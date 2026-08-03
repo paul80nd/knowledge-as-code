@@ -1,0 +1,12 @@
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# macOS
+.DS_Store
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Generated — rebuilt by `dotnet run .ci/kac.cs -- index`
+_reports/
