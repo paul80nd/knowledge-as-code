@@ -3,7 +3,8 @@
 What CI checks, what it builds, and what it deliberately leaves alone.
 
 > **Status: aspirational.** Almost nothing described here is implemented yet. This document records the intended
-> behaviour so it can be built against and argued with. Implemented items are marked ✅ as they land.
+> behaviour so it can be built against and argued with. The **Status** column on each table below tracks what is
+> actually built; a column is dropped once every row in its table is `Done`.
 
 The principle: the pipeline's job is not only to check that documents are *well-formed*, but that they still describe
 **reality**. Schema validation catches typos. Drift detection catches a wiki quietly becoming fiction, which is the
@@ -57,13 +58,13 @@ Run on every PR. Failures block merge.
 The checks that compare documents against the estate rather than against the schema. These are the reason Descriptive is
 its own tier.
 
-| Check             | Compares                                   | Flags                                                          |
-|-------------------|--------------------------------------------|----------------------------------------------------------------|
-| Service catalogue | `services/` vs the ADO repository list     | Services documented but deleted; repos with no document        |
-| Tooling register  | `tools/` vs package manifests across repos | Packages in use never approved; approved tools now unused      |
-| Capabilities      | `feature-files` paths vs the repos         | Paths that don't exist; feature files claimed by no capability |
-| Integrations      | `used-by` vs service dependencies          | Undocumented external calls                                    |
-| NFRs              | `measured-by` vs monitoring configuration  | Targets with no corresponding alert                            |
+| Check             | Compares                                   | Flags                                                          | Status  |
+|-------------------|--------------------------------------------|----------------------------------------------------------------|---------|
+| Service catalogue | `services/` vs the ADO repository list     | Services documented but deleted; repos with no document        | Planned |
+| Tooling register  | `tools/` vs package manifests across repos | Packages in use never approved; approved tools now unused      | Planned |
+| Capabilities      | `feature-files` paths vs the repos         | Paths that don't exist; feature files claimed by no capability | Planned |
+| Integrations      | `used-by` vs service dependencies          | Undocumented external calls                                    | Planned |
+| NFRs              | `measured-by` vs monitoring configuration  | Targets with no corresponding alert                            | Planned |
 
 Drift checks run on a schedule rather than per-PR — they depend on state outside this repo, and a failure is a prompt to
 investigate, not a reason to block someone's documentation change.
@@ -81,20 +82,20 @@ Generated content lives inside marker blocks in otherwise hand-written files:
 CI rewrites only what's between the markers and fails the build if a block is stale. This keeps one file per purpose —
 humans keep their prose, the machine keeps the tables current, and nobody has to choose.
 
-| Artefact                                    | Built from                               | Lives in                        |
-|---------------------------------------------|------------------------------------------|---------------------------------|
-| Type indexes                                | Frontmatter across the folder            | `<type>/INDEX.md`               |
-| Repository & launchpad tables               | `services/`                              | Root `README.md`                |
-| Per-type frontmatter reference              | `knowledge-as-code/schema/`              | `<type>/INDEX.md`               |
-| Full metadata reference                     | `knowledge-as-code/schema/`              | `knowledge-as-code/metadata.md` |
-| Rules digest                                | Active standards                         | Root `CLAUDE.md`                |
-| Control coverage report                     | `controls/` + standards' rules           | `controls/INDEX.md`             |
-| ISO alignment matrix                        | `policies/` `aligns-with`                | `policies/INDEX.md`             |
-| Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`         |
-| Orphan report                               | The link graph                           | `_reports/orphans.md`           |
-| Service dependency diagram                  | `depends-on`                             | `services/INDEX.md` (mermaid)   |
-| `.order` files                              | Folder contents + type ordering          | Each folder                     |
-| `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                       |
+| Artefact                                    | Built from                               | Lives in                        | Status  |
+|---------------------------------------------|------------------------------------------|---------------------------------|---------|
+| Type indexes                                | Frontmatter across the folder            | `<type>/INDEX.md`               | Done    |
+| Repository & launchpad tables               | `services/`                              | Root `README.md`                | Planned |
+| Per-type frontmatter reference              | `knowledge-as-code/schema/`              | `<type>.md` `schema-*` block    | Done    |
+| Full metadata reference                     | `knowledge-as-code/schema/`              | `knowledge-as-code/metadata.md` | Planned |
+| Rules digest                                | Active standards                         | Root `CLAUDE.md`                | Planned |
+| Control coverage report                     | `controls/` + standards' rules           | `controls/INDEX.md`             | Planned |
+| ISO alignment matrix                        | `policies/` `aligns-with`                | `policies/INDEX.md`             | Planned |
+| Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`         | Planned |
+| Orphan report                               | The link graph                           | `_reports/orphans.md`           | Planned |
+| Service dependency diagram                  | `depends-on`                             | `services/INDEX.md` (mermaid)   | Planned |
+| `.order` files                              | Folder contents + type ordering          | Each folder                     | Planned |
+| `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                       | Planned |
 
 ### The rules digest — root `CLAUDE.md`
 
@@ -159,15 +160,15 @@ dead ends. Provenance is what makes that detectable.
 
 The agent-facing machinery. Not automation in the CI sense, but part of the same system.
 
-| Skill           | Purpose                                                                                     |
-|-----------------|---------------------------------------------------------------------------------------------|
-| `kb-search`     | Where to look by question type; what frontmatter is grep-able; how to follow the link graph |
-| `kb-contribute` | How to add a document of type X — template, frontmatter, validation                         |
-| `adr`           | Draft an ADR: next number, template, supersession handling                                  |
-| `note`          | Capture a discovery mid-session                                                             |
-| `save` / `load` | Session handover (local storage — see [taxonomy](taxonomy.md))                              |
-| `conformance`   | Run the relevant conformance checklists against a diff                                      |
-| `dream`         | The distillation pass                                                                       |
+| Skill           | Purpose                                                                                     | Status  |
+|-----------------|---------------------------------------------------------------------------------------------|---------|
+| `kb-search`     | Where to look by question type; what frontmatter is grep-able; how to follow the link graph | Planned |
+| `kb-contribute` | How to add a document of type X — template, frontmatter, validation                         | Planned |
+| `adr`           | Draft an ADR: next number, template, supersession handling                                  | Planned |
+| `note`          | Capture a discovery mid-session                                                             | Planned |
+| `save` / `load` | Session handover (local storage — see [taxonomy](taxonomy.md))                              | Planned |
+| `conformance`   | Run the relevant conformance checklists against a diff                                      | Planned |
+| `dream`         | The distillation pass                                                                       | Planned |
 
 These are skills rather than per-folder `CLAUDE.md` files for a specific reason: a subdirectory `CLAUDE.md` loads only
 when a session reads a file in that directory. A session working in a service repository would never trigger one in
