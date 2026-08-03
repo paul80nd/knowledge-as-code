@@ -33,6 +33,7 @@ if (repoRoot is null)
 
 var kac = Path.Combine(repoRoot, ".ci", "kac.cs");
 var schemaDir = Path.Combine(repoRoot, "knowledge-as-code", "schema");
+var manifestFile = Path.Combine(repoRoot, "knowledge-as-code", "manifest.yaml");
 var fixturesDir = Path.Combine(repoRoot, ".ci", "tests", "fixtures");
 
 var rawArgs = args.ToList();
@@ -68,6 +69,8 @@ foreach (var scenario in scenarios)
     //   validate     run `validate --json`, diff findings against expected.json (contributes coverage)
     //   index        run `index --check`, assert the committed generated files are fresh (exit 0)
     //   index-stale  run `index --check` against a hand-broken corpus, assert staleness is caught (exit 1)
+    //   mechanism    run `mechanism --check` (corpus/ as local, reference/ as the source); assert
+    //                the synced paths in expected-drift.txt are flagged (exit 1), or in step (exit 0)
     var modePath = Path.Combine(scenario, "mode");
     var mode = File.Exists(modePath) ? File.ReadAllText(modePath).Trim() : "validate";
 
@@ -83,6 +86,9 @@ foreach (var scenario in scenarios)
                 break;
             case "index-stale":
                 RunIndexScenario(name, scenario, mustBeStale: true);
+                break;
+            case "mechanism":
+                RunMechanismScenario(name, scenario, corpusDir);
                 break;
             default:
                 failures.Add(name);
@@ -197,6 +203,80 @@ void RunIndexScenario(string name, string scenario, bool mustBeStale)
     }
 }
 
+// mechanism: assemble a local corpus (corpus/) and a reference source (reference/), each over the
+// real schema + manifest, then run `mechanism --check --against <reference>`. expected-drift.txt
+// lists the synced paths that must be named in the failure output; absent/empty means "expect in
+// step" (exit 0). Accepted divergences and forked differences are exercised by the fixture but must
+// not fail the run — the golden is the exit code plus the named synced paths, not free-form output.
+void RunMechanismScenario(string name, string scenario, string corpusDir)
+{
+    var referenceDir = Path.Combine(scenario, "reference");
+    if (!Directory.Exists(referenceDir))
+    {
+        failures.Add(name);
+        Console.WriteLine($"ERROR  {name}  — no reference/ tree in the fixture");
+        return;
+    }
+
+    if (update)
+    {
+        Console.WriteLine($"UPDATE {name}  (mechanism scenario — nothing to regenerate)");
+        return;
+    }
+
+    var expectedFile = Path.Combine(scenario, "expected-drift.txt");
+    var expected = File.Exists(expectedFile)
+        ? File.ReadAllLines(expectedFile).Select(l => l.Trim()).Where(l => l.Length > 0).ToList()
+        : [];
+
+    var localTemp = AssembleMechanismTemp(schemaDir, manifestFile, corpusDir);
+    var refTemp = AssembleMechanismTemp(schemaDir, manifestFile, referenceDir);
+    try
+    {
+        var (stdout, stderr, exit) = Run(localTemp, "dotnet", "run", kac, "--", "mechanism", "--check", "--against", refTemp);
+        var output = stderr + stdout;
+
+        if (expected.Count == 0)
+        {
+            if (exit == 0)
+            {
+                Console.WriteLine($"ok     {name}  (synced layer in step)");
+            }
+            else
+            {
+                failures.Add(name);
+                Console.WriteLine($"FAIL   {name}  — expected the synced layer in step (exit 0), got exit {exit}");
+                foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"         {l}");
+            }
+
+            return;
+        }
+
+        if (exit == 0)
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}  — expected drift (exit 1) but the check passed");
+            return;
+        }
+
+        var missing = expected.Where(l => !output.Contains(l)).ToList();
+        if (missing.Count == 0)
+        {
+            Console.WriteLine($"ok     {name}  (drift detected)");
+        }
+        else
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}  — drift detected but these paths were not named: {string.Join(", ", missing)}");
+        }
+    }
+    finally
+    {
+        TryDelete(localTemp);
+        TryDelete(refTemp);
+    }
+}
+
 Console.WriteLine();
 
 // -- coverage meta-test --
@@ -273,6 +353,17 @@ static string AssembleTemp(string schemaDir, string corpusDir)
     var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
     CopyTree(schemaDir, Path.Combine(temp, "knowledge-as-code", "schema"));
     CopyTree(corpusDir, temp);
+    return temp;
+}
+
+// Like AssembleTemp, but the mechanism check also reads the manifest, so copy the real one in too.
+// The subtree (a corpus/ or reference/) is laid over the top, and may add its own mechanism.lock.
+static string AssembleMechanismTemp(string schemaDir, string manifestFile, string subtree)
+{
+    var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
+    CopyTree(schemaDir, Path.Combine(temp, "knowledge-as-code", "schema"));
+    File.Copy(manifestFile, Path.Combine(temp, "knowledge-as-code", "manifest.yaml"));
+    CopyTree(subtree, temp);
     return temp;
 }
 

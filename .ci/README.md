@@ -15,6 +15,7 @@ dotnet run .ci/kac.cs -- index               # regenerate indexes and blocks
 dotnet run .ci/kac.cs -- index --check       # verify generated output is fresh
 dotnet run .ci/kac.cs -- checks              # list every check the validator implements
 dotnet run .ci/kac.cs -- checks --json       # …as JSON (the test suite reads this)
+dotnet run .ci/kac.cs -- mechanism --check --against ../other-corpus   # synced-layer drift vs a reference
 ```
 
 The rules are covered by a golden-file suite — see [`tests/README.md`](tests/README.md):
@@ -138,6 +139,29 @@ Three rules hold this together:
 - **Output is byte-stable.** Generation is a pure function of frontmatter + schema, so running
   `index` twice produces no diff. Tables use fixed column widths, `|` is escaped, and files are LF with a trailing
   newline — so if a Markdown formatter is added later, the freshness check keeps working instead of failing forever.
+
+## `mechanism` — portability
+
+`manifest.yaml` declares each file's layer — `synced`, `forked`, `generated`, `local`, `ignored` — but the declaration
+needs enforcing. `mechanism --check` resolves every tracked file against the manifest and compares the **synced** layer
+against a reference corpus, following the same discipline as `index --check`: recompute, compare, name what differs,
+exit non-zero, never write.
+
+```bash
+dotnet run .ci/kac.cs -- mechanism --check --against ../other-corpus
+```
+
+The reference defaults to `upstream.url` in `knowledge-as-code/mechanism.lock`, so a consumer that records where it
+synced from can run a bare `mechanism --check`. What it reports:
+
+- **synced** files that differ, are missing on either side, or match no manifest rule at all — each an **error** (exit `1`).
+- **forked** files are compared too, but only counted: how many differ from the reference is informational and never fails.
+- **generated**, **local** and **ignored** files are skipped — each corpus owns its own.
+- **accepted divergences** listed in `mechanism.lock` are honoured rather than flagged as drift, and any that have
+  quietly become identical to the reference again are named as `RESOLVED` so the stale entry can be removed.
+
+Comparison is LF-normalised, so line-ending differences never read as drift. `mechanism --sync` — the write half that
+copies the synced layer into a consumer — is not implemented yet.
 
 ## Known gaps
 
