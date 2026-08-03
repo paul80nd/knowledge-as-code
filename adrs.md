@@ -38,7 +38,7 @@ ADR by ID.
 <!-- BEGIN GENERATED: schema-adrs -->
 
 | Field           | Req | Type | Notes                                                                                              |
-|-----------------|-----|------|----------------------------------------------------------------------------------------------------|
+| --------------- | --- | ---- | -------------------------------------------------------------------------------------------------- |
 | `status`        | ●   | enum | `proposed` · `accepted` · `deprecated` · `superseded`                                              |
 | `decided-on`    |     | date | The acceptance date. Bare key until accepted. Required once `accepted`.                            |
 | `supersedes`    |     | id   | The ADR this replaces.                                                                             |
@@ -76,7 +76,7 @@ See [Contributing](/knowledge-as-code/contributing.md) for the review model that
 <!-- BEGIN GENERATED: checks-adrs -->
 
 | Check                       | Level   | What it verifies                                                      |
-|-----------------------------|---------|-----------------------------------------------------------------------|
+| --------------------------- | ------- | --------------------------------------------------------------------- |
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                   |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.        |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.     |
