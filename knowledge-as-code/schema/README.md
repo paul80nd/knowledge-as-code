@@ -14,11 +14,11 @@ Edit the schema, regenerate, review the diff. Never hand-edit anything inside a 
 
 ## Files
 
-| File | Contents |
-|---|---|
+| File              | Contents                                      |
+|-------------------|-----------------------------------------------|
 | `_universal.yaml` | Fields every document in the taxonomy carries |
-| `_enums.yaml` | Enums shared by more than one type |
-| `<folder>.yaml` | One per knowledge type, named for its folder |
+| `_enums.yaml`     | Enums shared by more than one type            |
+| `<folder>.yaml`   | One per knowledge type, named for its folder  |
 
 Type files are named for the **folder**, not the type — `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a
 document's type from its folder, so folder → schema is an identity lookup with no singularisation step.
@@ -31,7 +31,7 @@ fields:
     required: true|false        # default false
     type: string|date|enum|id|list|bool|int
     of: id|string               # element type, when type is list
-    values: [...]               # when type is enum, or an $enums.<name> reference
+    values: [ ... ]             # when type is enum, or an $enums.<name> reference
     ref: <folder>               # when type is id or list-of-id: which type the id must belong to
     reciprocal: <field>         # the field on the target that must point back
     pattern: '<regex>'          # additional constraint
@@ -50,16 +50,16 @@ fields:
 
 Beyond `fields`, each type file declares:
 
-| Key | Purpose |
-|---|---|
-| `type` / `folder` / `page` | Identity, and where the type lives |
-| `tier` / `lifecycle` | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
-| `id` | Prefix, style (`numbered` or `slug`), and width |
-| `filename` | Pattern and slug length limit |
-| `title` | H1 pattern, where the type has one |
-| `sections` | Required and optional H2s — drives template generation and structural validation |
-| `index` | Columns and sort order for the generated index |
-| `rules` | Type-level behaviours the validator applies (immutability, reciprocity) |
+| Key                        | Purpose                                                                                                          |
+|----------------------------|------------------------------------------------------------------------------------------------------------------|
+| `type` / `folder` / `page` | Identity, and where the type lives                                                                               |
+| `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
+| `id`                       | Prefix, style (`numbered` or `slug`), and width                                                                  |
+| `filename`                 | Pattern and slug length limit                                                                                    |
+| `title`                    | H1 pattern, where the type has one                                                                               |
+| `sections`                 | Required and optional H2s — drives template generation and structural validation                                 |
+| `index`                    | Columns and sort order for the generated index                                                                   |
+| `rules`                    | Type-level behaviours the validator applies (immutability, reciprocity)                                          |
 
 ## Open questions
 

@@ -1,0 +1,47 @@
+# knowledge-as-code — mechanism sync state for THIS corpus
+#
+# `manifest.yaml` says what is shared. This file says which version of it this corpus is running,
+# and where it has deliberately stepped away. It is `local`: never synced, never reconciled.
+#
+# Written by `kac mechanism --sync`; read by `kac mechanism --check`.
+
+version: 1
+
+corpus: knowledge-as-code
+
+role: source
+# One of: source | consumer.
+#
+#   source   — the master copy of the pattern. Changes originate or are reconciled here, and
+#              propagate outward. Exactly one corpus should hold this role.
+#   consumer — receives the synced layer from the source. Local edits to it are drift.
+#
+# A consumer may well be where a change is *authored* — real content is the only thing that
+# reveals a schema is wrong — but the change is not settled until it lands here.
+
+publishing-target: none
+# One of: azure-devops-wiki | github | mkdocs | none. Determines which `forked` publishing files
+# this corpus is expected to carry. Recorded rather than inferred, so the check can say "you are
+# missing the ADO nav file" instead of silently passing.
+#
+# `none` here because this repository is the pattern rather than a published wiki. It carries
+# `azure-pipelines.yml` and `.order` as *seeds* for corpora that are.
+
+upstream:
+  url:               # unset — this corpus is the source
+  mechanism-version: 1
+  synced-from:       # n/a for a source
+  synced-on:         "2026-08-03"
+
+# Files in the `synced` layer that this corpus deliberately holds differently. An escape hatch with
+# a recorded reason, so that a necessary deviation does not have to masquerade as drift — and so
+# that the next person can tell the two apart. `kac mechanism --check` reports these as accepted
+# rather than failing, and flags any that have since become identical again (delete those).
+#
+#   accepted-divergences:
+#     - path: .ci/kac.cs
+#       reason: Pinned to .NET 8 — this build agent has no .NET 10 SDK.
+#       since: 2026-08-03
+#       revisit: When the agent image is upgraded.
+
+accepted-divergences: []

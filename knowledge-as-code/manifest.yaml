@@ -1,0 +1,150 @@
+# knowledge-as-code — portability manifest
+#
+# Declares which files are shared across every corpus running this framework, and which belong to
+# the corpus that holds them. This file is the single definition of that boundary: it replaces the
+# prose assertions that used to live in `taxonomy.md` and `automation.md`, which nothing could
+# check.
+#
+# Read by `kac mechanism --check --against <path-or-url>`, which follows the same discipline as
+# `index --check`: it recomputes, compares, names what is stale, exits non-zero, and never writes.
+#
+# This file is itself `synced` — every corpus holds the same copy. Per-corpus sync state (which
+# upstream version this corpus is on, and what it has deliberately diverged from) lives alongside
+# it in `mechanism.lock`, which is `local`.
+
+version: 1
+
+layers:
+
+  synced:
+    rule: Byte-identical across every corpus running this framework.
+    on-drift: error
+    notes: >
+      The framework itself — validator, tests, schema, and the documents that describe how the
+      system works. Changes are made upstream and propagated; a local edit here is a defect, not a
+      customisation. Anything in this layer must be free of corpus-specific content, which is why
+      the test fixtures are synthetic rather than copied records.
+
+  forked:
+    rule: Seeded from upstream once, then owned locally. Never reconciled.
+    on-drift: informational
+    notes: >
+      Files whose *shape* is the framework's and whose *content* is the corpus's. A type root page
+      explains what a policy is in general and then gives examples in the local domain; a template
+      carries local example values; the publishing config is specific to where this corpus is
+      published. Divergence here is the point. The check lists these files so you can see how far
+      they have drifted, but never fails on them.
+
+  generated:
+    rule: Derived from local frontmatter and schema. Never synced, never hand-edited.
+    on-drift: ignore
+    notes: >
+      Output of `kac index`. Each corpus regenerates its own from its own records, so two corpora
+      will always differ here and neither is wrong. Freshness is already covered by
+      `index --check`; this layer exists so the sync check does not double-report it.
+
+  local:
+    rule: The corpus. Never shared.
+    on-drift: ignore
+    notes: >
+      The knowledge itself, plus orientation and scaffolding specific to this repository. This is
+      the default: a file matching no earlier rule is local. That direction is deliberate — a new
+      mechanism file has to be declared shared, rather than becoming shared by accident.
+
+  ignored:
+    rule: Outside the model entirely.
+    on-drift: ignore
+    notes: Tooling, editor and OS artefacts. Not knowledge, not mechanism.
+
+# Rules are evaluated in order; the first match wins. The final rule is a catch-all, so every file
+# in the repository resolves to exactly one layer.
+
+rules:
+
+  # ── ignored ──────────────────────────────────────────────────────────────────────────────────
+  - { path: ".git/**",                     layer: ignored }
+  - { path: ".idea/**",                    layer: ignored }
+  - { path: "**/.DS_Store",                layer: ignored }
+  - { path: ".claude/settings.local.json", layer: ignored }
+
+  # ── synced: the tool's own tree ──────────────────────────────────────────────────────────────
+  # Ahead of `generated`, because the test fixtures contain golden INDEX.md files that are shared
+  # test data, not generated output. Everything under `.ci/` is mechanism whatever it is called.
+  - path: ".ci/**"
+    layer: synced
+    note: >
+      Validator, generator, test runner and fixtures. Fixtures are part of the shared layer, so
+      they must stay synthetic — a fixture built from a real record would ship one corpus's content
+      to every other.
+
+  # ── generated ────────────────────────────────────────────────────────────────────────────────
+  # Matched before `synced`/`forked` so that generated files inside otherwise-shared folders
+  # resolve correctly.
+  - { path: "**/INDEX.md",                 layer: generated, note: "Corpus indexes. Fixture INDEX.md files are caught by the .ci/ rule above." }
+  - { path: "CLAUDE.md",                   layer: generated, note: "Rules digest." }
+  - { path: ".index.json",                 layer: generated, note: "Machine-readable corpus map." }
+  - { path: "_reports/**",                 layer: generated, note: "Coverage and staleness reports." }
+
+  # ── synced ───────────────────────────────────────────────────────────────────────────────────
+  - path: ".claude/skills/**"
+    layer: synced
+    note: "Agent machinery — kb-search, kb-contribute, adr and friends. Not yet built."
+
+  - { path: "knowledge-as-code/manifest.yaml",   layer: synced, note: "This file." }
+  - { path: "knowledge-as-code/schema/**",       layer: synced }
+  - { path: "knowledge-as-code/taxonomy.md",     layer: synced }
+  - { path: "knowledge-as-code/metadata.md",     layer: synced }
+  - { path: "knowledge-as-code/contributing.md", layer: synced }
+  - { path: "knowledge-as-code/automation.md",   layer: synced }
+
+  # ── forked ───────────────────────────────────────────────────────────────────────────────────
+  - path: "azure-pipelines.yml"
+    layer: forked
+    note: >
+      Publishing and CI target. This framework is deliberately opinionated toward Azure DevOps
+      wiki; a corpus published elsewhere replaces this file rather than reconciling it.
+  - { path: ".github/workflows/**",        layer: forked, note: "The GitHub equivalent of the above." }
+  - { path: "**/.order",                   layer: forked, note: "ADO wiki navigation order." }
+  - { path: ".gitignore",                  layer: forked }
+
+  - path: "**/template.md"
+    layer: forked
+    note: >
+      OPEN QUESTION — the one judgement call in this manifest. Templates are schema-shaped, so a
+      template that drifts from the schema produces records that fail validation, which argues for
+      `synced`. But templates carry example values in the local domain, which argues for `forked`.
+      They are also excluded from validation today, so nothing catches the drift either way.
+      Provisionally `forked`; revisit once a second corpus exists and the cost is visible.
+
+  - path: "knowledge-as-code.md"
+    layer: forked
+    note: "Explains the approach, but frames it for the local organisation."
+
+  # Type root pages: generic structure, local examples. `glossary.md` is the clearest case — its
+  # conventions are the framework's, but the passage that earns its place is a local vocabulary.
+  - path:
+      - "adrs.md"
+      - "capabilities.md"
+      - "controls.md"
+      - "data.md"
+      - "discoveries.md"
+      - "explanations.md"
+      - "faqs.md"
+      - "glossary.md"
+      - "integrations.md"
+      - "nfrs.md"
+      - "policies.md"
+      - "postmortems.md"
+      - "processes.md"
+      - "runbooks.md"
+      - "services.md"
+      - "standards.md"
+      - "tools.md"
+    layer: forked
+
+  # ── local ────────────────────────────────────────────────────────────────────────────────────
+  - { path: "README.md",                        layer: local, note: "Orientation for this corpus." }
+  - { path: "knowledge-as-code/mechanism.lock", layer: local, note: "This corpus's sync state." }
+  - { path: "_plan/**",                         layer: local, note: "Migration scaffolding — temporary." }
+
+  - { path: "**",                               layer: local }
