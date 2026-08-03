@@ -96,6 +96,7 @@ rules:
   - { path: "knowledge-as-code/metadata.md",     layer: synced }
   - { path: "knowledge-as-code/contributing.md", layer: synced }
   - { path: "knowledge-as-code/automation.md",   layer: synced }
+  - { path: "knowledge-as-code.md",              layer: synced, note: "The framework overview. Describes the system generically, so it is shared, not framed for the local domain." }
 
   # ── forked ───────────────────────────────────────────────────────────────────────────────────
   - path: "azure-pipelines.yml"
@@ -115,10 +116,6 @@ rules:
       `synced`. But templates carry example values in the local domain, which argues for `forked`.
       They are also excluded from validation today, so nothing catches the drift either way.
       Provisionally `forked`; revisit once a second corpus exists and the cost is visible.
-
-  - path: "knowledge-as-code.md"
-    layer: forked
-    note: "Explains the approach, but frames it for the local organisation."
 
   # Type root pages: generic structure, local examples. `glossary.md` is the clearest case — its
   # conventions are the framework's, but the passage that earns its place is a local vocabulary.
