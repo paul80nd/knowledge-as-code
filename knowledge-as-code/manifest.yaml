@@ -142,6 +142,7 @@ rules:
 
   # ── local ────────────────────────────────────────────────────────────────────────────────────
   - { path: "README.md",                        layer: local, note: "Orientation for this corpus." }
+  - { path: "LICENSE",                          layer: local, note: "MIT; a derived corpus may relicense its own copy." }
   - { path: "knowledge-as-code/mechanism.lock", layer: local, note: "This corpus's sync state." }
   - { path: "_plan/**",                         layer: local, note: "Migration scaffolding — temporary." }
 
