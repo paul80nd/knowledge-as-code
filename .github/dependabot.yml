@@ -1,0 +1,11 @@
+# Keep the GitHub Actions used by .github/workflows/kac.yml current.
+# No package-ecosystem entries are declared beyond github-actions: kac is a
+# .NET file-based app with no restored dependency manifest to track.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
