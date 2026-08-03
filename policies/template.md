@@ -1,0 +1,67 @@
+---
+id: pol-NNNN
+tier: normative
+status: draft
+aligns-with:
+implemented-by:
+review-by:
+owner:
+tags:
+  - a
+  - b
+---
+
+# Policy: <Title>
+
+_(Frontmatter notes — delete this block. **`status`**: `draft` · `active` · `retired`. **`aligns-with`** takes ISO/IEC
+27001:2022 Annex A references, e.g. `ISO27001:2022 A.8.25` — this records **alignment, not compliance or
+certification**, and the wording matters if this is ever read externally. **`implemented-by`** lists the standard ids
+that put this into practice. **`review-by`** is a quoted date; annual is usually right for a policy.)_
+
+## Purpose
+
+What we commit to, in one or two sentences, and why it matters. State the commitment plainly — a policy that hedges
+isn't one.
+
+_(Test before writing: would this still be true after replacing the entire technology estate? If it names a tool, a
+framework or a protocol, it is a [standard](/standards), not a policy.)_
+
+## Scope
+
+Who and what this applies to. Be explicit about the boundary — "all product repositories", "any system processing
+personal data", "production environments only".
+
+## Commitments
+
+* We **will** …
+* We **will not** …
+
+_(Principle-level. The specific, checkable rules belong in the implementing standards; this is the position they
+implement.)_
+
+## Alignment
+
+| Reference                 | Area           |
+|---------------------------|----------------|
+| ISO/IEC 27001:2022 A.N.NN | <control area> |
+
+The product is **aligned with** these areas; it is not certified against ISO/IEC 27001:2022 and is not audited. Alignment exists
+because the framework covers the right ground.
+
+_(Delete this section if no ISO area corresponds — an invented mapping is worse than none.)_
+
+## Exceptions
+
+Where this policy does not apply, and who can grant an exception. Exceptions stated up front are honest; exceptions
+discovered later are erosion. If there are none, say so.
+
+## Implemented by
+
+* [std-NNNN](/standards/…) — <what it requires>.
+
+_(A policy nothing implements is a statement of intent. That is allowed — mark it aspirational and say why the standard
+doesn't exist yet.)_
+
+## Review
+
+Reviewed <frequency> by <role>. Last reviewed: <date>.
