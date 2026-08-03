@@ -111,7 +111,7 @@ add it here, add it to the validator, and note it in the changelog below.
 ## Future state
 
 This document is currently hand-maintained. It will become generated output once the schema exists as machine-readable
-YAML under `knowledge-as-code/schema/`, at which point the per-type tables in each folder's `README.md` are generated
+YAML under `knowledge-as-code/schema/`, at which point the per-type tables on each type's page are generated
 from the same source. One definition, several renderings — which is rather the point.
 
 ## Changelog
