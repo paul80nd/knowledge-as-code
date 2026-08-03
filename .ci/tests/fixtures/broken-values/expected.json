@@ -1,0 +1,38 @@
+{
+  "summary": {
+    "validated": 3,
+    "skipped": 0,
+    "errors": 4,
+    "warnings": 0
+  },
+  "findings": [
+    {
+      "file": "adrs/0001-bad-enum-value.md",
+      "line": 3,
+      "severity": "error",
+      "check": "enum",
+      "message": "'status' value 'Draft' is not one of: proposed, accepted, deprecated, superseded."
+    },
+    {
+      "file": "adrs/0001-bad-enum-value.md",
+      "line": 3,
+      "severity": "error",
+      "check": "enum-lowercase",
+      "message": "'status' enum value 'Draft' must be lowercase."
+    },
+    {
+      "file": "adrs/0002-scalar-list.md",
+      "line": 6,
+      "severity": "error",
+      "check": "list",
+      "message": "'tags' must be a YAML sequence."
+    },
+    {
+      "file": "adrs/0003-unparseable-frontmatter.md",
+      "line": null,
+      "severity": "error",
+      "check": "frontmatter-parses",
+      "message": "frontmatter is not a valid YAML mapping."
+    }
+  ]
+}

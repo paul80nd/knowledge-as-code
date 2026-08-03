@@ -1,0 +1,80 @@
+{
+  "summary": {
+    "validated": 6,
+    "skipped": 0,
+    "errors": 9,
+    "warnings": 1
+  },
+  "findings": [
+    {
+      "file": "adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md",
+      "line": null,
+      "severity": "error",
+      "check": "slug-length",
+      "message": "slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30."
+    },
+    {
+      "file": "adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md",
+      "line": 9,
+      "severity": "error",
+      "check": "h1-pattern",
+      "message": "H1 'A title with no ADR prefix' does not match ^ADR-(\\d{4}): (.+)$."
+    },
+    {
+      "file": "adrs/0004-missing-consequences.md",
+      "line": null,
+      "severity": "error",
+      "check": "required-section",
+      "message": "missing required section '## Consequences'."
+    },
+    {
+      "file": "adrs/0004-missing-consequences.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-matches-filename",
+      "message": "id 'adr-0009' number does not match filename number '0004'."
+    },
+    {
+      "file": "adrs/0004-missing-consequences.md",
+      "line": 9,
+      "severity": "error",
+      "check": "h1-matches-id",
+      "message": "H1 number '0009' does not match filename number '0004'."
+    },
+    {
+      "file": "adrs/0005-no-h1.md",
+      "line": 0,
+      "severity": "warning",
+      "check": "y-statement",
+      "message": "no Y-statement block-quote follows the H1."
+    },
+    {
+      "file": "adrs/0005-no-h1.md",
+      "line": 1,
+      "severity": "error",
+      "check": "h1",
+      "message": "document has no H1."
+    },
+    {
+      "file": "adrs/0006-bad-id-prefix.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-prefix",
+      "message": "id 'xyz-0006' must start with 'adr-'."
+    },
+    {
+      "file": "adrs/0007-bad-id-width.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-format",
+      "message": "id 'adr-7' must be 'adr-' followed by 4 digits."
+    },
+    {
+      "file": "adrs/0008-Bad_Name.md",
+      "line": null,
+      "severity": "error",
+      "check": "filename-pattern",
+      "message": "filename '0008-Bad_Name.md' does not match ^\\d{4}-[a-z0-9-]+\\.md$."
+    }
+  ]
+}

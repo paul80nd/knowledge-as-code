@@ -1,0 +1,24 @@
+{
+  "summary": {
+    "validated": 1,
+    "skipped": 0,
+    "errors": 0,
+    "warnings": 2
+  },
+  "findings": [
+    {
+      "file": "adrs/0001-warnings.md",
+      "line": null,
+      "severity": "warning",
+      "check": "unused-definition",
+      "message": "link definition '[unused-ref]' is never referenced."
+    },
+    {
+      "file": "adrs/0001-warnings.md",
+      "line": 26,
+      "severity": "warning",
+      "check": "alternatives-verdict",
+      "message": "Alternatives Considered bullet has no verdict: \"A message queue  — we might explore this in a future revi…\"."
+    }
+  ]
+}

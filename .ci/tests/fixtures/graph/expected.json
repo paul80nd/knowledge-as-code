@@ -1,0 +1,59 @@
+{
+  "summary": {
+    "validated": 3,
+    "skipped": 0,
+    "errors": 6,
+    "warnings": 1
+  },
+  "findings": [
+    {
+      "file": "adrs/0001-first.md",
+      "line": 1,
+      "severity": "error",
+      "check": "related-matches-section",
+      "message": "'related' lists 'adr-0002' but it is not referenced in the '## Related' section."
+    },
+    {
+      "file": "adrs/0001-first.md",
+      "line": 1,
+      "severity": "error",
+      "check": "reciprocal",
+      "message": "'supersedes: adr-0002' is not reciprocated — adrs/0002-second.md must list 'superseded-by: adr-0001'."
+    },
+    {
+      "file": "adrs/0001-first.md",
+      "line": 25,
+      "severity": "error",
+      "check": "link-resolves",
+      "message": "link target 'nonexistent-target.md' does not resolve."
+    },
+    {
+      "file": "adrs/0001-first.md",
+      "line": 25,
+      "severity": "error",
+      "check": "undefined-label",
+      "message": "reference '[ADR-0099]' has no link definition."
+    },
+    {
+      "file": "adrs/0001-first.md",
+      "line": 26,
+      "severity": "warning",
+      "check": "bracket-literal",
+      "message": "'[an unlinked placeholder]' looks like a reference but has no definition (or use an inline link)."
+    },
+    {
+      "file": "adrs/0003-third.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-matches-filename",
+      "message": "id 'adr-0002' number does not match filename number '0003'."
+    },
+    {
+      "file": "adrs/0003-third.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-unique",
+      "message": "id 'adr-0002' is also used by adrs/0002-second.md."
+    }
+  ]
+}

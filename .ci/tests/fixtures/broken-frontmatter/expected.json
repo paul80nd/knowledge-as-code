@@ -1,0 +1,59 @@
+{
+  "summary": {
+    "validated": 1,
+    "skipped": 0,
+    "errors": 7,
+    "warnings": 0
+  },
+  "findings": [
+    {
+      "file": "adrs/0002-broken-frontmatter.md",
+      "line": 1,
+      "severity": "error",
+      "check": "unknown-key",
+      "message": "unknown frontmatter key 'priority'."
+    },
+    {
+      "file": "adrs/0002-broken-frontmatter.md",
+      "line": 1,
+      "severity": "error",
+      "check": "key-order",
+      "message": "'tier' must appear before 'status' in the frontmatter."
+    },
+    {
+      "file": "adrs/0002-broken-frontmatter.md",
+      "line": 1,
+      "severity": "error",
+      "check": "required-field",
+      "message": "missing required field 'owner'."
+    },
+    {
+      "file": "adrs/0002-broken-frontmatter.md",
+      "line": 3,
+      "severity": "error",
+      "check": "tier-matches-type",
+      "message": "tier 'descriptive' does not match the 'adr' type tier 'decided'."
+    },
+    {
+      "file": "adrs/0002-broken-frontmatter.md",
+      "line": 5,
+      "severity": "error",
+      "check": "date-quoted",
+      "message": "'decided-on' date must be quoted, e.g. \"2026/06/12\"."
+    },
+    {
+      "file": "adrs/0002-broken-frontmatter.md",
+      "line": 5,
+      "severity": "error",
+      "check": "date-format",
+      "message": "'decided-on' must be a YYYY-MM-DD date, got '2026/06/12'."
+    },
+    {
+      "file": "adrs/0002-broken-frontmatter.md",
+      "line": 6,
+      "severity": "error",
+      "check": "bare-key",
+      "message": "'deciders' is absent but not a bare key — use 'deciders:' with no value (not null, ~, \"\", or —)."
+    }
+  ]
+}
