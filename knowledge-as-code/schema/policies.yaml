@@ -1,0 +1,64 @@
+type: policy
+folder: policies
+page: policies.md
+tier: normative
+lifecycle: living
+
+id:
+  prefix: pol
+  style: numbered
+  width: 4
+
+filename:
+  pattern: '^\d{4}-[a-z0-9-]+\.md$'
+  slug-max: 30
+
+title:
+  h1-pattern: '^Policy: (.+)$'
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, active, retired]
+
+  aligns-with:
+    required: false
+    type: list
+    of: string
+    pattern: '^ISO27001:2022 A\.\d+\.\d+$'
+    notes: >
+      ISO/IEC 27001:2022 Annex A references. This records **alignment, not compliance or certification** —
+      we are not registered and are not audited. The field name is deliberate; wording that implies
+      certification fails review.
+
+  implemented-by:
+    required: false
+    type: list
+    of: id
+    ref: standards
+    reciprocal: implements
+
+  review-by:
+    required: true
+    type: date
+
+sections:
+  required: [Purpose, Scope, Commitments]
+  optional: [Alignment, Exceptions, Implemented by, Review]
+
+index:
+  columns: [id, title, status, aligns-with, review-by]
+  sort: id
+
+rules:
+  - id: policy-has-implementer
+    description: >
+      Every active policy has at least one implementing standard, or is explicitly marked aspirational in
+      its Purpose section. A policy nothing implements is a statement of intent and should say so.
+    severity: warning
+  - id: alignment-not-compliance
+    description: >
+      Flags the words "compliant", "compliance" and "certified" in proximity to an ISO reference.
+    severity: warning

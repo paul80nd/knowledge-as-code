@@ -1,0 +1,79 @@
+type: control
+folder: controls
+page: controls.md
+tier: normative
+lifecycle: living
+
+id:
+  prefix: ctl
+  style: numbered
+  width: 4
+
+filename:
+  pattern: '^\d{4}-[a-z0-9-]+\.md$'
+  slug-max: 30
+
+title:
+  h1-pattern: '^Control: (.+)$'
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [active, planned, retired]
+
+  verifies:
+    required: true
+    type: list
+    of: id
+    ref: standards
+    reciprocal: verified-by
+    notes: >
+      Standard ids, ideally rule-level anchors. A control that names no rule is not a control.
+
+  mechanism:
+    required: true
+    type: enum
+    values: [ci, review-checklist, manual-periodic, runtime-alert, not-enforced]
+    notes: >
+      `not-enforced` is a first-class value and the point of the coverage report — it converts an aspiration
+      into a visible number rather than letting the rulebook quietly become fiction. Do not invent a
+      mechanism to avoid using it.
+
+  frequency:
+    required: false
+    required-when: 'mechanism != not-enforced'
+    type: enum
+    values: [per-pr, per-deploy, daily, monthly, quarterly, annual]
+
+  evidence:
+    required: false
+    type: string
+    notes: Where the proof lives — the build log, the audit note, the dashboard.
+
+  applies-to:
+    required: false
+    type: list
+    of: id
+    ref: services
+    allow-literal: [all]
+
+sections:
+  required: [What it checks, How it works, Coverage and gaps]
+  optional: [Evidence, Owner]
+
+index:
+  columns: [id, title, mechanism, frequency, verifies, status]
+  sort: id
+  group-by: mechanism
+
+rules:
+  - id: mechanism-has-evidence
+    description: >
+      A control whose mechanism is not `not-enforced` names where its evidence can be found.
+    severity: warning
+  - id: coverage-report
+    description: >
+      Generates the proportion of MUST / MUST NOT rules across active standards that are claimed by a
+      control with a mechanism other than `not-enforced`.

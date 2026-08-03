@@ -1,0 +1,91 @@
+type: adr
+folder: adrs
+page: adrs.md
+tier: decided
+lifecycle: immutable
+
+id:
+  prefix: adr
+  style: numbered
+  width: 4
+
+filename:
+  pattern: '^\d{4}-[a-z0-9-]+\.md$'
+  slug-max: 30
+
+title:
+  h1-pattern: '^ADR-(\d{4}): (.+)$'
+  matches-id: true
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [proposed, accepted, deprecated, superseded]
+
+  decided-on:
+    required: false
+    required-when: 'status == accepted'
+    type: date
+    notes: The acceptance date. Bare key until accepted.
+
+  supersedes:
+    required: false
+    type: id
+    ref: adrs
+    reciprocal: superseded-by
+    notes: The ADR this replaces.
+
+  superseded-by:
+    required: false
+    required-when: 'status == superseded'
+    type: id
+    ref: adrs
+    reciprocal: supersedes
+    notes: CI enforces both directions; a one-sided supersession fails the build.
+
+  deciders:
+    required: false
+    type: list
+    of: string
+    notes: The people who agreed it.
+
+  related:
+    required: false
+    type: list
+    of: id
+    ref: adrs
+    mirrors-section: Related
+    notes: >
+      Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.
+
+sections:
+  required: [Context, Decision, Alternatives Considered, Consequences]
+  optional: [Related, References]
+
+index:
+  columns: [id, title, status, decided-on]
+  sort: id
+
+rules:
+  - id: immutable-after-accepted
+    description: >
+      Once status is `accepted`, content changes are limited to typo fixes, link corrections and status
+      transitions. A substantive edit fails with a pointer to the supersession process.
+  - id: reciprocal-supersession
+    fields: [supersedes, superseded-by]
+  - id: related-matches-section
+    field: related
+    section: Related
+  - id: y-statement-present
+    description: >
+      A blockquote follows the H1 containing all six moves — in the context of / facing / we decided /
+      rather than / to achieve / accepting.
+    max-words: 60
+    severity: warning
+  - id: alternatives-have-verdicts
+    description: >
+      Every bullet in Alternatives Considered states an outcome. An alternative left open means the decision
+      has not been made.
+    severity: warning

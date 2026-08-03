@@ -1,0 +1,62 @@
+type: integration
+folder: integrations
+page: integrations.md
+tier: descriptive
+lifecycle: living
+
+id:
+  prefix: int
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [active, trial, retired]
+
+  vendor:
+    required: true
+    type: string
+
+  used-by:
+    required: true
+    type: list
+    of: id
+    ref: services
+    notes: An integration nothing uses is a candidate for retirement.
+
+  criticality:
+    required: true
+    type: enum
+    values: $enums.criticality
+
+  their-sla:
+    required: false
+    type: string
+    notes: What the contract actually says, not what the marketing page implies.
+
+sections:
+  required: [What it does, Contract, Failure modes]
+  optional: [Their SLA, Commercials, Contacts, Related]
+
+index:
+  columns: [id, title, vendor, criticality, their-sla, status]
+  sort: id
+
+rules:
+  - id: fallback-required
+    description: >
+      Every failure mode names a fallback, or the document explicitly states there is none. An undocumented
+      single point of failure is the most expensive kind.
+  - id: no-credentials
+    description: >
+      Fails on anything resembling a token, key, password or connection string. Name the mechanism and where
+      the credential is stored, never the credential.
+  - id: unused-integrations
+    description: Reports integrations whose `used-by` is empty while status is `active`.
+    severity: warning

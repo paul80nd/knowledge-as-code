@@ -1,0 +1,76 @@
+type: nfr
+folder: nfrs
+page: nfrs.md
+tier: normative
+lifecycle: living
+
+id:
+  prefix: nfr
+  style: numbered
+  width: 4
+
+filename:
+  pattern: '^\d{4}-[a-z0-9-]+\.md$'
+  slug-max: 30
+
+title:
+  h1-pattern: '^NFR: (.+)$'
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, agreed, retired]
+    notes: >
+      `agreed` is a commitment someone has actually accepted, not an aspiration. Stay in `draft` until then.
+
+  applies-to:
+    required: true
+    type: list
+    of: id
+    ref: [services, capabilities]
+    notes: >
+      Estate-wide targets are almost always wrong — a marketing page and the booking flow do not deserve the
+      same budget.
+
+  target:
+    required: true
+    type: string
+    notes: Concrete and arguable — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`. Include the measurement window.
+
+  measured-by:
+    required: true
+    type: string
+    notes: >
+      An NFR you cannot measure is a wish. "We'd notice" is not a measurement method.
+
+  constrained-by:
+    required: false
+    type: list
+    of: id
+    ref: integrations
+    notes: >
+      External dependencies whose own SLA caps this target. A target exceeding what a dependency promises is
+      a hope, not a commitment.
+
+  review-by:
+    required: true
+    type: date
+
+sections:
+  required: [Target, How it is measured, If it is breached]
+  optional: [Current actual, Constraints, Related]
+
+index:
+  columns: [id, title, applies-to, target, status, review-by]
+  sort: id
+
+rules:
+  - id: target-is-measurable
+    description: >
+      `measured-by` must be present and must not be empty or hedged. Checked as a required non-empty string.
+  - id: constraint-consistency
+    description: >
+      Where `constrained-by` names an integration whose `their-sla` is weaker than this target, report it.
+    severity: warning

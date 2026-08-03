@@ -1,0 +1,69 @@
+type: service
+folder: services
+page: services.md
+tier: descriptive
+lifecycle: living
+
+id:
+  prefix: svc
+  style: slug
+  notes: Matches the repository or component name where one exists — `billing-api` → `svc-billing-api`.
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [live, building, deprecated, retired]
+
+  repo:
+    required: true
+    type: string
+
+  platform:
+    required: true
+    type: enum
+    values: [dotnet-web, dotnet-api, azure-function, static, typescript, terraform, mixed]
+
+  criticality:
+    required: true
+    type: enum
+    values: $enums.criticality
+
+  depends-on:
+    required: false
+    type: list
+    of: id
+    ref: services
+    notes: >
+      Downward only — what this service calls. The reverse view is generated, so do not maintain it by hand.
+
+  data-stores:
+    required: false
+    type: list
+    of: id
+    ref: data
+
+sections:
+  required: [What it does, Where it lives, Environments]
+  optional: [Dependencies, Data, Operational notes]
+
+index:
+  columns: [id, title, platform, criticality, status, owner]
+  sort: id
+
+rules:
+  - id: no-dependency-cycles
+    field: depends-on
+    description: A cycle in the dependency graph is reported, not failed — some are legitimate.
+    severity: warning
+  - id: drift-against-repos
+    description: >
+      Scheduled, not per-PR. Compares the catalogue against the actual ADO repository list; reports services
+      documented but deleted, and repositories with no service document.
+  - id: reverse-dependencies-generated
+    description: Generates the depended-on-by view and the mermaid dependency diagram from `depends-on`.

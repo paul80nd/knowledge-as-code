@@ -1,0 +1,71 @@
+type: runbook
+folder: runbooks
+page: runbooks.md
+tier: procedural
+lifecycle: living
+
+id:
+  prefix: rbk
+  style: slug
+  notes: Named for the failure, not the fix — that is what someone searches for at 2am.
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [active, draft, retired]
+
+  applies-to:
+    required: false
+    type: list
+    of: id
+    ref: services
+
+  severity:
+    required: false
+    type: enum
+    values: $enums.severity
+
+  last-rehearsed:
+    required: true
+    type: date
+    allow-literal: [never]
+    notes: >
+      `"never"` is permitted, and is exactly the thing worth knowing before the incident rather than during it.
+
+  rehearsal-frequency:
+    required: false
+    type: enum
+    values: $enums.rehearsal-frequency
+
+  requires-access:
+    required: false
+    type: list
+    of: string
+    notes: >
+      Must be complete. Discovering you lack a permission mid-incident is its own outage.
+
+sections:
+  required: [Symptoms, Immediate actions, Diagnosis, Resolution, Escalation]
+  optional: [Afterwards, Related]
+
+index:
+  columns: [id, title, severity, status, last-rehearsed]
+  sort: [severity, id]
+
+rules:
+  - id: symptoms-first
+    description: Symptoms is the first section after the H1 — that is how the reader finds the document.
+  - id: escalation-required
+    description: >
+      Every runbook names an escalation path. A diagnosis branch that ends without a resolution or an
+      escalation is a dead end.
+  - id: staleness-loud
+    description: >
+      Scheduled, and reported more prominently than for processes. An unrehearsed process is annoying; an
+      unrehearsed runbook is dangerous.

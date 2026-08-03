@@ -1,0 +1,66 @@
+type: capability
+folder: capabilities
+page: capabilities.md
+tier: descriptive
+lifecycle: living
+
+id:
+  prefix: cap
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [planned, building, live, deprecated]
+
+  implemented-by:
+    required: true
+    type: list
+    of: id
+    ref: services
+
+  ado-epics:
+    required: false
+    type: list
+    of: int
+    notes: ADO work item ids. Not resolvable by CI; recorded for humans and for the reverse harvest.
+
+  feature-files:
+    required: false
+    type: list
+    of: string
+    notes: >
+      Repo-relative paths. Checked in both directions — a path that does not exist fails, and a feature file
+      claimed by no capability is reported.
+
+  nfrs:
+    required: false
+    type: list
+    of: id
+    ref: nfrs
+
+sections:
+  required: [What it does, Why it exists, Where the detail lives]
+  optional: [Surfaces, Known limitations]
+
+index:
+  columns: [id, title, status, implemented-by]
+  sort: id
+
+rules:
+  - id: hub-not-specification
+    description: >
+      Reports a capability whose prose exceeds a threshold relative to its link count. A capability that
+      specifies behaviour has begun to drift from the ADO items it should point at, and a drifted capability
+      is worse than none because sessions will trust it.
+    severity: warning
+  - id: feature-file-orphans
+    description: >
+      Scheduled. Reports feature files in the code repositories claimed by no capability, and paths here
+      that no longer exist.

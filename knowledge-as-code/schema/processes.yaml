@@ -1,0 +1,67 @@
+type: process
+folder: processes
+page: processes.md
+tier: procedural
+lifecycle: living
+
+id:
+  prefix: prc
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [active, draft, retired]
+
+  applies-to:
+    required: false
+    type: list
+    of: id
+    ref: services
+
+  last-rehearsed:
+    required: true
+    type: date
+    allow-literal: [never]
+    notes: >
+      Quoted date, or `"never"` — which is permitted and preferable to a guess. Updated when someone actually
+      follows the process end to end, not when someone edits the document.
+
+  rehearsal-frequency:
+    required: false
+    type: enum
+    values: $enums.rehearsal-frequency
+
+  requires-access:
+    required: false
+    type: list
+    of: string
+    notes: Systems or roles needed before step 1.
+
+sections:
+  required: [When to use this, Prerequisites, Steps, Verification]
+  optional: [If it goes wrong, Related]
+
+index:
+  columns: [id, title, status, last-rehearsed, owner]
+  sort: id
+
+rules:
+  - id: verification-required
+    description: >
+      A process that ends at the last action leaves the reader guessing whether it worked. The Verification
+      section is required.
+  - id: staleness
+    description: >
+      Scheduled. Reports processes past their rehearsal frequency, and any whose `last-rehearsed` is `never`.
+  - id: no-hedged-ordering
+    description: >
+      Flags "typically", "usually" and "normally" inside the Steps section. A procedure whose ordering is
+      conditional should say what it depends on.
+    severity: warning

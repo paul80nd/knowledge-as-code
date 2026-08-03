@@ -1,0 +1,75 @@
+type: tool
+folder: tools
+page: tools.md
+tier: descriptive
+lifecycle: living
+
+id:
+  prefix: tol
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [approved, trial, deprecated, rejected]
+    notes: >
+      `approved` means approved **for new work**. Something already in use but not approved is drift, and the
+      drift report will say so.
+
+  category:
+    required: true
+    type: string
+    notes: e.g. `testing`, `build`, `observability`, `runtime`.
+
+  versions:
+    required: false
+    type: string
+    notes: >
+      A range, not a pin. The register states what we stand behind; the manifests state what is installed.
+
+  licence:
+    required: false
+    type: string
+    pattern: '^[A-Za-z0-9.\-+ ()]+$'
+    notes: SPDX identifier. The field nobody wants until they urgently do.
+
+  decided-in:
+    required: false
+    type: id
+    ref: adrs
+    notes: >
+      Where a decision was worth recording. Small, uncontroversial adoptions need only a register entry.
+
+  replaces:
+    required: false
+    type: id
+    ref: tools
+
+sections:
+  required: [What we use it for, Status]
+  optional: [Where it is used, Alternatives considered, Licence and obligations, Related]
+
+index:
+  columns: [id, title, category, status, versions, licence]
+  sort: [category, id]
+  group-by: category
+
+rules:
+  - id: deprecated-has-successor
+    description: >
+      A deprecated tool names what replaces it, or the entry is just a complaint.
+    severity: warning
+  - id: trial-has-criteria
+    description: >
+      A tool in `trial` states what would decide it. A trial with no decision criteria stays a trial forever.
+    severity: warning
+  - id: drift-against-manifests
+    description: >
+      Scheduled. Compares the register against package manifests across the organisation's repositories in both
+      directions — packages in use that were never approved, and approved tools nothing uses any more.

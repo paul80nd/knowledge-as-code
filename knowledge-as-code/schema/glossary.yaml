@@ -1,0 +1,70 @@
+type: glossary
+folder: null
+page: glossary.md
+tier: descriptive
+lifecycle: living
+
+style: single-document
+notes: >
+  The only type that is one document rather than a collection. There is no folder, no per-term files and no
+  per-record schema — the frontmatter below belongs to `glossary.md` itself. Terms are H3 headings and their
+  anchors are their identifiers.
+
+id:
+  prefix: null
+  style: literal
+  value: glossary
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, active]
+
+  review-by:
+    required: true
+    type: date
+
+sections:
+  required:
+    - "What is the glossary?"
+    - "Why we use it"
+    - "Scope"
+    - "Terms"
+    - "Adding a term"
+  optional: []
+
+entry:
+  heading-level: 3
+  pattern: '^### (.+)$'
+  shape:
+    - definition: One sentence. Required.
+    - not: >
+        Optional `**Not:** …` line naming the term it is most often confused with, and the difference in a
+        few words. These lines are the most useful content in the file.
+    - links: Optional. Owning service, ADRs, explanations.
+  max-paragraphs: 1
+  notes: >
+    Alphabetical and flat — no A–Z sub-headings. The file is meant to be read end to end and grepped, and
+    sub-headings break the per-term parse.
+
+index:
+  generated: false
+  notes: The document is its own index.
+
+rules:
+  - id: carried-in-full-by-digest
+    description: >
+      The generated rules digest includes this file in its entirety. It therefore consumes budget directly,
+      and entries that exceed one paragraph are reported.
+  - id: undefined-terms
+    description: >
+      Reports terms appearing more than N times across the corpus with no glossary entry.
+    severity: warning
+  - id: unused-terms
+    description: Reports glossary entries not used anywhere else.
+    severity: warning
+  - id: terms-are-singular
+    description: Entry headings are singular and in canonical casing.
+    severity: warning

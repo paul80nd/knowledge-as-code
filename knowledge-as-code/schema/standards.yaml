@@ -1,0 +1,99 @@
+type: standard
+folder: standards
+page: standards.md
+tier: normative
+lifecycle: living
+
+id:
+  prefix: std
+  style: numbered
+  width: 4
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+  notes: >
+    Standards are filed under a category folder (common/, platform/, public-api/, …) and named for the rule
+    area, not numbered in the filename. The numeric id lives in frontmatter.
+
+title:
+  h1-pattern: '^Standard: (.+)$'
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, active, deprecated, superseded]
+    notes: >
+      Plain values only. Enforcement notes belong in `verified-by`; "until ADR-NNNN is accepted" is derivable
+      from `derived-from` plus that ADR's own status.
+
+  axis:
+    required: true
+    type: enum
+    values: [common, platform, interface, domain]
+    notes: >
+      TODO — unresolved. Four formulations exist across the corpus (`standards.md` schema block,
+      `standards.md` prose which names `framework`, `taxonomy.md` which says "interface/domain", and
+      `standards/README.md` which splits differently). Settle before generating.
+
+  derived-from:
+    required: false
+    type: list
+    of: id
+    ref: adrs
+    notes: >
+      The ADRs this standard distils. Provenance is required — see `provenance-required` below — but may be
+      satisfied by `implements` instead where the standard descends from a policy rather than a decision.
+
+  implements:
+    required: false
+    type: list
+    of: id
+    ref: policies
+    reciprocal: implemented-by
+
+  verified-by:
+    required: false
+    type: list
+    of: id
+    ref: controls
+    reciprocal: verifies
+
+  applies-to:
+    required: true
+    type: list
+    of: id
+    ref: services
+    allow-literal: [all]
+
+  review-by:
+    required: true
+    type: date
+
+sections:
+  required: [Summary, Rules, Examples, Conformance checklist, Rationale and provenance]
+  optional: [Changelog]
+
+index:
+  columns: [id, title, axis, status, derived-from, review-by]
+  sort: [axis, id]
+  group-by: axis
+
+rules:
+  - id: provenance-required
+    description: >
+      Every standard cites at least one ADR in `derived-from` or one policy in `implements`. A standard with
+      neither is guidance, not a standard.
+  - id: rules-have-controls
+    description: >
+      Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.
+    severity: warning
+  - id: changelog-begins-at-active
+    description: >
+      Changelog entries are material changes only — a rule added, removed, or changed in effect — and begin
+      when status becomes `active`. Wording, examples, link fixes and typos are not material; git has those.
+  - id: changelog-on-material-change
+    description: >
+      If the Rules section changed and status is `active`, a new changelog entry is required in the same commit.

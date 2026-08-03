@@ -1,0 +1,73 @@
+type: data
+folder: data
+page: data.md
+tier: descriptive
+lifecycle: living
+
+notes: >
+  Folder is singular because English gives no plural. One of two exceptions to the plural-folder rule,
+  alongside `glossary.md`.
+
+id:
+  prefix: dat
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [active, deprecated]
+
+  owned-by:
+    required: true
+    type: id
+    ref: services
+    notes: >
+      A single service. Shared ownership means nobody is answerable — resolve it before writing the document.
+
+  classification:
+    required: true
+    type: enum
+    values: [public, internal, confidential, personal, special-category]
+
+  retention:
+    required: false
+    required-when: 'classification in [personal, special-category]'
+    type: string
+    notes: >
+      "Indefinitely" is an answer, and a revealing one. Record the actual retention; where it differs from
+      what the policy commits to, record both — that gap is the useful part.
+
+  flows-to:
+    required: false
+    type: list
+    of: id
+    ref: [services, integrations]
+    notes: Data leaving the estate is the part that matters most.
+
+sections:
+  required: [Entities, Where it lives, Classification, Retention]
+  optional: [Flows, Related]
+
+index:
+  columns: [id, title, owned-by, classification, retention]
+  sort: classification
+
+rules:
+  - id: personal-data-has-retention
+    description: >
+      Personal or special-category data with no stated retention is reported. It is the first thing anyone
+      external will ask.
+  - id: no-actual-data
+    description: >
+      Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.
+  - id: single-owner
+    field: owned-by
+    description: Exactly one owning service; the field is a scalar, not a list, deliberately.
+  - id: store-has-service
+    description: Every store named resolves to a service in the catalogue.

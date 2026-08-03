@@ -1,0 +1,61 @@
+type: explanation
+folder: explanations
+page: explanations.md
+tier: descriptive
+lifecycle: living
+
+id:
+  prefix: exp
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, active, stale]
+
+  explains:
+    required: true
+    type: list
+    of: id
+    ref: [services, capabilities]
+
+  review-by:
+    required: true
+    type: date
+    notes: >
+      The field that stops this type rotting. Explanations are the residual category, so they need the
+      tightest staleness discipline, not the loosest.
+
+sections:
+  required: [Where the detail lives]
+  optional: []
+  notes: >
+    Body sections are free-form — an explanation is narrative and its shape follows its subject. Only the
+    outbound links section is required, because linking rather than restating is what defines the type.
+
+index:
+  columns: [id, title, explains, status, review-by]
+  sort: id
+
+rules:
+  - id: links-rather-than-restates
+    description: >
+      Reports an explanation whose prose-to-link ratio exceeds a threshold. An explanation that accumulates
+      facts of its own has become a maintenance liability, and its facts will be the ones that go stale first.
+    severity: warning
+  - id: not-normative
+    description: >
+      Flags RFC 2119 keywords (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) in bold. Normative content belongs
+      in a standard; the explanation should link to it.
+    severity: warning
+  - id: not-load-bearing
+    description: >
+      Reports where a decided-tier document (ADR or postmortem) cites an explanation as the authority for a
+      constraint. Immutable records should not derive from mutable ones.
+    severity: warning

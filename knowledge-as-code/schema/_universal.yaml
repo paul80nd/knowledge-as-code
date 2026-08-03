@@ -1,0 +1,66 @@
+# Fields carried by every document in the taxonomy.
+# Type files may override `values` (status differs per type) and add their own fields.
+
+version: 1
+
+fields:
+
+  id:
+    required: true
+    type: string
+    notes: >
+      Stable, unique across the whole wiki, never reused. Format and width are set by the type's `id` block.
+      The id is the anchor for every cross-reference; filenames may be corrected, ids may not.
+
+  tier:
+    required: true
+    type: enum
+    values: [decided, normative, descriptive, procedural, observed]
+    notes: >
+      Fixed for the type and therefore derivable from the folder, but stated in frontmatter because it is a
+      trust signal for the reader — seeing "observed" at the top of a page tells you how much weight to give it.
+      CI checks it matches the type.
+
+  status:
+    required: true
+    type: enum
+    values: []          # supplied by each type
+    notes: Values vary by type.
+
+  owner:
+    required: true
+    type: string
+    notes: >
+      A named person, never a team alias. Someone must be answerable.
+
+  tags:
+    required: false
+    type: list
+    of: string
+    pattern: '^[a-z0-9-]+$'
+    notes: >
+      Free-form, lowercase, hyphenated. Used for cross-cutting search.
+
+# Keys permitted but not part of the knowledge schema. Azure DevOps uses these to control how a page is
+# labelled in wiki navigation; they are a rendering concern, so the validator allows them without
+# requiring them and ignores them everywhere else.
+reserved:
+  - title
+  - allowTitleToDifferFromFilename
+
+# Deliberately NOT fields, recorded here so the reasoning survives the next person who wants to add them.
+excluded:
+  type:       Inferred from the folder.
+  title:      It is the H1. (The reserved key above is an ADO navigation label, not document metadata.)
+  created:    Git knows, and will not forget to update it.
+  updated:    As above.
+  lifecycle:  Follows from tier; a second field could disagree with the first.
+
+# Applied to every document regardless of type.
+global-rules:
+  - dates-are-quoted-strings
+  - absent-values-are-bare-keys
+  - enums-are-lowercase-hyphenated
+  - unknown-keys-fail
+  - id-matches-folder-and-filename
+  - tier-matches-type

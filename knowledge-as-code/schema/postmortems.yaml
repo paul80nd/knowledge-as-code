@@ -1,0 +1,87 @@
+type: postmortem
+folder: postmortems
+page: postmortems.md
+tier: decided
+lifecycle: immutable
+
+id:
+  prefix: pmt
+  style: numbered
+  width: 4
+  notes: >
+    TODO — `pmt-` may collide with an organisation's own abbreviations and read ambiguously. `inc-` is the obvious
+    alternative but describes the incident rather than the document. Settle before the first record.
+
+filename:
+  pattern: '^\d{4}-[a-z0-9-]+\.md$'
+  slug-max: 30
+  notes: Named for the symptom as customers experienced it, not the cause.
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, published]
+    notes: >
+      `published` freezes the document. A materially different understanding is a new postmortem that
+      references this one.
+
+  occurred-on:
+    required: true
+    type: date
+
+  detected-on:
+    required: true
+    type: date
+    notes: Separate from `occurred-on` for a reason — the gap between them is often the finding.
+
+  duration:
+    required: true
+    type: string
+
+  severity:
+    required: true
+    type: enum
+    values: $enums.severity
+
+  affected:
+    required: true
+    type: list
+    of: id
+    ref: [services, capabilities]
+
+  prompted:
+    required: false
+    type: list
+    of: id
+    ref: [adrs, runbooks, nfrs, faqs, standards]
+    notes: What this incident caused to be written.
+
+sections:
+  required: [Summary, Timeline, Impact, Root cause, Contributing factors, What went well, Actions]
+  optional: [Related]
+
+index:
+  columns: [id, title, occurred-on, severity, duration, affected]
+  sort: occurred-on
+  order: descending
+
+rules:
+  - id: immutable-after-published
+    description: >
+      Once status is `published`, content changes are limited to typo fixes. Same rule as ADRs.
+  - id: detected-not-before-occurred
+    description: '`detected-on` is on or after `occurred-on`.'
+  - id: what-went-well-required
+    description: >
+      A postmortem that only lists failures teaches half the lesson and makes the next one harder to write
+      honestly. The section is required and must not be empty.
+  - id: blameless
+    description: >
+      Flags personal names inside the Timeline, Root cause and Contributing factors sections. Roles and
+      systems, not people.
+    severity: warning
+  - id: recurring-root-causes
+    description: >
+      Scheduled. Reports root causes recurring across postmortems — the highest-signal output in the corpus.

@@ -1,0 +1,87 @@
+type: discovery
+folder: discoveries
+page: discoveries.md
+tier: observed
+lifecycle: perishable
+
+id:
+  prefix: dsc
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [open, promoted, expired, rejected]
+
+  source:
+    required: true
+    type: enum
+    values: [human, session, dreamed]
+
+  confidence:
+    required: true
+    type: enum
+    values: [unverified, corroborated, confirmed]
+    default: unverified
+    notes: >
+      Stays `unverified` unless genuinely proven. An agent cannot confirm its own observation.
+
+  expires:
+    required: true
+    type: date
+    default-expression: 'created + 90d'
+    notes: >
+      Perishable by default. An observation nobody has needed in three months was probably situational.
+
+  provenance:
+    required: false
+    required-when: 'source == dreamed'
+    type: string
+    notes: >
+      A reference back to the session and passage this came from, so review is a thirty-second check rather
+      than an act of faith. An unverifiable proposal is a rejected proposal.
+
+  applies-to:
+    required: false
+    type: list
+    of: id
+    ref: services
+
+  promoted-to:
+    required: false
+    required-when: 'status == promoted'
+    type: id
+    ref: [faqs, standards]
+    reciprocal: promoted-from
+
+sections:
+  required: [What I saw, Context, Why it might matter]
+  optional: []
+
+index:
+  columns: [id, title, source, confidence, status, expires]
+  sort: expires
+
+rules:
+  - id: low-ceremony
+    description: >
+      Reports discoveries above a length threshold. Capture has to be nearly free or it stops happening; a
+      discovery written like an FAQ suggests the tier boundary is being ignored.
+    severity: warning
+  - id: expiry-sweep
+    description: >
+      Scheduled. Discoveries past `expires` with no promotion are set to `expired` with a note, not deleted.
+  - id: reciprocal-promotion
+    fields: [promoted-to, promoted-from]
+  - id: dreamed-requires-provenance
+    field: provenance
+  - id: no-review-required
+    description: >
+      Documented here so it is not mistaken for an omission: this tier merges on a green build with no
+      reviewer. Authority comes at promotion, not capture.
