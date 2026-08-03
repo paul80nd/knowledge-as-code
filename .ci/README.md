@@ -148,11 +148,15 @@ against a reference corpus, following the same discipline as `index --check`: re
 exit non-zero, never write.
 
 ```bash
-dotnet run .ci/kac.cs -- mechanism --check --against ../other-corpus
+dotnet run .ci/kac.cs -- mechanism --check --against ../other-corpus                      # a local path
+dotnet run .ci/kac.cs -- mechanism --check --against https://github.com/acme/knowledge-as-code   # a git URL
 ```
 
-The reference defaults to `upstream.url` in `knowledge-as-code/mechanism.lock`, so a consumer that records where it
-synced from can run a bare `mechanism --check`. What it reports:
+The reference is either a **local path** or a **git URL**. A URL is cloned to a temporary directory, compared, and
+removed; the ref checked out is `--ref`, else `upstream.synced-from` from `mechanism.lock`, else the remote's default
+branch — so a consumer pinned to a known commit checks against *that* commit rather than a moving branch. The reference
+defaults to `upstream.url` in `mechanism.lock`, so a consumer that records where it synced from can run a bare
+`mechanism --check`. What it reports:
 
 - **synced** files that differ, are missing on either side, or match no manifest rule at all — each an **error** (exit `1`).
 - **forked** files are compared too, but only counted: how many differ from the reference is informational and never fails.

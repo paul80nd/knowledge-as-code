@@ -1,0 +1,6 @@
+version: 1
+corpus: test-consumer-url
+role: consumer
+upstream:
+  url:
+accepted-divergences: []

@@ -76,13 +76,15 @@ checks.SetAction(pr => Commands.Checks(pr.GetValue(checksJsonOpt)));
 // recompute, compare, name what is stale, exit non-zero, never write. `--sync` (the write half)
 // is not implemented yet — see issue #6.
 var mechCheckOpt = new Option<bool>("--check") { Description = "Compare the synced layer against a reference and report drift; never writes." };
-var againstOpt = new Option<string?>("--against") { Description = "Reference corpus to compare against (a path). Defaults to upstream.url in mechanism.lock." };
+var againstOpt = new Option<string?>("--against") { Description = "Reference to compare against — a local path or a git URL. Defaults to upstream.url in mechanism.lock." };
+var refOpt = new Option<string?>("--ref") { Description = "When the reference is a git URL, the commit/tag/branch to check out. Defaults to upstream.synced-from, then the remote's default branch." };
 var mechanism = new Command("mechanism", "Enforce the portability manifest: compare the synced layer against a reference.")
 {
     mechCheckOpt,
-    againstOpt
+    againstOpt,
+    refOpt
 };
-mechanism.SetAction(pr => Commands.Mechanism(repoRoot, pr.GetValue(mechCheckOpt), pr.GetValue(againstOpt)));
+mechanism.SetAction(pr => Commands.Mechanism(repoRoot, pr.GetValue(mechCheckOpt), pr.GetValue(againstOpt), pr.GetValue(refOpt)));
 
 var root = new RootCommand("kac — the knowledge-as-code validator and generator.") { validate, index, checks, mechanism };
 
@@ -278,7 +280,7 @@ internal static class Commands
         return 0;
     }
 
-    public static int Mechanism(string repoRoot, bool check, string? against)
+    public static int Mechanism(string repoRoot, bool check, string? against, string? gitRef)
     {
         if (!check)
         {
@@ -291,16 +293,39 @@ internal static class Commands
 
         var reference = against ?? lockFile.UpstreamUrl;
         if (string.IsNullOrWhiteSpace(reference))
-            return Fail("mechanism: no reference to compare against. Pass --against <path>, "
+            return Fail("mechanism: no reference to compare against. Pass --against <path-or-url>, "
                 + "or set upstream.url in knowledge-as-code/mechanism.lock.");
 
-        var refRoot = Path.GetFullPath(reference, repoRoot);
-        if (!Directory.Exists(refRoot))
-            return Fail($"mechanism: reference corpus not found: {refRoot}");
-        if (Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot))
-            return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
+        // A git URL is cloned to a temp dir (at --ref, else upstream.synced-from, else the default
+        // branch) and removed afterwards; a plain path is compared in place.
+        string refRoot;
+        string? cloneToClean = null;
+        if (GitReference.LooksLikeUrl(reference))
+        {
+            var wanted = gitRef ?? lockFile.SyncedFrom;
+            if (!GitReference.Fetch(reference, wanted, out var cloned, out var error))
+                return Fail($"mechanism: could not fetch reference {reference}: {error}");
+            refRoot = cloned;
+            cloneToClean = cloned;
+            Console.WriteLine($"mechanism: cloned {reference}{(wanted is null ? "" : $" at {wanted}")} for comparison.");
+        }
+        else
+        {
+            refRoot = Path.GetFullPath(reference, repoRoot);
+            if (!Directory.Exists(refRoot))
+                return Fail($"mechanism: reference corpus not found: {refRoot}");
+            if (Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot))
+                return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
+        }
 
-        return MechanismCheck.Run(repoRoot, refRoot, manifest, lockFile);
+        try
+        {
+            return MechanismCheck.Run(repoRoot, refRoot, manifest, lockFile);
+        }
+        finally
+        {
+            if (cloneToClean is not null) GitReference.TryDelete(cloneToClean);
+        }
 
         static int Fail(string message)
         {
@@ -870,6 +895,7 @@ internal class MechanismLock
 {
     public string Role = "";
     public string? UpstreamUrl;
+    public string? SyncedFrom;
     public List<AcceptedDivergence> Accepted = [];
 
     public static MechanismLock Load(string repoRoot)
@@ -880,8 +906,11 @@ internal class MechanismLock
 
         var root = Yaml.LoadFile(path);
         lockFile.Role = Yaml.Str(Yaml.Get(root, "role")) ?? "";
-        var url = Yaml.Str(Yaml.Get(Yaml.Get(root, "upstream"), "url"));
+        var upstream = Yaml.Get(root, "upstream");
+        var url = Yaml.Str(Yaml.Get(upstream, "url"));
         lockFile.UpstreamUrl = string.IsNullOrWhiteSpace(url) ? null : url;
+        var syncedFrom = Yaml.Str(Yaml.Get(upstream, "synced-from"));
+        lockFile.SyncedFrom = string.IsNullOrWhiteSpace(syncedFrom) ? null : syncedFrom;
 
         if (Yaml.Get(root, "accepted-divergences") is YamlSequenceNode seq)
             foreach (var item in seq.Children)
@@ -1061,6 +1090,77 @@ internal static class MechanismCheck
             .Select(f => Path.GetRelativePath(root, f).Replace('\\', '/'))
             .Where(rel => rel != ".git" && !rel.StartsWith(".git/"))
     ];
+}
+
+// Fetching a git-URL reference for `mechanism --check`: clone it to a temp directory, optionally at a
+// specific ref, and tidy up afterwards. A local-path reference is handled by the caller, not here.
+internal static class GitReference
+{
+    // A URL scheme (https://, ssh://, git://, file://) or scp-style host:path (git@host:owner/repo).
+    // A local path — "../x", "/abs/x", "x" — has neither, so it falls through to path handling.
+    public static bool LooksLikeUrl(string reference) =>
+        Regex.IsMatch(reference, @"^[a-zA-Z][a-zA-Z0-9+.-]*://")
+        || Regex.IsMatch(reference, @"^[^/\\]+@[^/\\]+:");
+
+    public static bool Fetch(string url, string? gitRef, out string root, out string error)
+    {
+        root = Path.Combine(Path.GetTempPath(), "kac-ref-" + Guid.NewGuid().ToString("N"));
+
+        // No ref: a shallow clone of the default branch is enough. A specific ref may be any commit,
+        // so clone in full and check it out — clone --branch only accepts branch and tag names.
+        var (ok, err) = gitRef is null
+            ? Git("clone", "--depth", "1", "--quiet", url, root)
+            : Git("clone", "--quiet", url, root);
+        if (!ok) { error = err; TryDelete(root); return false; }
+
+        if (gitRef is not null)
+        {
+            (ok, err) = Git("-C", root, "checkout", "--quiet", gitRef);
+            if (!ok) { error = err; TryDelete(root); return false; }
+        }
+
+        error = "";
+        return true;
+    }
+
+    private static (bool ok, string error) Git(params string[] args)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo("git")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            foreach (var a in args) psi.ArgumentList.Add(a);
+            using var p = Process.Start(psi);
+            if (p is null) return (false, "could not start git");
+            _ = p.StandardOutput.ReadToEndAsync();
+            var stderr = p.StandardError.ReadToEndAsync();
+            p.WaitForExit();
+            if (p.ExitCode == 0) return (true, "");
+            var message = stderr.Result.Trim();
+            return (false, message.Length > 0 ? message : $"git exited {p.ExitCode}");
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    public static void TryDelete(string dir)
+    {
+        try
+        {
+            if (!Directory.Exists(dir)) return;
+            // Git pack files are read-only on some platforms; clear the bit before deleting.
+            foreach (var f in Directory.EnumerateFiles(dir, "*", SearchOption.AllDirectories))
+                File.SetAttributes(f, FileAttributes.Normal);
+            Directory.Delete(dir, recursive: true);
+        }
+        catch { /* best effort — a temp clone left behind is harmless */ }
+    }
 }
 
 // ---------------------------------------------------------------------------

@@ -71,6 +71,8 @@ foreach (var scenario in scenarios)
     //   index-stale  run `index --check` against a hand-broken corpus, assert staleness is caught (exit 1)
     //   mechanism    run `mechanism --check` (corpus/ as local, reference/ as the source); assert
     //                the synced paths in expected-drift.txt are flagged (exit 1), or in step (exit 0)
+    //   mechanism-url  as mechanism, but the reference/ tree is git-inited and passed as a file://
+    //                URL, exercising the clone-and-compare path rather than an in-place directory
     var modePath = Path.Combine(scenario, "mode");
     var mode = File.Exists(modePath) ? File.ReadAllText(modePath).Trim() : "validate";
 
@@ -88,7 +90,10 @@ foreach (var scenario in scenarios)
                 RunIndexScenario(name, scenario, mustBeStale: true);
                 break;
             case "mechanism":
-                RunMechanismScenario(name, scenario, corpusDir);
+                RunMechanismScenario(name, scenario, corpusDir, useUrl: false);
+                break;
+            case "mechanism-url":
+                RunMechanismScenario(name, scenario, corpusDir, useUrl: true);
                 break;
             default:
                 failures.Add(name);
@@ -208,7 +213,7 @@ void RunIndexScenario(string name, string scenario, bool mustBeStale)
 // lists the synced paths that must be named in the failure output; absent/empty means "expect in
 // step" (exit 0). Accepted divergences and forked differences are exercised by the fixture but must
 // not fail the run — the golden is the exit code plus the named synced paths, not free-form output.
-void RunMechanismScenario(string name, string scenario, string corpusDir)
+void RunMechanismScenario(string name, string scenario, string corpusDir, bool useUrl)
 {
     var referenceDir = Path.Combine(scenario, "reference");
     if (!Directory.Exists(referenceDir))
@@ -233,7 +238,16 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
     var refTemp = AssembleMechanismTemp(schemaDir, manifestFile, referenceDir);
     try
     {
-        var (stdout, stderr, exit) = Run(localTemp, "dotnet", "run", kac, "--", "mechanism", "--check", "--against", refTemp);
+        // useUrl exercises the git-URL path: make the reference a real repo and hand kac a file://
+        // URL, so it clones and compares. Otherwise the reference is compared in place as a path.
+        var against = refTemp;
+        if (useUrl)
+        {
+            GitInitCommit(refTemp);
+            against = "file://" + refTemp;
+        }
+
+        var (stdout, stderr, exit) = Run(localTemp, "dotnet", "run", kac, "--", "mechanism", "--check", "--against", against);
         var output = stderr + stdout;
 
         if (expected.Count == 0)
@@ -365,6 +379,20 @@ static string AssembleMechanismTemp(string schemaDir, string manifestFile, strin
     File.Copy(manifestFile, Path.Combine(temp, "knowledge-as-code", "manifest.yaml"));
     CopyTree(subtree, temp);
     return temp;
+}
+
+// Turn an assembled tree into a one-commit git repo so it can be handed to kac as a file:// URL.
+// Identity is passed with -c so the suite does not depend on the runner's global git config.
+static void GitInitCommit(string dir)
+{
+    (string, int) Ok(string what, (string _, string stderr, int exit) r) =>
+        r.exit == 0 ? ("", 0) : throw new Exception($"git {what} failed (exit {r.exit}).\n{r.stderr}");
+
+    Ok("init", Run(dir, "git", "init", "--quiet"));
+    Ok("add", Run(dir, "git", "add", "-A"));
+    Ok("commit", Run(dir, "git",
+        "-c", "user.email=tests@kac.local", "-c", "user.name=kac-tests",
+        "commit", "--quiet", "-m", "fixture reference"));
 }
 
 // Run `kac validate --json` against an assembled corpus and return the JSON.
