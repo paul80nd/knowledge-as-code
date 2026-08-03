@@ -1,0 +1,41 @@
+# CI for the knowledge-as-code wiki (GitHub Actions).
+#
+# The GitHub equivalent of azure-pipelines.yml: runs the kac validator and the
+# generated-content freshness check on pull requests into main. It NEVER writes
+# or commits generated files — `index --check` only verifies they are fresh and
+# fails, naming the command a human runs locally (`dotnet run .ci/kac.cs -- index`).
+# A workflow must never push; the job is granted read-only contents permission.
+
+name: kac
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the corpus
+        uses: actions/checkout@v4
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # One invocation per subcommand, run sequentially. File-based apps share
+      # build output, so the two kac runs must not execute concurrently.
+      - name: Validate frontmatter, links and structure
+        run: dotnet run .ci/kac.cs -- validate
+
+      - name: Check generated indexes are fresh
+        run: dotnet run .ci/kac.cs -- index --check
