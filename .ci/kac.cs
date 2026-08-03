@@ -10,6 +10,7 @@
 //
 //   validate   check the corpus against knowledge-as-code/schema/*.yaml   (this file)
 //   index      regenerate INDEX.md and the generated blocks in <type>.md   (phase 3)
+//   mechanism  enforce the portability manifest: synced layer vs a reference (this file)
 //   digest     rules digest                                                (later)
 //   drift      estate comparison                                           (later)
 //
@@ -20,6 +21,7 @@
 using System.CommandLine;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -69,7 +71,20 @@ var checks = new Command("checks", "List every check the validator implements.")
 };
 checks.SetAction(pr => Commands.Checks(pr.GetValue(checksJsonOpt)));
 
-var root = new RootCommand("kac — the knowledge-as-code validator and generator.") { validate, index, checks };
+// mechanism — enforce the portability manifest. `--check` compares this corpus's synced layer
+// against a reference copy and reports drift, following the same discipline as `index --check`:
+// recompute, compare, name what is stale, exit non-zero, never write. `--sync` (the write half)
+// is not implemented yet — see issue #6.
+var mechCheckOpt = new Option<bool>("--check") { Description = "Compare the synced layer against a reference and report drift; never writes." };
+var againstOpt = new Option<string?>("--against") { Description = "Reference corpus to compare against (a path). Defaults to upstream.url in mechanism.lock." };
+var mechanism = new Command("mechanism", "Enforce the portability manifest: compare the synced layer against a reference.")
+{
+    mechCheckOpt,
+    againstOpt
+};
+mechanism.SetAction(pr => Commands.Mechanism(repoRoot, pr.GetValue(mechCheckOpt), pr.GetValue(againstOpt)));
+
+var root = new RootCommand("kac — the knowledge-as-code validator and generator.") { validate, index, checks, mechanism };
 
 // Bad arguments exit 1 (System.CommandLine's default) — the printed error makes it
 // obvious it was a usage problem rather than corpus errors. Exit 2 is reserved for the
@@ -261,6 +276,37 @@ internal static class Commands
         Console.WriteLine();
         Console.WriteLine($"{CheckCatalogue.All.Count} checks.");
         return 0;
+    }
+
+    public static int Mechanism(string repoRoot, bool check, string? against)
+    {
+        if (!check)
+        {
+            Console.Error.WriteLine("mechanism: specify --check (mechanism --sync is not yet implemented — see issue #6).");
+            return 1;
+        }
+
+        var manifest = Manifest.Load(repoRoot);
+        var lockFile = MechanismLock.Load(repoRoot);
+
+        var reference = against ?? lockFile.UpstreamUrl;
+        if (string.IsNullOrWhiteSpace(reference))
+            return Fail("mechanism: no reference to compare against. Pass --against <path>, "
+                + "or set upstream.url in knowledge-as-code/mechanism.lock.");
+
+        var refRoot = Path.GetFullPath(reference, repoRoot);
+        if (!Directory.Exists(refRoot))
+            return Fail($"mechanism: reference corpus not found: {refRoot}");
+        if (Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot))
+            return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
+
+        return MechanismCheck.Run(repoRoot, refRoot, manifest, lockFile);
+
+        static int Fail(string message)
+        {
+            Console.Error.WriteLine(message);
+            return 1;
+        }
     }
 }
 
@@ -773,6 +819,247 @@ internal static class Corpus
             .EnumerateFiles(repoRoot, "*.md", SearchOption.AllDirectories)
             .Select(f => Path.GetRelativePath(repoRoot, f).Replace('\\', '/'))
             .Where(rel => !SkipDirs.Any(d => rel == d || rel.StartsWith(d + "/")))
+    ];
+}
+
+// ---------------------------------------------------------------------------
+// Portability manifest & mechanism sync state
+// ---------------------------------------------------------------------------
+
+// One rule from knowledge-as-code/manifest.yaml: a set of path globs that all resolve to one layer.
+internal record ManifestRule(IReadOnlyList<string> Patterns, string Layer);
+
+internal class Manifest
+{
+    public List<ManifestRule> Rules = [];
+
+    public static Manifest Load(string repoRoot)
+    {
+        var m = new Manifest();
+        var root = Yaml.LoadFile(Path.Combine(repoRoot, "knowledge-as-code", "manifest.yaml"));
+        if (Yaml.Get(root, "rules") is YamlSequenceNode rules)
+            foreach (var rule in rules.Children)
+            {
+                var pathNode = Yaml.Get(rule, "path");
+                var patterns = pathNode is YamlSequenceNode
+                    ? Yaml.StrList(pathNode)
+                    : Yaml.Str(pathNode) is { } single ? [single] : [];
+                var layer = Yaml.Str(Yaml.Get(rule, "layer"));
+                if (patterns.Count > 0 && layer is not null)
+                    m.Rules.Add(new ManifestRule(patterns, layer));
+            }
+        return m;
+    }
+
+    // First rule with a matching glob wins, mirroring the manifest's own "evaluated in order"
+    // contract. Returns null when nothing matches — which the check reports as an error, since the
+    // manifest is meant to resolve every file (its final rule is a catch-all).
+    public string? Resolve(string relPath)
+    {
+        foreach (var rule in Rules)
+            foreach (var pattern in rule.Patterns)
+                if (Glob.IsMatch(relPath, pattern))
+                    return rule.Layer;
+        return null;
+    }
+}
+
+internal record AcceptedDivergence(string Path, string? Reason);
+
+internal class MechanismLock
+{
+    public string Role = "";
+    public string? UpstreamUrl;
+    public List<AcceptedDivergence> Accepted = [];
+
+    public static MechanismLock Load(string repoRoot)
+    {
+        var path = Path.Combine(repoRoot, "knowledge-as-code", "mechanism.lock");
+        var lockFile = new MechanismLock();
+        if (!File.Exists(path)) return lockFile;
+
+        var root = Yaml.LoadFile(path);
+        lockFile.Role = Yaml.Str(Yaml.Get(root, "role")) ?? "";
+        var url = Yaml.Str(Yaml.Get(Yaml.Get(root, "upstream"), "url"));
+        lockFile.UpstreamUrl = string.IsNullOrWhiteSpace(url) ? null : url;
+
+        if (Yaml.Get(root, "accepted-divergences") is YamlSequenceNode seq)
+            foreach (var item in seq.Children)
+                if (Yaml.Str(Yaml.Get(item, "path")) is { } p)
+                    lockFile.Accepted.Add(new AcceptedDivergence(p, Yaml.Str(Yaml.Get(item, "reason"))));
+
+        return lockFile;
+    }
+}
+
+// Minimal glob → regex for manifest patterns: `**` spans path segments, `*` stays within one, and a
+// leading `**/` also matches at the root. Enough for the manifest's vocabulary, not a full gitignore.
+internal static class Glob
+{
+    private static readonly Dictionary<string, Regex> Cache = [];
+
+    public static bool IsMatch(string path, string pattern) =>
+        (Cache.TryGetValue(pattern, out var re) ? re : Cache[pattern] = Compile(pattern)).IsMatch(path);
+
+    private static Regex Compile(string glob)
+    {
+        var sb = new StringBuilder("^");
+        var i = 0;
+        if (glob.StartsWith("**/")) { sb.Append("(?:.*/)?"); i = 3; }
+        for (; i < glob.Length; i++)
+        {
+            var c = glob[i];
+            if (c == '*')
+            {
+                if (i + 1 < glob.Length && glob[i + 1] == '*') { sb.Append(".*"); i++; }
+                else sb.Append("[^/]*");
+            }
+            else if (c == '/') sb.Append('/');
+            else if ("\\.+?()[]{}|^$".IndexOf(c) >= 0) sb.Append('\\').Append(c);
+            else sb.Append(c);
+        }
+        sb.Append('$');
+        return new Regex(sb.ToString(), RegexOptions.CultureInvariant);
+    }
+}
+
+// The `mechanism --check` engine: resolve every file against the manifest and compare the synced
+// layer against the reference. Read-only — it classifies and reports, and never writes.
+internal static class MechanismCheck
+{
+    public static int Run(string localRoot, string refRoot, Manifest manifest, MechanismLock lockFile)
+    {
+        var accepted = lockFile.Accepted.Select(a => a.Path).ToHashSet(StringComparer.Ordinal);
+        var localFiles = ListFiles(localRoot);
+        var refFiles = ListFiles(refRoot);
+
+        var drift = new List<string>();           // synced, both present, content differs
+        var missingLocally = new List<string>();  // synced, in the reference but not here
+        var missingUpstream = new List<string>(); // synced, here but not in the reference
+        var unclassified = new List<string>();    // matches no manifest rule
+        var resolvedDivergence = new List<string>(); // accepted, but now identical again
+        var syncedInStep = 0;
+        var forkedShared = 0;
+        var forkedDiffer = 0;
+        var acceptedActive = 0;
+
+        foreach (var rel in localFiles.Union(refFiles).OrderBy(r => r, StringComparer.Ordinal))
+        {
+            var layer = manifest.Resolve(rel);
+            if (layer is null) { unclassified.Add(rel); continue; }
+
+            var inLocal = localFiles.Contains(rel);
+            var inRef = refFiles.Contains(rel);
+
+            switch (layer)
+            {
+                case "synced":
+                    var identical = inLocal && inRef
+                        && ReadLf(Path.Combine(localRoot, rel)) == ReadLf(Path.Combine(refRoot, rel));
+
+                    if (accepted.Contains(rel))
+                    {
+                        if (identical) resolvedDivergence.Add(rel);
+                        else acceptedActive++;
+                        break;
+                    }
+
+                    if (!inRef) missingUpstream.Add(rel);
+                    else if (!inLocal) missingLocally.Add(rel);
+                    else if (identical) syncedInStep++;
+                    else drift.Add(rel);
+                    break;
+
+                case "forked":
+                    if (inLocal && inRef)
+                    {
+                        forkedShared++;
+                        if (ReadLf(Path.Combine(localRoot, rel)) != ReadLf(Path.Combine(refRoot, rel)))
+                            forkedDiffer++;
+                    }
+                    break;
+
+                    // generated / local / ignored: each corpus owns these; nothing to compare.
+            }
+        }
+
+        Console.WriteLine($"mechanism: comparing the synced layer against {refRoot}");
+        var errors = Section("DRIFT — synced files differ from the reference", drift)
+            + Section("MISSING LOCALLY — synced files in the reference but not here", missingLocally)
+            + Section("MISSING UPSTREAM — synced files here but not in the reference", missingUpstream)
+            + Section("UNCLASSIFIED — files matching no manifest rule", unclassified);
+
+        if (resolvedDivergence.Count > 0)
+        {
+            Console.WriteLine("RESOLVED — accepted divergences that are now identical again (delete them from mechanism.lock):");
+            foreach (var p in resolvedDivergence) Console.WriteLine($"  {p}");
+        }
+
+        Console.WriteLine(
+            $"synced: {syncedInStep} in step, {drift.Count} drifted; "
+            + $"forked: {forkedShared} shared ({forkedDiffer} differ, informational); "
+            + $"accepted divergences: {acceptedActive}.");
+
+        if (errors > 0)
+        {
+            Console.Error.WriteLine($"mechanism check failed — {errors} synced-layer problem(s) above.");
+            return 1;
+        }
+
+        Console.WriteLine("mechanism: synced layer in step.");
+        return 0;
+
+        static int Section(string heading, List<string> paths)
+        {
+            if (paths.Count == 0) return 0;
+            Console.Error.WriteLine($"{heading}:");
+            foreach (var p in paths) Console.Error.WriteLine($"  {p}");
+            return paths.Count;
+        }
+    }
+
+    private static string ReadLf(string path) => File.ReadAllText(path).Replace("\r\n", "\n");
+
+    // Every tracked (and not-ignored) file, relative and forward-slashed. git ls-files respects
+    // .gitignore and never lists .git/; the fallback walk lets the check run in a non-git tree
+    // (the test harness assembles one), skipping only .git.
+    private static HashSet<string> ListFiles(string root)
+    {
+        var files = GitListFiles(root) ?? WalkAll(root);
+        return new HashSet<string>(files, StringComparer.Ordinal);
+    }
+
+    private static List<string>? GitListFiles(string root)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo("git", "ls-files --cached --others --exclude-standard")
+            {
+                WorkingDirectory = root,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            using var p = Process.Start(psi);
+            if (p is null) return null;
+            var stdout = p.StandardOutput.ReadToEndAsync();
+            _ = p.StandardError.ReadToEndAsync();
+            p.WaitForExit();
+            if (p.ExitCode != 0) return null;
+            return [.. stdout.Result.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)];
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static List<string> WalkAll(string root) =>
+    [
+        .. Directory
+            .EnumerateFiles(root, "*", SearchOption.AllDirectories)
+            .Select(f => Path.GetRelativePath(root, f).Replace('\\', '/'))
+            .Where(rel => rel != ".git" && !rel.StartsWith(".git/"))
     ];
 }
 
