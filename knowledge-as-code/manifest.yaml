@@ -117,8 +117,9 @@ rules:
       They are also excluded from validation today, so nothing catches the drift either way.
       Provisionally `forked`; revisit once a second corpus exists and the cost is visible.
 
-  # Type root pages: generic structure, local examples. `glossary.md` is the clearest case — its
-  # conventions are the framework's, but the passage that earns its place is a local vocabulary.
+  # Type root pages: framework structure, shipped generic. They are `forked` rather than `synced`
+  # because each corpus is expected to make them specific — `glossary.md` is the clearest case: its
+  # conventions are the framework's, but the vocabulary that will earn its place is the corpus's own.
   - path:
       - "adrs.md"
       - "capabilities.md"
