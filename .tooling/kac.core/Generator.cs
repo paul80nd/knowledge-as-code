@@ -51,7 +51,7 @@ public static class Generator
         var parts = new List<string>();
         if (f is { Type: "enum", Values.Count: > 0 })
             parts.Add(string.Join(" · ", f.Values.Select(v => $"`{v}`")));
-        if (!string.IsNullOrEmpty(f.Notes)) parts.Add(f.Notes);
+        if (!string.IsNullOrEmpty(f.TableText)) parts.Add(f.TableText);
         if (!string.IsNullOrEmpty(f.RequiredWhen))
             parts.Add($"Required once `{f.RequiredWhen.Split("==").Last().Trim()}`.");
         return Escape(string.Join(" ", parts));

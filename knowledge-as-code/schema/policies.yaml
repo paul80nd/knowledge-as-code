@@ -28,6 +28,7 @@ fields:
     type: list
     of: string
     pattern: '^ISO27001:2022 A\.\d+\.\d+$'
+    description: 'e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance.'
     notes: >
       ISO/IEC 27001:2022 Annex A references. This records **alignment, not compliance or certification** —
       we are not registered and are not audited. The field name is deliberate; wording that implies
@@ -39,10 +40,15 @@ fields:
     of: id
     ref: standards
     reciprocal: implements
+    description: Standard ids.
+    notes: >
+      The standards that put this policy into practice. A policy nothing implements is a statement of
+      intent and should say so in its Purpose.
 
   review-by:
     required: true
     type: date
+    description: Quoted. Annual is usually right for a policy.
 
 sections:
   required: [Purpose, Scope, Commitments]

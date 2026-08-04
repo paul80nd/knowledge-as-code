@@ -42,12 +42,12 @@ specific decision with the alternatives that were weighed; a policy states a pos
 
 <!-- BEGIN GENERATED: schema-policies -->
 
-| Field            | Req | Type | Notes                                                                                                                                                                                                                          |
-| ---------------- | --- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `status`         | ●   | enum | `draft` · `active` · `retired`                                                                                                                                                                                                 |
-| `aligns-with`    |     | list | ISO/IEC 27001:2022 Annex A references. This records **alignment, not compliance or certification** — we are not registered and are not audited. The field name is deliberate; wording that implies certification fails review. |
-| `implemented-by` |     | list |                                                                                                                                                                                                                                |
-| `review-by`      | ●   | date |                                                                                                                                                                                                                                |
+| Field            | Req | Type | Notes                                                   |
+| ---------------- | --- | ---- | ------------------------------------------------------- |
+| `status`         | ●   | enum | `draft` · `active` · `retired`                          |
+| `aligns-with`    |     | list | e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance. |
+| `implemented-by` |     | list | Standard ids.                                           |
+| `review-by`      | ●   | date | Quoted. Annual is usually right for a policy.           |
 
 <!-- END GENERATED: schema-policies -->
 

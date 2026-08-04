@@ -16,6 +16,27 @@ public class GeneratorTests
     }
 
     [Fact]
+    public void SchemaTable_prefers_description_and_falls_back_to_notes()
+    {
+        var t = new TypeSchema
+        {
+            FieldOrder = ["both", "notes-only", "neither"],
+            Fields = new Dictionary<string, FieldSpec>
+            {
+                ["both"] = new() { Name = "both", Description = "SHORT", Notes = "LONG" },
+                ["notes-only"] = new() { Name = "notes-only", Notes = "FALLBACK" },
+                ["neither"] = new() { Name = "neither" }
+            }
+        };
+
+        var table = Generator.SchemaTable(t);
+
+        Assert.Contains("SHORT", table);
+        Assert.DoesNotContain("LONG", table); // description wins outright — the two are not concatenated
+        Assert.Contains("FALLBACK", table);   // notes still render where no description exists
+    }
+
+    [Fact]
     public void ChecksTable_omits_rows_for_checks_the_type_cannot_trip()
     {
         // A type declaring no rules and no reciprocal/mirrors-section field: the schema-conditional

@@ -17,7 +17,15 @@ public class FieldSpec
     public string? Reciprocal; // field on the target that must point back
     public string? Pattern;
     public string? MirrorsSection; // section whose ids this field must mirror
-    public string? Notes; // prose, rendered into the generated Metadata table
+
+    // Two audiences, deliberately separate. `Description` is what a reader needs at a glance and is
+    // what the generated Metadata table renders; `Notes` is the longer why-it-exists, which belongs
+    // in the schema where there is room for it. A field with only Notes falls back to them, so the
+    // two can be adopted a schema at a time rather than all at once.
+    public string? Description;
+    public string? Notes;
+
+    public string? TableText => string.IsNullOrEmpty(Description) ? Notes : Description;
 }
 
 public class TypeSchema
@@ -156,6 +164,7 @@ public class Schema
             Reciprocal = Yaml.Str(Yaml.Get(node, "reciprocal")),
             Pattern = Yaml.Str(Yaml.Get(node, "pattern")),
             MirrorsSection = Yaml.Str(Yaml.Get(node, "mirrors-section")),
+            Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
             Notes = Collapse(Yaml.Str(Yaml.Get(node, "notes")))
         };
 
