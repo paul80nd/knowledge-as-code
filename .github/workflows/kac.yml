@@ -3,7 +3,7 @@
 # The GitHub equivalent of azure-pipelines.yml: runs the kac validator and the
 # generated-content freshness check on pull requests into main. It NEVER writes
 # or commits generated files — `index --check` only verifies they are fresh and
-# fails, naming the command a human runs locally (`dotnet run .ci/kac.cs -- index`).
+# fails, naming the command a human runs locally (`dotnet run .tooling/kac.cs -- index`).
 # A workflow must never push; the job is granted read-only contents permission.
 
 name: kac
@@ -35,7 +35,20 @@ jobs:
       # One invocation per subcommand, run sequentially. File-based apps share
       # build output, so the two kac runs must not execute concurrently.
       - name: Validate frontmatter, links and structure
-        run: dotnet run .ci/kac.cs -- validate
+        run: dotnet run .tooling/kac.cs -- validate
 
       - name: Check generated indexes are fresh
-        run: dotnet run .ci/kac.cs -- index --check
+        run: dotnet run .tooling/kac.cs -- index --check
+
+      # kac's own coverage, in three layers: focused xUnit unit tests over kac.core's shared
+      # helpers; Reqnroll feature tests that drive the validator in-process as behaviour specs;
+      # and the golden/subprocess suite (fixtures diffed against committed goldens, plus the
+      # coverage + checks-table gates and the end-to-end CLI contract).
+      - name: Run kac.core unit tests
+        run: dotnet test .tooling/kac.tests
+
+      - name: Run kac feature tests
+        run: dotnet test .tooling/kac.features
+
+      - name: Run the golden test suite
+        run: dotnet run .tooling/kac-tests.cs

@@ -39,7 +39,7 @@ upstream:
 # rather than failing, and flags any that have since become identical again (delete those).
 #
 #   accepted-divergences:
-#     - path: .ci/kac.cs
+#     - path: .tooling/kac.cs
 #       reason: Pinned to .NET 8 — this build agent has no .NET 10 SDK.
 #       since: 2026-08-03
 #       revisit: When the agent image is upgraded.

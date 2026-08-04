@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The mechanics of kac, split out of the single-file entrypoint (.tooling/kac.cs) so the code can
+       span multiple files and be unit-tested in-process. The entrypoint references this via a
+       `#:project` directive, so `dotnet run .tooling/kac.cs` still builds and runs it with no extra step. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Keep the core AOT-friendly: turns on the trim/AOT/single-file analyzers so any
+         reflection-based or otherwise AOT-hostile code fails the build here, up front. -->
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" Version="18.*" />
+    <PackageReference Include="Markdig" Version="1.*" />
+  </ItemGroup>
+
+</Project>

@@ -1,2 +1,0 @@
-.ci/tool.txt
-.ci/new-tool.txt
