@@ -1,12 +1,30 @@
+---
+id: std-NNNN
+tier: normative
+status: draft
+axis:
+derived-from:
+implements:
+verified-by:
+applies-to:
+review-by:
+owner:
+tags:
+  - a
+  - b
+---
+
 # Standard: <Title>
 
-**Status:** Draft | Active | Deprecated | Superseded by [<standard>](<slug>.md)
-**Since:** YYYY-MM-DD &nbsp; **Last updated:** YYYY-MM-DD
-**Applies to:** <scope — e.g. "All public HTTP APIs">
-**Derived from:** [ADR-NNNN]
+_(Frontmatter notes — delete this block. **`id`** is `std-` plus a four-digit number, never reused. **`status`** is
+`draft` until agreed, then `active`, and later `deprecated` or `superseded`; values are lowercase. **`axis`** places the
+standard at its true altitude — the layer where the rule is actually true. **`derived-from`** lists the ADR id(s) this
+standard distils; a standard citing neither an ADR here nor a policy in `implements` is guidance, not a standard.
+**`applies-to`** lists service ids, or `all`. **`review-by`** is a quoted `"YYYY-MM-DD"` and drives the staleness
+report.)_
 
-_(Keep one status. Standards are living documents — unlike ADRs they are edited in place as practice matures. Record
-material changes in the Changelog at the bottom rather than rewriting silently.)_
+Standards are living documents — unlike ADRs they are edited in place as practice matures. Record material changes in
+the Changelog at the bottom rather than rewriting silently.
 
 ## Summary
 
@@ -45,7 +63,7 @@ makes the standard *usable* rather than merely readable.
 - [ ] ...
 - [ ] ...
 
-## Rationale & provenance
+## Rationale and provenance
 
 One or two lines on *why*, then link down to the ADR(s) that decided it. Do not restate the ADR's full reasoning — the
 ADR owns the "why"; this standard owns the "what". Link, don't duplicate.

@@ -7,7 +7,7 @@ Status: **proposal / not started.** Captured for a later session.
 Every type schema carries a `rules:` block. Most entries are **prose intent, not executable
 checks** — a backlog of ~25 rules described in `description:` fields, of which only a handful are
 wired to C#. Today wiring one means adding a hard-coded arm to the `switch (ruleId)` in
-`Validator.CheckWarnings` (`kac.cs`). Twelve near-identical conditionals and threshold checks are
+`Validator.CheckWarnings` (`kac.core/Validator.cs`). Twelve near-identical conditionals and threshold checks are
 waiting behind that switch.
 
 This spec proposes turning the **field-predicate and simple-structural** rules into data: a
@@ -141,7 +141,7 @@ evaluator never re-parses markdown.**
 
 Adding a fact = adding one method to `Facts`. The grammar itself never changes.
 
-## C# design (in `kac.cs`)
+## C# design (in `kac.core`)
 
 Two new pieces plus small edits to three existing spots.
 

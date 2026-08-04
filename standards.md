@@ -39,8 +39,8 @@ back to the ADR only when they need the deeper "why".
 ## Categories
 
 Standards are stated at their true **altitude** along three axes and **composed** — the enforced rule-set for a piece of
-work is the union of the layers that apply (`common ∪ platform ∪ framework ∪ domain`). See the
-[standards index](standards/README.md#the-three-axes) for the composition rule and placement heuristic.
+work is the union of the layers that apply (`common ∪ platform ∪ framework ∪ domain`). The axes, and the heuristic for
+placing a rule on the right one, are set out below.
 
 * **common** — platform-agnostic principles (testing philosophy, code-quality-as-a-gate). _Active._
 * **platform** — language / runtime / framework specifics: `node/`, `lit/` (future `dotnet/`). _Active._
@@ -57,8 +57,9 @@ categories stay distinct; the common and platform axes let a rule live once, at 
 
 ## Where to find them
 
-* [Standards index, categories, conventions, and template](standards/README.md) — the catalogue, the process for
-  adding a new standard, and the template to copy.
+* **[→ Standards index](standards/INDEX.md)** — the generated catalogue of every standard, grouped by axis.
+* **[`template.md`](standards/template.md)** — copy this to start a new standard; the categories above and the process
+  below cover the rest.
 
 ## Metadata
 
@@ -86,3 +87,11 @@ or move it to the rationale section. Every **MUST** and **MUST NOT** should have
 control's mechanism is `not-enforced` — an honest gap is more useful than a silent one.
 
 Standards are living documents. Material changes are recorded in the changelog rather than made silently.
+
+## What CI checks
+
+<!-- BEGIN GENERATED: checks-standards -->
+
+_No automated checks yet — see [Automation](/knowledge-as-code/automation.md)._
+
+<!-- END GENERATED: checks-standards -->

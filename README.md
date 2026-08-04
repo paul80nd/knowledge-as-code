@@ -27,7 +27,7 @@ Which files fall on which side is declared in
 
 |                |                                                                                                  |
 |----------------|--------------------------------------------------------------------------------------------------|
-| `kac validate` | ~20 checks — frontmatter against schema, identity, structure, link resolution, graph reciprocity |
+| `kac validate` | ~30 checks — frontmatter against schema, identity, structure, link resolution, graph reciprocity |
 | `kac index`    | Generates `<type>/INDEX.md` and the schema/checks tables inside each type root page              |
 | `kac checks`   | Lists every check the validator implements                                                       |
 | Tests          | Three layers — unit (`kac.tests`), Reqnroll feature specs (`kac.features`), golden fixtures (`kac-tests.cs`) |

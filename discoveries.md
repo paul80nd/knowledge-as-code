@@ -53,9 +53,9 @@ Boundaries:
 
 ## Capturing a discovery
 
-Low ceremony on purpose. Title, what you observed, why it might matter, and the context you were in. Set
-`confidence: unverified` unless you've genuinely proven it. Don't tidy it up; don't verify it first; don't write it as
-an FAQ.
+Low ceremony on purpose. Copy [`template.md`](discoveries/template.md) and fill in a title, what you observed, why it
+might matter, and the context you were in. Set `confidence: unverified` unless you've genuinely proven it. Don't tidy it
+up; don't verify it first; don't write it as an FAQ.
 
 Discoveries expire after 90 days by default. That's a feature — an observation nobody has needed in three months was
 probably situational.
