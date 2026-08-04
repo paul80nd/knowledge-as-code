@@ -2,6 +2,9 @@
 .idea/
 *.sln.iml
 
+# Per-machine Rider/ReSharper state — absolute paths and test-session ids
+*.DotSettings.user
+
 # macOS
 .DS_Store
 

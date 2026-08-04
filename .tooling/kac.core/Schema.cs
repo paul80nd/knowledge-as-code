@@ -1,5 +1,6 @@
 using YamlDotNet.RepresentationModel;
 
+namespace kac.core;
 // ---------------------------------------------------------------------------
 // Schema model — loaded from knowledge-as-code/schema/*.yaml
 // ---------------------------------------------------------------------------
@@ -34,7 +35,7 @@ public class TypeSchema
     public List<string> OptionalSections = [];
     public List<string> IndexColumns = [];
     public string? IndexSort;
-    public List<Dictionary<string, object>> Rules = [];
+    public readonly List<Dictionary<string, object>> Rules = [];
 }
 
 public class Schema
@@ -42,8 +43,8 @@ public class Schema
     public List<string> UniversalOrder = [];
     public Dictionary<string, FieldSpec> Universal = [];
     public List<string> Reserved = [];
-    public Dictionary<string, List<string>> Enums = [];
-    public Dictionary<string, TypeSchema> ByFolder = [];
+    public readonly Dictionary<string, List<string>> Enums = [];
+    public readonly Dictionary<string, TypeSchema> ByFolder = [];
 
     public static Schema Load(string repoRoot)
     {

@@ -1,5 +1,10 @@
 // Unit tests for the pure Generator helpers. The full INDEX/<type>.md generation is covered by the
 // golden 'index' scenario; these pin the table/catalogue consistency and the splice in-process.
+
+using kac.core;
+
+namespace kac.tests;
+
 public class GeneratorTests
 {
     [Fact]
@@ -13,7 +18,7 @@ public class GeneratorTests
     [Fact]
     public void SpliceBlock_replaces_only_between_the_named_markers()
     {
-        var text = "before\n<!-- BEGIN GENERATED: x -->\nOLD\n<!-- END GENERATED: x -->\nafter";
+        const string text = "before\n<!-- BEGIN GENERATED: x -->\nOLD\n<!-- END GENERATED: x -->\nafter";
 
         var result = Generator.SpliceBlock(text, "x", "NEW");
 

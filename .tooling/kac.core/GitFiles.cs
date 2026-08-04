@@ -4,6 +4,8 @@ using System.Diagnostics;
 // File listing — shared by corpus discovery and the mechanism check
 // ---------------------------------------------------------------------------
 
+namespace kac.core;
+
 public static class GitFiles
 {
     // Tracked + untracked-but-not-ignored files, relative and forward-slashed, or null when git is

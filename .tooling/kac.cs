@@ -16,6 +16,7 @@
 // See .tooling/README.md for what fails versus warns and how each check maps to the schema.
 
 using System.CommandLine;
+using kac.core;
 
 var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
 if (repoRoot is null)

@@ -2,6 +2,8 @@
 // Corpus discovery
 // ---------------------------------------------------------------------------
 
+namespace kac.core;
+
 public static class Corpus
 {
     private static readonly string[] SkipDirs = [".git", ".idea", ".claude"];

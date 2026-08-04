@@ -1,9 +1,13 @@
-using System.Text.Json; // JsonSerializer for the --json output paths
+using System.Text.Json;
+
+// JsonSerializer for the --json output paths
 
 // ---------------------------------------------------------------------------
 // Subcommands — the orchestration behind each CLI verb. The entrypoint (.tooling/kac.cs) only wires
 // System.CommandLine to these; all the work lives here and in the rest of kac.core.
 // ---------------------------------------------------------------------------
+
+namespace kac.core;
 
 public static class Commands
 {
@@ -37,7 +41,7 @@ public static class Commands
             Validator.CheckDocument(doc, schema, repoRoot, findings);
 
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
-        Validator.CheckCorpus(docs, schema, findings);
+        Validator.CheckCorpus(docs, findings);
 
         return Report(findings, docs.Count, skippedNoFrontmatter, json);
     }
@@ -159,7 +163,10 @@ public static class Commands
         if (json)
         {
             var report = new ChecksReport(
-                [.. CheckCatalogue.All.Select(c => new CheckInfo(c.Id, c.Severity.ToString().ToLowerInvariant(), c.Summary))]);
+            [
+                .. CheckCatalogue.All.Select(c =>
+                    new CheckInfo(c.Id, c.Severity.ToString().ToLowerInvariant(), c.Summary))
+            ]);
             Console.WriteLine(JsonSerializer.Serialize(report, KacJson.Relaxed.ChecksReport));
         }
         else
@@ -179,7 +186,8 @@ public static class Commands
 
         Console.Error.WriteLine("checks: the reader-facing checks table is out of step with the catalogue:");
         foreach (var p in problems) Console.Error.WriteLine($"  {p}");
-        Console.Error.WriteLine("fix Generator.DocRows (or IntentionallyUndocumented) in .tooling/kac.core/Generator.cs.");
+        Console.Error.WriteLine(
+            "fix Generator.DocRows (or IntentionallyUndocumented) in .tooling/kac.core/Generator.cs.");
         return 1;
     }
 
@@ -187,7 +195,8 @@ public static class Commands
     {
         if (!check)
         {
-            Console.Error.WriteLine("mechanism: specify --check (mechanism --sync is not yet implemented — see issue #6).");
+            Console.Error.WriteLine(
+                "mechanism: specify --check (mechanism --sync is not yet implemented — see issue #6).");
             return 1;
         }
 
@@ -197,15 +206,14 @@ public static class Commands
         var reference = against ?? lockFile.UpstreamUrl;
         if (string.IsNullOrWhiteSpace(reference))
             return Fail("mechanism: no reference to compare against. Pass --against <path>, "
-                + "or set upstream.url in knowledge-as-code/mechanism.lock.");
+                        + "or set upstream.url in knowledge-as-code/mechanism.lock.");
 
         var refRoot = Path.GetFullPath(reference, repoRoot);
         if (!Directory.Exists(refRoot))
             return Fail($"mechanism: reference corpus not found: {refRoot}");
-        if (Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot))
-            return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
-
-        return MechanismCheck.Run(repoRoot, refRoot, manifest, lockFile);
+        return Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot)
+            ? Fail("mechanism: the reference is this corpus itself — nothing to compare.")
+            : MechanismCheck.Run(repoRoot, refRoot, manifest, lockFile);
 
         static int Fail(string message)
         {

@@ -7,6 +7,8 @@ using YamlDotNet.RepresentationModel;
 // The checks
 // ---------------------------------------------------------------------------
 
+namespace kac.core;
+
 public static class Validator
 {
     public static void CheckDocument(Doc d, Schema schema, string repoRoot, List<Finding> f)
@@ -104,7 +106,7 @@ public static class Validator
         CheckLinks(d, repoRoot, Err, Warn);
 
         // -- related mirrors ## Related --
-        CheckMirrorsSection(d, t, schema, present, Err);
+        CheckMirrorsSection(d, t, schema, Err);
 
         // -- warning rules --
         CheckWarnings(d, t, Warn);
@@ -116,7 +118,7 @@ public static class Validator
         void Err(string check, string msg, int? line = null) => f.Add(new Finding(d.Rel, line, Sev.Error, check, msg));
     }
 
-    public static void CheckCorpus(List<Doc> docs, Schema schema, List<Finding> f)
+    public static void CheckCorpus(List<Doc> docs, List<Finding> f)
     {
         // id uniqueness across the whole wiki.
         var byId = new Dictionary<string, Doc>(StringComparer.OrdinalIgnoreCase);
@@ -286,7 +288,7 @@ public static class Validator
             return;
         }
 
-        if (t.TitleMatchesId && m.Groups.Count > 1 && present.TryGetValue("id", out var idNode))
+        if (t.TitleMatchesId && m.Groups.Count > 1 && present.TryGetValue("id", out _))
         {
             var num = m.Groups[1].Value;
             var fileNum = FilenameNumber(d.Rel);
@@ -325,8 +327,7 @@ public static class Validator
                 warn("unused-definition", $"link definition '[{label}]' is never referenced.", null);
     }
 
-    private static void CheckMirrorsSection(Doc d, TypeSchema t, Schema schema, Dictionary<string, YamlNode> present,
-        Action<string, string, int?> err)
+    private static void CheckMirrorsSection(Doc d, TypeSchema t, Schema schema, Action<string, string, int?> err)
     {
         foreach (var name in t.FieldOrder)
         {

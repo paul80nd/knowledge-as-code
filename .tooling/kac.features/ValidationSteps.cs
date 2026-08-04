@@ -1,5 +1,8 @@
+using kac.core;
 using Reqnroll;
 using Xunit;
+
+namespace kac.features;
 
 [Binding]
 public sealed class ValidationSteps
@@ -10,7 +13,7 @@ public sealed class ValidationSteps
     private ValidationResult Result =>
         _result ?? throw new InvalidOperationException("validate the corpus first (missing 'When I validate the corpus')");
 
-    [Given(@"the (.*) fixture corpus")]
+    [Given("the (.*) fixture corpus")]
     public void GivenTheFixtureCorpus(string name) => _fixture = name;
 
     [When("I validate the corpus")]

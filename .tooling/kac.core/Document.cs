@@ -5,6 +5,8 @@ using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using YamlDotNet.RepresentationModel;
 
+namespace kac.core;
+
 // ---------------------------------------------------------------------------
 // Parsed document
 // ---------------------------------------------------------------------------
@@ -26,16 +28,16 @@ public class Doc
     public required MarkdownDocument Ast;
 
     public YamlMappingNode? Front; // frontmatter mapping (representation model)
-    public List<string> FrontKeys = [];
+    public readonly List<string> FrontKeys = [];
     public int FrontStartLine; // 1-based line where the frontmatter block begins
 
     public string? H1;
     public int H1Line;
-    public List<string> H2 = [];
-    public List<LinkRef> Links = [];
-    public List<string> DefinedLabels = [];
-    public HashSet<string> UsedLabels = new(StringComparer.OrdinalIgnoreCase);
-    public List<(string inner, int line)> BareBracketTokens = [];
+    public readonly List<string> H2 = [];
+    public readonly List<LinkRef> Links = [];
+    public readonly List<string> DefinedLabels = [];
+    public readonly HashSet<string> UsedLabels = new(StringComparer.OrdinalIgnoreCase);
+    public readonly List<(string inner, int line)> BareBracketTokens = [];
     public List<LinkRef> RelatedSectionLinks = [];
     public QuoteBlock? YStatement;
 
@@ -160,13 +162,6 @@ public class Doc
         var run = new StringBuilder();
         var segments = new List<(int offset, int line)>();
 
-        void Flush()
-        {
-            if (run.Length > 0) ScanBrackets(run.ToString(), segments, outp);
-            run.Clear();
-            segments.Clear();
-        }
-
         for (var child = container.FirstChild; child is not null; child = child.NextSibling)
             if (child is LiteralInline lit)
             {
@@ -180,6 +175,14 @@ public class Doc
             }
 
         Flush();
+        return;
+
+        void Flush()
+        {
+            if (run.Length > 0) ScanBrackets(run.ToString(), segments, outp);
+            run.Clear();
+            segments.Clear();
+        }
     }
 
     private static void ScanBrackets(string s, List<(int offset, int line)> segments, List<(string, int)> outp)

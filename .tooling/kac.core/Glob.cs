@@ -3,6 +3,8 @@ using System.Text.RegularExpressions;
 
 // Minimal glob → regex for manifest patterns: `**` spans path segments, `*` stays within one, and a
 // leading `**/` also matches at the root. Enough for the manifest's vocabulary, not a full gitignore.
+namespace kac.core;
+
 public static class Glob
 {
     private static readonly Dictionary<string, Regex> Cache = [];
@@ -18,14 +20,24 @@ public static class Glob
         for (; i < glob.Length; i++)
         {
             var c = glob[i];
-            if (c == '*')
+            switch (c)
             {
-                if (i + 1 < glob.Length && glob[i + 1] == '*') { sb.Append(".*"); i++; }
-                else sb.Append("[^/]*");
+                case '*' when i + 1 < glob.Length && glob[i + 1] == '*':
+                    sb.Append(".*"); i++;
+                    break;
+                case '*':
+                    sb.Append("[^/]*");
+                    break;
+                case '/':
+                    sb.Append('/');
+                    break;
+                default:
+                {
+                    if ("\\.+?()[]{}|^$".Contains(c)) sb.Append('\\').Append(c);
+                    else sb.Append(c);
+                    break;
+                }
             }
-            else if (c == '/') sb.Append('/');
-            else if ("\\.+?()[]{}|^$".IndexOf(c) >= 0) sb.Append('\\').Append(c);
-            else sb.Append(c);
         }
         sb.Append('$');
         return new Regex(sb.ToString(), RegexOptions.CultureInvariant);
