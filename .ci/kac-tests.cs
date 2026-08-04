@@ -313,6 +313,16 @@ if (filters.Count == 0)
         failures.Add("(coverage: stale check ids)");
     }
 
+    // The reader-facing "What CI checks" table must stay a faithful view of the catalogue. `kac
+    // checks` self-verifies its curated rows against the catalogue and exits non-zero on any drift
+    // (a new check with no row, a row naming a check that no longer exists, a stale waiver).
+    var (_, checksErr, checksExit) = Run(Directory.GetCurrentDirectory(), "dotnet", "run", kac, "--", "checks");
+    if (checksExit != 0)
+    {
+        Console.WriteLine($"  CHECKS TABLE out of step with the catalogue:\n{Indent(checksErr)}");
+        failures.Add("(checks table vs catalogue)");
+    }
+
     Console.WriteLine();
 }
 if (update)

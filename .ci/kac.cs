@@ -10,9 +10,7 @@
 //
 //   validate   check the corpus against knowledge-as-code/schema/*.yaml
 //   index      regenerate INDEX.md and the generated blocks in <type>.md
-//   mechanism  enforce the portability manifest: synced layer vs a reference (this file)
-//   digest     rules digest                                                (later)
-//   drift      estate comparison                                           (later)
+//   mechanism  enforce the portability manifest: synced layer vs a reference
 //
 // The tool is deliberately free of type-specific rules: everything it enforces is
 // read from the YAML schema, so adding a type is adding a YAML file, not editing C#.
@@ -259,23 +257,35 @@ internal static class Commands
 
     public static int Checks(bool json)
     {
+        // The catalogue is always valid data, so emit it either way; the reader-facing table's
+        // fidelity to it is a separate signal, reported to stderr and via the exit code below. This
+        // is the tie the test suite relies on: a new catalogue check with no table row (and no
+        // explicit waiver), or a row naming a check that no longer exists, exits non-zero here.
         if (json)
         {
             var report = new ChecksReport(
                 [.. CheckCatalogue.All.Select(c => new CheckInfo(c.Id, c.Severity.ToString().ToLowerInvariant(), c.Summary))]);
             Console.WriteLine(JsonSerializer.Serialize(report, KacJson.Relaxed.ChecksReport));
-            return 0;
         }
-
-        foreach (var c in CheckCatalogue.All)
+        else
         {
-            var tag = c.Severity == Sev.Error ? "error  " : "warning";
-            Console.WriteLine($"  {tag}  {c.Id,-24}  {c.Summary}");
+            foreach (var c in CheckCatalogue.All)
+            {
+                var tag = c.Severity == Sev.Error ? "error  " : "warning";
+                Console.WriteLine($"  {tag}  {c.Id,-24}  {c.Summary}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"{CheckCatalogue.All.Count} checks.");
         }
 
-        Console.WriteLine();
-        Console.WriteLine($"{CheckCatalogue.All.Count} checks.");
-        return 0;
+        var problems = Generator.ChecksTableProblems();
+        if (problems.Count == 0) return 0;
+
+        Console.Error.WriteLine("checks: the reader-facing checks table is out of step with the catalogue:");
+        foreach (var p in problems) Console.Error.WriteLine($"  {p}");
+        Console.Error.WriteLine("fix Generator.DocRows (or IntentionallyUndocumented) in .ci/kac.cs.");
+        return 1;
     }
 
     public static int Mechanism(string repoRoot, bool check, string? against)
@@ -462,35 +472,78 @@ internal static class Generator
         return Escape(string.Join(" ", parts));
     }
 
-    // The checks the validator actually implements. Kept here so `adrs.md`'s
-    // "What CI checks" block and the tool cannot drift apart.
+    // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that
+    // `kac index` splices into every type page. It is deliberately NOT the raw catalogue — related
+    // checks are folded into one row (e.g. the three `id-*` checks read as one `id` row) and worded
+    // for a human skim. Each row therefore names the catalogue ids it stands for, so the table's
+    // coverage stays verifiable (ChecksTableProblems) even though its presentation is hand-tuned.
+    private static readonly (string Label, string[] Ids, string Description)[] DocRows =
+    [
+        ("frontmatter-parses", ["frontmatter-parses"], "Frontmatter is present and is a valid YAML mapping."),
+        ("unknown-key", ["unknown-key"], "Every frontmatter key is a schema field or a reserved ADO key."),
+        ("key-order", ["key-order"], "Key order is a topological extension of the schema's field order."),
+        ("required-field", ["required-field"], "Required and conditionally-required fields are present."),
+        ("bare-key", ["bare-key"], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`."),
+        ("date-quoted / date-format", ["date-quoted", "date-format"], "Date fields are quoted `YYYY-MM-DD`."),
+        ("enum", ["enum", "enum-lowercase"], "Enum values are in range and lowercase."),
+        ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares."),
+        ("id", ["id-prefix", "id-format", "id-matches-filename"],
+            "`id` has the type's prefix and width and matches the filename number."),
+        ("id-unique", ["id-unique"], "`id` is unique across the whole wiki."),
+        ("filename / slug-length", ["filename-pattern", "slug-length"],
+            "Filename matches the pattern; the slug is within 30 characters."),
+        ("h1", ["h1", "h1-pattern", "h1-matches-id"], "The H1 matches the title pattern and its number matches the `id`."),
+        ("required-section", ["required-section"], "Every required section heading is present."),
+        ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional)."),
+        ("undefined-label", ["undefined-label"], "Every `[ADR-NNNN]` shortcut reference has a link definition."),
+        ("related-matches-section", ["related-matches-section"],
+            "`related` reconciles with the ids in the `## Related` section."),
+        ("reciprocal", ["reciprocal"], "`supersedes` / `superseded-by` agree in both directions."),
+        ("unused-definition", ["unused-definition"], "A link definition that nothing references."),
+        ("y-statement", ["y-statement"], "A Y-statement block-quote follows the H1 and is within 60 words."),
+        ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.")
+    ];
+
+    // Catalogue checks the reader-facing table deliberately does not surface: `type` (an internal
+    // folder→schema guard a well-formed document never trips), `list` (a low-level YAML-shape check
+    // subsumed by the field descriptions) and `bracket-literal` (a heuristic sibling of
+    // undefined-label). Every OTHER catalogue id must appear in DocRows — ChecksTableProblems fails
+    // otherwise, so a new check cannot silently go undocumented.
+    private static readonly HashSet<string> IntentionallyUndocumented =
+        new(["type", "list", "bracket-literal"], StringComparer.Ordinal);
+
     public static string ChecksTable()
     {
+        var severity = CheckCatalogue.All.ToDictionary(c => c.Id, c => c.Severity);
         List<string> headers = ["Check", "Level", "What it verifies"];
-        var rows = new[]
+        var rows = DocRows.Select(r => new List<string>
         {
-            ("frontmatter-parses", "error", "Frontmatter is present and is a valid YAML mapping."),
-            ("unknown-key", "error", "Every frontmatter key is a schema field or a reserved ADO key."),
-            ("key-order", "error", "Key order is a topological extension of the schema's field order."),
-            ("required-field", "error", "Required and conditionally-required fields are present."),
-            ("bare-key", "error", "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`."),
-            ("date-quoted / date-format", "error", "Date fields are quoted `YYYY-MM-DD`."),
-            ("enum", "error", "Enum values are in range and lowercase."),
-            ("tier-matches-type", "error", "`tier` matches the tier the type declares."),
-            ("id", "error", "`id` has the type's prefix and width and matches the filename number."),
-            ("id-unique", "error", "`id` is unique across the whole wiki."),
-            ("filename / slug-length", "error", "Filename matches the pattern; the slug is within 30 characters."),
-            ("h1", "error", "The H1 matches the title pattern and its number matches the `id`."),
-            ("required-section", "error", "Every required section heading is present."),
-            ("link-resolves", "error", "Every internal link resolves (all link forms, `.md` optional)."),
-            ("undefined-label", "error", "Every `[ADR-NNNN]` shortcut reference has a link definition."),
-            ("related-matches-section", "error", "`related` reconciles with the ids in the `## Related` section."),
-            ("reciprocal", "error", "`supersedes` / `superseded-by` agree in both directions."),
-            ("unused-definition", "warning", "A link definition that nothing references."),
-            ("y-statement", "warning", "A Y-statement block-quote follows the H1 and is within 60 words."),
-            ("alternatives-verdict", "warning", "Each Alternatives Considered bullet states a verdict.")
-        }.Select(r => new List<string> { $"`{r.Item1}`", r.Item2, r.Item3 }).ToList();
+            $"`{r.Label}`",
+            (severity.TryGetValue(r.Ids[0], out var s) ? s : Sev.Error).ToString().ToLowerInvariant(),
+            r.Description
+        }).ToList();
         return RenderTable(headers, rows);
+    }
+
+    // Reconcile the curated table with the catalogue. Empty means the reader-facing table is a
+    // faithful, complete view of what the validator enforces; any entry is a drift a human must
+    // resolve. `kac checks` calls this and fails on a non-empty result, which the test suite asserts.
+    public static IReadOnlyList<string> ChecksTableProblems()
+    {
+        var catalogue = CheckCatalogue.All.Select(c => c.Id).ToHashSet(StringComparer.Ordinal);
+        var documented = DocRows.SelectMany(r => r.Ids).ToHashSet(StringComparer.Ordinal);
+        var problems = new List<string>();
+
+        foreach (var id in documented.Where(id => !catalogue.Contains(id)).Order(StringComparer.Ordinal))
+            problems.Add($"the checks table documents '{id}', which is not a catalogue check (stale row).");
+        foreach (var id in catalogue.Where(id => !documented.Contains(id) && !IntentionallyUndocumented.Contains(id))
+                     .Order(StringComparer.Ordinal))
+            problems.Add($"catalogue check '{id}' is neither in the checks table nor waived in IntentionallyUndocumented.");
+        foreach (var id in IntentionallyUndocumented.Where(id => documented.Contains(id) || !catalogue.Contains(id))
+                     .Order(StringComparer.Ordinal))
+            problems.Add($"'{id}' is waived in IntentionallyUndocumented but is documented or unknown — drop the waiver.");
+
+        return problems;
     }
 
     public static string SpliceBlock(string text, string name, string inner)
@@ -724,6 +777,54 @@ internal class Schema
 }
 
 // ---------------------------------------------------------------------------
+// File listing — shared by corpus discovery and the mechanism check
+// ---------------------------------------------------------------------------
+
+internal static class GitFiles
+{
+    // Tracked + untracked-but-not-ignored files, relative and forward-slashed, or null when git is
+    // unavailable or this is not a repo (the caller then falls back to Walk). git ls-files respects
+    // .gitignore, .git/info/exclude and global excludes, and never lists .git/ itself.
+    public static List<string>? Tracked(string root)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo("git", "ls-files --cached --others --exclude-standard")
+            {
+                WorkingDirectory = root,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            using var p = Process.Start(psi);
+            if (p is null) return null;
+            // Drain both streams concurrently before waiting: reading one to end while the other's
+            // pipe buffer fills would deadlock.
+            var stdout = p.StandardOutput.ReadToEndAsync();
+            _ = p.StandardError.ReadToEndAsync();
+            p.WaitForExit();
+            if (p.ExitCode != 0) return null;
+            return
+                [.. stdout.Result.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)];
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    // Fallback for a non-git tree (the test harness assembles one): every file matching `pattern`,
+    // relative and forward-slashed, dropping any path at or under one of `skipDirs`.
+    public static List<string> Walk(string root, string pattern, params string[] skipDirs) =>
+    [
+        .. Directory
+            .EnumerateFiles(root, pattern, SearchOption.AllDirectories)
+            .Select(f => Path.GetRelativePath(root, f).Replace('\\', '/'))
+            .Where(rel => !skipDirs.Any(d => rel == d || rel.StartsWith(d + "/")))
+    ];
+}
+
+// ---------------------------------------------------------------------------
 // Corpus discovery
 // ---------------------------------------------------------------------------
 
@@ -733,10 +834,9 @@ internal static class Corpus
 
     public static List<string> Discover(string repoRoot, Schema schema, List<string> paths)
     {
-        // git ls-files respects .gitignore, .git/info/exclude and global excludes, and
-        // never lists .git/ itself — exactly the "respect .gitignore" requirement.
-        var listed = GitListFiles(repoRoot);
-        var files = listed ?? FallbackWalk(repoRoot);
+        // git ls-files respects .gitignore, .git/info/exclude and global excludes, and never lists
+        // .git/ itself — exactly the "respect .gitignore" requirement; the walk is the non-git fallback.
+        var files = GitFiles.Tracked(repoRoot) ?? GitFiles.Walk(repoRoot, "*.md", SkipDirs);
 
         // Type pages at the repo root — adrs.md, services.md, glossary.md, data.md, …
         var typePages = new HashSet<string>(
@@ -784,42 +884,6 @@ internal static class Corpus
         // docs being reconciled elsewhere) is left alone.
         return !typeFolders.Contains(top);
     }
-
-    private static List<string>? GitListFiles(string repoRoot)
-    {
-        try
-        {
-            var psi = new ProcessStartInfo("git", "ls-files --cached --others --exclude-standard")
-            {
-                WorkingDirectory = repoRoot,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false
-            };
-            using var p = Process.Start(psi);
-            if (p is null) return null;
-            // Drain both streams concurrently before waiting: reading one to end while
-            // the other's pipe buffer fills would deadlock.
-            var stdout = p.StandardOutput.ReadToEndAsync();
-            _ = p.StandardError.ReadToEndAsync();
-            p.WaitForExit();
-            if (p.ExitCode != 0) return null;
-            return
-                [.. stdout.Result.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)];
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private static List<string> FallbackWalk(string repoRoot) =>
-    [
-        .. Directory
-            .EnumerateFiles(repoRoot, "*.md", SearchOption.AllDirectories)
-            .Select(f => Path.GetRelativePath(repoRoot, f).Replace('\\', '/'))
-            .Where(rel => !SkipDirs.Any(d => rel == d || rel.StartsWith(d + "/")))
-    ];
 }
 
 // ---------------------------------------------------------------------------
@@ -1020,47 +1084,10 @@ internal static class MechanismCheck
 
     private static string ReadLf(string path) => File.ReadAllText(path).Replace("\r\n", "\n");
 
-    // Every tracked (and not-ignored) file, relative and forward-slashed. git ls-files respects
-    // .gitignore and never lists .git/; the fallback walk lets the check run in a non-git tree
-    // (the test harness assembles one), skipping only .git.
-    private static HashSet<string> ListFiles(string root)
-    {
-        var files = GitListFiles(root) ?? WalkAll(root);
-        return new HashSet<string>(files, StringComparer.Ordinal);
-    }
-
-    private static List<string>? GitListFiles(string root)
-    {
-        try
-        {
-            var psi = new ProcessStartInfo("git", "ls-files --cached --others --exclude-standard")
-            {
-                WorkingDirectory = root,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false
-            };
-            using var p = Process.Start(psi);
-            if (p is null) return null;
-            var stdout = p.StandardOutput.ReadToEndAsync();
-            _ = p.StandardError.ReadToEndAsync();
-            p.WaitForExit();
-            if (p.ExitCode != 0) return null;
-            return [.. stdout.Result.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)];
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private static List<string> WalkAll(string root) =>
-    [
-        .. Directory
-            .EnumerateFiles(root, "*", SearchOption.AllDirectories)
-            .Select(f => Path.GetRelativePath(root, f).Replace('\\', '/'))
-            .Where(rel => rel != ".git" && !rel.StartsWith(".git/"))
-    ];
+    // Every tracked (and not-ignored) file, relative and forward-slashed. The walk lets the check
+    // run in a non-git tree (the test harness assembles one), skipping only .git.
+    private static HashSet<string> ListFiles(string root) =>
+        new(GitFiles.Tracked(root) ?? GitFiles.Walk(root, "*", ".git"), StringComparer.Ordinal);
 }
 
 // ---------------------------------------------------------------------------
