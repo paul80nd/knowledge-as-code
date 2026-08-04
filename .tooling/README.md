@@ -83,6 +83,7 @@ is `severity: warning` in the schema (or a soft heuristic) and does **not** fail
 | `bare-key`                                        | error | An absent value is a bare key (`decided-on:`), never `null`, `~`, `""`, `''` or `—`.       |
 | `date-quoted` / `date-format`                     | error | `type: date` fields are quoted and `YYYY-MM-DD` in shape.                                  |
 | `enum` / `enum-lowercase`                         | error | `type: enum` values are in range and lowercase.                                            |
+| `field-pattern`                                   | error | A field's value matches its declared `pattern:` — per entry for a list, per value for a scalar. |
 | `tier-matches-type`                               | error | `tier` equals the tier the type declares.                                                  |
 | `id-prefix` / `id-format` / `id-matches-filename` | error | `id` has the type's prefix and width, and its number matches the filename.                 |
 

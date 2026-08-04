@@ -81,6 +81,11 @@ public static class Validator
                 case "enum": CheckEnum(name, node, spec, d, Err); break;
                 case "list": CheckList(name, node, spec, d, Err); break;
             }
+
+            // A declared `pattern:` applies to a scalar field's value; for a list it applies to each
+            // entry, so CheckList handles that half where it already walks the sequence.
+            if (spec.Type != "list" && node is YamlScalarNode)
+                CheckPattern(name, "value", node, spec, d, Err);
         }
 
         // -- tier matches type --
@@ -201,7 +206,20 @@ public static class Validator
             var v = Scalar(item);
             if (spec.Of == "id" && v is not null && !LooksLikeId(v))
                 err("id-format", $"'{name}' entry '{v}' is not a valid id.", Line(item, d));
+            CheckPattern(name, "entry", item, spec, d, err);
         }
+    }
+
+    // A field's declared `pattern:` — the schema's own regex, applied to whatever scalar carries the
+    // value. `noun` distinguishes a scalar field's "value" from a list's "entry" in the message.
+    private static void CheckPattern(string name, string noun, YamlNode node, FieldSpec spec, Doc d,
+        Action<string, string, int?> err)
+    {
+        if (spec.Pattern is null) return;
+        var v = Scalar(node);
+        if (v is null) return;
+        if (!System.Text.RegularExpressions.Regex.IsMatch(v, spec.Pattern))
+            err("field-pattern", $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Line(node, d));
     }
 
     private static void CheckKeyOrder(Doc d, TypeSchema t, Schema schema, Action<string, string, int?> err)

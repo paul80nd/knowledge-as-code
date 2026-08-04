@@ -71,6 +71,8 @@ public static class Generator
         ("bare-key", ["bare-key"], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`."),
         ("date-quoted / date-format", ["date-quoted", "date-format"], "Date fields are quoted `YYYY-MM-DD`."),
         ("enum", ["enum", "enum-lowercase"], "Enum values are in range and lowercase."),
+        ("field-pattern", ["field-pattern"],
+            "Values match the pattern their field declares (`tags`, `aligns-with`, `licence`)."),
         ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares."),
         ("id", ["id-prefix", "id-format", "id-matches-filename"],
             "`id` has the type's prefix and width and matches the filename number."),
