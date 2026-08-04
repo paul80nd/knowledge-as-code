@@ -36,7 +36,7 @@ fixtures/
 ```
 
 For each scenario the runner assembles a throwaway repo root in the system temp dir: it copies the **real**
-`knowledge-as-code/schema/` in, drops the scenario's `corpus/` on top, and runs `kac` against it. That the schema is
+`.schema/` in, drops the scenario's `corpus/` on top, and runs `kac` against it. That the schema is
 copied fresh each run (never a committed copy) is deliberate — the suite tests the **production** rules, so a schema
 change that alters behaviour surfaces here as a diff. The temp root is not a git repo, so kac's discovery falls back to
 a filesystem walk and paths stay corpus-relative — no temp path leaks into a golden.

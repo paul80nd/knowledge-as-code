@@ -2,7 +2,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 // ---------------------------------------------------------------------------
-// Schema model — loaded from knowledge-as-code/schema/*.yaml
+// Schema model — loaded from .schema/*.yaml
 // ---------------------------------------------------------------------------
 
 public class FieldSpec
@@ -65,7 +65,7 @@ public class Schema
 
     public static Schema Load(string repoRoot)
     {
-        var dir = Path.Combine(repoRoot, "knowledge-as-code", "schema");
+        var dir = Path.Combine(repoRoot, ".schema");
         var s = new Schema();
 
         var enumsRoot = Yaml.LoadFile(Path.Combine(dir, "_enums.yaml"));

@@ -67,7 +67,7 @@ rules:
   - { path: "**/.DS_Store",                layer: ignored }
   - { path: ".claude/settings.local.json", layer: ignored }
 
-  # ── synced: the tool's own tree ──────────────────────────────────────────────────────────────
+  # ── synced: the mechanism's own trees ────────────────────────────────────────────────────────
   # Ahead of `generated`, because the test fixtures contain golden INDEX.md files that are shared
   # test data, not generated output. Everything under `.tooling/` is mechanism whatever it is called.
   - path: ".tooling/**"
@@ -76,6 +76,14 @@ rules:
       Validator, generator, test runner and fixtures. Fixtures are part of the shared layer, so
       they must stay synthetic — a fixture built from a real record would ship one corpus's content
       to every other.
+
+  - path: ".schema/**"
+    layer: synced
+    note: >
+      The machine-readable schema — the contract the tool enforces. Dot-prefixed for the same
+      reason as `.tooling/`: it is mechanism, not knowledge, so it stays out of the published wiki
+      and out of the way in the repo. Kept as its own rule rather than folded under `.tooling/`
+      because the tool is replaceable and the schema is the thing being agreed.
 
   # ── generated ────────────────────────────────────────────────────────────────────────────────
   # Matched before `synced`/`forked` so that generated files inside otherwise-shared folders
@@ -91,7 +99,6 @@ rules:
     note: "Agent machinery — kb-search, kb-contribute, adr and friends. Not yet built."
 
   - { path: "knowledge-as-code/manifest.yaml",   layer: synced, note: "This file." }
-  - { path: "knowledge-as-code/schema/**",       layer: synced }
   - { path: "knowledge-as-code/taxonomy.md",     layer: synced }
   - { path: "knowledge-as-code/metadata.md",     layer: synced }
   - { path: "knowledge-as-code/contributing.md", layer: synced }

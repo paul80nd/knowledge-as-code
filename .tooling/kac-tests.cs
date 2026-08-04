@@ -27,12 +27,12 @@ using System.Text.Json;
 var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
 if (repoRoot is null)
 {
-    Console.Error.WriteLine("kac-tests: could not locate the repo root (no knowledge-as-code/schema above the cwd).");
+    Console.Error.WriteLine("kac-tests: could not locate the repo root (no .schema above the cwd).");
     return 2;
 }
 
 var kac = Path.Combine(repoRoot, ".tooling", "kac.cs");
-var schemaDir = Path.Combine(repoRoot, "knowledge-as-code", "schema");
+var schemaDir = Path.Combine(repoRoot, ".schema");
 var manifestFile = Path.Combine(repoRoot, "knowledge-as-code", "manifest.yaml");
 var fixturesDir = Path.Combine(repoRoot, ".tooling", "tests", "fixtures");
 
@@ -355,7 +355,7 @@ static string? FindRepoRoot(string start)
     var dir = new DirectoryInfo(start);
     while (dir is not null)
     {
-        if (Directory.Exists(Path.Combine(dir.FullName, "knowledge-as-code", "schema")))
+        if (Directory.Exists(Path.Combine(dir.FullName, ".schema")))
             return dir.FullName;
         dir = dir.Parent;
     }
@@ -369,7 +369,7 @@ static string? FindRepoRoot(string start)
 static string AssembleTemp(string schemaDir, string corpusDir)
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
-    CopyTree(schemaDir, Path.Combine(temp, "knowledge-as-code", "schema"));
+    CopyTree(schemaDir, Path.Combine(temp, ".schema"));
     CopyTree(corpusDir, temp);
     return temp;
 }
@@ -379,7 +379,9 @@ static string AssembleTemp(string schemaDir, string corpusDir)
 static string AssembleMechanismTemp(string schemaDir, string manifestFile, string subtree)
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
-    CopyTree(schemaDir, Path.Combine(temp, "knowledge-as-code", "schema"));
+    CopyTree(schemaDir, Path.Combine(temp, ".schema"));
+    // The schema lives at .schema/, so nothing else creates knowledge-as-code/ for us.
+    Directory.CreateDirectory(Path.Combine(temp, "knowledge-as-code"));
     File.Copy(manifestFile, Path.Combine(temp, "knowledge-as-code", "manifest.yaml"));
     CopyTree(subtree, temp);
     return temp;

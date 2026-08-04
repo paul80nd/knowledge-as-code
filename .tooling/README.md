@@ -1,7 +1,7 @@
 # `.tooling` — the knowledge-as-code tooling
 
 `kac` validates and generates a knowledge corpus against the machine-readable schema in
-`knowledge-as-code/schema/`. The command you run is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **
+`.schema/`. The command you run is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **
 `kac.core`** library that holds the mechanics; `dotnet run` builds and runs it with no build step to manage. The schema
 is the source of truth: `kac` reads it and enforces it, so **adding a knowledge type is adding a YAML file, not editing
 this tool**.

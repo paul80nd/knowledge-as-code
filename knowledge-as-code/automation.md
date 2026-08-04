@@ -82,20 +82,20 @@ Generated content lives inside marker blocks in otherwise hand-written files:
 CI rewrites only what's between the markers and fails the build if a block is stale. This keeps one file per purpose —
 humans keep their prose, the machine keeps the tables current, and nobody has to choose.
 
-| Artefact                                    | Built from                               | Lives in                        | Status  |
-|---------------------------------------------|------------------------------------------|---------------------------------|---------|
-| Type indexes                                | Frontmatter across the folder            | `<type>/INDEX.md`               | Done    |
-| Repository & launchpad tables               | `services/`                              | Root `README.md`                | Planned |
-| Per-type frontmatter reference              | `knowledge-as-code/schema/`              | `<type>.md` `schema-*` block    | Done    |
-| Universal frontmatter reference             | `knowledge-as-code/schema/_universal.yaml` | `metadata.md` `schema-universal` block | Done |
-| Rules digest                                | Active standards                         | Root `CLAUDE.md`                | Planned |
-| Control coverage report                     | `controls/` + standards' rules           | `controls/INDEX.md`             | Planned |
-| ISO alignment matrix                        | `policies/` `aligns-with`                | `policies/INDEX.md`             | Planned |
-| Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`         | Planned |
-| Orphan report                               | The link graph                           | `_reports/orphans.md`           | Planned |
-| Service dependency diagram                  | `depends-on`                             | `services/INDEX.md` (mermaid)   | Planned |
-| `.order` files                              | Folder contents + type ordering          | Each folder                     | Planned |
-| `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                       | Planned |
+| Artefact                                    | Built from                               | Lives in                               | Status  |
+|---------------------------------------------|------------------------------------------|----------------------------------------|---------|
+| Type indexes                                | Frontmatter across the folder            | `<type>/INDEX.md`                      | Done    |
+| Repository & launchpad tables               | `services/`                              | Root `README.md`                       | Planned |
+| Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block           | Done    |
+| Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block | Done    |
+| Rules digest                                | Active standards                         | Root `CLAUDE.md`                       | Planned |
+| Control coverage report                     | `controls/` + standards' rules           | `controls/INDEX.md`                    | Planned |
+| ISO alignment matrix                        | `policies/` `aligns-with`                | `policies/INDEX.md`                    | Planned |
+| Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`                | Planned |
+| Orphan report                               | The link graph                           | `_reports/orphans.md`                  | Planned |
+| Service dependency diagram                  | `depends-on`                             | `services/INDEX.md` (mermaid)          | Planned |
+| `.order` files                              | Folder contents + type ordering          | Each folder                            | Planned |
+| `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                              | Planned |
 
 ### The rules digest — root `CLAUDE.md`
 
@@ -171,9 +171,9 @@ The agent-facing machinery. Not automation in the CI sense, but part of the same
 | `dream`         | The distillation pass                                                                       | Planned |
 
 These are skills rather than per-folder `CLAUDE.md` files for a specific reason: a subdirectory `CLAUDE.md` loads only
-when a session reads a file in that directory. A session working in a service repository would never trigger one in
-the corpus's `standards/` folder. Skills are selected by description matching and work across repositories, which is
-the actual use case.
+when a session reads a file in that directory. A session working in a service repository would never trigger one in the
+corpus's `standards/` folder. Skills are selected by description matching and work across repositories, which is the
+actual use case.
 
 ## Portability
 
