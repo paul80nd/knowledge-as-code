@@ -19,26 +19,31 @@ fields:
     required: true
     type: enum
     values: [live, building, deprecated, retired]
+    description: Where the service is in its life.
 
   repo:
     required: true
     type: string
+    description: Where the code lives.
 
   platform:
     required: true
     type: enum
     values: [dotnet-web, dotnet-api, azure-function, static, typescript, terraform, mixed]
+    description: What it is built on. Drives which standards apply.
 
   criticality:
     required: true
     type: enum
     values: $enums.criticality
+    description: Judged by what a customer experiences when it is unavailable.
 
   depends-on:
     required: false
     type: list
     of: id
     ref: services
+    description: Downward only — what this service calls. The reverse view is generated.
     notes: >
       Downward only — what this service calls. The reverse view is generated, so do not maintain it by hand.
 
@@ -47,6 +52,7 @@ fields:
     type: list
     of: id
     ref: data
+    description: Data ids this service owns or reads.
 
 sections:
   required: [What it does, Where it lives, Environments]

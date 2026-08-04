@@ -13,15 +13,22 @@ public static class Generator
 
     public static string IndexPage(TypeSchema t, List<Doc> docs)
     {
-        var headers = t.IndexColumns.Select(Humanize).ToList();
-        var sort = string.IsNullOrEmpty(t.IndexSort) ? "id" : t.IndexSort;
-        var rows = docs
-            .OrderBy(d => d.FrontScalar(sort) ?? "", StringComparer.Ordinal)
-            .Select(d => t.IndexColumns.Select(c => Cell(d, c)).ToList())
-            .ToList();
-
         var title = t.IdPrefix.ToUpperInvariant() + " Index";
-        return $"{Banner}\n\n# {title}\n\n{RenderTable(headers, rows)}\n";
+
+        // An empty type still gets its index. Every type page links to one, so withholding the file
+        // until the first record left fourteen dead links that nothing caught — link-resolves does not
+        // check type root pages. A headed table with no rows would say less than nothing, so an empty
+        // index says it is empty and points at the template.
+        var body = docs.Count == 0
+            ? $"_Nothing here yet — copy [`template.md`](template.md) to add the first._"
+            : RenderTable(
+                t.IndexColumns.Select(Humanize).ToList(),
+                docs.OrderBy(d => d.FrontScalar(string.IsNullOrEmpty(t.IndexSort) ? "id" : t.IndexSort) ?? "",
+                        StringComparer.Ordinal)
+                    .Select(d => t.IndexColumns.Select(c => Cell(d, c)).ToList())
+                    .ToList());
+
+        return $"{Banner}\n\n# {title}\n\n{body}\n";
     }
 
     private static string Cell(Doc d, string col)
@@ -35,26 +42,88 @@ public static class Generator
         return Escape(d.FrontScalar(col) ?? "");
     }
 
-    public static string SchemaTable(TypeSchema t)
+    // The frontmatter reference on a type page: every field a document of that type carries, universal
+    // ones included. Showing only the type's own declarations left three required fields (id, tier,
+    // owner) off the page an author writes from, on the argument that metadata.md covers them — but a
+    // reader following that argument has to leave the page, and metadata.md drifted anyway.
+    //
+    // Universal fields come first, in the universal order, and are read through EffectiveField so a
+    // type that refines one (every type narrows `status` to its own values) shows the refinement rather
+    // than the universal placeholder. They are marked rather than separated: one table is one scan,
+    // which is what someone filling in frontmatter actually wants.
+    public static string SchemaTable(TypeSchema t, Schema s)
     {
         List<string> headers = ["Field", "Req", "Type", "Notes"];
-        var rows = t.FieldOrder.Select(name =>
-        {
-            var f = t.Fields[name];
-            return new List<string> { $"`{name}`", f.Required ? "●" : "", f.Type, NotesFor(f) };
-        }).ToList();
-        return RenderTable(headers, rows);
+        var universal = s.UniversalOrder.Where(n => s.EffectiveField(t, n) is not null).ToList();
+        var own = t.FieldOrder.Where(n => !universal.Contains(n));
+
+        var rows = universal.Select(n => Row(n, s.EffectiveField(t, n)!, true))
+            .Concat(own.Select(n => Row(n, t.Fields[n], false)))
+            .ToList();
+
+        var order = universal.Concat(own).ToList();
+        var specs = order.Select(n => s.EffectiveField(t, n)!).ToList();
+        var table = RenderTable(headers, rows) + EnumValues(specs) + ConditionalFields(specs);
+        return universal.Count == 0
+            ? table
+            : $"{table}\n\n† Carried by every document in the taxonomy — see "
+              + "[Metadata](/knowledge-as-code/metadata.md).";
+
+        static List<string> Row(string name, FieldSpec f, bool universal) =>
+            [$"`{name}`{(universal ? " †" : "")}", f.Required ? "●" : "", f.Type, NotesFor(f)];
+    }
+
+    // Enum values are data, not prose, and inside a Notes cell they were the single thing blowing the
+    // table out: `tier`'s five values plus its description came to 153 characters, and because the
+    // renderer pads every column to its widest cell that one field made every row 190 wide. These
+    // pages are read as code as much as rendered, so width is the constraint that matters — a table
+    // of its own keeps the values to ~84 characters and stops a six-value enum widening every row.
+    private static string EnumValues(IEnumerable<FieldSpec> fields)
+    {
+        var enums = fields.Where(f => f is { Type: "enum", Values.Count: > 0 }).ToList();
+        if (enums.Count == 0) return "";
+
+        List<string> headers = ["Field", "Values"];
+        var rows = enums
+            .Select(f => new List<string>
+                { $"`{f.Name}`", string.Join(" · ", f.Values!.Select(v => $"`{v}`")) })
+            .ToList();
+        return "\n\n**Enum values**\n\n" + RenderTable(headers, rows);
+    }
+
+    // Same reasoning as EnumValues. A condition appended to the Notes cell cost `data.retention` 62 of
+    // its 158 characters — and the condition is the one part that has to be quoted exactly, so trimming
+    // the prose to make room would have been the wrong half to lose.
+    private static string ConditionalFields(IEnumerable<FieldSpec> fields)
+    {
+        var conditional = fields.Where(f => !string.IsNullOrEmpty(f.RequiredWhen)).ToList();
+        if (conditional.Count == 0) return "";
+
+        List<string> headers = ["Field", "Required when"];
+        var rows = conditional
+            .Select(f => new List<string> { $"`{f.Name}`", $"`{f.RequiredWhen}`" })
+            .ToList();
+        return "\n\n**Conditionally required**\n\n" + RenderTable(headers, rows);
+    }
+
+    // The same reference for metadata.md, which documents the universal fields once for the whole
+    // taxonomy. Values are the unrefined universal declarations — `status` is genuinely "varies by
+    // type" here, because there is no type in hand to narrow it.
+    public static string UniversalSchemaTable(Schema s)
+    {
+        List<string> headers = ["Field", "Req", "Type", "Notes"];
+        var fields = s.UniversalOrder.Where(s.Universal.ContainsKey).Select(n => s.Universal[n]).ToList();
+        var rows = fields
+            .Select(f => new List<string> { $"`{f.Name}`", f.Required ? "●" : "", f.Type, NotesFor(f) })
+            .ToList();
+        return RenderTable(headers, rows) + EnumValues(fields) + ConditionalFields(fields);
     }
 
     private static string NotesFor(FieldSpec f)
     {
-        var parts = new List<string>();
-        if (f is { Type: "enum", Values.Count: > 0 })
-            parts.Add(string.Join(" · ", f.Values.Select(v => $"`{v}`")));
-        if (!string.IsNullOrEmpty(f.Notes)) parts.Add(f.Notes);
-        if (!string.IsNullOrEmpty(f.RequiredWhen))
-            parts.Add($"Required once `{f.RequiredWhen.Split("==").Last().Trim()}`.");
-        return Escape(string.Join(" ", parts));
+        // Enum values and required-when conditions are not repeated here — both render in their own
+        // tables beneath, see EnumValues and ConditionalFields.
+        return Escape(f.TableText ?? "");
     }
 
     // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that
@@ -62,32 +131,44 @@ public static class Generator
     // checks are folded into one row (e.g. the three `id-*` checks read as one `id` row) and worded
     // for a human skim. Each row therefore names the catalogue ids it stands for, so the table's
     // coverage stays verifiable (ChecksTableProblems) even though its presentation is hand-tuned.
-    private static readonly (string Label, string[] Ids, string Description)[] DocRows =
+    //
+    // `When` is the row's applicability: null means the check fires for every type, otherwise the
+    // predicate asks the type's own schema whether it can fire at all. Without it the table was a
+    // single ADR-shaped list spliced into every page, telling a policy reader that their documents
+    // are checked for Y-statements. Applicability is read from the schema rather than hand-listed
+    // per type, so declaring a rule is still the only thing needed to document it.
+    private static readonly (string Label, string[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
-        ("frontmatter-parses", ["frontmatter-parses"], "Frontmatter is present and is a valid YAML mapping."),
-        ("unknown-key", ["unknown-key"], "Every frontmatter key is a schema field or a reserved ADO key."),
-        ("key-order", ["key-order"], "Key order is a topological extension of the schema's field order."),
-        ("required-field", ["required-field"], "Required and conditionally-required fields are present."),
-        ("bare-key", ["bare-key"], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`."),
-        ("date-quoted / date-format", ["date-quoted", "date-format"], "Date fields are quoted `YYYY-MM-DD`."),
-        ("enum", ["enum", "enum-lowercase"], "Enum values are in range and lowercase."),
-        ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares."),
+        ("frontmatter-parses", ["frontmatter-parses"], "Frontmatter is present and is a valid YAML mapping.", null),
+        ("unknown-key", ["unknown-key"], "Every frontmatter key is a schema field or a reserved ADO key.", null),
+        ("key-order", ["key-order"], "Key order is a topological extension of the schema's field order.", null),
+        ("required-field", ["required-field"], "Required and conditionally-required fields are present.", null),
+        ("bare-key", ["bare-key"], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`.", null),
+        ("date-quoted / date-format", ["date-quoted", "date-format"], "Date fields are quoted `YYYY-MM-DD`.", null),
+        ("enum", ["enum", "enum-lowercase"], "Enum values are in range and lowercase.", null),
+        ("field-pattern", ["field-pattern"],
+            "Values match the pattern their field declares (e.g. `tags`).", null),
+        ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
         ("id", ["id-prefix", "id-format", "id-matches-filename"],
-            "`id` has the type's prefix and width and matches the filename number."),
-        ("id-unique", ["id-unique"], "`id` is unique across the whole wiki."),
+            "`id` carries the type's prefix and, where the type is numbered, matches the filename number.", null),
+        ("id-unique", ["id-unique"], "`id` is unique across the whole wiki.", null),
         ("filename / slug-length", ["filename-pattern", "slug-length"],
-            "Filename matches the pattern; the slug is within 30 characters."),
+            "Filename matches the pattern; the slug is within 30 characters.", null),
         ("h1", ["h1", "h1-pattern", "h1-matches-id"],
-            "The H1 matches the title pattern and its number matches the `id`."),
-        ("required-section", ["required-section"], "Every required section heading is present."),
-        ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional)."),
-        ("undefined-label", ["undefined-label"], "Every `[ADR-NNNN]` shortcut reference has a link definition."),
+            "The document has an H1 and, where the type declares one, it matches the title pattern.", null),
+        ("required-section", ["required-section"], "Every required section heading is present.", null),
+        ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional).", null),
+        ("undefined-label", ["undefined-label"], "Every shortcut reference has a link definition.", null),
         ("related-matches-section", ["related-matches-section"],
-            "`related` reconciles with the ids in the `## Related` section."),
-        ("reciprocal", ["reciprocal"], "`supersedes` / `superseded-by` agree in both directions."),
-        ("unused-definition", ["unused-definition"], "A link definition that nothing references."),
-        ("y-statement", ["y-statement"], "A Y-statement block-quote follows the H1 and is within 60 words."),
-        ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.")
+            "A field that mirrors a section reconciles with the ids in that section.",
+            t => t.AnyField(f => f.MirrorsSection is not null)),
+        ("reciprocal", ["reciprocal"], "A reciprocal field and its counterpart agree in both directions.",
+            t => t.AnyField(f => f.Reciprocal is not null)),
+        ("unused-definition", ["unused-definition"], "A link definition that nothing references.", null),
+        ("y-statement", ["y-statement"], "A Y-statement block-quote follows the H1 and is within 60 words.",
+            t => t.HasRule("y-statement-present")),
+        ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.",
+            t => t.HasRule("alternatives-have-verdicts"))
     ];
 
     // Catalogue checks the reader-facing table deliberately does not surface: `type` (an internal
@@ -98,11 +179,11 @@ public static class Generator
     private static readonly HashSet<string> IntentionallyUndocumented =
         new(["type", "list", "bracket-literal"], StringComparer.Ordinal);
 
-    public static string ChecksTable()
+    public static string ChecksTable(TypeSchema t)
     {
         var severity = CheckCatalogue.All.ToDictionary(c => c.Id, c => c.Severity);
         List<string> headers = ["Check", "Level", "What it verifies"];
-        var rows = DocRows.Select(r => new List<string>
+        var rows = DocRows.Where(r => r.When is null || r.When(t)).Select(r => new List<string>
         {
             $"`{r.Label}`",
             severity.GetValueOrDefault(r.Ids[0], Sev.Error).ToString().ToLowerInvariant(),

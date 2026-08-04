@@ -22,6 +22,7 @@ fields:
     required: true
     type: enum
     values: [active, planned, retired]
+    description: Whether the control is running, intended, or stood down.
 
   verifies:
     required: true
@@ -36,6 +37,7 @@ fields:
     required: true
     type: enum
     values: [ci, review-checklist, manual-periodic, runtime-alert, not-enforced]
+    description: How the check happens. `not-enforced` is first-class — an honest gap beats a fiction.
     notes: >
       `not-enforced` is a first-class value and the point of the coverage report — it converts an aspiration
       into a visible number rather than letting the rulebook quietly become fiction. Do not invent a
@@ -46,6 +48,7 @@ fields:
     required-when: 'mechanism != not-enforced'
     type: enum
     values: [per-pr, per-deploy, daily, monthly, quarterly, annual]
+    description: How often it runs.
 
   evidence:
     required: false
@@ -58,6 +61,7 @@ fields:
     of: id
     ref: services
     allow-literal: [all]
+    description: Service ids, or `all`.
 
 sections:
   required: [What it checks, How it works, Coverage and gaps]

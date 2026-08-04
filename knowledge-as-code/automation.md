@@ -87,7 +87,7 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Type indexes                                | Frontmatter across the folder            | `<type>/INDEX.md`               | Done    |
 | Repository & launchpad tables               | `services/`                              | Root `README.md`                | Planned |
 | Per-type frontmatter reference              | `knowledge-as-code/schema/`              | `<type>.md` `schema-*` block    | Done    |
-| Full metadata reference                     | `knowledge-as-code/schema/`              | `knowledge-as-code/metadata.md` | Planned |
+| Universal frontmatter reference             | `knowledge-as-code/schema/_universal.yaml` | `metadata.md` `schema-universal` block | Done |
 | Rules digest                                | Active standards                         | Root `CLAUDE.md`                | Planned |
 | Control coverage report                     | `controls/` + standards' rules           | `controls/INDEX.md`             | Planned |
 | ISO alignment matrix                        | `policies/` `aligns-with`                | `policies/INDEX.md`             | Planned |

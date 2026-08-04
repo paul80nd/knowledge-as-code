@@ -18,10 +18,12 @@ fields:
     required: true
     type: enum
     values: [active, trial, retired]
+    description: Whether the integration is live, on trial, or retired.
 
   vendor:
     required: true
     type: string
+    description: Who supplies it.
 
   used-by:
     required: true
@@ -34,6 +36,7 @@ fields:
     required: true
     type: enum
     values: $enums.criticality
+    description: Judged by what a customer experiences when it is unavailable.
 
   their-sla:
     required: false

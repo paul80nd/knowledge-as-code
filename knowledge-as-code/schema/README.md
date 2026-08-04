@@ -36,8 +36,19 @@ fields:
     reciprocal: <field>         # the field on the target that must point back
     pattern: '<regex>'          # additional constraint
     default: <value>
-    notes: >                    # prose, rendered into the generated Metadata table
+    description: >              # one line, rendered into the generated Metadata table
+    notes: >                    # the longer why; schema-only, and the fallback when there is no description
 ```
+
+`description` and `notes` answer different questions. `description` is what a reader of the type page needs at a
+glance and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there
+is room for it. A field declaring only `notes` still renders them, so the two can be adopted a schema at a time — but
+where a note has grown past a line, that is the signal it wants a `description` beside it rather than a trim.
+
+**Keep a `description` under ~100 characters.** The generated table pads every column to its widest cell, so one long
+description widens every row on the page — a 153-character cell once made all ten ADR rows 190 wide. Enum `values` are
+not part of that budget: they render in a small table of their own beneath it rather than inside the cell, so declaring
+a sixth value costs nothing in the width of the main table.
 
 **Conventions the validator enforces globally**
 

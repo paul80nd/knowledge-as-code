@@ -38,14 +38,27 @@ being repeated in eighteen months.
 
 <!-- BEGIN GENERATED: schema-tools -->
 
-| Field        | Req | Type   | Notes                                            |
-|--------------|-----|--------|--------------------------------------------------|
-| `status`     | ●   | enum   | `approved` · `trial` · `deprecated` · `rejected` |
-| `category`   | ●   | string | e.g. `testing`, `build`, `observability`         |
-| `versions`   |     | string | Approved range                                   |
-| `licence`    |     | string | SPDX identifier                                  |
-| `decided-in` |     | id     | ADR id, where one exists                         |
-| `replaces`   |     | id     |                                                  |
+| Field        | Req | Type   | Notes                                                                                                |
+| ------------ | --- | ------ | ---------------------------------------------------------------------------------------------------- |
+| `id` †       | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                                |
+| `tier` †     | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                 |
+| `status` †   | ●   | enum   | `approved` means approved for new work; existing use that is not approved is drift.                  |
+| `owner` †    | ●   | string | A named person, never a team alias.                                                                  |
+| `tags` †     |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                     |
+| `category`   | ●   | string | e.g. `testing`, `build`, `observability`, `runtime`.                                                 |
+| `versions`   |     | string | A range, not a pin. The register states what we stand behind; the manifests state what is installed. |
+| `licence`    |     | string | SPDX identifier. The field nobody wants until they urgently do.                                      |
+| `decided-in` |     | id     | Where a decision was worth recording. Small, uncontroversial adoptions need only a register entry.   |
+| `replaces`   |     | id     | The tool id this supersedes.                                                                         |
+
+**Enum values**
+
+| Field    | Values                                                              |
+| -------- | ------------------------------------------------------------------- |
+| `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
+| `status` | `approved` · `trial` · `deprecated` · `rejected`                    |
+
+† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-tools -->
 
@@ -70,6 +83,24 @@ being repeated in eighteen months.
 
 <!-- BEGIN GENERATED: checks-tools -->
 
-_No automated checks yet — see [Automation](/knowledge-as-code/automation.md)._
+| Check                       | Level   | What it verifies                                                                             |
+| --------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                          |
+| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                               |
+| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                            |
+| `required-field`            | error   | Required and conditionally-required fields are present.                                      |
+| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                               |
+| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                         |
+| `enum`                      | error   | Enum values are in range and lowercase.                                                      |
+| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                 |
+| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                   |
+| `id`                        | error   | `id` carries the type's prefix and, where the type is numbered, matches the filename number. |
+| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                        |
+| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                              |
+| `h1`                        | error   | The document has an H1 and, where the type declares one, it matches the title pattern.       |
+| `required-section`          | error   | Every required section heading is present.                                                   |
+| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                               |
+| `undefined-label`           | error   | Every shortcut reference has a link definition.                                              |
+| `unused-definition`         | warning | A link definition that nothing references.                                                   |
 
 <!-- END GENERATED: checks-tools -->

@@ -18,17 +18,20 @@ fields:
     required: true
     type: enum
     values: [active, draft, retired]
+    description: Whether the process is current, drafted, or stood down.
 
   applies-to:
     required: false
     type: list
     of: id
     ref: services
+    description: Service ids this process concerns.
 
   last-rehearsed:
     required: true
     type: date
     allow-literal: [never]
+    description: Quoted date or `"never"`. Set when someone follows it end to end, not when the page is edited.
     notes: >
       Quoted date, or `"never"` — which is permitted and preferable to a guess. Updated when someone actually
       follows the process end to end, not when someone edits the document.
@@ -37,6 +40,7 @@ fields:
     required: false
     type: enum
     values: $enums.rehearsal-frequency
+    description: How often it should be exercised.
 
   requires-access:
     required: false

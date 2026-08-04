@@ -19,22 +19,26 @@ fields:
     required: true
     type: enum
     values: [active, draft, retired]
+    description: Whether the runbook is current, drafted, or stood down.
 
   applies-to:
     required: false
     type: list
     of: id
     ref: services
+    description: Service ids this runbook covers.
 
   severity:
     required: false
     type: enum
     values: $enums.severity
+    description: The severity this runbook is written for.
 
   last-rehearsed:
     required: true
     type: date
     allow-literal: [never]
+    description: '`"never"` is permitted, and is worth knowing before the incident rather than during it.'
     notes: >
       `"never"` is permitted, and is exactly the thing worth knowing before the incident rather than during it.
 
@@ -42,6 +46,7 @@ fields:
     required: false
     type: enum
     values: $enums.rehearsal-frequency
+    description: How often it should be exercised.
 
   requires-access:
     required: false

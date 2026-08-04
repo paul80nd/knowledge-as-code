@@ -40,13 +40,26 @@ Two exceptions, both because English has no plural to give: `data/` (mass noun) 
 
 Carried by every document in the taxonomy.
 
-| Field    | Required | Type   | Notes                                                                                                                                                                                                                                                                         |
-|----------|----------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id`     | Yes      | string | Stable, unique across the whole wiki, never reused. See [IDs](#ids).                                                                                                                                                                                                          |
-| `tier`   | Yes      | enum   | `decided` · `normative` · `descriptive` · `procedural` · `observed`. Derivable from the folder, but stated because it is a **trust signal for the reader** — seeing "observed" at the top of a page tells you how much weight to give it. CI validates it matches the folder. |
-| `status` | Yes      | enum   | Values vary by type — see [per-type](#per-type-fields).                                                                                                                                                                                                                       |
-| `owner`  | Yes      | string | A named person, never a team alias. Someone must be answerable.                                                                                                                                                                                                               |
-| `tags`   | No       | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                                                                                                                                                                              |
+<!-- BEGIN GENERATED: schema-universal -->
+
+| Field    | Req | Type   | Notes                                                                                |
+| -------- | --- | ------ | ------------------------------------------------------------------------------------ |
+| `id`     | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `tier`   | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
+| `status` | ●   | enum   | Values vary by type.                                                                 |
+| `owner`  | ●   | string | A named person, never a team alias.                                                  |
+| `tags`   |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+
+**Enum values**
+
+| Field  | Values                                                              |
+| ------ | ------------------------------------------------------------------- |
+| `tier` | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
+
+<!-- END GENERATED: schema-universal -->
+
+`id` is the anchor for every cross-reference — see [IDs](#ids); `status` values are set by each type and are
+listed under [per-type fields](#per-type-fields).
 
 Deliberately absent, and why:
 

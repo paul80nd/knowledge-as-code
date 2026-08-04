@@ -60,25 +60,45 @@ public static class Commands
             (byType.TryGetValue(doc.Type.Folder, out var list) ? list : byType[doc.Type.Folder] = []).Add(doc);
         }
 
-        // Compute the full intended content of every affected file. A type is
-        // regenerated only if it has at least one record, so unmigrated types (empty
-        // INDEX.md, other <type>.md pages) are never touched.
+        // Compute the full intended content of every affected file.
         var targets = new List<(string path, string content)>();
-        foreach (var (folder, docs) in byType.OrderBy(kv => kv.Key))
+
+        // Every type with a folder gets an INDEX, populated or not — each type page links to one, so a
+        // withheld file is a dead link rather than a tidy absence. Types without a folder (glossary is
+        // the single-document type) have nothing to index, and a folder absent from disk is skipped so
+        // the generator never conjures a directory.
+        foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key))
         {
-            var t = schema.ByFolder[folder];
+            if (string.IsNullOrEmpty(t.Folder) || !Directory.Exists(Path.Combine(repoRoot, t.Folder))) continue;
+            var docs = byType.TryGetValue(t.Folder, out var found) ? found : [];
+            targets.Add((Path.Combine(repoRoot, t.Folder, "INDEX.md"), Generator.IndexPage(t, docs)));
+        }
 
-            var indexPath = Path.Combine(repoRoot, folder, "INDEX.md");
-            targets.Add((indexPath, Generator.IndexPage(t, docs)));
-
+        // The schema and checks blocks derive from the schema alone, so every type gets them whether or
+        // not it holds records yet. Regenerating only populated types meant an unmigrated page kept
+        // whatever had been hand-written into its markers — text nothing checked, describing fields and
+        // checks that were often not the ones the schema declared. The first record for a type would
+        // then rewrite the page and expose the drift, which is exactly when nobody wants the surprise.
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key))
+        {
             var pagePath = Path.Combine(repoRoot, t.Page);
-            if (File.Exists(pagePath))
-            {
-                var text = Files.ReadLf(pagePath);
-                text = Generator.SpliceBlock(text, $"schema-{folder}", Generator.SchemaTable(t));
-                text = Generator.SpliceBlock(text, $"checks-{folder}", Generator.ChecksTable());
-                targets.Add((pagePath, text));
-            }
+            if (!File.Exists(pagePath)) continue;
+
+            var text = Files.ReadLf(pagePath);
+            text = Generator.SpliceBlock(text, $"schema-{key}", Generator.SchemaTable(t, schema));
+            text = Generator.SpliceBlock(text, $"checks-{key}", Generator.ChecksTable(t));
+            targets.Add((pagePath, text));
+        }
+
+        // metadata.md documents the universal fields for the whole taxonomy. It is not a type page —
+        // it has no records and no folder — but it is derived from the same schema, so it is generated
+        // on the same pass rather than hand-maintained beside it.
+        var metadataPath = Path.Combine(repoRoot, "knowledge-as-code", "metadata.md");
+        if (File.Exists(metadataPath))
+        {
+            var text = Generator.SpliceBlock(Files.ReadLf(metadataPath), "schema-universal",
+                Generator.UniversalSchemaTable(schema));
+            targets.Add((metadataPath, text));
         }
 
         if (check)

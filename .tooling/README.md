@@ -1,8 +1,8 @@
 # `.tooling` — the knowledge-as-code tooling
 
 `kac` validates and generates a knowledge corpus against the machine-readable schema in
-`knowledge-as-code/schema/`. The command you run is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small
-**`kac.core`** library that holds the mechanics; `dotnet run` builds and runs it with no build step to manage. The schema
+`knowledge-as-code/schema/`. The command you run is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **
+`kac.core`** library that holds the mechanics; `dotnet run` builds and runs it with no build step to manage. The schema
 is the source of truth: `kac` reads it and enforces it, so **adding a knowledge type is adding a YAML file, not editing
 this tool**.
 
@@ -32,11 +32,11 @@ invocation per subcommand** — file-based apps share build output and contend i
 
 Three layers, all run in CI (see [`.github/workflows/kac.yml`](../.github/workflows/kac.yml)):
 
-| Layer       | Project / file           | Run                                | Covers                                                                                                                     |
-|-------------|--------------------------|------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| **Unit**    | `kac.tests` (xUnit v3)   | `dotnet test .tooling/kac.tests`   | `kac.core`'s shared primitives (`Glob`, `Yaml`, `Schema` helpers, `Manifest.Resolve`, `Md`, …) — fast, precise localization. |
-| **Feature** | `kac.features` (Reqnroll)| `dotnet test .tooling/kac.features`| Validator **behaviour** — "what findings this document produces" — as Gherkin specs driving `kac.core` in-process.        |
-| **Golden**  | `kac-tests.cs`           | `dotnet run .tooling/kac-tests.cs` | Fixtures diffed against committed goldens, plus the coverage & checks-table gates and the CLI contract (exit codes). See [`tests/README.md`](tests/README.md). |
+| Layer       | Project / file            | Run                                 | Covers                                                                                                                                                         |
+|-------------|---------------------------|-------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Unit**    | `kac.tests` (xUnit v3)    | `dotnet test .tooling/kac.tests`    | `kac.core`'s shared primitives (`Glob`, `Yaml`, `Schema` helpers, `Manifest.Resolve`, `Md`, …) — fast, precise localization.                                   |
+| **Feature** | `kac.features` (Reqnroll) | `dotnet test .tooling/kac.features` | Validator **behaviour** — "what findings this document produces" — as Gherkin specs driving `kac.core` in-process.                                             |
+| **Golden**  | `kac-tests.cs`            | `dotnet run .tooling/kac-tests.cs`  | Fixtures diffed against committed goldens, plus the coverage & checks-table gates and the CLI contract (exit codes). See [`tests/README.md`](tests/README.md). |
 
 The unit layer catches breakage in the pieces early; the feature layer is the readable regression net for what the
 validator does; the golden/subprocess layer owns the end-to-end CLI contract that the in-process layers bypass.
@@ -74,17 +74,18 @@ is `severity: warning` in the schema (or a soft heuristic) and does **not** fail
 
 ### Frontmatter (from `_universal.yaml` + `<type>.yaml`)
 
-| Check                                             | Level | What it enforces                                                                           |
-|---------------------------------------------------|-------|--------------------------------------------------------------------------------------------|
-| `frontmatter-parses`                              | error | The block is valid YAML and a mapping.                                                     |
-| `unknown-key`                                     | error | Every key is a universal field, a type field, or a reserved ADO key.                       |
-| `key-order`                                       | error | Order is a **topological extension** of the schema's declared field orders — see below.    |
-| `required-field`                                  | error | Every `required` field (and every `required-when` field whose condition holds) is present. |
-| `bare-key`                                        | error | An absent value is a bare key (`decided-on:`), never `null`, `~`, `""`, `''` or `—`.       |
-| `date-quoted` / `date-format`                     | error | `type: date` fields are quoted and `YYYY-MM-DD` in shape.                                  |
-| `enum` / `enum-lowercase`                         | error | `type: enum` values are in range and lowercase.                                            |
-| `tier-matches-type`                               | error | `tier` equals the tier the type declares.                                                  |
-| `id-prefix` / `id-format` / `id-matches-filename` | error | `id` has the type's prefix and width, and its number matches the filename.                 |
+| Check                                             | Level | What it enforces                                                                                |
+|---------------------------------------------------|-------|-------------------------------------------------------------------------------------------------|
+| `frontmatter-parses`                              | error | The block is valid YAML and a mapping.                                                          |
+| `unknown-key`                                     | error | Every key is a universal field, a type field, or a reserved ADO key.                            |
+| `key-order`                                       | error | Order is a **topological extension** of the schema's declared field orders — see below.         |
+| `required-field`                                  | error | Every `required` field (and every `required-when` field whose condition holds) is present.      |
+| `bare-key`                                        | error | An absent value is a bare key (`decided-on:`), never `null`, `~`, `""`, `''` or `—`.            |
+| `date-quoted` / `date-format`                     | error | `type: date` fields are quoted and `YYYY-MM-DD` in shape.                                       |
+| `enum` / `enum-lowercase`                         | error | `type: enum` values are in range and lowercase.                                                 |
+| `field-pattern`                                   | error | A field's value matches its declared `pattern:` — per entry for a list, per value for a scalar. |
+| `tier-matches-type`                               | error | `tier` equals the tier the type declares.                                                       |
+| `id-prefix` / `id-format` / `id-matches-filename` | error | `id` has the type's prefix and width, and its number matches the filename.                      |
 
 ### Identity & structure (from `<type>.yaml`)
 
@@ -132,16 +133,16 @@ corpus, and still catches genuine disorder (`tags` before `id`, `related` before
 
 `index` regenerates content that is derived from frontmatter and the schema, so it never has to be maintained by hand:
 
-| Artefact                                        | Built from                          | Rule                                                                                                         |
-|-------------------------------------------------|-------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `<type>/INDEX.md`                               | frontmatter across the folder       | Regenerated **wholly**; columns and sort come from the schema's `index` block; carries a do-not-edit banner. |
-| `<!-- … schema-<type> -->` block in `<type>.md` | the type's `fields`                 | The frontmatter reference table.                                                                             |
-| `<!-- … checks-<type> -->` block in `<type>.md` | the checks the validator implements | The "What CI checks" table.                                                                                  |
+| Artefact                                        | Built from                          | Rule                                                                                                                                                                                            |
+|-------------------------------------------------|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<type>/INDEX.md`                               | frontmatter across the folder       | Regenerated **wholly**; columns and sort come from the schema's `index` block; carries a do-not-edit banner. A type with no records yet gets an index saying so rather than a table with no rows; a type with no folder (glossary) gets none.                                                                                    |
+| `<!-- … schema-<type> -->` block in `<type>.md` | `_universal.yaml` + the type's `fields` | The frontmatter reference table — universal fields first, marked `†`, then the type's own. Each row renders the field's `description`, falling back to `notes` where the schema declares none. |
+| `<!-- … schema-universal -->` block in `metadata.md` | `_universal.yaml` | The universal field reference, documented once for the taxonomy rather than per type. |
+| `<!-- … checks-<type> -->` block in `<type>.md` | the checks the validator implements | The "What CI checks" table. Rows a type cannot trip — a rule it does not declare, a reciprocal or mirrors-section field it does not have — are omitted, so each page lists only its own checks. |
 
-Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of `<type>.md` is byte-preserved. A type is
-regenerated only if it has at least one frontmatter-bearing record, so unmigrated types are never touched — today that
-means `adrs/INDEX.md` and the two blocks in
-`adrs.md`.
+Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of `<type>.md` is byte-preserved. Every
+type is regenerated whether or not it holds records: the blocks derive from the schema alone, and an index that waits
+for its first record is a dead link from the type page until then.
 
 Three rules hold this together:
 
@@ -166,8 +167,10 @@ exit non-zero, never write.
 The reference defaults to `upstream.url` in `knowledge-as-code/mechanism.lock`, so a consumer that records where it
 synced from can run a bare `mechanism --check`. What it reports:
 
-- **synced** files that differ, are missing on either side, or match no manifest rule at all — each an **error** (exit `1`).
-- **forked** files are compared too, but only counted: how many differ from the reference is informational and never fails.
+- **synced** files that differ, are missing on either side, or match no manifest rule at all — each an **error** (exit
+  `1`).
+- **forked** files are compared too, but only counted: how many differ from the reference is informational and never
+  fails.
 - **generated**, **local** and **ignored** files are skipped — each corpus owns its own.
 - **accepted divergences** listed in `mechanism.lock` are honoured rather than flagged as drift, and any that have
   quietly become identical to the reference again are named as `RESOLVED` so the stale entry can be removed.

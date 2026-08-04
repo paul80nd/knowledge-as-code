@@ -1,8 +1,8 @@
 {
   "summary": {
-    "validated": 3,
+    "validated": 5,
     "skipped": 0,
-    "errors": 4,
+    "errors": 7,
     "warnings": 0
   },
   "findings": [
@@ -33,6 +33,27 @@
       "severity": "error",
       "check": "frontmatter-parses",
       "message": "frontmatter is not a valid YAML mapping."
+    },
+    {
+      "file": "adrs/0004-bad-tag-pattern.md",
+      "line": 7,
+      "severity": "error",
+      "check": "field-pattern",
+      "message": "'tags' entry 'Not Lowercase' does not match ^[a-z0-9-]+$."
+    },
+    {
+      "file": "adrs/0004-bad-tag-pattern.md",
+      "line": 9,
+      "severity": "error",
+      "check": "field-pattern",
+      "message": "'tags' entry 'trailing_underscore' does not match ^[a-z0-9-]+$."
+    },
+    {
+      "file": "tools/bad-licence-pattern.md",
+      "line": 5,
+      "severity": "error",
+      "check": "field-pattern",
+      "message": "'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\\-+ ()]+$."
     }
   ]
 }

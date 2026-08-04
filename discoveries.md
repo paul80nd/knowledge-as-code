@@ -39,15 +39,37 @@ Boundaries:
 
 <!-- BEGIN GENERATED: schema-discoveries -->
 
-| Field         | Req | Type   | Notes                                                    |
-|---------------|-----|--------|----------------------------------------------------------|
-| `status`      | ●   | enum   | `open` · `promoted` · `expired` · `rejected`             |
-| `source`      | ●   | enum   | `human` · `session` · `dreamed`                          |
-| `confidence`  | ●   | enum   | `unverified` · `corroborated` · `confirmed`              |
-| `expires`     | ●   | date   | Quoted. Default: 90 days from capture.                   |
-| `provenance`  |     | string | Where it came from — required when `source` is `dreamed` |
-| `applies-to`  |     | list   | Service ids                                              |
-| `promoted-to` |     | id     | Set when promoted                                        |
+| Field         | Req | Type   | Notes                                                                                             |
+| ------------- | --- | ------ | ------------------------------------------------------------------------------------------------- |
+| `id` †        | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                             |
+| `tier` †      | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.              |
+| `status` †    | ●   | enum   | Open until promoted, expired or rejected.                                                         |
+| `owner` †     | ●   | string | A named person, never a team alias.                                                               |
+| `tags` †      |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                  |
+| `source`      | ●   | enum   | Who or what observed it. `dreamed` means proposed by an agent.                                    |
+| `confidence`  | ●   | enum   | Stays `unverified` unless genuinely proven. An agent cannot confirm its own observation.          |
+| `expires`     | ●   | date   | Perishable by default. An observation nobody has needed in three months was probably situational. |
+| `provenance`  |     | string | A reference back to the session and passage, so review is a check rather than an act of faith.    |
+| `applies-to`  |     | list   | Service ids this observation concerns.                                                            |
+| `promoted-to` |     | id     | The FAQ or standard this became.                                                                  |
+
+**Enum values**
+
+| Field        | Values                                                              |
+| ------------ | ------------------------------------------------------------------- |
+| `tier`       | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
+| `status`     | `open` · `promoted` · `expired` · `rejected`                        |
+| `source`     | `human` · `session` · `dreamed`                                     |
+| `confidence` | `unverified` · `corroborated` · `confirmed`                         |
+
+**Conditionally required**
+
+| Field         | Required when        |
+| ------------- | -------------------- |
+| `provenance`  | `source == dreamed`  |
+| `promoted-to` | `status == promoted` |
+
+† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-discoveries -->
 
@@ -79,6 +101,25 @@ _(The automatic half is not built yet — see [Automation](/knowledge-as-code/au
 
 <!-- BEGIN GENERATED: checks-discoveries -->
 
-_No automated checks yet — see [Automation](/knowledge-as-code/automation.md)._
+| Check                       | Level   | What it verifies                                                                             |
+| --------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                          |
+| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                               |
+| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                            |
+| `required-field`            | error   | Required and conditionally-required fields are present.                                      |
+| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                               |
+| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                         |
+| `enum`                      | error   | Enum values are in range and lowercase.                                                      |
+| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                 |
+| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                   |
+| `id`                        | error   | `id` carries the type's prefix and, where the type is numbered, matches the filename number. |
+| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                        |
+| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                              |
+| `h1`                        | error   | The document has an H1 and, where the type declares one, it matches the title pattern.       |
+| `required-section`          | error   | Every required section heading is present.                                                   |
+| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                               |
+| `undefined-label`           | error   | Every shortcut reference has a link definition.                                              |
+| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                             |
+| `unused-definition`         | warning | A link definition that nothing references.                                                   |
 
 <!-- END GENERATED: checks-discoveries -->
