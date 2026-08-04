@@ -171,7 +171,7 @@ knowledge-as-code/     # the system's own documentation — outside the taxonomy
   manifest.yaml        # which files are shared and which are local
   mechanism.lock       # this corpus's sync state
 .claude/skills/        # agent machinery — SYNCED
-.ci/                   # validators and generators — SYNCED
+.tooling/                   # validators and generators — SYNCED
 _plan/                 # migration scaffolding — temporary
 _reports/              # GENERATED
 ```

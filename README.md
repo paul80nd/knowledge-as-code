@@ -30,7 +30,7 @@ Which files fall on which side is declared in
 | `kac validate` | ~20 checks — frontmatter against schema, identity, structure, link resolution, graph reciprocity |
 | `kac index`    | Generates `<type>/INDEX.md` and the schema/checks tables inside each type root page              |
 | `kac checks`   | Lists every check the validator implements                                                       |
-| Tests          | Eight fixture scenarios, run by `.ci/kac-tests.cs`, with golden expectations                     |
+| Tests          | Three layers — unit (`kac.tests`), Reqnroll feature specs (`kac.features`), golden fixtures (`kac-tests.cs`) |
 | Proven types   | **ADRs only.** The other sixteen schemas are written but have never validated a real document    |
 
 That last row is the honest limit. The schema will be wrong in ways only real content reveals, and only one type has met
@@ -48,20 +48,23 @@ corpus carries — generic, and the part a derived copy keeps and adapts as its 
 
 ## Getting started
 
-Requires the **.NET 10 SDK**. `kac` is a file-based app — no project file, no build step.
+Requires the **.NET 10 SDK**. `kac` runs via `dotnet run` — no build step to manage.
 
 ```bash
 git clone https://github.com/paul80nd/knowledge-as-code.git my-wiki
 cd my-wiki
 
-dotnet run .ci/kac.cs -- validate     # validate the corpus
-dotnet run .ci/kac.cs -- index        # regenerate indexes and generated blocks
-dotnet run .ci/kac.cs -- checks       # list the checks
-dotnet run .ci/kac-tests.cs           # run the test suite
+./kac validate                     # validate the corpus
+./kac index                        # regenerate indexes and generated blocks
+./kac checks                       # list the checks
+dotnet run .tooling/kac-tests.cs   # run the golden test suite
 ```
 
+`./kac` (Windows: `kac.cmd`) is a launcher at the repo root that wraps `dotnet run .tooling/kac.cs`; add the repo root to
+your `PATH` to run it as `kac`.
+
 To start your own corpus: clone, delete the type folders you don't want, rewrite the root pages' examples in your own
-domain, and start adding records. Keep `.ci/` and `knowledge-as-code/schema/` as they are — those are the half you want
+domain, and start adding records. Keep `.tooling/` and `knowledge-as-code/schema/` as they are — those are the half you want
 to receive updates to.
 
 ## Layout
@@ -81,7 +84,8 @@ knowledge-as-code/     # the system's own documentation
   ├── manifest.yaml    # which files are shared, which are local
   ├── mechanism.lock   # this corpus's sync state
   └── schema/          # the machine-readable schema — the source of truth
-.ci/                   # kac, its tests and fixtures
+kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
+.tooling/              # the kac tool: entrypoint + kac.core library, plus its tests and fixtures
 ```
 
 Adding a knowledge type is adding a YAML file to `schema/`, not editing the tool.

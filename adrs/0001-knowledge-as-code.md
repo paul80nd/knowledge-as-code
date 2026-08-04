@@ -55,7 +55,7 @@ We treat knowledge as code. Concretely:
 * **CI validates** schema conformance, ID uniqueness, link resolution and bidirectional relationships, and **generates**
   indexes, reports and an always-loaded rules digest.
 * **The mechanism is separable from the content.** Schema, validators, generators and skills live under
-  `knowledge-as-code/` and `.ci/`, carry no organisation specifics, and are not themselves governed by the taxonomy.
+  `knowledge-as-code/` and `.tooling/`, carry no organisation specifics, and are not themselves governed by the taxonomy.
 
 The full approach is described in [Knowledge as Code](/knowledge-as-code.md).
 

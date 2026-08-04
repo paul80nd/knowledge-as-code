@@ -3,7 +3,7 @@
 # Runs the kac validator and the generated-content freshness check on pull
 # requests into main. It NEVER writes or commits generated files: `index --check`
 # only verifies they are fresh and fails, naming the command a human runs locally
-# (`dotnet run .ci/kac.cs -- index`). A pipeline must never push.
+# (`dotnet run .tooling/kac.cs -- index`). A pipeline must never push.
 #
 # Wiring PR validation (important): this is an Azure Repos repository, where the
 # YAML `pr:` trigger below is IGNORED. Add this pipeline as a required
@@ -36,10 +36,10 @@ steps:
 
   # One invocation per subcommand, run sequentially. File-based apps share build
   # output, so the two kac runs must not execute concurrently.
-  - script: dotnet run .ci/kac.cs -- validate
+  - script: dotnet run .tooling/kac.cs -- validate
     displayName: Validate frontmatter, links and structure
     workingDirectory: $(Build.SourcesDirectory)
 
-  - script: dotnet run .ci/kac.cs -- index --check
+  - script: dotnet run .tooling/kac.cs -- index --check
     displayName: Check generated indexes are fresh
     workingDirectory: $(Build.SourcesDirectory)

@@ -69,8 +69,8 @@ rules:
 
   # ── synced: the tool's own tree ──────────────────────────────────────────────────────────────
   # Ahead of `generated`, because the test fixtures contain golden INDEX.md files that are shared
-  # test data, not generated output. Everything under `.ci/` is mechanism whatever it is called.
-  - path: ".ci/**"
+  # test data, not generated output. Everything under `.tooling/` is mechanism whatever it is called.
+  - path: ".tooling/**"
     layer: synced
     note: >
       Validator, generator, test runner and fixtures. Fixtures are part of the shared layer, so
@@ -80,7 +80,7 @@ rules:
   # ── generated ────────────────────────────────────────────────────────────────────────────────
   # Matched before `synced`/`forked` so that generated files inside otherwise-shared folders
   # resolve correctly.
-  - { path: "**/INDEX.md",                 layer: generated, note: "Corpus indexes. Fixture INDEX.md files are caught by the .ci/ rule above." }
+  - { path: "**/INDEX.md",                 layer: generated, note: "Corpus indexes. Fixture INDEX.md files are caught by the .tooling/ rule above." }
   - { path: "CLAUDE.md",                   layer: generated, note: "Rules digest." }
   - { path: ".index.json",                 layer: generated, note: "Machine-readable corpus map." }
   - { path: "_reports/**",                 layer: generated, note: "Coverage and staleness reports." }
