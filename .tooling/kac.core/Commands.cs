@@ -75,10 +75,21 @@ public static class Commands
             if (File.Exists(pagePath))
             {
                 var text = Files.ReadLf(pagePath);
-                text = Generator.SpliceBlock(text, $"schema-{folder}", Generator.SchemaTable(t));
+                text = Generator.SpliceBlock(text, $"schema-{folder}", Generator.SchemaTable(t, schema));
                 text = Generator.SpliceBlock(text, $"checks-{folder}", Generator.ChecksTable(t));
                 targets.Add((pagePath, text));
             }
+        }
+
+        // metadata.md documents the universal fields for the whole taxonomy. It is not a type page —
+        // it has no records and no folder — but it is derived from the same schema, so it is generated
+        // on the same pass rather than hand-maintained beside it.
+        var metadataPath = Path.Combine(repoRoot, "knowledge-as-code", "metadata.md");
+        if (File.Exists(metadataPath))
+        {
+            var text = Generator.SpliceBlock(Files.ReadLf(metadataPath), "schema-universal",
+                Generator.UniversalSchemaTable(schema));
+            targets.Add((metadataPath, text));
         }
 
         if (check)

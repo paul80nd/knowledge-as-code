@@ -42,12 +42,18 @@ specific decision with the alternatives that were weighed; a policy states a pos
 
 <!-- BEGIN GENERATED: schema-policies -->
 
-| Field            | Req | Type | Notes                                                   |
-| ---------------- | --- | ---- | ------------------------------------------------------- |
-| `status`         | ●   | enum | `draft` · `active` · `retired`                          |
-| `aligns-with`    |     | list | e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance. |
-| `implemented-by` |     | list | Standard ids.                                           |
-| `review-by`      | ●   | date | Quoted. Annual is usually right for a policy.           |
+| Field            | Req | Type   | Notes                                                                                                                                                     |
+| ---------------- | --- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                                                                                     |
+| `tier` †         | ●   | enum   | `decided` · `normative` · `descriptive` · `procedural` · `observed`. Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
+| `status` †       | ●   | enum   | `draft` · `active` · `retired`                                                                                                                            |
+| `owner` †        | ●   | string | A named person, never a team alias.                                                                                                                       |
+| `tags` †         |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                                                          |
+| `aligns-with`    |     | list   | e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance.                                                                                                   |
+| `implemented-by` |     | list   | Standard ids.                                                                                                                                             |
+| `review-by`      | ●   | date   | Quoted. Annual is usually right for a policy.                                                                                                             |
+
+† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-policies -->
 

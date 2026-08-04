@@ -29,11 +29,59 @@ public class GeneratorTests
             }
         };
 
-        var table = Generator.SchemaTable(t);
+        var table = Generator.SchemaTable(t, new Schema());
 
         Assert.Contains("SHORT", table);
         Assert.DoesNotContain("LONG", table); // description wins outright — the two are not concatenated
         Assert.Contains("FALLBACK", table);   // notes still render where no description exists
+    }
+
+    [Fact]
+    public void SchemaTable_leads_with_marked_universal_fields_and_shows_the_type_refinement()
+    {
+        var s = new Schema
+        {
+            UniversalOrder = ["id", "status"],
+            Universal = new Dictionary<string, FieldSpec>
+            {
+                ["id"] = new() { Name = "id", Required = true, Description = "UNIVERSAL-ID" },
+                ["status"] = new() { Name = "status", Type = "enum", Description = "VARIES BY TYPE" }
+            }
+        };
+        var t = new TypeSchema
+        {
+            FieldOrder = ["status", "own-field"],
+            Fields = new Dictionary<string, FieldSpec>
+            {
+                // The type narrows the universal status; the table must show the narrowing.
+                ["status"] = new() { Name = "status", Type = "enum", Values = ["draft"], Description = "REFINED" },
+                ["own-field"] = new() { Name = "own-field", Description = "TYPE-ONLY" }
+            }
+        };
+
+        var table = Generator.SchemaTable(t, s);
+
+        Assert.Contains("`id` †", table);         // universal fields are marked…
+        Assert.Contains("`status` †", table);     // …including one the type redeclares
+        Assert.Contains("`own-field`", table);
+        Assert.DoesNotContain("`own-field` †", table);
+        Assert.Contains("REFINED", table);        // EffectiveField wins over the universal declaration
+        Assert.DoesNotContain("VARIES BY TYPE", table);
+        Assert.True(table.IndexOf("`id`", StringComparison.Ordinal)
+                    < table.IndexOf("`own-field`", StringComparison.Ordinal)); // universal first
+        Assert.Contains("† Carried by every document", table);
+    }
+
+    [Fact]
+    public void SchemaTable_omits_the_legend_when_no_universal_field_applies()
+    {
+        var t = new TypeSchema
+        {
+            FieldOrder = ["own-field"],
+            Fields = new Dictionary<string, FieldSpec> { ["own-field"] = new() { Name = "own-field" } }
+        };
+
+        Assert.DoesNotContain("†", Generator.SchemaTable(t, new Schema()));
     }
 
     [Fact]

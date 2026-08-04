@@ -35,14 +35,46 @@ public static class Generator
         return Escape(d.FrontScalar(col) ?? "");
     }
 
-    public static string SchemaTable(TypeSchema t)
+    // The frontmatter reference on a type page: every field a document of that type carries, universal
+    // ones included. Showing only the type's own declarations left three required fields (id, tier,
+    // owner) off the page an author writes from, on the argument that metadata.md covers them — but a
+    // reader following that argument has to leave the page, and metadata.md drifted anyway.
+    //
+    // Universal fields come first, in the universal order, and are read through EffectiveField so a
+    // type that refines one (every type narrows `status` to its own values) shows the refinement rather
+    // than the universal placeholder. They are marked rather than separated: one table is one scan,
+    // which is what someone filling in frontmatter actually wants.
+    public static string SchemaTable(TypeSchema t, Schema s)
     {
         List<string> headers = ["Field", "Req", "Type", "Notes"];
-        var rows = t.FieldOrder.Select(name =>
-        {
-            var f = t.Fields[name];
-            return new List<string> { $"`{name}`", f.Required ? "●" : "", f.Type, NotesFor(f) };
-        }).ToList();
+        var universal = s.UniversalOrder.Where(n => s.EffectiveField(t, n) is not null).ToList();
+        var own = t.FieldOrder.Where(n => !universal.Contains(n));
+
+        var rows = universal.Select(n => Row(n, s.EffectiveField(t, n)!, true))
+            .Concat(own.Select(n => Row(n, t.Fields[n], false)))
+            .ToList();
+
+        var table = RenderTable(headers, rows);
+        return universal.Count == 0
+            ? table
+            : $"{table}\n\n† Carried by every document in the taxonomy — see "
+              + "[Metadata](/knowledge-as-code/metadata.md).";
+
+        static List<string> Row(string name, FieldSpec f, bool universal) =>
+            [$"`{name}`{(universal ? " †" : "")}", f.Required ? "●" : "", f.Type, NotesFor(f)];
+    }
+
+    // The same reference for metadata.md, which documents the universal fields once for the whole
+    // taxonomy. Values are the unrefined universal declarations — `status` is genuinely "varies by
+    // type" here, because there is no type in hand to narrow it.
+    public static string UniversalSchemaTable(Schema s)
+    {
+        List<string> headers = ["Field", "Req", "Type", "Notes"];
+        var rows = s.UniversalOrder
+            .Where(s.Universal.ContainsKey)
+            .Select(n => new List<string>
+                { $"`{n}`", s.Universal[n].Required ? "●" : "", s.Universal[n].Type, NotesFor(s.Universal[n]) })
+            .ToList();
         return RenderTable(headers, rows);
     }
 
@@ -50,7 +82,10 @@ public static class Generator
     {
         var parts = new List<string>();
         if (f is { Type: "enum", Values.Count: > 0 })
-            parts.Add(string.Join(" · ", f.Values.Select(v => $"`{v}`")));
+            // The value list is a fragment, not a sentence. Close it when prose follows, or the two
+            // run together as "`observed` Fixed for the type…".
+            parts.Add(string.Join(" · ", f.Values.Select(v => $"`{v}`"))
+                      + (string.IsNullOrEmpty(f.TableText) ? "" : "."));
         if (!string.IsNullOrEmpty(f.TableText)) parts.Add(f.TableText);
         if (!string.IsNullOrEmpty(f.RequiredWhen))
             parts.Add($"Required once `{f.RequiredWhen.Split("==").Last().Trim()}`.");
