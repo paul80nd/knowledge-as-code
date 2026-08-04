@@ -1,22 +1,27 @@
 // In-process unit tests for the pure Schema helpers, built from in-memory objects (no YAML files
 // needed). Schema.Load itself is covered end-to-end by the golden suite against the real schema.
+
+using kac.core;
+
+namespace kac.tests;
+
 public class SchemaTests
 {
     private static Schema SampleSchema() => new()
     {
         UniversalOrder = ["id", "status"],
-        Universal = new()
+        Universal = new Dictionary<string, FieldSpec>
         {
-            ["id"] = new FieldSpec { Name = "id" },
-            ["status"] = new FieldSpec { Name = "status" }, // universal status
+            ["id"] = new() { Name = "id" },
+            ["status"] = new() { Name = "status" } // universal status
         },
-        Reserved = ["wiki"],
+        Reserved = ["wiki"]
     };
 
     private static TypeSchema SampleType() => new()
     {
         FieldOrder = ["status", "date"],
-        Fields = new() { ["status"] = new FieldSpec { Name = "status", Required = true } }, // per-type override
+        Fields = new Dictionary<string, FieldSpec> { ["status"] = new() { Name = "status", Required = true } } // per-type override
     };
 
     [Fact]

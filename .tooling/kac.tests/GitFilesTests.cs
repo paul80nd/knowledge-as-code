@@ -1,5 +1,10 @@
 // Unit test for the non-git fallback walk (GitFiles.Walk), driven through a real temp tree.
 // GitFiles.Tracked (the git ls-files path) and Corpus.Discover are covered by the golden suite.
+
+using kac.core;
+
+namespace kac.tests;
+
 public class GitFilesTests
 {
     [Fact]

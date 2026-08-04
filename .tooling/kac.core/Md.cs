@@ -6,6 +6,8 @@ using Markdig.Syntax.Inlines;
 // Markdown helpers
 // ---------------------------------------------------------------------------
 
+namespace kac.core;
+
 public static class Md
 {
     public static string PlainText(ContainerInline? container)
@@ -15,9 +17,6 @@ public static class Md
         Walk(container, sb);
         return sb.ToString().Trim();
     }
-
-    public static string PlainText(LeafBlock? block)
-        => block?.Inline is null ? "" : PlainText(block.Inline);
 
     public static string PlainText(QuoteBlock quote)
     {

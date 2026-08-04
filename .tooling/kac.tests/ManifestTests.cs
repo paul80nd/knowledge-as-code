@@ -1,5 +1,10 @@
 // Unit tests for Manifest.Resolve — the first-rule-wins glob layering. Manifest.Load,
 // MechanismLock.Load and the MechanismCheck engine are covered by the golden 'mechanism' scenario.
+
+using kac.core;
+
+namespace kac.tests;
+
 public class ManifestTests
 {
     private static Manifest Sample() => new()
@@ -8,8 +13,8 @@ public class ManifestTests
         [
             new ManifestRule(["knowledge-as-code/**"], "synced"),
             new ManifestRule(["**/*.md"], "forked"),
-            new ManifestRule(["**"], "local"), // catch-all
-        ],
+            new ManifestRule(["**"], "local") // catch-all
+        ]
     };
 
     [Theory]

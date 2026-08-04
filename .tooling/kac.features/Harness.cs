@@ -3,6 +3,8 @@
 // Commands.Validate performs, but returning structured findings instead of printing. This is the
 // clean seam BDD steps bind to: Validator returns List<Finding> with no Console involved.
 
+using kac.core;
+
 public sealed record ValidationResult(List<Finding> Findings, int Validated, int Skipped);
 
 public static class Harness
@@ -33,7 +35,7 @@ public static class Harness
 
             foreach (var doc in docs)
                 Validator.CheckDocument(doc, schema, temp, findings);
-            Validator.CheckCorpus(docs, schema, findings);
+            Validator.CheckCorpus(docs, findings);
 
             return new ValidationResult(findings, docs.Count, skipped);
         }

@@ -4,6 +4,8 @@ using System.Text;
 // Generation — INDEX pages and the generated blocks in <type>.md
 // ---------------------------------------------------------------------------
 
+namespace kac.core;
+
 public static class Generator
 {
     private const string Banner =
@@ -75,7 +77,8 @@ public static class Generator
         ("id-unique", ["id-unique"], "`id` is unique across the whole wiki."),
         ("filename / slug-length", ["filename-pattern", "slug-length"],
             "Filename matches the pattern; the slug is within 30 characters."),
-        ("h1", ["h1", "h1-pattern", "h1-matches-id"], "The H1 matches the title pattern and its number matches the `id`."),
+        ("h1", ["h1", "h1-pattern", "h1-matches-id"],
+            "The H1 matches the title pattern and its number matches the `id`."),
         ("required-section", ["required-section"], "Every required section heading is present."),
         ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional)."),
         ("undefined-label", ["undefined-label"], "Every `[ADR-NNNN]` shortcut reference has a link definition."),
@@ -102,7 +105,7 @@ public static class Generator
         var rows = DocRows.Select(r => new List<string>
         {
             $"`{r.Label}`",
-            (severity.TryGetValue(r.Ids[0], out var s) ? s : Sev.Error).ToString().ToLowerInvariant(),
+            severity.GetValueOrDefault(r.Ids[0], Sev.Error).ToString().ToLowerInvariant(),
             r.Description
         }).ToList();
         return RenderTable(headers, rows);
@@ -121,10 +124,12 @@ public static class Generator
             problems.Add($"the checks table documents '{id}', which is not a catalogue check (stale row).");
         foreach (var id in catalogue.Where(id => !documented.Contains(id) && !IntentionallyUndocumented.Contains(id))
                      .Order(StringComparer.Ordinal))
-            problems.Add($"catalogue check '{id}' is neither in the checks table nor waived in IntentionallyUndocumented.");
+            problems.Add(
+                $"catalogue check '{id}' is neither in the checks table nor waived in IntentionallyUndocumented.");
         foreach (var id in IntentionallyUndocumented.Where(id => documented.Contains(id) || !catalogue.Contains(id))
                      .Order(StringComparer.Ordinal))
-            problems.Add($"'{id}' is waived in IntentionallyUndocumented but is documented or unknown — drop the waiver.");
+            problems.Add(
+                $"'{id}' is waived in IntentionallyUndocumented but is documented or unknown — drop the waiver.");
 
         return problems;
     }

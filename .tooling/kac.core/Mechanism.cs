@@ -1,5 +1,8 @@
 // The `mechanism --check` engine: resolve every file against the manifest and compare the synced
 // layer against the reference. Read-only — it classifies and reports, and never writes.
+
+namespace kac.core;
+
 public static class MechanismCheck
 {
     public static int Run(string localRoot, string refRoot, Manifest manifest, MechanismLock lockFile)
@@ -30,7 +33,7 @@ public static class MechanismCheck
             {
                 case "synced":
                     var identical = inLocal && inRef
-                        && Files.ReadLf(Path.Combine(localRoot, rel)) == Files.ReadLf(Path.Combine(refRoot, rel));
+                                            && Files.ReadLf(Path.Combine(localRoot, rel)) == Files.ReadLf(Path.Combine(refRoot, rel));
 
                     if (accepted.Contains(rel))
                     {
@@ -60,9 +63,9 @@ public static class MechanismCheck
 
         Console.WriteLine($"mechanism: comparing the synced layer against {refRoot}");
         var errors = Section("DRIFT — synced files differ from the reference", drift)
-            + Section("MISSING LOCALLY — synced files in the reference but not here", missingLocally)
-            + Section("MISSING UPSTREAM — synced files here but not in the reference", missingUpstream)
-            + Section("UNCLASSIFIED — files matching no manifest rule", unclassified);
+                     + Section("MISSING LOCALLY — synced files in the reference but not here", missingLocally)
+                     + Section("MISSING UPSTREAM — synced files here but not in the reference", missingUpstream)
+                     + Section("UNCLASSIFIED — files matching no manifest rule", unclassified);
 
         if (resolvedDivergence.Count > 0)
         {

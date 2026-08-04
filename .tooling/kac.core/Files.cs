@@ -2,6 +2,8 @@
 // Small file helpers
 // ---------------------------------------------------------------------------
 
+namespace kac.core;
+
 public static class Files
 {
     // Read a file as text with LF line endings, so content comparison and generation are

@@ -1,5 +1,6 @@
 using YamlDotNet.RepresentationModel;
 
+namespace kac.core;
 // ---------------------------------------------------------------------------
 // Portability manifest & mechanism sync state
 // ---------------------------------------------------------------------------
@@ -35,9 +36,9 @@ public class Manifest
     public string? Resolve(string relPath)
     {
         foreach (var rule in Rules)
-            foreach (var pattern in rule.Patterns)
-                if (Glob.IsMatch(relPath, pattern))
-                    return rule.Layer;
+        foreach (var pattern in rule.Patterns)
+            if (Glob.IsMatch(relPath, pattern))
+                return rule.Layer;
         return null;
     }
 }
@@ -48,7 +49,7 @@ public class MechanismLock
 {
     public string Role = "";
     public string? UpstreamUrl;
-    public List<AcceptedDivergence> Accepted = [];
+    public readonly List<AcceptedDivergence> Accepted = [];
 
     public static MechanismLock Load(string repoRoot)
     {

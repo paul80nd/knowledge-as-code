@@ -4,6 +4,8 @@ using YamlDotNet.RepresentationModel;
 // YAML helpers over the representation model
 // ---------------------------------------------------------------------------
 
+namespace kac.core;
+
 public static class Yaml
 {
     public static YamlNode LoadFile(string path)
