@@ -62,7 +62,7 @@ checks.SetAction(pr => Commands.Checks(pr.GetValue(checksJsonOpt)));
 // recompute, compare, name what is stale, exit non-zero, never write. `--sync` (the write half)
 // is not implemented yet — see issue #6.
 var mechCheckOpt = new Option<bool>("--check") { Description = "Compare the synced layer against a reference and report drift; never writes." };
-var againstOpt = new Option<string?>("--against") { Description = "Reference corpus to compare against (a path). Defaults to upstream.url in mechanism.lock." };
+var againstOpt = new Option<string?>("--against") { Description = "Reference corpus to compare against (a path). Defaults to upstream.url in .mechanism.lock." };
 var mechanism = new Command("mechanism", "Enforce the portability manifest: compare the synced layer against a reference.")
 {
     mechCheckOpt,

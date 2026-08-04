@@ -1,7 +1,8 @@
 # knowledge-as-code — mechanism sync state for THIS corpus
 #
-# `manifest.yaml` says what is shared. This file says which version of it this corpus is running,
-# and where it has deliberately stepped away. It is `local`: never synced, never reconciled.
+# `knowledge-as-code/manifest.yaml` says what is shared. This file says which version of it this
+# corpus is running, and where it has deliberately stepped away. It is `local`: never synced, never
+# reconciled — which is why it sits at the repo root rather than with the shared mechanism.
 #
 # Written by `kac mechanism --sync`; read by `kac mechanism --check`.
 

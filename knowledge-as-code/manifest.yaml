@@ -9,8 +9,8 @@
 # `index --check`: it recomputes, compares, names what is stale, exits non-zero, and never writes.
 #
 # This file is itself `synced` — every corpus holds the same copy. Per-corpus sync state (which
-# upstream version this corpus is on, and what it has deliberately diverged from) lives alongside
-# it in `mechanism.lock`, which is `local`.
+# upstream version this corpus is on, and what it has deliberately diverged from) lives in
+# `.mechanism.lock` at the repo root, which is `local`.
 
 version: 1
 
@@ -150,7 +150,7 @@ rules:
   # ── local ────────────────────────────────────────────────────────────────────────────────────
   - { path: "README.md",                        layer: local, note: "Orientation for this corpus." }
   - { path: "LICENSE",                          layer: local, note: "MIT; a derived corpus may relicense its own copy." }
-  - { path: "knowledge-as-code/mechanism.lock", layer: local, note: "This corpus's sync state." }
+  - { path: ".mechanism.lock",                  layer: local, note: "This corpus's sync state. Root-level and dot-prefixed, like any lockfile." }
   - { path: "_plan/**",                         layer: local, note: "Migration scaffolding — temporary." }
 
   - { path: "**",                               layer: local }

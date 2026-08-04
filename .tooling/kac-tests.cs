@@ -375,7 +375,7 @@ static string AssembleTemp(string schemaDir, string corpusDir)
 }
 
 // Like AssembleTemp, but the mechanism check also reads the manifest, so copy the real one in too.
-// The subtree (a corpus/ or reference/) is laid over the top, and may add its own mechanism.lock.
+// The subtree (a corpus/ or reference/) is laid over the top, and may add its own .mechanism.lock.
 static string AssembleMechanismTemp(string schemaDir, string manifestFile, string subtree)
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));

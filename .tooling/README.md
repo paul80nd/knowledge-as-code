@@ -164,7 +164,7 @@ exit non-zero, never write.
 ./kac mechanism --check --against ../other-corpus
 ```
 
-The reference defaults to `upstream.url` in `knowledge-as-code/mechanism.lock`, so a consumer that records where it
+The reference defaults to `upstream.url` in `.mechanism.lock`, so a consumer that records where it
 synced from can run a bare `mechanism --check`. What it reports:
 
 - **synced** files that differ, are missing on either side, or match no manifest rule at all — each an **error** (exit
@@ -172,7 +172,7 @@ synced from can run a bare `mechanism --check`. What it reports:
 - **forked** files are compared too, but only counted: how many differ from the reference is informational and never
   fails.
 - **generated**, **local** and **ignored** files are skipped — each corpus owns its own.
-- **accepted divergences** listed in `mechanism.lock` are honoured rather than flagged as drift, and any that have
+- **accepted divergences** listed in `.mechanism.lock` are honoured rather than flagged as drift, and any that have
   quietly become identical to the reference again are named as `RESOLVED` so the stale entry can be removed.
 
 Comparison is LF-normalised, so line-ending differences never read as drift. `mechanism --sync` — the write half that

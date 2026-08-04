@@ -81,15 +81,17 @@ knowledge-as-code/     # the system's own documentation
   ├── metadata.md      # the frontmatter fields
   ├── contributing.md  # how a contribution is made and reviewed
   ├── automation.md    # what is generated, validated and scheduled
-  ├── manifest.yaml    # which files are shared, which are local
-  └── mechanism.lock   # this corpus's sync state
+  └── manifest.yaml    # which files are shared, which are local
 kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
+.mechanism.lock        # this corpus's sync state
 .schema/               # the machine-readable schema — the source of truth
 .tooling/              # the kac tool: entrypoint + kac.core library, plus its tests and fixtures
 ```
 
-The mechanism is dot-prefixed — `.schema/` and `.tooling/` — so that the markdown stays the visible half of the
-repository, and so an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
+The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.mechanism.lock` — so that the markdown stays the visible
+half of the repository, and so an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
+What remains in `knowledge-as-code/` is documentation — bar `manifest.yaml`, which stays because the README and
+`automation.md` both cite it as the authority on the shared/local split.
 
 Adding a knowledge type is adding a YAML file to `.schema/`, not editing the tool.
 
@@ -99,7 +101,7 @@ This framework is designed to be **copied, not depended on**. An organisation ad
 diverge, with no runtime dependency on this repository and nothing to remove if they later want to go their own way.
 
 The cost of that is drift, which is what the manifest is for. Every file resolves to exactly one layer — `synced`,
-`forked`, `generated`, `local` or `ignored` — and each layer has a rule about what divergence means. `mechanism.lock`
+`forked`, `generated`, `local` or `ignored` — and each layer has a rule about what divergence means. `.mechanism.lock`
 records which version of the shared layer a given corpus is on, and any deviation it has deliberately accepted.
 
 ## Opinions
