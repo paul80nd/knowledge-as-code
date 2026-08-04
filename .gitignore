@@ -14,6 +14,9 @@
 # Generated — rebuilt by `dotnet run .tooling/kac.cs -- index`
 _reports/
 
+# Working material — drafts and source notes that are not themselves knowledge documents
+_plan/
+
 # .NET build output (kac.core / kac.tests / kac.features projects under .tooling/)
 bin/
 obj/
