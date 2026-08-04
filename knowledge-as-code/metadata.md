@@ -74,12 +74,16 @@ Each type's fields are documented on its own page, generated from the schema:
 [ADR](/adrs#metadata) · [Standard](/standards#metadata) · [Policy](/policies#metadata) ·
 [Control](/controls#metadata) · [NFR](/nfrs#metadata) · [Service](/services#metadata) ·
 [Capability](/capabilities#metadata) · [Process](/processes#metadata) · [Explanation](/explanations#metadata) ·
-[Runbook](/runbooks#metadata) · [Tooling](/tools#metadata) ·
+[Runbook](/runbooks#metadata) · [Tools](/tools#metadata) ·
 [Integration](/integrations#metadata) · [Data](/data#metadata) · [FAQ](/faqs#metadata) ·
 [Discovery](/discoveries#metadata) · [Postmortem](/postmortems#metadata)
 
 They are generated into those pages from `knowledge-as-code/schema/`, so a reader working in one folder has what they
 need without leaving it, and there is still one definition.
+
+[Glossary](/glossary) is the seventeenth type and the exception: a single document rather than a collection, so its two
+fields — `status` and `review-by` — live in its own frontmatter and are described on the page itself, not in a generated
+per-type table.
 
 ## Example
 
@@ -107,12 +111,6 @@ tags:
 A new field appears as a column on every document of that type, so it needs to justify itself. Before adding one, check
 that the information isn't already derivable from git, the folder, the H1, or an existing link. If it is genuinely new,
 add it here, add it to the validator, and note it in the changelog below.
-
-## Future state
-
-This document is currently hand-maintained. It will become generated output once the schema exists as machine-readable
-YAML under `knowledge-as-code/schema/`, at which point the per-type tables on each type's page are generated
-from the same source. One definition, several renderings — which is rather the point.
 
 ## Changelog
 

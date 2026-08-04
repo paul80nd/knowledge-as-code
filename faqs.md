@@ -35,6 +35,8 @@ Other boundaries:
   rule, and that needs an [ADR](/adrs) first.
 * **One problem per document.** A page of assorted gotchas cannot be found by symptom, which defeats the purpose.
 
+## Metadata
+
 <!-- BEGIN GENERATED: schema-faqs -->
 
 | Field              | Req | Type   | Notes                                      |

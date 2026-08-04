@@ -1,15 +1,18 @@
 ---
 id: adr-NNNN
+tier: decided
 status: proposed
 decided-on:
+owner:
 related: [ adr-AAAA, adr-BBBB, adr-CCCC ]
 ---
 
 # ADR-NNNN: <Title>
 
-_(Frontmatter notes — delete this block. **`id`** matches the filename number, four digits, never reused. **`status`**
-is `proposed` while under review, then `accepted`, and later `deprecated` or `superseded`; values are lowercase. **
-`decided-on`** is the acceptance date as a quoted `"YYYY-MM-DD"` — leave the key bare until accepted.)_
+_(Frontmatter notes — delete this block. **`id`** matches the filename number, four digits, never reused. **`tier`** is
+always `decided` for an ADR. **`status`** is `proposed` while under review, then `accepted`, and later `deprecated` or
+`superseded`; values are lowercase. **`decided-on`** is the acceptance date as a quoted `"YYYY-MM-DD"` — leave the key
+bare until accepted. **`owner`** is the named person answerable for the decision, never a team alias.)_
 
 > **In the context of** <use case>, **facing** <concern>, **we decided** <chosen option>, **rather than**
 > <alternatives>, **to achieve** <quality / benefit>, **accepting** <downside>.

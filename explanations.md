@@ -41,11 +41,11 @@ residual, and residual categories become dumping grounds unless the bar for entr
 
 <!-- BEGIN GENERATED: schema-explanations -->
 
-| Field     | Req | Type | Notes                                           |
-|-----------|-----|------|-------------------------------------------------|
-| status    | 	●   | enum	 | draft · active · stale                          |
-| explains	  | ●   | list	 | Service or capability ids                       |
-| review-by | 	●   | date	 | Quoted. The field that stops this type rotting. |
+| Field       | Req | Type | Notes                                           |
+|-------------|-----|------|-------------------------------------------------|
+| `status`    | ●   | enum | `draft` · `active` · `stale`                    |
+| `explains`  | ●   | list | Service or capability ids                       |
+| `review-by` | ●   | date | Quoted. The field that stops this type rotting. |
 
 <!-- END GENERATED: schema-explanations -->
 
@@ -60,4 +60,7 @@ residual, and residual categories become dumping grounds unless the bar for entr
 ## What CI checks
 
 <!-- BEGIN GENERATED: checks-explanations -->
+
+_No automated checks yet — see [Automation](/knowledge-as-code/automation.md)._
+
 <!-- END GENERATED: checks-explanations -->

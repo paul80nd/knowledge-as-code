@@ -52,12 +52,6 @@ Related but different:
 
 <!-- END GENERATED: schema-capabilities -->
 
-## Adding a Capability
-
-Capabilities are **hubs**. They link to epics, services, feature files and NFRs; they do not restate them. If a
-capability document starts to read like a specification, it has begun to drift from the ADO items it should be pointing
-at — and a drifted capability document is worse than none, because sessions will trust it.
-
 ## Adding a capability
 
 1. Copy [`template.md`](capabilities/template.md) to `<slug>.md`. Capabilities use slug ids — `cap-<name>`.
