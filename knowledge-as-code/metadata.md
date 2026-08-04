@@ -50,9 +50,11 @@ Carried by every document in the taxonomy.
 | `owner`  | ●   | string | A named person, never a team alias.                                                  |
 | `tags`   |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
 
-**Values**
+**Enum values**
 
-* `tier` — `decided` · `normative` · `descriptive` · `procedural` · `observed`
+| Field  | Values                                                              |
+| ------ | ------------------------------------------------------------------- |
+| `tier` | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
 
 <!-- END GENERATED: schema-universal -->
 

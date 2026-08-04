@@ -67,16 +67,20 @@ public static class Generator
 
     // Enum values are data, not prose, and inside a Notes cell they were the single thing blowing the
     // table out: `tier`'s five values plus its description came to 153 characters, and because the
-    // renderer pads every column to its widest cell that one field made every row 190 wide. Below the
-    // table each list is a short line of its own, and a type adding a six-value enum no longer widens
-    // every row on the page.
+    // renderer pads every column to its widest cell that one field made every row 190 wide. These
+    // pages are read as code as much as rendered, so width is the constraint that matters — a table
+    // of its own keeps the values to ~84 characters and stops a six-value enum widening every row.
     private static string EnumValues(IEnumerable<FieldSpec> fields)
     {
-        var lines = fields
-            .Where(f => f is { Type: "enum", Values.Count: > 0 })
-            .Select(f => $"* `{f.Name}` — {string.Join(" · ", f.Values!.Select(v => $"`{v}`"))}")
+        var enums = fields.Where(f => f is { Type: "enum", Values.Count: > 0 }).ToList();
+        if (enums.Count == 0) return "";
+
+        List<string> headers = ["Field", "Values"];
+        var rows = enums
+            .Select(f => new List<string>
+                { $"`{f.Name}`", string.Join(" · ", f.Values!.Select(v => $"`{v}`")) })
             .ToList();
-        return lines.Count == 0 ? "" : "\n\n**Values**\n\n" + string.Join("\n", lines);
+        return "\n\n**Enum values**\n\n" + RenderTable(headers, rows);
     }
 
     // The same reference for metadata.md, which documents the universal fields once for the whole

@@ -88,13 +88,15 @@ public class GeneratorTests
         };
 
         var table = Generator.SchemaTable(t, new Schema());
-        var row = table.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
+        var main = table.Split("**Enum values**", StringSplitOptions.None)[0];
+        var row = main.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
 
-        // The values are the thing that used to blow the column width out — they belong below.
+        // The values are the thing that used to blow the column width out — they belong below, in a
+        // table of their own so the page still reads as formatted code.
         Assert.DoesNotContain("`draft`", row);
         Assert.Contains("SHORT PROSE", row);
-        Assert.Contains("**Values**", table);
-        Assert.Contains("* `status` — `draft` · `active`", table);
+        Assert.Contains("**Enum values**", table);
+        Assert.Contains("| `status` | `draft` · `active` |", table);
     }
 
     [Fact]

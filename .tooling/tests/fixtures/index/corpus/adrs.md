@@ -21,10 +21,12 @@ byte-preserved.
 | `deciders`      |     | list   | The people who agreed it.                                                                          |
 | `related`       |     | list   | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.   |
 
-**Values**
+**Enum values**
 
-* `tier` — `decided` · `normative` · `descriptive` · `procedural` · `observed`
-* `status` — `proposed` · `accepted` · `deprecated` · `superseded`
+| Field    | Values                                                              |
+| -------- | ------------------------------------------------------------------- |
+| `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
+| `status` | `proposed` · `accepted` · `deprecated` · `superseded`               |
 
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 

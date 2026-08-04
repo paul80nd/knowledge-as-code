@@ -53,10 +53,12 @@ specific decision with the alternatives that were weighed; a policy states a pos
 | `implemented-by` |     | list   | Standard ids.                                                                        |
 | `review-by`      | ●   | date   | Quoted. Annual is usually right for a policy.                                        |
 
-**Values**
+**Enum values**
 
-* `tier` — `decided` · `normative` · `descriptive` · `procedural` · `observed`
-* `status` — `draft` · `active` · `retired`
+| Field    | Values                                                              |
+| -------- | ------------------------------------------------------------------- |
+| `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
+| `status` | `draft` · `active` · `retired`                                      |
 
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 

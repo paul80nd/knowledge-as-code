@@ -47,8 +47,8 @@ where a note has grown past a line, that is the signal it wants a `description` 
 
 **Keep a `description` under ~100 characters.** The generated table pads every column to its widest cell, so one long
 description widens every row on the page — a 153-character cell once made all ten ADR rows 190 wide. Enum `values` are
-not part of that budget: they render as a list beneath the table rather than inside the cell, so declaring a sixth
-value costs nothing in table width.
+not part of that budget: they render in a small table of their own beneath it rather than inside the cell, so declaring
+a sixth value costs nothing in the width of the main table.
 
 **Conventions the validator enforces globally**
 
