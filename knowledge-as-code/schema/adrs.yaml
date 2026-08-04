@@ -23,6 +23,7 @@ fields:
     required: true
     type: enum
     values: [proposed, accepted, deprecated, superseded]
+    description: Immutable once `accepted` — supersede rather than rewrite.
 
   decided-on:
     required: false

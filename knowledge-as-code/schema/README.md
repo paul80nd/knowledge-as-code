@@ -45,6 +45,11 @@ glance and is what the Metadata table renders; `notes` is the reasoning, which b
 is room for it. A field declaring only `notes` still renders them, so the two can be adopted a schema at a time — but
 where a note has grown past a line, that is the signal it wants a `description` beside it rather than a trim.
 
+**Keep a `description` under ~100 characters.** The generated table pads every column to its widest cell, so one long
+description widens every row on the page — a 153-character cell once made all ten ADR rows 190 wide. Enum `values` are
+not part of that budget: they render as a list beneath the table rather than inside the cell, so declaring a sixth
+value costs nothing in table width.
+
 **Conventions the validator enforces globally**
 
 * Dates are quoted strings in `YYYY-MM-DD` form.

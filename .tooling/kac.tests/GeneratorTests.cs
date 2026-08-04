@@ -73,6 +73,31 @@ public class GeneratorTests
     }
 
     [Fact]
+    public void SchemaTable_lists_enum_values_beneath_the_table_not_inside_the_cell()
+    {
+        var t = new TypeSchema
+        {
+            FieldOrder = ["status"],
+            Fields = new Dictionary<string, FieldSpec>
+            {
+                ["status"] = new()
+                {
+                    Name = "status", Type = "enum", Values = ["draft", "active"], Description = "SHORT PROSE"
+                }
+            }
+        };
+
+        var table = Generator.SchemaTable(t, new Schema());
+        var row = table.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
+
+        // The values are the thing that used to blow the column width out — they belong below.
+        Assert.DoesNotContain("`draft`", row);
+        Assert.Contains("SHORT PROSE", row);
+        Assert.Contains("**Values**", table);
+        Assert.Contains("* `status` — `draft` · `active`", table);
+    }
+
+    [Fact]
     public void SchemaTable_omits_the_legend_when_no_universal_field_applies()
     {
         var t = new TypeSchema

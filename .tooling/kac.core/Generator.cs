@@ -54,7 +54,8 @@ public static class Generator
             .Concat(own.Select(n => Row(n, t.Fields[n], false)))
             .ToList();
 
-        var table = RenderTable(headers, rows);
+        var order = universal.Concat(own).ToList();
+        var table = RenderTable(headers, rows) + EnumValues(order.Select(n => s.EffectiveField(t, n)!));
         return universal.Count == 0
             ? table
             : $"{table}\n\n† Carried by every document in the taxonomy — see "
@@ -64,28 +65,37 @@ public static class Generator
             [$"`{name}`{(universal ? " †" : "")}", f.Required ? "●" : "", f.Type, NotesFor(f)];
     }
 
+    // Enum values are data, not prose, and inside a Notes cell they were the single thing blowing the
+    // table out: `tier`'s five values plus its description came to 153 characters, and because the
+    // renderer pads every column to its widest cell that one field made every row 190 wide. Below the
+    // table each list is a short line of its own, and a type adding a six-value enum no longer widens
+    // every row on the page.
+    private static string EnumValues(IEnumerable<FieldSpec> fields)
+    {
+        var lines = fields
+            .Where(f => f is { Type: "enum", Values.Count: > 0 })
+            .Select(f => $"* `{f.Name}` — {string.Join(" · ", f.Values!.Select(v => $"`{v}`"))}")
+            .ToList();
+        return lines.Count == 0 ? "" : "\n\n**Values**\n\n" + string.Join("\n", lines);
+    }
+
     // The same reference for metadata.md, which documents the universal fields once for the whole
     // taxonomy. Values are the unrefined universal declarations — `status` is genuinely "varies by
     // type" here, because there is no type in hand to narrow it.
     public static string UniversalSchemaTable(Schema s)
     {
         List<string> headers = ["Field", "Req", "Type", "Notes"];
-        var rows = s.UniversalOrder
-            .Where(s.Universal.ContainsKey)
-            .Select(n => new List<string>
-                { $"`{n}`", s.Universal[n].Required ? "●" : "", s.Universal[n].Type, NotesFor(s.Universal[n]) })
+        var fields = s.UniversalOrder.Where(s.Universal.ContainsKey).Select(n => s.Universal[n]).ToList();
+        var rows = fields
+            .Select(f => new List<string> { $"`{f.Name}`", f.Required ? "●" : "", f.Type, NotesFor(f) })
             .ToList();
-        return RenderTable(headers, rows);
+        return RenderTable(headers, rows) + EnumValues(fields);
     }
 
     private static string NotesFor(FieldSpec f)
     {
+        // Enum values are not repeated here — they render beneath the table, see EnumValues.
         var parts = new List<string>();
-        if (f is { Type: "enum", Values.Count: > 0 })
-            // The value list is a fragment, not a sentence. Close it when prose follows, or the two
-            // run together as "`observed` Fixed for the type…".
-            parts.Add(string.Join(" · ", f.Values.Select(v => $"`{v}`"))
-                      + (string.IsNullOrEmpty(f.TableText) ? "" : "."));
         if (!string.IsNullOrEmpty(f.TableText)) parts.Add(f.TableText);
         if (!string.IsNullOrEmpty(f.RequiredWhen))
             parts.Add($"Required once `{f.RequiredWhen.Split("==").Last().Trim()}`.");
