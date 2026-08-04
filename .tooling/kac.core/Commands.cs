@@ -60,25 +60,29 @@ public static class Commands
             (byType.TryGetValue(doc.Type.Folder, out var list) ? list : byType[doc.Type.Folder] = []).Add(doc);
         }
 
-        // Compute the full intended content of every affected file. A type is
-        // regenerated only if it has at least one record, so unmigrated types (empty
-        // INDEX.md, other <type>.md pages) are never touched.
+        // Compute the full intended content of every affected file.
         var targets = new List<(string path, string content)>();
+
+        // An INDEX lists records, so only a type that has some gets one. An empty type has no index
+        // to be stale, and generating a headed table with no rows would say less than nothing.
         foreach (var (folder, docs) in byType.OrderBy(kv => kv.Key))
+            targets.Add((Path.Combine(repoRoot, folder, "INDEX.md"),
+                Generator.IndexPage(schema.ByFolder[folder], docs)));
+
+        // The schema and checks blocks derive from the schema alone, so every type gets them whether or
+        // not it holds records yet. Regenerating only populated types meant an unmigrated page kept
+        // whatever had been hand-written into its markers — text nothing checked, describing fields and
+        // checks that were often not the ones the schema declared. The first record for a type would
+        // then rewrite the page and expose the drift, which is exactly when nobody wants the surprise.
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key))
         {
-            var t = schema.ByFolder[folder];
-
-            var indexPath = Path.Combine(repoRoot, folder, "INDEX.md");
-            targets.Add((indexPath, Generator.IndexPage(t, docs)));
-
             var pagePath = Path.Combine(repoRoot, t.Page);
-            if (File.Exists(pagePath))
-            {
-                var text = Files.ReadLf(pagePath);
-                text = Generator.SpliceBlock(text, $"schema-{folder}", Generator.SchemaTable(t, schema));
-                text = Generator.SpliceBlock(text, $"checks-{folder}", Generator.ChecksTable(t));
-                targets.Add((pagePath, text));
-            }
+            if (!File.Exists(pagePath)) continue;
+
+            var text = Files.ReadLf(pagePath);
+            text = Generator.SpliceBlock(text, $"schema-{key}", Generator.SchemaTable(t, schema));
+            text = Generator.SpliceBlock(text, $"checks-{key}", Generator.ChecksTable(t));
+            targets.Add((pagePath, text));
         }
 
         // metadata.md documents the universal fields for the whole taxonomy. It is not a type page —

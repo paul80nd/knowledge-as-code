@@ -36,14 +36,27 @@ anything built on it. Record that in `constrained-by` rather than promising some
 
 <!-- BEGIN GENERATED: schema-nfrs -->
 
-| Field            | Req | Type   | Notes                              |
-|------------------|-----|--------|------------------------------------|
-| `status`         | ●   | enum   | `draft` · `agreed` · `retired`     |
-| `applies-to`     | ●   | list   | Service or capability ids          |
-| `target`         | ●   | string | e.g. `99.5% monthly`, `RTO 4h`     |
-| `measured-by`    | ●   | string | An NFR you can't measure is a wish |
-| `constrained-by` |     | list   | Integration ids                    |
-| `review-by`      | ●   | date   | Quoted                             |
+| Field            | Req | Type   | Notes                                                                                             |
+| ---------------- | --- | ------ | ------------------------------------------------------------------------------------------------- |
+| `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                             |
+| `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.              |
+| `status` †       | ●   | enum   | `agreed` is a commitment someone accepted, not an aspiration.                                     |
+| `owner` †        | ●   | string | A named person, never a team alias.                                                               |
+| `tags` †         |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                  |
+| `applies-to`     | ●   | list   | Estate-wide targets are almost always wrong — scope them.                                         |
+| `target`         | ●   | string | Concrete and arguable — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`. Include the measurement window. |
+| `measured-by`    | ●   | string | An NFR you cannot measure is a wish. "We'd notice" is not a measurement method.                   |
+| `constrained-by` |     | list   | Integrations whose own SLA caps this target.                                                      |
+| `review-by`      | ●   | date   | Quoted. Drives the staleness report.                                                              |
+
+**Enum values**
+
+| Field    | Values                                                              |
+| -------- | ------------------------------------------------------------------- |
+| `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
+| `status` | `draft` · `agreed` · `retired`                                      |
+
+† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-nfrs -->
 
@@ -66,6 +79,24 @@ anything built on it. Record that in `constrained-by` rather than promising some
 
 <!-- BEGIN GENERATED: checks-nfrs -->
 
-_No automated checks yet — see [Automation](/knowledge-as-code/automation.md)._
+| Check                       | Level   | What it verifies                                                                             |
+| --------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                          |
+| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                               |
+| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                            |
+| `required-field`            | error   | Required and conditionally-required fields are present.                                      |
+| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                               |
+| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                         |
+| `enum`                      | error   | Enum values are in range and lowercase.                                                      |
+| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                 |
+| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                   |
+| `id`                        | error   | `id` carries the type's prefix and, where the type is numbered, matches the filename number. |
+| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                        |
+| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                              |
+| `h1`                        | error   | The document has an H1 and, where the type declares one, it matches the title pattern.       |
+| `required-section`          | error   | Every required section heading is present.                                                   |
+| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                               |
+| `undefined-label`           | error   | Every shortcut reference has a link definition.                                              |
+| `unused-definition`         | warning | A link definition that nothing references.                                                   |
 
 <!-- END GENERATED: checks-nfrs -->

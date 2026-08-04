@@ -22,11 +22,13 @@ fields:
     required: true
     type: enum
     values: [active, deprecated]
+    description: Whether the store is current or on its way out.
 
   owned-by:
     required: true
     type: id
     ref: services
+    description: A single service. Shared ownership means nobody is answerable.
     notes: >
       A single service. Shared ownership means nobody is answerable — resolve it before writing the document.
 
@@ -34,11 +36,13 @@ fields:
     required: true
     type: enum
     values: [public, internal, confidential, personal, special-category]
+    description: Drives handling. `personal` and `special-category` pull in retention.
 
   retention:
     required: false
     required-when: 'classification in [personal, special-category]'
     type: string
+    description: The actual retention, not the policy's. Where they differ, record both — the gap is the point.
     notes: >
       "Indefinitely" is an answer, and a revealing one. Record the actual retention; where it differs from
       what the policy commits to, record both — that gap is the useful part.

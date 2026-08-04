@@ -18,16 +18,19 @@ fields:
     required: true
     type: enum
     values: [draft, active, stale]
+    description: '`stale` is an honest state — say so rather than let the page quietly rot.'
 
   explains:
     required: true
     type: list
     of: id
     ref: [services, capabilities]
+    description: Service or capability ids this explains.
 
   review-by:
     required: true
     type: date
+    description: The field that stops this type rotting — explanations need the tightest staleness discipline.
     notes: >
       The field that stops this type rotting. Explanations are the residual category, so they need the
       tightest staleness discipline, not the loosest.

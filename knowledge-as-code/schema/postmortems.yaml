@@ -23,6 +23,7 @@ fields:
     required: true
     type: enum
     values: [draft, published]
+    description: '`published` freezes the document; a new understanding is a new postmortem.'
     notes: >
       `published` freezes the document. A materially different understanding is a new postmortem that
       references this one.
@@ -30,6 +31,7 @@ fields:
   occurred-on:
     required: true
     type: date
+    description: Quoted. When the incident began, not when it was noticed.
 
   detected-on:
     required: true
@@ -39,17 +41,20 @@ fields:
   duration:
     required: true
     type: string
+    description: How long it lasted, in whatever unit reads honestly.
 
   severity:
     required: true
     type: enum
     values: $enums.severity
+    description: The severity it was handled at.
 
   affected:
     required: true
     type: list
     of: id
     ref: [services, capabilities]
+    description: Service and capability ids that suffered.
 
   prompted:
     required: false

@@ -21,10 +21,12 @@ fields:
     required: true
     type: enum
     values: [draft, active]
+    description: '`draft` while the terms are still settling.'
 
   review-by:
     required: true
     type: date
+    description: Quoted. The whole file is reviewed at once.
 
 sections:
   required:

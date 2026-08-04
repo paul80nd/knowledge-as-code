@@ -39,15 +39,28 @@ Other boundaries:
 
 <!-- BEGIN GENERATED: schema-faqs -->
 
-| Field              | Req | Type   | Notes                                      |
-|--------------------|-----|--------|--------------------------------------------|
-| `status`           | ●   | enum   | `active` · `superseded` · `fixed-upstream` |
-| `symptom-keywords` | ●   | list   | Be generous — this is what people grep     |
-| `applies-to`       |     | list   | Service ids                                |
-| `promoted-from`    |     | id     | Discovery id                               |
-| `confirmed-by`     | ●   | string | The human who verified it                  |
-| `confirmed-on`     | ●   | date   | Quoted                                     |
-| `review-by`        | ●   | date   | Quoted                                     |
+| Field              | Req | Type   | Notes                                                                                               |
+| ------------------ | --- | ------ | --------------------------------------------------------------------------------------------------- |
+| `id` †             | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                               |
+| `tier` †           | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                |
+| `status` †         | ●   | enum   | `fixed-upstream` means the cause is gone; the entry stays for whoever searches for it.              |
+| `owner` †          | ●   | string | A named person, never a team alias.                                                                 |
+| `tags` †           |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                    |
+| `symptom-keywords` | ●   | list   | Over-fill it: error text, service names, and what someone types before they know the cause.         |
+| `applies-to`       |     | list   | Service ids this answer concerns.                                                                   |
+| `promoted-from`    |     | id     | The discovery this was promoted from.                                                               |
+| `confirmed-by`     | ●   | string | A named human. An FAQ nobody confirmed is a discovery — this field is what separates the two tiers. |
+| `confirmed-on`     | ●   | date   | Quoted. When a human last confirmed the answer still holds.                                         |
+| `review-by`        | ●   | date   | Quoted. Drives the staleness report.                                                                |
+
+**Enum values**
+
+| Field    | Values                                                              |
+| -------- | ------------------------------------------------------------------- |
+| `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
+| `status` | `active` · `superseded` · `fixed-upstream`                          |
+
+† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-faqs -->
 
@@ -72,6 +85,25 @@ Other boundaries:
 
 <!-- BEGIN GENERATED: checks-faqs -->
 
-_No automated checks yet — see [Automation](/knowledge-as-code/automation.md)._
+| Check                       | Level   | What it verifies                                                                             |
+| --------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                          |
+| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                               |
+| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                            |
+| `required-field`            | error   | Required and conditionally-required fields are present.                                      |
+| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                               |
+| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                         |
+| `enum`                      | error   | Enum values are in range and lowercase.                                                      |
+| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                 |
+| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                   |
+| `id`                        | error   | `id` carries the type's prefix and, where the type is numbered, matches the filename number. |
+| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                        |
+| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                              |
+| `h1`                        | error   | The document has an H1 and, where the type declares one, it matches the title pattern.       |
+| `required-section`          | error   | Every required section heading is present.                                                   |
+| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                               |
+| `undefined-label`           | error   | Every shortcut reference has a link definition.                                              |
+| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                             |
+| `unused-definition`         | warning | A link definition that nothing references.                                                   |
 
 <!-- END GENERATED: checks-faqs -->

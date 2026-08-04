@@ -18,12 +18,14 @@ fields:
     required: true
     type: enum
     values: [planned, building, live, deprecated]
+    description: Lifecycle of the capability, not of the services behind it.
 
   implemented-by:
     required: true
     type: list
     of: id
     ref: services
+    description: Service ids. A capability no service implements is a plan.
 
   ado-epics:
     required: false
@@ -35,6 +37,7 @@ fields:
     required: false
     type: list
     of: string
+    description: 'Repo-relative paths. Checked both ways: a missing path fails, an unclaimed file is reported.'
     notes: >
       Repo-relative paths. Checked in both directions — a path that does not exist fails, and a feature file
       claimed by no capability is reported.
@@ -44,6 +47,7 @@ fields:
     type: list
     of: id
     ref: nfrs
+    description: NFR ids — the targets this capability is held to.
 
 sections:
   required: [What it does, Why it exists, Where the detail lives]

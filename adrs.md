@@ -37,18 +37,18 @@ ADR by ID.
 
 <!-- BEGIN GENERATED: schema-adrs -->
 
-| Field           | Req | Type   | Notes                                                                                              |
-| --------------- | --- | ------ | -------------------------------------------------------------------------------------------------- |
-| `id` †          | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                              |
-| `tier` †        | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.               |
-| `status` †      | ●   | enum   | Immutable once `accepted` — supersede rather than rewrite.                                         |
-| `owner` †       | ●   | string | A named person, never a team alias.                                                                |
-| `tags` †        |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                   |
-| `decided-on`    |     | date   | The acceptance date. Bare key until accepted. Required once `accepted`.                            |
-| `supersedes`    |     | id     | The ADR this replaces.                                                                             |
-| `superseded-by` |     | id     | CI enforces both directions; a one-sided supersession fails the build. Required once `superseded`. |
-| `deciders`      |     | list   | The people who agreed it.                                                                          |
-| `related`       |     | list   | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.   |
+| Field           | Req | Type   | Notes                                                                                            |
+| --------------- | --- | ------ | ------------------------------------------------------------------------------------------------ |
+| `id` †          | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                            |
+| `tier` †        | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.             |
+| `status` †      | ●   | enum   | Immutable once `accepted` — supersede rather than rewrite.                                       |
+| `owner` †       | ●   | string | A named person, never a team alias.                                                              |
+| `tags` †        |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                 |
+| `decided-on`    |     | date   | The acceptance date. Bare key until accepted.                                                    |
+| `supersedes`    |     | id     | The ADR this replaces.                                                                           |
+| `superseded-by` |     | id     | CI enforces both directions; a one-sided supersession fails the build.                           |
+| `deciders`      |     | list   | The people who agreed it.                                                                        |
+| `related`       |     | list   | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively. |
 
 **Enum values**
 
@@ -56,6 +56,13 @@ ADR by ID.
 | -------- | ------------------------------------------------------------------- |
 | `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
 | `status` | `proposed` · `accepted` · `deprecated` · `superseded`               |
+
+**Conditionally required**
+
+| Field           | Required when          |
+| --------------- | ---------------------- |
+| `decided-on`    | `status == accepted`   |
+| `superseded-by` | `status == superseded` |
 
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 

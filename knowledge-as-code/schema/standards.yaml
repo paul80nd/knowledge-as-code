@@ -25,6 +25,7 @@ fields:
     required: true
     type: enum
     values: [draft, active, deprecated, superseded]
+    description: Plain values only — enforcement notes belong in `verified-by`.
     notes: >
       Plain values only. Enforcement notes belong in `verified-by`; "until ADR-NNNN is accepted" is derivable
       from `derived-from` plus that ADR's own status.
@@ -33,6 +34,7 @@ fields:
     required: true
     type: enum
     values: [common, platform, interface, domain]
+    description: The layer where the rule is actually true. TODO — four formulations exist; settle before use.
     notes: >
       TODO — unresolved. Four formulations exist across the corpus (`standards.md` schema block,
       `standards.md` prose which names `framework`, `taxonomy.md` which says "interface/domain", and
@@ -43,6 +45,7 @@ fields:
     type: list
     of: id
     ref: adrs
+    description: The ADRs this standard distils. Provenance may come from `implements` instead.
     notes: >
       The ADRs this standard distils. Provenance is required — see `provenance-required` below — but may be
       satisfied by `implements` instead where the standard descends from a policy rather than a decision.
@@ -53,6 +56,7 @@ fields:
     of: id
     ref: policies
     reciprocal: implemented-by
+    description: Policy ids this standard puts into practice.
 
   verified-by:
     required: false
@@ -60,6 +64,7 @@ fields:
     of: id
     ref: controls
     reciprocal: verifies
+    description: Control ids that check it.
 
   applies-to:
     required: true
@@ -67,10 +72,12 @@ fields:
     of: id
     ref: services
     allow-literal: [all]
+    description: Service ids, or `all`.
 
   review-by:
     required: true
     type: date
+    description: Quoted. Drives the staleness report.
 
 sections:
   required: [Summary, Rules, Examples, Conformance checklist, Rationale and provenance]

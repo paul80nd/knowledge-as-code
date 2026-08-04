@@ -55,7 +55,8 @@ public static class Generator
             .ToList();
 
         var order = universal.Concat(own).ToList();
-        var table = RenderTable(headers, rows) + EnumValues(order.Select(n => s.EffectiveField(t, n)!));
+        var specs = order.Select(n => s.EffectiveField(t, n)!).ToList();
+        var table = RenderTable(headers, rows) + EnumValues(specs) + ConditionalFields(specs);
         return universal.Count == 0
             ? table
             : $"{table}\n\n† Carried by every document in the taxonomy — see "
@@ -83,6 +84,21 @@ public static class Generator
         return "\n\n**Enum values**\n\n" + RenderTable(headers, rows);
     }
 
+    // Same reasoning as EnumValues. A condition appended to the Notes cell cost `data.retention` 62 of
+    // its 158 characters — and the condition is the one part that has to be quoted exactly, so trimming
+    // the prose to make room would have been the wrong half to lose.
+    private static string ConditionalFields(IEnumerable<FieldSpec> fields)
+    {
+        var conditional = fields.Where(f => !string.IsNullOrEmpty(f.RequiredWhen)).ToList();
+        if (conditional.Count == 0) return "";
+
+        List<string> headers = ["Field", "Required when"];
+        var rows = conditional
+            .Select(f => new List<string> { $"`{f.Name}`", $"`{f.RequiredWhen}`" })
+            .ToList();
+        return "\n\n**Conditionally required**\n\n" + RenderTable(headers, rows);
+    }
+
     // The same reference for metadata.md, which documents the universal fields once for the whole
     // taxonomy. Values are the unrefined universal declarations — `status` is genuinely "varies by
     // type" here, because there is no type in hand to narrow it.
@@ -93,17 +109,14 @@ public static class Generator
         var rows = fields
             .Select(f => new List<string> { $"`{f.Name}`", f.Required ? "●" : "", f.Type, NotesFor(f) })
             .ToList();
-        return RenderTable(headers, rows) + EnumValues(fields);
+        return RenderTable(headers, rows) + EnumValues(fields) + ConditionalFields(fields);
     }
 
     private static string NotesFor(FieldSpec f)
     {
-        // Enum values are not repeated here — they render beneath the table, see EnumValues.
-        var parts = new List<string>();
-        if (!string.IsNullOrEmpty(f.TableText)) parts.Add(f.TableText);
-        if (!string.IsNullOrEmpty(f.RequiredWhen))
-            parts.Add($"Required once `{f.RequiredWhen.Split("==").Last().Trim()}`.");
-        return Escape(string.Join(" ", parts));
+        // Enum values and required-when conditions are not repeated here — both render in their own
+        // tables beneath, see EnumValues and ConditionalFields.
+        return Escape(f.TableText ?? "");
     }
 
     // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that

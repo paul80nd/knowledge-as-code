@@ -100,6 +100,31 @@ public class GeneratorTests
     }
 
     [Fact]
+    public void SchemaTable_lists_required_when_conditions_beneath_the_table()
+    {
+        var t = new TypeSchema
+        {
+            FieldOrder = ["retention"],
+            Fields = new Dictionary<string, FieldSpec>
+            {
+                ["retention"] = new()
+                {
+                    Name = "retention", Description = "SHORT PROSE",
+                    RequiredWhen = "classification in [personal, special-category]"
+                }
+            }
+        };
+
+        var table = Generator.SchemaTable(t, new Schema());
+        var main = table.Split("**Conditionally required**", StringSplitOptions.None)[0];
+
+        // The condition has to be quoted exactly, so it is the half that cannot be trimmed to fit.
+        Assert.DoesNotContain("classification in", main);
+        Assert.Contains("SHORT PROSE", main);
+        Assert.Contains("| `retention` | `classification in [personal, special-category]` |", table);
+    }
+
+    [Fact]
     public void SchemaTable_omits_the_legend_when_no_universal_field_applies()
     {
         var t = new TypeSchema
