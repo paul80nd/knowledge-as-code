@@ -13,15 +13,22 @@ public static class Generator
 
     public static string IndexPage(TypeSchema t, List<Doc> docs)
     {
-        var headers = t.IndexColumns.Select(Humanize).ToList();
-        var sort = string.IsNullOrEmpty(t.IndexSort) ? "id" : t.IndexSort;
-        var rows = docs
-            .OrderBy(d => d.FrontScalar(sort) ?? "", StringComparer.Ordinal)
-            .Select(d => t.IndexColumns.Select(c => Cell(d, c)).ToList())
-            .ToList();
-
         var title = t.IdPrefix.ToUpperInvariant() + " Index";
-        return $"{Banner}\n\n# {title}\n\n{RenderTable(headers, rows)}\n";
+
+        // An empty type still gets its index. Every type page links to one, so withholding the file
+        // until the first record left fourteen dead links that nothing caught — link-resolves does not
+        // check type root pages. A headed table with no rows would say less than nothing, so an empty
+        // index says it is empty and points at the template.
+        var body = docs.Count == 0
+            ? $"_Nothing here yet — copy [`template.md`](template.md) to add the first._"
+            : RenderTable(
+                t.IndexColumns.Select(Humanize).ToList(),
+                docs.OrderBy(d => d.FrontScalar(string.IsNullOrEmpty(t.IndexSort) ? "id" : t.IndexSort) ?? "",
+                        StringComparer.Ordinal)
+                    .Select(d => t.IndexColumns.Select(c => Cell(d, c)).ToList())
+                    .ToList());
+
+        return $"{Banner}\n\n# {title}\n\n{body}\n";
     }
 
     private static string Cell(Doc d, string col)

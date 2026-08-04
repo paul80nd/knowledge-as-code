@@ -63,11 +63,16 @@ public static class Commands
         // Compute the full intended content of every affected file.
         var targets = new List<(string path, string content)>();
 
-        // An INDEX lists records, so only a type that has some gets one. An empty type has no index
-        // to be stale, and generating a headed table with no rows would say less than nothing.
-        foreach (var (folder, docs) in byType.OrderBy(kv => kv.Key))
-            targets.Add((Path.Combine(repoRoot, folder, "INDEX.md"),
-                Generator.IndexPage(schema.ByFolder[folder], docs)));
+        // Every type with a folder gets an INDEX, populated or not — each type page links to one, so a
+        // withheld file is a dead link rather than a tidy absence. Types without a folder (glossary is
+        // the single-document type) have nothing to index, and a folder absent from disk is skipped so
+        // the generator never conjures a directory.
+        foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key))
+        {
+            if (string.IsNullOrEmpty(t.Folder) || !Directory.Exists(Path.Combine(repoRoot, t.Folder))) continue;
+            var docs = byType.TryGetValue(t.Folder, out var found) ? found : [];
+            targets.Add((Path.Combine(repoRoot, t.Folder, "INDEX.md"), Generator.IndexPage(t, docs)));
+        }
 
         // The schema and checks blocks derive from the schema alone, so every type gets them whether or
         // not it holds records yet. Regenerating only populated types meant an unmigrated page kept

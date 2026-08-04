@@ -16,6 +16,19 @@ public class GeneratorTests
     }
 
     [Fact]
+    public void IndexPage_says_it_is_empty_rather_than_rendering_a_headless_table()
+    {
+        var t = new TypeSchema { IdPrefix = "ctl", IndexColumns = ["id", "title"] };
+
+        var page = Generator.IndexPage(t, []);
+
+        Assert.Contains("# CTL Index", page);
+        Assert.Contains("Nothing here yet", page);
+        Assert.Contains("template.md", page);   // an empty index points at the way to fill it
+        Assert.DoesNotContain("| Id |", page);  // …rather than a table with headers and no rows
+    }
+
+    [Fact]
     public void SchemaTable_prefers_description_and_falls_back_to_notes()
     {
         var t = new TypeSchema

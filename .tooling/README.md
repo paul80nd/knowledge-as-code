@@ -135,15 +135,14 @@ corpus, and still catches genuine disorder (`tags` before `id`, `related` before
 
 | Artefact                                        | Built from                          | Rule                                                                                                                                                                                            |
 |-------------------------------------------------|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<type>/INDEX.md`                               | frontmatter across the folder       | Regenerated **wholly**; columns and sort come from the schema's `index` block; carries a do-not-edit banner.                                                                                    |
+| `<type>/INDEX.md`                               | frontmatter across the folder       | Regenerated **wholly**; columns and sort come from the schema's `index` block; carries a do-not-edit banner. A type with no records yet gets an index saying so rather than a table with no rows; a type with no folder (glossary) gets none.                                                                                    |
 | `<!-- … schema-<type> -->` block in `<type>.md` | `_universal.yaml` + the type's `fields` | The frontmatter reference table — universal fields first, marked `†`, then the type's own. Each row renders the field's `description`, falling back to `notes` where the schema declares none. |
 | `<!-- … schema-universal -->` block in `metadata.md` | `_universal.yaml` | The universal field reference, documented once for the taxonomy rather than per type. |
 | `<!-- … checks-<type> -->` block in `<type>.md` | the checks the validator implements | The "What CI checks" table. Rows a type cannot trip — a rule it does not declare, a reciprocal or mirrors-section field it does not have — are omitted, so each page lists only its own checks. |
 
-Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of `<type>.md` is byte-preserved. A type is
-regenerated only if it has at least one frontmatter-bearing record, so unmigrated types are never touched — today that
-means `adrs/INDEX.md` and the two blocks in
-`adrs.md`.
+Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of `<type>.md` is byte-preserved. Every
+type is regenerated whether or not it holds records: the blocks derive from the schema alone, and an index that waits
+for its first record is a dead link from the type page until then.
 
 Three rules hold this together:
 
