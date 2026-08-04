@@ -8,8 +8,8 @@
 //
 // One tool, several subcommands, sharing a schema-loading and markdown-parsing core:
 //
-//   validate   check the corpus against knowledge-as-code/schema/*.yaml   (this file)
-//   index      regenerate INDEX.md and the generated blocks in <type>.md   (phase 3)
+//   validate   check the corpus against knowledge-as-code/schema/*.yaml
+//   index      regenerate INDEX.md and the generated blocks in <type>.md
 //   mechanism  enforce the portability manifest: synced layer vs a reference (this file)
 //   digest     rules digest                                                (later)
 //   drift      estate comparison                                           (later)
@@ -979,7 +979,7 @@ internal static class MechanismCheck
                     }
                     break;
 
-                    // generated / local / ignored: each corpus owns these; nothing to compare.
+                // generated / local / ignored: each corpus owns these; nothing to compare.
             }
         }
 
@@ -1375,7 +1375,6 @@ internal static class Validator
             {
                 case "date": CheckDate(name, node, d, Err); break;
                 case "enum": CheckEnum(name, node, spec, d, Err); break;
-                case "id": CheckIdRef(name, node, spec, d, Err); break;
                 case "list": CheckList(name, node, spec, d, Err); break;
             }
         }
@@ -1483,13 +1482,6 @@ internal static class Validator
             err("enum", $"'{name}' value '{v}' is not one of: {string.Join(", ", spec.Values)}.", Line(node, d));
         if (v != v.ToLowerInvariant())
             err("enum-lowercase", $"'{name}' enum value '{v}' must be lowercase.", Line(node, d));
-    }
-
-    private static void CheckIdRef(string name, YamlNode node, FieldSpec spec, Doc d, Action<string, string, int?> err)
-    {
-        // scalar id field (e.g. superseded-by). List-of-id handled in CheckList.
-        var v = Scalar(node);
-        if (v is null) return;
     }
 
     private static void CheckList(string name, YamlNode node, FieldSpec spec, Doc d, Action<string, string, int?> err)
