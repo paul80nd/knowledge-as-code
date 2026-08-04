@@ -16,6 +16,43 @@ public class GeneratorTests
     }
 
     [Fact]
+    public void ChecksTable_omits_rows_for_checks_the_type_cannot_trip()
+    {
+        // A type declaring no rules and no reciprocal/mirrors-section field: the schema-conditional
+        // rows must not appear. Before this was conditional, every page carried the ADR-shaped table
+        // and told (say) a policy reader their documents are checked for Y-statements.
+        var table = Generator.ChecksTable(new TypeSchema());
+
+        Assert.DoesNotContain("y-statement", table);
+        Assert.DoesNotContain("alternatives-verdict", table);
+        Assert.DoesNotContain("related-matches-section", table);
+        Assert.DoesNotContain("reciprocal", table);
+        Assert.Contains("frontmatter-parses", table); // unconditional rows still render
+    }
+
+    [Fact]
+    public void ChecksTable_includes_rows_the_type_opts_into_through_its_schema()
+    {
+        var t = new TypeSchema
+        {
+            Fields = new Dictionary<string, FieldSpec>
+            {
+                ["supersedes"] = new() { Name = "supersedes", Reciprocal = "superseded-by" },
+                ["related"] = new() { Name = "related", MirrorsSection = "Related" }
+            }
+        };
+        t.Rules.Add(new Dictionary<string, object> { ["id"] = "y-statement-present" });
+        t.Rules.Add(new Dictionary<string, object> { ["id"] = "alternatives-have-verdicts" });
+
+        var table = Generator.ChecksTable(t);
+
+        Assert.Contains("y-statement", table);
+        Assert.Contains("alternatives-verdict", table);
+        Assert.Contains("related-matches-section", table);
+        Assert.Contains("reciprocal", table);
+    }
+
+    [Fact]
     public void SpliceBlock_replaces_only_between_the_named_markers()
     {
         const string text = "before\n<!-- BEGIN GENERATED: x -->\nOLD\n<!-- END GENERATED: x -->\nafter";

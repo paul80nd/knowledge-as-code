@@ -76,7 +76,7 @@ public static class Commands
             {
                 var text = Files.ReadLf(pagePath);
                 text = Generator.SpliceBlock(text, $"schema-{folder}", Generator.SchemaTable(t));
-                text = Generator.SpliceBlock(text, $"checks-{folder}", Generator.ChecksTable());
+                text = Generator.SpliceBlock(text, $"checks-{folder}", Generator.ChecksTable(t));
                 targets.Add((pagePath, text));
             }
         }

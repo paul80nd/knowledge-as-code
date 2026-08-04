@@ -36,6 +36,15 @@ public class TypeSchema
     public List<string> IndexColumns = [];
     public string? IndexSort;
     public readonly List<Dictionary<string, object>> Rules = [];
+
+    // Whether this type declares a given rule. The reader-facing checks table uses it to show a
+    // rule's row only on the pages whose schema actually carries the rule.
+    public bool HasRule(string id) =>
+        Rules.Any(r => r.TryGetValue("id", out var rid) && string.Equals(rid.ToString(), id, StringComparison.Ordinal));
+
+    // Whether any field on this type declares the given FieldSpec property — the same question for
+    // schema-driven core checks (reciprocal, mirrors-section) that only fire when a field opts in.
+    public bool AnyField(Func<FieldSpec, bool> predicate) => Fields.Values.Any(predicate);
 }
 
 public class Schema

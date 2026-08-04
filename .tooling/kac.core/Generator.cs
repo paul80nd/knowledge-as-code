@@ -62,34 +62,44 @@ public static class Generator
     // checks are folded into one row (e.g. the three `id-*` checks read as one `id` row) and worded
     // for a human skim. Each row therefore names the catalogue ids it stands for, so the table's
     // coverage stays verifiable (ChecksTableProblems) even though its presentation is hand-tuned.
-    private static readonly (string Label, string[] Ids, string Description)[] DocRows =
+    //
+    // `When` is the row's applicability: null means the check fires for every type, otherwise the
+    // predicate asks the type's own schema whether it can fire at all. Without it the table was a
+    // single ADR-shaped list spliced into every page, telling a policy reader that their documents
+    // are checked for Y-statements. Applicability is read from the schema rather than hand-listed
+    // per type, so declaring a rule is still the only thing needed to document it.
+    private static readonly (string Label, string[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
-        ("frontmatter-parses", ["frontmatter-parses"], "Frontmatter is present and is a valid YAML mapping."),
-        ("unknown-key", ["unknown-key"], "Every frontmatter key is a schema field or a reserved ADO key."),
-        ("key-order", ["key-order"], "Key order is a topological extension of the schema's field order."),
-        ("required-field", ["required-field"], "Required and conditionally-required fields are present."),
-        ("bare-key", ["bare-key"], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`."),
-        ("date-quoted / date-format", ["date-quoted", "date-format"], "Date fields are quoted `YYYY-MM-DD`."),
-        ("enum", ["enum", "enum-lowercase"], "Enum values are in range and lowercase."),
+        ("frontmatter-parses", ["frontmatter-parses"], "Frontmatter is present and is a valid YAML mapping.", null),
+        ("unknown-key", ["unknown-key"], "Every frontmatter key is a schema field or a reserved ADO key.", null),
+        ("key-order", ["key-order"], "Key order is a topological extension of the schema's field order.", null),
+        ("required-field", ["required-field"], "Required and conditionally-required fields are present.", null),
+        ("bare-key", ["bare-key"], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`.", null),
+        ("date-quoted / date-format", ["date-quoted", "date-format"], "Date fields are quoted `YYYY-MM-DD`.", null),
+        ("enum", ["enum", "enum-lowercase"], "Enum values are in range and lowercase.", null),
         ("field-pattern", ["field-pattern"],
-            "Values match the pattern their field declares (`tags`, `aligns-with`, `licence`)."),
-        ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares."),
+            "Values match the pattern their field declares (e.g. `tags`).", null),
+        ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
         ("id", ["id-prefix", "id-format", "id-matches-filename"],
-            "`id` has the type's prefix and width and matches the filename number."),
-        ("id-unique", ["id-unique"], "`id` is unique across the whole wiki."),
+            "`id` carries the type's prefix and, where the type is numbered, matches the filename number.", null),
+        ("id-unique", ["id-unique"], "`id` is unique across the whole wiki.", null),
         ("filename / slug-length", ["filename-pattern", "slug-length"],
-            "Filename matches the pattern; the slug is within 30 characters."),
+            "Filename matches the pattern; the slug is within 30 characters.", null),
         ("h1", ["h1", "h1-pattern", "h1-matches-id"],
-            "The H1 matches the title pattern and its number matches the `id`."),
-        ("required-section", ["required-section"], "Every required section heading is present."),
-        ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional)."),
-        ("undefined-label", ["undefined-label"], "Every `[ADR-NNNN]` shortcut reference has a link definition."),
+            "The document has an H1 and, where the type declares one, it matches the title pattern.", null),
+        ("required-section", ["required-section"], "Every required section heading is present.", null),
+        ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional).", null),
+        ("undefined-label", ["undefined-label"], "Every shortcut reference has a link definition.", null),
         ("related-matches-section", ["related-matches-section"],
-            "`related` reconciles with the ids in the `## Related` section."),
-        ("reciprocal", ["reciprocal"], "`supersedes` / `superseded-by` agree in both directions."),
-        ("unused-definition", ["unused-definition"], "A link definition that nothing references."),
-        ("y-statement", ["y-statement"], "A Y-statement block-quote follows the H1 and is within 60 words."),
-        ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.")
+            "A field that mirrors a section reconciles with the ids in that section.",
+            t => t.AnyField(f => f.MirrorsSection is not null)),
+        ("reciprocal", ["reciprocal"], "A reciprocal field and its counterpart agree in both directions.",
+            t => t.AnyField(f => f.Reciprocal is not null)),
+        ("unused-definition", ["unused-definition"], "A link definition that nothing references.", null),
+        ("y-statement", ["y-statement"], "A Y-statement block-quote follows the H1 and is within 60 words.",
+            t => t.HasRule("y-statement-present")),
+        ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.",
+            t => t.HasRule("alternatives-have-verdicts"))
     ];
 
     // Catalogue checks the reader-facing table deliberately does not surface: `type` (an internal
@@ -100,11 +110,11 @@ public static class Generator
     private static readonly HashSet<string> IntentionallyUndocumented =
         new(["type", "list", "bracket-literal"], StringComparer.Ordinal);
 
-    public static string ChecksTable()
+    public static string ChecksTable(TypeSchema t)
     {
         var severity = CheckCatalogue.All.ToDictionary(c => c.Id, c => c.Severity);
         List<string> headers = ["Check", "Level", "What it verifies"];
-        var rows = DocRows.Select(r => new List<string>
+        var rows = DocRows.Where(r => r.When is null || r.When(t)).Select(r => new List<string>
         {
             $"`{r.Label}`",
             severity.GetValueOrDefault(r.Ids[0], Sev.Error).ToString().ToLowerInvariant(),

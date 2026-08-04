@@ -137,7 +137,7 @@ corpus, and still catches genuine disorder (`tags` before `id`, `related` before
 |-------------------------------------------------|-------------------------------------|--------------------------------------------------------------------------------------------------------------|
 | `<type>/INDEX.md`                               | frontmatter across the folder       | Regenerated **wholly**; columns and sort come from the schema's `index` block; carries a do-not-edit banner. |
 | `<!-- … schema-<type> -->` block in `<type>.md` | the type's `fields`                 | The frontmatter reference table.                                                                             |
-| `<!-- … checks-<type> -->` block in `<type>.md` | the checks the validator implements | The "What CI checks" table.                                                                                  |
+| `<!-- … checks-<type> -->` block in `<type>.md` | the checks the validator implements | The "What CI checks" table. Rows a type cannot trip — a rule it does not declare, a reciprocal or mirrors-section field it does not have — are omitted, so each page lists only its own checks. |
 
 Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of `<type>.md` is byte-preserved. A type is
 regenerated only if it has at least one frontmatter-bearing record, so unmigrated types are never touched — today that
