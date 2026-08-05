@@ -169,9 +169,10 @@ glossary.md
 knowledge-as-code.md   # the approach
 knowledge-as-code/     # the system's own documentation — outside the taxonomy
   manifest.yaml        # which files are shared and which are local
-  mechanism.lock       # this corpus's sync state
+.mechanism.lock        # this corpus's sync state
 .claude/skills/        # agent machinery — SYNCED
-.tooling/                   # validators and generators — SYNCED
+.schema/               # the machine-readable schema — SYNCED
+.tooling/              # validators and generators — SYNCED
 _plan/                 # migration scaffolding — temporary
 _reports/              # GENERATED
 ```

@@ -13,12 +13,12 @@ public static class Harness
 
     public static ValidationResult Validate(string fixtureName)
     {
-        var schemaDir = Path.Combine(RepoRoot, "knowledge-as-code", "schema");
+        var schemaDir = Path.Combine(RepoRoot, ".schema");
         var corpusDir = Path.Combine(RepoRoot, ".tooling", "tests", "fixtures", fixtureName, "corpus");
         var temp = Path.Combine(Path.GetTempPath(), "kac-features-" + Guid.NewGuid().ToString("N"));
         try
         {
-            CopyTree(schemaDir, Path.Combine(temp, "knowledge-as-code", "schema"));
+            CopyTree(schemaDir, Path.Combine(temp, ".schema"));
             CopyTree(corpusDir, temp);
 
             var schema = Schema.Load(temp);
@@ -51,7 +51,7 @@ public static class Harness
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir is not null)
         {
-            if (Directory.Exists(Path.Combine(dir.FullName, "knowledge-as-code", "schema")))
+            if (Directory.Exists(Path.Combine(dir.FullName, ".schema")))
                 return dir.FullName;
             dir = dir.Parent;
         }

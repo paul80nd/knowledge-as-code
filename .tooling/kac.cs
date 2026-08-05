@@ -7,7 +7,7 @@
 //
 // One tool, several subcommands, sharing a schema-loading and markdown-parsing core:
 //
-//   validate   check the corpus against knowledge-as-code/schema/*.yaml
+//   validate   check the corpus against .schema/*.yaml
 //   index      regenerate INDEX.md and the generated blocks in <type>.md
 //   mechanism  enforce the portability manifest: synced layer vs a reference
 //
@@ -21,7 +21,7 @@ using kac.core;
 var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
 if (repoRoot is null)
 {
-    Console.Error.WriteLine("kac: could not locate the repo root (no knowledge-as-code/schema above the cwd).");
+    Console.Error.WriteLine("kac: could not locate the repo root (no .schema above the cwd).");
     return 2;
 }
 
@@ -32,7 +32,7 @@ var pathsArg = new Argument<string[]>("paths")
     Description = "Subtrees or files to validate (default: the whole repo)."
 };
 var jsonOpt = new Option<bool>("--json") { Description = "Emit the summary and findings as JSON." };
-var validate = new Command("validate", "Check the corpus against knowledge-as-code/schema/*.yaml.")
+var validate = new Command("validate", "Check the corpus against .schema/*.yaml.")
 {
     pathsArg,
     jsonOpt
@@ -62,7 +62,7 @@ checks.SetAction(pr => Commands.Checks(pr.GetValue(checksJsonOpt)));
 // recompute, compare, name what is stale, exit non-zero, never write. `--sync` (the write half)
 // is not implemented yet — see issue #6.
 var mechCheckOpt = new Option<bool>("--check") { Description = "Compare the synced layer against a reference and report drift; never writes." };
-var againstOpt = new Option<string?>("--against") { Description = "Reference corpus to compare against (a path). Defaults to upstream.url in mechanism.lock." };
+var againstOpt = new Option<string?>("--against") { Description = "Reference corpus to compare against (a path). Defaults to upstream.url in .mechanism.lock." };
 var mechanism = new Command("mechanism", "Enforce the portability manifest: compare the synced layer against a reference.")
 {
     mechCheckOpt,
@@ -82,7 +82,7 @@ static string? FindRepoRoot(string start)
     var dir = new DirectoryInfo(start);
     while (dir is not null)
     {
-        if (Directory.Exists(Path.Combine(dir.FullName, "knowledge-as-code", "schema")))
+        if (Directory.Exists(Path.Combine(dir.FullName, ".schema")))
             return dir.FullName;
         dir = dir.Parent;
     }
@@ -95,7 +95,7 @@ static string? FindRepoRoot(string start)
 // pre-flight. Every subcommand's logic — and all the mechanics — live in the kac.core project
 // (referenced via the #:project directive at the top), one class per file under .tooling/kac.core/:
 //   Commands.cs   the orchestration behind validate / index / checks / mechanism
-//   Schema.cs     FieldSpec, TypeSchema, Schema          (schema/*.yaml loading)
+//   Schema.cs     FieldSpec, TypeSchema, Schema          (.schema/*.yaml loading)
 //   GitFiles.cs   git ls-files + non-git fallback walk
 //   Corpus.cs     markdown discovery over the schema
 //   Document.cs   Doc, LinkRef                           (frontmatter + markdown parse)

@@ -226,7 +226,7 @@ public static class Commands
         var reference = against ?? lockFile.UpstreamUrl;
         if (string.IsNullOrWhiteSpace(reference))
             return Fail("mechanism: no reference to compare against. Pass --against <path>, "
-                        + "or set upstream.url in knowledge-as-code/mechanism.lock.");
+                        + "or set upstream.url in .mechanism.lock.");
 
         var refRoot = Path.GetFullPath(reference, repoRoot);
         if (!Directory.Exists(refRoot))

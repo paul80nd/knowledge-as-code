@@ -91,7 +91,7 @@ Each type's fields are documented on its own page, generated from the schema:
 [Integration](/integrations#metadata) · [Data](/data#metadata) · [FAQ](/faqs#metadata) ·
 [Discovery](/discoveries#metadata) · [Postmortem](/postmortems#metadata)
 
-They are generated into those pages from `knowledge-as-code/schema/`, so a reader working in one folder has what they
+They are generated into those pages from `.schema/`, so a reader working in one folder has what they
 need without leaving it, and there is still one definition.
 
 [Glossary](/glossary) is the seventeenth type and the exception: a single document rather than a collection, so its two

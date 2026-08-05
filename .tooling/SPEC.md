@@ -23,7 +23,7 @@ data* — at a fraction of the cost.
 
 ## Scope — what becomes data, what stays code
 
-The decision hinges on bucketing the **actual** rules in `knowledge-as-code/schema/*.yaml`.
+The decision hinges on bucketing the **actual** rules in `.schema/*.yaml`.
 
 ### Bucket A — becomes a one-line `expr:` (do this)
 

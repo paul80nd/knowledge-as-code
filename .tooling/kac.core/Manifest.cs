@@ -53,7 +53,7 @@ public class MechanismLock
 
     public static MechanismLock Load(string repoRoot)
     {
-        var path = Path.Combine(repoRoot, "knowledge-as-code", "mechanism.lock");
+        var path = Path.Combine(repoRoot, ".mechanism.lock");
         var lockFile = new MechanismLock();
         if (!File.Exists(path)) return lockFile;
 

@@ -25,13 +25,13 @@ Which files fall on which side is declared in
 
 **Early.** The mechanism is real and tested; the taxonomy is only partly proven.
 
-|                |                                                                                                  |
-|----------------|--------------------------------------------------------------------------------------------------|
-| `kac validate` | ~30 checks — frontmatter against schema, identity, structure, link resolution, graph reciprocity |
-| `kac index`    | Generates `<type>/INDEX.md` and the schema/checks tables inside each type root page              |
-| `kac checks`   | Lists every check the validator implements                                                       |
+|                |                                                                                                              |
+|----------------|--------------------------------------------------------------------------------------------------------------|
+| `kac validate` | ~30 checks — frontmatter against schema, identity, structure, link resolution, graph reciprocity             |
+| `kac index`    | Generates `<type>/INDEX.md` and the schema/checks tables inside each type root page                          |
+| `kac checks`   | Lists every check the validator implements                                                                   |
 | Tests          | Three layers — unit (`kac.tests`), Reqnroll feature specs (`kac.features`), golden fixtures (`kac-tests.cs`) |
-| Proven types   | **ADRs only.** The other sixteen schemas are written but have never validated a real document    |
+| Proven types   | **ADRs only.** The other sixteen schemas are written but have never validated a real document                |
 
 That last row is the honest limit. The schema will be wrong in ways only real content reveals, and only one type has met
 real content so far. Treat the other sixteen as drafts.
@@ -60,12 +60,12 @@ cd my-wiki
 dotnet run .tooling/kac-tests.cs   # run the golden test suite
 ```
 
-`./kac` (Windows: `kac.cmd`) is a launcher at the repo root that wraps `dotnet run .tooling/kac.cs`; add the repo root to
-your `PATH` to run it as `kac`.
+`./kac` (Windows: `kac.cmd`) is a launcher at the repo root that wraps `dotnet run .tooling/kac.cs`; add the repo root
+to your `PATH` to run it as `kac`.
 
 To start your own corpus: clone, delete the type folders you don't want, rewrite the root pages' examples in your own
-domain, and start adding records. Keep `.tooling/` and `knowledge-as-code/schema/` as they are — those are the half you want
-to receive updates to.
+domain, and start adding records. Keep `.tooling/` and `.schema/` as they are — those are the half you want to receive
+updates to.
 
 ## Layout
 
@@ -81,14 +81,19 @@ knowledge-as-code/     # the system's own documentation
   ├── metadata.md      # the frontmatter fields
   ├── contributing.md  # how a contribution is made and reviewed
   ├── automation.md    # what is generated, validated and scheduled
-  ├── manifest.yaml    # which files are shared, which are local
-  ├── mechanism.lock   # this corpus's sync state
-  └── schema/          # the machine-readable schema — the source of truth
+  └── manifest.yaml    # which files are shared, which are local
 kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
+.mechanism.lock        # this corpus's sync state
+.schema/               # the machine-readable schema — the source of truth
 .tooling/              # the kac tool: entrypoint + kac.core library, plus its tests and fixtures
 ```
 
-Adding a knowledge type is adding a YAML file to `schema/`, not editing the tool.
+The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.mechanism.lock` — so that the markdown stays the visible
+half of the repository, and so an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
+What remains in `knowledge-as-code/` is documentation — bar `manifest.yaml`, which stays because the README and
+`automation.md` both cite it as the authority on the shared/local split.
+
+Adding a knowledge type is adding a YAML file to `.schema/`, not editing the tool.
 
 ## Keeping copies in step
 
@@ -96,7 +101,7 @@ This framework is designed to be **copied, not depended on**. An organisation ad
 diverge, with no runtime dependency on this repository and nothing to remove if they later want to go their own way.
 
 The cost of that is drift, which is what the manifest is for. Every file resolves to exactly one layer — `synced`,
-`forked`, `generated`, `local` or `ignored` — and each layer has a rule about what divergence means. `mechanism.lock`
+`forked`, `generated`, `local` or `ignored` — and each layer has a rule about what divergence means. `.mechanism.lock`
 records which version of the shared layer a given corpus is on, and any deviation it has deliberately accepted.
 
 ## Opinions

@@ -1,7 +1,7 @@
 # `.tooling` — the knowledge-as-code tooling
 
 `kac` validates and generates a knowledge corpus against the machine-readable schema in
-`knowledge-as-code/schema/`. The command you run is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **
+`.schema/`. The command you run is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **
 `kac.core`** library that holds the mechanics; `dotnet run` builds and runs it with no build step to manage. The schema
 is the source of truth: `kac` reads it and enforces it, so **adding a knowledge type is adding a YAML file, not editing
 this tool**.
@@ -164,7 +164,7 @@ exit non-zero, never write.
 ./kac mechanism --check --against ../other-corpus
 ```
 
-The reference defaults to `upstream.url` in `knowledge-as-code/mechanism.lock`, so a consumer that records where it
+The reference defaults to `upstream.url` in `.mechanism.lock`, so a consumer that records where it
 synced from can run a bare `mechanism --check`. What it reports:
 
 - **synced** files that differ, are missing on either side, or match no manifest rule at all — each an **error** (exit
@@ -172,7 +172,7 @@ synced from can run a bare `mechanism --check`. What it reports:
 - **forked** files are compared too, but only counted: how many differ from the reference is informational and never
   fails.
 - **generated**, **local** and **ignored** files are skipped — each corpus owns its own.
-- **accepted divergences** listed in `mechanism.lock` are honoured rather than flagged as drift, and any that have
+- **accepted divergences** listed in `.mechanism.lock` are honoured rather than flagged as drift, and any that have
   quietly become identical to the reference again are named as `RESOLVED` so the stale entry can be removed.
 
 Comparison is LF-normalised, so line-ending differences never read as drift. `mechanism --sync` — the write half that

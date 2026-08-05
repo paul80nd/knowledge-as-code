@@ -18,7 +18,7 @@ public class ManifestTests
     };
 
     [Theory]
-    [InlineData("knowledge-as-code/schema/adrs.yaml", "synced")] // first rule wins
+    [InlineData("knowledge-as-code/manifest.yaml", "synced")]     // first rule wins
     [InlineData("adrs/0001-x.md", "forked")]                      // falls through to the .md rule
     [InlineData("scripts/build.txt", "local")]                    // only the catch-all matches
     public void Resolve_returns_the_first_matching_rules_layer(string path, string expected)

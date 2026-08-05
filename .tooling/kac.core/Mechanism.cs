@@ -69,7 +69,7 @@ public static class MechanismCheck
 
         if (resolvedDivergence.Count > 0)
         {
-            Console.WriteLine("RESOLVED — accepted divergences that are now identical again (delete them from mechanism.lock):");
+            Console.WriteLine("RESOLVED — accepted divergences that are now identical again (delete them from .mechanism.lock):");
             foreach (var p in resolvedDivergence) Console.WriteLine($"  {p}");
         }
 
