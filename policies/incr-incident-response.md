@@ -15,7 +15,7 @@ owner: paul.law
 tags: [ incident-response, learning, postmortem ]
 ---
 
-# Policy: Incidents are managed and learned from
+# POL-INCR: Incidents are managed and learned from
 
 ## Purpose
 

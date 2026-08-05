@@ -7,7 +7,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# Policy: An over-long slug behind a mnemonic
+# POL-MEXP: An over-long slug behind a mnemonic
 
 ## Purpose
 

@@ -12,7 +12,7 @@ owner: paul.law
 tags: [ api, contracts, interoperability, versioning ]
 ---
 
-# Policy: Interfaces are contracts we honour
+# POL-INTC: Interfaces are contracts we honour
 
 ## Purpose
 

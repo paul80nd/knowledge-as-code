@@ -12,7 +12,7 @@ owner: paul.law
 tags: [ ai-agents, knowledge-management, provenance ]
 ---
 
-# Policy: Agents propose, people decide
+# POL-AGNT: Agents propose, people decide
 
 ## Purpose
 

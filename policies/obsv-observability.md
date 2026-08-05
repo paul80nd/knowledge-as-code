@@ -13,7 +13,7 @@ owner: paul.law
 tags: [ alerting, logging, monitoring, observability ]
 ---
 
-# Policy: Systems are observable and actively monitored
+# POL-OBSV: Systems are observable and actively monitored
 
 ## Purpose
 

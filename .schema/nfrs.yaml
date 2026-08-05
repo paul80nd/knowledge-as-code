@@ -15,7 +15,8 @@ filename:
   slug-max: 30
 
 title:
-  h1-pattern: '^NFR: (.+)$'
+  h1-pattern: '^NFR-(\d{4}): (.+)$'
+  matches-id: true
 
 fields:
 

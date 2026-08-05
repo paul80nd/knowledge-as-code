@@ -11,7 +11,7 @@ owner: paul.law
 tags: [ capacity, non-functional-requirements, performance ]
 ---
 
-# Policy: Performance targets are stated and verified
+# POL-PERF: Performance targets are stated and verified
 
 ## Purpose
 

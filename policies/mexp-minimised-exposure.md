@@ -13,7 +13,7 @@ owner: paul.law
 tags: [ exposure, network-security, segmentation ]
 ---
 
-# Policy: Exposure is minimised and traffic is controlled
+# POL-MEXP: Exposure is minimised and traffic is controlled
 
 ## Purpose
 

@@ -11,7 +11,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# Control: {{Title}}
+# CTL-NNNN: {{Title}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 

@@ -15,7 +15,7 @@ owner: paul.law
 tags: [ secure-coding, secure-design, threat-modelling ]
 ---
 
-# Policy: Security is designed in, not added on
+# POL-SECD: Security is designed in, not added on
 
 ## Purpose
 

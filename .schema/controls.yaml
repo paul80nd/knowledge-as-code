@@ -15,7 +15,8 @@ filename:
   slug-max: 30
 
 title:
-  h1-pattern: '^Control: (.+)$'
+  h1-pattern: '^CTL-(\d{4}): (.+)$'
+  matches-id: true
 
 fields:
 

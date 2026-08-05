@@ -18,7 +18,8 @@ filename:
     area, not numbered in the filename. The numeric id lives in frontmatter.
 
 title:
-  h1-pattern: '^Standard: (.+)$'
+  h1-pattern: '^STD-(\d{4}): (.+)$'
+  matches-id: true
 
 fields:
 

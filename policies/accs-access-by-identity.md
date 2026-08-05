@@ -16,7 +16,7 @@ owner: paul.law
 tags: [ access-control, identity, least-privilege ]
 ---
 
-# Policy: Access is by individual identity, on least privilege
+# POL-ACCS: Access is by individual identity, on least privilege
 
 ## Purpose
 

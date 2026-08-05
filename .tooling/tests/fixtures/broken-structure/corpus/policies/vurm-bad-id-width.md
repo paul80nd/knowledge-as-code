@@ -7,7 +7,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# Policy: Bad mnemonic width
+# POL-VURM: Bad mnemonic width
 
 ## Purpose
 

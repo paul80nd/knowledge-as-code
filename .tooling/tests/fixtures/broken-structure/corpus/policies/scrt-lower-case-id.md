@@ -7,7 +7,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# Policy: Lower-case mnemonic in the id
+# POL-SCRT: Lower-case mnemonic in the id
 
 ## Purpose
 

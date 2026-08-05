@@ -119,6 +119,13 @@
       "message": "id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'."
     },
     {
+      "file": "policies/recv-h1-disagrees.md",
+      "line": 10,
+      "severity": "error",
+      "check": "h1-matches-id",
+      "message": "H1 mnemonic 'OBSV' does not match filename mnemonic 'recv'."
+    },
+    {
       "file": "policies/scrt-lower-case-id.md",
       "line": 1,
       "severity": "error",

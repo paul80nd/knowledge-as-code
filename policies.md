@@ -86,7 +86,8 @@ under governance is the clearest) are the ones most likely to be revisited.
 2. Choose a four-character mnemonic for the policy's *concept* — `VURM` for vulnerability remediation, `PIPE` for
    pipeline-to-production. Start it with the same letter as the slug, so the folder still reads alphabetically.
 3. Copy [`template.md`](policies/template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
-   upper-case.
+   upper-case. The H1 carries the same mnemonic — `# POL-MNEM: <the commitment>` — and CI checks it against the
+   filename.
 4. Set `category` to whichever of the four the commitment belongs to. If two fit, pick the one a reader looking for this
    policy would try first; if none does, that is a taxonomy conversation, not a fifth category invented in passing.
 5. State the commitment, the scope it applies to, and any explicit exceptions. Exceptions stated up front are honest;

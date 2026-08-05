@@ -10,7 +10,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# Policy: {{Title}}
+# POL-XXXX: {{Title}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 

@@ -14,7 +14,7 @@ owner: paul.law
 tags: [ backup, continuity, recovery, resilience ]
 ---
 
-# Policy: Services and data are recoverable
+# POL-RECV: Services and data are recoverable
 
 ## Purpose
 

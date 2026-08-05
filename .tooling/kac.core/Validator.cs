@@ -344,12 +344,24 @@ public static class Validator
             return;
         }
 
-        if (t.TitleMatchesId && m.Groups.Count > 1 && present.TryGetValue("id", out _))
+        // The H1 carries the id, so it is held to the filename exactly as the id itself is — digits for
+        // a numbered type, the mnemonic for a mnemonic one. The mnemonic comparison is case-insensitive
+        // because the H1 upper-cases what the filename carries lower-case: POL-SCRT in scrt-…md.
+        if (!t.TitleMatchesId || m.Groups.Count <= 1 || !present.ContainsKey("id")) return;
+
+        var inH1 = m.Groups[1].Value;
+        if (t.IdStyle == "mnemonic")
         {
-            var num = m.Groups[1].Value;
+            var fileMnemonic = FilenameMnemonic(d.Rel, t.IdWidth);
+            if (fileMnemonic is not null && !inH1.Equals(fileMnemonic, StringComparison.OrdinalIgnoreCase))
+                err("h1-matches-id",
+                    $"H1 mnemonic '{inH1}' does not match filename mnemonic '{fileMnemonic}'.", d.H1Line);
+        }
+        else
+        {
             var fileNum = FilenameNumber(d.Rel);
-            if (fileNum is not null && num != fileNum)
-                err("h1-matches-id", $"H1 number '{num}' does not match filename number '{fileNum}'.", d.H1Line);
+            if (fileNum is not null && inH1 != fileNum)
+                err("h1-matches-id", $"H1 number '{inH1}' does not match filename number '{fileNum}'.", d.H1Line);
         }
     }
 
