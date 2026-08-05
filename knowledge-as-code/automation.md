@@ -2,9 +2,10 @@
 
 What CI checks, what it builds, and what it deliberately leaves alone.
 
-> **Status: aspirational.** Almost nothing described here is implemented yet. This document records the intended
-> behaviour so it can be built against and argued with. The **Status** column on each table below tracks what is
-> actually built; a column is dropped once every row in its table is `Done`.
+> **Part of this is built, part is intent.** Schema validation, link and graph checking, and index generation run on
+> every PR today. Drift detection, the rules digest, the reports and the skills do not exist yet. The **Status** column
+> on each table tracks it, and a column is dropped once every row in its table is `Done`. For what is enforced right
+> now, `kac checks` lists every check the validator implements — that command is the authority, this page is the intent.
 
 The principle: the pipeline's job is not only to check that documents are *well-formed*, but that they still describe
 **reality**. Schema validation catches typos. Drift detection catches a wiki quietly becoming fiction, which is the
