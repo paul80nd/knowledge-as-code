@@ -24,3 +24,4 @@
 | pol-0018 | [Policy: Performance targets are stated and verified](0018-performance-targets.md)                            | draft  |             | 2027-08-04 |
 | pol-0019 | [Policy: Deviations are recorded, owned and time-bound](0019-recorded-deviations.md)                          | draft  |             | 2027-08-04 |
 | pol-0020 | [Policy: Cost is a non-functional requirement](0020-cost-as-an-nfr.md)                                        | draft  |             | 2027-08-04 |
+| pol-0021 | [Policy: Agents propose, people decide](0021-agents-propose-people-decide.md)                                 | draft  |             | 2027-08-05 |
