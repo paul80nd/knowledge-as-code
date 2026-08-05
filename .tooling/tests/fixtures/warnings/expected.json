@@ -29,7 +29,7 @@
     },
     {
       "file": "policies/ordn-ordinal-not-natural.md",
-      "line": 6,
+      "line": 7,
       "severity": "warning",
       "check": "list-order",
       "message": "'aligns-with' is not in alphabetical order — 'ISO27001:2022 A.8.7' should come before 'ISO27001:2022 A.8.29'."

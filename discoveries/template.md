@@ -1,5 +1,5 @@
 ---
-id: dsc-<slug>
+id: dsc-{{slug}}
 tier: observed
 status: open
 source: human
@@ -12,12 +12,19 @@ owner:
 tags: [ a, b ]
 ---
 
-# <What you noticed, in one line>
+# {{What you noticed, in one line}}
 
-_(Frontmatter notes — delete this block. **`source`**: `human` · `session` · `dreamed`. **`confidence`**: leave
-`unverified` unless you have genuinely proven it. **`expires`** is a quoted date, 90 days from capture by default. **
-`provenance`** is required when `source: dreamed` — a reference back to the session and passage it came from, so review
-is a thirty-second check rather than an act of faith.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`source`** — `human` · `session` · `dreamed`.
+* **`confidence`** — Leave `unverified` unless you have genuinely proven it.
+* **`expires`** — A quoted date — 90 days from capture by default.
+* **`provenance`** — Required when `source: dreamed`. A reference back to the session and passage it came from, so
+  review is a thirty-second check rather than an act of faith.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 ## What I saw
 

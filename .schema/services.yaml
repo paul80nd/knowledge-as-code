@@ -1,4 +1,5 @@
 type: service
+label: Service
 folder: services
 page: services.md
 tier: descriptive

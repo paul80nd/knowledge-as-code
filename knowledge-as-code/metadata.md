@@ -102,6 +102,13 @@ The ID is the anchor for every cross-reference in the wiki, and it is what a sho
 be corrected; IDs may not — which binds hardest on a mnemonic, because unlike a number it makes a claim that can go
 stale. A document whose meaning has moved that far is replaced and the old one retired, not renamed.
 
+**Types with an ID carry it in the H1**, upper-cased and followed by the title — `# ADR-0017: …`, `# POL-VURM: …`,
+`# STD-0004: …`. You arrive at these documents from a citation, so the first line confirms you are where the citation
+meant to send you. It is also the only part of an H1 that CI can check: `h1-matches-id` holds it to the filename, which
+a fixed label like `Policy:` gave nothing to verify. Types identified by a slug — services, explanations, glossary
+terms — have no discriminator worth repeating and title their H1 plainly. Generated indexes strip the ID back off,
+since they already carry it in a column of its own.
+
 ## Per-type fields
 
 Each type's fields are documented on its own page, generated from the schema:

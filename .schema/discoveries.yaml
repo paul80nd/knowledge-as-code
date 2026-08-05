@@ -1,4 +1,5 @@
 type: discovery
+label: Discovery
 folder: discoveries
 page: discoveries.md
 tier: observed

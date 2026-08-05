@@ -1,6 +1,7 @@
 ---
 id: pol-TRUS
 tier: normative
+category: security
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.19
@@ -13,7 +14,7 @@ owner: paul.law
 tags: [ dependencies, provenance, supply-chain ]
 ---
 
-# Policy: We ship only components we know and trust
+# POL-TRUS: We ship only components we know and trust
 
 ## Purpose
 

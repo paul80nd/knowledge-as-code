@@ -1,6 +1,7 @@
 ---
 id: pol-PIPE
 tier: normative
+category: delivery
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.9
@@ -12,7 +13,7 @@ owner: paul.law
 tags: [ change-management, deployment, release-management ]
 ---
 
-# Policy: Changes reach production through the pipeline
+# POL-PIPE: Changes reach production through the pipeline
 
 ## Purpose
 

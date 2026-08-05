@@ -1,6 +1,7 @@
 ---
 id: pol-INCR
 tier: normative
+category: operations
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.24
@@ -14,7 +15,7 @@ owner: paul.law
 tags: [ incident-response, learning, postmortem ]
 ---
 
-# Policy: Incidents are managed and learned from
+# POL-INCR: Incidents are managed and learned from
 
 ## Purpose
 

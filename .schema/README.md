@@ -40,10 +40,10 @@ fields:
     notes: >                    # the longer why; schema-only, and the fallback when there is no description
 ```
 
-`description` and `notes` answer different questions. `description` is what a reader of the type page needs at a
-glance and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there
-is room for it. A field declaring only `notes` still renders them, so the two can be adopted a schema at a time — but
-where a note has grown past a line, that is the signal it wants a `description` beside it rather than a trim.
+`description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
+and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room
+for it. A field declaring only `notes` still renders them, so the two can be adopted a schema at a time — but where a
+note has grown past a line, that is the signal it wants a `description` beside it rather than a trim.
 
 **Keep a `description` under ~100 characters.** The generated table pads every column to its widest cell, so one long
 description widens every row on the page — a 153-character cell once made all ten ADR rows 190 wide. Enum `values` are
@@ -64,6 +64,7 @@ Beyond `fields`, each type file declares:
 | Key                        | Purpose                                                                                                          |
 |----------------------------|------------------------------------------------------------------------------------------------------------------|
 | `type` / `folder` / `page` | Identity, and where the type lives                                                                               |
+| `label`                    | The singular display name — "Policy", "ADR" — used to head the generated index                                   |
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
 | `id`                       | Prefix, style (`numbered` or `slug`), and width                                                                  |
 | `filename`                 | Pattern and slug length limit                                                                                    |

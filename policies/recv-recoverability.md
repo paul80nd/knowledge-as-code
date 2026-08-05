@@ -1,6 +1,7 @@
 ---
 id: pol-RECV
 tier: normative
+category: operations
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.29
@@ -13,7 +14,7 @@ owner: paul.law
 tags: [ backup, continuity, recovery, resilience ]
 ---
 
-# Policy: Services and data are recoverable
+# POL-RECV: Services and data are recoverable
 
 ## Purpose
 

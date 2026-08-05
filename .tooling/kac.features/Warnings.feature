@@ -23,7 +23,7 @@ Feature: Warning-level checks
       | severity | line | check | message |
     And the findings for "policies/ordn-ordinal-not-natural.md" are exactly:
       | severity | line | check      | message                                                                                                       |
-      | warning  | 6    | list-order | 'aligns-with' is not in alphabetical order — 'ISO27001:2022 A.8.7' should come before 'ISO27001:2022 A.8.29'. |
+      | warning  | 7    | list-order | 'aligns-with' is not in alphabetical order — 'ISO27001:2022 A.8.7' should come before 'ISO27001:2022 A.8.29'. |
 
   Scenario: The corpus as a whole warns four times and errors not at all
     When I validate the corpus
@@ -33,4 +33,4 @@ Feature: Warning-level checks
       | adrs/0001-warnings.md                | warning  |      | unused-definition    | link definition '[unused-ref]' is never referenced.                                                           |
       | adrs/0001-warnings.md                | warning  | 26   | alternatives-verdict | Alternatives Considered bullet has no verdict: "A message queue  — we might explore this in a future revi…". |
       | adrs/0002-list-order.md              | warning  | 8    | list-order           | 'tags' is not in alphabetical order — 'access-control' should come before 'identity'.                         |
-      | policies/ordn-ordinal-not-natural.md | warning  | 6    | list-order           | 'aligns-with' is not in alphabetical order — 'ISO27001:2022 A.8.7' should come before 'ISO27001:2022 A.8.29'. |
+      | policies/ordn-ordinal-not-natural.md | warning  | 7    | list-order           | 'aligns-with' is not in alphabetical order — 'ISO27001:2022 A.8.7' should come before 'ISO27001:2022 A.8.29'. |

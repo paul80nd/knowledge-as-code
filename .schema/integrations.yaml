@@ -1,4 +1,5 @@
 type: integration
+label: Integration
 folder: integrations
 page: integrations.md
 tier: descriptive

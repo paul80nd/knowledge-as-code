@@ -1,5 +1,5 @@
 ---
-id: rbk-<slug>
+id: rbk-{{slug}}
 tier: procedural
 status: draft
 applies-to:
@@ -11,12 +11,20 @@ owner:
 tags: [ a, b ]
 ---
 
-# <What is broken>
+# {{What is broken}}
 
-_(Frontmatter notes — delete this block. Title this document for the **failure**, not the fix — that is what someone
-searches for at 2am. **`severity`**: `sev1` · `sev2` · `sev3`. **`last-rehearsed`** is a quoted date; `"never"` is
-permitted and is exactly the thing worth knowing before the incident rather than during it. **`requires-access`** must
-be complete — discovering you lack a permission mid-incident is its own outage.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+Title this document for the **failure**, not the fix — that is what someone searches for at 2am.
+
+* **`severity`** — `sev1` · `sev2` · `sev3`.
+* **`last-rehearsed`** — A quoted date; `"never"` is permitted, and is exactly the thing worth knowing before the
+  incident rather than during it.
+* **`requires-access`** — Must be complete. Discovering you lack a permission mid-incident is its own outage.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 ## Symptoms
 
@@ -27,21 +35,21 @@ _(Symptoms come first because that is how the reader finds this document.)_
 
 ## Immediate actions
 
-1. <Stop the bleeding.>
-2. <Notify whom.>
+1. {{Stop the bleeding.}}
+2. {{Notify whom.}}
 
 _(Before diagnosis. Contain first, understand afterwards.)_
 
 ## Diagnosis
 
-**Is <condition>?**
+**Is {{condition}}?**
 
-* **Yes** → <action>, then go to [Resolution](#resolution).
+* **Yes** → {{action}}, then go to [Resolution](#resolution).
 * **No** → continue.
 
-**Is <next condition>?**
+**Is {{next condition}}?**
 
-* **Yes** → <action>.
+* **Yes** → {{action}}.
 * **No** → [escalate](#escalation).
 
 _(A tree, not prose. Each branch ends in a resolution or an escalation — never in a dead end.)_
@@ -52,9 +60,9 @@ Steps to restore service, imperative and numbered. Then how to confirm it is act
 
 ## Escalation
 
-| When        | Who           | How       |
-|-------------|---------------|-----------|
-| <condition> | <name / role> | <channel> |
+| When          | Who             | How         |
+|---------------|-----------------|-------------|
+| {{condition}} | {{name / role}} | {{channel}} |
 
 _(Near the top of the page if this document is long — it must be findable without scrolling.)_
 

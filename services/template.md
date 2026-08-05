@@ -1,5 +1,5 @@
 ---
-id: svc-<slug>
+id: svc-{{slug}}
 tier: descriptive
 status: live
 repo:
@@ -11,14 +11,20 @@ owner:
 tags: [ a, b ]
 ---
 
-# <Service name>
+# {{Service name}}
 
-_(Frontmatter notes — delete this block. **`id`** is `svc-` plus the repository or component name. **`status`**:
-`live` · `building` · `deprecated` · `retired`. **`platform`**: `dotnet-web` · `dotnet-api` ·
-`azure-function` · `static` · `typescript` · `terraform` · `mixed`. **`criticality`**: `critical` if a customer sees the
-failure, `important` if service degrades, `supporting` if the impact is internal only — it drives runbook and NFR
-priority, so be honest rather than generous. **`depends-on`** lists other service ids and points downward only; the
-reverse view is generated.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`id`** — `svc-` plus the repository or component name.
+* **`status`** — `live` · `building` · `deprecated` · `retired`.
+* **`platform`** — `dotnet-web` · `dotnet-api` · `azure-function` · `static` · `typescript` · `terraform` · `mixed`.
+* **`criticality`** — `critical` if a customer sees the failure, `important` if service degrades, `supporting` if the
+  impact is internal only. It drives runbook and NFR priority, so be honest rather than generous.
+* **`depends-on`** — Other service ids, pointing downward only — the reverse view is generated.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 One or two sentences: what this component is for, in terms someone unfamiliar with it would understand.
 
@@ -29,11 +35,11 @@ that disagrees with the estate is worse than none.
 
 ## Where it lives
 
-|                 |                                               |
-|-----------------|-----------------------------------------------|
-| **Repository**  | [`<repo-name>`](<url>)                        |
-| **Platform**    | <runtime / framework>                         |
-| **Deployed as** | <app service / function app / CDN assets / …> |
+|                 |                                                 |
+|-----------------|-------------------------------------------------|
+| **Repository**  | [`{{repo-name}}`]({{url}})                      |
+| **Platform**    | {{runtime / framework}}                         |
+| **Deployed as** | {{app service / function app / CDN assets / …}} |
 
 ## Environments
 

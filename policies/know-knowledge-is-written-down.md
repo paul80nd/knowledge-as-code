@@ -1,6 +1,7 @@
 ---
 id: pol-KNOW
 tier: normative
+category: governance
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.37
@@ -10,7 +11,7 @@ owner: paul.law
 tags: [ documentation, knowledge-management ]
 ---
 
-# Policy: Knowledge is written down and kept with what it describes
+# POL-KNOW: Knowledge is written down and kept with what it describes
 
 ## Purpose
 

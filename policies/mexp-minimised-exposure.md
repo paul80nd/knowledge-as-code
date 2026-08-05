@@ -1,6 +1,7 @@
 ---
 id: pol-MEXP
 tier: normative
+category: security
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.20
@@ -12,7 +13,7 @@ owner: paul.law
 tags: [ exposure, network-security, segmentation ]
 ---
 
-# Policy: Exposure is minimised and traffic is controlled
+# POL-MEXP: Exposure is minimised and traffic is controlled
 
 ## Purpose
 

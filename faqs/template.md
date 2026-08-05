@@ -12,13 +12,21 @@ owner:
 tags: [ a, b ]
 ---
 
-# <The symptom, as you would encounter it>
+# {{The symptom, as you would encounter it}}
 
-_(Frontmatter notes — delete this block. Title and filename are named for the **symptom**, not the cause — that is what
-people search for. **`symptom-keywords`** should be generous: the literal error text, the service names, and the words
-someone would type who doesn't yet know what is wrong. This is the field that makes the document findable, so over-fill
-it. **`confirmed-by`** is a named person and **`confirmed-on`** a real quoted date — an FAQ nobody confirmed is a
-[discovery](/discoveries). **`status`**: `active` · `superseded` · `fixed-upstream`.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+Name the title and the filename for the **symptom**, not the cause — that is what people search for.
+
+* **`symptom-keywords`** — Be generous: the literal error text, the service names, and the words someone would type who
+  doesn't yet know what is wrong. This is the field that makes the document findable, so over-fill it.
+* **`confirmed-by`** — A named person.
+* **`confirmed-on`** — A real quoted date. An FAQ nobody confirmed is a [discovery](/discoveries).
+* **`status`** — `active` · `superseded` · `fixed-upstream`.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 ## Symptom
 
@@ -31,8 +39,8 @@ What is actually happening underneath, in a sentence or two.
 
 ## Fix
 
-1. <Step.>
-2. <Step.>
+1. {{Step.}}
+2. {{Step.}}
 
 How to confirm it worked.
 

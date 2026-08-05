@@ -1,6 +1,7 @@
 ---
 id: pol-ENVS
 tier: normative
+category: security
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.3
@@ -12,7 +13,7 @@ owner: paul.law
 tags: [ environments, production-data, separation ]
 ---
 
-# Policy: Environments are separated, and production stays in production
+# POL-ENVS: Environments are separated, and production stays in production
 
 ## Purpose
 

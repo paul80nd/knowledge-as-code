@@ -12,14 +12,21 @@ owner:
 tags: [ a, b ]
 ---
 
-# Standard: <Title>
+# STD-NNNN: {{Title}}
 
-_(Frontmatter notes — delete this block. **`id`** is `std-` plus a four-digit number, never reused. **`status`** is
-`draft` until agreed, then `active`, and later `deprecated` or `superseded`; values are lowercase. **`axis`** places the
-standard at its true altitude — the layer where the rule is actually true. **`derived-from`** lists the ADR id(s) this
-standard distils; a standard citing neither an ADR here nor a policy in `implements` is guidance, not a standard.
-**`applies-to`** lists service ids, or `all`. **`review-by`** is a quoted `"YYYY-MM-DD"` and drives the staleness
-report.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`id`** — `std-` plus a four-digit number, never reused.
+* **`status`** — `draft` until agreed, then `active`, and later `deprecated` or `superseded`. Values are lowercase.
+* **`axis`** — Places the standard at its true altitude — the layer where the rule is actually true.
+* **`derived-from`** — The ADR id(s) this standard distils. A standard citing neither an ADR here nor a policy in
+  `implements` is guidance, not a standard.
+* **`applies-to`** — Service ids, or `all`.
+* **`review-by`** — A quoted `"YYYY-MM-DD"`. Drives the staleness report.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 Standards are living documents — unlike ADRs they are edited in place as practice matures. Record material changes in
 the Changelog at the bottom rather than rewriting silently.
@@ -47,10 +54,10 @@ copy-paste accurate.
 
 ```
 ✅ Good
-<example>
+{{example}}
 
 ❌ Avoid
-<example>  — why it's wrong
+{{example}}  — why it's wrong
 ```
 
 ## Conformance checklist
@@ -66,7 +73,7 @@ makes the standard *usable* rather than merely readable.
 One or two lines on *why*, then link down to the ADR(s) that decided it. Do not restate the ADR's full reasoning — the
 ADR owns the "why"; this standard owns the "what". Link, don't duplicate.
 
-- [adr-NNNN] — <what it decided>
+- [adr-NNNN] — {{what it decided}}
 
 ## Changelog
 

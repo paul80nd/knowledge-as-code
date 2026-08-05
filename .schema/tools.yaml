@@ -1,4 +1,5 @@
 type: tool
+label: Tool
 folder: tools
 page: tools.md
 tier: descriptive

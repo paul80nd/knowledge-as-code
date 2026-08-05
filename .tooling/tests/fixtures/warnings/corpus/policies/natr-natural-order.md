@@ -1,6 +1,7 @@
 ---
 id: pol-NATR
 tier: normative
+category: governance
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.7
@@ -11,7 +12,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# Policy: Numbers in a list compare as numbers
+# POL-NATR: Numbers in a list compare as numbers
 
 ## Purpose
 

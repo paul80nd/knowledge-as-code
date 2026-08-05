@@ -1,6 +1,7 @@
 ---
 id: pol-A11Y
 tier: normative
+category: governance
 status: draft
 aligns-with:
 implemented-by:
@@ -9,7 +10,7 @@ owner: paul.law
 tags: [ accessibility, inclusive-design, legal-obligation ]
 ---
 
-# Policy: Software we build is usable by everyone
+# POL-A11Y: Software we build is usable by everyone
 
 ## Purpose
 

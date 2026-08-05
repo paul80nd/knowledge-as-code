@@ -13,7 +13,14 @@ public static class Generator
 
     public static string IndexPage(TypeSchema t, List<Doc> docs)
     {
-        var title = t.IdPrefix.ToUpperInvariant() + " Index";
+        // "Policy Index (POL)" — the type as a reader names it, then the id prefix they will meet in
+        // every cross-reference. The prefix is dropped where it only repeats the name, so an ADR index
+        // is headed "ADR Index" rather than "ADR Index (ADR)".
+        var prefix = t.IdPrefix.ToUpperInvariant();
+        var title = $"{t.DisplayName} Index"
+                    + (prefix.Length > 0 && !string.Equals(prefix, t.DisplayName, StringComparison.OrdinalIgnoreCase)
+                        ? $" ({prefix})"
+                        : "");
 
         // An empty type still gets its index. Every type page links to one, so withholding the file
         // until the first record left fourteen dead links that nothing caught — link-resolves does not

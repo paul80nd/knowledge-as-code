@@ -1,5 +1,5 @@
 ---
-id: cap-<slug>
+id: cap-{{slug}}
 tier: descriptive
 status: planned
 implemented-by:
@@ -10,11 +10,18 @@ owner:
 tags: [ a, b ]
 ---
 
-# <Capability name>
+# {{Capability name}}
 
-_(Frontmatter notes — delete this block. **`status`**: `planned` · `building` · `live` · `deprecated`. **
-`implemented-by`** lists service ids. **`feature-files`** are repo-relative paths and are checked in both directions — a
-path that doesn't exist fails, and a feature file claimed by no capability is reported.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`status`** — `planned` · `building` · `live` · `deprecated`.
+* **`implemented-by`** — Service ids.
+* **`feature-files`** — Repo-relative paths, checked in both directions — a path that doesn't exist fails, and a feature
+  file claimed by no capability is reported.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 One or two sentences on what a customer gets from this.
 

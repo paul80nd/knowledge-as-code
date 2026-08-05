@@ -1,6 +1,7 @@
 ---
 id: pol-EVER
 tier: normative
+category: delivery
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.4
@@ -13,7 +14,7 @@ owner: paul.law
 tags: [ change-management, source-control, traceability ]
 ---
 
-# Policy: Everything is in version control
+# POL-EVER: Everything is in version control
 
 ## Purpose
 

@@ -1,12 +1,13 @@
 ---
 id: pol-DEVI
 tier: normative
+category: delivery
 status: draft
 review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# Policy: Mnemonic disagreeing with the filename
+# POL-PIPE: Mnemonic disagreeing with the filename
 
 ## Purpose
 

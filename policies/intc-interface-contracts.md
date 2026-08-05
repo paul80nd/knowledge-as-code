@@ -1,6 +1,7 @@
 ---
 id: pol-INTC
 tier: normative
+category: delivery
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.26
@@ -11,7 +12,7 @@ owner: paul.law
 tags: [ api, contracts, interoperability, versioning ]
 ---
 
-# Policy: Interfaces are contracts we honour
+# POL-INTC: Interfaces are contracts we honour
 
 ## Purpose
 

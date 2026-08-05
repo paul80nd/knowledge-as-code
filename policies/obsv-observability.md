@@ -1,6 +1,7 @@
 ---
 id: pol-OBSV
 tier: normative
+category: operations
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.15
@@ -12,7 +13,7 @@ owner: paul.law
 tags: [ alerting, logging, monitoring, observability ]
 ---
 
-# Policy: Systems are observable and actively monitored
+# POL-OBSV: Systems are observable and actively monitored
 
 ## Purpose
 

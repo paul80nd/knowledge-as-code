@@ -31,4 +31,21 @@ public class DocumentTests
     [Fact]
     public void Doc_Parse_returns_null_without_frontmatter()
         => Assert.Null(Doc.Parse("notes.md", "# Just a heading, no frontmatter\n", new Schema()));
+
+    // The index heading already names the type, so the title column carries only what distinguishes
+    // one record from another. The last capture group is the title in every pattern the schema
+    // declares — whether that group is the only one or the second of two.
+    [Theory]
+    [InlineData("^Policy: (.+)$", "Policy: Secrets are managed", "Secrets are managed")]
+    [InlineData(@"^ADR-(\d{4}): (.+)$", "ADR-0001: Knowledge as code", "Knowledge as code")]
+    [InlineData(null, "A type that declares no pattern", "A type that declares no pattern")]
+    public void TitleText_strips_the_boilerplate_the_h1_pattern_declares(string? pattern, string h1, string expected)
+    {
+        var schema = new Schema();
+        schema.ByFolder["policies"] = new TypeSchema { H1Pattern = pattern };
+        var doc = Doc.Parse("policies/scrt-a-title.md", $"---\nid: pol-SCRT\n---\n\n# {h1}\n", schema);
+
+        Assert.NotNull(doc);
+        Assert.Equal(expected, doc.TitleText());
+    }
 }

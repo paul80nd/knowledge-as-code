@@ -136,11 +136,16 @@ public class Doc
             where ((YamlScalarNode)kv.Key).Value == key
             select (kv.Value as YamlScalarNode)?.Value).FirstOrDefault();
 
+    // The H1 with the type's own boilerplate stripped: "Policy: Secrets are managed" reads as
+    // "Secrets are managed" in an index that is already headed "Policy Index". Every h1-pattern in the
+    // schema captures the title as its LAST group — `^Policy: (.+)$` has only that one, `^ADR-(\d{4}):
+    // (.+)$` captures the number first — so the last group is the title wherever a pattern is declared.
+    // A type with no pattern has no boilerplate to strip and keeps its H1 whole.
     public string TitleText()
     {
         if (Type?.H1Pattern is null || H1 is null) return H1 ?? "";
         var m = System.Text.RegularExpressions.Regex.Match(H1, Type.H1Pattern);
-        return m is { Success: true, Groups.Count: > 2 } ? m.Groups[2].Value : H1;
+        return m is { Success: true, Groups.Count: > 1 } ? m.Groups[^1].Value : H1;
     }
 
     private static string StripFences(string text, YamlFrontMatterBlock block)

@@ -1,6 +1,7 @@
 ---
 id: pol-SCRT
 tier: normative
+category: security
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.17
@@ -11,7 +12,7 @@ owner: paul.law
 tags: [ credentials, key-management, secrets ]
 ---
 
-# Policy: Secrets are managed, never embedded
+# POL-SCRT: Secrets are managed, never embedded
 
 ## Purpose
 

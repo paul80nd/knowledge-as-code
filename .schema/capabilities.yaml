@@ -1,4 +1,5 @@
 type: capability
+label: Capability
 folder: capabilities
 page: capabilities.md
 tier: descriptive

@@ -12,13 +12,20 @@ owner:
 tags: [ a, b ]
 ---
 
-# <The symptom, as customers experienced it>
+# {{The symptom, as customers experienced it}}
 
-_(Frontmatter notes — delete this block. **`occurred-on`** and **`detected-on`** are separate quoted dates for a
-reason — the gap between them is often the finding. **`severity`**: `sev1` · `sev2` · `sev3`. **`affected`** lists
-service or capability ids. **`prompted`** lists the ADRs, runbooks, NFRs and FAQs this incident caused to be written. **
-`status: draft`** while it is being assembled; `published` freezes it. Postmortems are **immutable once published** — a
-materially different understanding is a new document that references this one.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`occurred-on` / `detected-on`** — Separate quoted dates for a reason — the gap between them is often the finding.
+* **`severity`** — `sev1` · `sev2` · `sev3`.
+* **`affected`** — Service or capability ids.
+* **`prompted`** — The ADRs, runbooks, NFRs and FAQs this incident caused to be written.
+* **`status`** — `draft` while it is being assembled; `published` freezes it. Postmortems are **immutable once
+  published** — a materially different understanding is a new document that references this one.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 ## Summary
 
@@ -39,7 +46,7 @@ detected, when it was understood, and when it was resolved; those are four diffe
 In customer terms, not system terms. How many, for how long, what they could not do. Include revenue or contractual
 consequence where it is known, and say so where it isn't.
 
-Measured against [nfr-NNNN](/nfrs/…): <met / breached>. _(If no NFR covered this, that is itself a finding.)_
+Measured against [nfr-NNNN](/nfrs/…): {{met / breached}}. _(If no NFR covered this, that is itself a finding.)_
 
 ## Root cause
 
@@ -47,7 +54,7 @@ The one thing that, had it been different, would have prevented this. Resist lis
 
 ## Contributing factors
 
-* <Condition that made it more likely, or harder to detect, or slower to fix.>
+* {{Condition that made it more likely, or harder to detect, or slower to fix.}}
 
 _(There is usually one root cause and several contributing factors. The factors are where most of the improvement
 lives.)_

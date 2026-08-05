@@ -11,13 +11,20 @@ owner:
 tags: [ a, b ]
 ---
 
-# Control: <Title>
+# CTL-NNNN: {{Title}}
 
-_(Frontmatter notes — delete this block. **`status`**: `active` · `planned` · `retired`. **`verifies`** lists standard
-ids, ideally rule-level anchors. **`mechanism`**: `ci` · `review-checklist` · `manual-periodic` · `runtime-alert` ·
-`not-enforced` — pick the real one. `not-enforced` is a first-class value and the whole point of the coverage report; do
-not invent a mechanism to avoid using it. **`frequency`**: `per-pr` · `per-deploy` · `daily` · `monthly` ·
-`quarterly` · `annual`.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`status`** — `active` · `planned` · `retired`.
+* **`verifies`** — Standard ids, ideally rule-level anchors.
+* **`mechanism`** — `ci` · `review-checklist` · `manual-periodic` · `runtime-alert` · `not-enforced`. Pick the real one:
+  `not-enforced` is a first-class value and the whole point of the coverage report, so do not invent a mechanism to
+  avoid using it.
+* **`frequency`** — `per-pr` · `per-deploy` · `daily` · `monthly` · `quarterly` · `annual`.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 One sentence: what this control proves.
 

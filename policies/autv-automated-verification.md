@@ -1,6 +1,7 @@
 ---
 id: pol-AUTV
 tier: normative
+category: delivery
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.25
@@ -13,7 +14,7 @@ owner: paul.law
 tags: [ continuous-integration, quality-gates, testing ]
 ---
 
-# Policy: Every change is verified automatically, and failures block
+# POL-AUTV: Every change is verified automatically, and failures block
 
 ## Purpose
 

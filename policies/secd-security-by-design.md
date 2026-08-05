@@ -1,6 +1,7 @@
 ---
 id: pol-SECD
 tier: normative
+category: security
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.8
@@ -14,7 +15,7 @@ owner: paul.law
 tags: [ secure-coding, secure-design, threat-modelling ]
 ---
 
-# Policy: Security is designed in, not added on
+# POL-SECD: Security is designed in, not added on
 
 ## Purpose
 

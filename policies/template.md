@@ -1,6 +1,7 @@
 ---
 id: pol-XXXX
 tier: normative
+category: security
 status: draft
 aligns-with:
 implemented-by:
@@ -9,15 +10,24 @@ owner:
 tags: [ a, b ]
 ---
 
-# Policy: <Title>
+# POL-XXXX: {{Title}}
 
-_(Frontmatter notes — delete this block. **`id`** is `pol-` plus a four-character mnemonic for the policy's concept,
-upper-case here and lower-case in the filename: `pol-VURM` in `vurm-vulnerability-remediation.md`. It is **immutable
-once the policy is active** — a change of meaning that big is a new policy and a retirement of this one.
-**`status`**: `draft` · `active` · `retired`. **`aligns-with`** takes ISO/IEC 27001:2022 Annex A references, e.g.
-`ISO27001:2022 A.8.25` — this records **alignment, not compliance or certification**, and the wording matters if this
-is ever read externally. **`implemented-by`** lists the standard ids that put this into practice. **`review-by`** is a
-quoted date; annual is usually right for a policy.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`id`** — `pol-` plus a four-character mnemonic for the policy's concept, upper-case here and lower-case in the
+  filename: `pol-VURM` in `vurm-vulnerability-remediation.md`. **Immutable once the policy is active** — a change of
+  meaning that big is a new policy and a retirement of this one.
+* **`category`** — `security` · `delivery` · `operations` · `governance`. The broad area the commitment belongs to,
+  which is a different question from the topics `tags` records.
+* **`status`** — `draft` · `active` · `retired`.
+* **`aligns-with`** — ISO/IEC 27001:2022 Annex A references, e.g. `ISO27001:2022 A.8.25`. This records **alignment, not
+  compliance or certification**, and the wording matters if this is ever read externally.
+* **`implemented-by`** — The standard ids that put this into practice.
+* **`review-by`** — A quoted date. Annual is usually right for a policy.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 ## Purpose
 
@@ -42,12 +52,12 @@ implement.)_
 
 ## Alignment
 
-| Reference                 | Area           |
-|---------------------------|----------------|
-| ISO/IEC 27001:2022 A.N.NN | <control area> |
+| Reference                 | Area             |
+|---------------------------|------------------|
+| ISO/IEC 27001:2022 A.N.NN | {{control area}} |
 
-The product is **aligned with** these areas; it is not certified against ISO/IEC 27001:2022 and is not audited. Alignment exists
-because the framework covers the right ground.
+The product is **aligned with** these areas; it is not certified against ISO/IEC 27001:2022 and is not audited.
+Alignment exists because the framework covers the right ground.
 
 _(Delete this section if no ISO area corresponds — an invented mapping is worse than none.)_
 
@@ -58,14 +68,14 @@ discovered later are erosion. If there are none, say so.
 
 ## Implemented by
 
-* [std-NNNN] — <what it requires>.
+* [std-NNNN] — {{what it requires}}.
 
 _(A policy nothing implements is a statement of intent. That is allowed — mark it aspirational and say why the standard
 doesn't exist yet.)_
 
 ## Review
 
-Reviewed <frequency> by <role>. Last reviewed: <date>.
+Reviewed {{frequency}} by {{role}}. Last reviewed: {{date}}.
 
 [pol-XXXX]: xxxx-kebab-slug.md
 [std-NNNN]: /standards/nnnn-kebab-slug.md

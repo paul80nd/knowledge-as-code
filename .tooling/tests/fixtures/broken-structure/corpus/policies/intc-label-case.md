@@ -1,12 +1,13 @@
 ---
 id: pol-INTC
 tier: normative
+category: delivery
 status: draft
 review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# Policy: Shortcut labels that are not the canonical id
+# POL-INTC: Shortcut labels that are not the canonical id
 
 ## Purpose
 

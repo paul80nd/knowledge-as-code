@@ -11,13 +11,20 @@ owner:
 tags: [ a, b ]
 ---
 
-# NFR: <Title>
+# NFR-NNNN: {{Title}}
 
-_(Frontmatter notes — delete this block. **`status`**: `draft` until someone has agreed it, then `agreed` — which is a
-commitment, not an aspiration. **`applies-to`** lists service or capability ids; estate-wide targets are almost always
-wrong, since a marketing page and the checkout flow don't deserve the same budget. **`target`** is concrete —
-`99.5% monthly`, `p95 < 400ms`, `RTO 4h`. **`measured-by`** is required: an NFR you cannot measure is a wish, and
-"we'd notice" is not a measurement method. **`constrained-by`** lists integration ids whose own SLA caps this.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`status`** — `draft` until someone has agreed it, then `agreed` — which is a commitment, not an aspiration.
+* **`applies-to`** — Service or capability ids. Estate-wide targets are almost always wrong, since a marketing page and
+  the checkout flow don't deserve the same budget.
+* **`target`** — Concrete — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`.
+* **`measured-by`** — Required. An NFR you cannot measure is a wish, and "we'd notice" is not a measurement method.
+* **`constrained-by`** — Integration ids whose own SLA caps this.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 One sentence stating the target.
 
@@ -45,7 +52,7 @@ consequence is documentation theatre, and saying "nothing much" is a legitimate 
 
 External dependencies that cap this target:
 
-* **[int-example](/integrations/example.md)** — their SLA is <x>, so anything built on it cannot promise more.
+* **[int-example](/integrations/example.md)** — their SLA is {{x}}, so anything built on it cannot promise more.
 
 _(If a target exceeds what a dependency promises, it is a hope rather than a commitment. Record that here rather than
 discovering it during an incident.)_

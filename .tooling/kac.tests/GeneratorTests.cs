@@ -18,14 +18,22 @@ public class GeneratorTests
     [Fact]
     public void IndexPage_says_it_is_empty_rather_than_rendering_a_headless_table()
     {
-        var t = new TypeSchema { IdPrefix = "ctl", IndexColumns = ["id", "title"] };
+        var t = new TypeSchema { Label = "Control", IdPrefix = "ctl", IndexColumns = ["id", "title"] };
 
         var page = Generator.IndexPage(t, []);
 
-        Assert.Contains("# CTL Index", page);
+        Assert.Contains("# Control Index (CTL)", page);
         Assert.Contains("Nothing here yet", page);
         Assert.Contains("template.md", page);   // an empty index points at the way to fill it
         Assert.DoesNotContain("| Id |", page);  // …rather than a table with headers and no rows
+    }
+
+    [Fact]
+    public void IndexPage_heading_drops_the_prefix_when_it_only_repeats_the_label()
+    {
+        var t = new TypeSchema { Label = "ADR", IdPrefix = "adr", IndexColumns = ["id", "title"] };
+
+        Assert.Contains("# ADR Index\n", Generator.IndexPage(t, []));
     }
 
     [Fact]

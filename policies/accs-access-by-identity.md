@@ -1,6 +1,7 @@
 ---
 id: pol-ACCS
 tier: normative
+category: security
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.15
@@ -15,7 +16,7 @@ owner: paul.law
 tags: [ access-control, identity, least-privilege ]
 ---
 
-# Policy: Access is by individual identity, on least privilege
+# POL-ACCS: Access is by individual identity, on least privilege
 
 ## Purpose
 

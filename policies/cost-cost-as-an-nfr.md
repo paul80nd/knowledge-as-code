@@ -1,6 +1,7 @@
 ---
 id: pol-COST
 tier: normative
+category: delivery
 status: draft
 aligns-with:
 implemented-by:
@@ -9,7 +10,7 @@ owner: paul.law
 tags: [ cost, efficiency, non-functional-requirements ]
 ---
 
-# Policy: Cost is a non-functional requirement
+# POL-COST: Cost is a non-functional requirement
 
 ## Purpose
 

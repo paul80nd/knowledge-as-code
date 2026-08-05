@@ -1,5 +1,5 @@
 ---
-id: dat-<slug>
+id: dat-{{slug}}
 tier: descriptive
 status: active
 owned-by:
@@ -10,34 +10,42 @@ owner:
 tags: [ a, b ]
 ---
 
-# <Data domain>
+# {{Data domain}}
 
-_(Frontmatter notes — delete this block. **`owned-by`** is a single service id — shared ownership means nobody is
-answerable, so resolve it before writing the document. **`classification`**: `public` · `internal` · `confidential` ·
-`personal` · `special-category`. **`retention`** is required where classification is `personal` or `special-category`,
-and "indefinitely" is an answer — a revealing one. **`flows-to`** lists the services and integrations that receive this
-data; data leaving the estate is the part that matters most.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`owned-by`** — A single service id. Shared ownership means nobody is answerable, so resolve it before writing the
+  document.
+* **`classification`** — `public` · `internal` · `confidential` · `personal` · `special-category`.
+* **`retention`** — Required where classification is `personal` or `special-category`. "indefinitely" is an answer — a
+  revealing one.
+* **`flows-to`** — The services and integrations that receive this data. Data leaving the estate is the part that
+  matters most.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 One sentence on what this domain covers.
 
 ## Entities
 
-* **<Entity>** — what it represents.
-* **<Entity>** — …
+* **{{Entity}}** — what it represents.
+* **{{Entity}}** — …
 
 _(Names and meanings, not schemas. Schemas live with the code that owns them.)_
 
 ## Where it lives
 
-|                    |                                         |
-|--------------------|-----------------------------------------|
-| **Owning service** | [svc-example](/services/example.md)     |
-| **Store**          | <SQL Server / blob / table storage / …> |
-| **Region**         |                                         |
+|                    |                                           |
+|--------------------|-------------------------------------------|
+| **Owning service** | [svc-example](/services/example.md)       |
+| **Store**          | {{SQL Server / blob / table storage / …}} |
+| **Region**         |                                           |
 
 ## Classification
 
-<classification>, because <reason>.
+{{classification}}, because {{reason}}.
 
 For `personal` or `special-category`: what personal data is present, and the lawful basis for holding it.
 

@@ -1,5 +1,5 @@
 ---
-id: tol-<slug>
+id: tol-{{slug}}
 tier: descriptive
 status: trial
 category:
@@ -11,13 +11,19 @@ owner:
 tags: [ a, b ]
 ---
 
-# <Tool name>
+# {{Tool name}}
 
-_(Frontmatter notes — delete this block. **`status`**: `approved` · `trial` · `deprecated` · `rejected` — approved means
-approved **for new work**; something already in use but not approved is drift, and the drift report will say so. **
-`versions`** is a range, not a pin: the register states what we stand behind, the manifests state what is installed. **
-`licence`** is an SPDX identifier — the field nobody wants until they urgently do. **`decided-in`** cites an ADR where
-one exists.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`status`** — `approved` · `trial` · `deprecated` · `rejected`. Approved means approved **for new work**; something
+  already in use but not approved is drift, and the drift report will say so.
+* **`versions`** — A range, not a pin: the register states what we stand behind, the manifests state what is installed.
+* **`licence`** — An SPDX identifier — the field nobody wants until they urgently do.
+* **`decided-in`** — An ADR, where one exists.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 One sentence: what it is and what we use it for.
 
@@ -27,7 +33,7 @@ Where it sits in the stack and which problem it solves for us specifically.
 
 ## Status
 
-**<approved / trial / deprecated / rejected>** — since <date>.
+**{{approved / trial / deprecated / rejected}}** — since {{date}}.
 
 For `trial`: what is being evaluated, where, and what would decide it. A trial with no decision criteria stays a trial
 forever.
@@ -44,14 +50,14 @@ _(Generated drift detection will compare this against the actual package manifes
 
 ## Alternatives considered
 
-* **<Alternative>** — why it lost out.
+* **{{Alternative}}** — why it lost out.
 
 _(Brief. If the choice was contested or expensive, the reasoning belongs in an [ADR](/adrs) and this cites it via
 `decided-in`. Small, uncontroversial adoptions need only this section.)_
 
 ## Licence and obligations
 
-<SPDX identifier>. Any attribution, copyleft or commercial-use obligations that follow from it.
+{{SPDX identifier}}. Any attribution, copyleft or commercial-use obligations that follow from it.
 
 ## Related
 

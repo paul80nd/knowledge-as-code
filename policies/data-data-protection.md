@@ -1,6 +1,7 @@
 ---
 id: pol-DATA
 tier: normative
+category: security
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.12
@@ -15,7 +16,7 @@ owner: paul.law
 tags: [ classification, data-protection, encryption, privacy ]
 ---
 
-# Policy: Data is protected according to its sensitivity
+# POL-DATA: Data is protected according to its sensitivity
 
 ## Purpose
 

@@ -92,14 +92,14 @@
     },
     {
       "file": "policies/intc-label-case.md",
-      "line": 14,
+      "line": 15,
       "severity": "error",
       "check": "label-canonical",
       "message": "reference '[pol-vurm]' should be written as the id 'pol-VURM'."
     },
     {
       "file": "policies/intc-label-case.md",
-      "line": 15,
+      "line": 16,
       "severity": "error",
       "check": "label-canonical",
       "message": "reference '[ADR-0004]' should be written as the id 'adr-0004'."
@@ -117,6 +117,13 @@
       "severity": "error",
       "check": "id-matches-filename",
       "message": "id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'."
+    },
+    {
+      "file": "policies/recv-h1-disagrees.md",
+      "line": 10,
+      "severity": "error",
+      "check": "h1-matches-id",
+      "message": "H1 mnemonic 'OBSV' does not match filename mnemonic 'recv'."
     },
     {
       "file": "policies/scrt-lower-case-id.md",

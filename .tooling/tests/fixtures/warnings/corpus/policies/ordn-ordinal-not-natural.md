@@ -1,6 +1,7 @@
 ---
 id: pol-ORDN
 tier: normative
+category: governance
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.29
@@ -9,7 +10,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# Policy: A byte-wise sort is not alphabetical
+# POL-ORDN: A byte-wise sort is not alphabetical
 
 ## Purpose
 

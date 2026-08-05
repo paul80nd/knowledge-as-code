@@ -32,6 +32,12 @@ Feature: Document structure checks
       | line | check               | message                                                         |
       | 1    | id-matches-filename | id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'. |
 
+  Scenario: A mnemonic H1 is checked against the filename, not just a numbered one
+    When I validate the corpus
+    Then the findings for "policies/recv-h1-disagrees.md" are exactly:
+      | line | check         | message                                                          |
+      | 10   | h1-matches-id | H1 mnemonic 'OBSV' does not match filename mnemonic 'recv'.      |
+
   Scenario: The mnemonic prefix is excluded from the slug-length measurement
     When I validate the corpus
     Then the findings for "policies/mexp-slug-that-is-definitely-way-too-long.md" are exactly:
@@ -44,12 +50,12 @@ Feature: Document structure checks
       | line | check           | message                                                              |
       |      | label-canonical | link definition '[ADR-0004]' should be written as the id 'adr-0004'. |
       |      | label-canonical | link definition '[pol-vurm]' should be written as the id 'pol-VURM'. |
-      | 14   | label-canonical | reference '[pol-vurm]' should be written as the id 'pol-VURM'.       |
-      | 15   | label-canonical | reference '[ADR-0004]' should be written as the id 'adr-0004'.       |
+      | 15   | label-canonical | reference '[pol-vurm]' should be written as the id 'pol-VURM'.       |
+      | 16   | label-canonical | reference '[ADR-0004]' should be written as the id 'adr-0004'.       |
 
   Scenario: The whole corpus produces exactly these findings and nothing else
     When I validate the corpus
-    Then validation reports 11 documents and 0 skipped
+    Then validation reports 12 documents and 0 skipped
     And the findings are exactly:
       | file                                                        | severity | line | check               | message                                                                                 |
       | adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30. |
@@ -64,9 +70,10 @@ Feature: Document structure checks
       | adrs/0008-Bad_Name.md                                       | error    |      | filename-pattern    | filename '0008-Bad_Name.md' does not match ^\d{4}-[a-z0-9-]+\.md$.                        |
       | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[ADR-0004]' should be written as the id 'adr-0004'.                     |
       | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[pol-vurm]' should be written as the id 'pol-VURM'.                     |
-      | policies/intc-label-case.md                                 | error    | 14   | label-canonical     | reference '[pol-vurm]' should be written as the id 'pol-VURM'.                           |
-      | policies/intc-label-case.md                                 | error    | 15   | label-canonical     | reference '[ADR-0004]' should be written as the id 'adr-0004'.                           |
+      | policies/intc-label-case.md                                 | error    | 15   | label-canonical     | reference '[pol-vurm]' should be written as the id 'pol-VURM'.                           |
+      | policies/intc-label-case.md                                 | error    | 16   | label-canonical     | reference '[ADR-0004]' should be written as the id 'adr-0004'.                           |
       | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30.            |
       | policies/pipe-id-disagrees.md                               | error    | 1    | id-matches-filename | id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'.                          |
+      | policies/recv-h1-disagrees.md                               | error    | 10   | h1-matches-id       | H1 mnemonic 'OBSV' does not match filename mnemonic 'recv'.                              |
       | policies/scrt-lower-case-id.md                              | error    | 1    | id-format           | id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter. |
       | policies/vurm-bad-id-width.md                               | error    | 1    | id-format           | id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter.   |
