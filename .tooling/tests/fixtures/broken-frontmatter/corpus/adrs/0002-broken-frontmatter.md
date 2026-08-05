@@ -7,7 +7,7 @@ decided-on: 2026/06/12
 deciders: null
 ---
 
-# ADR-0002: A deliberately broken frontmatter example
+# `adr-0002` A deliberately broken frontmatter example
 
 > **In the context of** testing the frontmatter rules, **facing** the need for a document with known defects, **we
 > decided** to keep the body valid and break only the frontmatter, **rather than** breaking everything at once, **to

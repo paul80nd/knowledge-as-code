@@ -6,7 +6,7 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# ADR-0003: Third graph fixture
+# `adr-0002` Third graph fixture
 
 > **In the context of** the graph rules, **we decided** to reuse an id that already exists, **to achieve** coverage of
 > `id-unique`, **accepting** that `id-matches-filename` fires alongside it.

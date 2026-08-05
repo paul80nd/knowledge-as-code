@@ -7,7 +7,7 @@ owner:
 related: [ adr-AAAA, adr-BBBB, adr-CCCC ]
 ---
 
-# ADR-NNNN: {{Title}}
+# `adr-NNNN` {{Title}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 

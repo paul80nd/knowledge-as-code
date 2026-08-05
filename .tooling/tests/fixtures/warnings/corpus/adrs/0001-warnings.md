@@ -6,7 +6,7 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# ADR-0001: Warning-level findings
+# `adr-0001` Warning-level findings
 
 > **In the context of** the warning rules, **we decided** to leave one alternative open and one link definition unused,
 > **to achieve** coverage of `alternatives-verdict` and `unused-definition`, **accepting** that the document is

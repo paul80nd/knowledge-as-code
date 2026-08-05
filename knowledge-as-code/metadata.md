@@ -102,12 +102,19 @@ The ID is the anchor for every cross-reference in the wiki, and it is what a sho
 be corrected; IDs may not — which binds hardest on a mnemonic, because unlike a number it makes a claim that can go
 stale. A document whose meaning has moved that far is replaced and the old one retired, not renamed.
 
-**Types with an ID carry it in the H1**, upper-cased and followed by the title — `# ADR-0017: …`, `# POL-VURM: …`,
-`# STD-0004: …`. You arrive at these documents from a citation, so the first line confirms you are where the citation
-meant to send you. It is also the only part of an H1 that CI can check: `h1-matches-id` holds it to the filename, which
-a fixed label like `Policy:` gave nothing to verify. Types identified by a slug — services, explanations, glossary
-terms — have no discriminator worth repeating and title their H1 plainly. Generated indexes strip the ID back off,
-since they already carry it in a column of its own.
+**Types with an ID carry it in the H1**, written as a code span and followed by the title — ``# `adr-0017` …``,
+``# `pol-VURM` …``. You arrive at these documents from a citation, so the first line confirms you are where the
+citation meant to send you, and the code span makes it read as a handle rather than competing with the title. The ID
+appears exactly as the frontmatter carries it — the same form a shortcut link label must use — so there is one casing
+of an ID across the wiki rather than a second invented for headings.
+
+`h1-matches-id` holds the H1 to the `id` field. It reads the code span from the parsed document rather than matching
+text, because `Md.PlainText` flattens a code span to its content: ``# `pol-VURM` …`` and `# pol-VURM …` are the same
+string once flattened, and only the syntax tree tells them apart. The `h1-pattern` a type declares therefore describes
+the H1 *after* that flattening, and never mentions the backticks.
+
+Types identified by a slug — services, explanations, glossary terms — have no discriminator worth repeating and title
+their H1 plainly. Generated indexes strip the ID back off, since they already carry it in a column of its own.
 
 ## Per-type fields
 

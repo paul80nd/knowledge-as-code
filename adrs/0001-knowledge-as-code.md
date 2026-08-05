@@ -6,7 +6,7 @@ owner: paul.law
 tags: [ documentation, knowledge-management, tooling ]
 ---
 
-# ADR-0001: Knowledge as code — a structured, validated wiki that AI sessions can read and contribute to
+# `adr-0001` Knowledge as code — a structured, validated wiki that AI sessions can read and contribute to
 
 > **In the context of** knowledge split across the wiki, ADO and heads, **facing** AI sessions that cannot find our
 > standards or record findings, **we decided** to treat knowledge as code: Markdown with validated frontmatter and

@@ -7,7 +7,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# POL-INTC: Shortcut labels that are not the canonical id
+# `pol-INTC` Shortcut labels that are not the canonical id
 
 ## Purpose
 

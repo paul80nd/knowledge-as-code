@@ -6,7 +6,7 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# ADR-0001: Clean baseline
+# `adr-0001` Clean baseline
 
 > **In the context of** the kac test suite, **facing** the need for a known-good corpus, **we decided** to keep one
 > fully valid ADR here, **rather than** pointing the tests at the live wiki, **to achieve** a stable zero-findings

@@ -6,7 +6,7 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# ADR-0007: Bad id width
+# `adr-0007` Bad id width
 
 > **In the context of** the id rules, **we decided** to use too few digits, **to achieve** coverage of `id-format`,
 > **accepting** that this document is intentionally broken.

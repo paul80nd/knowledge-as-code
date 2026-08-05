@@ -6,7 +6,7 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# ADR-0009: Missing consequences and a mismatched number
+# `adr-0009` Missing consequences and a mismatched number
 
 > **In the context of** the structure rules, **we decided** to mismatch the id and H1 against the filename and drop a
 > required section, **to achieve** coverage of `id-matches-filename`, `h1-matches-id` and `required-section`,

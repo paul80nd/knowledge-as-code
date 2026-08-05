@@ -12,7 +12,7 @@ owner: paul.law
 tags: [ credentials, key-management, secrets ]
 ---
 
-# POL-SCRT: Secrets are managed, never embedded
+# `pol-SCRT` Secrets are managed, never embedded
 
 ## Purpose
 

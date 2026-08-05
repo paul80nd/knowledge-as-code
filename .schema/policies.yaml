@@ -22,8 +22,8 @@ filename:
   slug-max: 30
 
 title:
-  h1-pattern: '^POL-([A-Z][A-Z0-9]{3}): (.+)$'
-  matches-id: true
+  h1-pattern: '^pol-[A-Z][A-Z0-9]{3} (.+)$'
+  id-as-code: true
 
 fields:
 

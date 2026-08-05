@@ -3,7 +3,7 @@ id: "adr-0003
 status: accepted
 ---
 
-# ADR-0003: Unparseable frontmatter
+# `adr-0003` Unparseable frontmatter
 
 > The frontmatter above has an unterminated quote, so it is not valid YAML. `frontmatter-parses` fires and the
 > validator returns early, so no other check runs against this document.

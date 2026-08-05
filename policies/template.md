@@ -10,7 +10,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# POL-XXXX: {{Title}}
+# `pol-XXXX` {{Title}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 

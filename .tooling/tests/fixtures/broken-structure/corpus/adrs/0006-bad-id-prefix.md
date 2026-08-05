@@ -6,7 +6,7 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# ADR-0006: Bad id prefix
+# `adr-0006` Bad id prefix
 
 > **In the context of** the id rules, **we decided** to use the wrong prefix, **to achieve** coverage of `id-prefix`,
 > **accepting** that this document is intentionally broken.

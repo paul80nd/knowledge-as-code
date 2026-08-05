@@ -7,7 +7,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# POL-VURM: A clean mnemonic policy
+# `pol-VURM` A clean mnemonic policy
 
 ## Purpose
 

@@ -16,7 +16,7 @@ owner: paul.law
 tags: [ classification, data-protection, encryption, privacy ]
 ---
 
-# POL-DATA: Data is protected according to its sensitivity
+# `pol-DATA` Data is protected according to its sensitivity
 
 ## Purpose
 

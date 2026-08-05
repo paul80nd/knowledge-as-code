@@ -10,7 +10,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# POL-ORDN: A byte-wise sort is not alphabetical
+# `pol-ORDN` A byte-wise sort is not alphabetical
 
 ## Purpose
 

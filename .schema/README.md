@@ -68,7 +68,7 @@ Beyond `fields`, each type file declares:
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
 | `id`                       | Prefix, style (`numbered` or `slug`), and width                                                                  |
 | `filename`                 | Pattern and slug length limit                                                                                    |
-| `title`                    | H1 pattern, where the type has one                                                                               |
+| `title`                    | H1 pattern, and `id-as-code` where the H1 opens with the ID as a code span                                       |
 | `sections`                 | Required and optional H2s — drives template generation and structural validation                                 |
 | `index`                    | Columns and sort order for the generated index                                                                   |
 | `rules`                    | Type-level behaviours the validator applies (immutability, reciprocity)                                          |

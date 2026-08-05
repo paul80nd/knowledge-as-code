@@ -1,8 +1,8 @@
 {
   "summary": {
-    "validated": 11,
+    "validated": 13,
     "skipped": 0,
-    "errors": 17,
+    "errors": 22,
     "warnings": 1
   },
   "findings": [
@@ -18,7 +18,7 @@
       "line": 9,
       "severity": "error",
       "check": "h1-pattern",
-      "message": "H1 'A title with no ADR prefix' does not match ^ADR-(\\d{4}): (.+)$."
+      "message": "H1 'A title with no ADR prefix' does not match ^adr-\\d{4} (.+)$."
     },
     {
       "file": "adrs/0004-missing-consequences.md",
@@ -33,13 +33,6 @@
       "severity": "error",
       "check": "id-matches-filename",
       "message": "id 'adr-0009' number does not match filename number '0004'."
-    },
-    {
-      "file": "adrs/0004-missing-consequences.md",
-      "line": 9,
-      "severity": "error",
-      "check": "h1-matches-id",
-      "message": "H1 number '0009' does not match filename number '0004'."
     },
     {
       "file": "adrs/0005-no-h1.md",
@@ -63,11 +56,25 @@
       "message": "id 'xyz-0006' must start with 'adr-'."
     },
     {
+      "file": "adrs/0006-bad-id-prefix.md",
+      "line": 9,
+      "severity": "error",
+      "check": "h1-matches-id",
+      "message": "H1 id 'adr-0006' does not match the document's id 'xyz-0006'."
+    },
+    {
       "file": "adrs/0007-bad-id-width.md",
       "line": 1,
       "severity": "error",
       "check": "id-format",
       "message": "id 'adr-7' must be 'adr-' followed by 4 digits."
+    },
+    {
+      "file": "adrs/0007-bad-id-width.md",
+      "line": 9,
+      "severity": "error",
+      "check": "h1-matches-id",
+      "message": "H1 id 'adr-0007' does not match the document's id 'adr-7'."
     },
     {
       "file": "adrs/0008-Bad_Name.md",
@@ -112,6 +119,13 @@
       "message": "slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30."
     },
     {
+      "file": "policies/obsv-h1-not-code.md",
+      "line": 10,
+      "severity": "error",
+      "check": "h1-matches-id",
+      "message": "H1 must open with the document's id as a code span — `pol-OBSV`."
+    },
+    {
       "file": "policies/pipe-id-disagrees.md",
       "line": 1,
       "severity": "error",
@@ -123,7 +137,7 @@
       "line": 10,
       "severity": "error",
       "check": "h1-matches-id",
-      "message": "H1 mnemonic 'OBSV' does not match filename mnemonic 'recv'."
+      "message": "H1 id 'pol-OBSV' does not match the document's id 'pol-RECV'."
     },
     {
       "file": "policies/scrt-lower-case-id.md",
@@ -133,11 +147,25 @@
       "message": "id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter."
     },
     {
+      "file": "policies/scrt-lower-case-id.md",
+      "line": 10,
+      "severity": "error",
+      "check": "h1-matches-id",
+      "message": "H1 id 'pol-SCRT' does not match the document's id 'pol-scrt'."
+    },
+    {
       "file": "policies/vurm-bad-id-width.md",
       "line": 1,
       "severity": "error",
       "check": "id-format",
       "message": "id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter."
+    },
+    {
+      "file": "policies/vurm-bad-id-width.md",
+      "line": 10,
+      "severity": "error",
+      "check": "h1-matches-id",
+      "message": "H1 id 'pol-VURM' does not match the document's id 'pol-VU'."
     }
   ]
 }

@@ -14,7 +14,7 @@ owner: paul.law
 tags: [ continuous-integration, quality-gates, testing ]
 ---
 
-# POL-AUTV: Every change is verified automatically, and failures block
+# `pol-AUTV` Every change is verified automatically, and failures block
 
 ## Purpose
 

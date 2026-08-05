@@ -11,7 +11,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# NFR-NNNN: {{Title}}
+# `nfr-NNNN` {{Title}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 

@@ -15,8 +15,8 @@ filename:
   slug-max: 30
 
 title:
-  h1-pattern: '^ADR-(\d{4}): (.+)$'
-  matches-id: true
+  h1-pattern: '^adr-\d{4} (.+)$'
+  id-as-code: true
 
 fields:
 
