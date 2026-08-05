@@ -1,4 +1,5 @@
 type: policy
+label: Policy
 folder: policies
 page: policies.md
 tier: normative

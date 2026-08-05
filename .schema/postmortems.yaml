@@ -1,4 +1,5 @@
 type: postmortem
+label: Postmortem
 folder: postmortems
 page: postmortems.md
 tier: decided

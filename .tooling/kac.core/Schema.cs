@@ -30,7 +30,7 @@ public class FieldSpec
 
 public class TypeSchema
 {
-    public string TypeName = "", Folder = "", Page = "", Tier = "", Lifecycle = "";
+    public string TypeName = "", Label = "", Folder = "", Page = "", Tier = "", Lifecycle = "";
     public string IdPrefix = "", IdStyle = "";
     public int IdWidth;
     public string? FilenamePattern;
@@ -44,6 +44,15 @@ public class TypeSchema
     public List<string> IndexColumns = [];
     public string? IndexSort;
     public readonly List<Dictionary<string, object>> Rules = [];
+
+    // How a single document of this type is named in generated prose — "Policy", "ADR", "NFR". The
+    // schema declares it rather than the generator deriving it, because there is no rule that turns
+    // `policy` into "Policy" and `adr` into "ADR" without knowing which names are initialisms. The
+    // fallbacks exist so a type schema that predates the field still renders something sensible.
+    public string DisplayName =>
+        !string.IsNullOrEmpty(Label) ? Label
+        : !string.IsNullOrEmpty(TypeName) ? char.ToUpperInvariant(TypeName[0]) + TypeName[1..]
+        : IdPrefix.ToUpperInvariant();
 
     // Whether this type declares a given rule. The reader-facing checks table uses it to show a
     // rule's row only on the pages whose schema actually carries the rule.
@@ -96,6 +105,7 @@ public class Schema
         var t = new TypeSchema
         {
             TypeName = Yaml.Str(Yaml.Get(root, "type")) ?? "",
+            Label = Yaml.Str(Yaml.Get(root, "label")) ?? "",
             Folder = Yaml.Str(Yaml.Get(root, "folder")) ?? "",
             Page = Yaml.Str(Yaml.Get(root, "page")) ?? "",
             Tier = Yaml.Str(Yaml.Get(root, "tier")) ?? "",

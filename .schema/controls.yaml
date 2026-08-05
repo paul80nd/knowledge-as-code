@@ -1,4 +1,5 @@
 type: control
+label: Control
 folder: controls
 page: controls.md
 tier: normative

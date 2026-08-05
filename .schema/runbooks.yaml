@@ -1,4 +1,5 @@
 type: runbook
+label: Runbook
 folder: runbooks
 page: runbooks.md
 tier: procedural

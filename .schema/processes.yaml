@@ -1,4 +1,5 @@
 type: process
+label: Process
 folder: processes
 page: processes.md
 tier: procedural

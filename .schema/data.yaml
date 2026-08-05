@@ -1,4 +1,5 @@
 type: data
+label: Data
 folder: data
 page: data.md
 tier: descriptive

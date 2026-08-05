@@ -1,4 +1,5 @@
 type: faq
+label: FAQ
 folder: faqs
 page: faqs.md
 tier: normative
