@@ -5,8 +5,8 @@ status: accepted
 decided-on: "2026-06-12"
 owner: alex.doe
 tags:
-  - Not Lowercase
   - fine-tag
+  - Not Lowercase
   - trailing_underscore
 ---
 
@@ -19,7 +19,8 @@ tags:
 
 `tags` is declared in `_universal.yaml` with `pattern: '^[a-z0-9-]+$'`. The pattern applies to each entry, not to the
 list as a whole, so a sequence carrying one good entry and two bad ones fires once per bad entry and stays silent on
-`fine-tag`.
+`fine-tag`. The entries are in alphabetical order so that `list-order` stays out of the way — this fixture is about
+the pattern alone.
 
 ## Decision
 

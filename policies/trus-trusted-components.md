@@ -10,7 +10,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ supply-chain, dependencies, provenance ]
+tags: [ dependencies, provenance, supply-chain ]
 ---
 
 # Policy: We ship only components we know and trust

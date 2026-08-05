@@ -10,7 +10,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ resilience, backup, recovery, continuity ]
+tags: [ backup, continuity, recovery, resilience ]
 ---
 
 # Policy: Services and data are recoverable

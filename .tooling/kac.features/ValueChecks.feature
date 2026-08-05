@@ -29,7 +29,7 @@ Feature: Frontmatter value checks
     When I validate the corpus
     Then the findings for "adrs/0004-bad-tag-pattern.md" are exactly:
       | line | check         | message                                                     |
-      | 7    | field-pattern | 'tags' entry 'Not Lowercase' does not match ^[a-z0-9-]+$.   |
+      | 8    | field-pattern | 'tags' entry 'Not Lowercase' does not match ^[a-z0-9-]+$.   |
       | 9    | field-pattern | 'tags' entry 'trailing_underscore' does not match ^[a-z0-9-]+$. |
 
   Scenario: A field pattern on a scalar field applies to its value
@@ -48,6 +48,6 @@ Feature: Frontmatter value checks
       | adrs/0001-bad-enum-value.md          | 3    | enum-lowercase     | 'status' enum value 'Draft' must be lowercase.                                    |
       | adrs/0002-scalar-list.md             | 6    | list               | 'tags' must be a YAML sequence.                                                   |
       | adrs/0003-unparseable-frontmatter.md |      | frontmatter-parses | frontmatter is not a valid YAML mapping.                                          |
-      | adrs/0004-bad-tag-pattern.md         | 7    | field-pattern      | 'tags' entry 'Not Lowercase' does not match ^[a-z0-9-]+$.                         |
+      | adrs/0004-bad-tag-pattern.md         | 8    | field-pattern      | 'tags' entry 'Not Lowercase' does not match ^[a-z0-9-]+$.                         |
       | adrs/0004-bad-tag-pattern.md         | 9    | field-pattern      | 'tags' entry 'trailing_underscore' does not match ^[a-z0-9-]+$.                   |
       | tools/bad-licence-pattern.md         | 5    | field-pattern      | 'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\-+ ()]+$.                 |

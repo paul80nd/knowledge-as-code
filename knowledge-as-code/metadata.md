@@ -21,6 +21,9 @@ them sparingly, and derive rather than state wherever possible.
    gives the least interesting field in the block the most lines. Every other list stays block, one entry per line —
    entries stay individually reviewable in a diff, and a validation finding can point at the entry that caused it
    rather than at the field.
+6. **Lists are alphabetical.** No list field's sequence carries meaning, so alphabetical is the order that scan-reads
+   and the one two authors will agree on without discussion. Numbers inside an entry compare as numbers, so
+   `ISO27001:2022 A.8.7` comes before `ISO27001:2022 A.8.29`. CI warns on a list that is out of order.
 
 ## Naming
 

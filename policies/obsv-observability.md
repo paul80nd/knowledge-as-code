@@ -9,7 +9,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ observability, logging, monitoring, alerting ]
+tags: [ alerting, logging, monitoring, observability ]
 ---
 
 # Policy: Systems are observable and actively monitored

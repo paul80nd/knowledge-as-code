@@ -36,7 +36,7 @@
     },
     {
       "file": "adrs/0004-bad-tag-pattern.md",
-      "line": 7,
+      "line": 8,
       "severity": "error",
       "check": "field-pattern",
       "message": "'tags' entry 'Not Lowercase' does not match ^[a-z0-9-]+$."

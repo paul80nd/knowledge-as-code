@@ -70,7 +70,8 @@ gains frontmatter.
 ## Checks
 
 All rules are read from the schema; nothing below is hard-coded per type. A rule marked **warning**
-is `severity: warning` in the schema (or a soft heuristic) and does **not** fail the build.
+is `severity: warning` in the schema (or a core check that reports at that level) and does **not**
+fail the build.
 
 ### Frontmatter (from `_universal.yaml` + `<type>.yaml`)
 
@@ -84,6 +85,7 @@ is `severity: warning` in the schema (or a soft heuristic) and does **not** fail
 | `date-quoted` / `date-format`                     | error | `type: date` fields are quoted and `YYYY-MM-DD` in shape.                                       |
 | `enum` / `enum-lowercase`                         | error | `type: enum` values are in range and lowercase.                                                 |
 | `field-pattern`                                   | error | A field's value matches its declared `pattern:` — per entry for a list, per value for a scalar. |
+| `list-order`                                      | warning | A `type: list` field's entries are in alphabetical order, digit runs compared as numbers (`A.8.7` before `A.8.29`). Only the first pair out of order is reported. |
 | `tier-matches-type`                               | error | `tier` equals the tier the type declares.                                                       |
 | `id-prefix` / `id-format` / `id-matches-filename` | error | `id` has the type's prefix and width, and its number matches the filename.                      |
 

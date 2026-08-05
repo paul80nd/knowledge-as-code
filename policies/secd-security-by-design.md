@@ -11,7 +11,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ secure-design, threat-modelling, secure-coding ]
+tags: [ secure-coding, secure-design, threat-modelling ]
 ---
 
 # Policy: Security is designed in, not added on

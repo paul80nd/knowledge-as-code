@@ -9,7 +9,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ network-security, segmentation, exposure ]
+tags: [ exposure, network-security, segmentation ]
 ---
 
 # Policy: Exposure is minimised and traffic is controlled

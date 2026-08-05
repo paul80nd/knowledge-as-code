@@ -111,6 +111,7 @@ _(The automatic half is not built yet — see [Automation](/knowledge-as-code/au
 | `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                   |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                           |
+| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.             |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                             |
 | `id`                        | error   | `id` carries the type's prefix and matches the filename's number or mnemonic.          |
 | `id-unique`                 | error   | `id` is unique across the whole wiki.                                                  |

@@ -51,6 +51,7 @@ public static class CheckCatalogue
         new("related-matches-section", Sev.Error, "A mirrors-section field reconciles with its section."),
         new("id-unique", Sev.Error, "id is unique across the whole wiki."),
         new("reciprocal", Sev.Error, "A reciprocal field agrees in both directions."),
+        new("list-order", Sev.Warning, "A list field's entries are in alphabetical order."),
         new("unused-definition", Sev.Warning, "A link definition that nothing references."),
         new("bracket-literal", Sev.Warning, "A [...] in prose that looks like a broken reference."),
         new("y-statement", Sev.Warning, "A short Y-statement block-quote follows the H1."),

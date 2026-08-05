@@ -9,7 +9,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ release-management, deployment, change-management ]
+tags: [ change-management, deployment, release-management ]
 ---
 
 # Policy: Changes reach production through the pipeline

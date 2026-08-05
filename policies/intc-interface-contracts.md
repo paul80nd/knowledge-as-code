@@ -8,7 +8,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ api, contracts, versioning, interoperability ]
+tags: [ api, contracts, interoperability, versioning ]
 ---
 
 # Policy: Interfaces are contracts we honour
