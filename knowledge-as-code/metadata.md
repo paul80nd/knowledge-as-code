@@ -16,7 +16,11 @@ them sparingly, and derive rather than state wherever possible.
 3. **Quote all dates.** Unquoted `2026-06-12` is parsed as a datetime and rendered with a locale format and a timezone
    shift. `"2026-06-12"` renders as written.
 4. **Enums are lowercase, hyphenated.** They are grep targets first and prose second.
-5. **Lists use YAML sequences**, which ADO renders as separate cells.
+5. **Lists use YAML sequences** — ADO renders either form as separate cells, so the choice is about reading the source.
+   `tags` takes the compact flow form, `tags: [ a, b ]`: it is search metadata rather than content, and a block list
+   gives the least interesting field in the block the most lines. Every other list stays block, one entry per line —
+   entries stay individually reviewable in a diff, and a validation finding can point at the entry that caused it
+   rather than at the field.
 
 ## Naming
 

@@ -7,9 +7,7 @@ ado-epics:
 feature-files:
 nfrs:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # <Capability name>

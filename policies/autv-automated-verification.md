@@ -10,10 +10,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags:
-  - continuous-integration
-  - testing
-  - quality-gates
+tags: [ continuous-integration, testing, quality-gates ]
 ---
 
 # Policy: Every change is verified automatically, and failures block

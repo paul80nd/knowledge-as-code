@@ -6,10 +6,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags:
-  - accessibility
-  - inclusive-design
-  - legal-obligation
+tags: [ accessibility, inclusive-design, legal-obligation ]
 ---
 
 # Policy: Software we build is usable by everyone

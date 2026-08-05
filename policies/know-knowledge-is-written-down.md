@@ -7,9 +7,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags:
-  - documentation
-  - knowledge-management
+tags: [ documentation, knowledge-management ]
 ---
 
 # Policy: Knowledge is written down and kept with what it describes

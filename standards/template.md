@@ -9,9 +9,7 @@ verified-by:
 applies-to:
 review-by:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # Standard: <Title>

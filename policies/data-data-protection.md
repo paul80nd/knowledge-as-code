@@ -12,11 +12,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags:
-  - data-protection
-  - privacy
-  - classification
-  - encryption
+tags: [ data-protection, privacy, classification, encryption ]
 ---
 
 # Policy: Data is protected according to its sensitivity

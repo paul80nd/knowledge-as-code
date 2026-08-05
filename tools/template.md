@@ -8,9 +8,7 @@ licence:
 decided-in:
 replaces:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # <Tool name>

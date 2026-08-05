@@ -8,9 +8,7 @@ frequency:
 evidence:
 applies-to:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # Control: <Title>

@@ -6,9 +6,7 @@ aligns-with:
 implemented-by:
 review-by:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # Policy: <Title>

@@ -8,10 +8,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags:
-  - secrets
-  - credentials
-  - key-management
+tags: [ secrets, credentials, key-management ]
 ---
 
 # Policy: Secrets are managed, never embedded

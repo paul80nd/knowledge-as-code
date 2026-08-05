@@ -9,9 +9,7 @@ severity:
 affected:
 prompted:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # <The symptom, as customers experienced it>

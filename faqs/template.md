@@ -9,9 +9,7 @@ confirmed-by:
 confirmed-on:
 review-by:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # <The symptom, as you would encounter it>

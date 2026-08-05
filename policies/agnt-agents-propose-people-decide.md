@@ -8,10 +8,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-05"
 owner: paul.law
-tags:
-  - ai-agents
-  - provenance
-  - knowledge-management
+tags: [ ai-agents, provenance, knowledge-management ]
 ---
 
 # Policy: Agents propose, people decide

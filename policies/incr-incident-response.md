@@ -11,10 +11,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags:
-  - incident-response
-  - postmortem
-  - learning
+tags: [ incident-response, postmortem, learning ]
 ---
 
 # Policy: Incidents are managed and learned from

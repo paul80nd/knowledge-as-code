@@ -12,10 +12,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags:
-  - identity
-  - access-control
-  - least-privilege
+tags: [ identity, access-control, least-privilege ]
 ---
 
 # Policy: Access is by individual identity, on least privilege

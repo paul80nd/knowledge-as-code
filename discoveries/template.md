@@ -9,9 +9,7 @@ provenance:
 applies-to:
 promoted-to:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # <What you noticed, in one line>

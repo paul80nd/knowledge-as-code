@@ -7,9 +7,7 @@ classification:
 retention:
 flows-to:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # <Data domain>
@@ -59,12 +57,13 @@ _(Especially anything crossing outside the estate.)_
 
 ## Related
 
-* [pol-XXXX](/policies/…) — the policy governing this classification.
-* [ADR-NNNN] — decisions about where this data lives.
+* [pol-XXXX] — the policy governing this classification.
+* [adr-NNNN] — decisions about where this data lives.
 
 ---
 
 _(**Never put actual data here** — no sample records, no identifiers, no connection strings. This wiki is broadly
 readable.)_
 
-[ADR-NNNN]: /adrs/NNNN-kebab-slug.md
+[adr-NNNN]: /adrs/nnnn-kebab-slug.md
+[pol-XXXX]: /policies/xxxx-kebab-slug.md

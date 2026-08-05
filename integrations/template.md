@@ -7,9 +7,7 @@ used-by:
 criticality:
 their-sla:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # <Integration name>
