@@ -27,14 +27,14 @@ them sparingly, and derive rather than state wherever possible.
 
 * **ID style** — set per type by the schema, and one of two shapes.
 
-  *Numbered* (`adr-0017`) suits anything chronological: the id records the order things happened, which is information
-  a mnemonic cannot carry.
+  *Numbered* (`adr-0017`) suits anything chronological: the id records the order things happened, which is information a
+  mnemonic cannot carry.
 
   *Mnemonic* (`pol-VURM`, filed as `vurm-vulnerability-remediation.md`) suits a small, long-lived set that other
   documents cite constantly — the id is what a reader meets most often, so it should say something. Upper-case in the
-  id, lower-case in the filename, and its first letter matches the slug's so the folder still reads alphabetically.
-  A mnemonic makes a claim a number never does, so it is drawn from the concept rather than the current wording, and
-  it is immutable once the document is active.
+  id, lower-case in the filename, and its first letter matches the slug's so the folder still reads alphabetically. A
+  mnemonic makes a claim a number never does, so it is drawn from the concept rather than the current wording, and it is
+  immutable once the document is active.
 
 * **Slug length** — the filename slug (excluding the `NNNN-` or `mnem-` prefix) is at most 30 characters. The filename
   is a handle, not a title: it identifies the document at a glance while the H1 carries the full descriptive title. CI
@@ -69,8 +69,8 @@ Carried by every document in the taxonomy.
 
 <!-- END GENERATED: schema-universal -->
 
-`id` is the anchor for every cross-reference — see [IDs](#ids); `status` values are set by each type and are
-listed under [per-type fields](#per-type-fields).
+`id` is the anchor for every cross-reference — see [IDs](#ids); `status` values are set by each type and are listed
+under [per-type fields](#per-type-fields).
 
 Deliberately absent, and why:
 
@@ -83,13 +83,17 @@ Deliberately absent, and why:
 
 ## IDs
 
-Format: `<type-prefix>-<number>` — `adr-0017`, `std-0004`, `ctl-0012`, `svc-billing-api`.
+Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing-api`. Which of the three
+[ID styles](#naming) a type uses is set by its schema.
 
 Numeric IDs are zero-padded to four digits, allocated sequentially, and **never reused** — if a document is withdrawn
-before acceptance, its number is retired. Services, explanations and glossary terms use slugs rather than numbers, since
-they have natural stable names.
+before acceptance, its number is retired. Mnemonic IDs are allocated by meaning rather than in sequence, so there is no
+next one to take: pick a four-character mnemonic for the concept that no document of that type already holds. Services,
+explanations and glossary terms use slugs, since they have natural stable names.
 
-The ID is the anchor for every cross-reference in the wiki. Filenames may be corrected; IDs may not.
+The ID is the anchor for every cross-reference in the wiki, and it is what a shortcut link label must say. Filenames may
+be corrected; IDs may not — which binds hardest on a mnemonic, because unlike a number it makes a claim that can go
+stale. A document whose meaning has moved that far is replaced and the old one retired, not renamed.
 
 ## Per-type fields
 
@@ -102,8 +106,8 @@ Each type's fields are documented on its own page, generated from the schema:
 [Integration](/integrations#metadata) · [Data](/data#metadata) · [FAQ](/faqs#metadata) ·
 [Discovery](/discoveries#metadata) · [Postmortem](/postmortems#metadata)
 
-They are generated into those pages from `.schema/`, so a reader working in one folder has what they
-need without leaving it, and there is still one definition.
+They are generated into those pages from `.schema/`, so a reader working in one folder has what they need without
+leaving it, and there is still one definition.
 
 [Glossary](/glossary) is the seventeenth type and the exception: a single document rather than a collection, so its two
 fields — `status` and `review-by` — live in its own frontmatter and are described on the page itself, not in a generated
@@ -124,9 +128,7 @@ deciders:
 related:
   - adr-0007
   - adr-0008
-tags:
-  - public-api
-  - http
+tags: [ public-api, http ]
 ---
 ```
 

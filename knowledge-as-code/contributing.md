@@ -7,7 +7,8 @@ same regardless of who is holding the keyboard.
 
 1. Work out where it goes — [taxonomy](taxonomy.md) has a decision table.
 2. Copy the type's `template.md`.
-3. Allocate an ID (next unused number for that type — check the folder's index).
+3. Allocate an ID in the style that type uses — the next unused number, a four-character mnemonic for the concept, or a
+   slug. Check the folder's index for what is already taken; see [metadata](metadata.md#ids).
 4. Fill in the frontmatter — see [metadata](metadata.md).
 5. Write the content. Follow the template's section structure; it exists so documents of a type are comparable.
 6. Open a PR against the corpus repository. Review expectations follow the tier, below.
