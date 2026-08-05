@@ -22,10 +22,9 @@ public static class Generator
                         ? $" ({prefix})"
                         : "");
 
-        // An empty type still gets its index. Every type page links to one, so withholding the file
-        // until the first record left fourteen dead links that nothing caught — link-resolves does not
-        // check type root pages. A headed table with no rows would say less than nothing, so an empty
-        // index says it is empty and points at the template.
+        // An empty type still gets its index: every type page links to one, and link-resolves does not
+        // check type root pages, so a withheld file would be an unchecked dead link. A headed table with
+        // no rows says less than nothing, so an empty index says it is empty and points at the template.
         var body = docs.Count == 0
             ? $"_Nothing here yet — copy [`template.md`](template.md) to add the first._"
             : RenderTable(
@@ -50,14 +49,13 @@ public static class Generator
     }
 
     // The frontmatter reference on a type page: every field a document of that type carries, universal
-    // ones included. Showing only the type's own declarations left three required fields (id, tier,
-    // owner) off the page an author writes from, on the argument that metadata.md covers them — but a
-    // reader following that argument has to leave the page, and metadata.md drifted anyway.
+    // ones included, so the page an author writes from is complete without sending them to metadata.md
+    // for id, tier and owner.
     //
-    // Universal fields come first, in the universal order, and are read through EffectiveField so a
-    // type that refines one (every type narrows `status` to its own values) shows the refinement rather
-    // than the universal placeholder. They are marked rather than separated: one table is one scan,
-    // which is what someone filling in frontmatter actually wants.
+    // Universal fields come first, in the universal order, and are read through EffectiveField so a type
+    // that refines one (every type narrows `status` to its own values) shows the refinement rather than
+    // the universal placeholder. They are marked rather than separated: one table is one scan, which is
+    // what someone filling in frontmatter wants.
     public static string SchemaTable(TypeSchema t, Schema s)
     {
         List<string> headers = ["Field", "Req", "Type", "Notes"];
@@ -80,11 +78,10 @@ public static class Generator
             [$"`{name}`{(universal ? " †" : "")}", f.Required ? "●" : "", f.Type, NotesFor(f)];
     }
 
-    // Enum values are data, not prose, and inside a Notes cell they were the single thing blowing the
-    // table out: `tier`'s five values plus its description came to 153 characters, and because the
-    // renderer pads every column to its widest cell that one field made every row 190 wide. These
-    // pages are read as code as much as rendered, so width is the constraint that matters — a table
-    // of its own keeps the values to ~84 characters and stops a six-value enum widening every row.
+    // Enum values are data, not prose, and they belong in a table of their own rather than in a Notes
+    // cell. The renderer pads every column to its widest cell, so one multi-value enum in Notes widens
+    // every row of the table — and these pages are read as source as much as rendered, which makes
+    // width the constraint that matters.
     private static string EnumValues(IEnumerable<FieldSpec> fields)
     {
         var enums = fields.Where(f => f is { Type: "enum", Values.Count: > 0 }).ToList();
@@ -98,9 +95,8 @@ public static class Generator
         return "\n\n**Enum values**\n\n" + RenderTable(headers, rows);
     }
 
-    // Same reasoning as EnumValues. A condition appended to the Notes cell cost `data.retention` 62 of
-    // its 158 characters — and the condition is the one part that has to be quoted exactly, so trimming
-    // the prose to make room would have been the wrong half to lose.
+    // Same reasoning as EnumValues, and a required-when condition has to be quoted exactly, so it is the
+    // last thing that should be competing for room in a Notes cell.
     private static string ConditionalFields(IEnumerable<FieldSpec> fields)
     {
         var conditional = fields.Where(f => !string.IsNullOrEmpty(f.RequiredWhen)).ToList();
@@ -133,17 +129,16 @@ public static class Generator
         return Escape(f.TableText ?? "");
     }
 
-    // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that
-    // `kac index` splices into every type page. It is deliberately NOT the raw catalogue — related
-    // checks are folded into one row (e.g. the three `id-*` checks read as one `id` row) and worded
-    // for a human skim. Each row therefore names the catalogue ids it stands for, so the table's
-    // coverage stays verifiable (ChecksTableProblems) even though its presentation is hand-tuned.
+    // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that `kac index`
+    // splices into every type page. It is deliberately NOT the raw catalogue — related checks are folded
+    // into one row (the three `id-*` checks read as one `id` row) and worded for a human skim. Generating
+    // it from the catalogue instead would change what the table means, so each row names the catalogue
+    // ids it stands for and ChecksTableProblems verifies the coverage, leaving the wording hand-tuned.
     //
-    // `When` is the row's applicability: null means the check fires for every type, otherwise the
-    // predicate asks the type's own schema whether it can fire at all. Without it the table was a
-    // single ADR-shaped list spliced into every page, telling a policy reader that their documents
-    // are checked for Y-statements. Applicability is read from the schema rather than hand-listed
-    // per type, so declaring a rule is still the only thing needed to document it.
+    // `When` is the row's applicability: null fires for every type, otherwise the predicate asks the
+    // type's own schema whether the check can fire at all — so a policy page does not advertise that its
+    // documents are checked for Y-statements. Read from the schema rather than hand-listed per type, so
+    // declaring a rule remains the only thing needed to document it.
     private static readonly (string Label, string[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
         ("frontmatter-parses", ["frontmatter-parses"], "Frontmatter is present and is a valid YAML mapping.", null),

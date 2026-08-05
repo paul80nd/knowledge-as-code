@@ -92,21 +92,8 @@ static string? FindRepoRoot(string start)
 
 // ---------------------------------------------------------------------------
 // This file is only the CLI surface: it wires System.CommandLine to Commands and does the repo-root
-// pre-flight. Every subcommand's logic — and all the mechanics — live in the kac.core project
-// (referenced via the #:project directive at the top), one class per file under .tooling/kac.core/:
-//   Commands.cs   the orchestration behind validate / index / checks / mechanism
-//   Schema.cs     FieldSpec, TypeSchema, Schema          (.schema/*.yaml loading)
-//   GitFiles.cs   git ls-files + non-git fallback walk
-//   Corpus.cs     markdown discovery over the schema
-//   Document.cs   Doc, LinkRef                           (frontmatter + markdown parse)
-//   Md.cs         markdown plain-text helpers
-//   Yaml.cs       YamlDotNet representation-model helpers
-//   Glob.cs       manifest glob → regex
-//   Files.cs      LF-normalising file read
-//   Manifest.cs   Manifest, ManifestRule, MechanismLock, AcceptedDivergence
-//   Mechanism.cs  the `mechanism --check` engine
-//   Findings.cs   Sev, Finding, CheckDef, CheckCatalogue
-//   Validator.cs  the checks
-//   Generator.cs  INDEX pages + the generated blocks in <type>.md
-//   Json.cs       JSON output models + the KacJson source-generated context
+// pre-flight. Every subcommand's logic — and all the mechanics — live in the kac.core project,
+// referenced via the #:project directive at the top, one class per file and named for what it holds.
+// Four of them carry the substance: Schema.cs loads .schema/*.yaml, Document.cs parses a record,
+// Validator.cs holds the checks, Generator.cs builds the generated blocks. The rest are helpers.
 // ---------------------------------------------------------------------------
