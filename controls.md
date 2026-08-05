@@ -40,7 +40,7 @@ One control may verify several rules, and one rule may need several controls. Co
 <!-- BEGIN GENERATED: schema-controls -->
 
 | Field        | Req | Type   | Notes                                                                                    |
-| ------------ | --- | ------ | ---------------------------------------------------------------------------------------- |
+|--------------|-----|--------|------------------------------------------------------------------------------------------|
 | `id` †       | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                    |
 | `tier` †     | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.     |
 | `status` †   | ●   | enum   | Whether the control is running, intended, or stood down.                                 |
@@ -55,7 +55,7 @@ One control may verify several rules, and one rule may need several controls. Co
 **Enum values**
 
 | Field       | Values                                                                           |
-| ----------- | -------------------------------------------------------------------------------- |
+|-------------|----------------------------------------------------------------------------------|
 | `tier`      | `decided` · `normative` · `descriptive` · `procedural` · `observed`              |
 | `status`    | `active` · `planned` · `retired`                                                 |
 | `mechanism` | `ci` · `review-checklist` · `manual-periodic` · `runtime-alert` · `not-enforced` |
@@ -64,7 +64,7 @@ One control may verify several rules, and one rule may need several controls. Co
 **Conditionally required**
 
 | Field       | Required when               |
-| ----------- | --------------------------- |
+|-------------|-----------------------------|
 | `frequency` | `mechanism != not-enforced` |
 
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
@@ -92,7 +92,7 @@ One control may verify several rules, and one rule may need several controls. Co
 <!-- BEGIN GENERATED: checks-controls -->
 
 | Check                       | Level   | What it verifies                                                                       |
-| --------------------------- | ------- | -------------------------------------------------------------------------------------- |
+|-----------------------------|---------|----------------------------------------------------------------------------------------|
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                    |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                         |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                      |

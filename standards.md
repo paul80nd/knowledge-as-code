@@ -66,7 +66,7 @@ categories stay distinct; the common and platform axes let a rule live once, at 
 <!-- BEGIN GENERATED: schema-standards -->
 
 | Field          | Req | Type   | Notes                                                                                         |
-| -------------- | --- | ------ | --------------------------------------------------------------------------------------------- |
+|----------------|-----|--------|-----------------------------------------------------------------------------------------------|
 | `id` †         | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                         |
 | `tier` †       | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.          |
 | `status` †     | ●   | enum   | Plain values only — enforcement notes belong in `verified-by`.                                |
@@ -82,7 +82,7 @@ categories stay distinct; the common and platform axes let a rule live once, at 
 **Enum values**
 
 | Field    | Values                                                              |
-| -------- | ------------------------------------------------------------------- |
+|----------|---------------------------------------------------------------------|
 | `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
 | `status` | `draft` · `active` · `deprecated` · `superseded`                    |
 | `axis`   | `common` · `platform` · `interface` · `domain`                      |
@@ -107,7 +107,7 @@ Standards are living documents. Material changes are recorded in the changelog r
 <!-- BEGIN GENERATED: checks-standards -->
 
 | Check                       | Level   | What it verifies                                                                       |
-| --------------------------- | ------- | -------------------------------------------------------------------------------------- |
+|-----------------------------|---------|----------------------------------------------------------------------------------------|
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                    |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                         |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                      |

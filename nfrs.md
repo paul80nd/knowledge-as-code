@@ -37,7 +37,7 @@ anything built on it. Record that in `constrained-by` rather than promising some
 <!-- BEGIN GENERATED: schema-nfrs -->
 
 | Field            | Req | Type   | Notes                                                                                             |
-| ---------------- | --- | ------ | ------------------------------------------------------------------------------------------------- |
+|------------------|-----|--------|---------------------------------------------------------------------------------------------------|
 | `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                             |
 | `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.              |
 | `status` †       | ●   | enum   | `agreed` is a commitment someone accepted, not an aspiration.                                     |
@@ -52,7 +52,7 @@ anything built on it. Record that in `constrained-by` rather than promising some
 **Enum values**
 
 | Field    | Values                                                              |
-| -------- | ------------------------------------------------------------------- |
+|----------|---------------------------------------------------------------------|
 | `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
 | `status` | `draft` · `agreed` · `retired`                                      |
 
@@ -80,7 +80,7 @@ anything built on it. Record that in `constrained-by` rather than promising some
 <!-- BEGIN GENERATED: checks-nfrs -->
 
 | Check                       | Level   | What it verifies                                                                       |
-| --------------------------- | ------- | -------------------------------------------------------------------------------------- |
+|-----------------------------|---------|----------------------------------------------------------------------------------------|
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                    |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                         |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                      |

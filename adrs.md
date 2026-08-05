@@ -38,7 +38,7 @@ ADR by ID.
 <!-- BEGIN GENERATED: schema-adrs -->
 
 | Field           | Req | Type   | Notes                                                                                            |
-| --------------- | --- | ------ | ------------------------------------------------------------------------------------------------ |
+|-----------------|-----|--------|--------------------------------------------------------------------------------------------------|
 | `id` †          | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                            |
 | `tier` †        | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.             |
 | `status` †      | ●   | enum   | Immutable once `accepted` — supersede rather than rewrite.                                       |
@@ -53,14 +53,14 @@ ADR by ID.
 **Enum values**
 
 | Field    | Values                                                              |
-| -------- | ------------------------------------------------------------------- |
+|----------|---------------------------------------------------------------------|
 | `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
 | `status` | `proposed` · `accepted` · `deprecated` · `superseded`               |
 
 **Conditionally required**
 
 | Field           | Required when          |
-| --------------- | ---------------------- |
+|-----------------|------------------------|
 | `decided-on`    | `status == accepted`   |
 | `superseded-by` | `status == superseded` |
 
@@ -96,7 +96,7 @@ See [Contributing](/knowledge-as-code/contributing.md) for the review model that
 <!-- BEGIN GENERATED: checks-adrs -->
 
 | Check                       | Level   | What it verifies                                                                       |
-| --------------------------- | ------- | -------------------------------------------------------------------------------------- |
+|-----------------------------|---------|----------------------------------------------------------------------------------------|
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                    |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                         |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                      |

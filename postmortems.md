@@ -41,7 +41,7 @@ means something.
 <!-- BEGIN GENERATED: schema-postmortems -->
 
 | Field         | Req | Type   | Notes                                                                                 |
-| ------------- | --- | ------ | ------------------------------------------------------------------------------------- |
+|---------------|-----|--------|---------------------------------------------------------------------------------------|
 | `id` †        | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                 |
 | `tier` †      | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.  |
 | `status` †    | ●   | enum   | `published` freezes the document; a new understanding is a new postmortem.            |
@@ -57,7 +57,7 @@ means something.
 **Enum values**
 
 | Field      | Values                                                              |
-| ---------- | ------------------------------------------------------------------- |
+|------------|---------------------------------------------------------------------|
 | `tier`     | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
 | `status`   | `draft` · `published`                                               |
 | `severity` | `sev1` · `sev2` · `sev3`                                            |
@@ -90,7 +90,7 @@ means something.
 <!-- BEGIN GENERATED: checks-postmortems -->
 
 | Check                       | Level   | What it verifies                                                                       |
-| --------------------------- | ------- | -------------------------------------------------------------------------------------- |
+|-----------------------------|---------|----------------------------------------------------------------------------------------|
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                    |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                         |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                      |

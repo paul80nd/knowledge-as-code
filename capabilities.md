@@ -43,7 +43,7 @@ Related but different:
 <!-- BEGIN GENERATED: schema-capabilities -->
 
 | Field            | Req | Type   | Notes                                                                                        |
-| ---------------- | --- | ------ | -------------------------------------------------------------------------------------------- |
+|------------------|-----|--------|----------------------------------------------------------------------------------------------|
 | `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                        |
 | `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.         |
 | `status` †       | ●   | enum   | Lifecycle of the capability, not of the services behind it.                                  |
@@ -57,7 +57,7 @@ Related but different:
 **Enum values**
 
 | Field    | Values                                                              |
-| -------- | ------------------------------------------------------------------- |
+|----------|---------------------------------------------------------------------|
 | `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
 | `status` | `planned` · `building` · `live` · `deprecated`                      |
 
@@ -83,7 +83,7 @@ Related but different:
 <!-- BEGIN GENERATED: checks-capabilities -->
 
 | Check                       | Level   | What it verifies                                                                       |
-| --------------------------- | ------- | -------------------------------------------------------------------------------------- |
+|-----------------------------|---------|----------------------------------------------------------------------------------------|
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                    |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                         |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                      |

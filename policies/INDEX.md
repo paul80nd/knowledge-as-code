@@ -3,7 +3,7 @@
 # POL Index
 
 | ID       | Title                                                                                                         | Status | Aligns with | Review by  |
-| -------- | ------------------------------------------------------------------------------------------------------------- | ------ | ----------- | ---------- |
+|----------|---------------------------------------------------------------------------------------------------------------|--------|-------------|------------|
 | pol-A11Y | [Policy: Software we build is usable by everyone](a11y-accessibility.md)                                      | draft  |             | 2027-08-04 |
 | pol-ACCS | [Policy: Access is by individual identity, on least privilege](accs-access-by-identity.md)                    | draft  |             | 2027-08-04 |
 | pol-AGNT | [Policy: Agents propose, people decide](agnt-agents-propose-people-decide.md)                                 | draft  |             | 2027-08-05 |

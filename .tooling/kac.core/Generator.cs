@@ -255,11 +255,14 @@ public static class Generator
         return sb.ToString();
     }
 
+    // Dashes fill the cell, padding spaces included: |------| rather than | ---- |. Both are valid
+    // GFM and the row width is identical, but this is the form markdown formatters normalise to, and
+    // a generated file that an editor reformats on save is a permanently dirty working tree.
     private static string Sep(int[] w)
     {
         var sb = new StringBuilder("|");
         foreach (var width in w)
-            sb.Append(' ').Append(new string('-', Math.Max(3, width))).Append(" |");
+            sb.Append(new string('-', Math.Max(3, width + 2))).Append('|');
         return sb.ToString();
     }
 

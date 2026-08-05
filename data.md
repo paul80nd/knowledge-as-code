@@ -39,7 +39,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 <!-- BEGIN GENERATED: schema-data -->
 
 | Field            | Req | Type   | Notes                                                                                          |
-| ---------------- | --- | ------ | ---------------------------------------------------------------------------------------------- |
+|------------------|-----|--------|------------------------------------------------------------------------------------------------|
 | `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                          |
 | `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.           |
 | `status` †       | ●   | enum   | Whether the store is current or on its way out.                                                |
@@ -53,7 +53,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 **Enum values**
 
 | Field            | Values                                                                   |
-| ---------------- | ------------------------------------------------------------------------ |
+|------------------|--------------------------------------------------------------------------|
 | `tier`           | `decided` · `normative` · `descriptive` · `procedural` · `observed`      |
 | `status`         | `active` · `deprecated`                                                  |
 | `classification` | `public` · `internal` · `confidential` · `personal` · `special-category` |
@@ -61,7 +61,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 **Conditionally required**
 
 | Field       | Required when                                    |
-| ----------- | ------------------------------------------------ |
+|-------------|--------------------------------------------------|
 | `retention` | `classification in [personal, special-category]` |
 
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
@@ -90,7 +90,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 <!-- BEGIN GENERATED: checks-data -->
 
 | Check                       | Level   | What it verifies                                                                       |
-| --------------------------- | ------- | -------------------------------------------------------------------------------------- |
+|-----------------------------|---------|----------------------------------------------------------------------------------------|
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                    |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                         |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                      |
