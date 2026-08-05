@@ -92,14 +92,14 @@
     },
     {
       "file": "policies/intc-label-case.md",
-      "line": 14,
+      "line": 15,
       "severity": "error",
       "check": "label-canonical",
       "message": "reference '[pol-vurm]' should be written as the id 'pol-VURM'."
     },
     {
       "file": "policies/intc-label-case.md",
-      "line": 15,
+      "line": 16,
       "severity": "error",
       "check": "label-canonical",
       "message": "reference '[ADR-0004]' should be written as the id 'adr-0004'."

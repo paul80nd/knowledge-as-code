@@ -1,6 +1,7 @@
 ---
 id: pol-TRUS
 tier: normative
+category: security
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.19

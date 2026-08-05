@@ -1,6 +1,7 @@
 ---
 id: pol-INCR
 tier: normative
+category: operations
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.24

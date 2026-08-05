@@ -25,6 +25,18 @@ title:
 
 fields:
 
+  category:
+    required: true
+    type: enum
+    values: [security, delivery, operations, governance]
+    description: The broad area the commitment belongs to. Controlled, and deliberately few.
+    notes: >
+      Why the policy exists, where `tags` say what topics it touches — the two answer different questions
+      and stay separate. Deliberately a small, closed set: a category earns its place by grouping enough
+      policies to be worth navigating, so resist adding a fifth until one is genuinely crowded out.
+      Category is metadata rather than folder structure, so a policy is recategorised by editing one line
+      rather than by moving a file and rewriting everything that links to it.
+
   status:
     required: true
     type: enum
@@ -63,7 +75,7 @@ sections:
   optional: [Alignment, Exceptions, Implemented by, Review]
 
 index:
-  columns: [id, title, status, aligns-with, review-by]
+  columns: [id, title, category, status, aligns-with, review-by]
   sort: id
 
 rules:

@@ -1,6 +1,7 @@
 ---
 id: pol-VURM
 tier: normative
+category: security
 status: draft
 review-by: "2027-08-05"
 owner: alex.doe

@@ -38,6 +38,20 @@ a tool, a framework or a protocol, it is a [standard](/standards).
 A policy is not a [control](/controls) — it commits, it does not verify. And it is not an [ADR](/adrs): an ADR records a
 specific decision with the alternatives that were weighed; a policy states a position we hold regardless.
 
+## Categories
+
+Every policy carries a `category`: **security**, **delivery**, **operations** or **governance**. It answers *why this
+policy exists* — the broad area of the commitment — where `tags` answer *what topics it touches*. Two different
+questions, so two fields: a secrets policy is `category: security` and `tags: [credentials, key-management, secrets]`.
+
+The set is closed and deliberately small. Four categories group twenty-one policies into groups worth navigating; a
+fifth would have to earn its place by making one of these too crowded to scan, and the pressure for that is easier to
+judge once there are enough policies to feel it.
+
+Category is metadata, not folder structure. `policies/` stays flat, which means recategorising a policy is a one-line
+edit rather than a file move that rewrites every document linking to it — and the awkward calls here (accessibility
+under governance is the clearest) are the ones most likely to be revisited.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-policies -->
@@ -49,16 +63,18 @@ specific decision with the alternatives that were weighed; a policy states a pos
 | `status` †       | ●   | enum   | `draft` until agreed; `retired` rather than deleted.                                 |
 | `owner` †        | ●   | string | A named person, never a team alias.                                                  |
 | `tags` †         |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| `category`       | ●   | enum   | The broad area the commitment belongs to. Controlled, and deliberately few.          |
 | `aligns-with`    |     | list   | e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance.                              |
 | `implemented-by` |     | list   | Standard ids.                                                                        |
 | `review-by`      | ●   | date   | Quoted. Annual is usually right for a policy.                                        |
 
 **Enum values**
 
-| Field    | Values                                                              |
-|----------|---------------------------------------------------------------------|
-| `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
-| `status` | `draft` · `active` · `retired`                                      |
+| Field      | Values                                                              |
+|------------|---------------------------------------------------------------------|
+| `tier`     | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
+| `status`   | `draft` · `active` · `retired`                                      |
+| `category` | `security` · `delivery` · `operations` · `governance`               |
 
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
@@ -71,11 +87,13 @@ specific decision with the alternatives that were weighed; a policy states a pos
    pipeline-to-production. Start it with the same letter as the slug, so the folder still reads alphabetically.
 3. Copy [`template.md`](policies/template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
    upper-case.
-4. State the commitment, the scope it applies to, and any explicit exceptions. Exceptions stated up front are honest;
+4. Set `category` to whichever of the four the commitment belongs to. If two fit, pick the one a reader looking for this
+   policy would try first; if none does, that is a taxonomy conversation, not a fifth category invented in passing.
+5. State the commitment, the scope it applies to, and any explicit exceptions. Exceptions stated up front are honest;
    exceptions discovered later are erosion.
-5. Set `aligns-with` where an ISO 27001 Annex A area corresponds. Use `aligns-with`, never wording that implies
+6. Set `aligns-with` where an ISO 27001 Annex A area corresponds. Use `aligns-with`, never wording that implies
    compliance or certification.
-6. Set `review-by`. Policies change rarely, so an annual review is usually right.
+7. Set `review-by`. Policies change rarely, so an annual review is usually right.
 
 **Conventions**
 

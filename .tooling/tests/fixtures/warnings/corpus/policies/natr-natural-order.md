@@ -1,6 +1,7 @@
 ---
 id: pol-NATR
 tier: normative
+category: governance
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.7

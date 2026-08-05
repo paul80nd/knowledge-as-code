@@ -1,6 +1,7 @@
 ---
 id: pol-DEVI
 tier: normative
+category: delivery
 status: draft
 review-by: "2027-08-05"
 owner: alex.doe

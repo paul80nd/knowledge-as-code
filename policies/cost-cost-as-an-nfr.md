@@ -1,6 +1,7 @@
 ---
 id: pol-COST
 tier: normative
+category: delivery
 status: draft
 aligns-with:
 implemented-by:

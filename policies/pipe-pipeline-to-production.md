@@ -1,6 +1,7 @@
 ---
 id: pol-PIPE
 tier: normative
+category: delivery
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.9

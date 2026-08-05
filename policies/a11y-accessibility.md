@@ -1,6 +1,7 @@
 ---
 id: pol-A11Y
 tier: normative
+category: governance
 status: draft
 aligns-with:
 implemented-by:
