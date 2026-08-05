@@ -7,7 +7,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ performance, capacity, non-functional-requirements ]
+tags: [ capacity, non-functional-requirements, performance ]
 ---
 
 # Policy: Performance targets are stated and verified

@@ -8,7 +8,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ exceptions, risk-acceptance, governance ]
+tags: [ exceptions, governance, risk-acceptance ]
 ---
 
 # Policy: Deviations are recorded, owned and time-bound

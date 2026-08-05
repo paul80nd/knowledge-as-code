@@ -148,6 +148,8 @@ public static class Generator
         ("enum", ["enum", "enum-lowercase"], "Enum values are in range and lowercase.", null),
         ("field-pattern", ["field-pattern"],
             "Values match the pattern their field declares (e.g. `tags`).", null),
+        ("list-order", ["list-order"],
+            "List entries read in alphabetical order, with numbers compared as numbers.", null),
         ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
         ("id", ["id-prefix", "id-format", "id-matches-filename"],
             "`id` carries the type's prefix and matches the filename's number or mnemonic.", null),

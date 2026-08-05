@@ -9,7 +9,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ environments, separation, production-data ]
+tags: [ environments, production-data, separation ]
 ---
 
 # Policy: Environments are separated, and production stays in production

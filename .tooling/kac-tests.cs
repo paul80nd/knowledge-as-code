@@ -436,8 +436,11 @@ static void RegenerateIndex(string kac, string schemaDir, string corpusDir)
         var (stdout, stderr, exit) = Run(temp, "dotnet", "run", kac, "--", "index");
         if (exit != 0) throw new Exception($"kac index failed (exit {exit}).\n{Indent(stderr)}");
 
+        // Only what the corpus itself owns comes back. `.schema/` and `knowledge-as-code/` were
+        // copied in from the real repo to assemble the run; writing them back would commit a stale
+        // duplicate of the schema into the fixture.
         foreach (var dir in Directory.EnumerateDirectories(temp))
-            if (Path.GetFileName(dir) != "knowledge-as-code")
+            if (Path.GetFileName(dir) is not ("knowledge-as-code" or ".schema"))
                 CopyTree(dir, Path.Combine(corpusDir, Path.GetFileName(dir)));
         foreach (var file in Directory.EnumerateFiles(temp))
             File.Copy(file, Path.Combine(corpusDir, Path.GetFileName(file)), overwrite: true);

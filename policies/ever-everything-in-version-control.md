@@ -10,7 +10,7 @@ aligns-with:
 implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
-tags: [ source-control, traceability, change-management ]
+tags: [ change-management, source-control, traceability ]
 ---
 
 # Policy: Everything is in version control

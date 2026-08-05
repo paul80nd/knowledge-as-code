@@ -79,7 +79,7 @@ public static class Validator
             {
                 case "date": CheckDate(name, node, d, Err); break;
                 case "enum": CheckEnum(name, node, spec, d, Err); break;
-                case "list": CheckList(name, node, spec, d, Err); break;
+                case "list": CheckList(name, node, spec, d, Err, Warn); break;
             }
 
             // A declared `pattern:` applies to a scalar field's value; for a list it applies to each
@@ -193,7 +193,8 @@ public static class Validator
             err("enum-lowercase", $"'{name}' enum value '{v}' must be lowercase.", Line(node, d));
     }
 
-    private static void CheckList(string name, YamlNode node, FieldSpec spec, Doc d, Action<string, string, int?> err)
+    private static void CheckList(string name, YamlNode node, FieldSpec spec, Doc d, Action<string, string, int?> err,
+        Action<string, string, int?> warn)
     {
         if (node is not YamlSequenceNode seq)
         {
@@ -207,6 +208,19 @@ public static class Validator
             if (spec.Of == "id" && v is not null && !LooksLikeId(v))
                 err("id-format", $"'{name}' entry '{v}' is not a valid id.", Line(item, d));
             CheckPattern(name, "entry", item, spec, d, err);
+        }
+
+        // Every list field in the taxonomy is a set — no field's sequence carries meaning — so
+        // alphabetical is simply the order that scan-reads and the one order two authors will agree
+        // on. Only the first pair out of order is reported; the rest are noise once the author
+        // re-sorts the field.
+        for (var i = 1; i < seq.Children.Count; i++)
+        {
+            if (Scalar(seq.Children[i - 1]) is not { } prev || Scalar(seq.Children[i]) is not { } cur) continue;
+            if (Natural.Compare(prev, cur) <= 0) continue;
+            warn("list-order", $"'{name}' is not in alphabetical order — '{cur}' should come before '{prev}'.",
+                Line(seq.Children[i], d));
+            break;
         }
     }
 
