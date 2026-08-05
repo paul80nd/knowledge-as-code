@@ -155,7 +155,7 @@ Each type follows the same shape:
 ```
 <type>.md              # what it is, why, how to contribute — human-written
 <type>/
-  ├── INDEX.md        # index — GENERATED
+  ├── INDEX.md         # index — GENERATED
   ├── template.md      # what humans and agents copy
   └── <records>.md
 ```
@@ -222,4 +222,4 @@ will be deleted once the migration is complete.
 
 Changing the taxonomy — adding a type, merging two, moving a type between tiers — is a larger act than editing any
 document within it, and should be recorded as an ADR superseding or amending
-[ADR-0001](/adrs/0001-knowledge-as-code.md).
+[adr-0001](/adrs/0001-knowledge-as-code.md).

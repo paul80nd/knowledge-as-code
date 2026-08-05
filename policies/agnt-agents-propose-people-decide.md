@@ -87,14 +87,14 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 
 The mechanism this policy describes already exists in this wiki's own taxonomy: [discoveries](/discoveries) carry their
 source, confidence and provenance, expire by default, cannot confirm themselves, and reach [FAQs](/faqs) or
-[standards](/standards) only by promotion. [ADR-0001] records why, and states the
+[standards](/standards) only by promotion. [adr-0001] records why, and states the
 consequence plainly — the value of the exercise depends on the promotion gate holding.
 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-05.
 
-[ADR-0001]: /adrs/0001-knowledge-as-code.md
+[adr-0001]: /adrs/0001-knowledge-as-code.md
 [pol-ACCS]: accs-access-by-identity.md
 [pol-AUTV]: autv-automated-verification.md
 [pol-KNOW]: know-knowledge-is-written-down.md

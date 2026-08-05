@@ -114,6 +114,7 @@ specific decision with the alternatives that were weighed; a policy states a pos
 | `required-section`          | error   | Every required section heading is present.                                             |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                         |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                        |
+| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.               |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                       |
 | `unused-definition`         | warning | A link definition that nothing references.                                             |
 

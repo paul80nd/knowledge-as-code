@@ -87,7 +87,7 @@ ADR by ID.
 * **Prescriptive language** — ADRs establishing defaults or policies may use
   [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. Decision-style ADRs use plain declarative prose.
 * **Format** — a lean Nygard-style format with an explicit Alternatives Considered section.
-  [ADR-0001](adrs/0001-knowledge-as-code.md) is the worked example.
+  [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example.
 
 See [Contributing](/knowledge-as-code/contributing.md) for the review model that applies to all Decided-tier documents.
 
@@ -113,6 +113,7 @@ See [Contributing](/knowledge-as-code/contributing.md) for the review model that
 | `required-section`          | error   | Every required section heading is present.                                             |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                         |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                        |
+| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.               |
 | `related-matches-section`   | error   | A field that mirrors a section reconciles with the ids in that section.                |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                       |
 | `unused-definition`         | warning | A link definition that nothing references.                                             |

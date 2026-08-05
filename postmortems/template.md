@@ -70,11 +70,11 @@ _(Actions live in ADO; this links to them. A postmortem is not a tracker.)_
 ## Related
 
 * [rbk-example](/runbooks/example.md) — written or revised as a result.
-* [ADR-NNNN] — the decision this prompted.
+* [adr-NNNN] — the decision this prompted.
 
 ---
 
 _(**Blameless, always.** Write about decisions and conditions, not individuals — "the deploy ran before the migration
 completed", not "X deployed too early". The output is a system that fails less, not a person who feels worse.)_
 
-[ADR-NNNN]: /adrs/NNNN-kebab-slug.md
+[adr-NNNN]: /adrs/nnnn-kebab-slug.md

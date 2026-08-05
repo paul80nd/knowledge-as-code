@@ -44,7 +44,7 @@ A one-sentence definition of what this means in the domain.
 
 **Not:** the neighbouring term it is most often confused with, and the difference in a few words.
 
-Owned by [svc-example](/services/example.md). See [ADR-NNNN].
+Owned by [svc-example](/services/example.md). See [adr-NNNN].
 
 ## Adding a term
 
@@ -110,6 +110,7 @@ file, so these fields describe `glossary.md` itself.
 | `required-section`          | error   | Every required section heading is present.                                             |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                         |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                        |
+| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.               |
 | `unused-definition`         | warning | A link definition that nothing references.                                             |
 
 <!-- END GENERATED: checks-glossary -->

@@ -159,6 +159,8 @@ public static class Generator
         ("required-section", ["required-section"], "Every required section heading is present.", null),
         ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional).", null),
         ("undefined-label", ["undefined-label"], "Every shortcut reference has a link definition.", null),
+        ("label-canonical", ["label-canonical"],
+            "A shortcut label that names a document is written as that document's id.", null),
         ("related-matches-section", ["related-matches-section"],
             "A field that mirrors a section reconciles with the ids in that section.",
             t => t.AnyField(f => f.MirrorsSection is not null)),

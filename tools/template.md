@@ -58,6 +58,6 @@ _(Brief. If the choice was contested or expensive, the reasoning belongs in an [
 ## Related
 
 * [std-NNNN](/standards/…) — standards that mandate or constrain its use.
-* [ADR-NNNN] — the decision, where there was one.
+* [adr-NNNN] — the decision, where there was one.
 
-[ADR-NNNN]: /adrs/NNNN-kebab-slug.md
+[adr-NNNN]: /adrs/nnnn-kebab-slug.md

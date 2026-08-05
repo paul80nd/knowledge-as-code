@@ -107,6 +107,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 | `required-section`          | error   | Every required section heading is present.                                             |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                         |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                        |
+| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.               |
 | `unused-definition`         | warning | A link definition that nothing references.                                             |
 
 <!-- END GENERATED: checks-data -->

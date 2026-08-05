@@ -11,7 +11,7 @@ This page explains the approach. The detail lives in four places:
 * [Contributing](knowledge-as-code/contributing.md) — how knowledge is added, reviewed and promoted.
 * [Automation](knowledge-as-code/automation.md) — what CI validates and generates.
 
-The decision to work this way is recorded in [ADR-0001](/adrs/0001-knowledge-as-code.md).
+The decision to work this way is recorded in [adr-0001](/adrs/0001-knowledge-as-code.md).
 
 ## The problem
 
@@ -104,7 +104,7 @@ promotion — is what lets the corpus grow without the average trustworthiness f
 | Add or change something                      | [Contributing](knowledge-as-code/contributing.md) |
 | Know what metadata a document needs          | [Metadata](knowledge-as-code/metadata.md)         |
 | Understand what CI checks and builds         | [Automation](knowledge-as-code/automation.md)     |
-| Know why we work this way                    | [ADR-0001](/adrs/0001-knowledge-as-code.md)       |
+| Know why we work this way                    | [adr-0001](/adrs/0001-knowledge-as-code.md)       |
 
 ---
 

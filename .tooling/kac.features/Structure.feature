@@ -38,9 +38,18 @@ Feature: Document structure checks
       | line | check       | message                                                                       |
       |      | slug-length | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30. |
 
+  Scenario: A mis-cased id label is flagged where it is read and where it is defined
+    When I validate the corpus
+    Then the findings for "policies/intc-label-case.md" are exactly:
+      | line | check           | message                                                              |
+      |      | label-canonical | link definition '[ADR-0004]' should be written as the id 'adr-0004'. |
+      |      | label-canonical | link definition '[pol-vurm]' should be written as the id 'pol-VURM'. |
+      | 14   | label-canonical | reference '[pol-vurm]' should be written as the id 'pol-VURM'.       |
+      | 15   | label-canonical | reference '[ADR-0004]' should be written as the id 'adr-0004'.       |
+
   Scenario: The whole corpus produces exactly these findings and nothing else
     When I validate the corpus
-    Then validation reports 10 documents and 0 skipped
+    Then validation reports 11 documents and 0 skipped
     And the findings are exactly:
       | file                                                        | severity | line | check               | message                                                                                 |
       | adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30. |
@@ -53,6 +62,10 @@ Feature: Document structure checks
       | adrs/0006-bad-id-prefix.md                                  | error    | 1    | id-prefix           | id 'xyz-0006' must start with 'adr-'.                                                     |
       | adrs/0007-bad-id-width.md                                   | error    | 1    | id-format           | id 'adr-7' must be 'adr-' followed by 4 digits.                                          |
       | adrs/0008-Bad_Name.md                                       | error    |      | filename-pattern    | filename '0008-Bad_Name.md' does not match ^\d{4}-[a-z0-9-]+\.md$.                        |
+      | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[ADR-0004]' should be written as the id 'adr-0004'.                     |
+      | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[pol-vurm]' should be written as the id 'pol-VURM'.                     |
+      | policies/intc-label-case.md                                 | error    | 14   | label-canonical     | reference '[pol-vurm]' should be written as the id 'pol-VURM'.                           |
+      | policies/intc-label-case.md                                 | error    | 15   | label-canonical     | reference '[ADR-0004]' should be written as the id 'adr-0004'.                           |
       | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30.            |
       | policies/pipe-id-disagrees.md                               | error    | 1    | id-matches-filename | id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'.                          |
       | policies/scrt-lower-case-id.md                              | error    | 1    | id-format           | id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter. |

@@ -70,6 +70,6 @@ SLA.
 
 * [svc-example](/services/example.md) — services that depend on this.
 * [rbk-example](/runbooks/example.md) — what to do when it is down.
-* [ADR-NNNN] — why we chose it.
+* [adr-NNNN] — why we chose it.
 
-[ADR-NNNN]: /adrs/NNNN-kebab-slug.md
+[adr-NNNN]: /adrs/nnnn-kebab-slug.md

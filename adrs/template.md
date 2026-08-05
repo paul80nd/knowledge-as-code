@@ -54,8 +54,8 @@ readers need to know about. Cover at least:
 
 ## Related
 
-* [ADR-NNNN] — <what it decided, and why it matters here>.
-* [ADR-NNNN] — <…>.
+* [adr-NNNN] — <what it decided, and why it matters here>.
+* [adr-NNNN] — <…>.
 
 _(One line each on **how** the two relate — the annotation is the value, not the link. Cite rather than restate: if
 another ADR already made an argument, link it instead of repeating it.)_
@@ -66,10 +66,10 @@ another ADR already made an argument, link it instead of repeating it.)_
 
 _(External sources only, as inline links — they are unaffected by renames. Omit the section if there are none.)_
 
-[ADR-NNNN]: NNNN-kebab-slug.md
-[ADR-NNNN]: NNNN-kebab-slug.md
+[adr-NNNN]: nnnn-kebab-slug.md
+[adr-NNNN]: nnnn-kebab-slug.md
 
 _(Link definitions, at the very foot, sorted by label. Internal references use **shortcut reference links** — write
-`[ADR-0007]` in the prose and define it once here, so a rename is a one-line change. The label is also the display text,
+`[adr-0007]` in the prose and define it once here, so a rename is a one-line change. The label is also the display text,
 so it must be the canonical id; where you want prose link text instead, use an inline link. Filename slugs are at most
 30 characters.)_

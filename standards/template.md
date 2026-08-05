@@ -68,16 +68,16 @@ makes the standard *usable* rather than merely readable.
 One or two lines on *why*, then link down to the ADR(s) that decided it. Do not restate the ADR's full reasoning — the
 ADR owns the "why"; this standard owns the "what". Link, don't duplicate.
 
-- [ADR-NNNN] — <what it decided>
+- [adr-NNNN] — <what it decided>
 
 ## Changelog
 
 - YYYY-MM-DD — Initial version.
 
-[ADR-NNNN]: NNNN-kebab-slug.md
-[ADR-NNNN]: NNNN-kebab-slug.md
+[adr-NNNN]: nnnn-kebab-slug.md
+[adr-NNNN]: nnnn-kebab-slug.md
 
 _(Link definitions, at the very foot, sorted by label. Internal references use **shortcut reference links** — write
-`[ADR-0007]` in the prose and define it once here, so a rename is a one-line change. The label is also the display text,
+`[adr-0007]` in the prose and define it once here, so a rename is a one-line change. The label is also the display text,
 so it must be the canonical id; where you want prose link text instead, use an inline link. Filename slugs are at most
 30 characters.)_

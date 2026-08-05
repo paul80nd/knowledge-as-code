@@ -41,7 +41,7 @@ Where a customer encounters this: the web UI, the admin screen, the API endpoint
 | **Specified in**   | ADO epics #NNNN, #NNNN                                               |
 | **Tested by**      | `repo/path/to/feature.feature`                                       |
 | **Constrained by** | [nfr-example](/nfrs/example.md)                                      |
-| **Decided in**     | [ADR-NNNN]                                                           |
+| **Decided in**     | [adr-NNNN]                                                           |
 
 _(This table is the point of the document. If the prose above it grows longer than the links below it, ask whether what
 you are writing belongs in an ADO item instead.)_
@@ -51,4 +51,4 @@ you are writing belongs in an ADO item instead.)_
 What it deliberately does not do, and anything a reader would otherwise assume works. Link to work items where a
 limitation is scheduled to change.
 
-[ADR-NNNN]: /adrs/NNNN-kebab-slug.md
+[adr-NNNN]: /adrs/nnnn-kebab-slug.md
