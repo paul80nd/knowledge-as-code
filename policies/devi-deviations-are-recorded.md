@@ -1,5 +1,5 @@
 ---
-id: pol-0019
+id: pol-DEVI
 tier: normative
 status: draft
 aligns-with:
@@ -60,8 +60,8 @@ the mapping here is partial by nature. We are not registered against ISO/IEC 270
 None — an unrecorded exception to the exception policy is exactly the failure mode this exists to prevent.
 
 Two commitments admit no deviation at all, and no record makes them acceptable: embedding a secret
-([pol-0004](0004-secrets-are-never-embedded.md)), and processing personal data without a lawful basis
-([pol-0005](0005-data-protection.md)). Where personal data may be copied, and for how long, is a question this policy
+([pol-SCRT](scrt-secrets-are-never-embedded.md)), and processing personal data without a lawful basis
+([pol-DATA](data-data-protection.md)). Where personal data may be copied, and for how long, is a question this policy
 can answer; whether we were entitled to hold it at all is not.
 
 ## Implemented by

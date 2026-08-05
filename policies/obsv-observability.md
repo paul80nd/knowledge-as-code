@@ -1,5 +1,5 @@
 ---
-id: pol-0013
+id: pol-OBSV
 tier: normative
 status: draft
 aligns-with:
@@ -43,7 +43,7 @@ All production systems we operate, and the lower environments where behaviour mu
   are.
 * We **will not** run a production system with no monitoring and no alerting.
 * We **will not** write secrets, credentials or unmasked sensitive personal data into telemetry — see
-  [pol-0004](0004-secrets-are-never-embedded.md) and [pol-0005](0005-data-protection.md).
+  [pol-SCRT](scrt-secrets-are-never-embedded.md) and [pol-DATA](data-data-protection.md).
 
 ## Alignment
 

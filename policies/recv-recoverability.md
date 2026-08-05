@@ -1,5 +1,5 @@
 ---
-id: pol-0014
+id: pol-RECV
 tier: normative
 status: draft
 aligns-with:
@@ -61,7 +61,7 @@ Alignment exists because the framework covers the right ground.
 
 Systems holding no state that cannot be regenerated from source need no data backup — but their recovery path is still
 defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded
-deviation under [pol-0019](0019-recorded-deviations.md), owned by whoever will answer for the downtime.
+deviation under [pol-DEVI](devi-deviations-are-recorded.md), owned by whoever will answer for the downtime.
 
 ## Implemented by
 

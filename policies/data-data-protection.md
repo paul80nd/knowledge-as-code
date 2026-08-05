@@ -1,5 +1,5 @@
 ---
-id: pol-0005
+id: pol-DATA
 tier: normative
 status: draft
 aligns-with:
@@ -65,7 +65,7 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 Where a defect genuinely cannot be reproduced without production data, a time-boxed, access-restricted copy may be used
-under a recorded deviation ([pol-0019](0019-recorded-deviations.md)) that names who approved it, who can see it and when
+under a recorded deviation ([pol-DEVI](devi-deviations-are-recorded.md)) that names who approved it, who can see it and when
 it will be destroyed. Legal hold overrides deletion, and is recorded when it does.
 
 ## Implemented by

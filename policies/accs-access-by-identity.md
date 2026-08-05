@@ -1,5 +1,5 @@
 ---
-id: pol-0003
+id: pol-ACCS
 tier: normative
 status: draft
 aligns-with:
@@ -61,7 +61,7 @@ Alignment exists because the framework covers the right ground.
 
 Break-glass access for incident response is permitted where an individual cannot otherwise act, provided the account is
 attributable, its use is alerted and recorded, and its use is reviewed afterwards. Any other departure requires a
-recorded deviation under [pol-0019](0019-recorded-deviations.md).
+recorded deviation under [pol-DEVI](devi-deviations-are-recorded.md).
 
 ## Implemented by
 

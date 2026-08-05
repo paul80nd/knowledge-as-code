@@ -1,5 +1,5 @@
 ---
-id: pol-0008
+id: pol-PIPE
 tier: normative
 status: draft
 aligns-with:
@@ -58,7 +58,7 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 Emergency change to restore service may bypass the normal path where the pipeline is itself unavailable or the delay
-would extend an outage. It is recorded as a deviation under [pol-0019](0019-recorded-deviations.md) at the time, and the
+would extend an outage. It is recorded as a deviation under [pol-DEVI](devi-deviations-are-recorded.md) at the time, and the
 change is reconciled back into version control before the incident is closed — otherwise the fix becomes the next
 outage.
 

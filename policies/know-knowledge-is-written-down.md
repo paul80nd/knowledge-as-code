@@ -1,5 +1,5 @@
 ---
-id: pol-0002
+id: pol-KNOW
 tier: normative
 status: draft
 aligns-with:
@@ -36,7 +36,7 @@ significant decisions, and the reference material a person or an agent needs to 
   reader can tell a considered choice from an accident.
 * We **will** write documentation to be usable by both people and the agents working in our codebases, treating them as
   readers of the same source of truth rather than maintaining two versions of it — including the rules we expect their
-  work to follow ([pol-0021](0021-agents-propose-people-decide.md)).
+  work to follow ([pol-AGNT](agnt-agents-propose-people-decide.md)).
 * We **will not** allow knowledge that is critical to operating or recovering a system to exist only in someone's head
   or in an ephemeral conversation.
 * We **will not** treat documentation as a task that follows delivery — undocumented work is unfinished work.

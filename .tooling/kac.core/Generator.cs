@@ -150,7 +150,7 @@ public static class Generator
             "Values match the pattern their field declares (e.g. `tags`).", null),
         ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
         ("id", ["id-prefix", "id-format", "id-matches-filename"],
-            "`id` carries the type's prefix and, where the type is numbered, matches the filename number.", null),
+            "`id` carries the type's prefix and matches the filename's number or mnemonic.", null),
         ("id-unique", ["id-unique"], "`id` is unique across the whole wiki.", null),
         ("filename / slug-length", ["filename-pattern", "slug-length"],
             "Filename matches the pattern; the slug is within 30 characters.", null),

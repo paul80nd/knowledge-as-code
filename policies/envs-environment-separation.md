@@ -1,5 +1,5 @@
 ---
-id: pol-0009
+id: pol-ENVS
 tier: normative
 status: draft
 aligns-with:
@@ -43,7 +43,7 @@ temporary and on-demand environments.
 * We **will not** develop, test or debug against production.
 * We **will not** reuse a production secret in any environment below production.
 * We **will not** place unmasked production or personal data into a lower environment — see
-  [pol-0005](0005-data-protection.md).
+  [pol-DATA](data-data-protection.md).
 
 ## Alignment
 
@@ -60,8 +60,8 @@ Alignment exists because the framework covers the right ground.
 
 Not every solution needs a full set of tiers; a reduced set is acceptable where the rationale is recorded and the
 production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not
-development, and is governed by [pol-0015](0015-incident-response.md). Any other departure requires a recorded deviation
-under [pol-0019](0019-recorded-deviations.md).
+development, and is governed by [pol-INCR](incr-incident-response.md). Any other departure requires a recorded deviation
+under [pol-DEVI](devi-deviations-are-recorded.md).
 
 ## Implemented by
 

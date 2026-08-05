@@ -67,42 +67,54 @@ specific decision with the alternatives that were weighed; a policy states a pos
 ## Adding a policy
 
 1. Apply the test above. Most things that feel like policies are standards.
-2. Copy [`template.md`](policies/template.md) to `NNNN-kebab-slug.md`.
-3. State the commitment, the scope it applies to, and any explicit exceptions. Exceptions stated up front are honest;
+2. Choose a four-character mnemonic for the policy's *concept* — `VURM` for vulnerability remediation, `PIPE` for
+   pipeline-to-production. Start it with the same letter as the slug, so the folder still reads alphabetically.
+3. Copy [`template.md`](policies/template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
+   upper-case.
+4. State the commitment, the scope it applies to, and any explicit exceptions. Exceptions stated up front are honest;
    exceptions discovered later are erosion.
-4. Set `aligns-with` where an ISO 27001 Annex A area corresponds. Use `aligns-with`, never wording that implies
+5. Set `aligns-with` where an ISO 27001 Annex A area corresponds. Use `aligns-with`, never wording that implies
    compliance or certification.
-5. Set `review-by`. Policies change rarely, so an annual review is usually right.
+6. Set `review-by`. Policies change rarely, so an annual review is usually right.
 
 **Conventions**
 
 * **Never say "compliant" or "certified".** We align. The distinction matters if anyone ever reads this externally.
 * **Every policy should have at least one implementing standard**, or be explicitly marked aspirational. A policy
   nothing implements is a statement of intent, and should say so.
+* **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
+  scope — the id does not move. Standards, controls and processes cite policies by id, and a mnemonic that is
+  reassigned turns every one of those citations into a quiet lie: the reference still resolves, so nothing fails, and
+  the reader is simply told something untrue.
+
+  This is why the mnemonic comes from the concept rather than the wording. A policy whose *meaning* has changed enough
+  to invalidate its mnemonic has not been edited — it has been replaced. **Retire the old policy and write a new one**,
+  so the record shows the position we used to hold, the position we hold now, and that they are different positions.
+  Retirement is cheap and keeps the history honest; an id quietly meaning something new destroys it.
 
 ## What CI checks
 
 <!-- BEGIN GENERATED: checks-policies -->
 
-| Check                       | Level   | What it verifies                                                                             |
-| --------------------------- | ------- | -------------------------------------------------------------------------------------------- |
-| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                          |
-| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                               |
-| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                            |
-| `required-field`            | error   | Required and conditionally-required fields are present.                                      |
-| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                               |
-| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                         |
-| `enum`                      | error   | Enum values are in range and lowercase.                                                      |
-| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                 |
-| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                   |
-| `id`                        | error   | `id` carries the type's prefix and, where the type is numbered, matches the filename number. |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                        |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                              |
-| `h1`                        | error   | The document has an H1 and, where the type declares one, it matches the title pattern.       |
-| `required-section`          | error   | Every required section heading is present.                                                   |
-| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                               |
-| `undefined-label`           | error   | Every shortcut reference has a link definition.                                              |
-| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                             |
-| `unused-definition`         | warning | A link definition that nothing references.                                                   |
+| Check                       | Level   | What it verifies                                                                       |
+| --------------------------- | ------- | -------------------------------------------------------------------------------------- |
+| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                    |
+| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                         |
+| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                      |
+| `required-field`            | error   | Required and conditionally-required fields are present.                                |
+| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                         |
+| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                   |
+| `enum`                      | error   | Enum values are in range and lowercase.                                                |
+| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                           |
+| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                             |
+| `id`                        | error   | `id` carries the type's prefix and matches the filename's number or mnemonic.          |
+| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                  |
+| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                        |
+| `h1`                        | error   | The document has an H1 and, where the type declares one, it matches the title pattern. |
+| `required-section`          | error   | Every required section heading is present.                                             |
+| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                         |
+| `undefined-label`           | error   | Every shortcut reference has a link definition.                                        |
+| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                       |
+| `unused-definition`         | warning | A link definition that nothing references.                                             |
 
 <!-- END GENERATED: checks-policies -->

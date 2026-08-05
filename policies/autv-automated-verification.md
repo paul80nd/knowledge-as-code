@@ -1,5 +1,5 @@
 ---
-id: pol-0007
+id: pol-AUTV
 tier: normative
 status: draft
 aligns-with:
@@ -42,7 +42,7 @@ configuration, data pipelines and the documentation held with them.
 * We **will** add a regression test for every defect we fix, so it can only be found once.
 * We **will** treat a broken mainline as the team's first priority.
 * We **will not** merge or release over a failing check without a recorded deviation
-  ([pol-0019](0019-recorded-deviations.md)).
+  ([pol-DEVI](devi-deviations-are-recorded.md)).
 * We **will not** disable, skip or suppress a check to make a release possible, and **will not** silence a warning
   without a recorded reason.
 * We **will not** depend on a particular person's machine to produce a build.
@@ -62,7 +62,7 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is
-recorded as a deviation under [pol-0019](0019-recorded-deviations.md), and the gate is satisfied afterwards rather than
+recorded as a deviation under [pol-DEVI](devi-deviations-are-recorded.md), and the gate is satisfied afterwards rather than
 waived — the exception buys time, not forgiveness.
 
 ## Implemented by

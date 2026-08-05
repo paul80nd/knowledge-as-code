@@ -1,5 +1,5 @@
 ---
-id: pol-0016
+id: pol-A11Y
 tier: normative
 status: draft
 aligns-with:
@@ -37,7 +37,7 @@ them may need it — which is to say, always, since we do not know who that is.
 * We **will** publish an accessibility statement where we are required to, and keep it truthful about the gaps that
   remain.
 * We **will not** ship a change that knowingly makes accessibility worse without a recorded deviation
-  ([pol-0019](0019-recorded-deviations.md)) and a plan to correct it.
+  ([pol-DEVI](devi-deviations-are-recorded.md)) and a plan to correct it.
 * We **will not** treat accessibility as a phase that follows delivery.
 
 ## Exceptions

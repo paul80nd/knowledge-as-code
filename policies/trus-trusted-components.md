@@ -1,5 +1,5 @@
 ---
-id: pol-0010
+id: pol-TRUS
 tier: normative
 status: draft
 aligns-with:
@@ -41,7 +41,7 @@ images and build-time tooling; and all artifacts we deploy.
 * We **will** be able to trace a deployed artifact to the change and the build that produced it.
 * We **will not** introduce a dependency from an untrusted or unverifiable source.
 * We **will not** ship a component with a known critical vulnerability without a recorded, risk-owned deviation
-  ([pol-0019](0019-recorded-deviations.md)).
+  ([pol-DEVI](devi-deviations-are-recorded.md)).
 * We **will not** alter a released artifact in place — a change produces a new version.
 
 ## Alignment

@@ -1,5 +1,5 @@
 ---
-id: pol-0006
+id: pol-SECD
 tier: normative
 status: draft
 aligns-with:
@@ -64,7 +64,7 @@ Alignment exists because the framework covers the right ground.
 Low-risk changes to systems that hold no sensitive data and have no external exposure need no separate threat
 consideration; the secure-design principles and coding standard still apply. Where a high-risk change must proceed
 before its security work is complete, that is a recorded deviation under
-[pol-0019](0019-recorded-deviations.md), not a judgement call made in the moment.
+[pol-DEVI](devi-deviations-are-recorded.md), not a judgement call made in the moment.
 
 ## Implemented by
 

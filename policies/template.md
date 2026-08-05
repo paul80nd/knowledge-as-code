@@ -1,5 +1,5 @@
 ---
-id: pol-NNNN
+id: pol-XXXX
 tier: normative
 status: draft
 aligns-with:
@@ -13,10 +13,13 @@ tags:
 
 # Policy: <Title>
 
-_(Frontmatter notes — delete this block. **`status`**: `draft` · `active` · `retired`. **`aligns-with`** takes ISO/IEC
-27001:2022 Annex A references, e.g. `ISO27001:2022 A.8.25` — this records **alignment, not compliance or
-certification**, and the wording matters if this is ever read externally. **`implemented-by`** lists the standard ids
-that put this into practice. **`review-by`** is a quoted date; annual is usually right for a policy.)_
+_(Frontmatter notes — delete this block. **`id`** is `pol-` plus a four-character mnemonic for the policy's concept,
+upper-case here and lower-case in the filename: `pol-VURM` in `vurm-vulnerability-remediation.md`. It is **immutable
+once the policy is active** — a change of meaning that big is a new policy and a retirement of this one.
+**`status`**: `draft` · `active` · `retired`. **`aligns-with`** takes ISO/IEC 27001:2022 Annex A references, e.g.
+`ISO27001:2022 A.8.25` — this records **alignment, not compliance or certification**, and the wording matters if this
+is ever read externally. **`implemented-by`** lists the standard ids that put this into practice. **`review-by`** is a
+quoted date; annual is usually right for a policy.)_
 
 ## Purpose
 

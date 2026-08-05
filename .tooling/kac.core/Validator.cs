@@ -263,15 +263,30 @@ public static class Validator
         }
 
         var numPart = id[expectPrefix.Length..];
-        var fileNum = FilenameNumber(d.Rel);
         if (t.IdStyle == "numbered")
         {
+            var fileNum = FilenameNumber(d.Rel);
             if (numPart.Length != t.IdWidth || !numPart.All(char.IsDigit))
                 err("id-format", $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} digits.",
                     Line(idNode, d));
             else if (fileNum is not null && numPart != fileNum)
                 err("id-matches-filename", $"id '{id}' number does not match filename number '{fileNum}'.",
                     Line(idNode, d));
+        }
+        else if (t.IdStyle == "mnemonic")
+        {
+            // The id carries the mnemonic upper-case (pol-VURM); the filename carries it lower-case
+            // (vurm-…md), so the two are compared case-insensitively.
+            var fileMnemonic = FilenameMnemonic(d.Rel, t.IdWidth);
+            if (numPart.Length != t.IdWidth || !numPart.All(char.IsLetterOrDigit)
+                                            || !char.IsLetter(numPart[0]) || numPart != numPart.ToUpperInvariant())
+                err("id-format",
+                    $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} upper-case alphanumeric "
+                    + "characters beginning with a letter.", Line(idNode, d));
+            else if (fileMnemonic is not null
+                     && !numPart.Equals(fileMnemonic, StringComparison.OrdinalIgnoreCase))
+                err("id-matches-filename",
+                    $"id '{id}' mnemonic does not match filename mnemonic '{fileMnemonic}'.", Line(idNode, d));
         }
     }
 
@@ -283,8 +298,17 @@ public static class Validator
         var slug = name;
         if (slug.EndsWith(".md")) slug = slug[..^3];
         var dash = slug.IndexOf('-');
-        if (t.IdStyle == "numbered" && dash >= 0 && slug[..dash].All(char.IsDigit))
-            slug = slug[(dash + 1)..];
+        if (dash >= 0)
+        {
+            var head = slug[..dash];
+            var isIdPrefix = t.IdStyle switch
+            {
+                "numbered" => head.All(char.IsDigit),
+                "mnemonic" => head.Length == t.IdWidth && head.All(char.IsLetterOrDigit),
+                _ => false
+            };
+            if (isIdPrefix) slug = slug[(dash + 1)..];
+        }
         if (slug.Length > t.SlugMax)
             err("slug-length", $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.", null);
     }
@@ -512,13 +536,29 @@ public static class Validator
         return i > 0 ? name[..i] : null;
     }
 
+    private static string? FilenameMnemonic(string rel, int width)
+    {
+        var name = Path.GetFileName(rel);
+        var dash = name.IndexOf('-');
+        if (dash != width) return null;
+        var head = name[..dash];
+        return head.All(char.IsLetterOrDigit) ? head : null;
+    }
+
     private static string? IdFromLink(LinkRef link, TypeSchema refType)
     {
-        // Resolve the link's target filename to the ref type's id, e.g. 0007-…md -> adr-0007.
+        // Resolve the link's target filename to the ref type's id, e.g. 0007-…md -> adr-0007,
+        // or vurm-…md -> pol-VURM where the type is mnemonic.
         var target = link.Target;
         var hash = target.IndexOf('#');
         if (hash >= 0) target = target[..hash];
         var file = target.Split('/').LastOrDefault() ?? "";
+        if (refType.IdStyle == "mnemonic")
+        {
+            var mnemonic = FilenameMnemonic(file, refType.IdWidth);
+            return mnemonic is null ? null : $"{refType.IdPrefix}-{mnemonic.ToUpperInvariant()}";
+        }
+
         var i = 0;
         while (i < file.Length && char.IsDigit(file[i])) i++;
         return i == refType.IdWidth ? $"{refType.IdPrefix}-{file[..i]}" : null;

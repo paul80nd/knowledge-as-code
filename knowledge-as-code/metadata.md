@@ -25,9 +25,20 @@ them sparingly, and derive rather than state wherever possible.
   document's type from it, so the mapping is a rule rather than a lookup.
 * **ID prefix** — singular, since an ID names a single document. `adr-0017`, `std-0004`.
 
-* **Slug length** — the filename slug (excluding any `NNNN-` prefix) is at most 30 characters. The filename is a handle,
-  not a title: it identifies the document at a glance while the H1 carries the full descriptive title. CI fails on
-  longer slugs.
+* **ID style** — set per type by the schema, and one of two shapes.
+
+  *Numbered* (`adr-0017`) suits anything chronological: the id records the order things happened, which is information
+  a mnemonic cannot carry.
+
+  *Mnemonic* (`pol-VURM`, filed as `vurm-vulnerability-remediation.md`) suits a small, long-lived set that other
+  documents cite constantly — the id is what a reader meets most often, so it should say something. Upper-case in the
+  id, lower-case in the filename, and its first letter matches the slug's so the folder still reads alphabetically.
+  A mnemonic makes a claim a number never does, so it is drawn from the concept rather than the current wording, and
+  it is immutable once the document is active.
+
+* **Slug length** — the filename slug (excluding the `NNNN-` or `mnem-` prefix) is at most 30 characters. The filename
+  is a handle, not a title: it identifies the document at a glance while the H1 carries the full descriptive title. CI
+  fails on longer slugs.
 
   A slug you cannot get under 30 characters is often a signal the document is doing two things.
   `internal-services-backing-public-surfaces` was one idea too many; splitting or narrowing the scope is usually the

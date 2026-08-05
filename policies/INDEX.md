@@ -4,24 +4,24 @@
 
 | ID       | Title                                                                                                         | Status | Aligns with | Review by  |
 | -------- | ------------------------------------------------------------------------------------------------------------- | ------ | ----------- | ---------- |
-| pol-0001 | [Policy: Everything is in version control](0001-everything-in-version-control.md)                             | draft  |             | 2027-08-04 |
-| pol-0002 | [Policy: Knowledge is written down and kept with what it describes](0002-knowledge-is-written-down.md)        | draft  |             | 2027-08-04 |
-| pol-0003 | [Policy: Access is by individual identity, on least privilege](0003-access-by-identity.md)                    | draft  |             | 2027-08-04 |
-| pol-0004 | [Policy: Secrets are managed, never embedded](0004-secrets-are-never-embedded.md)                             | draft  |             | 2027-08-04 |
-| pol-0005 | [Policy: Data is protected according to its sensitivity](0005-data-protection.md)                             | draft  |             | 2027-08-04 |
-| pol-0006 | [Policy: Security is designed in, not added on](0006-security-by-design.md)                                   | draft  |             | 2027-08-04 |
-| pol-0007 | [Policy: Every change is verified automatically, and failures block](0007-automated-verification.md)          | draft  |             | 2027-08-04 |
-| pol-0008 | [Policy: Changes reach production through the pipeline](0008-pipeline-to-production.md)                       | draft  |             | 2027-08-04 |
-| pol-0009 | [Policy: Environments are separated, and production stays in production](0009-environment-separation.md)      | draft  |             | 2027-08-04 |
-| pol-0010 | [Policy: We ship only components we know and trust](0010-trusted-components.md)                               | draft  |             | 2027-08-04 |
-| pol-0011 | [Policy: Vulnerabilities are found, prioritised and closed to a timeframe](0011-vulnerability-remediation.md) | draft  |             | 2027-08-04 |
-| pol-0012 | [Policy: Exposure is minimised and traffic is controlled](0012-minimised-exposure.md)                         | draft  |             | 2027-08-04 |
-| pol-0013 | [Policy: Systems are observable and actively monitored](0013-observability.md)                                | draft  |             | 2027-08-04 |
-| pol-0014 | [Policy: Services and data are recoverable](0014-recoverability.md)                                           | draft  |             | 2027-08-04 |
-| pol-0015 | [Policy: Incidents are managed and learned from](0015-incident-response.md)                                   | draft  |             | 2027-08-04 |
-| pol-0016 | [Policy: Software we build is usable by everyone](0016-accessibility.md)                                      | draft  |             | 2027-08-04 |
-| pol-0017 | [Policy: Interfaces are contracts we honour](0017-interface-contracts.md)                                     | draft  |             | 2027-08-04 |
-| pol-0018 | [Policy: Performance targets are stated and verified](0018-performance-targets.md)                            | draft  |             | 2027-08-04 |
-| pol-0019 | [Policy: Deviations are recorded, owned and time-bound](0019-recorded-deviations.md)                          | draft  |             | 2027-08-04 |
-| pol-0020 | [Policy: Cost is a non-functional requirement](0020-cost-as-an-nfr.md)                                        | draft  |             | 2027-08-04 |
-| pol-0021 | [Policy: Agents propose, people decide](0021-agents-propose-people-decide.md)                                 | draft  |             | 2027-08-05 |
+| pol-A11Y | [Policy: Software we build is usable by everyone](a11y-accessibility.md)                                      | draft  |             | 2027-08-04 |
+| pol-ACCS | [Policy: Access is by individual identity, on least privilege](accs-access-by-identity.md)                    | draft  |             | 2027-08-04 |
+| pol-AGNT | [Policy: Agents propose, people decide](agnt-agents-propose-people-decide.md)                                 | draft  |             | 2027-08-05 |
+| pol-AUTV | [Policy: Every change is verified automatically, and failures block](autv-automated-verification.md)          | draft  |             | 2027-08-04 |
+| pol-COST | [Policy: Cost is a non-functional requirement](cost-cost-as-an-nfr.md)                                        | draft  |             | 2027-08-04 |
+| pol-DATA | [Policy: Data is protected according to its sensitivity](data-data-protection.md)                             | draft  |             | 2027-08-04 |
+| pol-DEVI | [Policy: Deviations are recorded, owned and time-bound](devi-deviations-are-recorded.md)                      | draft  |             | 2027-08-04 |
+| pol-ENVS | [Policy: Environments are separated, and production stays in production](envs-environment-separation.md)      | draft  |             | 2027-08-04 |
+| pol-EVER | [Policy: Everything is in version control](ever-everything-in-version-control.md)                             | draft  |             | 2027-08-04 |
+| pol-INCR | [Policy: Incidents are managed and learned from](incr-incident-response.md)                                   | draft  |             | 2027-08-04 |
+| pol-INTC | [Policy: Interfaces are contracts we honour](intc-interface-contracts.md)                                     | draft  |             | 2027-08-04 |
+| pol-KNOW | [Policy: Knowledge is written down and kept with what it describes](know-knowledge-is-written-down.md)        | draft  |             | 2027-08-04 |
+| pol-MEXP | [Policy: Exposure is minimised and traffic is controlled](mexp-minimised-exposure.md)                         | draft  |             | 2027-08-04 |
+| pol-OBSV | [Policy: Systems are observable and actively monitored](obsv-observability.md)                                | draft  |             | 2027-08-04 |
+| pol-PERF | [Policy: Performance targets are stated and verified](perf-performance-targets.md)                            | draft  |             | 2027-08-04 |
+| pol-PIPE | [Policy: Changes reach production through the pipeline](pipe-pipeline-to-production.md)                       | draft  |             | 2027-08-04 |
+| pol-RECV | [Policy: Services and data are recoverable](recv-recoverability.md)                                           | draft  |             | 2027-08-04 |
+| pol-SCRT | [Policy: Secrets are managed, never embedded](scrt-secrets-are-never-embedded.md)                             | draft  |             | 2027-08-04 |
+| pol-SECD | [Policy: Security is designed in, not added on](secd-security-by-design.md)                                   | draft  |             | 2027-08-04 |
+| pol-TRUS | [Policy: We ship only components we know and trust](trus-trusted-components.md)                               | draft  |             | 2027-08-04 |
+| pol-VURM | [Policy: Vulnerabilities are found, prioritised and closed to a timeframe](vurm-vulnerability-remediation.md) | draft  |             | 2027-08-04 |

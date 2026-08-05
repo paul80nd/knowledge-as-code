@@ -59,7 +59,7 @@ _(Especially anything crossing outside the estate.)_
 
 ## Related
 
-* [pol-NNNN](/policies/…) — the policy governing this classification.
+* [pol-XXXX](/policies/…) — the policy governing this classification.
 * [ADR-NNNN] — decisions about where this data lives.
 
 ---
