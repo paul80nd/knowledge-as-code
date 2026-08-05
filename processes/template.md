@@ -12,10 +12,18 @@ tags: [ a, b ]
 
 # <Process name>
 
-_(Frontmatter notes — delete this block. **`status`**: `active` · `draft` · `retired`. **`last-rehearsed`** is a quoted
-date and `"never"` is permitted — preferable to a guess, since an unrehearsed procedure is a hypothesis. Update it when
-someone actually follows the process end to end, not when someone edits the document. **`rehearsal-frequency`**:
-`per-release` · `quarterly` · `annual`. **`requires-access`** names the systems or roles needed.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`status`** — `active` · `draft` · `retired`.
+* **`last-rehearsed`** — A quoted date, and `"never"` is permitted — preferable to a guess, since an unrehearsed
+  procedure is a hypothesis. Update it when someone actually follows the process end to end, not when someone edits the
+  document.
+* **`rehearsal-frequency`** — `per-release` · `quarterly` · `annual`.
+* **`requires-access`** — The systems or roles needed.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 One sentence: what this achieves and when you would do it.
 

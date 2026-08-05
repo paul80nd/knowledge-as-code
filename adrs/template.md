@@ -9,10 +9,18 @@ related: [ adr-AAAA, adr-BBBB, adr-CCCC ]
 
 # ADR-NNNN: <Title>
 
-_(Frontmatter notes — delete this block. **`id`** matches the filename number, four digits, never reused. **`tier`** is
-always `decided` for an ADR. **`status`** is `proposed` while under review, then `accepted`, and later `deprecated` or
-`superseded`; values are lowercase. **`decided-on`** is the acceptance date as a quoted `"YYYY-MM-DD"` — leave the key
-bare until accepted. **`owner`** is the named person answerable for the decision, never a team alias.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`id`** — Matches the filename number. Four digits, never reused.
+* **`tier`** — Always `decided` for an ADR.
+* **`status`** — `proposed` while under review, then `accepted`, and later `deprecated` or `superseded`. Values are
+  lowercase.
+* **`decided-on`** — The acceptance date, quoted `"YYYY-MM-DD"`. Leave the key bare until accepted.
+* **`owner`** — The named person answerable for the decision, never a team alias.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 > **In the context of** <use case>, **facing** <concern>, **we decided** <chosen option>, **rather than**
 > <alternatives>, **to achieve** <quality / benefit>, **accepting** <downside>.

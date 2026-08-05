@@ -13,10 +13,18 @@ tags: [ a, b ]
 
 # <What is broken>
 
-_(Frontmatter notes — delete this block. Title this document for the **failure**, not the fix — that is what someone
-searches for at 2am. **`severity`**: `sev1` · `sev2` · `sev3`. **`last-rehearsed`** is a quoted date; `"never"` is
-permitted and is exactly the thing worth knowing before the incident rather than during it. **`requires-access`** must
-be complete — discovering you lack a permission mid-incident is its own outage.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+Title this document for the **failure**, not the fix — that is what someone searches for at 2am.
+
+* **`severity`** — `sev1` · `sev2` · `sev3`.
+* **`last-rehearsed`** — A quoted date; `"never"` is permitted, and is exactly the thing worth knowing before the
+  incident rather than during it.
+* **`requires-access`** — Must be complete. Discovering you lack a permission mid-incident is its own outage.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 ## Symptoms
 

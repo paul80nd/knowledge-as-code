@@ -14,11 +14,18 @@ tags: [ a, b ]
 
 # <The symptom, as customers experienced it>
 
-_(Frontmatter notes — delete this block. **`occurred-on`** and **`detected-on`** are separate quoted dates for a
-reason — the gap between them is often the finding. **`severity`**: `sev1` · `sev2` · `sev3`. **`affected`** lists
-service or capability ids. **`prompted`** lists the ADRs, runbooks, NFRs and FAQs this incident caused to be written. **
-`status: draft`** while it is being assembled; `published` freezes it. Postmortems are **immutable once published** — a
-materially different understanding is a new document that references this one.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`occurred-on` / `detected-on`** — Separate quoted dates for a reason — the gap between them is often the finding.
+* **`severity`** — `sev1` · `sev2` · `sev3`.
+* **`affected`** — Service or capability ids.
+* **`prompted`** — The ADRs, runbooks, NFRs and FAQs this incident caused to be written.
+* **`status`** — `draft` while it is being assembled; `published` freezes it. Postmortems are **immutable once
+  published** — a materially different understanding is a new document that references this one.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 ## Summary
 

@@ -13,11 +13,17 @@ tags: [ a, b ]
 
 # <Tool name>
 
-_(Frontmatter notes — delete this block. **`status`**: `approved` · `trial` · `deprecated` · `rejected` — approved means
-approved **for new work**; something already in use but not approved is drift, and the drift report will say so. **
-`versions`** is a range, not a pin: the register states what we stand behind, the manifests state what is installed. **
-`licence`** is an SPDX identifier — the field nobody wants until they urgently do. **`decided-in`** cites an ADR where
-one exists.)_
+<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Frontmatter.** Delete this block once the fields above are filled in.
+
+* **`status`** — `approved` · `trial` · `deprecated` · `rejected`. Approved means approved **for new work**; something
+  already in use but not approved is drift, and the drift report will say so.
+* **`versions`** — A range, not a pin: the register states what we stand behind, the manifests state what is installed.
+* **`licence`** — An SPDX identifier — the field nobody wants until they urgently do.
+* **`decided-in`** — An ADR, where one exists.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 One sentence: what it is and what we use it for.
 
