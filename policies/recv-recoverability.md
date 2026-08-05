@@ -61,7 +61,7 @@ Alignment exists because the framework covers the right ground.
 
 Systems holding no state that cannot be regenerated from source need no data backup — but their recovery path is still
 defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded
-deviation under [pol-DEVI](devi-deviations-are-recorded.md), owned by whoever will answer for the downtime.
+deviation under [pol-DEVI], owned by whoever will answer for the downtime.
 
 ## Implemented by
 
@@ -72,3 +72,5 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DEVI]: devi-deviations-are-recorded.md

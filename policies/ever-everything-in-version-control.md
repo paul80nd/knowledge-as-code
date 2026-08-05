@@ -34,7 +34,7 @@ All solutions we build or operate, and every asset required to rebuild one: appl
 definitions, database schema and migrations, pipeline definitions, non-secret configuration, operational scripts and
 the documentation that describes them.
 
-Secrets are the deliberate exception — see [pol-SCRT](scrt-secrets-are-never-embedded.md).
+Secrets are the deliberate exception — see [pol-SCRT].
 
 ## Commitments
 
@@ -62,8 +62,8 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 Vendor-supplied binaries and third-party assets we cannot hold in source are referenced by version and provenance
-instead — see [pol-TRUS](trus-trusted-components.md). Any other asset held outside version control requires a recorded
-deviation under [pol-DEVI](devi-deviations-are-recorded.md), naming the asset, the reason and the recovery plan if it is
+instead — see [pol-TRUS]. Any other asset held outside version control requires a recorded
+deviation under [pol-DEVI], naming the asset, the reason and the recovery plan if it is
 lost.
 
 ## Implemented by
@@ -76,3 +76,7 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DEVI]: devi-deviations-are-recorded.md
+[pol-SCRT]: scrt-secrets-are-never-embedded.md
+[pol-TRUS]: trus-trusted-components.md

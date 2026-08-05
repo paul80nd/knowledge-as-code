@@ -32,8 +32,8 @@ Any contribution to the systems or the knowledge we own that was produced by an 
 configuration, documentation or a recorded observation. Applies to agents working under a person's direction and to
 autonomous or scheduled ones alike.
 
-_Boundary: the identity an agent authenticates as is governed by [pol-ACCS](accs-access-by-identity.md) and the
-credentials it holds by [pol-SCRT](scrt-secrets-are-never-embedded.md). This policy is about the authority of what it
+_Boundary: the identity an agent authenticates as is governed by [pol-ACCS] and the
+credentials it holds by [pol-SCRT]. This policy is about the authority of what it
 produces._
 
 ## Commitments
@@ -43,7 +43,7 @@ produces._
 * We **will** require a person to accept agent-produced work before it carries any authority, and that person owns it
   afterwards as if they had written it.
 * We **will** hold agent-produced changes to every gate that applies to our own — the same review, the same automated
-  verification under [pol-AUTV](autv-automated-verification.md), the same route to production.
+  verification under [pol-AUTV], the same route to production.
 * We **will** state the confidence an observation actually has, and let unverified ones expire rather than settle into
   the corpus by age.
 * We **will not** treat an agent's own account of its work as verification of that work.
@@ -53,7 +53,7 @@ produces._
   would not be granted.
 * We **will not** let "an agent wrote it" stand as either a reason to scrutinise it less or an excuse for what it broke.
 * We **will not** hold an agent to a rule we never put within its reach — under
-  [pol-KNOW](know-knowledge-is-written-down.md) that is our failure, not the agent's.
+  [pol-KNOW] that is our failure, not the agent's.
 
 ## Alignment
 
@@ -76,7 +76,7 @@ cannot tell which they are holding.
 What acceptance *looks like* scales with what is being accepted, and that is proportion rather than exception: a
 reviewer merging a change is acceptance; promoting an observation into a standard needs whoever owns that standard.
 Nor is an incident an exception — a fix an agent proposed during one is accepted by the person who applied it, and
-[pol-PIPE](pipe-pipeline-to-production.md) governs reconciling it afterwards.
+[pol-PIPE] governs reconciling it afterwards.
 
 ## Implemented by
 
@@ -87,9 +87,16 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 
 The mechanism this policy describes already exists in this wiki's own taxonomy: [discoveries](/discoveries) carry their
 source, confidence and provenance, expire by default, cannot confirm themselves, and reach [FAQs](/faqs) or
-[standards](/standards) only by promotion. [ADR-0001](/adrs/0001-knowledge-as-code.md) records why, and states the
+[standards](/standards) only by promotion. [ADR-0001] records why, and states the
 consequence plainly — the value of the exercise depends on the promotion gate holding.
 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-05.
+
+[ADR-0001]: /adrs/0001-knowledge-as-code.md
+[pol-ACCS]: accs-access-by-identity.md
+[pol-AUTV]: autv-automated-verification.md
+[pol-KNOW]: know-knowledge-is-written-down.md
+[pol-PIPE]: pipe-pipeline-to-production.md
+[pol-SCRT]: scrt-secrets-are-never-embedded.md

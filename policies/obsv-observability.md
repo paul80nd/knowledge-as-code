@@ -43,7 +43,7 @@ All production systems we operate, and the lower environments where behaviour mu
   are.
 * We **will not** run a production system with no monitoring and no alerting.
 * We **will not** write secrets, credentials or unmasked sensitive personal data into telemetry — see
-  [pol-SCRT](scrt-secrets-are-never-embedded.md) and [pol-DATA](data-data-protection.md).
+  [pol-SCRT] and [pol-DATA].
 
 ## Alignment
 
@@ -70,3 +70,6 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DATA]: data-data-protection.md
+[pol-SCRT]: scrt-secrets-are-never-embedded.md

@@ -43,7 +43,7 @@ temporary and on-demand environments.
 * We **will not** develop, test or debug against production.
 * We **will not** reuse a production secret in any environment below production.
 * We **will not** place unmasked production or personal data into a lower environment — see
-  [pol-DATA](data-data-protection.md).
+  [pol-DATA].
 
 ## Alignment
 
@@ -60,8 +60,8 @@ Alignment exists because the framework covers the right ground.
 
 Not every solution needs a full set of tiers; a reduced set is acceptable where the rationale is recorded and the
 production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not
-development, and is governed by [pol-INCR](incr-incident-response.md). Any other departure requires a recorded deviation
-under [pol-DEVI](devi-deviations-are-recorded.md).
+development, and is governed by [pol-INCR]. Any other departure requires a recorded deviation
+under [pol-DEVI].
 
 ## Implemented by
 
@@ -73,3 +73,7 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DATA]: data-data-protection.md
+[pol-DEVI]: devi-deviations-are-recorded.md
+[pol-INCR]: incr-incident-response.md

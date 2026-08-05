@@ -36,7 +36,7 @@ significant decisions, and the reference material a person or an agent needs to 
   reader can tell a considered choice from an accident.
 * We **will** write documentation to be usable by both people and the agents working in our codebases, treating them as
   readers of the same source of truth rather than maintaining two versions of it — including the rules we expect their
-  work to follow ([pol-AGNT](agnt-agents-propose-people-decide.md)).
+  work to follow ([pol-AGNT]).
 * We **will not** allow knowledge that is critical to operating or recovering a system to exist only in someone's head
   or in an ephemeral conversation.
 * We **will not** treat documentation as a task that follows delivery — undocumented work is unfinished work.
@@ -65,3 +65,5 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-AGNT]: agnt-agents-propose-people-decide.md

@@ -65,7 +65,7 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 Where a defect genuinely cannot be reproduced without production data, a time-boxed, access-restricted copy may be used
-under a recorded deviation ([pol-DEVI](devi-deviations-are-recorded.md)) that names who approved it, who can see it and when
+under a recorded deviation ([pol-DEVI]) that names who approved it, who can see it and when
 it will be destroyed. Legal hold overrides deletion, and is recorded when it does.
 
 ## Implemented by
@@ -78,3 +78,5 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DEVI]: devi-deviations-are-recorded.md

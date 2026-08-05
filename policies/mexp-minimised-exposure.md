@@ -37,7 +37,7 @@ inbound to our systems, between them, and outbound from them.
 * We **will** protect traffic crossing a trust boundary.
 * We **will** prefer private paths to public ones for access between our own services.
 * We **will** control and observe what leaves our systems, not only what arrives.
-* We **will** define network topology as reviewable code, under [pol-EVER](ever-everything-in-version-control.md).
+* We **will** define network topology as reviewable code, under [pol-EVER].
 * We **will not** expose a management interface or a datastore directly to the public internet.
 * We **will not** permit unrestricted lateral traffic between systems that have no need to talk to each other.
 
@@ -56,7 +56,7 @@ Alignment exists because the framework covers the right ground.
 
 Deliberately public services — those whose purpose is to be reached by anyone — are in scope for the rest of this
 policy, not exempt from it: they are exposed through an intended route, and everything behind them stays private. Any
-other exposure requires a recorded deviation under [pol-DEVI](devi-deviations-are-recorded.md).
+other exposure requires a recorded deviation under [pol-DEVI].
 
 ## Implemented by
 
@@ -67,3 +67,6 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DEVI]: devi-deviations-are-recorded.md
+[pol-EVER]: ever-everything-in-version-control.md

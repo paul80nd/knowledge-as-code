@@ -42,7 +42,7 @@ configuration, data pipelines and the documentation held with them.
 * We **will** add a regression test for every defect we fix, so it can only be found once.
 * We **will** treat a broken mainline as the team's first priority.
 * We **will not** merge or release over a failing check without a recorded deviation
-  ([pol-DEVI](devi-deviations-are-recorded.md)).
+  ([pol-DEVI]).
 * We **will not** disable, skip or suppress a check to make a release possible, and **will not** silence a warning
   without a recorded reason.
 * We **will not** depend on a particular person's machine to produce a build.
@@ -62,7 +62,7 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is
-recorded as a deviation under [pol-DEVI](devi-deviations-are-recorded.md), and the gate is satisfied afterwards rather than
+recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than
 waived — the exception buys time, not forgiveness.
 
 ## Implemented by
@@ -76,3 +76,5 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DEVI]: devi-deviations-are-recorded.md

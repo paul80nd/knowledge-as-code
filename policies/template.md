@@ -60,7 +60,7 @@ discovered later are erosion. If there are none, say so.
 
 ## Implemented by
 
-* [std-NNNN](/standards/…) — <what it requires>.
+* [std-NNNN] — <what it requires>.
 
 _(A policy nothing implements is a statement of intent. That is allowed — mark it aspirational and say why the standard
 doesn't exist yet.)_
@@ -68,3 +68,11 @@ doesn't exist yet.)_
 ## Review
 
 Reviewed <frequency> by <role>. Last reviewed: <date>.
+
+[pol-XXXX]: xxxx-kebab-slug.md
+[std-NNNN]: /standards/nnnn-kebab-slug.md
+
+_(Link definitions, at the very foot, sorted by label. References to another document **by its id** use **shortcut
+reference links** — write `[pol-DEVI]` in the prose and define it once here, so a rename is a one-line change. The label
+is also the display text, so it must be the id exactly as that document carries it. Where you want prose link text
+instead — "recorded as [NFRs](/nfrs)" — use an inline link and no definition.)_

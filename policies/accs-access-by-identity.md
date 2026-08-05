@@ -61,7 +61,7 @@ Alignment exists because the framework covers the right ground.
 
 Break-glass access for incident response is permitted where an individual cannot otherwise act, provided the account is
 attributable, its use is alerted and recorded, and its use is reviewed afterwards. Any other departure requires a
-recorded deviation under [pol-DEVI](devi-deviations-are-recorded.md).
+recorded deviation under [pol-DEVI].
 
 ## Implemented by
 
@@ -73,3 +73,5 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DEVI]: devi-deviations-are-recorded.md

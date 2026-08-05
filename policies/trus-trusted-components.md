@@ -41,7 +41,7 @@ images and build-time tooling; and all artifacts we deploy.
 * We **will** be able to trace a deployed artifact to the change and the build that produced it.
 * We **will not** introduce a dependency from an untrusted or unverifiable source.
 * We **will not** ship a component with a known critical vulnerability without a recorded, risk-owned deviation
-  ([pol-DEVI](devi-deviations-are-recorded.md)).
+  ([pol-DEVI]).
 * We **will not** alter a released artifact in place — a change produces a new version.
 
 ## Alignment
@@ -70,3 +70,5 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DEVI]: devi-deviations-are-recorded.md

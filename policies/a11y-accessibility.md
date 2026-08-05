@@ -37,7 +37,7 @@ them may need it — which is to say, always, since we do not know who that is.
 * We **will** publish an accessibility statement where we are required to, and keep it truthful about the gaps that
   remain.
 * We **will not** ship a change that knowingly makes accessibility worse without a recorded deviation
-  ([pol-DEVI](devi-deviations-are-recorded.md)) and a plan to correct it.
+  ([pol-DEVI]) and a plan to correct it.
 * We **will not** treat accessibility as a phase that follows delivery.
 
 ## Exceptions
@@ -58,3 +58,5 @@ an invented mapping would be worse than none._
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DEVI]: devi-deviations-are-recorded.md

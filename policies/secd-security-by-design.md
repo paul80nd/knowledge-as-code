@@ -64,7 +64,7 @@ Alignment exists because the framework covers the right ground.
 Low-risk changes to systems that hold no sensitive data and have no external exposure need no separate threat
 consideration; the secure-design principles and coding standard still apply. Where a high-risk change must proceed
 before its security work is complete, that is a recorded deviation under
-[pol-DEVI](devi-deviations-are-recorded.md), not a judgement call made in the moment.
+[pol-DEVI], not a judgement call made in the moment.
 
 ## Implemented by
 
@@ -76,3 +76,5 @@ _No implementing standard exists in this wiki yet; `implemented-by` stays empty 
 ## Review
 
 Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+
+[pol-DEVI]: devi-deviations-are-recorded.md
