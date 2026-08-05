@@ -8,9 +8,7 @@ measured-by:
 constrained-by:
 review-by:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # NFR: <Title>

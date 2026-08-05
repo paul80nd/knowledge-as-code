@@ -7,7 +7,8 @@ same regardless of who is holding the keyboard.
 
 1. Work out where it goes — [taxonomy](taxonomy.md) has a decision table.
 2. Copy the type's `template.md`.
-3. Allocate an ID (next unused number for that type — check the folder's index).
+3. Allocate an ID in the style that type uses — the next unused number, a four-character mnemonic for the concept, or a
+   slug. Check the folder's index for what is already taken; see [metadata](metadata.md#ids).
 4. Fill in the frontmatter — see [metadata](metadata.md).
 5. Write the content. Follow the template's section structure; it exists so documents of a type are comparable.
 6. Open a PR against the corpus repository. Review expectations follow the tier, below.
@@ -20,9 +21,9 @@ built from is wrong.
 **References to another document by its id use shortcut reference links** — the label is the id and doubles as the
 display text:
 
-    New headers are governed by [ADR-0013].
+    New headers are governed by [adr-0013].
 
-    [ADR-0013]: 0013-http-custom-header-naming.md
+    [adr-0013]: 0013-http-custom-header-naming.md
 
 **References with prose link text use inline links**, since the display text differs from the target:
 
@@ -32,10 +33,15 @@ Definitions go at the very foot of the document, after all prose sections, sorte
 `## Related` section exists it uses the same shortcut labels, so a path appears exactly once per document and a rename
 is a one-line change.
 
-Labels match the document's `id` in its canonical display form (`ADR-0013`). CI reconciliation against the `related:`
-frontmatter is case-insensitive.
+**The label is the id exactly as that document carries it** — `adr-0013`, `pol-DEVI`, `svc-billing-api`. The prefix is
+always lower-case; what follows takes the type's own form, so a mnemonic stays upper-case and a slug stays lower-case.
+The label is its own display text, so a label that is not the id shows the reader an id that does not exist.
 
-CI fails on an undefined label or an unused definition, and ignores fenced and indented code blocks.
+CI enforces this with `label-canonical`. It matters because reference and definition are matched case-insensitively:
+`[ADR-0013]` resolves perfectly happily, so nothing else would ever catch it. Reconciliation against the `related:`
+frontmatter is likewise case-insensitive.
+
+CI also fails on an undefined label or an unused definition, and ignores fenced and indented code blocks.
 
 ## How do I contribute…?
 

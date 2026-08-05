@@ -8,9 +8,7 @@ last-rehearsed:
 rehearsal-frequency:
 requires-access:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # <What is broken>

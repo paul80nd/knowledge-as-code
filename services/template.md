@@ -8,9 +8,7 @@ criticality:
 depends-on:
 data-stores:
 owner:
-tags:
-  - a
-  - b
+tags: [ a, b ]
 ---
 
 # <Service name>

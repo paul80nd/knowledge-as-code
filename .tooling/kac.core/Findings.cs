@@ -47,6 +47,7 @@ public static class CheckCatalogue
         new("required-section", Sev.Error, "Every required section heading is present."),
         new("link-resolves", Sev.Error, "Every internal link resolves."),
         new("undefined-label", Sev.Error, "A shortcut reference has a link definition."),
+        new("label-canonical", Sev.Error, "An id-shaped shortcut label is written as the canonical id."),
         new("related-matches-section", Sev.Error, "A mirrors-section field reconciles with its section."),
         new("id-unique", Sev.Error, "id is unique across the whole wiki."),
         new("reciprocal", Sev.Error, "A reciprocal field agrees in both directions."),

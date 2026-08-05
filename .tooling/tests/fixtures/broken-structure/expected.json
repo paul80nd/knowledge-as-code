@@ -1,8 +1,8 @@
 {
   "summary": {
-    "validated": 6,
+    "validated": 11,
     "skipped": 0,
-    "errors": 9,
+    "errors": 17,
     "warnings": 1
   },
   "findings": [
@@ -75,6 +75,62 @@
       "severity": "error",
       "check": "filename-pattern",
       "message": "filename '0008-Bad_Name.md' does not match ^\\d{4}-[a-z0-9-]+\\.md$."
+    },
+    {
+      "file": "policies/intc-label-case.md",
+      "line": null,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "link definition '[ADR-0004]' should be written as the id 'adr-0004'."
+    },
+    {
+      "file": "policies/intc-label-case.md",
+      "line": null,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "link definition '[pol-vurm]' should be written as the id 'pol-VURM'."
+    },
+    {
+      "file": "policies/intc-label-case.md",
+      "line": 14,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "reference '[pol-vurm]' should be written as the id 'pol-VURM'."
+    },
+    {
+      "file": "policies/intc-label-case.md",
+      "line": 15,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "reference '[ADR-0004]' should be written as the id 'adr-0004'."
+    },
+    {
+      "file": "policies/mexp-slug-that-is-definitely-way-too-long.md",
+      "line": null,
+      "severity": "error",
+      "check": "slug-length",
+      "message": "slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30."
+    },
+    {
+      "file": "policies/pipe-id-disagrees.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-matches-filename",
+      "message": "id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'."
+    },
+    {
+      "file": "policies/scrt-lower-case-id.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-format",
+      "message": "id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter."
+    },
+    {
+      "file": "policies/vurm-bad-id-width.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-format",
+      "message": "id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter."
     }
   ]
 }

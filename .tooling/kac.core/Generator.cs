@@ -150,7 +150,7 @@ public static class Generator
             "Values match the pattern their field declares (e.g. `tags`).", null),
         ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
         ("id", ["id-prefix", "id-format", "id-matches-filename"],
-            "`id` carries the type's prefix and, where the type is numbered, matches the filename number.", null),
+            "`id` carries the type's prefix and matches the filename's number or mnemonic.", null),
         ("id-unique", ["id-unique"], "`id` is unique across the whole wiki.", null),
         ("filename / slug-length", ["filename-pattern", "slug-length"],
             "Filename matches the pattern; the slug is within 30 characters.", null),
@@ -159,6 +159,8 @@ public static class Generator
         ("required-section", ["required-section"], "Every required section heading is present.", null),
         ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional).", null),
         ("undefined-label", ["undefined-label"], "Every shortcut reference has a link definition.", null),
+        ("label-canonical", ["label-canonical"],
+            "A shortcut label that names a document is written as that document's id.", null),
         ("related-matches-section", ["related-matches-section"],
             "A field that mirrors a section reconciles with the ids in that section.",
             t => t.AnyField(f => f.MirrorsSection is not null)),
@@ -253,11 +255,14 @@ public static class Generator
         return sb.ToString();
     }
 
+    // Dashes fill the cell, padding spaces included: |------| rather than | ---- |. Both are valid
+    // GFM and the row width is identical, but this is the form markdown formatters normalise to, and
+    // a generated file that an editor reformats on save is a permanently dirty working tree.
     private static string Sep(int[] w)
     {
         var sb = new StringBuilder("|");
         foreach (var width in w)
-            sb.Append(' ').Append(new string('-', Math.Max(3, width))).Append(" |");
+            sb.Append(new string('-', Math.Max(3, width + 2))).Append('|');
         return sb.ToString();
     }
 

@@ -20,4 +20,4 @@ rather than restating them here.
 ## Where the detail lives
 
 - [<Service>](/services/<id>.md) — <what it holds>
-- [ADR-NNNN](/adrs/NNNN-....md) — <what it decided>
+- [adr-NNNN](/adrs/NNNN-....md) — <what it decided>

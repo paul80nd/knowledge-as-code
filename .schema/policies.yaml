@@ -4,13 +4,20 @@ page: policies.md
 tier: normative
 lifecycle: living
 
+# A four-character mnemonic, upper-case in the id and lower-case in the filename — pol-VURM in
+# vurm-vulnerability-remediation.md. Policies are long-lived and cited from standards, controls and
+# processes, so the id is what a reader meets most often and it should say something. Draw the mnemonic
+# from the policy's concept rather than its current wording, because it is immutable once the policy is
+# active: retitle freely, never re-mnemonic. A change substantial enough to invalidate the mnemonic is a
+# new policy and a retirement of the old one, not an edit. Chronological types keep numbers — an ADR's id
+# records when the decision was taken, which a mnemonic cannot.
 id:
   prefix: pol
-  style: numbered
+  style: mnemonic
   width: 4
 
 filename:
-  pattern: '^\d{4}-[a-z0-9-]+\.md$'
+  pattern: '^[a-z][a-z0-9]{3}-[a-z0-9-]+\.md$'
   slug-max: 30
 
 title:

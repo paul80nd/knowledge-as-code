@@ -39,7 +39,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 <!-- BEGIN GENERATED: schema-data -->
 
 | Field            | Req | Type   | Notes                                                                                          |
-| ---------------- | --- | ------ | ---------------------------------------------------------------------------------------------- |
+|------------------|-----|--------|------------------------------------------------------------------------------------------------|
 | `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                          |
 | `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.           |
 | `status` †       | ●   | enum   | Whether the store is current or on its way out.                                                |
@@ -53,7 +53,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 **Enum values**
 
 | Field            | Values                                                                   |
-| ---------------- | ------------------------------------------------------------------------ |
+|------------------|--------------------------------------------------------------------------|
 | `tier`           | `decided` · `normative` · `descriptive` · `procedural` · `observed`      |
 | `status`         | `active` · `deprecated`                                                  |
 | `classification` | `public` · `internal` · `confidential` · `personal` · `special-category` |
@@ -61,7 +61,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 **Conditionally required**
 
 | Field       | Required when                                    |
-| ----------- | ------------------------------------------------ |
+|-------------|--------------------------------------------------|
 | `retention` | `classification in [personal, special-category]` |
 
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
@@ -89,24 +89,25 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 
 <!-- BEGIN GENERATED: checks-data -->
 
-| Check                       | Level   | What it verifies                                                                             |
-| --------------------------- | ------- | -------------------------------------------------------------------------------------------- |
-| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                          |
-| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                               |
-| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                            |
-| `required-field`            | error   | Required and conditionally-required fields are present.                                      |
-| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                               |
-| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                         |
-| `enum`                      | error   | Enum values are in range and lowercase.                                                      |
-| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                 |
-| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                   |
-| `id`                        | error   | `id` carries the type's prefix and, where the type is numbered, matches the filename number. |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                        |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                              |
-| `h1`                        | error   | The document has an H1 and, where the type declares one, it matches the title pattern.       |
-| `required-section`          | error   | Every required section heading is present.                                                   |
-| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                               |
-| `undefined-label`           | error   | Every shortcut reference has a link definition.                                              |
-| `unused-definition`         | warning | A link definition that nothing references.                                                   |
+| Check                       | Level   | What it verifies                                                                       |
+|-----------------------------|---------|----------------------------------------------------------------------------------------|
+| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                    |
+| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                         |
+| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                      |
+| `required-field`            | error   | Required and conditionally-required fields are present.                                |
+| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                         |
+| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                   |
+| `enum`                      | error   | Enum values are in range and lowercase.                                                |
+| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                           |
+| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                             |
+| `id`                        | error   | `id` carries the type's prefix and matches the filename's number or mnemonic.          |
+| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                  |
+| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                        |
+| `h1`                        | error   | The document has an H1 and, where the type declares one, it matches the title pattern. |
+| `required-section`          | error   | Every required section heading is present.                                             |
+| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                         |
+| `undefined-label`           | error   | Every shortcut reference has a link definition.                                        |
+| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.               |
+| `unused-definition`         | warning | A link definition that nothing references.                                             |
 
 <!-- END GENERATED: checks-data -->

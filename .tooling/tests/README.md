@@ -96,7 +96,7 @@ Every reachable check is covered (**29/30**; only the unreachable `type` is not 
   discovered document can reach it — effectively unreachable. It is listed as `unreachable` by the coverage gate rather
   than demanded of a fixture.
 
-> An earlier gap — `undefined-label`/`bracket-literal` only catching an *escaped* `\[ADR-0099]` because Markdig
+> An earlier gap — `undefined-label`/`bracket-literal` only catching an *escaped* `\[adr-0099]` because Markdig
 > fragments an unescaped `[` into its own literal inline — was fixed by rejoining each run of consecutive literal
 > inlines before scanning (`ScanContainer` in `kac.core/Document.cs`). The `graph` scenario now covers both from the natural
 > unescaped form.

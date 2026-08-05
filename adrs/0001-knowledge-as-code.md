@@ -3,10 +3,7 @@ id: adr-0001
 tier: decided
 status: proposed
 owner: paul.law
-tags:
-  - documentation
-  - knowledge-management
-  - tooling
+tags: [ documentation, knowledge-management, tooling ]
 ---
 
 # ADR-0001: Knowledge as code — a structured, validated wiki that AI sessions can read and contribute to
