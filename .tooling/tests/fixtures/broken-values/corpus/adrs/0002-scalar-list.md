@@ -7,7 +7,7 @@ owner: alex.doe
 tags: not-a-sequence
 ---
 
-# ADR-0002: Scalar where a list is expected
+# `adr-0002` Scalar where a list is expected
 
 > **In the context of** the list rules, **we decided** to give a list field a scalar value, **to achieve** coverage of
 > `list`, **accepting** that this document is intentionally broken.

@@ -7,7 +7,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# POL-OBSV: H1 mnemonic disagreeing with the filename
+# `pol-OBSV` H1 mnemonic disagreeing with the filename
 
 ## Purpose
 

@@ -7,7 +7,7 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# POL-PIPE: Mnemonic disagreeing with the filename
+# `pol-DEVI` Mnemonic disagreeing with the filename
 
 ## Purpose
 

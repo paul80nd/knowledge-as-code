@@ -36,8 +36,8 @@ public class DocumentTests
     // one record from another. The last capture group is the title in every pattern the schema
     // declares — whether that group is the only one or the second of two.
     [Theory]
-    [InlineData("^Policy: (.+)$", "Policy: Secrets are managed", "Secrets are managed")]
-    [InlineData(@"^ADR-(\d{4}): (.+)$", "ADR-0001: Knowledge as code", "Knowledge as code")]
+    [InlineData(@"^pol-[A-Z][A-Z0-9]{3} (.+)$", "`pol-SCRT` Secrets are managed", "Secrets are managed")]
+    [InlineData(@"^adr-\d{4} (.+)$", "`adr-0001` Knowledge as code", "Knowledge as code")]
     [InlineData(null, "A type that declares no pattern", "A type that declares no pattern")]
     public void TitleText_strips_the_boilerplate_the_h1_pattern_declares(string? pattern, string h1, string expected)
     {
@@ -47,5 +47,20 @@ public class DocumentTests
 
         Assert.NotNull(doc);
         Assert.Equal(expected, doc.TitleText());
+    }
+
+    // The whole basis of h1-matches-id: Md.PlainText flattens a code span to its content, so the two
+    // H1s below are indistinguishable as strings and only the AST separates them. If this ever stops
+    // holding, the check silently accepts an id written as prose.
+    [Theory]
+    [InlineData("# `pol-SCRT` Secrets are managed", "pol-SCRT")]
+    [InlineData("# pol-SCRT Secrets are managed", null)]
+    public void H1CodeSpan_sees_what_the_flattened_H1_cannot(string h1, string? expected)
+    {
+        var doc = Doc.Parse("policies/scrt-a-title.md", $"---\nid: pol-SCRT\n---\n\n{h1}\n", new Schema());
+
+        Assert.NotNull(doc);
+        Assert.Equal("pol-SCRT Secrets are managed", doc.H1);   // identical either way
+        Assert.Equal(expected, doc.H1CodeSpan);                 // …and only this tells them apart
     }
 }

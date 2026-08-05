@@ -14,7 +14,7 @@ owner: paul.law
 tags: [ change-management, source-control, traceability ]
 ---
 
-# POL-EVER: Everything is in version control
+# `pol-EVER` Everything is in version control
 
 ## Purpose
 

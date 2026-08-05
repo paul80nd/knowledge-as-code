@@ -13,7 +13,7 @@ owner: paul.law
 tags: [ change-management, deployment, release-management ]
 ---
 
-# POL-PIPE: Changes reach production through the pipeline
+# `pol-PIPE` Changes reach production through the pipeline
 
 ## Purpose
 

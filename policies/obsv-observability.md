@@ -13,7 +13,7 @@ owner: paul.law
 tags: [ alerting, logging, monitoring, observability ]
 ---
 
-# POL-OBSV: Systems are observable and actively monitored
+# `pol-OBSV` Systems are observable and actively monitored
 
 ## Purpose
 

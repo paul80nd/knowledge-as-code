@@ -337,32 +337,25 @@ public static class Validator
             return;
         }
 
-        var m = System.Text.RegularExpressions.Regex.Match(d.H1, t.H1Pattern);
-        if (!m.Success)
+        if (!System.Text.RegularExpressions.Regex.IsMatch(d.H1, t.H1Pattern))
         {
             err("h1-pattern", $"H1 '{d.H1}' does not match {t.H1Pattern}.", d.H1Line);
             return;
         }
 
-        // The H1 carries the id, so it is held to the filename exactly as the id itself is — digits for
-        // a numbered type, the mnemonic for a mnemonic one. The mnemonic comparison is case-insensitive
-        // because the H1 upper-cases what the filename carries lower-case: POL-SCRT in scrt-…md.
-        if (!t.TitleMatchesId || m.Groups.Count <= 1 || !present.ContainsKey("id")) return;
+        // A type that carries its id in the H1 writes it as a code span — "# `pol-VURM` Secrets are
+        // managed" — so it reads as a handle rather than competing with the title. The check anchors on
+        // the AST node rather than the pattern: Md.PlainText flattens a code span to its content, so the
+        // matched string cannot tell `pol-VURM` from a bare pol-VURM, and the H1 pattern therefore
+        // describes only the shape the title takes after it. Compared against the frontmatter id rather
+        // than the filename, because the id is what every citation uses and what the label must say —
+        // and id-matches-filename already ties that back to the file.
+        if (!t.IdAsCode || !present.TryGetValue("id", out var idNode) || Scalar(idNode) is not { } id) return;
 
-        var inH1 = m.Groups[1].Value;
-        if (t.IdStyle == "mnemonic")
-        {
-            var fileMnemonic = FilenameMnemonic(d.Rel, t.IdWidth);
-            if (fileMnemonic is not null && !inH1.Equals(fileMnemonic, StringComparison.OrdinalIgnoreCase))
-                err("h1-matches-id",
-                    $"H1 mnemonic '{inH1}' does not match filename mnemonic '{fileMnemonic}'.", d.H1Line);
-        }
-        else
-        {
-            var fileNum = FilenameNumber(d.Rel);
-            if (fileNum is not null && inH1 != fileNum)
-                err("h1-matches-id", $"H1 number '{inH1}' does not match filename number '{fileNum}'.", d.H1Line);
-        }
+        if (d.H1CodeSpan is null)
+            err("h1-matches-id", $"H1 must open with the document's id as a code span — `{id}`.", d.H1Line);
+        else if (!string.Equals(d.H1CodeSpan, id, StringComparison.Ordinal))
+            err("h1-matches-id", $"H1 id '{d.H1CodeSpan}' does not match the document's id '{id}'.", d.H1Line);
     }
 
     private static void CheckLinks(Doc d, Schema schema, string repoRoot, Action<string, string, int?> err,

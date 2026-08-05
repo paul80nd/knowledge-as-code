@@ -11,7 +11,7 @@ owner: paul.law
 tags: [ capacity, non-functional-requirements, performance ]
 ---
 
-# POL-PERF: Performance targets are stated and verified
+# `pol-PERF` Performance targets are stated and verified
 
 ## Purpose
 

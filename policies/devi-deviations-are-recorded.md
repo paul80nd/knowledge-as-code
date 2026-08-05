@@ -12,7 +12,7 @@ owner: paul.law
 tags: [ exceptions, governance, risk-acceptance ]
 ---
 
-# POL-DEVI: Deviations are recorded, owned and time-bound
+# `pol-DEVI` Deviations are recorded, owned and time-bound
 
 ## Purpose
 

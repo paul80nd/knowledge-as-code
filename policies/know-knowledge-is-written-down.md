@@ -11,7 +11,7 @@ owner: paul.law
 tags: [ documentation, knowledge-management ]
 ---
 
-# POL-KNOW: Knowledge is written down and kept with what it describes
+# `pol-KNOW` Knowledge is written down and kept with what it describes
 
 ## Purpose
 

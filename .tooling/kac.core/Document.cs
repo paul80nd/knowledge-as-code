@@ -33,6 +33,12 @@ public class Doc
 
     public string? H1;
     public int H1Line;
+
+    // The content of a code span opening the H1 — the `pol-VURM` in "# `pol-VURM` Secrets are managed"
+    // — or null when the H1 does not start with one. Kept separately because Md.PlainText flattens a
+    // code span to its content, deliberately and for every inline in the corpus, so H1 alone cannot
+    // tell an id written as code from the same characters written as prose.
+    public string? H1CodeSpan;
     public readonly List<string> H2 = [];
     public readonly List<LinkRef> Links = [];
     public readonly List<string> DefinedLabels = [];
@@ -83,6 +89,7 @@ public class Doc
                 case 1 when doc.H1 is null:
                     doc.H1 = txt;
                     doc.H1Line = h.Line + 1;
+                    doc.H1CodeSpan = (h.Inline?.FirstChild as CodeInline)?.Content;
                     break;
                 case 2:
                     doc.H2.Add(txt);

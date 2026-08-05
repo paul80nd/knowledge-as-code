@@ -43,7 +43,7 @@ public static class CheckCatalogue
         new("slug-length", Sev.Error, "The slug is within the type's slug-max."),
         new("h1", Sev.Error, "The document has an H1."),
         new("h1-pattern", Sev.Error, "The H1 matches the type's h1-pattern."),
-        new("h1-matches-id", Sev.Error, "The H1's number matches the id."),
+        new("h1-matches-id", Sev.Error, "The H1 opens with the document's id, written as a code span."),
         new("required-section", Sev.Error, "Every required section heading is present."),
         new("link-resolves", Sev.Error, "Every internal link resolves."),
         new("undefined-label", Sev.Error, "A shortcut reference has a link definition."),

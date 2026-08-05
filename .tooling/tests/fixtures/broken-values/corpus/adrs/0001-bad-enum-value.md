@@ -5,7 +5,7 @@ status: Draft
 owner: alex.doe
 ---
 
-# ADR-0001: Bad enum value
+# `adr-0001` Bad enum value
 
 > **In the context of** the enum rules, **we decided** to use a status that is both out of range and capitalised, **to
 > achieve** coverage of `enum` and `enum-lowercase`, **accepting** that this document is intentionally broken.

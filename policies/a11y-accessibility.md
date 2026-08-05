@@ -10,7 +10,7 @@ owner: paul.law
 tags: [ accessibility, inclusive-design, legal-obligation ]
 ---
 
-# POL-A11Y: Software we build is usable by everyone
+# `pol-A11Y` Software we build is usable by everyone
 
 ## Purpose
 
