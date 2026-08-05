@@ -1,0 +1,42 @@
+# Shared editor conventions, so a save does not fight the generators.
+#
+# EditorConfig covers whitespace, not formatting style. It cannot pin how a formatter
+# renders a markdown table — see the note under [*.md] for what actually guards that.
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+[*.md]
+indent_size = 2
+max_line_length = 120
+
+# The corpus wraps prose by hand at ~120 and uses no trailing-space hard breaks, so
+# trimming is safe — but reflowing is not. A formatter that rewraps paragraphs would
+# rewrite most of the corpus on first save and bury every real diff after it.
+ij_markdown_wrap_text_if_long = false
+ij_markdown_keep_line_breaks_inside_text_blocks = true
+
+# kac writes table separators as |------|, dashes filling the padding cells, because that
+# is the form the JetBrains formatter normalises to. There is no vendor-neutral property
+# for this, so a formatter preferring | ---- | (Prettier, for one) will still disagree and
+# this file cannot stop it. CI is the real guard: `kac index --check` fails on any generated
+# file that differs from what the generator would write.
+ij_markdown_format_tables = true
+
+[*.{yaml,yml}]
+indent_size = 2
+
+[*.json]
+indent_size = 2
+
+[*.cs]
+indent_size = 4
+
+[*.{csproj,slnx}]
+indent_size = 2
