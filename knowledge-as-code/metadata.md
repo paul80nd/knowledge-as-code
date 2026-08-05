@@ -19,8 +19,8 @@ them sparingly, and derive rather than state wherever possible.
 5. **Lists use YAML sequences** — ADO renders either form as separate cells, so the choice is about reading the source.
    `tags` takes the compact flow form, `tags: [ a, b ]`: it is search metadata rather than content, and a block list
    gives the least interesting field in the block the most lines. Every other list stays block, one entry per line —
-   entries stay individually reviewable in a diff, and a validation finding can point at the entry that caused it
-   rather than at the field.
+   entries stay individually reviewable in a diff, and a validation finding can point at the entry that caused it rather
+   than at the field.
 6. **Lists are alphabetical.** No list field's sequence carries meaning, so alphabetical is the order that scan-reads
    and the one two authors will agree on without discussion. Numbers inside an entry compare as numbers, so
    `ISO27001:2022 A.8.7` comes before `ISO27001:2022 A.8.29`. CI warns on a list that is out of order.
@@ -32,16 +32,22 @@ them sparingly, and derive rather than state wherever possible.
   document's type from it, so the mapping is a rule rather than a lookup.
 * **ID prefix** — singular, since an ID names a single document. `adr-0017`, `std-0004`.
 
-* **ID style** — set per type by the schema, and one of two shapes.
+* **ID style** — set per type by the schema, and one of three shapes.
 
-  *Numbered* (`adr-0017`) suits anything chronological: the id records the order things happened, which is information a
-  mnemonic cannot carry.
+  *Numbered* (`adr-0017`) suits anything chronological: the id records the order things happened, which is information
+  neither of the others can carry.
+
+  *Slug* (`svc-billing-api`) suits anything with a natural stable name, where a number would be an arbitrary handle for
+  something already well identified.
 
   *Mnemonic* (`pol-VURM`, filed as `vurm-vulnerability-remediation.md`) suits a small, long-lived set that other
   documents cite constantly — the id is what a reader meets most often, so it should say something. Upper-case in the
   id, lower-case in the filename, and its first letter matches the slug's so the folder still reads alphabetically. A
   mnemonic makes a claim a number never does, so it is drawn from the concept rather than the current wording, and it is
   immutable once the document is active.
+
+  The glossary is the exception that proves the rule: one document rather than a collection, so its id is the literal
+  `glossary` and there is nothing to discriminate between.
 
 * **Slug length** — the filename slug (excluding the `NNNN-` or `mnem-` prefix) is at most 30 characters. The filename
   is a handle, not a title: it identifies the document at a glance while the H1 carries the full descriptive title. CI
@@ -95,26 +101,19 @@ Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing
 
 Numeric IDs are zero-padded to four digits, allocated sequentially, and **never reused** — if a document is withdrawn
 before acceptance, its number is retired. Mnemonic IDs are allocated by meaning rather than in sequence, so there is no
-next one to take: pick a four-character mnemonic for the concept that no document of that type already holds. Services,
-explanations and glossary terms use slugs, since they have natural stable names.
+next one to take: pick a four-character mnemonic for the concept that no document of that type already holds. Slugs are
+simply the thing's own name.
 
 The ID is the anchor for every cross-reference in the wiki, and it is what a shortcut link label must say. Filenames may
 be corrected; IDs may not — which binds hardest on a mnemonic, because unlike a number it makes a claim that can go
 stale. A document whose meaning has moved that far is replaced and the old one retired, not renamed.
 
-**Types with an ID carry it in the H1**, written as a code span and followed by the title — ``# `adr-0017` …``,
-``# `pol-VURM` …``. You arrive at these documents from a citation, so the first line confirms you are where the
-citation meant to send you, and the code span makes it read as a handle rather than competing with the title. The ID
-appears exactly as the frontmatter carries it — the same form a shortcut link label must use — so there is one casing
-of an ID across the wiki rather than a second invented for headings.
-
-`h1-matches-id` holds the H1 to the `id` field. It reads the code span from the parsed document rather than matching
-text, because `Md.PlainText` flattens a code span to its content: ``# `pol-VURM` …`` and `# pol-VURM …` are the same
-string once flattened, and only the syntax tree tells them apart. The `h1-pattern` a type declares therefore describes
-the H1 *after* that flattening, and never mentions the backticks.
-
-Types identified by a slug — services, explanations, glossary terms — have no discriminator worth repeating and title
-their H1 plainly. Generated indexes strip the ID back off, since they already carry it in a column of its own.
+**Numbered and mnemonic types carry the ID in the H1**, as a code span followed by the title — ``# `adr-0017` …``,
+``# `pol-VURM` …``. You arrive at these documents from a citation, so the first line confirms you are where the citation
+meant to send you, and the code span makes the ID read as a handle rather than competing with the title. It appears
+exactly as the frontmatter carries it, so there is one casing of an ID across the wiki rather than a second invented for
+headings, and CI holds the two to each other. Slug types have no discriminator worth repeating and title their H1
+plainly. Generated indexes strip the ID back off either way, since they carry it in a column of its own.
 
 ## Per-type fields
 

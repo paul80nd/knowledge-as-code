@@ -15,9 +15,9 @@ The decision to work this way is recorded in [adr-0001](/adrs/0001-knowledge-as-
 
 ## The problem
 
-Engineering knowledge is spread thin. Architectural reasoning lives here; functional detail lives in ADO epics and features;
-operational know-how lives in people's heads or in a Teams message from eight months ago; the answer to "why does the
-build fail when I do X" is rediscovered roughly every quarter by whoever hits it next.
+Engineering knowledge is spread thin. Architectural reasoning lives here; functional detail lives in ADO epics and
+features; operational know-how lives in people's heads or in a Teams message from eight months ago; the answer to "why
+does the build fail when I do X" is rediscovered roughly every quarter by whoever hits it next.
 
 AI coding sessions make this sharper in both directions. A session that doesn't know our standards will confidently
 produce work that violates them. A session that *discovers* something useful has nowhere to put it, so the discovery
@@ -35,8 +35,8 @@ Knowledge is treated as code:
 * **Readable and writable by agents.** Sessions consult it before working and contribute back what they learn.
 
 The last point is the one that changes the character of the thing. A wiki that only humans write grows at the rate
-humans remember to write. A wiki that sessions can also write to grows at the rate work happens which is why the review
-model below matters more than it would otherwise.
+humans remember to write. A wiki that sessions can also write to grows at the rate work happens — which is why the
+review model below matters more than it otherwise would.
 
 ## The normative hierarchy
 
@@ -80,7 +80,7 @@ can contradict each other is a defect waiting to happen.
 ### Why Observed exists
 
 The most important tier is the one that carries the least authority. Capture has to be nearly free or it doesn't
-happen ... nobody writes up a gotcha if doing so requires a template, an owner and two reviewers. So observations are
+happen — nobody writes up a gotcha if doing so requires a template, an owner and two reviewers. So observations are
 recorded with no review at all, marked as unverified, and expire on their own if nothing promotes them.
 
 Promotion is where the rigour lives. A [discovery](/discoveries) becomes an [FAQ](/faqs) only when a human confirms it,

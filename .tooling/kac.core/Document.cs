@@ -34,10 +34,9 @@ public class Doc
     public string? H1;
     public int H1Line;
 
-    // The content of a code span opening the H1 — the `pol-VURM` in "# `pol-VURM` Secrets are managed"
-    // — or null when the H1 does not start with one. Kept separately because Md.PlainText flattens a
-    // code span to its content, deliberately and for every inline in the corpus, so H1 alone cannot
-    // tell an id written as code from the same characters written as prose.
+    // The content of a code span opening the H1 — the `pol-VURM` in "# `pol-VURM` Secrets are managed" —
+    // or null when the H1 does not start with one. Kept separately because Md.PlainText flattens a code
+    // span to its content, so H1 alone cannot tell an id written as code from one written as prose.
     public string? H1CodeSpan;
     public readonly List<string> H2 = [];
     public readonly List<LinkRef> Links = [];
@@ -143,11 +142,9 @@ public class Doc
             where ((YamlScalarNode)kv.Key).Value == key
             select (kv.Value as YamlScalarNode)?.Value).FirstOrDefault();
 
-    // The H1 with the type's own boilerplate stripped: "Policy: Secrets are managed" reads as
-    // "Secrets are managed" in an index that is already headed "Policy Index". Every h1-pattern in the
-    // schema captures the title as its LAST group — `^Policy: (.+)$` has only that one, `^ADR-(\d{4}):
-    // (.+)$` captures the number first — so the last group is the title wherever a pattern is declared.
-    // A type with no pattern has no boilerplate to strip and keeps its H1 whole.
+    // The H1 with the id stripped off: "`pol-SCRT` Secrets are managed" reads as "Secrets are managed"
+    // in an index that already carries the id in a column of its own. Every h1-pattern captures the
+    // title as its last group, so that is what is taken. A type with no pattern keeps its H1 whole.
     public string TitleText()
     {
         if (Type?.H1Pattern is null || H1 is null) return H1 ?? "";

@@ -66,7 +66,7 @@ Beyond `fields`, each type file declares:
 | `type` / `folder` / `page` | Identity, and where the type lives                                                                               |
 | `label`                    | The singular display name — "Policy", "ADR" — used to head the generated index                                   |
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
-| `id`                       | Prefix, style (`numbered` or `slug`), and width                                                                  |
+| `id`                       | Prefix, style (`numbered`, `slug`, `mnemonic` or `literal`), and width                                           |
 | `filename`                 | Pattern and slug length limit                                                                                    |
 | `title`                    | H1 pattern, and `id-as-code` where the H1 opens with the ID as a code span                                       |
 | `sections`                 | Required and optional H2s — drives template generation and structural validation                                 |
@@ -77,6 +77,6 @@ Beyond `fields`, each type file declares:
 
 * **`standards.yaml` `axis` values are unresolved** — four different formulations exist across the corpus. The schema
   currently carries the `standards.md` version with a `TODO` note. Settle it before generating.
-* **Numbered vs slug ids** are assigned per type below. Numbered where documents accrete in sequence and the number is
-  useful in navigation; slug where the thing has a natural stable name. Worth a review pass — the split is a convention,
-  not a derivation.
+* **ID styles** are assigned per type. Numbered where documents accrete in sequence and the number is useful in
+  navigation; slug where the thing has a natural stable name; mnemonic where a small, heavily-cited set benefits from an
+  id that says something. Worth a review pass — the split is a convention, not a derivation.

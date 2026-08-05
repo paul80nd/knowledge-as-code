@@ -6,16 +6,13 @@ same regardless of who is holding the keyboard.
 ## The shape of a contribution
 
 1. Work out where it goes — [taxonomy](taxonomy.md) has a decision table.
-2. Copy the type's `template.md`.
+2. Copy the type's `template.md`. It marks the parts you supply as `{{placeholder}}` and fences its own guidance
+   between `DELETE FROM HERE` and `DELETE TO HERE` comments; a finished document has neither left in it.
 3. Allocate an ID in the style that type uses — the next unused number, a four-character mnemonic for the concept, or a
    slug. Check the folder's index for what is already taken; see [metadata](metadata.md#ids).
 4. Fill in the frontmatter — see [metadata](metadata.md).
 5. Write the content. Follow the template's section structure; it exists so documents of a type are comparable.
 6. Open a PR against the corpus repository. Review expectations follow the tier, below.
-
-Every template marks the parts you supply as `{{placeholder}}`, and fences its own guidance between `DELETE FROM HERE`
-and `DELETE TO HERE` comments. A finished document has neither left in it. Braces rather than angle brackets because
-`<Title>` is a valid HTML tag shape, and a markdown renderer swallows it rather than showing it to you.
 
 Generated content — indexes, digests, reports — is not edited by hand. If an index looks wrong, the frontmatter it was
 built from is wrong.

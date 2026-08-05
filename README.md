@@ -27,14 +27,15 @@ Which files fall on which side is declared in
 
 |                |                                                                                                              |
 |----------------|--------------------------------------------------------------------------------------------------------------|
-| `kac validate` | ~30 checks — frontmatter against schema, identity, structure, link resolution, graph reciprocity             |
+| `kac validate` | 33 checks — frontmatter against schema, identity, structure, link resolution, graph reciprocity              |
 | `kac index`    | Generates `<type>/INDEX.md` and the schema/checks tables inside each type root page                          |
 | `kac checks`   | Lists every check the validator implements                                                                   |
 | Tests          | Three layers — unit (`kac.tests`), Reqnroll feature specs (`kac.features`), golden fixtures (`kac-tests.cs`) |
-| Proven types   | **ADRs only.** The other sixteen schemas are written but have never validated a real document                |
+| Proven types   | **ADRs and policies.** The other fifteen schemas are written but have never validated a real document        |
 
-That last row is the honest limit. The schema will be wrong in ways only real content reveals, and only one type has met
-real content so far. Treat the other sixteen as drafts.
+That last row is the honest limit. The schema will be wrong in ways only real content reveals, and two types have met it
+so far — policies alone forced the mnemonic id style, a category field and two changes to how a title is written. Treat
+the other fifteen as drafts.
 
 ## Provenance
 
@@ -88,9 +89,9 @@ kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
 .tooling/              # the kac tool: entrypoint + kac.core library, plus its tests and fixtures
 ```
 
-The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.mechanism.lock` — so that the markdown stays the visible
-half of the repository, and so an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
-What remains in `knowledge-as-code/` is documentation — bar `manifest.yaml`, which stays because the README and
+The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.mechanism.lock` — so that the markdown stays the visible half
+of the repository, and so an Azure DevOps wiki published from this tree shows knowledge rather than machinery. What
+remains in `knowledge-as-code/` is documentation — bar `manifest.yaml`, which stays because the README and
 `automation.md` both cite it as the authority on the shared/local split.
 
 Adding a knowledge type is adding a YAML file to `.schema/`, not editing the tool.

@@ -16,11 +16,14 @@ indent_style = space
 indent_size = 2
 max_line_length = 120
 
-# The corpus wraps prose by hand at ~120 and uses no trailing-space hard breaks, so
-# trimming is safe — but reflowing is not. A formatter that rewraps paragraphs would
-# rewrite most of the corpus on first save and bury every real diff after it.
-ij_markdown_wrap_text_if_long = false
-ij_markdown_keep_line_breaks_inside_text_blocks = true
+# Reflow prose to the 120 margin, so hand-written sections match what the generators
+# emit. Both properties are needed: wrap_text_if_long breaks over-long lines, and
+# keep_line_breaks = false lets the short lines below them be pulled back up. Setting
+# only the first gives ragged output rather than a reflow.
+#
+# The corpus uses no trailing-space hard breaks, so rewrapping does not eat any.
+ij_markdown_wrap_text_if_long = true
+ij_markdown_keep_line_breaks_inside_text_blocks = false
 
 # kac writes table separators as |------|, dashes filling the padding cells, because that
 # is the form the JetBrains formatter normalises to. There is no vendor-neutral property

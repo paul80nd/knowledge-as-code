@@ -18,10 +18,9 @@ public class FieldSpec
     public string? Pattern;
     public string? MirrorsSection; // section whose ids this field must mirror
 
-    // Two audiences, deliberately separate. `Description` is what a reader needs at a glance and is
-    // what the generated Metadata table renders; `Notes` is the longer why-it-exists, which belongs
-    // in the schema where there is room for it. A field with only Notes falls back to them, so the
-    // two can be adopted a schema at a time rather than all at once.
+    // Two audiences, deliberately separate. `Description` is what a reader needs at a glance and is what
+    // the generated Metadata table renders; `Notes` is the longer why-it-exists, which belongs in the
+    // schema where there is room for it. A field with only Notes falls back to them.
     public string? Description;
     public string? Notes;
 
@@ -45,10 +44,10 @@ public class TypeSchema
     public string? IndexSort;
     public readonly List<Dictionary<string, object>> Rules = [];
 
-    // How a single document of this type is named in generated prose — "Policy", "ADR", "NFR". The
-    // schema declares it rather than the generator deriving it, because there is no rule that turns
-    // `policy` into "Policy" and `adr` into "ADR" without knowing which names are initialisms. The
-    // fallbacks exist so a type schema that predates the field still renders something sensible.
+    // How a single document of this type is named in generated prose — "Policy", "ADR", "NFR". Declared
+    // by the schema rather than derived, because no rule turns `policy` into "Policy" and `adr` into
+    // "ADR" without knowing which names are initialisms. The fallbacks keep a schema that omits `label`
+    // rendering something sensible.
     public string DisplayName =>
         !string.IsNullOrEmpty(Label) ? Label
         : !string.IsNullOrEmpty(TypeName) ? char.ToUpperInvariant(TypeName[0]) + TypeName[1..]

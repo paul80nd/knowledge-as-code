@@ -75,10 +75,9 @@ public static class Commands
         }
 
         // The schema and checks blocks derive from the schema alone, so every type gets them whether or
-        // not it holds records yet. Regenerating only populated types meant an unmigrated page kept
-        // whatever had been hand-written into its markers — text nothing checked, describing fields and
-        // checks that were often not the ones the schema declared. The first record for a type would
-        // then rewrite the page and expose the drift, which is exactly when nobody wants the surprise.
+        // not it holds records yet. Restricting this to populated types would leave the markers on an
+        // empty page holding hand-written text nothing checks, to be overwritten by whoever adds the
+        // type's first record — surfacing the drift at the least convenient moment.
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key))
         {
             var pagePath = Path.Combine(repoRoot, t.Page);

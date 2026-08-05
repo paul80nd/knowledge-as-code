@@ -344,11 +344,10 @@ public static class Validator
         }
 
         // A type that carries its id in the H1 writes it as a code span — "# `pol-VURM` Secrets are
-        // managed" — so it reads as a handle rather than competing with the title. The check anchors on
-        // the AST node rather than the pattern: Md.PlainText flattens a code span to its content, so the
-        // matched string cannot tell `pol-VURM` from a bare pol-VURM, and the H1 pattern therefore
-        // describes only the shape the title takes after it. Compared against the frontmatter id rather
-        // than the filename, because the id is what every citation uses and what the label must say —
+        // managed". The check anchors on the AST node rather than the matched text, because Md.PlainText
+        // flattens a code span to its content and so cannot tell `pol-VURM` from a bare pol-VURM; the H1
+        // pattern therefore describes the flattened form and never mentions the backticks. Compared
+        // against the frontmatter id rather than the filename, since the id is what every citation uses
         // and id-matches-filename already ties that back to the file.
         if (!t.IdAsCode || !present.TryGetValue("id", out var idNode) || Scalar(idNode) is not { } id) return;
 
