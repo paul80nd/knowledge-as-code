@@ -1,5 +1,5 @@
 ---
-id: prc-<slug>
+id: prc-{{slug}}
 tier: procedural
 status: draft
 applies-to:
@@ -10,7 +10,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# <Process name>
+# {{Process name}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -33,9 +33,9 @@ The trigger. If you are here because something is broken, you probably want a [r
 
 ## Prerequisites
 
-* Access to <system> — request from <who>.
-* <Tool> installed at version <x>.
-* <Prior process> completed.
+* Access to {{system}} — request from {{who}}.
+* {{Tool}} installed at version {{x}}.
+* {{Prior process}} completed.
 
 _(Everything the reader needs before step 1. "Obtain the file from the repository owner" is not useful to someone who
 doesn't know who that is — name them, or name the role.)_

@@ -12,7 +12,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# <The symptom, as customers experienced it>
+# {{The symptom, as customers experienced it}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -46,7 +46,7 @@ detected, when it was understood, and when it was resolved; those are four diffe
 In customer terms, not system terms. How many, for how long, what they could not do. Include revenue or contractual
 consequence where it is known, and say so where it isn't.
 
-Measured against [nfr-NNNN](/nfrs/…): <met / breached>. _(If no NFR covered this, that is itself a finding.)_
+Measured against [nfr-NNNN](/nfrs/…): {{met / breached}}. _(If no NFR covered this, that is itself a finding.)_
 
 ## Root cause
 
@@ -54,7 +54,7 @@ The one thing that, had it been different, would have prevented this. Resist lis
 
 ## Contributing factors
 
-* <Condition that made it more likely, or harder to detect, or slower to fix.>
+* {{Condition that made it more likely, or harder to detect, or slower to fix.}}
 
 _(There is usually one root cause and several contributing factors. The factors are where most of the improvement
 lives.)_

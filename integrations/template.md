@@ -1,5 +1,5 @@
 ---
-id: int-<slug>
+id: int-{{slug}}
 tier: descriptive
 status: active
 vendor:
@@ -10,7 +10,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# <Integration name>
+# {{Integration name}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -31,12 +31,12 @@ The role it plays, and which parts of the product would stop working without it.
 
 ## Contract
 
-|              |                                     |
-|--------------|-------------------------------------|
-| **Protocol** | REST / SFTP / webhook / GraphQL / … |
-| **Endpoint** |                                     |
-| **Auth**     | <mechanism — never the credentials> |
-| **Docs**     | <link to their documentation>       |
+|              |                                       |
+|--------------|---------------------------------------|
+| **Protocol** | REST / SFTP / webhook / GraphQL / …   |
+| **Endpoint** |                                       |
+| **Auth**     | {{mechanism — never the credentials}} |
+| **Docs**     | {{link to their documentation}}       |
 
 _(Nothing secret goes in this wiki. Name the mechanism and where the credential is stored, not the credential.)_
 

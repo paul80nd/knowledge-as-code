@@ -12,7 +12,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# Standard: <Title>
+# Standard: {{Title}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -54,10 +54,10 @@ copy-paste accurate.
 
 ```
 ✅ Good
-<example>
+{{example}}
 
 ❌ Avoid
-<example>  — why it's wrong
+{{example}}  — why it's wrong
 ```
 
 ## Conformance checklist
@@ -73,7 +73,7 @@ makes the standard *usable* rather than merely readable.
 One or two lines on *why*, then link down to the ADR(s) that decided it. Do not restate the ADR's full reasoning — the
 ADR owns the "why"; this standard owns the "what". Link, don't duplicate.
 
-- [adr-NNNN] — <what it decided>
+- [adr-NNNN] — {{what it decided}}
 
 ## Changelog
 

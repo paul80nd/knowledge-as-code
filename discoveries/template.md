@@ -1,5 +1,5 @@
 ---
-id: dsc-<slug>
+id: dsc-{{slug}}
 tier: observed
 status: open
 source: human
@@ -12,7 +12,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# <What you noticed, in one line>
+# {{What you noticed, in one line}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 

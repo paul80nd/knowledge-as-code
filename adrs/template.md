@@ -7,7 +7,7 @@ owner:
 related: [ adr-AAAA, adr-BBBB, adr-CCCC ]
 ---
 
-# ADR-NNNN: <Title>
+# ADR-NNNN: {{Title}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -22,8 +22,8 @@ related: [ adr-AAAA, adr-BBBB, adr-CCCC ]
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
-> **In the context of** <use case>, **facing** <concern>, **we decided** <chosen option>, **rather than**
-> <alternatives>, **to achieve** <quality / benefit>, **accepting** <downside>.
+> **In the context of** {{use case}}, **facing** {{concern}}, **we decided** {{chosen option}}, **rather than**
+> {{alternatives}}, **to achieve** {{quality / benefit}}, **accepting** {{downside}}.
 
 _(One tight Y-statement, keeping all six moves. Make every clause a phrase, not a sentence, and name rejected options in
 a few words — the full forces, alternatives, and consequences live in the sections below, so the summary points at them
@@ -43,8 +43,8 @@ paragraphs.
 
 ## Alternatives Considered
 
-* **<Option name>** — rejected: why.
-* **<Option name>** — rejected: why.
+* **{{Option name}}** — rejected: why.
+* **{{Option name}}** — rejected: why.
 
 Include the options that were genuinely weighed, not every theoretical option. One or two sentences per option on why it
 lost out. If there were no real alternatives ("we use Azure because we are on Azure"), say so plainly rather than
@@ -62,7 +62,7 @@ readers need to know about. Cover at least:
 
 ## Related
 
-* [adr-NNNN] — <what it decided, and why it matters here>.
+* [adr-NNNN] — {{what it decided, and why it matters here}}.
 * [adr-NNNN] — <…>.
 
 _(One line each on **how** the two relate — the annotation is the value, not the link. Cite rather than restate: if
@@ -70,7 +70,7 @@ another ADR already made an argument, link it instead of repeating it.)_
 
 ## References
 
-* [RFC NNNN](https://www.rfc-editor.org/rfc/rfcNNNN) — <what it covers>.
+* [RFC NNNN](https://www.rfc-editor.org/rfc/rfcNNNN) — {{what it covers}}.
 
 _(External sources only, as inline links — they are unaffected by renames. Omit the section if there are none.)_
 

@@ -13,6 +13,10 @@ same regardless of who is holding the keyboard.
 5. Write the content. Follow the template's section structure; it exists so documents of a type are comparable.
 6. Open a PR against the corpus repository. Review expectations follow the tier, below.
 
+Every template marks the parts you supply as `{{placeholder}}`, and fences its own guidance between `DELETE FROM HERE`
+and `DELETE TO HERE` comments. A finished document has neither left in it. Braces rather than angle brackets because
+`<Title>` is a valid HTML tag shape, and a markdown renderer swallows it rather than showing it to you.
+
 Generated content — indexes, digests, reports — is not edited by hand. If an index looks wrong, the frontmatter it was
 built from is wrong.
 

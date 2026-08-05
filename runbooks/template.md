@@ -1,5 +1,5 @@
 ---
-id: rbk-<slug>
+id: rbk-{{slug}}
 tier: procedural
 status: draft
 applies-to:
@@ -11,7 +11,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# <What is broken>
+# {{What is broken}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -35,21 +35,21 @@ _(Symptoms come first because that is how the reader finds this document.)_
 
 ## Immediate actions
 
-1. <Stop the bleeding.>
-2. <Notify whom.>
+1. {{Stop the bleeding.}}
+2. {{Notify whom.}}
 
 _(Before diagnosis. Contain first, understand afterwards.)_
 
 ## Diagnosis
 
-**Is <condition>?**
+**Is {{condition}}?**
 
-* **Yes** → <action>, then go to [Resolution](#resolution).
+* **Yes** → {{action}}, then go to [Resolution](#resolution).
 * **No** → continue.
 
-**Is <next condition>?**
+**Is {{next condition}}?**
 
-* **Yes** → <action>.
+* **Yes** → {{action}}.
 * **No** → [escalate](#escalation).
 
 _(A tree, not prose. Each branch ends in a resolution or an escalation — never in a dead end.)_
@@ -60,9 +60,9 @@ Steps to restore service, imperative and numbered. Then how to confirm it is act
 
 ## Escalation
 
-| When        | Who           | How       |
-|-------------|---------------|-----------|
-| <condition> | <name / role> | <channel> |
+| When          | Who             | How         |
+|---------------|-----------------|-------------|
+| {{condition}} | {{name / role}} | {{channel}} |
 
 _(Near the top of the page if this document is long — it must be findable without scrolling.)_
 

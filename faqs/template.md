@@ -12,7 +12,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# <The symptom, as you would encounter it>
+# {{The symptom, as you would encounter it}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -39,8 +39,8 @@ What is actually happening underneath, in a sentence or two.
 
 ## Fix
 
-1. <Step.>
-2. <Step.>
+1. {{Step.}}
+2. {{Step.}}
 
 How to confirm it worked.
 

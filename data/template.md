@@ -1,5 +1,5 @@
 ---
-id: dat-<slug>
+id: dat-{{slug}}
 tier: descriptive
 status: active
 owned-by:
@@ -10,7 +10,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# <Data domain>
+# {{Data domain}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -30,22 +30,22 @@ One sentence on what this domain covers.
 
 ## Entities
 
-* **<Entity>** — what it represents.
-* **<Entity>** — …
+* **{{Entity}}** — what it represents.
+* **{{Entity}}** — …
 
 _(Names and meanings, not schemas. Schemas live with the code that owns them.)_
 
 ## Where it lives
 
-|                    |                                         |
-|--------------------|-----------------------------------------|
-| **Owning service** | [svc-example](/services/example.md)     |
-| **Store**          | <SQL Server / blob / table storage / …> |
-| **Region**         |                                         |
+|                    |                                           |
+|--------------------|-------------------------------------------|
+| **Owning service** | [svc-example](/services/example.md)       |
+| **Store**          | {{SQL Server / blob / table storage / …}} |
+| **Region**         |                                           |
 
 ## Classification
 
-<classification>, because <reason>.
+{{classification}}, because {{reason}}.
 
 For `personal` or `special-category`: what personal data is present, and the lawful basis for holding it.
 

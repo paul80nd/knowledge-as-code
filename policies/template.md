@@ -10,7 +10,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# Policy: <Title>
+# Policy: {{Title}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -52,9 +52,9 @@ implement.)_
 
 ## Alignment
 
-| Reference                 | Area           |
-|---------------------------|----------------|
-| ISO/IEC 27001:2022 A.N.NN | <control area> |
+| Reference                 | Area             |
+|---------------------------|------------------|
+| ISO/IEC 27001:2022 A.N.NN | {{control area}} |
 
 The product is **aligned with** these areas; it is not certified against ISO/IEC 27001:2022 and is not audited.
 Alignment exists because the framework covers the right ground.
@@ -68,14 +68,14 @@ discovered later are erosion. If there are none, say so.
 
 ## Implemented by
 
-* [std-NNNN] — <what it requires>.
+* [std-NNNN] — {{what it requires}}.
 
 _(A policy nothing implements is a statement of intent. That is allowed — mark it aspirational and say why the standard
 doesn't exist yet.)_
 
 ## Review
 
-Reviewed <frequency> by <role>. Last reviewed: <date>.
+Reviewed {{frequency}} by {{role}}. Last reviewed: {{date}}.
 
 [pol-XXXX]: xxxx-kebab-slug.md
 [std-NNNN]: /standards/nnnn-kebab-slug.md

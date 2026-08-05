@@ -1,5 +1,5 @@
 ---
-id: svc-<slug>
+id: svc-{{slug}}
 tier: descriptive
 status: live
 repo:
@@ -11,7 +11,7 @@ owner:
 tags: [ a, b ]
 ---
 
-# <Service name>
+# {{Service name}}
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -35,11 +35,11 @@ that disagrees with the estate is worse than none.
 
 ## Where it lives
 
-|                 |                                               |
-|-----------------|-----------------------------------------------|
-| **Repository**  | [`<repo-name>`](<url>)                        |
-| **Platform**    | <runtime / framework>                         |
-| **Deployed as** | <app service / function app / CDN assets / …> |
+|                 |                                                 |
+|-----------------|-------------------------------------------------|
+| **Repository**  | [`{{repo-name}}`]({{url}})                      |
+| **Platform**    | {{runtime / framework}}                         |
+| **Deployed as** | {{app service / function app / CDN assets / …}} |
 
 ## Environments
 
