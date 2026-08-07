@@ -173,7 +173,7 @@ Alongside the types:
 
 ```
 README.md              # orientation
-CLAUDE.md              # rules digest — GENERATED
+CLAUDE.md              # agent guidance, with the rules digest generated into it
 glossary.md
 frameworks.md          # external frameworks, and what each obliges us to
 knowledge-as-code.md   # the approach
