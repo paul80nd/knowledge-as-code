@@ -4,7 +4,6 @@ tier: normative
 category: delivery
 status: draft
 aligns-with:
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ cost, efficiency, non-functional-requirements ]

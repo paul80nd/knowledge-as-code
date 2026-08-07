@@ -6,7 +6,6 @@ status: draft
 aligns-with:
   - ISO27001:2022 A.5.4
   - ISO27001:2022 A.5.36
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ exceptions, governance, risk-acceptance ]

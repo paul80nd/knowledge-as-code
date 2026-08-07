@@ -6,7 +6,6 @@ status: draft
 aligns-with:
   - ISO27001:2022 A.8.26
   - ISO27001:2022 A.8.27
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ api, contracts, interoperability, versioning ]

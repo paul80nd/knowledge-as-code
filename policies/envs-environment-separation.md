@@ -7,7 +7,6 @@ aligns-with:
   - ISO27001:2022 A.8.3
   - ISO27001:2022 A.8.31
   - ISO27001:2022 A.8.33
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ environments, production-data, separation ]

@@ -56,17 +56,16 @@ under governance is the clearest) are the ones most likely to be revisited.
 
 <!-- BEGIN GENERATED: schema-policies -->
 
-| Field            | Req | Type   | Notes                                                                                |
-|------------------|-----|--------|--------------------------------------------------------------------------------------|
-| `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
-| `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` †       | ●   | enum   | `draft` until agreed; `retired` rather than deleted.                                 |
-| `owner` †        | ●   | string | A named person, never a team alias.                                                  |
-| `tags` †         |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `category`       | ●   | enum   | The broad area the commitment belongs to. Controlled, and deliberately few.          |
-| `aligns-with`    |     | list   | e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance.                              |
-| `implemented-by` |     | list   | Standard ids.                                                                        |
-| `review-by`      | ●   | date   | Quoted. Annual is usually right for a policy.                                        |
+| Field         | Req | Type   | Notes                                                                                |
+|---------------|-----|--------|--------------------------------------------------------------------------------------|
+| `id` †        | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `tier` †      | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
+| `status` †    | ●   | enum   | `draft` until agreed; `retired` rather than deleted.                                 |
+| `owner` †     | ●   | string | A named person, never a team alias.                                                  |
+| `tags` †      |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| `category`    | ●   | enum   | The broad area the commitment belongs to. Controlled, and deliberately few.          |
+| `aligns-with` |     | list   | e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance.                              |
+| `review-by`   | ●   | date   | Quoted. Annual is usually right for a policy.                                        |
 
 **Enum values**
 
@@ -99,8 +98,10 @@ under governance is the clearest) are the ones most likely to be revisited.
 **Conventions**
 
 * **Never say "compliant" or "certified".** We align. The distinction matters if anyone ever reads this externally.
-* **Every policy should have at least one implementing standard**, or be explicitly marked aspirational. A policy
-  nothing implements is a statement of intent, and should say so.
+* **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice,
+  and a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
+  standards against them, so the set of implementers is not knowable from here — and a policy nothing in *this* wiki
+  implements is the normal state rather than a gap to be explained.
 * **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
   scope — the id does not move. Standards, controls and processes cite policies by id, and a mnemonic that is reassigned
   turns every one of those citations into a quiet lie: the reference still resolves, so nothing fails, and the reader is
@@ -136,7 +137,6 @@ under governance is the clearest) are the ones most likely to be revisited.
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
-| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                         |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
 
 <!-- END GENERATED: checks-policies -->

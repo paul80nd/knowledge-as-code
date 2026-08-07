@@ -10,7 +10,6 @@ aligns-with:
   - ISO27001:2022 A.8.2
   - ISO27001:2022 A.8.3
   - ISO27001:2022 A.8.5
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ access-control, identity, least-privilege ]

@@ -52,17 +52,6 @@ fields:
       we are not registered and are not audited. The field name is deliberate; wording that implies
       certification fails review.
 
-  implemented-by:
-    required: false
-    type: list
-    of: id
-    ref: standards
-    reciprocal: implements
-    description: Standard ids.
-    notes: >
-      The standards that put this policy into practice. A policy nothing implements is a statement of
-      intent and should say so in its Purpose.
-
   review-by:
     required: true
     type: date
@@ -79,11 +68,6 @@ index:
   sort: id
 
 rules:
-  - id: policy-has-implementer
-    description: >
-      Every active policy has at least one implementing standard, or is explicitly marked aspirational in
-      its Purpose section. A policy nothing implements is a statement of intent and should say so.
-    severity: warning
   - id: alignment-not-compliance
     description: >
       Flags the words "compliant", "compliance" and "certified" in proximity to an ISO reference.

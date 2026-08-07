@@ -10,7 +10,6 @@ aligns-with:
   - ISO27001:2022 A.8.11
   - ISO27001:2022 A.8.12
   - ISO27001:2022 A.8.24
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ classification, data-protection, encryption, privacy ]

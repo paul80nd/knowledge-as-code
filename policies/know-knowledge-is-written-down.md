@@ -5,7 +5,6 @@ category: governance
 status: draft
 aligns-with:
   - ISO27001:2022 A.5.37
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ documentation, knowledge-management ]

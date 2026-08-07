@@ -8,7 +8,6 @@ aligns-with:
   - ISO27001:2022 A.8.9
   - ISO27001:2022 A.8.25
   - ISO27001:2022 A.8.32
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ change-management, source-control, traceability ]

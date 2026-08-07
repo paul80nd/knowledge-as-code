@@ -7,7 +7,6 @@ aligns-with:
   - ISO27001:2022 A.8.15
   - ISO27001:2022 A.8.16
   - ISO27001:2022 A.8.17
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ alerting, logging, monitoring, observability ]

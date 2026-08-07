@@ -4,7 +4,6 @@ tier: normative
 category: governance
 status: draft
 aligns-with:
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ accessibility, inclusive-design, legal-obligation ]

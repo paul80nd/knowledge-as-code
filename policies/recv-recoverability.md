@@ -8,7 +8,6 @@ aligns-with:
   - ISO27001:2022 A.5.30
   - ISO27001:2022 A.8.13
   - ISO27001:2022 A.8.14
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ backup, continuity, recovery, resilience ]

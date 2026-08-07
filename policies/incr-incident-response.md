@@ -9,7 +9,6 @@ aligns-with:
   - ISO27001:2022 A.5.26
   - ISO27001:2022 A.5.27
   - ISO27001:2022 A.6.8
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ incident-response, learning, postmortem ]

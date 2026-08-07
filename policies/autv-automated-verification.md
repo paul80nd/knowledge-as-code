@@ -8,7 +8,6 @@ aligns-with:
   - ISO27001:2022 A.8.28
   - ISO27001:2022 A.8.29
   - ISO27001:2022 A.8.33
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ continuous-integration, quality-gates, testing ]

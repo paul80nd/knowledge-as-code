@@ -8,7 +8,6 @@ aligns-with:
   - ISO27001:2022 A.5.21
   - ISO27001:2022 A.8.19
   - ISO27001:2022 A.8.30
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ dependencies, provenance, supply-chain ]

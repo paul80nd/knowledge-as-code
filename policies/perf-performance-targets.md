@@ -5,7 +5,6 @@ category: delivery
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.6
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ capacity, non-functional-requirements, performance ]

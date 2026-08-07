@@ -4,7 +4,6 @@ tier: normative
 category: security
 status: draft
 aligns-with:
-implemented-by:
 review-by:
 owner:
 tags: [ a, b ]
@@ -26,8 +25,10 @@ tags: [ a, b ]
 * **`status`** — `draft` · `active` · `retired`.
 * **`aligns-with`** — ISO/IEC 27001:2022 Annex A references, e.g. `ISO27001:2022 A.8.25`. This records **alignment, not
   compliance or certification**, and the wording matters if this is ever read externally.
-* **`implemented-by`** — The standard ids that put this into practice.
 * **`review-by`** — A quoted date. Annual is usually right for a policy.
+
+A policy names no implementers. A standard points up at the policy it puts into practice, and a downstream corpus
+inherits these policies to write its own standards against — so what implements this is not knowable from here.
 
 **The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
 reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
