@@ -1,126 +1,57 @@
-# SPEC — a small expression layer for `rules:`
+# The expression layer for `rules:`
 
-Status: **built, and being filled in.** The evaluator, the fact context and the dispatcher are in place;
-`detected-not-before-occurred` is converted. The rest of Bucket A is outstanding.
+Every type schema carries a `rules:` block. A rule that declares an `expr:` is a working check: the tool compiles it at
+load, evaluates it against every document of that type, and reports under the rule's own id. A rule without one is a
+statement of intent — a behaviour someone wanted, written down, that nothing answers to yet.
 
-## Motivation
+This file is the reference for that layer: what an expression may say, why the boundaries are where they are, and what
+is still to be converted.
 
-Every type schema carries a `rules:` block. Most entries are **prose intent, not executable checks** — over fifty rule
-entries across the type schemas, of which two are answered by a hard-coded arm in `Validator.CheckRules`
-(`kac.core/Validator.cs`) and one by an expression. Wiring a rule the first way means another arm; wiring it the second
-way means a line of YAML.
+**Where things stand.** 46 rule entries across the type schemas: **12 expressions**, **2 hand-written C# arms**, and
+**32 statements of intent**. Of those 32, roughly half will never be expressions — see [Bucket C](#bucket-c--stays-c).
 
-Fewer than half the entries declare a `severity:`, and a rule without one is declared but not enforced. So the grammar
-is only half the work: the other half is deciding, rule by rule, whether it fails a build or advises an author.
+## Why an expression and not a policy engine
 
-The **field-predicate and simple-structural** rules are therefore data: a one-line `expr:` string per rule, evaluated by
-a tiny in-house evaluator against a fixed *fact* context. This deliberately does **not** turn `kac` into a general
-policy engine (OPA/Rego). The grammar is frozen small on purpose; rules that need real algorithms stay in C#.
+Wiring a rule as C# means an arm in `Validator.CheckRules`, an entry in `CheckCatalogue.All`, a row in
+`Generator.DocRows`, a row in two READMEs, and a fixture. Wiring it as an expression means a line of YAML and a fixture.
+That difference is the whole argument, and it compounds: a corpus that has *taken* this framework rather than authored
+it may add a whole type file of its own, and before this layer existed every rule in one was inert — enforcing it
+needed an upstream code change and a release.
 
-See the conversation that produced this for the full reasoning. The one-line version: OPA/Rego would replace only the
-evaluation *tail* of the pipeline while leaving all the markdown/frontmatter extraction untouched, add a language +
-runtime dependency, and break the single-file, no-build-step design. A ~150-line evaluator buys the one property worth
-having — *new rules as data* — at a fraction of the cost.
+OPA/Rego was the obvious alternative and is the wrong shape. It would replace only the evaluation *tail* of the
+pipeline, leaving all the markdown and frontmatter extraction untouched, while adding a language and a runtime
+dependency and breaking the single-file, no-build-step design. A small hand-rolled evaluator buys the one property
+worth having — new rules as data — at a fraction of that.
 
-## Scope — what becomes data, what stays code
+## The YAML shape
 
-The decision hinges on bucketing the **actual** rules in `.schema/*.yaml`.
-
-### Bucket A — a one-line `expr:`
-
-Pure field predicates and simple structural facts, in one uniform shape. **Converted:**
-
-| Rule                           | Type         | `expr`                                             |
-|--------------------------------|--------------|----------------------------------------------------|
-| `detected-not-before-occurred` | postmortems  | guarded date comparison                            |
-| `symptoms-first`               | runbooks     | `first_section() == 'Symptoms'`                    |
-| `provenance-required`          | standards    | `present('derived-from') or present('implements')` |
-| `hub-not-specification`        | capabilities | `words() <= links() * 40`                          |
-| `links-rather-than-restates`   | explanations | `words() <= links() * 40`                          |
-| `low-ceremony`                 | discoveries  | `words() <= 200`                                   |
-
-The three thresholds are judgements, not measurements — no corpus has yet held enough of these types to calibrate them.
-Each is pinned by a fixture, so moving one is a visible change rather than a silent one. Note that a ratio means a
-document linking to nothing fails at any length: for a capability or an explanation, whose whole job is to point
-elsewhere, that is the intended reading.
-
-**Two rules need a schema change before they need an expression.** `trial-has-criteria` names a section `tools.yaml`
-does not list, and `deprecated-has-successor` names a `successor` field where `tools.yaml` has `replaces`, which points
-the other way.
-
-**Six rules that look like Bucket A are not:**
-
-* `what-went-well-required`, `escalation-required` and `verification-required` name sections their types already declare
-  **required**. Converting them would report one absence twice, in two vocabularies.
-* `unused-integrations` and `target-is-measurable` (the `present` half) name fields already declared `required: true`.
-* `carried-in-full-by-digest` bounds a glossary *entry*. The glossary is a single-document type, so `words()`
-  measures the whole page — the rule needs a per-entry fact, which puts it in Bucket B.
-
-**Two more belong to `required-when`, not here.** `personal-data-has-retention` and `mechanism-has-evidence` restate
-conditions the schema already declares — `classification in [personal, special-category]` and
-`mechanism != not-enforced`. Both are dead, because `Validator.RequiredWhenHolds` splits on `==` and understands nothing
-else, so neither condition has ever fired. Teaching it `!=` and `in [...]` fixes the declaration a schema author already
-wrote; routing them through `expr:` instead would leave the misleading `required-when` in place.
-
-**A rule about a field that may be absent must guard it.** A comparison where either side is absent is false, so
-`field('detected-on') >= field('occurred-on')` fires on a postmortem missing a date — where `required-field` has already
-said so. Write
-`present('a') and present('b') implies field('a') >= field('b')`. The guard is why the converted rule reads longer than
-the sketch it replaced.
-
-### Bucket B — needs one new *fact*, then it's an `expr:`
-
-Add a derived measurement to `Doc` (extraction pass) and expose it as a `Facts` method; the rule itself is then a normal
-expression.
-
-| Rule                  | New fact(s) needed                                                                   |
-|-----------------------|--------------------------------------------------------------------------------------|
-| `y-statement-present` | `has_ystatement()`, `ystatement_words()` (word count of the block-quote after H1)    |
-| `fallback-required`   | a body/section content probe                                                         |
-| `no-credentials`      | `body_matches('<regex>')` — borderline; keep the regex in YAML, the scan in the fact |
-
-Do these lazily — add the fact when you implement the rule, not up front.
-
-### Bucket C — stays C# (never a grammar feature)
-
-Git history, graph analysis, external data, cross-document joins, corpus-wide reporting. If you ever feel tempted to add
-loops/joins/quantifiers to the grammar to express one of these, **stop** — that is the signal you are rebuilding OPA.
-Write a dedicated arm instead.
-
-- `immutable-after-accepted`, `immutable-after-published` — git diff of committed content
-- `no-dependency-cycles` — graph over `depends-on`
-- `drift-against-repos` — external repo state
-- `rules-have-controls`, `constraint-consistency` — cross-document
-- `coverage-report`, `expiry-sweep`, `undefined-terms` — corpus-wide / reporting
-- `reciprocal-supersession`, `related-matches-section` — already core checks; leave as-is
-
-## YAML shape
-
-Expression *strings*, not nested predicate objects — several rules are conditionals (`A implies B`) and ratios that read
-cleanly inline but become ugly YAML trees. A rule **fires a finding when `expr` evaluates false**.
+A rule **fires a finding when its `expr` evaluates false**, so the expression reads as the condition that ought to hold
+rather than as the fault.
 
 ```yaml
 rules:
-  - id: detected-not-before-occurred
+  - id: symptoms-first
+    description: Symptoms is the first section after the H1 — that is how the reader finds the document.
     severity: error
-    expr: "field('detected-on') >= field('occurred-on')"
-    message: "detected-on must be on or after occurred-on."
-
-  - id: deprecated-has-successor
-    severity: warning
-    expr: "field('status') == 'deprecated' implies present('successor')"
-    message: "a deprecated tool must name its successor."
-
-  - id: hub-not-specification
-    severity: warning
-    expr: "words() <= links() * 40"
-    message: "prose has outgrown the links — this capability is drifting into specification."
+    expr: "first_section() == 'Symptoms'"
+    message: >
+      Symptoms must be the first section. Someone reaching for this at 2am matches on what they are
+      seeing, not on what the document is called.
 ```
 
-Rules that stay in Bucket C keep their current shape (`id` + `description` + bespoke fields, no
-`expr`). The dispatcher skips any rule without an `expr` and lets the existing C# arm handle it.
+* `description:` is what the rule *means*, and is rendered into the generated `## What CI checks` table on the type
+  page. `message:` is what an author is told when it fires. One is a definition, the other a diagnosis; do not make them
+  the same sentence.
+* A rule carrying an `expr:` **must** declare a severity and a message. A rule claiming to be finished is held to being
+  able to report, and the load fails otherwise.
+* A rule without an `expr:` keeps `id` + `description` and is skipped by the dispatcher.
 
-## Grammar (frozen — do not extend without a deliberate decision)
+Expression *strings*, not nested predicate objects: several rules are conditionals (`A implies B`) or ratios, and those
+read cleanly inline but become ugly YAML trees.
+
+## Grammar
+
+Frozen. Extending it is a deliberate decision, not a convenience.
 
 ```
 expr    := implies
@@ -135,118 +66,184 @@ primary := STRING | INT | call | "(" expr ")"
 call    := IDENT "(" ( expr ("," expr)* )? ")"
 ```
 
-- **Types:** string, int, bool. There are no boolean literals — every condition starts from something the document says.
-- **Strings** are single-quoted, and a doubled quote is one quote — the YAML and SQL convention. There are no backslash
-  escapes: the strings that most need a quote in them are regular expressions, and a second escaping layer over those is
-  how they stop being readable.
-- **Absence:** `field(...)` returns string-or-null. A comparison where either side is absent is **false**, and `!=` is
-  the negation of `==`, so it is **true**. One rule for every operator, so a rule that cares writes the guard rather
-  than working out which way silence falls.
-- **Dates** compare correctly as ISO strings lexicographically, so `field('a') >= field('b')`
-  works without a date type. Keep it that way; do not add a date type.
-- **Type-checked at compile time**, over those three types. An expression that could never mean anything —
-  `words() == 'three'`, `field('a') * 2`, an unknown fact, the wrong arity, a whole expression that is not a yes/no
-  question — fails the load rather than evaluating false forever.
-- **No** variables, no user-defined functions, no quantifiers, no collections. That boundary is the whole point.
+* **Types:** string, int, bool. No boolean literals — every condition starts from something the document says.
+* **Strings** are single-quoted, and a doubled quote is one quote, as in YAML and SQL. There are no backslash escapes:
+  the strings that most need a quote in them are regular expressions, and a second escaping layer over those is how
+  they stop being readable.
+* **A comparison is not chainable.** `1 < words() < 40` is a sentence rather than a condition, and the parser declines
+  it instead of choosing an associativity nobody asked for.
+* **Dates** compare correctly as ISO strings lexicographically, so `field('a') >= field('b')` works without a date type.
+  Keep it that way.
+* **Division by zero yields zero.** Nothing in the taxonomy divides; the operator exists because the grammar is frozen,
+  and a rule tripping over it should read as a threshold nobody meets rather than crash mid-corpus.
+* **No** variables, user-defined functions, quantifiers or collections. That boundary is the point.
 
-### Fact functions (the only callable surface)
+### Absence, and the guard that follows from it
 
-Everything an expression can see. Each reads data the extraction pass already produced — **the evaluator never re-parses
+`field(...)` returns string-or-null. **A comparison where either side is absent is false**, and `!=` is the negation of
+`==`, so it is true. One rule for every operator.
+
+The consequence is an idiom. `field('detected-on') >= field('occurred-on')` fires on a postmortem missing a date —
+where `required-field` has already said so, in better words. A rule about a field that may be absent guards it:
+
+```yaml
+expr: "present('detected-on') and present('occurred-on') implies field('detected-on') >= field('occurred-on')"
+```
+
+This is why converted rules read longer than a naive sketch of them. The alternative — each operator guessing which way
+silence should fall — trades one explicit guard for a table of special cases nobody remembers.
+
+### Compile-time checking
+
+An expression is parsed **and type-checked** at load, and anything wrong stops the load naming the rule. That covers a
+syntax error, an unknown fact, the wrong number of arguments, a comparison between a number and text, arithmetic on
+text, and a whole expression that is not a yes/no question.
+
+This matters more than it looks. Without it, `words() == 'three'` compiles and then evaluates false for the life of the
+schema — a check that appears wired up and never fires, which is the exact failure this layer exists to end.
+
+### Fact functions — the only callable surface
+
+Everything an expression can see. Each reads what the parse pass already produced: **the evaluator never re-parses
 markdown.**
 
-| Function                         | Returns | Backed by                                                                                                             |
-|----------------------------------|---------|-----------------------------------------------------------------------------------------------------------------------|
-| `field('name')`                  | string? | `Doc.FrontScalar`                                                                                                     |
-| `present('name')`                | bool    | frontmatter scalar non-empty                                                                                          |
-| `section('Title')`               | bool    | `Doc.H2` contains (case-insensitive)                                                                                  |
-| `first_section()`                | string  | first `Doc.H2`                                                                                                        |
-| `links()`                        | int     | `Doc.Links.Count`                                                                                                     |
-| `words()`                        | int     | every heading and paragraph the document renders; frontmatter and fenced code carry no inline content and so fall out |
-| `matches('re')`                  | bool    | the body **as written** — code fences, link targets and markdown syntax included; frontmatter is not                  |
-| `section_matches('Title', 're')` | bool    | the same, bounded to one section; false where the document holds no such section                                      |
-| `has_ystatement()`               | bool    | `Doc.YStatement is not null` (Bucket B, not built)                                                                    |
-| `ystatement_words()`             | int     | word count of `Doc.YStatement` (Bucket B, not built)                                                                  |
+| Function                         | Returns | Reads                                                                                                |
+|----------------------------------|---------|------------------------------------------------------------------------------------------------------|
+| `field('name')`                  | string? | a frontmatter scalar                                                                                 |
+| `present('name')`                | bool    | that scalar, non-empty — false for a bare key as well as a missing one                                |
+| `section('Title')`               | bool    | whether an H2 of that name exists (case-insensitive)                                                 |
+| `first_section()`                | string  | the first H2, or empty where there is none                                                           |
+| `links()`                        | int     | how many links the body carries                                                                      |
+| `words()`                        | int     | every heading and paragraph the document **renders** — frontmatter and fenced code carry no inline content and fall out |
+| `matches('re')`                  | bool    | the body **as written** — code fences, link targets and markdown syntax included; frontmatter is not |
+| `section_matches('Title', 're')` | bool    | the same, bounded to one section; false where the document holds no such section                     |
+
+**`words()` and `matches()` deliberately see different documents.** One walks the rendered text, the other the source.
+That is what lets `matches` find a credential pasted into a fenced block — the case those rules exist for — and find
+`**MUST**`, an obligation the rendered text would have flattened into an ordinary word. Do not simplify one onto the
+other; a unit test pins the difference.
 
 Adding a fact is adding one method to `Facts` and one row to `RuleExpr.Functions`, which is what the type checker reads.
-The grammar itself never changes.
+The grammar never changes.
 
-`Facts` is built per document and discarded once its rules have run, which is what makes `words()`
-safe to memoise there rather than on the immutable `Doc`.
+`Facts` is built per document and discarded once its rules have run, which is what makes `words()` safe to memoise
+there rather than on the immutable `Doc`.
 
-## C# design (in `kac.core`)
+## The C# behind it
 
-* **`Facts.cs`** — built per document, exposing exactly the fact functions above and nothing else.
-* **`RuleExpr.cs`** — lexer, recursive-descent parser, type checker and evaluator, no dependencies.
-  `RuleExpr.Compile(string)` returns an `Expr` or throws `RuleExprException`; `RuleExpr.Eval(expr,
-  facts)` answers it for one document.
-* **`RuleSpec`** (in `Schema.cs`) carries `Expr`, `Compiled`, `Severity` and `Message`.
-  `Schema.ParseRule` compiles at load, so a defective rule stops the load rather than becoming a check that never fires.
-  A rule with an `expr:` must also carry a severity and a message — a rule claiming to be finished is held to being able
-  to report.
-* **`Validator.CheckRules`** evaluates every compiled rule, then falls through to the bespoke arms for the rules whose
-  questions need a real algorithm. It emits at the rule's own severity, which is why it is no longer `CheckWarnings`.
+| File                        | Holds                                                                                          |
+|-----------------------------|-------------------------------------------------------------------------------------------------|
+| `kac.core/Facts.cs`         | the fact functions, and nothing else an expression can reach                                    |
+| `kac.core/RuleExpr.cs`      | lexer, recursive-descent parser, type checker, evaluator — no dependencies                       |
+| `RuleSpec` in `Schema.cs`   | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load                          |
+| `Validator.CheckRules`      | evaluates every compiled rule, then falls through to the bespoke arms                            |
+
+`CheckRules` emits at the rule's own severity, which is why it is not `CheckWarnings`.
 
 ## The coverage gate
 
 `kac-tests.cs` reads `kac checks --json` and asserts every id it names has a fixture that exercises it, and that no
 golden references an id `kac` no longer emits. `CheckCatalogue.For(schema)` appends each expression rule's
-`(id, severity, description)` to the core catalogue, so a rule cannot ship without a fixture any more than a core check
-can. `Commands.Checks` takes the repo root for this reason: the catalogue is a property of a corpus's schema, not of the
-tool.
+`(id, severity, description)` to the core catalogue, so **a rule cannot ship without a fixture** any more than a core
+check can. `Commands.Checks` takes the repo root for that reason: the catalogue is a property of a corpus's schema, not
+of the tool.
 
 **The reader-facing table follows a different rule for each kind.** `Generator.DocRows` groups several core check ids
 into one hand-worded row, and `ChecksTableProblems` fails until a new core check has one. An expression rule reports
-under its own id and its `description:` is already that row written out, so `ChecksTable` renders it from the schema —
-copying it into `DocRows` would be the same sentence in two files, drifting apart at the first edit.
+under its own id and its `description:` is already that row written out, so `ChecksTable` renders it from the schema.
+Copying it into `DocRows` would be the same sentence in two files, drifting apart at the first edit.
 
-The gate reads ids, not branches: `y-statement-present` was covered by a fixture for its absent block-quote while the
-`max-words` arm had none. A rule with more than one way to fail needs a fixture for each.
+**The gate reads ids, not branches.** `y-statement-present` was green for months with a fixture covering its absent
+block-quote and nothing covering the `max-words` arm. A rule with more than one way to fail needs a fixture for each.
+
+**Standing a rule up costs more in fixtures than in schema.** Converting five rules was 24 lines of YAML and ~590 of
+fixture, because each needed its type stood up in the fixture corpus — a page, a template and a record. That cost is
+not a cost of *this layer*: the gate demands a fixture however a check is implemented. It is mostly one-off, too; once
+a type is present, the next rule on it is a record.
+
+## What is worth converting
+
+### Ready now
+
+| Rule                          | Type  | Needs                                                                     |
+|-------------------------------|-------|---------------------------------------------------------------------------|
+| `trial-has-criteria`          | tools | a `Trial criteria` section added to `tools.yaml`, then a one-line `expr:` |
+| `deprecated-has-successor`    | tools | a `successor` field — `tools.yaml` has `replaces`, which points the other way |
+
+### Bucket B — one new fact each
+
+| Rule                        | Fact needed                                                          |
+|-----------------------------|-----------------------------------------------------------------------|
+| `y-statement-present`       | `has_ystatement()`, `ystatement_words()`                             |
+| `carried-in-full-by-digest` | a per-entry measurement — the glossary is one document, so `words()` measures the whole page |
+| `one-problem-per-document`  | `section_count('Symptoms')` or similar                               |
+| `terms-are-singular`        | per-entry heading access                                             |
+
+`y-statement-present` is the one worth doing next: it retires the larger of the two remaining C# arms, and
+`RuleSpec.MaxWords` — a rule-specific field on a general record — goes with it.
+
+### Bucket C — stays C#
+
+Roughly fifteen rules need git history, a graph walk, or more than one document at once. **If you find yourself wanting
+loops, joins or quantifiers in the grammar to reach one of these, stop** — that is the signal you are rebuilding OPA.
+Write a dedicated arm.
+
+They cluster, which is worth knowing before starting any of them:
+
+* **Git history — 4.** `immutable-after-accepted`, `immutable-after-published`, `changelog-begins-at-active`,
+  `changelog-on-material-change`. All four ask the same question: what changed in this commit versus the committed
+  content, and was it substantive? One mechanism answers all of them, and it is the largest single piece of work left.
+* **Cross-document — 5.** `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`,
+  and the corpus-wide glossary pair (`undefined-terms`, `unused-terms`). `Validator.CheckCorpus` already builds a
+  `byId` index and resolves clause citations and reciprocals against it; these are more of that.
+* **Graph — 1.** `no-dependency-cycles`.
+* **Per-collection — 1.** `alternatives-have-verdicts`, the surviving arm. It evaluates per bullet within a section,
+  and the grammar has no collections by design. This one is correctly stuck.
+
+### Not validator work at all
+
+Eight rules say **Scheduled** in their own descriptions: `feature-file-orphans`, `coverage-report`, `expiry-sweep`,
+`recurring-root-causes`, `staleness`, `staleness-loud`, `drift-against-repos`, `drift-against-manifests`. They are
+periodic reports over a whole corpus, several needing external state (repository lists, package manifests), and `kac`
+has no execution model for them — there is `validate`, `index`, `checks`, `mechanism`, and nothing that runs on a
+timer. `reverse-dependencies-generated` is a *generator* and belongs with `kac index`.
+
+Counting these as unenforced rules makes the ruleset look less finished than it is. They are an unbuilt feature, not a
+backlog.
+
+### Two that were miscounted, and why
+
+* **`blameless`** flags personal names in the Timeline, Root cause and Contributing factors sections. No regular
+  expression identifies a personal name: every shape that matches `Alex Doe` also matches `Root Cause`, and the
+  corpus's `alex.doe` handle style also matches `example.com` and `kac.core`. It needs a name list or nothing.
+* **`human-confirmed`** wants `confirmed-by` to be a person rather than an agent or a session id. That is a `pattern:`
+  on the field, not a rule about the document.
+
+## Traps
+
+* **A rule restating something the schema already declares is worse than no rule.** Twelve entries did — a field's
+  `reciprocal:`, a `mirrors-section:`, a `required-when:`, a scalar type, a required section — and reading as
+  outstanding work is how four of them survived in this document's own Bucket A while naming sections their types
+  already declared required. Before converting, check the field declaration and the `sections:` block.
+* **`required-when` is a different language and stays one.** It reads `==`, `!=` and `in [...]`, tests one field
+  against one other, and lives on the field. A condition needing more than that is a rule with an `expr:`.
+  See [`../.schema/README.md`](../.schema/README.md).
+* **Thresholds are judgements.** `words() <= links() * 40` and `words() <= 200` were chosen, not measured — no corpus
+  has held enough of those types to calibrate them. Each is pinned by a fixture so moving one is visible. Note a ratio
+  fails a document linking to nothing at any length; for a capability or an explanation that is the intended reading.
+* **The text rules are heuristics** and will be tuned wrong first. That is the argument for holding their patterns in
+  `.schema/`: tuning a regex there is a schema edit a corpus owner makes, where the same regex in C# is a release every
+  corpus has to take.
 
 ## When to abandon the in-house evaluator
 
-Keep the grammar at the surface above. The moment a real need appears for variables, function definitions, or
+Keep the grammar at the surface above. The moment a real need appears for variables, function definitions or
 quantifiers, swap the hand-rolled evaluator for **CEL** (Common Expression Language; a .NET port exists) — the `expr:`
-strings largely carry over, the engine drops in. Not before: the dependency is not worth it for ~12 predicates.
-
-## What is left
-
-Bucket A is converted. What remains is the fact that unlocks the rest.
-
-1. [x] **The text probe is in.** `matches` and `section_matches` read the body as written — code fences, link targets
-   and markdown syntax included — which is what lets a rule find a credential pasted into a fenced block, or a bold
-   modal the rendered text would have flattened away. Six rules converted on it:
-   `no-credentials`, `no-actual-data`, `not-normative`, `no-hedged-ordering`, `posture-belongs-to-frameworks`
-   and `fallback-required`.
-
-   Two that were counted did not convert. `blameless` flags personal names, and no regular expression identifies one —
-   every shape that matches a name matches a heading. `human-confirmed` wants a value that is not an agent or a session
-   id, which is a `pattern:` on `confirmed-by` rather than a rule about the document. Neither is a Bucket B rule; both
-   were miscounted.
-
-   These are heuristics and will be tuned wrong first. That is the argument for holding them as data: a regex in
-   `.schema/` is a schema edit, where the same regex in C# is a release every consumer takes.
-
-2. [x] **`required-when` reads `!=` and `in [...]`.** It split on `==` and understood nothing else, so two of the
-   schema's six conditional requirements had never fired: a control naming a mechanism it enforces was not asked for its
-   frequency, and personal data was not asked for its retention. `mechanism-has-evidence` and
-   `personal-data-has-retention` restate exactly those conditions and stay restatements.
-
-3. [ ] **Add the Bucket-B facts for `y-statement-present`** (`has_ystatement`, `ystatement_words`), which retires the
-   largest remaining C# arm along with `RuleSpec.MaxWords`.
-
-4. [x] **What was already enforced is gone.** Nine entries restated a `reciprocal:`, a `mirrors-section:`, a
-   `required-when:`, a scalar field type or a required section — and every one of their reasons was already written on
-   the type page a reader actually reads. Three more were half-enforced and now describe only the half that is not:
-   hedging in `measured-by`, an empty *What went well*, a diagnosis branch ending in neither a resolution nor an
-   escalation.
-
-5. [ ] Leave Bucket C in C#. Roughly fifteen rules need git history, a graph, or more than one document; a further eight
-   are marked **Scheduled** and are not per-PR validation in any form. Together that is 42% of the declared rules, and
-   no expression layer reaches them. Do not extend the grammar to try.
+strings largely carry over and the engine drops in. Not before: the dependency is not worth it at this size.
 
 ## Non-goals
 
-- A general policy engine. No arbitrary rules-as-data beyond the frozen grammar.
-- A date/collection type system.
-- Runtime/tenant-specific or externally-contributed rule sets.
-- Replacing any Bucket-C check.
+* A general policy engine. No rules-as-data beyond the frozen grammar.
+* A date or collection type system.
+* Runtime, tenant-specific or externally-contributed rule sets.
+* Replacing any Bucket-C check.
