@@ -8,7 +8,9 @@ lifecycle: living
 id:
   prefix: svc
   style: slug
-  notes: Matches the repository or component name where one exists — `billing-api` → `svc-billing-api`.
+  notes: >
+    Names the deployable, not the repository it lives in — a repository shipping three app services yields three ids
+    and none of them is the repository's name. The repository is carried by `repo`.
 
 filename:
   pattern: '^[a-z0-9-]+\.md$'
@@ -44,9 +46,12 @@ fields:
     type: list
     of: id
     ref: services
-    description: Downward only — what this service calls. The reverse view is generated.
+    description: Downward only — what this service calls. Nothing yet checks that the ids resolve.
     notes: >
-      Downward only — what this service calls. The reverse view is generated, so do not maintain it by hand.
+      Downward only — what this service calls. An edge means this service is configured to reach that one; messages
+      over a bus are not an edge, because the publisher does not know its consumers. Deliberately one-directional:
+      the reverse view is a reader's question, not a second field to keep in step. Nothing generates that view today
+      and nothing resolves the ids, so both are the author's responsibility for now.
 
   data-stores:
     required: false
