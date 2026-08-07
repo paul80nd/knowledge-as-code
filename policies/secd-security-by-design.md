@@ -33,15 +33,15 @@ externally exposed change warrants more than a routine internal one, but neither
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                                                      | Alignment                                                            |
-|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
-| `REQS`    | **MUST** capture security and privacy requirements for new systems and features, as requirements rather than as afterthoughts                                               | [ISO 27001:2022].A.5.8, [ISO 27001:2022].A.8.26, [OWASP ASVS 4.0].V1 |
-| `DESIGN`  | **MUST** apply established secure-design principles — least privilege, defence in depth, secure defaults, failing closed                                                    | [ISO 27001:2022].A.8.27, [OWASP ASVS 4.0].V1                         |
-| `THREAT`  | **MUST** think through how a significant new system or high-risk change could be attacked, and record what we found                                                         | [ISO 27001:2022].A.8.27, [OWASP ASVS 4.0].V1                         |
-| `ACTIONS` | **MUST** turn the findings into tracked work rather than leaving them in a document                                                                                         | [ISO 27001:2022].A.5.8                                               |
-| `CODING`  | **MUST** write code to a documented secure-coding standard appropriate to the stack it is written in, and treat review as covering correctness and security, not only style | [ISO 27001:2022].A.8.28, [OWASP ASVS 4.0].V5                         |
-| `HIRISK`  | **MUST NOT** take a high-risk change into build with no security requirements and no consideration of threat                                                                | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.26                     |
-| `LATE`    | **MUST NOT** rely on later testing to discover what design should have prevented                                                                                            | [ISO 27001:2022].A.8.25                                              |
+| Id        | Clause                                                                                                                                                                      | Alignment                                                                                  |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| `REQS`    | **MUST** capture security and privacy requirements for new systems and features, as requirements rather than as afterthoughts                                               | [ISO 27001:2022].A.5.8, [ISO 27001:2022].A.8.26, [OWASP ASVS 4.0].V1, [NIST SSDF 1.1].PO.1 |
+| `DESIGN`  | **MUST** apply established secure-design principles — least privilege, defence in depth, secure defaults, failing closed                                                    | [ISO 27001:2022].A.8.27, [OWASP ASVS 4.0].V1, [NIST SSDF 1.1].PW.1                         |
+| `THREAT`  | **MUST** think through how a significant new system or high-risk change could be attacked, and record what we found                                                         | [ISO 27001:2022].A.8.27, [OWASP ASVS 4.0].V1, [NIST SSDF 1.1].PW.1                         |
+| `ACTIONS` | **MUST** turn the findings into tracked work rather than leaving them in a document                                                                                         | [ISO 27001:2022].A.5.8                                                                     |
+| `CODING`  | **MUST** write code to a documented secure-coding standard appropriate to the stack it is written in, and treat review as covering correctness and security, not only style | [ISO 27001:2022].A.8.28, [OWASP ASVS 4.0].V5, [NIST SSDF 1.1].PW.5                         |
+| `HIRISK`  | **MUST NOT** take a high-risk change into build with no security requirements and no consideration of threat                                                                | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.26, [NIST SSDF 1.1].PO.1                     |
+| `LATE`    | **MUST NOT** rely on later testing to discover what design should have prevented                                                                                            | [ISO 27001:2022].A.8.25                                                                    |
 
 ## Exceptions
 
@@ -52,4 +52,5 @@ before its security work is complete, that is a recorded deviation under
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
+[NIST SSDF 1.1]: /frameworks.md#nist-ssdf-1-1
 [OWASP ASVS 4.0]: /frameworks.md#owasp-asvs-4

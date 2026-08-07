@@ -33,16 +33,16 @@ temporary and on-demand environments.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                | Alignment               |
-|-----------|---------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
-| `SPLIT`   | **MUST** separate production from non-production, with distinct access controls at each tier                                          | [ISO 27001:2022].A.8.31 |
-| `CREDS`   | **MUST** keep production credentials and secrets unreachable from any lower environment                                               | [ISO 27001:2022].A.8.3  |
-| `PARITY`  | **MUST** provision environments from the same definitions, so that what passes below production is a fair test of what will run in it | [ISO 27001:2022].A.8.31 |
-| `PROMOTE` | **MUST** promote changes between environments through automation rather than by manual copy                                           | [ISO 27001:2022].A.8.31 |
-| `MASK`    | **MUST** mask or synthesise the data used below production                                                                            | [ISO 27001:2022].A.8.33 |
-| `DEBUG`   | **MUST NOT** develop, test or debug against production                                                                                | [ISO 27001:2022].A.8.31 |
-| `REUSE`   | **MUST NOT** reuse a production secret in any environment below production                                                            | [ISO 27001:2022].A.8.3  |
-| `UNMASK`  | **MUST NOT** place unmasked production or personal data into a lower environment — see [pol-DATA]                                     | [ISO 27001:2022].A.8.33 |
+| Id        | Clause                                                                                                                                | Alignment                                     |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
+| `SPLIT`   | **MUST** separate production from non-production, with distinct access controls at each tier                                          | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
+| `CREDS`   | **MUST** keep production credentials and secrets unreachable from any lower environment                                               | [ISO 27001:2022].A.8.3, [NIST SSDF 1.1].PO.5  |
+| `PARITY`  | **MUST** provision environments from the same definitions, so that what passes below production is a fair test of what will run in it | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
+| `PROMOTE` | **MUST** promote changes between environments through automation rather than by manual copy                                           | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
+| `MASK`    | **MUST** mask or synthesise the data used below production                                                                            | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
+| `DEBUG`   | **MUST NOT** develop, test or debug against production                                                                                | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
+| `REUSE`   | **MUST NOT** reuse a production secret in any environment below production                                                            | [ISO 27001:2022].A.8.3, [NIST SSDF 1.1].PO.5  |
+| `UNMASK`  | **MUST NOT** place unmasked production or personal data into a lower environment — see [pol-DATA]                                     | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
 
 ## Exceptions
 
@@ -54,3 +54,4 @@ development, and is governed by [pol-INCR]. Any other departure requires a recor
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-INCR]: incr-incident-response.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
+[NIST SSDF 1.1]: /frameworks.md#nist-ssdf-1-1

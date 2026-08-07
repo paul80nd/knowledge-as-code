@@ -32,16 +32,16 @@ deployments, infrastructure changes, configuration changes and database changes.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                             | Alignment                                                |
-|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| `DEPLOY`  | **MUST** deploy to production only through an automated pipeline                                                                                   | [ISO 27001:2022].A.8.19, [DORA metrics].deploy-frequency |
-| `PROMOTE` | **MUST** deploy only artifacts the pipeline itself produced, promoting the same artifact through environments rather than rebuilding per stage     | [ISO 27001:2022].A.8.19                                  |
-| `TRACE`   | **MUST** be able to trace any production release to the change, the artifact and the approval behind it                                            | [ISO 27001:2022].A.8.32                                  |
-| `REVERT`  | **MUST** have a defined rollback or recovery path before a change goes to production                                                               | [ISO 27001:2022].A.8.32, [DORA metrics].recovery-time    |
-| `ASCODE`  | **MUST** hold the pipeline itself in version control, as a reviewed artifact like any other                                                        | [ISO 27001:2022].A.8.9                                   |
-| `GATES`   | **MUST** carry the safeguards that change approval exists to provide inside the pipeline, rather than treating automation as a reason to drop them | [ISO 27001:2022].A.8.32                                  |
-| `MANUAL`  | **MUST NOT** hand-edit production, whether code, configuration, infrastructure or schema                                                           | [ISO 27001:2022].A.8.9, [ISO 27001:2022].A.8.32          |
-| `LOCAL`   | **MUST NOT** deploy an artifact built locally or obtained from an unverified source                                                                | [ISO 27001:2022].A.8.19                                  |
+| Id        | Clause                                                                                                                                             | Alignment                                                                      |
+|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| `DEPLOY`  | **MUST** deploy to production only through an automated pipeline                                                                                   | [ISO 27001:2022].A.8.19, [DORA metrics].deploy-frequency, [NIST SSDF 1.1].PO.3 |
+| `PROMOTE` | **MUST** deploy only artifacts the pipeline itself produced, promoting the same artifact through environments rather than rebuilding per stage     | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
+| `TRACE`   | **MUST** be able to trace any production release to the change, the artifact and the approval behind it                                            | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.2                                  |
+| `REVERT`  | **MUST** have a defined rollback or recovery path before a change goes to production                                                               | [ISO 27001:2022].A.8.32, [DORA metrics].recovery-time                          |
+| `ASCODE`  | **MUST** hold the pipeline itself in version control, as a reviewed artifact like any other                                                        | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PO.3                                   |
+| `GATES`   | **MUST** carry the safeguards that change approval exists to provide inside the pipeline, rather than treating automation as a reason to drop them | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PO.4                                  |
+| `MANUAL`  | **MUST NOT** hand-edit production, whether code, configuration, infrastructure or schema                                                           | [ISO 27001:2022].A.8.9, [ISO 27001:2022].A.8.32                                |
+| `LOCAL`   | **MUST NOT** deploy an artifact built locally or obtained from an unverified source                                                                | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
 
 ## Exceptions
 
@@ -52,3 +52,4 @@ into version control before the incident is closed — otherwise the fix becomes
 [pol-DEVI]: devi-deviations-are-recorded.md
 [DORA metrics]: /frameworks.md#dora-metrics
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
+[NIST SSDF 1.1]: /frameworks.md#nist-ssdf-1-1

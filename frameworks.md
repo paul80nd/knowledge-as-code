@@ -116,6 +116,28 @@ been invented in a meeting.
 
 Referenced by: [pol-COST], [pol-RECV], [pol-PERF], [pol-OBSV].
 
+### NIST SSDF 1.1 {#nist-ssdf-1-1}
+
+**Inspiration.** The Secure Software Development Framework, NIST SP 800-218 — around forty practices grouped as `PO`
+prepare the organisation, `PS` protect the software, `PW` produce well-secured software, and `RV` respond to
+vulnerabilities. Cited as `PO.5`, `PW.7`, `RV.2`.
+
+It is the closest thing to a peer this corpus has. SSDF is deliberately implementation-agnostic — it says what a
+practice must achieve and leaves the tooling to whoever adopts it — which puts it at the same altitude as a policy
+clause and is why it reaches seven policies rather than one. Several of our clauses turn out to be SSDF practices we
+arrived at independently, which is worth knowing: it means the corpus is conventional where it should be, and the
+places it says something SSDF does not are the places worth defending.
+
+Free to download, published by a government agency, and not certifiable — there is no such thing as being registered
+against SSDF, which is why it sits here rather than under Obliged. US federal software procurement leans on it, but
+that is a buyer making it a condition rather than the framework binding anyone by itself.
+
+NIST also publishes SP 800-218A, an SSDF profile for generative AI. It addresses producers of models rather than
+consumers of coding agents, so it does not cover what [pol-AGNT] governs; that policy is still waiting for a framework
+that fits it.
+
+Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-PIPE], [pol-ENVS].
+
 ### OWASP ASVS 4.0 {#owasp-asvs-4}
 
 **Inspiration.** The Open Worldwide Application Security Project's Application Security Verification Standard — a
@@ -144,15 +166,20 @@ the entry: a policy clause written under its influence is easier to read with th
 
 [pol-A11Y]: policies/a11y-accessibility.md
 [pol-ACCS]: policies/accs-access-by-identity.md
+[pol-AGNT]: policies/agnt-agents-propose-people-decide.md
 [pol-AUTV]: policies/autv-automated-verification.md
 [pol-COST]: policies/cost-cost-as-an-nfr.md
 [pol-DATA]: policies/data-data-protection.md
 [pol-DEVI]: policies/devi-deviations-are-recorded.md
+[pol-ENVS]: policies/envs-environment-separation.md
+[pol-EVER]: policies/ever-everything-in-version-control.md
 [pol-INTC]: policies/intc-interface-contracts.md
 [pol-OBSV]: policies/obsv-observability.md
 [pol-PERF]: policies/perf-performance-targets.md
 [pol-PIPE]: policies/pipe-pipeline-to-production.md
 [pol-RECV]: policies/recv-recoverability.md
 [pol-SECD]: policies/secd-security-by-design.md
+[pol-TRUS]: policies/trus-trusted-components.md
+[pol-VURM]: policies/vurm-vulnerability-remediation.md
 [PSBAR 2018]: #psbar-2018
 [WCAG 2.2 AA]: #wcag-22-aa
