@@ -4,6 +4,7 @@ tier: normative
 status: active
 owner: alex.doe
 axis: common
+verified-by: [ctl-0001]
 applies-to: [svc-catalogue]
 review-by: "2026-12-31"
 ---

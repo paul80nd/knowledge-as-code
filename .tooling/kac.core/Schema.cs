@@ -14,7 +14,8 @@ public sealed class FieldSpec
 {
     public required string Name { get; init; }
     public bool Required { get; init; }
-    public string? RequiredWhen { get; init; } // e.g. "status == accepted"
+    public string? RequiredWhen { get; init; } // as written, for the message that quotes it
+    public RequiredWhen? RequiredWhenCondition { get; init; } // as parsed, for the check that applies it
     public string Type { get; init; } = "string"; // string|date|enum|id|list|bool|int
     public string? Of { get; init; } // element type when Type == list
     public IReadOnlyList<string>? Values { get; init; } // enum values (resolved)
@@ -64,6 +65,23 @@ public sealed class ClauseSpec(string idPattern, List<string> binding, List<stri
     // Longest first, so "MUST NOT" is recognised before the "MUST" that prefixes it.
     public IReadOnlyList<string> ModalsLongestFirst { get; } =
         [.. binding.Concat(advisory).OrderByDescending(m => m.Length)];
+}
+
+// A field's `required-when:` — the condition under which an otherwise optional field must be filled
+// in, as a test against one other field of the same document. A deliberately closed vocabulary:
+// `status == accepted`, `mechanism != not-enforced`, `classification in [personal, special-category]`.
+//
+// It is not the `expr:` language, and the difference is the point. A rule asks a question about a whole
+// document and may need to combine several; this asks one thing about one field, and stays legible in a
+// schema a reader is skimming for what a type requires.
+//
+// Absence answers false either way — including for `!=`. Where the field a condition names is missing,
+// `required-field` is already reporting that; requiring a second field on top of it would report one
+// omission as two.
+public sealed record RequiredWhen(string Field, bool Negated, IReadOnlyList<string> Values)
+{
+    public bool Holds(string? actual) =>
+        actual is not null && Values.Contains(actual, StringComparer.Ordinal) != Negated;
 }
 
 // One entry of a type's `rules:` block. A rule states an intention from the moment it is written, and
@@ -341,11 +359,14 @@ public sealed class Schema
             _ => null
         };
 
+        var requiredWhen = Yaml.Str(Yaml.Get(node, "required-when"));
+
         return new FieldSpec
         {
             Name = name,
             Required = Yaml.Bool(Yaml.Get(node, "required")),
-            RequiredWhen = Yaml.Str(Yaml.Get(node, "required-when")),
+            RequiredWhen = requiredWhen,
+            RequiredWhenCondition = ParseRequiredWhen(name, requiredWhen),
             Type = Yaml.Str(Yaml.Get(node, "type")) ?? "string",
             Of = Yaml.Str(Yaml.Get(node, "of")),
             Values = values,
@@ -410,6 +431,32 @@ public sealed class Schema
                 ? words
                 : null
         };
+    }
+
+    // Parsed at load, and a condition the vocabulary does not cover stops the load. Silence here is what
+    // let two of these sit dead: a form nobody had implemented read as a condition that simply never
+    // held, so the field it guarded was quietly never required and the schema went on claiming it was.
+    public static RequiredWhen? ParseRequiredWhen(string field, string? condition)
+    {
+        if (string.IsNullOrWhiteSpace(condition)) return null;
+
+        var inList = System.Text.RegularExpressions.Regex.Match(
+            condition, @"^\s*(\S+)\s+in\s*\[(.*)\]\s*$");
+        if (inList.Success)
+            return new RequiredWhen(inList.Groups[1].Value,
+                false,
+                [.. inList.Groups[2].Value.Split(',').Select(v => v.Trim()).Where(v => v.Length > 0)]);
+
+        foreach (var (op, negated) in new[] { ("!=", true), ("==", false) })
+        {
+            var parts = condition.Split(op, 2);
+            if (parts.Length != 2) continue;
+            return new RequiredWhen(parts[0].Trim(), negated, [parts[1].Trim()]);
+        }
+
+        throw new RuleExprException(
+            $"field '{field}' has a required-when the schema cannot read: '{condition}'. "
+            + "Write it as 'other == value', 'other != value', or 'other in [a, b]'.");
     }
 
     // The field a name resolves to for a given type: its own declaration where it has one, otherwise the

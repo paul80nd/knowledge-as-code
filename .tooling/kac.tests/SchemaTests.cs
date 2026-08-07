@@ -73,4 +73,42 @@ public class SchemaTests
         Assert.DoesNotContain(("id", "date"), edges);
         Assert.Equal(2, edges.Count);
     }
+
+    // -- required-when --
+    //
+    // The vocabulary is closed on purpose, and a form outside it stops the load. Two conditions sat dead
+    // for want of that: `!=` and `in [...]` read as conditions that simply never held, so the fields they
+    // guarded were never required and the schema went on claiming they were.
+
+    [Theory]
+    [InlineData("status == accepted", "accepted", true)]
+    [InlineData("status == accepted", "draft", false)]
+    [InlineData("mechanism != not-enforced", "ci", true)]
+    [InlineData("mechanism != not-enforced", "not-enforced", false)]
+    [InlineData("classification in [personal, special-category]", "personal", true)]
+    [InlineData("classification in [personal, special-category]", "special-category", true)]
+    [InlineData("classification in [personal, special-category]", "internal", false)]
+    public void RequiredWhen_reads_every_form_the_schema_uses(string condition, string actual, bool expected)
+        => Assert.Equal(expected, Schema.ParseRequiredWhen("f", condition)!.Holds(actual));
+
+    // Including for `!=`, where "not equal to anything" is tempting but wrong: the field the condition
+    // names is missing, `required-field` is already saying so, and a second finding would report one
+    // omission as two.
+    [Theory]
+    [InlineData("status == accepted")]
+    [InlineData("mechanism != not-enforced")]
+    [InlineData("classification in [personal, special-category]")]
+    public void RequiredWhen_does_not_hold_when_the_field_it_names_is_absent(string condition)
+        => Assert.False(Schema.ParseRequiredWhen("f", condition)!.Holds(null));
+
+    [Fact]
+    public void RequiredWhen_is_absent_when_nothing_is_declared()
+        => Assert.Null(Schema.ParseRequiredWhen("f", null));
+
+    [Theory]
+    [InlineData("status")]
+    [InlineData("status ~ accepted")]
+    [InlineData("status in personal, special-category")]
+    public void A_required_when_the_schema_cannot_read_stops_the_load(string condition)
+        => Assert.Throws<RuleExprException>(() => Schema.ParseRequiredWhen("f", condition));
 }

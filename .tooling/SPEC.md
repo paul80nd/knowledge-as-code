@@ -217,10 +217,10 @@ Bucket A is converted. What remains is the fact that unlocks the rest.
        These are heuristics and will be tuned wrong first. That is the argument for holding them as data: a regex in
        `.schema/` is a schema edit, where the same regex in C# is a release every consumer corpus has to take.
 
-2. [ ] **Teach `RequiredWhenHolds` `!=` and `in [...]`.** It splits on `==` and understands nothing else, so
-   `mechanism != not-enforced` (controls) and `classification in [personal, special-category]` (data) have never fired.
-   Two rules — `mechanism-has-evidence` and `personal-data-has-retention` — restate exactly those conditions and should
-   stay restatements once the declaration works.
+2. [x] **`required-when` reads `!=` and `in [...]`.** It split on `==` and understood nothing else, so two of the
+   schema's six conditional requirements had never fired: a control naming a mechanism it enforces was not asked for its
+   frequency, and personal data was not asked for its retention. `mechanism-has-evidence` and
+   `personal-data-has-retention` restate exactly those conditions and stay restatements.
 
 3. [ ] **Add the Bucket-B facts for `y-statement-present`** (`has_ystatement`, `ystatement_words`), which retires the
    largest remaining C# arm along with `RuleSpec.MaxWords`.

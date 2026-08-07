@@ -98,7 +98,7 @@ public static class Validator
         // -- required fields (universal + type), incl. required-when --
         foreach (var spec in t.DeclaredFields)
         {
-            var req = spec.Required || RequiredWhenHolds(spec.RequiredWhen, present);
+            var req = spec.Required || RequiredWhenHolds(spec.RequiredWhenCondition, present);
             var absent = !present.ContainsKey(spec.Name) || IsAbsentValue(present[spec.Name]);
             if (req && absent)
             {
@@ -871,15 +871,10 @@ public static class Validator
 
     // -- small utilities --
 
-    private static bool RequiredWhenHolds(string? expr, Dictionary<string, YamlNode> present)
-    {
-        if (string.IsNullOrWhiteSpace(expr)) return false;
-        var parts = expr.Split("==", 2);
-        if (parts.Length != 2) return false;
-        var field = parts[0].Trim();
-        var val = parts[1].Trim();
-        return present.TryGetValue(field, out var node) && Scalar(node) == val;
-    }
+    private static bool RequiredWhenHolds(RequiredWhen? condition, Dictionary<string, YamlNode> present)
+        => condition is not null
+           && present.TryGetValue(condition.Field, out var node)
+           && condition.Holds(Scalar(node));
 
     private static bool IsAbsentValue(YamlNode node) =>
         node switch

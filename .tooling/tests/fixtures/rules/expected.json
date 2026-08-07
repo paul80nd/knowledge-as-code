@@ -1,8 +1,8 @@
 {
   "summary": {
-    "validated": 6,
+    "validated": 8,
     "skipped": 0,
-    "errors": 3,
+    "errors": 5,
     "warnings": 3
   },
   "findings": [
@@ -12,6 +12,20 @@
       "severity": "warning",
       "check": "hub-not-specification",
       "message": "Prose has outgrown the links. A capability is a hub — move the detail into the documents it should be pointing at, and link to them from here."
+    },
+    {
+      "file": "controls/0001-frequency-not-stated.md",
+      "line": 1,
+      "severity": "error",
+      "check": "required-field",
+      "message": "missing required field 'frequency' (required when mechanism != not-enforced)."
+    },
+    {
+      "file": "data/borrower-records.md",
+      "line": 1,
+      "severity": "error",
+      "check": "required-field",
+      "message": "missing required field 'retention' (required when classification in [personal, special-category])."
     },
     {
       "file": "discoveries/pool-exhaustion-under-load.md",

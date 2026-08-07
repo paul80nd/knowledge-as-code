@@ -32,6 +32,7 @@ document's type from its folder, so folder → schema is an identity lookup with
 fields:
   <name>:
     required: true|false        # default false
+    required-when: '<other> == <value>' | '<other> != <value>' | '<other> in [a, b]'
     type: string|date|enum|id|list|bool|int
     of: id|string               # element type, when type is list
     values: [ ... ]             # when type is enum, or an $enums.<name> reference
@@ -42,6 +43,12 @@ fields:
     description: >              # one line, rendered into the generated Metadata table
     notes: >                    # the longer why; schema-only, and the fallback when there is no description
 ```
+
+`required-when` takes those three forms and no others — a condition the loader cannot read stops the load rather than
+reading as one that never holds. It tests one other field of the same document; a condition needing more than that is a
+rule with an `expr:`, not a field declaration. Where the field it names is absent the condition does not hold, `!=`
+included: `required-field` is already reporting that absence, and requiring a second field on top would report one
+omission as two.
 
 `description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
 and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room
@@ -77,9 +84,9 @@ Beyond `fields`, each type file declares:
 | `index`                    | Columns and sort order for the generated index                                                                   |
 | `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |
 
-**`shape`.** Most types are a **collection** — a folder of records, a page describing them, and a template to copy.
-The glossary is a **single-document** type: one document read end to end, whose page *is* the record. A collection
-declares its `folder:`; a single-document type declares none, because it has none, and nothing indexes it.
+**`shape`.** Most types are a **collection** — a folder of records, a page describing them, and a template to copy. The
+glossary is a **single-document** type: one document read end to end, whose page *is* the record. A collection declares
+its `folder:`; a single-document type declares none, because it has none, and nothing indexes it.
 
 It is declared rather than inferred. An absent `folder:` and a deliberate `folder: null` are the same string once
 parsed, so a shape read off the folder cannot tell a single-document type from a collection whose folder key was lost.
