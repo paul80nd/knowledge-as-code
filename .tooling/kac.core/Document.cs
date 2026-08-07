@@ -73,38 +73,49 @@ public class Doc
     public List<LinkRef> RelatedSectionLinks = [];
     public QuoteBlock? YStatement;
 
-    public static Doc? Parse(string rel, string text, Schema schema)
+    // `requireFrontmatter: false` is for a type page of a collection type. It carries no frontmatter
+    // and is not a record, but it holds links and generated blocks that are worth checking, so it is
+    // parsed for its prose alone.
+    public static Doc? Parse(string rel, string text, Schema schema, bool requireFrontmatter = true)
     {
         var pipeline = new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().Build();
         var ast = Markdown.Parse(text, pipeline);
 
         var fmBlock = ast.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
-        if (fmBlock is null) return null; // not migrated — caller counts and skips
+        if (fmBlock is null && requireFrontmatter) return null; // not migrated — caller counts and skips
 
         var top = rel.Split('/')[0];
-        schema.ByFolder.TryGetValue(top, out var type);
+        // A single-document type has no folder: its page at the repo root *is* the record, so the
+        // type is found by the page name rather than by the directory above it.
+        if (!schema.ByFolder.TryGetValue(top, out var type) && !rel.Contains('/'))
+            type = schema.ByFolder.Values.FirstOrDefault(
+                t => t.IsSingleDocument && string.Equals(t.Page, rel, StringComparison.OrdinalIgnoreCase));
 
         var doc = new Doc { Rel = rel, Folder = top, Type = type, Text = text, Ast = ast };
 
         // Frontmatter: strip the --- fences and parse with the representation model so
-        // key order and scalar quoting survive.
-        var yamlText = StripFences(text, fmBlock);
-        doc.FrontStartLine = fmBlock.Line + 1;
-        try
+        // key order and scalar quoting survive. A page parsed without it keeps `Front` null and is
+        // only ever asked about its prose, so the rest of the parse still runs.
+        if (fmBlock is not null)
         {
-            var stream = new YamlStream();
-            stream.Load(new StringReader(yamlText));
-            if (stream.Documents.Count > 0 && stream.Documents[0].RootNode is YamlMappingNode map)
+            var yamlText = StripFences(text, fmBlock);
+            doc.FrontStartLine = fmBlock.Line + 1;
+            try
             {
-                doc.Front = map;
-                foreach (var kv in map.Children)
-                    doc.FrontKeys.Add(((YamlScalarNode)kv.Key).Value ?? "");
+                var stream = new YamlStream();
+                stream.Load(new StringReader(yamlText));
+                if (stream.Documents.Count > 0 && stream.Documents[0].RootNode is YamlMappingNode map)
+                {
+                    doc.Front = map;
+                    foreach (var kv in map.Children)
+                        doc.FrontKeys.Add(((YamlScalarNode)kv.Key).Value ?? "");
+                }
             }
+            catch
+            {
+                doc.Front = null;
+            } // signalled as a parse error downstream
         }
-        catch
-        {
-            doc.Front = null;
-        } // signalled as a parse error downstream
 
         // Headings.
         foreach (var h in ast.Descendants<HeadingBlock>())

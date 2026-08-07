@@ -201,8 +201,11 @@ public static class Generator
     // `type-setup` joins them for a different reason: it checks whether the type is stood up at all,
     // and this table is rendered onto the very page whose absence it reports. A reader who can see the
     // row does not need it.
+    // `generated-block` joins them alongside `type-setup`, for the same reason: both are checks on
+    // the type page itself rather than on a document of that type, and this table describes what a
+    // contributor's document is held to.
     private static readonly HashSet<string> IntentionallyUndocumented =
-        new(["type", "list", "bracket-literal", "type-setup"], StringComparer.Ordinal);
+        new(["type", "list", "bracket-literal", "type-setup", "generated-block"], StringComparer.Ordinal);
 
     public static string ChecksTable(TypeSchema t)
     {

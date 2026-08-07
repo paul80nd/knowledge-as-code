@@ -40,6 +40,30 @@ public static class Commands
         foreach (var doc in docs)
             Validator.CheckDocument(doc, schema, repoRoot, findings);
 
+        // A collection type's page is not a record — it carries no frontmatter and describes the
+        // documents beneath it rather than being one — so the structural checks do not apply. What it
+        // does carry is links, and the generated blocks, and it is the page every record links back
+        // to and every contributor reads first. A single-document type's page is absent from this
+        // pass because it is a record, already checked above.
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        {
+            if (string.IsNullOrEmpty(t.Page)) continue;
+            if (paths.Count > 0 && !paths.Any(p => t.Page == p.Replace('\\', '/').TrimEnd('/'))) continue;
+            var full = Path.Combine(repoRoot, t.Page);
+            if (!File.Exists(full)) continue; // absence is type-setup's to report, not this pass's
+
+            var text = File.ReadAllText(full);
+
+            // Every type page carries the two generated blocks, whatever its shape.
+            Validator.CheckGeneratedBlocks(t.Page, text, [$"schema-{key}", $"checks-{key}"], findings);
+
+            // The link pass is only for a collection's page. A single-document type's page has
+            // already had it, as a record, along with everything else.
+            if (t.IsSingleDocument) continue;
+            var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
+            if (page is not null) Validator.CheckPageLinks(page, schema, repoRoot, findings);
+        }
+
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
         Validator.CheckCorpus(docs, findings);
 

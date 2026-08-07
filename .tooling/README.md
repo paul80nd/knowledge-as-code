@@ -59,13 +59,20 @@ and `.git/` is never walked), then applies the taxonomy exclusions from `knowled
 
 - `knowledge-as-code/`, `_plan/`, `_reports/`, and `.git/` `.idea/` `.claude/`
 - `**/template.md`, `**/INDEX.md`
-- root `README.md`, root `CLAUDE.md`, and each type's root page (`adrs.md`, `services.md`, …)
+- root `README.md` and root `CLAUDE.md`
 - anything outside a folder that maps to a type schema
 
 A document is validated **only if it carries a YAML frontmatter block** — that is how a document opts into the schema.
-Files in a type folder without frontmatter are counted as *skipped (not yet migrated)* and reported in the summary, not
-failed. Today that means **only ADRs are validated**; every other type is pre-migration prose and is skipped until it
-gains frontmatter.
+Files in a type folder without frontmatter are counted as *skipped (not yet migrated)* and reported in the summary,
+not failed.
+
+**Type pages get a pass of their own**, chosen by the type's `shape`:
+
+- a **`collection`** page — `adrs.md`, `services.md` — is not a record and carries no frontmatter, so the structural
+  checks do not apply. It is checked for link resolution, undefined and non-canonical labels, unused definitions, and
+  that its generated blocks still have their markers.
+- a **`single-document`** page — `glossary.md` — *is* the record, so it is validated like any other document, plus
+  the same generated-block check.
 
 ## Checks
 
@@ -126,6 +133,7 @@ A type that declares no `clauses:` block is checked for none of these.
 | `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                   |
 | `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`) and points at a document that exists.                                                                                                                                                                   |
 | `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. A `single-document` type has a page and no folder. Skipped when the run is narrowed to paths.    |
+| `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                              |
 | `unused-definition`       | warning | A link definition that nothing references.                                                                                                                                                                                                                                              |
 | `bracket-literal`         | warning | A `[...]` left in prose that looks like a reference but has no definition (use an inline link if it is deliberate).                                                                                                                                                                     |
 

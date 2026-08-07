@@ -1,3 +1,11 @@
+---
+id: glossary
+tier: descriptive
+status: draft
+review-by: "2027-08-07"
+owner: paul.law
+---
+
 # Glossary
 
 The words we use, and what we mean by them.
@@ -44,7 +52,7 @@ A one-sentence definition of what this means in the domain.
 
 **Not:** the neighbouring term it is most often confused with, and the difference in a few words.
 
-Owned by [svc-example](/services/example.md). See [adr-NNNN].
+Owned by [svc-lending]. See [adr-0001].
 
 ## Adding a term
 
@@ -115,3 +123,6 @@ file, so these fields describe `glossary.md` itself.
 | `unused-definition`         | warning | A link definition that nothing references.                                    |
 
 <!-- END GENERATED: checks-glossary -->
+
+[adr-0001]: /adrs/0001-knowledge-as-code.md
+[svc-lending]: /services/lending.md
