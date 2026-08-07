@@ -60,12 +60,12 @@ where ownership belongs if it needs stating: who is bound is a scope question, n
 One row per clause. Ordered **MUST**, **MUST NOT**, SHOULD, COULD — binding levels bold, non-binding plain, so the
 weight drops off at the boundary without needing a divider the table format can't give you.
 
-| Id       | Clause                                |
-|----------|---------------------------------------|
-| `XXXXXX` | **MUST** {{obligation}}               |
-| `XXXXXX` | **MUST NOT** {{prohibition}}          |
-| `XXXXXX` | SHOULD {{recommendation}}             |
-| `XXXXXX` | COULD {{aspiration}} _(aspirational)_ |
+| Id       | Clause                                | Alignment           |
+|----------|---------------------------------------|---------------------|
+| `XXXXXX` | **MUST** {{obligation}}               | [FRAMEWORK].{{ref}} |
+| `XXXXXX` | **MUST NOT** {{prohibition}}          |                     |
+| `XXXXXX` | SHOULD {{recommendation}}             |                     |
+| `XXXXXX` | COULD {{aspiration}} _(aspirational)_ |                     |
 
 **Ids.** `[A-Z][A-Z0-9]{1,6}`, unique within the document, immutable once the policy is active — anything else cites
 them as `pol-XXXX.CLAUSE`, CI holds every citation to a clause that exists, and removing one is a breaking change.
@@ -82,19 +82,12 @@ has escaped downward and belongs in the standard instead.
 clause is unevidenceable and needs rewriting — "consider accessibility" fails, "establish accessibility requirements
 during design" passes. The question itself is not published; controls carry evidence.
 
+**Alignment.** Per clause, and only where a genuine mapping exists — an invented mapping is worse than none, and an
+empty cell is honest. Reference-style links resolving into `/frameworks`, with the framework version folded into the id
+(`iso27001-2022`, not `iso27001:2022` — `:` is corpus scope). Clause refs within a framework use `.`.
+
 **`_(aspirational)_`** marks a clause we hold to but expect no standard beneath yet. Use it deliberately — an
 aspirational MUST is a real and useful state, but a policy where most clauses carry it is a wish list.
-
-## Alignment
-
-| Reference                 | Area             |
-|---------------------------|------------------|
-| ISO/IEC 27001:2022 A.N.NN | {{control area}} |
-
-The product is **aligned with** these areas; it is not certified against ISO/IEC 27001:2022 and is not audited.
-Alignment exists because the framework covers the right ground.
-
-_(Delete this section if no ISO area corresponds — an invented mapping is worse than none.)_
 
 ## Exceptions
 
@@ -114,6 +107,7 @@ Delete this heading if there is nothing to say. An empty section is worse than a
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-XXXX]: xxxx-kebab-slug.md
+[FRAMEWORK]: /frameworks.md#framework-anchor
 
 _(Link definitions, at the very foot, sorted by label. References to another document **by its id** use **shortcut
 reference links** — write `[pol-DEVI]` in the prose and define it once here, so a rename is a one-line change. The label

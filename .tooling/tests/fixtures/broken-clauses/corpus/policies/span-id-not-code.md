@@ -23,6 +23,6 @@ question the identity line settles for a document id.
 
 ## Clauses
 
-| Id    | Clause                                               |
-|-------|------------------------------------------------------|
-| CLEAN | **MUST** trigger `clause-id-format` and nothing else |
+| Id    | Clause                                               | Alignment |
+|-------|------------------------------------------------------|-----------|
+| CLEAN | **MUST** trigger `clause-id-format` and nothing else |           |

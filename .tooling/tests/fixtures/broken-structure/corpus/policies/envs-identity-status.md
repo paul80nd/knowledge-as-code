@@ -23,7 +23,7 @@ wrong-case branch, which `know-identity-case.md` covers.
 
 ## Clauses
 
-| Id      | Clause                                              |
-|---------|-----------------------------------------------------|
-| `CLEAN` | **MUST** trigger `identity-status` and nothing else |
+| Id      | Clause                                              | Alignment |
+|---------|-----------------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `identity-status` and nothing else |           |
 

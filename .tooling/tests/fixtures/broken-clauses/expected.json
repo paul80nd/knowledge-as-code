@@ -53,7 +53,7 @@
       "line": 26,
       "severity": "error",
       "check": "clause-table",
-      "message": "the clause table is headed 'Ref | Obligation' — it must be headed 'Id | Clause'."
+      "message": "the clause table is headed 'Ref | Obligation' — it must be headed 'Id | Clause | Alignment'."
     },
     {
       "file": "policies/moda-no-modal.md",
@@ -67,7 +67,7 @@
       "line": 24,
       "severity": "error",
       "check": "clause-table",
-      "message": "the '## Clauses' section holds no table — write one row per obligation, headed 'Id | Clause'."
+      "message": "the '## Clauses' section holds no table — write one row per obligation, headed 'Id | Clause | Alignment'."
     },
     {
       "file": "policies/ordr-out-of-order.md",

@@ -1,0 +1,85 @@
+# Frameworks
+
+The external frameworks this corpus refers to, and what each one obliges us to.
+
+A [policy](/policies) maps its clauses to a framework's controls in the `Alignment` column of its clause table, as
+`[ISO 27001:2022].A.8.24`. Those references resolve here, and this page is the only place that says what the
+relationship actually is — whether we are bound to a framework, hold ourselves to it, or simply learned from it. A
+policy states obligations; it does not state our standing against a framework, because that standing changes on its own
+schedule and would otherwise have to be corrected in twenty places at once.
+
+This page is maintained by hand. It is not generated, and it is not a knowledge record — there is no frontmatter, no id
+and no index. It exists because the references in the corpus need somewhere honest to land.
+
+## How to read the three postures
+
+| Posture            | What it means                                                                                                                     |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| **Obliged**        | Something outside us requires it — certification we hold, or law that applies to us. Not optional.                                |
+| **Self-obligated** | Nothing external compels it; a policy of ours does. Binding on us because we said so, and revocable only by changing that policy. |
+| **Inspiration**    | We took ideas from it. It shapes our thinking and binds nothing. A clause may cite it for provenance, not for obligation.         |
+
+The distinction matters when someone asks *why* a clause exists. "Because we are certified against it" and "because it
+seemed sensible" are different answers, and only one of them survives a change of mind.
+
+## Obliged
+
+### ISO/IEC 27001:2022 {#iso27001-2022}
+
+**Registered.** We hold certification against ISO/IEC 27001:2022 and are audited against it. Annex A is the control set
+our security, delivery and operations policies map their clauses to, and the mapping is the evidence trail an auditor
+follows from a control back to the commitment it implements.
+
+Registration is why the mapping has to be honest rather than generous. A clause mapped to a control it does not really
+implement is worse than an unmapped clause: the gap is now hidden behind a reference that looks like coverage. Where no
+clause genuinely maps to a control, the control is absent from the corpus and that absence is the finding.
+
+Referenced by: most policies under `category: security`, `delivery` and `operations`.
+
+### Public Sector Bodies Accessibility Regulations 2018 {#psbar-2018}
+
+**Obliged in law**, in the markets we serve. Sets the accessibility duty on public sector websites and mobile
+applications, including the requirement to publish and maintain an accessibility statement.
+
+Referenced by: [pol-A11Y].
+
+### EN 301 549 {#en-301-549}
+
+**Obliged in law**, as the harmonised European standard the accessibility regulations point at. It is the technical
+expression of the duty [PSBAR 2018] creates, and it incorporates [WCAG 2.2 AA] by reference for web content.
+
+Referenced by: [pol-A11Y].
+
+## Self-obligated
+
+### WCAG 2.2 AA {#wcag-22-aa}
+
+**Self-obligated**, under [pol-A11Y]. We target level AA because the policy says we do, not because a particular market
+has yet required that version of it. Where law obliges an older or narrower target, this is the higher bar and the one
+we hold.
+
+Referenced by: [pol-A11Y].
+
+## Inspiration
+
+Nothing sits here yet. When a framework shapes a policy without binding it — a maturity model, a well-architected
+review, someone else's published standard — it belongs in this section with a note on what we took from it. Recording
+that is worth doing: an idea whose provenance is written down can be re-examined when the source moves on, and an idea
+whose provenance is forgotten quietly becomes folklore.
+
+## Adding a framework
+
+1. Decide the posture first. If you cannot say which of the three it is, the corpus is not ready to reference it.
+2. Add a heading under that posture with an explicit anchor — `{#iso27001-2022}`, the version folded in with a hyphen
+   rather than a colon, since `:` scopes ids inside the corpus.
+3. Say what it is, what it obliges, and what changed if the posture is new. A framework we have just become obliged by
+   reads differently from one we have been certified against for years.
+4. In the citing policy, define the link at the foot — `[ISO 27001:2022]: /frameworks.md#iso27001-2022` — below the
+   corpus references, and cite it per clause rather than per document.
+
+A framework nothing references does not belong here. If we have stopped using one, say so and when, rather than deleting
+the entry: a policy clause written under its influence is easier to read with the history intact.
+
+[pol-A11Y]: policies/a11y-accessibility.md
+[PSBAR 2018]: #psbar-2018
+[WCAG 2.2 AA]: #wcag-22-aa

@@ -431,17 +431,19 @@ public static class Validator
         if (t.Clauses is not { } spec) return;
         if (!d.H2.Any(h => string.Equals(h, spec.Section, StringComparison.OrdinalIgnoreCase))) return;
 
+        var headers = string.Join(" | ", spec.Columns);
+
         if (d.ClauseHeaders is null)
         {
             err("clause-table", $"the '## {spec.Section}' section holds no table — write one row per "
-                                + "obligation, headed 'Id | Clause'.", d.ClauseSectionLine);
+                                + $"obligation, headed '{headers}'.", d.ClauseSectionLine);
             return;
         }
 
-        if (!d.ClauseHeaders.SequenceEqual(["Id", "Clause"], StringComparer.Ordinal))
+        if (!d.ClauseHeaders.SequenceEqual(spec.Columns, StringComparer.Ordinal))
         {
             err("clause-table", $"the clause table is headed '{string.Join(" | ", d.ClauseHeaders)}' — "
-                                + "it must be headed 'Id | Clause'.", d.ClauseTableLine);
+                                + $"it must be headed '{headers}'.", d.ClauseTableLine);
             return;
         }
 

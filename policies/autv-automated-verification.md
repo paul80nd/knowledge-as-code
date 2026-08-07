@@ -7,7 +7,6 @@ aligns-with:
   - ISO27001:2022 A.8.25
   - ISO27001:2022 A.8.28
   - ISO27001:2022 A.8.29
-  - ISO27001:2022 A.8.33
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ continuous-integration, quality-gates, testing ]
@@ -33,29 +32,17 @@ configuration, data pipelines and the documentation held with them.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                 |
-|-----------|------------------------------------------------------------------------------------------------------------------------|
-| `INTEG`   | **MUST** build and verify every change automatically, on integration, without anyone asking for it                     |
-| `BLOCK`   | **MUST** treat a failing check as blocking: a red build does not merge and does not promote                            |
-| `REPRO`   | **MUST** be able to reproduce a build from version control alone, on any machine set up to do so                       |
-| `LEVELS`  | **MUST** test at the levels the change warrants, fast enough that the feedback arrives while the work is still in hand |
-| `REGRESS` | **MUST** add a regression test for every defect we fix, so it can only be found once                                   |
-| `BROKEN`  | **MUST** treat a broken mainline as the team's first priority                                                          |
-| `BYPASS`  | **MUST NOT** merge or release over a failing check without a recorded deviation ([pol-DEVI])                           |
-| `DISABLE` | **MUST NOT** disable, skip, silence or suppress a check or a warning without a recorded reason                         |
-| `MACHINE` | **MUST NOT** depend on a particular person's machine to produce a build                                                |
-
-## Alignment
-
-| Reference                 | Area                                           |
-|---------------------------|------------------------------------------------|
-| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle                   |
-| ISO/IEC 27001:2022 A.8.28 | Secure coding                                  |
-| ISO/IEC 27001:2022 A.8.29 | Security testing in development and acceptance |
-| ISO/IEC 27001:2022 A.8.33 | Test information                               |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id        | Clause                                                                                                                 | Alignment                                        |
+|-----------|------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `INTEG`   | **MUST** build and verify every change automatically, on integration, without anyone asking for it                     | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.28 |
+| `BLOCK`   | **MUST** treat a failing check as blocking: a red build does not merge and does not promote                            | [ISO 27001:2022].A.8.29                          |
+| `REPRO`   | **MUST** be able to reproduce a build from version control alone, on any machine set up to do so                       |                                                  |
+| `LEVELS`  | **MUST** test at the levels the change warrants, fast enough that the feedback arrives while the work is still in hand | [ISO 27001:2022].A.8.29                          |
+| `REGRESS` | **MUST** add a regression test for every defect we fix, so it can only be found once                                   | [ISO 27001:2022].A.8.29                          |
+| `BROKEN`  | **MUST** treat a broken mainline as the team's first priority                                                          |                                                  |
+| `BYPASS`  | **MUST NOT** merge or release over a failing check without a recorded deviation ([pol-DEVI])                           | [ISO 27001:2022].A.8.29                          |
+| `DISABLE` | **MUST NOT** disable, skip, silence or suppress a check or a warning without a recorded reason                         |                                                  |
+| `MACHINE` | **MUST NOT** depend on a particular person's machine to produce a build                                                |                                                  |
 
 ## Exceptions
 
@@ -64,3 +51,4 @@ recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards r
 time, not forgiveness.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

@@ -23,7 +23,7 @@ This fixture only. It exists so `identity-type` is exercised — the check that 
 
 ## Clauses
 
-| Id      | Clause                                            |
-|---------|---------------------------------------------------|
-| `CLEAN` | **MUST** trigger `identity-type` and nothing else |
+| Id      | Clause                                            | Alignment |
+|---------|---------------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `identity-type` and nothing else |           |
 

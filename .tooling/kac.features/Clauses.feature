@@ -10,10 +10,10 @@ Feature: Clause table checks
     When I validate the corpus
     Then the findings for "policies/nota-clauses-as-bullets.md" are exactly:
       | line | check       | message                                                                                  |
-      | 24   | clause-table | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause'. |
+      | 24   | clause-table | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause \| Alignment'. |
     And the findings for "policies/head-wrong-headers.md" are exactly:
       | line | check       | message                                                                     |
-      | 26   | clause-table | the clause table is headed 'Ref \| Obligation' — it must be headed 'Id \| Clause'. |
+      | 26   | clause-table | the clause table is headed 'Ref \| Obligation' — it must be headed 'Id \| Clause \| Alignment'. |
     And the findings for "policies/empt-no-rows.md" are exactly:
       | line | check       | message                                                            |
       | 25   | clause-table | the clause table has no rows — a policy that binds nothing binds nobody. |
@@ -71,9 +71,9 @@ Feature: Clause table checks
       | policies/cref-unknown-clause.md            | error    | 16   | clause-ref       | 'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry.   |
       | policies/dupe-repeated-id.md               | error    | 28   | clause-id-unique | clause id 'SAME' is used twice — a citation of it names two obligations.                           |
       | policies/empt-no-rows.md                   | error    | 25   | clause-table     | the clause table has no rows — a policy that binds nothing binds nobody.                           |
-      | policies/head-wrong-headers.md             | error    | 26   | clause-table     | the clause table is headed 'Ref \| Obligation' — it must be headed 'Id \| Clause'.                 |
+      | policies/head-wrong-headers.md             | error    | 26   | clause-table     | the clause table is headed 'Ref \| Obligation' — it must be headed 'Id \| Clause \| Alignment'.                 |
       | policies/moda-no-modal.md                  | error    | 28   | clause-modal     | clause 'We will trigger clause-modal and nothing else' does not open with a modal — write one of MUST, MUST NOT, SHOULD, COULD. |
-      | policies/nota-clauses-as-bullets.md        | error    | 24   | clause-table     | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause'.     |
+      | policies/nota-clauses-as-bullets.md        | error    | 24   | clause-table     | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause \| Alignment'.     |
       | policies/ordr-out-of-order.md              | warning  | 28   | clause-order     | clause 'SECND' is a 'MUST' but follows a 'MUST NOT' — group the table MUST, MUST NOT, SHOULD, COULD. |
       | policies/refs-unknown-document.md          | error    | 16   | clause-ref       | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist.                                             |
       | policies/span-id-not-code.md               | error    | 28   | clause-id-format | clause id 'CLEAN' is not a code span — write it as `CLEAN`.                                        |

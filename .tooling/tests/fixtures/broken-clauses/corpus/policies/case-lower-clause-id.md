@@ -22,6 +22,6 @@ This fixture only. It exists so `clause-id-format` is exercised on its pattern b
 
 ## Clauses
 
-| Id      | Clause                                                |
-|---------|-------------------------------------------------------|
-| `clean` | **MUST** trigger `clause-id-format` and nothing else |
+| Id      | Clause                                               | Alignment |
+|---------|------------------------------------------------------|-----------|
+| `clean` | **MUST** trigger `clause-id-format` and nothing else |           |

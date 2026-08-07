@@ -23,8 +23,8 @@ mnemonic prefix is excluded from the slug-length measurement.
 
 ## Clauses
 
-| Id      | Clause                                                                                             |
-|---------|----------------------------------------------------------------------------------------------------|
-| `CLEAN` | **MUST** keep this document free of findings                                                       |
-| `LOCAL` | **MUST NOT** give it any internal links, so nothing here depends on the rest of the fixture corpus |
+| Id      | Clause                                                                                             | Alignment |
+|---------|----------------------------------------------------------------------------------------------------|-----------|
+| `CLEAN` | **MUST** keep this document free of findings                                                       |           |
+| `LOCAL` | **MUST NOT** give it any internal links, so nothing here depends on the rest of the fixture corpus |           |
 

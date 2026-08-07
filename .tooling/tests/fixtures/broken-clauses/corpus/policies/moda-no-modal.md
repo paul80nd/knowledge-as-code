@@ -23,6 +23,6 @@ This fixture only. It exists so `clause-modal` is exercised where no modal opens
 
 ## Clauses
 
-| Id      | Clause                                              |
-|---------|-----------------------------------------------------|
-| `CLEAN` | We will trigger `clause-modal` and nothing else     |
+| Id      | Clause                                          | Alignment |
+|---------|-------------------------------------------------|-----------|
+| `CLEAN` | We will trigger `clause-modal` and nothing else |           |

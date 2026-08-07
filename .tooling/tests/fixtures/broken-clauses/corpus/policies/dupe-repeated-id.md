@@ -22,7 +22,7 @@ This fixture only. It exists so `clause-id-unique` is exercised.
 
 ## Clauses
 
-| Id     | Clause                                               |
-|--------|------------------------------------------------------|
-| `SAME` | **MUST** trigger `clause-id-unique` and nothing else |
-| `SAME` | **MUST NOT** carry a second id of its own            |
+| Id     | Clause                                               | Alignment |
+|--------|------------------------------------------------------|-----------|
+| `SAME` | **MUST** trigger `clause-id-unique` and nothing else |           |
+| `SAME` | **MUST NOT** carry a second id of its own            |           |

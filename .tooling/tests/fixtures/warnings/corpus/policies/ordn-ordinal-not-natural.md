@@ -25,8 +25,8 @@ This fixture only.
 
 ## Clauses
 
-| Id       | Clause                                                                 |
-|----------|------------------------------------------------------------------------|
-| `ORDER`  | **MUST** treat a byte-wise sort of numbered references as out of order |
-| `ACCEPT` | **MUST NOT** accept it merely because it is consistent                 |
+| Id       | Clause                                                                 | Alignment |
+|----------|------------------------------------------------------------------------|-----------|
+| `ORDER`  | **MUST** treat a byte-wise sort of numbered references as out of order |           |
+| `ACCEPT` | **MUST NOT** accept it merely because it is consistent                 |           |
 

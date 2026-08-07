@@ -23,6 +23,6 @@ This fixture only. It exists so `clause-ref` is exercised where the document res
 
 ## Clauses
 
-| Id      | Clause                                             |
-|---------|----------------------------------------------------|
-| `CLEAN` | **MUST** trigger `clause-ref` and nothing else     |
+| Id      | Clause                                         | Alignment |
+|---------|------------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `clause-ref` and nothing else |           |

@@ -21,9 +21,14 @@ accidentally relitigate a security commitment.
 They also give the standards somewhere to point. A standard that cites no ADR and no policy has no provenance, which is
 usually a sign it is either guidance in disguise or a decision nobody has actually made.
 
-Policies record alignment with **ISO/IEC 27001:2022** Annex A where relevant. This is **alignment, not certification** —
-we are not registered, and the alignment exists because the framework covers the right ground, not because anyone is
-auditing against it. The `aligns-with` field makes that coverage reportable.
+Policies map their clauses to external frameworks — **ISO/IEC 27001:2022** Annex A most often — in the `Alignment`
+column of the clause table. Per clause, because a policy aligns with a control through one obligation rather than
+through all of them, and an empty cell where no genuine mapping exists is more use than an invented one.
+
+What our standing against a framework actually is — bound by certification, self-obligated by a policy of our own, or
+simply borrowed from — is recorded once in [Frameworks](/frameworks.md) and nowhere else. A policy states obligations;
+it does not state our standing, which changes on its own schedule and would otherwise have to be corrected in twenty
+places at once.
 
 ## Scope
 
@@ -64,7 +69,7 @@ under governance is the clearest) are the ones most likely to be revisited.
 | `owner` †     | ●   | string | A named person, never a team alias.                                                  |
 | `tags` †      |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
 | `category`    | ●   | enum   | The broad area the commitment belongs to. Controlled, and deliberately few.          |
-| `aligns-with` |     | list   | e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance.                              |
+| `aligns-with` |     | list   | e.g. `ISO27001:2022 A.8.25`. The document-level roll-up of what its clauses map to.  |
 | `review-by`   | ●   | date   | Quoted. Annual is usually right for a policy.                                        |
 
 **Enum values**
@@ -92,13 +97,16 @@ under governance is the clearest) are the ones most likely to be revisited.
 5. State the scope it binds, then the commitment itself as clauses — one obligation per row, each with a short
    upper-case id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Add any explicit exceptions beneath them. Exceptions
    stated up front are honest; exceptions discovered later are erosion.
-6. Set `aligns-with` where an ISO 27001 Annex A area corresponds. Use `aligns-with`, never wording that implies
-   compliance or certification.
+6. Map clauses to framework controls in the `Alignment` column where a genuine mapping exists, and roll the references
+   up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](/frameworks.md) — decide
+   its posture there before citing it here.
 7. Set `review-by`. Policies change rarely, so an annual review is usually right.
 
 **Conventions**
 
-* **Never say "compliant" or "certified".** We align. The distinction matters if anyone ever reads this externally.
+* **A policy does not state our standing against a framework.** Not "compliant", not "certified", not "registered" —
+  a policy maps its clauses to controls and says nothing about what that mapping is worth. Standing is recorded once,
+  in [Frameworks](/frameworks.md), so that a change of certification is one edit rather than twenty.
 * **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice,
   and a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
   standards against them, so the set of implementers is not knowable from here — and a policy nothing in *this* wiki

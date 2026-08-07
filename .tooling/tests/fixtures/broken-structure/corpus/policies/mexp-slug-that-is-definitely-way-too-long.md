@@ -23,7 +23,7 @@ This fixture only.
 
 ## Clauses
 
-| Id      | Clause                                          |
-|---------|-------------------------------------------------|
-| `CLEAN` | **MUST** trigger `slug-length` and nothing else |
+| Id      | Clause                                          | Alignment |
+|---------|-------------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `slug-length` and nothing else |           |
 

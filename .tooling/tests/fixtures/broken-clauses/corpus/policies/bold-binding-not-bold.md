@@ -22,6 +22,6 @@ This fixture only. It exists so `clause-modal` is exercised on its emphasis bran
 
 ## Clauses
 
-| Id      | Clause                                      |
-|---------|---------------------------------------------|
-| `CLEAN` | MUST trigger `clause-modal` and nothing else |
+| Id      | Clause                                       | Alignment |
+|---------|----------------------------------------------|-----------|
+| `CLEAN` | MUST trigger `clause-modal` and nothing else |           |

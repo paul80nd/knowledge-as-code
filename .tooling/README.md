@@ -107,7 +107,7 @@ A type that declares no `clauses:` block is checked for none of these.
 
 | Check                        | Level   | What it enforces                                                                                       |
 |------------------------------|---------|--------------------------------------------------------------------------------------------------------|
-| `clause-table`               | error   | The declared section holds a table headed `Id \| Clause`, with at least one row.                       |
+| `clause-table`               | error   | The declared section holds a table headed with the block's `columns`, with at least one row.           |
 | `clause-id-format`           | error   | Each id is a single code span matching the block's `id-pattern`.                                       |
 | `clause-id-unique`           | error   | Ids are unique within the document — a citation names one obligation.                                  |
 | `clause-modal`               | error   | Each clause opens with a declared modal; `binding` ones are bold, `advisory` ones plain.               |

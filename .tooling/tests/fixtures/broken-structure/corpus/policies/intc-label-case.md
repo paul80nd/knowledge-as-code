@@ -24,9 +24,9 @@ fixing only one of the two leaves the reader still looking at an id that does no
 
 ## Clauses
 
-| Id      | Clause                                                         |
-|---------|----------------------------------------------------------------|
-| `CLEAN` | **MUST** trigger `label-canonical` four times and nothing else |
+| Id      | Clause                                                         | Alignment |
+|---------|----------------------------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `label-canonical` four times and nothing else |           |
 
 [ADR-0004]: /adrs/0004-missing-consequences.md
 [pol-vurm]: vurm-bad-id-width.md

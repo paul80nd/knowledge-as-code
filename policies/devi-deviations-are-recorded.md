@@ -31,26 +31,16 @@ whether the departure is permanent, temporary or made under pressure during an i
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                     |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| `RECORD`  | **MUST** record a deviation before departing from a policy or standard, or immediately afterwards where an incident left no time           |
-| `OWNER`   | **MUST** name an individual who accepts the risk — someone with the authority to accept it, never a team or a role in the abstract         |
-| `CONTENT` | **MUST** state what the deviation is, why it is needed and what compensates for it                                                         |
-| `EXPIRY`  | **MUST** give every deviation a review date, and honour it                                                                                 |
-| `VISIBLE` | **MUST** make deviations visible to those affected by the risk, rather than filing them where only the person who raised them will look    |
-| `CLOSE`   | **MUST** close a deviation by fixing the underlying gap or by consciously re-accepting the risk — with the same scrutiny as the first time |
-| `PERM`    | **MUST NOT** treat a deviation as permanent by default, or let an expired one stand unreviewed                                             |
-| `CUSTOM`  | **MUST NOT** accept "we always do it this way" as a substitute for a recorded decision                                                     |
-
-## Alignment
-
-| Reference                 | Area                                       |
-|---------------------------|--------------------------------------------|
-| ISO/IEC 27001:2022 A.5.4  | Management responsibilities                |
-| ISO/IEC 27001:2022 A.5.36 | Adherence to policies, rules and standards |
-
-We **align with** these areas. Risk acceptance itself sits in the management-system clauses rather than in Annex A, so
-the mapping here is partial by nature. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
+| Id        | Clause                                                                                                                                     | Alignment               |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `RECORD`  | **MUST** record a deviation before departing from a policy or standard, or immediately afterwards where an incident left no time           | [ISO 27001:2022].A.5.36 |
+| `OWNER`   | **MUST** name an individual who accepts the risk — someone with the authority to accept it, never a team or a role in the abstract         | [ISO 27001:2022].A.5.4  |
+| `CONTENT` | **MUST** state what the deviation is, why it is needed and what compensates for it                                                         |                         |
+| `EXPIRY`  | **MUST** give every deviation a review date, and honour it                                                                                 |                         |
+| `VISIBLE` | **MUST** make deviations visible to those affected by the risk, rather than filing them where only the person who raised them will look    |                         |
+| `CLOSE`   | **MUST** close a deviation by fixing the underlying gap or by consciously re-accepting the risk — with the same scrutiny as the first time | [ISO 27001:2022].A.5.36 |
+| `PERM`    | **MUST NOT** treat a deviation as permanent by default, or let an expired one stand unreviewed                                             | [ISO 27001:2022].A.5.36 |
+| `CUSTOM`  | **MUST NOT** accept "we always do it this way" as a substitute for a recorded decision                                                     | [ISO 27001:2022].A.5.4  |
 
 ## Exceptions
 
@@ -69,3 +59,4 @@ recorded is a decision the implementing process makes.
 
 [pol-DATA]: data-data-protection.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

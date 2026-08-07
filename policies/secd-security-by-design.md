@@ -33,28 +33,15 @@ externally exposed change warrants more than a routine internal one, but neither
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                                                      |
-|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `REQS`    | **MUST** capture security and privacy requirements for new systems and features, as requirements rather than as afterthoughts                                               |
-| `DESIGN`  | **MUST** apply established secure-design principles — least privilege, defence in depth, secure defaults, failing closed                                                    |
-| `THREAT`  | **MUST** think through how a significant new system or high-risk change could be attacked, and record what we found                                                         |
-| `ACTIONS` | **MUST** turn the findings into tracked work rather than leaving them in a document                                                                                         |
-| `CODING`  | **MUST** write code to a documented secure-coding standard appropriate to the stack it is written in, and treat review as covering correctness and security, not only style |
-| `HIRISK`  | **MUST NOT** take a high-risk change into build with no security requirements and no consideration of threat                                                                |
-| `LATE`    | **MUST NOT** rely on later testing to discover what design should have prevented                                                                                            |
-
-## Alignment
-
-| Reference                 | Area                                       |
-|---------------------------|--------------------------------------------|
-| ISO/IEC 27001:2022 A.5.8  | Information security in project management |
-| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle               |
-| ISO/IEC 27001:2022 A.8.26 | Application security requirements          |
-| ISO/IEC 27001:2022 A.8.27 | Secure system architecture and engineering |
-| ISO/IEC 27001:2022 A.8.28 | Secure coding                              |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id        | Clause                                                                                                                                                                      | Alignment                                        |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `REQS`    | **MUST** capture security and privacy requirements for new systems and features, as requirements rather than as afterthoughts                                               | [ISO 27001:2022].A.5.8, [ISO 27001:2022].A.8.26  |
+| `DESIGN`  | **MUST** apply established secure-design principles — least privilege, defence in depth, secure defaults, failing closed                                                    | [ISO 27001:2022].A.8.27                          |
+| `THREAT`  | **MUST** think through how a significant new system or high-risk change could be attacked, and record what we found                                                         | [ISO 27001:2022].A.8.27                          |
+| `ACTIONS` | **MUST** turn the findings into tracked work rather than leaving them in a document                                                                                         | [ISO 27001:2022].A.5.8                           |
+| `CODING`  | **MUST** write code to a documented secure-coding standard appropriate to the stack it is written in, and treat review as covering correctness and security, not only style | [ISO 27001:2022].A.8.28                          |
+| `HIRISK`  | **MUST NOT** take a high-risk change into build with no security requirements and no consideration of threat                                                                | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.26 |
+| `LATE`    | **MUST NOT** rely on later testing to discover what design should have prevented                                                                                            | [ISO 27001:2022].A.8.25                          |
 
 ## Exceptions
 
@@ -64,3 +51,4 @@ before its security work is complete, that is a recorded deviation under
 [pol-DEVI], not a judgement call made in the moment.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

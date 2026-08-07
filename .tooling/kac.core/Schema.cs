@@ -33,6 +33,11 @@ public class FieldSpec
 public class ClauseSpec
 {
     public string Section = "Clauses";
+
+    // The table's headers, in order. The first two are read positionally as the id and the clause; any
+    // further column is the type's own — `Alignment` on a policy — and is checked for being there and
+    // named right, its contents being prose the schema has no view on.
+    public List<string> Columns = ["Id", "Clause"];
     public string IdPattern = "";
     public List<string> Binding = [];  // written bold — these oblige
     public List<string> Advisory = []; // written plain — these recommend
@@ -159,6 +164,9 @@ public class Schema
             t.Clauses = new ClauseSpec
             {
                 Section = Yaml.Str(Yaml.Get(clauses, "section")) ?? "Clauses",
+                Columns = Yaml.StrList(Yaml.Get(clauses, "columns")) is { Count: > 0 } cols
+                    ? cols
+                    : ["Id", "Clause"],
                 IdPattern = Yaml.Str(Yaml.Get(clauses, "id-pattern")) ?? "",
                 Binding = Yaml.StrList(Yaml.Get(clauses, "binding")),
                 Advisory = Yaml.StrList(Yaml.Get(clauses, "advisory"))

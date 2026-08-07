@@ -32,28 +32,20 @@ machine identities.
 
 ## Clauses
 
-| Id       | Clause                                                                                                                                       |
-|----------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `STORE`  | **MUST** hold secrets in a controlled store, with access granted by identity, restricted to those who need it, and recorded                  |
-| `ROTATE` | **MUST** rotate any secret on a defined cycle and on any suspicion of compromise, without a code change                                      |
-| `KEYS`   | **MUST** protect the keys and certificates that protect our data through their full lifecycle — issue, storage, rotation, revocation         |
-| `SCAN`   | **MUST** actively look for secrets that have leaked into places they should never reach                                                      |
-| `EMBED`  | **MUST NOT** commit a secret to version control, place one in a configuration file or pipeline definition, or bake one into a build artifact |
-| `REUSE`  | **MUST NOT** use a production secret anywhere outside production                                                                             |
-| `LOGS`   | **MUST NOT** write a secret to a log, a console, an error message or a support ticket                                                        |
-
-## Alignment
-
-| Reference                 | Area                       |
-|---------------------------|----------------------------|
-| ISO/IEC 27001:2022 A.5.17 | Authentication information |
-| ISO/IEC 27001:2022 A.8.24 | Use of cryptography        |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id       | Clause                                                                                                                                       | Alignment               |
+|----------|----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `STORE`  | **MUST** hold secrets in a controlled store, with access granted by identity, restricted to those who need it, and recorded                  | [ISO 27001:2022].A.5.17 |
+| `ROTATE` | **MUST** rotate any secret on a defined cycle and on any suspicion of compromise, without a code change                                      | [ISO 27001:2022].A.5.17 |
+| `KEYS`   | **MUST** protect the keys and certificates that protect our data through their full lifecycle — issue, storage, rotation, revocation         | [ISO 27001:2022].A.8.24 |
+| `SCAN`   | **MUST** actively look for secrets that have leaked into places they should never reach                                                      | [ISO 27001:2022].A.5.17 |
+| `EMBED`  | **MUST NOT** commit a secret to version control, place one in a configuration file or pipeline definition, or bake one into a build artifact | [ISO 27001:2022].A.5.17 |
+| `REUSE`  | **MUST NOT** use a production secret anywhere outside production                                                                             | [ISO 27001:2022].A.5.17 |
+| `LOGS`   | **MUST NOT** write a secret to a log, a console, an error message or a support ticket                                                        | [ISO 27001:2022].A.5.17 |
 
 ## Exceptions
 
 None. This commitment does not bend for expediency, prototypes or "temporary" work — a leaked secret does not care why
 it was written down. A secret that has reached source control is treated as compromised and rotated, not deleted and
 forgotten.
+
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

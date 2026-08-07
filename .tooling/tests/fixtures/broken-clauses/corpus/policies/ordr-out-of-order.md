@@ -22,8 +22,8 @@ This fixture only. It exists so `clause-order` is exercised, and reported once r
 
 ## Clauses
 
-| Id      | Clause                                                       |
-|---------|--------------------------------------------------------------|
-| `FIRST` | **MUST NOT** open the table with a prohibition               |
-| `SECND` | **MUST** trigger `clause-order` once and nothing else        |
-| `THIRD` | **MUST** stay unreported, the disorder already being counted |
+| Id      | Clause                                                       | Alignment |
+|---------|--------------------------------------------------------------|-----------|
+| `FIRST` | **MUST NOT** open the table with a prohibition               |           |
+| `SECND` | **MUST** trigger `clause-order` once and nothing else        |           |
+| `THIRD` | **MUST** stay unreported, the disorder already being counted |           |

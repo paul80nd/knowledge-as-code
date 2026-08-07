@@ -23,7 +23,7 @@ compare against different halves of the filename.
 
 ## Clauses
 
-| Id      | Clause                                          |
-|---------|-------------------------------------------------|
-| `CLEAN` | **MUST** trigger `identity-id` and nothing else |
+| Id      | Clause                                          | Alignment |
+|---------|-------------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `identity-id` and nothing else |           |
 

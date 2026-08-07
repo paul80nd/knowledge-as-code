@@ -36,29 +36,17 @@ This policy is about the authority of what it produces._
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                                                       |
-|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `SOURCE`  | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                    |
-| `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                        |
-| `GATES`   | **MUST** hold agent-produced changes to every gate that applies to our own — the same review, the same automated verification under [pol-AUTV], the same route to production |
-| `CONFID`  | **MUST** state the confidence an observation actually has, and let unverified ones expire rather than settle into the corpus by age                                          |
-| `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                           |
-| `TRACE`   | **MUST NOT** accept a proposal we cannot trace back to what produced it — an unverifiable proposal is a rejected one                                                         |
-| `ACCESS`  | **MUST NOT** grant an agent access, privilege or a route to production that an individual doing the same work would not be granted                                           |
-| `EXCUSE`  | **MUST NOT** let "an agent wrote it" stand as either a reason to scrutinise it less or an excuse for what it broke                                                           |
-| `REACH`   | **MUST NOT** hold an agent to a rule we never put within its reach — under [pol-KNOW] that is our failure, not the agent's                                                   |
-
-## Alignment
-
-| Reference                 | Area                         |
-|---------------------------|------------------------------|
-| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle |
-| ISO/IEC 27001:2022 A.8.30 | Outsourced development       |
-
-We **align with** these areas. The second is an analogy and worth naming as one: ISO/IEC 27001:2022 has no concept of a
-non-human contributor, but the obligation to direct, monitor and review development carried out beyond the team is the
-same obligation, and it is the closest the framework comes. We are not registered against ISO/IEC 27001:2022 and are not
-audited against it.
+| Id        | Clause                                                                                                                                                                       | Alignment               |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `SOURCE`  | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                    | [ISO 27001:2022].A.8.30 |
+| `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                        | [ISO 27001:2022].A.8.30 |
+| `GATES`   | **MUST** hold agent-produced changes to every gate that applies to our own — the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25 |
+| `CONFID`  | **MUST** state the confidence an observation actually has, and let unverified ones expire rather than settle into the corpus by age                                          |                         |
+| `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                           |                         |
+| `TRACE`   | **MUST NOT** accept a proposal we cannot trace back to what produced it — an unverifiable proposal is a rejected one                                                         | [ISO 27001:2022].A.8.30 |
+| `ACCESS`  | **MUST NOT** grant an agent access, privilege or a route to production that an individual doing the same work would not be granted                                           |                         |
+| `EXCUSE`  | **MUST NOT** let "an agent wrote it" stand as either a reason to scrutinise it less or an excuse for what it broke                                                           |                         |
+| `REACH`   | **MUST NOT** hold an agent to a rule we never put within its reach — under [pol-KNOW] that is our failure, not the agent's                                                   |                         |
 
 ## Exceptions
 
@@ -84,3 +72,4 @@ exercise depends on the promotion gate holding.
 [pol-KNOW]: know-knowledge-is-written-down.md
 [pol-PIPE]: pipe-pipeline-to-production.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

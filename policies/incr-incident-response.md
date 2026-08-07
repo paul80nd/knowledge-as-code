@@ -34,33 +34,22 @@ the organisation.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                               |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------|
-| `PROCESS` | **MUST** maintain a defined incident-response process with clear roles, so that during an incident it is never ambiguous who decides |
-| `TRIAGE`  | **MUST** classify incidents by severity, and escalate and communicate according to it                                                |
-| `RECORD`  | **MUST** preserve evidence and produce a record for every significant incident                                                       |
-| `REPORT`  | **MUST** encourage anyone to report a suspected incident, and make it easy to do so                                                  |
-| `REVIEW`  | **MUST** review significant incidents afterwards, looking for the conditions that allowed them rather than for someone to blame      |
-| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work                                                                        |
-| `DRILL`   | **MUST** rehearse the process rather than first exercising it for real                                                               |
-| `ADHOC`   | **MUST NOT** handle a significant incident informally, with no record and no named owner                                             |
-| `CLOSE`   | **MUST NOT** close an incident at the point service is restored — it closes when the learning is captured                            |
-
-## Alignment
-
-| Reference                 | Area                                                   |
-|---------------------------|--------------------------------------------------------|
-| ISO/IEC 27001:2022 A.5.24 | Incident management planning and preparation           |
-| ISO/IEC 27001:2022 A.5.25 | Assessment and decision on information security events |
-| ISO/IEC 27001:2022 A.5.26 | Response to information security incidents             |
-| ISO/IEC 27001:2022 A.5.27 | Learning from information security incidents           |
-| ISO/IEC 27001:2022 A.6.8  | Information security event reporting                   |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id        | Clause                                                                                                                               | Alignment               |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `PROCESS` | **MUST** maintain a defined incident-response process with clear roles, so that during an incident it is never ambiguous who decides | [ISO 27001:2022].A.5.24 |
+| `TRIAGE`  | **MUST** classify incidents by severity, and escalate and communicate according to it                                                | [ISO 27001:2022].A.5.25 |
+| `RECORD`  | **MUST** preserve evidence and produce a record for every significant incident                                                       | [ISO 27001:2022].A.5.26 |
+| `REPORT`  | **MUST** encourage anyone to report a suspected incident, and make it easy to do so                                                  | [ISO 27001:2022].A.6.8  |
+| `REVIEW`  | **MUST** review significant incidents afterwards, looking for the conditions that allowed them rather than for someone to blame      | [ISO 27001:2022].A.5.27 |
+| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work                                                                        | [ISO 27001:2022].A.5.27 |
+| `DRILL`   | **MUST** rehearse the process rather than first exercising it for real                                                               | [ISO 27001:2022].A.5.24 |
+| `ADHOC`   | **MUST NOT** handle a significant incident informally, with no record and no named owner                                             | [ISO 27001:2022].A.5.26 |
+| `CLOSE`   | **MUST NOT** close an incident at the point service is restored — it closes when the learning is captured                            | [ISO 27001:2022].A.5.27 |
 
 ## Exceptions
 
 Low-severity events are handled through routine work rather than the full process; the severity classification is what
 decides, and it is applied deliberately rather than by whoever wants the least paperwork. There is no exception to
 recording a significant incident.
+
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

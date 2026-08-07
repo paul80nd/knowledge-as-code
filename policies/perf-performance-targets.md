@@ -31,25 +31,18 @@ to having them.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                        |
-|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| `TARGETS` | **MUST** state performance and capacity targets for systems where performance matters, in terms that can be measured                          |
-| `VERIFY`  | **MUST** validate against those targets before significant releases, under conditions representative of real load rather than convenient load |
-| `DEFECT`  | **MUST** treat a target we no longer meet as a defect, not as a new baseline                                                                  |
-| `PEAK`    | **MUST** understand behaviour at peak and over time, not only at the average case on a quiet afternoon                                        |
-| `NOTEST`  | **MUST NOT** release a significant change to a performance-sensitive system with no performance validation at all                             |
-| `SILENT`  | **MUST NOT** allow an unstated target to become the reason nobody is accountable for a slow system                                            |
-
-## Alignment
-
-| Reference                | Area                |
-|--------------------------|---------------------|
-| ISO/IEC 27001:2022 A.8.6 | Capacity management |
-
-We **align with** this area, which covers the availability half of this policy. The rest is engineering practice with no
-corresponding control. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
+| Id        | Clause                                                                                                                                        | Alignment              |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| `TARGETS` | **MUST** state performance and capacity targets for systems where performance matters, in terms that can be measured                          | [ISO 27001:2022].A.8.6 |
+| `VERIFY`  | **MUST** validate against those targets before significant releases, under conditions representative of real load rather than convenient load | [ISO 27001:2022].A.8.6 |
+| `DEFECT`  | **MUST** treat a target we no longer meet as a defect, not as a new baseline                                                                  |                        |
+| `PEAK`    | **MUST** understand behaviour at peak and over time, not only at the average case on a quiet afternoon                                        | [ISO 27001:2022].A.8.6 |
+| `NOTEST`  | **MUST NOT** release a significant change to a performance-sensitive system with no performance validation at all                             |                        |
+| `SILENT`  | **MUST NOT** allow an unstated target to become the reason nobody is accountable for a slow system                                            |                        |
 
 ## Exceptions
 
 Systems where performance is genuinely not a concern — low-volume internal tooling with no user waiting on it — need no
 targets. That judgement is recorded once rather than assumed repeatedly, because systems acquire users.
+
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

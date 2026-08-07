@@ -24,7 +24,7 @@ of complaints about parts that were never written.
 
 ## Clauses
 
-| Id      | Clause                                       |
-|---------|----------------------------------------------|
-| `CLEAN` | **MUST** trigger `identity` and nothing else |
+| Id      | Clause                                       | Alignment |
+|---------|----------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `identity` and nothing else |           |
 

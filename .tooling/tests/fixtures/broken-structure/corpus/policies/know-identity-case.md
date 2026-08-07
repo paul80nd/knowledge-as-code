@@ -23,7 +23,7 @@ disagreeing-status branch, which `envs-identity-status.md` covers.
 
 ## Clauses
 
-| Id      | Clause                                              |
-|---------|-----------------------------------------------------|
-| `CLEAN` | **MUST** trigger `identity-status` and nothing else |
+| Id      | Clause                                              | Alignment |
+|---------|-----------------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `identity-status` and nothing else |           |
 

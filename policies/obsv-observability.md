@@ -30,27 +30,16 @@ All production systems we operate, and the lower environments where behaviour mu
 
 ## Clauses
 
-| Id        | Clause                                                                                                                       |
-|-----------|------------------------------------------------------------------------------------------------------------------------------|
-| `CENTRAL` | **MUST** emit operational and security-relevant telemetry to a central store that the emitting system cannot alter or delete |
-| `CLOCKS`  | **MUST** keep timestamps consistent across systems, so events can be correlated into one timeline                            |
-| `RETAIN`  | **MUST** retain telemetry for a defined period — long enough to investigate, no longer than justified                        |
-| `HEALTH`  | **MUST** monitor the availability and health of production systems, and alert an accountable owner when they degrade         |
-| `SECMON`  | **MUST** monitor for security-relevant events, not only for availability                                                     |
-| `ALERTS`  | **MUST** treat alerts as something to be acted on, and keep them few enough and meaningful enough that they still are        |
-| `BLIND`   | **MUST NOT** run a production system with no monitoring and no alerting                                                      |
-| `SECRETS` | **MUST NOT** write secrets, credentials or unmasked sensitive personal data into telemetry — see [pol-SCRT] and [pol-DATA]   |
-
-## Alignment
-
-| Reference                 | Area                  |
-|---------------------------|-----------------------|
-| ISO/IEC 27001:2022 A.8.15 | Logging               |
-| ISO/IEC 27001:2022 A.8.16 | Monitoring activities |
-| ISO/IEC 27001:2022 A.8.17 | Clock synchronisation |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id        | Clause                                                                                                                       | Alignment               |
+|-----------|------------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `CENTRAL` | **MUST** emit operational and security-relevant telemetry to a central store that the emitting system cannot alter or delete | [ISO 27001:2022].A.8.15 |
+| `CLOCKS`  | **MUST** keep timestamps consistent across systems, so events can be correlated into one timeline                            | [ISO 27001:2022].A.8.17 |
+| `RETAIN`  | **MUST** retain telemetry for a defined period — long enough to investigate, no longer than justified                        | [ISO 27001:2022].A.8.15 |
+| `HEALTH`  | **MUST** monitor the availability and health of production systems, and alert an accountable owner when they degrade         | [ISO 27001:2022].A.8.16 |
+| `SECMON`  | **MUST** monitor for security-relevant events, not only for availability                                                     | [ISO 27001:2022].A.8.16 |
+| `ALERTS`  | **MUST** treat alerts as something to be acted on, and keep them few enough and meaningful enough that they still are        | [ISO 27001:2022].A.8.16 |
+| `BLIND`   | **MUST NOT** run a production system with no monitoring and no alerting                                                      | [ISO 27001:2022].A.8.16 |
+| `SECRETS` | **MUST NOT** write secrets, credentials or unmasked sensitive personal data into telemetry — see [pol-SCRT] and [pol-DATA]   | [ISO 27001:2022].A.8.15 |
 
 ## Exceptions
 
@@ -59,3 +48,4 @@ unimportant to monitor is a system to question the existence of.
 
 [pol-DATA]: data-data-protection.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

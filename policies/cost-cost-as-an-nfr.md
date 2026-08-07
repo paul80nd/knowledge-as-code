@@ -30,16 +30,16 @@ make them meaningful.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                                                    |
-|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `ATTRIB`  | **MUST** attribute the running cost of a system to the service and the team that owns it                                                                                  |
-| `VISIBLE` | **MUST** give the people who own a system visibility of what it costs, at a cadence that lets them act                                                                    |
-| `DESIGN`  | **MUST** treat cost as a design consideration, weighed alongside performance and resilience rather than after them                                                        |
-| `SIZING`  | **MUST** size resources against what they actually use, and revisit that as usage changes                                                                                 |
-| `ANOMALY` | **MUST** notice unexpected cost quickly, and treat a sharp unexplained rise as a signal worth investigating — runaway spend is often a defect, and sometimes a compromise |
-| `UNUSED`  | **MUST** remove what we no longer use, including in environments below production                                                                                         |
-| `UNOWNED` | **MUST NOT** run a production workload that nobody owns the cost of                                                                                                       |
-| `ERODE`   | **MUST NOT** let cost efficiency erode resilience, security or accessibility — this policy sets a constraint to optimise within, not a licence to cut protections         |
+| Id        | Clause                                                                                                                                                                    | Alignment |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|
+| `ATTRIB`  | **MUST** attribute the running cost of a system to the service and the team that owns it                                                                                  |           |
+| `VISIBLE` | **MUST** give the people who own a system visibility of what it costs, at a cadence that lets them act                                                                    |           |
+| `DESIGN`  | **MUST** treat cost as a design consideration, weighed alongside performance and resilience rather than after them                                                        |           |
+| `SIZING`  | **MUST** size resources against what they actually use, and revisit that as usage changes                                                                                 |           |
+| `ANOMALY` | **MUST** notice unexpected cost quickly, and treat a sharp unexplained rise as a signal worth investigating — runaway spend is often a defect, and sometimes a compromise |           |
+| `UNUSED`  | **MUST** remove what we no longer use, including in environments below production                                                                                         |           |
+| `UNOWNED` | **MUST NOT** run a production workload that nobody owns the cost of                                                                                                       |           |
+| `ERODE`   | **MUST NOT** let cost efficiency erode resilience, security or accessibility — this policy sets a constraint to optimise within, not a licence to cut protections         |           |
 
 ## Exceptions
 

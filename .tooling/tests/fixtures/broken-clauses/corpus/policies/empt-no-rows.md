@@ -22,5 +22,5 @@ This fixture only. It exists so `clause-table` is exercised on its empty branch.
 
 ## Clauses
 
-| Id | Clause |
-|----|--------|
+| Id | Clause | Alignment |
+|----|--------|-----------|

@@ -35,30 +35,16 @@ analytical copies and test data.
 
 ## Clauses
 
-| Id       | Clause                                                                                                                                             |
-|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `CLASS`  | **MUST** classify data by sensitivity and handle each class according to that classification                                                       |
-| `CRYPTO` | **MUST** protect sensitive data in transit and at rest using current, well-regarded cryptographic algorithms, and retire algorithms as they weaken |
-| `LAWFUL` | **MUST** handle personal data on a lawful basis, collect only what is needed, and support the rights of the people it concerns                     |
-| `LOCATE` | **MUST** know where our sensitive and personal data lives                                                                                          |
-| `DELETE` | **MUST** delete data when its defined retention period ends                                                                                        |
-| `UNMASK` | **MUST NOT** place unmasked production or personal data into an environment below production                                                       |
-| `RETAIN` | **MUST NOT** retain sensitive or personal data beyond its defined lifetime without a recorded reason                                               |
-| `LOGS`   | **MUST NOT** write unmasked sensitive personal data into logs or telemetry                                                                         |
-
-## Alignment
-
-| Reference                 | Area                                    |
-|---------------------------|-----------------------------------------|
-| ISO/IEC 27001:2022 A.5.12 | Classification of information           |
-| ISO/IEC 27001:2022 A.5.34 | Privacy and protection of personal data |
-| ISO/IEC 27001:2022 A.8.10 | Information deletion                    |
-| ISO/IEC 27001:2022 A.8.11 | Data masking                            |
-| ISO/IEC 27001:2022 A.8.12 | Data leakage prevention                 |
-| ISO/IEC 27001:2022 A.8.24 | Use of cryptography                     |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id       | Clause                                                                                                                                             | Alignment               |
+|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `CLASS`  | **MUST** classify data by sensitivity and handle each class according to that classification                                                       | [ISO 27001:2022].A.5.12 |
+| `CRYPTO` | **MUST** protect sensitive data in transit and at rest using current, well-regarded cryptographic algorithms, and retire algorithms as they weaken | [ISO 27001:2022].A.8.24 |
+| `LAWFUL` | **MUST** handle personal data on a lawful basis, collect only what is needed, and support the rights of the people it concerns                     | [ISO 27001:2022].A.5.34 |
+| `LOCATE` | **MUST** know where our sensitive and personal data lives                                                                                          | [ISO 27001:2022].A.5.12 |
+| `DELETE` | **MUST** delete data when its defined retention period ends                                                                                        | [ISO 27001:2022].A.8.10 |
+| `UNMASK` | **MUST NOT** place unmasked production or personal data into an environment below production                                                       | [ISO 27001:2022].A.8.11 |
+| `RETAIN` | **MUST NOT** retain sensitive or personal data beyond its defined lifetime without a recorded reason                                               | [ISO 27001:2022].A.8.10 |
+| `LOGS`   | **MUST NOT** write unmasked sensitive personal data into logs or telemetry                                                                         | [ISO 27001:2022].A.8.12 |
 
 ## Exceptions
 
@@ -67,3 +53,4 @@ under a recorded deviation ([pol-DEVI]) that names who approved it, who can see 
 hold overrides deletion, and is recorded when it does.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

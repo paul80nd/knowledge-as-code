@@ -21,7 +21,7 @@ This fixture only.
 
 ## Clauses
 
-| Id      | Clause                                        |
-|---------|-----------------------------------------------|
-| `CLEAN` | **MUST** trigger `id-format` and nothing else |
+| Id      | Clause                                        | Alignment |
+|---------|-----------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `id-format` and nothing else |           |
 

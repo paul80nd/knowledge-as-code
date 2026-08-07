@@ -27,8 +27,8 @@ This fixture only.
 
 ## Clauses
 
-| Id       | Clause                                                        |
-|----------|---------------------------------------------------------------|
-| `ORDER`  | **MUST** keep ISO references in the order their numbers imply |
-| `RESORT` | **MUST NOT** re-sort them to suit a byte-wise comparison      |
+| Id       | Clause                                                        | Alignment |
+|----------|---------------------------------------------------------------|-----------|
+| `ORDER`  | **MUST** keep ISO references in the order their numbers imply |           |
+| `RESORT` | **MUST NOT** re-sort them to suit a byte-wise comparison      |           |
 
