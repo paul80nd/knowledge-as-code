@@ -53,7 +53,7 @@ public class TypeSchema
 {
     public string TypeName = "", Label = "", Folder = "", Page = "", Tier = "", Lifecycle = "";
     public string Shape = CollectionShape;
-    public string IdPrefix = "", IdStyle = "";
+    public string IdPrefix = "", IdStyle = "", IdValue = "";
     public int IdWidth;
     public string? FilenamePattern;
     public int SlugMax = 30;
@@ -149,6 +149,7 @@ public class Schema
             t.IdPrefix = Yaml.Str(Yaml.Get(id, "prefix")) ?? "";
             t.IdStyle = Yaml.Str(Yaml.Get(id, "style")) ?? "";
             t.IdWidth = Yaml.Int(Yaml.Get(id, "width"), 4);
+            t.IdValue = Yaml.Str(Yaml.Get(id, "value")) ?? "";
         }
 
         var fn = Yaml.Get(root, "filename");

@@ -1,0 +1,31 @@
+{
+  "summary": {
+    "validated": 1,
+    "skipped": 0,
+    "errors": 3,
+    "warnings": 0
+  },
+  "findings": [
+    {
+      "file": "adrs.md",
+      "line": null,
+      "severity": "error",
+      "check": "generated-block",
+      "message": "the 'schema-adrs' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both."
+    },
+    {
+      "file": "adrs.md",
+      "line": 6,
+      "severity": "error",
+      "check": "link-resolves",
+      "message": "link target '/nope.md' does not resolve."
+    },
+    {
+      "file": "glossary.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-format",
+      "message": "id 'not-glossary' must be 'glossary', the value the type declares."
+    }
+  ]
+}

@@ -129,6 +129,29 @@ public static class Validator
         void Err(string check, string msg, int? line = null) => f.Add(new Finding(d.Rel, line, Sev.Error, check, msg));
     }
 
+    // The markers a generated block lives between. `Generator.SpliceBlock` looks for the pair and
+    // returns the text untouched when either is missing, so a page that loses one silently stops
+    // being generated into — and `index --check` agrees it is fresh, because what the generator would
+    // write is exactly what is already there. Nothing else can notice, which is why this is a check
+    // on the markers rather than on the content between them.
+    public static void CheckGeneratedBlocks(string rel, string text, IEnumerable<string> names,
+        List<Finding> f)
+    {
+        foreach (var name in names)
+        {
+            var begin = text.IndexOf($"<!-- BEGIN GENERATED: {name} -->", StringComparison.Ordinal);
+            var end = text.IndexOf($"<!-- END GENERATED: {name} -->", StringComparison.Ordinal);
+            if (begin < 0 || end < 0)
+                f.Add(new Finding(rel, null, Sev.Error, "generated-block",
+                    $"the '{name}' block is missing its "
+                    + (begin < 0 && end < 0 ? "markers" : begin < 0 ? "BEGIN marker" : "END marker")
+                    + $" — `kac index` writes between them and leaves the page alone without both."));
+            else if (end < begin)
+                f.Add(new Finding(rel, null, Sev.Error, "generated-block",
+                    $"the '{name}' block's END marker comes before its BEGIN marker."));
+        }
+    }
+
     // Whether each type the schema declares is stood up, and stood up completely.
     //
     // A schema file says the tool manages this type; it does not say the corpus has built it yet. A
@@ -350,6 +373,17 @@ public static class Validator
         if (!present.TryGetValue("id", out var idNode)) return;
         var id = Scalar(idNode);
         if (id is null) return;
+
+        // A `literal` id is the whole id, declared by the schema — the single-document types, where
+        // there is one document and so one name for it. There is no prefix to carry and no filename
+        // discriminator to agree with, so this is the whole check.
+        if (t.IdStyle == "literal")
+        {
+            if (!string.Equals(id, t.IdValue, StringComparison.Ordinal))
+                err("id-format", $"id '{id}' must be '{t.IdValue}', the value the type declares.", Line(idNode, d));
+            return;
+        }
+
         var expectPrefix = t.IdPrefix + "-";
         if (!id.StartsWith(expectPrefix, StringComparison.Ordinal))
         {
@@ -588,6 +622,14 @@ public static class Validator
     // Placeholders stand in for anything the frontmatter could not supply.
     private static string Expected(TypeSchema t, string? id, string? status) =>
         $"`{t.DisplayName}: {id ?? $"{t.IdPrefix}-…"}` `{status?.ToUpperInvariant() ?? "STATUS"}`";
+
+    // The link half of a document's checks, on their own, for a page that is not a record. Every one
+    // of them asks about prose rather than about frontmatter, so they are the checks that carry over
+    // to a type page unchanged.
+    public static void CheckPageLinks(Doc d, Schema schema, string repoRoot, List<Finding> f) =>
+        CheckLinks(d, schema, repoRoot,
+            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Error, check, msg)),
+            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, check, msg)));
 
     private static void CheckLinks(Doc d, Schema schema, string repoRoot, Action<string, string, int?> err,
         Action<string, string, int?> warn)

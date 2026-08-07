@@ -20,12 +20,22 @@ public static class Corpus
         // .git/ itself — exactly the "respect .gitignore" requirement; the walk is the non-git fallback.
         var files = AllFiles(repoRoot);
 
-        // Type pages at the repo root — adrs.md, services.md, glossary.md, data.md, …
+        // Type pages at the repo root — adrs.md, services.md, data.md, … A collection type's page is
+        // prose about its records and is checked separately, as a page. A single-document type's page
+        // *is* its record, so it stays in the corpus and is validated like any other document.
         var typePages = new HashSet<string>(
-            schema.ByFolder.Values.Select(t => t.Page).Where(p => !string.IsNullOrEmpty(p)),
+            schema.ByFolder.Values.Where(t => !t.IsSingleDocument)
+                .Select(t => t.Page).Where(p => !string.IsNullOrEmpty(p)),
             StringComparer.OrdinalIgnoreCase);
 
         var typeFolders = new HashSet<string>(schema.ByFolder.Keys, StringComparer.OrdinalIgnoreCase);
+
+        // A single-document type's page, which is a record living at the repo root rather than inside
+        // a type folder — so it has to be let through the folder test at the end of IsExcluded.
+        var recordPages = new HashSet<string>(
+            schema.ByFolder.Values.Where(t => t.IsSingleDocument)
+                .Select(t => t.Page).Where(p => !string.IsNullOrEmpty(p)),
+            StringComparer.OrdinalIgnoreCase);
 
         var pathFilter = paths.Select(p => p.Replace('\\', '/').TrimEnd('/')).ToList();
 
@@ -34,7 +44,7 @@ public static class Corpus
         {
             var rel = raw.Replace('\\', '/');
             if (!rel.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) continue;
-            if (IsExcluded(rel, typePages, typeFolders)) continue;
+            if (IsExcluded(rel, typePages, typeFolders, recordPages)) continue;
             if (pathFilter.Count > 0 && !pathFilter.Any(p => rel == p || rel.StartsWith(p + "/"))) continue;
             result.Add(rel);
         }
@@ -42,7 +52,8 @@ public static class Corpus
         return [.. result.OrderBy(r => r, StringComparer.Ordinal)];
     }
 
-    private static bool IsExcluded(string rel, HashSet<string> typePages, HashSet<string> typeFolders)
+    private static bool IsExcluded(string rel, HashSet<string> typePages, HashSet<string> typeFolders,
+        HashSet<string> recordPages)
     {
         var parts = rel.Split('/');
         var top = parts[0];
@@ -60,6 +71,7 @@ public static class Corpus
             if (name.Equals("README.md", StringComparison.OrdinalIgnoreCase)) return true;
             if (name.Equals("CLAUDE.md", StringComparison.OrdinalIgnoreCase)) return true;
             if (typePages.Contains(name)) return true;
+            if (recordPages.Contains(name)) return false;
         }
 
         // Only look inside folders that map to a type; everything else (legacy root
