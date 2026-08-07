@@ -75,7 +75,7 @@ Feature: Document structure checks
 
   Scenario: The whole corpus produces exactly these findings and nothing else
     When I validate the corpus
-    Then validation reports 17 documents and 0 skipped
+    Then validation reports 18 documents and 0 skipped
     And the findings are exactly:
       | file                                                        | severity | line | check               | message                                                                                                |
       | adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30.               |
@@ -87,6 +87,7 @@ Feature: Document structure checks
       | adrs/0007-bad-id-width.md                                   | error    | 1    | id-format           | id 'adr-7' must be 'adr-' followed by 4 digits.                                                        |
       | adrs/0008-Bad_Name.md                                       | error    |      | filename-pattern    | filename '0008-Bad_Name.md' does not match ^\d{4}-[a-z0-9-]+\.md$.                                     |
       | policies/agnt-identity-malformed.md                         | error    | 12   | identity            | identity line is malformed — write it as `Policy: pol-AGNT` `DRAFT`.                                   |
+      | policies/dirs-directory-link.md                             | error    | 17   | link-resolves       | link target '/media' does not resolve.                                                                 |
       | policies/envs-identity-status.md                            | error    | 12   | identity-status     | identity line status 'ACTIVE' does not match the document's status 'draft'.                            |
       | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[ADR-0004]' should be written as the id 'adr-0004'.                                   |
       | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[pol-vurm]' should be written as the id 'pol-VURM'.                                   |
