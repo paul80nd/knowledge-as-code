@@ -122,6 +122,11 @@ Stated openly, because they are load-bearing:
 * **Azure DevOps wiki is the primary publishing target.** Frontmatter renders as a metadata table there, `.order`
   drives navigation, and `/`-rooted links resolve from the repo root. Everything degrades to plain markdown elsewhere,
   but the sharp edges were filed against ADO.
+* **The corpus assumes Azure, which is a separate assumption from the one above.** The publishing target shaped the
+  mechanism; the cloud shapes only the demonstration content — the Azure Well-Architected entry in
+  [`frameworks.md`](frameworks.md) and the pillars four policies cite from it. AWS and Google publish near-identical
+  pillars, so changing it is a relabelling rather than a re-mapping — no clause's wording names a provider, only the
+  references beside it.
 * **Seventeen types is a lot.** It is the most likely thing to be wrong here, and the mitigation is a decision table
   plus a standing willingness to merge types that aren't earning their place.
 * **Trust matters more than coverage.** The failure mode of a wiki is not too little content, it is content nobody
