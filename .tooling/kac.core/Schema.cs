@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
@@ -16,6 +17,7 @@ public class FieldSpec
     public string? Ref; // folder the id must belong to
     public string? Reciprocal; // field on the target that must point back
     public string? Pattern;
+    public Regex? PatternRegex; // Pattern compiled — the message still quotes the source string
     public string? MirrorsSection; // section whose ids this field must mirror
 
     // Two audiences, deliberately separate. `Description` is what a reader needs at a glance and is what
@@ -30,7 +32,10 @@ public class FieldSpec
 // The clause table a type's normative section carries — one addressable obligation per row, cited from
 // elsewhere as `pol-VURM.TIMEBOX`. Held as its own spec so a type gains clauses by declaring them and a
 // type that declares none is simply never checked for any.
-public class ClauseSpec
+//
+// The modal orderings are derived here, once per type, because every clause row of every document reads
+// them and they never differ between two rows of the same type.
+public class ClauseSpec(string idPattern, List<string> binding, List<string> advisory)
 {
     public string Section = "Clauses";
 
@@ -38,15 +43,23 @@ public class ClauseSpec
     // further column is the type's own — `Alignment` on a policy — and is checked for being there and
     // named right, its contents being prose the schema has no view on.
     public List<string> Columns = ["Id", "Clause"];
-    public string IdPattern = "";
-    public List<string> Binding = [];  // written bold — these oblige
-    public List<string> Advisory = []; // written plain — these recommend
+
+    public string IdPattern { get; } = idPattern;
+    public Regex? IdPatternRegex { get; } = Schema.CompilePattern(idPattern);
+
+    public IReadOnlyList<string> Binding { get; } = binding;  // written bold — these oblige
+    public IReadOnlyList<string> Advisory { get; } = advisory; // written plain — these recommend
+
+    // The order rows must appear in: binding levels before advisory ones, each as the type declares it.
+    private readonly List<string> levels = [.. binding, .. advisory];
+    public IReadOnlyList<string> Levels => levels;
+
+    // Where a modal sits in that order, or -1 for a modal the type does not declare.
+    public int Rank(string modal) => levels.IndexOf(modal);
 
     // Longest first, so "MUST NOT" is recognised before the "MUST" that prefixes it.
-    public IEnumerable<string> Modals => Binding.Concat(Advisory).OrderByDescending(m => m.Length);
-
-    // The order rows appear in: binding levels before advisory ones, each in the order declared.
-    public int Rank(string modal) => Binding.Concat(Advisory).ToList().IndexOf(modal);
+    public IReadOnlyList<string> ModalsLongestFirst { get; } =
+        [.. binding.Concat(advisory).OrderByDescending(m => m.Length)];
 }
 
 public class TypeSchema
@@ -56,6 +69,7 @@ public class TypeSchema
     public string IdPrefix = "", IdStyle = "", IdValue = "";
     public int IdWidth;
     public string? FilenamePattern;
+    public Regex? FilenameRegex; // FilenamePattern compiled — the message still quotes the source string
     public int SlugMax = 30;
     public List<string> FieldOrder = [];
     public Dictionary<string, FieldSpec> Fields = [];
@@ -156,6 +170,7 @@ public class Schema
         if (fn is not null)
         {
             t.FilenamePattern = Yaml.Str(Yaml.Get(fn, "pattern"));
+            t.FilenameRegex = CompilePattern(t.FilenamePattern);
             t.SlugMax = Yaml.Int(Yaml.Get(fn, "slug-max"), 30);
         }
 
@@ -173,15 +188,15 @@ public class Schema
         }
 
         if (Yaml.Get(root, "clauses") is { } clauses)
-            t.Clauses = new ClauseSpec
+            t.Clauses = new ClauseSpec(
+                Yaml.Str(Yaml.Get(clauses, "id-pattern")) ?? "",
+                Yaml.StrList(Yaml.Get(clauses, "binding")),
+                Yaml.StrList(Yaml.Get(clauses, "advisory")))
             {
                 Section = Yaml.Str(Yaml.Get(clauses, "section")) ?? "Clauses",
                 Columns = Yaml.StrList(Yaml.Get(clauses, "columns")) is { Count: > 0 } cols
                     ? cols
-                    : ["Id", "Clause"],
-                IdPattern = Yaml.Str(Yaml.Get(clauses, "id-pattern")) ?? "",
-                Binding = Yaml.StrList(Yaml.Get(clauses, "binding")),
-                Advisory = Yaml.StrList(Yaml.Get(clauses, "advisory"))
+                    : ["Id", "Clause"]
             };
 
         var index = Yaml.Get(root, "index");
@@ -215,6 +230,8 @@ public class Schema
             Notes = Collapse(Yaml.Str(Yaml.Get(node, "notes")))
         };
 
+        f.PatternRegex = CompilePattern(f.Pattern);
+
         var values = Yaml.Get(node, "values");
         switch (values)
         {
@@ -234,6 +251,13 @@ public class Schema
 
     public IEnumerable<string> KnownKeys(TypeSchema t) =>
         UniversalOrder.Concat(t.FieldOrder).Concat(Reserved).Distinct();
+
+    // A pattern the schema declares, held as a Regex so the expression is parsed once at load rather
+    // than looked up in the framework's cache on every value it is applied to. Interpreted rather than
+    // RegexOptions.Compiled: a compiled pattern generates IL on first use, which a corpus matching it a
+    // handful of times never earns back, and the two are level once volumes are high enough to matter.
+    internal static Regex? CompilePattern(string? pattern) =>
+        string.IsNullOrEmpty(pattern) ? null : new Regex(pattern, RegexOptions.CultureInvariant);
 
     private static string? Collapse(string? s) =>
         s is null ? null : string.Join(" ", s.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));

@@ -74,7 +74,7 @@ public class DocumentTests
         var schema = new Schema();
         schema.ByFolder["policies"] = new TypeSchema
         {
-            Clauses = new ClauseSpec { Section = "Clauses", Binding = ["MUST"], Advisory = ["SHOULD"] }
+            Clauses = new ClauseSpec("", ["MUST"], ["SHOULD"]) { Section = "Clauses" }
         };
         return schema;
     }

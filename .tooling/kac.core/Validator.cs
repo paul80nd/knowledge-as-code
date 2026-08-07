@@ -385,10 +385,10 @@ public static class Validator
     private static void CheckPattern(string name, string noun, YamlNode node, FieldSpec spec, Doc d,
         Action<string, string, int?> err)
     {
-        if (spec.Pattern is null) return;
+        if (spec.PatternRegex is null) return;
         var v = Scalar(node);
         if (v is null) return;
-        if (!System.Text.RegularExpressions.Regex.IsMatch(v, spec.Pattern))
+        if (!spec.PatternRegex.IsMatch(v))
             err("field-pattern", $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Line(node, d));
     }
 
@@ -474,7 +474,7 @@ public static class Validator
     private static void CheckFilename(Doc d, TypeSchema t, Action<string, string, int?> err)
     {
         var name = Path.GetFileName(d.Rel);
-        if (t.FilenamePattern is not null && !System.Text.RegularExpressions.Regex.IsMatch(name, t.FilenamePattern))
+        if (t.FilenameRegex is not null && !t.FilenameRegex.IsMatch(name))
             err("filename-pattern", $"filename '{name}' does not match {t.FilenamePattern}.", null);
         var slug = name;
         if (slug.EndsWith(".md")) slug = slug[..^3];
@@ -608,11 +608,11 @@ public static class Validator
 
             // The modal is the binding level, so a row without one is a sentence rather than an
             // obligation and nothing below it can be judged either.
-            var modal = spec.Modals.FirstOrDefault(m => row.Text.StartsWith(m, StringComparison.Ordinal));
+            var modal = spec.ModalsLongestFirst.FirstOrDefault(m => row.Text.StartsWith(m, StringComparison.Ordinal));
             if (modal is null)
             {
                 err("clause-modal", $"clause '{Trim(row.Text)}' does not open with a modal — write one of "
-                                    + $"{string.Join(", ", spec.Binding.Concat(spec.Advisory))}.", row.Line);
+                                    + $"{string.Join(", ", spec.Levels)}.", row.Line);
                 continue;
             }
 
@@ -628,7 +628,7 @@ public static class Validator
             // A second modal in the same row is two obligations sharing one id, so a citation of it can
             // only ever name half of what it means.
             var rest = row.Text[modal.Length..];
-            if (spec.Modals.FirstOrDefault(m => rest.Contains(m, StringComparison.Ordinal)) is { } second)
+            if (spec.ModalsLongestFirst.FirstOrDefault(m => rest.Contains(m, StringComparison.Ordinal)) is { } second)
                 warn("clause-compound", $"clause '{row.IdSpan ?? row.IdText}' carries a second '{second}' — "
                                         + "one obligation per clause, or the citation is ambiguous.", row.Line);
 
@@ -638,8 +638,8 @@ public static class Validator
             if (rank < highest && !disordered)
             {
                 warn("clause-order", $"clause '{row.IdSpan ?? row.IdText}' is a '{modal}' but follows a "
-                                     + $"'{spec.Binding.Concat(spec.Advisory).ElementAt(highest)}' — group the table "
-                                     + $"{string.Join(", ", spec.Binding.Concat(spec.Advisory))}.", row.Line);
+                                     + $"'{spec.Levels[highest]}' — group the table "
+                                     + $"{string.Join(", ", spec.Levels)}.", row.Line);
                 disordered = true;
             }
 
@@ -659,8 +659,7 @@ public static class Validator
             return;
         }
 
-        if (spec.IdPattern.Length > 0 &&
-            !System.Text.RegularExpressions.Regex.IsMatch(row.IdSpan, spec.IdPattern))
+        if (spec.IdPatternRegex is { } idPattern && !idPattern.IsMatch(row.IdSpan))
             err("clause-id-format", $"clause id '{row.IdSpan}' does not match {spec.IdPattern}.", row.Line);
 
         // Ordinal, because `pol-SCRT.LOGS` and `pol-SCRT.logs` differing only in case is not two clauses
