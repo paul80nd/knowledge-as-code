@@ -73,13 +73,18 @@ public class Doc
     public List<LinkRef> RelatedSectionLinks = [];
     public QuoteBlock? YStatement;
 
+    // The two extensions every record depends on: the frontmatter block, and the pipe tables a clause
+    // section is written as. A built pipeline is immutable, so one is shared across every parse rather
+    // than assembled per document.
+    private static readonly MarkdownPipeline Pipeline =
+        new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().Build();
+
     // `requireFrontmatter: false` is for a type page of a collection type. It carries no frontmatter
     // and is not a record, but it holds links and generated blocks that are worth checking, so it is
     // parsed for its prose alone.
     public static Doc? Parse(string rel, string text, Schema schema, bool requireFrontmatter = true)
     {
-        var pipeline = new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().Build();
-        var ast = Markdown.Parse(text, pipeline);
+        var ast = Markdown.Parse(text, Pipeline);
 
         var fmBlock = ast.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
         if (fmBlock is null && requireFrontmatter) return null; // not migrated — caller counts and skips

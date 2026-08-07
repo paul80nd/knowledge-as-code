@@ -11,6 +11,58 @@ namespace kac.core;
 
 public static class Validator
 {
+    // Everything the validator has to say about a loaded corpus, in the order a reader would ask it:
+    // each record on its own, then the pages that are not records, then the questions that need every
+    // record in hand, then whether the corpus has the shape its schema declares.
+    //
+    // This is the whole of `validate` — the command around it only chooses how to print the result.
+    // Any caller wanting to know what the tool thinks of a corpus calls this, so no caller can end up
+    // running a subset and believing it ran the lot.
+    public static List<Finding> CheckAll(LoadedCorpus corpus)
+    {
+        var (schema, repoRoot) = (corpus.Schema, corpus.RepoRoot);
+        var findings = new List<Finding>();
+
+        foreach (var doc in corpus.Docs)
+            CheckDocument(doc, schema, repoRoot, findings);
+
+        // A collection type's page is not a record — it carries no frontmatter and describes the
+        // documents beneath it rather than being one — so the structural checks do not apply. What it
+        // does carry is links, and the generated blocks, and it is the page every record links back
+        // to and every contributor reads first. A single-document type's page is absent from this
+        // pass because it is a record, already checked above.
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        {
+            if (string.IsNullOrEmpty(t.Page)) continue;
+            if (corpus.Paths.Count > 0
+                && !corpus.Paths.Any(p => t.Page == p.Replace('\\', '/').TrimEnd('/'))) continue;
+            var full = Path.Combine(repoRoot, t.Page);
+            if (!File.Exists(full)) continue; // absence is type-setup's to report, not this pass's
+
+            var text = File.ReadAllText(full);
+
+            // Every type page carries the two generated blocks, whatever its shape.
+            CheckGeneratedBlocks(t.Page, text, [$"schema-{key}", $"checks-{key}"], findings);
+
+            // The link pass is only for a collection's page. A single-document type's page has
+            // already had it, as a record, along with everything else.
+            if (t.IsSingleDocument) continue;
+            var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
+            if (page is not null) CheckPageLinks(page, schema, repoRoot, findings);
+        }
+
+        // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
+        CheckCorpus(corpus.Docs, findings);
+
+        // Whether each declared type is stood up. Skipped when the run is narrowed to given paths:
+        // asking about one document is not asking about the shape of the corpus, and answering
+        // anyway would bury the reply.
+        if (corpus.Paths.Count == 0)
+            CheckTypeSetup(schema, repoRoot, corpus.Files, findings);
+
+        return findings;
+    }
+
     public static void CheckDocument(Doc d, Schema schema, string repoRoot, List<Finding> f)
     {
         if (d.Type is null)

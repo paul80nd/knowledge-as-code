@@ -31,6 +31,10 @@ ids fold into one reader-facing row.
 
 ## The feature specs pin more than findings
 
-`Structure.feature` asserts how many documents a fixture corpus holds, as well as every finding it produces. Adding a
-file to a fixture changes that count, and regenerating the goldens will not tell you — the golden layer and the
-feature layer assert different things about the same corpus.
+A scenario asserting a whole corpus — `Structure.feature`, `Shape.feature` — pins how many documents the fixture
+holds, as well as every finding it produces. Adding a file to a fixture changes that count, and regenerating the
+goldens will not tell you: the golden layer and the feature layer assert different things about the same corpus.
+
+`Harness` runs `Corpus.Load` then `Validator.CheckAll` — the two calls `Commands.Validate` makes. Keep it that way: a
+harness that assembles its own subset of the sequence leaves whole checks unreachable from a spec, and every spec goes
+on passing.

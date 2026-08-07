@@ -42,6 +42,10 @@ The unit layer catches breakage in the pieces early; the feature layer is the re
 validator does; the golden/subprocess layer owns the end-to-end CLI contract that the in-process layers bypass.
 Regenerate golden expectations after an intended rule change with `dotnet run .tooling/kac-tests.cs -- --update`.
 
+The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check
+the command can emit is reachable from a spec. The golden layer builds `kac.cs` once per run and invokes the built
+assembly, so each scenario is a real process without paying `dotnet run`'s up-to-date check for each one.
+
 ### Exit codes
 
 | Code | Meaning                                                                         |

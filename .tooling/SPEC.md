@@ -5,10 +5,14 @@ Status: **proposal / not started.** Captured for a later session.
 ## Motivation
 
 Every type schema carries a `rules:` block. Most entries are **prose intent, not executable
-checks** — a backlog of ~25 rules described in `description:` fields, of which only a handful are
-wired to C#. Today wiring one means adding a hard-coded arm to the `switch (ruleId)` in
+checks** — over fifty rule entries across the type schemas, of which **two** are wired to C#. Today
+wiring one means adding a hard-coded arm to the `switch (ruleId)` in
 `Validator.CheckWarnings` (`kac.core/Validator.cs`). Twelve near-identical conditionals and threshold checks are
 waiting behind that switch.
+
+Fewer than half the entries declare a `severity:`, and `CheckWarnings` skips any rule that does not
+say `warning`. So the grammar below is only half the work: the other half is deciding, rule by rule,
+whether it fails a build or advises an author.
 
 This spec proposes turning the **field-predicate and simple-structural** rules into data: a
 one-line `expr:` string per rule, evaluated by a tiny in-house evaluator against a fixed *fact*
@@ -69,7 +73,7 @@ that is the signal you are rebuilding OPA. Write a dedicated arm instead.
 - `immutable-after-accepted`, `immutable-after-published` — git diff of committed content
 - `no-dependency-cycles` — graph over `depends-on`
 - `drift-against-repos` — external repo state
-- `policy-has-implementer`, `constraint-consistency` — cross-document
+- `rules-have-controls`, `constraint-consistency` — cross-document
 - `coverage-report`, `expiry-sweep`, `undefined-terms` — corpus-wide / reporting
 - `reciprocal-supersession`, `related-matches-section` — already core checks; leave as-is
 
@@ -202,9 +206,12 @@ cannot ship without a fixture" discipline rather than weakening it. It is the on
 reaches beyond `CheckWarnings`.
 
 Because the catalogue currently is a `static readonly` list, this means making the catalogue
-schema-aware (load-time construction). Verify `Commands.Checks` and the `checks-<folder>` generated
-table (`Generator.ChecksTable`) still render sensibly once rule ids are included — or keep the
-generated table to core checks and list rule ids only in `kac checks`.
+schema-aware (load-time construction).
+
+**The reader-facing table is not part of that.** `kac checks` gains the rule ids; the generated
+`checks-<folder>` table does not. `Generator.DocRows` groups several ids into one hand-worded row
+aimed at an author asking whether their document will pass, so an `expr` rule earns its row the same
+way a core check does — by someone writing one, with `ChecksTableProblems` failing until they do.
 
 ## When to abandon the in-house evaluator
 
@@ -220,7 +227,8 @@ before: the dependency is not worth it for ~12 predicates.
        semantics for `field()`.
 3. [ ] Extend the rule model (`expr`/`severity`/`message`/compiled `Expr`); compile in
        `Schema.ParseType`, failing loudly on syntax errors.
-4. [ ] Make `CheckCatalogue` schema-aware so `expr` rule ids appear in `kac checks --json`.
+4. [ ] Make `CheckCatalogue` schema-aware so `expr` rule ids appear in `kac checks --json`; give each
+       a `DocRows` row or an `IntentionallyUndocumented` waiver to satisfy `ChecksTableProblems`.
 5. [ ] Convert **one** Bucket-A rule (`detected-not-before-occurred` is a clean first) end to end,
        with a golden fixture, and confirm the coverage gate passes.
 6. [ ] Convert the rest of Bucket A.
