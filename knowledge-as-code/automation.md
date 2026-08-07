@@ -90,7 +90,7 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Repository & launchpad tables               | `services/`                              | Root `README.md`                       | Planned |
 | Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block           | Done    |
 | Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block | Done    |
-| Rules digest                                | Active standards                         | Root `CLAUDE.md`                       | Planned |
+| Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block  | Planned |
 | Control coverage report                     | `controls/` + standards' rules           | `controls/INDEX.md`                    | Planned |
 | Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/INDEX.md`                    | Planned |
 | Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`                | Planned |
@@ -99,7 +99,14 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | `.order` files                              | Folder contents + type ordering          | Each folder                            | Planned |
 | `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                              | Planned |
 
-### The rules digest — root `CLAUDE.md`
+### The rules digest — a block inside root `CLAUDE.md`
+
+Root `CLAUDE.md` is hand-written: it is the file an agent always reads, and most of what it needs there — which
+repository this is, what to run before committing, the conventions nothing enforces — is not derivable from the
+corpus. The digest is generated *into* it as a `rules-digest` block, the way a type page carries its schema table, so
+that standing guidance and generated rules arrive together instead of competing for the same filename.
+
+That means the digest also waits on generated blocks being able to target a page that is not a type page.
 
 The one generated artefact with a hard constraint on it.
 
