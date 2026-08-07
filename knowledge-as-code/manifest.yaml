@@ -124,6 +124,14 @@ rules:
       They are also excluded from validation today, so nothing catches the drift either way.
       Provisionally `forked`; revisit once a second corpus exists and the cost is visible.
 
+  - path: "frameworks.md"
+    layer: forked
+    note: >
+      The register of external frameworks and what each obliges us to. `forked` for the same reason
+      the type root pages are: the three postures and the rule that standing is stated here and
+      nowhere else are the framework's, while which frameworks appear and what our standing against
+      them is belong wholly to the corpus. A consumer keeps the shape and replaces every entry.
+
   # Type root pages: framework structure, shipped generic. They are `forked` rather than `synced`
   # because each corpus is expected to make them specific — `glossary.md` is the clearest case: its
   # conventions are the framework's, but the vocabulary that will earn its place is the corpus's own.
