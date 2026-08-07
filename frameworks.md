@@ -37,14 +37,14 @@ nothing genuinely maps, the control is absent from the corpus and that absence i
 this corpus is the engineering function's share and no more. Roughly a third of Annex A is deliberately answered
 elsewhere in the management system:
 
-| Area                                                    | Owned by                                     |
-|---------------------------------------------------------|----------------------------------------------|
-| Physical controls — `A.7.1`–`A.7.14` entire             | Facilities                                   |
-| People controls — `A.6.1`–`A.6.7`                       | HR, with the security awareness programme    |
-| The management system itself — `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                              |
-| Organisational reach — `A.5.5`, `A.5.6`, `A.5.31`       | Legal and the ISMS owner                     |
-| Asset handling — `A.5.10`, `A.5.11`, `A.5.13`           | IT operations                                |
-| Corporate IT — `A.8.23`, `A.8.34`                       | IT operations                                |
+| Area                                                      | Owned by                                  |
+|-----------------------------------------------------------|-------------------------------------------|
+| Physical controls — `A.7.1`–`A.7.14` entire               | Facilities                                |
+| People controls — `A.6.1`–`A.6.7`                         | HR, with the security awareness programme |
+| The management system itself — `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                            |
+| Organisational reach — `A.5.5`, `A.5.6`, `A.5.31`         | Legal and the ISMS owner                  |
+| Asset handling — `A.5.10`, `A.5.11`, `A.5.13`             | IT operations                             |
+| Corporate IT — `A.8.23`, `A.8.34`                         | IT operations                             |
 
 Without saying so, a reader who takes the rule above at face value counts every uncited control as a finding, and most
 of them are not ours to answer. The ones that *are* ours and still uncited are the real ones, and they are worth naming
