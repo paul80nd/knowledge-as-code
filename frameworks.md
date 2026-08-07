@@ -3,15 +3,14 @@
 The external frameworks this corpus refers to, and what each one obliges us to.
 
 A [policy](/policies) maps its clauses to a framework's controls in the `Alignment` column of its clause table, as
-`[ISO 27001:2022].A.8.24`. Those references resolve here, and this page is the only place that says what the
-relationship actually is — whether we are bound to a framework, hold ourselves to it, or simply learned from it. A
-policy states obligations; it does not state our standing against a framework, because that standing changes on its own
-schedule and would otherwise have to be corrected in twenty places at once.
+`[ISO 27001:2022].A.8.24`. Those references resolve here. This page is the only place that says what the relationship
+is — bound, self-held, or merely borrowed — because that standing changes on its own schedule and would otherwise need
+correcting in twenty policies at once.
 
-This page is maintained by hand. It is not generated, and it is not a knowledge record — there is no frontmatter, no id
-and no index. It exists because the references in the corpus need somewhere honest to land.
+Maintained by hand: no frontmatter, no id, no index. It exists so the references in the corpus have somewhere honest to
+land.
 
-## How to read the three postures
+## The three postures
 
 | Posture            | What it means                                                                                                                     |
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------------|
@@ -19,37 +18,33 @@ and no index. It exists because the references in the corpus need somewhere hone
 | **Self-obligated** | Nothing external compels it; a policy of ours does. Binding on us because we said so, and revocable only by changing that policy. |
 | **Inspiration**    | We took ideas from it. It shapes our thinking and binds nothing. A clause may cite it for provenance, not for obligation.         |
 
-The distinction matters when someone asks *why* a clause exists. "Because we are certified against it" and "because it
-seemed sensible" are different answers, and only one of them survives a change of mind.
+"Because we are certified against it" and "because it seemed sensible" are different answers to *why does this clause
+exist*, and only one of them survives a change of mind.
 
 ## Obliged
 
 ### ISO/IEC 27001:2022 {#iso27001-2022}
 
-**Registered.** We hold certification against ISO/IEC 27001:2022 and are audited against it. Annex A is the control set
-our security, delivery and operations policies map their clauses to, and the mapping is the evidence trail an auditor
-follows from a control back to the commitment it implements.
+**Registered.** We hold certification and are audited against it. Annex A is the control set our security, delivery and
+operations policies map to, and that mapping is the evidence trail an auditor follows from a control back to the
+commitment implementing it.
 
 Registration is why the mapping has to be honest rather than generous. A clause mapped to a control it does not really
-implement is worse than an unmapped clause: the gap is now hidden behind a reference that looks like coverage. Where no
-clause genuinely maps to a control, the control is absent from the corpus and that absence is the finding.
+implement is worse than no mapping at all — the gap is now hidden behind a reference that looks like coverage. Where
+nothing genuinely maps, the control is absent from the corpus and that absence is the finding.
 
 Referenced by: most policies under `category: security`, `delivery` and `operations`.
 
 ### UK GDPR and the Data Protection Act 2018 {#uk-gdpr}
 
-**Obliged in law**, wherever we process personal data — which is everywhere we hold a customer, an employee or a user
-record. The EU GDPR applies in parallel for people in the EU; the article numbering is the same, so a clause citing
-`Art.5(1)(e)` cites both, and only the supervisory authority differs.
+**Obliged in law**, wherever we process personal data. The EU GDPR applies in parallel for people in the EU and shares
+the article numbering, so a clause citing `Art.5(1)(e)` cites both; only the supervisory authority differs.
 
-This is where [pol-DATA]'s obligations actually originate. ISO/IEC 27001:2022 acknowledges the same ground in one
-control — A.5.34, *privacy and protection of personal data* — but a control that says "comply with the applicable law"
-is a pointer, not the duty. Lawful basis, minimisation, storage limitation and the rights of a data subject are duties
-in their own right, owed to people rather than to an auditor, and they survive any decision to stop being certified.
-
-The practical difference is who can waive it. An Annex A control is ours to scope out with a documented justification;
-an article of the UK GDPR is not, and a recorded deviation ([pol-DEVI]) against one of these clauses is a decision to
-break the law rather than a risk to accept.
+This is where [pol-DATA]'s obligations originate. ISO/IEC 27001:2022 covers the same ground in a single control —
+A.5.34, *privacy and protection of personal data* — but a control that says "comply with the applicable law" is a
+pointer, not the duty. The practical difference is who can waive it: an Annex A control is ours to scope out with a
+documented justification, and an article is not. A recorded deviation ([pol-DEVI]) against one of these clauses is a
+decision to break the law rather than a risk to accept.
 
 Referenced by: [pol-DATA].
 
@@ -79,40 +74,37 @@ Referenced by: [pol-A11Y].
 
 ## Inspiration
 
-Nothing here binds. A clause cites one of these to say where the thinking came from — that we are restating something
-the industry already knows rather than inventing it — and citing one is never an argument for keeping a clause we would
+Nothing here binds. A clause cites one of these to say where the thinking came from — that we are restating what the
+industry already knows rather than inventing it. Citing one is never an argument for keeping a clause we would
 otherwise drop.
 
 ### DORA metrics {#dora-metrics}
 
-**Inspiration.** The four delivery-performance measures from the DevOps Research and Assessment programme and the
-*Accelerate* research behind it: deployment frequency, lead time for changes, change failure rate, and the time to
-recover from a failed deployment.
+**Inspiration.** The four delivery-performance measures from the DevOps Research and Assessment programme: deployment
+frequency, lead time for changes, change failure rate, and time to recover from a failed deployment.
 
-These are outcomes rather than practices, which makes them an unusual thing to align a clause with. What the research
-claims — and what we are borrowing — is the causal direction: certain capabilities move certain measures, so a clause
-citing `lead-time` is claiming to be one of the things that moves it. That is a testable claim about our own delivery,
-not a control we satisfy.
+These are outcomes rather than practices, which makes them an unusual thing to align a clause with. What we borrow is
+the causal direction: certain capabilities move certain measures, so a clause citing `lead-time` is claiming to be one
+of the things that moves it — a testable claim about our own delivery rather than a control we satisfy.
 
-Not to be confused with the **Digital Operational Resilience Act**, the EU regulation for financial entities, which
-shares the acronym and nothing else. If that ever applies to us it goes under Obliged, under its full name.
+Not the **Digital Operational Resilience Act**, the EU regulation for financial entities, which shares the acronym and
+nothing else. If that ever applies to us it goes under Obliged, under its full name.
 
 Referenced by: [pol-PIPE], [pol-AUTV].
 
 ### Azure Well-Architected Framework {#azure-waf}
 
 **Inspiration.** Microsoft's five pillars for designing and operating a workload: Reliability, Security, Cost
-Optimization, Operational Excellence and Performance Efficiency.
+Optimization, Operational Excellence and Performance Efficiency. Vendor-published rather than standards-body, and
+Azure's because Azure is what we run on — AWS and Google publish near-identical pillars, so a move would be a
+relabelling rather than a re-mapping.
 
-Vendor-published rather than standards-body, and we cite Azure's because Azure is what we run on. AWS and Google
-publish near-identical pillars, so a move would be a relabelling rather than a re-mapping. Clauses cite the **pillar**
-and not the individual checklist recommendation: the recommendations are renumbered as the framework is revised, and a
-citation that rots quietly is worse than one that is a little coarse.
+Clauses cite the **pillar**, not the individual checklist recommendation: recommendations are renumbered as the
+framework is revised, and a citation that rots quietly is worse than one that is a little coarse.
 
-This is the only framework that covers [pol-COST], and it is worth being plain about why. No external body will ever
-oblige us to manage cloud spend. The Cost Optimization pillar is a genuine influence on how that policy is written, and
-recording it is the difference between a policy that borrows from established practice and one that appears to have
-been invented in a meeting.
+This is the only framework covering [pol-COST], and worth being plain about why. No external body will ever oblige us
+to manage our own cloud spend. Recording the Cost Optimization pillar as a real influence is the difference between a
+policy that borrows from established practice and one that appears to have been invented in a meeting.
 
 Referenced by: [pol-COST], [pol-RECV], [pol-PERF], [pol-OBSV].
 
@@ -120,21 +112,16 @@ Referenced by: [pol-COST], [pol-RECV], [pol-PERF], [pol-OBSV].
 
 **Inspiration.** The Secure Software Development Framework, NIST SP 800-218 — around forty practices grouped as `PO`
 prepare the organisation, `PS` protect the software, `PW` produce well-secured software, and `RV` respond to
-vulnerabilities. Cited as `PO.5`, `PW.7`, `RV.2`.
+vulnerabilities. Cited as `PO.5`, `PW.7`, `RV.2`. Free, and not certifiable: there is no registering against SSDF.
 
-It is the closest thing to a peer this corpus has. SSDF is deliberately implementation-agnostic — it says what a
-practice must achieve and leaves the tooling to whoever adopts it — which puts it at the same altitude as a policy
-clause and is why it reaches seven policies rather than one. Several of our clauses turn out to be SSDF practices we
-arrived at independently, which is worth knowing: it means the corpus is conventional where it should be, and the
-places it says something SSDF does not are the places worth defending.
-
-Free to download, published by a government agency, and not certifiable — there is no such thing as being registered
-against SSDF, which is why it sits here rather than under Obliged. US federal software procurement leans on it, but
-that is a buyer making it a condition rather than the framework binding anyone by itself.
+The closest thing to a peer this corpus has. SSDF says what a practice must achieve and leaves the tooling to whoever
+adopts it, which puts it at the same altitude as a policy clause and is why it reaches seven policies rather than one.
+Several of our clauses turn out to be SSDF practices arrived at independently — [pol-ENVS] is `PO.5` nearly in its
+entirety — and that cuts both ways: the corpus is conventional where it should be, and where it says something SSDF
+does not is where it is worth defending.
 
 NIST also publishes SP 800-218A, an SSDF profile for generative AI. It addresses producers of models rather than
-consumers of coding agents, so it does not cover what [pol-AGNT] governs; that policy is still waiting for a framework
-that fits it.
+consumers of coding agents, so it does not cover what [pol-AGNT] governs; the AI RMF below does.
 
 Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-PIPE], [pol-ENVS].
 
@@ -142,34 +129,29 @@ Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-
 
 **Inspiration.** The AI Risk Management Framework, NIST AI 100-1 — four functions: `GOVERN` (accountability and
 oversight), `MAP` (context and provenance), `MEASURE` (evaluation and verification) and `MANAGE` (risk treatment).
+Cited at function level, for the same reason the Well-Architected pillars are.
 
-Cited at function level rather than by category, for the same reason the Well-Architected pillars are: the categories
-beneath each function are numerous and re-numbered between revisions, and a clause aligning with an entire function is
-saying something true rather than something precise-looking.
+[pol-AGNT] is the policy this exists for. It previously had only `A.8.30`, *outsourced development* — a control written
+for contracting out a system build, pressed into service for an agent proposing a change. It reads plausibly and is
+wrong in the way that matters: an outsourced supplier is accountable for its work, and the premise of pol-AGNT is that
+an agent is not, so accountability sits with the person who accepts the output. GOVERN says that directly.
 
-[pol-AGNT] is the policy this exists for. Everything else in the corpus had a framework watching it and that one had
-`A.8.30`, *outsourced development* — a control written for contracting out a system build, pressed into service for an
-agent proposing a change. It reads plausibly and it is wrong: an outsourced supplier is accountable for its work, and
-the entire point of pol-AGNT is that an agent is not, so the accountability sits with the person who accepts the
-output. The AI RMF's GOVERN function says exactly that, which is why the mapping is worth having.
-
-**ISO/IEC 42001** is the certifiable sibling — an AI management system standard, and the natural companion to our
-ISO/IEC 27001 registration if the use of AI ever needs to be auditable rather than merely governed. It sits under
-Obliged the day we register for it and not before. The relationship is the same one SSDF has to 27001: the free
-framework describes the practice, the certifiable standard makes someone check.
+**ISO/IEC 42001** is the certifiable sibling, an AI management system standard and the natural companion to our 27001
+registration if the use of AI ever needs auditing rather than governing. It moves to Obliged the day we register and
+not before — the same relationship SSDF has to 27001: the free framework describes the practice, the certifiable
+standard makes someone check.
 
 Referenced by: [pol-AGNT].
 
 ### OWASP ASVS 4.0 {#owasp-asvs-4}
 
-**Inspiration.** The Open Worldwide Application Security Project's Application Security Verification Standard — a
-catalogue of application security requirements organised into chapters (`V1` architecture and threat modelling, `V2`
-authentication, `V4` access control, `V5` validation and encoding, `V13` APIs and web services), each at three levels
-of rigour.
+**Inspiration.** The Open Worldwide Application Security Project's Application Security Verification Standard —
+application security requirements in chapters (`V1` architecture and threat modelling, `V2` authentication, `V4` access
+control, `V5` validation and encoding, `V13` APIs and web services), each at three levels of rigour.
 
-The version is pinned deliberately. ASVS re-chapters between major versions, so `V13` means something specific only
-alongside the version it was written against. Moving to a later major version is a re-mapping exercise rather than an
-edit to this heading, and doing it as an edit would silently repoint every citation.
+The version is pinned deliberately: ASVS re-chapters between major versions, so `V13` means something specific only
+alongside the version it was written against. Moving to a later one is a re-mapping exercise, and doing it as an edit
+to this heading would silently repoint every citation.
 
 Referenced by: [pol-INTC], [pol-SECD], [pol-ACCS].
 
@@ -183,8 +165,8 @@ Referenced by: [pol-INTC], [pol-SECD], [pol-ACCS].
 4. In the citing policy, define the link at the foot — `[ISO 27001:2022]: /frameworks.md#iso27001-2022` — below the
    corpus references, and cite it per clause rather than per document.
 
-A framework nothing references does not belong here. If we have stopped using one, say so and when, rather than deleting
-the entry: a policy clause written under its influence is easier to read with the history intact.
+A framework nothing references does not belong here. If we stop using one, say so and when, rather than deleting the
+entry: a policy clause written under its influence is easier to read with the history intact.
 
 [pol-A11Y]: policies/a11y-accessibility.md
 [pol-ACCS]: policies/accs-access-by-identity.md
