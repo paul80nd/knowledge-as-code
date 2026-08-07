@@ -21,15 +21,35 @@ to your own domain and never reconcile them again.
 Which files fall on which side is declared in
 [`knowledge-as-code/manifest.yaml`](knowledge-as-code/manifest.yaml), not asserted in prose.
 
-**What the corpus claims about its organisation is illustrative.** Showing how framework alignment works requires
-something to align with, so this corpus takes a position: ISO/IEC 27001 registered, obliged by the UK GDPR, running on
-Azure, part of a management system whose other halves belong to facilities, HR and IT. None of that describes anyone
-real. It is scaffolding, so that [`frameworks.md`](frameworks.md) and the policies' `Alignment` columns do something
-instead of sitting empty — rewrite it on the way through.
+### The seeds come in two kinds, and the difference matters
 
-The twenty-one **policies** are the part worth reading on their own terms. The clause model, the mnemonic ids, the
-per-clause alignment and the gap analysis that closed it were worked out on them rather than assumed, and they would
-survive adoption with the specifics rewritten.
+**Some seeds are close to real.** The twenty-one **policies** are the clearest case, and the part worth reading on
+their own terms. The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were
+worked out on them rather than assumed. They are principle-level and stack-agnostic by design, so they name no service
+and invent no domain — which is exactly why they would survive adoption with only the specifics rewritten.
+
+**Other seeds need somewhere to stand.** A service catalogue demonstrates nothing without an estate; an NFR has to
+apply to something; a postmortem needs an incident. For those, this corpus uses **one fictional organisation
+throughout — Example Libraries, a public-library consortium** — so that the records form a graph instead of a list.
+Nine of them are in [`services/`](services.md) today, and the same estate will carry the example records for the other
+types as they are seeded.
+
+It cannot be mistaken for anyone real, by construction: every hostname is under `example.com`, which
+[RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered by anybody. The domain
+is deliberately non-commercial, and no repository carries an organisation prefix because there is no organisation to
+prefix with.
+
+**Delete these records; do not adapt them.** Each seeded type page says so at the top. They are chosen to exercise the
+schema's awkward corners — a monorepo shipping three deployables, a CDN whose `repo` cannot answer where its content
+comes from, a service coupled to the whole estate with no dependency edges — not to resemble your estate.
+
+**What the corpus claims about its organisation is illustrative in the same way.** Showing how framework alignment
+works requires something to align with, so this corpus takes a position: ISO/IEC 27001 registered, obliged by the UK
+GDPR, running on Azure, part of a management system whose other halves belong to facilities, HR and IT. That posture
+and the estate fit each other — a public library is a public-sector body, so the accessibility obligations the
+policies cite genuinely bind it — but none of it describes anyone real. It is scaffolding, so that
+[`frameworks.md`](frameworks.md) and the policies' `Alignment` columns do something instead of sitting empty — rewrite
+it on the way through.
 
 ## Status
 
@@ -41,11 +61,12 @@ survive adoption with the specifics rewritten.
 | `kac index`    | Generates `<type>/INDEX.md` and the schema/checks tables inside each type root page                          |
 | `kac checks`   | Lists every check the validator implements                                                                   |
 | Tests          | Three layers — unit (`kac.tests`), Reqnroll feature specs (`kac.features`), golden fixtures (`kac-tests.cs`) |
-| Proven types   | **ADRs and policies.** The other fifteen schemas are written but have never validated a real document        |
+| Proven types   | **ADRs, policies and services.** The other fourteen schemas are written but have never met real content      |
 
-That last row is the honest limit. The schema will be wrong in ways only real content reveals, and two types have met it
-so far — policies alone forced the mnemonic id style, a category field, the identity line, the clause table and the
-seven checks that hold it. Treat the other fifteen as drafts.
+That last row is the honest limit. The schema will be wrong in ways only real content reveals, and three types have met
+it so far — policies alone forced the mnemonic id style, a category field, the identity line, the clause table and the
+seven checks that hold it. Services were proven elsewhere: a consumer repository built a full catalogue against this
+type and sent back sixteen findings, which are tracked as issues here. Treat the other fourteen as drafts.
 
 ## Provenance
 
@@ -74,9 +95,13 @@ dotnet run .tooling/kac-tests.cs   # run the golden test suite
 `./kac` (Windows: `kac.cmd`) is a launcher at the repo root that wraps `dotnet run .tooling/kac.cs`; add the repo root
 to your `PATH` to run it as `kac`.
 
-To start your own corpus: clone, delete the type folders you don't want, rewrite the root pages' examples in your own
-domain, and start adding records. Keep `.tooling/` and `.schema/` as they are — those are the half you want to receive
-updates to.
+To start your own corpus: clone, delete the type folders you don't want, **delete the example records in the ones you
+keep**, rewrite the root pages' examples in your own domain, and start adding records. Keep `.tooling/` and `.schema/`
+as they are — those are the half you want to receive updates to.
+
+The example records are every `<type>/*.md` that is not `INDEX.md` or `template.md`. `./kac validate` covers them, so
+they are held to the same standard as real content and a schema change that breaks them fails CI here rather than in
+your repository.
 
 ## Layout
 

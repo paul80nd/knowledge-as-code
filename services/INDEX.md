@@ -2,4 +2,14 @@
 
 # Service Index (SVC)
 
-_Nothing here yet — copy [`template.md`](template.md) to add the first._
+| ID                | Title                             | Platform       | Criticality | Status     | Owner       |
+|-------------------|-----------------------------------|----------------|-------------|------------|-------------|
+| svc-catalogue-api | [Catalogue API](catalogue-api.md) | dotnet-api     | critical    | live       | robin.hale  |
+| svc-catalogue-web | [Catalogue](catalogue-web.md)     | dotnet-web     | critical    | live       | robin.hale  |
+| svc-covers-cdn    | [Covers CDN](covers-cdn.md)       | static         | critical    | live       | dev.raman   |
+| svc-lending       | [Lending](lending.md)             | dotnet-api     | critical    | live       | dev.raman   |
+| svc-notices       | [Notices](notices.md)             | azure-function | important   | live       | mira.okonjo |
+| svc-reservations  | [Reservations](reservations.md)   | dotnet-web     | important   | building   | mira.okonjo |
+| svc-search        | [Search](search.md)               | typescript     | important   | live       | mira.okonjo |
+| svc-shelf-audit   | [Shelf Audit](shelf-audit.md)     | mixed          | supporting  | deprecated | dev.raman   |
+| svc-thumbnailer   | [Thumbnailer](thumbnailer.md)     | dotnet-web     | critical    | live       | dev.raman   |
