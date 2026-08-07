@@ -19,6 +19,9 @@ is, or whether it is in force — the three things a reader arriving from a cita
 This fixture only. It exists so the absent-line branch of `identity` is exercised as well as the malformed-line branch,
 which `agnt-identity-malformed.md` covers.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `identity` and nothing else.
+| Id      | Clause                                       |
+|---------|----------------------------------------------|
+| `CLEAN` | **MUST** trigger `identity` and nothing else |
+

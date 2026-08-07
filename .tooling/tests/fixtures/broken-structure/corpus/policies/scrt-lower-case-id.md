@@ -20,6 +20,9 @@ lower-case, so this is `id-format` rather than a mismatch.
 
 This fixture only.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `id-format` and nothing else.
+| Id      | Clause                                        |
+|---------|-----------------------------------------------|
+| `CLEAN` | **MUST** trigger `id-format` and nothing else |
+

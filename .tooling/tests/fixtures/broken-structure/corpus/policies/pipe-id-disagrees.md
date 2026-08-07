@@ -19,6 +19,9 @@ A well-formed mnemonic that names a different policy than the file it sits in.
 
 This fixture only.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `id-matches-filename` and nothing else.
+| Id      | Clause                                                  |
+|---------|---------------------------------------------------------|
+| `CLEAN` | **MUST** trigger `id-matches-filename` and nothing else |
+

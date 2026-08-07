@@ -21,6 +21,9 @@ restates this is the one that moves, so it is the one that drifts.
 This fixture only. It exists so the disagreeing-status branch of `identity-status` is exercised as well as the
 wrong-case branch, which `know-identity-case.md` covers.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `identity-status` and nothing else.
+| Id      | Clause                                              |
+|---------|-----------------------------------------------------|
+| `CLEAN` | **MUST** trigger `identity-status` and nothing else |
+

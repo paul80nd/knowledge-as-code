@@ -21,6 +21,9 @@ characters higher.
 
 This fixture only.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `slug-length` and nothing else.
+| Id      | Clause                                          |
+|---------|-------------------------------------------------|
+| `CLEAN` | **MUST** trigger `slug-length` and nothing else |
+

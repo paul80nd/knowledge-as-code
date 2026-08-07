@@ -21,7 +21,10 @@ the two agreeing case-insensitively.
 This fixture only. It exists so the clean golden pins that a mnemonic type validates with no findings, and that the
 mnemonic prefix is excluded from the slug-length measurement.
 
-## Commitments
+## Clauses
 
-* We **will** keep this document free of findings.
-* We **will not** give it any internal links, so nothing here depends on the rest of the fixture corpus.
+| Id      | Clause                                                                                             |
+|---------|----------------------------------------------------------------------------------------------------|
+| `CLEAN` | **MUST** keep this document free of findings                                                       |
+| `LOCAL` | **MUST NOT** give it any internal links, so nothing here depends on the rest of the fixture corpus |
+

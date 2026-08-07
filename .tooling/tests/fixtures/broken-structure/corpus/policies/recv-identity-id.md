@@ -21,6 +21,9 @@ id and the filename agree, so only the line is wrong — which is the half `id-m
 This fixture only. It exists so `identity-id` is exercised on a mnemonic type as well as a numbered one; the two
 compare against different halves of the filename.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `identity-id` and nothing else.
+| Id      | Clause                                          |
+|---------|-------------------------------------------------|
+| `CLEAN` | **MUST** trigger `identity-id` and nothing else |
+
