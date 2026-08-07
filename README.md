@@ -14,12 +14,22 @@ Two halves, and the split is the point.
 **The mechanism** — `kac`, a validator and generator, plus the machine-readable schema it enforces. Generic. Portable to
 any organisation. Shared byte-for-byte between every corpus running this framework.
 
-**The seeds** — seventeen knowledge types, each with a root page explaining what it is and when to use it, and a
-template to copy. Opinionated, and meant to be forked: you take them once, then localise the examples to your own domain
-and never reconcile them again.
+**The seeds** — a demonstration corpus: seventeen knowledge types, each with a root page explaining what it is and when
+to use it, and a template to copy. Opinionated, and meant to be forked: you take them once, then localise the examples
+to your own domain and never reconcile them again.
 
 Which files fall on which side is declared in
 [`knowledge-as-code/manifest.yaml`](knowledge-as-code/manifest.yaml), not asserted in prose.
+
+**What the corpus claims about its organisation is illustrative.** Showing how framework alignment works requires
+something to align with, so this corpus takes a position: ISO/IEC 27001 registered, obliged by the UK GDPR, running on
+Azure, part of a management system whose other halves belong to facilities, HR and IT. None of that describes anyone
+real. It is scaffolding, so that [`frameworks.md`](frameworks.md) and the policies' `Alignment` columns do something
+instead of sitting empty — rewrite it on the way through.
+
+The twenty-one **policies** are the part worth reading on their own terms. The clause model, the mnemonic ids, the
+per-clause alignment and the gap analysis that closed it were worked out on them rather than assumed, and they would
+survive adoption with the specifics rewritten.
 
 ## Status
 
@@ -34,8 +44,8 @@ Which files fall on which side is declared in
 | Proven types   | **ADRs and policies.** The other fifteen schemas are written but have never validated a real document        |
 
 That last row is the honest limit. The schema will be wrong in ways only real content reveals, and two types have met it
-so far — policies alone forced the mnemonic id style, a category field and two changes to how a title is written. Treat
-the other fifteen as drafts.
+so far — policies alone forced the mnemonic id style, a category field, the identity line, the clause table and the
+seven checks that hold it. Treat the other fifteen as drafts.
 
 ## Provenance
 
