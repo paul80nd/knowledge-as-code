@@ -171,8 +171,12 @@ public static class Generator
         ("clause-order / clause-compound", ["clause-order", "clause-compound"],
             "Clause rows are grouped by binding level, and each carries a single obligation.",
             t => t.Clauses is not null),
+        // Shown on the pages inside the clause machinery — the types that declare clauses — rather than
+        // on every page. The check itself runs corpus-wide, since a citation is checked where it is
+        // written and any document may carry one; what this predicate scopes is the documentation, and
+        // a type with no clauses in sight has no reason to describe how they are cited.
         ("clause-ref", ["clause-ref"],
-            "A `pol-XXXX.CLAUSE` citation names a clause that exists.", null),
+            "A `pol-XXXX.CLAUSE` citation names a clause that exists.", t => t.Clauses is not null),
         ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional).", null),
         ("undefined-label", ["undefined-label"], "Every shortcut reference has a link definition.", null),
         ("label-canonical", ["label-canonical"],
