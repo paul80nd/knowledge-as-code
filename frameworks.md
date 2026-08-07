@@ -33,6 +33,23 @@ Registration is why the mapping has to be honest rather than generous. A clause 
 implement is worse than no mapping at all — the gap is now hidden behind a reference that looks like coverage. Where
 nothing genuinely maps, the control is absent from the corpus and that absence is the finding.
 
+**What this corpus is responsible for.** Annex A has 93 controls and the Statement of Applicability covers all of them;
+this corpus is the engineering function's share and no more. Roughly a third of Annex A is deliberately answered
+elsewhere in the management system:
+
+| Area                                                    | Owned by                                     |
+|---------------------------------------------------------|----------------------------------------------|
+| Physical controls — `A.7.1`–`A.7.14` entire             | Facilities                                   |
+| People controls — `A.6.1`–`A.6.7`                       | HR, with the security awareness programme    |
+| The management system itself — `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                              |
+| Organisational reach — `A.5.5`, `A.5.6`, `A.5.31`       | Legal and the ISMS owner                     |
+| Asset handling — `A.5.10`, `A.5.11`, `A.5.13`           | IT operations                                |
+| Corporate IT — `A.8.23`, `A.8.34`                       | IT operations                                |
+
+Without saying so, a reader who takes the rule above at face value counts every uncited control as a finding, and most
+of them are not ours to answer. The ones that *are* ours and still uncited are the real ones, and they are worth naming
+as gaps rather than leaving in a crowd of controls that were never in scope.
+
 Referenced by: most policies under `category: security`, `delivery` and `operations`.
 
 ### UK GDPR and the Data Protection Act 2018 {#uk-gdpr}
@@ -75,8 +92,8 @@ Referenced by: [pol-A11Y].
 ## Inspiration
 
 Nothing here binds. A clause cites one of these to say where the thinking came from — that we are restating what the
-industry already knows rather than inventing it. Citing one is never an argument for keeping a clause we would
-otherwise drop.
+industry already knows rather than inventing it. Citing one is never an argument for keeping a clause we would otherwise
+drop.
 
 ### DORA metrics {#dora-metrics}
 
@@ -102,8 +119,8 @@ relabelling rather than a re-mapping.
 Clauses cite the **pillar**, not the individual checklist recommendation: recommendations are renumbered as the
 framework is revised, and a citation that rots quietly is worse than one that is a little coarse.
 
-This is the only framework covering [pol-COST], and worth being plain about why. No external body will ever oblige us
-to manage our own cloud spend. Recording the Cost Optimization pillar as a real influence is the difference between a
+This is the only framework covering [pol-COST], and worth being plain about why. No external body will ever oblige us to
+manage our own cloud spend. Recording the Cost Optimization pillar as a real influence is the difference between a
 policy that borrows from established practice and one that appears to have been invented in a meeting.
 
 Referenced by: [pol-COST], [pol-RECV], [pol-PERF], [pol-OBSV].
@@ -117,8 +134,8 @@ vulnerabilities. Cited as `PO.5`, `PW.7`, `RV.2`. Free, and not certifiable: the
 The closest thing to a peer this corpus has. SSDF says what a practice must achieve and leaves the tooling to whoever
 adopts it, which puts it at the same altitude as a policy clause and is why it reaches seven policies rather than one.
 Several of our clauses turn out to be SSDF practices arrived at independently — [pol-ENVS] is `PO.5` nearly in its
-entirety — and that cuts both ways: the corpus is conventional where it should be, and where it says something SSDF
-does not is where it is worth defending.
+entirety — and that cuts both ways: the corpus is conventional where it should be, and where it says something SSDF does
+not is where it is worth defending.
 
 NIST also publishes SP 800-218A, an SSDF profile for generative AI. It addresses producers of models rather than
 consumers of coding agents, so it does not cover what [pol-AGNT] governs; the AI RMF below does.
@@ -128,8 +145,8 @@ Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-
 ### NIST AI RMF 1.0 {#nist-ai-rmf-1-0}
 
 **Inspiration.** The AI Risk Management Framework, NIST AI 100-1 — four functions: `GOVERN` (accountability and
-oversight), `MAP` (context and provenance), `MEASURE` (evaluation and verification) and `MANAGE` (risk treatment).
-Cited at function level, for the same reason the Well-Architected pillars are.
+oversight), `MAP` (context and provenance), `MEASURE` (evaluation and verification) and `MANAGE` (risk treatment). Cited
+at function level, for the same reason the Well-Architected pillars are.
 
 [pol-AGNT] is the policy this exists for. It previously had only `A.8.30`, *outsourced development* — a control written
 for contracting out a system build, pressed into service for an agent proposing a change. It reads plausibly and is
@@ -137,9 +154,9 @@ wrong in the way that matters: an outsourced supplier is accountable for its wor
 an agent is not, so accountability sits with the person who accepts the output. GOVERN says that directly.
 
 **ISO/IEC 42001** is the certifiable sibling, an AI management system standard and the natural companion to our 27001
-registration if the use of AI ever needs auditing rather than governing. It moves to Obliged the day we register and
-not before — the same relationship SSDF has to 27001: the free framework describes the practice, the certifiable
-standard makes someone check.
+registration if the use of AI ever needs auditing rather than governing. It moves to Obliged the day we register and not
+before — the same relationship SSDF has to 27001: the free framework describes the practice, the certifiable standard
+makes someone check.
 
 Referenced by: [pol-AGNT].
 
@@ -150,8 +167,8 @@ application security requirements in chapters (`V1` architecture and threat mode
 control, `V5` validation and encoding, `V13` APIs and web services), each at three levels of rigour.
 
 The version is pinned deliberately: ASVS re-chapters between major versions, so `V13` means something specific only
-alongside the version it was written against. Moving to a later one is a re-mapping exercise, and doing it as an edit
-to this heading would silently repoint every citation.
+alongside the version it was written against. Moving to a later one is a re-mapping exercise, and doing it as an edit to
+this heading would silently repoint every citation.
 
 Referenced by: [pol-INTC], [pol-SECD], [pol-ACCS].
 

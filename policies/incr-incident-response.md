@@ -8,6 +8,7 @@ aligns-with:
   - ISO27001:2022 A.5.25
   - ISO27001:2022 A.5.26
   - ISO27001:2022 A.5.27
+  - ISO27001:2022 A.5.28
   - ISO27001:2022 A.6.8
 review-by: "2027-08-04"
 owner: paul.law
@@ -34,17 +35,17 @@ the organisation.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                               | Alignment               |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
-| `PROCESS` | **MUST** maintain a defined incident-response process with clear roles, so that during an incident it is never ambiguous who decides | [ISO 27001:2022].A.5.24 |
-| `TRIAGE`  | **MUST** classify incidents by severity, and escalate and communicate according to it                                                | [ISO 27001:2022].A.5.25 |
-| `RECORD`  | **MUST** preserve evidence and produce a record for every significant incident                                                       | [ISO 27001:2022].A.5.26 |
-| `REPORT`  | **MUST** encourage anyone to report a suspected incident, and make it easy to do so                                                  | [ISO 27001:2022].A.6.8  |
-| `REVIEW`  | **MUST** review significant incidents afterwards, looking for the conditions that allowed them rather than for someone to blame      | [ISO 27001:2022].A.5.27 |
-| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work                                                                        | [ISO 27001:2022].A.5.27 |
-| `DRILL`   | **MUST** rehearse the process rather than first exercising it for real                                                               | [ISO 27001:2022].A.5.24 |
-| `ADHOC`   | **MUST NOT** handle a significant incident informally, with no record and no named owner                                             | [ISO 27001:2022].A.5.26 |
-| `CLOSE`   | **MUST NOT** close an incident at the point service is restored — it closes when the learning is captured                            | [ISO 27001:2022].A.5.27 |
+| Id        | Clause                                                                                                                               | Alignment                                        |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `PROCESS` | **MUST** maintain a defined incident-response process with clear roles, so that during an incident it is never ambiguous who decides | [ISO 27001:2022].A.5.24                          |
+| `TRIAGE`  | **MUST** classify incidents by severity, and escalate and communicate according to it                                                | [ISO 27001:2022].A.5.25                          |
+| `RECORD`  | **MUST** preserve evidence and produce a record for every significant incident                                                       | [ISO 27001:2022].A.5.26, [ISO 27001:2022].A.5.28 |
+| `REPORT`  | **MUST** encourage anyone to report a suspected incident, and make it easy to do so                                                  | [ISO 27001:2022].A.6.8                           |
+| `REVIEW`  | **MUST** review significant incidents afterwards, looking for the conditions that allowed them rather than for someone to blame      | [ISO 27001:2022].A.5.27                          |
+| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work                                                                        | [ISO 27001:2022].A.5.27                          |
+| `DRILL`   | **MUST** rehearse the process rather than first exercising it for real                                                               | [ISO 27001:2022].A.5.24                          |
+| `ADHOC`   | **MUST NOT** handle a significant incident informally, with no record and no named owner                                             | [ISO 27001:2022].A.5.26                          |
+| `CLOSE`   | **MUST NOT** close an incident at the point service is restored — it closes when the learning is captured                            | [ISO 27001:2022].A.5.27                          |
 
 ## Exceptions
 

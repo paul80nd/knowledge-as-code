@@ -6,6 +6,7 @@ status: draft
 aligns-with:
   - ISO27001:2022 A.5.19
   - ISO27001:2022 A.5.21
+  - ISO27001:2022 A.5.32
   - ISO27001:2022 A.8.19
 review-by: "2027-08-04"
 owner: paul.law
@@ -31,16 +32,16 @@ images and build-time tooling; and all artifacts we deploy.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                       | Alignment                                     |
-|-----------|----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
-| `INVENT`  | **MUST** maintain a resolvable inventory of what each solution depends on                                                                    | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4 |
-| `SCREEN`  | **MUST** screen dependencies for known vulnerabilities and for licence terms we can accept                                                   | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4 |
-| `SOURCE`  | **MUST** obtain components from sources we have reason to trust                                                                              | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4 |
-| `REPO`    | **MUST** hold build artifacts in a managed repository, versioned and retained so a release can be identified, rolled back and examined later | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3 |
-| `TRACE`   | **MUST** be able to trace a deployed artifact to the change and the build that produced it                                                   | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PS.2 |
-| `UNTRUST` | **MUST NOT** introduce a dependency from an untrusted or unverifiable source                                                                 | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4 |
-| `KNOWN`   | **MUST NOT** ship a component with a known critical vulnerability without a recorded, risk-owned deviation ([pol-DEVI])                      | [NIST SSDF 1.1].RV.2                          |
-| `MUTATE`  | **MUST NOT** alter a released artifact in place — a change produces a new version                                                            | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3 |
+| Id        | Clause                                                                                                                                       | Alignment                                                              |
+|-----------|----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| `INVENT`  | **MUST** maintain a resolvable inventory of what each solution depends on                                                                    | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4                          |
+| `SCREEN`  | **MUST** screen dependencies for known vulnerabilities and for licence terms we can accept                                                   | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4, [ISO 27001:2022].A.5.32 |
+| `SOURCE`  | **MUST** obtain components from sources we have reason to trust                                                                              | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4                          |
+| `REPO`    | **MUST** hold build artifacts in a managed repository, versioned and retained so a release can be identified, rolled back and examined later | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3                          |
+| `TRACE`   | **MUST** be able to trace a deployed artifact to the change and the build that produced it                                                   | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PS.2                          |
+| `UNTRUST` | **MUST NOT** introduce a dependency from an untrusted or unverifiable source                                                                 | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4                          |
+| `KNOWN`   | **MUST NOT** ship a component with a known critical vulnerability without a recorded, risk-owned deviation ([pol-DEVI])                      | [NIST SSDF 1.1].RV.2                                                   |
+| `MUTATE`  | **MUST NOT** alter a released artifact in place — a change produces a new version                                                            | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3                          |
 
 ## Exceptions
 
