@@ -31,19 +31,23 @@ that depends on someone remembering is verification we do not have.
 Every change to any solution we build or operate — application code, infrastructure definitions, database schema,
 configuration, data pipelines and the documentation held with them.
 
+## Clauses
+
+| Id        | Clause                                                                                                                 |
+|-----------|------------------------------------------------------------------------------------------------------------------------|
+| `INTEG`   | **MUST** build and verify every change automatically, on integration, without anyone asking for it                     |
+| `BLOCK`   | **MUST** treat a failing check as blocking: a red build does not merge and does not promote                            |
+| `REPRO`   | **MUST** be able to reproduce a build from version control alone, on any machine set up to do so                       |
+| `LEVELS`  | **MUST** test at the levels the change warrants, fast enough that the feedback arrives while the work is still in hand |
+| `REGRESS` | **MUST** add a regression test for every defect we fix, so it can only be found once                                   |
+| `BROKEN`  | **MUST** treat a broken mainline as the team's first priority                                                          |
+| `BYPASS`  | **MUST NOT** merge or release over a failing check without a recorded deviation ([pol-DEVI])                           |
+| `MACHINE` | **MUST NOT** depend on a particular person's machine to produce a build                                                |
+
 ## Commitments
 
-* We **will** build and verify every change automatically, on integration, without anyone asking for it.
-* We **will** treat a failing check as blocking: a red build does not merge and does not promote.
-* We **will** be able to reproduce a build from version control alone, on any machine set up to do so.
-* We **will** test at the levels the change warrants, fast enough that the feedback arrives while the work is still in
-  hand.
-* We **will** add a regression test for every defect we fix, so it can only be found once.
-* We **will** treat a broken mainline as the team's first priority.
-* We **will not** merge or release over a failing check without a recorded deviation ([pol-DEVI]).
 * We **will not** disable, skip or suppress a check to make a release possible, and **will not** silence a warning
   without a recorded reason.
-* We **will not** depend on a particular person's machine to produce a build.
 
 ## Alignment
 

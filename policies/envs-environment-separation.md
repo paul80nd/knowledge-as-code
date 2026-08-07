@@ -31,18 +31,18 @@ adding any protection of its own.
 All environments hosting systems we build or operate, from a developer's machine through to production, including
 temporary and on-demand environments.
 
-## Commitments
+## Clauses
 
-* We **will** separate production from non-production, with distinct access controls at each tier.
-* We **will** keep production credentials and secrets unreachable from any lower environment.
-* We **will** provision environments from the same definitions, so that what passes below production is a fair test of
-  what will run in it.
-* We **will** promote changes between environments through automation rather than by manual copy.
-* We **will** mask or synthesise the data used below production.
-* We **will not** develop, test or debug against production.
-* We **will not** reuse a production secret in any environment below production.
-* We **will not** place unmasked production or personal data into a lower environment — see
-  [pol-DATA].
+| Id        | Clause                                                                                                                                |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `SPLIT`   | **MUST** separate production from non-production, with distinct access controls at each tier                                          |
+| `CREDS`   | **MUST** keep production credentials and secrets unreachable from any lower environment                                               |
+| `PARITY`  | **MUST** provision environments from the same definitions, so that what passes below production is a fair test of what will run in it |
+| `PROMOTE` | **MUST** promote changes between environments through automation rather than by manual copy                                           |
+| `MASK`    | **MUST** mask or synthesise the data used below production                                                                            |
+| `DEBUG`   | **MUST NOT** develop, test or debug against production                                                                                |
+| `REUSE`   | **MUST NOT** reuse a production secret in any environment below production                                                            |
+| `UNMASK`  | **MUST NOT** place unmasked production or personal data into a lower environment — see [pol-DATA]                                     |
 
 ## Alignment
 

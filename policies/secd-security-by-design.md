@@ -31,19 +31,17 @@ and no amount of scanning later recovers what a half-hour of threat modelling wo
 New systems, new features and significant changes to existing ones. The depth is proportionate to risk: a high-risk or
 externally exposed change warrants more than a routine internal one, but neither warrants none.
 
-## Commitments
+## Clauses
 
-* We **will** capture security and privacy requirements for new systems and features, as requirements rather than as
-  afterthoughts.
-* We **will** apply established secure-design principles — least privilege, defence in depth, secure defaults, failing
-  closed.
-* We **will** think through how a significant new system or high-risk change could be attacked, and record what we
-  found.
-* We **will** turn the findings into tracked work rather than leaving them in a document.
-* We **will** write code to a documented secure-coding standard appropriate to the stack it is written in, and treat
-  review as covering correctness and security, not only style.
-* We **will not** take a high-risk change into build with no security requirements and no consideration of threat.
-* We **will not** rely on later testing to discover what design should have prevented.
+| Id        | Clause                                                                                                                                                                      |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `REQS`    | **MUST** capture security and privacy requirements for new systems and features, as requirements rather than as afterthoughts                                               |
+| `DESIGN`  | **MUST** apply established secure-design principles — least privilege, defence in depth, secure defaults, failing closed                                                    |
+| `THREAT`  | **MUST** think through how a significant new system or high-risk change could be attacked, and record what we found                                                         |
+| `ACTIONS` | **MUST** turn the findings into tracked work rather than leaving them in a document                                                                                         |
+| `CODING`  | **MUST** write code to a documented secure-coding standard appropriate to the stack it is written in, and treat review as covering correctness and security, not only style |
+| `HIRISK`  | **MUST NOT** take a high-risk change into build with no security requirements and no consideration of threat                                                                |
+| `LATE`    | **MUST NOT** rely on later testing to discover what design should have prevented                                                                                            |
 
 ## Alignment
 

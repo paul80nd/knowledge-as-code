@@ -32,19 +32,19 @@ incident, because nobody designs a good process at three in the morning.
 Security and operational incidents affecting systems we build or operate, including those reported to us from outside
 the organisation.
 
-## Commitments
+## Clauses
 
-* We **will** maintain a defined incident-response process with clear roles, so that during an incident it is never
-  ambiguous who decides.
-* We **will** classify incidents by severity, and escalate and communicate according to it.
-* We **will** preserve evidence and produce a record for every significant incident.
-* We **will** encourage anyone to report a suspected incident, and make it easy to do so.
-* We **will** review significant incidents afterwards, looking for the conditions that allowed them rather than for
-  someone to blame.
-* We **will** turn the findings of those reviews into tracked work.
-* We **will** rehearse the process rather than first exercising it for real.
-* We **will not** handle a significant incident informally, with no record and no named owner.
-* We **will not** close an incident at the point service is restored — it closes when the learning is captured.
+| Id        | Clause                                                                                                                               |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `PROCESS` | **MUST** maintain a defined incident-response process with clear roles, so that during an incident it is never ambiguous who decides |
+| `TRIAGE`  | **MUST** classify incidents by severity, and escalate and communicate according to it                                                |
+| `RECORD`  | **MUST** preserve evidence and produce a record for every significant incident                                                       |
+| `REPORT`  | **MUST** encourage anyone to report a suspected incident, and make it easy to do so                                                  |
+| `REVIEW`  | **MUST** review significant incidents afterwards, looking for the conditions that allowed them rather than for someone to blame      |
+| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work                                                                        |
+| `DRILL`   | **MUST** rehearse the process rather than first exercising it for real                                                               |
+| `ADHOC`   | **MUST NOT** handle a significant incident informally, with no record and no named owner                                             |
+| `CLOSE`   | **MUST NOT** close an incident at the point service is restored — it closes when the learning is captured                            |
 
 ## Alignment
 

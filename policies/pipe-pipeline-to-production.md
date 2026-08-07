@@ -30,18 +30,18 @@ exists nowhere but the system itself, and the cost of that lands later, on whoev
 Production and any environment where a change affects customers or holds real data. Applies equally to application
 deployments, infrastructure changes, configuration changes and database changes.
 
-## Commitments
+## Clauses
 
-* We **will** deploy to production only through an automated pipeline.
-* We **will** deploy only artifacts the pipeline itself produced, promoting the same artifact through environments
-  rather than rebuilding per stage.
-* We **will** be able to trace any production release to the change, the artifact and the approval behind it.
-* We **will** have a defined rollback or recovery path before a change goes to production.
-* We **will** hold the pipeline itself in version control, as a reviewed artifact like any other.
-* We **will** carry the safeguards that change approval exists to provide inside the pipeline, rather than treating
-  automation as a reason to drop them.
-* We **will not** hand-edit production, whether code, configuration, infrastructure or schema.
-* We **will not** deploy an artifact built locally or obtained from an unverified source.
+| Id        | Clause                                                                                                                                             |
+|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DEPLOY`  | **MUST** deploy to production only through an automated pipeline                                                                                   |
+| `PROMOTE` | **MUST** deploy only artifacts the pipeline itself produced, promoting the same artifact through environments rather than rebuilding per stage     |
+| `TRACE`   | **MUST** be able to trace any production release to the change, the artifact and the approval behind it                                            |
+| `REVERT`  | **MUST** have a defined rollback or recovery path before a change goes to production                                                               |
+| `ASCODE`  | **MUST** hold the pipeline itself in version control, as a reviewed artifact like any other                                                        |
+| `GATES`   | **MUST** carry the safeguards that change approval exists to provide inside the pipeline, rather than treating automation as a reason to drop them |
+| `MANUAL`  | **MUST NOT** hand-edit production, whether code, configuration, infrastructure or schema                                                           |
+| `LOCAL`   | **MUST NOT** deploy an artifact built locally or obtained from an unverified source                                                                |
 
 ## Alignment
 

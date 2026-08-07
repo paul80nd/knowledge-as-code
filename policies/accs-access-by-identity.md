@@ -32,15 +32,17 @@ standing privilege that nobody needs is simply a breach waiting for an attacker 
 All systems, environments, source repositories, pipelines and data stores we build or operate, for people and for
 machine identities alike. Applies to routine and privileged access.
 
-## Commitments
+## Clauses
 
-* We **will** grant access to a named individual or a distinctly identified workload, never to a shared persona.
-* We **will** grant the least privilege that allows the work to be done, and no more.
-* We **will** require strong authentication for access to our systems, our code and our data.
-* We **will** review access rights periodically, and remove them promptly when a role changes or a person leaves.
-* We **will** control and record the use of privileged administrative tooling.
-* We **will not** operate shared or generic privileged accounts where individual attribution is lost.
-* We **will not** leave standing production access in place beyond what the role genuinely requires.
+| Id        | Clause                                                                                                      |
+|-----------|-------------------------------------------------------------------------------------------------------------|
+| `NAMED`   | **MUST** grant access to a named individual or a distinctly identified workload, never to a shared persona  |
+| `LEAST`   | **MUST** grant the least privilege that allows the work to be done, and no more                             |
+| `AUTHN`   | **MUST** require strong authentication for access to our systems, our code and our data                     |
+| `REVIEW`  | **MUST** review access rights periodically, and remove them promptly when a role changes or a person leaves |
+| `ADMIN`   | **MUST** control and record the use of privileged administrative tooling                                    |
+| `SHARED`  | **MUST NOT** operate shared or generic privileged accounts where individual attribution is lost             |
+| `PERSIST` | **MUST NOT** leave standing production access in place beyond what the role genuinely requires              |
 
 ## Alignment
 

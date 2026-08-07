@@ -29,17 +29,17 @@ quickly.
 Interfaces we publish for consumption beyond the team that owns them: public APIs, internal service-to-service
 interfaces, webhooks and any other integration surface others build against.
 
-## Commitments
+## Clauses
 
-* We **will** define each interface against an explicit, documented contract, and treat that contract as the source of
-  truth rather than the implementation.
-* We **will** version interfaces so that a change we need does not become a break others must absorb.
-* We **will** publish a deprecation approach and give notice before removing or changing something consumers depend on.
-* We **will** secure interfaces by default — authenticated, authorised, and validating what they are given.
-* We **will** verify our contracts hold, rather than trusting that they do.
-* We **will not** make a breaking change to a published interface without a version increment and notice to its
-  consumers.
-* We **will not** expose sensitive data or a sensitive operation through an unauthenticated interface.
+| Id        | Clause                                                                                                                                                 |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SPEC`    | **MUST** define each interface against an explicit, documented contract, and treat that contract as the source of truth rather than the implementation |
+| `VERSION` | **MUST** version interfaces so that a change we need does not become a break others must absorb                                                        |
+| `DEPREC`  | **MUST** publish a deprecation approach and give notice before removing or changing something consumers depend on                                      |
+| `SECURE`  | **MUST** secure interfaces by default — authenticated, authorised, and validating what they are given                                                  |
+| `VERIFY`  | **MUST** verify our contracts hold, rather than trusting that they do                                                                                  |
+| `BREAK`   | **MUST NOT** make a breaking change to a published interface without a version increment and notice to its consumers                                   |
+| `EXPOSE`  | **MUST NOT** expose sensitive data or a sensitive operation through an unauthenticated interface                                                       |
 
 ## Alignment
 

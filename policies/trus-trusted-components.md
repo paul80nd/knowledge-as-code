@@ -30,18 +30,18 @@ about when one is disclosed, and an artifact whose origin we cannot establish is
 All third-party and open-source components used by systems we build or operate, including transitive dependencies, base
 images and build-time tooling; and all artifacts we deploy.
 
-## Commitments
+## Clauses
 
-* We **will** maintain a resolvable inventory of what each solution depends on.
-* We **will** screen dependencies for known vulnerabilities and for licence terms we can accept.
-* We **will** obtain components from sources we have reason to trust.
-* We **will** hold build artifacts in a managed repository, versioned and retained so a release can be identified,
-  rolled back and examined later.
-* We **will** be able to trace a deployed artifact to the change and the build that produced it.
-* We **will not** introduce a dependency from an untrusted or unverifiable source.
-* We **will not** ship a component with a known critical vulnerability without a recorded, risk-owned deviation
-  ([pol-DEVI]).
-* We **will not** alter a released artifact in place — a change produces a new version.
+| Id        | Clause                                                                                                                                       |
+|-----------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `INVENT`  | **MUST** maintain a resolvable inventory of what each solution depends on                                                                    |
+| `SCREEN`  | **MUST** screen dependencies for known vulnerabilities and for licence terms we can accept                                                   |
+| `SOURCE`  | **MUST** obtain components from sources we have reason to trust                                                                              |
+| `REPO`    | **MUST** hold build artifacts in a managed repository, versioned and retained so a release can be identified, rolled back and examined later |
+| `TRACE`   | **MUST** be able to trace a deployed artifact to the change and the build that produced it                                                   |
+| `UNTRUST` | **MUST NOT** introduce a dependency from an untrusted or unverifiable source                                                                 |
+| `KNOWN`   | **MUST NOT** ship a component with a known critical vulnerability without a recorded, risk-owned deviation ([pol-DEVI])                      |
+| `MUTATE`  | **MUST NOT** alter a released artifact in place — a change produces a new version                                                            |
 
 ## Alignment
 

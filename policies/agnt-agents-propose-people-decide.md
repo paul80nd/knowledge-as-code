@@ -34,24 +34,19 @@ autonomous or scheduled ones alike.
 _Boundary: the identity an agent authenticates as is governed by [pol-ACCS] and the credentials it holds by [pol-SCRT].
 This policy is about the authority of what it produces._
 
-## Commitments
+## Clauses
 
-* We **will** record where an agent-produced contribution came from, in enough detail that reviewing it is a check
-  rather than an act of faith.
-* We **will** require a person to accept agent-produced work before it carries any authority, and that person owns it
-  afterwards as if they had written it.
-* We **will** hold agent-produced changes to every gate that applies to our own — the same review, the same automated
-  verification under [pol-AUTV], the same route to production.
-* We **will** state the confidence an observation actually has, and let unverified ones expire rather than settle into
-  the corpus by age.
-* We **will not** treat an agent's own account of its work as verification of that work.
-* We **will not** accept a proposal we cannot trace back to what produced it — an unverifiable proposal is a rejected
-  one.
-* We **will not** grant an agent access, privilege or a route to production that an individual doing the same work would
-  not be granted.
-* We **will not** let "an agent wrote it" stand as either a reason to scrutinise it less or an excuse for what it broke.
-* We **will not** hold an agent to a rule we never put within its reach — under
-  [pol-KNOW] that is our failure, not the agent's.
+| Id        | Clause                                                                                                                                                                       |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SOURCE`  | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                    |
+| `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                        |
+| `GATES`   | **MUST** hold agent-produced changes to every gate that applies to our own — the same review, the same automated verification under [pol-AUTV], the same route to production |
+| `CONFID`  | **MUST** state the confidence an observation actually has, and let unverified ones expire rather than settle into the corpus by age                                          |
+| `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                           |
+| `TRACE`   | **MUST NOT** accept a proposal we cannot trace back to what produced it — an unverifiable proposal is a rejected one                                                         |
+| `ACCESS`  | **MUST NOT** grant an agent access, privilege or a route to production that an individual doing the same work would not be granted                                           |
+| `EXCUSE`  | **MUST NOT** let "an agent wrote it" stand as either a reason to scrutinise it less or an excuse for what it broke                                                           |
+| `REACH`   | **MUST NOT** hold an agent to a rule we never put within its reach — under [pol-KNOW] that is our failure, not the agent's                                                   |
 
 ## Alignment
 

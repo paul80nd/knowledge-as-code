@@ -28,20 +28,18 @@ one reconstructs what happened, the other tells us it is happening now.
 
 All production systems we operate, and the lower environments where behaviour must be understood to validate a change.
 
-## Commitments
+## Clauses
 
-* We **will** emit operational and security-relevant telemetry to a central store that the emitting system cannot alter
-  or delete.
-* We **will** keep timestamps consistent across systems, so events can be correlated into one timeline.
-* We **will** retain telemetry for a defined period — long enough to investigate, no longer than justified.
-* We **will** monitor the availability and health of production systems, and alert an accountable owner when they
-  degrade.
-* We **will** monitor for security-relevant events, not only for availability.
-* We **will** treat alerts as something to be acted on, and keep them few enough and meaningful enough that they still
-  are.
-* We **will not** run a production system with no monitoring and no alerting.
-* We **will not** write secrets, credentials or unmasked sensitive personal data into telemetry — see
-  [pol-SCRT] and [pol-DATA].
+| Id        | Clause                                                                                                                       |
+|-----------|------------------------------------------------------------------------------------------------------------------------------|
+| `CENTRAL` | **MUST** emit operational and security-relevant telemetry to a central store that the emitting system cannot alter or delete |
+| `CLOCKS`  | **MUST** keep timestamps consistent across systems, so events can be correlated into one timeline                            |
+| `RETAIN`  | **MUST** retain telemetry for a defined period — long enough to investigate, no longer than justified                        |
+| `HEALTH`  | **MUST** monitor the availability and health of production systems, and alert an accountable owner when they degrade         |
+| `SECMON`  | **MUST** monitor for security-relevant events, not only for availability                                                     |
+| `ALERTS`  | **MUST** treat alerts as something to be acted on, and keep them few enough and meaningful enough that they still are        |
+| `BLIND`   | **MUST NOT** run a production system with no monitoring and no alerting                                                      |
+| `SECRETS` | **MUST NOT** write secrets, credentials or unmasked sensitive personal data into telemetry — see [pol-SCRT] and [pol-DATA]   |
 
 ## Alignment
 

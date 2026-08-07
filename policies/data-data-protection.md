@@ -33,18 +33,18 @@ the records that would actually cause harm. Classification is what makes proport
 All data held or processed by systems we build or operate, in every environment, including backups, exports, logs,
 analytical copies and test data.
 
-## Commitments
+## Clauses
 
-* We **will** classify data by sensitivity and handle each class according to that classification.
-* We **will** protect sensitive data in transit and at rest using current, well-regarded cryptographic algorithms, and
-  retire algorithms as they weaken.
-* We **will** handle personal data on a lawful basis, collect only what is needed, and support the rights of the people
-  it concerns.
-* We **will** know where our sensitive and personal data lives.
-* We **will** delete data when its defined retention period ends.
-* We **will not** place unmasked production or personal data into an environment below production.
-* We **will not** retain sensitive or personal data beyond its defined lifetime without a recorded reason.
-* We **will not** write unmasked sensitive personal data into logs or telemetry.
+| Id       | Clause                                                                                                                                             |
+|----------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `CLASS`  | **MUST** classify data by sensitivity and handle each class according to that classification                                                       |
+| `CRYPTO` | **MUST** protect sensitive data in transit and at rest using current, well-regarded cryptographic algorithms, and retire algorithms as they weaken |
+| `LAWFUL` | **MUST** handle personal data on a lawful basis, collect only what is needed, and support the rights of the people it concerns                     |
+| `LOCATE` | **MUST** know where our sensitive and personal data lives                                                                                          |
+| `DELETE` | **MUST** delete data when its defined retention period ends                                                                                        |
+| `UNMASK` | **MUST NOT** place unmasked production or personal data into an environment below production                                                       |
+| `RETAIN` | **MUST NOT** retain sensitive or personal data beyond its defined lifetime without a recorded reason                                               |
+| `LOGS`   | **MUST NOT** write unmasked sensitive personal data into logs or telemetry                                                                         |
 
 ## Alignment
 

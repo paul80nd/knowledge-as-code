@@ -35,16 +35,16 @@ documentation that describes them.
 
 Secrets are the deliberate exception — see [pol-SCRT].
 
-## Commitments
+## Clauses
 
-* We **will** hold every asset needed to build, deploy, run and recover a solution in version control.
-* We **will** preserve a complete change history that attributes each change to an individual.
-* We **will** protect the default branch, so changes arrive by reviewed merge rather than direct push.
-* We **will** subject changes to infrastructure, schema and configuration to the same review as changes to application
-  code — the medium differs, the rigour does not.
-* We **will not** allow an asset that is necessary to reproduce a system to exist only on an individual's machine, in a
-  console, or in a shared drive.
-* We **will not** accept shared or generic accounts that make a change unattributable.
+| Id        | Clause                                                                                                                                                           |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ASSETS`  | **MUST** hold every asset needed to build, deploy, run and recover a solution in version control                                                                 |
+| `HISTORY` | **MUST** preserve a complete change history that attributes each change to an individual                                                                         |
+| `BRANCH`  | **MUST** protect the default branch, so changes arrive by reviewed merge rather than direct push                                                                 |
+| `PARITY`  | **MUST** subject changes to infrastructure, schema and configuration to the same review as changes to application code — the medium differs, the rigour does not |
+| `ORPHAN`  | **MUST NOT** allow an asset that is necessary to reproduce a system to exist only on an individual's machine, in a console, or in a shared drive                 |
+| `SHARED`  | **MUST NOT** accept shared or generic accounts that make a change unattributable                                                                                 |
 
 ## Alignment
 

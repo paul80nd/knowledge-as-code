@@ -30,17 +30,19 @@ dependency with no failure path is an outage waiting for its trigger.
 All systems we operate and the data they hold, with depth set by how critical the system is. Covers both designed-in
 fault tolerance and the ability to recover after failure.
 
-## Commitments
+## Clauses
 
-* We **will** define recovery-time and recovery-point objectives for critical systems, and design to meet them.
-* We **will** back up critical data on a schedule that matches those objectives.
-* We **will** test restoration periodically — recovery is proven, not assumed.
-* We **will** keep at least one copy of critical data outside the failure domain of its source.
-* We **will** bound every outbound call in time, so a slow dependency cannot become an unbounded wait.
-* We **will** design so that the failure of one dependency degrades function rather than taking the system down with it.
-* We **will** make operations that may be retried safe to re-run.
-* We **will not** rely on a backup that has never been test-restored.
-* We **will not** retry indefinitely, without limit or backoff, against a failing dependency.
+| Id        | Clause                                                                                                             |
+|-----------|--------------------------------------------------------------------------------------------------------------------|
+| `RTORPO`  | **MUST** define recovery-time and recovery-point objectives for critical systems, and design to meet them          |
+| `BACKUP`  | **MUST** back up critical data on a schedule that matches those objectives                                         |
+| `RESTORE` | **MUST** test restoration periodically — recovery is proven, not assumed                                           |
+| `OFFSITE` | **MUST** keep at least one copy of critical data outside the failure domain of its source                          |
+| `TIMEOUT` | **MUST** bound every outbound call in time, so a slow dependency cannot become an unbounded wait                   |
+| `DEGRADE` | **MUST** design so that the failure of one dependency degrades function rather than taking the system down with it |
+| `IDEMPOT` | **MUST** make operations that may be retried safe to re-run                                                        |
+| `UNTEST`  | **MUST NOT** rely on a backup that has never been test-restored                                                    |
+| `RETRY`   | **MUST NOT** retry indefinitely, without limit or backoff, against a failing dependency                            |
 
 ## Alignment
 

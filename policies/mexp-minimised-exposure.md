@@ -29,16 +29,18 @@ exposure deliberately, and denying by default, is what keeps a single compromise
 All networks, services and interfaces belonging to systems we build or operate, in every environment. Covers traffic
 inbound to our systems, between them, and outbound from them.
 
-## Commitments
+## Clauses
 
-* We **will** segment by trust boundary and by environment.
-* We **will** deny by default, and expose a service only through an intended, controlled route.
-* We **will** protect traffic crossing a trust boundary.
-* We **will** prefer private paths to public ones for access between our own services.
-* We **will** control and observe what leaves our systems, not only what arrives.
-* We **will** define network topology as reviewable code, under [pol-EVER].
-* We **will not** expose a management interface or a datastore directly to the public internet.
-* We **will not** permit unrestricted lateral traffic between systems that have no need to talk to each other.
+| Id        | Clause                                                                                                   |
+|-----------|----------------------------------------------------------------------------------------------------------|
+| `SEGMENT` | **MUST** segment by trust boundary and by environment                                                    |
+| `DENY`    | **MUST** deny by default, and expose a service only through an intended, controlled route                |
+| `TRANSIT` | **MUST** protect traffic crossing a trust boundary                                                       |
+| `PRIVATE` | **MUST** prefer private paths to public ones for access between our own services                         |
+| `EGRESS`  | **MUST** control and observe what leaves our systems, not only what arrives                              |
+| `ASCODE`  | **MUST** define network topology as reviewable code, under [pol-EVER]                                    |
+| `PUBLIC`  | **MUST NOT** expose a management interface or a datastore directly to the public internet                |
+| `LATERAL` | **MUST NOT** permit unrestricted lateral traffic between systems that have no need to talk to each other |
 
 ## Alignment
 
