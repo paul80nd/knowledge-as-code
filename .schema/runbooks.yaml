@@ -74,8 +74,8 @@ rules:
       seeing, not on what the document is called.
   - id: escalation-required
     description: >
-      Every runbook names an escalation path. A diagnosis branch that ends without a resolution or an
-      escalation is a dead end.
+      `sections` requires the heading. What is unenforced is the shape beneath it — a diagnosis branch that
+      ends in neither a resolution nor an escalation is a dead end, and only reading the tree finds one.
   - id: staleness-loud
     description: >
       Scheduled, and reported more prominently than for processes. An unrehearsed process is annoying; an

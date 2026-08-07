@@ -96,24 +96,29 @@ It defaults to `collection`, so only the type that is not one has to say so.
 act on two — `numbered` and `mnemonic` — and a type declaring either of the others receives the prefix check alone.
 Link-label canonicalisation covers `slug` as well, so the shortfall is in the id checks rather than in the idea.
 
-**`rules`.** These are declarations, not a dispatch table. Two rule ids are implemented — `y-statement-present` and
-`alternatives-have-verdicts`, both on the decision-record type, and both only where the rule declares
-`severity: warning`. Every other id across the type files names a behaviour that does not run, and a rule the tool does
-not implement is also absent from the generated `## What CI checks` block, so nothing on the page marks the gap.
+**`rules`.** A rule declaring an `expr:` runs. It is evaluated against every document of its type, reports under its
+own id, is listed by `kac checks`, and renders its own row into the generated `## What CI checks` block from its
+`description:` — so adding one is adding YAML rather than editing the tool. It must also declare a `severity:` and a
+`message:`, and an expression the tool cannot compile stops the load rather than passing silently.
+[`../.tooling/SPEC.md`](../.tooling/SPEC.md) holds the grammar and the facts an expression may ask for.
 
-Two checks that read as rules are not driven from here at all: reciprocity comes from a field's `reciprocal:`, and
-section mirroring from its `mirrors-section:`. A `rules:` entry naming either has no effect.
+Two ids keep a hand-written arm instead — `y-statement-present` and `alternatives-have-verdicts`, both on the
+decision-record type — because what they ask needs more than the grammar can say. Every remaining id is a statement of
+intent: a behaviour someone wants, written down, that no code answers to yet. Those do not appear in the checks table,
+so a reader of a type page sees what is enforced rather than what is hoped for.
 
-Treat an entry here as a statement of intent, and read the validator before relying on one.
+Reciprocity and section mirroring are declared on the **field**, not here: `reciprocal:` and `mirrors-section:` drive
+them. So does a conditional requirement, through `required-when:`. A `rules:` entry restating any of those has no
+effect, and there are none left — an entry that duplicates a declaration reads as a second, weaker source for the same
+obligation.
 
 ## Open questions
 
-* **A schema can declare something the tool does nothing with, and nothing objects.** An unimplemented rule id, a
-  `ref:` naming a folder no schema covers, a `values:` list on a `type: list` field, an `id.style` with no branch in the
-  id checks — each is accepted at load and silently ignored thereafter. The declaration then reads as a commitment to
-  anyone who takes a copy of these files. The fix is to fail at load on anything undispatchable, and to give genuinely
-  aspirational entries a marker the checks table can render as *not yet enforced*; the aspiration is worth keeping, the
-  silence is not.
+* **A schema can still declare something the tool does nothing with.** A `ref:` naming a folder no schema covers, a
+  `values:` list on a `type: list` field, an `id.style` with no branch in the id checks — each is accepted at load and
+  silently ignored thereafter, and then reads as a commitment to anyone who takes a copy of these files. An `expr:` and
+  a `required-when:` no longer can: both fail at load naming what they could not read. The remainder want the same
+  treatment, and a rule that is deliberately aspirational wants a marker saying so rather than silence.
 * **`_enums.yaml` `used-by:` is unparsed.** It lists the types an enum serves and nothing reconciles it against the
   loaded schemas, so in a corpus that has adopted only some of those types it is simply wrong. Either check it or say in
   the file that it is a comment.

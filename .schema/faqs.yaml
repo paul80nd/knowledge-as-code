@@ -77,8 +77,6 @@ rules:
       Reports documents with more than one Symptom section or multiple distinct problems. A page of assorted
       gotchas cannot be found by symptom, which defeats the purpose.
     severity: warning
-  - id: reciprocal-promotion
-    fields: [promoted-from, promoted-to]
   - id: human-confirmed
     description: >
       `confirmed-by` must be present and must not be an agent, a session id or a team alias.

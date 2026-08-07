@@ -88,8 +88,8 @@ rules:
       right, the earlier one is when it started.
   - id: what-went-well-required
     description: >
-      A postmortem that only lists failures teaches half the lesson and makes the next one harder to write
-      honestly. The section is required and must not be empty.
+      A postmortem that only lists failures teaches half the lesson. `sections` requires the heading; what is
+      unenforced is that anything follows it, and an empty section satisfies the requirement.
   - id: blameless
     description: >
       Flags personal names inside the Timeline, Root cause and Contributing factors sections. Roles and

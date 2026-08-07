@@ -71,7 +71,9 @@ index:
 rules:
   - id: target-is-measurable
     description: >
-      `measured-by` must be present and must not be empty or hedged. Checked as a required non-empty string.
+      `measured-by` names a measurement rather than an intention. Its presence is `required: true`; what is
+      unenforced is hedging — "monitored", "as needed", "where practical" all satisfy the field and answer
+      nothing.
   - id: constraint-consistency
     description: >
       Where `constrained-by` names an integration whose `their-sla` is weaker than this target, report it.

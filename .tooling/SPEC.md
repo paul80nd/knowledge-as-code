@@ -225,9 +225,11 @@ Bucket A is converted. What remains is the fact that unlocks the rest.
 3. [ ] **Add the Bucket-B facts for `y-statement-present`** (`has_ystatement`, `ystatement_words`), which retires the
    largest remaining C# arm along with `RuleSpec.MaxWords`.
 
-4. [ ] **Delete what is already enforced.** Nine entries restate a core check or a `required-when`, and one says
-   outright that it is documentation rather than a check. A backlog that overstates itself by a fifth makes every
-   judgement about it worse.
+4. [x] **What was already enforced is gone.** Nine entries restated a `reciprocal:`, a `mirrors-section:`, a
+   `required-when:`, a scalar field type or a required section — and every one of their reasons was already written
+   on the type page a reader actually reads. Three more were half-enforced and now describe only the half that is
+   not: hedging in `measured-by`, an empty *What went well*, a diagnosis branch ending in neither a resolution nor
+   an escalation.
 
 5. [ ] Leave Bucket C in C#. Roughly fifteen rules need git history, a graph, or more than one document; a further eight
    are marked **Scheduled** and are not per-PR validation in any form. Together that is 42% of the declared rules, and

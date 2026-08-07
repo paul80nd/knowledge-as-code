@@ -58,10 +58,6 @@ index:
   sort: id
 
 rules:
-  - id: verification-required
-    description: >
-      A process that ends at the last action leaves the reader guessing whether it worked. The Verification
-      section is required.
   - id: staleness
     description: >
       Scheduled. Reports processes past their rehearsal frequency, and any whose `last-rehearsed` is `never`.

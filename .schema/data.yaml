@@ -71,8 +71,5 @@ rules:
   - id: no-actual-data
     description: >
       Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.
-  - id: single-owner
-    field: owned-by
-    description: Exactly one owning service; the field is a scalar, not a list, deliberately.
   - id: store-has-service
     description: Every store named resolves to a service in the catalogue.

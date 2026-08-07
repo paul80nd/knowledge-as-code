@@ -87,11 +87,3 @@ rules:
   - id: expiry-sweep
     description: >
       Scheduled. Discoveries past `expires` with no promotion are set to `expired` with a note, not deleted.
-  - id: reciprocal-promotion
-    fields: [promoted-to, promoted-from]
-  - id: dreamed-requires-provenance
-    field: provenance
-  - id: no-review-required
-    description: >
-      Documented here so it is not mistaken for an omission: this tier merges on a green build with no
-      reviewer. Authority comes at promotion, not capture.

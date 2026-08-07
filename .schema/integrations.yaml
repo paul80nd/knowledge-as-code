@@ -61,6 +61,3 @@ rules:
     description: >
       Fails on anything resembling a token, key, password or connection string. Name the mechanism and where
       the credential is stored, never the credential.
-  - id: unused-integrations
-    description: Reports integrations whose `used-by` is empty while status is `active`.
-    severity: warning

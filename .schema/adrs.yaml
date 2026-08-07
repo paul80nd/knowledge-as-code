@@ -71,11 +71,6 @@ rules:
     description: >
       Once status is `accepted`, content changes are limited to typo fixes, link corrections and status
       transitions. A substantive edit fails with a pointer to the supersession process.
-  - id: reciprocal-supersession
-    fields: [supersedes, superseded-by]
-  - id: related-matches-section
-    field: related
-    section: Related
   - id: y-statement-present
     description: >
       A blockquote follows the H1 containing all six moves — in the context of / facing / we decided /
