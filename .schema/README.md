@@ -69,17 +69,17 @@ Beyond `fields`, each type file declares:
 | `type` / `folder` / `page` | Identity, and where the type lives                                                                               |
 | `label`                    | The singular display name — "Policy", "ADR" — used to head the generated index                                   |
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
-| `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                              |
+| `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
 | `filename`                 | Pattern and slug length limit                                                                                    |
 | `sections`                 | Required and optional H2s — the required ones are checked for presence                                           |
-| `clauses`                  | The clause table's section, id pattern and modals, where a type states its obligations as addressable rows      |
+| `clauses`                  | The clause table's section, id pattern and modals, where a type states its obligations as addressable rows       |
 | `index`                    | Columns and sort order for the generated index                                                                   |
 | `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |
 
 **`id.style`.** Five styles appear across the type files: `numbered`, `slug`, `mnemonic`, `literal` and
 `single-document`. The validator's id checks act on two — `numbered` and `mnemonic` — and a type declaring any other
-receives the prefix check alone. Link-label canonicalisation covers `slug` as well, so the shortfall is in the id
-checks rather than in the idea.
+receives the prefix check alone. Link-label canonicalisation covers `slug` as well, so the shortfall is in the id checks
+rather than in the idea.
 
 **`rules`.** These are declarations, not a dispatch table. Two rule ids are implemented — `y-statement-present` and
 `alternatives-have-verdicts`, both on the decision-record type, and both only where the rule declares
@@ -94,14 +94,14 @@ Treat an entry here as a statement of intent, and read the validator before rely
 ## Open questions
 
 * **A schema can declare something the tool does nothing with, and nothing objects.** An unimplemented rule id, a
-  `ref:` naming a folder no schema covers, a `values:` list on a `type: list` field, an `id.style` with no branch in
-  the id checks — each is accepted at load and silently ignored thereafter. The declaration then reads as a
-  commitment to anyone who takes a copy of these files. The fix is to fail at load on anything undispatchable, and to
-  give genuinely aspirational entries a marker the checks table can render as *not yet enforced*; the aspiration is
-  worth keeping, the silence is not.
+  `ref:` naming a folder no schema covers, a `values:` list on a `type: list` field, an `id.style` with no branch in the
+  id checks — each is accepted at load and silently ignored thereafter. The declaration then reads as a commitment to
+  anyone who takes a copy of these files. The fix is to fail at load on anything undispatchable, and to give genuinely
+  aspirational entries a marker the checks table can render as *not yet enforced*; the aspiration is worth keeping, the
+  silence is not.
 * **`_enums.yaml` `used-by:` is unparsed.** It lists the types an enum serves and nothing reconciles it against the
-  loaded schemas, so in a corpus that has adopted only some of those types it is simply wrong. Either check it or say
-  in the file that it is a comment.
+  loaded schemas, so in a corpus that has adopted only some of those types it is simply wrong. Either check it or say in
+  the file that it is a comment.
 * **`standards.yaml` `axis` values are unresolved** — four different formulations exist across the corpus. The schema
   currently carries the `standards.md` version with a `TODO` note. Settle it before generating.
 * **ID styles** are assigned per type. Numbered where documents accrete in sequence and the number is useful in
