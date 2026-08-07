@@ -79,10 +79,55 @@ Referenced by: [pol-A11Y].
 
 ## Inspiration
 
-Nothing sits here yet. When a framework shapes a policy without binding it — a maturity model, a well-architected
-review, someone else's published standard — it belongs in this section with a note on what we took from it. Recording
-that is worth doing: an idea whose provenance is written down can be re-examined when the source moves on, and an idea
-whose provenance is forgotten quietly becomes folklore.
+Nothing here binds. A clause cites one of these to say where the thinking came from — that we are restating something
+the industry already knows rather than inventing it — and citing one is never an argument for keeping a clause we would
+otherwise drop.
+
+### DORA metrics {#dora-metrics}
+
+**Inspiration.** The four delivery-performance measures from the DevOps Research and Assessment programme and the
+*Accelerate* research behind it: deployment frequency, lead time for changes, change failure rate, and the time to
+recover from a failed deployment.
+
+These are outcomes rather than practices, which makes them an unusual thing to align a clause with. What the research
+claims — and what we are borrowing — is the causal direction: certain capabilities move certain measures, so a clause
+citing `lead-time` is claiming to be one of the things that moves it. That is a testable claim about our own delivery,
+not a control we satisfy.
+
+Not to be confused with the **Digital Operational Resilience Act**, the EU regulation for financial entities, which
+shares the acronym and nothing else. If that ever applies to us it goes under Obliged, under its full name.
+
+Referenced by: [pol-PIPE], [pol-AUTV].
+
+### Azure Well-Architected Framework {#azure-waf}
+
+**Inspiration.** Microsoft's five pillars for designing and operating a workload: Reliability, Security, Cost
+Optimization, Operational Excellence and Performance Efficiency.
+
+Vendor-published rather than standards-body, and we cite Azure's because Azure is what we run on. AWS and Google
+publish near-identical pillars, so a move would be a relabelling rather than a re-mapping. Clauses cite the **pillar**
+and not the individual checklist recommendation: the recommendations are renumbered as the framework is revised, and a
+citation that rots quietly is worse than one that is a little coarse.
+
+This is the only framework that covers [pol-COST], and it is worth being plain about why. No external body will ever
+oblige us to manage cloud spend. The Cost Optimization pillar is a genuine influence on how that policy is written, and
+recording it is the difference between a policy that borrows from established practice and one that appears to have
+been invented in a meeting.
+
+Referenced by: [pol-COST], [pol-RECV], [pol-PERF], [pol-OBSV].
+
+### OWASP ASVS 4.0 {#owasp-asvs-4}
+
+**Inspiration.** The Open Worldwide Application Security Project's Application Security Verification Standard — a
+catalogue of application security requirements organised into chapters (`V1` architecture and threat modelling, `V2`
+authentication, `V4` access control, `V5` validation and encoding, `V13` APIs and web services), each at three levels
+of rigour.
+
+The version is pinned deliberately. ASVS re-chapters between major versions, so `V13` means something specific only
+alongside the version it was written against. Moving to a later major version is a re-mapping exercise rather than an
+edit to this heading, and doing it as an edit would silently repoint every citation.
+
+Referenced by: [pol-INTC], [pol-SECD], [pol-ACCS].
 
 ## Adding a framework
 
@@ -98,7 +143,16 @@ A framework nothing references does not belong here. If we have stopped using on
 the entry: a policy clause written under its influence is easier to read with the history intact.
 
 [pol-A11Y]: policies/a11y-accessibility.md
+[pol-ACCS]: policies/accs-access-by-identity.md
+[pol-AUTV]: policies/autv-automated-verification.md
+[pol-COST]: policies/cost-cost-as-an-nfr.md
 [pol-DATA]: policies/data-data-protection.md
 [pol-DEVI]: policies/devi-deviations-are-recorded.md
+[pol-INTC]: policies/intc-interface-contracts.md
+[pol-OBSV]: policies/obsv-observability.md
+[pol-PERF]: policies/perf-performance-targets.md
+[pol-PIPE]: policies/pipe-pipeline-to-production.md
+[pol-RECV]: policies/recv-recoverability.md
+[pol-SECD]: policies/secd-security-by-design.md
 [PSBAR 2018]: #psbar-2018
 [WCAG 2.2 AA]: #wcag-22-aa

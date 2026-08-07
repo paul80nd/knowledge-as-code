@@ -32,17 +32,17 @@ configuration, data pipelines and the documentation held with them.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                 | Alignment                                        |
-|-----------|------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| `INTEG`   | **MUST** build and verify every change automatically, on integration, without anyone asking for it                     | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.28 |
-| `BLOCK`   | **MUST** treat a failing check as blocking: a red build does not merge and does not promote                            | [ISO 27001:2022].A.8.29                          |
-| `REPRO`   | **MUST** be able to reproduce a build from version control alone, on any machine set up to do so                       |                                                  |
-| `LEVELS`  | **MUST** test at the levels the change warrants, fast enough that the feedback arrives while the work is still in hand | [ISO 27001:2022].A.8.29                          |
-| `REGRESS` | **MUST** add a regression test for every defect we fix, so it can only be found once                                   | [ISO 27001:2022].A.8.29                          |
-| `BROKEN`  | **MUST** treat a broken mainline as the team's first priority                                                          |                                                  |
-| `BYPASS`  | **MUST NOT** merge or release over a failing check without a recorded deviation ([pol-DEVI])                           | [ISO 27001:2022].A.8.29                          |
-| `DISABLE` | **MUST NOT** disable, skip, silence or suppress a check or a warning without a recorded reason                         |                                                  |
-| `MACHINE` | **MUST NOT** depend on a particular person's machine to produce a build                                                |                                                  |
+| Id        | Clause                                                                                                                 | Alignment                                                                  |
+|-----------|------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| `INTEG`   | **MUST** build and verify every change automatically, on integration, without anyone asking for it                     | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.28, [DORA metrics].lead-time |
+| `BLOCK`   | **MUST** treat a failing check as blocking: a red build does not merge and does not promote                            | [ISO 27001:2022].A.8.29, [DORA metrics].change-failure-rate                |
+| `REPRO`   | **MUST** be able to reproduce a build from version control alone, on any machine set up to do so                       |                                                                            |
+| `LEVELS`  | **MUST** test at the levels the change warrants, fast enough that the feedback arrives while the work is still in hand | [ISO 27001:2022].A.8.29, [DORA metrics].lead-time                          |
+| `REGRESS` | **MUST** add a regression test for every defect we fix, so it can only be found once                                   | [ISO 27001:2022].A.8.29, [DORA metrics].change-failure-rate                |
+| `BROKEN`  | **MUST** treat a broken mainline as the team's first priority                                                          |                                                                            |
+| `BYPASS`  | **MUST NOT** merge or release over a failing check without a recorded deviation ([pol-DEVI])                           | [ISO 27001:2022].A.8.29                                                    |
+| `DISABLE` | **MUST NOT** disable, skip, silence or suppress a check or a warning without a recorded reason                         |                                                                            |
+| `MACHINE` | **MUST NOT** depend on a particular person's machine to produce a build                                                |                                                                            |
 
 ## Exceptions
 
@@ -51,4 +51,5 @@ recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards r
 time, not forgiveness.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
+[DORA metrics]: /frameworks.md#dora-metrics
 [ISO 27001:2022]: /frameworks.md#iso27001-2022

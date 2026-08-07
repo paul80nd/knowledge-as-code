@@ -31,15 +31,15 @@ interfaces, webhooks and any other integration surface others build against.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                                 | Alignment               |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
-| `SPEC`    | **MUST** define each interface against an explicit, documented contract, and treat that contract as the source of truth rather than the implementation | [ISO 27001:2022].A.8.27 |
-| `VERSION` | **MUST** version interfaces so that a change we need does not become a break others must absorb                                                        | [ISO 27001:2022].A.8.27 |
-| `DEPREC`  | **MUST** publish a deprecation approach and give notice before removing or changing something consumers depend on                                      |                         |
-| `SECURE`  | **MUST** secure interfaces by default — authenticated, authorised, and validating what they are given                                                  | [ISO 27001:2022].A.8.26 |
-| `VERIFY`  | **MUST** verify our contracts hold, rather than trusting that they do                                                                                  | [ISO 27001:2022].A.8.26 |
-| `BREAK`   | **MUST NOT** make a breaking change to a published interface without a version increment and notice to its consumers                                   |                         |
-| `EXPOSE`  | **MUST NOT** expose sensitive data or a sensitive operation through an unauthenticated interface                                                       | [ISO 27001:2022].A.8.26 |
+| Id        | Clause                                                                                                                                                 | Alignment                                     |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
+| `SPEC`    | **MUST** define each interface against an explicit, documented contract, and treat that contract as the source of truth rather than the implementation | [ISO 27001:2022].A.8.27                       |
+| `VERSION` | **MUST** version interfaces so that a change we need does not become a break others must absorb                                                        | [ISO 27001:2022].A.8.27                       |
+| `DEPREC`  | **MUST** publish a deprecation approach and give notice before removing or changing something consumers depend on                                      |                                               |
+| `SECURE`  | **MUST** secure interfaces by default — authenticated, authorised, and validating what they are given                                                  | [ISO 27001:2022].A.8.26, [OWASP ASVS 4.0].V13 |
+| `VERIFY`  | **MUST** verify our contracts hold, rather than trusting that they do                                                                                  | [ISO 27001:2022].A.8.26                       |
+| `BREAK`   | **MUST NOT** make a breaking change to a published interface without a version increment and notice to its consumers                                   |                                               |
+| `EXPOSE`  | **MUST NOT** expose sensitive data or a sensitive operation through an unauthenticated interface                                                       | [ISO 27001:2022].A.8.26, [OWASP ASVS 4.0].V4  |
 
 ## Exceptions
 
@@ -49,3 +49,4 @@ checking before relying on it. A security fix may break a contract where leaving
 consumers are told as soon as it is safe to tell them.
 
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
+[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs-4
