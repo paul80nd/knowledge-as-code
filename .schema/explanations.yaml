@@ -53,6 +53,10 @@ rules:
       Reports an explanation whose prose-to-link ratio exceeds a threshold. An explanation that accumulates
       facts of its own has become a maintenance liability, and its facts will be the ones that go stale first.
     severity: warning
+    expr: "words() <= links() * 40"
+    message: >
+      Prose has outgrown the links. Each fact restated here is a second copy to keep true — link to the
+      document that owns it instead.
   - id: not-normative
     description: >
       Flags RFC 2119 keywords (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) in bold. Normative content belongs

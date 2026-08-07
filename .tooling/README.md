@@ -145,14 +145,22 @@ A type that declares no `clauses:` block is checked for none of these.
 
 A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
 by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
-editing this tool. The two below need more than the grammar can say and keep a C# arm; [`SPEC.md`](SPEC.md)
-draws the line between the two and lists what is still to convert.
+editing this tool. Only the last two need more than the grammar can say and keep a C# arm;
+[`SPEC.md`](SPEC.md) draws the line between the two and lists what is still to convert.
 
-| Check                          | Level   | What it enforces                                                                                                                      |
-|--------------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `detected-not-before-occurred` | error   | A postmortem's `detected-on` is on or after its `occurred-on`. Declared as an `expr:`, not as code.                                   |
-| `y-statement`                  | warning | A block-quote follows the H1 and is within `max-words` (60).                                                                          |
-| `alternatives-verdict`         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
+| Check                          | Type         | Level   | What it enforces                                                                                                                      |
+|--------------------------------|--------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `detected-not-before-occurred` | postmortems  | error   | `detected-on` is on or after `occurred-on` — an incident cannot be found before it began.                                             |
+| `symptoms-first`               | runbooks     | error   | Symptoms is the first section, because that is what someone reaching for a runbook matches on.                                        |
+| `provenance-required`          | standards    | error   | The standard cites an ADR in `derived-from` or a policy in `implements`. With neither it is guidance.                                 |
+| `hub-not-specification`        | capabilities | warning | Prose has not outgrown the links. A capability points at detail; it does not carry it.                                                |
+| `links-rather-than-restates`   | explanations | warning | As above — a fact restated rather than linked is a second copy to keep true.                                                          |
+| `low-ceremony`                 | discoveries  | warning | A capture stays short. Length here means the tier boundary is being ignored.                                                          |
+| `y-statement`                  | adrs         | warning | A block-quote follows the H1 and is within `max-words` (60).                                                                          |
+| `alternatives-verdict`         | adrs         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
+
+The three length rules are ratios or ceilings whose numbers are judgements rather than measurements — no corpus has yet
+held enough of these types to calibrate them. Each is pinned by a fixture, so changing one is visible.
 
 Code is excluded from every link and marker check: they walk the Markdig AST (inline links, literal runs), and fenced or
 indented code carries none of those nodes.

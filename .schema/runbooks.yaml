@@ -67,6 +67,11 @@ index:
 rules:
   - id: symptoms-first
     description: Symptoms is the first section after the H1 — that is how the reader finds the document.
+    severity: error
+    expr: "first_section() == 'Symptoms'"
+    message: >
+      Symptoms must be the first section. Someone reaching for this at 2am matches on what they are
+      seeing, not on what the document is called.
   - id: escalation-required
     description: >
       Every runbook names an escalation path. A diagnosis branch that ends without a resolution or an

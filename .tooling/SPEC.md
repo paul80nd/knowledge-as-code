@@ -28,31 +28,39 @@ The decision hinges on bucketing the **actual** rules in `.schema/*.yaml`.
 
 ### Bucket A — a one-line `expr:`
 
-Pure field predicates and simple structural facts, in one uniform shape.
+Pure field predicates and simple structural facts, in one uniform shape. **Converted:**
 
-| Rule                                  | Type         | `expr`                                                               |
-|---------------------------------------|--------------|----------------------------------------------------------------------|
-| `detected-not-before-occurred`        | postmortems  | **done** — see `.schema/postmortems.yaml`                            |
-| `personal-data-has-retention`         | data         | `field('classification') == 'personal' implies present('retention')` |
-| `mechanism-has-evidence` (field part) | controls     | `field('mechanism') == 'not-enforced' or present('evidence')`        |
-| `target-is-measurable` (present part) | nfrs         | `present('measured-by')`                                             |
-| `symptoms-first`                      | runbooks     | `first_section() == 'Symptoms'`                                      |
-| `hub-not-specification`               | capabilities | `words() <= links() * 40`                                            |
-| `low-ceremony`                        | discoveries  | `words() <= 200`                                                     |
-| `trial-has-criteria`                  | tools        | `field('status') == 'trial' implies section('Trial Criteria')`       |
+| Rule                           | Type         | `expr`                                             |
+|--------------------------------|--------------|----------------------------------------------------|
+| `detected-not-before-occurred` | postmortems  | guarded date comparison                            |
+| `symptoms-first`               | runbooks     | `first_section() == 'Symptoms'`                    |
+| `provenance-required`          | standards    | `present('derived-from') or present('implements')` |
+| `hub-not-specification`        | capabilities | `words() <= links() * 40`                          |
+| `links-rather-than-restates`   | explanations | `words() <= links() * 40`                          |
+| `low-ceremony`                 | discoveries  | `words() <= 200`                                   |
 
-Thresholds (40, 200) are placeholders — set them from the prose descriptions when converting. Two of these need a schema
-change first: `trial-has-criteria` names a section `tools.yaml` does not list, and `mechanism-has-evidence` assumes a
-`not-enforced` value in the `mechanism` enum.
+The three thresholds are judgements, not measurements — no corpus has yet held enough of these types to calibrate them.
+Each is pinned by a fixture, so moving one is a visible change rather than a silent one. Note that a ratio means a
+document linking to nothing fails at any length: for a capability or an explanation, whose whole job is to point
+elsewhere, that is the intended reading.
 
-Four rules that look like Bucket A are not:
+**Two rules need a schema change before they need an expression.** `trial-has-criteria` names a section `tools.yaml`
+does not list, and `deprecated-has-successor` names a `successor` field where `tools.yaml` has `replaces`, which points
+the other way.
 
-* `what-went-well-required` and `escalation-required` name sections their types already declare **required**. Converting
-  them would report one absence twice, in two vocabularies.
-* `deprecated-has-successor` names a `successor` field. `tools.yaml` has `replaces`, which points the other way; the
-  rule needs a field before it needs an expression.
-* `carried-in-full-by-digest` bounds a glossary *entry*. The glossary is a single-document type, so
-  `words()` measures the whole page — the rule needs a per-entry fact, which puts it in Bucket B.
+**Six rules that look like Bucket A are not:**
+
+* `what-went-well-required`, `escalation-required` and `verification-required` name sections their types already declare
+  **required**. Converting them would report one absence twice, in two vocabularies.
+* `unused-integrations` and `target-is-measurable` (the `present` half) name fields already declared `required: true`.
+* `carried-in-full-by-digest` bounds a glossary *entry*. The glossary is a single-document type, so `words()`
+  measures the whole page — the rule needs a per-entry fact, which puts it in Bucket B.
+
+**Two more belong to `required-when`, not here.** `personal-data-has-retention` and `mechanism-has-evidence` restate
+conditions the schema already declares — `classification in [personal, special-category]` and
+`mechanism != not-enforced`. Both are dead, because `Validator.RequiredWhenHolds` splits on `==` and understands nothing
+else, so neither condition has ever fired. Teaching it `!=` and `in [...]` fixes the declaration a schema author already
+wrote; routing them through `expr:` instead would leave the misleading `required-when` in place.
 
 **A rule about a field that may be absent must guard it.** A comparison where either side is absent is false, so
 `field('detected-on') >= field('occurred-on')` fires on a postmortem missing a date — where `required-field` has already
@@ -197,15 +205,33 @@ strings largely carry over, the engine drops in. Not before: the dependency is n
 
 ## What is left
 
-The evaluator, the fact context, the rule model, the dispatcher and the schema-aware catalogue are built, and
-`detected-not-before-occurred` is converted end to end with a fixture.
+Bucket A is converted. What remains is the fact that unlocks the rest.
 
-1. [ ] Convert the rest of Bucket A, one rule and one fixture at a time. `personal-data-has-retention`
-   and `low-ceremony` need nothing but the line of YAML; `trial-has-criteria` and
-   `mechanism-has-evidence` need a schema change first, noted beside them above.
-2. [ ] Add the Bucket-B facts (`has_ystatement`, `ystatement_words`) and convert `y-statement-present`, which retires
-   the largest remaining C# arm along with its `max-words` field on `RuleSpec`.
-3. [ ] Leave Bucket C in C#. Do not extend the grammar to reach them.
+1. [ ] **Add a text probe** — `matches(pattern)` over the body, and `section_matches('Title', pattern)` over one
+   section. Six rules want exactly this and nothing else: `no-credentials` and `no-actual-data` (a token or a record in
+   the prose), `not-normative` (bold RFC 2119 keywords), `blameless` (personal names in named sections),
+   `no-hedged-ordering` ("typically" inside Steps) and `posture-belongs-to-frameworks`. It is the best return left — one
+   fact for six rules — and it does not touch the grammar, because the pattern is an argument to a fact rather than a
+   feature of the language.
+
+       These are heuristics and will be tuned wrong first. That is the argument for holding them as data: a regex in
+       `.schema/` is a schema edit, where the same regex in C# is a release every consumer corpus has to take.
+
+2. [ ] **Teach `RequiredWhenHolds` `!=` and `in [...]`.** It splits on `==` and understands nothing else, so
+   `mechanism != not-enforced` (controls) and `classification in [personal, special-category]` (data) have never fired.
+   Two rules — `mechanism-has-evidence` and `personal-data-has-retention` — restate exactly those conditions and should
+   stay restatements once the declaration works.
+
+3. [ ] **Add the Bucket-B facts for `y-statement-present`** (`has_ystatement`, `ystatement_words`), which retires the
+   largest remaining C# arm along with `RuleSpec.MaxWords`.
+
+4. [ ] **Delete what is already enforced.** Nine entries restate a core check or a `required-when`, and one says
+   outright that it is documentation rather than a check. A backlog that overstates itself by a fifth makes every
+   judgement about it worse.
+
+5. [ ] Leave Bucket C in C#. Roughly fifteen rules need git history, a graph, or more than one document; a further eight
+   are marked **Scheduled** and are not per-PR validation in any form. Together that is 42% of the declared rules, and
+   no expression layer reaches them. Do not extend the grammar to try.
 
 ## Non-goals
 

@@ -95,6 +95,11 @@ rules:
     description: >
       Every standard cites at least one ADR in `derived-from` or one policy in `implements`. A standard with
       neither is guidance, not a standard.
+    severity: error
+    expr: "present('derived-from') or present('implements')"
+    message: >
+      A standard cites where its authority comes from — an ADR in `derived-from`, a policy in `implements`,
+      or both. With neither this is guidance, and guidance is an explanation.
   - id: rules-have-controls
     description: >
       Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.

@@ -1,17 +1,52 @@
 {
   "summary": {
-    "validated": 1,
+    "validated": 6,
     "skipped": 0,
-    "errors": 1,
-    "warnings": 0
+    "errors": 3,
+    "warnings": 3
   },
   "findings": [
+    {
+      "file": "capabilities/borrower-notifications.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "hub-not-specification",
+      "message": "Prose has outgrown the links. A capability is a hub — move the detail into the documents it should be pointing at, and link to them from here."
+    },
+    {
+      "file": "discoveries/pool-exhaustion-under-load.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "low-ceremony",
+      "message": "This is longer than a capture should be. If it needs this much explaining it has outgrown the tier — promote it rather than expanding it here."
+    },
+    {
+      "file": "explanations/how-holds-are-queued.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "links-rather-than-restates",
+      "message": "Prose has outgrown the links. Each fact restated here is a second copy to keep true — link to the document that owns it instead."
+    },
     {
       "file": "postmortems/0001-detected-before-it-happened.md",
       "line": 1,
       "severity": "error",
       "check": "detected-not-before-occurred",
       "message": "`detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are right, the earlier one is when it started."
+    },
+    {
+      "file": "runbooks/database-connections-exhausted.md",
+      "line": 1,
+      "severity": "error",
+      "check": "symptoms-first",
+      "message": "Symptoms must be the first section. Someone reaching for this at 2am matches on what they are seeing, not on what the document is called."
+    },
+    {
+      "file": "standards/common/error-responses.md",
+      "line": 1,
+      "severity": "error",
+      "check": "provenance-required",
+      "message": "A standard cites where its authority comes from — an ADR in `derived-from`, a policy in `implements`, or both. With neither this is guidance, and guidance is an explanation."
     }
   ]
 }
