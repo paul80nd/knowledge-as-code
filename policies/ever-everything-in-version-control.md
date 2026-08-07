@@ -35,28 +35,16 @@ documentation that describes them.
 
 Secrets are the deliberate exception — see [pol-SCRT].
 
-## Commitments
+## Clauses
 
-* We **will** hold every asset needed to build, deploy, run and recover a solution in version control.
-* We **will** preserve a complete change history that attributes each change to an individual.
-* We **will** protect the default branch, so changes arrive by reviewed merge rather than direct push.
-* We **will** subject changes to infrastructure, schema and configuration to the same review as changes to application
-  code — the medium differs, the rigour does not.
-* We **will not** allow an asset that is necessary to reproduce a system to exist only on an individual's machine, in a
-  console, or in a shared drive.
-* We **will not** accept shared or generic accounts that make a change unattributable.
-
-## Alignment
-
-| Reference                 | Area                         |
-|---------------------------|------------------------------|
-| ISO/IEC 27001:2022 A.8.4  | Access to source code        |
-| ISO/IEC 27001:2022 A.8.9  | Configuration management     |
-| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle |
-| ISO/IEC 27001:2022 A.8.32 | Change management            |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id        | Clause                                                                                                                                                           | Alignment                                                              |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| `ASSETS`  | **MUST** hold every asset needed to build, deploy, run and recover a solution in version control                                                                 | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
+| `HISTORY` | **MUST** preserve a complete change history that attributes each change to an individual                                                                         | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.1                          |
+| `BRANCH`  | **MUST** protect the default branch, so changes arrive by reviewed merge rather than direct push                                                                 | [ISO 27001:2022].A.8.4, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.1  |
+| `PARITY`  | **MUST** subject changes to infrastructure, schema and configuration to the same review as changes to application code — the medium differs, the rigour does not | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PW.7 |
+| `ORPHAN`  | **MUST NOT** allow an asset that is necessary to reproduce a system to exist only on an individual's machine, in a console, or in a shared drive                 | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
+| `SHARED`  | **MUST NOT** accept shared or generic accounts that make a change unattributable                                                                                 | [ISO 27001:2022].A.8.4, [NIST SSDF 1.1].PS.1                           |
 
 ## Exceptions
 
@@ -67,3 +55,5 @@ naming the asset, the reason and the recovery plan if it is lost.
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
 [pol-TRUS]: trus-trusted-components.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022
+[NIST SSDF 1.1]: /frameworks.md#nist-ssdf-1-1

@@ -101,6 +101,20 @@ fail the build.
 | `identity-id` / `identity-status` | error | The line's id and status are the frontmatter's, the status upper-cased.   |
 | `required-section`                | error | Every heading in `sections.required` is present.                          |
 
+### Clauses (from `<type>.yaml`'s `clauses:` block)
+
+A type that declares no `clauses:` block is checked for none of these.
+
+| Check                        | Level   | What it enforces                                                                                       |
+|------------------------------|---------|--------------------------------------------------------------------------------------------------------|
+| `clause-table`               | error   | The declared section holds a table headed with the block's `columns`, with at least one row.           |
+| `clause-id-format`           | error   | Each id is a single code span matching the block's `id-pattern`.                                       |
+| `clause-id-unique`           | error   | Ids are unique within the document — a citation names one obligation.                                  |
+| `clause-modal`               | error   | Each clause opens with a declared modal; `binding` ones are bold, `advisory` ones plain.               |
+| `clause-order`               | warning | Rows are grouped `binding` then `advisory`, in declared order. Reported once, on the row that breaks it. |
+| `clause-compound`            | warning | A clause carries one modal, not two — a second is two obligations sharing an id.                       |
+| `clause-ref`                 | error   | A `pol-VURM.TIMEBOX` code span resolves: the document exists and carries that clause. Corpus-wide, and applies to every type, since anything may cite a clause. |
+
 ### Links & the graph
 
 | Check                     | Level   | What it enforces                                                                                                                                                                                                                                                                        |

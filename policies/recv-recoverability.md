@@ -30,29 +30,19 @@ dependency with no failure path is an outage waiting for its trigger.
 All systems we operate and the data they hold, with depth set by how critical the system is. Covers both designed-in
 fault tolerance and the ability to recover after failure.
 
-## Commitments
+## Clauses
 
-* We **will** define recovery-time and recovery-point objectives for critical systems, and design to meet them.
-* We **will** back up critical data on a schedule that matches those objectives.
-* We **will** test restoration periodically — recovery is proven, not assumed.
-* We **will** keep at least one copy of critical data outside the failure domain of its source.
-* We **will** bound every outbound call in time, so a slow dependency cannot become an unbounded wait.
-* We **will** design so that the failure of one dependency degrades function rather than taking the system down with it.
-* We **will** make operations that may be retried safe to re-run.
-* We **will not** rely on a backup that has never been test-restored.
-* We **will not** retry indefinitely, without limit or backoff, against a failing dependency.
-
-## Alignment
-
-| Reference                 | Area                                            |
-|---------------------------|-------------------------------------------------|
-| ISO/IEC 27001:2022 A.5.29 | Information security during disruption          |
-| ISO/IEC 27001:2022 A.5.30 | ICT readiness for business continuity           |
-| ISO/IEC 27001:2022 A.8.13 | Information backup                              |
-| ISO/IEC 27001:2022 A.8.14 | Redundancy of information processing facilities |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id        | Clause                                                                                                             | Alignment                                                                 |
+|-----------|--------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| `RTORPO`  | **MUST** define recovery-time and recovery-point objectives for critical systems, and design to meet them          | [ISO 27001:2022].A.5.30, [Azure WAF].reliability                          |
+| `BACKUP`  | **MUST** back up critical data on a schedule that matches those objectives                                         | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
+| `RESTORE` | **MUST** test restoration periodically — recovery is proven, not assumed                                           | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
+| `OFFSITE` | **MUST** keep at least one copy of critical data outside the failure domain of its source                          | [ISO 27001:2022].A.8.13, [ISO 27001:2022].A.8.14, [Azure WAF].reliability |
+| `TIMEOUT` | **MUST** bound every outbound call in time, so a slow dependency cannot become an unbounded wait                   | [Azure WAF].reliability                                                   |
+| `DEGRADE` | **MUST** design so that the failure of one dependency degrades function rather than taking the system down with it | [ISO 27001:2022].A.5.29, [ISO 27001:2022].A.8.14, [Azure WAF].reliability |
+| `IDEMPOT` | **MUST** make operations that may be retried safe to re-run                                                        | [Azure WAF].reliability                                                   |
+| `UNTEST`  | **MUST NOT** rely on a backup that has never been test-restored                                                    | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
+| `RETRY`   | **MUST NOT** retry indefinitely, without limit or backoff, against a failing dependency                            | [Azure WAF].reliability                                                   |
 
 ## Exceptions
 
@@ -61,3 +51,5 @@ defined and still exercised. Accepting a longer recovery objective than a system
 deviation under [pol-DEVI], owned by whoever will answer for the downtime.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
+[Azure WAF]: /frameworks.md#azure-waf
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

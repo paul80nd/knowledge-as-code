@@ -19,6 +19,19 @@ public class LinkRef
     public string? Label;
 }
 
+// One row of a clause table, held as the parser found it rather than as it should be: an id cell that
+// is not a single code span keeps its text and reports no span, a clause cell that opens with no bold
+// run reports none. Every judgement about what is wrong belongs to the validator, which has the schema
+// to judge against and the words to say what was expected.
+public class ClauseRow
+{
+    public string? IdSpan;    // the Id cell's content when it is exactly one code span
+    public string IdText = "";  // the Id cell flattened, for quoting back when it is not
+    public string Text = "";    // the Clause cell flattened
+    public string? BoldLead;    // the leading bold run's text, when the cell opens with one
+    public int Line;
+}
+
 public class Doc
 {
     public required string Rel;
@@ -41,6 +54,16 @@ public class Doc
     // altogether; an empty list never occurs.
     public List<string>? IdentitySpans;
     public int IdentityLine;
+
+    // The clause table beneath the section the type's schema names. `ClauseHeaders` is null where that
+    // section holds no table at all — the section being absent and the section holding prose are
+    // different faults, and only the parser can tell them apart. `ClauseRefs` collects every code span
+    // shaped like a citation of one, from anywhere in the document.
+    public List<string>? ClauseHeaders;
+    public readonly List<ClauseRow> Clauses = [];
+    public int ClauseSectionLine;
+    public int ClauseTableLine;
+    public readonly List<(string Ref, int Line)> ClauseRefs = [];
 
     public readonly List<string> H2 = [];
     public readonly List<LinkRef> Links = [];
@@ -105,6 +128,12 @@ public class Doc
         // Y-statement or its prose first has no identity line, however its later paragraphs read.
         ReadIdentity(ast, doc);
 
+        // Clause table, and the citations of one anywhere in the document.
+        if (type?.Clauses is { } clauseSpec) ReadClauses(ast, doc, clauseSpec.Section);
+        foreach (var code in ast.Descendants<CodeInline>())
+            if (code.Content is { } content && ClauseCitation.IsMatch(content))
+                doc.ClauseRefs.Add((content, code.Line + 1));
+
         // Links (inline + resolved reference/shortcut). Iterating LinkInline naturally
         // excludes code — code spans and fenced/indented blocks carry no LinkInline.
         foreach (var link in ast.Descendants<LinkInline>())
@@ -166,6 +195,63 @@ public class Doc
 
         doc.IdentitySpans = [.. inline.Descendants<CodeInline>().Select(c => c.Content ?? "")];
         doc.IdentityLine = p.Line + 1;
+    }
+
+    // A code span shaped like a citation of a clause — an id, a dot, and a clause id, as `pol-VURM.TIMEBOX`.
+    // Deliberately loose on case and width: a mis-cased or over-long citation is one the validator should
+    // report as unresolved rather than one the parser should quietly decline to see.
+    private static readonly System.Text.RegularExpressions.Regex ClauseCitation =
+        new(@"^[a-z]{2,4}-[A-Za-z0-9]+\.[A-Za-z0-9]+$");
+
+    // The clause table: the first table under the H2 the schema names, read down to the next H2. Rows are
+    // taken whole and unjudged — the header row supplies `ClauseHeaders`, every other row a `ClauseRow`,
+    // however malformed — so that "no table here" is the only thing the parser decides.
+    private static void ReadClauses(MarkdownDocument ast, Doc doc, string section)
+    {
+        var inSection = false;
+        foreach (var block in ast)
+        {
+            if (block is HeadingBlock h)
+            {
+                if (h.Level > 2) continue; // a sub-heading inside the section does not end it
+                inSection = string.Equals(Md.PlainText(h.Inline), section, StringComparison.OrdinalIgnoreCase);
+                if (inSection) doc.ClauseSectionLine = h.Line + 1;
+                continue;
+            }
+
+            if (!inSection || block is not Markdig.Extensions.Tables.Table table) continue;
+
+            doc.ClauseTableLine = table.Line + 1;
+            foreach (var row in table.OfType<Markdig.Extensions.Tables.TableRow>())
+            {
+                var cells = row.OfType<Markdig.Extensions.Tables.TableCell>()
+                    .Select(c => (c.FirstOrDefault() as LeafBlock)?.Inline)
+                    .ToList();
+
+                if (row.IsHeader)
+                {
+                    doc.ClauseHeaders = [.. cells.Select(c => Md.PlainText(c))];
+                    continue;
+                }
+
+                var clause = cells.Count > 1 ? cells[1] : null;
+                doc.Clauses.Add(new ClauseRow
+                {
+                    IdSpan = cells.Count > 0 && cells[0]?.FirstChild is CodeInline { NextSibling: null } code
+                        ? code.Content
+                        : null,
+                    IdText = Md.PlainText(cells.Count > 0 ? cells[0] : null),
+                    Text = Md.PlainText(clause),
+                    BoldLead = clause?.FirstChild is EmphasisInline { DelimiterCount: 2 } bold
+                        ? Md.PlainText(bold)
+                        : null,
+                    Line = row.Line + 1
+                });
+            }
+
+            doc.ClauseHeaders ??= [];
+            return;
+        }
     }
 
     private static string StripFences(string text, YamlFrontMatterBlock block)

@@ -25,7 +25,10 @@ string comparison would demand `A.8.29` before `A.8.7`, which is why `list-order
 
 This fixture only.
 
-## Commitments
+## Clauses
 
-* We **will** keep ISO references in the order their numbers imply.
-* We **will not** re-sort them to suit a byte-wise comparison.
+| Id       | Clause                                                        | Alignment |
+|----------|---------------------------------------------------------------|-----------|
+| `ORDER`  | **MUST** keep ISO references in the order their numbers imply |           |
+| `RESORT` | **MUST NOT** re-sort them to suit a byte-wise comparison      |           |
+

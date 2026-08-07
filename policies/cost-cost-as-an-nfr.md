@@ -28,18 +28,18 @@ All systems we operate on metered infrastructure, in every environment. Targets 
 [NFRs](/nfrs) where they matter enough to be stated; this policy commits us to the ownership and the visibility that
 make them meaningful.
 
-## Commitments
+## Clauses
 
-* We **will** attribute the running cost of a system to the service and the team that owns it.
-* We **will** give the people who own a system visibility of what it costs, at a cadence that lets them act.
-* We **will** treat cost as a design consideration, weighed alongside performance and resilience rather than after them.
-* We **will** size resources against what they actually use, and revisit that as usage changes.
-* We **will** notice unexpected cost quickly, and treat a sharp unexplained rise as a signal worth investigating —
-  runaway spend is often a defect, and sometimes a compromise.
-* We **will** remove what we no longer use, including in environments below production.
-* We **will not** run a production workload that nobody owns the cost of.
-* We **will not** let cost efficiency erode resilience, security or accessibility — this policy sets a constraint to
-  optimise within, not a licence to cut protections.
+| Id        | Clause                                                                                                                                                                    | Alignment                     |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------|
+| `ATTRIB`  | **MUST** attribute the running cost of a system to the service and the team that owns it                                                                                  | [Azure WAF].cost-optimization |
+| `VISIBLE` | **MUST** give the people who own a system visibility of what it costs, at a cadence that lets them act                                                                    | [Azure WAF].cost-optimization |
+| `DESIGN`  | **MUST** treat cost as a design consideration, weighed alongside performance and resilience rather than after them                                                        | [Azure WAF].cost-optimization |
+| `SIZING`  | **MUST** size resources against what they actually use, and revisit that as usage changes                                                                                 | [Azure WAF].cost-optimization |
+| `ANOMALY` | **MUST** notice unexpected cost quickly, and treat a sharp unexplained rise as a signal worth investigating — runaway spend is often a defect, and sometimes a compromise | [Azure WAF].cost-optimization |
+| `UNUSED`  | **MUST** remove what we no longer use, including in environments below production                                                                                         | [Azure WAF].cost-optimization |
+| `UNOWNED` | **MUST NOT** run a production workload that nobody owns the cost of                                                                                                       | [Azure WAF].cost-optimization |
+| `ERODE`   | **MUST NOT** let cost efficiency erode resilience, security or accessibility — this policy sets a constraint to optimise within, not a licence to cut protections         | [Azure WAF].cost-optimization |
 
 ## Exceptions
 
@@ -50,4 +50,8 @@ not from ownership or from being cleaned up.
 ## Notes
 
 No ISO/IEC 27001:2022 Annex A area corresponds to cost efficiency — the framework's concern is availability, not
-expenditure — so this policy records no alignment rather than an invented one.
+expenditure — so this policy carries no Annex A reference rather than an invented one, and `aligns-with` stays empty.
+What it does align with is the [Azure WAF] Cost Optimization pillar, which is the only kind of alignment this policy
+will ever have: nothing external obliges an organisation to manage its own spend.
+
+[Azure WAF]: /frameworks.md#azure-waf

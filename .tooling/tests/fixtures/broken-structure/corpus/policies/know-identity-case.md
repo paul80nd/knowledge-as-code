@@ -21,6 +21,9 @@ lower-case because it is read by a machine; the line is upper-case because it is
 This fixture only. It exists so the wrong-case branch of `identity-status` is exercised as well as the
 disagreeing-status branch, which `envs-identity-status.md` covers.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `identity-status` and nothing else.
+| Id      | Clause                                              | Alignment |
+|---------|-----------------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `identity-status` and nothing else |           |
+

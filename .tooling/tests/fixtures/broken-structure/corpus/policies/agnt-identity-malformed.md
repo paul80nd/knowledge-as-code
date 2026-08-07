@@ -22,6 +22,9 @@ This fixture only. It exists so the malformed-line branch of `identity` is exerc
 which `obsv-no-identity-line.md` covers. A malformed line is reported once, against the line, rather than as a cascade
 of complaints about parts that were never written.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `identity` and nothing else.
+| Id      | Clause                                       | Alignment |
+|---------|----------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `identity` and nothing else |           |
+

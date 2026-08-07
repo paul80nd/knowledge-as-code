@@ -28,27 +28,16 @@ itself, which is the only reliable way documentation stays true.
 All solutions we build or operate. Covers setup and build instructions, operational runbooks, architecturally
 significant decisions, and the reference material a person or an agent needs to work on the system safely.
 
-## Commitments
+## Clauses
 
-* We **will** document what is needed to build, run and recover each solution, and version that documentation.
-* We **will** change documentation alongside the code, configuration or process it describes, in the same review.
-* We **will** record architecturally significant decisions, with the reasoning and the alternatives weighed, so a future
-  reader can tell a considered choice from an accident.
-* We **will** write documentation to be usable by both people and the agents working in our codebases, treating them as
-  readers of the same source of truth rather than maintaining two versions of it — including the rules we expect their
-  work to follow ([pol-AGNT]).
-* We **will not** allow knowledge that is critical to operating or recovering a system to exist only in someone's head
-  or in an ephemeral conversation.
-* We **will not** treat documentation as a task that follows delivery — undocumented work is unfinished work.
-
-## Alignment
-
-| Reference                 | Area                            |
-|---------------------------|---------------------------------|
-| ISO/IEC 27001:2022 A.5.37 | Documented operating procedures |
-
-We **align with** this area. We are not registered against ISO/IEC 27001:2022 and are not audited against it. Alignment
-exists because the framework covers the right ground.
+| Id       | Clause                                                                                                                                                                                                                                                              | Alignment               |
+|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `DOCS`   | **MUST** document what is needed to build, run and recover each solution, and version that documentation                                                                                                                                                            | [ISO 27001:2022].A.5.37 |
+| `SYNC`   | **MUST** change documentation alongside the code, configuration or process it describes, in the same review                                                                                                                                                         | [ISO 27001:2022].A.5.37 |
+| `DECIDE` | **MUST** record architecturally significant decisions, with the reasoning and the alternatives weighed, so a future reader can tell a considered choice from an accident                                                                                            |                         |
+| `AGENTS` | **MUST** write documentation to be usable by both people and the agents working in our codebases, treating them as readers of the same source of truth rather than maintaining two versions of it — including the rules we expect their work to follow ([pol-AGNT]) |                         |
+| `HEADS`  | **MUST NOT** allow knowledge that is critical to operating or recovering a system to exist only in someone's head or in an ephemeral conversation                                                                                                                   | [ISO 27001:2022].A.5.37 |
+| `AFTER`  | **MUST NOT** treat documentation as a task that follows delivery — undocumented work is unfinished work                                                                                                                                                             |                         |
 
 ## Exceptions
 
@@ -56,3 +45,4 @@ None. The effort is proportionate — a small internal tool needs less than a cu
 commitment to write down what is needed does not vary.
 
 [pol-AGNT]: agnt-agents-propose-people-decide.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

@@ -21,6 +21,9 @@ template from the wrong folder is how this happens, and the id alone would not c
 This fixture only. It exists so `identity-type` is exercised — the check that holds the line's type name to the
 `label` the folder's schema declares.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `identity-type` and nothing else.
+| Id      | Clause                                            | Alignment |
+|---------|---------------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `identity-type` and nothing else |           |
+

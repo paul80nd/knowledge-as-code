@@ -29,27 +29,21 @@ Systems where throughput, latency, concurrency or capacity affect whether the sy
 customer-facing systems and many internal ones. Targets themselves are recorded as [NFRs](/nfrs); this policy commits us
 to having them.
 
-## Commitments
+## Clauses
 
-* We **will** state performance and capacity targets for systems where performance matters, in terms that can be
-  measured.
-* We **will** validate against those targets before significant releases, under conditions representative of real load
-  rather than convenient load.
-* We **will** treat a target we no longer meet as a defect, not as a new baseline.
-* We **will** understand behaviour at peak and over time, not only at the average case on a quiet afternoon.
-* We **will not** release a significant change to a performance-sensitive system with no performance validation at all.
-* We **will not** allow an unstated target to become the reason nobody is accountable for a slow system.
-
-## Alignment
-
-| Reference                | Area                |
-|--------------------------|---------------------|
-| ISO/IEC 27001:2022 A.8.6 | Capacity management |
-
-We **align with** this area, which covers the availability half of this policy. The rest is engineering practice with no
-corresponding control. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
+| Id        | Clause                                                                                                                                        | Alignment                                                  |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| `TARGETS` | **MUST** state performance and capacity targets for systems where performance matters, in terms that can be measured                          | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
+| `VERIFY`  | **MUST** validate against those targets before significant releases, under conditions representative of real load rather than convenient load | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
+| `DEFECT`  | **MUST** treat a target we no longer meet as a defect, not as a new baseline                                                                  | [Azure WAF].performance-efficiency                         |
+| `PEAK`    | **MUST** understand behaviour at peak and over time, not only at the average case on a quiet afternoon                                        | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
+| `NOTEST`  | **MUST NOT** release a significant change to a performance-sensitive system with no performance validation at all                             | [Azure WAF].performance-efficiency                         |
+| `SILENT`  | **MUST NOT** allow an unstated target to become the reason nobody is accountable for a slow system                                            |                                                            |
 
 ## Exceptions
 
 Systems where performance is genuinely not a concern — low-volume internal tooling with no user waiting on it — need no
 targets. That judgement is recorded once rather than assumed repeatedly, because systems acquire users.
+
+[Azure WAF]: /frameworks.md#azure-waf
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

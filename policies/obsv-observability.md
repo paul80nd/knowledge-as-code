@@ -28,31 +28,18 @@ one reconstructs what happened, the other tells us it is happening now.
 
 All production systems we operate, and the lower environments where behaviour must be understood to validate a change.
 
-## Commitments
+## Clauses
 
-* We **will** emit operational and security-relevant telemetry to a central store that the emitting system cannot alter
-  or delete.
-* We **will** keep timestamps consistent across systems, so events can be correlated into one timeline.
-* We **will** retain telemetry for a defined period — long enough to investigate, no longer than justified.
-* We **will** monitor the availability and health of production systems, and alert an accountable owner when they
-  degrade.
-* We **will** monitor for security-relevant events, not only for availability.
-* We **will** treat alerts as something to be acted on, and keep them few enough and meaningful enough that they still
-  are.
-* We **will not** run a production system with no monitoring and no alerting.
-* We **will not** write secrets, credentials or unmasked sensitive personal data into telemetry — see
-  [pol-SCRT] and [pol-DATA].
-
-## Alignment
-
-| Reference                 | Area                  |
-|---------------------------|-----------------------|
-| ISO/IEC 27001:2022 A.8.15 | Logging               |
-| ISO/IEC 27001:2022 A.8.16 | Monitoring activities |
-| ISO/IEC 27001:2022 A.8.17 | Clock synchronisation |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id        | Clause                                                                                                                       | Alignment                                                   |
+|-----------|------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
+| `CENTRAL` | **MUST** emit operational and security-relevant telemetry to a central store that the emitting system cannot alter or delete | [ISO 27001:2022].A.8.15, [Azure WAF].operational-excellence |
+| `CLOCKS`  | **MUST** keep timestamps consistent across systems, so events can be correlated into one timeline                            | [ISO 27001:2022].A.8.17, [Azure WAF].operational-excellence |
+| `RETAIN`  | **MUST** retain telemetry for a defined period — long enough to investigate, no longer than justified                        | [ISO 27001:2022].A.8.15, [Azure WAF].operational-excellence |
+| `HEALTH`  | **MUST** monitor the availability and health of production systems, and alert an accountable owner when they degrade         | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
+| `SECMON`  | **MUST** monitor for security-relevant events, not only for availability                                                     | [ISO 27001:2022].A.8.16                                     |
+| `ALERTS`  | **MUST** treat alerts as something to be acted on, and keep them few enough and meaningful enough that they still are        | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
+| `BLIND`   | **MUST NOT** run a production system with no monitoring and no alerting                                                      | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
+| `SECRETS` | **MUST NOT** write secrets, credentials or unmasked sensitive personal data into telemetry — see [pol-SCRT] and [pol-DATA]   | [ISO 27001:2022].A.8.15                                     |
 
 ## Exceptions
 
@@ -61,3 +48,5 @@ unimportant to monitor is a system to question the existence of.
 
 [pol-DATA]: data-data-protection.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
+[Azure WAF]: /frameworks.md#azure-waf
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

@@ -131,10 +131,10 @@ reference resolves to a document that exists and is not superseded.
 ```
 Policy <──implements── Standard ──verified-by──> Control ──applies-to──> Service
    │                      │                                                ▲
-   │                      └──derived-from──> ADR                           │
+ clause                   └──derived-from──> ADR                           │
    │                                          ▲                            │
-   └──aligns-with──> ISO/IEC 27001:2022       │                            │
-                     Annex A             prompted-by                       │
+   └──aligns-with──> Framework                │                            │
+                     (frameworks.md)     prompted-by                       │
                                           Postmortem                       │
 Capability ──implemented-by────────────────────────────────────────────────┘
     │
@@ -151,6 +151,11 @@ Reciprocal pairs must agree in both directions: `supersedes`/`superseded-by`, `v
 Not every edge is a pair. A standard's `implements` points up at a policy and is never answered from the policy side:
 policies are the layer a downstream corpus inherits, standards the layer it writes for itself, so what implements a
 policy is not knowable from where the policy sits.
+
+Nor does every edge leave from a whole document. A policy aligns with a framework through a single **clause** rather
+than in its entirety, so the edge leaves the clause table and lands on a control — `pol-SCRT.KEYS` to Annex A A.8.24.
+[Frameworks](/frameworks.md) is the far end of every one of those edges, and the only place our standing against a
+framework is recorded.
 
 ## Layout
 
@@ -170,6 +175,7 @@ Alongside the types:
 README.md              # orientation
 CLAUDE.md              # rules digest — GENERATED
 glossary.md
+frameworks.md          # external frameworks, and what each obliges us to
 knowledge-as-code.md   # the approach
 knowledge-as-code/     # the system's own documentation — outside the taxonomy
   manifest.yaml        # which files are shared and which are local

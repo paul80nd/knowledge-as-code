@@ -92,7 +92,7 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block | Done    |
 | Rules digest                                | Active standards                         | Root `CLAUDE.md`                       | Planned |
 | Control coverage report                     | `controls/` + standards' rules           | `controls/INDEX.md`                    | Planned |
-| ISO alignment matrix                        | `policies/` `aligns-with`                | `policies/INDEX.md`                    | Planned |
+| Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/INDEX.md`                    | Planned |
 | Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`                | Planned |
 | Orphan report                               | The link graph                           | `_reports/orphans.md`                  | Planned |
 | Service dependency diagram                  | `depends-on`                             | `services/INDEX.md` (mermaid)          | Planned |

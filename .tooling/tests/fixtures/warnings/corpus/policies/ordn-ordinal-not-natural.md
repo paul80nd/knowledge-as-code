@@ -23,7 +23,10 @@ owner: alex.doe
 
 This fixture only.
 
-## Commitments
+## Clauses
 
-* We **will** treat a byte-wise sort of numbered references as out of order.
-* We **will not** accept it merely because it is consistent.
+| Id       | Clause                                                                 | Alignment |
+|----------|------------------------------------------------------------------------|-----------|
+| `ORDER`  | **MUST** treat a byte-wise sort of numbered references as out of order |           |
+| `ACCEPT` | **MUST NOT** accept it merely because it is consistent                 |           |
+

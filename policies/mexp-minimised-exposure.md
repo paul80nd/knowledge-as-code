@@ -29,27 +29,18 @@ exposure deliberately, and denying by default, is what keeps a single compromise
 All networks, services and interfaces belonging to systems we build or operate, in every environment. Covers traffic
 inbound to our systems, between them, and outbound from them.
 
-## Commitments
+## Clauses
 
-* We **will** segment by trust boundary and by environment.
-* We **will** deny by default, and expose a service only through an intended, controlled route.
-* We **will** protect traffic crossing a trust boundary.
-* We **will** prefer private paths to public ones for access between our own services.
-* We **will** control and observe what leaves our systems, not only what arrives.
-* We **will** define network topology as reviewable code, under [pol-EVER].
-* We **will not** expose a management interface or a datastore directly to the public internet.
-* We **will not** permit unrestricted lateral traffic between systems that have no need to talk to each other.
-
-## Alignment
-
-| Reference                 | Area                         |
-|---------------------------|------------------------------|
-| ISO/IEC 27001:2022 A.8.20 | Network security             |
-| ISO/IEC 27001:2022 A.8.21 | Security of network services |
-| ISO/IEC 27001:2022 A.8.22 | Segregation of networks      |
-
-We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
-Alignment exists because the framework covers the right ground.
+| Id        | Clause                                                                                                   | Alignment                                        |
+|-----------|----------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `SEGMENT` | **MUST** segment by trust boundary and by environment                                                    | [ISO 27001:2022].A.8.22                          |
+| `DENY`    | **MUST** deny by default, and expose a service only through an intended, controlled route                | [ISO 27001:2022].A.8.20, [ISO 27001:2022].A.8.21 |
+| `TRANSIT` | **MUST** protect traffic crossing a trust boundary                                                       | [ISO 27001:2022].A.8.20                          |
+| `PRIVATE` | **MUST** prefer private paths to public ones for access between our own services                         | [ISO 27001:2022].A.8.21                          |
+| `EGRESS`  | **MUST** control and observe what leaves our systems, not only what arrives                              | [ISO 27001:2022].A.8.20                          |
+| `ASCODE`  | **MUST** define network topology as reviewable code, under [pol-EVER]                                    |                                                  |
+| `PUBLIC`  | **MUST NOT** expose a management interface or a datastore directly to the public internet                | [ISO 27001:2022].A.8.21                          |
+| `LATERAL` | **MUST NOT** permit unrestricted lateral traffic between systems that have no need to talk to each other | [ISO 27001:2022].A.8.22                          |
 
 ## Exceptions
 
@@ -59,3 +50,4 @@ other exposure requires a recorded deviation under [pol-DEVI].
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-EVER]: ever-everything-in-version-control.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022

@@ -34,36 +34,19 @@ autonomous or scheduled ones alike.
 _Boundary: the identity an agent authenticates as is governed by [pol-ACCS] and the credentials it holds by [pol-SCRT].
 This policy is about the authority of what it produces._
 
-## Commitments
+## Clauses
 
-* We **will** record where an agent-produced contribution came from, in enough detail that reviewing it is a check
-  rather than an act of faith.
-* We **will** require a person to accept agent-produced work before it carries any authority, and that person owns it
-  afterwards as if they had written it.
-* We **will** hold agent-produced changes to every gate that applies to our own — the same review, the same automated
-  verification under [pol-AUTV], the same route to production.
-* We **will** state the confidence an observation actually has, and let unverified ones expire rather than settle into
-  the corpus by age.
-* We **will not** treat an agent's own account of its work as verification of that work.
-* We **will not** accept a proposal we cannot trace back to what produced it — an unverifiable proposal is a rejected
-  one.
-* We **will not** grant an agent access, privilege or a route to production that an individual doing the same work would
-  not be granted.
-* We **will not** let "an agent wrote it" stand as either a reason to scrutinise it less or an excuse for what it broke.
-* We **will not** hold an agent to a rule we never put within its reach — under
-  [pol-KNOW] that is our failure, not the agent's.
-
-## Alignment
-
-| Reference                 | Area                         |
-|---------------------------|------------------------------|
-| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle |
-| ISO/IEC 27001:2022 A.8.30 | Outsourced development       |
-
-We **align with** these areas. The second is an analogy and worth naming as one: ISO/IEC 27001:2022 has no concept of a
-non-human contributor, but the obligation to direct, monitor and review development carried out beyond the team is the
-same obligation, and it is the closest the framework comes. We are not registered against ISO/IEC 27001:2022 and are not
-audited against it.
+| Id        | Clause                                                                                                                                                                       | Alignment                                         |
+|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
+| `SOURCE`  | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                    | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
+| `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                        | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].GOVERN |
+| `GATES`   | **MUST** hold agent-produced changes to every gate that applies to our own — the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25, [NIST AI RMF 1.0].MANAGE |
+| `CONFID`  | **MUST** state the confidence an observation actually has, and let unverified ones expire rather than settle into the corpus by age                                          | [NIST AI RMF 1.0].MEASURE                         |
+| `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                           | [NIST AI RMF 1.0].MEASURE                         |
+| `TRACE`   | **MUST NOT** accept a proposal we cannot trace back to what produced it — an unverifiable proposal is a rejected one                                                         | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
+| `ACCESS`  | **MUST NOT** grant an agent access, privilege or a route to production that an individual doing the same work would not be granted                                           | [NIST AI RMF 1.0].MANAGE                          |
+| `EXCUSE`  | **MUST NOT** let "an agent wrote it" stand as either a reason to scrutinise it less or an excuse for what it broke                                                           | [NIST AI RMF 1.0].GOVERN                          |
+| `REACH`   | **MUST NOT** hold an agent to a rule we never put within its reach — under [pol-KNOW] that is our failure, not the agent's                                                   | [NIST AI RMF 1.0].GOVERN                          |
 
 ## Exceptions
 
@@ -89,3 +72,5 @@ exercise depends on the promotion gate holding.
 [pol-KNOW]: know-knowledge-is-written-down.md
 [pol-PIPE]: pipe-pipeline-to-production.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
+[ISO 27001:2022]: /frameworks.md#iso27001-2022
+[NIST AI RMF 1.0]: /frameworks.md#nist-ai-rmf-1-0

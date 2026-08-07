@@ -19,6 +19,9 @@ The id is `pol-VU` — the right prefix but two characters where four are requir
 
 This fixture only.
 
-## Commitments
+## Clauses
 
-* We **will** trigger `id-format` and nothing else.
+| Id      | Clause                                        | Alignment |
+|---------|-----------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `id-format` and nothing else |           |
+

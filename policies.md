@@ -21,9 +21,14 @@ accidentally relitigate a security commitment.
 They also give the standards somewhere to point. A standard that cites no ADR and no policy has no provenance, which is
 usually a sign it is either guidance in disguise or a decision nobody has actually made.
 
-Policies record alignment with **ISO/IEC 27001:2022** Annex A where relevant. This is **alignment, not certification** —
-we are not registered, and the alignment exists because the framework covers the right ground, not because anyone is
-auditing against it. The `aligns-with` field makes that coverage reportable.
+Policies map their clauses to external frameworks — **ISO/IEC 27001:2022** Annex A most often — in the `Alignment`
+column of the clause table. Per clause, because a policy aligns with a control through one obligation rather than
+through all of them, and an empty cell where no genuine mapping exists is more use than an invented one.
+
+What our standing against a framework actually is — bound by certification, self-obligated by a policy of our own, or
+simply borrowed from — is recorded once in [Frameworks](/frameworks.md) and nowhere else. A policy states obligations;
+it does not state our standing, which changes on its own schedule and would otherwise have to be corrected in twenty
+places at once.
 
 ## Scope
 
@@ -64,7 +69,7 @@ under governance is the clearest) are the ones most likely to be revisited.
 | `owner` †     | ●   | string | A named person, never a team alias.                                                  |
 | `tags` †      |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
 | `category`    | ●   | enum   | The broad area the commitment belongs to. Controlled, and deliberately few.          |
-| `aligns-with` |     | list   | e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance.                              |
+| `aligns-with` |     | list   | e.g. `ISO27001:2022 A.8.25`. The document-level roll-up of what its clauses map to.  |
 | `review-by`   | ●   | date   | Quoted. Annual is usually right for a policy.                                        |
 
 **Enum values**
@@ -89,19 +94,26 @@ under governance is the clearest) are the ones most likely to be revisited.
    ``` `Policy: pol-MNEM` `DRAFT` ``` — and CI checks it against the frontmatter.
 4. Set `category` to whichever of the four the commitment belongs to. If two fit, pick the one a reader looking for this
    policy would try first; if none does, that is a taxonomy conversation, not a fifth category invented in passing.
-5. State the commitment, the scope it applies to, and any explicit exceptions. Exceptions stated up front are honest;
-   exceptions discovered later are erosion.
-6. Set `aligns-with` where an ISO 27001 Annex A area corresponds. Use `aligns-with`, never wording that implies
-   compliance or certification.
+5. State the scope it binds, then the commitment itself as clauses — one obligation per row, each with a short
+   upper-case id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Add any explicit exceptions beneath them. Exceptions
+   stated up front are honest; exceptions discovered later are erosion.
+6. Map clauses to framework controls in the `Alignment` column where a genuine mapping exists, and roll the references
+   up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](/frameworks.md) — decide
+   its posture there before citing it here.
 7. Set `review-by`. Policies change rarely, so an annual review is usually right.
 
 **Conventions**
 
-* **Never say "compliant" or "certified".** We align. The distinction matters if anyone ever reads this externally.
+* **A policy does not state our standing against a framework.** Not "compliant", not "certified", not "registered" —
+  a policy maps its clauses to controls and says nothing about what that mapping is worth. Standing is recorded once,
+  in [Frameworks](/frameworks.md), so that a change of certification is one edit rather than twenty.
 * **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice,
   and a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
   standards against them, so the set of implementers is not knowable from here — and a policy nothing in *this* wiki
   implements is the normal state rather than a gap to be explained.
+* **A clause is the unit anything else cites.** Written `pol-VURM.TIMEBOX` — the policy id, then the clause id — so a
+  standard, a control or a deviation names the obligation it answers rather than the whole document. Clause ids are
+  immutable for the same reason policy ids are: removing or renaming one silently breaks every citation of it.
 * **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
   scope — the id does not move. Standards, controls and processes cite policies by id, and a mnemonic that is reassigned
   turns every one of those citations into a quiet lie: the reference still resolves, so nothing fails, and the reader is
@@ -116,27 +128,30 @@ under governance is the clearest) are the ones most likely to be revisited.
 
 <!-- BEGIN GENERATED: checks-policies -->
 
-| Check                       | Level   | What it verifies                                                                                         |
-|-----------------------------|---------|----------------------------------------------------------------------------------------------------------|
-| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                      |
-| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                           |
-| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                        |
-| `required-field`            | error   | Required and conditionally-required fields are present.                                                  |
-| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                           |
-| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                                     |
-| `enum`                      | error   | Enum values are in range and lowercase.                                                                  |
-| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                             |
-| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                               |
-| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                               |
-| `id`                        | error   | `id` carries the type's prefix and matches the filename's number or mnemonic.                            |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                    |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                          |
-| `h1`                        | error   | The document has an H1.                                                                                  |
-| `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter. |
-| `required-section`          | error   | Every required section heading is present.                                                               |
-| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
-| `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
-| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
-| `unused-definition`         | warning | A link definition that nothing references.                                                               |
+| Check                            | Level   | What it verifies                                                                                                         |
+|----------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------|
+| `frontmatter-parses`             | error   | Frontmatter is present and is a valid YAML mapping.                                                                      |
+| `unknown-key`                    | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                           |
+| `key-order`                      | error   | Key order is a topological extension of the schema's field order.                                                        |
+| `required-field`                 | error   | Required and conditionally-required fields are present.                                                                  |
+| `bare-key`                       | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                           |
+| `date-quoted / date-format`      | error   | Date fields are quoted `YYYY-MM-DD`.                                                                                     |
+| `enum`                           | error   | Enum values are in range and lowercase.                                                                                  |
+| `field-pattern`                  | error   | Values match the pattern their field declares (e.g. `tags`).                                                             |
+| `list-order`                     | warning | List entries read in alphabetical order, with numbers compared as numbers.                                               |
+| `tier-matches-type`              | error   | `tier` matches the tier the type declares.                                                                               |
+| `id`                             | error   | `id` carries the type's prefix and matches the filename's number or mnemonic.                                            |
+| `id-unique`                      | error   | `id` is unique across the whole wiki.                                                                                    |
+| `filename / slug-length`         | error   | Filename matches the pattern; the slug is within 30 characters.                                                          |
+| `h1`                             | error   | The document has an H1.                                                                                                  |
+| `identity`                       | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.                 |
+| `required-section`               | error   | Every required section heading is present.                                                                               |
+| `clauses`                        | error   | The clause section is a table of `Id \| Clause` rows, each id a unique code span and each clause opening with its modal. |
+| `clause-order / clause-compound` | warning | Clause rows are grouped by binding level, and each carries a single obligation.                                          |
+| `clause-ref`                     | error   | A `pol-XXXX.CLAUSE` citation names a clause that exists.                                                                 |
+| `link-resolves`                  | error   | Every internal link resolves (all link forms, `.md` optional).                                                           |
+| `undefined-label`                | error   | Every shortcut reference has a link definition.                                                                          |
+| `label-canonical`                | error   | A shortcut label that names a document is written as that document's id.                                                 |
+| `unused-definition`              | warning | A link definition that nothing references.                                                                               |
 
 <!-- END GENERATED: checks-policies -->

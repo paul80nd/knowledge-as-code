@@ -46,29 +46,60 @@ fields:
     type: list
     of: string
     pattern: '^ISO27001:2022 A\.\d+\.\d+$'
-    description: 'e.g. `ISO27001:2022 A.8.25`. Alignment, not compliance.'
+    description: 'e.g. `ISO27001:2022 A.8.25`. The document-level roll-up of what its clauses map to.'
     notes: >
-      ISO/IEC 27001:2022 Annex A references. This records **alignment, not compliance or certification** —
-      we are not registered and are not audited. The field name is deliberate; wording that implies
-      certification fails review.
+      Every Annex A reference the document's clauses carry, collected here so the generated index can be
+      read as a coverage table. The clause table is where a mapping is stated and this is a summary of it,
+      so a reference here that no clause carries is a claim of coverage the document cannot show. What our
+      standing against a framework is — obliged, self-obligated, inspiration — is stated once in
+      `frameworks.md` and never in a policy.
 
   review-by:
     required: true
     type: date
     description: Quoted. Annual is usually right for a policy.
 
+# `Clauses` is the policy proper — a table of individually addressable obligations, one row each, so a
+# standard or a control can cite the commitment it answers rather than the whole document. It is the only
+# place an obligation is stated: prose elsewhere in the document describes, qualifies or explains, and a
+# sentence that binds has escaped the table.
+#
 # `Notes` is the home for anything genuinely contextual about this policy — why it carries no framework
 # alignment, how it relates to the taxonomy, what it deliberately leaves to an implementing process.
 sections:
-  required: [Purpose, Scope, Commitments]
-  optional: [Alignment, Exceptions, Notes]
+  required: [Purpose, Scope, Clauses]
+  optional: [Exceptions, Notes]
+
+# The clause table's shape, declared here rather than built into the validator, so a type carries
+# clauses by describing them and one with no `clauses:` block is simply not checked for any.
+#
+# Ids are short and upper-case because they are read inside a citation — `pol-VURM.TIMEBOX` — where a
+# long one buries the policy it belongs to. Seven characters is enough for a word worth guessing at
+# and short enough that compressing to it is rare.
+#
+# Binding levels are written bold and non-binding ones plain, and rows are grouped in the order below,
+# so a reader sees the weight drop off down the table without needing a divider it cannot carry.
+#
+# `Alignment` carries the frameworks a clause maps to, as reference links resolving into
+# `/frameworks.md`. Per clause rather than per document, because a policy aligns with a control through
+# one obligation and not through all of them, and an empty cell is the honest answer where no genuine
+# mapping exists. What our standing against a framework actually is — obliged, self-obligated,
+# inspiration — is stated once in `frameworks.md` and nowhere else.
+clauses:
+  section: Clauses
+  columns: [Id, Clause, Alignment]
+  id-pattern: '^[A-Z][A-Z0-9]{1,6}$'
+  binding: [MUST, MUST NOT]
+  advisory: [SHOULD, COULD]
 
 index:
   columns: [id, title, category, status, aligns-with, review-by]
   sort: id
 
 rules:
-  - id: alignment-not-compliance
+  - id: posture-belongs-to-frameworks
     description: >
-      Flags the words "compliant", "compliance" and "certified" in proximity to an ISO reference.
+      Flags the words "compliant", "compliance", "certified" and "registered" near a framework reference.
+      A policy maps its clauses to controls; what our standing against that framework is belongs in
+      `frameworks.md`, where it is stated once and corrected in one place when it changes.
     severity: warning
