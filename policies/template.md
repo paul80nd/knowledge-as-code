@@ -71,16 +71,13 @@ _(Delete this section if no ISO area corresponds — an invented mapping is wors
 Where this policy does not apply, and who can grant an exception. Exceptions stated up front are honest; exceptions
 discovered later are erosion. If there are none, say so.
 
-## Implemented by
+## Notes
 
-* [std-NNNN] — {{what it requires}}.
+Anything genuinely contextual about this policy — why it carries no framework alignment, how it relates to the rest of
+the taxonomy, what it deliberately leaves to an implementing standard or process.
 
-_(A policy nothing implements is a statement of intent. That is allowed — mark it aspirational and say why the standard
-doesn't exist yet.)_
-
-## Review
-
-Reviewed {{frequency}} by {{role}}. Last reviewed: {{date}}.
+_(Optional, and it should stay that way. Delete the section rather than fill it: a note that would be true of every
+policy is boilerplate, and the review point is already `review-by`.)_
 
 [pol-XXXX]: xxxx-kebab-slug.md
 [std-NNNN]: /standards/nnnn-kebab-slug.md

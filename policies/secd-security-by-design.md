@@ -66,15 +66,4 @@ consideration; the secure-design principles and coding standard still apply. Whe
 before its security work is complete, that is a recorded deviation under
 [pol-DEVI], not a judgement call made in the moment.
 
-## Implemented by
-
-Intended implementing standards: threat modelling and secure design, secure coding and code quality, and the security
-provisions of the API standard.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-DEVI]: devi-deviations-are-recorded.md

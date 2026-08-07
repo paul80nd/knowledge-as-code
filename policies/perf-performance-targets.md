@@ -54,13 +54,3 @@ corresponding control. We are not registered against ISO/IEC 27001:2022 and are 
 
 Systems where performance is genuinely not a concern — low-volume internal tooling with no user waiting on it — need no
 targets. That judgement is recorded once rather than assumed repeatedly, because systems acquire users.
-
-## Implemented by
-
-Intended implementing standard: performance and load testing.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until that standard id does._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.

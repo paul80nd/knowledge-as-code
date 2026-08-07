@@ -67,15 +67,4 @@ Where a defect genuinely cannot be reproduced without production data, a time-bo
 under a recorded deviation ([pol-DEVI]) that names who approved it, who can see it and when it will be destroyed. Legal
 hold overrides deletion, and is recorded when it does.
 
-## Implemented by
-
-Intended implementing standards: data protection, classification and privacy; cryptography and key management; and the
-data-handling provisions of the environments standard.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-DEVI]: devi-deviations-are-recorded.md

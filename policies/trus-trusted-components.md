@@ -61,14 +61,4 @@ Alignment exists because the framework covers the right ground.
 A component that can no longer be sourced or maintained may be retained under a recorded deviation naming the risk
 owner, the compensating controls and the plan to replace it. "It still works" is not a plan.
 
-## Implemented by
-
-Intended implementing standards: dependency and supply-chain management, and artifact management and provenance.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-DEVI]: devi-deviations-are-recorded.md

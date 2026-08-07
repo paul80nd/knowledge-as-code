@@ -60,15 +60,5 @@ Alignment exists because the framework covers the right ground.
 The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system too
 unimportant to monitor is a system to question the existence of.
 
-## Implemented by
-
-Intended implementing standards: logging and observability, and monitoring and alerting.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-DATA]: data-data-protection.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md

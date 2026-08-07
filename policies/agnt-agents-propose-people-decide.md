@@ -77,21 +77,12 @@ reviewer merging a change is acceptance; promoting an observation into a standar
 is an incident an exception — a fix an agent proposed during one is accepted by the person who applied it, and
 [pol-PIPE] governs reconciling it afterwards.
 
-## Implemented by
-
-Intended implementing standards: AI-assisted engineering, and the contribution and review provisions of the source
-control standard.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
+## Notes
 
 The mechanism this policy describes already exists in this wiki's own taxonomy: [discoveries](/discoveries) carry their
 source, confidence and provenance, expire by default, cannot confirm themselves, and reach [FAQs](/faqs) or
 [standards](/standards) only by promotion. [adr-0001] records why, and states the consequence plainly — the value of the
 exercise depends on the promotion gate holding.
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-05.
 
 [adr-0001]: /adrs/0001-knowledge-as-code.md
 [pol-ACCS]: accs-access-by-identity.md

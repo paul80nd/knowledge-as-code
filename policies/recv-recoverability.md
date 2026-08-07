@@ -61,14 +61,4 @@ Systems holding no state that cannot be regenerated from source need no data bac
 defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded
 deviation under [pol-DEVI], owned by whoever will answer for the downtime.
 
-## Implemented by
-
-Intended implementing standards: backup, recovery and resilience; and application resilience and fault tolerance.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-DEVI]: devi-deviations-are-recorded.md

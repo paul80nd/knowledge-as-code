@@ -64,16 +64,4 @@ An emergency fix to restore service may bypass a non-security gate where the del
 recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than waived — the exception buys
 time, not forgiveness.
 
-## Implemented by
-
-Intended implementing standards: continuous integration, test strategy and quality assurance, secure coding and code
-quality, database lifecycle, application security testing, and — where data pipelines form part of the estate — the data
-pipeline standard.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-DEVI]: devi-deviations-are-recorded.md

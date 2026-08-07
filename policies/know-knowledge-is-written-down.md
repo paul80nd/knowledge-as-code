@@ -56,15 +56,4 @@ exists because the framework covers the right ground.
 None. The effort is proportionate — a small internal tool needs less than a customer-facing platform — but the
 commitment to write down what is needed does not vary.
 
-## Implemented by
-
-Intended implementing standards: documentation as code, and the decision-record conventions this wiki already applies to
-[ADRs](/adrs).
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-AGNT]: agnt-agents-propose-people-decide.md

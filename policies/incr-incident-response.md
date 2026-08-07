@@ -65,14 +65,3 @@ Alignment exists because the framework covers the right ground.
 Low-severity events are handled through routine work rather than the full process; the severity classification is what
 decides, and it is applied deliberately rather than by whoever wants the least paperwork. There is no exception to
 recording a significant incident.
-
-## Implemented by
-
-Intended implementing standard: incident response — with the operational detail carried in
-[runbooks](/runbooks) and the learning in [postmortems](/postmortems).
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until that standard id does._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.

@@ -62,17 +62,6 @@ Not every solution needs a full set of tiers; a reduced set is acceptable where 
 production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not
 development, and is governed by [pol-INCR]. Any other departure requires a recorded deviation under [pol-DEVI].
 
-## Implemented by
-
-Intended implementing standards: environments and promotion, network security and segmentation, secrets management, and
-data protection.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-DATA]: data-data-protection.md
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-INCR]: incr-incident-response.md

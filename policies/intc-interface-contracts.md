@@ -58,13 +58,3 @@ An interface with a single known consumer inside the team that owns it may evolv
 provided both sides genuinely know every consumer. That assumption is what usually turns out to be wrong, so it is worth
 checking before relying on it. A security fix may break a contract where leaving it intact would leave data exposed;
 consumers are told as soon as it is safe to tell them.
-
-## Implemented by
-
-Intended implementing standard: API design and lifecycle.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until that standard id does._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.

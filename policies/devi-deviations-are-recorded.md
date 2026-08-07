@@ -63,18 +63,12 @@ Two commitments admit no deviation at all, and no record makes them acceptable: 
 processing personal data without a lawful basis ([pol-DATA]). Where personal data may be copied, and for how long, is a
 question this policy can answer; whether we were entitled to hold it at all is not.
 
-## Implemented by
+## Notes
 
 No standard implements this directly; it is cited by the standards that carry an exception clause, and by the
 [controls](/controls) that verify those clauses are honoured. Where the mechanism for recording a deviation is defined,
-it will be defined as a [process](/processes).
-
-_This policy is deliberately mechanism-free — where deviations are recorded is a decision the implementing process
-makes._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+it will be defined as a [process](/processes) — this policy is deliberately mechanism-free, because where deviations are
+recorded is a decision the implementing process makes.
 
 [pol-DATA]: data-data-protection.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md

@@ -46,17 +46,10 @@ Where a third-party component we cannot replace falls short of the target standa
 route to the same outcome is provided where one is possible, and the statement says so. Recording a gap honestly is
 acceptable; concealing it is not.
 
-## Implemented by
+## Notes
 
-Intended implementing standard: accessibility.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until that standard id does._
-
-_This policy's driver is legal obligation rather than an information-security framework, so it carries no ISO
-alignment — an invented mapping would be worse than none._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+This policy's driver is legal obligation rather than an information-security framework. Framework alignment is recorded
+per clause where a genuine mapping exists and left absent where it does not; an invented mapping would be worse than
+none.
 
 [pol-DEVI]: devi-deviations-are-recorded.md

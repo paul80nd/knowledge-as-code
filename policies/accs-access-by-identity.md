@@ -63,15 +63,4 @@ Break-glass access for incident response is permitted where an individual cannot
 attributable, its use is alerted and recorded, and its use is reviewed afterwards. Any other departure requires a
 recorded deviation under [pol-DEVI].
 
-## Implemented by
-
-Intended implementing standards: identity and access management, and the access provisions of the source control
-standard.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-DEVI]: devi-deviations-are-recorded.md

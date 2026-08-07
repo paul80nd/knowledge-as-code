@@ -65,17 +65,6 @@ Vendor-supplied binaries and third-party assets we cannot hold in source are ref
 instead — see [pol-TRUS]. Any other asset held outside version control requires a recorded deviation under [pol-DEVI],
 naming the asset, the reason and the recovery plan if it is lost.
 
-## Implemented by
-
-Intended implementing standards: source control, infrastructure as code, database lifecycle, application and runtime
-configuration, deployment and release, documentation as code.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
-
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
 [pol-TRUS]: trus-trusted-components.md
