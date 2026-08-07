@@ -32,8 +32,8 @@ incident, because nobody designs a good process at three in the morning.
 ## Scope
 
 Security and operational incidents affecting systems we build or operate, including those reported to us from outside
-the organisation. A personal data breach is a security incident and is in scope here; what the data itself requires
-of us is [pol-DATA]'s.
+the organisation. A personal data breach is a security incident and is in scope here; what the data itself requires of
+us is [pol-DATA]'s.
 
 ## Clauses
 
