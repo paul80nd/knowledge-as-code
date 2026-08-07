@@ -776,17 +776,13 @@ public static class Validator
     {
         foreach (var rule in t.Rules)
         {
-            var ruleId = rule.TryGetValue("id", out var rid) ? rid.ToString() : null;
-            var severity = rule.TryGetValue("severity", out var sv) ? sv.ToString() : null;
-            if (severity != "warning") continue;
+            if (rule.Severity != Sev.Warning) continue;
 
-            switch (ruleId)
+            switch (rule.Id)
             {
                 case "y-statement-present":
                 {
-                    var max = rule.TryGetValue("max-words", out var mw) && int.TryParse(mw.ToString(), out var m)
-                        ? m
-                        : 60;
+                    var max = rule.MaxWords ?? 60;
                     if (d.YStatement is null)
                         warn("y-statement", "no Y-statement block-quote follows the H1.", d.H1Line);
                     else

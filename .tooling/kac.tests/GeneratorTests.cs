@@ -184,8 +184,8 @@ public class GeneratorTests
             },
             Rules =
             [
-                new Dictionary<string, object> { ["id"] = "y-statement-present" },
-                new Dictionary<string, object> { ["id"] = "alternatives-have-verdicts" }
+                new RuleSpec { Id = "y-statement-present" },
+                new RuleSpec { Id = "alternatives-have-verdicts" }
             ]
         };
 

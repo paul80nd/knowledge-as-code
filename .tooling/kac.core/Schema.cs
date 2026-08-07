@@ -66,6 +66,24 @@ public sealed class ClauseSpec(string idPattern, List<string> binding, List<stri
         [.. binding.Concat(advisory).OrderByDescending(m => m.Length)];
 }
 
+// One entry of a type's `rules:` block. A rule states an intention from the moment it is written, and
+// most of them are still only that — prose the schema carries and no check answers to yet. It gains a
+// `severity:` when something can act on it, which is why an absent severity means "declared, not
+// enforced" rather than a default level.
+public sealed record RuleSpec
+{
+    public required string Id { get; init; }
+
+    // The rule in the schema's own words, whitespace folded so it can be rendered into a table cell.
+    public string? Description { get; init; }
+
+    public Sev? Severity { get; init; }
+
+    // The ceiling `y-statement-present` holds a Y-statement to. Rule-specific because the check that
+    // reads it is; a threshold expressed as an `expr:` would not need a home here at all.
+    public int? MaxWords { get; init; }
+}
+
 public sealed class TypeSchema
 {
     public string TypeName { get; init; } = "";
@@ -89,7 +107,7 @@ public sealed class TypeSchema
     public IReadOnlyList<string> IndexColumns { get; init; } = [];
     public string? IndexSort { get; init; }
     public ClauseSpec? Clauses { get; init; }
-    public IReadOnlyList<Dictionary<string, object>> Rules { get; init; } = [];
+    public IReadOnlyList<RuleSpec> Rules { get; init; } = [];
 
     // -- derived at load from the declarations above; see the Derive* helpers --
     //
@@ -126,8 +144,7 @@ public sealed class TypeSchema
 
     // Whether this type declares a given rule. The reader-facing checks table uses it to show a
     // rule's row only on the pages whose schema actually carries the rule.
-    public bool HasRule(string id) =>
-        Rules.Any(r => r.TryGetValue("id", out var rid) && string.Equals(rid.ToString(), id, StringComparison.Ordinal));
+    public bool HasRule(string id) => Rules.Any(r => string.Equals(r.Id, id, StringComparison.Ordinal));
 
     // Whether any field on this type declares the given FieldSpec property — the same question for
     // schema-driven core checks (reciprocal, mirrors-section) that only fire when a field opts in.
@@ -231,9 +248,9 @@ public sealed class Schema
             fields[name] = ParseField(name, node, layer.Enums);
         }
 
-        var rules = new List<Dictionary<string, object>>();
-        if (Yaml.Get(root, "rules") is YamlSequenceNode ruleNodes)
-            rules.AddRange(ruleNodes.Children.Select(r => Yaml.Map(r).ToDictionary(x => x.Item1, object (x) => x.Item2)));
+        var rules = Yaml.Get(root, "rules") is YamlSequenceNode ruleNodes
+            ? ruleNodes.Children.Select(ParseRule).ToList()
+            : [];
 
         var filenamePattern = fn is null ? null : Yaml.Str(Yaml.Get(fn, "pattern"));
 
@@ -330,6 +347,24 @@ public sealed class Schema
             Notes = Collapse(Yaml.Str(Yaml.Get(node, "notes")))
         };
     }
+
+    // A severity the tool does not recognise reads as absent, which leaves the rule declared but not
+    // enforced — the same state as a rule that names no severity at all, and the safe one: a check that
+    // does not run is visible in `kac checks`, where a check that ran at a level nobody meant is not.
+    private static RuleSpec ParseRule(YamlNode node) => new()
+    {
+        Id = Yaml.Str(Yaml.Get(node, "id")) ?? "",
+        Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
+        Severity = Yaml.Str(Yaml.Get(node, "severity")) switch
+        {
+            "error" => Sev.Error,
+            "warning" => Sev.Warning,
+            _ => null
+        },
+        MaxWords = Yaml.Get(node, "max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
+            ? words
+            : null
+    };
 
     // The field a name resolves to for a given type: its own declaration where it has one, otherwise the
     // universal field it inherits. One definition, so the list derived at load and the lookup a check
