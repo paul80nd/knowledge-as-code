@@ -36,6 +36,23 @@ clause genuinely maps to a control, the control is absent from the corpus and th
 
 Referenced by: most policies under `category: security`, `delivery` and `operations`.
 
+### UK GDPR and the Data Protection Act 2018 {#uk-gdpr}
+
+**Obliged in law**, wherever we process personal data — which is everywhere we hold a customer, an employee or a user
+record. The EU GDPR applies in parallel for people in the EU; the article numbering is the same, so a clause citing
+`Art.5(1)(e)` cites both, and only the supervisory authority differs.
+
+This is where [pol-DATA]'s obligations actually originate. ISO/IEC 27001:2022 acknowledges the same ground in one
+control — A.5.34, *privacy and protection of personal data* — but a control that says "comply with the applicable law"
+is a pointer, not the duty. Lawful basis, minimisation, storage limitation and the rights of a data subject are duties
+in their own right, owed to people rather than to an auditor, and they survive any decision to stop being certified.
+
+The practical difference is who can waive it. An Annex A control is ours to scope out with a documented justification;
+an article of the UK GDPR is not, and a recorded deviation ([pol-DEVI]) against one of these clauses is a decision to
+break the law rather than a risk to accept.
+
+Referenced by: [pol-DATA].
+
 ### Public Sector Bodies Accessibility Regulations 2018 {#psbar-2018}
 
 **Obliged in law**, in the markets we serve. Sets the accessibility duty on public sector websites and mobile
@@ -81,5 +98,7 @@ A framework nothing references does not belong here. If we have stopped using on
 the entry: a policy clause written under its influence is easier to read with the history intact.
 
 [pol-A11Y]: policies/a11y-accessibility.md
+[pol-DATA]: policies/data-data-protection.md
+[pol-DEVI]: policies/devi-deviations-are-recorded.md
 [PSBAR 2018]: #psbar-2018
 [WCAG 2.2 AA]: #wcag-22-aa
