@@ -198,8 +198,11 @@ public static class Generator
     // subsumed by the field descriptions) and `bracket-literal` (a heuristic sibling of
     // undefined-label). Every OTHER catalogue id must appear in DocRows — ChecksTableProblems fails
     // otherwise, so a new check cannot silently go undocumented.
+    // `type-setup` joins them for a different reason: it checks whether the type is stood up at all,
+    // and this table is rendered onto the very page whose absence it reports. A reader who can see the
+    // row does not need it.
     private static readonly HashSet<string> IntentionallyUndocumented =
-        new(["type", "list", "bracket-literal"], StringComparer.Ordinal);
+        new(["type", "list", "bracket-literal", "type-setup"], StringComparer.Ordinal);
 
     public static string ChecksTable(TypeSchema t)
     {

@@ -57,7 +57,7 @@ it on the way through.
 
 |                |                                                                                                              |
 |----------------|--------------------------------------------------------------------------------------------------------------|
-| `kac validate` | 42 checks — frontmatter against schema, identity, structure, clauses, link resolution, graph reciprocity     |
+| `kac validate` | 43 checks — frontmatter against schema, identity, structure, clauses, links, graph reciprocity, type setup   |
 | `kac index`    | Generates `<type>/INDEX.md` and the schema/checks tables inside each type root page                          |
 | `kac checks`   | Lists every check the validator implements                                                                   |
 | Tests          | Three layers — unit (`kac.tests`), Reqnroll feature specs (`kac.features`), golden fixtures (`kac-tests.cs`) |
@@ -95,9 +95,14 @@ dotnet run .tooling/kac-tests.cs   # run the golden test suite
 `./kac` (Windows: `kac.cmd`) is a launcher at the repo root that wraps `dotnet run .tooling/kac.cs`; add the repo root
 to your `PATH` to run it as `kac`.
 
-To start your own corpus: clone, delete the type folders you don't want, **delete the example records in the ones you
-keep**, rewrite the root pages' examples in your own domain, and start adding records. Keep `.tooling/` and `.schema/`
-as they are — those are the half you want to receive updates to.
+To start your own corpus: clone, drop the types you don't want, **delete the example records in the ones you keep**,
+rewrite the root pages' examples in your own domain, and start adding records. Keep `.tooling/` as it is — that is the
+half you want to receive updates to.
+
+**Dropping a type means deleting both `<type>.md` and `<type>/`**, because a type is stood up as both or as neither and
+`./kac validate` says so. You may leave the schema file in place: `.schema/` declares what the tool *manages*, not what
+this corpus has built, so a type you have not stood up yet is a valid, silent state. That is what makes it possible to
+take the whole schema and grow into it one type at a time.
 
 The example records are every `<type>/*.md` that is not `INDEX.md` or `template.md`. `./kac validate` covers them, so
 they are held to the same standard as real content and a schema change that breaks them fails CI here rather than in

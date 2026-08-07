@@ -43,6 +43,12 @@ public static class Commands
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
         Validator.CheckCorpus(docs, findings);
 
+        // Whether each declared type is stood up. Skipped when the run is narrowed to given paths:
+        // asking about one document is not asking about the shape of the corpus, and answering
+        // anyway would bury the reply.
+        if (paths.Count == 0)
+            Validator.CheckTypeSetup(schema, repoRoot, Corpus.AllFiles(repoRoot), findings);
+
         return Report(findings, docs.Count, skippedNoFrontmatter, json);
     }
 

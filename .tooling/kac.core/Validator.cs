@@ -129,6 +129,63 @@ public static class Validator
         void Err(string check, string msg, int? line = null) => f.Add(new Finding(d.Rel, line, Sev.Error, check, msg));
     }
 
+    // Whether each type the schema declares is stood up, and stood up completely.
+    //
+    // A schema file says the tool manages this type; it does not say the corpus has built it yet. A
+    // corpus adopting the framework a type at a time holds the whole schema and grows into it, so a
+    // declared type with nothing behind it is a valid, silent state — nothing links to it, nothing
+    // generates for it, and no contributor can reach it.
+    //
+    // What is not valid is half of one. A folder is the signal that the type has been stood up, and
+    // from that point everything the type needs must be there: the page a reader arrives on, and the
+    // template a contributor copies. A page without a folder is the same fault from the other side.
+    // The generated INDEX is deliberately not checked here — `index --check` already reports it
+    // missing or stale, and one fault should not be reported by two commands.
+    //
+    // A folder counts as present when it holds tracked files. An empty directory git has never seen
+    // is not part of the corpus, so the answer is the same in a fresh clone as on the machine that
+    // happened to create it.
+    public static void CheckTypeSetup(Schema schema, string repoRoot, IEnumerable<string> corpusFiles,
+        List<Finding> f)
+    {
+        var folders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var rel in corpusFiles)
+        {
+            var slash = rel.Replace('\\', '/').IndexOf('/');
+            if (slash > 0) folders.Add(rel.Replace('\\', '/')[..slash]);
+        }
+
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        {
+            var at = $".schema/{key}.yaml";
+            var pageExists = !string.IsNullOrEmpty(t.Page) && File.Exists(Path.Combine(repoRoot, t.Page));
+
+            if (t.IsSingleDocument)
+            {
+                if (folders.Contains(key))
+                    f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                        $"type '{key}' is single-document, so '{key}/' must not exist — its page is the document."));
+                continue;
+            }
+
+            var folder = string.IsNullOrEmpty(t.Folder) ? key : t.Folder;
+            if (!folders.Contains(folder))
+            {
+                if (pageExists)
+                    f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                        $"type '{key}' has {t.Page} but no '{folder}/' — a type is set up as both or neither."));
+                continue;
+            }
+
+            var missing = new List<string>();
+            if (!pageExists) missing.Add(string.IsNullOrEmpty(t.Page) ? $"{key}.md" : t.Page);
+            if (!File.Exists(Path.Combine(repoRoot, folder, "template.md"))) missing.Add($"{folder}/template.md");
+            if (missing.Count > 0)
+                f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                    $"type '{key}' has a '{folder}/' folder but is not fully set up — add {string.Join(", ", missing)}."));
+        }
+    }
+
     public static void CheckCorpus(List<Doc> docs, List<Finding> f)
     {
         // id uniqueness across the whole wiki.

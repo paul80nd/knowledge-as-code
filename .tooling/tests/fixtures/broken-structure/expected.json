@@ -2,7 +2,7 @@
   "summary": {
     "validated": 18,
     "skipped": 0,
-    "errors": 23,
+    "errors": 22,
     "warnings": 1
   },
   "findings": [
@@ -74,14 +74,7 @@
       "line": 17,
       "severity": "error",
       "check": "link-resolves",
-      "message": "link target '/policies' does not resolve."
-    },
-    {
-      "file": "policies/dirs-directory-link.md",
-      "line": 17,
-      "severity": "error",
-      "check": "link-resolves",
-      "message": "link target '/adrs' does not resolve."
+      "message": "link target '/media' does not resolve."
     },
     {
       "file": "policies/envs-identity-status.md",
