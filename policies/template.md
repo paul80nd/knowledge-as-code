@@ -10,7 +10,9 @@ owner:
 tags: [ a, b ]
 ---
 
-# `pol-XXXX` {{Title}}
+# {{Title}}
+
+`Policy: pol-XXXX` `DRAFT`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -26,6 +28,9 @@ tags: [ a, b ]
   compliance or certification**, and the wording matters if this is ever read externally.
 * **`implemented-by`** — The standard ids that put this into practice.
 * **`review-by`** — A quoted date. Annual is usually right for a policy.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

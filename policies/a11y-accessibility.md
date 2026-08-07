@@ -10,7 +10,9 @@ owner: paul.law
 tags: [ accessibility, inclusive-design, legal-obligation ]
 ---
 
-# `pol-A11Y` Software we build is usable by everyone
+# Software we build is usable by everyone
+
+`Policy: pol-A11Y` `DRAFT`
 
 ## Purpose
 
@@ -18,8 +20,8 @@ The software we put in front of users is usable by people with disabilities, mee
 target, because it was designed that way rather than corrected afterwards.
 
 This is an obligation in law in the markets we serve, and it is also simply the difference between software that serves
-its users and software that serves most of them. Accessibility designed in costs a fraction of accessibility retrofitted,
-because the expensive failures are structural ones no late fix reaches.
+its users and software that serves most of them. Accessibility designed in costs a fraction of accessibility
+retrofitted, because the expensive failures are structural ones no late fix reaches.
 
 ## Scope
 
@@ -34,8 +36,8 @@ them may need it — which is to say, always, since we do not know who that is.
   that matter most.
 * We **will** publish an accessibility statement where we are required to, and keep it truthful about the gaps that
   remain.
-* We **will not** ship a change that knowingly makes accessibility worse without a recorded deviation
-  ([pol-DEVI]) and a plan to correct it.
+* We **will not** ship a change that knowingly makes accessibility worse without a recorded deviation ([pol-DEVI]) and a
+  plan to correct it.
 * We **will not** treat accessibility as a phase that follows delivery.
 
 ## Exceptions
@@ -50,8 +52,8 @@ Intended implementing standard: accessibility.
 
 _No implementing standard exists in this wiki yet; `implemented-by` stays empty until that standard id does._
 
-_This policy's driver is legal obligation rather than an information-security framework, so it carries no ISO alignment —
-an invented mapping would be worse than none._
+_This policy's driver is legal obligation rather than an information-security framework, so it carries no ISO
+alignment — an invented mapping would be worse than none._
 
 ## Review
 

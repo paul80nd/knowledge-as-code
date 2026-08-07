@@ -14,7 +14,9 @@ owner: paul.law
 tags: [ dependencies, provenance, supply-chain ]
 ---
 
-# `pol-TRUS` We ship only components we know and trust
+# We ship only components we know and trust
+
+`Policy: pol-TRUS` `DRAFT`
 
 ## Purpose
 

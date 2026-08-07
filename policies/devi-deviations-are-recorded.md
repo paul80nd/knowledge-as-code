@@ -12,7 +12,9 @@ owner: paul.law
 tags: [ exceptions, governance, risk-acceptance ]
 ---
 
-# `pol-DEVI` Deviations are recorded, owned and time-bound
+# Deviations are recorded, owned and time-bound
+
+`Policy: pol-DEVI` `DRAFT`
 
 ## Purpose
 
@@ -32,8 +34,8 @@ whether the departure is permanent, temporary or made under pressure during an i
 
 * We **will** record a deviation before departing from a policy or standard, or immediately afterwards where an incident
   left no time.
-* We **will** name an individual who accepts the risk — someone with the authority to accept it, never a team or a
-  role in the abstract.
+* We **will** name an individual who accepts the risk — someone with the authority to accept it, never a team or a role
+  in the abstract.
 * We **will** state what the deviation is, why it is needed and what compensates for it.
 * We **will** give every deviation a review date, and honour it.
 * We **will** make deviations visible to those affected by the risk, rather than filing them where only the person who
@@ -57,10 +59,9 @@ the mapping here is partial by nature. We are not registered against ISO/IEC 270
 
 None — an unrecorded exception to the exception policy is exactly the failure mode this exists to prevent.
 
-Two commitments admit no deviation at all, and no record makes them acceptable: embedding a secret
-([pol-SCRT]), and processing personal data without a lawful basis
-([pol-DATA]). Where personal data may be copied, and for how long, is a question this policy
-can answer; whether we were entitled to hold it at all is not.
+Two commitments admit no deviation at all, and no record makes them acceptable: embedding a secret ([pol-SCRT]), and
+processing personal data without a lawful basis ([pol-DATA]). Where personal data may be copied, and for how long, is a
+question this policy can answer; whether we were entitled to hold it at all is not.
 
 ## Implemented by
 

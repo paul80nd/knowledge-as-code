@@ -13,6 +13,8 @@ tags: [ a, b ]
 
 # {{Service name}}
 
+`Service: svc-{{slug}}` `LIVE`
+
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -23,6 +25,9 @@ tags: [ a, b ]
 * **`criticality`** — `critical` if a customer sees the failure, `important` if service degrades, `supporting` if the
   impact is internal only. It drives runbook and NFR priority, so be honest rather than generous.
 * **`depends-on`** — Other service ids, pointing downward only — the reverse view is generated.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

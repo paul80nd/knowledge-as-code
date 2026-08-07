@@ -21,10 +21,6 @@ filename:
   pattern: '^[a-z][a-z0-9]{3}-[a-z0-9-]+\.md$'
   slug-max: 30
 
-title:
-  h1-pattern: '^pol-[A-Z][A-Z0-9]{3} (.+)$'
-  id-as-code: true
-
 fields:
 
   category:

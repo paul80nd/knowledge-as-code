@@ -13,7 +13,9 @@ owner: paul.law
 tags: [ exposure, network-security, segmentation ]
 ---
 
-# `pol-MEXP` Exposure is minimised and traffic is controlled
+# Exposure is minimised and traffic is controlled
+
+`Policy: pol-MEXP` `DRAFT`
 
 ## Purpose
 
@@ -41,11 +43,11 @@ inbound to our systems, between them, and outbound from them.
 
 ## Alignment
 
-| Reference                 | Area                        |
-|---------------------------|-----------------------------|
-| ISO/IEC 27001:2022 A.8.20 | Network security            |
+| Reference                 | Area                         |
+|---------------------------|------------------------------|
+| ISO/IEC 27001:2022 A.8.20 | Network security             |
 | ISO/IEC 27001:2022 A.8.21 | Security of network services |
-| ISO/IEC 27001:2022 A.8.22 | Segregation of networks     |
+| ISO/IEC 27001:2022 A.8.22 | Segregation of networks      |
 
 We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
 Alignment exists because the framework covers the right ground.

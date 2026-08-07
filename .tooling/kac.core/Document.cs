@@ -34,10 +34,14 @@ public class Doc
     public string? H1;
     public int H1Line;
 
-    // The content of a code span opening the H1 — the `pol-VURM` in "# `pol-VURM` Secrets are managed" —
-    // or null when the H1 does not start with one. Kept separately because Md.PlainText flattens a code
-    // span to its content, so H1 alone cannot tell an id written as code from one written as prose.
-    public string? H1CodeSpan;
+    // The identity line — the paragraph directly beneath the H1, naming the document's type, id and
+    // status as code spans: "`Policy: pol-A11Y` `DRAFT`". Held as the raw span contents, in order, so
+    // the validator owns every judgement about their shape and can word each mismatch itself. Null
+    // when no paragraph beneath the H1 opens with a code span, which is the line being absent
+    // altogether; an empty list never occurs.
+    public List<string>? IdentitySpans;
+    public int IdentityLine;
+
     public readonly List<string> H2 = [];
     public readonly List<LinkRef> Links = [];
     public readonly List<string> DefinedLabels = [];
@@ -88,13 +92,18 @@ public class Doc
                 case 1 when doc.H1 is null:
                     doc.H1 = txt;
                     doc.H1Line = h.Line + 1;
-                    doc.H1CodeSpan = (h.Inline?.FirstChild as CodeInline)?.Content;
                     break;
                 case 2:
                     doc.H2.Add(txt);
                     break;
             }
         }
+
+        // Identity line — the block immediately after the H1, when it is a paragraph opening with a
+        // code span. Anchoring on "the next block" rather than "the first paragraph of code spans
+        // anywhere" is what lets the validator say the line is missing: a document that puts its
+        // Y-statement or its prose first has no identity line, however its later paragraphs read.
+        ReadIdentity(ast, doc);
 
         // Links (inline + resolved reference/shortcut). Iterating LinkInline naturally
         // excludes code — code spans and fenced/indented blocks carry no LinkInline.
@@ -142,14 +151,21 @@ public class Doc
             where ((YamlScalarNode)kv.Key).Value == key
             select (kv.Value as YamlScalarNode)?.Value).FirstOrDefault();
 
-    // The H1 with the id stripped off: "`pol-SCRT` Secrets are managed" reads as "Secrets are managed"
-    // in an index that already carries the id in a column of its own. Every h1-pattern captures the
-    // title as its last group, so that is what is taken. A type with no pattern keeps its H1 whole.
-    public string TitleText()
+    // Walk the top-level blocks to the H1, then look at the one after it. A paragraph whose first
+    // inline is a code span is taken as an attempted identity line and its code spans are collected —
+    // taken as attempted, rather than as correct, so a line with the wrong number of spans is reported
+    // as a malformed identity line rather than as no line at all. Only the code spans are kept; any
+    // stray prose between them is invisible here and caught by the span count.
+    private static void ReadIdentity(MarkdownDocument ast, Doc doc)
     {
-        if (Type?.H1Pattern is null || H1 is null) return H1 ?? "";
-        var m = System.Text.RegularExpressions.Regex.Match(H1, Type.H1Pattern);
-        return m is { Success: true, Groups.Count: > 1 } ? m.Groups[^1].Value : H1;
+        var blocks = ast.ToList();
+        var i = blocks.FindIndex(b => b is HeadingBlock { Level: 1 });
+        if (i < 0 || i + 1 >= blocks.Count) return;
+
+        if (blocks[i + 1] is not ParagraphBlock { Inline: { FirstChild: CodeInline } inline } p) return;
+
+        doc.IdentitySpans = [.. inline.Descendants<CodeInline>().Select(c => c.Content ?? "")];
+        doc.IdentityLine = p.Line + 1;
     }
 
     private static string StripFences(string text, YamlFrontMatterBlock block)

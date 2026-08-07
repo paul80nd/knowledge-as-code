@@ -17,10 +17,6 @@ filename:
     Standards are filed under a category folder (common/, platform/, public-api/, …) and named for the rule
     area, not numbered in the filename. The numeric id lives in frontmatter.
 
-title:
-  h1-pattern: '^std-\d{4} (.+)$'
-  id-as-code: true
-
 fields:
 
   status:

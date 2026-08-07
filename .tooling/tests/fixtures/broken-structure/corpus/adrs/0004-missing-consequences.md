@@ -6,20 +6,23 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# `adr-0009` Missing consequences and a mismatched number
+# Missing consequences and a mismatched number
 
-> **In the context of** the structure rules, **we decided** to mismatch the id and H1 against the filename and drop a
-> required section, **to achieve** coverage of `id-matches-filename`, `h1-matches-id` and `required-section`,
-> **accepting** that this document is intentionally broken.
+`ADR: adr-0009` `ACCEPTED`
+
+> **In the context of** the structure rules, **we decided** to mismatch the id against the filename and drop a
+> required section, **to achieve** coverage of `id-matches-filename` and `required-section`, **accepting** that this
+> document is intentionally broken.
 
 ## Context
 
-The id and H1 both say 0009, but the filename says 0004 — the filename is the anchor, so both mismatch. The
-Consequences section is absent.
+The id and the identity line both say 0009, but the filename says 0004 — the filename is the anchor, so the id is what
+mismatches. The identity line agrees with the id it is checked against, so it stays quiet and the finding lands in one
+place. The Consequences section is absent.
 
 ## Decision
 
-Trigger `id-matches-filename`, `h1-matches-id` and `required-section`.
+Trigger `id-matches-filename` and `required-section`.
 
 ## Alternatives Considered
 

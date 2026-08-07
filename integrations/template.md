@@ -12,6 +12,8 @@ tags: [ a, b ]
 
 # {{Integration name}}
 
+`Integration: int-{{slug}}` `ACTIVE`
+
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -20,6 +22,9 @@ tags: [ a, b ]
 * **`used-by`** — The service ids that call it. An integration nothing uses is a candidate for retirement.
 * **`criticality`** — Judged by what breaks for a customer when it is unavailable.
 * **`their-sla`** — What the contract actually says, not what the marketing page implies.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

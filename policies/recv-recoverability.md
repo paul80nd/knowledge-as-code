@@ -14,7 +14,9 @@ owner: paul.law
 tags: [ backup, continuity, recovery, resilience ]
 ---
 
-# `pol-RECV` Services and data are recoverable
+# Services and data are recoverable
+
+`Policy: pol-RECV` `DRAFT`
 
 ## Purpose
 
@@ -36,8 +38,7 @@ fault tolerance and the ability to recover after failure.
 * We **will** test restoration periodically — recovery is proven, not assumed.
 * We **will** keep at least one copy of critical data outside the failure domain of its source.
 * We **will** bound every outbound call in time, so a slow dependency cannot become an unbounded wait.
-* We **will** design so that the failure of one dependency degrades function rather than taking the system down with
-  it.
+* We **will** design so that the failure of one dependency degrades function rather than taking the system down with it.
 * We **will** make operations that may be retried safe to re-run.
 * We **will not** rely on a backup that has never been test-restored.
 * We **will not** retry indefinitely, without limit or backoff, against a failing dependency.

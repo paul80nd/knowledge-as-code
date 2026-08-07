@@ -95,30 +95,31 @@ See [Contributing](/knowledge-as-code/contributing.md) for the review model that
 
 <!-- BEGIN GENERATED: checks-adrs -->
 
-| Check                       | Level   | What it verifies                                                                                   |
-|-----------------------------|---------|----------------------------------------------------------------------------------------------------|
-| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                |
-| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                     |
-| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                  |
-| `required-field`            | error   | Required and conditionally-required fields are present.                                            |
-| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                     |
-| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                               |
-| `enum`                      | error   | Enum values are in range and lowercase.                                                            |
-| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                       |
-| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                         |
-| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                         |
-| `id`                        | error   | `id` carries the type's prefix and matches the filename's number or mnemonic.                      |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                              |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                    |
-| `h1`                        | error   | The document has an H1 matching the title pattern, opening with its id where the type carries one. |
-| `required-section`          | error   | Every required section heading is present.                                                         |
-| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                     |
-| `undefined-label`           | error   | Every shortcut reference has a link definition.                                                    |
-| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                           |
-| `related-matches-section`   | error   | A field that mirrors a section reconciles with the ids in that section.                            |
-| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                   |
-| `unused-definition`         | warning | A link definition that nothing references.                                                         |
-| `y-statement`               | warning | A Y-statement block-quote follows the H1 and is within 60 words.                                   |
-| `alternatives-verdict`      | warning | Each Alternatives Considered bullet states a verdict.                                              |
+| Check                       | Level   | What it verifies                                                                                         |
+|-----------------------------|---------|----------------------------------------------------------------------------------------------------------|
+| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                      |
+| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                           |
+| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                        |
+| `required-field`            | error   | Required and conditionally-required fields are present.                                                  |
+| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                           |
+| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                                     |
+| `enum`                      | error   | Enum values are in range and lowercase.                                                                  |
+| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                             |
+| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                               |
+| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                               |
+| `id`                        | error   | `id` carries the type's prefix and matches the filename's number or mnemonic.                            |
+| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                    |
+| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                          |
+| `h1`                        | error   | The document has an H1.                                                                                  |
+| `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter. |
+| `required-section`          | error   | Every required section heading is present.                                                               |
+| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
+| `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
+| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
+| `related-matches-section`   | error   | A field that mirrors a section reconciles with the ids in that section.                                  |
+| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                         |
+| `unused-definition`         | warning | A link definition that nothing references.                                                               |
+| `y-statement`               | warning | A Y-statement block-quote follows the H1 and is within 60 words.                                         |
+| `alternatives-verdict`      | warning | Each Alternatives Considered bullet states a verdict.                                                    |
 
 <!-- END GENERATED: checks-adrs -->

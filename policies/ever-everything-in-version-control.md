@@ -14,7 +14,9 @@ owner: paul.law
 tags: [ change-management, source-control, traceability ]
 ---
 
-# `pol-EVER` Everything is in version control
+# Everything is in version control
+
+`Policy: pol-EVER` `DRAFT`
 
 ## Purpose
 
@@ -29,8 +31,8 @@ evidence.
 ## Scope
 
 All solutions we build or operate, and every asset required to rebuild one: application code, infrastructure
-definitions, database schema and migrations, pipeline definitions, non-secret configuration, operational scripts and
-the documentation that describes them.
+definitions, database schema and migrations, pipeline definitions, non-secret configuration, operational scripts and the
+documentation that describes them.
 
 Secrets are the deliberate exception — see [pol-SCRT].
 
@@ -47,12 +49,12 @@ Secrets are the deliberate exception — see [pol-SCRT].
 
 ## Alignment
 
-| Reference                 | Area                                |
-|---------------------------|-------------------------------------|
-| ISO/IEC 27001:2022 A.8.4  | Access to source code               |
-| ISO/IEC 27001:2022 A.8.9  | Configuration management            |
-| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle        |
-| ISO/IEC 27001:2022 A.8.32 | Change management                   |
+| Reference                 | Area                         |
+|---------------------------|------------------------------|
+| ISO/IEC 27001:2022 A.8.4  | Access to source code        |
+| ISO/IEC 27001:2022 A.8.9  | Configuration management     |
+| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle |
+| ISO/IEC 27001:2022 A.8.32 | Change management            |
 
 We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
 Alignment exists because the framework covers the right ground.
@@ -60,9 +62,8 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 Vendor-supplied binaries and third-party assets we cannot hold in source are referenced by version and provenance
-instead — see [pol-TRUS]. Any other asset held outside version control requires a recorded
-deviation under [pol-DEVI], naming the asset, the reason and the recovery plan if it is
-lost.
+instead — see [pol-TRUS]. Any other asset held outside version control requires a recorded deviation under [pol-DEVI],
+naming the asset, the reason and the recovery plan if it is lost.
 
 ## Implemented by
 

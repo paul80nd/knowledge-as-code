@@ -14,6 +14,8 @@ tags: [ a, b ]
 
 # {{What you noticed, in one line}}
 
+`Discovery: dsc-{{slug}}` `OPEN`
+
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -23,6 +25,9 @@ tags: [ a, b ]
 * **`expires`** — A quoted date — 90 days from capture by default.
 * **`provenance`** — Required when `source: dreamed`. A reference back to the session and passage it came from, so
   review is a thirty-second check rather than an act of faith.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

@@ -6,18 +6,21 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# A title with no ADR prefix
+# An over-long filename slug
 
-> **In the context of** the structure rules, **we decided** to over-long the slug and mis-shape the H1, **to achieve**
-> coverage of `slug-length` and `h1-pattern`, **accepting** that this document is intentionally broken.
+`ADR: adr-0003` `ACCEPTED`
+
+> **In the context of** the structure rules, **we decided** to over-long the slug, **to achieve** coverage of
+> `slug-length`, **accepting** that this document is intentionally broken.
 
 ## Context
 
-The filename slug runs past the 30-character limit and the H1 does not match the type's pattern.
+The filename slug runs past the 30-character limit. Everything else about the document is well-formed, so the slug is
+measured on its own rather than alongside a second defect.
 
 ## Decision
 
-Trigger exactly `slug-length` and `h1-pattern`, and nothing else.
+Trigger exactly `slug-length`, and nothing else.
 
 ## Alternatives Considered
 

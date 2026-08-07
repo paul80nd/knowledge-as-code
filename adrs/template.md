@@ -7,7 +7,9 @@ owner:
 related: [ adr-AAAA, adr-BBBB, adr-CCCC ]
 ---
 
-# `adr-NNNN` {{Title}}
+# {{Title}}
+
+`ADR: adr-NNNN` `PROPOSED`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -19,6 +21,9 @@ related: [ adr-AAAA, adr-BBBB, adr-CCCC ]
   lowercase.
 * **`decided-on`** — The acceptance date, quoted `"YYYY-MM-DD"`. Leave the key bare until accepted.
 * **`owner`** — The named person answerable for the decision, never a team alias.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

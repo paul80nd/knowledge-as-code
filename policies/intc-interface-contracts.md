@@ -12,7 +12,9 @@ owner: paul.law
 tags: [ api, contracts, interoperability, versioning ]
 ---
 
-# `pol-INTC` Interfaces are contracts we honour
+# Interfaces are contracts we honour
+
+`Policy: pol-INTC` `DRAFT`
 
 ## Purpose
 
@@ -20,8 +22,8 @@ An interface we publish is a promise to whoever depends on it. It is defined exp
 it does not change under its consumers without a version and reasonable notice.
 
 Every integration is built against the behaviour an interface had on the day it was written. Breaking that quietly
-transfers our convenience into someone else's outage, and the cost lands hardest on the consumers least able to
-respond quickly.
+transfers our convenience into someone else's outage, and the cost lands hardest on the consumers least able to respond
+quickly.
 
 ## Scope
 

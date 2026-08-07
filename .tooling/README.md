@@ -75,28 +75,31 @@ fail the build.
 
 ### Frontmatter (from `_universal.yaml` + `<type>.yaml`)
 
-| Check                                             | Level | What it enforces                                                                                |
-|---------------------------------------------------|-------|-------------------------------------------------------------------------------------------------|
-| `frontmatter-parses`                              | error | The block is valid YAML and a mapping.                                                          |
-| `unknown-key`                                     | error | Every key is a universal field, a type field, or a reserved ADO key.                            |
-| `key-order`                                       | error | Order is a **topological extension** of the schema's declared field orders — see below.         |
-| `required-field`                                  | error | Every `required` field (and every `required-when` field whose condition holds) is present.      |
-| `bare-key`                                        | error | An absent value is a bare key (`decided-on:`), never `null`, `~`, `""`, `''` or `—`.            |
-| `date-quoted` / `date-format`                     | error | `type: date` fields are quoted and `YYYY-MM-DD` in shape.                                       |
-| `enum` / `enum-lowercase`                         | error | `type: enum` values are in range and lowercase.                                                 |
-| `field-pattern`                                   | error | A field's value matches its declared `pattern:` — per entry for a list, per value for a scalar. |
+| Check                                             | Level   | What it enforces                                                                                                                                                  |
+|---------------------------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `frontmatter-parses`                              | error   | The block is valid YAML and a mapping.                                                                                                                            |
+| `unknown-key`                                     | error   | Every key is a universal field, a type field, or a reserved ADO key.                                                                                              |
+| `key-order`                                       | error   | Order is a **topological extension** of the schema's declared field orders — see below.                                                                           |
+| `required-field`                                  | error   | Every `required` field (and every `required-when` field whose condition holds) is present.                                                                        |
+| `bare-key`                                        | error   | An absent value is a bare key (`decided-on:`), never `null`, `~`, `""`, `''` or `—`.                                                                              |
+| `date-quoted` / `date-format`                     | error   | `type: date` fields are quoted and `YYYY-MM-DD` in shape.                                                                                                         |
+| `enum` / `enum-lowercase`                         | error   | `type: enum` values are in range and lowercase.                                                                                                                   |
+| `field-pattern`                                   | error   | A field's value matches its declared `pattern:` — per entry for a list, per value for a scalar.                                                                   |
 | `list-order`                                      | warning | A `type: list` field's entries are in alphabetical order, digit runs compared as numbers (`A.8.7` before `A.8.29`). Only the first pair out of order is reported. |
-| `tier-matches-type`                               | error | `tier` equals the tier the type declares.                                                       |
-| `id-prefix` / `id-format` / `id-matches-filename` | error | `id` has the type's prefix and width, and its number matches the filename.                      |
+| `tier-matches-type`                               | error   | `tier` equals the tier the type declares.                                                                                                                         |
+| `id-prefix` / `id-format` / `id-matches-filename` | error   | `id` has the type's prefix and width, and its number matches the filename.                                                                                        |
 
 ### Identity & structure (from `<type>.yaml`)
 
-| Check                          | Level | What it enforces                                                        |
-|--------------------------------|-------|-------------------------------------------------------------------------|
-| `filename-pattern`             | error | Filename matches the type's `filename.pattern`.                         |
-| `slug-length`                  | error | The slug (filename minus the `NNNN-` prefix) is within `slug-max` (30). |
-| `h1-pattern` / `h1-matches-id` | error | The H1 matches `title.h1-pattern` and its number matches the id.        |
-| `required-section`             | error | Every heading in `sections.required` is present.                        |
+| Check                             | Level | What it enforces                                                          |
+|-----------------------------------|-------|---------------------------------------------------------------------------|
+| `filename-pattern`                | error | Filename matches the type's `filename.pattern`.                           |
+| `slug-length`                     | error | The slug (filename minus the `NNNN-` prefix) is within `slug-max` (30).   |
+| `h1`                              | error | The document has an H1. Its text is the title, and nothing constrains it. |
+| `identity`                        | error | Two code spans follow the H1 — `` `Type: id` `STATUS` ``.                 |
+| `identity-type`                   | error | The line's type name is the `label` the folder's schema declares.         |
+| `identity-id` / `identity-status` | error | The line's id and status are the frontmatter's, the status upper-cased.   |
+| `required-section`                | error | Every heading in `sections.required` is present.                          |
 
 ### Links & the graph
 
@@ -104,7 +107,7 @@ fail the build.
 |---------------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `link-resolves`           | error   | Every internal link resolves. All forms are handled: repo-relative, wiki-root-absolute (a leading `/` = repo root), inline, reference and **shortcut reference** links; `.md` may be omitted (ADO resolves both). External `http(s)/mailto/tel` and pure `#fragment` links are skipped. |
 | `undefined-label`         | error   | A shortcut label shaped like any type's id (`[adr-0013]`, `[pol-DEVI]`) with no link definition.                                                                                                                                                                                        |
-| `label-canonical`         | error   | An id-shaped shortcut label is written as the canonical id — prefix lower-case, mnemonic upper-case, slug lower-case. Reference and definition match case-insensitively, so a mis-cased label resolves and nothing else would catch it.                                                  |
+| `label-canonical`         | error   | An id-shaped shortcut label is written as the canonical id — prefix lower-case, mnemonic upper-case, slug lower-case. Reference and definition match case-insensitively, so a mis-cased label resolves and nothing else would catch it.                                                 |
 | `related-matches-section` | error   | A `mirrors-section` field (e.g. `related`) reconciles case-insensitively with the ids referenced in that section (`## Related`).                                                                                                                                                        |
 | `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                   |
 | `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`) and points at a document that exists.                                                                                                                                                                   |
@@ -136,12 +139,12 @@ corpus, and still catches genuine disorder (`tags` before `id`, `related` before
 
 `index` regenerates content that is derived from frontmatter and the schema, so it never has to be maintained by hand:
 
-| Artefact                                        | Built from                          | Rule                                                                                                                                                                                            |
-|-------------------------------------------------|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<type>/INDEX.md`                               | frontmatter across the folder       | Regenerated **wholly**; columns and sort come from the schema's `index` block; carries a do-not-edit banner. A type with no records yet gets an index saying so rather than a table with no rows; a type with no folder (glossary) gets none.                                                                                    |
-| `<!-- … schema-<type> -->` block in `<type>.md` | `_universal.yaml` + the type's `fields` | The frontmatter reference table — universal fields first, marked `†`, then the type's own. Each row renders the field's `description`, falling back to `notes` where the schema declares none. |
-| `<!-- … schema-universal -->` block in `metadata.md` | `_universal.yaml` | The universal field reference, documented once for the taxonomy rather than per type. |
-| `<!-- … checks-<type> -->` block in `<type>.md` | the checks the validator implements | The "What CI checks" table. Rows a type cannot trip — a rule it does not declare, a reciprocal or mirrors-section field it does not have — are omitted, so each page lists only its own checks. |
+| Artefact                                             | Built from                              | Rule                                                                                                                                                                                                                                          |
+|------------------------------------------------------|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<type>/INDEX.md`                                    | frontmatter across the folder           | Regenerated **wholly**; columns and sort come from the schema's `index` block; carries a do-not-edit banner. A type with no records yet gets an index saying so rather than a table with no rows; a type with no folder (glossary) gets none. |
+| `<!-- … schema-<type> -->` block in `<type>.md`      | `_universal.yaml` + the type's `fields` | The frontmatter reference table — universal fields first, marked `†`, then the type's own. Each row renders the field's `description`, falling back to `notes` where the schema declares none.                                                |
+| `<!-- … schema-universal -->` block in `metadata.md` | `_universal.yaml`                       | The universal field reference, documented once for the taxonomy rather than per type.                                                                                                                                                         |
+| `<!-- … checks-<type> -->` block in `<type>.md`      | the checks the validator implements     | The "What CI checks" table. Rows a type cannot trip — a rule it does not declare, a reciprocal or mirrors-section field it does not have — are omitted, so each page lists only its own checks.                                               |
 
 Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of `<type>.md` is byte-preserved. Every
 type is regenerated whether or not it holds records: the blocks derive from the schema alone, and an index that waits
@@ -167,8 +170,8 @@ exit non-zero, never write.
 ./kac mechanism --check --against ../other-corpus
 ```
 
-The reference defaults to `upstream.url` in `.mechanism.lock`, so a consumer that records where it
-synced from can run a bare `mechanism --check`. What it reports:
+The reference defaults to `upstream.url` in `.mechanism.lock`, so a consumer that records where it synced from can run a
+bare `mechanism --check`. What it reports:
 
 - **synced** files that differ, are missing on either side, or match no manifest rule at all — each an **error** (exit
   `1`).

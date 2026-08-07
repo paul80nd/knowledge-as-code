@@ -13,6 +13,8 @@ tags: [ a, b ]
 
 # {{What is broken}}
 
+`Runbook: rbk-{{slug}}` `DRAFT`
+
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -23,6 +25,9 @@ Title this document for the **failure**, not the fix — that is what someone se
 * **`last-rehearsed`** — A quoted date; `"never"` is permitted, and is exactly the thing worth knowing before the
   incident rather than during it.
 * **`requires-access`** — Must be complete. Discovering you lack a permission mid-incident is its own outage.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

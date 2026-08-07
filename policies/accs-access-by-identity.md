@@ -16,7 +16,9 @@ owner: paul.law
 tags: [ access-control, identity, least-privilege ]
 ---
 
-# `pol-ACCS` Access is by individual identity, on least privilege
+# Access is by individual identity, on least privilege
+
+`Policy: pol-ACCS` `DRAFT`
 
 ## Purpose
 
@@ -43,14 +45,14 @@ machine identities alike. Applies to routine and privileged access.
 
 ## Alignment
 
-| Reference                 | Area                             |
-|---------------------------|----------------------------------|
-| ISO/IEC 27001:2022 A.5.15 | Access control                   |
-| ISO/IEC 27001:2022 A.5.16 | Identity management              |
-| ISO/IEC 27001:2022 A.5.18 | Access rights                    |
-| ISO/IEC 27001:2022 A.8.2  | Privileged access rights         |
-| ISO/IEC 27001:2022 A.8.3  | Information access restriction   |
-| ISO/IEC 27001:2022 A.8.5  | Secure authentication            |
+| Reference                 | Area                           |
+|---------------------------|--------------------------------|
+| ISO/IEC 27001:2022 A.5.15 | Access control                 |
+| ISO/IEC 27001:2022 A.5.16 | Identity management            |
+| ISO/IEC 27001:2022 A.5.18 | Access rights                  |
+| ISO/IEC 27001:2022 A.8.2  | Privileged access rights       |
+| ISO/IEC 27001:2022 A.8.3  | Information access restriction |
+| ISO/IEC 27001:2022 A.8.5  | Secure authentication          |
 
 We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
 Alignment exists because the framework covers the right ground.

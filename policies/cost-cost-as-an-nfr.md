@@ -10,7 +10,9 @@ owner: paul.law
 tags: [ cost, efficiency, non-functional-requirements ]
 ---
 
-# `pol-COST` Cost is a non-functional requirement
+# Cost is a non-functional requirement
+
+`Policy: pol-COST` `DRAFT`
 
 ## Purpose
 

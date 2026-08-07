@@ -7,7 +7,9 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# `pol-DEVI` Mnemonic disagreeing with the filename
+# Mnemonic disagreeing with the filename
+
+`Policy: pol-DEVI` `DRAFT`
 
 ## Purpose
 

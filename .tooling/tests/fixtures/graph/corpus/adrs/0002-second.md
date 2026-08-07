@@ -6,7 +6,9 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# `adr-0002` Second graph fixture
+# Second graph fixture
+
+`ADR: adr-0002` `ACCEPTED`
 
 > **In the context of** the graph rules, **we decided** to keep this node fully valid, **rather than** breaking it, **to
 > achieve** a clean anchor that the others point at, **accepting** nothing unusual here.

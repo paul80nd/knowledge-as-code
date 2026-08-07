@@ -10,7 +10,9 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# `pol-ORDN` A byte-wise sort is not alphabetical
+# A byte-wise sort is not alphabetical
+
+`Policy: pol-ORDN` `DRAFT`
 
 ## Purpose
 

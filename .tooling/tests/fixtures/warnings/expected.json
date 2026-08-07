@@ -15,7 +15,7 @@
     },
     {
       "file": "adrs/0001-warnings.md",
-      "line": 26,
+      "line": 28,
       "severity": "warning",
       "check": "alternatives-verdict",
       "message": "Alternatives Considered bullet has no verdict: \"A message queue  — we might explore this in a future revi…\"."

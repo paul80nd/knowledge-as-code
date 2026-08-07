@@ -13,6 +13,8 @@ tags: [ a, b ]
 
 # {{Tool name}}
 
+`Tool: tol-{{slug}}` `TRIAL`
+
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -22,6 +24,9 @@ tags: [ a, b ]
 * **`versions`** — A range, not a pin: the register states what we stand behind, the manifests state what is installed.
 * **`licence`** — An SPDX identifier — the field nobody wants until they urgently do.
 * **`decided-in`** — An ADR, where one exists.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

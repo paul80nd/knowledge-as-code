@@ -16,7 +16,9 @@ owner: paul.law
 tags: [ classification, data-protection, encryption, privacy ]
 ---
 
-# `pol-DATA` Data is protected according to its sensitivity
+# Data is protected according to its sensitivity
+
+`Policy: pol-DATA` `DRAFT`
 
 ## Purpose
 
@@ -47,14 +49,14 @@ analytical copies and test data.
 
 ## Alignment
 
-| Reference                 | Area                                        |
-|---------------------------|---------------------------------------------|
-| ISO/IEC 27001:2022 A.5.12 | Classification of information               |
-| ISO/IEC 27001:2022 A.5.34 | Privacy and protection of personal data     |
-| ISO/IEC 27001:2022 A.8.10 | Information deletion                        |
-| ISO/IEC 27001:2022 A.8.11 | Data masking                                |
-| ISO/IEC 27001:2022 A.8.12 | Data leakage prevention                     |
-| ISO/IEC 27001:2022 A.8.24 | Use of cryptography                         |
+| Reference                 | Area                                    |
+|---------------------------|-----------------------------------------|
+| ISO/IEC 27001:2022 A.5.12 | Classification of information           |
+| ISO/IEC 27001:2022 A.5.34 | Privacy and protection of personal data |
+| ISO/IEC 27001:2022 A.8.10 | Information deletion                    |
+| ISO/IEC 27001:2022 A.8.11 | Data masking                            |
+| ISO/IEC 27001:2022 A.8.12 | Data leakage prevention                 |
+| ISO/IEC 27001:2022 A.8.24 | Use of cryptography                     |
 
 We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
 Alignment exists because the framework covers the right ground.
@@ -62,8 +64,8 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 Where a defect genuinely cannot be reproduced without production data, a time-boxed, access-restricted copy may be used
-under a recorded deviation ([pol-DEVI]) that names who approved it, who can see it and when
-it will be destroyed. Legal hold overrides deletion, and is recorded when it does.
+under a recorded deviation ([pol-DEVI]) that names who approved it, who can see it and when it will be destroyed. Legal
+hold overrides deletion, and is recorded when it does.
 
 ## Implemented by
 

@@ -13,7 +13,9 @@ owner: paul.law
 tags: [ alerting, logging, monitoring, observability ]
 ---
 
-# `pol-OBSV` Systems are observable and actively monitored
+# Systems are observable and actively monitored
+
+`Policy: pol-OBSV` `DRAFT`
 
 ## Purpose
 
@@ -55,8 +57,8 @@ Alignment exists because the framework covers the right ground.
 
 ## Exceptions
 
-The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system
-too unimportant to monitor is a system to question the existence of.
+The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system too
+unimportant to monitor is a system to question the existence of.
 
 ## Implemented by
 

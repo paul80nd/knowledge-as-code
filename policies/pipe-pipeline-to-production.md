@@ -13,7 +13,9 @@ owner: paul.law
 tags: [ change-management, deployment, release-management ]
 ---
 
-# `pol-PIPE` Changes reach production through the pipeline
+# Changes reach production through the pipeline
+
+`Policy: pol-PIPE` `DRAFT`
 
 ## Purpose
 
@@ -56,9 +58,8 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 Emergency change to restore service may bypass the normal path where the pipeline is itself unavailable or the delay
-would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the
-change is reconciled back into version control before the incident is closed — otherwise the fix becomes the next
-outage.
+would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the change is reconciled back
+into version control before the incident is closed — otherwise the fix becomes the next outage.
 
 ## Implemented by
 

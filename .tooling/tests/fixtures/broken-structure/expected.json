@@ -1,8 +1,8 @@
 {
   "summary": {
-    "validated": 13,
+    "validated": 17,
     "skipped": 0,
-    "errors": 22,
+    "errors": 21,
     "warnings": 1
   },
   "findings": [
@@ -12,13 +12,6 @@
       "severity": "error",
       "check": "slug-length",
       "message": "slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30."
-    },
-    {
-      "file": "adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md",
-      "line": 9,
-      "severity": "error",
-      "check": "h1-pattern",
-      "message": "H1 'A title with no ADR prefix' does not match ^adr-\\d{4} (.+)$."
     },
     {
       "file": "adrs/0004-missing-consequences.md",
@@ -56,13 +49,6 @@
       "message": "id 'xyz-0006' must start with 'adr-'."
     },
     {
-      "file": "adrs/0006-bad-id-prefix.md",
-      "line": 9,
-      "severity": "error",
-      "check": "h1-matches-id",
-      "message": "H1 id 'adr-0006' does not match the document's id 'xyz-0006'."
-    },
-    {
       "file": "adrs/0007-bad-id-width.md",
       "line": 1,
       "severity": "error",
@@ -70,18 +56,25 @@
       "message": "id 'adr-7' must be 'adr-' followed by 4 digits."
     },
     {
-      "file": "adrs/0007-bad-id-width.md",
-      "line": 9,
-      "severity": "error",
-      "check": "h1-matches-id",
-      "message": "H1 id 'adr-0007' does not match the document's id 'adr-7'."
-    },
-    {
       "file": "adrs/0008-Bad_Name.md",
       "line": null,
       "severity": "error",
       "check": "filename-pattern",
       "message": "filename '0008-Bad_Name.md' does not match ^\\d{4}-[a-z0-9-]+\\.md$."
+    },
+    {
+      "file": "policies/agnt-identity-malformed.md",
+      "line": 12,
+      "severity": "error",
+      "check": "identity",
+      "message": "identity line is malformed — write it as `Policy: pol-AGNT` `DRAFT`."
+    },
+    {
+      "file": "policies/envs-identity-status.md",
+      "line": 12,
+      "severity": "error",
+      "check": "identity-status",
+      "message": "identity line status 'ACTIVE' does not match the document's status 'draft'."
     },
     {
       "file": "policies/intc-label-case.md",
@@ -99,17 +92,24 @@
     },
     {
       "file": "policies/intc-label-case.md",
-      "line": 15,
+      "line": 17,
       "severity": "error",
       "check": "label-canonical",
       "message": "reference '[pol-vurm]' should be written as the id 'pol-VURM'."
     },
     {
       "file": "policies/intc-label-case.md",
-      "line": 16,
+      "line": 18,
       "severity": "error",
       "check": "label-canonical",
       "message": "reference '[ADR-0004]' should be written as the id 'adr-0004'."
+    },
+    {
+      "file": "policies/know-identity-case.md",
+      "line": 12,
+      "severity": "error",
+      "check": "identity-status",
+      "message": "identity line status 'Draft' must be upper-case — `DRAFT`."
     },
     {
       "file": "policies/mexp-slug-that-is-definitely-way-too-long.md",
@@ -119,11 +119,11 @@
       "message": "slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30."
     },
     {
-      "file": "policies/obsv-h1-not-code.md",
+      "file": "policies/obsv-no-identity-line.md",
       "line": 10,
       "severity": "error",
-      "check": "h1-matches-id",
-      "message": "H1 must open with the document's id as a code span — `pol-OBSV`."
+      "check": "identity",
+      "message": "no identity line follows the H1 — add `Policy: pol-OBSV` `DRAFT`."
     },
     {
       "file": "policies/pipe-id-disagrees.md",
@@ -133,11 +133,11 @@
       "message": "id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'."
     },
     {
-      "file": "policies/recv-h1-disagrees.md",
-      "line": 10,
+      "file": "policies/recv-identity-id.md",
+      "line": 12,
       "severity": "error",
-      "check": "h1-matches-id",
-      "message": "H1 id 'pol-OBSV' does not match the document's id 'pol-RECV'."
+      "check": "identity-id",
+      "message": "identity line id 'pol-OBSV' does not match the document's id 'pol-RECV'."
     },
     {
       "file": "policies/scrt-lower-case-id.md",
@@ -147,11 +147,11 @@
       "message": "id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter."
     },
     {
-      "file": "policies/scrt-lower-case-id.md",
-      "line": 10,
+      "file": "policies/trus-identity-type.md",
+      "line": 12,
       "severity": "error",
-      "check": "h1-matches-id",
-      "message": "H1 id 'pol-SCRT' does not match the document's id 'pol-scrt'."
+      "check": "identity-type",
+      "message": "identity line says 'Standard', but this is a Policy."
     },
     {
       "file": "policies/vurm-bad-id-width.md",
@@ -159,13 +159,6 @@
       "severity": "error",
       "check": "id-format",
       "message": "id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter."
-    },
-    {
-      "file": "policies/vurm-bad-id-width.md",
-      "line": 10,
-      "severity": "error",
-      "check": "h1-matches-id",
-      "message": "H1 id 'pol-VURM' does not match the document's id 'pol-VU'."
     }
   ]
 }

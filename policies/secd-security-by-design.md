@@ -15,12 +15,14 @@ owner: paul.law
 tags: [ secure-coding, secure-design, threat-modelling ]
 ---
 
-# `pol-SECD` Security is designed in, not added on
+# Security is designed in, not added on
+
+`Policy: pol-SECD` `DRAFT`
 
 ## Purpose
 
-Security and privacy are decided at design time — as requirements, through recognised design principles, and by
-thinking deliberately about how a system could be attacked — and then carried through into how the code is written.
+Security and privacy are decided at design time — as requirements, through recognised design principles, and by thinking
+deliberately about how a system could be attacked — and then carried through into how the code is written.
 
 Retrofitted security is expensive and shallow. A flaw in a design is inherited by every line of code that implements it,
 and no amount of scanning later recovers what a half-hour of threat modelling would have prevented.
@@ -46,13 +48,13 @@ externally exposed change warrants more than a routine internal one, but neither
 
 ## Alignment
 
-| Reference                 | Area                                        |
-|---------------------------|---------------------------------------------|
-| ISO/IEC 27001:2022 A.5.8  | Information security in project management  |
-| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle                |
-| ISO/IEC 27001:2022 A.8.26 | Application security requirements           |
-| ISO/IEC 27001:2022 A.8.27 | Secure system architecture and engineering  |
-| ISO/IEC 27001:2022 A.8.28 | Secure coding                               |
+| Reference                 | Area                                       |
+|---------------------------|--------------------------------------------|
+| ISO/IEC 27001:2022 A.5.8  | Information security in project management |
+| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle               |
+| ISO/IEC 27001:2022 A.8.26 | Application security requirements          |
+| ISO/IEC 27001:2022 A.8.27 | Secure system architecture and engineering |
+| ISO/IEC 27001:2022 A.8.28 | Secure coding                              |
 
 We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
 Alignment exists because the framework covers the right ground.
