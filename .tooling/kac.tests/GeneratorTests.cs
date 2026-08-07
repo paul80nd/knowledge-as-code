@@ -181,10 +181,13 @@ public class GeneratorTests
             {
                 ["supersedes"] = new() { Name = "supersedes", Reciprocal = "superseded-by" },
                 ["related"] = new() { Name = "related", MirrorsSection = "Related" }
-            }
+            },
+            Rules =
+            [
+                new Dictionary<string, object> { ["id"] = "y-statement-present" },
+                new Dictionary<string, object> { ["id"] = "alternatives-have-verdicts" }
+            ]
         };
-        t.Rules.Add(new Dictionary<string, object> { ["id"] = "y-statement-present" });
-        t.Rules.Add(new Dictionary<string, object> { ["id"] = "alternatives-have-verdicts" });
 
         var table = Generator.ChecksTable(t);
 

@@ -71,12 +71,13 @@ public class DocumentTests
     // ClauseSpec, since a type that declares none is never read for a clause table at all.
     private static Schema WithClauses()
     {
-        var schema = new Schema();
-        schema.ByFolder["policies"] = new TypeSchema
+        return new Schema
         {
-            Clauses = new ClauseSpec("", ["MUST"], ["SHOULD"]) { Section = "Clauses" }
+            ByFolder = new Dictionary<string, TypeSchema>
+            {
+                ["policies"] = new() { Clauses = new ClauseSpec("", ["MUST"], ["SHOULD"]) { Section = "Clauses" } }
+            }
         };
-        return schema;
     }
 
     private static Doc? ParseWithClauses(string body) =>

@@ -85,29 +85,25 @@ public static class Validator
             present[((YamlScalarNode)kv.Key).Value ?? ""] = kv.Value;
 
         // -- unknown keys --
-        var known = new HashSet<string>(schema.KnownKeys(t), StringComparer.Ordinal);
         foreach (var k in d.FrontKeys)
-            if (!known.Contains(k))
+            if (!t.KnownKeys.Contains(k))
                 Err("unknown-key", $"unknown frontmatter key '{k}'.", d.FrontStartLine);
 
         // -- key order --
-        // The schema specifies order across two files (_universal + the type), sharing
-        // the `status` key. Rather than invent one arbitrary total order, enforce that
-        // the actual order is a topological extension of both declared chains: every
-        // pair the schema orders must hold; genuinely unconstrained pairs are free.
-        CheckKeyOrder(d, t, schema, Err);
+        // The actual order must be a topological extension of the chains the schema declares: every
+        // pair it orders must hold, and genuinely unconstrained pairs are free. See
+        // TypeSchema.DeriveKeyOrderEdges for why the constraint is a pair set rather than a total order.
+        CheckKeyOrder(d, t, Err);
 
         // -- required fields (universal + type), incl. required-when --
-        foreach (var name in schema.UniversalOrder.Concat(t.FieldOrder).Distinct())
+        foreach (var spec in t.DeclaredFields)
         {
-            var spec = schema.EffectiveField(t, name);
-            if (spec is null) continue;
             var req = spec.Required || RequiredWhenHolds(spec.RequiredWhen, present);
-            var absent = !present.ContainsKey(name) || IsAbsentValue(present[name]);
+            var absent = !present.ContainsKey(spec.Name) || IsAbsentValue(present[spec.Name]);
             if (req && absent)
             {
                 var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
-                Err("required-field", $"missing required field '{name}'{why}.", d.FrontStartLine);
+                Err("required-field", $"missing required field '{spec.Name}'{why}.", d.FrontStartLine);
             }
         }
 
@@ -392,31 +388,16 @@ public static class Validator
             err("field-pattern", $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Line(node, d));
     }
 
-    private static void CheckKeyOrder(Doc d, TypeSchema t, Schema schema, Action<string, string, int?> err)
+    private static void CheckKeyOrder(Doc d, TypeSchema t, Action<string, string, int?> err)
     {
-        // All ordered pairs within each declared chain (transitive, so an absent
-        // intermediate key does not drop a constraint between its neighbours).
-        var edges = new HashSet<(string, string)>();
-
-        AddChain(schema.UniversalOrder);
-        AddChain(t.FieldOrder);
-
         var pos = new Dictionary<string, int>();
         for (var i = 0; i < d.FrontKeys.Count; i++)
             if (!pos.ContainsKey(d.FrontKeys[i]))
                 pos[d.FrontKeys[i]] = i;
 
-        foreach (var (a, b) in edges)
+        foreach (var (a, b) in t.KeyOrderEdges)
             if (pos.TryGetValue(a, out var pa) && pos.TryGetValue(b, out var pb) && pa > pb)
                 err("key-order", $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
-        return;
-
-        void AddChain(List<string> chain)
-        {
-            for (var i = 0; i < chain.Count; i++)
-            for (var j = i + 1; j < chain.Count; j++)
-                edges.Add((chain[i], chain[j]));
-        }
     }
 
     private static void CheckId(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,

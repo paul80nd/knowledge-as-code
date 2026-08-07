@@ -35,12 +35,42 @@ public class SchemaTests
         Assert.Null(schema.EffectiveField(t, "nope"));                       // unknown → null
     }
 
+    // Order carries no meaning in the result — the only question asked of it is whether a key is in it —
+    // so the comparison is on membership, sorted to be stable.
     [Fact]
-    public void KnownKeys_is_universal_then_type_then_reserved_deduplicated()
+    public void KnownKeys_spans_universal_type_and_reserved_deduplicated()
     {
-        var schema = SampleSchema();
-
         // 'status' appears in both universal and the type's field order — it collapses to one entry.
-        Assert.Equal(["id", "status", "date", "wiki"], schema.KnownKeys(SampleType()));
+        var keys = TypeSchema.DeriveKnownKeys(["id", "status"], ["status", "date"], ["wiki"]);
+
+        Assert.Equal(["date", "id", "status", "wiki"], keys.Order(StringComparer.Ordinal));
+    }
+
+    // Pairs span the whole chain rather than neighbouring keys, so a document that omits an intermediate
+    // key still has the keys either side of it constrained against one another.
+    [Fact]
+    public void KeyOrderEdges_are_every_pair_within_a_chain_not_only_neighbours()
+    {
+        var edges = TypeSchema.DeriveKeyOrderEdges(["id", "status", "owner"], []);
+
+        Assert.Contains(("id", "owner"), edges); // not neighbours, still ordered
+        Assert.Contains(("id", "status"), edges);
+        Assert.Contains(("status", "owner"), edges);
+        Assert.DoesNotContain(("owner", "id"), edges); // the constraint has a direction
+        Assert.Equal(3, edges.Count);
+    }
+
+    // Each chain constrains only its own keys. Nothing invents an order between a universal key and a
+    // type key that no single chain places together, which is what lets the two files be written
+    // independently of one another.
+    [Fact]
+    public void KeyOrderEdges_do_not_cross_between_the_two_chains()
+    {
+        var edges = TypeSchema.DeriveKeyOrderEdges(["id", "status"], ["status", "date"]);
+
+        Assert.Contains(("id", "status"), edges);
+        Assert.Contains(("status", "date"), edges);
+        Assert.DoesNotContain(("id", "date"), edges);
+        Assert.Equal(2, edges.Count);
     }
 }
