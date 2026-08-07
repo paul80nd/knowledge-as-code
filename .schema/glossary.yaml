@@ -1,15 +1,15 @@
 type: glossary
 label: Glossary
-folder: null
+shape: single-document
 page: glossary.md
 tier: descriptive
 lifecycle: living
 
-style: single-document
 notes: >
-  The only type that is one document rather than a collection. There is no folder, no per-term files and no
-  per-record schema — the frontmatter below belongs to `glossary.md` itself. Terms are H3 headings and their
-  anchors are their identifiers.
+  The only type that is one document rather than a collection, which is what `shape` says. A
+  single-document type declares no `folder:` — there are no per-term files and no per-record schema, so the
+  frontmatter below belongs to `glossary.md` itself. Terms are H3 headings and their anchors are their
+  identifiers.
 
 id:
   prefix: null

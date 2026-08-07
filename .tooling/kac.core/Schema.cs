@@ -52,6 +52,7 @@ public class ClauseSpec
 public class TypeSchema
 {
     public string TypeName = "", Label = "", Folder = "", Page = "", Tier = "", Lifecycle = "";
+    public string Shape = CollectionShape;
     public string IdPrefix = "", IdStyle = "";
     public int IdWidth;
     public string? FilenamePattern;
@@ -64,6 +65,15 @@ public class TypeSchema
     public string? IndexSort;
     public ClauseSpec? Clauses;
     public readonly List<Dictionary<string, object>> Rules = [];
+
+    // The two shapes a type can take. Most are a folder of records; the glossary is one document read
+    // end to end. Declared rather than inferred: an absent `folder:` and a deliberate `folder: null`
+    // are the same string once parsed, so inferring the shape from the folder cannot tell a
+    // single-document type from a collection whose folder key was lost.
+    public const string CollectionShape = "collection";
+    public const string SingleDocumentShape = "single-document";
+
+    public bool IsSingleDocument => Shape == SingleDocumentShape;
 
     // How a single document of this type is named in generated prose — "Policy", "ADR", "NFR". Declared
     // by the schema rather than derived, because no rule turns `policy` into "Policy" and `adr` into
@@ -129,7 +139,8 @@ public class Schema
             Folder = Yaml.Str(Yaml.Get(root, "folder")) ?? "",
             Page = Yaml.Str(Yaml.Get(root, "page")) ?? "",
             Tier = Yaml.Str(Yaml.Get(root, "tier")) ?? "",
-            Lifecycle = Yaml.Str(Yaml.Get(root, "lifecycle")) ?? ""
+            Lifecycle = Yaml.Str(Yaml.Get(root, "lifecycle")) ?? "",
+            Shape = Yaml.Str(Yaml.Get(root, "shape")) ?? TypeSchema.CollectionShape
         };
 
         var id = Yaml.Get(root, "id");

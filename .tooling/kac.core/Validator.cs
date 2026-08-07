@@ -366,12 +366,13 @@ public static class Validator
     // against the frontmatter separately, because "this says Standard" and "this says the wrong id" are
     // different mistakes with different fixes and a reader deserves to be told which they made.
     //
-    // Every type with a folder carries one. The single-page types (glossary) have no records to identify
-    // and are skipped, which is the same folder test `kac index` uses to decide what gets an INDEX.
+    // Every collection type carries one. A single-document type has no records to identify — its page
+    // is the document — so it is skipped, on the shape the schema declares rather than on a folder
+    // happening to be absent.
     private static void CheckIdentity(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
         Action<string, string, int?> err)
     {
-        if (d.H1 is null || string.IsNullOrEmpty(t.Folder)) return;
+        if (d.H1 is null || t.IsSingleDocument) return;
 
         var id = present.TryGetValue("id", out var idNode) ? Scalar(idNode) : null;
         var status = present.TryGetValue("status", out var statusNode) ? Scalar(statusNode) : null;
@@ -830,9 +831,13 @@ public static class Validator
 
         basePath = basePath.Replace('\\', '/');
 
+        // A directory is deliberately not a target. In Azure DevOps `data.md` is the page and `data/`
+        // is its children — one node — so `/data` is a link to the page, which the `.md` form below
+        // already resolves. Accepting the directory as well would resolve a link to a type whose page
+        // has gone, and would do it inconsistently: git cannot track an empty directory, so the same
+        // link passes on the machine that created the folder and fails in CI.
         return File.Exists(basePath)
-               || File.Exists(basePath + ".md") // ADO resolves links with .md omitted
-               || Directory.Exists(basePath);
+               || File.Exists(basePath + ".md"); // ADO resolves links with .md omitted
     }
 
     private static string Trim(string s) => s.Length > 60 ? s[..57] + "…" : s;

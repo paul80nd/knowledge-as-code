@@ -161,7 +161,7 @@ public static class Generator
         ("h1", ["h1"], "The document has an H1.", null),
         ("identity", ["identity", "identity-type", "identity-id", "identity-status"],
             "An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.",
-            t => !string.IsNullOrEmpty(t.Folder)),
+            t => !t.IsSingleDocument),
         ("required-section", ["required-section"], "Every required section heading is present.", null),
         // The pipe is escaped because this text lands in a table cell: GFM splits a cell on a bare `|`
         // even inside a code span, so an unescaped one would break the row it is describing.
