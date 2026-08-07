@@ -105,15 +105,15 @@ fail the build.
 
 A type that declares no `clauses:` block is checked for none of these.
 
-| Check                        | Level   | What it enforces                                                                                       |
-|------------------------------|---------|--------------------------------------------------------------------------------------------------------|
-| `clause-table`               | error   | The declared section holds a table headed with the block's `columns`, with at least one row.           |
-| `clause-id-format`           | error   | Each id is a single code span matching the block's `id-pattern`.                                       |
-| `clause-id-unique`           | error   | Ids are unique within the document — a citation names one obligation.                                  |
-| `clause-modal`               | error   | Each clause opens with a declared modal; `binding` ones are bold, `advisory` ones plain.               |
-| `clause-order`               | warning | Rows are grouped `binding` then `advisory`, in declared order. Reported once, on the row that breaks it. |
-| `clause-compound`            | warning | A clause carries one modal, not two — a second is two obligations sharing an id.                       |
-| `clause-ref`                 | error   | A `pol-VURM.TIMEBOX` code span resolves: the document exists and carries that clause. Corpus-wide, and applies to every type, since anything may cite a clause. |
+| Check              | Level   | What it enforces                                                                                                                                                |
+|--------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `clause-table`     | error   | The declared section holds a table headed with the block's `columns`, with at least one row.                                                                    |
+| `clause-id-format` | error   | Each id is a single code span matching the block's `id-pattern`.                                                                                                |
+| `clause-id-unique` | error   | Ids are unique within the document — a citation names one obligation.                                                                                           |
+| `clause-modal`     | error   | Each clause opens with a declared modal; `binding` ones are bold, `advisory` ones plain.                                                                        |
+| `clause-order`     | warning | Rows are grouped `binding` then `advisory`, in declared order. Reported once, on the row that breaks it.                                                        |
+| `clause-compound`  | warning | A clause carries one modal, not two — a second is two obligations sharing an id.                                                                                |
+| `clause-ref`       | error   | A `pol-VURM.TIMEBOX` code span resolves: the document exists and carries that clause. Corpus-wide, and applies to every type, since anything may cite a clause. |
 
 ### Links & the graph
 
@@ -125,6 +125,7 @@ A type that declares no `clauses:` block is checked for none of these.
 | `related-matches-section` | error   | A `mirrors-section` field (e.g. `related`) reconciles case-insensitively with the ids referenced in that section (`## Related`).                                                                                                                                                        |
 | `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                   |
 | `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`) and points at a document that exists.                                                                                                                                                                   |
+| `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. A `single-document` type has a page and no folder. Skipped when the run is narrowed to paths.    |
 | `unused-definition`       | warning | A link definition that nothing references.                                                                                                                                                                                                                                              |
 | `bracket-literal`         | warning | A `[...]` left in prose that looks like a reference but has no definition (use an inline link if it is deliberate).                                                                                                                                                                     |
 

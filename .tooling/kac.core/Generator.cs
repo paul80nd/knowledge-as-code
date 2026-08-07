@@ -161,7 +161,7 @@ public static class Generator
         ("h1", ["h1"], "The document has an H1.", null),
         ("identity", ["identity", "identity-type", "identity-id", "identity-status"],
             "An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.",
-            t => !string.IsNullOrEmpty(t.Folder)),
+            t => !t.IsSingleDocument),
         ("required-section", ["required-section"], "Every required section heading is present.", null),
         // The pipe is escaped because this text lands in a table cell: GFM splits a cell on a bare `|`
         // even inside a code span, so an unescaped one would break the row it is describing.
@@ -198,8 +198,11 @@ public static class Generator
     // subsumed by the field descriptions) and `bracket-literal` (a heuristic sibling of
     // undefined-label). Every OTHER catalogue id must appear in DocRows — ChecksTableProblems fails
     // otherwise, so a new check cannot silently go undocumented.
+    // `type-setup` joins them for a different reason: it checks whether the type is stood up at all,
+    // and this table is rendered onto the very page whose absence it reports. A reader who can see the
+    // row does not need it.
     private static readonly HashSet<string> IntentionallyUndocumented =
-        new(["type", "list", "bracket-literal"], StringComparer.Ordinal);
+        new(["type", "list", "bracket-literal", "type-setup"], StringComparer.Ordinal);
 
     public static string ChecksTable(TypeSchema t)
     {

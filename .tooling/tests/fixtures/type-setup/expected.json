@@ -1,0 +1,31 @@
+{
+  "summary": {
+    "validated": 0,
+    "skipped": 0,
+    "errors": 3,
+    "warnings": 0
+  },
+  "findings": [
+    {
+      "file": ".schema/data.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "type-setup",
+      "message": "type 'data' has data.md but no 'data/' — a type is set up as both or neither."
+    },
+    {
+      "file": ".schema/glossary.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "type-setup",
+      "message": "type 'glossary' is single-document, so 'glossary/' must not exist — its page is the document."
+    },
+    {
+      "file": ".schema/tools.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "type-setup",
+      "message": "type 'tools' has a 'tools/' folder but is not fully set up — add tools.md, tools/template.md."
+    }
+  ]
+}

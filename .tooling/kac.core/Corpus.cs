@@ -8,11 +8,17 @@ public static class Corpus
 {
     private static readonly string[] SkipDirs = [".git", ".idea", ".claude"];
 
+    // Every file the corpus contains, before any exclusion. Used to ask whether a folder is really
+    // there: an empty directory git has never seen is not part of the corpus, and treating it as one
+    // is what made the answer depend on which machine was asking.
+    public static List<string> AllFiles(string repoRoot) =>
+        GitFiles.Tracked(repoRoot) ?? GitFiles.Walk(repoRoot, "*.md", SkipDirs);
+
     public static List<string> Discover(string repoRoot, Schema schema, List<string> paths)
     {
         // git ls-files respects .gitignore, .git/info/exclude and global excludes, and never lists
         // .git/ itself — exactly the "respect .gitignore" requirement; the walk is the non-git fallback.
-        var files = GitFiles.Tracked(repoRoot) ?? GitFiles.Walk(repoRoot, "*.md", SkipDirs);
+        var files = AllFiles(repoRoot);
 
         // Type pages at the repo root — adrs.md, services.md, glossary.md, data.md, …
         var typePages = new HashSet<string>(

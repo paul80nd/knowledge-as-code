@@ -67,6 +67,7 @@ Beyond `fields`, each type file declares:
 | Key                        | Purpose                                                                                                          |
 |----------------------------|------------------------------------------------------------------------------------------------------------------|
 | `type` / `folder` / `page` | Identity, and where the type lives                                                                               |
+| `shape`                    | `collection` (the default) or `single-document` — see the note below                                             |
 | `label`                    | The singular display name — "Policy", "ADR" — used to head the generated index                                   |
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
 | `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
@@ -76,10 +77,17 @@ Beyond `fields`, each type file declares:
 | `index`                    | Columns and sort order for the generated index                                                                   |
 | `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |
 
-**`id.style`.** Five styles appear across the type files: `numbered`, `slug`, `mnemonic`, `literal` and
-`single-document`. The validator's id checks act on two — `numbered` and `mnemonic` — and a type declaring any other
-receives the prefix check alone. Link-label canonicalisation covers `slug` as well, so the shortfall is in the id checks
-rather than in the idea.
+**`shape`.** Most types are a **collection** — a folder of records, a page describing them, and a template to copy.
+The glossary is a **single-document** type: one document read end to end, whose page *is* the record. A collection
+declares its `folder:`; a single-document type declares none, because it has none, and nothing indexes it.
+
+It is declared rather than inferred. An absent `folder:` and a deliberate `folder: null` are the same string once
+parsed, so a shape read off the folder cannot tell a single-document type from a collection whose folder key was lost.
+It defaults to `collection`, so only the type that is not one has to say so.
+
+**`id.style`.** Four styles appear across the type files: `numbered`, `slug`, `mnemonic` and `literal`. The id checks
+act on two — `numbered` and `mnemonic` — and a type declaring either of the others receives the prefix check alone.
+Link-label canonicalisation covers `slug` as well, so the shortfall is in the id checks rather than in the idea.
 
 **`rules`.** These are declarations, not a dispatch table. Two rule ids are implemented — `y-statement-present` and
 `alternatives-have-verdicts`, both on the decision-record type, and both only where the rule declares

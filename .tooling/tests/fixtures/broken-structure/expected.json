@@ -1,8 +1,8 @@
 {
   "summary": {
-    "validated": 17,
+    "validated": 18,
     "skipped": 0,
-    "errors": 21,
+    "errors": 22,
     "warnings": 1
   },
   "findings": [
@@ -68,6 +68,13 @@
       "severity": "error",
       "check": "identity",
       "message": "identity line is malformed — write it as `Policy: pol-AGNT` `DRAFT`."
+    },
+    {
+      "file": "policies/dirs-directory-link.md",
+      "line": 17,
+      "severity": "error",
+      "check": "link-resolves",
+      "message": "link target '/media' does not resolve."
     },
     {
       "file": "policies/envs-identity-status.md",

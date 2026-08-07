@@ -56,6 +56,7 @@ public static class CheckCatalogue
         new("label-canonical", Sev.Error, "An id-shaped shortcut label is written as the canonical id."),
         new("related-matches-section", Sev.Error, "A mirrors-section field reconciles with its section."),
         new("id-unique", Sev.Error, "id is unique across the whole wiki."),
+        new("type-setup", Sev.Error, "A type the schema declares is stood up as both a page and a folder, or neither."),
         new("clause-ref", Sev.Error, "A pol-XXXX.CLAUSE citation names a clause that exists."),
         new("reciprocal", Sev.Error, "A reciprocal field agrees in both directions."),
         new("list-order", Sev.Warning, "A list field's entries are in alphabetical order."),

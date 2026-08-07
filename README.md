@@ -23,31 +23,31 @@ Which files fall on which side is declared in
 
 ### The seeds come in two kinds, and the difference matters
 
-**Some seeds are close to real.** The twenty-one **policies** are the clearest case, and the part worth reading on
-their own terms. The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were
-worked out on them rather than assumed. They are principle-level and stack-agnostic by design, so they name no service
-and invent no domain — which is exactly why they would survive adoption with only the specifics rewritten.
+**Some seeds are close to real.** The twenty-one **policies** are the clearest case, and the part worth reading on their
+own terms. The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were worked
+out on them rather than assumed. They are principle-level and stack-agnostic by design, so they name no service and
+invent no domain — which is exactly why they would survive adoption with only the specifics rewritten.
 
-**Other seeds need somewhere to stand.** A service catalogue demonstrates nothing without an estate; an NFR has to
-apply to something; a postmortem needs an incident. For those, this corpus uses **one fictional organisation
-throughout — Example Libraries, a public-library consortium** — so that the records form a graph instead of a list.
-Nine of them are in [`services/`](services.md) today, and the same estate will carry the example records for the other
-types as they are seeded.
+**Other seeds need somewhere to stand.** A service catalogue demonstrates nothing without an estate; an NFR has to apply
+to something; a postmortem needs an incident. For those, this corpus uses **one fictional organisation throughout —
+Example Libraries, a public-library consortium** — so that the records form a graph instead of a list. Nine of them are
+in [`services/`](services.md) today, and the same estate will carry the example records for the other types as they are
+seeded.
 
 It cannot be mistaken for anyone real, by construction: every hostname is under `example.com`, which
-[RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered by anybody. The domain
-is deliberately non-commercial, and no repository carries an organisation prefix because there is no organisation to
-prefix with.
+[RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered by anybody. The domain is
+deliberately non-commercial, and no repository carries an organisation prefix because there is no organisation to prefix
+with.
 
 **Delete these records; do not adapt them.** Each seeded type page says so at the top. They are chosen to exercise the
 schema's awkward corners — a monorepo shipping three deployables, a CDN whose `repo` cannot answer where its content
 comes from, a service coupled to the whole estate with no dependency edges — not to resemble your estate.
 
-**What the corpus claims about its organisation is illustrative in the same way.** Showing how framework alignment
-works requires something to align with, so this corpus takes a position: ISO/IEC 27001 registered, obliged by the UK
-GDPR, running on Azure, part of a management system whose other halves belong to facilities, HR and IT. That posture
-and the estate fit each other — a public library is a public-sector body, so the accessibility obligations the
-policies cite genuinely bind it — but none of it describes anyone real. It is scaffolding, so that
+**What the corpus claims about its organisation is illustrative in the same way.** Showing how framework alignment works
+requires something to align with, so this corpus takes a position: ISO/IEC 27001 registered, obliged by the UK GDPR,
+running on Azure, part of a management system whose other halves belong to facilities, HR and IT. That posture and the
+estate fit each other — a public library is a public-sector body, so the accessibility obligations the policies cite
+genuinely bind it — but none of it describes anyone real. It is scaffolding, so that
 [`frameworks.md`](frameworks.md) and the policies' `Alignment` columns do something instead of sitting empty — rewrite
 it on the way through.
 
@@ -57,7 +57,7 @@ it on the way through.
 
 |                |                                                                                                              |
 |----------------|--------------------------------------------------------------------------------------------------------------|
-| `kac validate` | 42 checks — frontmatter against schema, identity, structure, clauses, link resolution, graph reciprocity     |
+| `kac validate` | 43 checks — frontmatter against schema, identity, structure, clauses, links, graph reciprocity, type setup   |
 | `kac index`    | Generates `<type>/INDEX.md` and the schema/checks tables inside each type root page                          |
 | `kac checks`   | Lists every check the validator implements                                                                   |
 | Tests          | Three layers — unit (`kac.tests`), Reqnroll feature specs (`kac.features`), golden fixtures (`kac-tests.cs`) |
@@ -95,9 +95,14 @@ dotnet run .tooling/kac-tests.cs   # run the golden test suite
 `./kac` (Windows: `kac.cmd`) is a launcher at the repo root that wraps `dotnet run .tooling/kac.cs`; add the repo root
 to your `PATH` to run it as `kac`.
 
-To start your own corpus: clone, delete the type folders you don't want, **delete the example records in the ones you
-keep**, rewrite the root pages' examples in your own domain, and start adding records. Keep `.tooling/` and `.schema/`
-as they are — those are the half you want to receive updates to.
+To start your own corpus: clone, drop the types you don't want, **delete the example records in the ones you keep**,
+rewrite the root pages' examples in your own domain, and start adding records. Keep `.tooling/` as it is — that is the
+half you want to receive updates to.
+
+**Dropping a type means deleting both `<type>.md` and `<type>/`**, because a type is stood up as both or as neither and
+`./kac validate` says so. You may leave the schema file in place: `.schema/` declares what the tool *manages*, not what
+this corpus has built, so a type you have not stood up yet is a valid, silent state. That is what makes it possible to
+take the whole schema and grow into it one type at a time.
 
 The example records are every `<type>/*.md` that is not `INDEX.md` or `template.md`. `./kac validate` covers them, so
 they are held to the same standard as real content and a schema change that breaks them fails CI here rather than in

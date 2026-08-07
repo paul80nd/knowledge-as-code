@@ -43,6 +43,12 @@ public static class Commands
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
         Validator.CheckCorpus(docs, findings);
 
+        // Whether each declared type is stood up. Skipped when the run is narrowed to given paths:
+        // asking about one document is not asking about the shape of the corpus, and answering
+        // anyway would bury the reply.
+        if (paths.Count == 0)
+            Validator.CheckTypeSetup(schema, repoRoot, Corpus.AllFiles(repoRoot), findings);
+
         return Report(findings, docs.Count, skippedNoFrontmatter, json);
     }
 
@@ -63,13 +69,18 @@ public static class Commands
         // Compute the full intended content of every affected file.
         var targets = new List<(string path, string content)>();
 
-        // Every type with a folder gets an INDEX, populated or not — each type page links to one, so a
-        // withheld file is a dead link rather than a tidy absence. Types without a folder (glossary is
-        // the single-document type) have nothing to index, and a folder absent from disk is skipped so
-        // the generator never conjures a directory.
+        // Every collection type gets an INDEX, populated or not — each type page links to one, so a
+        // withheld file is a dead link rather than a tidy absence. A single-document type is its own
+        // index and has nothing to generate.
+        //
+        // A folder absent from disk is skipped rather than created: the generator populates structure
+        // the corpus has declared, and never invents it. `validate` is the one voice that says a
+        // declared type is not set up, so a missing folder is reported there rather than papered over
+        // here.
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key))
         {
-            if (string.IsNullOrEmpty(t.Folder) || !Directory.Exists(Path.Combine(repoRoot, t.Folder))) continue;
+            if (t.IsSingleDocument || string.IsNullOrEmpty(t.Folder)) continue;
+            if (!Directory.Exists(Path.Combine(repoRoot, t.Folder))) continue;
             var docs = byType.TryGetValue(t.Folder, out var found) ? found : [];
             targets.Add((Path.Combine(repoRoot, t.Folder, "INDEX.md"), Generator.IndexPage(t, docs)));
         }
