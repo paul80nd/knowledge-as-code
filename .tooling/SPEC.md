@@ -136,6 +136,9 @@ call    := IDENT "(" ( expr ("," expr)* )? ")"
 ```
 
 - **Types:** string, int, bool. There are no boolean literals — every condition starts from something the document says.
+- **Strings** are single-quoted, and a doubled quote is one quote — the YAML and SQL convention. There are no backslash
+  escapes: the strings that most need a quote in them are regular expressions, and a second escaping layer over those is
+  how they stop being readable.
 - **Absence:** `field(...)` returns string-or-null. A comparison where either side is absent is **false**, and `!=` is
   the negation of `==`, so it is **true**. One rule for every operator, so a rule that cares writes the guard rather
   than working out which way silence falls.
@@ -151,16 +154,18 @@ call    := IDENT "(" ( expr ("," expr)* )? ")"
 Everything an expression can see. Each reads data the extraction pass already produced — **the evaluator never re-parses
 markdown.**
 
-| Function             | Returns | Backed by                                                                                                             |
-|----------------------|---------|-----------------------------------------------------------------------------------------------------------------------|
-| `field('name')`      | string? | `Doc.FrontScalar`                                                                                                     |
-| `present('name')`    | bool    | frontmatter scalar non-empty                                                                                          |
-| `section('Title')`   | bool    | `Doc.H2` contains (case-insensitive)                                                                                  |
-| `first_section()`    | string  | first `Doc.H2`                                                                                                        |
-| `links()`            | int     | `Doc.Links.Count`                                                                                                     |
-| `words()`            | int     | every heading and paragraph the document renders; frontmatter and fenced code carry no inline content and so fall out |
-| `has_ystatement()`   | bool    | `Doc.YStatement is not null` (Bucket B, not built)                                                                    |
-| `ystatement_words()` | int     | word count of `Doc.YStatement` (Bucket B, not built)                                                                  |
+| Function                         | Returns | Backed by                                                                                                             |
+|----------------------------------|---------|-----------------------------------------------------------------------------------------------------------------------|
+| `field('name')`                  | string? | `Doc.FrontScalar`                                                                                                     |
+| `present('name')`                | bool    | frontmatter scalar non-empty                                                                                          |
+| `section('Title')`               | bool    | `Doc.H2` contains (case-insensitive)                                                                                  |
+| `first_section()`                | string  | first `Doc.H2`                                                                                                        |
+| `links()`                        | int     | `Doc.Links.Count`                                                                                                     |
+| `words()`                        | int     | every heading and paragraph the document renders; frontmatter and fenced code carry no inline content and so fall out |
+| `matches('re')`                  | bool    | the body **as written** — code fences, link targets and markdown syntax included; frontmatter is not                  |
+| `section_matches('Title', 're')` | bool    | the same, bounded to one section; false where the document holds no such section                                      |
+| `has_ystatement()`               | bool    | `Doc.YStatement is not null` (Bucket B, not built)                                                                    |
+| `ystatement_words()`             | int     | word count of `Doc.YStatement` (Bucket B, not built)                                                                  |
 
 Adding a fact is adding one method to `Facts` and one row to `RuleExpr.Functions`, which is what the type checker reads.
 The grammar itself never changes.
@@ -207,15 +212,19 @@ strings largely carry over, the engine drops in. Not before: the dependency is n
 
 Bucket A is converted. What remains is the fact that unlocks the rest.
 
-1. [ ] **Add a text probe** — `matches(pattern)` over the body, and `section_matches('Title', pattern)` over one
-   section. Six rules want exactly this and nothing else: `no-credentials` and `no-actual-data` (a token or a record in
-   the prose), `not-normative` (bold RFC 2119 keywords), `blameless` (personal names in named sections),
-   `no-hedged-ordering` ("typically" inside Steps) and `posture-belongs-to-frameworks`. It is the best return left — one
-   fact for six rules — and it does not touch the grammar, because the pattern is an argument to a fact rather than a
-   feature of the language.
+1. [x] **The text probe is in.** `matches` and `section_matches` read the body as written — code fences, link targets
+   and markdown syntax included — which is what lets a rule find a credential pasted into a fenced block, or a bold
+   modal the rendered text would have flattened away. Six rules converted on it:
+   `no-credentials`, `no-actual-data`, `not-normative`, `no-hedged-ordering`, `posture-belongs-to-frameworks`
+   and `fallback-required`.
 
-       These are heuristics and will be tuned wrong first. That is the argument for holding them as data: a regex in
-       `.schema/` is a schema edit, where the same regex in C# is a release every consumer corpus has to take.
+   Two that were counted did not convert. `blameless` flags personal names, and no regular expression identifies one —
+   every shape that matches a name matches a heading. `human-confirmed` wants a value that is not an agent or a session
+   id, which is a `pattern:` on `confirmed-by` rather than a rule about the document. Neither is a Bucket B rule; both
+   were miscounted.
+
+   These are heuristics and will be tuned wrong first. That is the argument for holding them as data: a regex in
+   `.schema/` is a schema edit, where the same regex in C# is a release every consumer takes.
 
 2. [x] **`required-when` reads `!=` and `in [...]`.** It split on `==` and understood nothing else, so two of the
    schema's six conditional requirements had never fired: a control naming a mechanism it enforces was not asked for its
@@ -226,10 +235,10 @@ Bucket A is converted. What remains is the fact that unlocks the rest.
    largest remaining C# arm along with `RuleSpec.MaxWords`.
 
 4. [x] **What was already enforced is gone.** Nine entries restated a `reciprocal:`, a `mirrors-section:`, a
-   `required-when:`, a scalar field type or a required section — and every one of their reasons was already written
-   on the type page a reader actually reads. Three more were half-enforced and now describe only the half that is
-   not: hedging in `measured-by`, an empty *What went well*, a diagnosis branch ending in neither a resolution nor
-   an escalation.
+   `required-when:`, a scalar field type or a required section — and every one of their reasons was already written on
+   the type page a reader actually reads. Three more were half-enforced and now describe only the half that is not:
+   hedging in `measured-by`, an empty *What went well*, a diagnosis branch ending in neither a resolution nor an
+   escalation.
 
 5. [ ] Leave Bucket C in C#. Roughly fifteen rules need git history, a graph, or more than one document; a further eight
    are marked **Scheduled** and are not per-PR validation in any form. Together that is 42% of the declared rules, and

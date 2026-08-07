@@ -135,4 +135,82 @@ public class RuleExprTests
     [Fact]
     public void A_chained_comparison_does_not_parse()
         => Assert.Throws<RuleExprException>(() => RuleExpr.Compile("1 < words() < 40"));
+
+    // -- the text probe --
+    //
+    // `matches` reads the body as written rather than as the AST renders it, which is the whole point:
+    // the rules that ask are looking for something that should not be in the document at all, and a
+    // credential pasted into a fenced block is the case they exist for.
+
+    [Fact]
+    public void Matches_sees_inside_a_fenced_code_block()
+        => Assert.True(Eval(@"matches('AKIA[0-9A-Z]{6}')",
+            body: "Configure it:\n\n```\nAWS_KEY=AKIA123456\n```\n"));
+
+    // The flattened text a word count walks carries no fenced code at all, so the two facts genuinely
+    // see different documents. Pinned so that nobody 'simplifies' one onto the other.
+    [Fact]
+    public void Words_does_not_see_what_matches_does()
+        => Assert.True(Eval("words() == 4 and matches('secret')",
+            body: "Configure it:\n\n```\nTOKEN=secret\n```\n"));
+
+    // Markdown syntax is in scope, which is what lets a rule find a bold modal — the emphasis markers
+    // are gone by the time the text is flattened.
+    [Fact]
+    public void Matches_sees_markdown_syntax()
+    {
+        Assert.True(Eval(@"matches('\*\*MUST\*\*')", body: "You **MUST** do this."));
+        Assert.False(Eval(@"matches('\*\*MUST\*\*')", body: "You MUST do this."));
+    }
+
+    // Frontmatter is not body. It is checked field by field against patterns its own fields declare, and
+    // a rule sweeping the prose should not trip over the metadata above it.
+    [Fact]
+    public void Matches_does_not_see_the_frontmatter()
+        => Assert.False(Eval("matches('alex.doe')", "id: adr-0001\nowner: alex.doe", "Prose with no name in it."));
+
+    [Fact]
+    public void Section_matches_is_bounded_by_the_next_heading()
+    {
+        const string body = "## Steps\n\nDo the thing.\n\n## Verification\n\nTypically it worked.\n";
+        Assert.False(Eval("section_matches('Steps', 'Typically')", body: body));
+        Assert.True(Eval("section_matches('Verification', 'Typically')", body: body));
+    }
+
+    // A section the document does not have answers false, so a rule naming one reads as satisfied rather
+    // than throwing. Whether the section ought to be there is required-section's question, not this one.
+    [Fact]
+    public void Section_matches_is_false_where_the_section_is_absent()
+        => Assert.False(Eval("section_matches('Nowhere', 'anything')", body: "## Steps\n\nDo the thing."));
+
+    [Fact]
+    public void Section_matches_finds_the_heading_whatever_its_case()
+        => Assert.True(Eval("section_matches('steps', 'thing')", body: "## Steps\n\nDo the thing."));
+
+    [Theory]
+    [InlineData("matches()", "1 argument")]
+    [InlineData("section_matches('Steps')", "2 argument")]
+    [InlineData("matches(3)", "wants text")]
+    public void The_text_probe_is_type_checked_like_any_other_fact(string expr, string expected)
+    {
+        var ex = Assert.Throws<RuleExprException>(() => RuleExpr.Compile(expr));
+        Assert.Contains(expected, ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    // A doubled quote is one quote, as in YAML and SQL. Regular expressions are the strings that most need
+    // one, and this is the escape that avoids putting a second backslash layer over an expression already
+    // full of them. The pattern below is the character class ["'].
+    [Fact]
+    public void A_doubled_quote_is_one_quote()
+    {
+        const string quoteClass = "matches('[\"'']')";
+
+        Assert.True(Eval(quoteClass, body: "It's here."));
+        Assert.True(Eval(quoteClass, body: "A \"quote\"."));
+        Assert.False(Eval(quoteClass, body: "Nothing quoted."));
+    }
+
+    [Fact]
+    public void A_string_left_open_by_an_escaped_quote_still_fails_to_compile()
+        => Assert.Throws<RuleExprException>(() => RuleExpr.Compile("matches('a''"));
 }

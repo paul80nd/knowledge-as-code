@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 8,
+    "validated": 13,
     "skipped": 0,
-    "errors": 5,
-    "warnings": 3
+    "errors": 7,
+    "warnings": 7
   },
   "findings": [
     {
@@ -28,6 +28,13 @@
       "message": "missing required field 'retention' (required when classification in [personal, special-category])."
     },
     {
+      "file": "data/reader-contact-list.md",
+      "line": 1,
+      "severity": "error",
+      "check": "no-actual-data",
+      "message": "This reads as an actual record rather than as a description of one. Addresses in examples belong under `example.com`, which RFC 2606 reserves so that it can never be anybody's."
+    },
+    {
       "file": "discoveries/pool-exhaustion-under-load.md",
       "line": 1,
       "severity": "warning",
@@ -42,11 +49,46 @@
       "message": "Prose has outgrown the links. Each fact restated here is a second copy to keep true — link to the document that owns it instead."
     },
     {
+      "file": "explanations/why-holds-expire.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "not-normative",
+      "message": "A bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard and link to it from here."
+    },
+    {
+      "file": "integrations/payment-gateway.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "fallback-required",
+      "message": "The Failure modes section names no fallback. Say what happens instead when this fails, or say plainly that nothing does."
+    },
+    {
+      "file": "integrations/payment-gateway.md",
+      "line": 1,
+      "severity": "error",
+      "check": "no-credentials",
+      "message": "Something here reads as a credential rather than as a reference to one. Name the mechanism and where the value is held; never the value."
+    },
+    {
+      "file": "policies/cert-certification-claim.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "posture-belongs-to-frameworks",
+      "message": "This claims a standing against a framework. A policy maps clauses to controls; where the organisation stands belongs in `frameworks.md`, the one place it can be kept true."
+    },
+    {
       "file": "postmortems/0001-detected-before-it-happened.md",
       "line": 1,
       "severity": "error",
       "check": "detected-not-before-occurred",
       "message": "`detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are right, the earlier one is when it started."
+    },
+    {
+      "file": "processes/rotate-a-signing-key.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "no-hedged-ordering",
+      "message": "A step hedged with \"typically\", \"usually\" or \"normally\" leaves the reader to decide. Say what the ordering depends on, or state it plainly."
     },
     {
       "file": "runbooks/database-connections-exhausted.md",

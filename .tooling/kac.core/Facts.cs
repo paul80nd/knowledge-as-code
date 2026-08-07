@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
 using Markdig.Syntax;
 
 // ---------------------------------------------------------------------------
@@ -32,6 +34,21 @@ public sealed class Facts(Doc doc)
 
     public int Links() => doc.Links.Count;
 
+    // Whether the body matches a pattern the schema supplies. Read as written — code fences, link
+    // targets and the markdown syntax itself are all in scope — because the rules that ask this are
+    // looking for something that should not be in the document at all, and a credential pasted into a
+    // fenced block is the case they exist for. It is also what lets `\*\*MUST\*\*` find a bold modal
+    // that the rendered text would have flattened away.
+    //
+    // Frontmatter is excluded: it is checked field by field, against patterns its fields declare.
+    public bool Matches(string pattern) => Pattern(pattern).IsMatch(Body);
+
+    // The same question asked of one section — from its heading down to the next one at the same level
+    // or above. False where the document has no such section, so a rule naming a section reads as
+    // satisfied rather than throwing; whether the section ought to be there is `required-section`'s.
+    public bool SectionMatches(string title, string pattern) =>
+        SectionText(title) is { } text && Pattern(pattern).IsMatch(text);
+
     // Words of prose: every heading and paragraph the document renders, and nothing else. Frontmatter
     // is excluded because it is not prose, and fenced code with it — neither carries inline content, so
     // both fall out of the walk rather than needing to be skipped. Whitespace-separated runs, which is
@@ -39,6 +56,34 @@ public sealed class Facts(Doc doc)
     public int Words() => words ??= CountWords();
 
     private int? words;
+
+    private string Body => body ??= doc.Text[doc.BodyStart..];
+
+    private string? body;
+
+    // The source of one section, found on the heading text rather than on any id, because that is what
+    // the schema names it by everywhere else. Case-insensitive for the same reason `section()` is.
+    private string? SectionText(string title)
+    {
+        var headings = doc.Ast.OfType<HeadingBlock>().Where(h => h.Level <= 2).ToList();
+        for (var i = 0; i < headings.Count; i++)
+        {
+            if (!string.Equals(Md.PlainText(headings[i].Inline), title, StringComparison.OrdinalIgnoreCase))
+                continue;
+            var from = headings[i].Span.End + 1;
+            var to = i + 1 < headings.Count ? headings[i + 1].Span.Start : doc.Text.Length;
+            return from >= to ? "" : doc.Text[from..to];
+        }
+
+        return null;
+    }
+
+    // Schema patterns are few and fixed, and every document of a type asks the same ones, so they are
+    // parsed once for the life of the process rather than once per document.
+    private static readonly ConcurrentDictionary<string, Regex> Patterns = new();
+
+    private static Regex Pattern(string pattern) =>
+        Patterns.GetOrAdd(pattern, p => new Regex(p, RegexOptions.CultureInvariant));
 
     private int CountWords()
     {

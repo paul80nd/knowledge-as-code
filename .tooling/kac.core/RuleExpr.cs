@@ -45,7 +45,9 @@ public static class RuleExpr
             ["section"] = ([ValueType.Str], ValueType.Bool),
             ["first_section"] = ([], ValueType.Str),
             ["links"] = ([], ValueType.Int),
-            ["words"] = ([], ValueType.Int)
+            ["words"] = ([], ValueType.Int),
+            ["matches"] = ([ValueType.Str], ValueType.Bool),
+            ["section_matches"] = ([ValueType.Str, ValueType.Str], ValueType.Bool)
         };
 
     // Parse and type-check. Throws RuleExprException on anything wrong, because a rule that cannot be
@@ -87,6 +89,8 @@ public static class RuleExpr
             "first_section" => f.FirstSection(),
             "links" => f.Links(),
             "words" => f.Words(),
+            "matches" => f.Matches((string)args[0]!),
+            "section_matches" => f.SectionMatches((string)args[0]!, (string)args[1]!),
             _ => null
         };
     }
@@ -340,12 +344,27 @@ public static class RuleExpr
 
                 if (s[i] == '\'')
                 {
-                    // No escapes: a quote ends the string. Every value the taxonomy compares against is
-                    // an id, a status or a section name, and none of them contains one.
-                    var close = s.IndexOf('\'', i + 1);
-                    if (close < 0) throw new RuleExprException($"unterminated string at {i} in '{s}'.");
-                    tokens.Add(("str", s[(i + 1)..close], start));
-                    i = close + 1;
+                    // A doubled quote is one quote, as in YAML and SQL. There are no backslash escapes,
+                    // because the strings that most need a quote in them are regular expressions and a
+                    // second escaping layer over those is how they become unreadable.
+                    var text = new System.Text.StringBuilder();
+                    var j = i + 1;
+                    while (true)
+                    {
+                        if (j >= s.Length) throw new RuleExprException($"unterminated string at {i} in '{s}'.");
+                        if (s[j] == '\'')
+                        {
+                            if (j + 1 >= s.Length || s[j + 1] != '\'') break;
+                            text.Append('\'');
+                            j += 2;
+                            continue;
+                        }
+
+                        text.Append(s[j++]);
+                    }
+
+                    tokens.Add(("str", text.ToString(), start));
+                    i = j + 1;
                 }
                 else if (char.IsAsciiDigit(s[i]))
                 {

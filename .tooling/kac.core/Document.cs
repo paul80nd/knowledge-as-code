@@ -44,6 +44,12 @@ public class Doc
     public readonly List<string> FrontKeys = [];
     public int FrontStartLine; // 1-based line where the frontmatter block begins
 
+    // Where the body begins: the first character after the frontmatter block, or 0 where there is none.
+    // Held so a check can read the document as it was written — code fences and link targets included —
+    // rather than as the AST renders it. A credential is most likely to be in a fenced block, which is
+    // exactly what the flattened text drops.
+    public int BodyStart;
+
     public string? H1;
     public int H1Line;
 
@@ -105,6 +111,7 @@ public class Doc
         {
             var yamlText = StripFences(text, fmBlock);
             doc.FrontStartLine = fmBlock.Line + 1;
+            doc.BodyStart = Math.Min(text.Length, fmBlock.Span.End + 1);
             try
             {
                 var stream = new YamlStream();

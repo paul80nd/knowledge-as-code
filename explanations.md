@@ -97,5 +97,6 @@ residual, and residual categories become dumping grounds unless the bar for entr
 | `label-canonical`            | error   | A shortcut label that names a document is written as that document's id.                                                                                                                                       |
 | `unused-definition`          | warning | A link definition that nothing references.                                                                                                                                                                     |
 | `links-rather-than-restates` | warning | Reports an explanation whose prose-to-link ratio exceeds a threshold. An explanation that accumulates facts of its own has become a maintenance liability, and its facts will be the ones that go stale first. |
+| `not-normative`              | warning | Flags RFC 2119 keywords (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) in bold. Normative content belongs in a standard; the explanation should link to it.                                                         |
 
 <!-- END GENERATED: checks-explanations -->

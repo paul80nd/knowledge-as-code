@@ -148,19 +148,30 @@ by an `expr:` — a one-line condition the schema states and the tool evaluates,
 editing this tool. Only the last two need more than the grammar can say and keep a C# arm;
 [`SPEC.md`](SPEC.md) draws the line between the two and lists what is still to convert.
 
-| Check                          | Type         | Level   | What it enforces                                                                                                                      |
-|--------------------------------|--------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `detected-not-before-occurred` | postmortems  | error   | `detected-on` is on or after `occurred-on` — an incident cannot be found before it began.                                             |
-| `symptoms-first`               | runbooks     | error   | Symptoms is the first section, because that is what someone reaching for a runbook matches on.                                        |
-| `provenance-required`          | standards    | error   | The standard cites an ADR in `derived-from` or a policy in `implements`. With neither it is guidance.                                 |
-| `hub-not-specification`        | capabilities | warning | Prose has not outgrown the links. A capability points at detail; it does not carry it.                                                |
-| `links-rather-than-restates`   | explanations | warning | As above — a fact restated rather than linked is a second copy to keep true.                                                          |
-| `low-ceremony`                 | discoveries  | warning | A capture stays short. Length here means the tier boundary is being ignored.                                                          |
-| `y-statement`                  | adrs         | warning | A block-quote follows the H1 and is within `max-words` (60).                                                                          |
-| `alternatives-verdict`         | adrs         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
+| Check                           | Type         | Level   | What it enforces                                                                                                                      |
+|---------------------------------|--------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `detected-not-before-occurred`  | postmortems  | error   | `detected-on` is on or after `occurred-on` — an incident cannot be found before it began.                                             |
+| `symptoms-first`                | runbooks     | error   | Symptoms is the first section, because that is what someone reaching for a runbook matches on.                                        |
+| `provenance-required`           | standards    | error   | The standard cites an ADR in `derived-from` or a policy in `implements`. With neither it is guidance.                                 |
+| `hub-not-specification`         | capabilities | warning | Prose has not outgrown the links. A capability points at detail; it does not carry it.                                                |
+| `links-rather-than-restates`    | explanations | warning | As above — a fact restated rather than linked is a second copy to keep true.                                                          |
+| `low-ceremony`                  | discoveries  | warning | A capture stays short. Length here means the tier boundary is being ignored.                                                          |
+| `no-credentials`                | integrations | error   | Nothing reads as a credential rather than as a reference to one — code fences included.                                               |
+| `no-actual-data`                | data         | error   | No address outside `example.com`, which RFC 2606 reserves so that it can never be anybody's.                                          |
+| `fallback-required`             | integrations | warning | The *Failure modes* section names a fallback, or says plainly that there is none.                                                     |
+| `not-normative`                 | explanations | warning | No bold RFC 2119 keyword — a bold modal binds, and an explanation does not.                                                           |
+| `no-hedged-ordering`            | processes    | warning | No "typically", "usually" or "normally" inside *Steps*.                                                                               |
+| `posture-belongs-to-frameworks` | policies     | warning | No claim of standing beside a framework's name — that belongs in `frameworks.md`.                                                     |
+| `y-statement`                   | adrs         | warning | A block-quote follows the H1 and is within `max-words` (60).                                                                          |
+| `alternatives-verdict`          | adrs         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
 
 The three length rules are ratios or ceilings whose numbers are judgements rather than measurements — no corpus has yet
 held enough of these types to calibrate them. Each is pinned by a fixture, so changing one is visible.
+
+The six that match text are heuristics, and their patterns live in `.schema/` for that reason: a heuristic gets tuned,
+and tuning a regex there is a schema edit rather than a release every corpus has to take. They read the document **as
+written** — a credential pasted into a fenced block is the case they exist for, and the flattened text a word count
+walks would never see it.
 
 Code is excluded from every link and marker check: they walk the Markdig AST (inline links, literal runs), and fenced or
 indented code carries none of those nodes.
