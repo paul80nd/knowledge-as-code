@@ -1,0 +1,94 @@
+{
+  "summary": {
+    "validated": 12,
+    "skipped": 0,
+    "errors": 10,
+    "warnings": 2
+  },
+  "findings": [
+    {
+      "file": "policies/bold-binding-not-bold.md",
+      "line": 27,
+      "severity": "error",
+      "check": "clause-modal",
+      "message": "'MUST' binds — write it bold, `**MUST**`."
+    },
+    {
+      "file": "policies/case-lower-clause-id.md",
+      "line": 27,
+      "severity": "error",
+      "check": "clause-id-format",
+      "message": "clause id 'clean' does not match ^[A-Z][A-Z0-9]{1,6}$."
+    },
+    {
+      "file": "policies/cmpd-two-obligations.md",
+      "line": 28,
+      "severity": "warning",
+      "check": "clause-compound",
+      "message": "clause 'CLEAN' carries a second 'MUST' — one obligation per clause, or the citation is ambiguous."
+    },
+    {
+      "file": "policies/cref-unknown-clause.md",
+      "line": 16,
+      "severity": "error",
+      "check": "clause-ref",
+      "message": "'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry."
+    },
+    {
+      "file": "policies/dupe-repeated-id.md",
+      "line": 28,
+      "severity": "error",
+      "check": "clause-id-unique",
+      "message": "clause id 'SAME' is used twice — a citation of it names two obligations."
+    },
+    {
+      "file": "policies/empt-no-rows.md",
+      "line": 25,
+      "severity": "error",
+      "check": "clause-table",
+      "message": "the clause table has no rows — a policy that binds nothing binds nobody."
+    },
+    {
+      "file": "policies/head-wrong-headers.md",
+      "line": 26,
+      "severity": "error",
+      "check": "clause-table",
+      "message": "the clause table is headed 'Ref | Obligation' — it must be headed 'Id | Clause'."
+    },
+    {
+      "file": "policies/moda-no-modal.md",
+      "line": 28,
+      "severity": "error",
+      "check": "clause-modal",
+      "message": "clause 'We will trigger clause-modal and nothing else' does not open with a modal — write one of MUST, MUST NOT, SHOULD, COULD."
+    },
+    {
+      "file": "policies/nota-clauses-as-bullets.md",
+      "line": 24,
+      "severity": "error",
+      "check": "clause-table",
+      "message": "the '## Clauses' section holds no table — write one row per obligation, headed 'Id | Clause'."
+    },
+    {
+      "file": "policies/ordr-out-of-order.md",
+      "line": 28,
+      "severity": "warning",
+      "check": "clause-order",
+      "message": "clause 'SECND' is a 'MUST' but follows a 'MUST NOT' — group the table MUST, MUST NOT, SHOULD, COULD."
+    },
+    {
+      "file": "policies/refs-unknown-document.md",
+      "line": 16,
+      "severity": "error",
+      "check": "clause-ref",
+      "message": "'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist."
+    },
+    {
+      "file": "policies/span-id-not-code.md",
+      "line": 28,
+      "severity": "error",
+      "check": "clause-id-format",
+      "message": "clause id 'CLEAN' is not a code span — write it as `CLEAN`."
+    }
+  ]
+}

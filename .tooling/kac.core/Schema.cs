@@ -27,6 +27,23 @@ public class FieldSpec
     public string? TableText => string.IsNullOrEmpty(Description) ? Notes : Description;
 }
 
+// The clause table a type's normative section carries — one addressable obligation per row, cited from
+// elsewhere as `pol-VURM.TIMEBOX`. Held as its own spec so a type gains clauses by declaring them and a
+// type that declares none is simply never checked for any.
+public class ClauseSpec
+{
+    public string Section = "Clauses";
+    public string IdPattern = "";
+    public List<string> Binding = [];  // written bold — these oblige
+    public List<string> Advisory = []; // written plain — these recommend
+
+    // Longest first, so "MUST NOT" is recognised before the "MUST" that prefixes it.
+    public IEnumerable<string> Modals => Binding.Concat(Advisory).OrderByDescending(m => m.Length);
+
+    // The order rows appear in: binding levels before advisory ones, each in the order declared.
+    public int Rank(string modal) => Binding.Concat(Advisory).ToList().IndexOf(modal);
+}
+
 public class TypeSchema
 {
     public string TypeName = "", Label = "", Folder = "", Page = "", Tier = "", Lifecycle = "";
@@ -40,6 +57,7 @@ public class TypeSchema
     public List<string> OptionalSections = [];
     public List<string> IndexColumns = [];
     public string? IndexSort;
+    public ClauseSpec? Clauses;
     public readonly List<Dictionary<string, object>> Rules = [];
 
     // How a single document of this type is named in generated prose — "Policy", "ADR", "NFR". Declared
@@ -136,6 +154,15 @@ public class Schema
             t.RequiredSections = Yaml.StrList(Yaml.Get(sections, "required"));
             t.OptionalSections = Yaml.StrList(Yaml.Get(sections, "optional"));
         }
+
+        if (Yaml.Get(root, "clauses") is { } clauses)
+            t.Clauses = new ClauseSpec
+            {
+                Section = Yaml.Str(Yaml.Get(clauses, "section")) ?? "Clauses",
+                IdPattern = Yaml.Str(Yaml.Get(clauses, "id-pattern")) ?? "",
+                Binding = Yaml.StrList(Yaml.Get(clauses, "binding")),
+                Advisory = Yaml.StrList(Yaml.Get(clauses, "advisory"))
+            };
 
         var index = Yaml.Get(root, "index");
         if (index is not null)

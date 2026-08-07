@@ -163,6 +163,16 @@ public static class Generator
             "An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.",
             t => !string.IsNullOrEmpty(t.Folder)),
         ("required-section", ["required-section"], "Every required section heading is present.", null),
+        // The pipe is escaped because this text lands in a table cell: GFM splits a cell on a bare `|`
+        // even inside a code span, so an unescaped one would break the row it is describing.
+        ("clauses", ["clause-table", "clause-id-format", "clause-id-unique", "clause-modal"],
+            "The clause section is a table of `Id \\| Clause` rows, each id a unique code span and each "
+            + "clause opening with its modal.", t => t.Clauses is not null),
+        ("clause-order / clause-compound", ["clause-order", "clause-compound"],
+            "Clause rows are grouped by binding level, and each carries a single obligation.",
+            t => t.Clauses is not null),
+        ("clause-ref", ["clause-ref"],
+            "A `pol-XXXX.CLAUSE` citation names a clause that exists.", null),
         ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional).", null),
         ("undefined-label", ["undefined-label"], "Every shortcut reference has a link definition.", null),
         ("label-canonical", ["label-canonical"],

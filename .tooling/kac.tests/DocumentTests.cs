@@ -66,4 +66,94 @@ public class DocumentTests
         Assert.NotNull(doc);
         Assert.Null(doc.IdentitySpans);
     }
+
+    // A schema declaring clauses, for the parse tests below: the folder must map to a type carrying a
+    // ClauseSpec, since a type that declares none is never read for a clause table at all.
+    private static Schema WithClauses()
+    {
+        var schema = new Schema();
+        schema.ByFolder["policies"] = new TypeSchema
+        {
+            Clauses = new ClauseSpec { Section = "Clauses", Binding = ["MUST"], Advisory = ["SHOULD"] }
+        };
+        return schema;
+    }
+
+    private static Doc? ParseWithClauses(string body) =>
+        Doc.Parse("policies/scrt-a-title.md",
+            $"---\nid: pol-SCRT\n---\n\n# Secrets are managed\n\n{body}", WithClauses());
+
+    // Rows arrive as written, not as they should be: an id that is not a single code span reports no
+    // span but keeps its text, and a clause that opens with no bold run reports no lead. Every one of
+    // those is a finding the validator words, and it can only word them if the parser declines to fix
+    // them on the way past.
+    [Fact]
+    public void Clause_rows_are_read_as_written()
+    {
+        var doc = ParseWithClauses("""
+                                   ## Clauses
+
+                                   | Id      | Clause                  |
+                                   |---------|-------------------------|
+                                   | `STORE` | **MUST** hold secrets   |
+                                   | PLAIN   | SHOULD rotate them      |
+                                   """);
+
+        Assert.NotNull(doc);
+        Assert.Equal(["Id", "Clause"], doc.ClauseHeaders);
+        Assert.Collection(doc.Clauses,
+            first =>
+            {
+                Assert.Equal("STORE", first.IdSpan);
+                Assert.Equal("MUST hold secrets", first.Text);
+                Assert.Equal("MUST", first.BoldLead);
+            },
+            second =>
+            {
+                Assert.Null(second.IdSpan);       // written as prose, so no span to report
+                Assert.Equal("PLAIN", second.IdText);
+                Assert.Null(second.BoldLead);     // …and no bold run opening the clause
+            });
+    }
+
+    // Null headers mean "the section holds no table", which is the finding. An empty list would say the
+    // table is there and headed with nothing, and the two have different fixes.
+    [Fact]
+    public void No_clause_table_when_the_section_holds_prose()
+    {
+        var doc = ParseWithClauses("## Clauses\n\n* We will hold secrets in a store.\n");
+
+        Assert.NotNull(doc);
+        Assert.Null(doc.ClauseHeaders);
+        Assert.Empty(doc.Clauses);
+    }
+
+    // A table under some other heading is not the clause table, however much it looks like one — the
+    // section the schema names is what makes it one.
+    [Fact]
+    public void A_table_outside_the_clause_section_is_not_read_as_clauses()
+    {
+        var doc = ParseWithClauses("""
+                                   ## Alignment
+
+                                   | Id      | Clause                |
+                                   |---------|-----------------------|
+                                   | `STORE` | **MUST** hold secrets |
+                                   """);
+
+        Assert.NotNull(doc);
+        Assert.Null(doc.ClauseHeaders);
+    }
+
+    // Citations are collected from code spans anywhere in the document, and left unjudged: case and
+    // width are the validator's to rule on, so a mis-cased citation is one it can report as unresolved
+    // rather than one the parser silently never saw.
+    [Fact]
+    public void Clause_citations_are_collected_from_code_spans()
+    {
+        var doc = ParseWithClauses("Cites `pol-VURM.TIMEBOX`, `pol-vurm.lower`, `pol-VURM` and `DRAFT`.\n");
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX", "pol-vurm.lower"], doc.ClauseRefs.Select(r => r.Ref));
+    }
 }

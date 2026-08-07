@@ -113,6 +113,7 @@ See [Contributing](/knowledge-as-code/contributing.md) for the review model that
 | `h1`                        | error   | The document has an H1.                                                                                  |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter. |
 | `required-section`          | error   | Every required section heading is present.                                                               |
+| `clause-ref`                | error   | A `pol-XXXX.CLAUSE` citation names a clause that exists.                                                 |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |

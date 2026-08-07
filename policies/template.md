@@ -67,10 +67,11 @@ weight drops off at the boundary without needing a divider the table format can'
 | `XXXXXX` | SHOULD {{recommendation}}             |
 | `XXXXXX` | COULD {{aspiration}} _(aspirational)_ |
 
-**Ids.** `[A-Z][A-Z0-9]{1,6}`, unique within the document, immutable once the policy is active — downstream corpora cite
-them as `pol-XXXX.CLAUSE` and removing one is a breaking change. Prefer the shortest natural word; compress only when
-there isn't one. They are reconciliation keys, not prose, and every report that shows an id shows its clause text
-alongside — but a CI failure or a diff shows the id alone, so it should still be guessable.
+**Ids.** `[A-Z][A-Z0-9]{1,6}`, unique within the document, immutable once the policy is active — anything else cites
+them as `pol-XXXX.CLAUSE`, CI holds every citation to a clause that exists, and removing one is a breaking change.
+Prefer the shortest natural word; compress only when there isn't one. They are reconciliation keys, not prose, and every
+report that shows an id shows its clause text alongside — but a CI failure or a diff shows the id alone, so it should
+still be guessable.
 
 **Writing a clause.** Start with the modal verb; the subject is always us, so don't restate it. One obligation per
 clause — if it needs an "and" joining two different actions, it is two clauses. Keep them implementation-agnostic: a
@@ -81,9 +82,8 @@ has escaped downward and belongs in the standard instead.
 clause is unevidenceable and needs rewriting — "consider accessibility" fails, "establish accessibility requirements
 during design" passes. The question itself is not published; controls carry evidence.
 
-**`_(aspirational)_`** marks a clause with no implementing standard expected yet. It is a token, not prose: it excludes
-the clause from the unclaimed-clause report. Use it deliberately — an aspirational MUST is a real and useful state, but
-a policy where most clauses carry it is a wish list.
+**`_(aspirational)_`** marks a clause we hold to but expect no standard beneath yet. Use it deliberately — an
+aspirational MUST is a real and useful state, but a policy where most clauses carry it is a wish list.
 
 ## Alignment
 

@@ -109,6 +109,7 @@ file, so these fields describe `glossary.md` itself.
 | `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.               |
 | `h1`                        | error   | The document has an H1.                                                       |
 | `required-section`          | error   | Every required section heading is present.                                    |
+| `clause-ref`                | error   | A `pol-XXXX.CLAUSE` citation names a clause that exists.                      |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                               |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.      |

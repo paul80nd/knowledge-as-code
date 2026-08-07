@@ -69,6 +69,7 @@ Beyond `fields`, each type file declares:
 | `id`                       | Prefix, style (`numbered`, `slug`, `mnemonic` or `literal`), and width                                           |
 | `filename`                 | Pattern and slug length limit                                                                                    |
 | `sections`                 | Required and optional H2s — drives template generation and structural validation                                 |
+| `clauses`                  | The clause table's section, id pattern and modals, where a type states its obligations as addressable rows      |
 | `index`                    | Columns and sort order for the generated index                                                                   |
 | `rules`                    | Type-level behaviours the validator applies (immutability, reciprocity)                                          |
 
