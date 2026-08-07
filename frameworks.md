@@ -138,6 +138,28 @@ that fits it.
 
 Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-PIPE], [pol-ENVS].
 
+### NIST AI RMF 1.0 {#nist-ai-rmf-1-0}
+
+**Inspiration.** The AI Risk Management Framework, NIST AI 100-1 — four functions: `GOVERN` (accountability and
+oversight), `MAP` (context and provenance), `MEASURE` (evaluation and verification) and `MANAGE` (risk treatment).
+
+Cited at function level rather than by category, for the same reason the Well-Architected pillars are: the categories
+beneath each function are numerous and re-numbered between revisions, and a clause aligning with an entire function is
+saying something true rather than something precise-looking.
+
+[pol-AGNT] is the policy this exists for. Everything else in the corpus had a framework watching it and that one had
+`A.8.30`, *outsourced development* — a control written for contracting out a system build, pressed into service for an
+agent proposing a change. It reads plausibly and it is wrong: an outsourced supplier is accountable for its work, and
+the entire point of pol-AGNT is that an agent is not, so the accountability sits with the person who accepts the
+output. The AI RMF's GOVERN function says exactly that, which is why the mapping is worth having.
+
+**ISO/IEC 42001** is the certifiable sibling — an AI management system standard, and the natural companion to our
+ISO/IEC 27001 registration if the use of AI ever needs to be auditable rather than merely governed. It sits under
+Obliged the day we register for it and not before. The relationship is the same one SSDF has to 27001: the free
+framework describes the practice, the certifiable standard makes someone check.
+
+Referenced by: [pol-AGNT].
+
 ### OWASP ASVS 4.0 {#owasp-asvs-4}
 
 **Inspiration.** The Open Worldwide Application Security Project's Application Security Verification Standard — a
