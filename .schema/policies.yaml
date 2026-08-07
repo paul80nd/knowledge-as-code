@@ -58,17 +58,15 @@ fields:
     description: Quoted. Annual is usually right for a policy.
 
 # `Clauses` is the policy proper — a table of individually addressable obligations, one row each, so a
-# standard or a control can cite the commitment it answers rather than the whole document.
-#
-# `Commitments` holds prose obligations that have no single clause to become: two obligations in one
-# sentence, most often. It is optional and expected to empty — a bullet sitting there is one awaiting the
-# editorial judgement that splitting it needs, not a second way of writing a policy.
+# standard or a control can cite the commitment it answers rather than the whole document. It is the only
+# place an obligation is stated: prose elsewhere in the document describes, qualifies or explains, and a
+# sentence that binds has escaped the table.
 #
 # `Notes` is the home for anything genuinely contextual about this policy — why it carries no framework
 # alignment, how it relates to the taxonomy, what it deliberately leaves to an implementing process.
 sections:
   required: [Purpose, Scope, Clauses]
-  optional: [Alignment, Commitments, Exceptions, Notes]
+  optional: [Alignment, Exceptions, Notes]
 
 index:
   columns: [id, title, category, status, aligns-with, review-by]

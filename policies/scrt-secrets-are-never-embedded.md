@@ -32,19 +32,15 @@ machine identities.
 
 ## Clauses
 
-| Id      | Clause                                                                                                                                       |
-|---------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `STORE` | **MUST** hold secrets in a controlled store, with access granted by identity, restricted to those who need it, and recorded                  |
-| `KEYS`  | **MUST** protect the keys and certificates that protect our data through their full lifecycle — issue, storage, rotation, revocation         |
-| `SCAN`  | **MUST** actively look for secrets that have leaked into places they should never reach                                                      |
-| `EMBED` | **MUST NOT** commit a secret to version control, place one in a configuration file or pipeline definition, or bake one into a build artifact |
-| `REUSE` | **MUST NOT** use a production secret anywhere outside production                                                                             |
-| `LOGS`  | **MUST NOT** write a secret to a log, a console, an error message or a support ticket                                                        |
-
-## Commitments
-
-* We **will** be able to rotate any secret without a code change, and **will** rotate on a defined cycle and on any
-  suspicion of compromise.
+| Id       | Clause                                                                                                                                       |
+|----------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `STORE`  | **MUST** hold secrets in a controlled store, with access granted by identity, restricted to those who need it, and recorded                  |
+| `ROTATE` | **MUST** rotate any secret on a defined cycle and on any suspicion of compromise, without a code change                                      |
+| `KEYS`   | **MUST** protect the keys and certificates that protect our data through their full lifecycle — issue, storage, rotation, revocation         |
+| `SCAN`   | **MUST** actively look for secrets that have leaked into places they should never reach                                                      |
+| `EMBED`  | **MUST NOT** commit a secret to version control, place one in a configuration file or pipeline definition, or bake one into a build artifact |
+| `REUSE`  | **MUST NOT** use a production secret anywhere outside production                                                                             |
+| `LOGS`   | **MUST NOT** write a secret to a log, a console, an error message or a support ticket                                                        |
 
 ## Alignment
 

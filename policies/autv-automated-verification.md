@@ -42,12 +42,8 @@ configuration, data pipelines and the documentation held with them.
 | `REGRESS` | **MUST** add a regression test for every defect we fix, so it can only be found once                                   |
 | `BROKEN`  | **MUST** treat a broken mainline as the team's first priority                                                          |
 | `BYPASS`  | **MUST NOT** merge or release over a failing check without a recorded deviation ([pol-DEVI])                           |
+| `DISABLE` | **MUST NOT** disable, skip, silence or suppress a check or a warning without a recorded reason                         |
 | `MACHINE` | **MUST NOT** depend on a particular person's machine to produce a build                                                |
-
-## Commitments
-
-* We **will not** disable, skip or suppress a check to make a release possible, and **will not** silence a warning
-  without a recorded reason.
 
 ## Alignment
 
