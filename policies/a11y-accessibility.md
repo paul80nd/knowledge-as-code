@@ -15,8 +15,8 @@ tags: [ accessibility, inclusive-design, legal-obligation ]
 
 ## Purpose
 
-The software we put in front of users is usable by people with disabilities, meeting the accessibility standard we
-target, because it was designed that way rather than corrected afterwards.
+The software we put in front of users is usable by people with disabilities, meeting [WCAG 2.2 AA], because it was
+designed that way rather than corrected afterwards.
 
 This is an obligation in law in the markets we serve, and it is also simply the difference between software that serves
 its users and software that serves most of them. Accessibility designed in costs a fraction of accessibility
@@ -27,17 +27,15 @@ retrofitted, because the expensive failures are structural ones no late fix reac
 All user-facing applications and interfaces we build. Internal tools are held to the same standard where anyone using
 them may need it — which is to say, always, since we do not know who that is.
 
-## Commitments
+## Clauses
 
-* We **will** meet the accessibility standard the organisation targets for user-facing software.
-* We **will** consider accessibility at design, as a requirement alongside any other.
-* We **will** test for accessibility, including with the assistive technologies people actually use, on the journeys
-  that matter most.
-* We **will** publish an accessibility statement where we are required to, and keep it truthful about the gaps that
-  remain.
-* We **will not** ship a change that knowingly makes accessibility worse without a recorded deviation ([pol-DEVI]) and a
-  plan to correct it.
-* We **will not** treat accessibility as a phase that follows delivery.
+| Id        | Clause                                                                                                                                 |
+|-----------|----------------------------------------------------------------------------------------------------------------------------------------|
+| `DESIGN`  | **MUST** establish accessibility requirements during design, alongside any other requirement                                           |
+| `VERIFY`  | **MUST** verify conformance against [WCAG 2.2 AA] before a change reaches users                                                        |
+| `VENDOR`  | **MUST** assess third-party components against [WCAG 2.2 AA] before we adopt them, and record what falls short                         |
+| `PUBLISH` | **MUST** publish an accessibility statement where we are required to, and keep it truthful about the gaps that remain                  |
+| `REGRESS` | **MUST NOT** ship a change that knowingly makes accessibility worse without a recorded deviation ([pol-DEVI]) and a plan to correct it |
 
 ## Exceptions
 
@@ -52,3 +50,4 @@ per clause where a genuine mapping exists and left absent where it does not; an 
 none.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
+[WCAG 2.2 AA]: https://www.w3.org/TR/WCAG22/

@@ -89,8 +89,9 @@ under governance is the clearest) are the ones most likely to be revisited.
    ``` `Policy: pol-MNEM` `DRAFT` ``` — and CI checks it against the frontmatter.
 4. Set `category` to whichever of the four the commitment belongs to. If two fit, pick the one a reader looking for this
    policy would try first; if none does, that is a taxonomy conversation, not a fifth category invented in passing.
-5. State the commitment, the scope it applies to, and any explicit exceptions. Exceptions stated up front are honest;
-   exceptions discovered later are erosion.
+5. State the scope it binds, then the commitment itself as clauses — one obligation per row, each with a short
+   upper-case id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Add any explicit exceptions beneath them. Exceptions
+   stated up front are honest; exceptions discovered later are erosion.
 6. Set `aligns-with` where an ISO 27001 Annex A area corresponds. Use `aligns-with`, never wording that implies
    compliance or certification.
 7. Set `review-by`. Policies change rarely, so an annual review is usually right.
@@ -102,6 +103,9 @@ under governance is the clearest) are the ones most likely to be revisited.
   and a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
   standards against them, so the set of implementers is not knowable from here — and a policy nothing in *this* wiki
   implements is the normal state rather than a gap to be explained.
+* **A clause is the unit anything else cites.** Written `pol-VURM.TIMEBOX` — the policy id, then the clause id — so a
+  standard, a control or a deviation names the obligation it answers rather than the whole document. Clause ids are
+  immutable for the same reason policy ids are: removing or renaming one silently breaks every citation of it.
 * **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
   scope — the id does not move. Standards, controls and processes cite policies by id, and a mnemonic that is reassigned
   turns every one of those citations into a quiet lie: the reference still resolves, so nothing fails, and the reader is

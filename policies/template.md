@@ -37,24 +37,53 @@ reader arriving from a citation sees first, and CI checks all three against the 
 
 ## Purpose
 
-What we commit to, in one or two sentences, and why it matters. State the commitment plainly — a policy that hedges
-isn't one.
+What we commit to and why, in one or two short paragraphs. This is the section a person reads if they read nothing else,
+so write it as prose with a point of view — plain, declarative, unhedged. A policy that hedges isn't one.
+
+Say the thing and the reason for it. The first paragraph states the position; the second earns it, ideally with the
+argument someone sceptical would need rather than the one that sounds best. Avoid previewing the clauses: if a sentence
+here could be re-read as an obligation, it belongs in the table instead.
 
 _(Test before writing: would this still be true after replacing the entire technology estate? If it names a tool, a
 framework or a protocol, it is a [standard](/standards), not a policy.)_
 
 ## Scope
 
-Who and what this applies to. Be explicit about the boundary — "all product repositories", "any system processing
-personal data", "production environments only".
+Who and what this binds, and where the boundary falls — "all product repositories", "any system processing personal
+data", "production environments only". Two or three sentences at most.
 
-## Commitments
+Where the boundary is arguable, say which way it falls and why, rather than leaving the reader to infer it. This is also
+where ownership belongs if it needs stating: who is bound is a scope question, not a purpose one.
 
-* We **will** …
-* We **will not** …
+## Clauses
 
-_(Principle-level. The specific, checkable rules belong in the implementing standards; this is the position they
-implement.)_
+One row per clause. Ordered **MUST**, **MUST NOT**, SHOULD, COULD — binding levels bold, non-binding plain, so the
+weight drops off at the boundary without needing a divider the table format can't give you.
+
+| Id       | Clause                                |
+|----------|---------------------------------------|
+| `XXXXXX` | **MUST** {{obligation}}               |
+| `XXXXXX` | **MUST NOT** {{prohibition}}          |
+| `XXXXXX` | SHOULD {{recommendation}}             |
+| `XXXXXX` | COULD {{aspiration}} _(aspirational)_ |
+
+**Ids.** `[A-Z][A-Z0-9]{1,6}`, unique within the document, immutable once the policy is active — downstream corpora cite
+them as `pol-XXXX.CLAUSE` and removing one is a breaking change. Prefer the shortest natural word; compress only when
+there isn't one. They are reconciliation keys, not prose, and every report that shows an id shows its clause text
+alongside — but a CI failure or a diff shows the id alone, so it should still be guessable.
+
+**Writing a clause.** Start with the modal verb; the subject is always us, so don't restate it. One obligation per
+clause — if it needs an "and" joining two different actions, it is two clauses. Keep them implementation-agnostic: a
+clause says what must be true, a standard says how, and if an engineer could action it without a standard beneath it, it
+has escaped downward and belongs in the standard instead.
+
+**The evidenceability test.** Before writing a clause, ask what an auditor would ask to *see*. If you can't answer, the
+clause is unevidenceable and needs rewriting — "consider accessibility" fails, "establish accessibility requirements
+during design" passes. The question itself is not published; controls carry evidence.
+
+**`_(aspirational)_`** marks a clause with no implementing standard expected yet. It is a token, not prose: it excludes
+the clause from the unclaimed-clause report. Use it deliberately — an aspirational MUST is a real and useful state, but
+a policy where most clauses carry it is a wish list.
 
 ## Alignment
 
@@ -69,19 +98,22 @@ _(Delete this section if no ISO area corresponds — an invented mapping is wors
 
 ## Exceptions
 
-Where this policy does not apply, and who can grant an exception. Exceptions stated up front are honest; exceptions
-discovered later are erosion. If there are none, say so.
+Where the clauses above do not hold, and who can grant a departure. Name the clauses being qualified rather than leaving
+it to inference. Stays below the clauses — an exception cannot be read before the thing it excepts.
+
+Exceptions stated up front are honest; exceptions discovered later are erosion. If there are none, say so in a sentence.
+Recording a gap is acceptable; concealing it is not — and a one-off departure is a recorded deviation ([pol-DEVI]), not
+an exception.
 
 ## Notes
 
-Anything genuinely contextual about this policy — why it carries no framework alignment, how it relates to the rest of
-the taxonomy, what it deliberately leaves to an implementing standard or process.
+Only what has no other home: why an expected alignment is absent, why a clause is worded unusually, a caveat a future
+reader would otherwise raise. If a note is doing the job of a section, it belongs in the section.
 
-_(Optional, and it should stay that way. Delete the section rather than fill it: a note that would be true of every
-policy is boilerplate, and the review point is already `review-by`.)_
+Delete this heading if there is nothing to say. An empty section is worse than a missing one.
 
+[pol-DEVI]: devi-deviations-are-recorded.md
 [pol-XXXX]: xxxx-kebab-slug.md
-[std-NNNN]: /standards/nnnn-kebab-slug.md
 
 _(Link definitions, at the very foot, sorted by label. References to another document **by its id** use **shortcut
 reference links** — write `[pol-DEVI]` in the prose and define it once here, so a rename is a one-line change. The label
