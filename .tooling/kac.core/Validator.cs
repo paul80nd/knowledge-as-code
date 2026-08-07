@@ -167,8 +167,8 @@ public static class Validator
         // -- related mirrors ## Related --
         CheckMirrorsSection(d, t, schema, Err);
 
-        // -- warning rules --
-        CheckWarnings(d, t, Warn);
+        // -- the type's own rules --
+        CheckRules(d, t, Err, Warn);
         return;
 
         void Warn(string check, string msg, int? line = null) =>
@@ -772,10 +772,28 @@ public static class Validator
         }
     }
 
-    private static void CheckWarnings(Doc d, TypeSchema t, Action<string, string, int?> warn)
+    // The type's own `rules:`, in the order the schema declares them. Two kinds arrive here: a rule
+    // carrying an `expr:` is answered by evaluating it, and needs no C# beyond this loop; a rule whose
+    // question needs a real algorithm keeps an arm below. SPEC.md draws the line between them, and the
+    // reason to hold it is that the arms are what this loop exists to stop accumulating.
+    private static void CheckRules(Doc d, TypeSchema t, Action<string, string, int?> err,
+        Action<string, string, int?> warn)
     {
+        // Built once for the document and only where a rule actually asks something of it, so a type
+        // with no expression rules measures nothing.
+        Facts? facts = null;
+
         foreach (var rule in t.Rules)
         {
+            if (rule.Compiled is { } compiled)
+            {
+                facts ??= new Facts(d);
+                if (RuleExpr.Eval(compiled, facts)) continue;
+                var report = rule.Severity == Sev.Error ? err : warn;
+                report(rule.Id, rule.Message!, d.FrontStartLine);
+                continue;
+            }
+
             if (rule.Severity != Sev.Warning) continue;
 
             switch (rule.Id)

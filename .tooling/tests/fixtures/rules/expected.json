@@ -1,0 +1,17 @@
+{
+  "summary": {
+    "validated": 1,
+    "skipped": 0,
+    "errors": 1,
+    "warnings": 0
+  },
+  "findings": [
+    {
+      "file": "postmortems/0001-detected-before-it-happened.md",
+      "line": 1,
+      "severity": "error",
+      "check": "detected-not-before-occurred",
+      "message": "`detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are right, the earlier one is when it started."
+    }
+  ]
+}

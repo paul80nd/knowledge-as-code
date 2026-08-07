@@ -42,9 +42,9 @@ The unit layer catches breakage in the pieces early; the feature layer is the re
 validator does; the golden/subprocess layer owns the end-to-end CLI contract that the in-process layers bypass.
 Regenerate golden expectations after an intended rule change with `dotnet run .tooling/kac-tests.cs -- --update`.
 
-The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check
-the command can emit is reachable from a spec. The golden layer builds `kac.cs` once per run and invokes the built
-assembly, so each scenario is a real process without paying `dotnet run`'s up-to-date check for each one.
+The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check the
+command can emit is reachable from a spec. The golden layer builds `kac.cs` once per run and invokes the built assembly,
+so each scenario is a real process without paying `dotnet run`'s up-to-date check for each one.
 
 ### Exit codes
 
@@ -67,16 +67,16 @@ and `.git/` is never walked), then applies the taxonomy exclusions from `knowled
 - anything outside a folder that maps to a type schema
 
 A document is validated **only if it carries a YAML frontmatter block** — that is how a document opts into the schema.
-Files in a type folder without frontmatter are counted as *skipped (not yet migrated)* and reported in the summary,
-not failed.
+Files in a type folder without frontmatter are counted as *skipped (not yet migrated)* and reported in the summary, not
+failed.
 
 **Type pages get a pass of their own**, chosen by the type's `shape`:
 
 - a **`collection`** page — `adrs.md`, `services.md` — is not a record and carries no frontmatter, so the structural
   checks do not apply. It is checked for link resolution, undefined and non-canonical labels, unused definitions, and
   that its generated blocks still have their markers.
-- a **`single-document`** page — `glossary.md` — *is* the record, so it is validated like any other document, plus
-  the same generated-block check.
+- a **`single-document`** page — `glossary.md` — *is* the record, so it is validated like any other document, plus the
+  same generated-block check.
 
 ## Checks
 
@@ -137,16 +137,22 @@ A type that declares no `clauses:` block is checked for none of these.
 | `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                   |
 | `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`) and points at a document that exists.                                                                                                                                                                   |
 | `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. A `single-document` type has a page and no folder. Skipped when the run is narrowed to paths.    |
-| `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                              |
+| `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                               |
 | `unused-definition`       | warning | A link definition that nothing references.                                                                                                                                                                                                                                              |
 | `bracket-literal`         | warning | A `[...]` left in prose that looks like a reference but has no definition (use an inline link if it is deliberate).                                                                                                                                                                     |
 
-### Content quality (schema `rules` with `severity: warning`)
+### Content quality (a type's own `rules`)
 
-| Check                  | Level   | What it enforces                                                                                                                      |
-|------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `y-statement`          | warning | A block-quote follows the H1 and is within `max-words` (60).                                                                          |
-| `alternatives-verdict` | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
+A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
+by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
+editing this tool. The two below need more than the grammar can say and keep a C# arm; [`SPEC.md`](SPEC.md)
+draws the line between the two and lists what is still to convert.
+
+| Check                          | Level   | What it enforces                                                                                                                      |
+|--------------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `detected-not-before-occurred` | error   | A postmortem's `detected-on` is on or after its `occurred-on`. Declared as an `expr:`, not as code.                                   |
+| `y-statement`                  | warning | A block-quote follows the H1 and is within `max-words` (60).                                                                          |
+| `alternatives-verdict`         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
 
 Code is excluded from every link and marker check: they walk the Markdig AST (inline links, literal runs), and fenced or
 indented code carries none of those nodes.

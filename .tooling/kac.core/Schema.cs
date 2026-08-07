@@ -79,6 +79,17 @@ public sealed record RuleSpec
 
     public Sev? Severity { get; init; }
 
+    // The condition a document must satisfy, as the schema wrote it, and compiled. A rule carrying one
+    // needs no C# at all: the dispatcher evaluates it and reports `Message` where it comes out false.
+    // Absent on the rules that need a real algorithm — git history, graph walks, anything spanning
+    // documents — which stay in C# and are listed in SPEC.md as the boundary not to push.
+    public string? Expr { get; init; }
+    public Expr? Compiled { get; init; }
+
+    // What the author is told when the expression fails. Distinct from Description, which says what the
+    // rule means to someone reading the type page: one is a diagnosis, the other a definition.
+    public string? Message { get; init; }
+
     // The ceiling `y-statement-present` holds a Y-statement to. Rule-specific because the check that
     // reads it is; a threshold expressed as an `expr:` would not need a home here at all.
     public int? MaxWords { get; init; }
@@ -351,20 +362,55 @@ public sealed class Schema
     // A severity the tool does not recognise reads as absent, which leaves the rule declared but not
     // enforced — the same state as a rule that names no severity at all, and the safe one: a check that
     // does not run is visible in `kac checks`, where a check that ran at a level nobody meant is not.
-    private static RuleSpec ParseRule(YamlNode node) => new()
+    //
+    // A rule carrying an `expr:` is held to more, because it is a rule that claims to be finished. It
+    // must compile, and it must say at what level it fires and what to tell the author, or it would load
+    // as a check that can never report anything. Each of those is a defect in the schema rather than in
+    // any document, so the load stops rather than carrying a rule nobody can rely on.
+    private static RuleSpec ParseRule(YamlNode node)
     {
-        Id = Yaml.Str(Yaml.Get(node, "id")) ?? "",
-        Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
-        Severity = Yaml.Str(Yaml.Get(node, "severity")) switch
+        var id = Yaml.Str(Yaml.Get(node, "id")) ?? "";
+        var source = Yaml.Str(Yaml.Get(node, "expr"));
+        var severity = Yaml.Str(Yaml.Get(node, "severity")) switch
         {
             "error" => Sev.Error,
             "warning" => Sev.Warning,
-            _ => null
-        },
-        MaxWords = Yaml.Get(node, "max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
-            ? words
-            : null
-    };
+            _ => (Sev?)null
+        };
+        var message = Collapse(Yaml.Str(Yaml.Get(node, "message")));
+
+        Expr? compiled = null;
+        if (source is not null)
+        {
+            if (severity is null)
+                throw new RuleExprException($"rule '{id}' has an expr but no severity — say whether it fails "
+                                            + "a build or advises an author.");
+            if (string.IsNullOrEmpty(message))
+                throw new RuleExprException($"rule '{id}' has an expr but no message — an author has to be "
+                                            + "told what to do about it.");
+            try
+            {
+                compiled = RuleExpr.Compile(source);
+            }
+            catch (RuleExprException ex)
+            {
+                throw new RuleExprException($"rule '{id}': {ex.Message}");
+            }
+        }
+
+        return new RuleSpec
+        {
+            Id = id,
+            Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
+            Severity = severity,
+            Expr = source,
+            Compiled = compiled,
+            Message = message,
+            MaxWords = Yaml.Get(node, "max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
+                ? words
+                : null
+        };
+    }
 
     // The field a name resolves to for a given type: its own declaration where it has one, otherwise the
     // universal field it inherits. One definition, so the list derived at load and the lookup a check

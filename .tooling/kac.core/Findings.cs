@@ -68,4 +68,20 @@ public static class CheckCatalogue
         new("y-statement", Sev.Warning, "A short Y-statement block-quote follows the H1."),
         new("alternatives-verdict", Sev.Warning, "Each Alternatives Considered bullet states an outcome.")
     ];
+
+    // The catalogue as it stands for a given corpus: the checks above, which every corpus gets, plus one
+    // entry per expression rule its schema declares. A rule with an `expr:` reports under its own id, so
+    // it is a check like any other — it appears in `kac checks`, and the coverage gate holds it to the
+    // same requirement of a fixture that exercises it.
+    //
+    // Ordered so the core checks keep the sequence a document is read in and the schema's own rules
+    // follow, grouped by the type that declares them.
+    public static IReadOnlyList<CheckDef> For(Schema schema) =>
+    [
+        .. All,
+        .. schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal)
+            .SelectMany(kv => kv.Value.Rules)
+            .Where(r => r.Compiled is not null)
+            .Select(r => new CheckDef(r.Id, r.Severity ?? Sev.Warning, r.Description ?? r.Message ?? r.Id))
+    ];
 }

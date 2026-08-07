@@ -79,6 +79,13 @@ rules:
       Once status is `published`, content changes are limited to typo fixes. Same rule as ADRs.
   - id: detected-not-before-occurred
     description: '`detected-on` is on or after `occurred-on`.'
+    severity: error
+    # Guarded, because a missing date is `required-field`'s to report: without the guard a postmortem
+    # that omits one would be told about the same omission twice, in two vocabularies.
+    expr: "present('detected-on') and present('occurred-on') implies field('detected-on') >= field('occurred-on')"
+    message: >
+      `detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are
+      right, the earlier one is when it started.
   - id: what-went-well-required
     description: >
       A postmortem that only lists failures teaches half the lesson and makes the next one harder to write

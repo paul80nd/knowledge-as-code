@@ -150,8 +150,10 @@ public static class Commands
         return errors > 0 ? 1 : 0;
     }
 
-    public static int Checks(bool json)
+    public static int Checks(string repoRoot, bool json)
     {
+        var catalogue = CheckCatalogue.For(Schema.Load(repoRoot));
+
         // The catalogue is always valid data, so emit it either way; the reader-facing table's
         // fidelity to it is a separate signal, reported to stderr and via the exit code below. This
         // is the tie the test suite relies on: a new catalogue check with no table row (and no
@@ -160,21 +162,21 @@ public static class Commands
         {
             var report = new ChecksReport(
             [
-                .. CheckCatalogue.All.Select(c =>
+                .. catalogue.Select(c =>
                     new CheckInfo(c.Id, c.Severity.ToString().ToLowerInvariant(), c.Summary))
             ]);
             Console.WriteLine(JsonSerializer.Serialize(report, KacJson.Relaxed.ChecksReport));
         }
         else
         {
-            foreach (var c in CheckCatalogue.All)
+            foreach (var c in catalogue)
             {
                 var tag = c.Severity == Sev.Error ? "error  " : "warning";
                 Console.WriteLine($"  {tag}  {c.Id,-24}  {c.Summary}");
             }
 
             Console.WriteLine();
-            Console.WriteLine($"{CheckCatalogue.All.Count} checks.");
+            Console.WriteLine($"{catalogue.Count} checks.");
         }
 
         var problems = Generator.ChecksTableProblems();
