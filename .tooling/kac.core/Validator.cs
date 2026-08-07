@@ -99,8 +99,11 @@ public static class Validator
         // -- filename pattern + slug length --
         CheckFilename(d, t, Err);
 
-        // -- H1 pattern + number matches id --
-        CheckH1(d, t, present, Err);
+        // -- H1 present --
+        CheckH1(d, Err);
+
+        // -- identity line beneath the H1 agrees with the frontmatter --
+        CheckIdentity(d, t, present, Err);
 
         // -- required sections --
         foreach (var sec in t.RequiredSections)
@@ -327,35 +330,77 @@ public static class Validator
             err("slug-length", $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.", null);
     }
 
-    private static void CheckH1(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
+    // The H1 is plain descriptive text — no id, no prefix, no shape the schema constrains — so the only
+    // thing left to check is that there is one. What used to be read out of the H1 is now the identity
+    // line's job, and CheckIdentity depends on this having run: with no H1 there is no line beneath it,
+    // and reporting both would be one fault counted twice.
+    private static void CheckH1(Doc d, Action<string, string, int?> err)
+    {
+        if (d.H1 is null) err("h1", "document has no H1.", 1);
+    }
+
+    // The identity line — "`Policy: pol-A11Y` `DRAFT`" directly beneath the H1. It states, on the page,
+    // the three things frontmatter already carries and an Azure DevOps reader may not scroll to see:
+    // what kind of document this is, which one it is, and whether it is in force. Each half is checked
+    // against the frontmatter separately, because "this says Standard" and "this says the wrong id" are
+    // different mistakes with different fixes and a reader deserves to be told which they made.
+    //
+    // Every type with a folder carries one. The single-page types (glossary) have no records to identify
+    // and are skipped, which is the same folder test `kac index` uses to decide what gets an INDEX.
+    private static void CheckIdentity(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
         Action<string, string, int?> err)
     {
-        if (t.H1Pattern is null) return;
-        if (d.H1 is null)
+        if (d.H1 is null || string.IsNullOrEmpty(t.Folder)) return;
+
+        var id = present.TryGetValue("id", out var idNode) ? Scalar(idNode) : null;
+        var status = present.TryGetValue("status", out var statusNode) ? Scalar(statusNode) : null;
+        var expected = Expected(t, id, status);
+
+        if (d.IdentitySpans is null)
         {
-            err("h1", "document has no H1.", 1);
+            err("identity", $"no identity line follows the H1 — add {expected}.", d.H1Line);
             return;
         }
 
-        if (!System.Text.RegularExpressions.Regex.IsMatch(d.H1, t.H1Pattern))
+        // Two spans, the first of them "Type: id". Anything else is reported once, against the whole
+        // line, rather than as a cascade of derived complaints about parts that were never there.
+        var colon = d.IdentitySpans[0].IndexOf(':');
+        if (d.IdentitySpans.Count != 2 || colon <= 0)
         {
-            err("h1-pattern", $"H1 '{d.H1}' does not match {t.H1Pattern}.", d.H1Line);
+            err("identity", $"identity line is malformed — write it as {expected}.", d.IdentityLine);
             return;
         }
 
-        // A type that carries its id in the H1 writes it as a code span — "# `pol-VURM` Secrets are
-        // managed". The check anchors on the AST node rather than the matched text, because Md.PlainText
-        // flattens a code span to its content and so cannot tell `pol-VURM` from a bare pol-VURM; the H1
-        // pattern therefore describes the flattened form and never mentions the backticks. Compared
-        // against the frontmatter id rather than the filename, since the id is what every citation uses
-        // and id-matches-filename already ties that back to the file.
-        if (!t.IdAsCode || !present.TryGetValue("id", out var idNode) || Scalar(idNode) is not { } id) return;
+        var gotType = d.IdentitySpans[0][..colon].Trim();
+        var gotId = d.IdentitySpans[0][(colon + 1)..].Trim();
+        var gotStatus = d.IdentitySpans[1].Trim();
 
-        if (d.H1CodeSpan is null)
-            err("h1-matches-id", $"H1 must open with the document's id as a code span — `{id}`.", d.H1Line);
-        else if (!string.Equals(d.H1CodeSpan, id, StringComparison.Ordinal))
-            err("h1-matches-id", $"H1 id '{d.H1CodeSpan}' does not match the document's id '{id}'.", d.H1Line);
+        if (!string.Equals(gotType, t.DisplayName, StringComparison.Ordinal))
+            err("identity-type", $"identity line says '{gotType}', but this is a {t.DisplayName}.", d.IdentityLine);
+
+        // Compared against the frontmatter rather than the filename: the id is what every citation uses,
+        // and id-matches-filename already ties the frontmatter back to the file. Where the frontmatter
+        // is itself absent or malformed its own check has said so, and there is nothing to compare to.
+        if (id is not null && !string.Equals(gotId, id, StringComparison.Ordinal))
+            err("identity-id", $"identity line id '{gotId}' does not match the document's id '{id}'.",
+                d.IdentityLine);
+
+        // Status is lower-case in frontmatter and upper-case on the line — one value, written for a
+        // machine in one place and for a reader in the other, so the comparison is case-insensitive
+        // and the casing itself is what the message names when it is wrong.
+        if (status is not null && !string.Equals(gotStatus, status, StringComparison.OrdinalIgnoreCase))
+            err("identity-status",
+                $"identity line status '{gotStatus}' does not match the document's status '{status}'.",
+                d.IdentityLine);
+        else if (status is not null && !string.Equals(gotStatus, status.ToUpperInvariant(), StringComparison.Ordinal))
+            err("identity-status", $"identity line status '{gotStatus}' must be upper-case — "
+                                   + $"`{status.ToUpperInvariant()}`.", d.IdentityLine);
     }
+
+    // The line the document should have carried, for a message that shows rather than describes.
+    // Placeholders stand in for anything the frontmatter could not supply.
+    private static string Expected(TypeSchema t, string? id, string? status) =>
+        $"`{t.DisplayName}: {id ?? $"{t.IdPrefix}-…"}` `{status?.ToUpperInvariant() ?? "STATUS"}`";
 
     private static void CheckLinks(Doc d, Schema schema, string repoRoot, Action<string, string, int?> err,
         Action<string, string, int?> warn)

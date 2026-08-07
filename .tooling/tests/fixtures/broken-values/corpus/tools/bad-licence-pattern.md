@@ -9,6 +9,8 @@ owner: alex.doe
 
 # Bad licence pattern
 
+`Tool: tol-bad-licence-pattern` `APPROVED`
+
 ## What we use it for
 
 Covering `field-pattern` on a scalar field. `licence` is `type: string` with

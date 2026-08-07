@@ -10,7 +10,9 @@ tags:
   - least-privilege
 ---
 
-# `adr-0002` A list out of alphabetical order
+# A list out of alphabetical order
+
+`ADR: adr-0002` `ACCEPTED`
 
 > **In the context of** the `list-order` rule, **we decided** to leave `tags` in the order the author typed them,
 > **to achieve** coverage of the warning, **accepting** that only the first pair out of order is reported.

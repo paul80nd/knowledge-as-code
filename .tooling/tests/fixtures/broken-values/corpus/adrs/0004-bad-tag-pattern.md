@@ -10,7 +10,9 @@ tags:
   - trailing_underscore
 ---
 
-# `adr-0004` List entries that break the field pattern
+# List entries that break the field pattern
+
+`ADR: adr-0004` `ACCEPTED`
 
 > **In the context of** the field-pattern rule, **we decided** to give `tags` entries that break the declared regex,
 > **to achieve** coverage of `field-pattern` on a list, **accepting** that this document is intentionally broken.

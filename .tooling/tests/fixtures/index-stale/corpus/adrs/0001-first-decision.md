@@ -6,7 +6,9 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# `adr-0001` First decision
+# First decision
+
+`ADR: adr-0001` `ACCEPTED`
 
 > **In the context of** the index fixture, **we decided** to keep one accepted ADR, **to achieve** a populated index
 > row with a decided-on date, **accepting** that it must stay valid.

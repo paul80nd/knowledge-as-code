@@ -6,7 +6,9 @@ decided-on:
 owner: alex.doe
 ---
 
-# `adr-0002` Second decision
+# Second decision
+
+`ADR: adr-0002` `PROPOSED`
 
 > **In the context of** the index fixture, **we decided** to keep one proposed ADR, **to achieve** an index row with an
 > empty decided-on cell, **accepting** that it must stay valid.

@@ -11,7 +11,9 @@ owner:
 tags: [ a, b ]
 ---
 
-# `ctl-NNNN` {{Title}}
+# {{Title}}
+
+`Control: ctl-NNNN` `PLANNED`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -23,6 +25,9 @@ tags: [ a, b ]
   `not-enforced` is a first-class value and the whole point of the coverage report, so do not invent a mechanism to
   avoid using it.
 * **`frequency`** — `per-pr` · `per-deploy` · `daily` · `monthly` · `quarterly` · `annual`.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

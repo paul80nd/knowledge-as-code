@@ -34,8 +34,6 @@ public class TypeSchema
     public int IdWidth;
     public string? FilenamePattern;
     public int SlugMax = 30;
-    public string? H1Pattern;
-    public bool IdAsCode;
     public List<string> FieldOrder = [];
     public Dictionary<string, FieldSpec> Fields = [];
     public List<string> RequiredSections = [];
@@ -124,13 +122,6 @@ public class Schema
         {
             t.FilenamePattern = Yaml.Str(Yaml.Get(fn, "pattern"));
             t.SlugMax = Yaml.Int(Yaml.Get(fn, "slug-max"), 30);
-        }
-
-        var title = Yaml.Get(root, "title");
-        if (title is not null)
-        {
-            t.H1Pattern = Yaml.Str(Yaml.Get(title, "h1-pattern"));
-            t.IdAsCode = Yaml.Bool(Yaml.Get(title, "id-as-code"));
         }
 
         foreach (var (name, node) in Yaml.Map(Yaml.Get(root, "fields")))

@@ -32,35 +32,38 @@ public class DocumentTests
     public void Doc_Parse_returns_null_without_frontmatter()
         => Assert.Null(Doc.Parse("notes.md", "# Just a heading, no frontmatter\n", new Schema()));
 
-    // The index heading already names the type, so the title column carries only what distinguishes
-    // one record from another. The last capture group is the title in every pattern the schema
-    // declares — whether that group is the only one or the second of two.
+    // The identity line's code spans are handed to the validator raw and in order — the parser makes
+    // no judgement about how many there should be or what they should say, so a malformed line still
+    // arrives as data the validator can quote back.
     [Theory]
-    [InlineData(@"^pol-[A-Z][A-Z0-9]{3} (.+)$", "`pol-SCRT` Secrets are managed", "Secrets are managed")]
-    [InlineData(@"^adr-\d{4} (.+)$", "`adr-0001` Knowledge as code", "Knowledge as code")]
-    [InlineData(null, "A type that declares no pattern", "A type that declares no pattern")]
-    public void TitleText_strips_the_boilerplate_the_h1_pattern_declares(string? pattern, string h1, string expected)
+    [InlineData("`Policy: pol-SCRT` `DRAFT`", new[] { "Policy: pol-SCRT", "DRAFT" })]
+    [InlineData("`pol-SCRT` `DRAFT`", new[] { "pol-SCRT", "DRAFT" })]
+    [InlineData("`Policy: pol-SCRT`", new[] { "Policy: pol-SCRT" })]
+    [InlineData("`Policy: pol-SCRT` `DRAFT` `EXTRA`", new[] { "Policy: pol-SCRT", "DRAFT", "EXTRA" })]
+    public void Identity_line_yields_its_code_spans_in_order(string line, string[] expected)
     {
-        var schema = new Schema();
-        schema.ByFolder["policies"] = new TypeSchema { H1Pattern = pattern };
-        var doc = Doc.Parse("policies/scrt-a-title.md", $"---\nid: pol-SCRT\n---\n\n# {h1}\n", schema);
+        var doc = Doc.Parse("policies/scrt-a-title.md",
+            $"---\nid: pol-SCRT\n---\n\n# Secrets are managed\n\n{line}\n", new Schema());
 
         Assert.NotNull(doc);
-        Assert.Equal(expected, doc.TitleText());
+        Assert.Equal(expected, doc.IdentitySpans);
+        Assert.Equal(7, doc.IdentityLine);
     }
 
-    // The whole basis of h1-matches-id: Md.PlainText flattens a code span to its content, so the two
-    // H1s below are indistinguishable as strings and only the AST separates them. If this ever stops
-    // holding, the check silently accepts an id written as prose.
+    // Anchored on the block directly after the H1, not on the first paragraph of code spans anywhere.
+    // Without that anchor a document that opened with prose would borrow an identity line from further
+    // down the page and the missing-line check could never fire.
     [Theory]
-    [InlineData("# `pol-SCRT` Secrets are managed", "pol-SCRT")]
-    [InlineData("# pol-SCRT Secrets are managed", null)]
-    public void H1CodeSpan_sees_what_the_flattened_H1_cannot(string h1, string? expected)
+    [InlineData("## Purpose\n")]                                  // straight into a section
+    [InlineData("Some opening prose.\n\n`Policy: pol-SCRT` `DRAFT`\n")]  // line, but not first
+    [InlineData("> A Y-statement block-quote.\n")]                // the wrong kind of block
+    [InlineData("")]                                              // nothing at all after the H1
+    public void No_identity_line_when_the_block_after_the_h1_is_something_else(string after)
     {
-        var doc = Doc.Parse("policies/scrt-a-title.md", $"---\nid: pol-SCRT\n---\n\n{h1}\n", new Schema());
+        var doc = Doc.Parse("policies/scrt-a-title.md",
+            $"---\nid: pol-SCRT\n---\n\n# Secrets are managed\n\n{after}", new Schema());
 
         Assert.NotNull(doc);
-        Assert.Equal("pol-SCRT Secrets are managed", doc.H1);   // identical either way
-        Assert.Equal(expected, doc.H1CodeSpan);                 // …and only this tells them apart
+        Assert.Null(doc.IdentitySpans);
     }
 }

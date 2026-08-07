@@ -7,13 +7,14 @@ aligns-with:
   - ISO27001:2022 A.8.15
   - ISO27001:2022 A.8.16
   - ISO27001:2022 A.8.17
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ alerting, logging, monitoring, observability ]
 ---
 
-# `pol-OBSV` Systems are observable and actively monitored
+# Systems are observable and actively monitored
+
+`Policy: pol-OBSV` `DRAFT`
 
 ## Purpose
 
@@ -55,18 +56,8 @@ Alignment exists because the framework covers the right ground.
 
 ## Exceptions
 
-The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system
-too unimportant to monitor is a system to question the existence of.
-
-## Implemented by
-
-Intended implementing standards: logging and observability, and monitoring and alerting.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system too
+unimportant to monitor is a system to question the existence of.
 
 [pol-DATA]: data-data-protection.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md

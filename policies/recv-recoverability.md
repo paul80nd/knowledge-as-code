@@ -8,13 +8,14 @@ aligns-with:
   - ISO27001:2022 A.5.30
   - ISO27001:2022 A.8.13
   - ISO27001:2022 A.8.14
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ backup, continuity, recovery, resilience ]
 ---
 
-# `pol-RECV` Services and data are recoverable
+# Services and data are recoverable
+
+`Policy: pol-RECV` `DRAFT`
 
 ## Purpose
 
@@ -36,8 +37,7 @@ fault tolerance and the ability to recover after failure.
 * We **will** test restoration periodically — recovery is proven, not assumed.
 * We **will** keep at least one copy of critical data outside the failure domain of its source.
 * We **will** bound every outbound call in time, so a slow dependency cannot become an unbounded wait.
-* We **will** design so that the failure of one dependency degrades function rather than taking the system down with
-  it.
+* We **will** design so that the failure of one dependency degrades function rather than taking the system down with it.
 * We **will** make operations that may be retried safe to re-run.
 * We **will not** rely on a backup that has never been test-restored.
 * We **will not** retry indefinitely, without limit or backoff, against a failing dependency.
@@ -59,15 +59,5 @@ Alignment exists because the framework covers the right ground.
 Systems holding no state that cannot be regenerated from source need no data backup — but their recovery path is still
 defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded
 deviation under [pol-DEVI], owned by whoever will answer for the downtime.
-
-## Implemented by
-
-Intended implementing standards: backup, recovery and resilience; and application resilience and fault tolerance.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
 
 [pol-DEVI]: devi-deviations-are-recorded.md

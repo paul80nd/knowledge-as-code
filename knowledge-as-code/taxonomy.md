@@ -129,14 +129,14 @@ The edges carry as much value as the nodes, and they are the part that breaks si
 reference resolves to a document that exists and is not superseded.
 
 ```
-Policy ──implemented-by──> Standard ──verified-by──> Control ──applies-to──> Service
-   │                          │                                                ▲
-   │                          └──derived-from──> ADR                           │
-   │                                              ▲                            │
-   └──aligns-with──> ISO/IEC 27001:2022           │                            │
-                     Annex A                 prompted-by                       │
-                                              Postmortem                       │
-Capability ──implemented-by────────────────────────────────────────────────────┘
+Policy <──implements── Standard ──verified-by──> Control ──applies-to──> Service
+   │                      │                                                ▲
+   │                      └──derived-from──> ADR                           │
+   │                                          ▲                            │
+   └──aligns-with──> ISO/IEC 27001:2022       │                            │
+                     Annex A             prompted-by                       │
+                                          Postmortem                       │
+Capability ──implemented-by────────────────────────────────────────────────┘
     │
     ├──detailed-by──────> ADO epics & features
     ├──tested-by────────> feature files
@@ -145,8 +145,12 @@ Capability ──implemented-by────────────────�
 Discovery ──promoted-to──> FAQ ──relates-to──> Service | Capability
 ```
 
-Reciprocal pairs must agree in both directions: `supersedes`/`superseded-by`,
-`implements`/`implemented-by`, `promoted-from`/`promoted-to`. A one-sided link fails the build.
+Reciprocal pairs must agree in both directions: `supersedes`/`superseded-by`, `verifies`/`verified-by`,
+`promoted-from`/`promoted-to`. A one-sided link fails the build.
+
+Not every edge is a pair. A standard's `implements` points up at a policy and is never answered from the policy side:
+policies are the layer a downstream corpus inherits, standards the layer it writes for itself, so what implements a
+policy is not knowable from where the policy sits.
 
 ## Layout
 

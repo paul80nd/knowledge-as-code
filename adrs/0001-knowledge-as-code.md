@@ -6,7 +6,9 @@ owner: paul.law
 tags: [ documentation, knowledge-management, tooling ]
 ---
 
-# `adr-0001` Knowledge as code — a structured, validated wiki that AI sessions can read and contribute to
+# Knowledge as code — a structured, validated wiki that AI sessions can read and contribute to
+
+`ADR: adr-0001` `PROPOSED`
 
 > **In the context of** knowledge split across the wiki, ADO and heads, **facing** AI sessions that cannot find our
 > standards or record findings, **we decided** to treat knowledge as code: Markdown with validated frontmatter and
@@ -52,7 +54,8 @@ We treat knowledge as code. Concretely:
 * **CI validates** schema conformance, ID uniqueness, link resolution and bidirectional relationships, and **generates**
   indexes, reports and an always-loaded rules digest.
 * **The mechanism is separable from the content.** Schema, validators, generators and skills live under
-  `knowledge-as-code/` and `.tooling/`, carry no organisation specifics, and are not themselves governed by the taxonomy.
+  `knowledge-as-code/` and `.tooling/`, carry no organisation specifics, and are not themselves governed by the
+  taxonomy.
 
 The full approach is described in [Knowledge as Code](/knowledge-as-code.md).
 

@@ -7,7 +7,9 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# `pol-MEXP` An over-long slug behind a mnemonic
+# An over-long slug behind a mnemonic
+
+`Policy: pol-MEXP` `DRAFT`
 
 ## Purpose
 

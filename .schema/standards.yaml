@@ -17,10 +17,6 @@ filename:
     Standards are filed under a category folder (common/, platform/, public-api/, …) and named for the rule
     area, not numbered in the filename. The numeric id lives in frontmatter.
 
-title:
-  h1-pattern: '^std-\d{4} (.+)$'
-  id-as-code: true
-
 fields:
 
   status:
@@ -57,8 +53,12 @@ fields:
     type: list
     of: id
     ref: policies
-    reciprocal: implemented-by
     description: Policy ids this standard puts into practice.
+    notes: >
+      One-way, and pointed upward. A standard names the policy it puts into practice; the policy does not
+      name its standards. Policies are the layer a downstream corpus inherits and a standard is the layer it
+      writes for itself, so the set of implementers is unknowable from where the policy sits — and a policy
+      with no implementer named is the normal state, not a gap.
 
   verified-by:
     required: false

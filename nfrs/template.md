@@ -11,7 +11,9 @@ owner:
 tags: [ a, b ]
 ---
 
-# `nfr-NNNN` {{Title}}
+# {{Title}}
+
+`NFR: nfr-NNNN` `DRAFT`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -23,6 +25,9 @@ tags: [ a, b ]
 * **`target`** — Concrete — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`.
 * **`measured-by`** — Required. An NFR you cannot measure is a wish, and "we'd notice" is not a measurement method.
 * **`constrained-by`** — Integration ids whose own SLA caps this.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

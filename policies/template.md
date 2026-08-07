@@ -4,13 +4,14 @@ tier: normative
 category: security
 status: draft
 aligns-with:
-implemented-by:
 review-by:
 owner:
 tags: [ a, b ]
 ---
 
-# `pol-XXXX` {{Title}}
+# {{Title}}
+
+`Policy: pol-XXXX` `DRAFT`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -24,8 +25,13 @@ tags: [ a, b ]
 * **`status`** — `draft` · `active` · `retired`.
 * **`aligns-with`** — ISO/IEC 27001:2022 Annex A references, e.g. `ISO27001:2022 A.8.25`. This records **alignment, not
   compliance or certification**, and the wording matters if this is ever read externally.
-* **`implemented-by`** — The standard ids that put this into practice.
 * **`review-by`** — A quoted date. Annual is usually right for a policy.
+
+A policy names no implementers. A standard points up at the policy it puts into practice, and a downstream corpus
+inherits these policies to write its own standards against — so what implements this is not knowable from here.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
@@ -66,16 +72,13 @@ _(Delete this section if no ISO area corresponds — an invented mapping is wors
 Where this policy does not apply, and who can grant an exception. Exceptions stated up front are honest; exceptions
 discovered later are erosion. If there are none, say so.
 
-## Implemented by
+## Notes
 
-* [std-NNNN] — {{what it requires}}.
+Anything genuinely contextual about this policy — why it carries no framework alignment, how it relates to the rest of
+the taxonomy, what it deliberately leaves to an implementing standard or process.
 
-_(A policy nothing implements is a statement of intent. That is allowed — mark it aspirational and say why the standard
-doesn't exist yet.)_
-
-## Review
-
-Reviewed {{frequency}} by {{role}}. Last reviewed: {{date}}.
+_(Optional, and it should stay that way. Delete the section rather than fill it: a note that would be true of every
+policy is boilerplate, and the review point is already `review-by`.)_
 
 [pol-XXXX]: xxxx-kebab-slug.md
 [std-NNNN]: /standards/nnnn-kebab-slug.md

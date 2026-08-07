@@ -14,6 +14,8 @@ tags: [ a, b ]
 
 # {{The symptom, as you would encounter it}}
 
+`FAQ: faq-NNNN` `ACTIVE`
+
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -25,6 +27,9 @@ Name the title and the filename for the **symptom**, not the cause — that is w
 * **`confirmed-by`** — A named person.
 * **`confirmed-on`** — A real quoted date. An FAQ nobody confirmed is a [discovery](/discoveries).
 * **`status`** — `active` · `superseded` · `fixed-upstream`.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

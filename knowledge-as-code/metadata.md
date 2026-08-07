@@ -90,7 +90,7 @@ Deliberately absent, and why:
 | Not a field           | Because                                          |
 |-----------------------|--------------------------------------------------|
 | `type`                | Inferred from the folder                         |
-| `title`               | It's the H1                                      |
+| `title`               | It's the H1, verbatim                            |
 | `created` / `updated` | Git knows, and won't forget to update it         |
 | `lifecycle`           | Follows from tier; a second field could disagree |
 
@@ -108,12 +108,31 @@ The ID is the anchor for every cross-reference in the wiki, and it is what a sho
 be corrected; IDs may not — which binds hardest on a mnemonic, because unlike a number it makes a claim that can go
 stale. A document whose meaning has moved that far is replaced and the old one retired, not renamed.
 
-**Numbered and mnemonic types carry the ID in the H1**, as a code span followed by the title — ``# `adr-0017` …``,
-``# `pol-VURM` …``. You arrive at these documents from a citation, so the first line confirms you are where the citation
-meant to send you, and the code span makes the ID read as a handle rather than competing with the title. It appears
-exactly as the frontmatter carries it, so there is one casing of an ID across the wiki rather than a second invented for
-headings, and CI holds the two to each other. Slug types have no discriminator worth repeating and title their H1
-plainly. Generated indexes strip the ID back off either way, since they carry it in a column of its own.
+## The identity line
+
+Every record carries one line directly beneath its H1 — the type, the ID, then the status in upper case:
+
+```markdown
+# Software we build is usable by everyone
+
+`Policy: pol-A11Y` `DRAFT`
+```
+
+You arrive at these documents from a citation, so the top of the page has to answer three questions before the prose
+starts: what kind of document is this, which one is it, and is it in force. Frontmatter answers all three, but it
+renders as a metadata table an Azure DevOps reader may never look at, and it is written for a machine. The identity line
+is the same three facts written for a person, at the one place their eye already is.
+
+The ID appears exactly as the frontmatter carries it, so there is one casing of an ID across the wiki rather than a
+second invented for headings. The status is the exception: lower-case in frontmatter because a machine reads it,
+upper-case on the line because it is read as a stamp. CI holds all three to the frontmatter — a document cannot go
+`active` and leave the line saying `DRAFT`.
+
+**The H1 is the title and nothing else** — no ID, no prefix, no type name. It carried the ID as a code span until the
+identity line took that job, and the split is worth it: a title that competes with a handle is a worse title, and
+generated indexes had to strip the ID back off to fill a column that already held it.
+
+The single-page types — the glossary — have no records to identify and carry no identity line.
 
 ## Per-type fields
 

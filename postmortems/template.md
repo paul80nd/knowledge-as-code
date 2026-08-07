@@ -14,6 +14,8 @@ tags: [ a, b ]
 
 # {{The symptom, as customers experienced it}}
 
+`Postmortem: pmt-NNNN` `DRAFT`
+
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -24,6 +26,9 @@ tags: [ a, b ]
 * **`prompted`** — The ADRs, runbooks, NFRs and FAQs this incident caused to be written.
 * **`status`** — `draft` while it is being assembled; `published` freezes it. Postmortems are **immutable once
   published** — a materially different understanding is a new document that references this one.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

@@ -7,13 +7,14 @@ aligns-with:
   - ISO27001:2022 A.8.9
   - ISO27001:2022 A.8.19
   - ISO27001:2022 A.8.32
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ change-management, deployment, release-management ]
 ---
 
-# `pol-PIPE` Changes reach production through the pipeline
+# Changes reach production through the pipeline
+
+`Policy: pol-PIPE` `DRAFT`
 
 ## Purpose
 
@@ -56,19 +57,7 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 Emergency change to restore service may bypass the normal path where the pipeline is itself unavailable or the delay
-would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the
-change is reconciled back into version control before the incident is closed — otherwise the fix becomes the next
-outage.
-
-## Implemented by
-
-Intended implementing standards: deployment and release management, artifact management and provenance, application and
-runtime configuration, database lifecycle, and infrastructure as code.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the change is reconciled back
+into version control before the incident is closed — otherwise the fix becomes the next outage.
 
 [pol-DEVI]: devi-deviations-are-recorded.md

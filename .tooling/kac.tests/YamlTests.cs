@@ -35,5 +35,19 @@ public class YamlTests : IDisposable
         Assert.Equal(42, Yaml.Int(Yaml.Get(root, "absent"), fallback: 42));
     }
 
+    // The schema writes `folder: null` and `prefix: null` where a type has neither. Read literally
+    // those are the string "null", which makes a folderless type one whose folder is named "null" and
+    // silently passes every emptiness test downstream — the glossary's checks table advertised an
+    // identity line it can never carry. Quoting is the escape hatch for anyone who means the word.
+    [Theory]
+    [InlineData("folder: null\n", null)]
+    [InlineData("folder: NULL\n", null)]
+    [InlineData("folder: ~\n", null)]
+    [InlineData("folder:\n", null)]
+    [InlineData("folder: \"null\"\n", "null")]
+    [InlineData("folder: policies\n", "policies")]
+    public void An_unquoted_null_reads_as_absent_rather_than_as_the_word(string yaml, string? expected)
+        => Assert.Equal(expected, Yaml.Str(Yaml.Get(Load(yaml), "folder")));
+
     public void Dispose() => File.Delete(_path);
 }

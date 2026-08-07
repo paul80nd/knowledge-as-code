@@ -4,13 +4,14 @@ tier: normative
 category: delivery
 status: draft
 aligns-with:
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ cost, efficiency, non-functional-requirements ]
 ---
 
-# `pol-COST` Cost is a non-functional requirement
+# Cost is a non-functional requirement
+
+`Policy: pol-COST` `DRAFT`
 
 ## Purpose
 
@@ -46,15 +47,7 @@ Deliberate over-provisioning for resilience, performance headroom or a known eve
 a cost decision, recorded as one and owned by whoever made it. Short-lived experiments are exempt from right-sizing but
 not from ownership or from being cleaned up.
 
-## Implemented by
+## Notes
 
-Intended implementing standard: cloud cost and efficiency.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until that standard id does._
-
-_No ISO/IEC 27001:2022 Annex A area corresponds to cost efficiency — the framework's concern is availability, not
-expenditure — so this policy records no alignment rather than an invented one._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+No ISO/IEC 27001:2022 Annex A area corresponds to cost efficiency — the framework's concern is availability, not
+expenditure — so this policy records no alignment rather than an invented one.

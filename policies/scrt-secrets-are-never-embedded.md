@@ -6,13 +6,14 @@ status: draft
 aligns-with:
   - ISO27001:2022 A.5.17
   - ISO27001:2022 A.8.24
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ credentials, key-management, secrets ]
 ---
 
-# `pol-SCRT` Secrets are managed, never embedded
+# Secrets are managed, never embedded
+
+`Policy: pol-SCRT` `DRAFT`
 
 ## Purpose
 
@@ -45,10 +46,10 @@ machine identities.
 
 ## Alignment
 
-| Reference                 | Area                        |
-|---------------------------|-----------------------------|
-| ISO/IEC 27001:2022 A.5.17 | Authentication information  |
-| ISO/IEC 27001:2022 A.8.24 | Use of cryptography         |
+| Reference                 | Area                       |
+|---------------------------|----------------------------|
+| ISO/IEC 27001:2022 A.5.17 | Authentication information |
+| ISO/IEC 27001:2022 A.8.24 | Use of cryptography        |
 
 We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
 Alignment exists because the framework covers the right ground.
@@ -58,14 +59,3 @@ Alignment exists because the framework covers the right ground.
 None. This commitment does not bend for expediency, prototypes or "temporary" work — a leaked secret does not care why
 it was written down. A secret that has reached source control is treated as compromised and rotated, not deleted and
 forgotten.
-
-## Implemented by
-
-Intended implementing standards: secrets management, cryptography and key management, and the prohibition carried in
-the source control standard.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.

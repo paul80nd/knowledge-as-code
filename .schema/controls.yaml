@@ -14,10 +14,6 @@ filename:
   pattern: '^\d{4}-[a-z0-9-]+\.md$'
   slug-max: 30
 
-title:
-  h1-pattern: '^ctl-\d{4} (.+)$'
-  id-as-code: true
-
 fields:
 
   status:

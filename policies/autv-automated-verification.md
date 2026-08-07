@@ -8,13 +8,14 @@ aligns-with:
   - ISO27001:2022 A.8.28
   - ISO27001:2022 A.8.29
   - ISO27001:2022 A.8.33
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ continuous-integration, quality-gates, testing ]
 ---
 
-# `pol-AUTV` Every change is verified automatically, and failures block
+# Every change is verified automatically, and failures block
+
+`Policy: pol-AUTV` `DRAFT`
 
 ## Purpose
 
@@ -39,20 +40,19 @@ configuration, data pipelines and the documentation held with them.
   hand.
 * We **will** add a regression test for every defect we fix, so it can only be found once.
 * We **will** treat a broken mainline as the team's first priority.
-* We **will not** merge or release over a failing check without a recorded deviation
-  ([pol-DEVI]).
+* We **will not** merge or release over a failing check without a recorded deviation ([pol-DEVI]).
 * We **will not** disable, skip or suppress a check to make a release possible, and **will not** silence a warning
   without a recorded reason.
 * We **will not** depend on a particular person's machine to produce a build.
 
 ## Alignment
 
-| Reference                 | Area                                             |
-|---------------------------|--------------------------------------------------|
-| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle                     |
-| ISO/IEC 27001:2022 A.8.28 | Secure coding                                    |
-| ISO/IEC 27001:2022 A.8.29 | Security testing in development and acceptance   |
-| ISO/IEC 27001:2022 A.8.33 | Test information                                 |
+| Reference                 | Area                                           |
+|---------------------------|------------------------------------------------|
+| ISO/IEC 27001:2022 A.8.25 | Secure development lifecycle                   |
+| ISO/IEC 27001:2022 A.8.28 | Secure coding                                  |
+| ISO/IEC 27001:2022 A.8.29 | Security testing in development and acceptance |
+| ISO/IEC 27001:2022 A.8.33 | Test information                               |
 
 We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
 Alignment exists because the framework covers the right ground.
@@ -60,19 +60,7 @@ Alignment exists because the framework covers the right ground.
 ## Exceptions
 
 An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is
-recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than
-waived — the exception buys time, not forgiveness.
-
-## Implemented by
-
-Intended implementing standards: continuous integration, test strategy and quality assurance, secure coding and code
-quality, database lifecycle, application security testing, and — where data pipelines form part of the estate — the data
-pipeline standard.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
+recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than waived — the exception buys
+time, not forgiveness.
 
 [pol-DEVI]: devi-deviations-are-recorded.md

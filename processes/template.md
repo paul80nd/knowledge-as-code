@@ -12,6 +12,8 @@ tags: [ a, b ]
 
 # {{Process name}}
 
+`Process: prc-{{slug}}` `DRAFT`
+
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -22,6 +24,9 @@ tags: [ a, b ]
   document.
 * **`rehearsal-frequency`** — `per-release` · `quarterly` · `annual`.
 * **`requires-access`** — The systems or roles needed.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

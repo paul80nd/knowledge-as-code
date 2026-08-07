@@ -6,7 +6,9 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# `adr-0006` Bad id prefix
+# Bad id prefix
+
+`ADR: xyz-0006` `ACCEPTED`
 
 > **In the context of** the id rules, **we decided** to use the wrong prefix, **to achieve** coverage of `id-prefix`,
 > **accepting** that this document is intentionally broken.

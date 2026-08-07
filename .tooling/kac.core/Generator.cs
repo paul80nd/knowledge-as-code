@@ -42,7 +42,7 @@ public static class Generator
         if (col == "title")
         {
             var file = Path.GetFileName(d.Rel);
-            return $"[{Escape(d.TitleText())}]({file})";
+            return $"[{Escape(d.H1 ?? "")}]({file})";
         }
 
         return Escape(d.FrontScalar(col) ?? "");
@@ -158,9 +158,10 @@ public static class Generator
         ("id-unique", ["id-unique"], "`id` is unique across the whole wiki.", null),
         ("filename / slug-length", ["filename-pattern", "slug-length"],
             "Filename matches the pattern; the slug is within 30 characters.", null),
-        ("h1", ["h1", "h1-pattern", "h1-matches-id"],
-            "The document has an H1 matching the title pattern, opening with its id where the type carries one.",
-            null),
+        ("h1", ["h1"], "The document has an H1.", null),
+        ("identity", ["identity", "identity-type", "identity-id", "identity-status"],
+            "An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.",
+            t => !string.IsNullOrEmpty(t.Folder)),
         ("required-section", ["required-section"], "Every required section heading is present.", null),
         ("link-resolves", ["link-resolves"], "Every internal link resolves (all link forms, `.md` optional).", null),
         ("undefined-label", ["undefined-label"], "Every shortcut reference has a link definition.", null),

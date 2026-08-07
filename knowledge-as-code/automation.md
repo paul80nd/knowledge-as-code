@@ -33,7 +33,8 @@ Run on every PR. Failures block merge.
   historical (`supersedes`, `promoted-from`, `replaces`).
 - Relative markdown links resolve.
 - Bidirectional pairs agree — `supersedes` / `superseded-by`, `promoted-from` / `promoted-to`,
-  `implements` / `implemented-by`. A one-sided link fails.
+  `verifies` / `verified-by`. A one-sided link fails. `implements` is deliberately not one of these: it points up
+  from a standard to a policy and is never answered from the policy side.
 - `.index.json` is present, parses, and is not stale relative to the frontmatter it was built from.
 - Every `path` in it resolves; every `id` is unique; every id in a `related` array exists in the file.
 

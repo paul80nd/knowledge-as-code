@@ -8,13 +8,14 @@ aligns-with:
   - ISO27001:2022 A.5.21
   - ISO27001:2022 A.8.19
   - ISO27001:2022 A.8.30
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ dependencies, provenance, supply-chain ]
 ---
 
-# `pol-TRUS` We ship only components we know and trust
+# We ship only components we know and trust
+
+`Policy: pol-TRUS` `DRAFT`
 
 ## Purpose
 
@@ -58,15 +59,5 @@ Alignment exists because the framework covers the right ground.
 
 A component that can no longer be sourced or maintained may be retained under a recorded deviation naming the risk
 owner, the compensating controls and the plan to replace it. "It still works" is not a plan.
-
-## Implemented by
-
-Intended implementing standards: dependency and supply-chain management, and artifact management and provenance.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until those standard ids do._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
 
 [pol-DEVI]: devi-deviations-are-recorded.md

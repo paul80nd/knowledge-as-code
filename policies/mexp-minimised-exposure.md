@@ -7,13 +7,14 @@ aligns-with:
   - ISO27001:2022 A.8.20
   - ISO27001:2022 A.8.21
   - ISO27001:2022 A.8.22
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ exposure, network-security, segmentation ]
 ---
 
-# `pol-MEXP` Exposure is minimised and traffic is controlled
+# Exposure is minimised and traffic is controlled
+
+`Policy: pol-MEXP` `DRAFT`
 
 ## Purpose
 
@@ -41,11 +42,11 @@ inbound to our systems, between them, and outbound from them.
 
 ## Alignment
 
-| Reference                 | Area                        |
-|---------------------------|-----------------------------|
-| ISO/IEC 27001:2022 A.8.20 | Network security            |
+| Reference                 | Area                         |
+|---------------------------|------------------------------|
+| ISO/IEC 27001:2022 A.8.20 | Network security             |
 | ISO/IEC 27001:2022 A.8.21 | Security of network services |
-| ISO/IEC 27001:2022 A.8.22 | Segregation of networks     |
+| ISO/IEC 27001:2022 A.8.22 | Segregation of networks      |
 
 We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
 Alignment exists because the framework covers the right ground.
@@ -55,16 +56,6 @@ Alignment exists because the framework covers the right ground.
 Deliberately public services — those whose purpose is to be reached by anyone — are in scope for the rest of this
 policy, not exempt from it: they are exposed through an intended route, and everything behind them stays private. Any
 other exposure requires a recorded deviation under [pol-DEVI].
-
-## Implemented by
-
-Intended implementing standard: network security and segmentation.
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until that standard id does._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-EVER]: ever-everything-in-version-control.md

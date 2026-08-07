@@ -10,7 +10,9 @@ related:
   - adr-0002
 ---
 
-# `adr-0001` First graph fixture
+# First graph fixture
+
+`ADR: adr-0001` `ACCEPTED`
 
 > **In the context of** the graph rules, **we decided** to point at a missing target and a one-sided supersession, **to
 > achieve** coverage of the link and reciprocity checks, **accepting** that this document is intentionally broken.

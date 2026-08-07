@@ -9,22 +9,23 @@ aligns-with:
   - ISO27001:2022 A.5.26
   - ISO27001:2022 A.5.27
   - ISO27001:2022 A.6.8
-implemented-by:
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ incident-response, learning, postmortem ]
 ---
 
-# `pol-INCR` Incidents are managed and learned from
+# Incidents are managed and learned from
+
+`Policy: pol-INCR` `DRAFT`
 
 ## Purpose
 
 When something goes wrong, there is a defined way to respond: someone is in charge, severity determines the response,
 what happened is recorded, and the organisation is measurably better afterwards for having been through it.
 
-The response is what turns an incident into either a recovery or a compounding failure, and the review afterwards is
-the only mechanism that converts an expensive hour into something we never pay for twice. Both need to be decided
-before the incident, because nobody designs a good process at three in the morning.
+The response is what turns an incident into either a recovery or a compounding failure, and the review afterwards is the
+only mechanism that converts an expensive hour into something we never pay for twice. Both need to be decided before the
+incident, because nobody designs a good process at three in the morning.
 
 ## Scope
 
@@ -47,13 +48,13 @@ the organisation.
 
 ## Alignment
 
-| Reference                 | Area                                                         |
-|---------------------------|--------------------------------------------------------------|
-| ISO/IEC 27001:2022 A.5.24 | Incident management planning and preparation                 |
-| ISO/IEC 27001:2022 A.5.25 | Assessment and decision on information security events       |
-| ISO/IEC 27001:2022 A.5.26 | Response to information security incidents                   |
-| ISO/IEC 27001:2022 A.5.27 | Learning from information security incidents                 |
-| ISO/IEC 27001:2022 A.6.8  | Information security event reporting                         |
+| Reference                 | Area                                                   |
+|---------------------------|--------------------------------------------------------|
+| ISO/IEC 27001:2022 A.5.24 | Incident management planning and preparation           |
+| ISO/IEC 27001:2022 A.5.25 | Assessment and decision on information security events |
+| ISO/IEC 27001:2022 A.5.26 | Response to information security incidents             |
+| ISO/IEC 27001:2022 A.5.27 | Learning from information security incidents           |
+| ISO/IEC 27001:2022 A.6.8  | Information security event reporting                   |
 
 We **align with** these areas. We are not registered against ISO/IEC 27001:2022 and are not audited against it.
 Alignment exists because the framework covers the right ground.
@@ -63,14 +64,3 @@ Alignment exists because the framework covers the right ground.
 Low-severity events are handled through routine work rather than the full process; the severity classification is what
 decides, and it is applied deliberately rather than by whoever wants the least paperwork. There is no exception to
 recording a significant incident.
-
-## Implemented by
-
-Intended implementing standard: incident response — with the operational detail carried in
-[runbooks](/runbooks) and the learning in [postmortems](/postmortems).
-
-_No implementing standard exists in this wiki yet; `implemented-by` stays empty until that standard id does._
-
-## Review
-
-Reviewed annually by the owner named above. Last reviewed: not yet — drafted 2026-08-04.

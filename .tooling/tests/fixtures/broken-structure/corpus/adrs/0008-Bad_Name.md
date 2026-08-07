@@ -6,7 +6,9 @@ decided-on: "2026-06-12"
 owner: alex.doe
 ---
 
-# `adr-0008` Bad filename
+# Bad filename
+
+`ADR: adr-0008` `ACCEPTED`
 
 > **In the context of** the filename rule, **we decided** to use capitals and an underscore, **to achieve** coverage of
 > `filename-pattern`, **accepting** that this document is intentionally broken.

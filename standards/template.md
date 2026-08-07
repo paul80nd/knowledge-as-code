@@ -12,7 +12,9 @@ owner:
 tags: [ a, b ]
 ---
 
-# `std-NNNN` {{Title}}
+# {{Title}}
+
+`Standard: std-NNNN` `DRAFT`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -25,6 +27,9 @@ tags: [ a, b ]
   `implements` is guidance, not a standard.
 * **`applies-to`** — Service ids, or `all`.
 * **`review-by`** — A quoted `"YYYY-MM-DD"`. Drives the staleness report.
+
+**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
+reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

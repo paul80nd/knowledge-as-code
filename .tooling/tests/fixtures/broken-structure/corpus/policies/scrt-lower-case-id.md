@@ -7,7 +7,9 @@ review-by: "2027-08-05"
 owner: alex.doe
 ---
 
-# `pol-SCRT` Lower-case mnemonic in the id
+# Lower-case mnemonic in the id
+
+`Policy: pol-scrt` `DRAFT`
 
 ## Purpose
 

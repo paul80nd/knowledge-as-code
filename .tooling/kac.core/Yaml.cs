@@ -1,3 +1,4 @@
+using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
 // ---------------------------------------------------------------------------
@@ -31,7 +32,16 @@ public static class Yaml
                 yield return (((YamlScalarNode)kv.Key).Value ?? "", kv.Value);
     }
 
-    public static string? Str(YamlNode? node) => (node as YamlScalarNode)?.Value;
+    // A plain `null` or `~` reads as absent, not as the four-character string "null" — the same rule
+    // the validator applies to a document's frontmatter, applied to the schema that declares it. The
+    // schema writes `folder: null` and `prefix: null` where a type has neither, and without this a
+    // folderless type is one whose folder is named "null": every emptiness test downstream silently
+    // passes. Plain style only, so a value quoted "null" is still the string someone meant.
+    public static string? Str(YamlNode? node)
+    {
+        if (node is not YamlScalarNode sc) return null;
+        return sc is { Style: ScalarStyle.Plain, Value: "" or "~" or "null" or "Null" or "NULL" } ? null : sc.Value;
+    }
 
     public static bool Bool(YamlNode? node)
         => (node as YamlScalarNode)?.Value?.ToLowerInvariant() is "true" or "yes";
