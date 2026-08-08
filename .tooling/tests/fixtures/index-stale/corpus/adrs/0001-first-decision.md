@@ -28,4 +28,4 @@ Serve as the first row of the generated index.
 
 ## Consequences
 
-The generated `INDEX.md` lists this ADR with its decided-on date.
+The generated `_index.md` lists this ADR with its decided-on date.

@@ -2,7 +2,7 @@
 
 How we know the standards are actually being followed.
 
-**[→ Index](controls/INDEX.md)**
+**[→ Index](controls/_index.md)**
 
 ## What is a control?
 
@@ -73,7 +73,7 @@ One control may verify several rules, and one rule may need several controls. Co
 
 ## Adding a control
 
-1. Copy [`template.md`](controls/template.md) to `NNNN-kebab-slug.md`.
+1. Copy [`_template.md`](controls/_template.md) to `NNNN-kebab-slug.md`.
 2. Name the rules it verifies in `verifies` — rule-level anchors where the standard has them, the standard id otherwise.
 3. Pick the real `mechanism`. If nothing currently checks the rule, that is `not-enforced` and the control still gets
    written — an unenforced rule you know about is worth more than one you don't.

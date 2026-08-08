@@ -1,1 +1,1 @@
-adrs/INDEX.md
+adrs/_index.md

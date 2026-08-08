@@ -2,7 +2,7 @@
 
 What to do when something is broken.
 
-**[→ Index](runbooks/INDEX.md)**
+**[→ Index](runbooks/_index.md)**
 
 ## What is a runbook?
 
@@ -65,7 +65,7 @@ document is written for the day it isn't.
 
 ## Adding a runbook
 
-1. Copy [`template.md`](runbooks/template.md) to `<slug>.md`. Runbooks use slug ids — `rbk-estate-rebuild`.
+1. Copy [`_template.md`](runbooks/_template.md) to `<slug>.md`. Runbooks use slug ids — `rbk-estate-rebuild`.
 2. Lead with **symptoms** — what the reader is seeing. That is how they will find this document.
 3. Give immediate actions before diagnosis. Stop the bleeding, then work out why.
 4. Structure the diagnosis as a tree, not prose. Each branch ends in a resolution or an escalation.

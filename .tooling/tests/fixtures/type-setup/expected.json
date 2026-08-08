@@ -25,7 +25,7 @@
       "line": null,
       "severity": "error",
       "check": "type-setup",
-      "message": "type 'tools' has a 'tools/' folder but is not fully set up — add tools.md, tools/template.md."
+      "message": "type 'tools' has a 'tools/' folder but is not fully set up — add tools.md, tools/_template.md."
     }
   ]
 }

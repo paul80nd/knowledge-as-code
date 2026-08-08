@@ -2,7 +2,7 @@
 
 Problems we have hit before, with the fix that worked.
 
-**[→ Index](faqs/INDEX.md)**
+**[→ Index](faqs/_index.md)**
 
 ## What is an FAQ?
 
@@ -66,7 +66,7 @@ Other boundaries:
 
 ## Adding an FAQ
 
-1. Copy [`template.md`](faqs/template.md) to `<slug>.md`, named for the symptom rather than the cause — that is what
+1. Copy [`_template.md`](faqs/_template.md) to `<slug>.md`, named for the symptom rather than the cause — that is what
    people search for.
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
 3. Be generous with `symptom-keywords`. Include the literal error text, the service names, and the words someone would

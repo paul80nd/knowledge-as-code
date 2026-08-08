@@ -2,7 +2,7 @@
 
 What the product offers its customers, and why.
 
-**[→ Index](capabilities/INDEX.md)**
+**[→ Index](capabilities/_index.md)**
 
 ## What is a capability?
 
@@ -67,7 +67,7 @@ Related but different:
 
 ## Adding a capability
 
-1. Copy [`template.md`](capabilities/template.md) to `<slug>.md`. Capabilities use slug ids — `cap-<name>`.
+1. Copy [`_template.md`](capabilities/_template.md) to `<slug>.md`. Capabilities use slug ids — `cap-<name>`.
 2. Write the *what* and the *why* in prose. Two or three paragraphs is usually enough.
 3. Fill in `implemented-by`, `ado-epics` and `feature-files` — these are the links that make it a hub.
 4. Resist the urge to explain how it works. Link to the services and explanations that already do.

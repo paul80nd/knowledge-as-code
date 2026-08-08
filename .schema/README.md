@@ -7,11 +7,11 @@ three things:
 2. **The `## Metadata` block** generated into each `<type>.md`.
 3. **The `## What CI checks` block** generated into each `<type>.md`.
 
-Plus the columns and sort order for `<type>/INDEX.md`.
+Plus the columns and sort order for `<type>/_index.md`.
 
 Edit the schema, regenerate, review the diff. Never hand-edit anything inside a `BEGIN GENERATED` marker.
 
-**`<type>/template.md` is not generated.** A template is written and kept in step by hand, and it is also excluded from
+**`<type>/_template.md` is not generated.** A template is written and kept in step by hand, and it is also excluded from
 validation, so nothing ties one to its schema in either direction. Changing a type's fields or required sections means
 opening its template and making the same change there — assume that, rather than that a regeneration will catch it.
 

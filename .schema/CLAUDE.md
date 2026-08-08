@@ -17,7 +17,7 @@
   universal order followed by the type's. Reordering fields here can invalidate documents that were correct, and the
   failure surfaces in the corpus rather than here.
 
-* **Templates do not follow.** Nothing generates `<type>/template.md` and nothing validates it, so a field added here
+* **Templates do not follow.** Nothing generates `<type>/_template.md` and nothing validates it, so a field added here
   has to be added there by hand or every document copied from it will be wrong.
 
 ## Writing a rule

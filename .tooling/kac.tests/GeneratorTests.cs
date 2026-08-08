@@ -1,4 +1,4 @@
-// Unit tests for the pure Generator helpers. The full INDEX/<type>.md generation is covered by the
+// Unit tests for the pure Generator helpers. The full index / <type>.md generation is covered by the
 // golden 'index' scenario; these pin the table/catalogue consistency and the splice in-process.
 
 using kac.core;
@@ -24,7 +24,7 @@ public class GeneratorTests
 
         Assert.Contains("# Control Index (CTL)", page);
         Assert.Contains("Nothing here yet", page);
-        Assert.Contains("template.md", page);   // an empty index points at the way to fill it
+        Assert.Contains("_template.md", page);   // an empty index points at the way to fill it
         Assert.DoesNotContain("| Id |", page);  // …rather than a table with headers and no rows
     }
 

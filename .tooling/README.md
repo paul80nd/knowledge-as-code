@@ -61,8 +61,9 @@ Warnings never change the exit code.
 `kac` discovers Markdown via `git ls-files` (so **`.gitignore`, `.git/info/exclude` and global excludes are respected**,
 and `.git/` is never walked), then applies the taxonomy exclusions from `knowledge-as-code/automation.md`:
 
-- `knowledge-as-code/`, `_plan/`, `_reports/`, and `.git/` `.idea/` `.claude/`
-- `**/template.md`, `**/INDEX.md`
+- anything on a path with a `_`-prefixed segment — the reserved prefix for a framework artefact, which covers
+  `**/_index.md` and `**/_template.md` as well as `_plan/` and `_reports/`
+- `knowledge-as-code/`, and `.git/` `.idea/` `.claude/`
 - root `README.md` and root `CLAUDE.md`
 - anything outside a folder that maps to a type schema
 
@@ -136,7 +137,7 @@ A type that declares no `clauses:` block is checked for none of these.
 | `related-matches-section` | error   | A `mirrors-section` field (e.g. `related`) reconciles case-insensitively with the ids referenced in that section (`## Related`).                                                                                                                                                        |
 | `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                   |
 | `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`) and points at a document that exists.                                                                                                                                                                   |
-| `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. A `single-document` type has a page and no folder. Skipped when the run is narrowed to paths.    |
+| `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `_template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. A `single-document` type has a page and no folder. Skipped when the run is narrowed to paths.   |
 | `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                               |
 | `unused-definition`       | warning | A link definition that nothing references.                                                                                                                                                                                                                                              |
 | `bracket-literal`         | warning | A `[...]` left in prose that looks like a reference but has no definition (use an inline link if it is deliberate).                                                                                                                                                                     |
@@ -224,7 +225,7 @@ corpus, and still catches genuine disorder (`tags` before `id`, `related` before
 
 | Artefact                                             | Built from                              | Rule                                                                                                                                                                                                                                          |
 |------------------------------------------------------|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<type>/INDEX.md`                                    | frontmatter across the folder           | Regenerated **wholly**; columns and sort come from the schema's `index` block; carries a do-not-edit banner. A type with no records yet gets an index saying so rather than a table with no rows; a type with no folder (glossary) gets none. |
+| `<type>/_index.md`                                   | frontmatter across the folder           | Regenerated **wholly**; columns and sort come from the schema's `index` block; carries a do-not-edit banner. A type with no records yet gets an index saying so rather than a table with no rows; a type with no folder (glossary) gets none. |
 | `<!-- … schema-<type> -->` block in `<type>.md`      | `_universal.yaml` + the type's `fields` | The frontmatter reference table — universal fields first, marked `†`, then the type's own. Each row renders the field's `description`, falling back to `notes` where the schema declares none.                                                |
 | `<!-- … schema-universal -->` block in `metadata.md` | `_universal.yaml`                       | The universal field reference, documented once for the taxonomy rather than per type.                                                                                                                                                         |
 | `<!-- … checks-<type> -->` block in `<type>.md`      | the checks the validator implements     | The "What CI checks" table. Rows a type cannot trip — a rule it does not declare, a reciprocal or mirrors-section field it does not have — are omitted, so each page lists only its own checks.                                               |

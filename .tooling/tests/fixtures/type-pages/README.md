@@ -7,4 +7,4 @@ there while `index --check` still calls the page fresh.
 `glossary.md` is a single-document type's page, so it is a record. Its id disagrees with the literal value
 `glossary.yaml` declares.
 
-`adrs/template.md` exists only so `type-setup` stays silent and the fixture asserts one thing.
+`adrs/_template.md` exists only so `type-setup` stays silent and the fixture asserts one thing.

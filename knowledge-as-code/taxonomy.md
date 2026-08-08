@@ -164,10 +164,16 @@ Each type follows the same shape:
 ```
 <type>.md              # what it is, why, how to contribute — human-written
 <type>/
-  ├── INDEX.md         # index — GENERATED
-  ├── template.md      # what humans and agents copy
+  ├── _index.md        # index — GENERATED
+  ├── _template.md     # what humans and agents copy
   └── <records>.md
 ```
+
+`_` is reserved. A leading underscore means the framework's own artefact rather than a knowledge record — the generated
+index and the template inside a type folder, the scaffolding directories alongside them. The tool reads the prefix, not
+the names, so anything under it is excluded from discovery and never validated as a record. A record must therefore not
+take it. The prefix also sorts ahead of letters whether or not a listing folds case, which is what keeps the framework's
+files together at the top of a folder someone is scanning for content.
 
 Alongside the types:
 

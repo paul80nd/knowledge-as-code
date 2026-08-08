@@ -2,7 +2,7 @@
 
 How to perform the planned tasks that keep the platform running.
 
-**[→ Index](processes/INDEX.md)**
+**[→ Index](processes/_index.md)**
 
 ## What is a process?
 
@@ -63,7 +63,7 @@ A process is also not:
 
 ## Adding a process
 
-1. Copy [`template.md`](processes/template.md) to `<slug>.md`. Processes use slug ids — `prc-releasing`.
+1. Copy [`_template.md`](processes/_template.md) to `<slug>.md`. Processes use slug ids — `prc-releasing`.
 2. Write the steps imperatively and in order. Assume the reader has not done it before.
 3. Include prerequisites, a verification step ("you know it worked when…") and a rollback.
 4. Set `last-rehearsed`. `"never"` is permitted and preferable to a guess.

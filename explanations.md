@@ -2,7 +2,7 @@
 
 Narrative documents that help you *understand* how the platform works and why it is shaped the way it is.
 
-**[→ Index](explanations/INDEX.md)**
+**[→ Index](explanations/_index.md)**
 
 ## What is an explanation?
 
@@ -65,7 +65,7 @@ residual, and residual categories become dumping grounds unless the bar for entr
 ## Adding an explanation
 
 1. Check it isn't one of the four things above.
-2. Copy [`template.md`](explanations/template.md) to a kebab-case filename — no number prefix; explanations are named,
+2. Copy [`_template.md`](explanations/_template.md) to a kebab-case filename — no number prefix; explanations are named,
    not sequenced.
 3. Set `explains` to the services or capabilities it covers, and `review-by`.
 4. Write it as prose. Link out for every concrete fact you're tempted to state.

@@ -2,7 +2,7 @@
 
 The packages, services and utilities we have approved, rejected, or are trialling.
 
-**[→ Index](tools/INDEX.md)**
+**[→ Index](tools/_index.md)**
 
 ## What is a tool entry?
 
@@ -65,7 +65,7 @@ being repeated in eighteen months.
 
 ## Adding a tool
 
-1. Copy [`template.md`](tools/template.md) to `<slug>.md`. Tools use slug ids — `tol-vitest`.
+1. Copy [`_template.md`](tools/_template.md) to `<slug>.md`. Tools use slug ids — `tol-vitest`.
 2. Set `status`. `trial` is for something being evaluated in one place; promote or reject it rather than leaving it
    there indefinitely.
 3. Record the `licence` as an SPDX identifier. This is the field nobody wants until they urgently do.

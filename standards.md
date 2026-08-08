@@ -57,8 +57,8 @@ categories stay distinct; the common and platform axes let a rule live once, at 
 
 ## Where to find them
 
-* **[→ Standards index](standards/INDEX.md)** — the generated catalogue of every standard, grouped by axis.
-* **[`template.md`](standards/template.md)** — copy this to start a new standard; the categories above and the process
+* **[→ Standards index](standards/_index.md)** — the generated catalogue of every standard, grouped by axis.
+* **[`_template.md`](standards/_template.md)** — copy this to start a new standard; the categories above and the process
   below cover the rest.
 
 ## Metadata

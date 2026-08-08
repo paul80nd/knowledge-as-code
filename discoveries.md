@@ -2,7 +2,7 @@
 
 Things we noticed and haven't verified yet.
 
-**[→ Index](discoveries/INDEX.md)**
+**[→ Index](discoveries/_index.md)**
 
 ## What is a discovery?
 
@@ -75,7 +75,7 @@ Boundaries:
 
 ## Capturing a discovery
 
-Low ceremony on purpose. Copy [`template.md`](discoveries/template.md) and fill in a title, what you observed, why it
+Low ceremony on purpose. Copy [`_template.md`](discoveries/_template.md) and fill in a title, what you observed, why it
 might matter, and the context you were in. Set `confidence: unverified` unless you've genuinely proven it. Don't tidy it
 up; don't verify it first; don't write it as an FAQ.
 

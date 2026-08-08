@@ -86,16 +86,16 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 
 | Artefact                                    | Built from                               | Lives in                               | Status  |
 |---------------------------------------------|------------------------------------------|----------------------------------------|---------|
-| Type indexes                                | Frontmatter across the folder            | `<type>/INDEX.md`                      | Done    |
+| Type indexes                                | Frontmatter across the folder            | `<type>/_index.md`                     | Done    |
 | Repository & launchpad tables               | `services/`                              | Root `README.md`                       | Planned |
 | Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block           | Done    |
 | Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block | Done    |
 | Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block  | Planned |
-| Control coverage report                     | `controls/` + standards' rules           | `controls/INDEX.md`                    | Planned |
-| Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/INDEX.md`                    | Planned |
+| Control coverage report                     | `controls/` + standards' rules           | `controls/_index.md`                   | Planned |
+| Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/_index.md`                   | Planned |
 | Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`                | Planned |
 | Orphan report                               | The link graph                           | `_reports/orphans.md`                  | Planned |
-| Service dependency diagram                  | `depends-on`                             | `services/INDEX.md` (mermaid)          | Planned |
+| Service dependency diagram                  | `depends-on`                             | `services/_index.md` (mermaid)         | Planned |
 | `.order` files                              | Folder contents + type ordering          | Each folder                            | Planned |
 | `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                              | Planned |
 
@@ -136,12 +136,13 @@ Not part of the taxonomy, carry no taxonomy frontmatter, and are excluded from s
 | `knowledge-as-code/` | Describes the system; is not governed by it        |
 | `_plan/`             | Temporary migration scaffolding; deleted when done |
 | `_reports/`          | Generated output                                   |
-| `**/template.md`     | Templates carry placeholder frontmatter by design  |
+| `**/_template.md`    | Templates carry placeholder frontmatter by design  |
 | Root `README.md`     | Orientation page, not a knowledge record           |
 | Root `CLAUDE.md`     | Generated                                          |
 
 Stated explicitly rather than left implicit in a glob, so that a validation failure is never resolved by quietly
-widening an exclusion.
+widening an exclusion. The `_` rows are the one deliberate glob: the prefix is reserved for the framework's own
+artefacts, and the tool tests the prefix rather than the names — see [taxonomy](taxonomy.md#layout).
 
 ## Scheduled tasks
 

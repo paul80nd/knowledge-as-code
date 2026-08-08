@@ -28,4 +28,4 @@ Serve as the second row of the generated index.
 
 ## Consequences
 
-The generated `INDEX.md` lists this ADR with an empty decided-on cell.
+The generated `_index.md` lists this ADR with an empty decided-on cell.

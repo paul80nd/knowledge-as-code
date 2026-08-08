@@ -12,7 +12,7 @@ Feature: Corpus shape checks
       | file                 | line | check      | message                                                                                    |
       | .schema/data.yaml    |      | type-setup | type 'data' has data.md but no 'data/' — a type is set up as both or neither.               |
       | .schema/glossary.yaml |     | type-setup | type 'glossary' is single-document, so 'glossary/' must not exist — its page is the document. |
-      | .schema/tools.yaml   |      | type-setup | type 'tools' has a 'tools/' folder but is not fully set up — add tools.md, tools/template.md. |
+      | .schema/tools.yaml   |      | type-setup | type 'tools' has a 'tools/' folder but is not fully set up — add tools.md, tools/_template.md. |
 
   Scenario: A collection's page is checked for its generated markers and its links
     Given the type-pages fixture corpus

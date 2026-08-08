@@ -2,7 +2,7 @@
 
 This wiki maintains a log of architecturally significant decisions made for the platform.
 
-**[→ ADRs index](adrs/INDEX.md)**
+**[→ ADRs index](adrs/_index.md)**
 
 ## What is an ADR?
 
@@ -70,8 +70,8 @@ ADR by ID.
 
 ## Adding an ADR
 
-1. Copy [`template.md`](adrs/template.md) to `NNNN-kebab-case-title.md`, where `NNNN` is the next unused four-digit
-   number — check the [index](adrs/INDEX.md) for the highest in use.
+1. Copy [`_template.md`](adrs/_template.md) to `NNNN-kebab-case-title.md`, where `NNNN` is the next unused four-digit
+   number — check the [index](adrs/_index.md) for the highest in use.
 2. Fill in the frontmatter and sections. Keep it short — narrative paragraphs, not form-filling.
 3. Open a PR. Status starts `proposed`.
 4. On acceptance, set `status: accepted` and `decided-on`. The index rebuilds itself.

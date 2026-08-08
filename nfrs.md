@@ -2,7 +2,7 @@
 
 Non-functional requirements — what the platform promises about availability, speed and recovery.
 
-**[→ Index](nfrs/INDEX.md)**
+**[→ Index](nfrs/_index.md)**
 
 ## What is an NFR?
 
@@ -62,7 +62,7 @@ anything built on it. Record that in `constrained-by` rather than promising some
 
 ## Adding an NFR
 
-1. Copy [`template.md`](nfrs/template.md) to `NNNN-kebab-slug.md`.
+1. Copy [`_template.md`](nfrs/_template.md) to `NNNN-kebab-slug.md`.
 2. State the target concretely. "Fast" is not a target; "p95 under 400ms" is.
 3. State how it is measured, and where that measurement can be seen.
 4. Record what breaching it actually means — degraded service, contractual exposure, or nothing much. An NFR with no
