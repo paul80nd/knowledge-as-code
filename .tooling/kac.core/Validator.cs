@@ -1,5 +1,3 @@
-using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
@@ -592,7 +590,7 @@ public static class Validator
             var modal = spec.ModalsLongestFirst.FirstOrDefault(m => row.Text.StartsWith(m, StringComparison.Ordinal));
             if (modal is null)
             {
-                err("clause-modal", $"clause '{Trim(row.Text)}' does not open with a modal — write one of "
+                err("clause-modal", $"clause '{Md.Snippet(row.Text)}' does not open with a modal — write one of "
                                     + $"{string.Join(", ", spec.Levels)}.", row.Line);
                 continue;
             }
@@ -635,8 +633,8 @@ public static class Validator
         // than a word, and Md.PlainText cannot tell the two apart once the span is flattened.
         if (row.IdSpan is null)
         {
-            err("clause-id-format", $"clause id '{Trim(row.IdText)}' is not a code span — write it as "
-                                    + $"`{Trim(row.IdText)}`.", row.Line);
+            err("clause-id-format", $"clause id '{Md.Snippet(row.IdText)}' is not a code span — write it as "
+                                    + $"`{Md.Snippet(row.IdText)}`.", row.Line);
             return;
         }
 
@@ -773,9 +771,9 @@ public static class Validator
     }
 
     // The type's own `rules:`, in the order the schema declares them. Two kinds arrive here: a rule
-    // carrying an `expr:` is answered by evaluating it, and needs no C# beyond this loop; a rule whose
-    // question needs a real algorithm keeps an arm below. SPEC.md draws the line between them, and the
-    // reason to hold it is that the arms are what this loop exists to stop accumulating.
+    // carrying an `expr:` is answered by evaluating it, and needs no C# at all; a rule whose question
+    // needs a real algorithm is one of `DocumentRules`, looked up by id. SPEC.md draws the line between
+    // them, and this loop is the whole of the dispatch either way.
     private static void CheckRules(Doc d, TypeSchema t, Action<string, string, int?> err,
         Action<string, string, int?> warn)
     {
@@ -794,111 +792,11 @@ public static class Validator
                 continue;
             }
 
-            if (rule.Severity != Sev.Warning) continue;
-
-            switch (rule.Id)
-            {
-                case "y-statement-present":
-                {
-                    var max = rule.MaxWords ?? 60;
-                    if (d.YStatement is null)
-                        warn("y-statement", "no Y-statement block-quote follows the H1.", d.H1Line);
-                    else
-                    {
-                        var text = Md.PlainText(d.YStatement);
-                        var line = d.YStatement.Line + 1;
-
-                        var missing = MissingMoves(text);
-                        if (missing.Count > 0)
-                            warn("y-statement",
-                                $"Y-statement is missing {QuotedList(missing)}. The six moves are what make it a "
-                                + "Y-statement rather than a summary of one.", line);
-
-                        var words = text.Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
-                        if (words > max)
-                            warn("y-statement", $"Y-statement is {words} words; keep it under {max}.", line);
-                    }
-
-                    break;
-                }
-                case "alternatives-have-verdicts":
-                {
-                    foreach (var (text, line) in AlternativeBullets(d))
-                        if (!HasVerdict(text))
-                            warn("alternatives-verdict",
-                                $"Alternatives Considered bullet has no verdict: \"{Trim(text)}\".", line);
-                    break;
-                }
-            }
+            // A rule with neither an `expr:` nor an implementation is a statement of intent, and is
+            // skipped in silence: the schema records what someone wanted, and nothing answers to it yet.
+            if (DocumentRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
+                implementation.Check(new RuleContext(d, t, rule, err, warn));
         }
-    }
-
-    private static IEnumerable<(string text, int line)> AlternativeBullets(Doc d)
-    {
-        var inSection = false;
-        foreach (var block in d.Ast)
-        {
-            if (block is HeadingBlock h)
-            {
-                inSection = h.Level switch
-                {
-                    2 => string.Equals(Md.PlainText(h.Inline), "Alternatives Considered",
-                        StringComparison.OrdinalIgnoreCase),
-                    < 2 => false,
-                    _ => inSection
-                };
-                continue;
-            }
-
-            if (inSection && block is ListBlock list)
-                foreach (var item in list)
-                    if (item is ListItemBlock li)
-                    {
-                        var text = string.Join(" ", li.Descendants<LiteralInline>().Select(x => x.Content.ToString()));
-                        yield return (text, li.Line + 1);
-                    }
-        }
-    }
-
-    // The six moves of a Y-statement, in the order they are written. The form is fixed rather than
-    // tunable — a block-quote missing one is not a Y-statement worded differently, it is a summary — so
-    // the phrases live here, where `max-words` lives in the schema because a ceiling is a judgement.
-    private static readonly string[] Moves =
-        ["in the context of", "facing", "we decided", "rather than", "to achieve", "accepting"];
-
-    // Asked of the rendered text, so the bold that marks each move in the corpus is already gone and a
-    // Y-statement written without it still reads. Whole words only: `facing` is not found inside
-    // `surfacing`, and a move followed by a comma is still found.
-    private static List<string> MissingMoves(string text)
-    {
-        var words = new string(text.Select(c => char.IsLetterOrDigit(c) ? char.ToLowerInvariant(c) : ' ').ToArray())
-            .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
-        var haystack = $" {string.Join(' ', words)} ";
-        return Moves.Where(m => !haystack.Contains($" {m} ", StringComparison.Ordinal)).ToList();
-    }
-
-    // The moves as a sentence reads them: "facing", "rather than" and "accepting".
-    private static string QuotedList(IReadOnlyList<string> items) =>
-        items.Count == 1
-            ? Quoted(items[0])
-            : $"{string.Join(", ", items.Take(items.Count - 1).Select(Quoted))} and {Quoted(items[^1])}";
-
-    private static string Quoted(string item) => $"\"{item}\"";
-
-    private static bool HasVerdict(string text)
-    {
-        var t = text.ToLowerInvariant();
-        // An explicit verdict word, or a contrastive / negative-outcome cue that shows
-        // the option was weighed to a conclusion. A genuinely open bullet ("we could
-        // also use X") carries none of these and is what this warning is for.
-        string[] markers =
-        [
-            "reject", "accept", "chosen", "choose", "defer", "declined", "discarded", "adopted",
-            "not for this adr", "no real alternative", "not adopted", "not pursued", "not chosen",
-            "not relevant", "not worth", "no need", "unnecessary", "ruled out", "set aside",
-            "we use", "instead", "however", "but ", "overkill", "heavier", "too ", "revisit"
-        ];
-        return markers.Any(t.Contains);
     }
 
     // -- small utilities --
@@ -1011,6 +909,4 @@ public static class Validator
         return File.Exists(basePath)
                || File.Exists(basePath + ".md"); // ADO resolves links with .md omitted
     }
-
-    private static string Trim(string s) => s.Length > 60 ? s[..57] + "…" : s;
 }

@@ -145,8 +145,8 @@ A type that declares no `clauses:` block is checked for none of these.
 
 A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
 by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
-editing this tool. Only the last two need more than the grammar can say and keep a C# arm;
-[`SPEC.md`](SPEC.md) draws the line between the two and lists what is still to convert.
+editing this tool. Only the last two need more than the grammar can say, and each is a class in `kac.core/Rules/`
+with its own unit tests. [`SPEC.md`](SPEC.md) draws the line between the two and lists what is still to convert.
 
 | Check                           | Type         | Level   | What it enforces                                                                                                                      |
 |---------------------------------|--------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|

@@ -9,7 +9,18 @@
 below applies: the catalogue, the checks table and `kac checks` all pick it up from the schema. Reach for a C# check
 only when the question needs git history, a graph walk, or more than one document at once.
 
-For one that does, four places have to agree, and three of them fail a meta-test rather than a test you were looking at:
+**A rule that does need C# is a class, not an arm.** One file in `kac.core/Rules/` implementing `IDocumentRule`, with
+its own unit tests, and a line in `DocumentRules.All`. It declares the checks it `Emits`, and `CheckCatalogue.All`
+reads them from there — so implementing it and registering it are the same edit, and its id cannot drift from its
+catalogue entry. `Validator.CheckRules` finds it by the id the schema's `rules:` block declares; a rule id nothing
+implements is a statement of intent and is skipped in silence.
+
+Only the per-document shape has an interface. The rules still to come that need the whole corpus, a graph walk or git
+history do not fit `RuleContext`, and their interface should be designed against the first real one rather than ahead
+of it.
+
+For a core check — one that is not a rule at all — four places have to agree, and three of them fail a meta-test
+rather than a test you were looking at:
 
 1. **`CheckCatalogue.All`** in `Findings.cs` — the registry. `kac checks` reads it, and so does the coverage gate.
 2. **`Generator.DocRows`** *or* **`Generator.IntentionallyUndocumented`** — every catalogue id must appear in one of
@@ -24,7 +35,8 @@ fold into one reader-facing row. An expression rule is the opposite — one id, 
 comes from its `description:` and writing one into `DocRows` would duplicate it.
 
 **The coverage gate reads ids, not branches.** A check with two ways to fail is green once a fixture trips either one.
-If you add a second arm, add a second fixture.
+A rule reporting three faults under one id needs a fixture for each, and unit tests beside the rule class for the
+branches a fixture would only duplicate.
 
 ## The fixtures
 

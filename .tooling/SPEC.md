@@ -7,14 +7,14 @@ statement of intent — a behaviour someone wanted, written down, that nothing a
 This file is the reference for that layer: what an expression may say, why the boundaries are where they are, and what
 is still to be converted.
 
-**Where things stand.** 46 rule entries across the type schemas: **14 expressions**, **2 hand-written C# arms**, and
+**Where things stand.** 46 rule entries across the type schemas: **14 expressions**, **2 rule classes**, and
 **30 statements of intent**. Most of those 30 will never be expressions — see [Stays C#](#stays-c) and
 [Not validator work at all](#not-validator-work-at-all).
 
 ## Why an expression and not a policy engine
 
-Wiring a rule as C# means an arm in `Validator.CheckRules`, an entry in `CheckCatalogue.All`, a row in
-`Generator.DocRows`, a row in two READMEs, and a fixture. Wiring it as an expression means a line of YAML and a fixture.
+Wiring a rule as C# means a class, a registry line, unit tests, a row in `Generator.DocRows`, a row in two READMEs,
+and a fixture. Wiring it as an expression means a line of YAML and a fixture.
 That difference is the whole argument, and it compounds: a corpus that has *taken* this framework rather than authored
 it may add a whole type file of its own, and before this layer existed every rule in one was inert — enforcing it
 needed an upstream code change and a release.
@@ -132,14 +132,27 @@ there rather than on the immutable `Doc`.
 
 ## The C# behind it
 
-| File                        | Holds                                                                                          |
-|-----------------------------|-------------------------------------------------------------------------------------------------|
-| `kac.core/Facts.cs`         | the fact functions, and nothing else an expression can reach                                    |
-| `kac.core/RuleExpr.cs`      | lexer, recursive-descent parser, type checker, evaluator — no dependencies                       |
-| `RuleSpec` in `Schema.cs`   | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load                          |
-| `Validator.CheckRules`      | evaluates every compiled rule, then falls through to the bespoke arms                            |
+| File                       | Holds                                                                                      |
+|----------------------------|--------------------------------------------------------------------------------------------|
+| `kac.core/Facts.cs`        | the fact functions, and nothing else an expression can reach                               |
+| `kac.core/RuleExpr.cs`     | lexer, recursive-descent parser, type checker, evaluator — no dependencies                  |
+| `RuleSpec` in `Schema.cs`  | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load                     |
+| `kac.core/Rules/`          | one class per rule that needs C#, and the registry the dispatcher looks them up in          |
+| `Validator.CheckRules`     | evaluates every compiled rule, and looks up by id the ones that are not                    |
 
 `CheckRules` emits at the rule's own severity, which is why it is not `CheckWarnings`.
+
+**A rule that needs C# is a class.** `IDocumentRule` gives it the document, the type, and the `RuleSpec` the schema
+declared — so a threshold like `max-words` is read from the schema rather than held as a constant — and it declares
+the `CheckDef`s it emits, which is where `CheckCatalogue.All` gets them. The rule id and the check id are separately
+named because they differ: `y-statement-present` reports under `y-statement`.
+
+That the dispatcher is a dictionary is the smaller half of it. The larger half is that a rule can be unit-tested on
+its own, which is the only way to hold a rule with three ways to fail honest — the coverage gate reads ids, so it
+would be green on any one of them.
+
+Only the per-document shape has an interface. Cross-document, graph and git-history rules need inputs `RuleContext`
+does not carry, and their interface is worth designing against the first real one rather than ahead of it.
 
 ## The coverage gate
 
@@ -189,7 +202,7 @@ Each states a fault about the document as a whole, so one message is the whole d
 
 Sixteen rules need git history, a graph walk, more than one document at once, or a message an expression cannot write.
 **If you find yourself wanting loops, joins or quantifiers in the grammar to reach one of these, stop** — that is the
-signal you are rebuilding OPA. Write a dedicated arm.
+signal you are rebuilding OPA. Write a rule class.
 
 They cluster, which is worth knowing before starting any of them:
 

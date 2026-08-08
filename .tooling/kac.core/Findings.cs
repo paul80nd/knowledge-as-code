@@ -65,8 +65,10 @@ public static class CheckCatalogue
         new("clause-compound", Sev.Warning, "A clause carries one obligation, not two."),
         new("unused-definition", Sev.Warning, "A link definition that nothing references."),
         new("bracket-literal", Sev.Warning, "A [...] in prose that looks like a broken reference."),
-        new("y-statement", Sev.Warning, "A short Y-statement block-quote, stating all six moves, follows the H1."),
-        new("alternatives-verdict", Sev.Warning, "Each Alternatives Considered bullet states an outcome.")
+
+        // The rules that need C# declare what they report, so implementing one and registering it is
+        // the same edit. Restating them here is how an id and its catalogue entry drift apart.
+        .. DocumentRules.All.SelectMany(r => r.Emits)
     ];
 
     // The catalogue as it stands for a given corpus: the checks above, which every corpus gets, plus one
