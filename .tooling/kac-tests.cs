@@ -295,11 +295,10 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
 Console.WriteLine();
 
 // -- coverage meta-test --
-// Every check kac can emit should be exercised by some fixture. A golden that references a check
-// kac no longer emits is a hard error (a rename left a stale golden); a check with no fixture yet
-// is reported but does not fail the build while the corpus is still being filled out. Coverage is
-// a property of the WHOLE suite, so it is only computed on a full run — a filtered run would
-// undercount and read as a regression.
+// Every reachable check must be exercised by some fixture, and both directions fail the build: a
+// check with no fixture, and a golden naming a check the catalogue does not hold — which is a rename
+// that left a stale golden. Coverage is a property of the WHOLE suite, so it is only computed on a
+// full run; a filtered run would undercount and read as a regression.
 if (filters.Count == 0)
 {
     // Checks that no discovered document can reach, so no fixture can exercise them. `type` fires

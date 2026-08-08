@@ -108,8 +108,9 @@ public sealed record RuleSpec
     // rule means to someone reading the type page: one is a diagnosis, the other a definition.
     public string? Message { get; init; }
 
-    // The ceiling `y-statement-present` holds a Y-statement to. Rule-specific because the check that
-    // reads it is; a threshold expressed as an `expr:` would not need a home here at all.
+    // The ceiling `y-statement-present` holds a Y-statement to. It sits in the schema for the reason
+    // every threshold does — a number chosen rather than measured is one a corpus tunes, and tuning it
+    // should not be a release — and on the rule rather than on a field because no field carries it.
     public int? MaxWords { get; init; }
 }
 
@@ -433,9 +434,9 @@ public sealed class Schema
         };
     }
 
-    // Parsed at load, and a condition the vocabulary does not cover stops the load. Silence here is what
-    // let two of these sit dead: a form nobody had implemented read as a condition that simply never
-    // held, so the field it guarded was quietly never required and the schema went on claiming it was.
+    // Parsed at load, and a condition the vocabulary does not cover stops the load. Failing silently
+    // would be worse than useless: an unreadable condition is one that never holds, so the field it
+    // guards is quietly never required while the schema goes on claiming it is.
     public static RequiredWhen? ParseRequiredWhen(string field, string? condition)
     {
         if (string.IsNullOrWhiteSpace(condition)) return null;

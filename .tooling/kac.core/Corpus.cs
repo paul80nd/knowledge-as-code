@@ -33,8 +33,8 @@ public static class Corpus
     private static readonly string[] SkipDirs = [".git", ".idea", ".claude"];
 
     // Every file the corpus contains, before any exclusion. Used to ask whether a folder is really
-    // there: an empty directory git has never seen is not part of the corpus, and treating it as one
-    // is what made the answer depend on which machine was asking.
+    // there: an empty directory git has never seen is not part of the corpus, and counting it as one
+    // makes the answer depend on which machine is asking.
     //
     // git ls-files respects .gitignore, .git/info/exclude and global excludes, and never lists .git/
     // itself — exactly the "respect .gitignore" requirement; the walk is the non-git fallback.

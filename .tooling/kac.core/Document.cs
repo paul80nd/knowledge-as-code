@@ -129,7 +129,6 @@ public class Doc
             } // signalled as a parse error downstream
         }
 
-        // Headings.
         foreach (var h in ast.Descendants<HeadingBlock>())
         {
             var txt = Md.PlainText(h.Inline);
@@ -172,7 +171,6 @@ public class Doc
             if (link.Reference is not null) doc.UsedLabels.Add(link.Reference.Label ?? "");
         }
 
-        // Link reference definitions.
         foreach (var def in ast.Descendants<LinkReferenceDefinition>())
             if (def.Label is not null)
                 doc.DefinedLabels.Add(def.Label);
@@ -191,7 +189,6 @@ public class Doc
         // Y-statement — first block-quote after the H1.
         doc.YStatement = ast.Descendants<QuoteBlock>().FirstOrDefault(q => q.Line > (doc.H1Line - 1));
 
-        // Related section links.
         doc.RelatedSectionLinks = SectionLinks(ast, "Related");
 
         return doc;

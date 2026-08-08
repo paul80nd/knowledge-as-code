@@ -474,8 +474,8 @@ public static class Validator
     }
 
     // The H1 is plain descriptive text — no id, no prefix, no shape the schema constrains — so the only
-    // thing left to check is that there is one. What used to be read out of the H1 is now the identity
-    // line's job, and CheckIdentity depends on this having run: with no H1 there is no line beneath it,
+    // thing left to check is that there is one. The type, the id and the status are the identity line's
+    // to carry, and CheckIdentity depends on this having run: with no H1 there is no line beneath it,
     // and reporting both would be one fault counted twice.
     private static void CheckH1(Doc d, Action<string, string, int?> err)
     {

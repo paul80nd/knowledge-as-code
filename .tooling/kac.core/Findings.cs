@@ -12,11 +12,11 @@ public enum Sev
 
 public record Finding(string File, int? Line, Sev Severity, string Check, string Message);
 
-// The registry of every check the validator can emit. It exists so the test suite can assert
-// coverage (every id here must be triggered by a fixture) and so a human can `kac checks` to see
-// the ruleset. Adding a new Err/Warn check to the validator means adding its id here — the
-// coverage meta-test fails on any id emitted in a fixture golden that is missing from this list,
-// which keeps the two honest. Ordered roughly as a document is checked, then corpus-wide.
+// The registry of every check the validator can emit. It exists so the test suite can assert coverage
+// — every id here must be triggered by a fixture — and so a human can `kac checks` to see the ruleset.
+// A core check has to be added here by hand; a rule declares what it emits and is folded in below.
+// Either way the coverage meta-test fails on an id a golden carries and this list does not, which
+// keeps the two honest. Ordered roughly as a document is checked, then corpus-wide.
 public readonly record struct CheckDef(string Id, Sev Severity, string Summary);
 
 public static class CheckCatalogue

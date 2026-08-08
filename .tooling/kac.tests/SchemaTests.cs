@@ -76,9 +76,9 @@ public class SchemaTests
 
     // -- required-when --
     //
-    // The vocabulary is closed on purpose, and a form outside it stops the load. Two conditions sat dead
-    // for want of that: `!=` and `in [...]` read as conditions that simply never held, so the fields they
-    // guarded were never required and the schema went on claiming they were.
+    // The vocabulary is closed on purpose, and a form outside it stops the load. A form that parsed to
+    // nothing would be a condition that never holds, leaving the field it guards quietly unrequired
+    // while the schema goes on claiming it is — which is the failure these cases exist to prevent.
 
     [Theory]
     [InlineData("status == accepted", "accepted", true)]
