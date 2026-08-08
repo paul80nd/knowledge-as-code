@@ -68,8 +68,8 @@ The most important tier is the one carrying the least authority.
 
 Capture has to be nearly free or it does not happen. Nobody writes up a gotcha if doing so requires a template, an owner
 and two reviewers — so observations are recorded with no review at all, marked unverified, and expire on their own if
-nothing promotes them. The rigour lives at promotion instead: a [discovery](/discoveries) becomes an [FAQ](/faqs) when a
-human confirms it, and the FAQ carries provenance back to the observation.
+nothing promotes them. The rigour lives at promotion instead: a [discovery](/discoveries) becomes an [FAQ](/faqs) when
+a human confirms it, and the FAQ carries provenance back to the observation.
 
 That gradient is what lets a corpus grow without its average trustworthiness falling. Cheap in, expensive up.
 
@@ -114,11 +114,12 @@ tiered model should never land on an organisation that does not need it.
 
 ### Tiered corpora
 
-> **Planned.** The shape is agreed. None of the mechanism described here is built.
+> **Planned.** The shape is agreed. None of the mechanism described here is built — tracked in
+> [knowledge-as-code#93](https://github.com/paul80nd/knowledge-as-code/issues/93).
 
 A larger organisation has several bounded contexts and one governance conversation. Without a way to share, each context
-copies the standards and controls it is bound by, and the copies drift —
-which [one authoritative owner](#one-authoritative-owner) says is the failure to avoid.
+copies the standards and controls it is bound by, and the copies drift — which [one authoritative
+owner](#one-authoritative-owner) says is the failure to avoid.
 
 The intended shape is three layers. The **framework** holds schema, validator and skills. A **governance corpus** holds
 the organisation-wide layer — policies, standards, controls, tools, glossary, cross-cutting decisions — changing slowly
@@ -139,13 +140,15 @@ Each of these follows from a principle above and is not yet built.
 
 > **Planned.** A corpus declares what it consumes, in its lockfile, by name and version. Dependencies are declared and
 > never inferred from folder structure or naming convention — the same discipline `manifest.yaml` already applies to the
-> shared layer, extended from files to corpora.
+> shared layer, extended from files to corpora. Tracked in
+> [knowledge-as-code#93](https://github.com/paul80nd/knowledge-as-code/issues/93).
 
 **Versioned consumption.**
 
 > **Planned.** A corpus validates against a published version of an upstream corpus, never against the current state of
 > another repository's default branch. Validation that depends on someone else's uncommitted afternoon is not
-> reproducible, and the argument is the one that already applies to software packages.
+> reproducible, and the argument is the one that already applies to software packages. Tracked in
+> [knowledge-as-code#93](https://github.com/paul80nd/knowledge-as-code/issues/93).
 
 **Published contracts.**
 
