@@ -1,7 +1,10 @@
 # Enums used by more than one type. Referenced as $enums.<name>.
 # An enum used by exactly one type lives in that type's file.
 
-version: 1
+notes: >
+  Which types each enum serves is not recorded here. A list of them would be a second place to keep in step with
+  `values: $enums.<name>`, and wrong in any corpus that adopted some of these types and not the others — where the
+  reference itself is right by construction. Grep for the enum to find who draws on it.
 
 enums:
 
@@ -11,17 +14,13 @@ enums:
       Judged by what a customer experiences when it is unavailable. `critical` means customer-facing failure,
       `important` means degraded service, `supporting` means internal impact only. It drives runbook and NFR
       priority, so it should be honest rather than generous.
-    used-by: [services, integrations]
 
   severity:
     values: [sev1, sev2, sev3]
-    used-by: [runbooks, postmortems]
 
   rehearsal-frequency:
     values: [per-release, quarterly, annual]
-    used-by: [processes, runbooks]
 
   review-cadence:
     values: [quarterly, biannual, annual]
     notes: Guidance for setting `review-by`; not itself a frontmatter field.
-    used-by: [policies, standards, nfrs, faqs, explanations]

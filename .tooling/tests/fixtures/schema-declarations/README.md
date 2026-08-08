@@ -15,6 +15,9 @@ so the golden is the schema pass and nothing else.
   `index.order: newest-first`, `ref: gizmos` at a folder no schema covers, a `values:` list on a `type: list` field, a
   `min-items:` on a `type: string` field, and `mirrors-section: See also`.
 * **Shape** — a collection type with no `folder:`.
+* **Unknown** — `stability:` at the top of the file and `unique:` on a field, at two levels, because the vocabulary
+  is per-level. The `notes:` on the `id` block is the other half of that assertion: it is parsed nowhere and
+  reported nowhere, which is what makes closing the rest of the key space possible.
 
 `ref: [widgets, gizmos]` is the pair that matters: the first entry resolves and only the second is reported, which is
 what pins that a list `ref:` is read entry by entry rather than dropped whole.

@@ -39,19 +39,19 @@ Boundaries:
 
 <!-- BEGIN GENERATED: schema-discoveries -->
 
-| Field         | Req | Type   | Notes                                                                                             |
-|---------------|-----|--------|---------------------------------------------------------------------------------------------------|
-| `id` †        | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                             |
-| `tier` †      | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.              |
-| `status` †    | ●   | enum   | Open until promoted, expired or rejected.                                                         |
-| `owner` †     | ●   | string | A named person, never a team alias.                                                               |
-| `tags` †      |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                  |
-| `source`      | ●   | enum   | Who or what observed it. `dreamed` means proposed by an agent.                                    |
-| `confidence`  | ●   | enum   | Stays `unverified` unless genuinely proven. An agent cannot confirm its own observation.          |
-| `expires`     | ●   | date   | Perishable by default. An observation nobody has needed in three months was probably situational. |
-| `provenance`  |     | string | A reference back to the session and passage, so review is a check rather than an act of faith.    |
-| `applies-to`  |     | list   | Service ids this observation concerns.                                                            |
-| `promoted-to` |     | id     | The FAQ or standard this became.                                                                  |
+| Field         | Req | Type   | Notes                                                                                          |
+|---------------|-----|--------|------------------------------------------------------------------------------------------------|
+| `id` †        | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                          |
+| `tier` †      | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.           |
+| `status` †    | ●   | enum   | Open until promoted, expired or rejected.                                                      |
+| `owner` †     | ●   | string | A named person, never a team alias.                                                            |
+| `tags` †      |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                               |
+| `source`      | ●   | enum   | Who or what observed it. `dreamed` means proposed by an agent.                                 |
+| `confidence`  | ●   | enum   | Starts at `unverified`, and stays there unless genuinely proven.                               |
+| `expires`     | ●   | date   | Quoted. Ninety days from capture by convention — the template says so.                         |
+| `provenance`  |     | string | A reference back to the session and passage, so review is a check rather than an act of faith. |
+| `applies-to`  |     | list   | Service ids this observation concerns.                                                         |
+| `promoted-to` |     | id     | The FAQ or standard this became.                                                               |
 
 **Enum values**
 

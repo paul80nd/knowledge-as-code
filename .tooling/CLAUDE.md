@@ -53,8 +53,11 @@ so core checks are called in sequence and never looked up in a registry. Where a
 
 **`Checks/SchemaChecks.cs` reads no document at all.** It runs once, before the corpus, and asks whether the schema
 declares anything the tool cannot act on. A vocabulary it tests must be read from the code that dispatches the value —
-`Validator.IdStyles`, `Doc.RelatedSection`, `DocumentRules.ByRuleId` — never restated there, because a copy is a list of
-what is spelled correctly rather than of what runs.
+`Validator.IdStyles`, `Doc.RelatedSection`, `Generator.IndexOrders`, `DocumentRules.ByRuleId` — never restated there,
+because a copy is a list of what is spelled correctly rather than of what runs. The key vocabulary follows the same
+rule with no list at all: `Schema.Load` reads every mapping through a `Level` that records what it was asked for, so
+adding a `Get` is what admits a key. Adding one without the code that reads what it parsed into moves the failure from
+`schema-unknown-key` to `schema-dispatch` rather than removing it.
 
 Wherever it lives, four places have to agree, and three of them fail a meta-test rather than a test you were looking at:
 

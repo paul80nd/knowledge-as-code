@@ -2,10 +2,24 @@
   "summary": {
     "validated": 0,
     "skipped": 0,
-    "errors": 12,
+    "errors": 14,
     "warnings": 0
   },
   "findings": [
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-unknown-key",
+      "message": "the file declares 'stability', which the loader does not read — implement it, drop it, or write what it was saying as 'notes:', the one key every level admits."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-unknown-key",
+      "message": "field 'related' declares 'unique', which the loader does not read — implement it, drop it, or write what it was saying as 'notes:', the one key every level admits."
+    },
     {
       "file": ".schema/widgets.yaml",
       "line": null,

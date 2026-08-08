@@ -9,7 +9,14 @@ notes: >
   The only type that is one document rather than a collection, which is what `shape` says. A
   single-document type declares no `folder:` — there are no per-term files and no per-record schema, so the
   frontmatter below belongs to `glossary.md` itself. Terms are H3 headings and their anchors are their
-  identifiers.
+  identifiers, and nothing generates an index because the document is its own.
+
+  A term is an H3 heading, a one-sentence definition, an optional `**Not:** …` line naming what it is most often
+  confused with, and optional links to the owning service or an explanation. Those `**Not:**` lines are the most
+  useful content in the file. One paragraph per term, because the rules digest carries this file whole and every
+  paragraph is spent from the same budget. The list is alphabetical and flat — no A–Z sub-headings — so that it
+  reads end to end and greps cleanly. All of that is held by whoever reviews the file: the rules below that would
+  read a term's shape are declared and not built, and no check parses an entry.
 
 id:
   prefix: null
@@ -37,24 +44,6 @@ sections:
     - "Terms"
     - "Adding a term"
   optional: []
-
-entry:
-  heading-level: 3
-  pattern: '^### (.+)$'
-  shape:
-    - definition: One sentence. Required.
-    - not: >
-        Optional `**Not:** …` line naming the term it is most often confused with, and the difference in a
-        few words. These lines are the most useful content in the file.
-    - links: Optional. Owning service, ADRs, explanations.
-  max-paragraphs: 1
-  notes: >
-    Alphabetical and flat — no A–Z sub-headings. The file is meant to be read end to end and grepped, and
-    sub-headings break the per-term parse.
-
-index:
-  generated: false
-  notes: The document is its own index.
 
 rules:
   - id: carried-in-full-by-digest

@@ -2,11 +2,10 @@
 
 [`README.md`](README.md) is the reference for the keys. This is what will bite you.
 
-* **A key you write may still do nothing.** The schema-load pass covers the values the tool dispatches — rule ids,
-  `ref:` folders, `id.style`, `shape`, `mirrors-section`, `values:` — but it does not check that a *key* is one the
-  loader reads at all. `glossary.yaml` carries an `entry:` block and an `index.generated:` that nothing parses. Before
-  relying on a key, find it in `.tooling/kac.core/Schema.cs`, then find the code that reads what it parsed into. Finding
-  it parsed is not enough.
+* **A key you invent is rejected, and `notes:` is how you say the thing anyway.** The key space is closed at every
+  level: the loader records what it asks each mapping for, and anything left over fails as `schema-unknown-key`. So a
+  new key means an edit to `.tooling/kac.core/Schema.cs` and to the code that reads what it parsed into — finding it
+  parsed is not enough, since a value nothing dispatches fails the same pass one step later.
 
 * **Run `./kac index` after any change.** Every type page carries generated `schema-<type>` and `checks-<type>`
   blocks derived from these files, so a schema edit alone leaves the corpus stale and fails `index --check` in CI.

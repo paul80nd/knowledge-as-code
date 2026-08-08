@@ -245,14 +245,73 @@ public sealed class TypeSchema
     }
 }
 
+// A key a schema file carries that the loader never asks for. Held rather than thrown, as every schema
+// defect is, so that one such key is one finding naming the file and the key and the rest of the schema
+// still loads.
+public sealed record UnreadKey(string File, string Where, string Key);
+
+// A mapping the loader is reading, which remembers what it was asked for. The vocabulary a level admits
+// is therefore the set of keys the loader actually reads: adding a key to the loader adds it to the
+// vocabulary in the same edit, where a list of permitted keys written out beside the check would be a
+// list of what is spelled correctly rather than of what runs.
+//
+// `notes:` is the exception, admitted at every level and parsed only on a field. It is the schema's one
+// word for commentary, and these files earn it — they are read by someone who cannot ask what a key was
+// for. Naming commentary is what lets the rest of the key space be closed around it.
+internal sealed class Level(YamlNode? node, string where)
+{
+    private readonly HashSet<string> asked = new(StringComparer.Ordinal);
+
+    public string Where { get; } = where;
+
+    // Whether the block is there at all, for the one caller that treats an absent block and an empty one
+    // differently: a type declares clauses by carrying the block, and every key in it has a default.
+    public bool Present => node is YamlMappingNode;
+
+    public YamlNode? Get(string key)
+    {
+        asked.Add(key);
+        return Yaml.Get(node, key);
+    }
+
+    public IEnumerable<string> Unread() => Yaml.Map(node)
+        .Select(entry => entry.Item1)
+        .Where(key => key != Schema.Commentary && !asked.Contains(key));
+}
+
+// The mappings read from one schema file. Levels are harvested in the order they were opened, so a file
+// with several unread keys reports them in the order someone reading it would meet them.
+internal sealed class KeyReader(string file)
+{
+    private readonly List<Level> levels = [];
+
+    public Level At(YamlNode? node, string where)
+    {
+        var level = new Level(node, where);
+        levels.Add(level);
+        return level;
+    }
+
+    public IEnumerable<UnreadKey> Unread() =>
+        levels.SelectMany(l => l.Unread().Select(key => new UnreadKey(file, l.Where, key)));
+}
+
 public sealed class Schema
 {
+    // The one key admitted at every level and required at none. See Level.
+    public const string Commentary = "notes";
+
     public IReadOnlyList<string> UniversalOrder { get; init; } = [];
     public IReadOnlyDictionary<string, FieldSpec> Universal { get; init; } = new Dictionary<string, FieldSpec>();
     public IReadOnlyList<string> Reserved { get; init; } = [];
     public IReadOnlyDictionary<string, IReadOnlyList<string>> Enums { get; init; } =
         new Dictionary<string, IReadOnlyList<string>>();
     public IReadOnlyDictionary<string, TypeSchema> ByFolder { get; init; } = new Dictionary<string, TypeSchema>();
+
+    // Every key these files carry that the loader never asked for, in the order it would be met reading
+    // them. A key nothing reads is a declaration in a file documented as the contract the tool enforces,
+    // which is the same promise a rule id nothing dispatches makes.
+    public IReadOnlyList<UnreadKey> UnreadKeys { get; init; } = [];
 
     // The parts of the schema every type is read against: the shared field declarations, the reserved
     // keys, and the enum vocabularies a field can draw on. Carried as one argument into type parsing
@@ -266,29 +325,37 @@ public sealed class Schema
     public static Schema Load(string repoRoot)
     {
         var dir = Path.Combine(repoRoot, ".schema");
+        var unread = new List<UnreadKey>();
 
-        var enumsRoot = Yaml.LoadFile(Path.Combine(dir, "_enums.yaml"));
+        var enumKeys = new KeyReader(".schema/_enums.yaml");
+        var enumsRoot = enumKeys.At(Yaml.LoadFile(Path.Combine(dir, "_enums.yaml")), TheFile);
         var enums = new Dictionary<string, IReadOnlyList<string>>();
-        foreach (var (name, node) in Yaml.Map(Yaml.Get(enumsRoot, "enums")))
-            enums[name] = Yaml.StrList(Yaml.Get(node, "values"));
+        foreach (var (name, node) in Yaml.Map(enumsRoot.Get("enums")))
+            enums[name] = Yaml.StrList(enumKeys.At(node, $"enum '{name}'").Get("values"));
+        unread.AddRange(enumKeys.Unread());
 
-        var uni = Yaml.LoadFile(Path.Combine(dir, "_universal.yaml"));
+        var universalKeys = new KeyReader(".schema/_universal.yaml");
+        var uni = universalKeys.At(Yaml.LoadFile(Path.Combine(dir, "_universal.yaml")), TheFile);
         var universalOrder = new List<string>();
         var universal = new Dictionary<string, FieldSpec>();
-        foreach (var (name, node) in Yaml.Map(Yaml.Get(uni, "fields")))
+        foreach (var (name, node) in Yaml.Map(uni.Get("fields")))
         {
             universalOrder.Add(name);
-            universal[name] = ParseField(name, node, enums);
+            universal[name] = ParseField(universalKeys.At(node, $"field '{name}'"), name, enums);
         }
 
-        var layer = new UniversalLayer(universalOrder, universal, Yaml.StrList(Yaml.Get(uni, "reserved")), enums);
+        var layer = new UniversalLayer(universalOrder, universal, Yaml.StrList(uni.Get("reserved")), enums);
+        unread.AddRange(universalKeys.Unread());
 
         var byFolder = new Dictionary<string, TypeSchema>();
         foreach (var file in Directory.GetFiles(dir, "*.yaml").OrderBy(f => f))
         {
             var baseName = Path.GetFileNameWithoutExtension(file);
             if (baseName.StartsWith('_')) continue; // _universal, _enums
-            byFolder[baseName] = ParseType(Yaml.LoadFile(file), layer);
+
+            var keys = new KeyReader($".schema/{baseName}.yaml");
+            byFolder[baseName] = ParseType(keys.At(Yaml.LoadFile(file), TheFile), keys, layer);
+            unread.AddRange(keys.Unread());
         }
 
         return new Schema
@@ -297,72 +364,78 @@ public sealed class Schema
             Universal = layer.Fields,
             Reserved = layer.Reserved,
             Enums = layer.Enums,
-            ByFolder = byFolder
+            ByFolder = byFolder,
+            UnreadKeys = unread
         };
     }
 
-    private static TypeSchema ParseType(YamlNode root, UniversalLayer layer)
+    // How a level names itself in a finding. The file is already named beside the message, so the top of
+    // one says only that it is the top.
+    private const string TheFile = "the file";
+
+    private static TypeSchema ParseType(Level root, KeyReader keys, UniversalLayer layer)
     {
-        var id = Yaml.Get(root, "id");
-        var fn = Yaml.Get(root, "filename");
-        var sections = Yaml.Get(root, "sections");
-        var index = Yaml.Get(root, "index");
+        var id = keys.At(root.Get("id"), "the 'id' block");
+        var fn = keys.At(root.Get("filename"), "the 'filename' block");
+        var sections = keys.At(root.Get("sections"), "the 'sections' block");
+        var index = keys.At(root.Get("index"), "the 'index' block");
 
         var fieldOrder = new List<string>();
         var fields = new Dictionary<string, FieldSpec>();
-        foreach (var (name, node) in Yaml.Map(Yaml.Get(root, "fields")))
+        foreach (var (name, node) in Yaml.Map(root.Get("fields")))
         {
             fieldOrder.Add(name);
-            fields[name] = ParseField(name, node, layer.Enums);
+            fields[name] = ParseField(keys.At(node, $"field '{name}'"), name, layer.Enums);
         }
 
-        var rules = Yaml.Get(root, "rules") is YamlSequenceNode ruleNodes
-            ? ruleNodes.Children.Select(ParseRule).ToList()
+        var rules = root.Get("rules") is YamlSequenceNode ruleNodes
+            ? ruleNodes.Children.Select(node => ParseRule(node, keys)).ToList()
             : [];
 
-        var filenamePattern = fn is null ? null : Yaml.Str(Yaml.Get(fn, "pattern"));
+        var filenamePattern = Yaml.Str(fn.Get("pattern"));
+        var clauses = keys.At(root.Get("clauses"), "the 'clauses' block");
 
         return new TypeSchema
         {
-            TypeName = Yaml.Str(Yaml.Get(root, "type")) ?? "",
-            Label = Yaml.Str(Yaml.Get(root, "label")) ?? "",
-            Folder = Yaml.Str(Yaml.Get(root, "folder")) ?? "",
-            Page = Yaml.Str(Yaml.Get(root, "page")) ?? "",
-            Tier = Yaml.Str(Yaml.Get(root, "tier")) ?? "",
-            Lifecycle = Yaml.Str(Yaml.Get(root, "lifecycle")) ?? "",
-            Shape = Yaml.Str(Yaml.Get(root, "shape")) ?? TypeSchema.CollectionShape,
+            TypeName = Yaml.Str(root.Get("type")) ?? "",
+            Label = Yaml.Str(root.Get("label")) ?? "",
+            Folder = Yaml.Str(root.Get("folder")) ?? "",
+            Page = Yaml.Str(root.Get("page")) ?? "",
+            Tier = Yaml.Str(root.Get("tier")) ?? "",
+            Lifecycle = Yaml.Str(root.Get("lifecycle")) ?? "",
+            Shape = Yaml.Str(root.Get("shape")) ?? TypeSchema.CollectionShape,
 
-            IdPrefix = id is null ? "" : Yaml.Str(Yaml.Get(id, "prefix")) ?? "",
-            IdStyle = id is null ? "" : Yaml.Str(Yaml.Get(id, "style")) ?? "",
-            IdWidth = id is null ? 0 : Yaml.Int(Yaml.Get(id, "width"), 4),
-            IdValue = id is null ? "" : Yaml.Str(Yaml.Get(id, "value")) ?? "",
+            IdPrefix = Yaml.Str(id.Get("prefix")) ?? "",
+            IdStyle = Yaml.Str(id.Get("style")) ?? "",
+            IdWidth = Yaml.Int(id.Get("width"), 4),
+            IdValue = Yaml.Str(id.Get("value")) ?? "",
 
             FilenamePattern = filenamePattern,
             FilenameRegex = CompilePattern(filenamePattern),
-            SlugMax = fn is null ? 30 : Yaml.Int(Yaml.Get(fn, "slug-max"), 30),
+            SlugMax = Yaml.Int(fn.Get("slug-max"), 30),
 
             FieldOrder = fieldOrder,
             Fields = fields,
 
-            RequiredSections = sections is null ? [] : Yaml.StrList(Yaml.Get(sections, "required")),
-            OptionalSections = sections is null ? [] : Yaml.StrList(Yaml.Get(sections, "optional")),
+            RequiredSections = Yaml.StrList(sections.Get("required")),
+            OptionalSections = Yaml.StrList(sections.Get("optional")),
 
-            Clauses = Yaml.Get(root, "clauses") is { } clauses
+            Clauses = clauses.Present
                 ? new ClauseSpec(
-                    Yaml.Str(Yaml.Get(clauses, "id-pattern")) ?? "",
-                    Yaml.StrList(Yaml.Get(clauses, "binding")),
-                    Yaml.StrList(Yaml.Get(clauses, "advisory")))
+                    Yaml.Str(clauses.Get("id-pattern")) ?? "",
+                    Yaml.StrList(clauses.Get("binding")),
+                    Yaml.StrList(clauses.Get("advisory")))
                 {
-                    Section = Yaml.Str(Yaml.Get(clauses, "section")) ?? "Clauses",
-                    Columns = Yaml.StrList(Yaml.Get(clauses, "columns")) is { Count: > 0 } cols
+                    Section = Yaml.Str(clauses.Get("section")) ?? "Clauses",
+                    Columns = Yaml.StrList(clauses.Get("columns")) is { Count: > 0 } cols
                         ? cols
                         : ["Id", "Clause"]
                 }
                 : null,
 
-            IndexColumns = index is null ? [] : Yaml.StrList(Yaml.Get(index, "columns")),
-            IndexSort = index is null ? [] : StrOrList(Yaml.Get(index, "sort")),
-            IndexOrder = index is null ? "" : Yaml.Str(Yaml.Get(index, "order")) ?? "",
+            IndexColumns = Yaml.StrList(index.Get("columns")),
+            IndexSort = StrOrList(index.Get("sort")),
+            IndexOrder = Yaml.Str(index.Get("order")) ?? "",
 
             Rules = rules,
 
@@ -383,17 +456,17 @@ public sealed class Schema
             .OfType<FieldSpec>()
     ];
 
-    private static FieldSpec ParseField(string name, YamlNode node,
+    private static FieldSpec ParseField(Level node, string name,
         IReadOnlyDictionary<string, IReadOnlyList<string>> enums)
     {
-        var pattern = Yaml.Str(Yaml.Get(node, "pattern"));
+        var pattern = Yaml.Str(node.Get("pattern"));
         string? problem = null;
 
         // `values: $enums.status` draws the vocabulary from _enums.yaml; a sequence declares it inline.
         // A name no enum answers to is a defect in the schema rather than a field with no range: the
         // declaration says the values are written down somewhere, and they are not.
         IReadOnlyList<string>? values = null;
-        switch (Yaml.Get(node, "values"))
+        switch (node.Get("values"))
         {
             case YamlScalarNode { Value: { } v } when v.StartsWith("$enums.", StringComparison.Ordinal):
                 var enumName = v["$enums.".Length..];
@@ -409,12 +482,12 @@ public sealed class Schema
 
         // A scalar `ref:` is one folder, a sequence is several; both arrive as a list so that neither
         // form can be read as the absence of a ref.
-        var refs = StrOrList(Yaml.Get(node, "ref"));
+        var refs = StrOrList(node.Get("ref"));
 
         // The condition is parsed here so that an unreadable one is reported against the field that
         // carries it. It is a defect in the schema either way: a condition nothing can read is one that
         // never holds, leaving the field quietly unrequired while the schema goes on claiming it is.
-        var requiredWhen = Yaml.Str(Yaml.Get(node, "required-when"));
+        var requiredWhen = Yaml.Str(node.Get("required-when"));
         RequiredWhen? condition = null;
         try
         {
@@ -428,21 +501,21 @@ public sealed class Schema
         return new FieldSpec
         {
             Name = name,
-            Required = Yaml.Bool(Yaml.Get(node, "required")),
+            Required = Yaml.Bool(node.Get("required")),
             RequiredWhen = requiredWhen,
             RequiredWhenCondition = condition,
-            Type = Yaml.Str(Yaml.Get(node, "type")) ?? "string",
-            Of = Yaml.Str(Yaml.Get(node, "of")),
+            Type = Yaml.Str(node.Get("type")) ?? "string",
+            Of = Yaml.Str(node.Get("of")),
             Values = values,
             Refs = refs,
-            Reciprocal = Yaml.Str(Yaml.Get(node, "reciprocal")),
+            Reciprocal = Yaml.Str(node.Get("reciprocal")),
             Pattern = pattern,
             PatternRegex = CompilePattern(pattern),
-            MirrorsSection = Yaml.Str(Yaml.Get(node, "mirrors-section")),
-            AllowLiteral = Yaml.StrList(Yaml.Get(node, "allow-literal")),
-            MinItems = Yaml.NullableInt(Yaml.Get(node, "min-items")),
-            Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
-            Notes = Collapse(Yaml.Str(Yaml.Get(node, "notes"))),
+            MirrorsSection = Yaml.Str(node.Get("mirrors-section")),
+            AllowLiteral = Yaml.StrList(node.Get("allow-literal")),
+            MinItems = Yaml.NullableInt(node.Get("min-items")),
+            Description = Collapse(Yaml.Str(node.Get("description"))),
+            Notes = Collapse(Yaml.Str(node.Get("notes"))),
             Problem = problem
         };
     }
@@ -456,17 +529,19 @@ public sealed class Schema
     // as a check that can never report anything. Each of those is a defect in the schema rather than in
     // any document, and is recorded on the rule for SchemaChecks to report against the file that
     // declares it — the rule itself loading inert, so that one broken rule is one finding.
-    private static RuleSpec ParseRule(YamlNode node)
+    private static RuleSpec ParseRule(YamlNode node, KeyReader keys)
     {
-        var id = Yaml.Str(Yaml.Get(node, "id")) ?? "";
-        var source = Yaml.Str(Yaml.Get(node, "expr"));
-        var severity = Yaml.Str(Yaml.Get(node, "severity")) switch
+        // Read once outside the recorder to name the level, then everything through it.
+        var rule = keys.At(node, $"rule '{Yaml.Str(Yaml.Get(node, "id")) ?? ""}'");
+        var id = Yaml.Str(rule.Get("id")) ?? "";
+        var source = Yaml.Str(rule.Get("expr"));
+        var severity = Yaml.Str(rule.Get("severity")) switch
         {
             "error" => Sev.Error,
             "warning" => Sev.Warning,
             _ => (Sev?)null
         };
-        var message = Collapse(Yaml.Str(Yaml.Get(node, "message")));
+        var message = Collapse(Yaml.Str(rule.Get("message")));
 
         Expr? compiled = null;
         string? problem = null;
@@ -492,13 +567,13 @@ public sealed class Schema
         return new RuleSpec
         {
             Id = id,
-            Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
+            Description = Collapse(Yaml.Str(rule.Get("description"))),
             Severity = severity,
             Expr = source,
             Compiled = compiled,
             Message = message,
             Problem = problem,
-            MaxWords = Yaml.Get(node, "max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
+            MaxWords = rule.Get("max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
                 ? words
                 : null
         };
