@@ -114,4 +114,12 @@ means something.
 | `detected-not-before-occurred` | error   | `detected-on` is on or after `occurred-on`.                                                                                              |
 | `what-went-well-required`      | warning | A postmortem that only lists failures teaches half the lesson. `sections` requires the heading; this requires that something follows it. |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule                        | What it would verify                                                                                                   |
+|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `immutable-after-published` | Once status is `published`, content changes are limited to typo fixes. Same rule as ADRs.                              |
+| `blameless`                 | Flags personal names inside the Timeline, Root cause and Contributing factors sections. Roles and systems, not people. |
+| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems — the highest-signal output in the corpus.                 |
+
 <!-- END GENERATED: checks-postmortems -->

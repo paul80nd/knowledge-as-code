@@ -19,11 +19,21 @@ public sealed class FieldSpec
     public string Type { get; init; } = "string"; // string|date|enum|id|list|bool|int
     public string? Of { get; init; } // element type when Type == list
     public IReadOnlyList<string>? Values { get; init; } // enum values (resolved)
-    public string? Ref { get; init; } // folder the id must belong to
+
+    // The folders an id in this field may belong to. A list because several fields point at more than
+    // one type — a discovery is promoted to a FAQ or a standard — and a scalar `ref:` is the one-entry
+    // case rather than a separate shape.
+    public IReadOnlyList<string> Refs { get; init; } = [];
+
     public string? Reciprocal { get; init; } // field on the target that must point back
     public string? Pattern { get; init; }
     public Regex? PatternRegex { get; init; } // Pattern compiled — the message still quotes the source string
     public string? MirrorsSection { get; init; } // section whose ids this field must mirror
+
+    // Why this declaration could not be read, where it could not be. Carried on the spec rather than
+    // thrown at load so that one unreadable field is one finding naming the file and the key, and the
+    // rest of the schema still loads: a corpus is told what is wrong with it, not handed a stack trace.
+    public string? Problem { get; init; }
 
     // Two audiences, deliberately separate. `Description` is what a reader needs at a glance and is what
     // the generated Metadata table renders; `Notes` is the longer why-it-exists, which belongs in the
@@ -112,6 +122,10 @@ public sealed record RuleSpec
     // every threshold does — a number chosen rather than measured is one a corpus tunes, and tuning it
     // should not be a release — and on the rule rather than on a field because no field carries it.
     public int? MaxWords { get; init; }
+
+    // Why this rule could not be read, where it could not be. See FieldSpec.Problem — same reasoning,
+    // and SchemaChecks turns both into findings against the file that declares them.
+    public string? Problem { get; init; }
 }
 
 public sealed class TypeSchema
@@ -348,36 +362,64 @@ public sealed class Schema
         IReadOnlyDictionary<string, IReadOnlyList<string>> enums)
     {
         var pattern = Yaml.Str(Yaml.Get(node, "pattern"));
+        string? problem = null;
 
         // `values: $enums.status` draws the vocabulary from _enums.yaml; a sequence declares it inline.
-        // A name no enum answers to leaves the field without values, which reads downstream as a field
-        // whose range the schema does not constrain.
-        IReadOnlyList<string>? values = Yaml.Get(node, "values") switch
+        // A name no enum answers to is a defect in the schema rather than a field with no range: the
+        // declaration says the values are written down somewhere, and they are not.
+        IReadOnlyList<string>? values = null;
+        switch (Yaml.Get(node, "values"))
         {
-            YamlScalarNode { Value: { } v } when v.StartsWith("$enums.", StringComparison.Ordinal) =>
-                enums.GetValueOrDefault(v["$enums.".Length..]),
-            YamlSequenceNode seq => Yaml.StrList(seq),
-            _ => null
-        };
+            case YamlScalarNode { Value: { } v } when v.StartsWith("$enums.", StringComparison.Ordinal):
+                var enumName = v["$enums.".Length..];
+                values = enums.GetValueOrDefault(enumName);
+                if (values is null)
+                    problem = $"field '{name}' draws its values from '{v}', and _enums.yaml declares no "
+                              + $"'{enumName}'.";
+                break;
+            case YamlSequenceNode seq:
+                values = Yaml.StrList(seq);
+                break;
+        }
 
+        // A scalar `ref:` is one folder, a sequence is several; both arrive as a list so that neither
+        // form can be read as the absence of a ref.
+        var refNode = Yaml.Get(node, "ref");
+        IReadOnlyList<string> refs = refNode is YamlSequenceNode
+            ? Yaml.StrList(refNode)
+            : Yaml.Str(refNode) is { } single ? [single] : [];
+
+        // The condition is parsed here so that an unreadable one is reported against the field that
+        // carries it. It is a defect in the schema either way: a condition nothing can read is one that
+        // never holds, leaving the field quietly unrequired while the schema goes on claiming it is.
         var requiredWhen = Yaml.Str(Yaml.Get(node, "required-when"));
+        RequiredWhen? condition = null;
+        try
+        {
+            condition = ParseRequiredWhen(name, requiredWhen);
+        }
+        catch (RuleExprException ex)
+        {
+            problem ??= ex.Message;
+        }
 
         return new FieldSpec
         {
             Name = name,
             Required = Yaml.Bool(Yaml.Get(node, "required")),
             RequiredWhen = requiredWhen,
-            RequiredWhenCondition = ParseRequiredWhen(name, requiredWhen),
+            RequiredWhenCondition = condition,
             Type = Yaml.Str(Yaml.Get(node, "type")) ?? "string",
             Of = Yaml.Str(Yaml.Get(node, "of")),
             Values = values,
-            Ref = Yaml.Str(Yaml.Get(node, "ref")),
+            Refs = refs,
             Reciprocal = Yaml.Str(Yaml.Get(node, "reciprocal")),
             Pattern = pattern,
             PatternRegex = CompilePattern(pattern),
             MirrorsSection = Yaml.Str(Yaml.Get(node, "mirrors-section")),
             Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
-            Notes = Collapse(Yaml.Str(Yaml.Get(node, "notes")))
+            Notes = Collapse(Yaml.Str(Yaml.Get(node, "notes"))),
+            Problem = problem
         };
     }
 
@@ -388,7 +430,8 @@ public sealed class Schema
     // A rule carrying an `expr:` is held to more, because it is a rule that claims to be finished. It
     // must compile, and it must say at what level it fires and what to tell the author, or it would load
     // as a check that can never report anything. Each of those is a defect in the schema rather than in
-    // any document, so the load stops rather than carrying a rule nobody can rely on.
+    // any document, and is recorded on the rule for SchemaChecks to report against the file that
+    // declares it — the rule itself loading inert, so that one broken rule is one finding.
     private static RuleSpec ParseRule(YamlNode node)
     {
         var id = Yaml.Str(Yaml.Get(node, "id")) ?? "";
@@ -402,22 +445,24 @@ public sealed class Schema
         var message = Collapse(Yaml.Str(Yaml.Get(node, "message")));
 
         Expr? compiled = null;
+        string? problem = null;
         if (source is not null)
         {
             if (severity is null)
-                throw new RuleExprException($"rule '{id}' has an expr but no severity — say whether it fails "
-                                            + "a build or advises an author.");
-            if (string.IsNullOrEmpty(message))
-                throw new RuleExprException($"rule '{id}' has an expr but no message — an author has to be "
-                                            + "told what to do about it.");
-            try
-            {
-                compiled = RuleExpr.Compile(source);
-            }
-            catch (RuleExprException ex)
-            {
-                throw new RuleExprException($"rule '{id}': {ex.Message}");
-            }
+                problem = $"rule '{id}' has an expr but no severity — say whether it fails "
+                          + "a build or advises an author.";
+            else if (string.IsNullOrEmpty(message))
+                problem = $"rule '{id}' has an expr but no message — an author has to be "
+                          + "told what to do about it.";
+            else
+                try
+                {
+                    compiled = RuleExpr.Compile(source);
+                }
+                catch (RuleExprException ex)
+                {
+                    problem = $"rule '{id}': {ex.Message}";
+                }
         }
 
         return new RuleSpec
@@ -428,15 +473,16 @@ public sealed class Schema
             Expr = source,
             Compiled = compiled,
             Message = message,
+            Problem = problem,
             MaxWords = Yaml.Get(node, "max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
                 ? words
                 : null
         };
     }
 
-    // Parsed at load, and a condition the vocabulary does not cover stops the load. Failing silently
-    // would be worse than useless: an unreadable condition is one that never holds, so the field it
-    // guards is quietly never required while the schema goes on claiming it is.
+    // A condition the vocabulary does not cover throws, and ParseField catches it against the field that
+    // wrote it. Reading it as absent would be worse than useless: an unreadable condition is one that
+    // never holds, so the field it guards is quietly never required while the schema claims it is.
     public static RequiredWhen? ParseRequiredWhen(string field, string? condition)
     {
         if (string.IsNullOrWhiteSpace(condition)) return null;

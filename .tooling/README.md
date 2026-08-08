@@ -85,6 +85,24 @@ All rules are read from the schema; nothing below is hard-coded per type. A rule
 is `severity: warning` in the schema (or a core check that reports at that level) and does **not**
 fail the build.
 
+### The schema itself (`.schema/*.yaml`)
+
+Before any document is read, the schema is held against what the tool can act on. A declaration nothing dispatches is
+not harmlessly inert: `rules:` is documented as behaviour the validator applies, so a rule id no code answers to reads
+as a commitment — and these files are copied into corpora whose authors cannot ask what a key was meant to do. Findings
+name the schema file and the key rather than a record.
+
+| Check               | Level | What it enforces                                                                                                                                                                                                                                                      |
+|---------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `schema-unreadable` | error | A declaration the loader cannot read as written: an `expr:` that does not compile or names no `severity:` or `message:`, a `required-when:` outside its vocabulary, `values: $enums.x` naming no enum.                                                                |
+| `schema-dispatch`   | error | A value nothing acts on: a rule id claiming a `severity:` that neither an `expr:` nor a `DocumentRule` answers, a `ref:` at a folder no schema covers, `values:` on anything but an enum, an unknown `id.style` or `shape`, a `mirrors-section` other than `Related`. |
+| `schema-shape`      | error | A `collection` names the `folder:` holding its records; a `single-document` type names none.                                                                                                                                                                          |
+
+The question asked is not whether a key is spelled correctly but whether code acts on the value — `style: literal` is a
+real style, and what makes it sound is the branch in `CheckId`. A rule declaring no `severity:` is exempt by design:
+that is how the schema records an intention, and the type page renders those beneath the checks table as *Declared, not
+yet enforced*.
+
 ### Frontmatter (from `_universal.yaml` + `<type>.yaml`)
 
 | Check                                             | Level   | What it enforces                                                                                                                                                  |
@@ -148,6 +166,10 @@ A rule fires against the documents of the type whose schema declares it, and rep
 by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
 editing this tool; [`../.schema/README.md`](../.schema/README.md) is the reference for what one may say. Only the last
 two need more than the grammar can say, and each is a class in `kac.core/Rules/` with its own unit tests.
+
+The table below is every rule that runs. The schema declares roughly as many again that do not — intentions, carrying a
+`description:` and no `severity:`, rendered on their type page under *Declared, not yet enforced*. Naming a severity
+without running is the one arrangement this forbids, and `schema-dispatch` is what forbids it.
 
 | Check                           | Type         | Level   | What it enforces                                                                                                                      |
 |---------------------------------|--------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|

@@ -99,4 +99,10 @@ residual, and residual categories become dumping grounds unless the bar for entr
 | `links-rather-than-restates` | warning | Reports an explanation whose prose-to-link ratio exceeds a threshold. An explanation that accumulates facts of its own has become a maintenance liability, and its facts will be the ones that go stale first. |
 | `not-normative`              | warning | Flags RFC 2119 keywords (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) in bold. Normative content belongs in a standard; the explanation should link to it.                                                         |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule               | What it would verify                                                                                                                                                     |
+|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `not-load-bearing` | Reports where a decided-tier document (ADR or postmortem) cites an explanation as the authority for a constraint. Immutable records should not derive from mutable ones. |
+
 <!-- END GENERATED: checks-explanations -->

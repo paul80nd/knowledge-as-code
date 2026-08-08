@@ -73,4 +73,3 @@ rules:
     description: >
       Reports where a decided-tier document (ADR or postmortem) cites an explanation as the authority for a
       constraint. Immutable records should not derive from mutable ones.
-    severity: warning

@@ -110,4 +110,10 @@ being repeated in eighteen months.
 | `deprecated-has-successor`  | warning | A deprecated tool names what replaces it, or the entry is just a complaint.                              |
 | `trial-has-criteria`        | warning | A tool in `trial` states what would decide it. A trial with no decision criteria stays a trial forever.  |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule                      | What it would verify                                                                                                                                                                                       |
+|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `drift-against-manifests` | Scheduled. Compares the register against package manifests across the organisation's repositories in both directions — packages in use that were never approved, and approved tools nothing uses any more. |
+
 <!-- END GENERATED: checks-tools -->

@@ -101,7 +101,6 @@ rules:
     description: >
       Flags personal names inside the Timeline, Root cause and Contributing factors sections. Roles and
       systems, not people.
-    severity: warning
   - id: recurring-root-causes
     description: >
       Scheduled. Reports root causes recurring across postmortems — the highest-signal output in the corpus.

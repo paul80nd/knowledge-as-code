@@ -122,6 +122,15 @@ file, so these fields describe `glossary.md` itself.
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.      |
 | `unused-definition`         | warning | A link definition that nothing references.                                    |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule                        | What it would verify                                                                                                                                      |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `carried-in-full-by-digest` | The generated rules digest includes this file in its entirety. It therefore consumes budget directly, and entries that exceed one paragraph are reported. |
+| `undefined-terms`           | Reports terms appearing more than N times across the corpus with no glossary entry.                                                                       |
+| `unused-terms`              | Reports glossary entries not used anywhere else.                                                                                                          |
+| `terms-are-singular`        | Entry headings are singular and in canonical casing.                                                                                                      |
+
 <!-- END GENERATED: checks-glossary -->
 
 [adr-0001]: /adrs/0001-knowledge-as-code.md

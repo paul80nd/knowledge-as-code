@@ -116,4 +116,10 @@ One control may verify several rules, and one rule may need several controls. Co
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
 | `mechanism-has-evidence`    | warning | A control whose mechanism is not `not-enforced` names where its evidence can be found.                   |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule              | What it would verify                                                                                                                                |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `coverage-report` | Generates the proportion of MUST / MUST NOT rules across active standards that are claimed by a control with a mechanism other than `not-enforced`. |
+
 <!-- END GENERATED: checks-controls -->

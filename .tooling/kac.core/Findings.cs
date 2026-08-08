@@ -23,6 +23,11 @@ public static class CheckCatalogue
 {
     public static readonly IReadOnlyList<CheckDef> All =
     [
+        // The schema itself, before any document is read against it.
+        new("schema-unreadable", Sev.Error, "A schema declaration the loader cannot read as written."),
+        new("schema-dispatch", Sev.Error, "A schema declaration naming a value nothing acts on."),
+        new("schema-shape", Sev.Error, "A type's shape and its folder declaration agree."),
+
         new("type", Sev.Error, "The document's folder maps to a type schema."),
         new("frontmatter-parses", Sev.Error, "The frontmatter block is valid YAML and a mapping."),
         new("unknown-key", Sev.Error, "Every frontmatter key is a known field or reserved key."),

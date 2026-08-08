@@ -2,10 +2,11 @@
 
 [`README.md`](README.md) is the reference for the keys. This is what will bite you.
 
-* **A key you write may do nothing.** The loader accepts declarations the validator never dispatches — unimplemented
-  rule ids, a `ref:` at a type no schema covers, `values:` on a list field. Before relying on a key, find it in
-  `.tooling/kac.core/Schema.cs`, then find the code that reads what it parsed into. Finding it parsed is not enough. The
-  open question in `README.md` tracks this.
+* **A key you write may still do nothing.** The schema-load pass covers the values the tool dispatches — rule ids,
+  `ref:` folders, `id.style`, `shape`, `mirrors-section`, `values:` — but it does not check that a *key* is one the
+  loader reads at all. `glossary.yaml` carries an `entry:` block and an `index.generated:` that nothing parses. Before
+  relying on a key, find it in `.tooling/kac.core/Schema.cs`, then find the code that reads what it parsed into. Finding
+  it parsed is not enough.
 
 * **Run `./kac index` after any change.** Every type page carries generated `schema-<type>` and `checks-<type>`
   blocks derived from these files, so a schema edit alone leaves the corpus stale and fails `index --check` in CI.
@@ -26,6 +27,10 @@
   `mirrors-section:`, a `required-when:`, a scalar type, a required section — each has been written out as a rule at
   some point, and each read as outstanding work for as long as it survived. Before writing one, read the field
   declaration and the `sections:` block; the rule may already be answered.
+
+* **A rule you have not built declares no `severity:`.** That absence is what says "declared, not enforced", and the
+  type page renders it as such. Naming a level nothing fires at fails the schema-load pass, because it reads as enforced
+  everywhere a reader looks — the checks table, `kac checks`, the catalogue — and is not.
 
 * **`required-when` is a different language and stays one.** It reads `==`, `!=` and `in [...]`, tests one field against
   one other, and lives on the field. A condition needing more than that is a rule with an `expr:`. It also produces an

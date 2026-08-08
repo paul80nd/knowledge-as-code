@@ -126,4 +126,10 @@ _(The automatic half is not built yet — see [Automation](/knowledge-as-code/au
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                                                                      |
 | `low-ceremony`              | warning | Reports discoveries above a length threshold. Capture has to be nearly free or it stops happening; a discovery written like an FAQ suggests the tier boundary is being ignored. |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule           | What it would verify                                                                                   |
+|----------------|--------------------------------------------------------------------------------------------------------|
+| `expiry-sweep` | Scheduled. Discoveries past `expires` with no promotion are set to `expired` with a note, not deleted. |
+
 <!-- END GENERATED: checks-discoveries -->

@@ -36,7 +36,7 @@ fields:
     type: string|date|enum|id|list|bool|int
     of: id|string               # element type, when type is list
     values: [ ... ]             # when type is enum, or an $enums.<name> reference
-    ref: <folder>               # when type is id or list-of-id: which type the id must belong to
+    ref: <folder> | [ ... ]     # when type is id or list-of-id: which type(s) the id may belong to
     reciprocal: <field>         # the field on the target that must point back
     pattern: '<regex>'          # additional constraint
     default: <value>
@@ -44,11 +44,16 @@ fields:
     notes: >                    # the longer why; schema-only, and the fallback when there is no description
 ```
 
-`required-when` takes those three forms and no others — a condition the loader cannot read stops the load rather than
-reading as one that never holds. It tests one other field of the same document; a condition needing more than that is a
-rule with an `expr:`, not a field declaration. Where the field it names is absent the condition does not hold, `!=`
-included: `required-field` is already reporting that absence, and requiring a second field on top would report one
-omission as two.
+`required-when` takes those three forms and no others — a condition the loader cannot read is reported against the field
+that declares it rather than reading as one that never holds. It tests one other field of the same document; a condition
+needing more than that is a rule with an `expr:`, not a field declaration. Where the field it names is absent the
+condition does not hold, `!=` included: `required-field` is already reporting that absence, and requiring a second field
+on top would report one omission as two.
+
+`values:` is read from an `enum` and nowhere else, and `ref:` names one folder or several. Both are checked when the
+schema loads — a `values:` list on a `type: list` field and a `ref:` at a folder no schema covers are each reported
+naming the file and the key, because a vocabulary or a target nothing applies is a promise to whoever takes a copy of
+these files. See [What the schema is held to](#what-the-schema-is-held-to).
 
 `description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
 and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room
@@ -92,9 +97,10 @@ It is declared rather than inferred. An absent `folder:` and a deliberate `folde
 parsed, so a shape read off the folder cannot tell a single-document type from a collection whose folder key was lost.
 It defaults to `collection`, so only the type that is not one has to say so.
 
-**`id.style`.** Four styles appear across the type files: `numbered`, `slug`, `mnemonic` and `literal`. The id checks
-act on two — `numbered` and `mnemonic` — and a type declaring either of the others receives the prefix check alone.
-Link-label canonicalisation covers `slug` as well, so the shortfall is in the id checks rather than in the idea.
+**`id.style`.** Four styles are dispatched: `numbered`, `slug`, `mnemonic` and `literal`, and a fifth name fails when
+the schema loads. Of the four, the id checks give `numbered` and `mnemonic` a full reading and the other two the prefix
+check alone. Link-label canonicalisation covers `slug` as well, so the shortfall is in the id checks rather than in the
+idea.
 
 **`rules`.** A rule declaring an `expr:` runs. It is evaluated against every document of its type, reports under its own
 id, is listed by `kac checks`, and renders its own row into the generated `## What CI checks` block from its
@@ -103,8 +109,11 @@ below for what one may say.
 
 Two ids keep a hand-written class instead — `y-statement-present` and `alternatives-have-verdicts`, both on the
 decision-record type — because what they ask needs more than the grammar can say. Every remaining id is a statement of
-intent: a behaviour someone wants, written down, that no code answers to yet. Those do not appear in the checks table,
-so a reader of a type page sees what is enforced rather than what is hoped for.
+intent: a behaviour someone wants, written down, that no code answers to yet. **An intention declares no `severity:`**,
+which is what tells the tool it is one; the type page renders them beneath the checks table under *Declared, not yet
+enforced*, so a reader can see both what a build will say about their document and what has been written down and not
+built. A rule naming a severity that nothing dispatches is the one arrangement that reads as enforced from every angle
+and is not, and it fails when the schema loads.
 
 Not every statement of intent is waiting for an expression, and counting them as though they were makes the ruleset look
 less finished than it is. Nine are not validator work in any form: eight say **Scheduled** in their own descriptions —
@@ -137,8 +146,8 @@ rules:
   page. `message:` is what an author is told when it fires. One is a definition, the other a diagnosis; do not make them
   the same sentence.
 * A rule carrying an `expr:` **must** declare a severity and a message. A rule claiming to be finished is held to being
-  able to report, and the load fails otherwise.
-* A rule without an `expr:` keeps `id` + `description` and is skipped.
+  able to report, and one that cannot is a schema error rather than a check that never fires.
+* A rule without an `expr:` keeps `id` + `description`, declares no severity, and is rendered as an intention.
 
 Expression *strings*, not nested predicate objects: several rules are conditionals (`A implies B`) or ratios, and those
 read cleanly inline but become ugly YAML trees.
@@ -224,13 +233,38 @@ The grammar never changes. `section_count()` and `field_matches()` were each wri
 out to answer a question the next corpus will ask again, which is the usual shape of a new fact — and the reason
 reaching for the grammar instead is almost always the wrong move.
 
+## What the schema is held to
+
+These files are read by people who cannot ask what a key was meant to do — a corpus that took the framework rather than
+wrote it holds every one of them. So a declaration the tool does nothing with is not harmlessly inert: `rules:` reads as
+behaviour the validator applies, and a `ref:` reads as a target being checked. Before any document is validated, the
+schema is held against what the tool can act on, and each finding names the file and the key.
+
+| Reported                                                                        | Check               |
+|---------------------------------------------------------------------------------|---------------------|
+| An `expr:` that will not compile, or that names no `severity:` or `message:`    | `schema-unreadable` |
+| A `required-when:` outside its three forms                                      | `schema-unreadable` |
+| `values: $enums.x` where `_enums.yaml` declares no `x`                          | `schema-unreadable` |
+| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers  | `schema-dispatch`   |
+| A `ref:` entry naming a folder no schema covers                                 | `schema-dispatch`   |
+| `values:` on any field that is not an `enum`                                    | `schema-dispatch`   |
+| An `id.style`, a `shape:` or a `mirrors-section:` with no code behind the value | `schema-dispatch`   |
+| A `collection` with no `folder:`, or a `single-document` type declaring one     | `schema-shape`      |
+
+**The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
+style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is
+therefore read from the code that dispatches it, so adding a name without a branch beneath is the mistake this pass
+exists to prevent.
+
+A `ref:` at a type the corpus never adopted is reported for the same reason as one that is misspelled: whether the
+folder was deleted here or never existed upstream, the field claims a target nothing can resolve. Re-adopt the type file
+or drop the ref — the two are the same decision about what this corpus holds.
+
+Aspiration is not the thing being removed; silence is. An intention keeps its `description:`, drops its `severity:`, and
+is rendered on the type page as declared-but-not-enforced.
+
 ## Open questions
 
-* **A schema can still declare something the tool does nothing with.** A `ref:` naming a folder no schema covers, a
-  `values:` list on a `type: list` field, an `id.style` with no branch in the id checks — each is accepted at load and
-  silently ignored thereafter, and then reads as a commitment to anyone who takes a copy of these files. An `expr:` and
-  a `required-when:` no longer can: both fail at load naming what they could not read. The remainder want the same
-  treatment, and a rule that is deliberately aspirational wants a marker saying so rather than silence.
 * **`_enums.yaml` `used-by:` is unparsed.** It lists the types an enum serves and nothing reconciles it against the
   loaded schemas, so in a corpus that has adopted only some of those types it is simply wrong. Either check it or say in
   the file that it is a comment.

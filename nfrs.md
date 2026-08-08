@@ -103,4 +103,10 @@ anything built on it. Record that in `constrained-by` rather than promising some
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                                                                                                  |
 | `target-is-measurable`      | warning | `measured-by` names a measurement rather than an intention. Its presence is `required: true`; this is about hedging — "monitored", "as needed", "where practical" all satisfy the field and answer nothing. |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule                     | What it would verify                                                                                 |
+|--------------------------|------------------------------------------------------------------------------------------------------|
+| `constraint-consistency` | Where `constrained-by` names an integration whose `their-sla` is weaker than this target, report it. |
+
 <!-- END GENERATED: checks-nfrs -->

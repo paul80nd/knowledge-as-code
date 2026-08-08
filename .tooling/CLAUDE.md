@@ -38,7 +38,8 @@ signal you are rebuilding OPA. Write a rule class.
 its own unit tests, and a line in `DocumentRules.All`. It declares the checks it `Emits`, and `CheckCatalogue.All`
 reads them from there — so implementing it and registering it are the same edit, and its id cannot drift from its
 catalogue entry. `Validator.CheckRules` finds it by the id the schema's `rules:` block declares; a rule id nothing
-implements is a statement of intent and is skipped in silence.
+implements is a statement of intent, is skipped, and is rendered on the type page as declared-but-not-enforced — so long
+as it declares no `severity:`, which `SchemaChecks` holds it to.
 
 Only the per-document shape has an interface. The rules still to come that need the whole corpus, a graph walk or git
 history do not fit `RuleContext`, and their interface should be designed against the first real one rather than ahead of
@@ -49,6 +50,11 @@ early so a later check does not report nonsense about a document already known t
 so core checks are called in sequence and never looked up in a registry. Where a group of them is self-contained —
 `Checks/LinkChecks.cs`, `Checks/ClauseChecks.cs` — it is a static class of its own with unit tests; the rest stay in
 `Validator.cs`, and extracting one buys nothing unless it has logic worth testing directly.
+
+**`Checks/SchemaChecks.cs` reads no document at all.** It runs once, before the corpus, and asks whether the schema
+declares anything the tool cannot act on. A vocabulary it tests must be read from the code that dispatches the value —
+`Validator.IdStyles`, `Doc.RelatedSection`, `DocumentRules.ByRuleId` — never restated there, because a copy is a list of
+what is spelled correctly rather than of what runs.
 
 Wherever it lives, four places have to agree, and three of them fail a meta-test rather than a test you were looking at:
 
