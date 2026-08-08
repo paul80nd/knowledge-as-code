@@ -58,12 +58,12 @@ naming the file and the key, because a vocabulary or a target nothing applies is
 these files. See [What the schema is held to](#what-the-schema-is-held-to).
 
 `allow-literal` admits a word beside the field's declared type — `applies-to: [all]` on a list of service ids,
-`last-rehearsed: "never"` on a date. A listed value is taken as written and nothing further is asked of it; on a list
-it exempts the entry rather than the field, so the ids beside it are still ids. It exists so that a field with one
-honest answer outside its type does not have to widen into a string and give up every check on the values it usually
-carries. `min-items` is the floor on a list's length, read only from a `type: list` field, for the field whose value is
-its breadth: a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill, and nothing else holds it to
-more than a single entry.
+`last-rehearsed: "never"` on a date. A listed value is taken as written and nothing further is asked of it; on a list it
+exempts the entry rather than the field, so the ids beside it are still ids. It exists so that a field with one honest
+answer outside its type does not have to widen into a string and give up every check on the values it usually carries.
+`min-items` is the floor on a list's length, read only from a `type: list` field, for the field whose value is its
+breadth: a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill, and nothing else holds it to more
+than a single entry.
 
 `description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
 and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room
