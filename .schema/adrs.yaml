@@ -73,8 +73,8 @@ rules:
       transitions. A substantive edit fails with a pointer to the supersession process.
   - id: y-statement-present
     description: >
-      A blockquote follows the H1 containing all six moves — in the context of / facing / we decided /
-      rather than / to achieve / accepting.
+      A blockquote follows the H1 stating all six moves — in the context of / facing / we decided /
+      rather than / to achieve / accepting — within `max-words`. Each absent move is named.
     max-words: 60
     severity: warning
   - id: alternatives-have-verdicts

@@ -10,8 +10,9 @@ owner: alex.doe
 
 `ADR: adr-7` `ACCEPTED`
 
-> **In the context of** the id rules, **we decided** to use too few digits, **to achieve** coverage of `id-format`,
-> **accepting** that this document is intentionally broken.
+> **In the context of** the id rules, **facing** a width check the prefix check would otherwise hide, **we decided**
+> to use too few digits, **rather than** the wrong prefix, **to achieve** coverage of `id-format`, **accepting** that
+> this document is intentionally broken.
 
 ## Context
 

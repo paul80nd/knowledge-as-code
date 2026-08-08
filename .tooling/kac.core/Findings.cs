@@ -65,7 +65,7 @@ public static class CheckCatalogue
         new("clause-compound", Sev.Warning, "A clause carries one obligation, not two."),
         new("unused-definition", Sev.Warning, "A link definition that nothing references."),
         new("bracket-literal", Sev.Warning, "A [...] in prose that looks like a broken reference."),
-        new("y-statement", Sev.Warning, "A short Y-statement block-quote follows the H1."),
+        new("y-statement", Sev.Warning, "A short Y-statement block-quote, stating all six moves, follows the H1."),
         new("alternatives-verdict", Sev.Warning, "Each Alternatives Considered bullet states an outcome.")
     ];
 

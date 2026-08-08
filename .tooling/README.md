@@ -162,7 +162,9 @@ editing this tool. Only the last two need more than the grammar can say and keep
 | `not-normative`                 | explanations | warning | No bold RFC 2119 keyword — a bold modal binds, and an explanation does not.                                                           |
 | `no-hedged-ordering`            | processes    | warning | No "typically", "usually" or "normally" inside *Steps*.                                                                               |
 | `posture-belongs-to-frameworks` | policies     | warning | No claim of standing beside a framework's name — that belongs in `frameworks.md`.                                                     |
-| `y-statement`                   | adrs         | warning | A block-quote follows the H1 and is within `max-words` (60).                                                                          |
+| `trial-has-criteria`            | tools        | warning | A tool in `trial` carries a *Trial criteria* section; without one the trial has no way to end.                                        |
+| `deprecated-has-successor`      | tools        | warning | A deprecated tool names its `successor`, so the reader is sent somewhere rather than told a dead end.                                 |
+| `y-statement`                   | adrs         | warning | A block-quote follows the H1, states all six moves, and is within `max-words` (60).                                                   |
 | `alternatives-verdict`          | adrs         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
 
 The three length rules are ratios or ceilings whose numbers are judgements rather than measurements — no corpus has yet

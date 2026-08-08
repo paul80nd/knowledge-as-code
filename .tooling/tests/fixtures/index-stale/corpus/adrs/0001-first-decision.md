@@ -10,8 +10,9 @@ owner: alex.doe
 
 `ADR: adr-0001` `ACCEPTED`
 
-> **In the context of** the index fixture, **we decided** to keep one accepted ADR, **to achieve** a populated index
-> row with a decided-on date, **accepting** that it must stay valid.
+> **In the context of** the index fixture, **facing** a generator that renders one row per document, **we decided**
+> to keep one accepted ADR, **rather than** only proposed ones, **to achieve** a populated index row with a
+> decided-on date, **accepting** that it must stay valid.
 
 ## Context
 

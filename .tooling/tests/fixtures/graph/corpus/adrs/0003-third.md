@@ -10,7 +10,8 @@ owner: alex.doe
 
 `ADR: adr-0002` `ACCEPTED`
 
-> **In the context of** the graph rules, **we decided** to reuse an id that already exists, **to achieve** coverage of
+> **In the context of** the graph rules, **facing** a duplicate that has to live in its own file, **we decided** to
+> reuse an id that already exists, **rather than** renaming the file to match, **to achieve** coverage of
 > `id-unique`, **accepting** that `id-matches-filename` fires alongside it.
 
 ## Context

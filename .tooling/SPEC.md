@@ -7,8 +7,9 @@ statement of intent — a behaviour someone wanted, written down, that nothing a
 This file is the reference for that layer: what an expression may say, why the boundaries are where they are, and what
 is still to be converted.
 
-**Where things stand.** 46 rule entries across the type schemas: **12 expressions**, **2 hand-written C# arms**, and
-**32 statements of intent**. Of those 32, roughly half will never be expressions — see [Bucket C](#bucket-c--stays-c).
+**Where things stand.** 46 rule entries across the type schemas: **14 expressions**, **2 hand-written C# arms**, and
+**30 statements of intent**. Most of those 30 will never be expressions — see [Stays C#](#stays-c) and
+[Not validator work at all](#not-validator-work-at-all).
 
 ## Why an expression and not a policy engine
 
@@ -153,8 +154,10 @@ into one hand-worded row, and `ChecksTableProblems` fails until a new core check
 under its own id and its `description:` is already that row written out, so `ChecksTable` renders it from the schema.
 Copying it into `DocRows` would be the same sentence in two files, drifting apart at the first edit.
 
-**The gate reads ids, not branches.** `y-statement-present` was green for months with a fixture covering its absent
-block-quote and nothing covering the `max-words` arm. A rule with more than one way to fail needs a fixture for each.
+**The gate reads ids, not branches.** `y-statement-present` reports three faults under one id — an absent
+block-quote, a missing move, and a Y-statement past `max-words` — and a fixture for any one of them satisfies the
+gate. A rule with more than one way to fail needs a fixture for each, and this sentence is the only thing that says
+so.
 
 **Standing a rule up costs more in fixtures than in schema.** Converting five rules was 24 lines of YAML and ~590 of
 fixture, because each needed its type stood up in the fixture corpus — a page, a template and a record. That cost is
@@ -163,42 +166,48 @@ a type is present, the next rule on it is a record.
 
 ## What is worth converting
 
+**The test is what the author is told.** Convert a rule when one fixed message says everything the C# would have said.
+Keep the C# where it can name *which* part of the document is at fault and a single string cannot. A rule that reports
+"something here is wrong" where it could have named the missing piece has been made cheaper and worse, and nothing in
+the gate will notice.
+
+Cost is the second question, and it only ever argues for converting a rule that has already passed the first. A schema
+with no C# behind it was never the aim.
+
 ### Ready now
 
-| Rule                          | Type  | Needs                                                                     |
-|-------------------------------|-------|---------------------------------------------------------------------------|
-| `trial-has-criteria`          | tools | a `Trial criteria` section added to `tools.yaml`, then a one-line `expr:` |
-| `deprecated-has-successor`    | tools | a `successor` field — `tools.yaml` has `replaces`, which points the other way |
+| Rule                       | Type        | Needs                                                                       |
+|----------------------------|-------------|-----------------------------------------------------------------------------|
+| `what-went-well-required`  | postmortems | nothing — `section_matches('What went well', '\w')` asks it today           |
+| `mechanism-has-evidence`   | controls    | nothing — `mechanism` and `evidence` are both declared fields               |
+| `one-problem-per-document` | faqs        | `section_count('Symptom')`                                                  |
+| `target-is-measurable`     | nfrs        | `field_matches('name', 're')`, because `matches()` does not see frontmatter |
 
-### Bucket B — one new fact each
+Each states a fault about the document as a whole, so one message is the whole diagnosis.
 
-| Rule                        | Fact needed                                                          |
-|-----------------------------|-----------------------------------------------------------------------|
-| `y-statement-present`       | `has_ystatement()`, `ystatement_words()`                             |
-| `carried-in-full-by-digest` | a per-entry measurement — the glossary is one document, so `words()` measures the whole page |
-| `one-problem-per-document`  | `section_count('Symptoms')` or similar                               |
-| `terms-are-singular`        | per-entry heading access                                             |
+### Stays C#
 
-`y-statement-present` is the one worth doing next: it retires the larger of the two remaining C# arms, and
-`RuleSpec.MaxWords` — a rule-specific field on a general record — goes with it.
-
-### Bucket C — stays C#
-
-Roughly fifteen rules need git history, a graph walk, or more than one document at once. **If you find yourself wanting
-loops, joins or quantifiers in the grammar to reach one of these, stop** — that is the signal you are rebuilding OPA.
-Write a dedicated arm.
+Sixteen rules need git history, a graph walk, more than one document at once, or a message an expression cannot write.
+**If you find yourself wanting loops, joins or quantifiers in the grammar to reach one of these, stop** — that is the
+signal you are rebuilding OPA. Write a dedicated arm.
 
 They cluster, which is worth knowing before starting any of them:
 
 * **Git history — 4.** `immutable-after-accepted`, `immutable-after-published`, `changelog-begins-at-active`,
   `changelog-on-material-change`. All four ask the same question: what changed in this commit versus the committed
   content, and was it substantive? One mechanism answers all of them, and it is the largest single piece of work left.
-* **Cross-document — 5.** `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`,
-  and the corpus-wide glossary pair (`undefined-terms`, `unused-terms`). `Validator.CheckCorpus` already builds a
+* **Cross-document — 6.** `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`,
+  and the corpus-wide glossary pair `undefined-terms` and `unused-terms`. `Validator.CheckCorpus` already builds a
   `byId` index and resolves clause citations and reciprocals against it; these are more of that.
 * **Graph — 1.** `no-dependency-cycles`.
-* **Per-collection — 1.** `alternatives-have-verdicts`, the surviving arm. It evaluates per bullet within a section,
-  and the grammar has no collections by design. This one is correctly stuck.
+* **Per-part — 4.** `alternatives-have-verdicts`, `terms-are-singular`, `carried-in-full-by-digest` and
+  `escalation-required`. Each judges the parts of one document — bullets under a heading, entries in a glossary,
+  branches of a diagnosis tree — and its message has to name the part that failed. The grammar has no collections by
+  design, and a count would not name the entry. Only the first is written.
+* **A fixed form — 1.** `y-statement-present`. A Y-statement is six moves in one block-quote, and the message worth
+  reading names the move that is absent. An expression could report that the block-quote is not a Y-statement, which
+  is the one thing the author already knows. `RuleSpec.MaxWords` belongs with it, for the ordinary reason a threshold
+  sits in the schema: the ceiling is a judgement a corpus tunes, and tuning it should not be a release.
 
 ### Not validator work at all
 
@@ -211,7 +220,7 @@ timer. `reverse-dependencies-generated` is a *generator* and belongs with `kac i
 Counting these as unenforced rules makes the ruleset look less finished than it is. They are an unbuilt feature, not a
 backlog.
 
-### Two that were miscounted, and why
+### Two that are not rules about a document
 
 * **`blameless`** flags personal names in the Timeline, Root cause and Contributing factors sections. No regular
   expression identifies a personal name: every shape that matches `Alex Doe` also matches `Root Cause`, and the
@@ -221,10 +230,12 @@ backlog.
 
 ## Traps
 
-* **A rule restating something the schema already declares is worse than no rule.** Twelve entries did — a field's
-  `reciprocal:`, a `mirrors-section:`, a `required-when:`, a scalar type, a required section — and reading as
-  outstanding work is how four of them survived in this document's own Bucket A while naming sections their types
-  already declared required. Before converting, check the field declaration and the `sections:` block.
+* **A rule restating something the schema already declares is worse than no rule.** A `reciprocal:`, a
+  `mirrors-section:`, a `required-when:`, a scalar type, a required section — each has been written out as a rule
+  here, and each read as outstanding work for as long as it survived. `personal-data-has-retention` is the one still
+  standing: `data.yaml` declares `retention` as `required-when: 'classification in [personal, special-category]'`, and
+  the validator already reports exactly that. Before converting anything, read the field declaration and the
+  `sections:` block; the rule may already be answered.
 * **`required-when` is a different language and stays one.** It reads `==`, `!=` and `in [...]`, tests one field
   against one other, and lives on the field. A condition needing more than that is a rule with an `expr:`.
   See [`../.schema/README.md`](../.schema/README.md).
@@ -246,4 +257,4 @@ strings largely carry over and the engine drops in. Not before: the dependency i
 * A general policy engine. No rules-as-data beyond the frozen grammar.
 * A date or collection type system.
 * Runtime, tenant-specific or externally-contributed rule sets.
-* Replacing any Bucket-C check.
+* Replacing a check that stays C#.

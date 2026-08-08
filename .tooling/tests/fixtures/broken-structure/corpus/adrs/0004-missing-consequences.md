@@ -10,9 +10,10 @@ owner: alex.doe
 
 `ADR: adr-0009` `ACCEPTED`
 
-> **In the context of** the structure rules, **we decided** to mismatch the id against the filename and drop a
-> required section, **to achieve** coverage of `id-matches-filename` and `required-section`, **accepting** that this
-> document is intentionally broken.
+> **In the context of** the structure rules, **facing** one cluster of defects per document, **we decided** to
+> mismatch the id against the filename and drop a required section, **rather than** splitting the two across separate
+> files, **to achieve** coverage of `id-matches-filename` and `required-section`, **accepting** that this document is
+> intentionally broken.
 
 ## Context
 

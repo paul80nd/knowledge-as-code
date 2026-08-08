@@ -50,6 +50,7 @@ being repeated in eighteen months.
 | `licence`    |     | string | SPDX identifier. The field nobody wants until they urgently do.                                      |
 | `decided-in` |     | id     | Where a decision was worth recording. Small, uncontroversial adoptions need only a register entry.   |
 | `replaces`   |     | id     | The tool id this supersedes.                                                                         |
+| `successor`  |     | id     | The tool id that replaces this one.                                                                  |
 
 **Enum values**
 
@@ -104,6 +105,9 @@ being repeated in eighteen months.
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
+| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                         |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
+| `deprecated-has-successor`  | warning | A deprecated tool names what replaces it, or the entry is just a complaint.                              |
+| `trial-has-criteria`        | warning | A tool in `trial` states what would decide it. A trial with no decision criteria stays a trial forever.  |
 
 <!-- END GENERATED: checks-tools -->

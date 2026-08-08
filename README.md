@@ -57,7 +57,7 @@ it on the way through.
 
 |                |                                                                                                              |
 |----------------|--------------------------------------------------------------------------------------------------------------|
-| `kac validate` | 56 checks — frontmatter, identity, structure, clauses, links, graph reciprocity, type setup, type pages      |
+| `kac validate` | 58 checks — frontmatter, identity, structure, clauses, links, graph reciprocity, type setup, type pages      |
 | `kac index`    | Generates `<type>/INDEX.md` and the schema/checks tables inside each type root page                          |
 | `kac checks`   | Lists every check the validator implements                                                                   |
 | Tests          | Three layers — unit (`kac.tests`), Reqnroll feature specs (`kac.features`), golden fixtures (`kac-tests.cs`) |

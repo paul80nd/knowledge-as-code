@@ -18,8 +18,8 @@ owner: alex.doe
 
 ## Context
 
-The `y-statement-present` rule carries a `max-words` ceiling in the schema. A Y-statement that is absent is one
-fault and a Y-statement that is too long is another, and only the first had a fixture.
+The `y-statement-present` rule reports three faults under one id, and the coverage gate reads ids rather than
+branches. This document owns the ceiling: the block-quote states all six moves and runs past `max-words`.
 
 ## Decision
 

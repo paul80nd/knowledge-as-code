@@ -805,11 +805,18 @@ public static class Validator
                         warn("y-statement", "no Y-statement block-quote follows the H1.", d.H1Line);
                     else
                     {
-                        var words = Md.PlainText(d.YStatement)
-                            .Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
+                        var text = Md.PlainText(d.YStatement);
+                        var line = d.YStatement.Line + 1;
+
+                        var missing = MissingMoves(text);
+                        if (missing.Count > 0)
+                            warn("y-statement",
+                                $"Y-statement is missing {QuotedList(missing)}. The six moves are what make it a "
+                                + "Y-statement rather than a summary of one.", line);
+
+                        var words = text.Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
                         if (words > max)
-                            warn("y-statement", $"Y-statement is {words} words; keep it under {max}.",
-                                d.YStatement.Line + 1);
+                            warn("y-statement", $"Y-statement is {words} words; keep it under {max}.", line);
                     }
 
                     break;
@@ -852,6 +859,31 @@ public static class Validator
                     }
         }
     }
+
+    // The six moves of a Y-statement, in the order they are written. The form is fixed rather than
+    // tunable — a block-quote missing one is not a Y-statement worded differently, it is a summary — so
+    // the phrases live here, where `max-words` lives in the schema because a ceiling is a judgement.
+    private static readonly string[] Moves =
+        ["in the context of", "facing", "we decided", "rather than", "to achieve", "accepting"];
+
+    // Asked of the rendered text, so the bold that marks each move in the corpus is already gone and a
+    // Y-statement written without it still reads. Whole words only: `facing` is not found inside
+    // `surfacing`, and a move followed by a comma is still found.
+    private static List<string> MissingMoves(string text)
+    {
+        var words = new string(text.Select(c => char.IsLetterOrDigit(c) ? char.ToLowerInvariant(c) : ' ').ToArray())
+            .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
+        var haystack = $" {string.Join(' ', words)} ";
+        return Moves.Where(m => !haystack.Contains($" {m} ", StringComparison.Ordinal)).ToList();
+    }
+
+    // The moves as a sentence reads them: "facing", "rather than" and "accepting".
+    private static string QuotedList(IReadOnlyList<string> items) =>
+        items.Count == 1
+            ? Quoted(items[0])
+            : $"{string.Join(", ", items.Take(items.Count - 1).Select(Quoted))} and {Quoted(items[^1])}";
+
+    private static string Quoted(string item) => $"\"{item}\"";
 
     private static bool HasVerdict(string text)
     {

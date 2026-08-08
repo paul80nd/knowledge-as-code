@@ -19,8 +19,8 @@ Feature: Cross-document graph checks
       | file               | severity | line | check                   | message                                                                                             |
       | adrs/0001-first.md | error    | 1    | related-matches-section | 'related' lists 'adr-0002' but it is not referenced in the '## Related' section.                    |
       | adrs/0001-first.md | error    | 1    | reciprocal              | 'supersedes: adr-0002' is not reciprocated — adrs/0002-second.md must list 'superseded-by: adr-0001'. |
-      | adrs/0001-first.md | error    | 27   | link-resolves           | link target 'nonexistent-target.md' does not resolve.                                               |
-      | adrs/0001-first.md | error    | 27   | undefined-label         | reference '[ADR-0099]' has no link definition.                                                      |
-      | adrs/0001-first.md | warning  | 28   | bracket-literal         | '[an unlinked placeholder]' looks like a reference but has no definition (or use an inline link).   |
+      | adrs/0001-first.md | error    | 28   | link-resolves           | link target 'nonexistent-target.md' does not resolve.                                               |
+      | adrs/0001-first.md | error    | 28   | undefined-label         | reference '[ADR-0099]' has no link definition.                                                      |
+      | adrs/0001-first.md | warning  | 29   | bracket-literal         | '[an unlinked placeholder]' looks like a reference but has no definition (or use an inline link).   |
       | adrs/0003-third.md | error    | 1    | id-matches-filename     | id 'adr-0002' number does not match filename number '0003'.                                         |
       | adrs/0003-third.md | error    | 1    | id-unique               | id 'adr-0002' is also used by adrs/0002-second.md.                                                  |

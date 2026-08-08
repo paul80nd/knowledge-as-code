@@ -10,7 +10,8 @@ owner: alex.doe
 
 `ADR: xyz-0006` `ACCEPTED`
 
-> **In the context of** the id rules, **we decided** to use the wrong prefix, **to achieve** coverage of `id-prefix`,
+> **In the context of** the id rules, **facing** a prefix check that returns before the others run, **we decided** to
+> use the wrong prefix, **rather than** breaking the width as well, **to achieve** coverage of `id-prefix`,
 > **accepting** that this document is intentionally broken.
 
 ## Context

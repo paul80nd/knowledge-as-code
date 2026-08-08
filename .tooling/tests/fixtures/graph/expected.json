@@ -22,21 +22,21 @@
     },
     {
       "file": "adrs/0001-first.md",
-      "line": 27,
+      "line": 28,
       "severity": "error",
       "check": "link-resolves",
       "message": "link target 'nonexistent-target.md' does not resolve."
     },
     {
       "file": "adrs/0001-first.md",
-      "line": 27,
+      "line": 28,
       "severity": "error",
       "check": "undefined-label",
       "message": "reference '[ADR-0099]' has no link definition."
     },
     {
       "file": "adrs/0001-first.md",
-      "line": 28,
+      "line": 29,
       "severity": "warning",
       "check": "bracket-literal",
       "message": "'[an unlinked placeholder]' looks like a reference but has no definition (or use an inline link)."

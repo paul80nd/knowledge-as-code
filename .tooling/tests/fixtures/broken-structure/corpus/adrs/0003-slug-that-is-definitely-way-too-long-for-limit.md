@@ -10,8 +10,9 @@ owner: alex.doe
 
 `ADR: adr-0003` `ACCEPTED`
 
-> **In the context of** the structure rules, **we decided** to over-long the slug, **to achieve** coverage of
-> `slug-length`, **accepting** that this document is intentionally broken.
+> **In the context of** the structure rules, **facing** a limit that has to be measured on its own, **we decided** to
+> over-long the slug, **rather than** breaking anything else here, **to achieve** coverage of `slug-length`,
+> **accepting** that this document is intentionally broken.
 
 ## Context
 

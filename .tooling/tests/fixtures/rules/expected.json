@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 13,
+    "validated": 15,
     "skipped": 0,
     "errors": 7,
-    "warnings": 7
+    "warnings": 9
   },
   "findings": [
     {
@@ -103,6 +103,20 @@
       "severity": "error",
       "check": "provenance-required",
       "message": "A standard cites where its authority comes from — an ADR in `derived-from`, a policy in `implements`, or both. With neither this is guidance, and guidance is an explanation."
+    },
+    {
+      "file": "tools/deprecated-no-successor.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "deprecated-has-successor",
+      "message": "This is deprecated and names no successor. Set `successor` to whatever took its place, so that someone arriving here from a manifest has somewhere to go next."
+    },
+    {
+      "file": "tools/trial-no-criteria.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "trial-has-criteria",
+      "message": "This is in trial and nothing says what would end the trial. Add a `## Trial criteria` section naming what is being evaluated, where, and what would settle it either way."
     }
   ]
 }
