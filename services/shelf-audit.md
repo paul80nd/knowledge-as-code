@@ -17,8 +17,7 @@ tags: [ internal, scheduled ]
 
 A nightly outside-in check that every branch's catalogue pages respond, reported by email.
 
-> **Being replaced** by the platform's own synthetic monitoring. It still runs, and this record stays until it is
-> switched off, because it is the only thing checking the catalogue from outside today.
+> **Being replaced** by the platform's own synthetic monitoring, and still running until that is in place.
 
 ## What it does
 
@@ -34,26 +33,23 @@ mailbox. Whether an unread nightly email is the right home for that signal is th
 * **Platform** — a PowerShell function and a workflow app, deployed together
 * **Deployed as** — both, by Terraform from within the same repository
 
-**It is deployed unlike anything else in the estate.** There is no release pipeline: the repository holds its own
-Terraform configuration and is applied from a workstation against a dedicated workspace, rather than from source
-control. It runs in a pay-as-you-go subscription rather than the per-environment subscriptions the rest of the estate
-uses.
+**It is deployed unlike anything else in the estate.** There is no release pipeline. The repository holds its own
+Terraform configuration, applied from a workstation against a dedicated workspace rather than from source control. It
+runs in a pay-as-you-go subscription rather than the per-environment subscriptions the rest of the estate uses.
 
-`platform` is `mixed` rather than `terraform`, and the distinction is the point: the field describes what a service is
-**built on**, not what deploys it. A Terraform-deployed service is not a Terraform service, and infrastructure-as-code
-deploys services rather than being one.
+`platform` is `mixed`, not `terraform` — Terraform deploys this service rather than being what it is built on.
 
 ## Environments
 
-| Environment | URL | Notes                                          |
-|-------------|-----|------------------------------------------------|
-| Development |     | Does not exist                                 |
-| Test        |     | Does not exist                                 |
+| Environment | URL | Notes                                              |
+|-------------|-----|----------------------------------------------------|
+| Development |     | Does not exist                                     |
+| Test        |     | Does not exist                                     |
 | Production  |     | `func-shelf-audit-prd` and `logic-shelf-audit-prd` |
 
 **Production only**, and not by configuration: `-prd` is written into the resource names rather than derived from an
-environment variable, so there is no other environment to deploy to. A change cannot be rehearsed before it runs
-against production. Every other service in the estate runs in three environments.
+environment variable, so there is no other environment to deploy to. A change cannot be rehearsed before it runs against
+production. Every other service in the estate runs in three environments.
 
 ## Dependencies
 
@@ -65,5 +61,5 @@ reader would.
 * **Schedule** — nightly.
 * **Output** — an email. Nothing else reads the result and no alert is raised from it.
 * **Criticality** — `supporting`. Nothing a reader touches depends on it; if it stops, the only loss is the signal
-  itself. That said, it is the check that would notice the catalogue being down, so its own silence is
-  indistinguishable from good news.
+  itself. That said, it is the check that would notice the catalogue being down, so its own silence is indistinguishable
+  from good news.

@@ -19,12 +19,12 @@ Overdue reminders, hold-ready alerts and membership renewals — the email a rea
 
 ## What it does
 
-Sends the templated email the library owes a reader. It runs on a schedule and reacts to events: timers sweep for
-loans falling due and loans already overdue, and three bus topics carry the events that need an immediate message.
+Sends the templated email the library owes a reader. It runs on a schedule and reacts to events: timers sweep for loans
+falling due and loans already overdue, and three bus topics carry the events that need an immediate message.
 
 The message bodies live with the mail provider as templates selected by event type, so changing the wording is a
-provider change rather than a deployment. That is a deliberate trade and worth stating both halves of: the wording is
-editable by the people who are accountable for it and are not developers, and it is not in version control.
+provider change rather than a deployment. The trade is deliberate: the people accountable for the wording can change it
+without a developer, and the wording is not in version control.
 
 ## Where it lives
 
@@ -34,14 +34,13 @@ editable by the people who are accountable for it and are not developers, and it
 
 ## Environments
 
-| Environment | URL | Notes                                  |
-|-------------|-----|----------------------------------------|
-| Development |     | `func-notices-dev` — no public URL     |
-| Test        |     | `func-notices-test` — no public URL    |
-| Production  |     | `func-notices-prd` — no public URL     |
+| Environment | URL | Notes                               |
+|-------------|-----|-------------------------------------|
+| Development |     | `func-notices-dev` — no public URL  |
+| Test        |     | `func-notices-test` — no public URL |
+| Production  |     | `func-notices-prd` — no public URL  |
 
-A function app with no HTTP surface published anywhere: there is no URL to record, which is different from one nobody
-has written down.
+It publishes no HTTP surface in any environment. There is no URL to record, rather than one nobody has written down.
 
 ## Dependencies
 
@@ -60,5 +59,5 @@ Both are in the shared storage account.
   `notices-loan-due` from `lending.loan_due`, and `notices-membership-expiring` from `members.membership_expiring`.
 * **Schedule** — the due-soon sweep runs daily at 06:00 and the overdue sweep at 07:00, in that order, so a loan that
   became overdue overnight is not also reminded about as due soon.
-* **Criticality** — `important`. It is queue-fed, so an outage delays notices rather than losing them: work resumes
-  from where it stopped when the service returns.
+* **Criticality** — `important`. It is queue-fed, so an outage delays notices rather than losing them: work resumes from
+  where it stopped when the service returns.

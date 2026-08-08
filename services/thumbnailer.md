@@ -22,9 +22,8 @@ Resizes and re-encodes jacket images on demand from blob storage — the origin 
 Reads a jacket image from blob storage and returns it at the dimensions and quality the request asks for. It holds no
 state and caches nothing itself; the caching is the edge's job.
 
-It is **not reached directly**. [svc-covers-cdn] forwards to it as its origin, so every request arrives through the
-edge and the edge caches the resized result rather than the original. That is why the covers surface has an endpoint
-of its own while the estate's other static content shares one.
+It is **not reached directly**. [svc-covers-cdn] forwards to it as its origin, so every request arrives through the edge
+and the edge caches the resized result rather than the original.
 
 ## Where it lives
 
@@ -34,8 +33,8 @@ of its own while the estate's other static content shares one.
 
 ## Environments
 
-| Environment | URL                                     | Notes                      |
-|-------------|-----------------------------------------|----------------------------|
+| Environment | URL                                      | Notes                      |
+|-------------|------------------------------------------|----------------------------|
 | Development | https://app-thumbnailer-dev.example.net  | Reached via the covers CDN |
 | Test        | https://app-thumbnailer-test.example.net | Reached via the covers CDN |
 | Production  | https://app-thumbnailer-prd.example.net  | Reached via the covers CDN |
@@ -56,10 +55,9 @@ against [svc-covers-cdn].
 ## Operational notes
 
 * **TLS terminates at the edge**, so this app service accepts plain HTTP where every other application service in the
-  estate is configured to refuse it. The origin is not reachable from outside the platform network, which is
-  presumably the reasoning, but it is a deliberate difference from its neighbours and worth confirming rather than
-  inheriting.
-* **Criticality** — `critical`. Every jacket image on every catalogue page is served through this service; if it
-  fails, the covers CDN has no origin to forward to and imagery breaks estate-wide, cached content aside.
+  estate is configured to refuse it. The origin is not reachable from outside the platform network, which is presumably
+  the reasoning. Nothing records it, so it stays an open question.
+* **Criticality** — `critical`. Every jacket image on every catalogue page is served through this service; if it fails,
+  the covers CDN has no origin to forward to and imagery breaks estate-wide, cached content aside.
 
 [svc-covers-cdn]: covers-cdn.md

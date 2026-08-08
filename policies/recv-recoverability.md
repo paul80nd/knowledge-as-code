@@ -19,8 +19,8 @@ tags: [ backup, continuity, recovery, resilience ]
 
 ## Purpose
 
-We know how quickly each critical system must come back and how much data we can afford to lose, we can demonstrate that
-we can meet those objectives, and our systems degrade rather than collapse when something they depend on fails.
+We know how quickly each critical system must come back, and how much data we can afford to lose. We can demonstrate
+that we can meet those objectives. Our systems degrade rather than collapse when something they depend on fails.
 
 Resilience that has never been exercised is an assumption. A backup that has never been restored is not a backup, and a
 dependency with no failure path is an outage waiting for its trigger.
