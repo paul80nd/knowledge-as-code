@@ -142,9 +142,9 @@ built. A rule naming a severity that nothing dispatches is the one arrangement t
 and is not, and it fails when the schema loads.
 
 Not every statement of intent is waiting for an expression, and counting them as though they were makes the ruleset look
-less finished than it is. Nine are not validator work in any form: eight say **Scheduled** in their own descriptions —
+less finished than it is. Eight are not validator work in any form: seven say **Scheduled** in their own descriptions —
 periodic reports over a whole corpus, several needing external state — and `kac` has no execution model for them, while
-`reverse-dependencies-generated` is a generator and belongs with `kac index`. Two are not rules about a document at all:
+`coverage-report` is a generator and belongs with `kac index`. Two are not rules about a document at all:
 `blameless` needs a list of personal names, since no regular expression tells `Alex Doe` from
 `Root Cause`, and `human-confirmed` is a `pattern:` on a field.
 
