@@ -95,7 +95,7 @@ rules:
   # ── synced ───────────────────────────────────────────────────────────────────────────────────
   - path: ".claude/skills/**"
     layer: synced
-    note: "Agent machinery — kb-search, kb-contribute, adr and friends. Not yet built."
+    note: "Agent machinery — kb-review, with kb-search, kb-contribute and friends still to come."
 
   - { path: "knowledge-as-code/manifest.yaml",   layer: synced, note: "This file." }
   - { path: "knowledge-as-code/taxonomy.md",     layer: synced }
