@@ -68,8 +68,8 @@ The most important tier is the one carrying the least authority.
 
 Capture has to be nearly free or it does not happen. Nobody writes up a gotcha if doing so requires a template, an owner
 and two reviewers — so observations are recorded with no review at all, marked unverified, and expire on their own if
-nothing promotes them. The rigour lives at promotion instead: a discovery becomes an FAQ when a human confirms it, and
-the FAQ carries provenance back to the observation.
+nothing promotes them. The rigour lives at promotion instead: a [discovery](/discoveries) becomes an [FAQ](/faqs) when a
+human confirms it, and the FAQ carries provenance back to the observation.
 
 That gradient is what lets a corpus grow without its average trustworthiness falling. Cheap in, expensive up.
 
