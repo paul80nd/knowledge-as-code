@@ -179,10 +179,9 @@ get to look like one it can. It is prose here for that reason.
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                             | What it would verify                                                                                                                                                      |
-|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `no-dependency-cycles`           | A cycle in the dependency graph is reported, not failed — some are legitimate.                                                                                            |
-| `drift-against-repos`            | Scheduled, not per-PR. Compares the catalogue against the actual ADO repository list; reports services documented but deleted, and repositories with no service document. |
-| `reverse-dependencies-generated` | Generates the depended-on-by view and the mermaid dependency diagram from `depends-on`.                                                                                   |
+| Rule                   | What it would verify                                                                                                                                                      |
+|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `no-dependency-cycles` | A cycle in the dependency graph is reported, not failed — some are legitimate.                                                                                            |
+| `drift-against-repos`  | Scheduled, not per-PR. Compares the catalogue against the actual ADO repository list; reports services documented but deleted, and repositories with no service document. |
 
 <!-- END GENERATED: checks-services -->
