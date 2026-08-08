@@ -8,17 +8,28 @@ description: Review knowledge records against the corpus authoring rules and pro
 You are reviewing existing records against this corpus's authoring rules and proposing rewrites. You are not adding
 knowledge, not correcting facts, and not moving documents between types.
 
-**Read [`knowledge-as-code/authoring.md`](../../../knowledge-as-code/authoring.md) first, every time.** It is the
-authority. This skill is the procedure for applying it; it does not restate the rules, and where the two appear to
-disagree, `authoring.md` wins.
+## What outranks what
+
+Three sources of rules, in this order:
+
+1. **The schema and the validator.** `.schema/*.yaml`, and what `./kac validate` and `./kac checks` report. These are
+   executable, so they are the authority on anything mechanical: required sections, clause modals, id and filename
+   formats, link forms, and which text rules a type actually declares.
+2. **The type's own pages.** `<type>.md` for what the type is meant to hold, `<type>/template.md` for the sections it
+   must have.
+3. **[`knowledge-as-code/authoring.md`](../../../knowledge-as-code/authoring.md).** The prose rules. Read it in full,
+   every time. This skill is the procedure for applying it and does not restate it.
+
+**Where a prose rule contradicts the schema, that is a finding to report — never an instruction to act on.**
+`authoring.md` says the same of itself. Report which of the two is wrong and leave both alone. A reviewer who resolves
+the contradiction instead breaks the build while claiming the rulebook's authority: read literally, one wrong bullet
+would have stripped **MUST** from twenty-one normative documents that `clauses` requires it in.
 
 ## The one rule that stops this going wrong
 
 **Language follows tier, not type.** Read the record's `tier:` frontmatter before you read its prose, and apply that
 tier's section of `authoring.md`. A rewrite that applies procedural terseness to an ADR has destroyed the document while
 appearing to improve it.
-
-If a record has no `tier:` field, stop and say so. Do not infer it.
 
 ## Never do these
 
@@ -35,76 +46,133 @@ If a record has no `tier:` field, stop and say so. Do not infer it.
 * **Never change frontmatter** other than to correct a demonstrable error, and say so explicitly if you do.
 * **Never delete a section the type's `template.md` requires**, even if it is thin. An empty required section is a
   content gap to report, not a formatting problem to fix.
+* **Never edit a `template.md` or a `<type>.md`.** A defect in every record of a type is a template defect — see below.
+
+## What the validator gives you, and what it does not
+
+**Run `./kac validate` first and expect it to come back clean.** CI gates the branch and pushes to `main` are rejected,
+so a clean corpus is the normal state rather than the lucky one. It is your regression baseline: run it again at the end
+and compare. It is not a source of findings, and it will not hand you a starting list.
+
+**Then run `./kac checks` to establish which text rules apply to the type in front of you.** Each is declared on a
+single type — `low-ceremony` on discoveries, `not-normative` on explanations, `symptoms-first` on runbooks — and most
+types declare none at all. For `services/`, not one text rule fires. Do not report a check's findings as your own, and
+do not read the absence of a check as permission.
+
+## What to look for
+
+Ten categories, ordered by what they cost the reader. Use these names in the report; they are the category list.
+
+1. **Not record content.** The highest-yield finding. A paragraph that would appear in more than one record of the type
+   is corpus guidance in the wrong place. So is commentary about the record's own editorial choices, prose restating
+   `owner`, `review-by`, `status` or `tags`, a review section duplicating frontmatter, placeholder text describing the
+   absence of a relationship, and any explanation of what a metadata field means. Say where the content belongs instead.
+2. **Restated rather than cited.** Prose reproducing what an ADR, standard, type page or glossary entry already says.
+   Replace it with a link.
+3. **Duplicated across records.** Two records in the same folder carrying near-identical paragraphs. Flag both: one
+   should hold it, or neither should.
+4. **Unmarked aspiration.** Content describing what is intended rather than what exists, with no **Planned** or
+   **Aspirational** marker. This is a correctness finding, not a style one — flag it prominently.
+5. **Tier violation.** Future tense in a descriptive record. Rationale inside a procedural step. A discovery written
+   with the confidence of an FAQ. A condition trailing the action it guards in a runbook.
+6. **Two ideas in one sentence.** The most common single defect. Usually a sentence over about 25 words, or a clause
+   joined by *and* whose halves could each be failed independently.
+7. **Filler.** Sentences that announce the next sentence. *It is important to note*, *in order to*, *simply*, *of
+   course*. Adjectives carrying no information — *robust*, *seamless*, *comprehensive*.
+8. **Inconsistent wording.** Two names for one thing, or one caveat worded three ways across sibling records. Elegant
+   variation is a defect here.
+9. **Template defect.** Below.
+10. **Rulebook contradiction.** Above.
+
+## Records that exist to demonstrate their type
+
+Most of this repository's records are examples, and a type page will often say so — `services.md` says its estate is
+there for "the awkward cases the schema was shaped by". That pulls against *not record content*, because the awkward
+case and the lecture about it arrive in the same paragraph. Separate them:
+
+* **Keep the awkward case, in full.** A `repo` field that under-answers, a bare `depends-on` on a service that depends
+  on a great deal, a `critical` service depending on an `important` one. The fact is what makes the example worth
+  shipping, and the demonstration is the **shape of the record**.
+* **Cut the convention it restates.** Where the record goes on to explain the rule that makes the fact awkward, that
+  text is already on the type page — often word for word. Nine copies is nine things to keep in step.
+* **Cite the type page.** A link is how the reader gets the rule, and it costs one line.
+
+## Template defects
+
+**A defect appearing in every record of a type is a defect in that type's `template.md`, not in the records.**
+`services/template.md` tells authors that a consumers list "is maintained by hand and will go stale. Say so", and the
+caveat duly appears in three records where *not record content* says it should appear in none.
+
+Name the template line responsible, and leave the records alone. **Fixing the template is out of scope for a review** —
+in a `role: source` repository as much as anywhere, because it changes every record of the type and every corpus
+downstream. Propose it as separate work.
+
+## When there is nothing to find
+
+**"No findings" is a correct outcome**, and the likely one on prose that has been worked over before. A padded report is
+worse than a short one: it spends the reader's attention on findings you did not believe in, and teaches them to
+discount the ones you did.
+
+For each candidate, name the category it falls in and the reader it costs. If you cannot do both, it is not a finding.
+Where you are unsure whether a cut loses meaning, **do not make it** — list it under *Judgement calls* and let a human
+decide. That list is worth more than a larger diff.
 
 ## Procedure
 
 1. **Establish scope.** One record, a type folder, or a named set. If asked to review "the corpus", propose an order —
    by tier, worst offenders first — and confirm before starting. Do not silently review a hundred documents.
-2. **Read `authoring.md`.** In full. Then read the type's root page (`<type>.md`) for what that type is meant to
-   contain, and its `template.md` for the sections it must have.
-3. **For each record**, in this order:
+2. **Run `./kac validate` and `./kac checks`.** Baseline, and the rules that apply to this type.
+3. **Read `authoring.md`.** In full. Then the type's `<type>.md` for what the type is meant to contain, and its
+   `template.md` for the sections it must have.
+4. **For each record**, in this order:
    a. Read the frontmatter. Note the `tier`, the `status`, and whether it is Decided. b. Read the record whole before
    changing anything. c. Identify findings against the floor, then against the tier's rules, then against
-   [intent, not administration](../../../knowledge-as-code/authoring.md#intent-not-administration). d. Propose the
-   rewrite as a whole document, not a diff of fragments — the result must read in one voice.
-4. **Check what you produced** against the checklist below.
-5. **Run `./kac validate`** and, if any frontmatter changed, `./kac index`. A rewrite that fails validation is not a
-   rewrite.
-6. **Report** in the shape given below. Propose; do not commit. Open a PR if asked — pushes to `main` are rejected.
-
-## What to look for
-
-Ordered by how much they usually cost the reader.
-
-**Run `./kac validate` before you read anything.** The schema already catches part of this — `low-ceremony`,
-`not-normative`, `no-hedged-ordering`, `hub-not-specification`, `links-rather-than-restates`,
-`posture-belongs-to-frameworks` and `symptoms-first` among them. Those findings are free; do not spend judgement
-rediscovering them, and do not report them as though you found them. Your value is everything below, which no expression
-can see.
-
-**Content that is not record content.** The highest-yield finding. A paragraph that would appear in more than one record
-of this type is corpus guidance in the wrong place. Prose restating `owner`, `review-by`, `status` or `tags`. A review
-section duplicating frontmatter. Placeholder text describing the absence of a relationship. An explanation of what a
-metadata field means. Report these for removal and say where the content belongs instead.
-
-**Duplication across records.** Where two records in the same folder carry near-identical paragraphs, flag both. One
-should hold it, or neither should.
-
-**Restated rather than cited.** Prose reproducing what an ADR, standard or glossary entry already says. Replace with a
-link.
-
-**Filler and hedging.** Sentences that announce the next sentence. *It is important to note*, *in order to*, *simply*,
-*of course*. Adjectives carrying no information — *robust*, *seamless*, *comprehensive*.
-
-**Tier violations.** Future tense in a Descriptive record. RFC 2119 keywords in a policy. Rationale inside a procedural
-step. A discovery written with the confidence of an FAQ. Conditions trailing the action they guard in a runbook.
-
-**Unmarked aspiration.** Content describing what is intended rather than what exists, with no **Planned** or
-**Aspirational** marker. This is a correctness finding, not a style one — flag it prominently.
-
-**Sentences carrying two ideas.** The most common single defect. Usually visible as a sentence over about 25 words, or
-any clause joined by *and* where the two halves could each be failed independently.
+   [intent, not administration](../../../knowledge-as-code/authoring.md#intent-not-administration). d. **Rewrite the
+   whole document, not a diff of fragments** — the result must read in one voice, and a reader arriving cold must not be
+   able to tell which paragraph is newest.
+5. **Check what you produced** against the checklist below.
+6. **Run `./kac validate`** again and, if any frontmatter changed, `./kac index`. A rewrite that fails validation is not
+   a rewrite.
+7. **Report** in the shape given below. Propose; do not commit. Open a PR if asked — pushes to `main` are rejected.
 
 ## Before you hand it back
 
-* Every identifier unchanged.
-* Every link still resolves; every reference definition still used; definitions still at the foot, sorted by label.
-* Required sections all present.
-* Prose wrapped at 120 columns, tables exempt.
-* No generated block touched.
-* Nothing added that was not in the original — this is a rewrite, not an expansion.
-* Read the result cold. If you cannot tell which paragraphs you changed, it is right.
+The validator checks these. Read its output rather than checking them by eye:
+
+* Every internal link resolves, every shortcut reference has a definition, and every definition is used.
+* Required sections are all present, and the identity line agrees with the frontmatter.
+* Both generated-block markers survive.
+* Clause ids are present, unique and correctly formed, and every `pol-XXXX.CLAUSE` citation still names a clause.
+
+Nothing checks these. They are yours:
+
+* **Every identifier unchanged.** The validator catches a rename that breaks a link inside this corpus; it cannot see a
+  citation from another one.
+* **Definitions at the foot, sorted by label.** `unused-definition` and `undefined-label` fire; the ordering does not.
+* **Prose wrapped at 120 columns**, tables exempt. `.editorconfig` says so and no check enforces it.
+* **Nothing changed inside a generated block.** The validator checks that the markers survive, not the content between
+  them.
+* **Nothing added that was not in the original** — with one carve-out: **a link that replaces restated content is not an
+  addition.** Swapping a paragraph of convention for `[Services](/services)` is the fix, not an expansion. A link from a
+  record to a type page resolves and validates; `link-resolves` accepts every link form and the `.md` is optional.
+* **Read the result cold.** If you cannot tell which paragraphs you changed, it is right.
 
 ## Reporting
 
+**Report the findings and the judgement calls. Do not reproduce the documents.**
+
+Where the rewrite is applied to the working tree, `git diff` is the artefact — say so, and let the reader read it.
+Reproducing nine records at four hundred words each duplicates the corpus into a report that is stale the moment anyone
+edits a file, in a repository whose first rule is *say less, once*. Reproduce a whole document only where nothing has
+been written to disk.
+
 For each record, keep it short:
 
-**`<id>` — <what changed, in one line>.** Then the findings as a list, each naming the rule it breaches. Then the
-rewritten document.
+**`<id>` — <what changed, in one line>.** Then the findings as a list, each naming its category and the rule it
+breaches.
 
-Where you are unsure whether a cut loses meaning, **do not make it** — list it separately under *Judgement calls* and
-let a human decide. That list is more valuable than a larger diff.
+Then, separately, **Judgement calls**: the findings you did not act on, and why each was left.
 
-Finish with the numbers, because they are the point: how many records, how many findings by category, and the change in
-total length. If length went up, explain why — occasionally it should, when a record was terse because it was
-incomplete.
+Finish with the numbers, because they are the point: how many records, how many findings by category using the names
+above, and the change in total length. If length went up, explain why — occasionally it should, when a record was terse
+because it was incomplete.
