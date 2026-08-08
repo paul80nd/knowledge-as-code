@@ -240,16 +240,16 @@ wrote it holds every one of them. So a declaration the tool does nothing with is
 behaviour the validator applies, and a `ref:` reads as a target being checked. Before any document is validated, the
 schema is held against what the tool can act on, and each finding names the file and the key.
 
-| Reported                                                                             | Check               |
-|--------------------------------------------------------------------------------------|---------------------|
-| An `expr:` that will not compile, or that names no `severity:` or `message:`          | `schema-unreadable` |
-| A `required-when:` outside its three forms                                            | `schema-unreadable` |
-| `values: $enums.x` where `_enums.yaml` declares no `x`                                | `schema-unreadable` |
-| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers        | `schema-dispatch`   |
-| A `ref:` entry naming a folder no schema covers                                       | `schema-dispatch`   |
-| `values:` on any field that is not an `enum`                                          | `schema-dispatch`   |
-| An `id.style`, a `shape:` or a `mirrors-section:` with no code behind the value       | `schema-dispatch`   |
-| A `collection` with no `folder:`, or a `single-document` type declaring one           | `schema-shape`      |
+| Reported                                                                        | Check               |
+|---------------------------------------------------------------------------------|---------------------|
+| An `expr:` that will not compile, or that names no `severity:` or `message:`    | `schema-unreadable` |
+| A `required-when:` outside its three forms                                      | `schema-unreadable` |
+| `values: $enums.x` where `_enums.yaml` declares no `x`                          | `schema-unreadable` |
+| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers  | `schema-dispatch`   |
+| A `ref:` entry naming a folder no schema covers                                 | `schema-dispatch`   |
+| `values:` on any field that is not an `enum`                                    | `schema-dispatch`   |
+| An `id.style`, a `shape:` or a `mirrors-section:` with no code behind the value | `schema-dispatch`   |
+| A `collection` with no `folder:`, or a `single-document` type declaring one     | `schema-shape`      |
 
 **The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
 style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is

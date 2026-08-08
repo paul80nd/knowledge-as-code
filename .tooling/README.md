@@ -92,11 +92,11 @@ not harmlessly inert: `rules:` is documented as behaviour the validator applies,
 as a commitment — and these files are copied into corpora whose authors cannot ask what a key was meant to do. Findings
 name the schema file and the key rather than a record.
 
-| Check               | Level | What it enforces                                                                                                                                                                   |
-|---------------------|-------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `schema-unreadable` | error | A declaration the loader cannot read as written: an `expr:` that does not compile or names no `severity:` or `message:`, a `required-when:` outside its vocabulary, `values: $enums.x` naming no enum. |
+| Check               | Level | What it enforces                                                                                                                                                                                                                                                      |
+|---------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `schema-unreadable` | error | A declaration the loader cannot read as written: an `expr:` that does not compile or names no `severity:` or `message:`, a `required-when:` outside its vocabulary, `values: $enums.x` naming no enum.                                                                |
 | `schema-dispatch`   | error | A value nothing acts on: a rule id claiming a `severity:` that neither an `expr:` nor a `DocumentRule` answers, a `ref:` at a folder no schema covers, `values:` on anything but an enum, an unknown `id.style` or `shape`, a `mirrors-section` other than `Related`. |
-| `schema-shape`      | error | A `collection` names the `folder:` holding its records; a `single-document` type names none.                                                                                        |
+| `schema-shape`      | error | A `collection` names the `folder:` holding its records; a `single-document` type names none.                                                                                                                                                                          |
 
 The question asked is not whether a key is spelled correctly but whether code acts on the value — `style: literal` is a
 real style, and what makes it sound is the branch in `CheckId`. A rule declaring no `severity:` is exempt by design:

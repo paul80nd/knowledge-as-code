@@ -5,8 +5,8 @@
 * **A key you write may still do nothing.** The schema-load pass covers the values the tool dispatches — rule ids,
   `ref:` folders, `id.style`, `shape`, `mirrors-section`, `values:` — but it does not check that a *key* is one the
   loader reads at all. `glossary.yaml` carries an `entry:` block and an `index.generated:` that nothing parses. Before
-  relying on a key, find it in `.tooling/kac.core/Schema.cs`, then find the code that reads what it parsed into.
-  Finding it parsed is not enough.
+  relying on a key, find it in `.tooling/kac.core/Schema.cs`, then find the code that reads what it parsed into. Finding
+  it parsed is not enough.
 
 * **Run `./kac index` after any change.** Every type page carries generated `schema-<type>` and `checks-<type>`
   blocks derived from these files, so a schema edit alone leaves the corpus stale and fails `index --check` in CI.
