@@ -162,6 +162,10 @@ with its own unit tests. [`SPEC.md`](SPEC.md) draws the line between the two and
 | `not-normative`                 | explanations | warning | No bold RFC 2119 keyword — a bold modal binds, and an explanation does not.                                                           |
 | `no-hedged-ordering`            | processes    | warning | No "typically", "usually" or "normally" inside *Steps*.                                                                               |
 | `posture-belongs-to-frameworks` | policies     | warning | No claim of standing beside a framework's name — that belongs in `frameworks.md`.                                                     |
+| `target-is-measurable`          | nfrs         | warning | `measured-by` names an instrument rather than hedging — "monitored", "where practical" answer nothing.                                |
+| `what-went-well-required`       | postmortems  | warning | Something follows the *What went well* heading. `sections` can require the heading and not its contents.                              |
+| `mechanism-has-evidence`        | controls     | warning | A control whose `mechanism` is not `not-enforced` names where the proof of it lives.                                                  |
+| `one-problem-per-document`      | faqs         | warning | One *Symptom* section, because an FAQ is found by its symptom.                                                                        |
 | `trial-has-criteria`            | tools        | warning | A tool in `trial` carries a *Trial criteria* section; without one the trial has no way to end.                                        |
 | `deprecated-has-successor`      | tools        | warning | A deprecated tool names its `successor`, so the reader is sent somewhere rather than told a dead end.                                 |
 | `y-statement`                   | adrs         | warning | A block-quote follows the H1, states all six moves, and is within `max-words` (60).                                                   |
@@ -170,10 +174,11 @@ with its own unit tests. [`SPEC.md`](SPEC.md) draws the line between the two and
 The three length rules are ratios or ceilings whose numbers are judgements rather than measurements — no corpus has yet
 held enough of these types to calibrate them. Each is pinned by a fixture, so changing one is visible.
 
-The six that match text are heuristics, and their patterns live in `.schema/` for that reason: a heuristic gets tuned,
-and tuning a regex there is a schema edit rather than a release every corpus has to take. They read the document **as
+The seven that match text are heuristics, and their patterns live in `.schema/` for that reason: a heuristic gets tuned,
+and tuning a regex there is a schema edit rather than a release every corpus has to take. Six read the document **as
 written** — a credential pasted into a fenced block is the case they exist for, and the flattened text a word count
-walks would never see it.
+walks would never see it. `target-is-measurable` is the exception: it reads a frontmatter value, which the body
+patterns deliberately cannot see, because a field is judged against what its own declaration says.
 
 Code is excluded from every link and marker check: they walk the Markdig AST (inline links, literal runs), and fenced or
 indented code carries none of those nodes.

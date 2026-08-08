@@ -45,6 +45,29 @@ public class RuleExprTests
         Assert.True(Eval("first_section() == ''", body: "No headings at all."));
     }
 
+    // `section()` asks whether a document has one; `section_count()` asks whether it has more than one,
+    // which is a different fault. Matched without case, as `section()` is — a heading is prose someone
+    // wrote, and `## symptom` is the section the schema means however it was capitalised.
+    [Fact]
+    public void Section_count_counts_the_heading_and_ignores_its_casing()
+    {
+        Assert.True(Eval("section_count('Symptom') == 2", body: "## Symptom\n\na\n\n## symptom\n\nb"));
+        Assert.True(Eval("section_count('Symptom') == 1", body: "## Symptom\n\na\n\n## Cause\n\nb"));
+        Assert.True(Eval("section_count('Symptom') == 0", body: "## Cause\n\nb"));
+    }
+
+    // The body pattern facts cannot see frontmatter, because a field is judged against what its own
+    // declaration says. `field_matches` is how a rule asks about the value rather than the shape, and it
+    // is false for an absent field — whether the field ought to be there is `required-field`'s question.
+    [Fact]
+    public void Field_matches_reads_the_frontmatter_that_matches_cannot()
+    {
+        const string front = "id: nfr-0001\nmeasured-by: Monitored where practical.";
+        Assert.True(Eval("field_matches('measured-by', '(?i)where practical')", front, "Body text."));
+        Assert.False(Eval("field_matches('measured-by', 'p95')", front, "p95 appears in the body only."));
+        Assert.False(Eval("field_matches('nope', '.')", front, "Body text."));
+    }
+
     // The H1 is prose the document renders, so it counts; the frontmatter above it does not.
     [Fact]
     public void Words_counts_prose_and_not_frontmatter()

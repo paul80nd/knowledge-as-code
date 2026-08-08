@@ -88,8 +88,15 @@ rules:
       right, the earlier one is when it started.
   - id: what-went-well-required
     description: >
-      A postmortem that only lists failures teaches half the lesson. `sections` requires the heading; what is
-      unenforced is that anything follows it, and an empty section satisfies the requirement.
+      A postmortem that only lists failures teaches half the lesson. `sections` requires the heading; this
+      requires that something follows it.
+    severity: warning
+    # Guarded, because an absent section is `required-section`'s to report: without the guard a postmortem
+    # missing the heading would be told about the same omission twice, in two vocabularies.
+    expr: "section('What went well') implies section_matches('What went well', '\\w')"
+    message: >
+      The What went well section is empty. An incident that taught nothing about what held is half a
+      lesson, and the half nobody writes down is the half that stops being true.
   - id: blameless
     description: >
       Flags personal names inside the Timeline, Root cause and Contributing factors sections. Roles and

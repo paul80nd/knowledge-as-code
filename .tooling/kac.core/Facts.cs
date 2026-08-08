@@ -28,6 +28,12 @@ public sealed class Facts(Doc doc)
     public bool Section(string title) =>
         doc.H2.Any(h => string.Equals(h, title, StringComparison.OrdinalIgnoreCase));
 
+    // How many times that heading appears. `section()` answers whether a document has one; this answers
+    // whether it has more than one, which is a different fault — a page carrying two of a heading that
+    // names the thing it is about is two documents that have been filed as one.
+    public int SectionCount(string title) =>
+        doc.H2.Count(h => string.Equals(h, title, StringComparison.OrdinalIgnoreCase));
+
     // Empty where the document has no H2 at all, so a rule naming the first section reads false rather
     // than throwing on a document that has none.
     public string FirstSection() => doc.H2.Count > 0 ? doc.H2[0] : "";
@@ -42,6 +48,13 @@ public sealed class Facts(Doc doc)
     //
     // Frontmatter is excluded: it is checked field by field, against patterns its fields declare.
     public bool Matches(string pattern) => Pattern(pattern).IsMatch(Body);
+
+    // A pattern asked of one frontmatter scalar, which `matches()` deliberately cannot reach: the body
+    // is prose and the frontmatter is fields, and a field is judged against what its own declaration
+    // says. False for an absent field, so a rule about a value guards nothing — whether the field ought
+    // to be there is `required-field`'s question, asked in better words.
+    public bool FieldMatches(string name, string pattern) =>
+        doc.FrontScalar(name) is { Length: > 0 } value && Pattern(pattern).IsMatch(value);
 
     // The same question asked of one section — from its heading down to the next one at the same level
     // or above. False where the document has no such section, so a rule naming a section reads as

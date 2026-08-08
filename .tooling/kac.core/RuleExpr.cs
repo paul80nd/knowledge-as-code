@@ -43,11 +43,13 @@ public static class RuleExpr
             ["field"] = ([ValueType.Str], ValueType.Str),
             ["present"] = ([ValueType.Str], ValueType.Bool),
             ["section"] = ([ValueType.Str], ValueType.Bool),
+            ["section_count"] = ([ValueType.Str], ValueType.Int),
             ["first_section"] = ([], ValueType.Str),
             ["links"] = ([], ValueType.Int),
             ["words"] = ([], ValueType.Int),
             ["matches"] = ([ValueType.Str], ValueType.Bool),
-            ["section_matches"] = ([ValueType.Str, ValueType.Str], ValueType.Bool)
+            ["section_matches"] = ([ValueType.Str, ValueType.Str], ValueType.Bool),
+            ["field_matches"] = ([ValueType.Str, ValueType.Str], ValueType.Bool)
         };
 
     // Parse and type-check. Throws RuleExprException on anything wrong, because a rule that cannot be
@@ -86,11 +88,13 @@ public static class RuleExpr
             "field" => f.Field((string)args[0]!),
             "present" => f.Present((string)args[0]!),
             "section" => f.Section((string)args[0]!),
+            "section_count" => f.SectionCount((string)args[0]!),
             "first_section" => f.FirstSection(),
             "links" => f.Links(),
             "words" => f.Words(),
             "matches" => f.Matches((string)args[0]!),
             "section_matches" => f.SectionMatches((string)args[0]!, (string)args[1]!),
+            "field_matches" => f.FieldMatches((string)args[0]!, (string)args[1]!),
             _ => null
         };
     }

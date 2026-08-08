@@ -77,7 +77,7 @@ excluded from the gate. Adding a new rule therefore means adding a scenario that
 
 ## Current scenarios
 
-Every reachable check is covered (**57/58**; only the unreachable `type` is not — see below).
+Every reachable check is covered (**61/62**; only the unreachable `type` is not — see below).
 
 | Scenario             | Asserts                                                                                                                                                                                                                                                                                                                                                                                               |
 |----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

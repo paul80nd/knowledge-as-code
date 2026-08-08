@@ -7,9 +7,9 @@ statement of intent — a behaviour someone wanted, written down, that nothing a
 This file is the reference for that layer: what an expression may say, why the boundaries are where they are, and what
 is still to be converted.
 
-**Where things stand.** 46 rule entries across the type schemas: **14 expressions**, **2 rule classes**, and
-**30 statements of intent**. Most of those 30 will never be expressions — see [Stays C#](#stays-c) and
-[Not validator work at all](#not-validator-work-at-all).
+**Where things stand.** 46 rule entries across the type schemas: **18 expressions**, **2 rule classes**, and
+**26 statements of intent**. Every rule an expression could answer has been converted; what is left will not be one —
+see [Stays C#](#stays-c) and [Not validator work at all](#not-validator-work-at-all).
 
 ## Why an expression and not a policy engine
 
@@ -112,7 +112,9 @@ markdown.**
 |----------------------------------|---------|------------------------------------------------------------------------------------------------------|
 | `field('name')`                  | string? | a frontmatter scalar                                                                                 |
 | `present('name')`                | bool    | that scalar, non-empty — false for a bare key as well as a missing one                                |
+| `field_matches('name', 're')`    | bool    | that scalar against a pattern — false where absent; the one pattern fact that sees frontmatter        |
 | `section('Title')`               | bool    | whether an H2 of that name exists (case-insensitive)                                                 |
+| `section_count('Title')`         | int     | how many times it appears — `section()` asks whether, this asks how many                              |
 | `first_section()`                | string  | the first H2, or empty where there is none                                                           |
 | `links()`                        | int     | how many links the body carries                                                                      |
 | `words()`                        | int     | every heading and paragraph the document **renders** — frontmatter and fenced code carry no inline content and fall out |
@@ -187,16 +189,12 @@ the gate will notice.
 Cost is the second question, and it only ever argues for converting a rule that has already passed the first. A schema
 with no C# behind it was never the aim.
 
-### Ready now
+### Nothing, and that is the point
 
-| Rule                       | Type        | Needs                                                                       |
-|----------------------------|-------------|-----------------------------------------------------------------------------|
-| `what-went-well-required`  | postmortems | nothing — `section_matches('What went well', '\w')` asks it today           |
-| `mechanism-has-evidence`   | controls    | nothing — `mechanism` and `evidence` are both declared fields               |
-| `one-problem-per-document` | faqs        | `section_count('Symptom')`                                                  |
-| `target-is-measurable`     | nfrs        | `field_matches('name', 're')`, because `matches()` does not see frontmatter |
-
-Each states a fault about the document as a whole, so one message is the whole diagnosis.
+There is no queue. Every rule the test admits has been converted, which is what makes the two facts added last worth
+knowing about: `section_count()` and `field_matches()` were each written for one rule, and each is now the obvious
+answer to a question a corpus will ask again. Adding a fact is one method on `Facts` and one row in
+`RuleExpr.Functions`; adding to the grammar is not, and the two are easy to confuse when a rule will not quite fit.
 
 ### Stays C#
 
@@ -246,9 +244,11 @@ backlog.
 * **A rule restating something the schema already declares is worse than no rule.** A `reciprocal:`, a
   `mirrors-section:`, a `required-when:`, a scalar type, a required section — each has been written out as a rule
   here, and each read as outstanding work for as long as it survived. `personal-data-has-retention` is the one still
-  standing: `data.yaml` declares `retention` as `required-when: 'classification in [personal, special-category]'`, and
-  the validator already reports exactly that. Before converting anything, read the field declaration and the
-  `sections:` block; the rule may already be answered.
+  standing — `data.yaml` declares `retention` as `required-when: 'classification in [personal, special-category]'`, and
+  the validator already reports exactly that — and it is
+  [issue #83](https://github.com/paul80nd/knowledge-as-code/issues/83), to be either deleted or given a question the
+  field declaration cannot ask. Before converting anything, read the field declaration and the `sections:` block; the
+  rule may already be answered.
 * **`required-when` is a different language and stays one.** It reads `==`, `!=` and `in [...]`, tests one field
   against one other, and lives on the field. A condition needing more than that is a rule with an `expr:`.
   See [`../.schema/README.md`](../.schema/README.md).

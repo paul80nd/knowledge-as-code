@@ -114,5 +114,6 @@ One control may verify several rules, and one rule may need several controls. Co
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                         |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
+| `mechanism-has-evidence`    | warning | A control whose mechanism is not `not-enforced` names where its evidence can be found.                   |
 
 <!-- END GENERATED: checks-controls -->

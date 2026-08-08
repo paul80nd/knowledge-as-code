@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 15,
+    "validated": 19,
     "skipped": 0,
     "errors": 7,
-    "warnings": 9
+    "warnings": 13
   },
   "findings": [
     {
@@ -19,6 +19,13 @@
       "severity": "error",
       "check": "required-field",
       "message": "missing required field 'frequency' (required when mechanism != not-enforced)."
+    },
+    {
+      "file": "controls/0002-evidence-not-named.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "mechanism-has-evidence",
+      "message": "This control claims to run and does not say where the proof of it lives. Set `evidence` to the build log, the audit note or the dashboard — an unevidenced control is an assertion, and `not-enforced` is the honest value for one."
     },
     {
       "file": "data/borrower-records.md",
@@ -56,6 +63,13 @@
       "message": "A bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard and link to it from here."
     },
     {
+      "file": "faqs/two-symptoms-one-page.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "one-problem-per-document",
+      "message": "This carries more than one Symptom section, so it is more than one FAQ. Someone arriving with a symptom matches on the first one and never reads the second — split it."
+    },
+    {
       "file": "integrations/payment-gateway.md",
       "line": 1,
       "severity": "warning",
@@ -70,6 +84,13 @@
       "message": "Something here reads as a credential rather than as a reference to one. Name the mechanism and where the value is held; never the value."
     },
     {
+      "file": "nfrs/0001-hedged-measurement.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "target-is-measurable",
+      "message": "`measured-by` hedges rather than measures. Name the instrument and the number it reports — an NFR measured \"where practical\" is one nobody has to meet."
+    },
+    {
       "file": "policies/cert-certification-claim.md",
       "line": 1,
       "severity": "warning",
@@ -82,6 +103,13 @@
       "severity": "error",
       "check": "detected-not-before-occurred",
       "message": "`detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are right, the earlier one is when it started."
+    },
+    {
+      "file": "postmortems/0002-nothing-recorded-as-well.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "what-went-well-required",
+      "message": "The What went well section is empty. An incident that taught nothing about what held is half a lesson, and the half nobody writes down is the half that stops being true."
     },
     {
       "file": "processes/rotate-a-signing-key.md",
