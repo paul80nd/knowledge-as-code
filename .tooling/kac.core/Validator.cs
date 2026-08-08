@@ -46,7 +46,7 @@ public static class Validator
             // already had it, as a record, along with everything else.
             if (t.IsSingleDocument) continue;
             var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
-            if (page is not null) CheckPageLinks(page, schema, repoRoot, findings);
+            if (page is not null) LinkChecks.CheckPage(page, schema, repoRoot, findings);
         }
 
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
@@ -157,10 +157,10 @@ public static class Validator
                 Err("required-section", $"missing required section '## {sec}'.");
 
         // -- clause table shape, ids and modals --
-        CheckClauses(d, t, Err, Warn);
+        ClauseChecks.Check(d, t, Err, Warn);
 
         // -- links resolve --
-        CheckLinks(d, schema, repoRoot, Err, Warn);
+        LinkChecks.Check(d, schema, repoRoot, Err, Warn);
 
         // -- related mirrors ## Related --
         CheckMirrorsSection(d, t, schema, Err);
@@ -541,207 +541,10 @@ public static class Validator
                                    + $"`{status.ToUpperInvariant()}`.", d.IdentityLine);
     }
 
-    // The clause table — the section where a policy actually binds. Every other section describes,
-    // qualifies or explains; these rows are the obligations themselves, and each carries an id so a
-    // standard, a control or a deviation can cite the one it answers rather than the whole document.
-    //
-    // Runs only for a type whose schema declares a `clauses:` block, and only once the section itself is
-    // present: a missing section is `required-section`'s to report, and saying it twice would make one
-    // fault look like two.
-    private static void CheckClauses(Doc d, TypeSchema t, Action<string, string, int?> err,
-        Action<string, string, int?> warn)
-    {
-        if (t.Clauses is not { } spec) return;
-        if (!d.H2.Any(h => string.Equals(h, spec.Section, StringComparison.OrdinalIgnoreCase))) return;
-
-        var headers = string.Join(" | ", spec.Columns);
-
-        if (d.ClauseHeaders is null)
-        {
-            err("clause-table", $"the '## {spec.Section}' section holds no table — write one row per "
-                                + $"obligation, headed '{headers}'.", d.ClauseSectionLine);
-            return;
-        }
-
-        if (!d.ClauseHeaders.SequenceEqual(spec.Columns, StringComparer.Ordinal))
-        {
-            err("clause-table", $"the clause table is headed '{string.Join(" | ", d.ClauseHeaders)}' — "
-                                + $"it must be headed '{headers}'.", d.ClauseTableLine);
-            return;
-        }
-
-        if (d.Clauses.Count == 0)
-        {
-            err("clause-table", "the clause table has no rows — a policy that binds nothing binds nobody.",
-                d.ClauseTableLine);
-            return;
-        }
-
-        var seen = new HashSet<string>(StringComparer.Ordinal);
-        var highest = 0;
-        var disordered = false;
-
-        foreach (var row in d.Clauses)
-        {
-            CheckClauseId(row, spec, seen, err);
-
-            // The modal is the binding level, so a row without one is a sentence rather than an
-            // obligation and nothing below it can be judged either.
-            var modal = spec.ModalsLongestFirst.FirstOrDefault(m => row.Text.StartsWith(m, StringComparison.Ordinal));
-            if (modal is null)
-            {
-                err("clause-modal", $"clause '{Md.Snippet(row.Text)}' does not open with a modal — write one of "
-                                    + $"{string.Join(", ", spec.Levels)}.", row.Line);
-                continue;
-            }
-
-            // Bold carries the binding level visually, and the reader skimming a long table reads the
-            // weight before the words. A binding modal that is not bold reads as advice; an advisory one
-            // that is bold reads as an obligation. Both are the wrong document.
-            var binds = spec.Binding.Contains(modal, StringComparer.Ordinal);
-            if (binds && !string.Equals(row.BoldLead, modal, StringComparison.Ordinal))
-                err("clause-modal", $"'{modal}' binds — write it bold, `**{modal}**`.", row.Line);
-            else if (!binds && row.BoldLead is not null)
-                err("clause-modal", $"'{modal}' does not bind — write it plain, not bold.", row.Line);
-
-            // A second modal in the same row is two obligations sharing one id, so a citation of it can
-            // only ever name half of what it means.
-            var rest = row.Text[modal.Length..];
-            if (spec.ModalsLongestFirst.FirstOrDefault(m => rest.Contains(m, StringComparison.Ordinal)) is { } second)
-                warn("clause-compound", $"clause '{row.IdSpan ?? row.IdText}' carries a second '{second}' — "
-                                        + "one obligation per clause, or the citation is ambiguous.", row.Line);
-
-            // Reported once, against the first row that breaks the grouping: a table sorted wholly the
-            // wrong way would otherwise report every row after the first.
-            var rank = spec.Rank(modal);
-            if (rank < highest && !disordered)
-            {
-                warn("clause-order", $"clause '{row.IdSpan ?? row.IdText}' is a '{modal}' but follows a "
-                                     + $"'{spec.Levels[highest]}' — group the table "
-                                     + $"{string.Join(", ", spec.Levels)}.", row.Line);
-                disordered = true;
-            }
-
-            highest = Math.Max(highest, rank);
-        }
-    }
-
-    private static void CheckClauseId(ClauseRow row, ClauseSpec spec, HashSet<string> seen,
-        Action<string, string, int?> err)
-    {
-        // Written as a code span for the same reason the identity line's id is: it is a handle rather
-        // than a word, and Md.PlainText cannot tell the two apart once the span is flattened.
-        if (row.IdSpan is null)
-        {
-            err("clause-id-format", $"clause id '{Md.Snippet(row.IdText)}' is not a code span — write it as "
-                                    + $"`{Md.Snippet(row.IdText)}`.", row.Line);
-            return;
-        }
-
-        if (spec.IdPatternRegex is { } idPattern && !idPattern.IsMatch(row.IdSpan))
-            err("clause-id-format", $"clause id '{row.IdSpan}' does not match {spec.IdPattern}.", row.Line);
-
-        // Ordinal, because `pol-SCRT.LOGS` and `pol-SCRT.logs` differing only in case is not two clauses
-        // a reader could tell apart either.
-        if (!seen.Add(row.IdSpan))
-            err("clause-id-unique", $"clause id '{row.IdSpan}' is used twice — a citation of it names "
-                                    + "two obligations.", row.Line);
-    }
-
     // The line the document should have carried, for a message that shows rather than describes.
     // Placeholders stand in for anything the frontmatter could not supply.
     private static string Expected(TypeSchema t, string? id, string? status) =>
         $"`{t.DisplayName}: {id ?? $"{t.IdPrefix}-…"}` `{status?.ToUpperInvariant() ?? "STATUS"}`";
-
-    // The link half of a document's checks, on their own, for a page that is not a record. Every one
-    // of them asks about prose rather than about frontmatter, so they are the checks that carry over
-    // to a type page unchanged.
-    public static void CheckPageLinks(Doc d, Schema schema, string repoRoot, List<Finding> f) =>
-        CheckLinks(d, schema, repoRoot,
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Error, check, msg)),
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, check, msg)));
-
-    private static void CheckLinks(Doc d, Schema schema, string repoRoot, Action<string, string, int?> err,
-        Action<string, string, int?> warn)
-    {
-        foreach (var link in d.Links)
-        {
-            var target = link.Target;
-            if (string.IsNullOrEmpty(target)) continue;
-            if (IsExternal(target) || target.StartsWith('#')) continue;
-            if (!ResolveTarget(repoRoot, d.Rel, target))
-                err("link-resolves", $"link target '{target}' does not resolve.", link.Line);
-        }
-
-        // undefined shortcut/reference labels left as literal '[x]'. Id-shaped is an error — the author
-        // meant to reference a document; anything else is only a warning, since '[x]' in prose is legal.
-        var defined = new HashSet<string>(d.DefinedLabels, StringComparer.OrdinalIgnoreCase);
-        foreach (var (inner, line) in d.BareBracketTokens)
-        {
-            if (defined.Contains(inner)) continue; // a genuine reference that resolved
-            if (TryCanonicalId(inner, schema, out _))
-                err("undefined-label", $"reference '[{inner}]' has no link definition.", line);
-            else
-                warn("bracket-literal",
-                    $"'[{inner}]' looks like a reference but has no definition (or use an inline link).", line);
-        }
-
-        // A shortcut label doubles as its own display text, so it is read as an id and must be written
-        // as one. Reference and definition are matched case-insensitively, so a mis-cased label still
-        // resolves — nothing else would catch it.
-        foreach (var link in d.Links)
-        {
-            if (!link.IsReference || string.IsNullOrEmpty(link.Label)) continue;
-            if (TryCanonicalId(link.Label, schema, out var canonical) && link.Label != canonical)
-                err("label-canonical",
-                    $"reference '[{link.Label}]' should be written as the id '{canonical}'.", link.Line);
-        }
-
-        foreach (var label in d.DefinedLabels.Distinct(StringComparer.Ordinal))
-            if (TryCanonicalId(label, schema, out var canonical) && label != canonical)
-                err("label-canonical",
-                    $"link definition '[{label}]' should be written as the id '{canonical}'.", null);
-
-        // unused definitions
-        foreach (var label in d.DefinedLabels.Distinct(StringComparer.OrdinalIgnoreCase))
-            if (!d.UsedLabels.Contains(label))
-                warn("unused-definition", $"link definition '[{label}]' is never referenced.", null);
-    }
-
-    // A label is id-shaped when its prefix names a type and the remainder fits that type's id style.
-    // The canonical form is the id exactly as the document carries it: the prefix always lower-case,
-    // a mnemonic always upper-case, a slug always lower-case.
-    private static bool TryCanonicalId(string label, Schema schema, out string canonical)
-    {
-        canonical = "";
-        var dash = label.IndexOf('-');
-        if (dash <= 0 || dash == label.Length - 1) return false;
-        var prefix = label[..dash];
-        var rest = label[(dash + 1)..];
-
-        var t = schema.ByFolder.Values.FirstOrDefault(x =>
-            x.IdPrefix.Length > 0 && string.Equals(x.IdPrefix, prefix, StringComparison.OrdinalIgnoreCase));
-        if (t is null) return false;
-
-        switch (t.IdStyle)
-        {
-            case "numbered":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsDigit)) return false;
-                canonical = $"{t.IdPrefix}-{rest}";
-                return true;
-            case "mnemonic":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsLetterOrDigit) || !char.IsLetter(rest[0]))
-                    return false;
-                canonical = $"{t.IdPrefix}-{rest.ToUpperInvariant()}";
-                return true;
-            case "slug":
-                if (!rest.All(c => char.IsLetterOrDigit(c) || c == '-')) return false;
-                canonical = $"{t.IdPrefix}-{rest.ToLowerInvariant()}";
-                return true;
-            default:
-                return false;
-        }
-    }
 
     private static void CheckMirrorsSection(Doc d, TypeSchema t, Schema schema, Action<string, string, int?> err)
     {
@@ -877,36 +680,5 @@ public static class Validator
         var i = 0;
         while (i < file.Length && char.IsDigit(file[i])) i++;
         return i == refType.IdWidth ? $"{refType.IdPrefix}-{file[..i]}" : null;
-    }
-
-    private static bool IsExternal(string t)
-        => t.StartsWith("http://") || t.StartsWith("https://") || t.StartsWith("mailto:") || t.StartsWith("tel:");
-
-    private static bool ResolveTarget(string repoRoot, string fromRel, string target)
-    {
-        var hash = target.IndexOf('#');
-        if (hash >= 0) target = target[..hash];
-        var q = target.IndexOf('?');
-        if (q >= 0) target = target[..q];
-        if (target.Length == 0) return true; // pure fragment
-
-        string basePath;
-        if (target.StartsWith('/'))
-            basePath = Path.Combine(repoRoot, target.TrimStart('/'));
-        else
-        {
-            var fromDir = Path.GetDirectoryName(Path.Combine(repoRoot, fromRel)) ?? repoRoot;
-            basePath = Path.GetFullPath(Path.Combine(fromDir, target));
-        }
-
-        basePath = basePath.Replace('\\', '/');
-
-        // A directory is deliberately not a target. In Azure DevOps `data.md` is the page and `data/`
-        // is its children — one node — so `/data` is a link to the page, which the `.md` form below
-        // already resolves. Accepting the directory as well would resolve a link to a type whose page
-        // has gone, and would do it inconsistently: git cannot track an empty directory, so the same
-        // link passes on the machine that created the folder and fails in CI.
-        return File.Exists(basePath)
-               || File.Exists(basePath + ".md"); // ADO resolves links with .md omitted
     }
 }

@@ -16,11 +16,17 @@ catalogue entry. `Validator.CheckRules` finds it by the id the schema's `rules:`
 implements is a statement of intent and is skipped in silence.
 
 Only the per-document shape has an interface. The rules still to come that need the whole corpus, a graph walk or git
-history do not fit `RuleContext`, and their interface should be designed against the first real one rather than ahead
-of it.
+history do not fit `RuleContext`, and their interface should be designed against the first real one rather than ahead of
+it.
 
-For a core check — one that is not a rule at all — four places have to agree, and three of them fail a meta-test
-rather than a test you were looking at:
+**A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
+early so a later check does not report nonsense about a document already known to be broken. That order is the design,
+so core checks are called in sequence and never looked up in a registry. Where a group of them is self-contained —
+`Checks/LinkChecks.cs`, `Checks/ClauseChecks.cs` — it is a static class of its own with unit tests; the rest stay in
+`Validator.cs`, and extracting one buys nothing unless it has logic worth testing directly.
+
+Wherever it lives, four places have to agree, and three of them fail a meta-test rather than a test you were looking
+at:
 
 1. **`CheckCatalogue.All`** in `Findings.cs` — the registry. `kac checks` reads it, and so does the coverage gate.
 2. **`Generator.DocRows`** *or* **`Generator.IntentionallyUndocumented`** — every catalogue id must appear in one of
@@ -34,9 +40,9 @@ rather than a test you were looking at:
 fold into one reader-facing row. An expression rule is the opposite — one id, reporting under its own name — so its row
 comes from its `description:` and writing one into `DocRows` would duplicate it.
 
-**The coverage gate reads ids, not branches.** A check with two ways to fail is green once a fixture trips either one.
-A rule reporting three faults under one id needs a fixture for each, and unit tests beside the rule class for the
-branches a fixture would only duplicate.
+**The coverage gate reads ids, not branches.** A check with two ways to fail is green once a fixture trips either one. A
+rule reporting three faults under one id needs a fixture for each, and unit tests beside the rule class for the branches
+a fixture would only duplicate.
 
 ## The fixtures
 
