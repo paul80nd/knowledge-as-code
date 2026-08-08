@@ -5,9 +5,34 @@
 ## Adding or changing a check
 
 **First ask whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
-`expr:` on a rule in `.schema/<type>.yaml` — see [`SPEC.md`](SPEC.md). That costs the YAML and a fixture, and nothing
-below applies: the catalogue, the checks table and `kac checks` all pick it up from the schema. Reach for a C# check
-only when the question needs git history, a graph walk, or more than one document at once.
+`expr:` on a rule in `.schema/<type>.yaml` — see [`../.schema/README.md`](../.schema/README.md) for what one may say.
+That costs the YAML and a fixture, and nothing below applies: the catalogue, the checks table and `kac checks` all pick
+it up from the schema.
+
+**The test is what the author is told.** Write the expression when one fixed message says everything the code would have
+said. Write the code where it can name *which* part of the document is at fault and a single string cannot. A rule that
+reports "something here is wrong" where it could have named the missing piece has been made cheaper and worse, and
+nothing in the gate will notice. Cost is the second question, and it only ever argues for converting a rule that has
+already passed the first — a schema with no C# behind it was never the aim.
+
+Sixteen rules fail that test, and they cluster, which is worth knowing before starting one:
+
+* **Git history — 4.** `immutable-after-accepted`, `immutable-after-published`, `changelog-begins-at-active`,
+  `changelog-on-material-change`. All four ask the same question: what changed in this commit versus the committed
+  content, and was it substantive? One mechanism answers all of them, and it is the largest single piece of work left.
+* **Cross-document — 6.** `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`, and
+  the corpus-wide glossary pair `undefined-terms` and `unused-terms`. `Validator.CheckCorpus` already builds a
+  `byId` index and resolves clause citations and reciprocals against it; these are more of that.
+* **Graph — 1.** `no-dependency-cycles`.
+* **Per-part — 4.** `alternatives-have-verdicts`, `terms-are-singular`, `carried-in-full-by-digest` and
+  `escalation-required`. Each judges the parts of one document — bullets under a heading, entries in a glossary,
+  branches of a diagnosis tree — and its message has to name the part that failed. Only the first is written.
+* **A fixed form — 1.** `y-statement-present`. A Y-statement is six moves in one block-quote, and the message worth
+  reading names the move that is absent. An expression could report that the block-quote is not a Y-statement, which is
+  the one thing the author already knows.
+
+**If you find yourself wanting loops, joins or quantifiers in the grammar to reach one of these, stop** — that is the
+signal you are rebuilding OPA. Write a rule class.
 
 **A rule that does need C# is a class, not an arm.** One file in `kac.core/Rules/` implementing `IDocumentRule`, with
 its own unit tests, and a line in `DocumentRules.All`. It declares the checks it `Emits`, and `CheckCatalogue.All`
@@ -25,8 +50,7 @@ so core checks are called in sequence and never looked up in a registry. Where a
 `Checks/LinkChecks.cs`, `Checks/ClauseChecks.cs` — it is a static class of its own with unit tests; the rest stay in
 `Validator.cs`, and extracting one buys nothing unless it has logic worth testing directly.
 
-Wherever it lives, four places have to agree, and three of them fail a meta-test rather than a test you were looking
-at:
+Wherever it lives, four places have to agree, and three of them fail a meta-test rather than a test you were looking at:
 
 1. **`CheckCatalogue.All`** in `Findings.cs` — the registry. `kac checks` reads it, and so does the coverage gate.
 2. **`Generator.DocRows`** *or* **`Generator.IntentionallyUndocumented`** — every catalogue id must appear in one of

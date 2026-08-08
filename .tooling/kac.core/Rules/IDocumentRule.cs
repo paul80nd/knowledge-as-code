@@ -7,7 +7,7 @@ namespace kac.core;
 // A rule whose question the expression grammar cannot ask. Most rules are answered by an `expr:` in
 // `.schema/<type>.yaml`, which costs a line of YAML and a fixture; this interface is for the rest —
 // the ones whose useful message names *which* part of a document is at fault, where one fixed string
-// could only say that something is. SPEC.md draws that line and is the place to argue with it.
+// could only say that something is. That is the test, and `../../CLAUDE.md` is where to argue with it.
 //
 // One rule, one class, one file, so that each is unit-testable on its own rather than only through a
 // whole corpus, and so that the dispatcher stays a dictionary lookup however many arrive.

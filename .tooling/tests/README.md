@@ -75,6 +75,20 @@ fails. Two escape hatches keep it honest — a check that appears in a golden bu
 (a rename left a stale golden), and a check that no discovered document can reach is listed as `unreachable` and
 excluded from the gate. Adding a new rule therefore means adding a scenario that exercises it, or CI goes red.
 
+**The catalogue is a property of a corpus, not of the tool.** `CheckCatalogue.For(schema)` appends each expression
+rule's `(id, severity, description)` to the core checks, which is why `Commands.Checks` takes the repo root — and why a
+rule declared in YAML cannot ship without a fixture any more than a C# check can.
+
+**The gate reads ids, not branches.** `y-statement-present` reports three faults under one id — an absent block-quote, a
+missing move, and a Y-statement past `max-words` — and a fixture for any one of them satisfies it. A rule with more than
+one way to fail needs a fixture for each, or unit tests beside its rule class for the branches a second fixture would
+only duplicate.
+
+**Standing a rule up costs more in fixtures than in schema.** Converting five rules once took 24 lines of YAML and
+~590 of fixture, because each needed its type stood up here — a page, a template and a record. That is not a cost of
+writing rules as data: the gate demands a fixture however a check is implemented. It is mostly one-off, too; once a type
+is present, the next rule on it is a record.
+
 ## Current scenarios
 
 Every reachable check is covered (**61/62**; only the unreachable `type` is not — see below).

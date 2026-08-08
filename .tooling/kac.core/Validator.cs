@@ -575,8 +575,8 @@ public static class Validator
 
     // The type's own `rules:`, in the order the schema declares them. Two kinds arrive here: a rule
     // carrying an `expr:` is answered by evaluating it, and needs no C# at all; a rule whose question
-    // needs a real algorithm is one of `DocumentRules`, looked up by id. SPEC.md draws the line between
-    // them, and this loop is the whole of the dispatch either way.
+    // needs a real algorithm is one of `DocumentRules`, looked up by id. `CLAUDE.md` beside this project
+    // draws the line between them, and this loop is the whole of the dispatch either way.
     private static void CheckRules(Doc d, TypeSchema t, Action<string, string, int?> err,
         Action<string, string, int?> warn)
     {

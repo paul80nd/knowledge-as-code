@@ -145,8 +145,8 @@ A type that declares no `clauses:` block is checked for none of these.
 
 A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
 by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
-editing this tool. Only the last two need more than the grammar can say, and each is a class in `kac.core/Rules/`
-with its own unit tests. [`SPEC.md`](SPEC.md) draws the line between the two and lists what is still to convert.
+editing this tool; [`../.schema/README.md`](../.schema/README.md) is the reference for what one may say. Only the last
+two need more than the grammar can say, and each is a class in `kac.core/Rules/` with its own unit tests.
 
 | Check                           | Type         | Level   | What it enforces                                                                                                                      |
 |---------------------------------|--------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
@@ -177,11 +177,35 @@ held enough of these types to calibrate them. Each is pinned by a fixture, so ch
 The seven that match text are heuristics, and their patterns live in `.schema/` for that reason: a heuristic gets tuned,
 and tuning a regex there is a schema edit rather than a release every corpus has to take. Six read the document **as
 written** — a credential pasted into a fenced block is the case they exist for, and the flattened text a word count
-walks would never see it. `target-is-measurable` is the exception: it reads a frontmatter value, which the body
-patterns deliberately cannot see, because a field is judged against what its own declaration says.
+walks would never see it. `target-is-measurable` is the exception: it reads a frontmatter value, which the body patterns
+deliberately cannot see, because a field is judged against what its own declaration says.
 
 Code is excluded from every link and marker check: they walk the Markdig AST (inline links, literal runs), and fenced or
 indented code carries none of those nodes.
+
+### Why rules are data
+
+Wiring a rule as C# means a class, a registry line, unit tests, a row in `Generator.DocRows`, a row in two READMEs, and
+a fixture. Wiring it as an expression means a line of YAML and a fixture. That difference is the whole argument, and it
+compounds: a corpus that has *taken* this framework rather than authored it may add a whole type file of its own, and
+before this layer existed every rule in one was inert — enforcing it needed an upstream code change and a release.
+
+OPA/Rego was the obvious alternative and is the wrong shape. It would replace only the evaluation *tail* of the
+pipeline, leaving all the markdown and frontmatter extraction untouched, while adding a language and a runtime
+dependency and breaking the single-file, no-build-step design. A small hand-rolled evaluator buys the one property worth
+having — new rules as data — at a fraction of that. `RuleExpr.cs` says when that judgement expires.
+
+| File                      | Holds                                                                              |
+|---------------------------|------------------------------------------------------------------------------------|
+| `kac.core/Facts.cs`       | the fact functions, and nothing else an expression can reach                       |
+| `kac.core/RuleExpr.cs`    | lexer, recursive-descent parser, type checker, evaluator — no dependencies         |
+| `RuleSpec` in `Schema.cs` | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load            |
+| `kac.core/Rules/`         | one class per rule that needs C#, and the registry the dispatcher looks them up in |
+| `Validator.CheckRules`    | evaluates every compiled rule, and looks up by id the ones that are not            |
+
+`CheckRules` emits at the rule's own severity, which is why it is not `CheckWarnings`. `Facts` is built per document and
+discarded once its rules have run, which is what makes `words()` safe to memoise there rather than on the immutable
+`Doc`.
 
 ## The key-order rule
 
