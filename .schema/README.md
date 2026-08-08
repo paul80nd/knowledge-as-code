@@ -51,10 +51,10 @@ fields:
 
 **Every key in these files is one the loader reads, and `notes:` is the one exception.** A key nothing reads is a
 declaration in a file documented as the contract the tool enforces, so it is reported at load like any other — see
-[What the schema is held to](#what-the-schema-is-held-to). `notes:` is admitted at every level and parsed only here on
-a field, which is how something worth saying and not worth acting on gets said: these files are read by people who
-cannot ask what a key was for, and a schema that could not explain itself would be worse than one with a loose
-vocabulary. Everything else is implemented, dropped, or rewritten as a note.
+[What the schema is held to](#what-the-schema-is-held-to). `notes:` is admitted at every level and parsed only here on a
+field, which is how something worth saying and not worth acting on gets said: these files are read by people who cannot
+ask what a key was for, and a schema that could not explain itself would be worse than one with a loose vocabulary.
+Everything else is implemented, dropped, or rewritten as a note.
 
 `required-when` takes those three forms and no others — a condition the loader cannot read is reported against the field
 that declares it rather than reading as one that never holds. It tests one other field of the same document; a condition
