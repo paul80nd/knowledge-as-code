@@ -13,9 +13,14 @@ Two rules carry most of the weight, and both are easier to state than to follow:
 Both serve one end. A corpus is read under pressure, by people who did not write it and by agents that cannot ask what a
 sentence meant. Length is not thoroughness. A document that says less, and says it once, is read.
 
-Some of what follows is enforced. The schema carries text rules — `low-ceremony`, `not-normative`, `no-hedged-ordering`
-and others named below — that fail or warn on what a machine can judge, and `./kac checks` lists them. The rest is
-judgement, and the absence of a check is not permission.
+Some of this is enforced, though less than you would hope and never uniformly. Each text rule is declared on a single
+type — `low-ceremony` on discoveries, `not-normative` on explanations, `no-hedged-ordering` on processes — and many
+types carry none at all. Run `./kac checks` to see what applies to the type in front of you rather than assuming, and
+expect `./kac validate` to come back clean: CI gates the branch, so a clean run is the baseline rather than a source of
+findings. The rest is judgement, and the absence of a check is not permission.
+
+Where a rule here contradicts the schema, **the schema is right and this page is wrong**. It is executable and this is
+not. Report the contradiction; do not resolve it by editing records.
 
 ## The floor
 
@@ -69,7 +74,8 @@ reader in that state skims, and a skimmed instruction must still be right.
 * **State the outcome.** A step the reader cannot confirm succeeded is a step they will repeat.
 * **Warnings precede the step they guard**, never follow it.
 * **Do not hedge an order.** *Typically*, *usually* and *normally* in a step tell a reader under pressure that the
-  sequence is negotiable. If it genuinely is, say what decides it. `no-hedged-ordering` warns on this.
+  sequence is negotiable. If it genuinely is, say what decides it. `no-hedged-ordering` warns on this in a
+  [process](/processes); nothing catches it in a runbook.
 * **A runbook opens with Symptoms**, because that is how a reader who does not yet know which document they need finds
   it. `symptoms-first` is an error, not a warning.
 
@@ -79,9 +85,12 @@ The rule must be checkable, and a reader must be able to tell obligation from co
 
 * **[Standards](/standards) use RFC 2119 keywords, in capitals, leading the clause.** The capitals are what make them
   normative; lower-case *must* is prose. See [lineage](lineage.md#standard).
-* **[Policies](/policies) do not use RFC 2119 keywords at all.** A policy states intent; the standard beneath it states
-  the obligation. A policy written in **MUST** has taken the standard's job.
-* **One obligation per clause.** If a clause cannot be failed in exactly one way, split it.
+* **[Policies](/policies) carry modals in their clauses and nowhere else.** Purpose and Scope are written as
+  commitment — what we hold to, and why. The clause table states the obligation and opens each row with its keyword;
+  `clauses` is an error if a row does not. What separates a policy clause from a standard's is altitude, not grammar:
+  a policy clause stays true when the whole technology estate is replaced.
+* **One obligation per clause.** If a clause cannot be failed in exactly one way, split it —
+  `clause-order / clause-compound` warns when a row carries more than one.
 * **A clause is testable, or it is a wish.** *Services are secure* is untestable. *Services read secrets from a managed
   vault* can be checked.
 * **Rationale lives in Purpose, not in the clause.** The clause table is scanned; the purpose is read once.
@@ -100,9 +109,10 @@ These must mirror reality, so anything that reads as intent will eventually read
 * **No promotion.** *Robust*, *seamless*, *world-class*, *best-in-class* describe nothing and survive no audit.
 * **Never normative.** A **MUST** in an [explanation](/explanations) means the rule is now in two places and only one of
   them is owned. `not-normative` warns on RFC 2119 keywords appearing here.
-* **Link rather than restate.** These types are hubs, and length is judged against how much they link:
-  `hub-not-specification` and `links-rather-than-restates` warn at roughly forty words per outbound link. An explanation
-  or capability accumulating facts of its own has become a liability — which is what that ratio is measuring.
+* **Link rather than restate.** A [capability](/capabilities) and an [explanation](/explanations) are hubs, and their
+  length is judged against how much they link — `hub-not-specification` and `links-rather-than-restates` warn at roughly
+  forty words per outbound link. One accumulating facts of its own has become a liability, which is what that ratio
+  measures. The other descriptive types have no such rule and are held to it by judgement alone.
 
 ### Decided
 
