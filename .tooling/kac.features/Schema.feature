@@ -1,0 +1,22 @@
+Feature: The schema's own declarations
+  One level further out than the corpus: before asking whether a document obeys its type, kac asks whether
+  the type says anything the tool cannot do. These files are copied into corpora whose authors cannot ask
+  what a key meant, so a declaration nothing dispatches is not inert — it reads as a commitment. Driven
+  against the schema-declarations fixture, which lays a deliberately wrong type file over the real schema.
+
+  Scenario: A schema that promises what the tool cannot deliver is reported against the file that says so
+    Given the schema-declarations fixture corpus
+    When I validate the corpus
+    Then validation reports 0 documents and 0 skipped
+    And the findings are exactly:
+      | file                 | line | check             | message                                                                                                                                                                                                            |
+      | .schema/widgets.yaml |      | schema-shape      | type 'widgets' is a collection and declares no 'folder:' — say which folder holds its records, or declare it 'shape: single-document'.                                                                             |
+      | .schema/widgets.yaml |      | schema-dispatch   | type 'widgets' declares 'id.style: roman-numeral', which no id check reads. The styles the tool applies are 'literal', 'mnemonic', 'numbered', 'slug'.                                                             |
+      | .schema/widgets.yaml |      | schema-unreadable | field 'classification' draws its values from '$enums.sensitivity', and _enums.yaml declares no 'sensitivity'.                                                                                                      |
+      | .schema/widgets.yaml |      | schema-dispatch   | field 'tags' is 'type: list' and declares 'values:', which only an enum's range is read from — declare it 'type: enum', or drop the values.                                                                        |
+      | .schema/widgets.yaml |      | schema-dispatch   | field 'related' declares 'ref: gizmos', and no schema covers that folder — either the type was never adopted here, or the name is wrong.                                                                           |
+      | .schema/widgets.yaml |      | schema-dispatch   | field 'related' declares 'mirrors-section: See also', and only 'Related' is reconciled against its section.                                                                                                        |
+      | .schema/widgets.yaml |      | schema-unreadable | field 'retention' has a required-when the schema cannot read: 'classification is personal'. Write it as 'other == value', 'other != value', or 'other in [a, b]'.                                                  |
+      | .schema/widgets.yaml |      | schema-dispatch   | rule 'widgets-are-blue' on type 'widgets' declares 'severity: warning' and nothing dispatches it — give it an 'expr:', implement it as a DocumentRule, or drop the severity and leave it declared as an intention. |
+      | .schema/widgets.yaml |      | schema-unreadable | rule 'widgets-have-an-owner': expected ')' closing 'present(' in 'present('owner''.                                                                                                                                |
+      | .schema/widgets.yaml |      | schema-unreadable | rule 'widgets-are-documented' has an expr but no severity — say whether it fails a build or advises an author.                                                                                                     |

@@ -106,4 +106,10 @@ Related but different:
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                                                                                                                                                   |
 | `hub-not-specification`     | warning | Reports a capability whose prose exceeds a threshold relative to its link count. A capability that specifies behaviour has begun to drift from the ADO items it should point at, and a drifted capability is worse than none because sessions will trust it. |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule                   | What it would verify                                                                                                     |
+|------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `feature-file-orphans` | Scheduled. Reports feature files in the code repositories claimed by no capability, and paths here that no longer exist. |
+
 <!-- END GENERATED: checks-capabilities -->

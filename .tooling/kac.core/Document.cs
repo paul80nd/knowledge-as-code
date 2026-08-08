@@ -79,6 +79,11 @@ public class Doc
     public List<LinkRef> RelatedSectionLinks = [];
     public QuoteBlock? YStatement;
 
+    // The one section a `mirrors-section:` field can be reconciled against, because it is the one the
+    // parse above collects. Named here so that SchemaChecks can reject a field declaring any other and
+    // the two cannot drift — see issue #63, which is about widening this rather than restating it.
+    public const string RelatedSection = "Related";
+
     // The two extensions every record depends on: the frontmatter block, and the pipe tables a clause
     // section is written as. A built pipeline is immutable, so one is shared across every parse rather
     // than assembled per document.
@@ -189,7 +194,7 @@ public class Doc
         // Y-statement — first block-quote after the H1.
         doc.YStatement = ast.Descendants<QuoteBlock>().FirstOrDefault(q => q.Line > (doc.H1Line - 1));
 
-        doc.RelatedSectionLinks = SectionLinks(ast, "Related");
+        doc.RelatedSectionLinks = SectionLinks(ast, RelatedSection);
 
         return doc;
     }

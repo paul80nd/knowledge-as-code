@@ -205,13 +205,20 @@ public static class Generator
     // `generated-block` joins them alongside `type-setup`, for the same reason: both are checks on
     // the type page itself rather than on a document of that type, and this table describes what a
     // contributor's document is held to.
+    // The three `schema-*` checks join them for the furthest-out version of that reason: they read the
+    // schema rather than any document, and what they report is a defect in the file this very table is
+    // generated from. Their audience is whoever edits `.schema/`, and `.schema/README.md` is where they
+    // are documented.
     private static readonly HashSet<string> IntentionallyUndocumented =
-        new(["type", "list", "bracket-literal", "type-setup", "generated-block"], StringComparer.Ordinal);
+        new(["type", "list", "bracket-literal", "type-setup", "generated-block",
+            "schema-unreadable", "schema-dispatch", "schema-shape"], StringComparer.Ordinal);
 
     // The curated rows, then a row for each expression rule the type declares. A core check is worded
     // here because several ids fold into one reader-facing row; an expression rule is one id reporting
     // under its own name, and its `description:` in the schema is already that row written out. Copying
     // it here would be the same sentence in two files, drifting apart at the first edit.
+    //
+    // Beneath both, the rules the type declares and nothing runs. See Intentions.
     public static string ChecksTable(TypeSchema t)
     {
         var severity = CheckCatalogue.All.ToDictionary(c => c.Id, c => c.Severity);
@@ -230,7 +237,31 @@ public static class Generator
             Escape(r.Description ?? r.Message ?? "")
         }));
 
-        return RenderTable(headers, rows);
+        return RenderTable(headers, rows) + Intentions(t);
+    }
+
+    // The rules the type declares that nothing runs — no `expr:`, no implementation. Each is a real
+    // decision about what this type should be held to, and each is unenforced, so a page that showed
+    // only the table above would say the schema promises nothing more than CI delivers. It promises
+    // rather a lot more, and that is worth a reader knowing before they rely on it.
+    //
+    // Kept apart from the table rather than folded in as rows, because the two answer different
+    // questions: one is what a build will say about a document, the other what has been written down
+    // and not built. A rule leaves this block by gaining an `expr:` or a class, at which point it
+    // appears above under its own name.
+    private static string Intentions(TypeSchema t)
+    {
+        var intended = t.Rules
+            .Where(r => r.Compiled is null && !DocumentRules.ByRuleId.ContainsKey(r.Id))
+            .ToList();
+        if (intended.Count == 0) return "";
+
+        List<string> headers = ["Rule", "What it would verify"];
+        var rows = intended
+            .Select(r => new List<string> { $"`{r.Id}`", Escape(r.Description ?? r.Message ?? "") })
+            .ToList();
+        return "\n\n**Declared, not yet enforced** — carried by the schema, run by nothing.\n\n"
+               + RenderTable(headers, rows);
     }
 
     // Reconcile the curated table with the catalogue. Empty means the reader-facing table is a

@@ -105,4 +105,10 @@ A process is also not:
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                                     |
 | `no-hedged-ordering`        | warning | Flags "typically", "usually" and "normally" inside the Steps section. A procedure whose ordering is conditional should say what it depends on. |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule        | What it would verify                                                                                    |
+|-------------|---------------------------------------------------------------------------------------------------------|
+| `staleness` | Scheduled. Reports processes past their rehearsal frequency, and any whose `last-rehearsed` is `never`. |
+
 <!-- END GENERATED: checks-processes -->

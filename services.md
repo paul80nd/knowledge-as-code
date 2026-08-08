@@ -146,8 +146,9 @@ Three rules make the vocabulary small enough to be searchable, and they are the 
    the same three might each earn their place; that is a judgement to make against your own catalogue, not to inherit
    from this one.
 
-Nothing enforces the vocabulary. `values:` can be written on a `tags` field and will render on this page, but the
-validator does not read it, so a declared vocabulary would be a promise nothing keeps. It is prose here for that reason.
+Nothing enforces the vocabulary. A `values:` list is read from an `enum` field and nowhere else, and one written on
+`tags` is rejected when the schema loads rather than quietly ignored — a vocabulary the validator cannot apply does not
+get to look like one it can. It is prose here for that reason.
 
 ## What CI checks
 
@@ -175,5 +176,13 @@ validator does not read it, so a declared vocabulary would be a promise nothing 
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
+
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule                             | What it would verify                                                                                                                                                      |
+|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `no-dependency-cycles`           | A cycle in the dependency graph is reported, not failed — some are legitimate.                                                                                            |
+| `drift-against-repos`            | Scheduled, not per-PR. Compares the catalogue against the actual ADO repository list; reports services documented but deleted, and repositories with no service document. |
+| `reverse-dependencies-generated` | Generates the depended-on-by view and the mermaid dependency diagram from `depends-on`.                                                                                   |
 
 <!-- END GENERATED: checks-services -->

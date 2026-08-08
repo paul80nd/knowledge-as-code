@@ -70,9 +70,7 @@ index:
 
 rules:
   - id: no-dependency-cycles
-    field: depends-on
     description: A cycle in the dependency graph is reported, not failed — some are legitimate.
-    severity: warning
   - id: drift-against-repos
     description: >
       Scheduled, not per-PR. Compares the catalogue against the actual ADO repository list; reports services

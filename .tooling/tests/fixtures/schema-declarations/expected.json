@@ -1,0 +1,80 @@
+{
+  "summary": {
+    "validated": 0,
+    "skipped": 0,
+    "errors": 10,
+    "warnings": 0
+  },
+  "findings": [
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' is a collection and declares no 'folder:' — say which folder holds its records, or declare it 'shape: single-document'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "type 'widgets' declares 'id.style: roman-numeral', which no id check reads. The styles the tool applies are 'literal', 'mnemonic', 'numbered', 'slug'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-unreadable",
+      "message": "field 'classification' draws its values from '$enums.sensitivity', and _enums.yaml declares no 'sensitivity'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "field 'tags' is 'type: list' and declares 'values:', which only an enum's range is read from — declare it 'type: enum', or drop the values."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "field 'related' declares 'ref: gizmos', and no schema covers that folder — either the type was never adopted here, or the name is wrong."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "field 'related' declares 'mirrors-section: See also', and only 'Related' is reconciled against its section."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-unreadable",
+      "message": "field 'retention' has a required-when the schema cannot read: 'classification is personal'. Write it as 'other == value', 'other != value', or 'other in [a, b]'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "rule 'widgets-are-blue' on type 'widgets' declares 'severity: warning' and nothing dispatches it — give it an 'expr:', implement it as a DocumentRule, or drop the severity and leave it declared as an intention."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-unreadable",
+      "message": "rule 'widgets-have-an-owner': expected ')' closing 'present(' in 'present('owner''."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-unreadable",
+      "message": "rule 'widgets-are-documented' has an expr but no severity — say whether it fails a build or advises an author."
+    }
+  ]
+}

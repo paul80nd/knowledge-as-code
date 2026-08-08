@@ -83,4 +83,3 @@ rules:
   - id: constraint-consistency
     description: >
       Where `constrained-by` names an integration whose `their-sla` is weaker than this target, report it.
-    severity: warning

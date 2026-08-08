@@ -110,4 +110,10 @@ Other boundaries:
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                    |
 | `one-problem-per-document`  | warning | One Symptom section, because an FAQ is found by its symptom. A page of assorted gotchas cannot be, which defeats the purpose. |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule              | What it would verify                                                                   |
+|-------------------|----------------------------------------------------------------------------------------|
+| `human-confirmed` | `confirmed-by` must be present and must not be an agent, a session id or a team alias. |
+
 <!-- END GENERATED: checks-faqs -->

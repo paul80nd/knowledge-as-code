@@ -109,4 +109,11 @@ document is written for the day it isn't.
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
 | `symptoms-first`            | error   | Symptoms is the first section after the H1 — that is how the reader finds the document.                  |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule                  | What it would verify                                                                                                                                                                                     |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `escalation-required` | `sections` requires the heading. What is unenforced is the shape beneath it — a diagnosis branch that ends in neither a resolution nor an escalation is a dead end, and only reading the tree finds one. |
+| `staleness-loud`      | Scheduled, and reported more prominently than for processes. An unrehearsed process is annoying; an unrehearsed runbook is dangerous.                                                                    |
+
 <!-- END GENERATED: checks-runbooks -->

@@ -122,4 +122,10 @@ See [Contributing](/knowledge-as-code/contributing.md) for the review model that
 | `y-statement`               | warning | A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.                  |
 | `alternatives-verdict`      | warning | Each Alternatives Considered bullet states a verdict.                                                    |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule                       | What it would verify                                                                                                                                                                |
+|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `immutable-after-accepted` | Once status is `accepted`, content changes are limited to typo fixes, link corrections and status transitions. A substantive edit fails with a pointer to the supersession process. |
+
 <!-- END GENERATED: checks-adrs -->

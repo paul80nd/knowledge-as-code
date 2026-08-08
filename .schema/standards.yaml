@@ -103,7 +103,6 @@ rules:
   - id: rules-have-controls
     description: >
       Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.
-    severity: warning
   - id: changelog-begins-at-active
     description: >
       Changelog entries are material changes only — a rule added, removed, or changed in effect — and begin

@@ -21,6 +21,12 @@ public static class Validator
         var (schema, repoRoot) = (corpus.Schema, corpus.RepoRoot);
         var findings = new List<Finding>();
 
+        // The schema first, because it decides how every document below is read. Reported even when the
+        // run is narrowed to given paths — unlike the corpus-shape checks, this is not a question about
+        // the corpus but about the terms it was judged on, and those hold however few documents were
+        // asked about.
+        SchemaChecks.Check(schema, findings);
+
         foreach (var doc in corpus.Docs)
             CheckDocument(doc, schema, repoRoot, findings);
 
@@ -296,7 +302,7 @@ public static class Validator
             foreach (var name in d.Type.FieldOrder)
             {
                 var spec = d.Type.Fields[name];
-                if (spec.Reciprocal is null || spec.Ref is null) continue;
+                if (spec.Reciprocal is null || spec.Refs.Count == 0) continue;
                 foreach (var targetId in FrontIdList(d, name))
                 {
                     if (!byId.TryGetValue(targetId, out var target))
@@ -398,6 +404,14 @@ public static class Validator
             if (pos.TryGetValue(a, out var pa) && pos.TryGetValue(b, out var pb) && pa > pb)
                 err("key-order", $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
     }
+
+    // The id styles the checks below apply. Held here rather than in the schema loader because this is
+    // where the branches are, and SchemaChecks reads it to reject a style nothing acts on. `slug` earns
+    // its place on the prefix check alone — the slug half of a slug id is unchecked, which is #60 — and
+    // that is the reason this is a set of what is dispatched rather than a list of what is spelled
+    // correctly: adding a name here without a branch beneath is the mistake it exists to prevent.
+    public static readonly IReadOnlySet<string> IdStyles =
+        new HashSet<string>(["numbered", "mnemonic", "slug", "literal"], StringComparer.Ordinal);
 
     private static void CheckId(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
         Action<string, string, int?> err)
@@ -552,14 +566,18 @@ public static class Validator
         foreach (var name in t.FieldOrder)
         {
             var spec = t.Fields[name];
-            if (spec.MirrorsSection is null || spec.Ref is null) continue;
-            if (!schema.ByFolder.TryGetValue(spec.Ref, out var refType)) continue;
+            if (spec.MirrorsSection is null) continue;
+            var refTypes = spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>().ToList();
+            if (refTypes.Count == 0) continue;
 
             var inFront = new HashSet<string>(FrontIdList(d, name), StringComparer.OrdinalIgnoreCase);
             var inSection = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var link in d.RelatedSectionLinks)
             {
-                var id = IdFromLink(link, refType);
+                // A field may point at several types, and a link resolves under whichever of them names
+                // a file of that shape. The first answer is the id, since no two types share both an id
+                // style and a width without their filenames colliding anyway.
+                var id = refTypes.Select(rt => IdFromLink(link, rt)).FirstOrDefault(x => x is not null);
                 if (id is not null) inSection.Add(id);
             }
 

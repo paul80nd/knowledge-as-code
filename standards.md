@@ -131,4 +131,12 @@ Standards are living documents. Material changes are recorded in the changelog r
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                                  |
 | `provenance-required`       | error   | Every standard cites at least one ADR in `derived-from` or one policy in `implements`. A standard with neither is guidance, not a standard. |
 
+**Declared, not yet enforced** — carried by the schema, run by nothing.
+
+| Rule                           | What it would verify                                                                                                                                                                                         |
+|--------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `rules-have-controls`          | Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.                                                                                                             |
+| `changelog-begins-at-active`   | Changelog entries are material changes only — a rule added, removed, or changed in effect — and begin when status becomes `active`. Wording, examples, link fixes and typos are not material; git has those. |
+| `changelog-on-material-change` | If the Rules section changed and status is `active`, a new changelog entry is required in the same commit.                                                                                                   |
+
 <!-- END GENERATED: checks-standards -->

@@ -1,0 +1,64 @@
+type: widget
+label: Widget
+# No `folder:`, and the type is a collection — so its records have nowhere to live.
+page: widgets.md
+tier: descriptive
+lifecycle: living
+
+notes: >
+  A type that exists only to be wrong. Every declaration below was accepted in silence before the
+  schema-load pass, and each is the shape of a real one: a promise the tool cannot keep, written by
+  someone with every reason to believe it could.
+
+id:
+  prefix: wdg
+  style: roman-numeral
+  width: 4
+
+fields:
+
+  classification:
+    required: true
+    type: enum
+    values: $enums.sensitivity
+
+  tags:
+    required: true
+    type: list
+    of: string
+    values: [internal, public]
+
+  related:
+    type: list
+    of: id
+    ref: [widgets, gizmos]
+    mirrors-section: See also
+
+  retention:
+    type: string
+    required-when: classification is personal
+
+sections:
+  required:
+    - Summary
+  optional: []
+
+index:
+  columns: [id, title]
+  sort: id
+
+rules:
+  - id: widgets-are-blue
+    description: Every widget is blue.
+    severity: warning
+
+  - id: widgets-have-an-owner
+    description: A widget names someone who answers for it.
+    severity: error
+    expr: "present('owner'"
+    message: This widget names no owner.
+
+  - id: widgets-are-documented
+    description: A widget says what it is for.
+    expr: "words() > 0"
+    message: This widget is empty.
