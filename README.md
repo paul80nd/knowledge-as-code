@@ -63,12 +63,12 @@ direction as well as the state, and marks the difference — anything unmarked e
 **Planned** or **Aspirational** marker. [Authoring](knowledge-as-code/authoring.md#what-is-not-built-yet) defines them;
 [Principles](knowledge-as-code/principles.md#where-this-is-going) is where most of the unbuilt work is described.
 
-| Built                                                                                                                   | Planned                                         | Aspirational                                           |
-|-------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|--------------------------------------------------------|
-| `kac validate` — 66 checks: the schema itself, frontmatter, identity, structure, clauses, links, graph reciprocity, type setup, type pages | Tiered corpora — governance above domain        | Published machine-readable corpus contracts            |
-| `kac index` — generates `<type>/_index.md` and the schema and checks tables in each type root page                      | Explicit corpus dependencies in the lockfile    | Addressing records below document level across corpora |
-| `kac checks` — lists every check the validator implements                                                               | Validation against a published upstream version | Agents composing several corpora as one graph          |
-| Three test layers — unit, Reqnroll feature specs, golden fixtures                                                       |                                                 |                                                        |
+| Built                                                                                                                                      | Planned                                         | Aspirational                                           |
+|--------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|--------------------------------------------------------|
+| `kac validate` — 67 checks: the schema itself, frontmatter, identity, structure, clauses, links, graph reciprocity, type setup, type pages | Tiered corpora — governance above domain        | Published machine-readable corpus contracts            |
+| `kac index` — generates `<type>/_index.md` and the schema and checks tables in each type root page                                         | Explicit corpus dependencies in the lockfile    | Addressing records below document level across corpora |
+| `kac checks` — lists every check the validator implements                                                                                  | Validation against a published upstream version | Agents composing several corpora as one graph          |
+| Three test layers — unit, Reqnroll feature specs, golden fixtures                                                                          |                                                 |                                                        |
 
 **Proven types: ADRs, policies and services.** The other fourteen schemas are written but have never met real content.
 That is the honest limit — the schema will be wrong in ways only real content reveals. Policies alone forced the

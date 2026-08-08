@@ -88,7 +88,6 @@ sections:
 index:
   columns: [id, title, axis, status, derived-from, review-by]
   sort: [axis, id]
-  group-by: axis
 
 rules:
   - id: provenance-required

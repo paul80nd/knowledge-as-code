@@ -1,7 +1,11 @@
 # Fields carried by every document in the taxonomy.
 # Type files may override `values` (status differs per type) and add their own fields.
 
-version: 1
+notes: >
+  Five things are deliberately not fields here, and each was proposed at least once. `type` is inferred from the
+  folder. `title` is the H1 — the reserved key below is an Azure DevOps navigation label, not document metadata.
+  `created` and `updated` are what git knows, and git will not forget to update them. `lifecycle` follows from
+  `tier`, and a second field could disagree with the first.
 
 fields:
 
@@ -49,20 +53,3 @@ fields:
 reserved:
   - title
   - allowTitleToDifferFromFilename
-
-# Deliberately NOT fields, recorded here so the reasoning survives the next person who wants to add them.
-excluded:
-  type:       Inferred from the folder.
-  title:      It is the H1. (The reserved key above is an ADO navigation label, not document metadata.)
-  created:    Git knows, and will not forget to update it.
-  updated:    As above.
-  lifecycle:  Follows from tier; a second field could disagree with the first.
-
-# Applied to every document regardless of type.
-global-rules:
-  - dates-are-quoted-strings
-  - absent-values-are-bare-keys
-  - enums-are-lowercase-hyphenated
-  - unknown-keys-fail
-  - id-matches-folder-and-filename
-  - tier-matches-type

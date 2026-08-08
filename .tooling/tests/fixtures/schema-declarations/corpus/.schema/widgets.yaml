@@ -10,10 +10,15 @@ notes: >
   schema-load pass, and each is the shape of a real one: a promise the tool cannot keep, written by
   someone with every reason to believe it could.
 
+stability: experimental
+
 id:
   prefix: wdg
   style: roman-numeral
   width: 4
+  notes: >
+    Commentary at a level that parses none of it. Admitted in silence, which is the assertion — closing the key
+    space works only if these files can still say why.
 
 fields:
 
@@ -33,6 +38,7 @@ fields:
     of: id
     ref: [widgets, gizmos]
     mirrors-section: See also
+    unique: true
 
   retention:
     type: string

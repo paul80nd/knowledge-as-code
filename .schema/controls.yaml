@@ -68,7 +68,6 @@ sections:
 index:
   columns: [id, title, mechanism, frequency, verifies, status]
   sort: id
-  group-by: mechanism
 
 rules:
   - id: mechanism-has-evidence

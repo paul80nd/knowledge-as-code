@@ -31,6 +31,8 @@ public static class SchemaChecks
     {
         // Walked in declared order, here and below, so that a schema with several faults reports them
         // in the order someone reading the file would meet them.
+        UnreadKeys(".schema/_enums.yaml", schema, f);
+        UnreadKeys(".schema/_universal.yaml", schema, f);
         foreach (var name in schema.UniversalOrder)
             if (schema.Universal.TryGetValue(name, out var spec))
                 CheckField(".schema/_universal.yaml", name, spec, schema, f);
@@ -39,6 +41,7 @@ public static class SchemaChecks
         {
             var at = $".schema/{key}.yaml";
 
+            UnreadKeys(at, schema, f);
             CheckShape(at, key, t, f);
 
             if (!Validator.IdStyles.Contains(t.IdStyle))
@@ -55,6 +58,22 @@ public static class SchemaChecks
             foreach (var rule in t.Rules)
                 CheckRule(at, key, rule, f);
         }
+    }
+
+    // A key the loader never asked for. Every other check here reads a declaration and asks whether code
+    // acts on its value; this one asks whether the declaration is read at all, which is the question a
+    // key nothing dispatches answers with silence. The vocabulary is not listed anywhere — it is the set
+    // of keys the loader requested, recorded as it read the file — so a key gains its meaning and its
+    // admission in the same edit.
+    //
+    // `notes:` is admitted at every level and is the way to say something these files should say and the
+    // tool has no use for.
+    private static void UnreadKeys(string at, Schema schema, List<Finding> f)
+    {
+        foreach (var key in schema.UnreadKeys.Where(k => k.File == at))
+            f.Add(new Finding(at, null, Sev.Error, "schema-unknown-key",
+                $"{key.Where} declares '{key.Key}', which the loader does not read — implement it, drop it, "
+                + "or write what it was saying as 'notes:', the one key every level admits."));
     }
 
     // A type is a folder of records or a single document, and the two disagree about `folder:` rather

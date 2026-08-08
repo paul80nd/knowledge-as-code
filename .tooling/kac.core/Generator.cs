@@ -238,7 +238,7 @@ public static class Generator
     // are documented.
     private static readonly HashSet<string> IntentionallyUndocumented =
         new(["type", "list", "bracket-literal", "type-setup", "generated-block",
-            "schema-unreadable", "schema-dispatch", "schema-shape"], StringComparer.Ordinal);
+            "schema-unknown-key", "schema-unreadable", "schema-dispatch", "schema-shape"], StringComparer.Ordinal);
 
     // The curated rows, then a row for each expression rule the type declares. A core check is worded
     // here because several ids fold into one reader-facing row; an expression rule is one id reporting

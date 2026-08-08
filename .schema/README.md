@@ -26,6 +26,10 @@ opening its template and making the same change there — assume that, rather th
 Type files are named for the **folder**, not the type — `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a
 document's type from its folder, so folder → schema is an identity lookup with no singularisation step.
 
+None of them carries a version stamp. Answering "which version of the schema is this corpus on" takes something that
+reconciles the answer against an upstream, and a number nothing compares is a number a corpus can be wrong about
+silently — so the stamp and its reader arrive together, or not at all. See #16.
+
 ## Field specification
 
 ```yaml
@@ -41,10 +45,16 @@ fields:
     pattern: '<regex>'          # additional constraint
     allow-literal: [ ... ]      # words admitted in place of a value of the declared type
     min-items: <n>              # when type is list: the floor on its length
-    default: <value>
     description: >              # one line, rendered into the generated Metadata table
     notes: >                    # the longer why; schema-only, and the fallback when there is no description
 ```
+
+**Every key in these files is one the loader reads, and `notes:` is the one exception.** A key nothing reads is a
+declaration in a file documented as the contract the tool enforces, so it is reported at load like any other — see
+[What the schema is held to](#what-the-schema-is-held-to). `notes:` is admitted at every level and parsed only here on a
+field, which is how something worth saying and not worth acting on gets said: these files are read by people who cannot
+ask what a key was for, and a schema that could not explain itself would be worse than one with a loose vocabulary.
+Everything else is implemented, dropped, or rewritten as a note.
 
 `required-when` takes those three forms and no others — a condition the loader cannot read is reported against the field
 that declares it rather than reading as one that never holds. It tests one other field of the same document; a condition
@@ -58,12 +68,12 @@ naming the file and the key, because a vocabulary or a target nothing applies is
 these files. See [What the schema is held to](#what-the-schema-is-held-to).
 
 `allow-literal` admits a word beside the field's declared type — `applies-to: [all]` on a list of service ids,
-`last-rehearsed: "never"` on a date. A listed value is taken as written and nothing further is asked of it; on a list
-it exempts the entry rather than the field, so the ids beside it are still ids. It exists so that a field with one
-honest answer outside its type does not have to widen into a string and give up every check on the values it usually
-carries. `min-items` is the floor on a list's length, read only from a `type: list` field, for the field whose value is
-its breadth: a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill, and nothing else holds it to
-more than a single entry.
+`last-rehearsed: "never"` on a date. A listed value is taken as written and nothing further is asked of it; on a list it
+exempts the entry rather than the field, so the ids beside it are still ids. It exists so that a field with one honest
+answer outside its type does not have to widen into a string and give up every check on the values it usually carries.
+`min-items` is the floor on a list's length, read only from a `type: list` field, for the field whose value is its
+breadth: a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill, and nothing else holds it to more
+than a single entry.
 
 `description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
 and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room
@@ -256,23 +266,28 @@ wrote it holds every one of them. So a declaration the tool does nothing with is
 behaviour the validator applies, and a `ref:` reads as a target being checked. Before any document is validated, the
 schema is held against what the tool can act on, and each finding names the file and the key.
 
-| Reported                                                                        | Check               |
-|---------------------------------------------------------------------------------|---------------------|
-| An `expr:` that will not compile, or that names no `severity:` or `message:`    | `schema-unreadable` |
-| A `required-when:` outside its three forms                                      | `schema-unreadable` |
-| `values: $enums.x` where `_enums.yaml` declares no `x`                          | `schema-unreadable` |
-| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers  | `schema-dispatch`   |
-| A `ref:` entry naming a folder no schema covers                                 | `schema-dispatch`   |
-| `values:` on any field that is not an `enum`                                    | `schema-dispatch`   |
-| `min-items:` on any field that is not a `list`                                  | `schema-dispatch`   |
-| An `index.order:` that is neither `ascending` nor `descending`                  | `schema-dispatch`   |
-| An `id.style`, a `shape:` or a `mirrors-section:` with no code behind the value | `schema-dispatch`   |
-| A `collection` with no `folder:`, or a `single-document` type declaring one     | `schema-shape`      |
+| Reported                                                                        | Check                |
+|---------------------------------------------------------------------------------|----------------------|
+| A key at any level the loader never reads, `notes:` excepted                    | `schema-unknown-key` |
+| An `expr:` that will not compile, or that names no `severity:` or `message:`    | `schema-unreadable`  |
+| A `required-when:` outside its three forms                                      | `schema-unreadable`  |
+| `values: $enums.x` where `_enums.yaml` declares no `x`                          | `schema-unreadable`  |
+| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers  | `schema-dispatch`    |
+| A `ref:` entry naming a folder no schema covers                                 | `schema-dispatch`    |
+| `values:` on any field that is not an `enum`                                    | `schema-dispatch`    |
+| `min-items:` on any field that is not a `list`                                  | `schema-dispatch`    |
+| An `index.order:` that is neither `ascending` nor `descending`                  | `schema-dispatch`    |
+| An `id.style`, a `shape:` or a `mirrors-section:` with no code behind the value | `schema-dispatch`    |
+| A `collection` with no `folder:`, or a `single-document` type declaring one     | `schema-shape`       |
 
 **The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
 style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is
 therefore read from the code that dispatches it, so adding a name without a branch beneath is the mistake this pass
 exists to prevent.
+
+The key vocabulary is read the same way, and there is no list of permitted keys anywhere: the loader records what it
+asks each mapping for, and whatever is left over is reported. So a key gains its meaning and its admission in the same
+edit, and a key that stops being read stops being admitted without anyone having to remember.
 
 A `ref:` at a type the corpus never adopted is reported for the same reason as one that is misspelled: whether the
 folder was deleted here or never existed upstream, the field claims a target nothing can resolve. Re-adopt the type file
@@ -283,9 +298,6 @@ is rendered on the type page as declared-but-not-enforced.
 
 ## Open questions
 
-* **`_enums.yaml` `used-by:` is unparsed.** It lists the types an enum serves and nothing reconciles it against the
-  loaded schemas, so in a corpus that has adopted only some of those types it is simply wrong. Either check it or say in
-  the file that it is a comment.
 * **`standards.yaml` `axis` values are unresolved** — four different formulations exist across the corpus. The schema
   currently carries the `standards.md` version with a `TODO` note. Settle it before generating.
 * **ID styles** are assigned per type. Numbered where documents accrete in sequence and the number is useful in

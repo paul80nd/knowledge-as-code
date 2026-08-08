@@ -31,16 +31,18 @@ fields:
     required: true
     type: enum
     values: [unverified, corroborated, confirmed]
-    default: unverified
+    description: Starts at `unverified`, and stays there unless genuinely proven.
     notes: >
-      Stays `unverified` unless genuinely proven. An agent cannot confirm its own observation.
+      Starts at `unverified` and stays there unless genuinely proven. An agent cannot confirm its own observation.
 
   expires:
     required: true
     type: date
-    default-expression: 'created + 90d'
+    description: Quoted. Ninety days from capture by convention — the template says so.
     notes: >
-      Perishable by default. An observation nobody has needed in three months was probably situational.
+      Perishable by default: ninety days from the day it was written, which the template carries rather than the
+      schema, since nothing here writes a document's frontmatter. An observation nobody has needed in three months
+      was probably situational.
 
   provenance:
     required: false

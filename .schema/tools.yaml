@@ -72,7 +72,6 @@ sections:
 index:
   columns: [id, title, category, status, versions, licence]
   sort: [category, id]
-  group-by: category
 
 rules:
   - id: deprecated-has-successor
