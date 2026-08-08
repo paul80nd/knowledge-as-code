@@ -29,12 +29,36 @@ public static class Generator
             ? $"_Nothing here yet — copy [`{Artefact.Template}`]({Artefact.Template}) to add the first._"
             : RenderTable(
                 t.IndexColumns.Select(Humanize).ToList(),
-                docs.OrderBy(d => d.FrontScalar(string.IsNullOrEmpty(t.IndexSort) ? "id" : t.IndexSort) ?? "",
-                        StringComparer.Ordinal)
+                Sorted(t, docs)
                     .Select(d => t.IndexColumns.Select(c => Cell(d, c)).ToList())
                     .ToList());
 
         return $"{Banner}\n\n# {title}\n\n{body}\n";
+    }
+
+    // The two directions an index is written in. Read by SchemaChecks, so a type declaring a third word
+    // is told at load rather than sorted the default way and left looking deliberate.
+    public const string Descending = "descending";
+    public static readonly IReadOnlySet<string> IndexOrders =
+        new HashSet<string>(["ascending", Descending], StringComparer.Ordinal);
+
+    // The rows of an index, in the order the type's `index` block asks for. Sorting on several columns
+    // is a sort by the first, ties broken by the next; the direction applies to the whole ordering,
+    // because a type that wanted one column each way would be asking for two questions in one key.
+    //
+    // A type declaring no `sort:` is sorted by id, which is the one column every document carries.
+    private static IEnumerable<Doc> Sorted(TypeSchema t, List<Doc> docs)
+    {
+        var keys = t.IndexSort.Count > 0 ? t.IndexSort : ["id"];
+        var descending = t.IndexOrder == Descending;
+
+        var ordered = descending
+            ? docs.OrderByDescending(d => d.FrontScalar(keys[0]) ?? "", StringComparer.Ordinal)
+            : docs.OrderBy(d => d.FrontScalar(keys[0]) ?? "", StringComparer.Ordinal);
+
+        return keys.Skip(1).Aggregate(ordered, (acc, key) => descending
+            ? acc.ThenByDescending(d => d.FrontScalar(key) ?? "", StringComparer.Ordinal)
+            : acc.ThenBy(d => d.FrontScalar(key) ?? "", StringComparer.Ordinal));
     }
 
     private static string Cell(Doc d, string col)
@@ -150,6 +174,9 @@ public static class Generator
         ("enum", ["enum", "enum-lowercase"], "Enum values are in range and lowercase.", null),
         ("field-pattern", ["field-pattern"],
             "Values match the pattern their field declares (e.g. `tags`).", null),
+        ("min-items", ["min-items"],
+            "A list field carries at least as many entries as its schema asks for.",
+            t => t.AnyField(f => f.MinItems is not null)),
         ("list-order", ["list-order"],
             "List entries read in alphabetical order, with numbers compared as numbers.", null),
         ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),

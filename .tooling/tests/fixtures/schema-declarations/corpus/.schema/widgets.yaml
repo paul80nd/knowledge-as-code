@@ -37,6 +37,7 @@ fields:
   retention:
     type: string
     required-when: classification is personal
+    min-items: 2
 
 sections:
   required:
@@ -46,6 +47,7 @@ sections:
 index:
   columns: [id, title]
   sort: id
+  order: newest-first
 
 rules:
   - id: widgets-are-blue

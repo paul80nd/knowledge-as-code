@@ -39,6 +39,7 @@ public static class CheckCatalogue
         new("enum", Sev.Error, "An enum value is a scalar in the declared range."),
         new("enum-lowercase", Sev.Error, "An enum value is lowercase."),
         new("list", Sev.Error, "A list field is a YAML sequence."),
+        new("min-items", Sev.Error, "A list field carries at least the entries the schema asks for."),
         new("field-pattern", Sev.Error, "A field value matches the pattern the schema declares for it."),
         new("tier-matches-type", Sev.Error, "tier equals the tier the type declares."),
         new("id-prefix", Sev.Error, "id carries the type's prefix."),

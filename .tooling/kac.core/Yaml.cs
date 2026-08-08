@@ -49,6 +49,11 @@ public static class Yaml
     public static int Int(YamlNode? node, int fallback)
         => int.TryParse((node as YamlScalarNode)?.Value, out var v) ? v : fallback;
 
+    // The same reading, where the schema's silence and a number it declares have to stay distinguishable
+    // — a floor of zero is not the absence of one.
+    public static int? NullableInt(YamlNode? node)
+        => int.TryParse((node as YamlScalarNode)?.Value, out var v) ? v : null;
+
     public static List<string> StrList(YamlNode? node)
     {
         var result = new List<string>();
