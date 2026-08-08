@@ -12,7 +12,11 @@
 # upstream version this corpus is on, and what it has deliberately diverged from) lives in
 # `.mechanism.lock` at the repo root, which is `local`.
 
-version: 1
+version: 2
+# The mechanism's version, matched by `upstream.mechanism-version` in each corpus's `.mechanism.lock`.
+# It moves when the shared layer changes shape in a way a corpus has to act on — a renamed artefact, a
+# new file every corpus must carry — rather than on every edit to a synced file. A corpus whose lock
+# names an older version has work to do before its next sync.
 
 layers:
 
@@ -68,7 +72,7 @@ rules:
   - { path: ".claude/settings.local.json", layer: ignored }
 
   # ── synced: the mechanism's own trees ────────────────────────────────────────────────────────
-  # Ahead of `generated`, because the test fixtures contain golden INDEX.md files that are shared
+  # Ahead of `generated`, because the test fixtures contain golden _index.md files that are shared
   # test data, not generated output. Everything under `.tooling/` is mechanism whatever it is called.
   - path: ".tooling/**"
     layer: synced
@@ -88,7 +92,7 @@ rules:
   # ── generated ────────────────────────────────────────────────────────────────────────────────
   # Matched before `synced`/`forked` so that generated files inside otherwise-shared folders
   # resolve correctly.
-  - { path: "**/INDEX.md",                 layer: generated, note: "Corpus indexes. Fixture INDEX.md files are caught by the .tooling/ rule above." }
+  - { path: "**/_index.md",                layer: generated, note: "Corpus indexes. Fixture _index.md files are caught by the .tooling/ rule above." }
   - { path: ".index.json",                 layer: generated, note: "Machine-readable corpus map." }
   - { path: "_reports/**",                 layer: generated, note: "Coverage and staleness reports." }
 
@@ -117,7 +121,7 @@ rules:
   - { path: "**/.order",                   layer: forked, note: "ADO wiki navigation order." }
   - { path: ".gitignore",                  layer: forked }
 
-  - path: "**/template.md"
+  - path: "**/_template.md"
     layer: forked
     note: >
       OPEN QUESTION — the one judgement call in this manifest. Templates are schema-shaped, so a

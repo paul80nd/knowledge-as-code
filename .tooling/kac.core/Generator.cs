@@ -1,7 +1,7 @@
 using System.Text;
 
 // ---------------------------------------------------------------------------
-// Generation — INDEX pages and the generated blocks in <type>.md
+// Generation — index pages and the generated blocks in <type>.md
 // ---------------------------------------------------------------------------
 
 namespace kac.core;
@@ -26,7 +26,7 @@ public static class Generator
         // check type root pages, so a withheld file would be an unchecked dead link. A headed table with
         // no rows says less than nothing, so an empty index says it is empty and points at the template.
         var body = docs.Count == 0
-            ? $"_Nothing here yet — copy [`template.md`](template.md) to add the first._"
+            ? $"_Nothing here yet — copy [`{Artefact.Template}`]({Artefact.Template}) to add the first._"
             : RenderTable(
                 t.IndexColumns.Select(Humanize).ToList(),
                 docs.OrderBy(d => d.FrontScalar(string.IsNullOrEmpty(t.IndexSort) ? "id" : t.IndexSort) ?? "",

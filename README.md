@@ -66,7 +66,7 @@ direction as well as the state, and marks the difference — anything unmarked e
 | Built                                                                                                                   | Planned                                         | Aspirational                                           |
 |-------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|--------------------------------------------------------|
 | `kac validate` — 62 checks: frontmatter, identity, structure, clauses, links, graph reciprocity, type setup, type pages | Tiered corpora — governance above domain        | Published machine-readable corpus contracts            |
-| `kac index` — generates `<type>/INDEX.md` and the schema and checks tables in each type root page                       | Explicit corpus dependencies in the lockfile    | Addressing records below document level across corpora |
+| `kac index` — generates `<type>/_index.md` and the schema and checks tables in each type root page                      | Explicit corpus dependencies in the lockfile    | Addressing records below document level across corpora |
 | `kac checks` — lists every check the validator implements                                                               | Validation against a published upstream version | Agents composing several corpora as one graph          |
 | Three test layers — unit, Reqnroll feature specs, golden fixtures                                                       |                                                 |                                                        |
 
@@ -102,7 +102,7 @@ as they are — that is the half you want to receive updates to.
 this corpus has built, so a type you have not stood up yet is a valid, silent state. That is what makes it possible to
 take the whole schema and grow into it one type at a time.
 
-The example records are every `<type>/*.md` that is not `INDEX.md` or `template.md`. `./kac validate` covers them, so
+The example records are every `<type>/*.md` that is not `_index.md` or `_template.md`. `./kac validate` covers them, so
 they are held to the same standard as real content and a schema change that breaks them fails CI here rather than in
 your repository.
 
@@ -111,8 +111,8 @@ your repository.
 ```
 <type>.md              # what the type is, why it exists, how to contribute — one per type
 <type>/
-  ├── INDEX.md         # GENERATED from frontmatter
-  ├── template.md      # what humans and agents copy
+  ├── _index.md        # GENERATED from frontmatter
+  ├── _template.md     # what humans and agents copy
   └── <records>.md
 
 knowledge-as-code.md   # the approach, and the way in to everything below

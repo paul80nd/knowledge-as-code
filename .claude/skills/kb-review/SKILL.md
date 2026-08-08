@@ -15,7 +15,7 @@ Three sources of rules, in this order:
 1. **The schema and the validator.** `.schema/*.yaml`, and what `./kac validate` and `./kac checks` report. These are
    executable, so they are the authority on anything mechanical: required sections, clause modals, id and filename
    formats, link forms, and which text rules a type actually declares.
-2. **The type's own pages.** `<type>.md` for what the type is meant to hold, `<type>/template.md` for the sections it
+2. **The type's own pages.** `<type>.md` for what the type is meant to hold, `<type>/_template.md` for the sections it
    must have.
 3. **[`knowledge-as-code/authoring.md`](../../../knowledge-as-code/authoring.md).** The prose rules. Read it in full,
    every time. This skill is the procedure for applying it and does not restate it.
@@ -44,9 +44,9 @@ appearing to improve it.
 * **Never change meaning to save words.** Losing a qualifier, an exception or a scope boundary is a defect, not a
   saving. When a sentence is long because the obligation is genuinely conditional, leave it long.
 * **Never change frontmatter** other than to correct a demonstrable error, and say so explicitly if you do.
-* **Never delete a section the type's `template.md` requires**, even if it is thin. An empty required section is a
+* **Never delete a section the type's `_template.md` requires**, even if it is thin. An empty required section is a
   content gap to report, not a formatting problem to fix.
-* **Never edit a `template.md` or a `<type>.md`.** A defect in every record of a type is a template defect — see below.
+* **Never edit a `_template.md` or a `<type>.md`.** A defect in every record of a type is a template defect — see below.
 
 ## What the validator gives you, and what it does not
 
@@ -99,8 +99,8 @@ case and the lecture about it arrive in the same paragraph. Separate them:
 
 ## Template defects
 
-**A defect appearing in every record of a type is a defect in that type's `template.md`, not in the records.**
-`services/template.md` tells authors that a consumers list "is maintained by hand and will go stale. Say so", and the
+**A defect appearing in every record of a type is a defect in that type's `_template.md`, not in the records.**
+`services/_template.md` tells authors that a consumers list "is maintained by hand and will go stale. Say so", and the
 caveat duly appears in three records where *not record content* says it should appear in none.
 
 Name the template line responsible, and leave the records alone. **Fixing the template is out of scope for a review** —
@@ -123,7 +123,7 @@ decide. That list is worth more than a larger diff.
    by tier, worst offenders first — and confirm before starting. Do not silently review a hundred documents.
 2. **Run `./kac validate` and `./kac checks`.** Baseline, and the rules that apply to this type.
 3. **Read `authoring.md`.** In full. Then the type's `<type>.md` for what the type is meant to contain, and its
-   `template.md` for the sections it must have.
+   `_template.md` for the sections it must have.
 4. **For each record**, in this order:
    a. Read the frontmatter. Note the `tier`, the `status`, and whether it is Decided. b. Read the record whole before
    changing anything. c. Identify findings against the floor, then against the tier's rules, then against

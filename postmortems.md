@@ -2,7 +2,7 @@
 
 What actually happened, and why.
 
-**[→ Index](postmortems/INDEX.md)**
+**[→ Index](postmortems/_index.md)**
 
 ## What is a postmortem?
 
@@ -68,7 +68,7 @@ means something.
 
 ## Adding a postmortem
 
-1. Copy [`template.md`](postmortems/template.md) to `NNNN-kebab-slug.md`, named for the symptom rather than the cause.
+1. Copy [`_template.md`](postmortems/_template.md) to `NNNN-kebab-slug.md`, named for the symptom rather than the cause.
 2. Write the timeline first, from the evidence, before anyone theorises. `occurred-on` and `detected-on` are separate
    fields for a reason — the gap between them is often the finding.
 3. State the impact in customer terms, not system terms.

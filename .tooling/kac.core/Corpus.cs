@@ -118,11 +118,13 @@ public static class Corpus
         var top = parts[0];
 
         if (SkipDirs.Contains(top)) return true;
-        if (top is "knowledge-as-code" or "_plan" or "_reports") return true;
+        if (top == "knowledge-as-code") return true;
+
+        // The framework's own files, wherever they sit: the generated index and the template inside a
+        // type folder, and the scaffolding directories at the root.
+        if (Artefact.IsReserved(rel)) return true;
 
         var name = parts[^1];
-        if (name.Equals("template.md", StringComparison.OrdinalIgnoreCase)) return true;
-        if (name.Equals("INDEX.md", StringComparison.OrdinalIgnoreCase)) return true;
 
         // Root-level orientation / generated / type pages.
         if (parts.Length == 1)

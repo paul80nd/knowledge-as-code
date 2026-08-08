@@ -208,7 +208,7 @@ public static class Validator
     // What is not valid is half of one. A folder is the signal that the type has been stood up, and
     // from that point everything the type needs must be there: the page a reader arrives on, and the
     // template a contributor copies. A page without a folder is the same fault from the other side.
-    // The generated INDEX is deliberately not checked here — `index --check` already reports it
+    // The generated index is deliberately not checked here — `index --check` already reports it
     // missing or stale, and one fault should not be reported by two commands.
     //
     // A folder counts as present when it holds tracked files. An empty directory git has never seen
@@ -248,7 +248,8 @@ public static class Validator
 
             var missing = new List<string>();
             if (!pageExists) missing.Add(string.IsNullOrEmpty(t.Page) ? $"{key}.md" : t.Page);
-            if (!File.Exists(Path.Combine(repoRoot, folder, "template.md"))) missing.Add($"{folder}/template.md");
+            if (!File.Exists(Path.Combine(repoRoot, folder, Artefact.Template)))
+                missing.Add($"{folder}/{Artefact.Template}");
             if (missing.Count > 0)
                 f.Add(new Finding(at, null, Sev.Error, "type-setup",
                     $"type '{key}' has a '{folder}/' folder but is not fully set up — add {string.Join(", ", missing)}."));

@@ -2,7 +2,7 @@
 
 Where data lives, how long we keep it, and how sensitive it is.
 
-**[→ Index](data/INDEX.md)**
+**[→ Index](data/_index.md)**
 
 ## What is a data document?
 
@@ -70,7 +70,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 
 ## Adding a data document
 
-1. Copy [`template.md`](data/template.md) to `<slug>.md`. Data documents use slug ids — `dat-<name>`.
+1. Copy [`_template.md`](data/_template.md) to `<slug>.md`. Data documents use slug ids — `dat-<name>`.
 2. Name the entities it covers and the single service that owns them. If two services claim ownership, resolve that
    before writing the document.
 3. Classify honestly. Customer names, email addresses and payment histories are `personal`; anything special-category

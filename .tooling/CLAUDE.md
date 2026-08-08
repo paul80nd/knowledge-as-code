@@ -73,7 +73,7 @@ a fixture would only duplicate.
 * They share the **real** `.schema/`. `AssembleTemp` copies it beside each fixture corpus, so a schema change ripples
   into every fixture at once — run the golden suite after touching `.schema/`, not just `./kac validate`.
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and
-  `template.md` beside it. Types it does not use are simply absent, which is silent. Adding a folder to a fixture
+  `_template.md` beside it. Types it does not use are simply absent, which is silent. Adding a folder to a fixture
   without standing the type up adds a finding to every scenario that reads it.
 * Only fixtures in **`validate` mode** run the validator. `index`, `index-stale` and `mechanism` modes do not, so a new
   check cannot affect them.

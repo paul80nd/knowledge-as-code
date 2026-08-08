@@ -2,7 +2,7 @@
 
 The external systems the platform depends on.
 
-**[→ Index](integrations/INDEX.md)**
+**[→ Index](integrations/_index.md)**
 
 ## What is an integration?
 
@@ -62,7 +62,7 @@ Not the place for:
 
 ## Adding an integration
 
-1. Copy [`template.md`](integrations/template.md) to `<slug>.md`. Integrations use slug ids — `int-sendgrid`.
+1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids — `int-sendgrid`.
 2. Record the contract and the auth mechanism, but not the credentials. Nothing secret goes in this wiki.
 3. Document the **failure modes** and our fallback for each. "It goes down sometimes" is not a failure mode; "returns
    503 during their maintenance window, we queue and retry" is.

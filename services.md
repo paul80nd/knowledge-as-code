@@ -2,7 +2,7 @@
 
 The catalogue of deployable components that make up the platform.
 
-**[→ Index](services/INDEX.md)**
+**[→ Index](services/_index.md)**
 
 > **The records in `services/` are an example estate, not your estate.** They describe a fictional public-library
 > consortium, and they are here so this type has something to demonstrate — a dependency graph, a criticality
@@ -72,10 +72,10 @@ Infrastructure-as-code is not a service either: it deploys services rather than 
 
 ## Adding a service
 
-1. Copy [`template.md`](services/template.md) to `<slug>.md`. Services use a **slug id**, not a number —
+1. Copy [`_template.md`](services/_template.md) to `<slug>.md`. Services use a **slug id**, not a number —
    `svc-<name>` — because they have natural stable names.
 2. Fill in the frontmatter. `depends-on` names other service ids — check them against the
-   [index](services/INDEX.md) yourself, because nothing checks that they resolve yet.
+   [index](services/_index.md) yourself, because nothing checks that they resolve yet.
 3. Record environments and URLs, and the data stores it owns.
 4. Keep it current. This is a descriptive document — a service catalogue that disagrees with the estate is worse than
    none, because everything else trusts it.

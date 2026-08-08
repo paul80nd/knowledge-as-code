@@ -30,9 +30,9 @@ publishing-target: none
 
 upstream:
   url:               # unset — this corpus is the source
-  mechanism-version: 1
+  mechanism-version: 2
   synced-from:       # n/a for a source
-  synced-on:         "2026-08-03"
+  synced-on:         "2026-08-08"
 
 # Files in the `synced` layer that this corpus deliberately holds differently. An escape hatch with
 # a recorded reason, so that a necessary deviation does not have to masquerade as drift — and so

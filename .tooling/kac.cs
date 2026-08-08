@@ -8,7 +8,7 @@
 // One tool, several subcommands, sharing a schema-loading and markdown-parsing core:
 //
 //   validate   check the corpus against .schema/*.yaml
-//   index      regenerate INDEX.md and the generated blocks in <type>.md
+//   index      regenerate _index.md and the generated blocks in <type>.md
 //   mechanism  enforce the portability manifest: synced layer vs a reference
 //
 // The tool is deliberately free of type-specific rules: everything it enforces is
@@ -39,9 +39,9 @@ var validate = new Command("validate", "Check the corpus against .schema/*.yaml.
 };
 validate.SetAction(pr => Commands.Validate(repoRoot, [.. pr.GetValue(pathsArg) ?? []], pr.GetValue(jsonOpt)));
 
-// index — regenerate INDEX.md and the generated blocks in <type>.md.
+// index — regenerate _index.md and the generated blocks in <type>.md.
 var checkOpt = new Option<bool>("--check") { Description = "Fail if a generated file is stale instead of writing it." };
-var index = new Command("index", "Regenerate INDEX.md and the generated blocks in <type>.md.")
+var index = new Command("index", "Regenerate _index.md and the generated blocks in <type>.md.")
 {
     checkOpt
 };

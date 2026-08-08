@@ -154,7 +154,7 @@ void RunValidateScenario(string name, string scenario, string corpusDir)
 
 // index (mustBeStale=false): the committed corpus already holds fresh generated files; `--update`
 // regenerates them, a normal run asserts `index --check` finds them fresh (exit 0). The golden is
-// the committed INDEX.md / <type>.md itself — reviewable in git, kept fresh by `--update`.
+// the committed _index.md / <type>.md itself — reviewable in git, kept fresh by `--update`.
 // index-stale (mustBeStale=true): the corpus is deliberately stale; the run asserts `--check` flags
 // it (exit 1) and, if expected-stale.txt is present, names those files. `--update` leaves it alone.
 void RunIndexScenario(string name, string scenario, bool mustBeStale)
@@ -433,7 +433,7 @@ static (int exit, string output) RunIndex(string kac, string schemaDir, string c
 
 // Regenerate a scenario's committed generated files: run `kac index` (writing) in a temp assembled
 // from the corpus, then copy everything the corpus owns (all but knowledge-as-code/) back over it.
-// index leaves source docs untouched, so only INDEX.md and the spliced <type>.md change.
+// index leaves source docs untouched, so only _index.md and the spliced <type>.md change.
 static void RegenerateIndex(string kac, string schemaDir, string corpusDir)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);

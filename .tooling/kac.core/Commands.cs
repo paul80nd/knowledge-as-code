@@ -35,7 +35,7 @@ public static class Commands
         // Compute the full intended content of every affected file.
         var targets = new List<(string path, string content)>();
 
-        // Every collection type gets an INDEX, populated or not — each type page links to one, so a
+        // Every collection type gets an index, populated or not — each type page links to one, so a
         // withheld file is a dead link rather than a tidy absence. A single-document type is its own
         // index and has nothing to generate.
         //
@@ -48,7 +48,7 @@ public static class Commands
             if (t.IsSingleDocument || string.IsNullOrEmpty(t.Folder)) continue;
             if (!Directory.Exists(Path.Combine(repoRoot, t.Folder))) continue;
             var docs = byType.TryGetValue(t.Folder, out var found) ? found : [];
-            targets.Add((Path.Combine(repoRoot, t.Folder, "INDEX.md"), Generator.IndexPage(t, docs)));
+            targets.Add((Path.Combine(repoRoot, t.Folder, Artefact.Index), Generator.IndexPage(t, docs)));
         }
 
         // The schema and checks blocks derive from the schema alone, so every type gets them whether or

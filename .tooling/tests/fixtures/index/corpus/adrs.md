@@ -1,7 +1,7 @@
 # Architecture Decision Records
 
 This is a fixture type page. `index` regenerates the two blocks below from the schema, and rebuilds
-`adrs/INDEX.md` from the frontmatter of the ADRs in this corpus. Everything outside the markers is
+`adrs/_index.md` from the frontmatter of the ADRs in this corpus. Everything outside the markers is
 byte-preserved.
 
 ## Metadata

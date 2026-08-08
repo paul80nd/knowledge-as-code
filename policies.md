@@ -2,7 +2,7 @@
 
 The engineering commitments we hold ourselves to — the *what* and the *why*.
 
-**[→ Index](policies/INDEX.md)**
+**[→ Index](policies/_index.md)**
 
 ## What is a policy?
 
@@ -89,7 +89,7 @@ under governance is the clearest) are the ones most likely to be revisited.
 1. Apply the test above. Most things that feel like policies are standards.
 2. Choose a four-character mnemonic for the policy's *concept* — `VURM` for vulnerability remediation, `PIPE` for
    pipeline-to-production. Start it with the same letter as the slug, so the folder still reads alphabetically.
-3. Copy [`template.md`](policies/template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
+3. Copy [`_template.md`](policies/_template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
    upper-case. The H1 is the commitment in plain words; the identity line beneath it carries the id —
    ``` `Policy: pol-MNEM` `DRAFT` ``` — and CI checks it against the frontmatter.
 4. Set `category` to whichever of the four the commitment belongs to. If two fit, pick the one a reader looking for this
