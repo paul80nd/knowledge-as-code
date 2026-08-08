@@ -127,6 +127,12 @@ public static class Validator
                 continue;
             }
 
+            // A word the field admits beside its declared type — `last-rehearsed: "never"`. It is taken
+            // as written and nothing further is asked of it, which is the whole of what `allow-literal`
+            // means. A list is not short-circuited here: there the literal is one entry among ids, and
+            // CheckList exempts that entry rather than the field.
+            if (spec.Type != "list" && spec.IsLiteral(Scalar(node))) continue;
+
             switch (spec.Type)
             {
                 case "date": CheckDate(name, node, d, Err); break;
@@ -359,9 +365,18 @@ public static class Validator
             return;
         }
 
+        // A floor the schema sets on a field whose value is its breadth. Reported before the entries are
+        // read, because an author told both that the list is short and that one of its entries is
+        // malformed will fix the second and re-run to find the first.
+        if (spec.MinItems is { } min && seq.Children.Count < min)
+            err("min-items",
+                $"'{name}' has {Count(seq.Children.Count, "entry", "entries")} — the schema asks for at least {min}.",
+                Line(node, d));
+
         foreach (var item in seq.Children)
         {
             var v = Scalar(item);
+            if (spec.IsLiteral(v)) continue; // a word the field admits beside its ids — `applies-to: [all]`
             if (spec.Of == "id" && v is not null && !LooksLikeId(v))
                 err("id-format", $"'{name}' entry '{v}' is not a valid id.", Line(item, d));
             CheckPattern(name, "entry", item, spec, d, err);
@@ -644,6 +659,8 @@ public static class Validator
            && v[..4].All(char.IsDigit) && v[5..7].All(char.IsDigit) && v[8..].All(char.IsDigit);
 
     private static bool LooksLikeId(string v) => v.Contains('-') && v == v.ToLowerInvariant();
+
+    private static string Count(int n, string one, string many) => $"{n} {(n == 1 ? one : many)}";
 
     private static string? Scalar(YamlNode node) => (node as YamlScalarNode)?.Value;
 

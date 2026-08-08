@@ -1,8 +1,8 @@
 {
   "summary": {
-    "validated": 5,
+    "validated": 6,
     "skipped": 0,
-    "errors": 7,
+    "errors": 8,
     "warnings": 0
   },
   "findings": [
@@ -47,6 +47,13 @@
       "severity": "error",
       "check": "field-pattern",
       "message": "'tags' entry 'trailing_underscore' does not match ^[a-z0-9-]+$."
+    },
+    {
+      "file": "faqs/too-few-keywords.md",
+      "line": 4,
+      "severity": "error",
+      "check": "min-items",
+      "message": "'symptom-keywords' has 2 entries — the schema asks for at least 3."
     },
     {
       "file": "tools/bad-licence-pattern.md",

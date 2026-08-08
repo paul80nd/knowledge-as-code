@@ -3,7 +3,7 @@ id: rbk-database-connections-exhausted
 tier: procedural
 status: active
 owner: alex.doe
-last-rehearsed: "2026-05-01"
+last-rehearsed: "never"
 ---
 
 # Database connections exhausted
@@ -14,6 +14,9 @@ last-rehearsed: "2026-05-01"
 
 Every section this type requires is present, so `required-section` is satisfied. What is wrong is the
 order: the reader meets the fix before the symptom.
+
+`last-rehearsed` carries the literal `"never"` that its schema admits. Nothing here reports it, and that silence is the
+assertion: without `allow-literal` the value fails `date-format`, and this golden would gain a finding.
 
 ## Symptoms
 

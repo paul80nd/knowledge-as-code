@@ -39,6 +39,8 @@ fields:
     ref: <folder> | [ ... ]     # when type is id or list-of-id: which type(s) the id may belong to
     reciprocal: <field>         # the field on the target that must point back
     pattern: '<regex>'          # additional constraint
+    allow-literal: [ ... ]      # words admitted in place of a value of the declared type
+    min-items: <n>              # when type is list: the floor on its length
     default: <value>
     description: >              # one line, rendered into the generated Metadata table
     notes: >                    # the longer why; schema-only, and the fallback when there is no description
@@ -54,6 +56,14 @@ on top would report one omission as two.
 schema loads — a `values:` list on a `type: list` field and a `ref:` at a folder no schema covers are each reported
 naming the file and the key, because a vocabulary or a target nothing applies is a promise to whoever takes a copy of
 these files. See [What the schema is held to](#what-the-schema-is-held-to).
+
+`allow-literal` admits a word beside the field's declared type — `applies-to: [all]` on a list of service ids,
+`last-rehearsed: "never"` on a date. A listed value is taken as written and nothing further is asked of it; on a list
+it exempts the entry rather than the field, so the ids beside it are still ids. It exists so that a field with one
+honest answer outside its type does not have to widen into a string and give up every check on the values it usually
+carries. `min-items` is the floor on a list's length, read only from a `type: list` field, for the field whose value is
+its breadth: a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill, and nothing else holds it to
+more than a single entry.
 
 `description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
 and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room
@@ -86,7 +96,7 @@ Beyond `fields`, each type file declares:
 | `filename`                 | Pattern and slug length limit                                                                                    |
 | `sections`                 | Required and optional H2s — the required ones are checked for presence                                           |
 | `clauses`                  | The clause table's section, id pattern and modals, where a type states its obligations as addressable rows       |
-| `index`                    | Columns and sort order for the generated index                                                                   |
+| `index`                    | Columns, sort columns and direction for the generated index — see the note below                                 |
 | `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |
 
 **`shape`.** Most types are a **collection** — a folder of records, a page describing them, and a template to copy. The
@@ -96,6 +106,12 @@ its `folder:`; a single-document type declares none, because it has none, and no
 It is declared rather than inferred. An absent `folder:` and a deliberate `folder: null` are the same string once
 parsed, so a shape read off the folder cannot tell a single-document type from a collection whose folder key was lost.
 It defaults to `collection`, so only the type that is not one has to say so.
+
+**`index`.** `sort:` is one column or several — `sort: [severity, id]` sorts on the first and breaks ties with the
+next — and a type declaring none is sorted by `id`, the one column every document carries. `order:` is `ascending`
+(the default) or `descending`, and applies to the sort as a whole rather than to one column of it; a type wanting one
+column each way is asking two questions with one key. A postmortem index is the case for `descending`: the incident
+someone is looking for is almost always the most recent.
 
 **`id.style`.** Four styles are dispatched: `numbered`, `slug`, `mnemonic` and `literal`, and a fifth name fails when
 the schema loads. Of the four, the id checks give `numbered` and `mnemonic` a full reading and the other two the prefix
@@ -248,6 +264,8 @@ schema is held against what the tool can act on, and each finding names the file
 | A rule claiming a `severity:` that neither an `expr:` nor a rule class answers  | `schema-dispatch`   |
 | A `ref:` entry naming a folder no schema covers                                 | `schema-dispatch`   |
 | `values:` on any field that is not an `enum`                                    | `schema-dispatch`   |
+| `min-items:` on any field that is not a `list`                                  | `schema-dispatch`   |
+| An `index.order:` that is neither `ascending` nor `descending`                  | `schema-dispatch`   |
 | An `id.style`, a `shape:` or a `mirrors-section:` with no code behind the value | `schema-dispatch`   |
 | A `collection` with no `folder:`, or a `single-document` type declaring one     | `schema-shape`      |
 

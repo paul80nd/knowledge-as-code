@@ -30,6 +30,16 @@ public sealed class FieldSpec
     public Regex? PatternRegex { get; init; } // Pattern compiled — the message still quotes the source string
     public string? MirrorsSection { get; init; } // section whose ids this field must mirror
 
+    // Words admitted beside the field's declared type — `applies-to: [all]`, `last-rehearsed: never`. A
+    // value listed here is taken as written and nothing further is asked of it, which is what lets a date
+    // field say "never" and a list of ids say "all" without either widening into a string field and
+    // losing the checks that hold every other value it carries.
+    public IReadOnlyList<string> AllowLiteral { get; init; } = [];
+
+    // The floor on a list field's length, where the schema sets one. A field whose whole purpose is to be
+    // over-filled — a FAQ's search keywords — has nothing else holding it to more than one entry.
+    public int? MinItems { get; init; }
+
     // Why this declaration could not be read, where it could not be. Carried on the spec rather than
     // thrown at load so that one unreadable field is one finding naming the file and the key, and the
     // rest of the schema still loads: a corpus is told what is wrong with it, not handed a stack trace.
@@ -42,6 +52,12 @@ public sealed class FieldSpec
     public string? Notes { get; init; }
 
     public string? TableText => string.IsNullOrEmpty(Description) ? Notes : Description;
+
+    // Whether a value is one of the literals this field admits. Asked of a scalar field's value and of
+    // each entry of a list, because `allow-literal` is about the word rather than about the shape that
+    // carries it.
+    public bool IsLiteral(string? value) =>
+        value is not null && AllowLiteral.Contains(value, StringComparer.Ordinal);
 }
 
 // The clause table a type's normative section carries — one addressable obligation per row, cited from
@@ -149,7 +165,15 @@ public sealed class TypeSchema
     public IReadOnlyList<string> RequiredSections { get; init; } = [];
     public IReadOnlyList<string> OptionalSections { get; init; } = [];
     public IReadOnlyList<string> IndexColumns { get; init; } = [];
-    public string? IndexSort { get; init; }
+
+    // The columns the index sorts on, in order of precedence. A list because a type whose rows group
+    // naturally reads better sorted twice — a runbook by severity then id — and a scalar `sort:` is the
+    // one-entry case rather than a separate shape.
+    public IReadOnlyList<string> IndexSort { get; init; } = [];
+
+    // `ascending` (the default) or `descending`, applied to the sort as a whole. A postmortem index is
+    // the case for it: the incident someone is looking for is almost always the most recent.
+    public string IndexOrder { get; init; } = "";
     public ClauseSpec? Clauses { get; init; }
     public IReadOnlyList<RuleSpec> Rules { get; init; } = [];
 
@@ -337,7 +361,8 @@ public sealed class Schema
                 : null,
 
             IndexColumns = index is null ? [] : Yaml.StrList(Yaml.Get(index, "columns")),
-            IndexSort = index is null ? null : Yaml.Str(Yaml.Get(index, "sort")),
+            IndexSort = index is null ? [] : StrOrList(Yaml.Get(index, "sort")),
+            IndexOrder = index is null ? "" : Yaml.Str(Yaml.Get(index, "order")) ?? "",
 
             Rules = rules,
 
@@ -384,10 +409,7 @@ public sealed class Schema
 
         // A scalar `ref:` is one folder, a sequence is several; both arrive as a list so that neither
         // form can be read as the absence of a ref.
-        var refNode = Yaml.Get(node, "ref");
-        IReadOnlyList<string> refs = refNode is YamlSequenceNode
-            ? Yaml.StrList(refNode)
-            : Yaml.Str(refNode) is { } single ? [single] : [];
+        var refs = StrOrList(Yaml.Get(node, "ref"));
 
         // The condition is parsed here so that an unreadable one is reported against the field that
         // carries it. It is a defect in the schema either way: a condition nothing can read is one that
@@ -417,6 +439,8 @@ public sealed class Schema
             Pattern = pattern,
             PatternRegex = CompilePattern(pattern),
             MirrorsSection = Yaml.Str(Yaml.Get(node, "mirrors-section")),
+            AllowLiteral = Yaml.StrList(Yaml.Get(node, "allow-literal")),
+            MinItems = Yaml.NullableInt(Yaml.Get(node, "min-items")),
             Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
             Notes = Collapse(Yaml.Str(Yaml.Get(node, "notes"))),
             Problem = problem
@@ -514,6 +538,14 @@ public sealed class Schema
         typeFields.TryGetValue(name, out var tf) ? tf : universal.GetValueOrDefault(name);
 
     public FieldSpec? EffectiveField(TypeSchema t, string name) => Effective(t.Fields, Universal, name);
+
+    // A key the schema may write either way — one folder or several, one sort column or several. Both
+    // arrive as a list, so that neither form can be read as the absence of the key: `Yaml.Str` answers
+    // null for a sequence, so a scalar accessor over a key that may be written as one silently drops
+    // every declaration that uses the list form.
+    private static IReadOnlyList<string> StrOrList(YamlNode? node) => node is YamlSequenceNode
+        ? Yaml.StrList(node)
+        : Yaml.Str(node) is { } single ? [single] : [];
 
     // A pattern the schema declares, held as a Regex so the expression is parsed once at load rather
     // than looked up in the framework's cache on every value it is applied to. Interpreted rather than

@@ -36,6 +36,59 @@ public class GeneratorTests
         Assert.Contains("# ADR Index\n", Generator.IndexPage(t, []));
     }
 
+    // The three sorts a type can declare, over one set of rows: no `sort:` at all, several columns, and
+    // a direction. Each is a value the loader reads and the golden 'index' scenario cannot reach, because
+    // the fixture corpora it runs over hold one type whose index sorts by id.
+    private static List<Doc> Rows(params (string Id, string Severity)[] rows) =>
+        [.. rows.Select(r => Doc.Parse($"runbooks/{r.Id}.md",
+            $"---\nid: {r.Id}\nseverity: {r.Severity}\n---\n\n# {r.Id}\n", new Schema())!)];
+
+    [Fact]
+    public void IndexPage_sorts_by_id_where_the_type_declares_no_sort()
+    {
+        var t = new TypeSchema { Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id"] };
+
+        var page = Generator.IndexPage(t, Rows(("rbk-b", "sev1"), ("rbk-a", "sev3")));
+
+        Assert.True(page.IndexOf("rbk-a", StringComparison.Ordinal)
+                    < page.IndexOf("rbk-b", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void IndexPage_sorts_on_each_declared_column_in_turn()
+    {
+        var t = new TypeSchema
+        {
+            Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id", "severity"], IndexSort = ["severity", "id"]
+        };
+
+        var page = Generator.IndexPage(t, Rows(("rbk-a", "sev3"), ("rbk-c", "sev1"), ("rbk-b", "sev1")));
+
+        // severity first, then id within it — so the sev1 pair leads, in id order, and sev3 follows.
+        Assert.True(page.IndexOf("rbk-b", StringComparison.Ordinal)
+                    < page.IndexOf("rbk-c", StringComparison.Ordinal));
+        Assert.True(page.IndexOf("rbk-c", StringComparison.Ordinal)
+                    < page.IndexOf("rbk-a", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void IndexPage_reverses_the_whole_ordering_where_the_type_asks_for_descending()
+    {
+        var t = new TypeSchema
+        {
+            Label = "Runbook", IdPrefix = "rbk", IndexColumns = ["id", "severity"],
+            IndexSort = ["severity", "id"], IndexOrder = Generator.Descending
+        };
+
+        var page = Generator.IndexPage(t, Rows(("rbk-a", "sev3"), ("rbk-c", "sev1"), ("rbk-b", "sev1")));
+
+        // The direction applies to the sort as a whole, tie-breaker included.
+        Assert.True(page.IndexOf("rbk-a", StringComparison.Ordinal)
+                    < page.IndexOf("rbk-c", StringComparison.Ordinal));
+        Assert.True(page.IndexOf("rbk-c", StringComparison.Ordinal)
+                    < page.IndexOf("rbk-b", StringComparison.Ordinal));
+    }
+
     [Fact]
     public void SchemaTable_prefers_description_and_falls_back_to_notes()
     {

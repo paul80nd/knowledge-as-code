@@ -45,6 +45,10 @@ public static class SchemaChecks
                 Dispatch(at, $"type '{key}' declares 'id.style: {t.IdStyle}', which no id check reads. "
                              + $"The styles the tool applies are {List(Validator.IdStyles)}.", f);
 
+            if (t.IndexOrder.Length > 0 && !Generator.IndexOrders.Contains(t.IndexOrder))
+                Dispatch(at, $"type '{key}' declares 'index.order: {t.IndexOrder}', which the generator does "
+                             + $"not read. An index is written {List(Generator.IndexOrders)}.", f);
+
             foreach (var name in t.FieldOrder)
                 CheckField(at, name, t.Fields[name], schema, f);
 
@@ -96,6 +100,12 @@ public static class SchemaChecks
         if (spec.Values is { Count: > 0 } && spec.Type != "enum")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'values:', which only an "
                          + "enum's range is read from — declare it 'type: enum', or drop the values.", f);
+
+        // A floor is a question about a sequence's length, so it has no reading on a scalar. `allow-literal`
+        // needs no such guard: it is a word admitted in place of a value, and every field type has one.
+        if (spec.MinItems is not null && spec.Type != "list")
+            Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-items:', which only a "
+                         + "list's length is read against — declare it 'type: list', or drop the floor.", f);
 
         if (spec.MirrorsSection is { } section && !MirroredSections.Contains(section, StringComparer.Ordinal))
             Dispatch(at, $"field '{name}' declares 'mirrors-section: {section}', and only "
