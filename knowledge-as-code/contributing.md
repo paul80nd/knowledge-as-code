@@ -6,12 +6,14 @@ same regardless of who is holding the keyboard.
 ## The shape of a contribution
 
 1. Work out where it goes — [taxonomy](taxonomy.md) has a decision table.
-2. Copy the type's `template.md`. It marks the parts you supply as `{{placeholder}}` and fences its own guidance
-   between `DELETE FROM HERE` and `DELETE TO HERE` comments; a finished document has neither left in it.
+2. Copy the type's `template.md`. It marks the parts you supply as `{{placeholder}}` and fences its own guidance between
+   `DELETE FROM HERE` and `DELETE TO HERE` comments; a finished document has neither left in it.
 3. Allocate an ID in the style that type uses — the next unused number, a four-character mnemonic for the concept, or a
    slug. Check the folder's index for what is already taken; see [metadata](metadata.md#ids).
 4. Fill in the frontmatter — see [metadata](metadata.md).
-5. Write the content. Follow the template's section structure; it exists so documents of a type are comparable.
+5. Write the content. Follow the template's section structure, which exists so documents of a type are comparable, and
+   [authoring](authoring.md) for how the prose itself is written — those rules follow the document's tier, so a runbook
+   step and an ADR paragraph are held to different ones.
 6. Open a PR against the corpus repository. Review expectations follow the tier, below.
 
 Generated content — indexes, digests, reports — is not edited by hand. If an index looks wrong, the frontmatter it was
@@ -99,8 +101,8 @@ If you are an agent contributing to this wiki:
 * **Never hand-edit generated regions** — anything between `<!-- BEGIN GENERATED -->` and `<!-- END GENERATED -->`.
   Change the source and let CI rebuild.
 * **Cite, don't restate.** If the reasoning lives in an ADR, link it. Duplication is how this corpus rots.
-* **Use the glossary's terms exactly.** Where the glossary distinguishes two near-synonyms, the distinction
-  is load-bearing; treating them as interchangeable produces work that is plausible and subtly wrong.
+* **Use the glossary's terms exactly.** Where the glossary distinguishes two near-synonyms, the distinction is
+  load-bearing; treating them as interchangeable produces work that is plausible and subtly wrong.
 * **When unsure of placement, ask.** A well-written document in the wrong folder is a cost, not a contribution.
 
 ## What not to add

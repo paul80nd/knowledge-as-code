@@ -19,8 +19,8 @@ The catalogue search index — rebuilt from bus events, queried by the catalogue
 
 ## What it does
 
-Maintains the search index over the collection and answers queries against it: free-text search, faceted browse, and
-the type-ahead on the catalogue's search box.
+Maintains the search index over the collection and answers queries against it: free-text search, faceted browse, and the
+type-ahead on the catalogue's search box.
 
 The index is **not** read from a database. It is built from events: every change to an item, a holding or a branch's
 stock arrives on the message bus and is applied incrementally, with a full rebuild available on demand. That is what
@@ -34,11 +34,11 @@ makes it the estate's clearest example of heavy coupling with no dependency edge
 
 ## Environments
 
-| Environment | URL                                 | Notes            |
-|-------------|-------------------------------------|------------------|
-| Development | https://search-dev.example.net      | No custom domain |
-| Test        | https://search-test.example.net     | No custom domain |
-| Production  | https://search-prd.example.net      | No custom domain |
+| Environment | URL                             | Notes            |
+|-------------|---------------------------------|------------------|
+| Development | https://search-dev.example.net  | No custom domain |
+| Test        | https://search-test.example.net | No custom domain |
+| Production  | https://search-prd.example.net  | No custom domain |
 
 **Quick check** — the index health document:
 [dev](https://search-dev.example.net/health/index) ·
@@ -48,10 +48,8 @@ makes it the estate's clearest example of heavy coupling with no dependency edge
 ## Dependencies
 
 **None, and the graph is right.** This service cannot function without the events [svc-catalogue-api] and
-[svc-lending] publish, so it is coupled to both as tightly as anything in the estate. It has no edge to either,
-because `depends-on` records **calls**, not messages: an edge means this service is configured to reach that one — a
-URL in its settings, or a route pointing at it. Publish and subscribe over the bus is deliberately not an edge,
-because it is not a call and the publisher does not know its consumers.
+[svc-lending] publish, so it is coupled to both as tightly as anything in the estate. Neither is an edge: `depends-on`
+records calls, and a bus message is not a call — see [Services](/services).
 
 So this service looks unconnected while being anything but. What it consumes is in Operational notes below, which is
 where the coupling actually lives.

@@ -6,12 +6,12 @@ Read `role:` in [`.mechanism.lock`](.mechanism.lock) before you change anything 
 decides whether those directories are yours.
 
 * **`role: source`** — the framework master. `.schema/` and `.tooling/` are yours to change, and what you write
-  propagates to every corpus that has taken a copy. Assume it will be read by someone who cannot see this
-  conversation and cannot ask you what you meant.
+  propagates to every corpus that has taken a copy. Assume it will be read by someone who cannot see this conversation
+  and cannot ask you what you meant.
 * **`role: consumer`** — a corpus derived from the framework. `.schema/` and `.tooling/` arrive from upstream, and a
-  local edit to either is **drift, not customisation** — `kac mechanism --check` reports it as a defect. Fix it
-  upstream and resync. The exception is adding or deleting a whole type file in `.schema/`, which is a corpus's own
-  decision about what it has adopted.
+  local edit to either is **drift, not customisation** — `kac mechanism --check` reports it as a defect. Fix it upstream
+  and resync. The exception is adding or deleting a whole type file in `.schema/`, which is a corpus's own decision
+  about what it has adopted.
 
 If a change seems to need editing the tool, it almost certainly does not: **adding a knowledge type is adding a YAML
 file to `.schema/`**.
@@ -36,12 +36,21 @@ Run **one `kac` invocation at a time**. File-based apps share build output and c
 * **Never hand-edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter, then run
   `./kac index`. A schema edit without a regeneration fails CI.
 * **Markdown prose wraps at 120 columns**; tables are exempt. `.editorconfig` says so and no check enforces it.
+* **How a document is written follows its tier, not its type.** The rules are in
+  [`knowledge-as-code/authoring.md`](knowledge-as-code/authoring.md) — read it before writing or rewriting any record. A
+  runbook step and an ADR paragraph obey different constraints, and nothing in CI will tell you that you used the wrong
+  ones.
+* **Say less, once.** Cut filler, do not restate frontmatter in prose, and cite rather than duplicate. If a paragraph
+  would appear in more than one document, it belongs in `knowledge-as-code/` and gets written a single time.
+* **Anything not yet built carries a marker.** Unmarked prose describes what exists today; direction is marked
+  **Planned** or **Aspirational**. Do not write aspirational content unmarked, and do not delete a marker without
+  deleting the gap it describes.
 * **Comments and documentation are timeless.** Describe the design as it is, not as it changed, and never as a
   correction of what it was. The history of a change belongs in its commit message.
-* **A Markdown edit leaves a whole document, not a diff.** Fold new material into what is already there and delete
-  what it supersedes, so the file reads in one voice and someone arriving cold cannot tell which paragraph is the
-  newest. Give each point the detail it earns and make it once — length is not thoroughness, and a paragraph
-  justifying a change is a paragraph that will read as noise a month later.
+* **A Markdown edit leaves a whole document, not a diff.** Fold new material into what is already there and delete what
+  it supersedes, so the file reads in one voice and someone arriving cold cannot tell which paragraph is the newest.
+  Give each point the detail it earns and make it once — length is not thoroughness, and a paragraph justifying a change
+  is a paragraph that will read as noise a month later.
 * **Branch and open a PR.** Pushes to `main` are rejected.
 * **Example records use one fictional estate** — Example Libraries, a public-library consortium, on `example.com`
   (reserved by RFC 2606). Extend it rather than inventing a second one; [`README.md`](README.md) explains why.

@@ -95,12 +95,15 @@ rules:
   # ── synced ───────────────────────────────────────────────────────────────────────────────────
   - path: ".claude/skills/**"
     layer: synced
-    note: "Agent machinery — kb-search, kb-contribute, adr and friends. Not yet built."
+    note: "Agent machinery — kb-review, with kb-search, kb-contribute and friends still to come."
 
   - { path: "knowledge-as-code/manifest.yaml",   layer: synced, note: "This file." }
   - { path: "knowledge-as-code/taxonomy.md",     layer: synced }
   - { path: "knowledge-as-code/metadata.md",     layer: synced }
   - { path: "knowledge-as-code/contributing.md", layer: synced }
+  - { path: "knowledge-as-code/authoring.md",    layer: synced }
+  - { path: "knowledge-as-code/principles.md",   layer: synced }
+  - { path: "knowledge-as-code/lineage.md",      layer: synced }
   - { path: "knowledge-as-code/automation.md",   layer: synced }
   - { path: "knowledge-as-code.md",              layer: synced, note: "The framework overview. Describes the system generically, so it is shared, not framed for the local domain." }
 

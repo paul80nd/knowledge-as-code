@@ -16,8 +16,8 @@ tags: [ internal ]
 
 `Service: svc-catalogue-api` `LIVE`
 
-The gateway behind the public catalogue — the only API the reader-facing site talks to, and the boundary that keeps
-the internal services off the public internet.
+The gateway behind the public catalogue — the only API the reader-facing site talks to, and the boundary that keeps the
+internal services off the public internet.
 
 ## What it does
 
@@ -25,10 +25,9 @@ Publishes a simplified API to [svc-catalogue-web] and aggregates across the serv
 call where it would otherwise make four.
 
 Two capabilities are **compiled into this application** rather than deployed beside it. Account management and loan
-history both live under `src/Services` in the monorepo, but nothing deploys them independently, so they are part of
-this service rather than services in their own right. That is why this catalogue lists three services out of the
-`platform` repository rather than the five components its solution file suggests — the id names the deployable, and
-two of those components are not one.
+history both live under `src/Services` in the monorepo, but nothing deploys them independently, so they are part of this
+service rather than services in their own right. The `platform` repository therefore yields three services in this
+catalogue rather than the five components its solution file suggests.
 
 ## Where it lives
 
@@ -40,11 +39,11 @@ Deployed by the `platform` release pipeline as the `api` app, from the `Catalogu
 
 ## Environments
 
-| Environment | URL                                      | Notes            |
-|-------------|------------------------------------------|------------------|
-| Development | https://app-catalogue-api-dev.example.net | No custom domain |
+| Environment | URL                                        | Notes            |
+|-------------|--------------------------------------------|------------------|
+| Development | https://app-catalogue-api-dev.example.net  | No custom domain |
 | Test        | https://app-catalogue-api-test.example.net | No custom domain |
-| Production  | https://app-catalogue-api-prd.example.net | No custom domain |
+| Production  | https://app-catalogue-api-prd.example.net  | No custom domain |
 
 **Quick check** — the OpenAPI document:
 [dev](https://app-catalogue-api-dev.example.net/openapi/v1.json) ·
@@ -60,8 +59,8 @@ Taken from the application settings the infrastructure declares for the app serv
 * [svc-lending] — loans, holds and borrower records, configured as `Apis__Lending__Url` with a matching
   `Apis__Lending__Key`.
 
-It is also configured with the identity provider's authority and with the bibliographic data supplier's API, neither
-of which is a service in this catalogue.
+It is also configured with the identity provider's authority and with the bibliographic data supplier's API, neither of
+which is a service in this catalogue.
 
 ## Data
 
@@ -69,15 +68,14 @@ Holds a database connection, configured as `ConnectionStrings__Catalogue`. Becau
 loan-history capabilities are compiled into this application rather than deployed beside it, their stores are reached
 through that connection rather than through services of their own.
 
-**What that database is, and whether it is the same one [svc-lending] maps, is not established** by any source this
-catalogue was built from. Recorded as an open question rather than guessed at — the distinction matters, because a
-guess here would be repeated by everything that reads this page.
+**What that database is, and whether it is the same one [svc-lending] maps, is an open question.** No source this
+catalogue was built from establishes it.
 
 ## Operational notes
 
 * **Rate limiting and CORS** live at this boundary rather than in the services behind it.
-* **Consumers** — [svc-catalogue-web] is the only service configured with this URL. Maintained by hand; nothing
-  checks it.
+* **Consumers** — [svc-catalogue-web] is the only service configured with this URL. Maintained by hand; nothing checks
+  it.
 
 [svc-catalogue-web]: catalogue-web.md
 [svc-lending]: lending.md
