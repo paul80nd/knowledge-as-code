@@ -10,8 +10,9 @@ owner: alex.doe
 
 `ADR: adr-0002` `PROPOSED`
 
-> **In the context of** the index fixture, **we decided** to keep one proposed ADR, **to achieve** an index row with an
-> empty decided-on cell, **accepting** that it must stay valid.
+> **In the context of** the index fixture, **facing** a column that may hold nothing, **we decided** to keep one
+> proposed ADR, **rather than** a second accepted one, **to achieve** an index row with an empty decided-on cell,
+> **accepting** that it must stay valid.
 
 ## Context
 

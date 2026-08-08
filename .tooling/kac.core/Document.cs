@@ -44,6 +44,12 @@ public class Doc
     public readonly List<string> FrontKeys = [];
     public int FrontStartLine; // 1-based line where the frontmatter block begins
 
+    // Where the body begins: the first character after the frontmatter block, or 0 where there is none.
+    // Held so a check can read the document as it was written — code fences and link targets included —
+    // rather than as the AST renders it. A credential is most likely to be in a fenced block, which is
+    // exactly what the flattened text drops.
+    public int BodyStart;
+
     public string? H1;
     public int H1Line;
 
@@ -73,13 +79,18 @@ public class Doc
     public List<LinkRef> RelatedSectionLinks = [];
     public QuoteBlock? YStatement;
 
+    // The two extensions every record depends on: the frontmatter block, and the pipe tables a clause
+    // section is written as. A built pipeline is immutable, so one is shared across every parse rather
+    // than assembled per document.
+    private static readonly MarkdownPipeline Pipeline =
+        new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().Build();
+
     // `requireFrontmatter: false` is for a type page of a collection type. It carries no frontmatter
     // and is not a record, but it holds links and generated blocks that are worth checking, so it is
     // parsed for its prose alone.
     public static Doc? Parse(string rel, string text, Schema schema, bool requireFrontmatter = true)
     {
-        var pipeline = new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().Build();
-        var ast = Markdown.Parse(text, pipeline);
+        var ast = Markdown.Parse(text, Pipeline);
 
         var fmBlock = ast.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
         if (fmBlock is null && requireFrontmatter) return null; // not migrated — caller counts and skips
@@ -100,6 +111,7 @@ public class Doc
         {
             var yamlText = StripFences(text, fmBlock);
             doc.FrontStartLine = fmBlock.Line + 1;
+            doc.BodyStart = Math.Min(text.Length, fmBlock.Span.End + 1);
             try
             {
                 var stream = new YamlStream();
@@ -117,7 +129,6 @@ public class Doc
             } // signalled as a parse error downstream
         }
 
-        // Headings.
         foreach (var h in ast.Descendants<HeadingBlock>())
         {
             var txt = Md.PlainText(h.Inline);
@@ -160,7 +171,6 @@ public class Doc
             if (link.Reference is not null) doc.UsedLabels.Add(link.Reference.Label ?? "");
         }
 
-        // Link reference definitions.
         foreach (var def in ast.Descendants<LinkReferenceDefinition>())
             if (def.Label is not null)
                 doc.DefinedLabels.Add(def.Label);
@@ -179,7 +189,6 @@ public class Doc
         // Y-statement — first block-quote after the H1.
         doc.YStatement = ast.Descendants<QuoteBlock>().FirstOrDefault(q => q.Line > (doc.H1Line - 1));
 
-        // Related section links.
         doc.RelatedSectionLinks = SectionLinks(ast, "Related");
 
         return doc;

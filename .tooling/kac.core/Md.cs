@@ -31,6 +31,10 @@ public static class Md
         return sb.ToString().Trim();
     }
 
+    // A fragment of a document quoted back in a finding, cut to what a terminal line can hold beside
+    // the rest of the message.
+    public static string Snippet(string s, int max = 60) => s.Length > max ? s[..(max - 3)] + "…" : s;
+
     private static void Walk(Inline inline, StringBuilder sb)
     {
         switch (inline)

@@ -74,11 +74,13 @@ index:
 rules:
   - id: one-problem-per-document
     description: >
-      Reports documents with more than one Symptom section or multiple distinct problems. A page of assorted
-      gotchas cannot be found by symptom, which defeats the purpose.
+      One Symptom section, because an FAQ is found by its symptom. A page of assorted gotchas cannot be,
+      which defeats the purpose.
     severity: warning
-  - id: reciprocal-promotion
-    fields: [promoted-from, promoted-to]
+    expr: "section_count('Symptom') <= 1"
+    message: >
+      This carries more than one Symptom section, so it is more than one FAQ. Someone arriving with a
+      symptom matches on the first one and never reads the second — split it.
   - id: human-confirmed
     description: >
       `confirmed-by` must be present and must not be an agent, a session id or a team alias.

@@ -52,11 +52,22 @@ fields:
     required: false
     type: id
     ref: tools
+    reciprocal: successor
     description: The tool id this supersedes.
+
+  successor:
+    required: false
+    type: id
+    ref: tools
+    reciprocal: replaces
+    description: The tool id that replaces this one.
+    notes: >
+      The counterpart of `replaces`, and what a deprecated entry owes its reader. CI enforces both
+      directions, so a supersession claimed at one end is claimed at both.
 
 sections:
   required: [What we use it for, Status]
-  optional: [Where it is used, Alternatives considered, Licence and obligations, Related]
+  optional: [Trial criteria, Where it is used, Alternatives considered, Licence and obligations, Related]
 
 index:
   columns: [id, title, category, status, versions, licence]
@@ -68,10 +79,18 @@ rules:
     description: >
       A deprecated tool names what replaces it, or the entry is just a complaint.
     severity: warning
+    expr: "field('status') == 'deprecated' implies present('successor')"
+    message: >
+      This is deprecated and names no successor. Set `successor` to whatever took its place, so that
+      someone arriving here from a manifest has somewhere to go next.
   - id: trial-has-criteria
     description: >
       A tool in `trial` states what would decide it. A trial with no decision criteria stays a trial forever.
     severity: warning
+    expr: "field('status') == 'trial' implies section('Trial criteria')"
+    message: >
+      This is in trial and nothing says what would end the trial. Add a `## Trial criteria` section naming
+      what is being evaluated, where, and what would settle it either way.
   - id: drift-against-manifests
     description: >
       Scheduled. Compares the register against package manifests across the organisation's repositories in both

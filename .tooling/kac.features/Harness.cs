@@ -1,7 +1,8 @@
 // Test harness for the BDD pilot: assemble a throwaway repo root (the real schema plus a fixture
-// corpus) and run the validate pipeline in-process against kac.core — the same sequence
-// Commands.Validate performs, but returning structured findings instead of printing. This is the
-// clean seam BDD steps bind to: Validator returns List<Finding> with no Console involved.
+// corpus) and run the validate pipeline in-process against kac.core. It calls Corpus.Load and
+// Validator.CheckAll — the same two calls `kac validate` makes, so a check cannot be visible to the
+// command and invisible here — and returns the findings rather than printing them. That is the clean
+// seam BDD steps bind to: a List<Finding> with no Console involved.
 
 using kac.core;
 
@@ -21,23 +22,9 @@ public static class Harness
             CopyTree(schemaDir, Path.Combine(temp, ".schema"));
             CopyTree(corpusDir, temp);
 
-            var schema = Schema.Load(temp);
-            var findings = new List<Finding>();
-            var docs = new List<Doc>();
-            var skipped = 0;
-
-            foreach (var rel in Corpus.Discover(temp, schema, []))
-            {
-                var doc = Doc.Parse(rel, File.ReadAllText(Path.Combine(temp, rel)), schema);
-                if (doc is null) { skipped++; continue; }
-                docs.Add(doc);
-            }
-
-            foreach (var doc in docs)
-                Validator.CheckDocument(doc, schema, temp, findings);
-            Validator.CheckCorpus(docs, findings);
-
-            return new ValidationResult(findings, docs.Count, skipped);
+            var corpus = Corpus.Load(temp, []);
+            return new ValidationResult(Validator.CheckAll(corpus), corpus.Docs.Count,
+                corpus.SkippedNoFrontmatter);
         }
         finally
         {

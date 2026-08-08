@@ -1,0 +1,150 @@
+{
+  "summary": {
+    "validated": 19,
+    "skipped": 0,
+    "errors": 7,
+    "warnings": 13
+  },
+  "findings": [
+    {
+      "file": "capabilities/borrower-notifications.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "hub-not-specification",
+      "message": "Prose has outgrown the links. A capability is a hub — move the detail into the documents it should be pointing at, and link to them from here."
+    },
+    {
+      "file": "controls/0001-frequency-not-stated.md",
+      "line": 1,
+      "severity": "error",
+      "check": "required-field",
+      "message": "missing required field 'frequency' (required when mechanism != not-enforced)."
+    },
+    {
+      "file": "controls/0002-evidence-not-named.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "mechanism-has-evidence",
+      "message": "This control claims to run and does not say where the proof of it lives. Set `evidence` to the build log, the audit note or the dashboard — an unevidenced control is an assertion, and `not-enforced` is the honest value for one."
+    },
+    {
+      "file": "data/borrower-records.md",
+      "line": 1,
+      "severity": "error",
+      "check": "required-field",
+      "message": "missing required field 'retention' (required when classification in [personal, special-category])."
+    },
+    {
+      "file": "data/reader-contact-list.md",
+      "line": 1,
+      "severity": "error",
+      "check": "no-actual-data",
+      "message": "This reads as an actual record rather than as a description of one. Addresses in examples belong under `example.com`, which RFC 2606 reserves so that it can never be anybody's."
+    },
+    {
+      "file": "discoveries/pool-exhaustion-under-load.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "low-ceremony",
+      "message": "This is longer than a capture should be. If it needs this much explaining it has outgrown the tier — promote it rather than expanding it here."
+    },
+    {
+      "file": "explanations/how-holds-are-queued.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "links-rather-than-restates",
+      "message": "Prose has outgrown the links. Each fact restated here is a second copy to keep true — link to the document that owns it instead."
+    },
+    {
+      "file": "explanations/why-holds-expire.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "not-normative",
+      "message": "A bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard and link to it from here."
+    },
+    {
+      "file": "faqs/two-symptoms-one-page.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "one-problem-per-document",
+      "message": "This carries more than one Symptom section, so it is more than one FAQ. Someone arriving with a symptom matches on the first one and never reads the second — split it."
+    },
+    {
+      "file": "integrations/payment-gateway.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "fallback-required",
+      "message": "The Failure modes section names no fallback. Say what happens instead when this fails, or say plainly that nothing does."
+    },
+    {
+      "file": "integrations/payment-gateway.md",
+      "line": 1,
+      "severity": "error",
+      "check": "no-credentials",
+      "message": "Something here reads as a credential rather than as a reference to one. Name the mechanism and where the value is held; never the value."
+    },
+    {
+      "file": "nfrs/0001-hedged-measurement.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "target-is-measurable",
+      "message": "`measured-by` hedges rather than measures. Name the instrument and the number it reports — an NFR measured \"where practical\" is one nobody has to meet."
+    },
+    {
+      "file": "policies/cert-certification-claim.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "posture-belongs-to-frameworks",
+      "message": "This claims a standing against a framework. A policy maps clauses to controls; where the organisation stands belongs in `frameworks.md`, the one place it can be kept true."
+    },
+    {
+      "file": "postmortems/0001-detected-before-it-happened.md",
+      "line": 1,
+      "severity": "error",
+      "check": "detected-not-before-occurred",
+      "message": "`detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are right, the earlier one is when it started."
+    },
+    {
+      "file": "postmortems/0002-nothing-recorded-as-well.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "what-went-well-required",
+      "message": "The What went well section is empty. An incident that taught nothing about what held is half a lesson, and the half nobody writes down is the half that stops being true."
+    },
+    {
+      "file": "processes/rotate-a-signing-key.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "no-hedged-ordering",
+      "message": "A step hedged with \"typically\", \"usually\" or \"normally\" leaves the reader to decide. Say what the ordering depends on, or state it plainly."
+    },
+    {
+      "file": "runbooks/database-connections-exhausted.md",
+      "line": 1,
+      "severity": "error",
+      "check": "symptoms-first",
+      "message": "Symptoms must be the first section. Someone reaching for this at 2am matches on what they are seeing, not on what the document is called."
+    },
+    {
+      "file": "standards/common/error-responses.md",
+      "line": 1,
+      "severity": "error",
+      "check": "provenance-required",
+      "message": "A standard cites where its authority comes from — an ADR in `derived-from`, a policy in `implements`, or both. With neither this is guidance, and guidance is an explanation."
+    },
+    {
+      "file": "tools/deprecated-no-successor.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "deprecated-has-successor",
+      "message": "This is deprecated and names no successor. Set `successor` to whatever took its place, so that someone arriving here from a manifest has somewhere to go next."
+    },
+    {
+      "file": "tools/trial-no-criteria.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "trial-has-criteria",
+      "message": "This is in trial and nothing says what would end the trial. Add a `## Trial criteria` section naming what is being evaluated, where, and what would settle it either way."
+    }
+  ]
+}

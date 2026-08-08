@@ -37,8 +37,8 @@ public class YamlTests : IDisposable
 
     // The schema writes `folder: null` and `prefix: null` where a type has neither. Read literally
     // those are the string "null", which makes a folderless type one whose folder is named "null" and
-    // silently passes every emptiness test downstream — the glossary's checks table advertised an
-    // identity line it can never carry. Quoting is the escape hatch for anyone who means the word.
+    // passes every emptiness test downstream — far enough that the glossary's checks table advertises
+    // an identity line it can never carry. Quoting is the escape hatch for anyone who means the word.
     [Theory]
     [InlineData("folder: null\n", null)]
     [InlineData("folder: NULL\n", null)]

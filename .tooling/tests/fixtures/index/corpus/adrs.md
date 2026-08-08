@@ -67,7 +67,7 @@ byte-preserved.
 | `related-matches-section`   | error   | A field that mirrors a section reconciles with the ids in that section.                                  |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                         |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
-| `y-statement`               | warning | A Y-statement block-quote follows the H1 and is within 60 words.                                         |
+| `y-statement`               | warning | A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.                  |
 | `alternatives-verdict`      | warning | Each Alternatives Considered bullet states a verdict.                                                    |
 
 <!-- END GENERATED: checks-adrs -->

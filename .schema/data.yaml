@@ -64,6 +64,9 @@ index:
   sort: classification
 
 rules:
+  # `retention` already declares `required-when: 'classification in [personal, special-category]'`, and the
+  # validator already reports exactly that, so this entry restates a declaration made above. Issue #83 is
+  # whether to delete it or give it a question the field declaration cannot ask.
   - id: personal-data-has-retention
     description: >
       Personal or special-category data with no stated retention is reported. It is the first thing anyone
@@ -71,8 +74,13 @@ rules:
   - id: no-actual-data
     description: >
       Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.
-  - id: single-owner
-    field: owned-by
-    description: Exactly one owning service; the field is a scalar, not a list, deliberately.
+    severity: error
+    # example.com is reserved by RFC 2606 and is what every address in this corpus uses, so an address
+    # anywhere else is either real or pretending to be, and both are the fault.
+    expr: >-
+      not matches('[A-Za-z0-9._%+-]+@(?!example\.com)[A-Za-z0-9.-]+\.[A-Za-z]{2,}')
+    message: >
+      This reads as an actual record rather than as a description of one. Addresses in examples belong under
+      `example.com`, which RFC 2606 reserves so that it can never be anybody's.
   - id: store-has-service
     description: Every store named resolves to a service in the catalogue.

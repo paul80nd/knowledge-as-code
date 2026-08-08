@@ -12,11 +12,11 @@ public enum Sev
 
 public record Finding(string File, int? Line, Sev Severity, string Check, string Message);
 
-// The registry of every check the validator can emit. It exists so the test suite can assert
-// coverage (every id here must be triggered by a fixture) and so a human can `kac checks` to see
-// the ruleset. Adding a new Err/Warn check to the validator means adding its id here — the
-// coverage meta-test fails on any id emitted in a fixture golden that is missing from this list,
-// which keeps the two honest. Ordered roughly as a document is checked, then corpus-wide.
+// The registry of every check the validator can emit. It exists so the test suite can assert coverage
+// — every id here must be triggered by a fixture — and so a human can `kac checks` to see the ruleset.
+// A core check has to be added here by hand; a rule declares what it emits and is folded in below.
+// Either way the coverage meta-test fails on an id a golden carries and this list does not, which
+// keeps the two honest. Ordered roughly as a document is checked, then corpus-wide.
 public readonly record struct CheckDef(string Id, Sev Severity, string Summary);
 
 public static class CheckCatalogue
@@ -65,7 +65,25 @@ public static class CheckCatalogue
         new("clause-compound", Sev.Warning, "A clause carries one obligation, not two."),
         new("unused-definition", Sev.Warning, "A link definition that nothing references."),
         new("bracket-literal", Sev.Warning, "A [...] in prose that looks like a broken reference."),
-        new("y-statement", Sev.Warning, "A short Y-statement block-quote follows the H1."),
-        new("alternatives-verdict", Sev.Warning, "Each Alternatives Considered bullet states an outcome.")
+
+        // The rules that need C# declare what they report, so implementing one and registering it is
+        // the same edit. Restating them here is how an id and its catalogue entry drift apart.
+        .. DocumentRules.All.SelectMany(r => r.Emits)
+    ];
+
+    // The catalogue as it stands for a given corpus: the checks above, which every corpus gets, plus one
+    // entry per expression rule its schema declares. A rule with an `expr:` reports under its own id, so
+    // it is a check like any other — it appears in `kac checks`, and the coverage gate holds it to the
+    // same requirement of a fixture that exercises it.
+    //
+    // Ordered so the core checks keep the sequence a document is read in and the schema's own rules
+    // follow, grouped by the type that declares them.
+    public static IReadOnlyList<CheckDef> For(Schema schema) =>
+    [
+        .. All,
+        .. schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal)
+            .SelectMany(kv => kv.Value.Rules)
+            .Where(r => r.Compiled is not null)
+            .Select(r => new CheckDef(r.Id, r.Severity ?? Sev.Warning, r.Description ?? r.Message ?? r.Id))
     ];
 }

@@ -14,8 +14,9 @@ tags:
 
 `ADR: adr-0004` `ACCEPTED`
 
-> **In the context of** the field-pattern rule, **we decided** to give `tags` entries that break the declared regex,
-> **to achieve** coverage of `field-pattern` on a list, **accepting** that this document is intentionally broken.
+> **In the context of** the field-pattern rule, **facing** a pattern that applies to each entry, **we decided** to
+> give `tags` entries that break the declared regex, **rather than** breaking the list as a whole, **to achieve**
+> coverage of `field-pattern` on a list, **accepting** that this document is intentionally broken.
 
 ## Context
 

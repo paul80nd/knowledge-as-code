@@ -10,8 +10,9 @@ owner: alex.doe
 
 `ADR: adr-0002` `ACCEPTED`
 
-> **In the context of** the graph rules, **we decided** to keep this node fully valid, **rather than** breaking it, **to
-> achieve** a clean anchor that the others point at, **accepting** nothing unusual here.
+> **In the context of** the graph rules, **facing** the need for something sound to point at, **we decided** to keep
+> this node fully valid, **rather than** breaking it, **to achieve** a clean anchor that the others point at,
+> **accepting** nothing unusual here.
 
 ## Context
 

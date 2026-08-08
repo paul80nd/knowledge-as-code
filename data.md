@@ -111,5 +111,6 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
+| `no-actual-data`            | error   | Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.   |
 
 <!-- END GENERATED: checks-data -->

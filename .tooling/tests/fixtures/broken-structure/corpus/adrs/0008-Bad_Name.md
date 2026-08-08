@@ -10,7 +10,8 @@ owner: alex.doe
 
 `ADR: adr-0008` `ACCEPTED`
 
-> **In the context of** the filename rule, **we decided** to use capitals and an underscore, **to achieve** coverage of
+> **In the context of** the filename rule, **facing** a slug short enough to keep `slug-length` quiet, **we decided**
+> to use capitals and an underscore, **rather than** an over-long name, **to achieve** coverage of
 > `filename-pattern`, **accepting** that this document is intentionally broken.
 
 ## Context

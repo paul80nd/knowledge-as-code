@@ -67,10 +67,15 @@ index:
 rules:
   - id: symptoms-first
     description: Symptoms is the first section after the H1 — that is how the reader finds the document.
+    severity: error
+    expr: "first_section() == 'Symptoms'"
+    message: >
+      Symptoms must be the first section. Someone reaching for this at 2am matches on what they are
+      seeing, not on what the document is called.
   - id: escalation-required
     description: >
-      Every runbook names an escalation path. A diagnosis branch that ends without a resolution or an
-      escalation is a dead end.
+      `sections` requires the heading. What is unenforced is the shape beneath it — a diagnosis branch that
+      ends in neither a resolution nor an escalation is a dead end, and only reading the tree finds one.
   - id: staleness-loud
     description: >
       Scheduled, and reported more prominently than for processes. An unrehearsed process is annoying; an

@@ -21,7 +21,6 @@
 // coverage gate: a new rule cannot ship without a scenario exercising it.
 
 using System.Diagnostics;
-using System.Text;
 using System.Text.Json;
 
 var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
@@ -31,7 +30,7 @@ if (repoRoot is null)
     return 2;
 }
 
-var kac = Path.Combine(repoRoot, ".tooling", "kac.cs");
+var kacSource = Path.Combine(repoRoot, ".tooling", "kac.cs");
 var schemaDir = Path.Combine(repoRoot, ".schema");
 var manifestFile = Path.Combine(repoRoot, "knowledge-as-code", "manifest.yaml");
 var fixturesDir = Path.Combine(repoRoot, ".tooling", "tests", "fixtures");
@@ -57,6 +56,14 @@ if (scenarios.Count == 0)
     Console.Error.WriteLine("kac-tests: no matching scenarios.");
     return 2;
 }
+
+// Every scenario below runs kac as a subprocess, because what it asserts — the exit code and what
+// lands on stdout — is the CLI's contract rather than the library's. `dotnet run` would repeat its
+// up-to-date check on each of those invocations, which costs an order of magnitude more than the
+// suite's real work; building once and calling the built assembly keeps the process boundary
+// without paying for it a dozen times over.
+var kac = BuildKac(kacSource);
+if (kac is null) return 2;
 
 var coveredChecks = new HashSet<string>(StringComparer.Ordinal);
 var failures = new List<string>();
@@ -241,7 +248,7 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
     var refTemp = AssembleMechanismTemp(schemaDir, manifestFile, referenceDir);
     try
     {
-        var (stdout, stderr, exit) = Run(localTemp, "dotnet", "run", kac, "--", "mechanism", "--check", "--against", refTemp);
+        var (stdout, stderr, exit) = Run(localTemp, "dotnet", kac, "mechanism", "--check", "--against", refTemp);
         var output = stderr + stdout;
 
         if (expected.Count == 0)
@@ -288,11 +295,10 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
 Console.WriteLine();
 
 // -- coverage meta-test --
-// Every check kac can emit should be exercised by some fixture. A golden that references a check
-// kac no longer emits is a hard error (a rename left a stale golden); a check with no fixture yet
-// is reported but does not fail the build while the corpus is still being filled out. Coverage is
-// a property of the WHOLE suite, so it is only computed on a full run — a filtered run would
-// undercount and read as a regression.
+// Every reachable check must be exercised by some fixture, and both directions fail the build: a
+// check with no fixture, and a golden naming a check the catalogue does not hold — which is a rename
+// that left a stale golden. Coverage is a property of the WHOLE suite, so it is only computed on a
+// full run; a filtered run would undercount and read as a regression.
 if (filters.Count == 0)
 {
     // Checks that no discovered document can reach, so no fixture can exercise them. `type` fires
@@ -324,7 +330,7 @@ if (filters.Count == 0)
     // The reader-facing "What CI checks" table must stay a faithful view of the catalogue. `kac
     // checks` self-verifies its curated rows against the catalogue and exits non-zero on any drift
     // (a new check with no row, a row naming a check that no longer exists, a stale waiver).
-    var (_, checksErr, checksExit) = Run(Directory.GetCurrentDirectory(), "dotnet", "run", kac, "--", "checks");
+    var (_, checksErr, checksExit) = Run(Directory.GetCurrentDirectory(), "dotnet", kac, "checks");
     if (checksExit != 0)
     {
         Console.WriteLine($"  CHECKS TABLE out of step with the catalogue:\n{Indent(checksErr)}");
@@ -393,7 +399,7 @@ static (string json, int exit) RunValidate(string kac, string schemaDir, string 
     var temp = AssembleTemp(schemaDir, corpusDir);
     try
     {
-        var (stdout, stderr, exit) = Run(temp, "dotnet", "run", kac, "--", "validate", "--json");
+        var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "validate", "--json");
         var json = FromFirstBrace(stdout);
         if (json is null)
             throw new Exception($"kac produced no JSON (exit {exit}).\n{Indent(stderr)}\n{Indent(stdout)}");
@@ -414,8 +420,8 @@ static (int exit, string output) RunIndex(string kac, string schemaDir, string c
     try
     {
         string[] argv = check
-            ? ["run", kac, "--", "index", "--check"]
-            : ["run", kac, "--", "index"];
+            ? [kac, "index", "--check"]
+            : [kac, "index"];
         var (stdout, stderr, exit) = Run(temp, "dotnet", argv);
         return (exit, stderr + stdout);
     }
@@ -433,7 +439,7 @@ static void RegenerateIndex(string kac, string schemaDir, string corpusDir)
     var temp = AssembleTemp(schemaDir, corpusDir);
     try
     {
-        var (stdout, stderr, exit) = Run(temp, "dotnet", "run", kac, "--", "index");
+        var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "index");
         if (exit != 0) throw new Exception($"kac index failed (exit {exit}).\n{Indent(stderr)}");
 
         // Only what the corpus itself owns comes back. `.schema/` and `knowledge-as-code/` were
@@ -451,9 +457,34 @@ static void RegenerateIndex(string kac, string schemaDir, string corpusDir)
     }
 }
 
+// Compile .tooling/kac.cs and return the assembly to invoke, or null having said why. Two calls
+// because they do different things: the first builds, and `--getProperty` evaluates the project
+// without building. The path cannot simply be constructed — MSBuild puts a file-based app's output
+// in a content-addressed directory outside the repo, which is why it is read back rather than
+// assumed.
+static string? BuildKac(string kacSource)
+{
+    var (buildOut, buildErr, buildExit) = Run(Directory.GetCurrentDirectory(), "dotnet", "build", kacSource);
+    if (buildExit != 0)
+    {
+        Console.Error.WriteLine($"kac-tests: building {kacSource} failed (exit {buildExit}).");
+        Console.Error.WriteLine(Indent(buildErr + buildOut));
+        return null;
+    }
+
+    var (pathOut, pathErr, pathExit) =
+        Run(Directory.GetCurrentDirectory(), "dotnet", "build", kacSource, "--getProperty:TargetPath");
+    var assembly = pathOut.Trim();
+    if (pathExit == 0 && assembly.Length > 0 && File.Exists(assembly)) return assembly;
+
+    Console.Error.WriteLine($"kac-tests: could not locate the built assembly for {kacSource} (exit {pathExit}).");
+    Console.Error.WriteLine(Indent(pathErr + pathOut));
+    return null;
+}
+
 static IReadOnlySet<string> CheckCatalogue(string kac)
 {
-    var (stdout, stderr, exit) = Run(Directory.GetCurrentDirectory(), "dotnet", "run", kac, "--", "checks", "--json");
+    var (stdout, stderr, exit) = Run(Directory.GetCurrentDirectory(), "dotnet", kac, "checks", "--json");
     var json = FromFirstBrace(stdout) ?? throw new Exception($"kac checks produced no JSON (exit {exit}).\n{stderr}");
     using var doc = JsonDocument.Parse(json);
     var set = new HashSet<string>(StringComparer.Ordinal);
@@ -510,7 +541,8 @@ static (string stdout, string stderr, int exit) Run(string workingDir, string fi
     return (outTask.Result, errTask.Result, p.ExitCode);
 }
 
-// `dotnet run` can prepend build output; take the JSON from the first '{'.
+// Take the JSON from the first '{', so anything the runtime prints ahead of the report does not
+// have to be anticipated to be tolerated.
 static string? FromFirstBrace(string s)
 {
     var i = s.IndexOf('{');

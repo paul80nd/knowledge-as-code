@@ -107,5 +107,6 @@ document is written for the day it isn't.
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
+| `symptoms-first`            | error   | Symptoms is the first section after the H1 — that is how the reader finds the document.                  |
 
 <!-- END GENERATED: checks-runbooks -->

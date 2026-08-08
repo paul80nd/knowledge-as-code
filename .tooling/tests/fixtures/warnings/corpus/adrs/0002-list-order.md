@@ -14,8 +14,9 @@ tags:
 
 `ADR: adr-0002` `ACCEPTED`
 
-> **In the context of** the `list-order` rule, **we decided** to leave `tags` in the order the author typed them,
-> **to achieve** coverage of the warning, **accepting** that only the first pair out of order is reported.
+> **In the context of** the `list-order` rule, **facing** a set whose sequence carries no meaning, **we decided** to
+> leave `tags` in the order the author typed them, **rather than** sorting them, **to achieve** coverage of the
+> warning, **accepting** that only the first pair out of order is reported.
 
 ## Context
 

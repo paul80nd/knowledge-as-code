@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 4,
+    "validated": 6,
     "skipped": 0,
     "errors": 0,
-    "warnings": 4
+    "warnings": 6
   },
   "findings": [
     {
@@ -15,7 +15,7 @@
     },
     {
       "file": "adrs/0001-warnings.md",
-      "line": 28,
+      "line": 29,
       "severity": "warning",
       "check": "alternatives-verdict",
       "message": "Alternatives Considered bullet has no verdict: \"A message queue  — we might explore this in a future revi…\"."
@@ -26,6 +26,20 @@
       "severity": "warning",
       "check": "list-order",
       "message": "'tags' is not in alphabetical order — 'access-control' should come before 'identity'."
+    },
+    {
+      "file": "adrs/0003-long-y-statement.md",
+      "line": 13,
+      "severity": "warning",
+      "check": "y-statement",
+      "message": "Y-statement is 95 words; keep it under 60."
+    },
+    {
+      "file": "adrs/0004-incomplete-y-statement.md",
+      "line": 13,
+      "severity": "warning",
+      "check": "y-statement",
+      "message": "Y-statement is missing \"facing\" and \"rather than\". The six moves are what make it a Y-statement rather than a summary of one."
     },
     {
       "file": "policies/ordn-ordinal-not-natural.md",

@@ -13,80 +13,22 @@ public static class Commands
 {
     public static int Validate(string repoRoot, List<string> paths, bool json)
     {
-        var schema = Schema.Load(repoRoot);
-        var corpus = Corpus.Discover(repoRoot, schema, paths);
-
-        var findings = new List<Finding>();
-        var docs = new List<Doc>();
-        var skippedNoFrontmatter = 0;
-
-        // Parse pass: load every candidate, keep the ones that have opted into the
-        // schema by carrying a frontmatter block.
-        foreach (var rel in corpus)
-        {
-            var full = Path.Combine(repoRoot, rel);
-            var text = File.ReadAllText(full);
-            var doc = Doc.Parse(rel, text, schema);
-            if (doc is null)
-            {
-                skippedNoFrontmatter++;
-                continue;
-            }
-
-            docs.Add(doc);
-        }
-
-        // Per-document checks.
-        foreach (var doc in docs)
-            Validator.CheckDocument(doc, schema, repoRoot, findings);
-
-        // A collection type's page is not a record — it carries no frontmatter and describes the
-        // documents beneath it rather than being one — so the structural checks do not apply. What it
-        // does carry is links, and the generated blocks, and it is the page every record links back
-        // to and every contributor reads first. A single-document type's page is absent from this
-        // pass because it is a record, already checked above.
-        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
-        {
-            if (string.IsNullOrEmpty(t.Page)) continue;
-            if (paths.Count > 0 && !paths.Any(p => t.Page == p.Replace('\\', '/').TrimEnd('/'))) continue;
-            var full = Path.Combine(repoRoot, t.Page);
-            if (!File.Exists(full)) continue; // absence is type-setup's to report, not this pass's
-
-            var text = File.ReadAllText(full);
-
-            // Every type page carries the two generated blocks, whatever its shape.
-            Validator.CheckGeneratedBlocks(t.Page, text, [$"schema-{key}", $"checks-{key}"], findings);
-
-            // The link pass is only for a collection's page. A single-document type's page has
-            // already had it, as a record, along with everything else.
-            if (t.IsSingleDocument) continue;
-            var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
-            if (page is not null) Validator.CheckPageLinks(page, schema, repoRoot, findings);
-        }
-
-        // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
-        Validator.CheckCorpus(docs, findings);
-
-        // Whether each declared type is stood up. Skipped when the run is narrowed to given paths:
-        // asking about one document is not asking about the shape of the corpus, and answering
-        // anyway would bury the reply.
-        if (paths.Count == 0)
-            Validator.CheckTypeSetup(schema, repoRoot, Corpus.AllFiles(repoRoot), findings);
-
-        return Report(findings, docs.Count, skippedNoFrontmatter, json);
+        var corpus = Corpus.Load(repoRoot, paths);
+        var findings = Validator.CheckAll(corpus);
+        return Report(findings, corpus.Docs.Count, corpus.SkippedNoFrontmatter, json);
     }
 
     public static int Index(string repoRoot, bool check)
     {
-        var schema = Schema.Load(repoRoot);
-        var corpus = Corpus.Discover(repoRoot, schema, []);
+        var corpus = Corpus.Load(repoRoot, []);
+        var schema = corpus.Schema;
 
-        // Load every frontmatter-bearing doc, grouped by type.
+        // Grouped by type. A document whose folder maps to no schema has nothing to be indexed under;
+        // validate is the voice that says so.
         var byType = new Dictionary<string, List<Doc>>();
-        foreach (var rel in corpus)
+        foreach (var doc in corpus.Docs)
         {
-            var doc = Doc.Parse(rel, File.ReadAllText(Path.Combine(repoRoot, rel)), schema);
-            if (doc?.Type is null) continue;
+            if (doc.Type is null) continue;
             (byType.TryGetValue(doc.Type.Folder, out var list) ? list : byType[doc.Type.Folder] = []).Add(doc);
         }
 
@@ -208,8 +150,10 @@ public static class Commands
         return errors > 0 ? 1 : 0;
     }
 
-    public static int Checks(bool json)
+    public static int Checks(string repoRoot, bool json)
     {
+        var catalogue = CheckCatalogue.For(Schema.Load(repoRoot));
+
         // The catalogue is always valid data, so emit it either way; the reader-facing table's
         // fidelity to it is a separate signal, reported to stderr and via the exit code below. This
         // is the tie the test suite relies on: a new catalogue check with no table row (and no
@@ -218,21 +162,21 @@ public static class Commands
         {
             var report = new ChecksReport(
             [
-                .. CheckCatalogue.All.Select(c =>
+                .. catalogue.Select(c =>
                     new CheckInfo(c.Id, c.Severity.ToString().ToLowerInvariant(), c.Summary))
             ]);
             Console.WriteLine(JsonSerializer.Serialize(report, KacJson.Relaxed.ChecksReport));
         }
         else
         {
-            foreach (var c in CheckCatalogue.All)
+            foreach (var c in catalogue)
             {
                 var tag = c.Severity == Sev.Error ? "error  " : "warning";
                 Console.WriteLine($"  {tag}  {c.Id,-24}  {c.Summary}");
             }
 
             Console.WriteLine();
-            Console.WriteLine($"{CheckCatalogue.All.Count} checks.");
+            Console.WriteLine($"{catalogue.Count} checks.");
         }
 
         var problems = Generator.ChecksTableProblems();

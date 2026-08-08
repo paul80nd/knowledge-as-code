@@ -187,7 +187,8 @@ public static class Generator
         ("reciprocal", ["reciprocal"], "A reciprocal field and its counterpart agree in both directions.",
             t => t.AnyField(f => f.Reciprocal is not null)),
         ("unused-definition", ["unused-definition"], "A link definition that nothing references.", null),
-        ("y-statement", ["y-statement"], "A Y-statement block-quote follows the H1 and is within 60 words.",
+        ("y-statement", ["y-statement"],
+            "A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.",
             t => t.HasRule("y-statement-present")),
         ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.",
             t => t.HasRule("alternatives-have-verdicts"))
@@ -207,6 +208,10 @@ public static class Generator
     private static readonly HashSet<string> IntentionallyUndocumented =
         new(["type", "list", "bracket-literal", "type-setup", "generated-block"], StringComparer.Ordinal);
 
+    // The curated rows, then a row for each expression rule the type declares. A core check is worded
+    // here because several ids fold into one reader-facing row; an expression rule is one id reporting
+    // under its own name, and its `description:` in the schema is already that row written out. Copying
+    // it here would be the same sentence in two files, drifting apart at the first edit.
     public static string ChecksTable(TypeSchema t)
     {
         var severity = CheckCatalogue.All.ToDictionary(c => c.Id, c => c.Severity);
@@ -217,6 +222,14 @@ public static class Generator
             severity.GetValueOrDefault(r.Ids[0], Sev.Error).ToString().ToLowerInvariant(),
             r.Description
         }).ToList();
+
+        rows.AddRange(t.Rules.Where(r => r.Compiled is not null).Select(r => new List<string>
+        {
+            $"`{r.Id}`",
+            (r.Severity ?? Sev.Warning).ToString().ToLowerInvariant(),
+            Escape(r.Description ?? r.Message ?? "")
+        }));
+
         return RenderTable(headers, rows);
     }
 

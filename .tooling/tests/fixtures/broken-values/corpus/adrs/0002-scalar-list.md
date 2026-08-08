@@ -11,8 +11,9 @@ tags: not-a-sequence
 
 `ADR: adr-0002` `ACCEPTED`
 
-> **In the context of** the list rules, **we decided** to give a list field a scalar value, **to achieve** coverage of
-> `list`, **accepting** that this document is intentionally broken.
+> **In the context of** the list rules, **facing** a field the schema declares as a sequence, **we decided** to give
+> it a scalar value, **rather than** an ill-formed sequence, **to achieve** coverage of `list`, **accepting** that
+> this document is intentionally broken.
 
 ## Context
 

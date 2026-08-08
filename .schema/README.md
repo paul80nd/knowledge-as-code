@@ -32,6 +32,7 @@ document's type from its folder, so folder → schema is an identity lookup with
 fields:
   <name>:
     required: true|false        # default false
+    required-when: '<other> == <value>' | '<other> != <value>' | '<other> in [a, b]'
     type: string|date|enum|id|list|bool|int
     of: id|string               # element type, when type is list
     values: [ ... ]             # when type is enum, or an $enums.<name> reference
@@ -42,6 +43,12 @@ fields:
     description: >              # one line, rendered into the generated Metadata table
     notes: >                    # the longer why; schema-only, and the fallback when there is no description
 ```
+
+`required-when` takes those three forms and no others — a condition the loader cannot read stops the load rather than
+reading as one that never holds. It tests one other field of the same document; a condition needing more than that is a
+rule with an `expr:`, not a field declaration. Where the field it names is absent the condition does not hold, `!=`
+included: `required-field` is already reporting that absence, and requiring a second field on top would report one
+omission as two.
 
 `description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
 and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room
@@ -77,9 +84,9 @@ Beyond `fields`, each type file declares:
 | `index`                    | Columns and sort order for the generated index                                                                   |
 | `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |
 
-**`shape`.** Most types are a **collection** — a folder of records, a page describing them, and a template to copy.
-The glossary is a **single-document** type: one document read end to end, whose page *is* the record. A collection
-declares its `folder:`; a single-document type declares none, because it has none, and nothing indexes it.
+**`shape`.** Most types are a **collection** — a folder of records, a page describing them, and a template to copy. The
+glossary is a **single-document** type: one document read end to end, whose page *is* the record. A collection declares
+its `folder:`; a single-document type declares none, because it has none, and nothing indexes it.
 
 It is declared rather than inferred. An absent `folder:` and a deliberate `folder: null` are the same string once
 parsed, so a shape read off the folder cannot tell a single-document type from a collection whose folder key was lost.
@@ -89,24 +96,141 @@ It defaults to `collection`, so only the type that is not one has to say so.
 act on two — `numbered` and `mnemonic` — and a type declaring either of the others receives the prefix check alone.
 Link-label canonicalisation covers `slug` as well, so the shortfall is in the id checks rather than in the idea.
 
-**`rules`.** These are declarations, not a dispatch table. Two rule ids are implemented — `y-statement-present` and
-`alternatives-have-verdicts`, both on the decision-record type, and both only where the rule declares
-`severity: warning`. Every other id across the type files names a behaviour that does not run, and a rule the tool does
-not implement is also absent from the generated `## What CI checks` block, so nothing on the page marks the gap.
+**`rules`.** A rule declaring an `expr:` runs. It is evaluated against every document of its type, reports under its own
+id, is listed by `kac checks`, and renders its own row into the generated `## What CI checks` block from its
+`description:` — so adding one is adding YAML rather than editing the tool. See [Rule expressions](#rule-expressions)
+below for what one may say.
 
-Two checks that read as rules are not driven from here at all: reciprocity comes from a field's `reciprocal:`, and
-section mirroring from its `mirrors-section:`. A `rules:` entry naming either has no effect.
+Two ids keep a hand-written class instead — `y-statement-present` and `alternatives-have-verdicts`, both on the
+decision-record type — because what they ask needs more than the grammar can say. Every remaining id is a statement of
+intent: a behaviour someone wants, written down, that no code answers to yet. Those do not appear in the checks table,
+so a reader of a type page sees what is enforced rather than what is hoped for.
 
-Treat an entry here as a statement of intent, and read the validator before relying on one.
+Not every statement of intent is waiting for an expression, and counting them as though they were makes the ruleset look
+less finished than it is. Nine are not validator work in any form: eight say **Scheduled** in their own descriptions —
+periodic reports over a whole corpus, several needing external state — and `kac` has no execution model for them, while
+`reverse-dependencies-generated` is a generator and belongs with `kac index`. Two are not rules about a document at all:
+`blameless` needs a list of personal names, since no regular expression tells `Alex Doe` from
+`Root Cause`, and `human-confirmed` is a `pattern:` on a field.
+
+Reciprocity and section mirroring are declared on the **field**, not here: `reciprocal:` and `mirrors-section:` drive
+them. So does a conditional requirement, through `required-when:`. A `rules:` entry restating any of those has no
+effect — an entry that duplicates a declaration reads as a second, weaker source for the same obligation.
+
+## Rule expressions
+
+A rule **fires a finding when its `expr` evaluates false**, so the expression reads as the condition that ought to hold
+rather than as the fault.
+
+```yaml
+rules:
+  - id: symptoms-first
+    description: Symptoms is the first section after the H1 — that is how the reader finds the document.
+    severity: error
+    expr: "first_section() == 'Symptoms'"
+    message: >
+      Symptoms must be the first section. Someone reaching for this at 2am matches on what they are
+      seeing, not on what the document is called.
+```
+
+* `description:` is what the rule *means*, and is rendered into the generated `## What CI checks` table on the type
+  page. `message:` is what an author is told when it fires. One is a definition, the other a diagnosis; do not make them
+  the same sentence.
+* A rule carrying an `expr:` **must** declare a severity and a message. A rule claiming to be finished is held to being
+  able to report, and the load fails otherwise.
+* A rule without an `expr:` keeps `id` + `description` and is skipped.
+
+Expression *strings*, not nested predicate objects: several rules are conditionals (`A implies B`) or ratios, and those
+read cleanly inline but become ugly YAML trees.
+
+### Grammar
+
+Frozen. Extending it is a deliberate decision, not a convenience.
+
+```
+expr    := implies
+implies := or ( "implies" or )*          // A implies B  ≡  (not A) or B
+or      := and ( "or" and )*
+and     := cmp ( "and" cmp )*
+cmp     := add ( ("=="|"!="|"<"|"<="|">"|">=") add )?
+add     := mul ( ("+"|"-") mul )*        // needed only for `links() * 40` style ratios
+mul     := unary ( ("*"|"/") unary )*
+unary   := "not" unary | primary
+primary := STRING | INT | call | "(" expr ")"
+call    := IDENT "(" ( expr ("," expr)* )? ")"
+```
+
+* **Types:** string, int, bool. No boolean literals — every condition starts from something the document says.
+* **Strings** are single-quoted, and a doubled quote is one quote, as in YAML and SQL. There are no backslash escapes:
+  the strings that most need a quote in them are regular expressions, and a second escaping layer over those is how they
+  stop being readable.
+* **A comparison is not chainable.** `1 < words() < 40` is a sentence rather than a condition, and the parser declines
+  it instead of choosing an associativity nobody asked for.
+* **Dates** compare correctly as ISO strings lexicographically, so `field('a') >= field('b')` works without a date type.
+  Keep it that way.
+* **Division by zero yields zero.** Nothing in the taxonomy divides; the operator exists because the grammar is frozen,
+  and a rule tripping over it should read as a threshold nobody meets rather than crash mid-corpus.
+* **No** variables, user-defined functions, quantifiers or collections. That boundary is the point.
+
+### Absence, and the guard that follows from it
+
+`field(...)` returns string-or-null. **A comparison where either side is absent is false**, and `!=` is the negation of
+`==`, so it is true. One rule for every operator.
+
+The consequence is an idiom. `field('detected-on') >= field('occurred-on')` fires on a postmortem missing a date — where
+`required-field` has already said so, in better words. A rule about a field that may be absent guards it:
+
+```yaml
+expr: "present('detected-on') and present('occurred-on') implies field('detected-on') >= field('occurred-on')"
+```
+
+This is why written rules read longer than a naive sketch of them. The alternative — each operator guessing which way
+silence should fall — trades one explicit guard for a table of special cases nobody remembers.
+
+### Compile-time checking
+
+An expression is parsed **and type-checked** at load, and anything wrong stops the load naming the rule. That covers a
+syntax error, an unknown fact, the wrong number of arguments, a comparison between a number and text, arithmetic on
+text, and a whole expression that is not a yes/no question.
+
+This matters more than it looks. Without it, `words() == 'three'` compiles and then evaluates false for the life of the
+schema — a check that appears wired up and never fires, which is the exact failure this layer exists to end.
+
+### Fact functions — the only callable surface
+
+Everything an expression can see. Each reads what the parse pass already produced, so the evaluator never re-parses
+markdown.
+
+| Function                         | Returns | Reads                                                                                                                   |
+|----------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------|
+| `field('name')`                  | string? | a frontmatter scalar                                                                                                    |
+| `present('name')`                | bool    | that scalar, non-empty — false for a bare key as well as a missing one                                                  |
+| `field_matches('name', 're')`    | bool    | that scalar against a pattern — false where absent; the one pattern fact that sees frontmatter                          |
+| `section('Title')`               | bool    | whether an H2 of that name exists (case-insensitive)                                                                    |
+| `section_count('Title')`         | int     | how many times it appears — `section()` asks whether, this asks how many                                                |
+| `first_section()`                | string  | the first H2, or empty where there is none                                                                              |
+| `links()`                        | int     | how many links the body carries                                                                                         |
+| `words()`                        | int     | every heading and paragraph the document **renders** — frontmatter and fenced code carry no inline content and fall out |
+| `matches('re')`                  | bool    | the body **as written** — code fences, link targets and markdown syntax included; frontmatter is not                    |
+| `section_matches('Title', 're')` | bool    | the same, bounded to one section; false where the document holds no such section                                        |
+
+**`words()` and `matches()` deliberately see different documents.** One walks the rendered text, the other the source.
+That is what lets `matches` find a credential pasted into a fenced block — the case those rules exist for — and find
+`**MUST**`, an obligation the rendered text would have flattened into an ordinary word. Do not simplify one onto the
+other; a unit test pins the difference.
+
+Adding a fact is adding one method to `Facts` and one row to `RuleExpr.Functions`, which is what the type checker reads.
+The grammar never changes. `section_count()` and `field_matches()` were each written for a single rule and each turned
+out to answer a question the next corpus will ask again, which is the usual shape of a new fact — and the reason
+reaching for the grammar instead is almost always the wrong move.
 
 ## Open questions
 
-* **A schema can declare something the tool does nothing with, and nothing objects.** An unimplemented rule id, a
-  `ref:` naming a folder no schema covers, a `values:` list on a `type: list` field, an `id.style` with no branch in the
-  id checks — each is accepted at load and silently ignored thereafter. The declaration then reads as a commitment to
-  anyone who takes a copy of these files. The fix is to fail at load on anything undispatchable, and to give genuinely
-  aspirational entries a marker the checks table can render as *not yet enforced*; the aspiration is worth keeping, the
-  silence is not.
+* **A schema can still declare something the tool does nothing with.** A `ref:` naming a folder no schema covers, a
+  `values:` list on a `type: list` field, an `id.style` with no branch in the id checks — each is accepted at load and
+  silently ignored thereafter, and then reads as a commitment to anyone who takes a copy of these files. An `expr:` and
+  a `required-when:` no longer can: both fail at load naming what they could not read. The remainder want the same
+  treatment, and a rule that is deliberately aspirational wants a marker saying so rather than silence.
 * **`_enums.yaml` `used-by:` is unparsed.** It lists the types an enum serves and nothing reconciles it against the
   loaded schemas, so in a corpus that has adopted only some of those types it is simply wrong. Either check it or say in
   the file that it is a comment.

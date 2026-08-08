@@ -1,5 +1,3 @@
-using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
@@ -11,6 +9,58 @@ namespace kac.core;
 
 public static class Validator
 {
+    // Everything the validator has to say about a loaded corpus, in the order a reader would ask it:
+    // each record on its own, then the pages that are not records, then the questions that need every
+    // record in hand, then whether the corpus has the shape its schema declares.
+    //
+    // This is the whole of `validate` — the command around it only chooses how to print the result.
+    // Any caller wanting to know what the tool thinks of a corpus calls this, so no caller can end up
+    // running a subset and believing it ran the lot.
+    public static List<Finding> CheckAll(LoadedCorpus corpus)
+    {
+        var (schema, repoRoot) = (corpus.Schema, corpus.RepoRoot);
+        var findings = new List<Finding>();
+
+        foreach (var doc in corpus.Docs)
+            CheckDocument(doc, schema, repoRoot, findings);
+
+        // A collection type's page is not a record — it carries no frontmatter and describes the
+        // documents beneath it rather than being one — so the structural checks do not apply. What it
+        // does carry is links, and the generated blocks, and it is the page every record links back
+        // to and every contributor reads first. A single-document type's page is absent from this
+        // pass because it is a record, already checked above.
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        {
+            if (string.IsNullOrEmpty(t.Page)) continue;
+            if (corpus.Paths.Count > 0
+                && !corpus.Paths.Any(p => t.Page == p.Replace('\\', '/').TrimEnd('/'))) continue;
+            var full = Path.Combine(repoRoot, t.Page);
+            if (!File.Exists(full)) continue; // absence is type-setup's to report, not this pass's
+
+            var text = File.ReadAllText(full);
+
+            // Every type page carries the two generated blocks, whatever its shape.
+            CheckGeneratedBlocks(t.Page, text, [$"schema-{key}", $"checks-{key}"], findings);
+
+            // The link pass is only for a collection's page. A single-document type's page has
+            // already had it, as a record, along with everything else.
+            if (t.IsSingleDocument) continue;
+            var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
+            if (page is not null) LinkChecks.CheckPage(page, schema, repoRoot, findings);
+        }
+
+        // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
+        CheckCorpus(corpus.Docs, findings);
+
+        // Whether each declared type is stood up. Skipped when the run is narrowed to given paths:
+        // asking about one document is not asking about the shape of the corpus, and answering
+        // anyway would bury the reply.
+        if (corpus.Paths.Count == 0)
+            CheckTypeSetup(schema, repoRoot, corpus.Files, findings);
+
+        return findings;
+    }
+
     public static void CheckDocument(Doc d, Schema schema, string repoRoot, List<Finding> f)
     {
         if (d.Type is null)
@@ -33,29 +83,25 @@ public static class Validator
             present[((YamlScalarNode)kv.Key).Value ?? ""] = kv.Value;
 
         // -- unknown keys --
-        var known = new HashSet<string>(schema.KnownKeys(t), StringComparer.Ordinal);
         foreach (var k in d.FrontKeys)
-            if (!known.Contains(k))
+            if (!t.KnownKeys.Contains(k))
                 Err("unknown-key", $"unknown frontmatter key '{k}'.", d.FrontStartLine);
 
         // -- key order --
-        // The schema specifies order across two files (_universal + the type), sharing
-        // the `status` key. Rather than invent one arbitrary total order, enforce that
-        // the actual order is a topological extension of both declared chains: every
-        // pair the schema orders must hold; genuinely unconstrained pairs are free.
-        CheckKeyOrder(d, t, schema, Err);
+        // The actual order must be a topological extension of the chains the schema declares: every
+        // pair it orders must hold, and genuinely unconstrained pairs are free. See
+        // TypeSchema.DeriveKeyOrderEdges for why the constraint is a pair set rather than a total order.
+        CheckKeyOrder(d, t, Err);
 
         // -- required fields (universal + type), incl. required-when --
-        foreach (var name in schema.UniversalOrder.Concat(t.FieldOrder).Distinct())
+        foreach (var spec in t.DeclaredFields)
         {
-            var spec = schema.EffectiveField(t, name);
-            if (spec is null) continue;
-            var req = spec.Required || RequiredWhenHolds(spec.RequiredWhen, present);
-            var absent = !present.ContainsKey(name) || IsAbsentValue(present[name]);
+            var req = spec.Required || RequiredWhenHolds(spec.RequiredWhenCondition, present);
+            var absent = !present.ContainsKey(spec.Name) || IsAbsentValue(present[spec.Name]);
             if (req && absent)
             {
                 var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
-                Err("required-field", $"missing required field '{name}'{why}.", d.FrontStartLine);
+                Err("required-field", $"missing required field '{spec.Name}'{why}.", d.FrontStartLine);
             }
         }
 
@@ -111,16 +157,16 @@ public static class Validator
                 Err("required-section", $"missing required section '## {sec}'.");
 
         // -- clause table shape, ids and modals --
-        CheckClauses(d, t, Err, Warn);
+        ClauseChecks.Check(d, t, Err, Warn);
 
         // -- links resolve --
-        CheckLinks(d, schema, repoRoot, Err, Warn);
+        LinkChecks.Check(d, schema, repoRoot, Err, Warn);
 
         // -- related mirrors ## Related --
         CheckMirrorsSection(d, t, schema, Err);
 
-        // -- warning rules --
-        CheckWarnings(d, t, Warn);
+        // -- the type's own rules --
+        CheckRules(d, t, Err, Warn);
         return;
 
         void Warn(string check, string msg, int? line = null) =>
@@ -333,38 +379,23 @@ public static class Validator
     private static void CheckPattern(string name, string noun, YamlNode node, FieldSpec spec, Doc d,
         Action<string, string, int?> err)
     {
-        if (spec.Pattern is null) return;
+        if (spec.PatternRegex is null) return;
         var v = Scalar(node);
         if (v is null) return;
-        if (!System.Text.RegularExpressions.Regex.IsMatch(v, spec.Pattern))
+        if (!spec.PatternRegex.IsMatch(v))
             err("field-pattern", $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Line(node, d));
     }
 
-    private static void CheckKeyOrder(Doc d, TypeSchema t, Schema schema, Action<string, string, int?> err)
+    private static void CheckKeyOrder(Doc d, TypeSchema t, Action<string, string, int?> err)
     {
-        // All ordered pairs within each declared chain (transitive, so an absent
-        // intermediate key does not drop a constraint between its neighbours).
-        var edges = new HashSet<(string, string)>();
-
-        AddChain(schema.UniversalOrder);
-        AddChain(t.FieldOrder);
-
         var pos = new Dictionary<string, int>();
         for (var i = 0; i < d.FrontKeys.Count; i++)
             if (!pos.ContainsKey(d.FrontKeys[i]))
                 pos[d.FrontKeys[i]] = i;
 
-        foreach (var (a, b) in edges)
+        foreach (var (a, b) in t.KeyOrderEdges)
             if (pos.TryGetValue(a, out var pa) && pos.TryGetValue(b, out var pb) && pa > pb)
                 err("key-order", $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
-        return;
-
-        void AddChain(List<string> chain)
-        {
-            for (var i = 0; i < chain.Count; i++)
-            for (var j = i + 1; j < chain.Count; j++)
-                edges.Add((chain[i], chain[j]));
-        }
     }
 
     private static void CheckId(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
@@ -422,7 +453,7 @@ public static class Validator
     private static void CheckFilename(Doc d, TypeSchema t, Action<string, string, int?> err)
     {
         var name = Path.GetFileName(d.Rel);
-        if (t.FilenamePattern is not null && !System.Text.RegularExpressions.Regex.IsMatch(name, t.FilenamePattern))
+        if (t.FilenameRegex is not null && !t.FilenameRegex.IsMatch(name))
             err("filename-pattern", $"filename '{name}' does not match {t.FilenamePattern}.", null);
         var slug = name;
         if (slug.EndsWith(".md")) slug = slug[..^3];
@@ -443,8 +474,8 @@ public static class Validator
     }
 
     // The H1 is plain descriptive text — no id, no prefix, no shape the schema constrains — so the only
-    // thing left to check is that there is one. What used to be read out of the H1 is now the identity
-    // line's job, and CheckIdentity depends on this having run: with no H1 there is no line beneath it,
+    // thing left to check is that there is one. The type, the id and the status are the identity line's
+    // to carry, and CheckIdentity depends on this having run: with no H1 there is no line beneath it,
     // and reporting both would be one fault counted twice.
     private static void CheckH1(Doc d, Action<string, string, int?> err)
     {
@@ -510,208 +541,10 @@ public static class Validator
                                    + $"`{status.ToUpperInvariant()}`.", d.IdentityLine);
     }
 
-    // The clause table — the section where a policy actually binds. Every other section describes,
-    // qualifies or explains; these rows are the obligations themselves, and each carries an id so a
-    // standard, a control or a deviation can cite the one it answers rather than the whole document.
-    //
-    // Runs only for a type whose schema declares a `clauses:` block, and only once the section itself is
-    // present: a missing section is `required-section`'s to report, and saying it twice would make one
-    // fault look like two.
-    private static void CheckClauses(Doc d, TypeSchema t, Action<string, string, int?> err,
-        Action<string, string, int?> warn)
-    {
-        if (t.Clauses is not { } spec) return;
-        if (!d.H2.Any(h => string.Equals(h, spec.Section, StringComparison.OrdinalIgnoreCase))) return;
-
-        var headers = string.Join(" | ", spec.Columns);
-
-        if (d.ClauseHeaders is null)
-        {
-            err("clause-table", $"the '## {spec.Section}' section holds no table — write one row per "
-                                + $"obligation, headed '{headers}'.", d.ClauseSectionLine);
-            return;
-        }
-
-        if (!d.ClauseHeaders.SequenceEqual(spec.Columns, StringComparer.Ordinal))
-        {
-            err("clause-table", $"the clause table is headed '{string.Join(" | ", d.ClauseHeaders)}' — "
-                                + $"it must be headed '{headers}'.", d.ClauseTableLine);
-            return;
-        }
-
-        if (d.Clauses.Count == 0)
-        {
-            err("clause-table", "the clause table has no rows — a policy that binds nothing binds nobody.",
-                d.ClauseTableLine);
-            return;
-        }
-
-        var seen = new HashSet<string>(StringComparer.Ordinal);
-        var highest = 0;
-        var disordered = false;
-
-        foreach (var row in d.Clauses)
-        {
-            CheckClauseId(row, spec, seen, err);
-
-            // The modal is the binding level, so a row without one is a sentence rather than an
-            // obligation and nothing below it can be judged either.
-            var modal = spec.Modals.FirstOrDefault(m => row.Text.StartsWith(m, StringComparison.Ordinal));
-            if (modal is null)
-            {
-                err("clause-modal", $"clause '{Trim(row.Text)}' does not open with a modal — write one of "
-                                    + $"{string.Join(", ", spec.Binding.Concat(spec.Advisory))}.", row.Line);
-                continue;
-            }
-
-            // Bold carries the binding level visually, and the reader skimming a long table reads the
-            // weight before the words. A binding modal that is not bold reads as advice; an advisory one
-            // that is bold reads as an obligation. Both are the wrong document.
-            var binds = spec.Binding.Contains(modal, StringComparer.Ordinal);
-            if (binds && !string.Equals(row.BoldLead, modal, StringComparison.Ordinal))
-                err("clause-modal", $"'{modal}' binds — write it bold, `**{modal}**`.", row.Line);
-            else if (!binds && row.BoldLead is not null)
-                err("clause-modal", $"'{modal}' does not bind — write it plain, not bold.", row.Line);
-
-            // A second modal in the same row is two obligations sharing one id, so a citation of it can
-            // only ever name half of what it means.
-            var rest = row.Text[modal.Length..];
-            if (spec.Modals.FirstOrDefault(m => rest.Contains(m, StringComparison.Ordinal)) is { } second)
-                warn("clause-compound", $"clause '{row.IdSpan ?? row.IdText}' carries a second '{second}' — "
-                                        + "one obligation per clause, or the citation is ambiguous.", row.Line);
-
-            // Reported once, against the first row that breaks the grouping: a table sorted wholly the
-            // wrong way would otherwise report every row after the first.
-            var rank = spec.Rank(modal);
-            if (rank < highest && !disordered)
-            {
-                warn("clause-order", $"clause '{row.IdSpan ?? row.IdText}' is a '{modal}' but follows a "
-                                     + $"'{spec.Binding.Concat(spec.Advisory).ElementAt(highest)}' — group the table "
-                                     + $"{string.Join(", ", spec.Binding.Concat(spec.Advisory))}.", row.Line);
-                disordered = true;
-            }
-
-            highest = Math.Max(highest, rank);
-        }
-    }
-
-    private static void CheckClauseId(ClauseRow row, ClauseSpec spec, HashSet<string> seen,
-        Action<string, string, int?> err)
-    {
-        // Written as a code span for the same reason the identity line's id is: it is a handle rather
-        // than a word, and Md.PlainText cannot tell the two apart once the span is flattened.
-        if (row.IdSpan is null)
-        {
-            err("clause-id-format", $"clause id '{Trim(row.IdText)}' is not a code span — write it as "
-                                    + $"`{Trim(row.IdText)}`.", row.Line);
-            return;
-        }
-
-        if (spec.IdPattern.Length > 0 &&
-            !System.Text.RegularExpressions.Regex.IsMatch(row.IdSpan, spec.IdPattern))
-            err("clause-id-format", $"clause id '{row.IdSpan}' does not match {spec.IdPattern}.", row.Line);
-
-        // Ordinal, because `pol-SCRT.LOGS` and `pol-SCRT.logs` differing only in case is not two clauses
-        // a reader could tell apart either.
-        if (!seen.Add(row.IdSpan))
-            err("clause-id-unique", $"clause id '{row.IdSpan}' is used twice — a citation of it names "
-                                    + "two obligations.", row.Line);
-    }
-
     // The line the document should have carried, for a message that shows rather than describes.
     // Placeholders stand in for anything the frontmatter could not supply.
     private static string Expected(TypeSchema t, string? id, string? status) =>
         $"`{t.DisplayName}: {id ?? $"{t.IdPrefix}-…"}` `{status?.ToUpperInvariant() ?? "STATUS"}`";
-
-    // The link half of a document's checks, on their own, for a page that is not a record. Every one
-    // of them asks about prose rather than about frontmatter, so they are the checks that carry over
-    // to a type page unchanged.
-    public static void CheckPageLinks(Doc d, Schema schema, string repoRoot, List<Finding> f) =>
-        CheckLinks(d, schema, repoRoot,
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Error, check, msg)),
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, check, msg)));
-
-    private static void CheckLinks(Doc d, Schema schema, string repoRoot, Action<string, string, int?> err,
-        Action<string, string, int?> warn)
-    {
-        foreach (var link in d.Links)
-        {
-            var target = link.Target;
-            if (string.IsNullOrEmpty(target)) continue;
-            if (IsExternal(target) || target.StartsWith('#')) continue;
-            if (!ResolveTarget(repoRoot, d.Rel, target))
-                err("link-resolves", $"link target '{target}' does not resolve.", link.Line);
-        }
-
-        // undefined shortcut/reference labels left as literal '[x]'. Id-shaped is an error — the author
-        // meant to reference a document; anything else is only a warning, since '[x]' in prose is legal.
-        var defined = new HashSet<string>(d.DefinedLabels, StringComparer.OrdinalIgnoreCase);
-        foreach (var (inner, line) in d.BareBracketTokens)
-        {
-            if (defined.Contains(inner)) continue; // a genuine reference that resolved
-            if (TryCanonicalId(inner, schema, out _))
-                err("undefined-label", $"reference '[{inner}]' has no link definition.", line);
-            else
-                warn("bracket-literal",
-                    $"'[{inner}]' looks like a reference but has no definition (or use an inline link).", line);
-        }
-
-        // A shortcut label doubles as its own display text, so it is read as an id and must be written
-        // as one. Reference and definition are matched case-insensitively, so a mis-cased label still
-        // resolves — nothing else would catch it.
-        foreach (var link in d.Links)
-        {
-            if (!link.IsReference || string.IsNullOrEmpty(link.Label)) continue;
-            if (TryCanonicalId(link.Label, schema, out var canonical) && link.Label != canonical)
-                err("label-canonical",
-                    $"reference '[{link.Label}]' should be written as the id '{canonical}'.", link.Line);
-        }
-
-        foreach (var label in d.DefinedLabels.Distinct(StringComparer.Ordinal))
-            if (TryCanonicalId(label, schema, out var canonical) && label != canonical)
-                err("label-canonical",
-                    $"link definition '[{label}]' should be written as the id '{canonical}'.", null);
-
-        // unused definitions
-        foreach (var label in d.DefinedLabels.Distinct(StringComparer.OrdinalIgnoreCase))
-            if (!d.UsedLabels.Contains(label))
-                warn("unused-definition", $"link definition '[{label}]' is never referenced.", null);
-    }
-
-    // A label is id-shaped when its prefix names a type and the remainder fits that type's id style.
-    // The canonical form is the id exactly as the document carries it: the prefix always lower-case,
-    // a mnemonic always upper-case, a slug always lower-case.
-    private static bool TryCanonicalId(string label, Schema schema, out string canonical)
-    {
-        canonical = "";
-        var dash = label.IndexOf('-');
-        if (dash <= 0 || dash == label.Length - 1) return false;
-        var prefix = label[..dash];
-        var rest = label[(dash + 1)..];
-
-        var t = schema.ByFolder.Values.FirstOrDefault(x =>
-            x.IdPrefix.Length > 0 && string.Equals(x.IdPrefix, prefix, StringComparison.OrdinalIgnoreCase));
-        if (t is null) return false;
-
-        switch (t.IdStyle)
-        {
-            case "numbered":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsDigit)) return false;
-                canonical = $"{t.IdPrefix}-{rest}";
-                return true;
-            case "mnemonic":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsLetterOrDigit) || !char.IsLetter(rest[0]))
-                    return false;
-                canonical = $"{t.IdPrefix}-{rest.ToUpperInvariant()}";
-                return true;
-            case "slug":
-                if (!rest.All(c => char.IsLetterOrDigit(c) || c == '-')) return false;
-                canonical = $"{t.IdPrefix}-{rest.ToLowerInvariant()}";
-                return true;
-            default:
-                return false;
-        }
-    }
 
     private static void CheckMirrorsSection(Doc d, TypeSchema t, Schema schema, Action<string, string, int?> err)
     {
@@ -740,100 +573,41 @@ public static class Validator
         }
     }
 
-    private static void CheckWarnings(Doc d, TypeSchema t, Action<string, string, int?> warn)
+    // The type's own `rules:`, in the order the schema declares them. Two kinds arrive here: a rule
+    // carrying an `expr:` is answered by evaluating it, and needs no C# at all; a rule whose question
+    // needs a real algorithm is one of `DocumentRules`, looked up by id. `CLAUDE.md` beside this project
+    // draws the line between them, and this loop is the whole of the dispatch either way.
+    private static void CheckRules(Doc d, TypeSchema t, Action<string, string, int?> err,
+        Action<string, string, int?> warn)
     {
+        // Built once for the document and only where a rule actually asks something of it, so a type
+        // with no expression rules measures nothing.
+        Facts? facts = null;
+
         foreach (var rule in t.Rules)
         {
-            var ruleId = rule.TryGetValue("id", out var rid) ? rid.ToString() : null;
-            var severity = rule.TryGetValue("severity", out var sv) ? sv.ToString() : null;
-            if (severity != "warning") continue;
-
-            switch (ruleId)
+            if (rule.Compiled is { } compiled)
             {
-                case "y-statement-present":
-                {
-                    var max = rule.TryGetValue("max-words", out var mw) && int.TryParse(mw.ToString(), out var m)
-                        ? m
-                        : 60;
-                    if (d.YStatement is null)
-                        warn("y-statement", "no Y-statement block-quote follows the H1.", d.H1Line);
-                    else
-                    {
-                        var words = Md.PlainText(d.YStatement)
-                            .Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
-                        if (words > max)
-                            warn("y-statement", $"Y-statement is {words} words; keep it under {max}.",
-                                d.YStatement.Line + 1);
-                    }
-
-                    break;
-                }
-                case "alternatives-have-verdicts":
-                {
-                    foreach (var (text, line) in AlternativeBullets(d))
-                        if (!HasVerdict(text))
-                            warn("alternatives-verdict",
-                                $"Alternatives Considered bullet has no verdict: \"{Trim(text)}\".", line);
-                    break;
-                }
-            }
-        }
-    }
-
-    private static IEnumerable<(string text, int line)> AlternativeBullets(Doc d)
-    {
-        var inSection = false;
-        foreach (var block in d.Ast)
-        {
-            if (block is HeadingBlock h)
-            {
-                inSection = h.Level switch
-                {
-                    2 => string.Equals(Md.PlainText(h.Inline), "Alternatives Considered",
-                        StringComparison.OrdinalIgnoreCase),
-                    < 2 => false,
-                    _ => inSection
-                };
+                facts ??= new Facts(d);
+                if (RuleExpr.Eval(compiled, facts)) continue;
+                var report = rule.Severity == Sev.Error ? err : warn;
+                report(rule.Id, rule.Message!, d.FrontStartLine);
                 continue;
             }
 
-            if (inSection && block is ListBlock list)
-                foreach (var item in list)
-                    if (item is ListItemBlock li)
-                    {
-                        var text = string.Join(" ", li.Descendants<LiteralInline>().Select(x => x.Content.ToString()));
-                        yield return (text, li.Line + 1);
-                    }
+            // A rule with neither an `expr:` nor an implementation is a statement of intent, and is
+            // skipped in silence: the schema records what someone wanted, and nothing answers to it yet.
+            if (DocumentRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
+                implementation.Check(new RuleContext(d, t, rule, err, warn));
         }
-    }
-
-    private static bool HasVerdict(string text)
-    {
-        var t = text.ToLowerInvariant();
-        // An explicit verdict word, or a contrastive / negative-outcome cue that shows
-        // the option was weighed to a conclusion. A genuinely open bullet ("we could
-        // also use X") carries none of these and is what this warning is for.
-        string[] markers =
-        [
-            "reject", "accept", "chosen", "choose", "defer", "declined", "discarded", "adopted",
-            "not for this adr", "no real alternative", "not adopted", "not pursued", "not chosen",
-            "not relevant", "not worth", "no need", "unnecessary", "ruled out", "set aside",
-            "we use", "instead", "however", "but ", "overkill", "heavier", "too ", "revisit"
-        ];
-        return markers.Any(t.Contains);
     }
 
     // -- small utilities --
 
-    private static bool RequiredWhenHolds(string? expr, Dictionary<string, YamlNode> present)
-    {
-        if (string.IsNullOrWhiteSpace(expr)) return false;
-        var parts = expr.Split("==", 2);
-        if (parts.Length != 2) return false;
-        var field = parts[0].Trim();
-        var val = parts[1].Trim();
-        return present.TryGetValue(field, out var node) && Scalar(node) == val;
-    }
+    private static bool RequiredWhenHolds(RequiredWhen? condition, Dictionary<string, YamlNode> present)
+        => condition is not null
+           && present.TryGetValue(condition.Field, out var node)
+           && condition.Holds(Scalar(node));
 
     private static bool IsAbsentValue(YamlNode node) =>
         node switch
@@ -907,37 +681,4 @@ public static class Validator
         while (i < file.Length && char.IsDigit(file[i])) i++;
         return i == refType.IdWidth ? $"{refType.IdPrefix}-{file[..i]}" : null;
     }
-
-    private static bool IsExternal(string t)
-        => t.StartsWith("http://") || t.StartsWith("https://") || t.StartsWith("mailto:") || t.StartsWith("tel:");
-
-    private static bool ResolveTarget(string repoRoot, string fromRel, string target)
-    {
-        var hash = target.IndexOf('#');
-        if (hash >= 0) target = target[..hash];
-        var q = target.IndexOf('?');
-        if (q >= 0) target = target[..q];
-        if (target.Length == 0) return true; // pure fragment
-
-        string basePath;
-        if (target.StartsWith('/'))
-            basePath = Path.Combine(repoRoot, target.TrimStart('/'));
-        else
-        {
-            var fromDir = Path.GetDirectoryName(Path.Combine(repoRoot, fromRel)) ?? repoRoot;
-            basePath = Path.GetFullPath(Path.Combine(fromDir, target));
-        }
-
-        basePath = basePath.Replace('\\', '/');
-
-        // A directory is deliberately not a target. In Azure DevOps `data.md` is the page and `data/`
-        // is its children — one node — so `/data` is a link to the page, which the `.md` form below
-        // already resolves. Accepting the directory as well would resolve a link to a type whose page
-        // has gone, and would do it inconsistently: git cannot track an empty directory, so the same
-        // link passes on the machine that created the folder and fails in CI.
-        return File.Exists(basePath)
-               || File.Exists(basePath + ".md"); // ADO resolves links with .md omitted
-    }
-
-    private static string Trim(string s) => s.Length > 60 ? s[..57] + "…" : s;
 }

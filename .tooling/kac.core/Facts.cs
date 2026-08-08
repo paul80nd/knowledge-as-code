@@ -1,0 +1,113 @@
+using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
+using Markdig.Syntax;
+
+// ---------------------------------------------------------------------------
+// The facts an `expr:` can see
+// ---------------------------------------------------------------------------
+
+namespace kac.core;
+
+// Everything a rule expression is allowed to ask about a document, and the whole of it. Each answer
+// reads what the parse pass already produced — the evaluator never re-parses markdown — so adding a
+// fact means adding one method here and one entry to RuleExpr's function table, and never touching
+// the grammar.
+//
+// Built per document and discarded after its rules have run, which is what makes the measurements it
+// caches safe to cache: the document it was built from cannot change while it exists.
+public sealed class Facts(Doc doc)
+{
+    // Null where the frontmatter does not carry the key at all, or carries it as a bare key. A rule
+    // comparing against an absent field is answered by RuleExpr's comparison rules, not here.
+    public string? Field(string name) => doc.FrontScalar(name);
+
+    public bool Present(string name) => doc.FrontScalar(name) is { Length: > 0 };
+
+    // Case-insensitive, matching required-section: a heading is prose a person wrote, and '## context'
+    // is the section the schema means however it was capitalised.
+    public bool Section(string title) =>
+        doc.H2.Any(h => string.Equals(h, title, StringComparison.OrdinalIgnoreCase));
+
+    // How many times that heading appears. `section()` answers whether a document has one; this answers
+    // whether it has more than one, which is a different fault — a page carrying two of a heading that
+    // names the thing it is about is two documents that have been filed as one.
+    public int SectionCount(string title) =>
+        doc.H2.Count(h => string.Equals(h, title, StringComparison.OrdinalIgnoreCase));
+
+    // Empty where the document has no H2 at all, so a rule naming the first section reads false rather
+    // than throwing on a document that has none.
+    public string FirstSection() => doc.H2.Count > 0 ? doc.H2[0] : "";
+
+    public int Links() => doc.Links.Count;
+
+    // Whether the body matches a pattern the schema supplies. Read as written — code fences, link
+    // targets and the markdown syntax itself are all in scope — because the rules that ask this are
+    // looking for something that should not be in the document at all, and a credential pasted into a
+    // fenced block is the case they exist for. It is also what lets `\*\*MUST\*\*` find a bold modal
+    // that the rendered text would have flattened away.
+    //
+    // Frontmatter is excluded: it is checked field by field, against patterns its fields declare.
+    public bool Matches(string pattern) => Pattern(pattern).IsMatch(Body);
+
+    // A pattern asked of one frontmatter scalar, which `matches()` deliberately cannot reach: the body
+    // is prose and the frontmatter is fields, and a field is judged against what its own declaration
+    // says. False for an absent field, so a rule about a value guards nothing — whether the field ought
+    // to be there is `required-field`'s question, asked in better words.
+    public bool FieldMatches(string name, string pattern) =>
+        doc.FrontScalar(name) is { Length: > 0 } value && Pattern(pattern).IsMatch(value);
+
+    // The same question asked of one section — from its heading down to the next one at the same level
+    // or above. False where the document has no such section, so a rule naming a section reads as
+    // satisfied rather than throwing; whether the section ought to be there is `required-section`'s.
+    public bool SectionMatches(string title, string pattern) =>
+        SectionText(title) is { } text && Pattern(pattern).IsMatch(text);
+
+    // Words of prose: every heading and paragraph the document renders, and nothing else. Frontmatter
+    // is excluded because it is not prose, and fenced code with it — neither carries inline content, so
+    // both fall out of the walk rather than needing to be skipped. Whitespace-separated runs, which is
+    // what a person means when they say a Y-statement is too long.
+    public int Words() => words ??= CountWords();
+
+    private int? words;
+
+    private string Body => body ??= doc.Text[doc.BodyStart..];
+
+    private string? body;
+
+    // The source of one section, found on the heading text rather than on any id, because that is what
+    // the schema names it by everywhere else. Case-insensitive for the same reason `section()` is.
+    private string? SectionText(string title)
+    {
+        var headings = doc.Ast.OfType<HeadingBlock>().Where(h => h.Level <= 2).ToList();
+        for (var i = 0; i < headings.Count; i++)
+        {
+            if (!string.Equals(Md.PlainText(headings[i].Inline), title, StringComparison.OrdinalIgnoreCase))
+                continue;
+            var from = headings[i].Span.End + 1;
+            var to = i + 1 < headings.Count ? headings[i + 1].Span.Start : doc.Text.Length;
+            return from >= to ? "" : doc.Text[from..to];
+        }
+
+        return null;
+    }
+
+    // Schema patterns are few and fixed, and every document of a type asks the same ones, so they are
+    // parsed once for the life of the process rather than once per document.
+    private static readonly ConcurrentDictionary<string, Regex> Patterns = new();
+
+    private static Regex Pattern(string pattern) =>
+        Patterns.GetOrAdd(pattern, p => new Regex(p, RegexOptions.CultureInvariant));
+
+    private int CountWords()
+    {
+        var total = 0;
+        foreach (var leaf in doc.Ast.Descendants<LeafBlock>())
+        {
+            if (leaf.Inline is null) continue;
+            total += Md.PlainText(leaf.Inline)
+                .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length;
+        }
+
+        return total;
+    }
+}

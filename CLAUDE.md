@@ -38,6 +38,10 @@ Run **one `kac` invocation at a time**. File-based apps share build output and c
 * **Markdown prose wraps at 120 columns**; tables are exempt. `.editorconfig` says so and no check enforces it.
 * **Comments and documentation are timeless.** Describe the design as it is, not as it changed, and never as a
   correction of what it was. The history of a change belongs in its commit message.
+* **A Markdown edit leaves a whole document, not a diff.** Fold new material into what is already there and delete
+  what it supersedes, so the file reads in one voice and someone arriving cold cannot tell which paragraph is the
+  newest. Give each point the detail it earns and make it once — length is not thoroughness, and a paragraph
+  justifying a change is a paragraph that will read as noise a month later.
 * **Branch and open a PR.** Pushes to `main` are rejected.
 * **Example records use one fictional estate** — Example Libraries, a public-library consortium, on `example.com`
   (reserved by RFC 2606). Extend it rather than inventing a second one; [`README.md`](README.md) explains why.

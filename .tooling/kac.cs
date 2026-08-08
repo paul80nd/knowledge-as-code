@@ -55,7 +55,7 @@ var checks = new Command("checks", "List every check the validator implements.")
 {
     checksJsonOpt
 };
-checks.SetAction(pr => Commands.Checks(pr.GetValue(checksJsonOpt)));
+checks.SetAction(pr => Commands.Checks(repoRoot, pr.GetValue(checksJsonOpt)));
 
 // mechanism — enforce the portability manifest. `--check` compares this corpus's synced layer
 // against a reference copy and reports drift, following the same discipline as `index --check`:

@@ -65,6 +65,12 @@ rules:
       specifies behaviour has begun to drift from the ADO items it should point at, and a drifted capability
       is worse than none because sessions will trust it.
     severity: warning
+    # A capability linking to nothing is a specification however short it is, which is why the
+    # allowance is a ratio rather than a ceiling.
+    expr: "words() <= links() * 40"
+    message: >
+      Prose has outgrown the links. A capability is a hub — move the detail into the documents it should
+      be pointing at, and link to them from here.
   - id: feature-file-orphans
     description: >
       Scheduled. Reports feature files in the code repositories claimed by no capability, and paths here

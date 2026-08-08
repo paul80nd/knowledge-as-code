@@ -1,28 +1,35 @@
+using System.Text.RegularExpressions;
 using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 // ---------------------------------------------------------------------------
 // Schema model — loaded from .schema/*.yaml
+//
+// Everything here is settled at load and read-only afterwards. That is what makes the derived sets on
+// TypeSchema safe to hold: they are computed from the declarations beside them, and nothing can change
+// a declaration out from under a set that was derived from it.
 // ---------------------------------------------------------------------------
 
-public class FieldSpec
+public sealed class FieldSpec
 {
-    public required string Name;
-    public bool Required;
-    public string? RequiredWhen; // e.g. "status == accepted"
-    public string Type = "string"; // string|date|enum|id|list|bool|int
-    public string? Of; // element type when Type == list
-    public List<string>? Values; // enum values (resolved)
-    public string? Ref; // folder the id must belong to
-    public string? Reciprocal; // field on the target that must point back
-    public string? Pattern;
-    public string? MirrorsSection; // section whose ids this field must mirror
+    public required string Name { get; init; }
+    public bool Required { get; init; }
+    public string? RequiredWhen { get; init; } // as written, for the message that quotes it
+    public RequiredWhen? RequiredWhenCondition { get; init; } // as parsed, for the check that applies it
+    public string Type { get; init; } = "string"; // string|date|enum|id|list|bool|int
+    public string? Of { get; init; } // element type when Type == list
+    public IReadOnlyList<string>? Values { get; init; } // enum values (resolved)
+    public string? Ref { get; init; } // folder the id must belong to
+    public string? Reciprocal { get; init; } // field on the target that must point back
+    public string? Pattern { get; init; }
+    public Regex? PatternRegex { get; init; } // Pattern compiled — the message still quotes the source string
+    public string? MirrorsSection { get; init; } // section whose ids this field must mirror
 
     // Two audiences, deliberately separate. `Description` is what a reader needs at a glance and is what
     // the generated Metadata table renders; `Notes` is the longer why-it-exists, which belongs in the
     // schema where there is room for it. A field with only Notes falls back to them.
-    public string? Description;
-    public string? Notes;
+    public string? Description { get; init; }
+    public string? Notes { get; init; }
 
     public string? TableText => string.IsNullOrEmpty(Description) ? Notes : Description;
 }
@@ -30,41 +37,122 @@ public class FieldSpec
 // The clause table a type's normative section carries — one addressable obligation per row, cited from
 // elsewhere as `pol-VURM.TIMEBOX`. Held as its own spec so a type gains clauses by declaring them and a
 // type that declares none is simply never checked for any.
-public class ClauseSpec
+//
+// The modal orderings are derived here, once per type, because every clause row of every document reads
+// them and they never differ between two rows of the same type.
+public sealed class ClauseSpec(string idPattern, List<string> binding, List<string> advisory)
 {
-    public string Section = "Clauses";
+    public string Section { get; init; } = "Clauses";
 
     // The table's headers, in order. The first two are read positionally as the id and the clause; any
     // further column is the type's own — `Alignment` on a policy — and is checked for being there and
     // named right, its contents being prose the schema has no view on.
-    public List<string> Columns = ["Id", "Clause"];
-    public string IdPattern = "";
-    public List<string> Binding = [];  // written bold — these oblige
-    public List<string> Advisory = []; // written plain — these recommend
+    public IReadOnlyList<string> Columns { get; init; } = ["Id", "Clause"];
+
+    public string IdPattern { get; } = idPattern;
+    public Regex? IdPatternRegex { get; } = Schema.CompilePattern(idPattern);
+
+    public IReadOnlyList<string> Binding { get; } = binding;  // written bold — these oblige
+    public IReadOnlyList<string> Advisory { get; } = advisory; // written plain — these recommend
+
+    // The order rows must appear in: binding levels before advisory ones, each as the type declares it.
+    private readonly List<string> levels = [.. binding, .. advisory];
+    public IReadOnlyList<string> Levels => levels;
+
+    // Where a modal sits in that order, or -1 for a modal the type does not declare.
+    public int Rank(string modal) => levels.IndexOf(modal);
 
     // Longest first, so "MUST NOT" is recognised before the "MUST" that prefixes it.
-    public IEnumerable<string> Modals => Binding.Concat(Advisory).OrderByDescending(m => m.Length);
-
-    // The order rows appear in: binding levels before advisory ones, each in the order declared.
-    public int Rank(string modal) => Binding.Concat(Advisory).ToList().IndexOf(modal);
+    public IReadOnlyList<string> ModalsLongestFirst { get; } =
+        [.. binding.Concat(advisory).OrderByDescending(m => m.Length)];
 }
 
-public class TypeSchema
+// A field's `required-when:` — the condition under which an otherwise optional field must be filled
+// in, as a test against one other field of the same document. A deliberately closed vocabulary:
+// `status == accepted`, `mechanism != not-enforced`, `classification in [personal, special-category]`.
+//
+// It is not the `expr:` language, and the difference is the point. A rule asks a question about a whole
+// document and may need to combine several; this asks one thing about one field, and stays legible in a
+// schema a reader is skimming for what a type requires.
+//
+// Absence answers false either way — including for `!=`. Where the field a condition names is missing,
+// `required-field` is already reporting that; requiring a second field on top of it would report one
+// omission as two.
+public sealed record RequiredWhen(string Field, bool Negated, IReadOnlyList<string> Values)
 {
-    public string TypeName = "", Label = "", Folder = "", Page = "", Tier = "", Lifecycle = "";
-    public string Shape = CollectionShape;
-    public string IdPrefix = "", IdStyle = "", IdValue = "";
-    public int IdWidth;
-    public string? FilenamePattern;
-    public int SlugMax = 30;
-    public List<string> FieldOrder = [];
-    public Dictionary<string, FieldSpec> Fields = [];
-    public List<string> RequiredSections = [];
-    public List<string> OptionalSections = [];
-    public List<string> IndexColumns = [];
-    public string? IndexSort;
-    public ClauseSpec? Clauses;
-    public readonly List<Dictionary<string, object>> Rules = [];
+    public bool Holds(string? actual) =>
+        actual is not null && Values.Contains(actual, StringComparer.Ordinal) != Negated;
+}
+
+// One entry of a type's `rules:` block. A rule states an intention from the moment it is written, and
+// most of them are still only that — prose the schema carries and no check answers to yet. It gains a
+// `severity:` when something can act on it, which is why an absent severity means "declared, not
+// enforced" rather than a default level.
+public sealed record RuleSpec
+{
+    public required string Id { get; init; }
+
+    // The rule in the schema's own words, whitespace folded so it can be rendered into a table cell.
+    public string? Description { get; init; }
+
+    public Sev? Severity { get; init; }
+
+    // The condition a document must satisfy, as the schema wrote it, and compiled. A rule carrying one
+    // needs no C# at all: the dispatcher evaluates it and reports `Message` where it comes out false.
+    // Absent on the rules that need a real algorithm — git history, graph walks, anything spanning
+    // documents — which stay in C# as a class in `Rules/`, and on the rules nothing answers to yet.
+    public string? Expr { get; init; }
+    public Expr? Compiled { get; init; }
+
+    // What the author is told when the expression fails. Distinct from Description, which says what the
+    // rule means to someone reading the type page: one is a diagnosis, the other a definition.
+    public string? Message { get; init; }
+
+    // The ceiling `y-statement-present` holds a Y-statement to. It sits in the schema for the reason
+    // every threshold does — a number chosen rather than measured is one a corpus tunes, and tuning it
+    // should not be a release — and on the rule rather than on a field because no field carries it.
+    public int? MaxWords { get; init; }
+}
+
+public sealed class TypeSchema
+{
+    public string TypeName { get; init; } = "";
+    public string Label { get; init; } = "";
+    public string Folder { get; init; } = "";
+    public string Page { get; init; } = "";
+    public string Tier { get; init; } = "";
+    public string Lifecycle { get; init; } = "";
+    public string Shape { get; init; } = CollectionShape;
+    public string IdPrefix { get; init; } = "";
+    public string IdStyle { get; init; } = "";
+    public string IdValue { get; init; } = "";
+    public int IdWidth { get; init; }
+    public string? FilenamePattern { get; init; }
+    public Regex? FilenameRegex { get; init; } // FilenamePattern compiled — the message quotes the source
+    public int SlugMax { get; init; } = 30;
+    public IReadOnlyList<string> FieldOrder { get; init; } = [];
+    public IReadOnlyDictionary<string, FieldSpec> Fields { get; init; } = new Dictionary<string, FieldSpec>();
+    public IReadOnlyList<string> RequiredSections { get; init; } = [];
+    public IReadOnlyList<string> OptionalSections { get; init; } = [];
+    public IReadOnlyList<string> IndexColumns { get; init; } = [];
+    public string? IndexSort { get; init; }
+    public ClauseSpec? Clauses { get; init; }
+    public IReadOnlyList<RuleSpec> Rules { get; init; } = [];
+
+    // -- derived at load from the declarations above; see the Derive* helpers --
+    //
+    // Each is a per-type constant that every document of the type asks for. Left underived, a hand-built
+    // TypeSchema is simply a type with no fields to know about, which is what the generator's tests want.
+
+    // Every frontmatter key a document of this type may carry.
+    public IReadOnlySet<string> KnownKeys { get; init; } = new HashSet<string>(StringComparer.Ordinal);
+
+    // Every pair of keys whose relative order the schema fixes.
+    public IReadOnlyList<(string Before, string After)> KeyOrderEdges { get; init; } = [];
+
+    // Every field a document of this type is judged against, in the order the schema declares them, with
+    // each type override already resolved against the universal field it refines.
+    public IReadOnlyList<FieldSpec> DeclaredFields { get; init; } = [];
 
     // The two shapes a type can take. Most are a folder of records; the glossary is one document read
     // end to end. Declared rather than inferred: an absent `folder:` and a deliberate `folder: null`
@@ -86,53 +174,117 @@ public class TypeSchema
 
     // Whether this type declares a given rule. The reader-facing checks table uses it to show a
     // rule's row only on the pages whose schema actually carries the rule.
-    public bool HasRule(string id) =>
-        Rules.Any(r => r.TryGetValue("id", out var rid) && string.Equals(rid.ToString(), id, StringComparison.Ordinal));
+    public bool HasRule(string id) => Rules.Any(r => string.Equals(r.Id, id, StringComparison.Ordinal));
 
     // Whether any field on this type declares the given FieldSpec property — the same question for
     // schema-driven core checks (reciprocal, mirrors-section) that only fire when a field opts in.
     public bool AnyField(Func<FieldSpec, bool> predicate) => Fields.Values.Any(predicate);
+
+    // The universal fields, the type's own, and the reserved keys the publishing platform adds.
+    // Deduplicated, since a type refining `status` declares it in both chains. Order carries no meaning
+    // here — the only question asked of it is whether a key is in it.
+    public static IReadOnlySet<string> DeriveKnownKeys(
+        IEnumerable<string> universalOrder, IEnumerable<string> fieldOrder, IEnumerable<string> reserved) =>
+        universalOrder.Concat(fieldOrder).Concat(reserved).ToHashSet(StringComparer.Ordinal);
+
+    // Key order is declared across two files that share the `status` key, so rather than invent one
+    // arbitrary total order, every pair within each declared chain becomes a constraint and genuinely
+    // unconstrained pairs stay free. Taken pairwise across the whole chain rather than between
+    // neighbours, so an absent intermediate key does not drop the constraint between its neighbours.
+    public static IReadOnlyList<(string Before, string After)> DeriveKeyOrderEdges(
+        IReadOnlyList<string> universalOrder, IReadOnlyList<string> fieldOrder)
+    {
+        // A set while building, because a type that re-declares two universal keys in the order the
+        // universal chain already holds them contributes that pair twice, and a document out of order on
+        // it would be told about one fault twice. A list once built, because checking a document walks
+        // every constraint and never asks whether a given one is present.
+        var edges = new HashSet<(string, string)>();
+        foreach (var chain in new[] { universalOrder, fieldOrder })
+            for (var i = 0; i < chain.Count; i++)
+            for (var j = i + 1; j < chain.Count; j++)
+                edges.Add((chain[i], chain[j]));
+        return [.. edges];
+    }
 }
 
-public class Schema
+public sealed class Schema
 {
-    public List<string> UniversalOrder = [];
-    public Dictionary<string, FieldSpec> Universal = [];
-    public List<string> Reserved = [];
-    public readonly Dictionary<string, List<string>> Enums = [];
-    public readonly Dictionary<string, TypeSchema> ByFolder = [];
+    public IReadOnlyList<string> UniversalOrder { get; init; } = [];
+    public IReadOnlyDictionary<string, FieldSpec> Universal { get; init; } = new Dictionary<string, FieldSpec>();
+    public IReadOnlyList<string> Reserved { get; init; } = [];
+    public IReadOnlyDictionary<string, IReadOnlyList<string>> Enums { get; init; } =
+        new Dictionary<string, IReadOnlyList<string>>();
+    public IReadOnlyDictionary<string, TypeSchema> ByFolder { get; init; } = new Dictionary<string, TypeSchema>();
+
+    // The parts of the schema every type is read against: the shared field declarations, the reserved
+    // keys, and the enum vocabularies a field can draw on. Carried as one argument into type parsing
+    // because a type's derived sets span its own declarations and these together.
+    private sealed record UniversalLayer(
+        IReadOnlyList<string> Order,
+        IReadOnlyDictionary<string, FieldSpec> Fields,
+        IReadOnlyList<string> Reserved,
+        IReadOnlyDictionary<string, IReadOnlyList<string>> Enums);
 
     public static Schema Load(string repoRoot)
     {
         var dir = Path.Combine(repoRoot, ".schema");
-        var s = new Schema();
 
         var enumsRoot = Yaml.LoadFile(Path.Combine(dir, "_enums.yaml"));
+        var enums = new Dictionary<string, IReadOnlyList<string>>();
         foreach (var (name, node) in Yaml.Map(Yaml.Get(enumsRoot, "enums")))
-            s.Enums[name] = Yaml.StrList(Yaml.Get(node, "values"));
+            enums[name] = Yaml.StrList(Yaml.Get(node, "values"));
 
         var uni = Yaml.LoadFile(Path.Combine(dir, "_universal.yaml"));
+        var universalOrder = new List<string>();
+        var universal = new Dictionary<string, FieldSpec>();
         foreach (var (name, node) in Yaml.Map(Yaml.Get(uni, "fields")))
         {
-            s.UniversalOrder.Add(name);
-            s.Universal[name] = ParseField(name, node, s);
+            universalOrder.Add(name);
+            universal[name] = ParseField(name, node, enums);
         }
 
-        s.Reserved = Yaml.StrList(Yaml.Get(uni, "reserved"));
+        var layer = new UniversalLayer(universalOrder, universal, Yaml.StrList(Yaml.Get(uni, "reserved")), enums);
 
+        var byFolder = new Dictionary<string, TypeSchema>();
         foreach (var file in Directory.GetFiles(dir, "*.yaml").OrderBy(f => f))
         {
             var baseName = Path.GetFileNameWithoutExtension(file);
             if (baseName.StartsWith('_')) continue; // _universal, _enums
-            s.ByFolder[baseName] = ParseType(Yaml.LoadFile(file), s);
+            byFolder[baseName] = ParseType(Yaml.LoadFile(file), layer);
         }
 
-        return s;
+        return new Schema
+        {
+            UniversalOrder = layer.Order,
+            Universal = layer.Fields,
+            Reserved = layer.Reserved,
+            Enums = layer.Enums,
+            ByFolder = byFolder
+        };
     }
 
-    private static TypeSchema ParseType(YamlNode root, Schema s)
+    private static TypeSchema ParseType(YamlNode root, UniversalLayer layer)
     {
-        var t = new TypeSchema
+        var id = Yaml.Get(root, "id");
+        var fn = Yaml.Get(root, "filename");
+        var sections = Yaml.Get(root, "sections");
+        var index = Yaml.Get(root, "index");
+
+        var fieldOrder = new List<string>();
+        var fields = new Dictionary<string, FieldSpec>();
+        foreach (var (name, node) in Yaml.Map(Yaml.Get(root, "fields")))
+        {
+            fieldOrder.Add(name);
+            fields[name] = ParseField(name, node, layer.Enums);
+        }
+
+        var rules = Yaml.Get(root, "rules") is YamlSequenceNode ruleNodes
+            ? ruleNodes.Children.Select(ParseRule).ToList()
+            : [];
+
+        var filenamePattern = fn is null ? null : Yaml.Str(Yaml.Get(fn, "pattern"));
+
+        return new TypeSchema
         {
             TypeName = Yaml.Str(Yaml.Get(root, "type")) ?? "",
             Label = Yaml.Str(Yaml.Get(root, "label")) ?? "",
@@ -140,100 +292,189 @@ public class Schema
             Page = Yaml.Str(Yaml.Get(root, "page")) ?? "",
             Tier = Yaml.Str(Yaml.Get(root, "tier")) ?? "",
             Lifecycle = Yaml.Str(Yaml.Get(root, "lifecycle")) ?? "",
-            Shape = Yaml.Str(Yaml.Get(root, "shape")) ?? TypeSchema.CollectionShape
+            Shape = Yaml.Str(Yaml.Get(root, "shape")) ?? TypeSchema.CollectionShape,
+
+            IdPrefix = id is null ? "" : Yaml.Str(Yaml.Get(id, "prefix")) ?? "",
+            IdStyle = id is null ? "" : Yaml.Str(Yaml.Get(id, "style")) ?? "",
+            IdWidth = id is null ? 0 : Yaml.Int(Yaml.Get(id, "width"), 4),
+            IdValue = id is null ? "" : Yaml.Str(Yaml.Get(id, "value")) ?? "",
+
+            FilenamePattern = filenamePattern,
+            FilenameRegex = CompilePattern(filenamePattern),
+            SlugMax = fn is null ? 30 : Yaml.Int(Yaml.Get(fn, "slug-max"), 30),
+
+            FieldOrder = fieldOrder,
+            Fields = fields,
+
+            RequiredSections = sections is null ? [] : Yaml.StrList(Yaml.Get(sections, "required")),
+            OptionalSections = sections is null ? [] : Yaml.StrList(Yaml.Get(sections, "optional")),
+
+            Clauses = Yaml.Get(root, "clauses") is { } clauses
+                ? new ClauseSpec(
+                    Yaml.Str(Yaml.Get(clauses, "id-pattern")) ?? "",
+                    Yaml.StrList(Yaml.Get(clauses, "binding")),
+                    Yaml.StrList(Yaml.Get(clauses, "advisory")))
+                {
+                    Section = Yaml.Str(Yaml.Get(clauses, "section")) ?? "Clauses",
+                    Columns = Yaml.StrList(Yaml.Get(clauses, "columns")) is { Count: > 0 } cols
+                        ? cols
+                        : ["Id", "Clause"]
+                }
+                : null,
+
+            IndexColumns = index is null ? [] : Yaml.StrList(Yaml.Get(index, "columns")),
+            IndexSort = index is null ? null : Yaml.Str(Yaml.Get(index, "sort")),
+
+            Rules = rules,
+
+            KnownKeys = TypeSchema.DeriveKnownKeys(layer.Order, fieldOrder, layer.Reserved),
+            KeyOrderEdges = TypeSchema.DeriveKeyOrderEdges(layer.Order, fieldOrder),
+            DeclaredFields = DeriveDeclaredFields(layer, fieldOrder, fields)
         };
-
-        var id = Yaml.Get(root, "id");
-        if (id is not null)
-        {
-            t.IdPrefix = Yaml.Str(Yaml.Get(id, "prefix")) ?? "";
-            t.IdStyle = Yaml.Str(Yaml.Get(id, "style")) ?? "";
-            t.IdWidth = Yaml.Int(Yaml.Get(id, "width"), 4);
-            t.IdValue = Yaml.Str(Yaml.Get(id, "value")) ?? "";
-        }
-
-        var fn = Yaml.Get(root, "filename");
-        if (fn is not null)
-        {
-            t.FilenamePattern = Yaml.Str(Yaml.Get(fn, "pattern"));
-            t.SlugMax = Yaml.Int(Yaml.Get(fn, "slug-max"), 30);
-        }
-
-        foreach (var (name, node) in Yaml.Map(Yaml.Get(root, "fields")))
-        {
-            t.FieldOrder.Add(name);
-            t.Fields[name] = ParseField(name, node, s);
-        }
-
-        var sections = Yaml.Get(root, "sections");
-        if (sections is not null)
-        {
-            t.RequiredSections = Yaml.StrList(Yaml.Get(sections, "required"));
-            t.OptionalSections = Yaml.StrList(Yaml.Get(sections, "optional"));
-        }
-
-        if (Yaml.Get(root, "clauses") is { } clauses)
-            t.Clauses = new ClauseSpec
-            {
-                Section = Yaml.Str(Yaml.Get(clauses, "section")) ?? "Clauses",
-                Columns = Yaml.StrList(Yaml.Get(clauses, "columns")) is { Count: > 0 } cols
-                    ? cols
-                    : ["Id", "Clause"],
-                IdPattern = Yaml.Str(Yaml.Get(clauses, "id-pattern")) ?? "",
-                Binding = Yaml.StrList(Yaml.Get(clauses, "binding")),
-                Advisory = Yaml.StrList(Yaml.Get(clauses, "advisory"))
-            };
-
-        var index = Yaml.Get(root, "index");
-        if (index is not null)
-        {
-            t.IndexColumns = Yaml.StrList(Yaml.Get(index, "columns"));
-            t.IndexSort = Yaml.Str(Yaml.Get(index, "sort"));
-        }
-
-        if (Yaml.Get(root, "rules") is YamlSequenceNode rules)
-            foreach (var r in rules.Children)
-                t.Rules.Add(Yaml.Map(r).ToDictionary(x => x.Item1, object (x) => x.Item2));
-
-        return t;
     }
 
-    private static FieldSpec ParseField(string name, YamlNode node, Schema s)
+    // Every field a document of the type is judged against, in declared order — the universal fields
+    // first, then the type's own, with a name appearing in both resolved to the type's refinement of it.
+    // A name that resolves to no declaration is dropped rather than carried as a hole.
+    private static IReadOnlyList<FieldSpec> DeriveDeclaredFields(UniversalLayer layer,
+        IReadOnlyList<string> fieldOrder, IReadOnlyDictionary<string, FieldSpec> fields) =>
+    [
+        .. layer.Order.Concat(fieldOrder).Distinct()
+            .Select(n => Effective(fields, layer.Fields, n))
+            .OfType<FieldSpec>()
+    ];
+
+    private static FieldSpec ParseField(string name, YamlNode node,
+        IReadOnlyDictionary<string, IReadOnlyList<string>> enums)
     {
-        var f = new FieldSpec
+        var pattern = Yaml.Str(Yaml.Get(node, "pattern"));
+
+        // `values: $enums.status` draws the vocabulary from _enums.yaml; a sequence declares it inline.
+        // A name no enum answers to leaves the field without values, which reads downstream as a field
+        // whose range the schema does not constrain.
+        IReadOnlyList<string>? values = Yaml.Get(node, "values") switch
+        {
+            YamlScalarNode { Value: { } v } when v.StartsWith("$enums.", StringComparison.Ordinal) =>
+                enums.GetValueOrDefault(v["$enums.".Length..]),
+            YamlSequenceNode seq => Yaml.StrList(seq),
+            _ => null
+        };
+
+        var requiredWhen = Yaml.Str(Yaml.Get(node, "required-when"));
+
+        return new FieldSpec
         {
             Name = name,
             Required = Yaml.Bool(Yaml.Get(node, "required")),
-            RequiredWhen = Yaml.Str(Yaml.Get(node, "required-when")),
+            RequiredWhen = requiredWhen,
+            RequiredWhenCondition = ParseRequiredWhen(name, requiredWhen),
             Type = Yaml.Str(Yaml.Get(node, "type")) ?? "string",
             Of = Yaml.Str(Yaml.Get(node, "of")),
+            Values = values,
             Ref = Yaml.Str(Yaml.Get(node, "ref")),
             Reciprocal = Yaml.Str(Yaml.Get(node, "reciprocal")),
-            Pattern = Yaml.Str(Yaml.Get(node, "pattern")),
+            Pattern = pattern,
+            PatternRegex = CompilePattern(pattern),
             MirrorsSection = Yaml.Str(Yaml.Get(node, "mirrors-section")),
             Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
             Notes = Collapse(Yaml.Str(Yaml.Get(node, "notes")))
         };
-
-        var values = Yaml.Get(node, "values");
-        switch (values)
-        {
-            case YamlScalarNode sc when (sc.Value?.StartsWith("$enums.") == true):
-                s.Enums.TryGetValue(sc.Value["$enums.".Length..], out f.Values);
-                break;
-            case YamlSequenceNode:
-                f.Values = Yaml.StrList(values);
-                break;
-        }
-        return f;
     }
 
-    // Merge the universal status enum (per-type override) into the type's status field.
-    public FieldSpec? EffectiveField(TypeSchema t, string name) =>
-        t.Fields.TryGetValue(name, out var tf) ? tf : Universal.GetValueOrDefault(name);
+    // A severity the tool does not recognise reads as absent, which leaves the rule declared but not
+    // enforced — the same state as a rule that names no severity at all, and the safe one: a check that
+    // does not run is visible in `kac checks`, where a check that ran at a level nobody meant is not.
+    //
+    // A rule carrying an `expr:` is held to more, because it is a rule that claims to be finished. It
+    // must compile, and it must say at what level it fires and what to tell the author, or it would load
+    // as a check that can never report anything. Each of those is a defect in the schema rather than in
+    // any document, so the load stops rather than carrying a rule nobody can rely on.
+    private static RuleSpec ParseRule(YamlNode node)
+    {
+        var id = Yaml.Str(Yaml.Get(node, "id")) ?? "";
+        var source = Yaml.Str(Yaml.Get(node, "expr"));
+        var severity = Yaml.Str(Yaml.Get(node, "severity")) switch
+        {
+            "error" => Sev.Error,
+            "warning" => Sev.Warning,
+            _ => (Sev?)null
+        };
+        var message = Collapse(Yaml.Str(Yaml.Get(node, "message")));
 
-    public IEnumerable<string> KnownKeys(TypeSchema t) =>
-        UniversalOrder.Concat(t.FieldOrder).Concat(Reserved).Distinct();
+        Expr? compiled = null;
+        if (source is not null)
+        {
+            if (severity is null)
+                throw new RuleExprException($"rule '{id}' has an expr but no severity — say whether it fails "
+                                            + "a build or advises an author.");
+            if (string.IsNullOrEmpty(message))
+                throw new RuleExprException($"rule '{id}' has an expr but no message — an author has to be "
+                                            + "told what to do about it.");
+            try
+            {
+                compiled = RuleExpr.Compile(source);
+            }
+            catch (RuleExprException ex)
+            {
+                throw new RuleExprException($"rule '{id}': {ex.Message}");
+            }
+        }
+
+        return new RuleSpec
+        {
+            Id = id,
+            Description = Collapse(Yaml.Str(Yaml.Get(node, "description"))),
+            Severity = severity,
+            Expr = source,
+            Compiled = compiled,
+            Message = message,
+            MaxWords = Yaml.Get(node, "max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
+                ? words
+                : null
+        };
+    }
+
+    // Parsed at load, and a condition the vocabulary does not cover stops the load. Failing silently
+    // would be worse than useless: an unreadable condition is one that never holds, so the field it
+    // guards is quietly never required while the schema goes on claiming it is.
+    public static RequiredWhen? ParseRequiredWhen(string field, string? condition)
+    {
+        if (string.IsNullOrWhiteSpace(condition)) return null;
+
+        var inList = System.Text.RegularExpressions.Regex.Match(
+            condition, @"^\s*(\S+)\s+in\s*\[(.*)\]\s*$");
+        if (inList.Success)
+            return new RequiredWhen(inList.Groups[1].Value,
+                false,
+                [.. inList.Groups[2].Value.Split(',').Select(v => v.Trim()).Where(v => v.Length > 0)]);
+
+        foreach (var (op, negated) in new[] { ("!=", true), ("==", false) })
+        {
+            var parts = condition.Split(op, 2);
+            if (parts.Length != 2) continue;
+            return new RequiredWhen(parts[0].Trim(), negated, [parts[1].Trim()]);
+        }
+
+        throw new RuleExprException(
+            $"field '{field}' has a required-when the schema cannot read: '{condition}'. "
+            + "Write it as 'other == value', 'other != value', or 'other in [a, b]'.");
+    }
+
+    // The field a name resolves to for a given type: its own declaration where it has one, otherwise the
+    // universal field it inherits. One definition, so the list derived at load and the lookup a check
+    // makes cannot disagree about which field a name means.
+    private static FieldSpec? Effective(IReadOnlyDictionary<string, FieldSpec> typeFields,
+        IReadOnlyDictionary<string, FieldSpec> universal, string name) =>
+        typeFields.TryGetValue(name, out var tf) ? tf : universal.GetValueOrDefault(name);
+
+    public FieldSpec? EffectiveField(TypeSchema t, string name) => Effective(t.Fields, Universal, name);
+
+    // A pattern the schema declares, held as a Regex so the expression is parsed once at load rather
+    // than looked up in the framework's cache on every value it is applied to. Interpreted rather than
+    // RegexOptions.Compiled: a compiled pattern generates IL on first use, which a corpus matching it a
+    // handful of times never earns back, and the two are level once volumes are high enough to matter.
+    internal static Regex? CompilePattern(string? pattern) =>
+        string.IsNullOrEmpty(pattern) ? null : new Regex(pattern, RegexOptions.CultureInvariant);
 
     private static string? Collapse(string? s) =>
         s is null ? null : string.Join(" ", s.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));

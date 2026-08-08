@@ -42,6 +42,10 @@ The unit layer catches breakage in the pieces early; the feature layer is the re
 validator does; the golden/subprocess layer owns the end-to-end CLI contract that the in-process layers bypass.
 Regenerate golden expectations after an intended rule change with `dotnet run .tooling/kac-tests.cs -- --update`.
 
+The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check the
+command can emit is reachable from a spec. The golden layer builds `kac.cs` once per run and invokes the built assembly,
+so each scenario is a real process without paying `dotnet run`'s up-to-date check for each one.
+
 ### Exit codes
 
 | Code | Meaning                                                                         |
@@ -63,16 +67,16 @@ and `.git/` is never walked), then applies the taxonomy exclusions from `knowled
 - anything outside a folder that maps to a type schema
 
 A document is validated **only if it carries a YAML frontmatter block** — that is how a document opts into the schema.
-Files in a type folder without frontmatter are counted as *skipped (not yet migrated)* and reported in the summary,
-not failed.
+Files in a type folder without frontmatter are counted as *skipped (not yet migrated)* and reported in the summary, not
+failed.
 
 **Type pages get a pass of their own**, chosen by the type's `shape`:
 
 - a **`collection`** page — `adrs.md`, `services.md` — is not a record and carries no frontmatter, so the structural
   checks do not apply. It is checked for link resolution, undefined and non-canonical labels, unused definitions, and
   that its generated blocks still have their markers.
-- a **`single-document`** page — `glossary.md` — *is* the record, so it is validated like any other document, plus
-  the same generated-block check.
+- a **`single-document`** page — `glossary.md` — *is* the record, so it is validated like any other document, plus the
+  same generated-block check.
 
 ## Checks
 
@@ -133,19 +137,75 @@ A type that declares no `clauses:` block is checked for none of these.
 | `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                   |
 | `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`) and points at a document that exists.                                                                                                                                                                   |
 | `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. A `single-document` type has a page and no folder. Skipped when the run is narrowed to paths.    |
-| `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                              |
+| `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                               |
 | `unused-definition`       | warning | A link definition that nothing references.                                                                                                                                                                                                                                              |
 | `bracket-literal`         | warning | A `[...]` left in prose that looks like a reference but has no definition (use an inline link if it is deliberate).                                                                                                                                                                     |
 
-### Content quality (schema `rules` with `severity: warning`)
+### Content quality (a type's own `rules`)
 
-| Check                  | Level   | What it enforces                                                                                                                      |
-|------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `y-statement`          | warning | A block-quote follows the H1 and is within `max-words` (60).                                                                          |
-| `alternatives-verdict` | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
+A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
+by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
+editing this tool; [`../.schema/README.md`](../.schema/README.md) is the reference for what one may say. Only the last
+two need more than the grammar can say, and each is a class in `kac.core/Rules/` with its own unit tests.
+
+| Check                           | Type         | Level   | What it enforces                                                                                                                      |
+|---------------------------------|--------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `detected-not-before-occurred`  | postmortems  | error   | `detected-on` is on or after `occurred-on` — an incident cannot be found before it began.                                             |
+| `symptoms-first`                | runbooks     | error   | Symptoms is the first section, because that is what someone reaching for a runbook matches on.                                        |
+| `provenance-required`           | standards    | error   | The standard cites an ADR in `derived-from` or a policy in `implements`. With neither it is guidance.                                 |
+| `hub-not-specification`         | capabilities | warning | Prose has not outgrown the links. A capability points at detail; it does not carry it.                                                |
+| `links-rather-than-restates`    | explanations | warning | As above — a fact restated rather than linked is a second copy to keep true.                                                          |
+| `low-ceremony`                  | discoveries  | warning | A capture stays short. Length here means the tier boundary is being ignored.                                                          |
+| `no-credentials`                | integrations | error   | Nothing reads as a credential rather than as a reference to one — code fences included.                                               |
+| `no-actual-data`                | data         | error   | No address outside `example.com`, which RFC 2606 reserves so that it can never be anybody's.                                          |
+| `fallback-required`             | integrations | warning | The *Failure modes* section names a fallback, or says plainly that there is none.                                                     |
+| `not-normative`                 | explanations | warning | No bold RFC 2119 keyword — a bold modal binds, and an explanation does not.                                                           |
+| `no-hedged-ordering`            | processes    | warning | No "typically", "usually" or "normally" inside *Steps*.                                                                               |
+| `posture-belongs-to-frameworks` | policies     | warning | No claim of standing beside a framework's name — that belongs in `frameworks.md`.                                                     |
+| `target-is-measurable`          | nfrs         | warning | `measured-by` names an instrument rather than hedging — "monitored", "where practical" answer nothing.                                |
+| `what-went-well-required`       | postmortems  | warning | Something follows the *What went well* heading. `sections` can require the heading and not its contents.                              |
+| `mechanism-has-evidence`        | controls     | warning | A control whose `mechanism` is not `not-enforced` names where the proof of it lives.                                                  |
+| `one-problem-per-document`      | faqs         | warning | One *Symptom* section, because an FAQ is found by its symptom.                                                                        |
+| `trial-has-criteria`            | tools        | warning | A tool in `trial` carries a *Trial criteria* section; without one the trial has no way to end.                                        |
+| `deprecated-has-successor`      | tools        | warning | A deprecated tool names its `successor`, so the reader is sent somewhere rather than told a dead end.                                 |
+| `y-statement`                   | adrs         | warning | A block-quote follows the H1, states all six moves, and is within `max-words` (60).                                                   |
+| `alternatives-verdict`          | adrs         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
+
+The three length rules are ratios or ceilings whose numbers are judgements rather than measurements — no corpus has yet
+held enough of these types to calibrate them. Each is pinned by a fixture, so changing one is visible.
+
+The seven that match text are heuristics, and their patterns live in `.schema/` for that reason: a heuristic gets tuned,
+and tuning a regex there is a schema edit rather than a release every corpus has to take. Six read the document **as
+written** — a credential pasted into a fenced block is the case they exist for, and the flattened text a word count
+walks would never see it. `target-is-measurable` is the exception: it reads a frontmatter value, which the body patterns
+deliberately cannot see, because a field is judged against what its own declaration says.
 
 Code is excluded from every link and marker check: they walk the Markdig AST (inline links, literal runs), and fenced or
 indented code carries none of those nodes.
+
+### Why rules are data
+
+Wiring a rule as C# means a class, a registry line, unit tests, a row in `Generator.DocRows`, a row in two READMEs, and
+a fixture. Wiring it as an expression means a line of YAML and a fixture. That difference is the whole argument, and it
+compounds: a corpus that has *taken* this framework rather than authored it may add a whole type file of its own, and
+before this layer existed every rule in one was inert — enforcing it needed an upstream code change and a release.
+
+OPA/Rego was the obvious alternative and is the wrong shape. It would replace only the evaluation *tail* of the
+pipeline, leaving all the markdown and frontmatter extraction untouched, while adding a language and a runtime
+dependency and breaking the single-file, no-build-step design. A small hand-rolled evaluator buys the one property worth
+having — new rules as data — at a fraction of that. `RuleExpr.cs` says when that judgement expires.
+
+| File                      | Holds                                                                              |
+|---------------------------|------------------------------------------------------------------------------------|
+| `kac.core/Facts.cs`       | the fact functions, and nothing else an expression can reach                       |
+| `kac.core/RuleExpr.cs`    | lexer, recursive-descent parser, type checker, evaluator — no dependencies         |
+| `RuleSpec` in `Schema.cs` | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load            |
+| `kac.core/Rules/`         | one class per rule that needs C#, and the registry the dispatcher looks them up in |
+| `Validator.CheckRules`    | evaluates every compiled rule, and looks up by id the ones that are not            |
+
+`CheckRules` emits at the rule's own severity, which is why it is not `CheckWarnings`. `Facts` is built per document and
+discarded once its rules have run, which is what makes `words()` safe to memoise there rather than on the immutable
+`Doc`.
 
 ## The key-order rule
 

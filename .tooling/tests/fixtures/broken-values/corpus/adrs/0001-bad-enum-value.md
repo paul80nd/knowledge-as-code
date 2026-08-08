@@ -9,8 +9,9 @@ owner: alex.doe
 
 `ADR: adr-0001` `DRAFT`
 
-> **In the context of** the enum rules, **we decided** to use a status that is both out of range and capitalised, **to
-> achieve** coverage of `enum` and `enum-lowercase`, **accepting** that this document is intentionally broken.
+> **In the context of** the enum rules, **facing** two checks that travel together, **we decided** to use a status
+> that is both out of range and capitalised, **rather than** one fault at a time, **to achieve** coverage of `enum`
+> and `enum-lowercase`, **accepting** that this document is intentionally broken.
 
 ## Context
 

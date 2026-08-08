@@ -10,9 +10,10 @@ owner: alex.doe
 
 `ADR: adr-0001` `ACCEPTED`
 
-> **In the context of** the warning rules, **we decided** to leave one alternative open and one link definition unused,
-> **to achieve** coverage of `alternatives-verdict` and `unused-definition`, **accepting** that the document is
-> otherwise valid so only warnings appear.
+> **In the context of** the warning rules, **facing** two warnings that need no error beside them, **we decided** to
+> leave one alternative open and one link definition unused, **rather than** breaking anything at error level, **to
+> achieve** coverage of `alternatives-verdict` and `unused-definition`, **accepting** that the document is otherwise
+> valid so only warnings appear.
 
 ## Context
 

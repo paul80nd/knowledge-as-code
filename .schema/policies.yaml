@@ -99,7 +99,13 @@ index:
 rules:
   - id: posture-belongs-to-frameworks
     description: >
-      Flags the words "compliant", "compliance", "certified" and "registered" near a framework reference.
-      A policy maps its clauses to controls; what our standing against that framework is belongs in
-      `frameworks.md`, where it is stated once and corrected in one place when it changes.
+      Flags the words "compliant", "compliance", "certified" and "registered" near a framework reference. A
+      policy maps its clauses to controls; what our standing is against a framework belongs in frameworks.md.
     severity: warning
+    # Proximity rather than the bare word: a policy may reasonably say "compliance" about a process without
+    # claiming a standing. It is the claim beside a framework's name that belongs somewhere else.
+    expr: >-
+      not matches('(?i)(compliant|compliance|certified|registered)[^.]{0,80}(ISO|GDPR|SOC ?2|PCI)|(ISO|GDPR|SOC ?2|PCI)[^.]{0,80}(compliant|compliance|certified|registered)')
+    message: >
+      This claims a standing against a framework. A policy maps clauses to controls; where the organisation
+      stands belongs in `frameworks.md`, the one place it can be kept true.

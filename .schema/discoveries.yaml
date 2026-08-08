@@ -80,14 +80,10 @@ rules:
       Reports discoveries above a length threshold. Capture has to be nearly free or it stops happening; a
       discovery written like an FAQ suggests the tier boundary is being ignored.
     severity: warning
+    expr: "words() <= 200"
+    message: >
+      This is longer than a capture should be. If it needs this much explaining it has outgrown the tier —
+      promote it rather than expanding it here.
   - id: expiry-sweep
     description: >
       Scheduled. Discoveries past `expires` with no promotion are set to `expired` with a note, not deleted.
-  - id: reciprocal-promotion
-    fields: [promoted-to, promoted-from]
-  - id: dreamed-requires-provenance
-    field: provenance
-  - id: no-review-required
-    description: >
-      Documented here so it is not mistaken for an omission: this tier merges on a green build with no
-      reviewer. Authority comes at promotion, not capture.

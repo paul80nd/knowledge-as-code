@@ -112,8 +112,8 @@ public class GeneratorTests
         var main = table.Split("**Enum values**", StringSplitOptions.None)[0];
         var row = main.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
 
-        // The values are the thing that used to blow the column width out — they belong below, in a
-        // table of their own so the page still reads as formatted code.
+        // Values are what blows a column's width out, so they belong below in a table of their own,
+        // where the page still reads as formatted code.
         Assert.DoesNotContain("`draft`", row);
         Assert.Contains("SHORT PROSE", row);
         Assert.Contains("**Enum values**", table);
@@ -161,8 +161,8 @@ public class GeneratorTests
     public void ChecksTable_omits_rows_for_checks_the_type_cannot_trip()
     {
         // A type declaring no rules and no reciprocal/mirrors-section field: the schema-conditional
-        // rows must not appear. Before this was conditional, every page carried the ADR-shaped table
-        // and told (say) a policy reader their documents are checked for Y-statements.
+        // rows must not appear. Unconditional rows would tell a policy reader their documents are
+        // checked for Y-statements, which is the ADR-shaped table advertised on every page.
         var table = Generator.ChecksTable(new TypeSchema());
 
         Assert.DoesNotContain("y-statement", table);
@@ -181,10 +181,13 @@ public class GeneratorTests
             {
                 ["supersedes"] = new() { Name = "supersedes", Reciprocal = "superseded-by" },
                 ["related"] = new() { Name = "related", MirrorsSection = "Related" }
-            }
+            },
+            Rules =
+            [
+                new RuleSpec { Id = "y-statement-present" },
+                new RuleSpec { Id = "alternatives-have-verdicts" }
+            ]
         };
-        t.Rules.Add(new Dictionary<string, object> { ["id"] = "y-statement-present" });
-        t.Rules.Add(new Dictionary<string, object> { ["id"] = "alternatives-have-verdicts" });
 
         var table = Generator.ChecksTable(t);
 

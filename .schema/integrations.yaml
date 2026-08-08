@@ -57,10 +57,22 @@ rules:
     description: >
       Every failure mode names a fallback, or the document explicitly states there is none. An undocumented
       single point of failure is the most expensive kind.
+    severity: warning
+    # The section as a whole rather than each mode within it: nothing here can tell one failure mode from
+    # the next, so this catches the document that never mentions a fallback, not the one missing a case.
+    expr: "section_matches('Failure modes', '(?i)fallback')"
+    message: >
+      The Failure modes section names no fallback. Say what happens instead when this fails, or say plainly
+      that nothing does.
   - id: no-credentials
     description: >
       Fails on anything resembling a token, key, password or connection string. Name the mechanism and where
       the credential is stored, never the credential.
-  - id: unused-integrations
-    description: Reports integrations whose `used-by` is empty while status is `active`.
-    severity: warning
+    severity: error
+    # An assignment, not a mention: a document explaining how credentials are handled says "password"
+    # constantly and is right to. What it never does is follow one with a value.
+    expr: >-
+      not matches('(?i)(password|passwd|secret|api[_-]?key|access[_-]?key|token)\s*[:=]\s*["'']?[A-Za-z0-9/+_.-]{8,}')
+    message: >
+      Something here reads as a credential rather than as a reference to one. Name the mechanism and where
+      the value is held; never the value.

@@ -53,11 +53,22 @@ rules:
       Reports an explanation whose prose-to-link ratio exceeds a threshold. An explanation that accumulates
       facts of its own has become a maintenance liability, and its facts will be the ones that go stale first.
     severity: warning
+    expr: "words() <= links() * 40"
+    message: >
+      Prose has outgrown the links. Each fact restated here is a second copy to keep true — link to the
+      document that owns it instead.
   - id: not-normative
     description: >
       Flags RFC 2119 keywords (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) in bold. Normative content belongs
       in a standard; the explanation should link to it.
     severity: warning
+    # Bold is how a clause table states an obligation, so it is the bold that separates an explanation
+    # quoting the word from one binding with it.
+    expr: >-
+      not matches('\*\*(MUST NOT|MUST|SHOULD NOT|SHOULD|MAY)\*\*')
+    message: >
+      A bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard and
+      link to it from here.
   - id: not-load-bearing
     description: >
       Reports where a decided-tier document (ADR or postmortem) cites an explanation as the authority for a
