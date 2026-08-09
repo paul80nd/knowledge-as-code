@@ -60,12 +60,12 @@ where ownership belongs if it needs stating: who is bound is a scope question, n
 One row per clause. Ordered **MUST**, **MUST NOT**, SHOULD, COULD — binding levels bold, non-binding plain, so the
 weight drops off at the boundary without needing a divider the table format can't give you.
 
-| Id       | Clause                                | Alignment           |
-|----------|---------------------------------------|---------------------|
-| `XXXXXX` | **MUST** {{obligation}}               | [FRAMEWORK].{{ref}} |
-| `XXXXXX` | **MUST NOT** {{prohibition}}          |                     |
-| `XXXXXX` | SHOULD {{recommendation}}             |                     |
-| `XXXXXX` | COULD {{aspiration}} _(aspirational)_ |                     |
+| Id       | Clause                       | Alignment           |
+|----------|------------------------------|---------------------|
+| `XXXXXX` | **MUST** {{obligation}}      | [FRAMEWORK].{{ref}} |
+| `XXXXXX` | **MUST NOT** {{prohibition}} |                     |
+| `XXXXXX` | SHOULD {{recommendation}}    |                     |
+| `XXXXXX` | COULD {{aspiration}}         |                     |
 
 **Ids.** `[A-Z][A-Z0-9]{1,6}`, unique within the document, immutable once the policy is active — anything else cites
 them as `pol-XXXX.CLAUSE`, CI holds every citation to a clause that exists, and removing one is a breaking change.
@@ -86,8 +86,10 @@ during design" passes. The question itself is not published; controls carry evid
 empty cell is honest. Reference-style links resolving into `/frameworks`, with the framework version folded into the id
 (`iso27001-2022`, not `iso27001:2022` — `:` is corpus scope). Clause refs within a framework use `.`.
 
-**`_(aspirational)_`** marks a clause we hold to but expect no standard beneath yet. Use it deliberately — an
-aspirational MUST is a real and useful state, but a policy where most clauses carry it is a wish list.
+**`_(aspirational)_`** marks a clause we hold as direction, with no standard expected beneath it. It earns its place on
+a **MUST** or a SHOULD. There it says what the modal cannot: we bind ourselves to this and have not yet built what would
+carry it. A COULD is already an aspiration, so the token repeats its modal and is left off. Use it deliberately — an
+aspirational **MUST** is a real and useful state, but a policy where most clauses carry it is a wish list.
 
 ## Exceptions
 

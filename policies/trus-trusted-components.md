@@ -49,7 +49,7 @@ images and build-time tooling; the third-party and cloud services those systems 
 | `UNTRUST` | **MUST NOT** introduce a dependency from an untrusted or unverifiable source                                                                 | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4                          |
 | `KNOWN`   | **MUST NOT** ship a component with a known critical vulnerability without a recorded, risk-owned deviation ([pol-DEVI])                      | [NIST SSDF 1.1].RV.2                                                   |
 | `MUTATE`  | **MUST NOT** alter a released artifact in place — a change produces a new version                                                            | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3                          |
-| `ATTEST`  | COULD refuse into production any artifact whose origin cannot be cryptographically proven _(aspirational)_                                   | [NIST SSDF 1.1].PS.2                                                   |
+| `ATTEST`  | COULD refuse into production any artifact whose origin cannot be cryptographically proven                                                    | [NIST SSDF 1.1].PS.2                                                   |
 
 ## Exceptions
 

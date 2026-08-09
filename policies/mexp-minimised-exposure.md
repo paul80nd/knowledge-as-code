@@ -44,7 +44,7 @@ inbound to our systems, between them, and outbound from them.
 | `PUBLIC`  | **MUST NOT** expose a management interface or a datastore directly to the public internet                                           | [ISO 27001:2022].A.8.21                          |
 | `LATERAL` | **MUST NOT** permit unrestricted lateral traffic between systems that have no need to talk to each other                            | [ISO 27001:2022].A.8.22                          |
 | `UNVERIF` | **MUST NOT** disable, bypass or weaken that identity verification                                                                   | [ISO 27001:2022].A.8.24                          |
-| `ZEROTR`  | COULD authenticate and authorise every service-to-service call, so that network location grants no trust _(aspirational)_           |                                                  |
+| `ZEROTR`  | COULD authenticate and authorise every service-to-service call, so that network location grants no trust                            |                                                  |
 
 ## Exceptions
 
