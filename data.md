@@ -115,9 +115,8 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                          | What it would verify                                                                                                    |
-|-------------------------------|-------------------------------------------------------------------------------------------------------------------------|
-| `personal-data-has-retention` | Personal or special-category data with no stated retention is reported. It is the first thing anyone external will ask. |
-| `store-has-service`           | Every store named resolves to a service in the catalogue.                                                               |
+| Rule                | What it would verify                                      |
+|---------------------|-----------------------------------------------------------|
+| `store-has-service` | Every store named resolves to a service in the catalogue. |
 
 <!-- END GENERATED: checks-data -->
