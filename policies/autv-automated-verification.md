@@ -46,6 +46,7 @@ configuration, data pipelines and the documentation held with them.
 | `OFTEN`   | SHOULD integrate to the mainline often enough that any one change is small enough to reason about                      | [DORA metrics].lead-time                                                                         |
 | `WARN`    | SHOULD treat a new warning as a defect to triage rather than noise to accumulate                                       |                                                                                                  |
 | `COVER`   | SHOULD know what proportion of our code the tests exercise, and notice when it falls                                   |                                                                                                  |
+| `BITWISE` | COULD produce byte-for-byte identical output from the same source _(aspirational)_                                     | [NIST SSDF 1.1].PW.6                                                                             |
 
 ## Exceptions
 

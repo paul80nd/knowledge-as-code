@@ -44,6 +44,7 @@ deployments, infrastructure changes, configuration changes and database changes.
 | `MANUAL`  | **MUST NOT** hand-edit production, whether code, configuration, infrastructure or schema                                                           | [ISO 27001:2022].A.8.9, [ISO 27001:2022].A.8.32                                |
 | `LOCAL`   | **MUST NOT** deploy an artifact built locally or obtained from an unverified source                                                                | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
 | `FLAGS`   | SHOULD treat a flag that changes production behaviour as a controlled, auditable change                                                            | [ISO 27001:2022].A.8.32                                                        |
+| `PROGDEL` | COULD release progressively, promoting or reversing on live signals rather than on a decision made beforehand _(aspirational)_                     | [DORA metrics].recovery-time                                                   |
 
 ## Exceptions
 
