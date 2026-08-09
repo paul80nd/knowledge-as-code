@@ -47,7 +47,7 @@ machine identities alike. Applies to routine and privileged access.
 | `SHARED`  | **MUST NOT** operate shared or generic privileged accounts where individual attribution is lost                                        | [ISO 27001:2022].A.8.2                          |
 | `PERSIST` | **MUST NOT** leave standing production access in place beyond what the role genuinely requires                                         | [ISO 27001:2022].A.8.2                          |
 | `CENTRAL` | SHOULD hold identity in a single directory, so that access granted or removed once takes effect everywhere                             | [ISO 27001:2022].A.5.16                         |
-| `ZERO`    | COULD hold no standing privilege at all, granting privileged access on request and only for as long as the work takes _(aspirational)_ |                                                 |
+| `ZERO`    | COULD hold no standing privilege at all, granting privileged access on request and only for as long as the work takes _(aspirational)_ | [ISO 27001:2022].A.8.2                          |
 
 ## Exceptions
 
