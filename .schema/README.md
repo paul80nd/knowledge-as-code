@@ -28,7 +28,8 @@ document's type from its folder, so folder → schema is an identity lookup with
 
 None of them carries a version stamp. Answering "which version of the schema is this corpus on" takes something that
 reconciles the answer against an upstream, and a number nothing compares is a number a corpus can be wrong about
-silently — so the stamp and its reader arrive together, or not at all. See #16.
+silently — so the stamp and its reader arrive together, or not at all. Tracked in
+[knowledge-as-code#16](https://github.com/paul80nd/knowledge-as-code/issues/16).
 
 ## Field specification
 
@@ -158,11 +159,11 @@ built. A rule naming a severity that nothing dispatches is the one arrangement t
 and is not, and it fails when the schema loads.
 
 Not every statement of intent is waiting for an expression, and counting them as though they were makes the ruleset look
-less finished than it is. Eight are not validator work in any form: seven say **Scheduled** in their own descriptions —
-periodic reports over a whole corpus, several needing external state — and `kac` has no execution model for them, while
-`coverage-report` is a generator and belongs with `kac index`. Two are not rules about a document at all:
-`blameless` needs a list of personal names, since no regular expression tells `Alex Doe` from
-`Root Cause`, and `human-confirmed` is a `pattern:` on a field.
+less finished than it is. Ten will never be an expression. Eight are not validator work in any form: seven say
+**Scheduled** in their own descriptions — periodic reports over a whole corpus, several needing external state — and
+`kac` has no execution model for them, while `coverage-report` is a generator and belongs with `kac index`. The other
+two are not rules about a document at all: `blameless` needs a list of personal names, since no regular expression tells
+`Alex Doe` from `Root Cause`, and `human-confirmed` is a `pattern:` on a field.
 
 Reciprocity and section mirroring are declared on the **field**, not here: `reciprocal:` and `mirrors-section:` drive
 them. So does a conditional requirement, through `required-when:`. A `rules:` entry restating any of those has no

@@ -1,10 +1,9 @@
 # `.tooling` — the knowledge-as-code tooling
 
-`kac` validates and generates a knowledge corpus against the machine-readable schema in
-`.schema/`. The command you run is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **
-`kac.core`** library that holds the mechanics; `dotnet run` builds and runs it with no build step to manage. The schema
-is the source of truth: `kac` reads it and enforces it, so **adding a knowledge type is adding a YAML file, not editing
-this tool**.
+`kac` validates and generates a knowledge corpus against the machine-readable schema in `.schema/`. The command you run
+is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **`kac.core`** library that holds the mechanics;
+`dotnet run` builds and runs it with no build step to manage. The schema is the source of truth: `kac` reads it and
+enforces it, so **adding a knowledge type is adding a YAML file, not editing this tool**.
 
 ## Running
 
@@ -261,7 +260,7 @@ Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of 
 type is regenerated whether or not it holds records: the blocks derive from the schema alone, and an index that waits
 for its first record is a dead link from the type page until then.
 
-Three rules hold this together:
+Two rules hold this together:
 
 - **CI never commits.** `index` writes locally. In CI, run `index --check`: it recomputes the generated content, and if
   any file differs it prints the stale files, names the command to run (`dotnet run .tooling/kac.cs -- index`, or just

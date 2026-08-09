@@ -3,9 +3,10 @@
 What CI checks, what it builds, and what it deliberately leaves alone.
 
 > **Part of this is built, part is intent.** Schema validation, link and graph checking, and index generation run on
-> every PR today. Drift detection, the rules digest, the reports and the skills do not exist yet. The **Status** column
-> on each table tracks it, and a column is dropped once every row in its table is `Done`. For what is enforced right
-> now, `kac checks` lists every check the validator implements — that command is the authority, this page is the intent.
+> every PR today. Drift detection, the rules digest, the reports and the skills do not exist yet. Two devices mark the
+> difference: a **Status** column on each table, dropped once every row in it is `Done`, and a **Planned** or
+> **Aspirational** marker leading the bullets that describe checks nothing runs. For what is enforced right now,
+> `kac checks` lists every check the validator implements — that command is the authority, this page is the intent.
 
 The principle: the pipeline's job is not only to check that documents are *well-formed*, but that they still describe
 **reality**. Schema validation catches typos. Drift detection catches a wiki quietly becoming fiction, which is the
@@ -13,7 +14,8 @@ failure mode that actually matters.
 
 ## Validation
 
-Run on every PR. Failures block merge.
+Run on every PR. Failures block merge. A marked bullet is the exception: it describes a check this page intends and
+nothing runs yet, and each section carries its marked bullets last.
 
 ### Schema
 
@@ -22,38 +24,47 @@ Run on every PR. Failures block merge.
 - Enum values valid.
 - Dates are quoted strings in `YYYY-MM-DD` form.
 - `id` is unique across the wiki, matches the type's prefix, and matches the folder it sits in.
-- Numeric IDs have no gaps and no reuse — including against IDs retired from withdrawn documents.
-- `tier` matches the tier defined for the document's type. A document claiming a tier its folder doesn't have is a
+- **Aspirational.** Numeric IDs have no gaps and no reuse — including against IDs retired from withdrawn documents.
+- `tier` matches the tier defined for the document's type. A document claiming a tier its folder does not have is a
   placement error, not a metadata error.
 
 ### Links and the graph
 
 - Every `id` referenced in a cross-reference field resolves to a document that exists.
-- No document references one that is `superseded`, `retired` or `expired`, except where the reference is explicitly
-  historical (`supersedes`, `promoted-from`, `replaces`).
 - Relative markdown links resolve.
 - Bidirectional pairs agree — `supersedes` / `superseded-by`, `promoted-from` / `promoted-to`,
-  `verifies` / `verified-by`. A one-sided link fails. `implements` is deliberately not one of these: it points up
-  from a standard to a policy and is never answered from the policy side.
-- `.index.json` is present, parses, and is not stale relative to the frontmatter it was built from.
-- Every `path` in it resolves; every `id` is unique; every id in a `related` array exists in the file.
+  `verifies` / `verified-by`. A one-sided link fails. `implements` is deliberately not one of these: it points up from a
+  standard to a policy and is never answered from the policy side.
+- **Aspirational.** No document references one that is `superseded`, `retired` or `expired`, except where the reference
+  is explicitly historical (`supersedes`, `promoted-from`, `replaces`).
+- **Planned.** `.index.json` is present, parses, and is not stale relative to the frontmatter it was built from; every
+  `path` in it resolves, every `id` is unique, and every id in a `related` array exists in the file. The artefact it
+  reads is in the [generation table](#generation) and is not built either. Tracked in
+  [knowledge-as-code#7](https://github.com/paul80nd/knowledge-as-code/issues/7).
 
 ### Per-tier rules
 
-- **Decided** — an accepted document's content has not changed. Only status transitions and frontmatter corrections are
-  permitted after acceptance; substantive edits fail with a pointer to the supersession process.
-- **Normative** — every standard has at least one `derived-from`; every **MUST** / **MUST NOT** rule is claimed by a
-  control, or the standard declares the gap; `review-by` is present and in the future at time of merge.
+- **Normative** — every standard cites an ADR in `derived-from` or a policy in `implements`.
 - **Descriptive** — see [drift](#drift-detection).
 - **Procedural** — `last-rehearsed` present, `"never"` permitted.
 - **Observed** — `expires` present; `provenance` present when `source: dreamed`.
+- **Planned. Decided** — an accepted document's content has not changed. Only status transitions and frontmatter
+  corrections are permitted after acceptance; substantive edits fail with a pointer to the supersession process. It
+  needs the diff against the committed content, so it belongs in a git-aware step rather than in the static validator.
+  Tracked in [knowledge-as-code#10](https://github.com/paul80nd/knowledge-as-code/issues/10).
+- **Aspirational. Normative** — every **MUST** / **MUST NOT** rule is claimed by a control, or the standard declares the
+  gap. `standards.yaml` carries it as `rules-have-controls`, declared and not enforced.
+- **Aspirational. Normative** — `review-by` is present and in the future at time of merge. Only the descriptive types
+  and FAQs carry the field today, so this needs the field before it needs the check.
 
 ### Hygiene
 
-- No secrets — scan for tokens, connection strings, keys.
-- Glossary terms used consistently; a term appearing more than N times without a glossary entry is flagged (warning, not
-  a failure).
+- No credentials, and no data that reads as real. Declared per type, where the risk lives: integrations and data
+  documents today.
 - Generated regions are not stale relative to their source.
+- **Planned.** Glossary terms used consistently; a term appearing repeatedly without a glossary entry is flagged
+  (warning, not a failure). Tracked in
+  [knowledge-as-code#14](https://github.com/paul80nd/knowledge-as-code/issues/14).
 
 ## Drift detection
 
@@ -102,13 +113,13 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 ### The rules digest — a block inside root `CLAUDE.md`
 
 Root `CLAUDE.md` is hand-written: it is the file an agent always reads, and most of what it needs there — which
-repository this is, what to run before committing, the conventions nothing enforces — is not derivable from the
-corpus. The digest is generated *into* it as a `rules-digest` block, the way a type page carries its schema table, so
-that standing guidance and generated rules arrive together instead of competing for the same filename.
+repository this is, what to run before committing, the conventions nothing enforces — is not derivable from the corpus.
+The digest is generated *into* it as a `rules-digest` block, the way a type page carries its schema table, so that
+standing guidance and generated rules arrive together instead of competing for the same filename.
 
 That means the digest also waits on generated blocks being able to target a page that is not a type page.
 
-The one generated artefact with a hard constraint on it.
+It is the one generated artefact with a hard constraint on its contents:
 
 - **Active standards only** — not draft, not planned.
 - **MUST and MUST NOT only.** SHOULD and MAY stay in the standard.
@@ -117,12 +128,12 @@ The one generated artefact with a hard constraint on it.
 - **The glossary is included in full.** Highest value per byte in the corpus.
 - **A hard line budget, enforced by CI.**
 
-That last point deserves explaining rather than just asserting. There are currently ~190 **MUST** / **MUST NOT** rules
-across the standards. They will not fit inside the size where an always-loaded context file remains effective, and past
-that point adherence degrades — an oversized digest is worse than a short one, because it dilutes everything in it.
+The budget is the constraint worth arguing about. There are ~190 **MUST** / **MUST NOT** rules across the standards, and
+they will not fit inside the size where an always-loaded context file stays effective. Past that size adherence
+degrades, so an oversized digest is worse than a short one: it dilutes everything in it.
 
-So the budget is a forcing function. When it's exceeded, the answer is not to raise it; it's to decide which rules are
-genuinely always-on and which belong in an on-demand skill. That conversation is the point.
+The budget is therefore a forcing function. When it is exceeded, the answer is not to raise it. It is to decide which
+rules are genuinely always-on and which belong in an on-demand skill. That conversation is the point.
 
 *Open question: whether the digest needs tiering — a small always-on core plus per-stack digests loaded by skill. Likely
 yes, once the budget first bites.*
@@ -138,7 +149,7 @@ Not part of the taxonomy, carry no taxonomy frontmatter, and are excluded from s
 | `_reports/`          | Generated output                                   |
 | `**/_template.md`    | Templates carry placeholder frontmatter by design  |
 | Root `README.md`     | Orientation page, not a knowledge record           |
-| Root `CLAUDE.md`     | Generated                                          |
+| Root `CLAUDE.md`     | Agent guidance, not a knowledge record             |
 
 Stated explicitly rather than left implicit in a glob, so that a validation failure is never resolved by quietly
 widening an exclusion. The `_` rows are the one deliberate glob: the prefix is reserved for the framework's own

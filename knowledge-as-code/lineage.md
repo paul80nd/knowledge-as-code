@@ -42,7 +42,7 @@ holding it.
 
 ## Collisions
 
-Four of these words already mean something else to a reader arriving from another framework. Where the collision is
+Five of these words already mean something else to a reader arriving from another framework. Where the collision is
 severe, the type's own root page repeats the warning — a reader who never opens this page still needs it.
 
 ### Control
@@ -135,9 +135,8 @@ described as STE-compliant or as conforming to ISO 24495-1. A corpus wanting gen
 specifications directly. This is the same alignment-not-compliance stance the rest of this page takes, applied to the
 one framework that also constrains how it may be quoted.
 
-The same care applies to two sources above: [Diátaxis][diataxis] and arc42 are licensed CC BY-SA, whose share-alike
-condition does not sit comfortably with this repository's MIT licence. Both are linked and attributed. Neither is quoted
-at length.
+The same care applies to [Diátaxis][diataxis] above, licensed CC BY-SA, whose share-alike condition does not sit
+comfortably with this repository's MIT licence. It is linked and attributed, and is not quoted at length.
 
 ## What is not verified
 

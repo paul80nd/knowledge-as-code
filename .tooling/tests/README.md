@@ -70,10 +70,10 @@ the golden.
 ## Coverage
 
 On a full run the suite compares the checks exercised by the goldens against `kac checks` — the authoritative catalogue
-of every rule `kac` implements. The gate is now enforced: **every reachable check must have a fixture**, or the run
-fails. Two escape hatches keep it honest — a check that appears in a golden but is missing from the catalogue fails too
-(a rename left a stale golden), and a check that no discovered document can reach is listed as `unreachable` and
-excluded from the gate. Adding a new rule therefore means adding a scenario that exercises it, or CI goes red.
+of every rule `kac` implements. The gate is enforced: **every reachable check must have a fixture**, or the run fails.
+Two escape hatches keep it honest — a check that appears in a golden but is missing from the catalogue fails too (a
+rename left a stale golden), and a check that no discovered document can reach is listed as `unreachable` and excluded
+from the gate. Adding a new rule therefore means adding a scenario that exercises it, or CI goes red.
 
 **The catalogue is a property of a corpus, not of the tool.** `CheckCatalogue.For(schema)` appends each expression
 rule's `(id, severity, description)` to the core checks, which is why `Commands.Checks` takes the repo root — and why a
@@ -91,7 +91,7 @@ is present, the next rule on it is a record.
 
 ## Current scenarios
 
-Every reachable check is covered (**66/67**; only the unreachable `type` is not — see below).
+Every reachable check is covered (**67/68**; only the unreachable `type` is not — see below).
 
 | Scenario              | Asserts                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -110,8 +110,3 @@ Every reachable check is covered (**66/67**; only the unreachable `type` is not 
 - **`type`** fires only for a document whose folder maps to no schema, but discovery excludes non-type folders, so no
   discovered document can reach it — effectively unreachable. It is listed as `unreachable` by the coverage gate rather
   than demanded of a fixture.
-
-> An earlier gap — `undefined-label`/`bracket-literal` only catching an *escaped* `\[adr-0099]` because Markdig
-> fragments an unescaped `[` into its own literal inline — was fixed by rejoining each run of consecutive literal
-> inlines before scanning (`ScanContainer` in `kac.core/Document.cs`). The `graph` scenario now covers both from the
-> natural unescaped form.
