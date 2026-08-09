@@ -89,30 +89,30 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 
 <!-- BEGIN GENERATED: checks-data -->
 
-| Check                       | Level   | What it verifies                                                                                         |
-|-----------------------------|---------|----------------------------------------------------------------------------------------------------------|
-| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                      |
-| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                           |
-| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                        |
-| `required-field`            | error   | Required and conditionally-required fields are present.                                                  |
-| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                           |
-| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                                     |
-| `enum`                      | error   | Enum values are in range and lowercase.                                                                  |
-| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                             |
-| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                               |
-| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                               |
-| `id`                        | error   | `id` carries the type's prefix and matches the filename's number or mnemonic.                            |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                    |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                          |
-| `h1`                        | error   | The document has an H1.                                                                                  |
-| `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter. |
-| `required-section`          | error   | Every required section heading is present.                                                               |
-| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
-| `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
-| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
-| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                 |
-| `unused-definition`         | warning | A link definition that nothing references.                                                               |
-| `no-actual-data`            | error   | Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.   |
+| Check                       | Level   | What it verifies                                                                                                |
+|-----------------------------|---------|-----------------------------------------------------------------------------------------------------------------|
+| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                             |
+| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                  |
+| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
+| `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
+| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
+| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                                            |
+| `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
+| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
+| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
+| `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
+| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                           |
+| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
+| `h1`                        | error   | The document has an H1.                                                                                         |
+| `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
+| `required-section`          | error   | Every required section heading is present.                                                                      |
+| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                  |
+| `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
+| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
+| `unused-definition`         | warning | A link definition that nothing references.                                                                      |
+| `no-actual-data`            | error   | Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.          |
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 

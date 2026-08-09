@@ -180,8 +180,14 @@ public static class Generator
         ("list-order", ["list-order"],
             "List entries read in alphabetical order, with numbers compared as numbers.", null),
         ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
+        // Which of the three shapes an id takes is the type's to decide, so the row says that a shape is
+        // held to rather than listing the styles a reader could be on any of. A `literal` id is not one
+        // of the three: it is a single declared value, with no prefix to carry and no filename to agree
+        // with, and the row a single-document type shows says so instead.
         ("id", ["id-prefix", "id-format", "id-matches-filename"],
-            "`id` carries the type's prefix and matches the filename's number or mnemonic.", null),
+            "`id` carries the type's prefix, takes the shape the type declares, and names the same document "
+            + "as the filename.", t => t.IdStyle != "literal"),
+        ("id", ["id-format"], "`id` is the one value the type declares.", t => t.IdStyle == "literal"),
         ("id-unique", ["id-unique"], "`id` is unique across the whole wiki.", null),
         ("filename / slug-length", ["filename-pattern", "slug-length"],
             "Filename matches the pattern; the slug is within 30 characters.", null),

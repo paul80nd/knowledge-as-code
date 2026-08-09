@@ -14,8 +14,8 @@ namespace kac.core;
 //
 // The question asked of each value is not "is this key spelled right" but "is there code that acts on
 // this value". `style: literal` is a real style and would pass a spelling test; what makes it sound is
-// the branch in CheckId, and what makes `slug` only half-sound is that the branch stops at the prefix.
-// So each vocabulary here is read from the code that dispatches it rather than restated.
+// the branch in IdChecks. So each vocabulary here is read from the code that dispatches it rather than
+// restated.
 //
 // Findings land against `.schema/<file>.yaml`, because that is the file a corpus owner edits and the
 // one the mechanism sync will carry. A rule or field the loader could not read at all carries its own
@@ -44,9 +44,9 @@ public static class SchemaChecks
             UnreadKeys(at, schema, f);
             CheckShape(at, key, t, f);
 
-            if (!Validator.IdStyles.Contains(t.IdStyle))
+            if (!IdChecks.IdStyles.Contains(t.IdStyle))
                 Dispatch(at, $"type '{key}' declares 'id.style: {t.IdStyle}', which no id check reads. "
-                             + $"The styles the tool applies are {List(Validator.IdStyles)}.", f);
+                             + $"The styles the tool applies are {List(IdChecks.IdStyles)}.", f);
 
             if (t.IndexOrder.Length > 0 && !Generator.IndexOrders.Contains(t.IndexOrder))
                 Dispatch(at, $"type '{key}' declares 'index.order: {t.IndexOrder}', which the generator does "

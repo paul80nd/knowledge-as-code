@@ -151,11 +151,12 @@ public static class Validator
             Err("tier-matches-type", $"tier '{tier}' does not match the '{t.TypeName}' type tier '{t.Tier}'.",
                 Line(tierNode, d));
 
-        // -- id: prefix, width, matches filename number --
-        CheckId(d, t, present, Err);
+        // -- id: prefix, shape, agreement with the filename --
+        if (present.TryGetValue("id", out var idNode) && Scalar(idNode) is { } id)
+            IdChecks.Check(id, Line(idNode, d), d.Rel, t, Err);
 
         // -- filename pattern + slug length --
-        CheckFilename(d, t, Err);
+        IdChecks.CheckFilename(d.Rel, t, Err);
 
         // -- H1 present --
         CheckH1(d, Err);
@@ -442,89 +443,6 @@ public static class Validator
                 err("key-order", $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
     }
 
-    // The id styles the checks below apply. Held here rather than in the schema loader because this is
-    // where the branches are, and SchemaChecks reads it to reject a style nothing acts on. `slug` earns
-    // its place on the prefix check alone — the slug half of a slug id is unchecked, which is #60 — and
-    // that is the reason this is a set of what is dispatched rather than a list of what is spelled
-    // correctly: adding a name here without a branch beneath is the mistake it exists to prevent.
-    public static readonly IReadOnlySet<string> IdStyles =
-        new HashSet<string>(["numbered", "mnemonic", "slug", "literal"], StringComparer.Ordinal);
-
-    private static void CheckId(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
-        Action<string, string, int?> err)
-    {
-        if (!present.TryGetValue("id", out var idNode)) return;
-        var id = Scalar(idNode);
-        if (id is null) return;
-
-        // A `literal` id is the whole id, declared by the schema — the single-document types, where
-        // there is one document and so one name for it. There is no prefix to carry and no filename
-        // discriminator to agree with, so this is the whole check.
-        if (t.IdStyle == "literal")
-        {
-            if (!string.Equals(id, t.IdValue, StringComparison.Ordinal))
-                err("id-format", $"id '{id}' must be '{t.IdValue}', the value the type declares.", Line(idNode, d));
-            return;
-        }
-
-        var expectPrefix = t.IdPrefix + "-";
-        if (!id.StartsWith(expectPrefix, StringComparison.Ordinal))
-        {
-            err("id-prefix", $"id '{id}' must start with '{expectPrefix}'.", Line(idNode, d));
-            return;
-        }
-
-        var numPart = id[expectPrefix.Length..];
-        if (t.IdStyle == "numbered")
-        {
-            var fileNum = FilenameNumber(d.Rel);
-            if (numPart.Length != t.IdWidth || !numPart.All(char.IsDigit))
-                err("id-format", $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} digits.",
-                    Line(idNode, d));
-            else if (fileNum is not null && numPart != fileNum)
-                err("id-matches-filename", $"id '{id}' number does not match filename number '{fileNum}'.",
-                    Line(idNode, d));
-        }
-        else if (t.IdStyle == "mnemonic")
-        {
-            // The id carries the mnemonic upper-case (pol-VURM); the filename carries it lower-case
-            // (vurm-…md), so the two are compared case-insensitively.
-            var fileMnemonic = FilenameMnemonic(d.Rel, t.IdWidth);
-            if (numPart.Length != t.IdWidth || !numPart.All(char.IsLetterOrDigit)
-                                            || !char.IsLetter(numPart[0]) || numPart != numPart.ToUpperInvariant())
-                err("id-format",
-                    $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} upper-case alphanumeric "
-                    + "characters beginning with a letter.", Line(idNode, d));
-            else if (fileMnemonic is not null
-                     && !numPart.Equals(fileMnemonic, StringComparison.OrdinalIgnoreCase))
-                err("id-matches-filename",
-                    $"id '{id}' mnemonic does not match filename mnemonic '{fileMnemonic}'.", Line(idNode, d));
-        }
-    }
-
-    private static void CheckFilename(Doc d, TypeSchema t, Action<string, string, int?> err)
-    {
-        var name = Path.GetFileName(d.Rel);
-        if (t.FilenameRegex is not null && !t.FilenameRegex.IsMatch(name))
-            err("filename-pattern", $"filename '{name}' does not match {t.FilenamePattern}.", null);
-        var slug = name;
-        if (slug.EndsWith(".md")) slug = slug[..^3];
-        var dash = slug.IndexOf('-');
-        if (dash >= 0)
-        {
-            var head = slug[..dash];
-            var isIdPrefix = t.IdStyle switch
-            {
-                "numbered" => head.All(char.IsDigit),
-                "mnemonic" => head.Length == t.IdWidth && head.All(char.IsLetterOrDigit),
-                _ => false
-            };
-            if (isIdPrefix) slug = slug[(dash + 1)..];
-        }
-        if (slug.Length > t.SlugMax)
-            err("slug-length", $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.", null);
-    }
-
     // The H1 is plain descriptive text — no id, no prefix, no shape the schema constrains — so the only
     // thing left to check is that there is one. The type, the id and the status are the identity line's
     // to carry, and CheckIdentity depends on this having run: with no H1 there is no line beneath it,
@@ -611,10 +529,10 @@ public static class Validator
             var inSection = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var link in d.RelatedSectionLinks)
             {
-                // A field may point at several types, and a link resolves under whichever of them names
-                // a file of that shape. The first answer is the id, since no two types share both an id
-                // style and a width without their filenames colliding anyway.
-                var id = refTypes.Select(rt => IdFromLink(link, rt)).FirstOrDefault(x => x is not null);
+                // A field may point at several types, and a link cites whichever of them owns the folder
+                // it lands in. At most one can, so the first answer is the answer.
+                var id = refTypes.Select(rt => IdChecks.IdFromLink(link, d.Rel, rt))
+                    .FirstOrDefault(x => x is not null);
                 if (id is not null) inSection.Add(id);
             }
 
@@ -704,39 +622,4 @@ public static class Validator
         return result;
     }
 
-    private static string? FilenameNumber(string rel)
-    {
-        var name = Path.GetFileName(rel);
-        var i = 0;
-        while (i < name.Length && char.IsDigit(name[i])) i++;
-        return i > 0 ? name[..i] : null;
-    }
-
-    private static string? FilenameMnemonic(string rel, int width)
-    {
-        var name = Path.GetFileName(rel);
-        var dash = name.IndexOf('-');
-        if (dash != width) return null;
-        var head = name[..dash];
-        return head.All(char.IsLetterOrDigit) ? head : null;
-    }
-
-    private static string? IdFromLink(LinkRef link, TypeSchema refType)
-    {
-        // Resolve the link's target filename to the ref type's id, e.g. 0007-…md -> adr-0007,
-        // or vurm-…md -> pol-VURM where the type is mnemonic.
-        var target = link.Target;
-        var hash = target.IndexOf('#');
-        if (hash >= 0) target = target[..hash];
-        var file = target.Split('/').LastOrDefault() ?? "";
-        if (refType.IdStyle == "mnemonic")
-        {
-            var mnemonic = FilenameMnemonic(file, refType.IdWidth);
-            return mnemonic is null ? null : $"{refType.IdPrefix}-{mnemonic.ToUpperInvariant()}";
-        }
-
-        var i = 0;
-        while (i < file.Length && char.IsDigit(file[i])) i++;
-        return i == refType.IdWidth ? $"{refType.IdPrefix}-{file[..i]}" : null;
-    }
 }

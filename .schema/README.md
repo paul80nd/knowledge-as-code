@@ -126,9 +126,10 @@ column each way is asking two questions with one key. A postmortem index is the 
 someone is looking for is almost always the most recent.
 
 **`id.style`.** Four styles are dispatched: `numbered`, `slug`, `mnemonic` and `literal`, and a fifth name fails when
-the schema loads. Of the four, the id checks give `numbered` and `mnemonic` a full reading and the other two the prefix
-check alone. Link-label canonicalisation covers `slug` as well, so the shortfall is in the id checks rather than in the
-idea.
+the schema loads. Each is read in full. The first three are a prefix and a discriminator — four digits, a lower-case
+slug, a fixed-width upper-case mnemonic — checked for shape and then for agreement with the same discriminator in the
+filename, which is what keeps a record's id and its path naming the same document. `literal` is the whole id, declared
+by the type: single-document types have one document and so one name for it, and no filename to agree with.
 
 **`rules`.** A rule declaring an `expr:` runs. It is evaluated against every document of its type, reports under its own
 id, is listed by `kac checks`, and renders its own row into the generated `## What CI checks` block from its

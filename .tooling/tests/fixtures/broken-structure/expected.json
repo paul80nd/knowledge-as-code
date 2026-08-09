@@ -1,8 +1,8 @@
 {
   "summary": {
-    "validated": 18,
+    "validated": 20,
     "skipped": 0,
-    "errors": 22,
+    "errors": 24,
     "warnings": 1
   },
   "findings": [
@@ -166,6 +166,20 @@
       "severity": "error",
       "check": "id-format",
       "message": "id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter."
+    },
+    {
+      "file": "tools/id-disagrees.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-matches-filename",
+      "message": "id 'tol-names-another-tool' slug does not match filename slug 'id-disagrees'."
+    },
+    {
+      "file": "tools/site-server.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-format",
+      "message": "id 'tol-Site_Server' must be 'tol-' followed by lower-case letters, digits and hyphens."
     }
   ]
 }
