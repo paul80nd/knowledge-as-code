@@ -35,7 +35,8 @@ Run **one `kac` invocation at a time**. File-based apps share build output and c
 
 * **Never hand-edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter, then run
   `./kac index`. A schema edit without a regeneration fails CI.
-* **Markdown prose wraps at 120 columns**; tables are exempt. `.editorconfig` says so and no check enforces it.
+* **Markdown prose wraps at 120 columns**; tables and link definitions are exempt — a URL cannot be broken.
+  `.editorconfig` says so and no check enforces it.
 * **How a document is written follows its tier, not its type.** The rules are in
   [`knowledge-as-code/authoring.md`](knowledge-as-code/authoring.md) — read it before writing or rewriting any record. A
   runbook step and an ADR paragraph obey different constraints, and nothing in CI will tell you that you used the wrong

@@ -12,8 +12,8 @@ The words we use, and what we mean by them.
 
 ## What is the glossary?
 
-The ubiquitous language of the domain — one entry per term whose meaning is specific to us, or which is easily
-confused with a neighbouring term.
+The ubiquitous language of the domain — one entry per term whose meaning is specific to us, or which is easily confused
+with a neighbouring term.
 
 Unlike every other type, this is a **single document rather than a collection**. It is meant to be read end to end, and
 it carries its own frontmatter as one descriptive document; there are no per-term files and no per-term metadata.
@@ -24,14 +24,14 @@ It is the highest value-per-byte content in the wiki, and the only document incl
 digest that every session loads.
 
 The reason is specific. The terms particular to the domain are often not interchangeable, and neighbouring terms are
-easily confused. A contributor — human or agent — who doesn't know the distinctions will produce work that is
-plausible, confident and subtly wrong, in code and in documentation alike. Every other document in this wiki assumes
-these terms mean something precise; this is where that precision lives.
+easily confused. A contributor — human or agent — who doesn't know the distinctions will produce work that is plausible,
+confident and subtly wrong, in code and in documentation alike. Every other document in this wiki assumes these terms
+mean something precise; this is where that precision lives.
 
 ## Scope
 
-A term belongs here if it is **specific to the domain, or easily confused with something else**. General industry vocabulary does
-not — we are not writing a dictionary, and every entry costs digest budget.
+A term belongs here if it is **specific to the domain, or easily confused with something else**. General industry
+vocabulary does not — we are not writing a dictionary, and every entry costs digest budget.
 
 Not the place for:
 
@@ -64,15 +64,15 @@ Owned by [svc-lending]. See [adr-0001].
 
 **Conventions**
 
-* **Cross-references use the heading anchor** — `[tenant](/glossary#tenant)`. The anchor is the term's identifier;
-  there are no numeric ids.
+* **Cross-references use the heading anchor** — `[tenant](/glossary#tenant)`. The anchor is the term's identifier; there
+  are no numeric ids.
 * **Terms are singular and in canonical casing.** `Term`, not `terms`.
 * **Keep it tight.** CI enforces a budget on the generated digest, and this file is carried in full.
 
 ## Metadata
 
-The only type whose frontmatter belongs to this page rather than to a record — there is no folder and no per-term
-file, so these fields describe `glossary.md` itself.
+The only type whose frontmatter belongs to this page rather than to a record — there is no folder and no per-term file,
+so these fields describe `glossary.md` itself.
 
 <!-- BEGIN GENERATED: schema-glossary -->
 
