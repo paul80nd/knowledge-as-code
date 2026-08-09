@@ -21,11 +21,11 @@ tags: [ public ]
 
 **Frontmatter.** Delete this block once the fields above are filled in.
 
-* **`id`** — `svc-` plus the name of the **deployable**, not of the repository it lives in. A repository shipping
-  three app services yields three ids and none of them is the repository's name.
+* **`id`** — `svc-` plus the name of the **deployable**, not of the repository it lives in. A repository shipping three
+  app services yields three ids and none of them is the repository's name.
 * **`status`** — `live` · `building` · `deprecated` · `retired`.
-* **`repo`** — the repository a change to *this service* is made in. Where content it serves comes from somewhere
-  else, say so in the body — the field takes one value and some services need more.
+* **`repo`** — the repository a change to *this service* is made in. Where content it serves comes from somewhere else,
+  say so in the body — the field takes one value and some services need more.
 * **`platform`** — what it is **built on**, not what deploys it. The values are on [the type page](/services) and are
   derived from the estate, so check the list there rather than assuming this one.
 * **`criticality`** — `critical` if a reader sees the failure, `important` if service degrades, `supporting` if the
@@ -83,17 +83,17 @@ and "none in this catalogue" is a different statement from "none at all".)_
 
 ## Data
 
-What this service owns, and where it stores it. Link to the [data](/data) document for the domain rather than
-describing schemas here. **"None of its own", verified, is a finding worth recording** — it is not the same as nobody
-having looked.
+What this service owns, and where it stores it. Link to the [data](/data) document for the domain rather than describing
+schemas here. **"None of its own", verified, is a finding worth recording** — it is not the same as nobody having
+looked.
 
 ## Operational notes
 
-_(Only what is true of **this** service. A health-check endpoint every service exposes, or a runbook nobody has
-written yet, is estate-wide background: recording it on every record adds length and no information. What earns a
-bullet is the exception — the service hosted differently from its neighbours, the one with no test environment, the
-setting that disagrees with the others, the criticality that wants defending. A service with no exceptions needs no
-section, so delete this one.)_
+_(Only what is true of **this** service. A health-check endpoint every service exposes, or a runbook nobody has written
+yet, is estate-wide background: recording it on every record adds length and no information. What earns a bullet is the
+exception — the service hosted differently from its neighbours, the one with no test environment, the setting that
+disagrees with the others, the criticality that wants defending. A service with no exceptions needs no section, so
+delete this one.)_
 
 * **Runbooks** — where any exist. Name an unadopted type rather than linking its folder: an empty folder is untracked,
   so a link to it resolves on the machine that created it and nowhere else.

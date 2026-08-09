@@ -66,8 +66,8 @@ on top would report one omission as two.
 schema loads — a `values:` list on a `type: list` field and a `ref:` at a folder no schema covers are each reported
 naming the file and the key, because a vocabulary or a target nothing applies is a promise to whoever takes a copy of
 these files. See [What the schema is held to](#what-the-schema-is-held-to). Every id the field then carries is resolved
-against the corpus as `ref-resolves`, whether or not the field also declares a `reciprocal:` — the one-directional
-edges are the ones no counterpart holds in step, so they are the ones a check has to hold.
+against the corpus as `ref-resolves`, whether or not the field also declares a `reciprocal:` — the one-directional edges
+are the ones no counterpart holds in step, so they are the ones a check has to hold.
 
 `allow-literal` admits a word beside the field's declared type — `applies-to: [all]` on a list of service ids,
 `last-rehearsed: "never"` on a date. A listed value is taken as written and nothing further is asked of it; on a list it

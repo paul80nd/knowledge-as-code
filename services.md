@@ -74,8 +74,7 @@ Infrastructure-as-code is not a service either: it deploys services rather than 
 
 1. Copy [`_template.md`](services/_template.md) to `<slug>.md`. Services use a **slug id**, not a number —
    `svc-<name>` — because they have natural stable names.
-2. Fill in the frontmatter. `depends-on` names other service ids; the [index](services/_index.md) is where to find
-   them.
+2. Fill in the frontmatter. `depends-on` names other service ids; the [index](services/_index.md) is where to find them.
 3. Record environments and URLs, and the data stores it owns.
 4. Keep it current. This is a descriptive document — a service catalogue that disagrees with the estate is worse than
    none, because everything else trusts it.
