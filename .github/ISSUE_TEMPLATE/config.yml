@@ -1,0 +1,12 @@
+# Blank issues stay enabled. Most issues here are written by the maintainer to the maintainer, and a
+# form is in the way of a working note.
+blank_issues_enabled: true
+
+contact_links:
+  - name: Contributing
+    url: https://github.com/paul80nd/knowledge-as-code/blob/main/.github/CONTRIBUTING.md
+    about: Whether this repository takes outside work, and what to do instead. Read this before opening a pull request.
+
+  - name: Report a vulnerability
+    url: https://github.com/paul80nd/knowledge-as-code/security/advisories/new
+    about: Suspected vulnerabilities are reported privately, never as an issue.

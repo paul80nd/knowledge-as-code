@@ -176,12 +176,13 @@ rules:
   - path:
       - ".github/CONTRIBUTING.md"
       - ".github/SECURITY.md"
+      - ".github/ISSUE_TEMPLATE/**"
     layer: local
     note: >
-      Whether this repository takes outside contributions, and where a vulnerability in it is reported.
-      Both are answers a corpus gives for itself, so neither is ever shared — which is also why they are
-      stated here rather than left to the catch-all: the sibling `.github/workflows/**` rule is `forked`,
-      and these files are not.
+      Whether this repository takes outside contributions, where a vulnerability in it is reported, and
+      what it asks of an issue. Each is an answer a corpus gives for itself, so none is ever shared —
+      which is also why they are stated here rather than left to the catch-all: the sibling
+      `.github/workflows/**` rule is `forked`, and these files are not.
   - { path: "LICENSE",                          layer: local, note: "MIT; a derived corpus may relicense its own copy." }
   - { path: ".mechanism.lock",                  layer: local, note: "This corpus's sync state. Root-level and dot-prefixed, like any lockfile." }
   - { path: "_plan/**",                         layer: local, note: "Migration scaffolding — temporary." }

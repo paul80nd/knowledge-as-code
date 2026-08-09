@@ -1,0 +1,26 @@
+name: A question
+description: About the taxonomy, the sync model, or why something is shaped the way it is.
+labels: [question]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Questions are welcome, including ones that turn out to be about the documentation being unclear.
+
+        [`knowledge-as-code.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/knowledge-as-code.md) is the
+        way in to the framework's own documentation, and `./kac checks` lists what the tool enforces on the type in
+        front of you.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: The question
+    validations:
+      required: true
+
+  - type: textarea
+    id: read
+    attributes:
+      label: What you have already read
+      description: A link to the page that should have answered it, and did not, is more useful than anything else here.
