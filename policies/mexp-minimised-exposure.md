@@ -7,6 +7,7 @@ aligns-with:
   - ISO27001:2022 A.8.20
   - ISO27001:2022 A.8.21
   - ISO27001:2022 A.8.22
+  - ISO27001:2022 A.8.24
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ exposure, network-security, segmentation ]
@@ -31,16 +32,18 @@ inbound to our systems, between them, and outbound from them.
 
 ## Clauses
 
-| Id        | Clause                                                                                                   | Alignment                                        |
-|-----------|----------------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| `SEGMENT` | **MUST** segment by trust boundary and by environment                                                    | [ISO 27001:2022].A.8.22                          |
-| `DENY`    | **MUST** deny by default, and expose a service only through an intended, controlled route                | [ISO 27001:2022].A.8.20, [ISO 27001:2022].A.8.21 |
-| `TRANSIT` | **MUST** protect traffic crossing a trust boundary                                                       | [ISO 27001:2022].A.8.20                          |
-| `PRIVATE` | **MUST** prefer private paths to public ones for access between our own services                         | [ISO 27001:2022].A.8.21                          |
-| `EGRESS`  | **MUST** control and observe what leaves our systems, not only what arrives                              | [ISO 27001:2022].A.8.20                          |
-| `ASCODE`  | **MUST** define network topology as reviewable code, under [pol-EVER]                                    |                                                  |
-| `PUBLIC`  | **MUST NOT** expose a management interface or a datastore directly to the public internet                | [ISO 27001:2022].A.8.21                          |
-| `LATERAL` | **MUST NOT** permit unrestricted lateral traffic between systems that have no need to talk to each other | [ISO 27001:2022].A.8.22                          |
+| Id        | Clause                                                                                                                              | Alignment                                        |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `SEGMENT` | **MUST** segment by trust boundary and by environment                                                                               | [ISO 27001:2022].A.8.22                          |
+| `DENY`    | **MUST** deny by default, and expose a service only through an intended, controlled route                                           | [ISO 27001:2022].A.8.20, [ISO 27001:2022].A.8.21 |
+| `TRANSIT` | **MUST** protect traffic crossing a trust boundary                                                                                  | [ISO 27001:2022].A.8.20                          |
+| `VERIFY`  | **MUST** verify the identity presented at the far end of a connection that crosses a trust boundary, and refuse it where that fails | [ISO 27001:2022].A.8.20, [ISO 27001:2022].A.8.24 |
+| `PRIVATE` | **MUST** prefer private paths to public ones for access between our own services                                                    | [ISO 27001:2022].A.8.21                          |
+| `EGRESS`  | **MUST** control and observe what leaves our systems, not only what arrives                                                         | [ISO 27001:2022].A.8.20                          |
+| `ASCODE`  | **MUST** define network topology as reviewable code, under [pol-EVER]                                                               |                                                  |
+| `PUBLIC`  | **MUST NOT** expose a management interface or a datastore directly to the public internet                                           | [ISO 27001:2022].A.8.21                          |
+| `LATERAL` | **MUST NOT** permit unrestricted lateral traffic between systems that have no need to talk to each other                            | [ISO 27001:2022].A.8.22                          |
+| `UNVERIF` | **MUST NOT** disable, bypass or weaken that identity verification                                                                   | [ISO 27001:2022].A.8.24                          |
 
 ## Exceptions
 
