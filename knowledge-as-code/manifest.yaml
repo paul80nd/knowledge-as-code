@@ -173,6 +173,12 @@ rules:
 
   # ── local ────────────────────────────────────────────────────────────────────────────────────
   - { path: "README.md",                        layer: local, note: "Orientation for this corpus." }
+  - path: ".github/CONTRIBUTING.md"
+    layer: local
+    note: >
+      Whether this repository takes outside contributions, and on what terms. A corpus decides that for
+      itself, so it is never shared — which is also why it is stated here rather than left to the
+      catch-all: the sibling `.github/workflows/**` rule is `forked`, and this file is not.
   - { path: "LICENSE",                          layer: local, note: "MIT; a derived corpus may relicense its own copy." }
   - { path: ".mechanism.lock",                  layer: local, note: "This corpus's sync state. Root-level and dot-prefixed, like any lockfile." }
   - { path: "_plan/**",                         layer: local, note: "Migration scaffolding — temporary." }
