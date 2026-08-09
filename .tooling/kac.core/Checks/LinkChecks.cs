@@ -33,7 +33,7 @@ public static class LinkChecks
         foreach (var (inner, line) in d.BareBracketTokens)
         {
             if (defined.Contains(inner)) continue; // a genuine reference that resolved
-            if (TryCanonicalId(inner, schema, out _))
+            if (IdChecks.TryCanonicalId(inner, schema, out _))
                 err("undefined-label", $"reference '[{inner}]' has no link definition.", line);
             else
                 warn("bracket-literal",
@@ -46,13 +46,13 @@ public static class LinkChecks
         foreach (var link in d.Links)
         {
             if (!link.IsReference || string.IsNullOrEmpty(link.Label)) continue;
-            if (TryCanonicalId(link.Label, schema, out var canonical) && link.Label != canonical)
+            if (IdChecks.TryCanonicalId(link.Label, schema, out var canonical) && link.Label != canonical)
                 err("label-canonical",
                     $"reference '[{link.Label}]' should be written as the id '{canonical}'.", link.Line);
         }
 
         foreach (var label in d.DefinedLabels.Distinct(StringComparer.Ordinal))
-            if (TryCanonicalId(label, schema, out var canonical) && label != canonical)
+            if (IdChecks.TryCanonicalId(label, schema, out var canonical) && label != canonical)
                 err("label-canonical",
                     $"link definition '[{label}]' should be written as the id '{canonical}'.", null);
 
@@ -60,41 +60,6 @@ public static class LinkChecks
         foreach (var label in d.DefinedLabels.Distinct(StringComparer.OrdinalIgnoreCase))
             if (!d.UsedLabels.Contains(label))
                 warn("unused-definition", $"link definition '[{label}]' is never referenced.", null);
-    }
-
-    // A label is id-shaped when its prefix names a type and the remainder fits that type's id style.
-    // The canonical form is the id exactly as the document carries it: the prefix always lower-case,
-    // a mnemonic always upper-case, a slug always lower-case.
-    public static bool TryCanonicalId(string label, Schema schema, out string canonical)
-    {
-        canonical = "";
-        var dash = label.IndexOf('-');
-        if (dash <= 0 || dash == label.Length - 1) return false;
-        var prefix = label[..dash];
-        var rest = label[(dash + 1)..];
-
-        var t = schema.ByFolder.Values.FirstOrDefault(x =>
-            x.IdPrefix.Length > 0 && string.Equals(x.IdPrefix, prefix, StringComparison.OrdinalIgnoreCase));
-        if (t is null) return false;
-
-        switch (t.IdStyle)
-        {
-            case "numbered":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsDigit)) return false;
-                canonical = $"{t.IdPrefix}-{rest}";
-                return true;
-            case "mnemonic":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsLetterOrDigit) || !char.IsLetter(rest[0]))
-                    return false;
-                canonical = $"{t.IdPrefix}-{rest.ToUpperInvariant()}";
-                return true;
-            case "slug":
-                if (!rest.All(c => char.IsLetterOrDigit(c) || c == '-')) return false;
-                canonical = $"{t.IdPrefix}-{rest.ToLowerInvariant()}";
-                return true;
-            default:
-                return false;
-        }
     }
 
     public static bool IsExternal(string t)

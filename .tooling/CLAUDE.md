@@ -48,12 +48,14 @@ it.
 **A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
 early so a later check does not report nonsense about a document already known to be broken. That order is the design,
 so core checks are called in sequence and never looked up in a registry. Where a group of them is self-contained —
-`Checks/LinkChecks.cs`, `Checks/ClauseChecks.cs` — it is a static class of its own with unit tests; the rest stay in
-`Validator.cs`, and extracting one buys nothing unless it has logic worth testing directly.
+`Checks/IdChecks.cs`, `Checks/LinkChecks.cs`, `Checks/ClauseChecks.cs` — it is a static class of its own with unit
+tests; the rest stay in `Validator.cs`, and extracting one buys nothing unless it has logic worth testing directly.
+`IdChecks` is the shape of an id and of the filename that carries it, which three passes read in three directions, and
+is the case for extracting: a second copy of that shape anywhere would be a place for the styles to disagree silently.
 
 **`Checks/SchemaChecks.cs` reads no document at all.** It runs once, before the corpus, and asks whether the schema
 declares anything the tool cannot act on. A vocabulary it tests must be read from the code that dispatches the value —
-`Validator.IdStyles`, `Doc.RelatedSection`, `Generator.IndexOrders`, `DocumentRules.ByRuleId` — never restated there,
+`IdChecks.IdStyles`, `Doc.RelatedSection`, `Generator.IndexOrders`, `DocumentRules.ByRuleId` — never restated there,
 because a copy is a list of what is spelled correctly rather than of what runs. The key vocabulary follows the same rule
 with no list at all: `Schema.Load` reads every mapping through a `Level` that records what it was asked for, so adding a
 `Get` is what admits a key. Adding one without the code that reads what it parsed into moves the failure from
