@@ -45,6 +45,7 @@ fault tolerance and the ability to recover after failure.
 | `RETRY`   | **MUST NOT** retry indefinitely, without limit or backoff, against a failing dependency                            | [Azure WAF].reliability                                                   |
 | `REDUND`  | SHOULD run critical services across more than one failure domain                                                   | [ISO 27001:2022].A.8.14                                                   |
 | `SHED`    | SHOULD shed or slow work deliberately under load beyond capacity, rather than failing unpredictably                | [Azure WAF].reliability                                                   |
+| `BREAK`   | COULD prove resilience by causing failure deliberately, rather than waiting to observe one _(aspirational)_        | [Azure WAF].reliability                                                   |
 
 ## Exceptions
 
