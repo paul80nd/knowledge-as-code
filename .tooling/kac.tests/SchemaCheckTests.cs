@@ -14,7 +14,8 @@ public class SchemaCheckTests
 {
     private static TypeSchema Widgets(string idStyle = "slug", string folder = "widgets",
         string shape = TypeSchema.CollectionShape,
-        (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null) => new()
+        (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
+        string[]? sections = null) => new()
     {
         TypeName = "widget",
         Folder = folder,
@@ -22,7 +23,8 @@ public class SchemaCheckTests
         IdStyle = idStyle,
         FieldOrder = [.. (fields ?? []).Select(x => x.Name)],
         Fields = (fields ?? []).ToDictionary(x => x.Name, x => x.Spec),
-        Rules = rules ?? []
+        Rules = rules ?? [],
+        OptionalSections = sections ?? []
     };
 
     private static List<Finding> Check(TypeSchema widgets) =>
@@ -117,20 +119,29 @@ public class SchemaCheckTests
             ("status", new FieldSpec { Name = "status", Type = "enum", Values = ["draft", "active"] })
         ])));
 
-    // Only one section is parsed for the ids a field mirrors, so naming any other declares a
-    // reconciliation that cannot happen.
+    // The section a field mirrors is read from the record, so a name the type's own `sections:` block
+    // does not offer is a reconciliation against a heading no record may carry.
     [Fact]
-    public void A_mirrors_section_naming_a_section_nothing_parses_is_reported()
+    public void A_mirrors_section_the_type_does_not_declare_is_reported()
     {
         var finding = Assert.Single(Check(Widgets(fields:
         [
             ("related", new FieldSpec
                 { Name = "related", Type = "list", Of = "id", Refs = ["widgets"], MirrorsSection = "See also" })
-        ])));
+        ], sections: ["Summary"])));
 
-        Assert.Equal("schema-dispatch", finding.Check);
+        Assert.Equal("schema-shape", finding.Check);
         Assert.Contains("See also", finding.Message);
     }
+
+    // Any section the type declares reconciles, not one fixed name.
+    [Fact]
+    public void A_mirrors_section_the_type_declares_passes()
+        => Assert.Empty(Check(Widgets(fields:
+        [
+            ("depends-on", new FieldSpec
+                { Name = "depends-on", Type = "list", Of = "id", Refs = ["widgets"], MirrorsSection = "Dependencies" })
+        ], sections: ["Dependencies"])));
 
     [Fact]
     public void A_universal_field_is_reported_against_the_file_that_declares_it()

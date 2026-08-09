@@ -1,0 +1,43 @@
+type: gizmo
+label: Gizmo
+folder: gizmos
+page: gizmos.md
+tier: descriptive
+lifecycle: living
+
+notes: >
+  A fixture type laid over the real schema so that the mirroring check is exercised against a section
+  that is not 'Related'. The section a field mirrors is whatever the field names, and the ADR type —
+  the only real one that mirrors anything — cannot say that on its own.
+
+id:
+  prefix: giz
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [live, retired]
+    description: Where the gizmo is in its life.
+
+  depends-on:
+    required: false
+    type: list
+    of: id
+    ref: gizmos
+    mirrors-section: Dependencies
+    description: What this gizmo calls, repeated as prose in the section it mirrors.
+
+sections:
+  required: [What it does]
+  optional: [Dependencies]
+
+index:
+  columns: [id, title, status, owner]
+  sort: id

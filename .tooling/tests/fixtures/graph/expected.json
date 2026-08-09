@@ -1,8 +1,8 @@
 {
   "summary": {
-    "validated": 4,
+    "validated": 6,
     "skipped": 0,
-    "errors": 9,
+    "errors": 10,
     "warnings": 1
   },
   "findings": [
@@ -75,6 +75,13 @@
       "severity": "error",
       "check": "ref-resolves",
       "message": "'superseded-by' points at 'adr-0099', which does not exist."
+    },
+    {
+      "file": "gizmos/adrift.md",
+      "line": 1,
+      "severity": "error",
+      "check": "related-matches-section",
+      "message": "the '## Dependencies' section references 'giz-mirrored' but 'depends-on' does not list it."
     }
   ]
 }

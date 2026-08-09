@@ -157,4 +157,75 @@ public class DocumentTests
         Assert.NotNull(doc);
         Assert.Equal(["pol-VURM.TIMEBOX", "pol-vurm.lower"], doc.ClauseRefs.Select(r => r.Ref));
     }
+
+    // A schema whose service type mirrors two fields against two sections, for the parse tests below.
+    // Which sections are collected is decided by the fields, so a type declaring none is never walked
+    // for one.
+    private static Schema WithMirrors(params string[] sections) => new()
+    {
+        ByFolder = new Dictionary<string, TypeSchema>
+        {
+            ["services"] = new()
+            {
+                DeclaredFields =
+                    [.. sections.Select(s => new FieldSpec { Name = s.ToLowerInvariant(), MirrorsSection = s })]
+            }
+        }
+    };
+
+    private static Doc? ParseWithMirrors(string body, params string[] sections) =>
+        Doc.Parse("services/catalogue-web.md",
+            $"---\nid: svc-catalogue-web\n---\n\n# The catalogue site\n\n{body}", WithMirrors(sections));
+
+    // Each field's own section, gathered in the one walk. A field mirroring `Dependencies` sees the
+    // links under `## Dependencies` and nothing from the section beside it.
+    [Fact]
+    public void Links_are_collected_under_each_mirrored_section()
+    {
+        var doc = ParseWithMirrors("""
+                                   ## Dependencies
+
+                                   * [svc-search](search.md) — the search box.
+
+                                   ### Not an edge
+
+                                   * [svc-lending](lending.md) — over the bus, inside the same section.
+
+                                   ## Data
+
+                                   * [dat-catalogue](../data/catalogue.md) — the bibliographic record.
+                                   """, "Dependencies", "Data");
+
+        Assert.NotNull(doc);
+        Assert.Equal(["search.md", "lending.md"],
+            doc.MirroredSectionLinks["Dependencies"].Select(l => l.Target));
+        Assert.Equal(["../data/catalogue.md"], doc.MirroredSectionLinks["Data"].Select(l => l.Target));
+    }
+
+    // A link in a paragraph is a link. Inlines hang off leaf blocks, so a walk that descends from the
+    // top-level block finds the ones in a list and silently misses the ones in prose — the same link to
+    // whoever wrote it, and the difference between a section that reconciles and one that seems to.
+    [Fact]
+    public void Links_written_as_prose_are_collected_as_readily_as_bullets()
+    {
+        var doc = ParseWithMirrors("""
+                                   ## Dependencies
+
+                                   None, and the graph is wrong: it reaches [svc-search](search.md) all the same.
+                                   """, "Dependencies");
+
+        Assert.NotNull(doc);
+        Assert.Equal(["search.md"], doc.MirroredSectionLinks["Dependencies"].Select(l => l.Target));
+    }
+
+    // A section the document does not carry is an empty list rather than an absent key, so the
+    // validator reports every id in the field as missing from it rather than skipping the field.
+    [Fact]
+    public void A_mirrored_section_the_document_lacks_is_collected_as_empty()
+    {
+        var doc = ParseWithMirrors("## Environments\n\n* [svc-search](search.md)\n", "Dependencies");
+
+        Assert.NotNull(doc);
+        Assert.Empty(doc.MirroredSectionLinks["Dependencies"]);
+    }
 }
