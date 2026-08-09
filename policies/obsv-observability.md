@@ -40,6 +40,8 @@ All production systems we operate, and the lower environments where behaviour mu
 | `ALERTS`  | **MUST** treat alerts as something to be acted on, and keep them few enough and meaningful enough that they still are        | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
 | `BLIND`   | **MUST NOT** run a production system with no monitoring and no alerting                                                      | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
 | `SECRETS` | **MUST NOT** write secrets, credentials or unmasked sensitive personal data into telemetry — see [pol-SCRT] and [pol-DATA]   | [ISO 27001:2022].A.8.15                                     |
+| `SLO`     | SHOULD express what good looks like as service-level objectives, and monitor against them                                    | [Azure WAF].reliability                                     |
+| `CORREL`  | SHOULD emit telemetry that can be correlated across systems by a shared identifier, not only by time                         | [ISO 27001:2022].A.8.15                                     |
 
 ## Exceptions
 

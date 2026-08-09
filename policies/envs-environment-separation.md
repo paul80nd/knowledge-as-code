@@ -45,6 +45,7 @@ temporary and on-demand environments.
 | `DEBUG`   | **MUST NOT** develop, test or debug against production                                                                                | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
 | `REUSE`   | **MUST NOT** reuse a production secret in any environment below production                                                            | [ISO 27001:2022].A.8.3, [NIST SSDF 1.1].PO.5  |
 | `UNMASK`  | **MUST NOT** place unmasked production or personal data into a lower environment — see [pol-DATA]                                     | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
+| `EPHEM`   | SHOULD be able to create an environment on demand and discard it when the work is done                                                |                                               |
 
 ## Exceptions
 

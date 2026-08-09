@@ -35,12 +35,13 @@ is about its output. Protecting that data, rather than checking it, is [pol-DATA
 
 ## Clauses
 
-| Id       | Clause                                                                                           | Alignment                                      |
-|----------|--------------------------------------------------------------------------------------------------|------------------------------------------------|
-| `EXPECT` | **MUST** state what a correct output looks like, in terms that can be checked automatically      | [Azure WAF].reliability                        |
-| `CHECK`  | **MUST** check a production output against those expectations before anything downstream uses it | [UK GDPR].Art.5(1)(d), [Azure WAF].reliability |
-| `RECORD` | **MUST** keep, for each production run, a record of its inputs, its output and its check result  | [Azure WAF].operational-excellence             |
-| `FAILED` | **MUST NOT** use a derived output whose checks did not pass                                      |                                                |
+| Id        | Clause                                                                                           | Alignment                                      |
+|-----------|--------------------------------------------------------------------------------------------------|------------------------------------------------|
+| `EXPECT`  | **MUST** state what a correct output looks like, in terms that can be checked automatically      | [Azure WAF].reliability                        |
+| `CHECK`   | **MUST** check a production output against those expectations before anything downstream uses it | [UK GDPR].Art.5(1)(d), [Azure WAF].reliability |
+| `RECORD`  | **MUST** keep, for each production run, a record of its inputs, its output and its check result  | [Azure WAF].operational-excellence             |
+| `FAILED`  | **MUST NOT** use a derived output whose checks did not pass                                      |                                                |
+| `LINEAGE` | SHOULD be able to trace a derived value back through the runs that produced it to its source     |                                                |
 
 ## Exceptions
 
