@@ -10,6 +10,7 @@
 | pol-AUTV | [Every change is verified automatically, and failures block](autv-automated-verification.md)          | delivery   | draft  |             | 2027-08-04 |
 | pol-COST | [Cost is a non-functional requirement](cost-cost-as-an-nfr.md)                                        | delivery   | draft  |             | 2027-08-04 |
 | pol-DATA | [Data is protected according to its sensitivity](data-data-protection.md)                             | security   | draft  |             | 2027-08-04 |
+| pol-DERV | [Derived data is verified before it is trusted](derv-derived-data-is-verified.md)                     | delivery   | draft  |             | 2027-08-09 |
 | pol-DEVI | [Deviations are recorded, owned and time-bound](devi-deviations-are-recorded.md)                      | governance | draft  |             | 2027-08-04 |
 | pol-ENVS | [Environments are separated, and production stays in production](envs-environment-separation.md)      | security   | draft  |             | 2027-08-04 |
 | pol-EVER | [Everything is in version control](ever-everything-in-version-control.md)                             | delivery   | draft  |             | 2027-08-04 |
