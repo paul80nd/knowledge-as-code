@@ -24,11 +24,14 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
+      # Actions are pinned to a commit rather than a tag: a tag is mutable, so a moved tag would
+      # change what runs here without changing this file. Dependabot moves the pins, and the trailing
+      # comment is what makes the diff legible when it does.
       - name: Check out the corpus
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install .NET 10 SDK
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
 
