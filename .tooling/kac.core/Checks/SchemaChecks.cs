@@ -14,8 +14,8 @@ namespace kac.core;
 //
 // The question asked of each value is not "is this key spelled right" but "is there code that acts on
 // this value". `style: literal` is a real style and would pass a spelling test; what makes it sound is
-// the branch in CheckId, and what makes `slug` only half-sound is that the branch stops at the prefix.
-// So each vocabulary here is read from the code that dispatches it rather than restated.
+// the branch in CheckId. So each vocabulary here is read from the code that dispatches it rather than
+// restated.
 //
 // Findings land against `.schema/<file>.yaml`, because that is the file a corpus owner edits and the
 // one the mechanism sync will carry. A rule or field the loader could not read at all carries its own

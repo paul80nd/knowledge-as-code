@@ -443,10 +443,9 @@ public static class Validator
     }
 
     // The id styles the checks below apply. Held here rather than in the schema loader because this is
-    // where the branches are, and SchemaChecks reads it to reject a style nothing acts on. `slug` earns
-    // its place on the prefix check alone — the slug half of a slug id is unchecked, which is #60 — and
-    // that is the reason this is a set of what is dispatched rather than a list of what is spelled
-    // correctly: adding a name here without a branch beneath is the mistake it exists to prevent.
+    // where the branches are, and SchemaChecks reads it to reject a style nothing acts on. It is a set of
+    // what is dispatched rather than a list of what is spelled correctly: adding a name here without a
+    // branch beneath is the mistake it exists to prevent.
     public static readonly IReadOnlySet<string> IdStyles =
         new HashSet<string>(["numbered", "mnemonic", "slug", "literal"], StringComparer.Ordinal);
 
@@ -474,14 +473,19 @@ public static class Validator
             return;
         }
 
-        var numPart = id[expectPrefix.Length..];
+        // What follows the prefix: the discriminator that says which document of the type this is. Each
+        // style shapes it differently, and each ties it to the same discriminator in the filename — the
+        // shape first, then the agreement, so a malformed id is reported once rather than twice. Where
+        // the filename cannot supply its half the agreement is skipped: that filename has failed
+        // filename-pattern, and one broken name is one finding.
+        var rest = id[expectPrefix.Length..];
         if (t.IdStyle == "numbered")
         {
             var fileNum = FilenameNumber(d.Rel);
-            if (numPart.Length != t.IdWidth || !numPart.All(char.IsDigit))
+            if (rest.Length != t.IdWidth || !rest.All(char.IsDigit))
                 err("id-format", $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} digits.",
                     Line(idNode, d));
-            else if (fileNum is not null && numPart != fileNum)
+            else if (fileNum is not null && rest != fileNum)
                 err("id-matches-filename", $"id '{id}' number does not match filename number '{fileNum}'.",
                     Line(idNode, d));
         }
@@ -490,15 +494,29 @@ public static class Validator
             // The id carries the mnemonic upper-case (pol-VURM); the filename carries it lower-case
             // (vurm-…md), so the two are compared case-insensitively.
             var fileMnemonic = FilenameMnemonic(d.Rel, t.IdWidth);
-            if (numPart.Length != t.IdWidth || !numPart.All(char.IsLetterOrDigit)
-                                            || !char.IsLetter(numPart[0]) || numPart != numPart.ToUpperInvariant())
+            if (rest.Length != t.IdWidth || !rest.All(char.IsLetterOrDigit)
+                                         || !char.IsLetter(rest[0]) || rest != rest.ToUpperInvariant())
                 err("id-format",
                     $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} upper-case alphanumeric "
                     + "characters beginning with a letter.", Line(idNode, d));
             else if (fileMnemonic is not null
-                     && !numPart.Equals(fileMnemonic, StringComparison.OrdinalIgnoreCase))
+                     && !rest.Equals(fileMnemonic, StringComparison.OrdinalIgnoreCase))
                 err("id-matches-filename",
                     $"id '{id}' mnemonic does not match filename mnemonic '{fileMnemonic}'.", Line(idNode, d));
+        }
+        else if (t.IdStyle == "slug")
+        {
+            // A slug is not a fixed-width discriminator cut from the front of the filename: it is the
+            // whole of it. So the two are compared entire, and case-sensitively — a slug is lower-case in
+            // both places, and the id check is where that is said.
+            var fileSlug = FilenameSlug(d.Rel);
+            if (!IsSlug(rest))
+                err("id-format",
+                    $"id '{id}' must be '{expectPrefix}' followed by lower-case letters, digits and hyphens.",
+                    Line(idNode, d));
+            else if (fileSlug is not null && rest != fileSlug)
+                err("id-matches-filename", $"id '{id}' slug does not match filename slug '{fileSlug}'.",
+                    Line(idNode, d));
         }
     }
 
@@ -509,6 +527,11 @@ public static class Validator
             err("filename-pattern", $"filename '{name}' does not match {t.FilenamePattern}.", null);
         var slug = name;
         if (slug.EndsWith(".md")) slug = slug[..^3];
+        // A numbered or mnemonic filename opens with the id's discriminator — 0007-…, vurm-… — and the
+        // limit is on the slug that follows it, not on the discriminator a contributor did not choose.
+        // No other style puts one there: a slug filename is slug throughout, so its first segment is
+        // measured like every other, and a literal id names a single-document type that has no folder of
+        // records to name in the first place.
         var dash = slug.IndexOf('-');
         if (dash >= 0)
         {
@@ -720,6 +743,18 @@ public static class Validator
         var head = name[..dash];
         return head.All(char.IsLetterOrDigit) ? head : null;
     }
+
+    private static string? FilenameSlug(string rel)
+    {
+        var stem = Path.GetFileNameWithoutExtension(rel);
+        return IsSlug(stem) ? stem : null;
+    }
+
+    // The slug alphabet, and the one place it is stated: lower-case letters, digits and the hyphen that
+    // joins them. ASCII rather than Unicode because a slug is also a URL path segment and a filename on
+    // three operating systems.
+    private static bool IsSlug(string s) =>
+        s.Length > 0 && s.All(c => char.IsAsciiLetterLower(c) || char.IsAsciiDigit(c) || c == '-');
 
     private static string? IdFromLink(LinkRef link, TypeSchema refType)
     {

@@ -121,19 +121,19 @@ intention, and the type page renders those beneath the checks table as *Declared
 | `min-items`                                       | error   | A `type: list` field carries at least the `min-items:` its schema declares. Reported against the field — no entry is at fault.                                    |
 | `list-order`                                      | warning | A `type: list` field's entries are in alphabetical order, digit runs compared as numbers (`A.8.7` before `A.8.29`). Only the first pair out of order is reported. |
 | `tier-matches-type`                               | error   | `tier` equals the tier the type declares.                                                                                                                         |
-| `id-prefix` / `id-format` / `id-matches-filename` | error   | `id` has the type's prefix and width, and its number matches the filename.                                                                                        |
+| `id-prefix` / `id-format` / `id-matches-filename` | error   | `id` has the type's prefix, its discriminator has the shape the `id.style` declares, and that discriminator matches the filename's.                               |
 
 ### Identity & structure (from `<type>.yaml`)
 
-| Check                             | Level | What it enforces                                                          |
-|-----------------------------------|-------|---------------------------------------------------------------------------|
-| `filename-pattern`                | error | Filename matches the type's `filename.pattern`.                           |
-| `slug-length`                     | error | The slug (filename minus the `NNNN-` prefix) is within `slug-max` (30).   |
-| `h1`                              | error | The document has an H1. Its text is the title, and nothing constrains it. |
-| `identity`                        | error | Two code spans follow the H1 — `` `Type: id` `STATUS` ``.                 |
-| `identity-type`                   | error | The line's type name is the `label` the folder's schema declares.         |
-| `identity-id` / `identity-status` | error | The line's id and status are the frontmatter's, the status upper-cased.   |
-| `required-section`                | error | Every heading in `sections.required` is present.                          |
+| Check                             | Level | What it enforces                                                                          |
+|-----------------------------------|-------|-------------------------------------------------------------------------------------------|
+| `filename-pattern`                | error | Filename matches the type's `filename.pattern`.                                           |
+| `slug-length`                     | error | The slug — the filename minus any `NNNN-` or mnemonic prefix — is within `slug-max` (30). |
+| `h1`                              | error | The document has an H1. Its text is the title, and nothing constrains it.                 |
+| `identity`                        | error | Two code spans follow the H1 — `` `Type: id` `STATUS` ``.                                 |
+| `identity-type`                   | error | The line's type name is the `label` the folder's schema declares.                         |
+| `identity-id` / `identity-status` | error | The line's id and status are the frontmatter's, the status upper-cased.                   |
+| `required-section`                | error | Every heading in `sections.required` is present.                                          |
 
 ### Clauses (from `<type>.yaml`'s `clauses:` block)
 

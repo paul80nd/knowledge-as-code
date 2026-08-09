@@ -181,7 +181,7 @@ public static class Generator
             "List entries read in alphabetical order, with numbers compared as numbers.", null),
         ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
         ("id", ["id-prefix", "id-format", "id-matches-filename"],
-            "`id` carries the type's prefix and matches the filename's number or mnemonic.", null),
+            "`id` carries the type's prefix and matches the filename's number, mnemonic or slug.", null),
         ("id-unique", ["id-unique"], "`id` is unique across the whole wiki.", null),
         ("filename / slug-length", ["filename-pattern", "slug-length"],
             "Filename matches the pattern; the slug is within 30 characters.", null),

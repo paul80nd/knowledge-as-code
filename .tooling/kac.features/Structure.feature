@@ -31,6 +31,15 @@ Feature: Document structure checks
       | line | check               | message                                                         |
       | 1    | id-matches-filename | id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'. |
 
+  Scenario: A slug id is checked for its alphabet and for agreement with the whole filename
+    When I validate the corpus
+    Then the findings for "tools/site-server.md" are exactly:
+      | line | check     | message                                                                             |
+      | 1    | id-format | id 'tol-Site_Server' must be 'tol-' followed by lower-case letters, digits and hyphens. |
+    And the findings for "tools/id-disagrees.md" are exactly:
+      | line | check               | message                                                                     |
+      | 1    | id-matches-filename | id 'tol-names-another-tool' slug does not match filename slug 'id-disagrees'. |
+
   Scenario: An identity line is required beneath the H1, and is reported once when malformed
     When I validate the corpus
     Then the findings for "policies/obsv-no-identity-line.md" are exactly:
@@ -75,7 +84,7 @@ Feature: Document structure checks
 
   Scenario: The whole corpus produces exactly these findings and nothing else
     When I validate the corpus
-    Then validation reports 18 documents and 0 skipped
+    Then validation reports 20 documents and 0 skipped
     And the findings are exactly:
       | file                                                        | severity | line | check               | message                                                                                                |
       | adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30.               |
@@ -101,3 +110,5 @@ Feature: Document structure checks
       | policies/scrt-lower-case-id.md                              | error    | 1    | id-format           | id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter. |
       | policies/trus-identity-type.md                              | error    | 12   | identity-type       | identity line says 'Standard', but this is a Policy.                                                   |
       | policies/vurm-bad-id-width.md                               | error    | 1    | id-format           | id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter.   |
+      | tools/id-disagrees.md                                       | error    | 1    | id-matches-filename | id 'tol-names-another-tool' slug does not match filename slug 'id-disagrees'.                          |
+      | tools/site-server.md                                        | error    | 1    | id-format           | id 'tol-Site_Server' must be 'tol-' followed by lower-case letters, digits and hyphens.                |
