@@ -182,23 +182,63 @@ public static class IdChecks
         }
     }
 
-    // The id a link cites, read from the file it points at — 0007-…md under a numbered type is
-    // `adr-0007`. Null where the target is not a record of that type.
-    public static string? IdFromLink(LinkRef link, TypeSchema refType)
+    // The id a link cites, read from the file it points at — `0007-…md` under a numbered type is
+    // `adr-0007`. Null where the target is not a record of that type, which is the common answer: this
+    // is asked of every link in a `## Related` section, and most of them are prose citations.
+    //
+    // The folder decides what type a target belongs to, not the filename. A numbered or mnemonic name is
+    // distinctive enough that asking the folder rarely changes the answer, but a slug is shaped like any
+    // other word — `ripgrep.md` says nothing about which folder it came from, and `services.md`, a type
+    // page rather than a record, would read as a record of the type it heads. So a relative target is
+    // resolved against the folder the citing document sits in, and has to land in the type's own.
+    public static string? IdFromLink(LinkRef link, string fromRel, TypeSchema refType)
     {
         var target = link.Target;
-        var hash = target.IndexOf('#');
-        if (hash >= 0) target = target[..hash];
-        var file = target.Split('/').LastOrDefault() ?? "";
-        if (refType.IdStyle == "mnemonic")
+        foreach (var cut in new[] { '#', '?' })
         {
-            var mnemonic = FilenameDiscriminator(file, refType);
-            return mnemonic is null ? null : $"{refType.IdPrefix}-{mnemonic.ToUpperInvariant()}";
+            var at = target.IndexOf(cut);
+            if (at >= 0) target = target[..at];
         }
 
-        var i = 0;
-        while (i < file.Length && char.IsDigit(file[i])) i++;
-        return i == refType.IdWidth ? $"{refType.IdPrefix}-{file[..i]}" : null;
+        if (target.Length == 0) return null; // a pure fragment addresses this document, not another
+        if (Folder(target, fromRel) != refType.Folder) return null;
+        if (FilenameDiscriminator(target, refType) is not { } discriminator) return null;
+
+        return refType.IdStyle switch
+        {
+            // A discriminator of the wrong width is a filename that opens with digits without being a
+            // record — the id checks report that where it is written, and it cites nothing here.
+            "numbered" => discriminator.Length == refType.IdWidth ? $"{refType.IdPrefix}-{discriminator}" : null,
+            "mnemonic" => $"{refType.IdPrefix}-{discriminator.ToUpperInvariant()}",
+            "slug" => $"{refType.IdPrefix}-{discriminator}",
+            _ => null
+        };
+    }
+
+    // The folder a target lands in, repo-relative: an absolute target from the root, a relative one from
+    // the folder the citing document sits in. String work rather than a filesystem walk, because the
+    // question is which type the link names and not whether the file is there — `link-resolves` asks
+    // that, and asking it twice would report a missing file as a citation of nothing.
+    private static string Folder(string target, string fromRel)
+    {
+        target = target.Replace('\\', '/');
+        var segments = new List<string>();
+        if (!target.StartsWith('/'))
+            segments.AddRange(fromRel.Replace('\\', '/').Split('/')[..^1]);
+
+        foreach (var part in target.TrimStart('/').Split('/')[..^1])
+        {
+            if (part is "" or ".") continue;
+            if (part == "..")
+            {
+                if (segments.Count > 0) segments.RemoveAt(segments.Count - 1);
+                continue;
+            }
+
+            segments.Add(part);
+        }
+
+        return string.Join('/', segments);
     }
 
     // The slug alphabet, and the one place it is stated: lower-case letters, digits and the hyphen that

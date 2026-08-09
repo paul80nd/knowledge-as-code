@@ -529,10 +529,10 @@ public static class Validator
             var inSection = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var link in d.RelatedSectionLinks)
             {
-                // A field may point at several types, and a link resolves under whichever of them names
-                // a file of that shape. The first answer is the id, since no two types share both an id
-                // style and a width without their filenames colliding anyway.
-                var id = refTypes.Select(rt => IdChecks.IdFromLink(link, rt)).FirstOrDefault(x => x is not null);
+                // A field may point at several types, and a link cites whichever of them owns the folder
+                // it lands in. At most one can, so the first answer is the answer.
+                var id = refTypes.Select(rt => IdChecks.IdFromLink(link, d.Rel, rt))
+                    .FirstOrDefault(x => x is not null);
                 if (id is not null) inSection.Add(id);
             }
 

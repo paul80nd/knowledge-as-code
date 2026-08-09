@@ -158,24 +158,44 @@ public class IdCheckTests
     // -- which id does a link cite? --
 
     [Theory]
-    [InlineData("0007-a-decision.md", "adr-0007")]
+    [InlineData("0007-a-decision.md", "adr-0007")]           // relative, from a document in the folder
     [InlineData("/adrs/0007-a-decision.md", "adr-0007")]
+    [InlineData("../adrs/0007-a-decision.md", "adr-0007")]
     [InlineData("0007-a-decision.md#context", "adr-0007")]   // a fragment addresses within the target
+    [InlineData("0007-a-decision?raw=1", "adr-0007")]        // the extension may be left off
     public void A_link_to_a_numbered_record_is_read_as_its_id(string target, string expected)
-        => Assert.Equal(expected, IdChecks.IdFromLink(new LinkRef { Target = target }, Numbered()));
+        => Assert.Equal(expected, Cite(target, "adrs/0001-first.md", Numbered()));
 
     // The filename carries the mnemonic lower-case; the id it cites is the upper-case form.
     [Fact]
     public void A_link_to_a_mnemonic_record_is_written_back_upper_case()
-        => Assert.Equal("pol-VURM",
-            IdChecks.IdFromLink(new LinkRef { Target = "/policies/vurm-vulnerability.md" }, Mnemonic()));
+        => Assert.Equal("pol-VURM", Cite("/policies/vurm-vulnerability.md", "adrs/0001-first.md", Mnemonic()));
+
+    // The style with nothing distinctive in the filename to recognise, and so the one the folder is
+    // load-bearing for.
+    [Theory]
+    [InlineData("/tools/ripgrep.md", "tol-ripgrep")]
+    [InlineData("ripgrep.md", "tol-ripgrep")]
+    public void A_link_to_a_slug_record_is_read_as_its_id(string target, string expected)
+        => Assert.Equal(expected, Cite(target, "tools/fd.md", Slug()));
+
+    // A type page is not a record, and under a slug type its name is shaped exactly like one. The folder
+    // is what tells them apart: `tools.md` sits beside the folder rather than in it.
+    [Theory]
+    [InlineData("/tools.md", "tools/fd.md")]
+    [InlineData("../tools.md", "tools/fd.md")]
+    [InlineData("/services/lending.md", "tools/fd.md")]   // a record, but of another type
+    [InlineData("https://example.com/tools/ripgrep.md", "tools/fd.md")]
+    public void A_link_outside_the_type_s_folder_cites_no_id(string target, string fromRel)
+        => Assert.Null(Cite(target, fromRel, Slug()));
 
     [Theory]
     [InlineData("/adrs.md")]            // the type page, not a record
     [InlineData("/adrs/_template.md")]
-    [InlineData("https://example.com")]
+    [InlineData("/adrs/007-too-few.md")]
+    [InlineData("#a-heading-here")]     // a fragment addressing this document
     public void A_link_to_anything_else_cites_no_id(string target)
-        => Assert.Null(IdChecks.IdFromLink(new LinkRef { Target = target }, Numbered()));
+        => Assert.Null(Cite(target, "adrs/0001-first.md", Numbered()));
 
     // -- driving the checks --
 
@@ -189,6 +209,9 @@ public class IdCheckTests
         "policies" => Mnemonic(),
         _ => Slug()
     };
+
+    private static string? Cite(string target, string fromRel, TypeSchema refType) =>
+        IdChecks.IdFromLink(new LinkRef { Target = target }, fromRel, refType);
 
     private static List<Finding> Run(string id, string rel, TypeSchema t) => Collect(err =>
         IdChecks.Check(id, 1, rel, t, err));
