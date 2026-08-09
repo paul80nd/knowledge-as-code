@@ -5,6 +5,7 @@ category: security
 status: draft
 aligns-with:
   - ISO27001:2022 A.8.3
+  - ISO27001:2022 A.8.9
   - ISO27001:2022 A.8.31
   - ISO27001:2022 A.8.33
 review-by: "2027-08-04"
@@ -38,6 +39,7 @@ temporary and on-demand environments.
 | `SPLIT`   | **MUST** separate production from non-production, with distinct access controls at each tier                                          | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
 | `CREDS`   | **MUST** keep production credentials and secrets unreachable from any lower environment                                               | [ISO 27001:2022].A.8.3, [NIST SSDF 1.1].PO.5  |
 | `PARITY`  | **MUST** provision environments from the same definitions, so that what passes below production is a fair test of what will run in it | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
+| `BASELIN` | **MUST** be able to state the configuration an environment is running, and reproduce it                                               | [ISO 27001:2022].A.8.9                        |
 | `PROMOTE` | **MUST** promote changes between environments through automation rather than by manual copy                                           | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
 | `MASK`    | **MUST** mask or synthesise the data used below production                                                                            | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
 | `DEBUG`   | **MUST NOT** develop, test or debug against production                                                                                | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |

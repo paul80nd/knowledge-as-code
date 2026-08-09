@@ -64,7 +64,7 @@ pointer, not the duty. The practical difference is who can waive it: an Annex A 
 documented justification, and an article is not. A recorded deviation ([pol-DEVI]) against one of these clauses is a
 decision to break the law rather than a risk to accept.
 
-Referenced by: [pol-DATA].
+Referenced by: [pol-DATA], [pol-DERV].
 
 ### Public Sector Bodies Accessibility Regulations 2018 {#psbar-2018}
 
@@ -124,7 +124,7 @@ This is the only framework covering [pol-COST], and worth being plain about why.
 manage our own cloud spend. Recording the Cost Optimization pillar as a real influence is the difference between a
 policy that borrows from established practice and one that appears to have been invented in a meeting.
 
-Referenced by: [pol-COST], [pol-RECV], [pol-PERF], [pol-OBSV].
+Referenced by: [pol-COST], [pol-RECV], [pol-PERF], [pol-OBSV], [pol-DERV].
 
 ### NIST SSDF 1.1 {#nist-ssdf-1-1}
 
@@ -192,6 +192,7 @@ entry: a policy clause written under its influence is easier to read with the hi
 [pol-AUTV]: policies/autv-automated-verification.md
 [pol-COST]: policies/cost-cost-as-an-nfr.md
 [pol-DATA]: policies/data-data-protection.md
+[pol-DERV]: policies/derv-derived-data-is-verified.md
 [pol-DEVI]: policies/devi-deviations-are-recorded.md
 [pol-ENVS]: policies/envs-environment-separation.md
 [pol-EVER]: policies/ever-everything-in-version-control.md
