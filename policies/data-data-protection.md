@@ -51,7 +51,7 @@ analytical copies and test data.
 | `SHARE`   | **MUST NOT** send personal data to a third party before a written processing agreement covers it                                                   | [ISO 27001:2022].A.5.14, [UK GDPR].Art.28                          |
 | `RETAIN`  | **MUST NOT** retain sensitive or personal data beyond its defined lifetime without a recorded reason                                               | [ISO 27001:2022].A.8.10, [UK GDPR].Art.5(1)(e)                     |
 | `LOGS`    | **MUST NOT** write unmasked sensitive personal data into logs or telemetry                                                                         | [ISO 27001:2022].A.8.12, [UK GDPR].Art.5(1)(f)                     |
-| `AGILE`   | COULD change cryptographic algorithm without re-architecting what depends on it                                                                    |                                                                    |
+| `AGILE`   | COULD change cryptographic algorithm without re-architecting what depends on it, rather than treating the choice as permanent                      |                                                                    |
 | `CLEAR`   | COULD protect sensitive data so that it is never processed in the clear                                                                            | [UK GDPR].Art.32(1)(a)                                             |
 
 ## Exceptions
