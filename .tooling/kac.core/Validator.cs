@@ -301,7 +301,34 @@ public static class Validator
                     $"'{citation}' cites a clause '{clauseId}' that {target.Rel} does not carry."));
         }
 
-        // reciprocal fields (e.g. supersedes / superseded-by).
+        // Referenced ids — every field the schema gives a `ref:`. The declaration names the type an id
+        // in this field belongs to, which reads to whoever holds these files as a target the tool
+        // answers for. Asked of every ref field alike, reciprocal or not: a one-directional edge —
+        // `depends-on`, the estate's own dependency graph — has no counterpart obliged to keep it in
+        // step, which makes it the edge with least behind it rather than the one to leave alone.
+        //
+        // Only the target's existence is asked. A literal the field admits is not an id and is skipped,
+        // as it is everywhere else.
+        foreach (var d in docs)
+        {
+            if (d.Type is null) continue;
+            foreach (var name in d.Type.FieldOrder)
+            {
+                var spec = d.Type.Fields[name];
+                if (spec.Refs.Count == 0) continue;
+                if (spec.Type != "id" && (spec.Type != "list" || spec.Of != "id")) continue;
+                foreach (var targetId in FrontIdList(d, name))
+                {
+                    if (spec.IsLiteral(targetId) || byId.ContainsKey(targetId)) continue;
+                    f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "ref-resolves",
+                        $"'{name}' points at '{targetId}', which does not exist."));
+                }
+            }
+        }
+
+        // reciprocal fields (e.g. supersedes / superseded-by). Whether the target exists is `ref-resolves`
+        // above; what is left here is the one question this field asks, which is whether the document at
+        // the other end points back.
         foreach (var d in docs)
         {
             if (d.Type is null) continue;
@@ -311,12 +338,7 @@ public static class Validator
                 if (spec.Reciprocal is null || spec.Refs.Count == 0) continue;
                 foreach (var targetId in FrontIdList(d, name))
                 {
-                    if (!byId.TryGetValue(targetId, out var target))
-                    {
-                        f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "reciprocal",
-                            $"'{name}' points at '{targetId}', which does not exist."));
-                        continue;
-                    }
+                    if (!byId.TryGetValue(targetId, out var target)) continue;
 
                     var back = FrontIdList(target, spec.Reciprocal);
                     var selfId = d.FrontScalar("id");

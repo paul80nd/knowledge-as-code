@@ -107,6 +107,7 @@ Other boundaries:
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                                |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                               |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                                      |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                                      |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                              |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                    |
 | `one-problem-per-document`  | warning | One Symptom section, because an FAQ is found by its symptom. A page of assorted gotchas cannot be, which defeats the purpose. |

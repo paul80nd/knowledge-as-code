@@ -211,6 +211,8 @@ public static class Generator
         ("related-matches-section", ["related-matches-section"],
             "A field that mirrors a section reconciles with the ids in that section.",
             t => t.AnyField(f => f.MirrorsSection is not null)),
+        ("ref-resolves", ["ref-resolves"], "An id in a field that references another document names one that exists.",
+            t => t.AnyField(f => f.Refs.Count > 0)),
         ("reciprocal", ["reciprocal"], "A reciprocal field and its counterpart agree in both directions.",
             t => t.AnyField(f => f.Reciprocal is not null)),
         ("unused-definition", ["unused-definition"], "A link definition that nothing references.", null),

@@ -100,6 +100,7 @@ anything built on it. Record that in `constrained-by` rather than promising some
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                                                                                                              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                                                                                                             |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                                                                                                                    |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                                                                                                                    |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                                                                                                  |
 | `target-is-measurable`      | warning | `measured-by` names a measurement rather than an intention. Its presence is `required: true`; this is about hedging — "monitored", "as needed", "where practical" all satisfy the field and answer nothing. |
 

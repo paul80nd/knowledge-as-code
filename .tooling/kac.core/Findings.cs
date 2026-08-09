@@ -66,6 +66,7 @@ public static class CheckCatalogue
         new("type-setup", Sev.Error, "A type the schema declares is stood up as both a page and a folder, or neither."),
         new("generated-block", Sev.Error, "A page carrying a generated block still has both of its markers."),
         new("clause-ref", Sev.Error, "A pol-XXXX.CLAUSE citation names a clause that exists."),
+        new("ref-resolves", Sev.Error, "An id in a field with a ref names a document that exists."),
         new("reciprocal", Sev.Error, "A reciprocal field agrees in both directions."),
         new("list-order", Sev.Warning, "A list field's entries are in alphabetical order."),
         new("clause-order", Sev.Warning, "Clause rows are grouped by binding level."),

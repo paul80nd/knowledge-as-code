@@ -110,6 +110,7 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                 |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
 | `no-actual-data`            | error   | Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.   |
 

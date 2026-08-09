@@ -54,7 +54,7 @@ Infrastructure-as-code is not a service either: it deploys services rather than 
 | `repo`        | ●   | string | Where the code lives.                                                                |
 | `platform`    | ●   | enum   | What it is built on. Drives which standards apply.                                   |
 | `criticality` | ●   | enum   | Judged by what a customer experiences when it is unavailable.                        |
-| `depends-on`  |     | list   | Downward only — what this service calls. Nothing yet checks that the ids resolve.    |
+| `depends-on`  |     | list   | Downward only — what this service calls.                                             |
 | `data-stores` |     | list   | Data ids this service owns or reads.                                                 |
 
 **Enum values**
@@ -74,8 +74,7 @@ Infrastructure-as-code is not a service either: it deploys services rather than 
 
 1. Copy [`_template.md`](services/_template.md) to `<slug>.md`. Services use a **slug id**, not a number —
    `svc-<name>` — because they have natural stable names.
-2. Fill in the frontmatter. `depends-on` names other service ids — check them against the
-   [index](services/_index.md) yourself, because nothing checks that they resolve yet.
+2. Fill in the frontmatter. `depends-on` names other service ids; the [index](services/_index.md) is where to find them.
 3. Record environments and URLs, and the data stores it owns.
 4. Keep it current. This is a descriptive document — a service catalogue that disagrees with the estate is worse than
    none, because everything else trusts it.
@@ -175,6 +174,7 @@ get to look like one it can. It is prose here for that reason.
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                 |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.

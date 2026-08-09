@@ -8,6 +8,7 @@ supersedes:
   - adr-0002
 related:
   - adr-0002
+  - adr-0099
 ---
 
 # First graph fixture
@@ -21,7 +22,8 @@ related:
 ## Context
 
 This fixture exercises the cross-document rules: a dead link, an undefined shortcut, a one-sided supersession, and a
-`related` field that disagrees with its section.
+`related` field that both disagrees with its section and names an ADR nobody wrote. `related` declares a `ref:` and no
+`reciprocal:`, so the unresolved id is what holds the two checks apart.
 
 ## Decision
 
@@ -35,7 +37,8 @@ warns `bracket-literal`.
 
 ## Consequences
 
-The golden pins the `link-resolves`, `undefined-label`, `reciprocal` and `related-matches-section` findings.
+The golden pins the `link-resolves`, `undefined-label`, `ref-resolves`, `reciprocal` and `related-matches-section`
+findings.
 
 ## Related
 
