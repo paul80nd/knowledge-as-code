@@ -38,9 +38,9 @@ Grouped by [tier](../knowledge-as-code.md#tiers), because tier determines how ea
 
 ### Decided — immutable once accepted
 
-**[ADRs](/adrs)** — an architecturally significant decision affecting more than one repository: the context, the
-choice, the alternatives weighed, the consequences. Immutable once accepted; superseded by a new ADR rather than
-rewritten. Decisions local to a single repo belong in that repo, not here.
+**[ADRs](/adrs)** — an architecturally significant decision affecting more than one repository: the context, the choice,
+the alternatives weighed, the consequences. Immutable once accepted; superseded by a new ADR rather than rewritten.
+Decisions local to a single repo belong in that repo, not here.
 
 **[Postmortems](/postmortems)** — what actually happened during an incident: timeline, impact, root cause, contributing
 factors, actions. Blameless. Immutable once published. The honest counterpart to the ADR log — ADRs record what we
@@ -74,9 +74,9 @@ rot faster than anything else.
 data stores, criticality, owner. This is the **anchor** most other types point at; without it, cross-references can't be
 validated.
 
-**[Capability](/capabilities)** — what we offer and why, at the level above ADO epics. A *hub* document: it links to
-the epics that detail it, the services that implement it, the feature files that test it, and the NFRs that constrain
-it. It does not restate them.
+**[Capability](/capabilities)** — what we offer and why, at the level above ADO epics. A *hub* document: it links to the
+epics that detail it, the services that implement it, the feature files that test it, and the NFRs that constrain it. It
+does not restate them.
 
 **[Tools](/tools)** — the approved-software register: what we've chosen, what we've rejected, what's deprecated, and the
 version ranges we stand behind.
@@ -86,12 +86,12 @@ fallback, who to contact.
 
 **[Data](/data)** — which store owns which entities, retention periods, classification, and where personal data flows.
 
-**[Glossary](/glossary)** — the ubiquitous language. Terms whose meaning is specific to us, or which are easily
-confused with each other. Small, high-value, and the one document worth loading into every session.
+**[Glossary](/glossary)** — the ubiquitous language. Terms whose meaning is specific to us, or which are easily confused
+with each other. Small, high-value, and the one document worth loading into every session.
 
-**[Explanations](/explanations)** — narrative that helps you *understand* how something works or why it is shaped the way
-it is. Architecture overviews, conceptual walkthroughs, "how the pieces fit together". Descriptive tier: it must mirror
-reality, and it carries an owner and a review date like anything else.
+**[Explanations](/explanations)** — narrative that helps you *understand* how something works or why it is shaped the
+way it is. Architecture overviews, conceptual walkthroughs, "how the pieces fit together". Descriptive tier: it must
+mirror reality, and it carries an owner and a review date like anything else.
 
 An explanation is **not**:
 
@@ -208,11 +208,10 @@ after replacing the entire technology estate, it's a policy.
 **Standard vs Control.** The standard says what to do; the control says how we know it happened. `Secrets MUST come
 from Key Vault` is a standard. `CI runs gitleaks on every PR` is a control. If it can fail a build, it's a control.
 
-**Capability vs Spec.** A *capability* is the product surface — Billing, Search, Notifications — described once,
-above the epic layer, as a hub of links. A *spec* is the per-feature application of standards to a concrete contract,
-and it belongs in the repo that owns the feature, next to the OpenAPI document and the feature files it describes. This
-follows the same central-vs-local rule as ADRs: cross-repo synthesis lives here, feature-level detail lives with the
-code.
+**Capability vs Spec.** A *capability* is the product surface — Billing, Search, Notifications — described once, above
+the epic layer, as a hub of links. A *spec* is the per-feature application of standards to a concrete contract, and it
+belongs in the repo that owns the feature, next to the OpenAPI document and the feature files it describes. This follows
+the same central-vs-local rule as ADRs: cross-repo synthesis lives here, feature-level detail lives with the code.
 
 **Capability vs Service.** A capability is what a customer gets. A service is a thing we deploy. One capability
 typically spans several services; one service often contributes to several capabilities.
@@ -233,8 +232,8 @@ everything else links to it.
 
 ## Status of this taxonomy
 
-Not all types exist yet. The current state and sequencing live in `_plan/backlog.md`, which is temporary scaffolding and
-will be deleted once the migration is complete.
+Not all types are proven. Which are and which are drafts is recorded once, in the root
+[README](../README.md#maturity).
 
 Changing the taxonomy — adding a type, merging two, moving a type between tiers — is a larger act than editing any
 document within it, and should be recorded as an ADR superseding or amending

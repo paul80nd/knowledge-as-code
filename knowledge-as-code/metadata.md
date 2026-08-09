@@ -28,14 +28,17 @@ them sparingly, and derive rather than state wherever possible.
 ## Naming
 
 * **Type name** — singular. An *ADR*, a *standard*, a *control*.
+
 * **Folder and page** — plural. `adrs/`, `standards/`, `controls/`. The folder is a collection, and CI infers a
-  document's type from it, so the mapping is a rule rather than a lookup.
+  document's type from it, so the mapping is a rule rather than a lookup. Two types take the singular because English
+  has no plural to give: `data/` is a mass noun, and `glossary.md` is one document rather than a collection.
+
 * **ID prefix** — singular, since an ID names a single document. `adr-0017`, `std-0004`.
 
-* **ID style** — set per type by the schema, and one of three shapes.
+* **ID style** — set per type by the schema, and one of four shapes.
 
   *Numbered* (`adr-0017`) suits anything chronological: the id records the order things happened, which is information
-  neither of the others can carry.
+  none of the others can carry.
 
   *Slug* (`svc-billing-api`) suits anything with a natural stable name, where a number would be an arbitrary handle for
   something already well identified.
@@ -46,8 +49,8 @@ them sparingly, and derive rather than state wherever possible.
   mnemonic makes a claim a number never does, so it is drawn from the concept rather than the current wording, and it is
   immutable once the document is active.
 
-  The glossary is the exception that proves the rule: one document rather than a collection, so its id is the literal
-  `glossary` and there is nothing to discriminate between.
+  *Literal* is the whole id, written into the schema by the type that carries it. A single-document type has one
+  document and so one name for it: the glossary's id is `glossary`, and there is nothing to discriminate between.
 
 * **Slug length** — the filename slug (excluding the `NNNN-` or `mnem-` prefix) is at most 30 characters. The filename
   is a handle, not a title: it identifies the document at a glance while the H1 carries the full descriptive title. CI
@@ -56,9 +59,6 @@ them sparingly, and derive rather than state wherever possible.
   A slug you cannot get under 30 characters is often a signal the document is doing two things.
   `internal-services-backing-public-surfaces` was one idea too many; splitting or narrowing the scope is usually the
   better fix than abbreviating harder.
-
-Two exceptions, both because English has no plural to give: `data/` (mass noun) and
-`glossary.md` (one document, not a collection).
 
 ## Universal fields
 
@@ -96,13 +96,13 @@ Deliberately absent, and why:
 
 ## IDs
 
-Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing-api`. Which of the three
+Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing-api`. Which of the four
 [ID styles](#naming) a type uses is set by its schema.
 
 Numeric IDs are zero-padded to four digits, allocated sequentially, and **never reused** — if a document is withdrawn
 before acceptance, its number is retired. Mnemonic IDs are allocated by meaning rather than in sequence, so there is no
-next one to take: pick a four-character mnemonic for the concept that no document of that type already holds. Slugs are
-simply the thing's own name.
+next one to take: pick a four-character mnemonic for the concept that no document of that type already holds. A slug is
+the thing's own name.
 
 The ID is the anchor for every cross-reference in the wiki, and it is what a shortcut link label must say. Filenames may
 be corrected; IDs may not — which binds hardest on a mnemonic, because unlike a number it makes a claim that can go
@@ -174,9 +174,6 @@ tags: [ public-api, http ]
 ## Adding a field
 
 A new field appears as a column on every document of that type, so it needs to justify itself. Before adding one, check
-that the information isn't already derivable from git, the folder, the H1, or an existing link. If it is genuinely new,
-add it here, add it to the validator, and note it in the changelog below.
-
-## Changelog
-
-- Initial version.
+that the information is not already derivable from git, the folder, the H1, or an existing link. If it is genuinely new,
+declare it in the type's `.schema/<folder>.yaml`, add it to that type's `_template.md`, and run `./kac index` so the
+generated tables carry it. The validator reads the schema, so it needs no change of its own.
