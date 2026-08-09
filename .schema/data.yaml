@@ -64,13 +64,6 @@ index:
   sort: classification
 
 rules:
-  # `retention` already declares `required-when: 'classification in [personal, special-category]'`, and the
-  # validator already reports exactly that, so this entry restates a declaration made above. Issue #83 is
-  # whether to delete it or give it a question the field declaration cannot ask.
-  - id: personal-data-has-retention
-    description: >
-      Personal or special-category data with no stated retention is reported. It is the first thing anyone
-      external will ask.
   - id: no-actual-data
     description: >
       Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.
