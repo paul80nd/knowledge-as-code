@@ -43,6 +43,9 @@ configuration, data pipelines and the documentation held with them.
 | `BYPASS`  | **MUST NOT** merge or release over a failing check without a recorded deviation ([pol-DEVI])                           | [ISO 27001:2022].A.8.29, [NIST SSDF 1.1].PO.4                                                    |
 | `DISABLE` | **MUST NOT** disable, skip, silence or suppress a check or a warning without a recorded reason                         | [NIST SSDF 1.1].PO.4                                                                             |
 | `MACHINE` | **MUST NOT** depend on a particular person's machine to produce a build                                                | [NIST SSDF 1.1].PO.3                                                                             |
+| `OFTEN`   | SHOULD integrate to the mainline often enough that any one change is small enough to reason about                      | [DORA metrics].lead-time                                                                         |
+| `WARN`    | SHOULD treat a new warning as a defect to triage rather than noise to accumulate                                       |                                                                                                  |
+| `COVER`   | SHOULD know what proportion of our code the tests exercise, and notice when it falls                                   |                                                                                                  |
 
 ## Exceptions
 

@@ -26,8 +26,9 @@ silently is erosion, and it is indistinguishable afterwards from nobody having k
 
 ## Scope
 
-Any knowing departure from a policy in this section or a standard that implements one, in any environment. Applies
-whether the departure is permanent, temporary or made under pressure during an incident.
+Any knowing departure from a policy in this section or a standard that implements one, in any environment, and any
+shortcut taken knowing it will have to be revisited. Applies whether the departure is permanent, temporary or made
+under pressure during an incident.
 
 ## Clauses
 
@@ -41,6 +42,7 @@ whether the departure is permanent, temporary or made under pressure during an i
 | `CLOSE`   | **MUST** close a deviation by fixing the underlying gap or by consciously re-accepting the risk — with the same scrutiny as the first time | [ISO 27001:2022].A.5.36 |
 | `PERM`    | **MUST NOT** treat a deviation as permanent by default, or let an expired one stand unreviewed                                             | [ISO 27001:2022].A.5.36 |
 | `CUSTOM`  | **MUST NOT** accept "we always do it this way" as a substitute for a recorded decision                                                     | [ISO 27001:2022].A.5.4  |
+| `DEBT`    | SHOULD record a shortcut taken knowingly, so that it is tracked work rather than something the next person discovers                       |                         |
 
 ## Exceptions
 
