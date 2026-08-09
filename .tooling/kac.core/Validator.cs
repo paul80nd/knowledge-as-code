@@ -518,16 +518,15 @@ public static class Validator
 
     private static void CheckMirrorsSection(Doc d, TypeSchema t, Schema schema, Action<string, string, int?> err)
     {
-        foreach (var name in t.FieldOrder)
+        foreach (var spec in t.DeclaredFields)
         {
-            var spec = t.Fields[name];
-            if (spec.MirrorsSection is null) continue;
+            if (spec.MirrorsSection is not { } section) continue;
             var refTypes = spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>().ToList();
             if (refTypes.Count == 0) continue;
 
-            var inFront = new HashSet<string>(FrontIdList(d, name), StringComparer.OrdinalIgnoreCase);
+            var inFront = new HashSet<string>(FrontIdList(d, spec.Name), StringComparer.OrdinalIgnoreCase);
             var inSection = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var link in d.RelatedSectionLinks)
+            foreach (var link in d.MirroredSectionLinks.GetValueOrDefault(section, []))
             {
                 // A field may point at several types, and a link cites whichever of them owns the folder
                 // it lands in. At most one can, so the first answer is the answer.
@@ -538,11 +537,11 @@ public static class Validator
 
             foreach (var id in inFront.Except(inSection))
                 err("related-matches-section",
-                    $"'{name}' lists '{id}' but it is not referenced in the '## {spec.MirrorsSection}' section.",
+                    $"'{spec.Name}' lists '{id}' but it is not referenced in the '## {section}' section.",
                     d.FrontStartLine);
             foreach (var id in inSection.Except(inFront))
                 err("related-matches-section",
-                    $"the '## {spec.MirrorsSection}' section references '{id}' but '{name}' does not list it.",
+                    $"the '## {section}' section references '{id}' but '{spec.Name}' does not list it.",
                     d.FrontStartLine);
         }
     }

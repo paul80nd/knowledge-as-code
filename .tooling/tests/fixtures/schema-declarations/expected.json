@@ -66,8 +66,8 @@
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
-      "check": "schema-dispatch",
-      "message": "field 'related' declares 'mirrors-section: See also', and only 'Related' is reconciled against its section."
+      "check": "schema-shape",
+      "message": "field 'related' declares 'mirrors-section: See also', and the type's 'sections:' block declares no such section — name a section the type has, or add it."
     },
     {
       "file": ".schema/widgets.yaml",

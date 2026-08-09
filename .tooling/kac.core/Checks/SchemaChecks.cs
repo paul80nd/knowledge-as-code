@@ -23,10 +23,6 @@ namespace kac.core;
 // schema defect is a finding like any other rather than a stack trace on the way to one.
 public static class SchemaChecks
 {
-    // The section a `mirrors-section:` field can name. Doc parses exactly this one, so a field naming
-    // any other section declares a reconciliation that cannot happen — see issue #63.
-    private static readonly string[] MirroredSections = [Doc.RelatedSection];
-
     public static void Check(Schema schema, List<Finding> f)
     {
         // Walked in declared order, here and below, so that a schema with several faults reports them
@@ -35,7 +31,7 @@ public static class SchemaChecks
         UnreadKeys(".schema/_universal.yaml", schema, f);
         foreach (var name in schema.UniversalOrder)
             if (schema.Universal.TryGetValue(name, out var spec))
-                CheckField(".schema/_universal.yaml", name, spec, schema, f);
+                CheckField(".schema/_universal.yaml", name, spec, schema, null, f);
 
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
@@ -53,7 +49,7 @@ public static class SchemaChecks
                              + $"not read. An index is written {List(Generator.IndexOrders)}.", f);
 
             foreach (var name in t.FieldOrder)
-                CheckField(at, name, t.Fields[name], schema, f);
+                CheckField(at, name, t.Fields[name], schema, t, f);
 
             foreach (var rule in t.Rules)
                 CheckRule(at, key, rule, f);
@@ -105,7 +101,11 @@ public static class SchemaChecks
         }
     }
 
-    private static void CheckField(string at, string name, FieldSpec spec, Schema schema, List<Finding> f)
+    // `t` is the type declaring the field, and is null for a universal one — a field declared for every
+    // type belongs to none of them, so the questions that read the type's own declarations are not asked
+    // of it.
+    private static void CheckField(string at, string name, FieldSpec spec, Schema schema, TypeSchema? t,
+        List<Finding> f)
     {
         if (spec.Problem is { } problem)
             f.Add(new Finding(at, null, Sev.Error, "schema-unreadable", problem));
@@ -126,9 +126,15 @@ public static class SchemaChecks
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-items:', which only a "
                          + "list's length is read against — declare it 'type: list', or drop the floor.", f);
 
-        if (spec.MirrorsSection is { } section && !MirroredSections.Contains(section, StringComparer.Ordinal))
-            Dispatch(at, $"field '{name}' declares 'mirrors-section: {section}', and only "
-                         + $"{List(MirroredSections)} is reconciled against its section.", f);
+        // Any section reconciles, so this is not a vocabulary the tool holds — which is why nothing
+        // else would catch a section the type never offers. The reconciliation would run against a
+        // heading no record may carry and report every id in the field as missing from it.
+        if (t is not null && spec.MirrorsSection is { } section
+                          && !t.RequiredSections.Concat(t.OptionalSections)
+                              .Contains(section, StringComparer.OrdinalIgnoreCase))
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"field '{name}' declares 'mirrors-section: {section}', and the type's 'sections:' block "
+                + "declares no such section — name a section the type has, or add it."));
     }
 
     // A rule says what it is by what it carries. An `expr:` is a rule that is finished; a matching

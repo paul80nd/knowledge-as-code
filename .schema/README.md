@@ -42,6 +42,7 @@ fields:
     values: [ ... ]             # when type is enum, or an $enums.<name> reference
     ref: <folder> | [ ... ]     # when type is id or list-of-id: which type(s) the id may belong to
     reciprocal: <field>         # the field on the target that must point back
+    mirrors-section: <H2>       # a section of the record whose ids this field must agree with
     pattern: '<regex>'          # additional constraint
     allow-literal: [ ... ]      # words admitted in place of a value of the declared type
     min-items: <n>              # when type is list: the floor on its length
@@ -68,6 +69,18 @@ naming the file and the key, because a vocabulary or a target nothing applies is
 these files. See [What the schema is held to](#what-the-schema-is-held-to). Every id the field then carries is resolved
 against the corpus as `ref-resolves`, whether or not the field also declares a `reciprocal:` — the one-directional edges
 are the ones no counterpart holds in step, so they are the ones a check has to hold.
+
+`mirrors-section` names an H2 the type declares — any of them, and a type may mirror two fields against two sections —
+and holds the ids in the field against the ids the section links to, in a bullet or in prose alike, in both directions
+and case-insensitively. It is for a field carried in frontmatter and repeated in the body, where the two drift apart
+quietly: `related` against `## Related` on an ADR is the case in this corpus. A name the type's `sections:` block does
+not offer is reported when the schema loads, since it would reconcile against a heading no record may carry.
+
+Both directions is the part to weigh before declaring one. A section that mentions an id the field does not carry is a
+finding as much as the reverse, so the field has to be the whole truth about what the section names — a prose aside
+about something deliberately *not* in the field will fail. `services` is the case in point and is why `depends-on` does
+not mirror `## Dependencies`: `svc-search` names the two services whose events it consumes, and the whole point of that
+paragraph is that neither is an edge.
 
 `allow-literal` admits a word beside the field's declared type — `applies-to: [all]` on a list of service ids,
 `last-rehearsed: "never"` on a date. A listed value is taken as written and nothing further is asked of it; on a list it
@@ -280,13 +293,18 @@ schema is held against what the tool can act on, and each finding names the file
 | `values:` on any field that is not an `enum`                                    | `schema-dispatch`    |
 | `min-items:` on any field that is not a `list`                                  | `schema-dispatch`    |
 | An `index.order:` that is neither `ascending` nor `descending`                  | `schema-dispatch`    |
-| An `id.style`, a `shape:` or a `mirrors-section:` with no code behind the value | `schema-dispatch`    |
+| An `id.style` or a `shape:` with no code behind the value                       | `schema-dispatch`    |
 | A `collection` with no `folder:`, or a `single-document` type declaring one     | `schema-shape`       |
+| A `mirrors-section:` at a section the type's `sections:` block does not declare | `schema-shape`       |
 
 **The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
 style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is
 therefore read from the code that dispatches it, so adding a name without a branch beneath is the mistake this pass
 exists to prevent.
+
+The two `schema-shape` rows ask something else. There the tool acts on whatever the value says — any section is
+reconciled, any folder is read — and what makes it sound is a second declaration in the same file: the `folder:` beside
+a `shape:`, the `sections:` block beside a `mirrors-section:`.
 
 The key vocabulary is read the same way, and there is no list of permitted keys anywhere: the loader records what it
 asks each mapping for, and whatever is left over is reported. So a key gains its meaning and its admission in the same

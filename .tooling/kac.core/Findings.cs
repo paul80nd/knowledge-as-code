@@ -27,7 +27,7 @@ public static class CheckCatalogue
         new("schema-unknown-key", Sev.Error, "A schema key the loader never reads."),
         new("schema-unreadable", Sev.Error, "A schema declaration the loader cannot read as written."),
         new("schema-dispatch", Sev.Error, "A schema declaration naming a value nothing acts on."),
-        new("schema-shape", Sev.Error, "A type's shape and its folder declaration agree."),
+        new("schema-shape", Sev.Error, "A type's declarations agree with one another."),
 
         new("type", Sev.Error, "The document's folder maps to a type schema."),
         new("frontmatter-parses", Sev.Error, "The frontmatter block is valid YAML and a mapping."),

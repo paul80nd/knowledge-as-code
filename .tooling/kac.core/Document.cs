@@ -76,13 +76,14 @@ public class Doc
     public readonly List<string> DefinedLabels = [];
     public readonly HashSet<string> UsedLabels = new(StringComparer.OrdinalIgnoreCase);
     public readonly List<(string inner, int line)> BareBracketTokens = [];
-    public List<LinkRef> RelatedSectionLinks = [];
     public QuoteBlock? YStatement;
 
-    // The one section a `mirrors-section:` field can be reconciled against, because it is the one the
-    // parse above collects. Named here so that SchemaChecks can reject a field declaring any other and
-    // the two cannot drift — see issue #63, which is about widening this rather than restating it.
-    public const string RelatedSection = "Related";
+    // The links written under each section a field of this type mirrors, keyed by the section name the
+    // field declared — keyed rather than flattened, because two fields on a type may mirror two
+    // different sections. A section this document does not carry arrives as an empty list, so the
+    // reconciliation reports every id in the field rather than passing in silence.
+    public IReadOnlyDictionary<string, List<LinkRef>> MirroredSectionLinks =
+        new Dictionary<string, List<LinkRef>>(StringComparer.OrdinalIgnoreCase);
 
     // The two extensions every record depends on: the frontmatter block, and the pipe tables a clause
     // section is written as. A built pipeline is immutable, so one is shared across every parse rather
@@ -194,7 +195,7 @@ public class Doc
         // Y-statement — first block-quote after the H1.
         doc.YStatement = ast.Descendants<QuoteBlock>().FirstOrDefault(q => q.Line > (doc.H1Line - 1));
 
-        doc.RelatedSectionLinks = SectionLinks(ast, RelatedSection);
+        doc.MirroredSectionLinks = SectionLinks(ast, type?.DeclaredFields.Select(spec => spec.MirrorsSection));
 
         return doc;
     }
@@ -355,29 +356,47 @@ public class Doc
         return line;
     }
 
-    private static List<LinkRef> SectionLinks(MarkdownDocument ast, string sectionTitle)
+    // The links under each of the named H2 sections, gathered in one walk however many are asked for.
+    // A section title matches case-insensitively, an H1 ends whichever section is open, and a heading
+    // deeper than H2 leaves it open — a sub-heading is inside its section, not after it.
+    private static Dictionary<string, List<LinkRef>> SectionLinks(
+        MarkdownDocument ast, IEnumerable<string?>? sectionTitles)
     {
-        var result = new List<LinkRef>();
-        var inSection = false;
+        var result = (sectionTitles ?? [])
+            .OfType<string>()
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(title => title, _ => new List<LinkRef>(), StringComparer.OrdinalIgnoreCase);
+        if (result.Count == 0) return result;
+
+        List<LinkRef>? section = null;
         foreach (var block in ast)
         {
             if (block is HeadingBlock h)
             {
-                inSection = h.Level switch
+                section = h.Level switch
                 {
-                    2 => string.Equals(Md.PlainText(h.Inline), sectionTitle, StringComparison.OrdinalIgnoreCase),
-                    < 2 => false,
-                    _ => inSection
+                    2 => result.GetValueOrDefault(Md.PlainText(h.Inline)),
+                    < 2 => null,
+                    _ => section
                 };
+                continue;
             }
 
-            if (inSection && block is not HeadingBlock)
-                result.AddRange(from link in block.Descendants<LinkInline>()
-                    where !link.IsImage
-                    select new LinkRef
-                        { Target = link.Url ?? "", Line = link.Line + 1, Label = link.Reference?.Label ?? link.Label });
+            section?.AddRange(from leaf in Leaves(block)
+                where leaf.Inline is not null
+                from link in leaf.Inline!.Descendants<LinkInline>()
+                where !link.IsImage
+                select new LinkRef
+                    { Target = link.Url ?? "", Line = link.Line + 1, Label = link.Reference?.Label ?? link.Label });
         }
 
         return result;
     }
+
+    // Every leaf block one block holds, itself included when it is one. Inlines hang off leaves and
+    // nowhere else, which is what makes this the way to reach a link written as prose: descending from
+    // the block itself yields the links in a list beneath it and none of the links in a paragraph, and
+    // to whoever wrote the section those are the same link.
+    private static IEnumerable<LeafBlock> Leaves(Block block) =>
+        block is LeafBlock leaf ? [leaf] : ((ContainerBlock)block).Descendants<LeafBlock>();
 }

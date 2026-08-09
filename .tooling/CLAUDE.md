@@ -55,11 +55,15 @@ is the case for extracting: a second copy of that shape anywhere would be a plac
 
 **`Checks/SchemaChecks.cs` reads no document at all.** It runs once, before the corpus, and asks whether the schema
 declares anything the tool cannot act on. A vocabulary it tests must be read from the code that dispatches the value —
-`IdChecks.IdStyles`, `Doc.RelatedSection`, `Generator.IndexOrders`, `DocumentRules.ByRuleId` — never restated there,
-because a copy is a list of what is spelled correctly rather than of what runs. The key vocabulary follows the same rule
-with no list at all: `Schema.Load` reads every mapping through a `Level` that records what it was asked for, so adding a
+`IdChecks.IdStyles`, `Generator.IndexOrders`, `DocumentRules.ByRuleId` — never restated there, because a copy is a list
+of what is spelled correctly rather than of what runs. The key vocabulary follows the same rule with no list at all:
+`Schema.Load` reads every mapping through a `Level` that records what it was asked for, so adding a
 `Get` is what admits a key. Adding one without the code that reads what it parsed into moves the failure from
 `schema-unknown-key` to `schema-dispatch` rather than removing it.
+
+Not every question there is about a vocabulary. A `mirrors-section:` names any section and the code acts on whatever it
+names, so what makes it sound is the type's own `sections:` block — one declaration held against another in the same
+file, which is `schema-shape` rather than `schema-dispatch`.
 
 Wherever it lives, four places have to agree, and three of them fail a meta-test rather than a test you were looking at:
 
