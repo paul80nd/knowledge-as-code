@@ -49,7 +49,7 @@ Every policy carries a `category`: **security**, **delivery**, **operations** or
 policy exists* — the broad area of the commitment — where `tags` answer *what topics it touches*. Two different
 questions, so two fields: a secrets policy is `category: security` and `tags: [credentials, key-management, secrets]`.
 
-The set is closed and deliberately small. Four categories group twenty-one policies into groups worth navigating; a
+The set is closed and deliberately small. Four categories group twenty-two policies into groups worth navigating; a
 fifth would have to earn its place by making one of these too crowded to scan, and the pressure for that is easier to
 judge once there are enough policies to feel it.
 

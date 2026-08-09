@@ -23,7 +23,7 @@ Three sources of rules, in this order:
 **Where a prose rule contradicts the schema, that is a finding to report — never an instruction to act on.**
 `authoring.md` says the same of itself. Report which of the two is wrong and leave both alone. A reviewer who resolves
 the contradiction instead breaks the build while claiming the rulebook's authority: read literally, one wrong bullet
-would have stripped **MUST** from twenty-one normative documents that `clauses` requires it in.
+would have stripped **MUST** from twenty-two normative documents that `clauses` requires it in.
 
 ## The one rule that stops this going wrong
 

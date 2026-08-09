@@ -30,7 +30,7 @@ the shapes they go in.
 
 ## The seeds come in two kinds
 
-**Some are close to real.** The twenty-one [policies](policies.md) are the clearest case, and the part worth reading on
+**Some are close to real.** The twenty-two [policies](policies.md) are the clearest case, and the part worth reading on
 their own terms. The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were
 worked out on them rather than assumed. They are principle-level and stack-agnostic by design, so they name no service
 and invent no domain — which is why they would survive adoption with only the specifics rewritten.
