@@ -98,7 +98,7 @@ Other boundaries:
 | `min-items`                 | error   | A list field carries at least as many entries as its schema asks for.                                                         |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                                    |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                                    |
-| `id`                        | error   | `id` carries the type's prefix and matches the filename's number, mnemonic or slug.                                           |
+| `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename.               |
 | `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                                         |
 | `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                               |
 | `h1`                        | error   | The document has an H1.                                                                                                       |
