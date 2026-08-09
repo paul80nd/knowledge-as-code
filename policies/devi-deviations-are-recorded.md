@@ -18,7 +18,8 @@ tags: [ exceptions, governance, risk-acceptance ]
 ## Purpose
 
 Where we knowingly depart from one of these policies or the standards beneath them, the departure is written down,
-carries a named person accepting the risk, and has a date by which it is revisited.
+carries a named person accepting the risk, and has a date by which it is revisited. A shortcut taken knowing it will
+have to be revisited is the same decision without a rule to break, and is held the same way.
 
 Almost every policy here contains an escape hatch — "without a recorded exception". This policy is what makes those
 words mean something. An exception granted deliberately and reviewed is risk management; the same decision taken
