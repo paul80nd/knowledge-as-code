@@ -9,6 +9,7 @@ aligns-with:
   - ISO27001:2022 A.5.22
   - ISO27001:2022 A.5.23
   - ISO27001:2022 A.5.32
+  - ISO27001:2022 A.8.7
   - ISO27001:2022 A.8.19
 review-by: "2027-08-04"
 owner: paul.law
@@ -38,6 +39,7 @@ images and build-time tooling; the third-party and cloud services those systems 
 |-----------|----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
 | `INVENT`  | **MUST** maintain a resolvable inventory of what each solution depends on                                                                    | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4                          |
 | `SCREEN`  | **MUST** screen dependencies for known vulnerabilities and for licence terms we can accept                                                   | [ISO 27001:2022].A.5.21, [ISO 27001:2022].A.5.32, [NIST SSDF 1.1].PW.4 |
+| `MALWARE` | **MUST** scan the artifacts we build for malicious content before we release them                                                            | [ISO 27001:2022].A.8.7                                                 |
 | `SOURCE`  | **MUST** obtain components from sources we have reason to trust                                                                              | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4                          |
 | `CLOUD`   | **MUST** establish which security responsibilities we hold and which the provider holds, before adopting a service                           | [ISO 27001:2022].A.5.23                                                |
 | `EXIT`    | **MUST** know how we would leave a service before we depend on it                                                                            | [ISO 27001:2022].A.5.23                                                |
