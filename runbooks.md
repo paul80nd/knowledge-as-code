@@ -106,6 +106,7 @@ document is written for the day it isn't.
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                 |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
 | `symptoms-first`            | error   | Symptoms is the first section after the H1 — that is how the reader finds the document.                  |
 

@@ -127,6 +127,7 @@ Standards are living documents. Material changes are recorded in the changelog r
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                                              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                                             |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                                                    |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                                                    |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                                            |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                                  |
 | `provenance-required`       | error   | Every standard cites at least one ADR in `derived-from` or one policy in `implements`. A standard with neither is guidance, not a standard. |

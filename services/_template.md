@@ -31,8 +31,7 @@ tags: [ public ]
 * **`criticality`** — `critical` if a reader sees the failure, `important` if service degrades, `supporting` if the
   impact is internal only. It drives runbook and NFR priority, so be honest rather than generous.
 * **`depends-on`** — other service ids, pointing downward only. An edge means this service is **configured to reach**
-  that one. Messages over a bus are not an edge. Nothing checks that these ids resolve, so check them against the
-  [index](_index.md) yourself.
+  that one. Messages over a bus are not an edge.
 * **`owner`** — the named person answerable for the service, never a team alias.
 * **`tags`** — one exposure tag, then any traits that apply. The vocabulary and the reasoning behind it are on
   [the type page](/services); it is derived from the estate, so read it before inventing a tag. Never restate another

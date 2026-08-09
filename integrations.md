@@ -102,6 +102,7 @@ Not the place for:
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                                                            |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                                                           |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                                                                  |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                                                                  |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                                                                |
 | `fallback-required`         | warning | Every failure mode names a fallback, or the document explicitly states there is none. An undocumented single point of failure is the most expensive kind. |
 | `no-credentials`            | error   | Fails on anything resembling a token, key, password or connection string. Name the mechanism and where the credential is stored, never the credential.    |

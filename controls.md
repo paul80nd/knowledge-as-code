@@ -112,6 +112,7 @@ One control may verify several rules, and one rule may need several controls. Co
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                           |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                          |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                 |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                 |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                         |
 | `unused-definition`         | warning | A link definition that nothing references.                                                               |
 | `mechanism-has-evidence`    | warning | A control whose mechanism is not `not-enforced` names where its evidence can be found.                   |
