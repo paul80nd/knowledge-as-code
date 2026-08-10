@@ -62,6 +62,6 @@ well would overstate what this policy adds.
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-OBSV]: obsv-observability.md
 [pol-PIPE]: pipe-pipeline-to-production.md
-[Azure WAF]: /frameworks.md#azure-waf
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
+[Azure WAF]: /frameworks.md#azure-well-architected-framework
+[ISO 27001:2022]: /frameworks.md#iso-27001
 [UK GDPR]: /frameworks.md#uk-gdpr

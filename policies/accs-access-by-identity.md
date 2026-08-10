@@ -61,5 +61,5 @@ recorded deviation under [pol-DEVI].
 [pol-AGNT]: agnt-agents-propose-people-decide.md
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-EVER]: ever-everything-in-version-control.md
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
-[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs-4
+[ISO 27001:2022]: /frameworks.md#iso-27001
+[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs

@@ -150,7 +150,7 @@ under governance is the clearest) are the ones most likely to be revisited.
 | `clauses`                        | error   | The clause section is a table of `Id \| Clause` rows, each id a unique code span and each clause opening with its modal. |
 | `clause-order / clause-compound` | warning | Clause rows are grouped by binding level, and each carries a single obligation.                                          |
 | `clause-ref`                     | error   | A `pol-XXXX.CLAUSE` citation names a clause that exists.                                                                 |
-| `link-resolves`                  | error   | Every internal link resolves (all link forms, `.md` optional).                                                           |
+| `link-resolves`                  | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.                       |
 | `undefined-label`                | error   | Every shortcut reference has a link definition.                                                                          |
 | `label-canonical`                | error   | A shortcut label that names a document is written as that document's id.                                                 |
 | `unused-definition`              | warning | A link definition that nothing references.                                                                               |

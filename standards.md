@@ -125,7 +125,7 @@ Standards are living documents. Material changes are recorded in the changelog r
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `required-section`          | error   | Every required section heading is present.                                                                      |
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
-| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                  |
+| `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |

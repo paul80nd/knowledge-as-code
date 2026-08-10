@@ -22,7 +22,7 @@ public static class LinkChecks
         {
             var target = link.Target;
             if (string.IsNullOrEmpty(target)) continue;
-            if (IsExternal(target) || target.StartsWith('#')) continue;
+            if (IsExternal(target)) continue;
 
             // A template's example targets name a document the author has not written yet, so the
             // placeholder stands where the filename will go. Every other target in one is a real link
@@ -30,8 +30,28 @@ public static class LinkChecks
             // other, which is what catches a template pointing at a document the corpus has deleted.
             if (kind == DocKind.Template && Placeholder.In(target)) continue;
 
-            if (!ResolveTarget(repoRoot, d.Rel, target))
+            var hash = target.IndexOf('#');
+            var fragment = hash >= 0 ? target[(hash + 1)..] : "";
+            var path = hash >= 0 ? target[..hash] : target;
+
+            // A fragment with nothing before it names a heading in this document.
+            if (path.Length == 0)
+            {
+                CheckFragment(d.Text, fragment, d.Rel, link.Line, err);
+                continue;
+            }
+
+            var file = Resolve(repoRoot, d.Rel, target);
+            if (file is null)
+            {
                 err("link-resolves", $"link target '{target}' does not resolve.", link.Line);
+                continue;
+            }
+
+            // Only a Markdown file offers headings to land on. A link into anything else carries a
+            // fragment the corpus cannot judge, and silence is the honest answer.
+            if (file.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+                CheckFragment(Files.ReadLf(file), fragment, path, link.Line, err);
         }
 
         // undefined shortcut/reference labels left as literal '[x]'. Id-shaped is an error — the author
@@ -80,13 +100,42 @@ public static class LinkChecks
     public static bool IsExternal(string t)
         => t.StartsWith("http://") || t.StartsWith("https://") || t.StartsWith("mailto:") || t.StartsWith("tel:");
 
+    // A link that names a heading is a promise the heading is there, and the promise is the half that
+    // rots: the file goes on resolving after the heading it pointed into has been renamed, so the link
+    // lands silently at the top of the page and the reader is left to find what was meant.
+    //
+    // Judged on the anchor every renderer agrees on — see `Md.Slug`. A heading whose punctuation makes
+    // renderers disagree therefore fails here rather than only in the wiki, which is the point.
+    private static void CheckFragment(string markdown, string fragment, string page, int? line,
+        Action<string, string, int?> err)
+    {
+        if (fragment.Length == 0) return;
+        if (Md.Anchors(markdown).Contains(fragment)) return;
+        err("fragment-resolves", $"'#{fragment}' names no heading in '{page}'.", line);
+    }
+
     public static bool ResolveTarget(string repoRoot, string fromRel, string target)
+        => Resolve(repoRoot, fromRel, target) is not null || StripsToNothing(target);
+
+    private static bool StripsToNothing(string target)
     {
         var hash = target.IndexOf('#');
         if (hash >= 0) target = target[..hash];
         var q = target.IndexOf('?');
         if (q >= 0) target = target[..q];
-        if (target.Length == 0) return true; // pure fragment
+        return target.Length == 0;
+    }
+
+    // The file a link target names, or null where nothing is there. Returns the path that exists so a
+    // caller can go on to read it — which of the two forms below resolved is not the caller's business,
+    // but the file it found is.
+    public static string? Resolve(string repoRoot, string fromRel, string target)
+    {
+        var hash = target.IndexOf('#');
+        if (hash >= 0) target = target[..hash];
+        var q = target.IndexOf('?');
+        if (q >= 0) target = target[..q];
+        if (target.Length == 0) return null; // pure fragment — no file of its own
 
         string basePath;
         if (target.StartsWith('/'))
@@ -104,7 +153,7 @@ public static class LinkChecks
         // already resolves. Accepting the directory as well would resolve a link to a type whose page
         // has gone, and would do it inconsistently: git cannot track an empty directory, so the same
         // link passes on the machine that created the folder and fails in CI.
-        return File.Exists(basePath)
-               || File.Exists(basePath + ".md"); // ADO resolves links with .md omitted
+        if (File.Exists(basePath)) return basePath;
+        return File.Exists(basePath + ".md") ? basePath + ".md" : null; // ADO resolves links with .md omitted
     }
 }

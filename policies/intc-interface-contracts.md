@@ -51,5 +51,5 @@ A security fix may break a contract where leaving it intact would leave data exp
 [pol-DEVI], and consumers are told as soon as it is safe to tell them.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
-[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs-4
+[ISO 27001:2022]: /frameworks.md#iso-27001
+[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs

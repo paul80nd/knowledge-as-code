@@ -55,4 +55,4 @@ What it does align with is the [Azure WAF] Cost Optimization pillar, which is th
 will ever have: nothing external obliges an organisation to manage its own spend.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
-[Azure WAF]: /frameworks.md#azure-waf
+[Azure WAF]: /frameworks.md#azure-well-architected-framework

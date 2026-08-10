@@ -59,5 +59,5 @@ into version control before the incident is closed — otherwise the fix becomes
 [pol-EVER]: ever-everything-in-version-control.md
 [pol-TRUS]: trus-trusted-components.md
 [DORA metrics]: /frameworks.md#dora-metrics
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
-[NIST SSDF 1.1]: /frameworks.md#nist-ssdf-1-1
+[ISO 27001:2022]: /frameworks.md#iso-27001
+[NIST SSDF 1.1]: /frameworks.md#nist-ssdf

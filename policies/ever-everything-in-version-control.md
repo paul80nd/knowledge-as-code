@@ -58,5 +58,5 @@ naming the asset, the reason and the recovery plan if it is lost.
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
 [pol-TRUS]: trus-trusted-components.md
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
-[NIST SSDF 1.1]: /frameworks.md#nist-ssdf-1-1
+[ISO 27001:2022]: /frameworks.md#iso-27001
+[NIST SSDF 1.1]: /frameworks.md#nist-ssdf

@@ -54,4 +54,4 @@ none.
 [pol-DEVI]: devi-deviations-are-recorded.md
 [EN 301 549]: /frameworks.md#en-301-549
 [PSBAR 2018]: /frameworks.md#psbar-2018
-[WCAG 2.2 AA]: /frameworks.md#wcag-22-aa
+[WCAG 2.2 AA]: /frameworks.md#wcag
