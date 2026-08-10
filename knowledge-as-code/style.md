@@ -87,8 +87,7 @@ members.
 * **Six sentences to a paragraph.** The same kind of ceiling as the sentence one above. Past it, a paragraph is usually
   carrying a second point that deserves its own.
 * **Prefer the short word, and the same word.** Two names for one thing read as two things. Elegant variation is a
-  defect here. Where the [glossary](/glossary) distinguishes near-synonyms, the distinction is load-bearing — see
-  [authoring](authoring.md).
+  defect here. Where the [glossary](/glossary.md) distinguishes near-synonyms, the distinction is load-bearing.
 * **Cut filler.** *Simply*, *obviously*, *of course*, *it is important to note*, *in order to*. Delete the word and read
   the sentence again. If nothing was lost, it was filler.
 * **Cut any sentence that only announces the next one.**
@@ -134,15 +133,15 @@ is not — break it with a preposition or a verb.
 
 Words we have reached for and should not, each found in our own writing:
 
-| Instead of | Write |
-|---|---|
-| blast radius | how far a breach reaches |
-| lateral traffic | traffic between our own systems |
-| correlatable | able to be lined up across systems |
-| resolvable inventory | an inventory naming each component and the version in use |
-| escape hatch | the exception a policy allows |
-| mainline, main branch | the default branch |
-| single point of failure | the only person who knows |
+| Instead of              | Write                                                     |
+|-------------------------|-----------------------------------------------------------|
+| blast radius            | how far a breach reaches                                  |
+| lateral traffic         | traffic between our own systems                           |
+| correlatable            | able to be lined up across systems                        |
+| resolvable inventory    | an inventory naming each component and the version in use |
+| escape hatch            | the exception a policy allows                             |
+| mainline, main branch   | the default branch                                        |
+| single point of failure | the only person who knows                                 |
 
 Ask who is reading. An auditor, a new joiner and an agent all read what we write, and none of them arrives with our
 context.
