@@ -80,6 +80,5 @@ rules:
       log, the audit note or the dashboard — an unevidenced control is an assertion, and `not-enforced` is
       the honest value for one.
   - id: coverage-report
-    description: >
-      Generates the proportion of MUST / MUST NOT rules across active standards that are claimed by a
-      control with a mechanism other than `not-enforced`.
+    description: The share of MUST / MUST NOT rules in active standards claimed by an enforced control.
+    # Enforced meaning a mechanism other than `not-enforced`. Generated, rather than checked per document.

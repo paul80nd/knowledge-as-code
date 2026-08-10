@@ -62,9 +62,7 @@ rules:
     description: >
       Scheduled. Reports processes past their rehearsal frequency, and any whose `last-rehearsed` is `never`.
   - id: no-hedged-ordering
-    description: >
-      Flags "typically", "usually" and "normally" inside the Steps section. A procedure whose ordering is
-      conditional should say what it depends on.
+    description: No step hedged with "typically", "usually" or "normally".
     severity: warning
     expr: >-
       not section_matches('Steps', '(?i)\b(typically|usually|normally)\b')

@@ -16,6 +16,10 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a data document adds to those.
+
 **Frontmatter.** Delete this block once the fields above are filled in.
 
 * **`owned-by`** — A single service id. Shared ownership means nobody is answerable, so resolve it before writing the
@@ -44,7 +48,7 @@ _(Names and meanings, not schemas. Schemas live with the code that owns them.)_
 
 |                    |                                           |
 |--------------------|-------------------------------------------|
-| **Owning service** | [svc-example](/services/example.md)       |
+| **Owning service** | [svc-{{a}}]                               |
 | **Store**          | {{SQL Server / blob / table storage / …}} |
 | **Region**         |                                           |
 
@@ -61,22 +65,24 @@ and the system does another, record both — that gap is the useful part.
 
 ## Flows
 
-| Goes to                                 | Why | What is shared |
-|-----------------------------------------|-----|----------------|
-| [svc-example](/services/example.md)     |     |                |
-| [int-example](/integrations/example.md) |     |                |
+| Goes to     | Why | What is shared |
+|-------------|-----|----------------|
+| [svc-{{a}}] |     |                |
+| [int-{{a}}] |     |                |
 
 _(Especially anything crossing outside the estate.)_
 
 ## Related
 
-* [pol-XXXX] — the policy governing this classification.
-* [adr-NNNN] — decisions about where this data lives.
+* [pol-{{a}}] — the policy governing this classification.
+* [adr-{{a}}] — decisions about where this data lives.
 
 ---
 
 _(**Never put actual data here** — no sample records, no identifiers, no connection strings. This wiki is broadly
 readable.)_
 
-[adr-NNNN]: /adrs/nnnn-kebab-slug.md
-[pol-XXXX]: /policies/xxxx-kebab-slug.md
+[adr-{{a}}]: /adrs/{{a}}.md
+[int-{{a}}]: /integrations/{{a}}.md
+[pol-{{a}}]: /policies/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md

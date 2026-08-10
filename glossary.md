@@ -117,6 +117,7 @@ so these fields describe `glossary.md` itself.
 | `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.            |
 | `h1`                        | error   | The document has an H1.                                                    |
 | `required-section`          | error   | Every required section heading is present.                                 |
+| `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.               |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).             |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                            |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.   |
@@ -124,12 +125,12 @@ so these fields describe `glossary.md` itself.
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                        | What it would verify                                                                                                                                      |
-|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `carried-in-full-by-digest` | The generated rules digest includes this file in its entirety. It therefore consumes budget directly, and entries that exceed one paragraph are reported. |
-| `undefined-terms`           | Reports terms appearing more than N times across the corpus with no glossary entry.                                                                       |
-| `unused-terms`              | Reports glossary entries not used anywhere else.                                                                                                          |
-| `terms-are-singular`        | Entry headings are singular and in canonical casing.                                                                                                      |
+| Rule                        | What it would verify                                                                |
+|-----------------------------|-------------------------------------------------------------------------------------|
+| `carried-in-full-by-digest` | No glossary entry runs beyond one paragraph.                                        |
+| `undefined-terms`           | Reports terms appearing more than N times across the corpus with no glossary entry. |
+| `unused-terms`              | Reports glossary entries not used anywhere else.                                    |
+| `terms-are-singular`        | Entry headings are singular and in canonical casing.                                |
 
 <!-- END GENERATED: checks-glossary -->
 

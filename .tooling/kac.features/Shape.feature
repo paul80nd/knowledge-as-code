@@ -23,3 +23,17 @@ Feature: Corpus shape checks
       | adrs.md      |      | generated-block | the 'schema-adrs' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both. |
       | adrs.md      | 6    | link-resolves   | link target '/nope.md' does not resolve.                                                                                |
       | glossary.md  | 1    | id-format       | id 'not-glossary' must be 'glossary', the value the type declares.                                                      |
+
+  # The count is the assertion here. A template is checked and is not a document: it holds no id, takes no
+  # place in an index, and answers to nothing corpus-wide. Were it discovered as a record instead, this
+  # would read 1, and the findings below would be joined by a dozen more saying the file is not filled in.
+  Scenario: A type's template is checked without being counted as a record
+    Given the broken-template fixture corpus
+    When I validate the corpus
+    Then validation reports 0 documents and 0 skipped
+    And the findings are exactly:
+      | file                | line | check           | message                                                                                                                    |
+      | adrs/_template.md   | 1    | template-fields | 'priority' is not a field of the 'adr' type — every document copied from this template would fail unknown-key.             |
+      | adrs/_template.md   | 1    | template-fields | the template does not carry 'owner', which is required — every document copied from it would fail required-field.          |
+      | adrs/_template.md   | 4    | template-fields | 'decided-on' is read as a YAML mapping rather than a value — a placeholder that opens one has to be quoted: decided-on: "{{…}}". |
+      | adrs/_template.md   | 21   | link-resolves   | link target '0404-superseded-and-deleted.md' does not resolve.                                                             |

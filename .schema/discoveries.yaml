@@ -78,9 +78,7 @@ index:
 
 rules:
   - id: low-ceremony
-    description: >
-      Reports discoveries above a length threshold. Capture has to be nearly free or it stops happening; a
-      discovery written like an FAQ suggests the tier boundary is being ignored.
+    description: A discovery stays within the length its tier is for.
     severity: warning
     expr: "words() <= 200"
     message: >

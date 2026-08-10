@@ -19,6 +19,22 @@ same regardless of who is holding the keyboard.
 Generated content — indexes, digests, reports — is not edited by hand. If an index looks wrong, the frontmatter it was
 built from is wrong.
 
+### Writing a template
+
+`{{…}}` marks everything the author supplies, and nothing else does — not `NNNN`, not `XXXX`, not a slug called
+`example`. One mark, so that a template teaches exactly what the tool recognises. The casing carries what a sentence
+would otherwise have to: `pol-{{MNEM}}` in `{{mnem}}-kebab-slug.md` says a mnemonic is upper-case in the id and
+lower-case in the filename. `{{a}}` and `{{b}}` stand for *another* document, and `{{a}}.md` is its whole filename.
+
+CI checks templates — `template-fields`, and everything a copy inherits — so the mark has to survive YAML, and in two
+places it does not:
+
+* **A placeholder cannot sit in a flow sequence.** `related: [ adr-{{a}} ]` is a parse error, because a plain scalar
+  in flow context may not contain a brace. Write the list as a block sequence.
+* **A placeholder opening a value has to be quoted.** `review-by: {{date}}` is read as a flow mapping rather than as
+  text, so the field arrives holding nothing. Write `review-by: "{{date}}"`. A placeholder that follows something —
+  `svc-{{slug}}` — needs no quotes.
+
 ### Links
 
 **References to another document by its id use shortcut reference links** — the label is the id and doubles as the

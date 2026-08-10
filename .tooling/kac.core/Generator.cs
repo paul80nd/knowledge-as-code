@@ -163,6 +163,14 @@ public static class Generator
     // type's own schema whether the check can fire at all — so a policy page does not advertise that its
     // documents are checked for Y-statements. Read from the schema rather than hand-listed per type, so
     // declaring a rule remains the only thing needed to document it.
+    // What a description may run to. The checks table is read by scanning — a reader wants to know which
+    // row is the one they tripped, not to read a paragraph about each of forty-odd — and a cell that runs
+    // to several sentences is one that has taken on the message's job as well as its own. A description
+    // says what is verified; a rule's `message:` says what to do about it, and is where the author who
+    // tripped it will read the reasoning. Held here because the table is what makes this a limit, and read
+    // by SchemaChecks so a schema's own rules are held to the same bound as the rows written below.
+    public const int DescriptionMax = 120;
+
     private static readonly (string Label, string[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
         ("frontmatter-parses", ["frontmatter-parses"], "Frontmatter is present and is a valid YAML mapping.", null),
@@ -196,6 +204,8 @@ public static class Generator
             "An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.",
             t => !t.IsSingleDocument),
         ("required-section", ["required-section"], "Every required section heading is present.", null),
+        ("placeholder-left", ["placeholder-left"],
+            "No `{{…}}` from the template is left unfilled, outside code.", null),
         // The pipe is escaped because this text lands in a table cell: GFM splits a cell on a bare `|`
         // even inside a code span, so an unescaped one would break the row it is describing.
         ("clauses", ["clause-table", "clause-id-format", "clause-id-unique", "clause-modal"],
@@ -245,7 +255,7 @@ public static class Generator
     // generated from. Their audience is whoever edits `.schema/`, and `.schema/README.md` is where they
     // are documented.
     private static readonly HashSet<string> IntentionallyUndocumented =
-        new(["type", "list", "bracket-literal", "type-setup", "generated-block",
+        new(["type", "list", "bracket-literal", "type-setup", "generated-block", "template-fields",
             "schema-unknown-key", "schema-unreadable", "schema-dispatch", "schema-shape"], StringComparer.Ordinal);
 
     // The curated rows, then a row for each expression rule the type declares. A core check is worded
@@ -318,6 +328,13 @@ public static class Generator
                      .Order(StringComparer.Ordinal))
             problems.Add(
                 $"'{id}' is waived in IntentionallyUndocumented but is documented or unknown — drop the waiver.");
+
+        // The rows written above, held to the bound a schema's rules are held to. Nothing else would
+        // notice: these are C# literals rendered into a generated table, so a row that grows past it
+        // reads as intentional in the diff and as noise on the page.
+        foreach (var row in DocRows.Where(r => r.Description.Length > DescriptionMax))
+            problems.Add($"the checks table row '{row.Label}' has a {row.Description.Length}-character "
+                         + $"description; the limit is {DescriptionMax}.");
 
         return problems;
     }

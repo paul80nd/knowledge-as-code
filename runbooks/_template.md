@@ -17,6 +17,10 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a runbook adds to those.
+
 **Frontmatter.** Delete this block once the fields above are filled in.
 
 Title this document for the **failure**, not the fix — that is what someone searches for at 2am.
@@ -78,5 +82,8 @@ _(Near the top of the page if this document is long — it must be findable with
 
 ## Related
 
-* [svc-example](/services/example.md) — the service this covers.
-* [exp-example](/explanations/example.md) — how the system works, for afterwards. Not now.
+* [svc-{{a}}] — the service this covers.
+* [exp-{{a}}] — how the system works, for afterwards. Not now.
+
+[exp-{{a}}]: /explanations/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md

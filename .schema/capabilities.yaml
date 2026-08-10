@@ -60,10 +60,7 @@ index:
 
 rules:
   - id: hub-not-specification
-    description: >
-      Reports a capability whose prose exceeds a threshold relative to its link count. A capability that
-      specifies behaviour has begun to drift from the ADO items it should point at, and a drifted capability
-      is worse than none because sessions will trust it.
+    description: A capability's prose stays proportionate to its links — a hub, not a specification.
     severity: warning
     # A capability linking to nothing is a specification however short it is, which is why the
     # allowance is a ratio rather than a ceiling.

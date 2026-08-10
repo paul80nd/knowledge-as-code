@@ -150,6 +150,12 @@ id, is listed by `kac checks`, and renders its own row into the generated `## Wh
 `description:` — so adding one is adding YAML rather than editing the tool. See [Rule expressions](#rule-expressions)
 below for what one may say.
 
+**A rule's `description` is capped at 120 characters, and the cap is enforced.** It says what is checked, in a table a
+reader scans to find the row they tripped; the reasoning belongs in the rule's `message:`, which is what the author who
+trips it actually reads, or in a `#` comment for an intention that has no message. A description doing both jobs is how
+every one of these grew to two or three sentences, and `schema-shape` now says so when the schema loads. An intention's
+description is bound too — it renders in *Declared, not yet enforced* on the same page.
+
 Two ids keep a hand-written class instead — `y-statement-present` and `alternatives-have-verdicts`, both on the
 decision-record type — because what they ask needs more than the grammar can say. Every remaining id is a statement of
 intent: a behaviour someone wants, written down, that no code answers to yet. **An intention declares no `severity:`**,

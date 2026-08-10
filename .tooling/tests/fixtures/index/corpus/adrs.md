@@ -61,6 +61,7 @@ byte-preserved.
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `required-section`          | error   | Every required section heading is present.                                                                      |
+| `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                  |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
@@ -73,8 +74,8 @@ byte-preserved.
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                       | What it would verify                                                                                                                                                                |
-|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `immutable-after-accepted` | Once status is `accepted`, content changes are limited to typo fixes, link corrections and status transitions. A substantive edit fails with a pointer to the supersession process. |
+| Rule                       | What it would verify                                                                             |
+|----------------------------|--------------------------------------------------------------------------------------------------|
+| `immutable-after-accepted` | Once status is `accepted`, only typo fixes, link corrections and status transitions are allowed. |
 
 <!-- END GENERATED: checks-adrs -->

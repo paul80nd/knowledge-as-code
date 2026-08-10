@@ -1,5 +1,5 @@
 ---
-id: pmt-NNNN
+id: pmt-{{nnnn}}
 tier: decided
 status: draft
 occurred-on:
@@ -14,9 +14,13 @@ tags: [ a, b ]
 
 # {{The symptom, as customers experienced it}}
 
-`Postmortem: pmt-NNNN` `DRAFT`
+`Postmortem: pmt-{{nnnn}}` `DRAFT`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a postmortem adds to those.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
 
@@ -51,7 +55,7 @@ detected, when it was understood, and when it was resolved; those are four diffe
 In customer terms, not system terms. How many, for how long, what they could not do. Include revenue or contractual
 consequence where it is known, and say so where it isn't.
 
-Measured against [nfr-NNNN](/nfrs/…): {{met / breached}}. _(If no NFR covered this, that is itself a finding.)_
+Measured against [nfr-{{a}}]: {{met / breached}}. _(If no NFR covered this, that is itself a finding.)_
 
 ## Root cause
 
@@ -71,20 +75,22 @@ failures teaches half the lesson and makes the next one harder to write honestly
 
 ## Actions
 
-| Action | Work item | Owner |
-|--------|-----------|-------|
-|        | #NNNN     |       |
+| Action | Work item  | Owner |
+|--------|------------|-------|
+|        | #{{item}}  |       |
 
 _(Actions live in ADO; this links to them. A postmortem is not a tracker.)_
 
 ## Related
 
-* [rbk-example](/runbooks/example.md) — written or revised as a result.
-* [adr-NNNN] — the decision this prompted.
+* [rbk-{{a}}] — written or revised as a result.
+* [adr-{{a}}] — the decision this prompted.
 
 ---
 
 _(**Blameless, always.** Write about decisions and conditions, not individuals — "the deploy ran before the migration
 completed", not "X deployed too early". The output is a system that fails less, not a person who feels worse.)_
 
-[adr-NNNN]: /adrs/nnnn-kebab-slug.md
+[adr-{{a}}]: /adrs/{{a}}.md
+[nfr-{{a}}]: /nfrs/{{a}}.md
+[rbk-{{a}}]: /runbooks/{{a}}.md

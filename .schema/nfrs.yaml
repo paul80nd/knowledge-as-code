@@ -70,9 +70,7 @@ index:
 
 rules:
   - id: target-is-measurable
-    description: >
-      `measured-by` names a measurement rather than an intention. Its presence is `required: true`; this is
-      about hedging — "monitored", "as needed", "where practical" all satisfy the field and answer nothing.
+    description: '`measured-by` names an instrument, not a hedge — "monitored", "as needed", "where practical".'
     severity: warning
     expr: >-
       not field_matches('measured-by',

@@ -128,31 +128,32 @@ under governance is the clearest) are the ones most likely to be revisited.
 
 <!-- BEGIN GENERATED: checks-policies -->
 
-| Check                            | Level   | What it verifies                                                                                                                                                                                              |
-|----------------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `frontmatter-parses`             | error   | Frontmatter is present and is a valid YAML mapping.                                                                                                                                                           |
-| `unknown-key`                    | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                                                                                                                |
-| `key-order`                      | error   | Key order is a topological extension of the schema's field order.                                                                                                                                             |
-| `required-field`                 | error   | Required and conditionally-required fields are present.                                                                                                                                                       |
-| `bare-key`                       | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                                                                                                                |
-| `date-quoted / date-format`      | error   | Date fields are quoted `YYYY-MM-DD`.                                                                                                                                                                          |
-| `enum`                           | error   | Enum values are in range and lowercase.                                                                                                                                                                       |
-| `field-pattern`                  | error   | Values match the pattern their field declares (e.g. `tags`).                                                                                                                                                  |
-| `list-order`                     | warning | List entries read in alphabetical order, with numbers compared as numbers.                                                                                                                                    |
-| `tier-matches-type`              | error   | `tier` matches the tier the type declares.                                                                                                                                                                    |
-| `id`                             | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename.                                                                                               |
-| `id-unique`                      | error   | `id` is unique across the whole wiki.                                                                                                                                                                         |
-| `filename / slug-length`         | error   | Filename matches the pattern; the slug is within 30 characters.                                                                                                                                               |
-| `h1`                             | error   | The document has an H1.                                                                                                                                                                                       |
-| `identity`                       | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.                                                                                                      |
-| `required-section`               | error   | Every required section heading is present.                                                                                                                                                                    |
-| `clauses`                        | error   | The clause section is a table of `Id \| Clause` rows, each id a unique code span and each clause opening with its modal.                                                                                      |
-| `clause-order / clause-compound` | warning | Clause rows are grouped by binding level, and each carries a single obligation.                                                                                                                               |
-| `clause-ref`                     | error   | A `pol-XXXX.CLAUSE` citation names a clause that exists.                                                                                                                                                      |
-| `link-resolves`                  | error   | Every internal link resolves (all link forms, `.md` optional).                                                                                                                                                |
-| `undefined-label`                | error   | Every shortcut reference has a link definition.                                                                                                                                                               |
-| `label-canonical`                | error   | A shortcut label that names a document is written as that document's id.                                                                                                                                      |
-| `unused-definition`              | warning | A link definition that nothing references.                                                                                                                                                                    |
-| `posture-belongs-to-frameworks`  | warning | Flags the words "compliant", "compliance", "certified" and "registered" near a framework reference. A policy maps its clauses to controls; what our standing is against a framework belongs in frameworks.md. |
+| Check                            | Level   | What it verifies                                                                                                         |
+|----------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------|
+| `frontmatter-parses`             | error   | Frontmatter is present and is a valid YAML mapping.                                                                      |
+| `unknown-key`                    | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                           |
+| `key-order`                      | error   | Key order is a topological extension of the schema's field order.                                                        |
+| `required-field`                 | error   | Required and conditionally-required fields are present.                                                                  |
+| `bare-key`                       | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                           |
+| `date-quoted / date-format`      | error   | Date fields are quoted `YYYY-MM-DD`.                                                                                     |
+| `enum`                           | error   | Enum values are in range and lowercase.                                                                                  |
+| `field-pattern`                  | error   | Values match the pattern their field declares (e.g. `tags`).                                                             |
+| `list-order`                     | warning | List entries read in alphabetical order, with numbers compared as numbers.                                               |
+| `tier-matches-type`              | error   | `tier` matches the tier the type declares.                                                                               |
+| `id`                             | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename.          |
+| `id-unique`                      | error   | `id` is unique across the whole wiki.                                                                                    |
+| `filename / slug-length`         | error   | Filename matches the pattern; the slug is within 30 characters.                                                          |
+| `h1`                             | error   | The document has an H1.                                                                                                  |
+| `identity`                       | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.                 |
+| `required-section`               | error   | Every required section heading is present.                                                                               |
+| `placeholder-left`               | error   | No `{{…}}` from the template is left unfilled, outside code.                                                             |
+| `clauses`                        | error   | The clause section is a table of `Id \| Clause` rows, each id a unique code span and each clause opening with its modal. |
+| `clause-order / clause-compound` | warning | Clause rows are grouped by binding level, and each carries a single obligation.                                          |
+| `clause-ref`                     | error   | A `pol-XXXX.CLAUSE` citation names a clause that exists.                                                                 |
+| `link-resolves`                  | error   | Every internal link resolves (all link forms, `.md` optional).                                                           |
+| `undefined-label`                | error   | Every shortcut reference has a link definition.                                                                          |
+| `label-canonical`                | error   | A shortcut label that names a document is written as that document's id.                                                 |
+| `unused-definition`              | warning | A link definition that nothing references.                                                                               |
+| `posture-belongs-to-frameworks`  | warning | "compliant", "certified" or "registered" near a framework reference — standing belongs in `frameworks.md`.               |
 
 <!-- END GENERATED: checks-policies -->

@@ -16,6 +16,10 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a process adds to those.
+
 **Frontmatter.** Delete this block once the fields above are filled in.
 
 * **`status`** — `active` · `draft` · `retired`.
@@ -67,5 +71,8 @@ How to back out, or who to tell. If there is no rollback, say so explicitly — 
 
 ## Related
 
-* [svc-example](/services/example.md) — the service this operates on.
-* [std-NNNN](/standards/…) — rules this process must respect.
+* [svc-{{a}}] — the service this operates on.
+* [std-{{a}}] — rules this process must respect.
+
+[std-{{a}}]: /standards/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md

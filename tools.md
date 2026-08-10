@@ -102,6 +102,7 @@ being repeated in eighteen months.
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `required-section`          | error   | Every required section heading is present.                                                                      |
+| `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                  |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
@@ -113,8 +114,8 @@ being repeated in eighteen months.
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                      | What it would verify                                                                                                                                                                                       |
-|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `drift-against-manifests` | Scheduled. Compares the register against package manifests across the organisation's repositories in both directions — packages in use that were never approved, and approved tools nothing uses any more. |
+| Rule                      | What it would verify                                                          |
+|---------------------------|-------------------------------------------------------------------------------|
+| `drift-against-manifests` | The register against package manifests across the estate, in both directions. |
 
 <!-- END GENERATED: checks-tools -->

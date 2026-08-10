@@ -32,6 +32,16 @@ public class ClauseRow
     public int Line;
 }
 
+// What is being read. A record is a document of the corpus; a template is the file every record of its
+// type is copied from. The two are held to different questions — a template has no id of its own, no
+// filename to agree with and no values filled in — and this is what the checks branch on, so that
+// "which of these applies to a template" is answered once per check, where the check is written.
+public enum DocKind
+{
+    Record,
+    Template
+}
+
 public class Doc
 {
     public required string Rel;

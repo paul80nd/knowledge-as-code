@@ -21,8 +21,9 @@ public static class Artefact
     // The index `kac index` writes into every collection type's folder.
     public const string Index = "_index.md";
 
-    // The template a contributor copies. Written and kept in step by hand — nothing generates it and
-    // nothing validates it.
+    // The template a contributor copies. Written by hand, and held to the schema it teaches: it is not a
+    // record, so it answers to none of the questions that need an id or a filename, but every other
+    // defect in it is inherited by every document copied from it. See Validator.CheckTemplateFields.
     public const string Template = "_template.md";
 
     // Whether any segment of a repo-relative path takes the prefix. Asked of the whole path rather

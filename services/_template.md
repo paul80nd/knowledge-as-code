@@ -19,6 +19,10 @@ tags: [ public ]
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a service adds to those.
+
 **Frontmatter.** Delete this block once the fields above are filled in.
 
 * **`id`** — `svc-` plus the name of the **deployable**, not of the repository it lives in. A repository shipping three
@@ -101,8 +105,3 @@ delete this one.)_
 * **Consumers** — the reverse view is not generated, so any list here is maintained by hand and will go stale. Say so.
 
 [svc-{{a}}]: {{a}}.md
-
-_(Link definitions, at the very foot, sorted by label. Internal references use **shortcut reference links** — write
-`[svc-example]` in the prose and define it once here, so a rename is a one-line change. The label is also the display
-text, so it must be the canonical id, which CI checks; where you want prose link text instead, use an inline link.
-Filename slugs are at most 30 characters.)_

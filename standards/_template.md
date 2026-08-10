@@ -1,5 +1,5 @@
 ---
-id: std-NNNN
+id: std-{{nnnn}}
 tier: normative
 status: draft
 axis:
@@ -14,9 +14,13 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Standard: std-NNNN` `DRAFT`
+`Standard: std-{{nnnn}}` `DRAFT`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a standard adds to those.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
 
@@ -78,16 +82,10 @@ makes the standard *usable* rather than merely readable.
 One or two lines on *why*, then link down to the ADR(s) that decided it. Do not restate the ADR's full reasoning — the
 ADR owns the "why"; this standard owns the "what". Link, don't duplicate.
 
-- [adr-NNNN] — {{what it decided}}
+- [adr-{{a}}] — {{what it decided}}
 
 ## Changelog
 
-- YYYY-MM-DD — Initial version.
+- {{YYYY-MM-DD}} — Initial version.
 
-[adr-NNNN]: nnnn-kebab-slug.md
-[adr-NNNN]: nnnn-kebab-slug.md
-
-_(Link definitions, at the very foot, sorted by label. Internal references use **shortcut reference links** — write
-`[adr-0007]` in the prose and define it once here, so a rename is a one-line change. The label is also the display text,
-so it must be the canonical id; where you want prose link text instead, use an inline link. Filename slugs are at most
-30 characters.)_
+[adr-{{a}}]: {{a}}.md

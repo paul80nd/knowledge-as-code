@@ -61,7 +61,8 @@ Warnings never change the exit code.
 and `.git/` is never walked), then applies the taxonomy exclusions from `knowledge-as-code/automation.md`:
 
 - anything on a path with a `_`-prefixed segment — the reserved prefix for a framework artefact, which covers
-  `**/_index.md` and `**/_template.md` as well as `_plan/` and `_reports/`
+  `**/_index.md` and `**/_template.md` as well as `_plan/` and `_reports/`. A type's `_template.md` is not a record and
+  is discovered as none, but it is checked: see `template-fields` below
 - `knowledge-as-code/`, and `.git/` `.idea/` `.claude/`
 - root `README.md` and root `CLAUDE.md`
 - anything outside a folder that maps to a type schema
@@ -133,6 +134,7 @@ intention, and the type page renders those beneath the checks table as *Declared
 | `identity-type`                   | error | The line's type name is the `label` the folder's schema declares.                         |
 | `identity-id` / `identity-status` | error | The line's id and status are the frontmatter's, the status upper-cased.                   |
 | `required-section`                | error | Every heading in `sections.required` is present.                                          |
+| `placeholder-left`                | error | No `{{…}}` the template left to fill in survives into a record, outside code.             |
 
 ### Clauses (from `<type>.yaml`'s `clauses:` block)
 
@@ -150,19 +152,20 @@ A type that declares no `clauses:` block is checked for none of these.
 
 ### Links & the graph
 
-| Check                     | Level   | What it enforces                                                                                                                                                                                                                                                                        |
-|---------------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `link-resolves`           | error   | Every internal link resolves. All forms are handled: repo-relative, wiki-root-absolute (a leading `/` = repo root), inline, reference and **shortcut reference** links; `.md` may be omitted (ADO resolves both). External `http(s)/mailto/tel` and pure `#fragment` links are skipped. |
-| `undefined-label`         | error   | A shortcut label shaped like any type's id (`[adr-0013]`, `[pol-DEVI]`) with no link definition.                                                                                                                                                                                        |
-| `label-canonical`         | error   | An id-shaped shortcut label is written as the canonical id — prefix lower-case, mnemonic upper-case, slug lower-case. Reference and definition match case-insensitively, so a mis-cased label resolves and nothing else would catch it.                                                 |
-| `related-matches-section` | error   | A `mirrors-section` field reconciles case-insensitively with the ids the section it names links to, in a bullet or in prose alike — `related` against `## Related`, and any other field against any other section the type declares.                                                    |
-| `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                   |
-| `ref-resolves`            | error   | An id in a field declaring a `ref:` names a document that exists — for a `type: id` and a `type: list, of: id` alike, and whether or not the field also reciprocates. A literal the field admits (`applies-to: [all]`) is not an id and is skipped.                                     |
-| `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`). Whether the target exists is `ref-resolves`, so a dangling reference is reported once rather than twice.                                                                                               |
-| `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `_template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. A `single-document` type has a page and no folder. Skipped when the run is narrowed to paths.   |
-| `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                               |
-| `unused-definition`       | warning | A link definition that nothing references.                                                                                                                                                                                                                                              |
-| `bracket-literal`         | warning | A `[...]` left in prose that looks like a reference but has no definition (use an inline link if it is deliberate).                                                                                                                                                                     |
+| Check                     | Level   | What it enforces                                                                                                                                                                                                                                                                         |
+|---------------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `link-resolves`           | error   | Every internal link resolves. All forms are handled: repo-relative, wiki-root-absolute (a leading `/` = repo root), inline, reference and **shortcut reference** links; `.md` may be omitted (ADO resolves both). External `http(s)/mailto/tel` and pure `#fragment` links are skipped.  |
+| `undefined-label`         | error   | A shortcut label shaped like any type's id (`[adr-0013]`, `[pol-DEVI]`) with no link definition.                                                                                                                                                                                         |
+| `label-canonical`         | error   | An id-shaped shortcut label is written as the canonical id — prefix lower-case, mnemonic upper-case, slug lower-case. Reference and definition match case-insensitively, so a mis-cased label resolves and nothing else would catch it.                                                  |
+| `related-matches-section` | error   | A `mirrors-section` field reconciles case-insensitively with the ids the section it names links to, in a bullet or in prose alike — `related` against `## Related`, and any other field against any other section the type declares.                                                     |
+| `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                    |
+| `ref-resolves`            | error   | An id in a field declaring a `ref:` names a document that exists — for a `type: id` and a `type: list, of: id` alike, and whether or not the field also reciprocates. A literal the field admits (`applies-to: [all]`) is not an id and is skipped.                                      |
+| `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`). Whether the target exists is `ref-resolves`, so a dangling reference is reported once rather than twice.                                                                                                |
+| `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `_template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. A `single-document` type has a page and no folder. Skipped when the run is narrowed to paths.    |
+| `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                                |
+| `template-fields`         | error   | A type's `_template.md` carries no key the type does not declare, carries every field it requires, and holds each in a form YAML reads as a value — a placeholder opening one has to be quoted. A defect here is every future document's, found by the next author rather than the last. |
+| `unused-definition`       | warning | A link definition that nothing references.                                                                                                                                                                                                                                               |
+| `bracket-literal`         | warning | A `[...]` left in prose that looks like a reference but has no definition (use an inline link if it is deliberate).                                                                                                                                                                      |
 
 ### Content quality (a type's own `rules`)
 

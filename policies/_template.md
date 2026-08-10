@@ -1,5 +1,5 @@
 ---
-id: pol-XXXX
+id: pol-{{MNEM}}
 tier: normative
 category: security
 status: draft
@@ -11,9 +11,13 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Policy: pol-XXXX` `DRAFT`
+`Policy: pol-{{MNEM}}` `DRAFT`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a policy adds to those.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
 
@@ -60,15 +64,15 @@ where ownership belongs if it needs stating: who is bound is a scope question, n
 One row per clause. Ordered **MUST**, **MUST NOT**, SHOULD, COULD — binding levels bold, non-binding plain, so the
 weight drops off at the boundary without needing a divider the table format can't give you.
 
-| Id       | Clause                       | Alignment           |
-|----------|------------------------------|---------------------|
-| `XXXXXX` | **MUST** {{obligation}}      | [FRAMEWORK].{{ref}} |
-| `XXXXXX` | **MUST NOT** {{prohibition}} |                     |
-| `XXXXXX` | SHOULD {{recommendation}}    |                     |
-| `XXXXXX` | COULD {{aspiration}}         |                     |
+| Id       | Clause                       | Alignment               |
+|----------|------------------------------|-------------------------|
+| `{{ID}}` | **MUST** {{obligation}}      | [{{FRAMEWORK}}].{{ref}} |
+| `{{ID}}` | **MUST NOT** {{prohibition}} |                         |
+| `{{ID}}` | SHOULD {{recommendation}}    |                         |
+| `{{ID}}` | COULD {{aspiration}}         |                         |
 
 **Ids.** `[A-Z][A-Z0-9]{1,6}`, unique within the document, immutable once the policy is active — anything else cites
-them as `pol-XXXX.CLAUSE`, CI holds every citation to a clause that exists, and removing one is a breaking change.
+them as `pol-{{MNEM}}.{{ID}}`, CI holds every citation to a clause that exists, and removing one is a breaking change.
 Prefer the shortest natural word; compress only when there isn't one. They are reconciliation keys, not prose, and every
 report that shows an id shows its clause text alongside — but a CI failure or a diff shows the id alone, so it should
 still be guessable.
@@ -108,10 +112,4 @@ reader would otherwise raise. If a note is doing the job of a section, it belong
 Delete this heading if there is nothing to say. An empty section is worse than a missing one.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
-[pol-XXXX]: xxxx-kebab-slug.md
-[FRAMEWORK]: /frameworks.md#framework-anchor
-
-_(Link definitions, at the very foot, sorted by label. References to another document **by its id** use **shortcut
-reference links** — write `[pol-DEVI]` in the prose and define it once here, so a rename is a one-line change. The label
-is also the display text, so it must be the id exactly as that document carries it. Where you want prose link text
-instead — "recorded as [NFRs](/nfrs)" — use an inline link and no definition.)_
+[{{FRAMEWORK}}]: /frameworks.md#{{framework}}

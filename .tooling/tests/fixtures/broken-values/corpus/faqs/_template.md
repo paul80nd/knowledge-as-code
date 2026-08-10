@@ -1,15 +1,27 @@
 ---
-id: faq-NNNN
+id: faq-{{nnnn}}
 tier: normative
 status: active
 symptom-keywords:
+applies-to:
+promoted-from:
 confirmed-by:
 confirmed-on:
 review-by:
 owner:
+tags: [ a, b ]
 ---
 
-# {{The symptom, as you would encounter it}}
+# {{Title}}
 
-Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the real one —
-templates are excluded from validation, so nothing here is asserted.
+`FAQ: faq-{{nnnn}}` `ACTIVE`
+
+Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
+real one — it carries the frontmatter, identity line and required sections that `kac validate` holds
+a template to, and nothing more.
+
+## Symptom
+
+## Cause
+
+## Fix

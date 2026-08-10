@@ -171,6 +171,7 @@ get to look like one it can. It is prose here for that reason.
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `required-section`          | error   | Every required section heading is present.                                                                      |
+| `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                  |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
@@ -179,9 +180,9 @@ get to look like one it can. It is prose here for that reason.
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                   | What it would verify                                                                                                                                                      |
-|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `no-dependency-cycles` | A cycle in the dependency graph is reported, not failed — some are legitimate.                                                                                            |
-| `drift-against-repos`  | Scheduled, not per-PR. Compares the catalogue against the actual ADO repository list; reports services documented but deleted, and repositories with no service document. |
+| Rule                   | What it would verify                                                           |
+|------------------------|--------------------------------------------------------------------------------|
+| `no-dependency-cycles` | A cycle in the dependency graph is reported, not failed — some are legitimate. |
+| `drift-against-repos`  | The catalogue against the real repository list, in both directions.            |
 
 <!-- END GENERATED: checks-services -->

@@ -55,6 +55,23 @@ public static class Validator
             if (page is not null) LinkChecks.CheckPage(page, schema, repoRoot, findings);
         }
 
+        // The template each collection type carries. It is the one file in a type that every future
+        // document is copied from, so a defect in it is not one document's problem but every
+        // document's — and it is found by the next author rather than by whoever last edited it.
+        //
+        // It is checked here rather than discovered as a record, because it is not one: it holds no id,
+        // claims no place in the index, and must not answer to id-unique or to a reciprocal edge. What
+        // it is held to is everything a copy of it inherits.
+        foreach (var rel in corpus.Templates)
+        {
+            var template = Doc.Parse(rel, File.ReadAllText(Path.Combine(repoRoot, rel)), schema);
+            if (template is null)
+                findings.Add(new Finding(rel, null, Sev.Error, "template-fields",
+                    "the template carries no frontmatter — a document copied from it starts with none."));
+            else
+                CheckDocument(template, schema, repoRoot, findings, DocKind.Template);
+        }
+
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
         CheckCorpus(corpus.Docs, findings);
 
@@ -67,7 +84,8 @@ public static class Validator
         return findings;
     }
 
-    public static void CheckDocument(Doc d, Schema schema, string repoRoot, List<Finding> f)
+    public static void CheckDocument(Doc d, Schema schema, string repoRoot, List<Finding> f,
+        DocKind kind = DocKind.Record)
     {
         if (d.Type is null)
         {
@@ -88,10 +106,15 @@ public static class Validator
         foreach (var kv in d.Front.Children)
             present[((YamlScalarNode)kv.Key).Value ?? ""] = kv.Value;
 
-        // -- unknown keys --
-        foreach (var k in d.FrontKeys)
-            if (!t.KnownKeys.Contains(k))
-                Err("unknown-key", $"unknown frontmatter key '{k}'.", d.FrontStartLine);
+        // -- the frontmatter's keys --
+        // A record is asked whether every key it carries is known; whether the required ones are filled
+        // in is a separate question below. A template is asked both at once and answers for the
+        // documents copied from it rather than for itself, so the two live together in one check.
+        if (kind == DocKind.Template) CheckTemplateFields(d, t, Err);
+        else
+            foreach (var k in d.FrontKeys)
+                if (!t.KnownKeys.Contains(k))
+                    Err("unknown-key", $"unknown frontmatter key '{k}'.", d.FrontStartLine);
 
         // -- key order --
         // The actual order must be a topological extension of the chains the schema declares: every
@@ -100,22 +123,44 @@ public static class Validator
         CheckKeyOrder(d, t, Err);
 
         // -- required fields (universal + type), incl. required-when --
-        foreach (var spec in t.DeclaredFields)
-        {
-            var req = spec.Required || RequiredWhenHolds(spec.RequiredWhenCondition, present);
-            var absent = !present.ContainsKey(spec.Name) || IsAbsentValue(present[spec.Name]);
-            if (req && absent)
+        // Not asked of a template. Every value in one is either bare or a placeholder, both of which
+        // say "not supplied yet" — which is the whole point of the file. That the fields are all there
+        // to be supplied is CheckTemplateFields' question above.
+        if (kind == DocKind.Record)
+            foreach (var spec in t.DeclaredFields)
             {
-                var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
-                Err("required-field", $"missing required field '{spec.Name}'{why}.", d.FrontStartLine);
+                var req = spec.Required || RequiredWhenHolds(spec.RequiredWhenCondition, present);
+                var absent = !present.ContainsKey(spec.Name) || IsAbsentValue(present[spec.Name]);
+                if (req && absent)
+                {
+                    var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
+                    Err("required-field", $"missing required field '{spec.Name}'{why}.", d.FrontStartLine);
+                }
             }
-        }
 
         // -- per-field value checks --
         foreach (var (name, node) in present)
         {
             var spec = schema.EffectiveField(t, name);
             if (spec is null) continue; // unknown key already reported
+
+            // A placeholder opening a value is a flow mapping to YAML, not text — `{` is an indicator
+            // in that one position, so `review-by: {{date}}` parses as a mapping and arrives here with
+            // nothing readable in it. Reported with the fix rather than left to the value checks, which
+            // would say the date is malformed and quote an empty string back at whoever wrote it.
+            if (kind == DocKind.Template && node is YamlMappingNode)
+            {
+                Err("template-fields",
+                    $"'{name}' is read as a YAML mapping rather than a value — a placeholder that opens "
+                    + "one has to be quoted: " + name + ": \"{{…}}\".", Line(node, d));
+                continue;
+            }
+
+            // A placeholder is not a value: `{{slug}}` is the instruction to supply one. Read as absent
+            // in a template — the field's own checks would otherwise report the mark as a malformed
+            // date, an unknown enum value or an id of the wrong shape, which is three ways of saying
+            // the file has not been filled in.
+            if (kind == DocKind.Template && HasPlaceholder(node)) continue;
 
             // absent values must be bare keys, never null / ~ / "" / —
             if (IsAbsentValue(node))
@@ -152,11 +197,17 @@ public static class Validator
                 Line(tierNode, d));
 
         // -- id: prefix, shape, agreement with the filename --
-        if (present.TryGetValue("id", out var idNode) && Scalar(idNode) is { } id)
-            IdChecks.Check(id, Line(idNode, d), d.Rel, t, Err);
-
         // -- filename pattern + slug length --
-        IdChecks.CheckFilename(d.Rel, t, Err);
+        // Neither is asked of a template. It has no id — `svc-{{slug}}` is the instruction to allocate
+        // one — and `_template.md` is a reserved name that no type's filename pattern matches or should.
+        // What the identity line below still asks is that the template agrees with itself.
+        if (kind == DocKind.Record)
+        {
+            if (present.TryGetValue("id", out var idNode) && Scalar(idNode) is { } id)
+                IdChecks.Check(id, Line(idNode, d), d.Rel, t, Err);
+
+            IdChecks.CheckFilename(d.Rel, t, Err);
+        }
 
         // -- H1 present --
         CheckH1(d, Err);
@@ -169,17 +220,34 @@ public static class Validator
             if (!d.H2.Any(h => string.Equals(h, sec, StringComparison.OrdinalIgnoreCase)))
                 Err("required-section", $"missing required section '## {sec}'.");
 
+        // -- placeholders left from the template --
+        // The other half of the convention: `{{…}}` means "supply this", so a record still carrying one
+        // is a copy nobody finished. Easy to do and easy to miss — the file has an id, a title and every
+        // section, so every other check passes and the document reads as complete until someone follows
+        // a link to `{{a}}.md`. Reported once, naming the first: an unfinished copy holds a dozen, and
+        // eleven more findings say nothing the first did not.
+        if (kind == DocKind.Record) CheckPlaceholders(d, Err);
+
         // -- clause table shape, ids and modals --
-        ClauseChecks.Check(d, t, Err, Warn);
+        // A template's clause rows are a demonstration of the shape, with `{{ID}}` where the id goes, so
+        // they are neither unique nor citable and are not asked to be.
+        if (kind == DocKind.Record) ClauseChecks.Check(d, t, Err, Warn);
 
         // -- links resolve --
-        LinkChecks.Check(d, schema, repoRoot, Err, Warn);
+        LinkChecks.Check(d, schema, repoRoot, Err, Warn, kind);
 
         // -- related mirrors ## Related --
-        CheckMirrorsSection(d, t, schema, Err);
+        // A reconciliation between two halves of the same document, both of which are examples in a
+        // template — it would hold the file to agreeing with itself about documents that do not exist.
+        if (kind == DocKind.Record) CheckMirrorsSection(d, t, schema, Err);
 
         // -- the type's own rules --
-        CheckRules(d, t, Err, Warn);
+        // Every one of them judges a filled-in document: whether the prose has outgrown the links,
+        // whether a step hedges, whether a control names its evidence. A template answers none of those
+        // questions, and its guidance prose would answer several of them wrongly. This is also the one
+        // open-ended set — a type may declare a rule tomorrow — so a template is exempt from the
+        // category rather than from the rules that happen to exist today.
+        if (kind == DocKind.Record) CheckRules(d, t, Err, Warn);
         return;
 
         void Warn(string check, string msg, int? line = null) =>
@@ -352,6 +420,56 @@ public static class Validator
     }
 
     // -- helpers for individual checks --
+
+    // The template's frontmatter against the type's fields, in both directions. Read as one question —
+    // would a document copied from this file pass its own frontmatter checks? — because the two answers
+    // have the same cause, a schema that moved and a template that did not, and the same fix.
+    //
+    // The bar is what a copy would fail on, not what the type declares. A template is curated: it
+    // offers the fields a document of the type will usually fill in, and leaving out an optional one is
+    // an editorial choice rather than drift — the ADR template offers `decided-on` and not `deciders`,
+    // and no ADR is the worse for it. A required field is the opposite: absent from the template, every
+    // copy fails `required-field` on a line its author never wrote. `required-when` is not asked, for
+    // the same reason the value checks are not — the field it depends on is a placeholder or bare, so
+    // the condition has nothing to read.
+    //
+    // A reserved key is admitted but never expected: `title` belongs to the publishing platform, and a
+    // template has no reason to teach it.
+    private static void CheckTemplateFields(Doc d, TypeSchema t, Action<string, string, int?> err)
+    {
+        foreach (var k in d.FrontKeys.Where(k => !t.KnownKeys.Contains(k)))
+            err("template-fields",
+                $"'{k}' is not a field of the '{t.TypeName}' type — every document copied from this "
+                + "template would fail unknown-key.", d.FrontStartLine);
+
+        var carried = new HashSet<string>(d.FrontKeys, StringComparer.Ordinal);
+        foreach (var spec in t.DeclaredFields.Where(spec => spec.Required && !carried.Contains(spec.Name)))
+            err("template-fields",
+                $"the template does not carry '{spec.Name}', which is required — every document copied "
+                + "from it would fail required-field.", d.FrontStartLine);
+    }
+
+    private static void CheckPlaceholders(Doc d, Action<string, string, int?> err)
+    {
+        var left = Placeholder.Occurrences(d).ToList();
+        if (left.Count == 0) return;
+
+        var (token, line) = left[0];
+        var rest = left.Count > 1 ? $" There are {left.Count - 1} more in this document." : "";
+        err("placeholder-left",
+            $"'{token}' is a placeholder the template left for you to fill in.{rest}", line);
+    }
+
+    // Whether a value carries the placeholder mark anywhere — the scalar itself, or any entry of a
+    // sequence. Asked of the whole field rather than of each entry, because a list in a template is a
+    // demonstration of the field's shape and `[ svc-{{a}}, svc-real ]` is not a state worth modelling.
+    private static bool HasPlaceholder(YamlNode node) =>
+        node switch
+        {
+            YamlScalarNode sc => Placeholder.In(sc.Value),
+            YamlSequenceNode seq => seq.Children.Any(HasPlaceholder),
+            _ => false
+        };
 
     private static void CheckDate(string name, YamlNode node, Doc d, Action<string, string, int?> err)
     {

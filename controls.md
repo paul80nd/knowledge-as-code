@@ -109,6 +109,7 @@ One control may verify several rules, and one rule may need several controls. Co
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `required-section`          | error   | Every required section heading is present.                                                                      |
+| `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                  |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
@@ -119,8 +120,8 @@ One control may verify several rules, and one rule may need several controls. Co
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule              | What it would verify                                                                                                                                |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `coverage-report` | Generates the proportion of MUST / MUST NOT rules across active standards that are claimed by a control with a mechanism other than `not-enforced`. |
+| Rule              | What it would verify                                                                   |
+|-------------------|----------------------------------------------------------------------------------------|
+| `coverage-report` | The share of MUST / MUST NOT rules in active standards claimed by an enforced control. |
 
 <!-- END GENERATED: checks-controls -->

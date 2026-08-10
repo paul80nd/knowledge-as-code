@@ -68,17 +68,15 @@ index:
 
 rules:
   - id: immutable-after-accepted
-    description: >
-      Once status is `accepted`, content changes are limited to typo fixes, link corrections and status
-      transitions. A substantive edit fails with a pointer to the supersession process.
+    description: Once status is `accepted`, only typo fixes, link corrections and status transitions are allowed.
+    # A substantive edit fails with a pointer to the supersession process.
   - id: y-statement-present
-    description: >
-      A blockquote follows the H1 stating all six moves — in the context of / facing / we decided /
-      rather than / to achieve / accepting — within `max-words`. Each absent move is named.
+    description: A block-quote below the H1 states all six Y-statement moves, within `max-words`.
+    # The six: in the context of / facing / we decided / rather than / to achieve / accepting. Naming the absent one is
+    # what needs code rather than an expression.
     max-words: 60
     severity: warning
   - id: alternatives-have-verdicts
-    description: >
-      Every bullet in Alternatives Considered states an outcome. An alternative left open means the decision
-      has not been made.
+    description: Every bullet in Alternatives Considered states an outcome.
+    # An alternative left open means the decision has not been made.
     severity: warning
