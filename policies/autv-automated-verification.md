@@ -18,12 +18,12 @@ tags: [ continuous-integration, quality-gates, testing ]
 
 ## Purpose
 
-Every change is built and checked automatically before it joins the mainline or moves towards production, and a failed
+We build and check every change automatically before it joins the default branch or moves towards production. A failed
 check stops it. Quality checks are gates, not advisories.
 
-A check that warns but does not block is a check that will eventually be ignored, and the discipline of a permanently
-releasable mainline is worth more than any individual gate in it. Automation is what makes this affordable: verification
-that depends on someone remembering is verification we do not have.
+A check that warns but does not block is a check that will eventually be ignored. Keeping the default branch releasable
+at all times is worth more than any single gate in it. Gating every change is only affordable because machines do the
+checking. A check somebody has to remember to run is a check we do not have.
 
 ## Scope
 
@@ -39,11 +39,11 @@ configuration, data pipelines and the documentation held with them.
 | `REPRO`   | **MUST** be able to reproduce a build from version control alone, on any machine set up to do so                       | [NIST SSDF 1.1].PW.6                                                                             |
 | `LEVELS`  | **MUST** test at the levels the change warrants, fast enough that the feedback arrives while the work is still in hand | [ISO 27001:2022].A.8.29, [DORA metrics].lead-time, [NIST SSDF 1.1].PW.8                          |
 | `REGRESS` | **MUST** add a regression test for every defect we fix, so it can only be found once — see [pol-VURM]                  | [ISO 27001:2022].A.8.29, [DORA metrics].change-failure-rate, [NIST SSDF 1.1].PW.8                |
-| `BROKEN`  | **MUST** treat a broken mainline as the team's first priority                                                          |                                                                                                  |
+| `BROKEN`  | **MUST** treat a broken default branch as the team's first priority                                                    |                                                                                                  |
 | `BYPASS`  | **MUST NOT** merge or release over a failing check without a recorded deviation ([pol-DEVI])                           | [ISO 27001:2022].A.8.29, [NIST SSDF 1.1].PO.4                                                    |
 | `DISABLE` | **MUST NOT** disable, skip, silence or suppress a check or a warning without a recorded deviation ([pol-DEVI])         | [NIST SSDF 1.1].PO.4                                                                             |
 | `MACHINE` | **MUST NOT** depend on a particular person's machine to produce a build                                                | [NIST SSDF 1.1].PO.3                                                                             |
-| `OFTEN`   | SHOULD integrate to the mainline often enough that any one change is small enough to reason about                      | [DORA metrics].lead-time                                                                         |
+| `OFTEN`   | SHOULD integrate to the default branch often enough that any one change is small enough to reason about                | [DORA metrics].lead-time                                                                         |
 | `WARN`    | SHOULD treat a new warning as a defect to triage rather than noise to accumulate                                       |                                                                                                  |
 | `COVER`   | SHOULD know what proportion of our code the tests exercise, and notice when it falls                                   |                                                                                                  |
 | `BITWISE` | COULD produce byte-for-byte identical output from the same source                                                      | [NIST SSDF 1.1].PW.6                                                                             |
@@ -51,8 +51,7 @@ configuration, data pipelines and the documentation held with them.
 ## Exceptions
 
 An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is
-recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than waived — the exception buys
-time, not forgiveness.
+recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than waived.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-VURM]: vurm-vulnerability-remediation.md

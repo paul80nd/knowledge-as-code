@@ -19,14 +19,13 @@ tags: [ change-management, source-control, traceability ]
 
 ## Purpose
 
-Everything needed to build, configure, deploy, run and recover a solution is held in version control, with a complete
-and attributable history. If an asset is required to reproduce the system and it is not versioned, the system cannot
-honestly be said to be reproducible. A schema migration and an application change differ in medium, not in the rigour
-they get.
+We hold everything needed to build, configure, deploy, run and recover a solution in version control, with a complete
+and attributable history. If one asset needed to rebuild the system is not versioned, we cannot claim the system is
+reproducible. A schema migration and an application change differ in medium, not in the rigour they get.
 
-This is the foundation the rest of these policies stand on. Review, traceability, reproducible builds, controlled
-release and recovery all assume a single authoritative source; without it each becomes a matter of trust rather than
-evidence.
+Almost every other policy here assumes there is one authoritative copy of everything. Review, traceability, reproducible
+builds, controlled release and recovery all rest on it. Without it, each of them becomes something we assert rather than
+something we can show.
 
 ## Scope
 
