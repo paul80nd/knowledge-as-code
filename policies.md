@@ -49,9 +49,9 @@ Every policy carries a `category`: **security**, **delivery**, **operations** or
 policy exists* — the broad area of the commitment — where `tags` answer *what topics it touches*. Two different
 questions, so two fields: a secrets policy is `category: security` and `tags: [credentials, key-management, secrets]`.
 
-The set is closed and deliberately small. Four categories group twenty-two policies into groups worth navigating; a
-fifth would have to earn its place by making one of these too crowded to scan, and the pressure for that is easier to
-judge once there are enough policies to feel it.
+The set is closed and deliberately small. Four categories cut the policy set into groups worth navigating; a fifth would
+have to earn its place by making one of these too crowded to scan, and the pressure for that is easier to judge once
+there are enough policies to feel it.
 
 Category is metadata, not folder structure. `policies/` stays flat, which means recategorising a policy is a one-line
 edit rather than a file move that rewrites every document linking to it — and the awkward calls here (accessibility
@@ -104,11 +104,11 @@ under governance is the clearest) are the ones most likely to be revisited.
 
 **Conventions**
 
-* **A policy does not state our standing against a framework.** Not "compliant", not "certified", not "registered" —
-  a policy maps its clauses to controls and says nothing about what that mapping is worth. Standing is recorded once,
+* **A policy does not state our standing against a framework.** Not "compliant", not "certified", not "registered" — a
+  policy maps its clauses to controls and says nothing about what that mapping is worth. Standing is recorded once,
   in [Frameworks](/frameworks.md), so that a change of certification is one edit rather than twenty.
-* **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice,
-  and a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
+* **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice, and
+  a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
   standards against them, so the set of implementers is not knowable from here — and a policy nothing in *this* wiki
   implements is the normal state rather than a gap to be explained.
 * **A clause is the unit anything else cites.** Written `pol-VURM.TIMEBOX` — the policy id, then the clause id — so a

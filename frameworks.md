@@ -5,7 +5,7 @@ The external frameworks this corpus refers to, and what each one obliges us to.
 A [policy](/policies) maps its clauses to a framework's controls in the `Alignment` column of its clause table, as
 `[ISO 27001:2022].A.8.24`. Those references resolve here. This page is the only place that says what the relationship
 is — bound, self-held, or merely borrowed — because that standing changes on its own schedule and would otherwise need
-correcting in twenty policies at once.
+correcting in every policy that cites it at once.
 
 Maintained by hand: no frontmatter, no id, no index. It exists so the references in the corpus have somewhere honest to
 land.
@@ -136,10 +136,10 @@ respond to vulnerabilities. Cited as `PO.5`, `PW.7`, `RV.2`. Free, and not certi
 SSDF.
 
 The closest thing to a peer this corpus has. SSDF says what a practice must achieve and leaves the tooling to whoever
-adopts it, which puts it at the same altitude as a policy clause and is why it reaches seven policies rather than one.
-Several of our clauses turn out to be SSDF practices arrived at independently — [pol-ENVS] is `PO.5` nearly in its
-entirety — and that cuts both ways: the corpus is conventional where it should be, and where it says something SSDF does
-not is where it is worth defending.
+adopts it, which puts it at the same altitude as a policy clause and is why it reaches across the policy set rather than
+landing on one policy. Several of our clauses turn out to be SSDF practices arrived at independently — [pol-ENVS] is
+`PO.5` nearly in its entirety — and that cuts both ways: the corpus is conventional where it should be, and where it
+says something SSDF does not is where it is worth defending.
 
 NIST also publishes SP 800-218A, an SSDF profile for generative AI. It addresses producers of models rather than
 consumers of coding agents, so it does not cover what [pol-AGNT] governs; the AI RMF below does.
