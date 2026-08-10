@@ -45,8 +45,6 @@ This policy is about the authority of what it produces._
 | `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                           | [NIST AI RMF 1.0].MEASURE                         |
 | `UNPROV`  | **MUST NOT** accept a proposal we cannot trace back to what produced it — an unverifiable proposal is a rejected one                                                         | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
 | `ACCESS`  | **MUST NOT** grant an agent access, privilege or a route to production that an individual doing the same work would not be granted                                           | [NIST AI RMF 1.0].MANAGE                          |
-| `EXCUSE`  | **MUST NOT** let "an agent wrote it" stand as either a reason to scrutinise it less or an excuse for what it broke                                                           | [NIST AI RMF 1.0].GOVERN                          |
-| `REACH`   | **MUST NOT** hold an agent to a rule we never put within its reach — under [pol-KNOW] that is our failure, not the agent's                                                   | [NIST AI RMF 1.0].GOVERN                          |
 
 ## Exceptions
 
@@ -70,7 +68,6 @@ exercise depends on the promotion gate holding.
 [adr-0001]: /adrs/0001-knowledge-as-code.md
 [pol-ACCS]: accs-access-by-identity.md
 [pol-AUTV]: autv-automated-verification.md
-[pol-KNOW]: know-knowledge-is-written-down.md
 [pol-PIPE]: pipe-pipeline-to-production.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
 [ISO 27001:2022]: /frameworks.md#iso-27001

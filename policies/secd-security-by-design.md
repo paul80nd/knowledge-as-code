@@ -42,7 +42,6 @@ externally exposed change warrants more than a routine internal one, but neither
 | `ACTIONS` | **MUST** turn the findings into tracked work rather than leaving them in a document                                                                                         | [ISO 27001:2022].A.5.8                                                                     |
 | `CODING`  | **MUST** write code to a documented secure-coding standard appropriate to the stack it is written in, and treat review as covering correctness and security, not only style | [ISO 27001:2022].A.8.28, [OWASP ASVS 4.0].V5, [NIST SSDF 1.1].PW.5                         |
 | `HIRISK`  | **MUST NOT** take a high-risk change into build with no security requirements and no consideration of threat                                                                | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.26, [NIST SSDF 1.1].PO.1                     |
-| `LATE`    | **MUST NOT** rely on later testing to discover what design should have prevented                                                                                            | [ISO 27001:2022].A.8.25                                                                    |
 
 ## Exceptions
 

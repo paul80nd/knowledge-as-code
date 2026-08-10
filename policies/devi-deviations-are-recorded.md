@@ -44,7 +44,7 @@ pressure during an incident.
 | `SURFACE` | **MUST** make deviations visible to those affected by the risk, rather than filing them where only the person who raised them will look    |                         |
 | `CLOSE`   | **MUST** close a deviation by fixing the underlying gap or by consciously re-accepting the risk — with the same scrutiny as the first time | [ISO 27001:2022].A.5.36 |
 | `PERM`    | **MUST NOT** treat a deviation as permanent by default, or let an expired one stand unreviewed                                             | [ISO 27001:2022].A.5.36 |
-| `CUSTOM`  | **MUST NOT** accept "we always do it this way" as a substitute for a recorded decision                                                     | [ISO 27001:2022].A.5.4  |
+| `CUSTOM`  | **MUST NOT** treat a long-standing practice as exempt from a policy it breaks                                                              | [ISO 27001:2022].A.5.4  |
 | `DEBT`    | SHOULD record a shortcut taken knowingly, so that it is tracked work rather than something the next person discovers                       |                         |
 
 ## Exceptions
