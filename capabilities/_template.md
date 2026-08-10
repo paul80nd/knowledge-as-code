@@ -45,13 +45,13 @@ Where a customer encounters this: the web UI, the admin screen, the API endpoint
 
 ## Where the detail lives
 
-|                    |                                                                      |
-|--------------------|----------------------------------------------------------------------|
-| **Implemented by** | [svc-example](/services/example.md), [svc-other](/services/other.md) |
-| **Specified in**   | ADO epics #NNNN, #NNNN                                               |
-| **Tested by**      | `repo/path/to/feature.feature`                                       |
-| **Constrained by** | [nfr-example](/nfrs/example.md)                                      |
-| **Decided in**     | [adr-NNNN]                                                           |
+|                    |                                |
+|--------------------|--------------------------------|
+| **Implemented by** | [svc-{{a}}], [svc-{{b}}]       |
+| **Specified in**   | ADO epics #{{epic}}, #{{epic}} |
+| **Tested by**      | `{{repo}}/{{path}}.feature`    |
+| **Constrained by** | [nfr-{{a}}]                    |
+| **Decided in**     | [adr-{{a}}]                    |
 
 _(This table is the point of the document. If the prose above it grows longer than the links below it, ask whether what
 you are writing belongs in an ADO item instead.)_
@@ -61,4 +61,7 @@ you are writing belongs in an ADO item instead.)_
 What it deliberately does not do, and anything a reader would otherwise assume works. Link to work items where a
 limitation is scheduled to change.
 
-[adr-NNNN]: /adrs/nnnn-kebab-slug.md
+[adr-{{a}}]: /adrs/{{a}}.md
+[nfr-{{a}}]: /nfrs/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md
+[svc-{{b}}]: /services/{{b}}.md

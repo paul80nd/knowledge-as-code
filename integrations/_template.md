@@ -36,12 +36,12 @@ The role it plays, and which parts of the product would stop working without it.
 
 ## Contract
 
-|              |                                       |
-|--------------|---------------------------------------|
-| **Protocol** | REST / SFTP / webhook / GraphQL / …   |
-| **Endpoint** |                                       |
-| **Auth**     | {{mechanism — never the credentials}} |
-| **Docs**     | {{link to their documentation}}       |
+|              |                                         |
+|--------------|-----------------------------------------|
+| **Protocol** | {{REST / SFTP / webhook / GraphQL / …}} |
+| **Endpoint** |                                         |
+| **Auth**     | {{mechanism — never the credentials}}   |
+| **Docs**     | {{link to their documentation}}         |
 
 _(Nothing secret goes in this wiki. Name the mechanism and where the credential is stored, not the credential.)_
 
@@ -77,8 +77,10 @@ SLA.
 
 ## Related
 
-* [svc-example](/services/example.md) — services that depend on this.
-* [rbk-example](/runbooks/example.md) — what to do when it is down.
-* [adr-NNNN] — why we chose it.
+* [svc-{{a}}] — services that depend on this.
+* [rbk-{{a}}] — what to do when it is down.
+* [adr-{{a}}] — why we chose it.
 
-[adr-NNNN]: /adrs/nnnn-kebab-slug.md
+[adr-{{a}}]: /adrs/{{a}}.md
+[rbk-{{a}}]: /runbooks/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md

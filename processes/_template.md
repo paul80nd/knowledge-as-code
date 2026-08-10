@@ -67,5 +67,8 @@ How to back out, or who to tell. If there is no rollback, say so explicitly — 
 
 ## Related
 
-* [svc-example](/services/example.md) — the service this operates on.
-* [std-NNNN](/standards/…) — rules this process must respect.
+* [svc-{{a}}] — the service this operates on.
+* [std-{{a}}] — rules this process must respect.
+
+[std-{{a}}]: /standards/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md

@@ -103,6 +103,6 @@ delete this one.)_
 [svc-{{a}}]: {{a}}.md
 
 _(Link definitions, at the very foot, sorted by label. Internal references use **shortcut reference links** — write
-`[svc-example]` in the prose and define it once here, so a rename is a one-line change. The label is also the display
+`[svc-search]` in the prose and define it once here, so a rename is a one-line change. The label is also the display
 text, so it must be the canonical id, which CI checks; where you want prose link text instead, use an inline link.
 Filename slugs are at most 30 characters.)_

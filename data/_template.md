@@ -44,7 +44,7 @@ _(Names and meanings, not schemas. Schemas live with the code that owns them.)_
 
 |                    |                                           |
 |--------------------|-------------------------------------------|
-| **Owning service** | [svc-example](/services/example.md)       |
+| **Owning service** | [svc-{{a}}]                               |
 | **Store**          | {{SQL Server / blob / table storage / …}} |
 | **Region**         |                                           |
 
@@ -61,22 +61,24 @@ and the system does another, record both — that gap is the useful part.
 
 ## Flows
 
-| Goes to                                 | Why | What is shared |
-|-----------------------------------------|-----|----------------|
-| [svc-example](/services/example.md)     |     |                |
-| [int-example](/integrations/example.md) |     |                |
+| Goes to     | Why | What is shared |
+|-------------|-----|----------------|
+| [svc-{{a}}] |     |                |
+| [int-{{a}}] |     |                |
 
 _(Especially anything crossing outside the estate.)_
 
 ## Related
 
-* [pol-XXXX] — the policy governing this classification.
-* [adr-NNNN] — decisions about where this data lives.
+* [pol-{{a}}] — the policy governing this classification.
+* [adr-{{a}}] — decisions about where this data lives.
 
 ---
 
 _(**Never put actual data here** — no sample records, no identifiers, no connection strings. This wiki is broadly
 readable.)_
 
-[adr-NNNN]: /adrs/nnnn-kebab-slug.md
-[pol-XXXX]: /policies/xxxx-kebab-slug.md
+[adr-{{a}}]: /adrs/{{a}}.md
+[int-{{a}}]: /integrations/{{a}}.md
+[pol-{{a}}]: /policies/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md

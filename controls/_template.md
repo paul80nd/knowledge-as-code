@@ -1,5 +1,5 @@
 ---
-id: ctl-NNNN
+id: ctl-{{nnnn}}
 tier: normative
 status: planned
 verifies:
@@ -13,7 +13,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Control: ctl-NNNN` `PLANNED`
+`Control: ctl-{{nnnn}}` `PLANNED`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -37,8 +37,8 @@ One sentence: what this control proves.
 
 The rules this control verifies, quoted or anchored:
 
-* [std-NNNN](/standards/…#anchor) — "Services **MUST** …"
-* [std-NNNN](/standards/…#anchor) — "Responses **MUST NOT** …"
+* [std-{{a}}] — "Services **MUST** …"
+* [std-{{b}}] — "Responses **MUST NOT** …"
 
 _(Name rules, not intentions. "We review carefully" is not a control; "the PR template requires a tick against each
 conformance checklist item" is.)_
@@ -64,3 +64,6 @@ exposure is meanwhile.)_
 ## Owner
 
 Who is answerable for this control continuing to run, and who notices when it stops.
+
+[std-{{a}}]: /standards/{{a}}.md#{{anchor}}
+[std-{{b}}]: /standards/{{b}}.md#{{anchor}}

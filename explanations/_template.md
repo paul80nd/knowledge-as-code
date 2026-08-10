@@ -35,5 +35,7 @@ rather than restating them here.
 
 ## Where the detail lives
 
-- [{{Service}}](/services/{{id}}.md) — {{what it holds}}
-- [adr-NNNN](/adrs/NNNN-....md) — {{what it decided}}
+- [{{Service}}](/services/{{a}}.md) — {{what it holds}}
+- [adr-{{a}}] — {{what it decided}}
+
+[adr-{{a}}]: /adrs/{{a}}.md

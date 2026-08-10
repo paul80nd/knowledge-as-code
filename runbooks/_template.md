@@ -78,5 +78,8 @@ _(Near the top of the page if this document is long — it must be findable with
 
 ## Related
 
-* [svc-example](/services/example.md) — the service this covers.
-* [exp-example](/explanations/example.md) — how the system works, for afterwards. Not now.
+* [svc-{{a}}] — the service this covers.
+* [exp-{{a}}] — how the system works, for afterwards. Not now.
+
+[exp-{{a}}]: /explanations/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md

@@ -1,5 +1,5 @@
 ---
-id: std-NNNN
+id: std-{{nnnn}}
 tier: normative
 status: draft
 axis:
@@ -14,7 +14,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Standard: std-NNNN` `DRAFT`
+`Standard: std-{{nnnn}}` `DRAFT`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -78,14 +78,13 @@ makes the standard *usable* rather than merely readable.
 One or two lines on *why*, then link down to the ADR(s) that decided it. Do not restate the ADR's full reasoning — the
 ADR owns the "why"; this standard owns the "what". Link, don't duplicate.
 
-- [adr-NNNN] — {{what it decided}}
+- [adr-{{a}}] — {{what it decided}}
 
 ## Changelog
 
-- YYYY-MM-DD — Initial version.
+- {{YYYY-MM-DD}} — Initial version.
 
-[adr-NNNN]: nnnn-kebab-slug.md
-[adr-NNNN]: nnnn-kebab-slug.md
+[adr-{{a}}]: {{a}}.md
 
 _(Link definitions, at the very foot, sorted by label. Internal references use **shortcut reference links** — write
 `[adr-0007]` in the prose and define it once here, so a rename is a one-line change. The label is also the display text,

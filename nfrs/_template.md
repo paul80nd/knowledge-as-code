@@ -1,5 +1,5 @@
 ---
-id: nfr-NNNN
+id: nfr-{{nnnn}}
 tier: normative
 status: draft
 applies-to:
@@ -13,7 +13,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`NFR: nfr-NNNN` `DRAFT`
+`NFR: nfr-{{nnnn}}` `DRAFT`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -57,12 +57,16 @@ consequence is documentation theatre, and saying "nothing much" is a legitimate 
 
 External dependencies that cap this target:
 
-* **[int-example](/integrations/example.md)** — their SLA is {{x}}, so anything built on it cannot promise more.
+* **[int-{{a}}]** — their SLA is {{x}}, so anything built on it cannot promise more.
 
 _(If a target exceeds what a dependency promises, it is a hope rather than a commitment. Record that here rather than
 discovering it during an incident.)_
 
 ## Related
 
-* [cap-example](/capabilities/example.md) — the capability this constrains.
-* [pmt-NNNN](/postmortems/…) — incidents measured against this target.
+* [cap-{{a}}] — the capability this constrains.
+* [pmt-{{a}}] — incidents measured against this target.
+
+[cap-{{a}}]: /capabilities/{{a}}.md
+[int-{{a}}]: /integrations/{{a}}.md
+[pmt-{{a}}]: /postmortems/{{a}}.md

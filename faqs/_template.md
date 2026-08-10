@@ -1,5 +1,5 @@
 ---
-id: faq-NNNN
+id: faq-{{nnnn}}
 tier: normative
 status: active
 symptom-keywords:
@@ -14,7 +14,7 @@ tags: [ a, b ]
 
 # {{The symptom, as you would encounter it}}
 
-`FAQ: faq-NNNN` `ACTIVE`
+`FAQ: faq-{{nnnn}}` `ACTIVE`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -64,5 +64,8 @@ be different, but the way in may be the same.
 
 ## Related
 
-* [svc-example](/services/example.md) — the service affected.
-* [dsc-example](/discoveries/example.md) — the observation this was promoted from.
+* [svc-{{a}}] — the service affected.
+* [dsc-{{a}}] — the observation this was promoted from.
+
+[dsc-{{a}}]: /discoveries/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md

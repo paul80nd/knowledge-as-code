@@ -56,7 +56,7 @@ decision criteria stays a trial forever.
 
 ## Where it is used
 
-* [svc-example](/services/example.md)
+* [svc-{{a}}]
 
 _(Generated drift detection will compare this against the actual package manifests once it exists — both directions.)_
 
@@ -73,7 +73,9 @@ _(Brief. If the choice was contested or expensive, the reasoning belongs in an [
 
 ## Related
 
-* [std-NNNN](/standards/…) — standards that mandate or constrain its use.
-* [adr-NNNN] — the decision, where there was one.
+* [std-{{a}}] — standards that mandate or constrain its use.
+* [adr-{{a}}] — the decision, where there was one.
 
-[adr-NNNN]: /adrs/nnnn-kebab-slug.md
+[adr-{{a}}]: /adrs/{{a}}.md
+[std-{{a}}]: /standards/{{a}}.md
+[svc-{{a}}]: /services/{{a}}.md

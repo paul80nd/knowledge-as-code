@@ -1,15 +1,17 @@
 ---
-id: adr-NNNN
+id: adr-{{nnnn}}
 tier: decided
 status: proposed
 decided-on:
 owner:
-related: [ adr-AAAA, adr-BBBB, adr-CCCC ]
+related:
+  - adr-{{a}}
+  - adr-{{b}}
 ---
 
 # {{Title}}
 
-`ADR: adr-NNNN` `PROPOSED`
+`ADR: adr-{{nnnn}}` `PROPOSED`
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -67,20 +69,20 @@ readers need to know about. Cover at least:
 
 ## Related
 
-* [adr-NNNN] — {{what it decided, and why it matters here}}.
-* [adr-NNNN] — <…>.
+* [adr-{{a}}] — {{what it decided, and why it matters here}}.
+* [adr-{{b}}] — {{how it relates}}.
 
 _(One line each on **how** the two relate — the annotation is the value, not the link. Cite rather than restate: if
 another ADR already made an argument, link it instead of repeating it.)_
 
 ## References
 
-* [RFC NNNN](https://www.rfc-editor.org/rfc/rfcNNNN) — {{what it covers}}.
+* [RFC {{number}}](https://www.rfc-editor.org/rfc/rfc{{number}}) — {{what it covers}}.
 
 _(External sources only, as inline links — they are unaffected by renames. Omit the section if there are none.)_
 
-[adr-NNNN]: nnnn-kebab-slug.md
-[adr-NNNN]: nnnn-kebab-slug.md
+[adr-{{a}}]: {{a}}.md
+[adr-{{b}}]: {{b}}.md
 
 _(Link definitions, at the very foot, sorted by label. Internal references use **shortcut reference links** — write
 `[adr-0007]` in the prose and define it once here, so a rename is a one-line change. The label is also the display text,
