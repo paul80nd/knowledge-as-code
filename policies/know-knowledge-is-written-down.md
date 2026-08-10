@@ -16,18 +16,19 @@ tags: [ documentation, knowledge-management ]
 
 ## Purpose
 
-The knowledge needed to build, run, decide about and recover a system is written down, versioned, and kept alongside the
-thing it describes — not held in individuals' heads or in chat histories nobody can search. Agents read the same
-documentation people do. Undocumented work is unfinished work.
+The knowledge needed to build, run, decide about and recover a system is written down, versioned, and kept next to the
+thing it describes. It is not held in someone's head, and not in a chat history nobody can search. Agents read the same
+documentation people do.
 
-Undocumented knowledge is a single point of failure that no amount of redundancy elsewhere compensates for. Keeping
-documentation next to the code also means a change that invalidates it can be reviewed in the same breath as the change
-itself, which is the only reliable way documentation stays true.
+If one person is the only one who knows how a system recovers, the system is one resignation away from being
+unrecoverable. Running two of everything does not help. Keeping the documentation next to the code helps, because a
+change that makes the documentation wrong is then reviewed alongside the change itself. Undocumented work is unfinished
+work.
 
 ## Scope
 
-All solutions we build or operate. Covers setup and build instructions, operational runbooks, architecturally
-significant decisions, and the reference material a person or an agent needs to work on the system safely.
+All solutions we build or operate. That covers setup and build instructions, operational runbooks, and architecturally
+significant decisions. It also covers the reference material a person or an agent needs to work on the system safely.
 
 ## Clauses
 
@@ -42,8 +43,8 @@ significant decisions, and the reference material a person or an agent needs to 
 
 ## Exceptions
 
-None. The effort is proportionate — a small internal tool needs less than a customer-facing platform — but the
-commitment to write down what is needed does not vary.
+None. The effort is proportionate: a small internal tool needs less than a customer-facing platform. The commitment to
+write down what is needed does not vary.
 
 [pol-AGNT]: agnt-agents-propose-people-decide.md
 [ISO 27001:2022]: /frameworks.md#iso-27001
