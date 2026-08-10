@@ -54,7 +54,7 @@ policy owns deciding to recover and doing it, held to the objectives [pol-RECV] 
 | `ACTIONS` | **MUST** turn the findings of those reviews into tracked work                                                                                      | [ISO 27001:2022].A.5.27                                               |
 | `DRILL`   | **MUST** rehearse the process rather than first exercising it for real                                                                             | [ISO 27001:2022].A.5.24                                               |
 | `ADHOC`   | **MUST NOT** handle a significant incident informally, with no record and no named owner                                                           | [ISO 27001:2022].A.5.26                                               |
-| `TOOSOON` | **MUST NOT** close an incident at the point service is restored — it closes when the learning is captured                                          | [ISO 27001:2022].A.5.27                                               |
+| `TOOSOON` | **MUST NOT** close an incident before the learning from it is captured                                                                             | [ISO 27001:2022].A.5.27                                               |
 
 ## Exceptions
 

@@ -21,6 +21,7 @@ owner, it is visible to the people whose decisions move it, and it is designed f
 Treating cost as a finance concern puts the accountability a long way from the design decisions that set it. The
 architecture, the data volumes and the resource choices are made by engineers, so engineers are the people who can act
 on them — and the same discipline we apply to any other non-functional requirement works here without modification.
+Runaway spend is often a defect, and sometimes a compromise.
 
 Cost is a constraint we optimise within. It is not a licence to cut resilience, security or accessibility.
 
@@ -32,16 +33,16 @@ make them meaningful.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                                                    | Alignment                     |
-|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------|
-| `ATTRIB`  | **MUST** attribute the running cost of a system to the service and the team that owns it                                                                                  | [Azure WAF].cost-optimization |
-| `VISIBLE` | **MUST** give the people who own a system visibility of what it costs, at a cadence that lets them act                                                                    | [Azure WAF].cost-optimization |
-| `WEIGHED` | **MUST** state expected running cost as a design output for new systems and significant changes                                                                           | [Azure WAF].cost-optimization |
-| `SIZING`  | **MUST** size resources against what they actually use, and revisit that as usage changes                                                                                 | [Azure WAF].cost-optimization |
-| `ANOMALY` | **MUST** notice unexpected cost quickly, and treat a sharp unexplained rise as a signal worth investigating — runaway spend is often a defect, and sometimes a compromise | [Azure WAF].cost-optimization |
-| `UNUSED`  | **MUST** remove what we no longer use, including in environments below production                                                                                         | [Azure WAF].cost-optimization |
-| `UNOWNED` | **MUST NOT** run a production workload that nobody owns the cost of                                                                                                       | [Azure WAF].cost-optimization |
-| `ERODE`   | **MUST NOT** let cost efficiency erode resilience, security or accessibility                                                                                              | [Azure WAF].cost-optimization |
+| Id        | Clause                                                                                                 | Alignment                     |
+|-----------|--------------------------------------------------------------------------------------------------------|-------------------------------|
+| `ATTRIB`  | **MUST** attribute the running cost of a system to the service and the team that owns it               | [Azure WAF].cost-optimization |
+| `VISIBLE` | **MUST** give the people who own a system visibility of what it costs, at a cadence that lets them act | [Azure WAF].cost-optimization |
+| `WEIGHED` | **MUST** state expected running cost as a design output for new systems and significant changes        | [Azure WAF].cost-optimization |
+| `SIZING`  | **MUST** size resources against what they actually use, and revisit that as usage changes              | [Azure WAF].cost-optimization |
+| `ANOMALY` | **MUST** notice unexpected cost quickly, and investigate a sharp unexplained rise                      | [Azure WAF].cost-optimization |
+| `UNUSED`  | **MUST** remove what we no longer use, including in environments below production                      | [Azure WAF].cost-optimization |
+| `UNOWNED` | **MUST NOT** run a production workload that nobody owns the cost of                                    | [Azure WAF].cost-optimization |
+| `ERODE`   | **MUST NOT** let cost efficiency erode resilience, security or accessibility                           | [Azure WAF].cost-optimization |
 
 ## Exceptions
 

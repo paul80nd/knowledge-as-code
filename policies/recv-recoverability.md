@@ -46,7 +46,7 @@ response to an outage: this policy is what makes recovery possible, and deciding
 |-----------|--------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
 | `RTORPO`  | **MUST** define recovery-time and recovery-point objectives for critical systems, and design to meet them          | [ISO 27001:2022].A.5.30, [Azure WAF].reliability                          |
 | `BACKUP`  | **MUST** back up critical data on a schedule that matches those objectives                                         | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
-| `RESTORE` | **MUST** test restoration periodically — recovery is proven, not assumed                                           | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
+| `RESTORE` | **MUST** test restoration periodically                                                                             | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
 | `OFFSITE` | **MUST** keep at least one copy of critical data outside the failure domain of its source                          | [ISO 27001:2022].A.8.13, [ISO 27001:2022].A.8.14, [Azure WAF].reliability |
 | `TIMEOUT` | **MUST** bound every outbound call in time, so a slow dependency cannot become an unbounded wait                   | [Azure WAF].reliability                                                   |
 | `DEGRADE` | **MUST** design so that the failure of one dependency degrades function rather than taking the system down with it | [ISO 27001:2022].A.5.29, [ISO 27001:2022].A.8.14, [Azure WAF].reliability |
