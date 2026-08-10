@@ -19,7 +19,7 @@ tags: [ credentials, key-management, secrets ]
 
 Secrets — credentials, keys, tokens and certificates — are held in a controlled store that restricts and records access
 and allows rotation without changing code. They are never embedded in source, configuration, pipeline definitions or
-build artifacts.
+build artefacts.
 
 An embedded secret cannot be rotated without a release, cannot be revoked in isolation, and survives in history long
 after the file that carried it is deleted. Treating secrets as managed assets rather than as text is what makes a
@@ -38,7 +38,7 @@ machine identities.
 | `ROTATE`  | **MUST** rotate any secret on a defined cycle and on any suspicion of compromise, without a code change                                      | [ISO 27001:2022].A.5.17 |
 | `KEYS`    | **MUST** protect the keys and certificates that protect our data through their full lifecycle — issue, storage, rotation, revocation         | [ISO 27001:2022].A.8.24 |
 | `SCAN`    | **MUST** actively look for secrets that have leaked into places they should never reach                                                      | [ISO 27001:2022].A.5.17 |
-| `EMBED`   | **MUST NOT** commit a secret to version control, place one in a configuration file or pipeline definition, or bake one into a build artifact | [ISO 27001:2022].A.5.17 |
+| `EMBED`   | **MUST NOT** commit a secret to version control, place one in a configuration file or pipeline definition, or bake one into a build artefact | [ISO 27001:2022].A.5.17 |
 | `REUSE`   | **MUST NOT** use a production secret anywhere outside production                                                                             | [ISO 27001:2022].A.5.17 |
 | `LOGS`    | **MUST NOT** write a secret to a log, a console, an error message or a support ticket                                                        | [ISO 27001:2022].A.5.17 |
 | `ZEROSEC` | COULD reach a position where there is no static secret left to leak                                                                          |                         |
