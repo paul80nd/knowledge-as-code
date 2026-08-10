@@ -105,6 +105,7 @@ rules:
   - { path: "knowledge-as-code/taxonomy.md",     layer: synced }
   - { path: "knowledge-as-code/metadata.md",     layer: synced }
   - { path: "knowledge-as-code/contributing.md", layer: synced }
+  - { path: "knowledge-as-code/style.md",        layer: synced }
   - { path: "knowledge-as-code/authoring.md",    layer: synced }
   - { path: "knowledge-as-code/principles.md",   layer: synced }
   - { path: "knowledge-as-code/lineage.md",      layer: synced }

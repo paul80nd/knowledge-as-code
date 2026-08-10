@@ -120,7 +120,8 @@ knowledge-as-code/     # the system's own documentation
   ├── taxonomy.md      # the seventeen types and where things go
   ├── metadata.md      # the frontmatter fields
   ├── contributing.md  # how a contribution is made and reviewed
-  ├── authoring.md     # how documents are written
+  ├── style.md         # how we write, in every document and every comment
+  ├── authoring.md     # what a document's tier adds to that
   ├── principles.md    # why the framework is shaped this way
   ├── lineage.md       # where the taxonomy's names came from
   ├── automation.md    # what is generated, validated and scheduled

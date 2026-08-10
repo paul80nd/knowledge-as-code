@@ -11,6 +11,7 @@ This page is the way in. The detail lives beneath it:
 | Understand what kinds of knowledge live here | [Taxonomy](knowledge-as-code/taxonomy.md)         |
 | Know why the framework is shaped this way    | [Principles](knowledge-as-code/principles.md)     |
 | Add or change something                      | [Contributing](knowledge-as-code/contributing.md) |
+| Write a clear sentence, anywhere at all      | [Style](knowledge-as-code/style.md)               |
 | Know how a document should be written        | [Authoring](knowledge-as-code/authoring.md)       |
 | Know what metadata a document needs          | [Metadata](knowledge-as-code/metadata.md)         |
 | Understand what CI checks and builds         | [Automation](knowledge-as-code/automation.md)     |

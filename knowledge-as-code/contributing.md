@@ -3,6 +3,11 @@
 How knowledge is added, reviewed, and promoted. This applies equally to people and to AI sessions — the rules are the
 same regardless of who is holding the keyboard.
 
+Four pages carry what a contribution needs, and a type's `_template.md` sends you here rather than repeating them.
+[Taxonomy](taxonomy.md) says where a document goes. [Metadata](metadata.md) covers the frontmatter.
+[Style](style.md) holds the rules for the words, which are the same in every document, comment and commit message.
+[Authoring](authoring.md) holds what a document's tier adds on top.
+
 ## The shape of a contribution
 
 1. Work out where it goes — [taxonomy](taxonomy.md) has a decision table.
@@ -11,9 +16,9 @@ same regardless of who is holding the keyboard.
 3. Allocate an ID in the style that type uses — the next unused number, a four-character mnemonic for the concept, or a
    slug. Check the folder's index for what is already taken; see [metadata](metadata.md#ids).
 4. Fill in the frontmatter — see [metadata](metadata.md).
-5. Write the content. Follow the template's section structure, which exists so documents of a type are comparable, and
-   [authoring](authoring.md) for how the prose itself is written — those rules follow the document's tier, so a runbook
-   step and an ADR paragraph are held to different ones.
+5. Write the content, to [style](style.md) and [authoring](authoring.md). Follow the template's section structure, which
+   exists so documents of a type are comparable. The tier rules are why a runbook step and an ADR paragraph are held to
+   different constraints.
 6. Open a PR against the corpus repository. Review expectations follow the tier, below.
 
 Generated content — indexes, digests, reports — is not edited by hand. If an index looks wrong, the frontmatter it was
