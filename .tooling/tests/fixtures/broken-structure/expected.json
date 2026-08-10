@@ -1,8 +1,9 @@
 {
   "summary": {
-    "validated": 20,
+    "validated": 21,
+    "templates": 3,
     "skipped": 0,
-    "errors": 24,
+    "errors": 25,
     "warnings": 1
   },
   "findings": [
@@ -61,6 +62,13 @@
       "severity": "error",
       "check": "filename-pattern",
       "message": "filename '0008-Bad_Name.md' does not match ^\\d{4}-[a-z0-9-]+\\.md$."
+    },
+    {
+      "file": "adrs/0010-half-filled-copy.md",
+      "line": 13,
+      "severity": "error",
+      "check": "placeholder-left",
+      "message": "'{{the pressure to get something committed}}' is a placeholder the template left for you to fill in."
     },
     {
       "file": "policies/agnt-identity-malformed.md",

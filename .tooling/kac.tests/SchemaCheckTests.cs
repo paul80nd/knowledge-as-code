@@ -134,6 +134,42 @@ public class SchemaCheckTests
         Assert.Contains("See also", finding.Message);
     }
 
+    // A description is rendered into the type page's checks table, which is read by scanning. The bound
+    // is held here rather than left to review because the table is generated: an over-long cell reads as
+    // deliberate in the diff, and there is nowhere else it would be noticed.
+    [Fact]
+    public void A_rule_description_longer_than_the_table_allows_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(rules:
+        [
+            new RuleSpec { Id = "very-wordy", Description = new string('x', Generator.DescriptionMax + 1) }
+        ])));
+
+        Assert.Equal("schema-shape", finding.Check);
+        Assert.Contains($"the limit is {Generator.DescriptionMax}", finding.Message);
+    }
+
+    // Asked of a rule that runs, not only of one that does not: a dispatched rule is precisely the one
+    // whose description reaches the table, and CheckRule lets those go early.
+    [Fact]
+    public void The_bound_holds_for_a_rule_that_is_dispatched_too()
+    {
+        var implemented = DocumentRules.All.SelectMany(r => r.Emits).First().Id;
+        var finding = Assert.Single(Check(Widgets(rules:
+        [
+            new RuleSpec { Id = implemented, Description = new string('x', Generator.DescriptionMax + 1) }
+        ])));
+
+        Assert.Equal("schema-shape", finding.Check);
+    }
+
+    [Fact]
+    public void A_description_at_the_bound_passes()
+        => Assert.Empty(Check(Widgets(rules:
+        [
+            new RuleSpec { Id = "just-fits", Description = new string('x', Generator.DescriptionMax) }
+        ])));
+
     // Any section the type declares reconciles, not one fixed name.
     [Fact]
     public void A_mirrors_section_the_type_declares_passes()

@@ -98,9 +98,7 @@ index:
 
 rules:
   - id: posture-belongs-to-frameworks
-    description: >
-      Flags the words "compliant", "compliance", "certified" and "registered" near a framework reference. A
-      policy maps its clauses to controls; what our standing is against a framework belongs in frameworks.md.
+    description: '"compliant", "certified" or "registered" near a framework reference — standing belongs in `frameworks.md`.'
     severity: warning
     # Proximity rather than the bare word: a policy may reasonably say "compliance" about a process without
     # claiming a standing. It is the claim beside a framework's name that belongs somewhere else.

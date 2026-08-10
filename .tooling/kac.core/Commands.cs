@@ -15,7 +15,7 @@ public static class Commands
     {
         var corpus = Corpus.Load(repoRoot, paths);
         var findings = Validator.CheckAll(corpus);
-        return Report(findings, corpus.Docs.Count, corpus.SkippedNoFrontmatter, json);
+        return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
     public static int Index(string repoRoot, bool check)
@@ -110,7 +110,7 @@ public static class Commands
         return 0;
     }
 
-    private static int Report(List<Finding> findings, int validated, int skipped, bool json)
+    private static int Report(List<Finding> findings, int validated, int templates, int skipped, bool json)
     {
         var errors = findings.Count(f => f.Severity == Sev.Error);
         var warnings = findings.Count(f => f.Severity == Sev.Warning);
@@ -120,7 +120,7 @@ public static class Commands
             // Emitted through the source generator (KacJson), not reflection — the core is
             // AOT-friendly. See Json.cs for the output models.
             var report = new ValidateReport(
-                new ValidateSummary(validated, skipped, errors, warnings),
+                new ValidateSummary(validated, templates, skipped, errors, warnings),
                 [
                     .. findings
                         .OrderBy(f => f.File).ThenBy(f => f.Line ?? 0)
@@ -145,8 +145,12 @@ public static class Commands
             Console.WriteLine();
         }
 
+        // Templates are counted apart from documents because they are checked apart from them: a reader
+        // who sees a finding against a `_template.md` should find it accounted for in the tally, and one
+        // who sees none should be able to tell that the templates were read rather than skipped.
         Console.WriteLine(
-            $"validated {validated} document(s), skipped {skipped} without frontmatter — {errors} error(s), {warnings} warning(s)");
+            $"validated {validated} document(s) and {templates} template(s), skipped {skipped} without "
+            + $"frontmatter — {errors} error(s), {warnings} warning(s)");
         return errors > 0 ? 1 : 0;
     }
 

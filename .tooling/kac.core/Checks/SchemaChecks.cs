@@ -153,6 +153,14 @@ public static class SchemaChecks
             return;
         }
 
+        // Asked of every rule, before the dispatched ones are let go: a rule that runs is a rule whose
+        // description reaches the type page, and that is the row a reader has to scan past.
+        if (rule.Description is { } description && description.Length > Generator.DescriptionMax)
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"rule '{rule.Id}' on type '{key}' has a {description.Length}-character description; the "
+                + $"limit is {Generator.DescriptionMax}. A description says what is checked — the reasoning "
+                + "belongs in its 'message:', where the author who trips it reads it."));
+
         if (rule.Compiled is not null || DocumentRules.ByRuleId.ContainsKey(rule.Id)) return;
 
         if (rule.Severity is { } severity)

@@ -18,6 +18,12 @@ public sealed class LoadedCorpus
     // The records: every discovered document that carries frontmatter, in corpus order.
     public required List<Doc> Docs;
 
+    // The template each stood-up collection type carries, in corpus order. Held beside the records
+    // rather than among them: a template is checked, and is not one. Discovered here so that the count
+    // the summary reports and the files the validator reads are the same list rather than two walks
+    // that could disagree about what the corpus holds.
+    public required List<string> Templates;
+
     // Discovered but not migrated. Reported rather than dropped, so a corpus part-way through
     // adoption reads as part-way through rather than as smaller than it is.
     public required int SkippedNoFrontmatter;
@@ -70,9 +76,33 @@ public static class Corpus
             Schema = schema,
             Files = files,
             Docs = docs,
+            Templates = DiscoverTemplates(repoRoot, schema, paths),
             SkippedNoFrontmatter = skipped,
             Paths = paths
         };
+    }
+
+    // The template of every collection type that has one. Asked of the filesystem rather than of the
+    // file listing, as type-setup asks it: the question is whether the file a contributor would copy is
+    // there, and a type whose template is untracked has a different problem from one with none.
+    //
+    // A type with no template is skipped in silence — its absence is type-setup's to report, and a type
+    // nobody has stood up yet is a valid, quiet state.
+    private static List<string> DiscoverTemplates(string repoRoot, Schema schema, List<string> paths)
+    {
+        var pathFilter = paths.Select(p => p.Replace('\\', '/').TrimEnd('/')).ToList();
+
+        var result = new List<string>();
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        {
+            if (t.IsSingleDocument) continue; // one document, and it is the page — nothing to copy
+
+            var rel = $"{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/{Artefact.Template}";
+            if (pathFilter.Count > 0 && !pathFilter.Any(p => rel == p || rel.StartsWith(p + "/"))) continue;
+            if (File.Exists(Path.Combine(repoRoot, rel))) result.Add(rel);
+        }
+
+        return result;
     }
 
     // Which of the listed files are records to validate: markdown, inside a folder the schema maps to

@@ -27,7 +27,7 @@ public static class CheckCatalogue
         new("schema-unknown-key", Sev.Error, "A schema key the loader never reads."),
         new("schema-unreadable", Sev.Error, "A schema declaration the loader cannot read as written."),
         new("schema-dispatch", Sev.Error, "A schema declaration naming a value nothing acts on."),
-        new("schema-shape", Sev.Error, "A type's declarations agree with one another."),
+        new("schema-shape", Sev.Error, "A type's declarations are well-formed and agree with one another."),
 
         new("type", Sev.Error, "The document's folder maps to a type schema."),
         new("frontmatter-parses", Sev.Error, "The frontmatter block is valid YAML and a mapping."),
@@ -54,6 +54,7 @@ public static class CheckCatalogue
         new("identity-id", Sev.Error, "The identity line's id matches the frontmatter id."),
         new("identity-status", Sev.Error, "The identity line's status is the frontmatter status, upper-case."),
         new("required-section", Sev.Error, "Every required section heading is present."),
+        new("placeholder-left", Sev.Error, "A record carries no `{{…}}` left unfilled from its template."),
         new("clause-table", Sev.Error, "The clause section holds a table of Id and Clause rows."),
         new("clause-id-format", Sev.Error, "A clause id is a code span matching the type's pattern."),
         new("clause-id-unique", Sev.Error, "A clause id is unique within its document."),

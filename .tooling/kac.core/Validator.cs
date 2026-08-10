@@ -62,20 +62,9 @@ public static class Validator
         // It is checked here rather than discovered as a record, because it is not one: it holds no id,
         // claims no place in the index, and must not answer to id-unique or to a reciprocal edge. What
         // it is held to is everything a copy of it inherits.
-        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach (var rel in corpus.Templates)
         {
-            if (t.IsSingleDocument) continue; // one document, and it is the page — nothing to copy
-
-            var folder = string.IsNullOrEmpty(t.Folder) ? key : t.Folder;
-            var rel = $"{folder}/{Artefact.Template}";
-            if (corpus.Paths.Count > 0 && !corpus.Paths
-                    .Select(p => p.Replace('\\', '/').TrimEnd('/'))
-                    .Any(p => rel == p || rel.StartsWith(p + "/"))) continue;
-
-            var at = Path.Combine(repoRoot, rel);
-            if (!File.Exists(at)) continue; // absence is type-setup's to report, not this pass's
-
-            var template = Doc.Parse(rel, File.ReadAllText(at), schema);
+            var template = Doc.Parse(rel, File.ReadAllText(Path.Combine(repoRoot, rel)), schema);
             if (template is null)
                 findings.Add(new Finding(rel, null, Sev.Error, "template-fields",
                     "the template carries no frontmatter — a document copied from it starts with none."));
@@ -230,6 +219,14 @@ public static class Validator
         foreach (var sec in t.RequiredSections)
             if (!d.H2.Any(h => string.Equals(h, sec, StringComparison.OrdinalIgnoreCase)))
                 Err("required-section", $"missing required section '## {sec}'.");
+
+        // -- placeholders left from the template --
+        // The other half of the convention: `{{…}}` means "supply this", so a record still carrying one
+        // is a copy nobody finished. Easy to do and easy to miss — the file has an id, a title and every
+        // section, so every other check passes and the document reads as complete until someone follows
+        // a link to `{{a}}.md`. Reported once, naming the first: an unfinished copy holds a dozen, and
+        // eleven more findings say nothing the first did not.
+        if (kind == DocKind.Record) CheckPlaceholders(d, Err);
 
         // -- clause table shape, ids and modals --
         // A template's clause rows are a demonstration of the shape, with `{{ID}}` where the id goes, so
@@ -450,6 +447,17 @@ public static class Validator
             err("template-fields",
                 $"the template does not carry '{spec.Name}', which is required — every document copied "
                 + "from it would fail required-field.", d.FrontStartLine);
+    }
+
+    private static void CheckPlaceholders(Doc d, Action<string, string, int?> err)
+    {
+        var left = Placeholder.Occurrences(d).ToList();
+        if (left.Count == 0) return;
+
+        var (token, line) = left[0];
+        var rest = left.Count > 1 ? $" There are {left.Count - 1} more in this document." : "";
+        err("placeholder-left",
+            $"'{token}' is a placeholder the template left for you to fill in.{rest}", line);
     }
 
     // Whether a value carries the placeholder mark anywhere — the scalar itself, or any entry of a

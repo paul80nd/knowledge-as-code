@@ -106,38 +106,39 @@ Standards are living documents. Material changes are recorded in the changelog r
 
 <!-- BEGIN GENERATED: checks-standards -->
 
-| Check                       | Level   | What it verifies                                                                                                                            |
-|-----------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                                                         |
-| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                                              |
-| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                                                           |
-| `required-field`            | error   | Required and conditionally-required fields are present.                                                                                     |
-| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                                              |
-| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                                                                        |
-| `enum`                      | error   | Enum values are in range and lowercase.                                                                                                     |
-| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                                                |
-| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                                                  |
-| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                                                  |
-| `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename.                             |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                                                       |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                                             |
-| `h1`                        | error   | The document has an H1.                                                                                                                     |
-| `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.                                    |
-| `required-section`          | error   | Every required section heading is present.                                                                                                  |
-| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                                              |
-| `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                                             |
-| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                                                    |
-| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                                                    |
-| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                                            |
-| `unused-definition`         | warning | A link definition that nothing references.                                                                                                  |
-| `provenance-required`       | error   | Every standard cites at least one ADR in `derived-from` or one policy in `implements`. A standard with neither is guidance, not a standard. |
+| Check                       | Level   | What it verifies                                                                                                |
+|-----------------------------|---------|-----------------------------------------------------------------------------------------------------------------|
+| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                             |
+| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                  |
+| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
+| `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
+| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
+| `date-quoted / date-format` | error   | Date fields are quoted `YYYY-MM-DD`.                                                                            |
+| `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
+| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
+| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
+| `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
+| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                           |
+| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
+| `h1`                        | error   | The document has an H1.                                                                                         |
+| `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
+| `required-section`          | error   | Every required section heading is present.                                                                      |
+| `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
+| `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                  |
+| `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
+| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
+| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
+| `unused-definition`         | warning | A link definition that nothing references.                                                                      |
+| `provenance-required`       | error   | A standard cites an ADR in `derived-from`, a policy in `implements`, or both.                                   |
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                                                                                                                                         |
-|--------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `rules-have-controls`          | Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.                                                                                                             |
-| `changelog-begins-at-active`   | Changelog entries are material changes only — a rule added, removed, or changed in effect — and begin when status becomes `active`. Wording, examples, link fixes and typos are not material; git has those. |
-| `changelog-on-material-change` | If the Rules section changed and status is `active`, a new changelog entry is required in the same commit.                                                                                                   |
+| Rule                           | What it would verify                                                                                       |
+|--------------------------------|------------------------------------------------------------------------------------------------------------|
+| `rules-have-controls`          | Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.           |
+| `changelog-begins-at-active`   | Changelog entries are material changes only, and begin when status becomes `active`.                       |
+| `changelog-on-material-change` | If the Rules section changed and status is `active`, a new changelog entry is required in the same commit. |
 
 <!-- END GENERATED: checks-standards -->

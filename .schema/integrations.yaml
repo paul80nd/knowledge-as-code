@@ -54,9 +54,7 @@ index:
 
 rules:
   - id: fallback-required
-    description: >
-      Every failure mode names a fallback, or the document explicitly states there is none. An undocumented
-      single point of failure is the most expensive kind.
+    description: Every failure mode names a fallback, or the document says there is none.
     severity: warning
     # The section as a whole rather than each mode within it: nothing here can tell one failure mode from
     # the next, so this catches the document that never mentions a fallback, not the one missing a case.
@@ -65,9 +63,7 @@ rules:
       The Failure modes section names no fallback. Say what happens instead when this fails, or say plainly
       that nothing does.
   - id: no-credentials
-    description: >
-      Fails on anything resembling a token, key, password or connection string. Name the mechanism and where
-      the credential is stored, never the credential.
+    description: Nothing reads as a token, key, password or connection string.
     severity: error
     # An assignment, not a mention: a document explaining how credentials are handled says "password"
     # constantly and is right to. What it never does is follow one with a value.

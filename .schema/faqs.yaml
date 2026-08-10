@@ -73,9 +73,7 @@ index:
 
 rules:
   - id: one-problem-per-document
-    description: >
-      One Symptom section, because an FAQ is found by its symptom. A page of assorted gotchas cannot be,
-      which defeats the purpose.
+    description: One Symptom section, because an FAQ is found by its symptom.
     severity: warning
     expr: "section_count('Symptom') <= 1"
     message: >

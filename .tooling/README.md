@@ -134,6 +134,7 @@ intention, and the type page renders those beneath the checks table as *Declared
 | `identity-type`                   | error | The line's type name is the `label` the folder's schema declares.                         |
 | `identity-id` / `identity-status` | error | The line's id and status are the frontmatter's, the status upper-cased.                   |
 | `required-section`                | error | Every heading in `sections.required` is present.                                          |
+| `placeholder-left`                | error | No `{{…}}` the template left to fill in survives into a record, outside code.             |
 
 ### Clauses (from `<type>.yaml`'s `clauses:` block)
 

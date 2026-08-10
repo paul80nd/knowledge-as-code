@@ -103,6 +103,7 @@ document is written for the day it isn't.
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `required-section`          | error   | Every required section heading is present.                                                                      |
+| `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`             | error   | Every internal link resolves (all link forms, `.md` optional).                                                  |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
@@ -112,9 +113,9 @@ document is written for the day it isn't.
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                  | What it would verify                                                                                                                                                                                     |
-|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `escalation-required` | `sections` requires the heading. What is unenforced is the shape beneath it — a diagnosis branch that ends in neither a resolution nor an escalation is a dead end, and only reading the tree finds one. |
-| `staleness-loud`      | Scheduled, and reported more prominently than for processes. An unrehearsed process is annoying; an unrehearsed runbook is dangerous.                                                                    |
+| Rule                  | What it would verify                                                            |
+|-----------------------|---------------------------------------------------------------------------------|
+| `escalation-required` | Every diagnosis branch ends in a resolution or an escalation, never a dead end. |
+| `staleness-loud`      | Rehearsal staleness, reported more prominently than a process's.                |
 
 <!-- END GENERATED: checks-runbooks -->

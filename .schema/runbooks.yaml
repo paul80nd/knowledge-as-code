@@ -73,10 +73,9 @@ rules:
       Symptoms must be the first section. Someone reaching for this at 2am matches on what they are
       seeing, not on what the document is called.
   - id: escalation-required
-    description: >
-      `sections` requires the heading. What is unenforced is the shape beneath it — a diagnosis branch that
-      ends in neither a resolution nor an escalation is a dead end, and only reading the tree finds one.
+    description: Every diagnosis branch ends in a resolution or an escalation, never a dead end.
+    # `sections` requires the heading; the shape beneath it is what this adds, and only reading the tree finds a dead
+    # end.
   - id: staleness-loud
-    description: >
-      Scheduled, and reported more prominently than for processes. An unrehearsed process is annoying; an
-      unrehearsed runbook is dangerous.
+    description: Rehearsal staleness, reported more prominently than a process's.
+    # Scheduled. An unrehearsed process is annoying; an unrehearsed runbook is dangerous.

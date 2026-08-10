@@ -47,9 +47,8 @@ sections:
 
 rules:
   - id: carried-in-full-by-digest
-    description: >
-      The generated rules digest includes this file in its entirety. It therefore consumes budget directly,
-      and entries that exceed one paragraph are reported.
+    description: No glossary entry runs beyond one paragraph.
+    # The generated rules digest carries this file whole, so every entry consumes budget directly.
   - id: undefined-terms
     description: >
       Reports terms appearing more than N times across the corpus with no glossary entry.

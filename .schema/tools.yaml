@@ -91,6 +91,5 @@ rules:
       This is in trial and nothing says what would end the trial. Add a `## Trial criteria` section naming
       what is being evaluated, where, and what would settle it either way.
   - id: drift-against-manifests
-    description: >
-      Scheduled. Compares the register against package manifests across the organisation's repositories in both
-      directions — packages in use that were never approved, and approved tools nothing uses any more.
+    description: The register against package manifests across the estate, in both directions.
+    # Scheduled. Reports packages in use that were never approved, and approved tools nothing uses any more.

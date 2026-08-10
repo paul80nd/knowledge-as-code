@@ -87,9 +87,7 @@ rules:
       `detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are
       right, the earlier one is when it started.
   - id: what-went-well-required
-    description: >
-      A postmortem that only lists failures teaches half the lesson. `sections` requires the heading; this
-      requires that something follows it.
+    description: The What went well section has something under it, not just the heading.
     severity: warning
     # Guarded, because an absent section is `required-section`'s to report: without the guard a postmortem
     # missing the heading would be told about the same omission twice, in two vocabularies.

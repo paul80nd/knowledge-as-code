@@ -76,6 +76,5 @@ rules:
   # The state this compares against lives outside the repository, so it can never run in the per-PR pass that
   # every other rule here runs in. Issue #15 carries it, alongside the same question for the other types.
   - id: drift-against-repos
-    description: >
-      Scheduled, not per-PR. Compares the catalogue against the actual ADO repository list; reports services
-      documented but deleted, and repositories with no service document.
+    description: The catalogue against the real repository list, in both directions.
+    # Scheduled, not per-PR. Reports services documented but deleted, and repositories with no service document.

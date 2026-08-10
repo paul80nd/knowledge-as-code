@@ -57,6 +57,40 @@ public class PlaceholderTests
         Assert.Equal("adr-{{a}}", ((YamlDotNet.RepresentationModel.YamlScalarNode)seq.Children[0]).Value);
     }
 
+    // -- what a record is scanned for, and what it is not --
+
+    // The four places a half-filled copy keeps one, none of which is ordinary prose alone. The
+    // identity line matters most and is the easiest to miss: it is written in code spans, so a scan
+    // that skipped code to protect fenced examples would skip the repeated id along with them.
+    [Theory]
+    [InlineData("---\nid: svc-{{slug}}\n---\n\n# A title\n", "{{slug}}")]
+    [InlineData("---\nid: svc-a\ndepends-on:\n  - svc-{{b}}\n---\n\n# A title\n", "{{b}}")]
+    [InlineData("---\nid: svc-a\n---\n\n# A title\n\n`Service: svc-{{slug}}` `LIVE`\n", "{{slug}}")]
+    [InlineData("---\nid: svc-a\n---\n\n# {{Service name}}\n", "{{Service name}}")]
+    [InlineData("---\nid: svc-a\n---\n\n# A title\n\nSee [the other]({{a}}.md).\n", "{{a}}")]
+    public void A_placeholder_is_found_in_frontmatter_the_identity_line_the_prose_and_a_link(
+        string text, string expected)
+    {
+        var found = Placeholder.Occurrences(Doc.Parse("services/a.md", text, new Schema())!).ToList();
+        Assert.Contains(expected, found.Select(f => f.Token));
+    }
+
+    // A document describing a templating language is not a document that failed to finish. Both forms
+    // of code are excluded, which is why the scan reads the parsed inlines rather than the source.
+    [Theory]
+    [InlineData("---\nid: svc-a\n---\n\n# A title\n\n```yaml\nrun: echo ${{ vars.id }}\n```\n")]
+    [InlineData("---\nid: svc-a\n---\n\n# A title\n\nWrite `${{ vars.id }}` to read it.\n")]
+    [InlineData("---\nid: svc-a\n---\n\n# A title\n\n    indented: ${{ vars.id }}\n")]
+    public void Code_is_not_scanned(string text)
+        => Assert.Empty(Placeholder.Occurrences(Doc.Parse("services/a.md", text, new Schema())!));
+
+    [Fact]
+    public void Every_occurrence_is_returned_so_the_check_can_count_what_it_does_not_name()
+    {
+        const string text = "---\nid: svc-{{slug}}\n---\n\n# {{Name}}\n\nIt calls [{{a}}]({{a}}.md).\n";
+        Assert.Equal(4, Placeholder.Occurrences(Doc.Parse("services/a.md", text, new Schema())!).Count());
+    }
+
     private static YamlDotNet.RepresentationModel.YamlNode Value(string yaml)
     {
         var stream = new YamlDotNet.RepresentationModel.YamlStream();
