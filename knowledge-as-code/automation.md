@@ -147,13 +147,20 @@ Not part of the taxonomy, carry no taxonomy frontmatter, and are excluded from s
 | `knowledge-as-code/` | Describes the system; is not governed by it        |
 | `_plan/`             | Temporary migration scaffolding; deleted when done |
 | `_reports/`          | Generated output                                   |
-| `**/_template.md`    | Templates carry placeholder frontmatter by design  |
+| `**/_template.md`    | Not a record; checked as a template — see below    |
 | Root `README.md`     | Orientation page, not a knowledge record           |
 | Root `CLAUDE.md`     | Agent guidance, not a knowledge record             |
 
 Stated explicitly rather than left implicit in a glob, so that a validation failure is never resolved by quietly
 widening an exclusion. The `_` rows are the one deliberate glob: the prefix is reserved for the framework's own
 artefacts, and the tool tests the prefix rather than the names — see [taxonomy](taxonomy.md#layout).
+
+**A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
+answers to nothing that needs a filename, so discovering it as a record would report a dozen faults that are the file
+doing its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that
+are not placeholders, the identity line, the required sections, and the links that point at real documents. A defect
+there is not one document's problem but every document's, and it is found by the next author rather than by whoever
+last edited the file.
 
 ## Scheduled tasks
 

@@ -12,68 +12,14 @@ owner:
 tags: [ a, b ]
 ---
 
-# {{Tool name}}
+# {{Title}}
 
 `Tool: tol-{{slug}}` `TRIAL`
 
-<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
-
-**Frontmatter.** Delete this block once the fields above are filled in.
-
-* **`status`** — `approved` · `trial` · `deprecated` · `rejected`. Approved means approved **for new work**; something
-  already in use but not approved is drift, and the drift report will say so.
-* **`versions`** — A range, not a pin: the register states what we stand behind, the manifests state what is installed.
-* **`licence`** — An SPDX identifier — the field nobody wants until they urgently do.
-* **`decided-in`** — An ADR, where one exists.
-* **`successor`** — What replaces this, once the status is `deprecated`. `replaces` is the same edge read the
-  other way, and CI enforces both ends.
-
-**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
-reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
-
-<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
-
-One sentence: what it is and what we use it for.
+Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
+real one — it carries the frontmatter, identity line and required sections that `kac validate` holds
+a template to, and nothing more.
 
 ## What we use it for
 
-Where it sits in the stack and which problem it solves for us specifically.
-
 ## Status
-
-**{{approved / trial / deprecated / rejected}}** — since {{date}}.
-
-For `deprecated`: name the replacement in `successor`, and say by when.
-
-For `rejected`: this entry exists so the evaluation isn't repeated in eighteen months. Say what was wrong with it.
-
-## Trial criteria
-
-_(Required while the status is `trial`, and deleted once it is not.)_
-
-What is being evaluated, where it is being evaluated, and what would settle it either way. A trial with no
-decision criteria stays a trial forever.
-
-## Where it is used
-
-* [svc-example](/services/example.md)
-
-_(Generated drift detection will compare this against the actual package manifests once it exists — both directions.)_
-
-## Alternatives considered
-
-* **{{Alternative}}** — why it lost out.
-
-_(Brief. If the choice was contested or expensive, the reasoning belongs in an [ADR](/adrs) and this cites it via
-`decided-in`. Small, uncontroversial adoptions need only this section.)_
-
-## Licence and obligations
-
-{{SPDX identifier}}. Any attribution, copyleft or commercial-use obligations that follow from it.
-
-## Related
-
-* [std-NNNN](/standards/…) — standards that mandate or constrain its use.
-* [adr-NNNN] — the decision, where there was one.
-
-[adr-NNNN]: /adrs/nnnn-kebab-slug.md

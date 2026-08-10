@@ -245,7 +245,7 @@ public static class Generator
     // generated from. Their audience is whoever edits `.schema/`, and `.schema/README.md` is where they
     // are documented.
     private static readonly HashSet<string> IntentionallyUndocumented =
-        new(["type", "list", "bracket-literal", "type-setup", "generated-block",
+        new(["type", "list", "bracket-literal", "type-setup", "generated-block", "template-fields",
             "schema-unknown-key", "schema-unreadable", "schema-dispatch", "schema-shape"], StringComparer.Ordinal);
 
     // The curated rows, then a row for each expression rule the type declares. A core check is worded

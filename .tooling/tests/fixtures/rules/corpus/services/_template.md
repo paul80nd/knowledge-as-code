@@ -6,11 +6,23 @@ repo:
 platform:
 criticality:
 depends-on:
+  - svc-{{a}}
+  - svc-{{b}}
 data-stores:
 owner:
+tags: [ public ]
 ---
 
-# {{Service}}
+# {{Title}}
 
-Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the real one —
-templates are excluded from validation, so nothing here is asserted.
+`Service: svc-{{slug}}` `LIVE`
+
+Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
+real one — it carries the frontmatter, identity line and required sections that `kac validate` holds
+a template to, and nothing more.
+
+## What it does
+
+## Where it lives
+
+## Environments

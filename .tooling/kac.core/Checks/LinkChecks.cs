@@ -16,29 +16,41 @@ public static class LinkChecks
             (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, check, msg)));
 
     public static void Check(Doc d, Schema schema, string repoRoot, Action<string, string, int?> err,
-        Action<string, string, int?> warn)
+        Action<string, string, int?> warn, DocKind kind = DocKind.Record)
     {
         foreach (var link in d.Links)
         {
             var target = link.Target;
             if (string.IsNullOrEmpty(target)) continue;
             if (IsExternal(target) || target.StartsWith('#')) continue;
+
+            // A template's example targets name a document the author has not written yet, so the
+            // placeholder stands where the filename will go. Every other target in one is a real link
+            // — to the type page, to the framework's own documentation — and is resolved like any
+            // other, which is what catches a template pointing at a document the corpus has deleted.
+            if (kind == DocKind.Template && Placeholder.In(target)) continue;
+
             if (!ResolveTarget(repoRoot, d.Rel, target))
                 err("link-resolves", $"link target '{target}' does not resolve.", link.Line);
         }
 
         // undefined shortcut/reference labels left as literal '[x]'. Id-shaped is an error — the author
         // meant to reference a document; anything else is only a warning, since '[x]' in prose is legal.
+        //
+        // Not asked of a template, where a bracket in prose is as likely to be a demonstration of the
+        // form as a reference to anything — `[{{FRAMEWORK}}]`, a task-list box in a checklist a
+        // contributor is being shown how to write.
         var defined = new HashSet<string>(d.DefinedLabels, StringComparer.OrdinalIgnoreCase);
-        foreach (var (inner, line) in d.BareBracketTokens)
-        {
-            if (defined.Contains(inner)) continue; // a genuine reference that resolved
-            if (IdChecks.TryCanonicalId(inner, schema, out _))
-                err("undefined-label", $"reference '[{inner}]' has no link definition.", line);
-            else
-                warn("bracket-literal",
-                    $"'[{inner}]' looks like a reference but has no definition (or use an inline link).", line);
-        }
+        if (kind == DocKind.Record)
+            foreach (var (inner, line) in d.BareBracketTokens)
+            {
+                if (defined.Contains(inner)) continue; // a genuine reference that resolved
+                if (IdChecks.TryCanonicalId(inner, schema, out _))
+                    err("undefined-label", $"reference '[{inner}]' has no link definition.", line);
+                else
+                    warn("bracket-literal",
+                        $"'[{inner}]' looks like a reference but has no definition (or use an inline link).", line);
+            }
 
         // A shortcut label doubles as its own display text, so it is read as an id and must be written
         // as one. Reference and definition are matched case-insensitively, so a mis-cased label still
@@ -56,10 +68,13 @@ public static class LinkChecks
                 err("label-canonical",
                     $"link definition '[{label}]' should be written as the id '{canonical}'.", null);
 
-        // unused definitions
-        foreach (var label in d.DefinedLabels.Distinct(StringComparer.OrdinalIgnoreCase))
-            if (!d.UsedLabels.Contains(label))
-                warn("unused-definition", $"link definition '[{label}]' is never referenced.", null);
+        // unused definitions. A template's definitions are exemplars — the block exists to show where
+        // definitions go and how they sort — so one that nothing references is not the oversight it is
+        // in a record.
+        if (kind == DocKind.Record)
+            foreach (var label in d.DefinedLabels.Distinct(StringComparer.OrdinalIgnoreCase))
+                if (!d.UsedLabels.Contains(label))
+                    warn("unused-definition", $"link definition '[{label}]' is never referenced.", null);
     }
 
     public static bool IsExternal(string t)

@@ -64,6 +64,7 @@ public static class CheckCatalogue
         new("related-matches-section", Sev.Error, "A mirrors-section field reconciles with its section."),
         new("id-unique", Sev.Error, "id is unique across the whole wiki."),
         new("type-setup", Sev.Error, "A type the schema declares is stood up as both a page and a folder, or neither."),
+        new("template-fields", Sev.Error, "A type's template carries the fields a copy of it needs, usably."),
         new("generated-block", Sev.Error, "A page carrying a generated block still has both of its markers."),
         new("clause-ref", Sev.Error, "A pol-XXXX.CLAUSE citation names a clause that exists."),
         new("ref-resolves", Sev.Error, "An id in a field with a ref names a document that exists."),
