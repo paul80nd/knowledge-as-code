@@ -17,8 +17,11 @@
   universal order followed by the type's. Reordering fields here can invalidate documents that were correct, and the
   failure surfaces in the corpus rather than here.
 
-* **Templates do not follow.** Nothing generates `<type>/_template.md` and nothing validates it, so a field added here
-  has to be added there by hand or every document copied from it will be wrong.
+* **Templates do not follow, but they are held to this file.** Nothing generates `<type>/_template.md`, so a field
+  added here has to be added there by hand. A **required** one is caught — `template-fields` fails when the template
+  omits it, because every document copied from it would fail `required-field`. An **optional** one is not: a template
+  is curated, and leaving one out is an editorial choice. A field *removed* here is caught from the other side, since
+  the template would then carry a key the type does not declare.
 
 ## Writing a rule
 
