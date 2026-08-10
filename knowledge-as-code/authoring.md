@@ -1,7 +1,8 @@
 # Authoring
 
-How knowledge is **written** here. [Contributing](contributing.md) covers the mechanics — where a document goes, which
-template to copy, how it is reviewed. This page covers the prose.
+How knowledge is **written** here. [Style](style.md) covers the words themselves, in every document this repository
+holds. [Contributing](contributing.md) covers the mechanics — where a document goes, which template to copy, how it is
+reviewed. This page covers what a record's tier asks of its prose on top of those.
 
 Two rules carry most of the weight, and both are easier to state than to follow:
 
@@ -24,38 +25,11 @@ not. Report the contradiction; do not resolve it by editing records.
 
 ## The floor
 
-These bind every tier.
+[Style](style.md) is the floor, and it binds every document in this repository: name who does what, anchor what you
+write to something real, say it once and say it short, leave nothing to reconstruct, use the precise word and explain it
+once, and write what stays true. Read it before this page.
 
-**One idea per sentence.** A sentence carrying two obligations, or a claim and its justification, is two sentences.
-
-**Prefer the short word, and the same word.** Elegant variation is a defect here: two names for one thing reads as two
-things. Where the [glossary](/glossary.md) distinguishes near-synonyms, the distinction is load-bearing.
-
-**No filler.** Cut *it is important to note*, *in order to*, *it should be borne in mind*, *simply*, *of course*,
-*obviously*. Cut any sentence whose removal loses nothing. Cut any paragraph that only announces the next one.
-
-**Noun clusters run to three words.** *Recovery point objective* is legible. *Corpus dependency resolution failure mode*
-is not — break it with a preposition or a verb.
-
-**Active voice, present tense.** Name the actor. *CI blocks the merge*, not *the merge will be blocked*. Passive is
-permitted only where the actor is genuinely unknown or irrelevant.
-
-**Twenty-five words to a sentence, six sentences to a paragraph.** Not arithmetic to be checked, but a ceiling: past it,
-a sentence is almost always carrying two ideas.
-
-**Cite, don't restate.** If the reasoning is in an ADR, link the ADR. Duplication is how a corpus rots — the copy is
-never updated, and nobody can tell which one is current.
-
-**Write timelessly.** Describe what is, not what changed, and never as a correction of what was. A paragraph justifying
-a change reads as noise a month later. Change history belongs in the commit message and the changelog.
-
-**Do not count the corpus.** *There are ~190 MUST clauses*, *twenty-two policies*, *71 checks* — a measurement written
-into prose is stale on the next merge, and in a corpus that took this framework and grew its own content it was never
-true at all. Nothing recomputes it and no check will catch it. If a number is load-bearing, generate it or point at the
-command that reports it; if it is only conveying scale, the argument is usually stronger without it, because *the
-rulebook outgrows the budget* holds everywhere and *190 outgrows the budget* holds for one repository on one day. A
-count of a deliberately closed set — four categories, the tiers, an external framework's control count — is a different
-thing: it moves by decision rather than by accumulation, and it may be stated.
+What follows is what a corpus record asks on top of it.
 
 ## By tier
 
@@ -183,11 +157,9 @@ point at. A marker that never comes off is a wish wearing a plan's clothes.
 
 ## Where these rules come from
 
-The tier rules are informed by [ASD-STE100 Simplified Technical English](lineage.md#language), the controlled language
-used for aerospace maintenance documentation, and by the plain-language principles of ISO 24495-1. The debt is real and
-the influence is direct, particularly on the procedural tier.
+The tier rules are informed by ASD-STE100 Simplified Technical English, the controlled language used for aerospace
+maintenance documentation, and by the plain-language principles of ISO 24495-1. The debt is real and the influence is
+direct, particularly on the procedural tier.
 
-The rules above are nonetheless **ours**, written in our own words and set at our own limits. This corpus does not
-reproduce ASD-STE100, does not ship its dictionary, and makes no claim of conformance to it. ASD does not endorse
-third-party compliance claims, and its specification may not be reproduced without written authority. Cite it, learn
-from it, do not claim it. [Lineage](lineage.md#language) records the citation properly.
+Both constrain how they may be quoted, so what we cite, what we learned from and what we do not claim is recorded in
+[lineage](lineage.md#language).

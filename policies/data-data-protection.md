@@ -28,7 +28,8 @@ places it does not belong, and deleted when its purpose ends. Personal data carr
 the people it describes.
 
 Uniform handling is either wasteful or unsafe, and usually both: it over-protects trivial data while under-protecting
-the records that would actually cause harm. Classification is what makes proportionate protection possible.
+the records that would actually cause harm. Until we say which data is which, we cannot protect it in proportion to its
+risk.
 
 ## Scope
 

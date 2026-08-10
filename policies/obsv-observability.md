@@ -18,8 +18,9 @@ tags: [ alerting, logging, monitoring, observability ]
 
 ## Purpose
 
-Our systems tell us what they are doing. They emit enough protected, correlatable telemetry to explain their behaviour
-after the fact, and we watch that telemetry closely enough to know about a problem before a customer reports it.
+Our systems tell us what they are doing. They emit enough telemetry — logs, metrics and traces — to explain their
+behaviour afterwards. It is protected, and tied together so events in different systems line up on one timeline. We
+watch it closely enough to know about a problem before a customer reports it.
 
 Telemetry nobody watches is storage, and monitoring without adequate telemetry is guesswork. Both halves are needed:
 one reconstructs what happened, the other tells us it is happening now.

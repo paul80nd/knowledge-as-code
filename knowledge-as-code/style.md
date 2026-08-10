@@ -1,0 +1,238 @@
+# Style
+
+How we write — every document, every comment, every clause. [Authoring](authoring.md) covers how a corpus record is
+structured and what each tier requires. This page covers the words.
+
+**One idea sits underneath all of it.** Clear writing and warm writing are the same discipline. We make writing hard to
+read when we perform — when we reach for an abstraction, an epigram, or a passive that hides who acts. That puts
+distance between us and the reader, and we do it when we write *at* someone rather than *to* them. When we name who does
+what, in a short sentence, with an ordinary word, we trust the reader to follow.
+
+So there is no trade-off to manage. The warm choice and the precise choice are nearly always the same sentence.
+
+## Scope
+
+Everything we write down: corpus records, README files, code comments, commit messages, pull request descriptions and
+review comments. Where a rule applies to only one of those, it says so.
+
+The rules bind, and the judgement stays yours. A rule that makes a particular sentence worse is a rule to break, and to
+say why in review.
+
+## Name who does what
+
+The most common way our writing goes wrong is by deleting the actor.
+
+> Attribution is what makes everything else enforceable.
+
+Nothing does anything in that sentence. "Attribution" stands in for people writing their names against changes. The
+construction — *X is what makes Y possible* — lifts an abstraction into the subject slot. It reads as insight. It
+carries less than it appears to.
+
+> If we cannot tell who did something, we cannot hold anyone to any rule below.
+
+Same claim, and the reader has it on the first pass.
+
+**Write subject, verb, object, with a person or a system as the subject.** Use the active voice. Passive is fine where
+the actor is genuinely unknown or genuinely irrelevant, and nowhere else.
+
+**That cleft is one shape of the defect, not the defect.** Any abstract noun in the subject slot does the same work —
+*acceptance*, *authority*, *provenance*, *proportion*. You can cut every cleft and leave the defect in place. A document
+can have every sentence under 25 words and still read cryptically.
+
+Test each sentence by naming its subject. Where the subject is a noun made from a verb rather than a person, a system or
+a document, rewrite until it is one.
+
+**Vary the shape, not only the vocabulary.** One replacement applied everywhere becomes the next mannerism. Swap every
+cleft for the same conditional and you have moved the tic, not removed it. It now sits in the paragraph the cleft used
+to occupy. A reader who meets the same beat in the same position a dozen times reads style rather than substance,
+whichever beat it is.
+
+Plain-English guidance allows one more use: the passive softens an unwelcome sentence by removing the person from it.
+That works in a letter to a customer, and **we decline it here.** An obligation that softens is one a reader cannot pin
+down, and the kind thing in a rule is to say who is bound.
+
+## Anchor what you write to something real
+
+An abstraction works when it sits beside something concrete. It fails when it floats.
+
+**A line anchored to a physical thing lands on first reading. A line built out of abstractions does not.**
+
+> A backup that has never been restored is not a backup.
+
+> Undocumented knowledge is a single point of failure that no amount of redundancy elsewhere compensates for.
+
+The first names something you can point at. The second stacks four abstractions and applies a hardware metaphor to a
+person. Both are reaching for something true. Only one arrives.
+
+This bites hardest on the line you are pleased with. Keep it where it names something real, and cut it where it does
+not. The difference is easier to see the morning after.
+
+The same move works on any claim, not only a memorable one. **Replace a category with the things inside it.**
+
+> Work produced by an AI agent — code, configuration, documentation, or an observation about how something behaves —
+> enters our estate as a proposal.
+
+> An agent can write code, change configuration, draft documentation, or report something it noticed about a system.
+
+The second names things a reader can picture. We cut nothing and simplified nothing. We swapped a class name for its
+members.
+
+## Say it once, and say it short
+
+* **One idea per sentence.** A sentence carrying an obligation and its justification is two sentences.
+* **Aim for an average of 15 to 20 words, and treat 25 as a ceiling.** Both are diagnostics rather than targets, and
+  length is a symptom. A 25-word sentence with a person as its subject reads on one pass; a 14-word sentence built on
+  two abstractions does not. **When a sentence is hard, fix the subject before you shorten it.** Shorten one whose
+  subject is an abstraction and you get a short sentence that is still hard.
+* **Six sentences to a paragraph.** The same kind of ceiling as the sentence one above. Past it, a paragraph is usually
+  carrying a second point that deserves its own.
+* **Prefer the short word, and the same word.** Two names for one thing read as two things. Elegant variation is a
+  defect here. Where the [glossary](/glossary.md) distinguishes near-synonyms, the distinction is load-bearing.
+* **Cut filler.** *Simply*, *obviously*, *of course*, *it is important to note*, *in order to*. Delete the word and read
+  the sentence again. If nothing was lost, it was filler.
+* **Cut any sentence that only announces the next one.**
+* **Make every item in a list finish the line that introduces it.** A list breaks most often when one item no longer
+  completes the stem. Prefer bullets to numbers unless the order carries meaning.
+* **Cite rather than restate.** If the reasoning lives somewhere else, link it. Nobody updates a copy.
+
+### Rules you can ignore
+
+Split an infinitive where it reads better. Open a sentence with *and*, *but* or *so*. End one with a preposition. Use
+the same word twice rather than reaching for a synonym you like less.
+
+Each is a half-remembered school rule. A sentence contorted to obey one is worse for it.
+
+## Leave nothing to reconstruct
+
+A reader should be able to move forwards. Each of these sends them back.
+
+* **A pointer needs something to point at.** *The acceptance gate has none* — has no what? The answer sat in the section
+  heading rather than the sentence. A definite reference — *the same*, *none*, *that*, *it* — needs its antecedent in
+  the sentence before. Make it a noun the reader can point at.
+* **Do not drop a verb across a clause boundary.** *…and no recorded deviation can.* Can what? The reader rebuilds the
+  verb from a clause they have already left.
+* **Repeat the noun rather than chain pronouns.** Three sentences of *It… It… It* pointing back at one subject give the
+  reader three chances to lose it. Naming it once mid-chain costs a word.
+* **Do not define a word only by its opposite.** *That is proportion, not exception.* An X-not-Y frame works where the
+  reader already holds the distinction and fails where they do not. Where they might not, state the mechanism first: *a
+  person who accepts agent work becomes its author, not its approver.* The frame survives once there is a person inside
+  it.
+
+We keep definition by contrast — it is house voice. Use it as a device rather than as a reflex.
+
+## Use the precise word, and explain it once
+
+Jargon is not the enemy of clarity. Vagueness is. *Idempotent*, *failure domain*, *trust boundary* and *shed load* each
+carry something no plain phrase carries as tightly, and replacing them costs precision.
+
+**Keep the precise term and gloss it on first use in a document.** Replace one only where a plain phrase says the same
+thing in the same space.
+
+**Noun clusters run to three words.** *Recovery point objective* is legible. *Corpus dependency resolution failure mode*
+is not — break it with a preposition or a verb.
+
+Words we have reached for and should not, each found in our own writing:
+
+| Instead of              | Write                                                     |
+|-------------------------|-----------------------------------------------------------|
+| blast radius            | how far a breach reaches                                  |
+| lateral traffic         | traffic between our own systems                           |
+| correlatable            | able to be lined up across systems                        |
+| resolvable inventory    | an inventory naming each component and the version in use |
+| escape hatch            | the exception a policy allows                             |
+| mainline, main branch   | the default branch                                        |
+| single point of failure | the only person who knows                                 |
+
+Ask who is reading. An auditor, a new joiner and an agent all read what we write, and none of them arrives with our
+context.
+
+## Write what stays true
+
+Someone will read this in a year, in a repository you have not seen, having missed the conversation that produced it.
+
+* **Describe what is, not what changed**, and never as a correction of what was. A paragraph justifying a change reads
+  as noise a month later. Change history belongs in the commit message and the changelog.
+* **Do not count the corpus.** A measurement written into prose is stale on the next merge. A corpus that took this
+  framework and grew its own content was never described by it at all. Where a number is load-bearing, generate it or
+  point at the command that reports it.
+* **A closed set may be counted.** Four categories, the tiers, an external framework's control count. Each moves by
+  decision rather than by accumulation.
+
+## Warmth, concretely
+
+We write as a team that expects people to do the right thing and says why, not as one that assumes they will not.
+
+* **Write "we" for us and "you" for the reader.** A policy is a commitment we hold, so it says "we". A README, a runbook
+  or a review comment is addressed to somebody, so it says "you". Both appear on this page.
+* **Give the reason, not the suspicion.** Where a rule exists because something went wrong, name what went wrong. Do not
+  write as though the reader is the one who will do it next.
+* **Skip the escalation.** *At all times*, *under no circumstances*, *strictly prohibited*. Emphasis of that kind tells
+  a reader we expect to be ignored, and a rule that shouts is no clearer than one that states.
+* **State exceptions early and plainly.** An exception written up front says we thought about the hard case. An
+  exception discovered later says we did not.
+* **Assume the reader wants to get it right**, and is reading because they do.
+
+None of this softens an obligation. A clause can be unambiguous and unhedged and still be written by someone who likes
+their colleagues.
+
+## Give the instruction
+
+Where you want someone to do something, write the instruction. Not a sentence about the instruction.
+
+> Remove the packet from the box.
+
+> The packet should be removed from the box.
+
+The second is longer, vaguer about who acts, and no gentler. We avoid commands because we think they sound harsh. What
+we reach for instead is harder to follow at the moment someone is following it.
+
+**Where a courtesy word helps, use it. Where compliance is not optional, leave it out.** "Please" offers a choice the
+reader does not have, and offering one that is not real is unkinder than the plain instruction.
+
+This matters most in a runbook read at 3am, and in a clause read in an audit. Those are the two places our writing is
+under real pressure.
+
+## Writing that binds
+
+People read clauses, rules and controls under different conditions from everything else: scanned, cited on their own,
+quoted back in an audit. They carry the whole weight of precision, and they should carry none of the argument.
+
+* **The clause states the obligation. The Purpose earns it.** Warmth lives in the Purpose. A reader who understands why
+  something matters will want to do it, and that carries further than a requirement. A clause with a reason attached is
+  one an auditor cannot parse, because they cannot tell where the obligation ends.
+* **One obligation per clause.** If it needs an *and* joining two actions, it is two clauses.
+* **A clause is testable, or it is a wish.** Before writing one, ask what an auditor would ask to *see*. If you cannot
+  answer, rewrite it.
+* **A clause states its obligation without help.** A cross-reference points at the other side of a shared obligation, or
+  at the policy that owns it. It does not finish the sentence for you.
+* **Write it so it cannot be read two ways.** Then read it again, deliberately, looking for the second way.
+
+Standards and checks catch us when we fall. They are not why we do this.
+
+## By medium
+
+**Corpus records.** [Authoring](authoring.md) holds the rules that follow a document's tier. Everything on this page
+applies underneath them.
+
+**Code comments.** The code says what it does. The comment says why it does it that way. A comment restating the line
+beneath it is noise, and it will be wrong within a month. Where a comment explains a workaround, name what is being
+worked around and what would let it go. Do not apologise in a comment — *hacky*, *sorry*, *don't ask* — say what the
+constraint was.
+
+**Commit messages.** The subject line says what changed. The body says why. Change history belongs here, so this is the
+one place where describing what used to be true is correct.
+
+**Pull requests and reviews.** [Contributing](contributing.md) covers the process. On the words: review the change, not
+the person. Ask rather than assert where you might be wrong, and say what would change your mind. A review comment that
+is right and lands badly has cost more than it bought.
+
+## Before you publish
+
+Four checks, in the order that catches most:
+
+1. **Who does what, in each sentence?** If the answer is "nothing", rewrite it.
+2. **Read the longest sentence aloud.** If you run out of breath, it is two sentences.
+3. **Find the line you are proudest of.** Ask whether it names something real. Cut it if it does not.
+4. **Read it as someone who was not in the conversation.** That reader is most of your audience.
+
+Our debts are recorded in [lineage](lineage.md#language).

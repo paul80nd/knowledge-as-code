@@ -17,12 +17,12 @@ tags: [ api, contracts, interoperability, versioning ]
 
 ## Purpose
 
-An interface we publish is a promise to whoever depends on it. It is defined explicitly, it is secured by default, and
-it does not change under its consumers without a version and reasonable notice.
+An interface we publish is a promise to whoever depends on it. We define it explicitly and secure it by default. We do
+not change it under its consumers without a version and reasonable notice.
 
-Every integration is built against the behaviour an interface had on the day it was written. Breaking that quietly
-transfers our convenience into someone else's outage, and the cost lands hardest on the consumers least able to respond
-quickly.
+Every integration is built against the behaviour an interface had on the day it was written. Change it without warning
+and we save ourselves an afternoon while costing someone else a day. That cost lands hardest on the consumers least able
+to respond quickly.
 
 ## Scope
 
@@ -44,8 +44,8 @@ interfaces, webhooks and any other integration surface others build against.
 ## Exceptions
 
 An interface with a single consumer inside the team that owns it falls outside the Scope above rather than being
-excepted. It comes into scope the moment anyone beyond that team builds against it, and the belief that every consumer
-is known is the one that usually turns out to be wrong.
+excepted. It comes into scope the moment anyone beyond that team builds against it. Teams are usually wrong about who is
+already calling them.
 
 A security fix may break a contract where leaving it intact would leave data exposed. That is a recorded deviation under
 [pol-DEVI], and consumers are told as soon as it is safe to tell them.

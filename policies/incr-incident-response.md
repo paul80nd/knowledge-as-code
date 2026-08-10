@@ -23,12 +23,12 @@ tags: [ incident-response, learning, postmortem ]
 
 ## Purpose
 
-When something goes wrong, there is a defined way to respond: someone is in charge, severity determines the response,
-what happened is recorded, and the organisation is measurably better afterwards for having been through it.
+When something goes wrong, we have a defined way to respond. Someone is in charge. Severity decides how large the
+response is. We record what happened, and we can show we are better for having been through it.
 
-The response is what turns an incident into either a recovery or a compounding failure, and the review afterwards is the
-only mechanism that converts an expensive hour into something we never pay for twice. Both need to be decided before the
-incident, because nobody designs a good process at three in the morning.
+Respond well and an incident ends in a recovery; respond badly and it becomes a second failure on top of the first.
+Review it afterwards and we do not pay for it twice. Both have to be settled before the incident, because nobody designs
+a good process at three in the morning.
 
 ## Scope
 
@@ -37,7 +37,9 @@ the organisation. A personal data breach is a security incident and is in scope 
 us is [pol-DATA]'s.
 
 _Boundary: [pol-RECV] owns being able to recover — the objectives, the backups, and the proof that a restore works. This
-policy owns deciding to recover and doing it, held to the objectives [pol-RECV] set._
+policy owns deciding to recover and doing it, held to the objectives [pol-RECV] set. `ACTIONS` is shared with
+[pol-SECD]: findings become tracked work whether they came from an incident review here or from threat modelling
+there._
 
 ## Clauses
 
@@ -51,19 +53,20 @@ policy owns deciding to recover and doing it, held to the objectives [pol-RECV] 
 | `INFORM`  | **MUST** tell the people a personal data breach puts at high risk, without undue delay                                                             | [UK GDPR].Art.34                                                      |
 | `REPORT`  | **MUST** encourage anyone to report a suspected incident, and make it easy to do so                                                                | [ISO 27001:2022].A.6.8                                                |
 | `LEARN`   | **MUST** review significant incidents afterwards, looking for the conditions that allowed them rather than for someone to blame                    | [ISO 27001:2022].A.5.27                                               |
-| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work                                                                                      | [ISO 27001:2022].A.5.27                                               |
+| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work — see [pol-SECD]                                                                     | [ISO 27001:2022].A.5.27                                               |
 | `DRILL`   | **MUST** rehearse the process rather than first exercising it for real                                                                             | [ISO 27001:2022].A.5.24                                               |
 | `ADHOC`   | **MUST NOT** handle a significant incident informally, with no record and no named owner                                                           | [ISO 27001:2022].A.5.26                                               |
-| `TOOSOON` | **MUST NOT** close an incident at the point service is restored — it closes when the learning is captured                                          | [ISO 27001:2022].A.5.27                                               |
+| `TOOSOON` | **MUST NOT** close an incident before the learning from it is captured                                                                             | [ISO 27001:2022].A.5.27                                               |
 
 ## Exceptions
 
-Low-severity events are handled through routine work rather than the full process; the severity classification is what
-decides, and it is applied deliberately rather than by whoever wants the least paperwork. There is no exception to
-recording a significant incident, and none at all to recording a personal data breach — `EVIDENC` binds at every
-severity, because the assessment of whether a breach is notifiable is itself a thing we have to be able to show.
+Low-severity events are handled through routine work rather than the full process. The severity classification decides
+which, and we apply it deliberately rather than letting whoever wants the least paperwork set it. There is no exception
+to recording a significant incident, and none at all to recording a personal data breach. `EVIDENC` binds at every
+severity. Deciding that a breach was not notifiable is itself a decision we have to be able to show.
 
 [pol-DATA]: data-data-protection.md
 [pol-RECV]: recv-recoverability.md
+[pol-SECD]: secd-security-by-design.md
 [ISO 27001:2022]: /frameworks.md#iso-27001
 [UK GDPR]: /frameworks.md#uk-gdpr

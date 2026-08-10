@@ -23,19 +23,19 @@ tags: [ access-control, identity, least-privilege ]
 
 ## Purpose
 
-Every access to a system, its code or its data is granted to an individual identity, authenticated strongly, limited to
-what that person or workload actually needs, and reviewed as circumstances change.
+We grant access to a named person or a named workload, never to a shared login. We authenticate it strongly, we limit it
+to what that person or workload actually needs, and we review it as circumstances change.
 
-Attribution is what makes everything else enforceable. A shared account converts an audit trail into a guess, and
-standing privilege that nobody needs is simply a breach waiting for an attacker to find the credential.
+If we cannot tell who did something, we cannot hold anyone to any rule below. A shared account converts an audit trail
+into a guess. Standing privilege that nobody needs is a breach waiting for an attacker to find the credential.
 
 ## Scope
 
 All systems, environments, source repositories, pipelines and data stores we build or operate, for people and for
 machine identities alike. Applies to routine and privileged access.
 
-_Boundary: [pol-AGNT] governs the authority of what an agent produces. Accepting agent work makes the accepting person
-its author; it does not make them its approver, so `DUTIES` still requires a second person to release it._
+_Boundary: [pol-AGNT] governs the authority of what an agent produces. A person who accepts agent work becomes its
+author, not its approver, so `DUTIES` still requires a second person to release it._
 
 ## Clauses
 
@@ -54,9 +54,9 @@ its author; it does not make them its approver, so `DUTIES` still requires a sec
 
 ## Exceptions
 
-Break-glass access for incident response is permitted where an individual cannot otherwise act, provided the account is
-attributable, its use is alerted and recorded, and its use is reviewed afterwards. Any other departure requires a
-recorded deviation under [pol-DEVI].
+Incident response sometimes needs a break-glass account — one kept for emergencies, outside the normal grants. That is
+allowed where a person cannot otherwise act. The account is still attributable, its use raises an alert and is recorded,
+and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI].
 
 [pol-AGNT]: agnt-agents-propose-people-decide.md
 [pol-DEVI]: devi-deviations-are-recorded.md

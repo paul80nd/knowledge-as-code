@@ -17,8 +17,10 @@ Three sources of rules, in this order:
    formats, link forms, and which text rules a type actually declares.
 2. **The type's own pages.** `<type>.md` for what the type is meant to hold, `<type>/_template.md` for the sections it
    must have.
-3. **[`knowledge-as-code/authoring.md`](../../../knowledge-as-code/authoring.md).** The prose rules. Read it in full,
-   every time. This skill is the procedure for applying it and does not restate it.
+3. **[`knowledge-as-code/style.md`](../../../knowledge-as-code/style.md) and
+   [`knowledge-as-code/authoring.md`](../../../knowledge-as-code/authoring.md).** The prose rules — style for the words,
+   which are the same everywhere, and authoring for what a document's tier adds. Read both in full, every time. This
+   skill is the procedure for applying them and does not restate them.
 
 **Where a prose rule contradicts the schema, that is a finding to report — never an instruction to act on.**
 `authoring.md` says the same of itself. Report which of the two is wrong and leave both alone. A reviewer who resolves
@@ -122,8 +124,8 @@ decide. That list is worth more than a larger diff.
 1. **Establish scope.** One record, a type folder, or a named set. If asked to review "the corpus", propose an order —
    by tier, worst offenders first — and confirm before starting. Do not silently review a hundred documents.
 2. **Run `./kac validate` and `./kac checks`.** Baseline, and the rules that apply to this type.
-3. **Read `authoring.md`.** In full. Then the type's `<type>.md` for what the type is meant to contain, and its
-   `_template.md` for the sections it must have.
+3. **Read `style.md` and `authoring.md`.** In full. Then the type's `<type>.md` for what the type is meant to contain,
+   and its `_template.md` for the sections it must have.
 4. **For each record**, in this order:
    a. Read the frontmatter. Note the `tier`, the `status`, and whether it is Decided. b. Read the record whole before
    changing anything. c. Identify findings against the floor, then against the tier's rules, then against

@@ -19,13 +19,13 @@ tags: [ change-management, source-control, traceability ]
 
 ## Purpose
 
-Everything needed to build, configure, deploy, run and recover a solution is held in version control, with a complete
-and attributable history. If an asset is required to reproduce the system and it is not versioned, the system cannot
-honestly be said to be reproducible.
+We hold everything needed to build, configure, deploy, run and recover a solution in version control, with a complete
+and attributable history. If one asset needed to rebuild the system is not versioned, we cannot claim the system is
+reproducible. A schema migration and an application change differ in medium, not in the rigour they get.
 
-This is the foundation the rest of these policies stand on. Review, traceability, reproducible builds, controlled
-release and recovery all assume a single authoritative source; without it each becomes a matter of trust rather than
-evidence.
+Almost every other policy here assumes there is one authoritative copy of everything. Review, traceability, reproducible
+builds, controlled release and recovery all rest on it. Without it, each of them becomes something we assert rather than
+something we can show.
 
 ## Scope
 
@@ -37,16 +37,16 @@ Secrets are the deliberate exception — see [pol-SCRT].
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                                           | Alignment                                                              |
-|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
-| `ASSETS`  | **MUST** hold every asset needed to build, deploy, run and recover a solution in version control                                                                 | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
-| `HISTORY` | **MUST** preserve a complete change history that attributes each change to an individual                                                                         | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.1                          |
-| `INTENT`  | **MUST** link each change to the work that asked for it                                                                                                          | [ISO 27001:2022].A.8.32                                                |
-| `BRANCH`  | **MUST** protect the default branch, so changes arrive by reviewed merge rather than direct push                                                                 | [ISO 27001:2022].A.8.4, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.1  |
-| `PARITY`  | **MUST** subject changes to infrastructure, schema and configuration to the same review as changes to application code — the medium differs, the rigour does not | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PW.7 |
-| `ORPHAN`  | **MUST NOT** allow an asset that is necessary to reproduce a system to exist only on an individual's machine, in a console, or in a shared drive                 | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
-| `SHARED`  | **MUST NOT** accept shared or generic accounts that make a change unattributable — see [pol-ACCS]                                                                | [ISO 27001:2022].A.8.4, [NIST SSDF 1.1].PS.1                           |
-| `SIGNED`  | COULD prove the authorship of a change cryptographically, rather than trusting what it claims                                                                    | [NIST SSDF 1.1].PS.1                                                   |
+| Id        | Clause                                                                                                                                           | Alignment                                                              |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| `ASSETS`  | **MUST** hold every asset needed to build, deploy, run and recover a solution in version control                                                 | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
+| `HISTORY` | **MUST** preserve a complete change history that attributes each change to an individual                                                         | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.1                          |
+| `INTENT`  | **MUST** link each change to the work that asked for it                                                                                          | [ISO 27001:2022].A.8.32                                                |
+| `BRANCH`  | **MUST** protect the default branch, so changes arrive by reviewed merge rather than direct push                                                 | [ISO 27001:2022].A.8.4, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.1  |
+| `PARITY`  | **MUST** subject changes to infrastructure, schema and configuration to the same review as changes to application code                           | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PW.7 |
+| `ORPHAN`  | **MUST NOT** allow an asset that is necessary to reproduce a system to exist only on an individual's machine, in a console, or in a shared drive | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
+| `SHARED`  | **MUST NOT** accept shared or generic accounts that make a change unattributable — see [pol-ACCS]                                                | [ISO 27001:2022].A.8.4, [NIST SSDF 1.1].PS.1                           |
+| `SIGNED`  | COULD prove the authorship of a change cryptographically, rather than trusting what it claims                                                    | [NIST SSDF 1.1].PS.1                                                   |
 
 ## Exceptions
 

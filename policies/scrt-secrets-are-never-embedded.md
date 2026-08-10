@@ -22,8 +22,8 @@ and allows rotation without changing code. They are never embedded in source, co
 build artefacts.
 
 An embedded secret cannot be rotated without a release, cannot be revoked in isolation, and survives in history long
-after the file that carried it is deleted. Treating secrets as managed assets rather than as text is what makes a
-compromise recoverable.
+after the file that carried it is deleted. A secret held in a store we control can be rotated the day it leaks, and
+everything that used it keeps working.
 
 ## Scope
 

@@ -19,13 +19,12 @@ tags: [ environments, production-data, separation ]
 
 ## Purpose
 
-Production is separated from every environment below it — by access, by network and by credential — so that a change can
-be validated before it reaches customers, and so that nothing outside production can reach production's data or
-identity.
+We separate production from every environment below it, by access, by network and by credential. That way a change is
+checked before it reaches customers, and nothing outside production can reach production's data or its identity.
 
-Separation is what makes a lower environment safe to experiment in. Where the boundary is soft, a mistake in development
-becomes an incident in production, and every copy of production data multiplies the blast radius of a breach without
-adding any protection of its own.
+A developer can only experiment freely because the boundary holds. Where it is soft, a mistake in development becomes an
+incident in production. Every copy of production data held below production widens how far a breach reaches, and
+protects nothing.
 
 ## Scope
 
@@ -49,10 +48,10 @@ temporary and on-demand environments.
 
 ## Exceptions
 
-Not every solution needs a full set of tiers; a reduced set is acceptable where the rationale is recorded and the
+Not every solution needs a full set of tiers. A reduced set is acceptable where the rationale is recorded and the
 production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not
-development, and is governed by [pol-INCR]. `CREDS` and `REUSE` carry a secrets prohibition that [pol-SCRT] owns and
-that admits no exception. Any other departure requires a recorded deviation under [pol-DEVI].
+development, and [pol-INCR] governs it. `CREDS` and `REUSE` carry a secrets prohibition that [pol-SCRT] owns and that
+admits no exception. Any other departure requires a recorded deviation under [pol-DEVI].
 
 [pol-DATA]: data-data-protection.md
 [pol-DEVI]: devi-deviations-are-recorded.md

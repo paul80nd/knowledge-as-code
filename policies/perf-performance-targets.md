@@ -38,7 +38,6 @@ to having them.
 | `DEFECT`  | **MUST** treat a target we no longer meet as a defect, not as a new baseline                                                                  | [Azure WAF].performance-efficiency                         |
 | `PEAK`    | **MUST** understand behaviour at peak and over time, not only at the average case on a quiet afternoon                                        | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
 | `NOTEST`  | **MUST NOT** release a significant change to a performance-sensitive system with no performance validation at all                             | [Azure WAF].performance-efficiency                         |
-| `SILENT`  | **MUST NOT** allow an unstated target to become the reason nobody is accountable for a slow system                                            |                                                            |
 
 ## Exceptions
 

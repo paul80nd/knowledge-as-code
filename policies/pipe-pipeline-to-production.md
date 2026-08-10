@@ -22,8 +22,9 @@ The pipeline is the only route into production. Every production change — appl
 schema — arrives through an automated path that is traceable to its source change and its approval, and that can be
 reversed.
 
-A single controlled route is what makes production knowable. Every hand-applied change creates a system whose real state
-exists nowhere but the system itself, and the cost of that lands later, on whoever is trying to rebuild or recover it.
+If every change takes the same route, we can say what is running in production and how it got there. Every hand-applied
+change creates a system whose real state exists nowhere but the system itself, and the cost of that lands later, on
+whoever is trying to rebuild or recover it.
 
 ## Scope
 
@@ -38,7 +39,7 @@ made of, where it is held and whether its origin can be proved is [pol-TRUS]'s._
 | Id        | Clause                                                                                                                                             | Alignment                                                                      |
 |-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
 | `DEPLOY`  | **MUST** deploy to production only through an automated pipeline                                                                                   | [ISO 27001:2022].A.8.19, [DORA metrics].deploy-frequency, [NIST SSDF 1.1].PO.3 |
-| `SAMEART` | **MUST** deploy only artefacts the pipeline itself produced, promoting the same artefact through environments rather than rebuilding per stage     | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
+| `SAMEART` | **MUST** promote one artefact through the environments rather than rebuilding it for each stage                                                    | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
 | `CONFIG`  | **MUST** hold environment-specific configuration outside the artefact, so the artefact promoted between environments is the one that was built     | [ISO 27001:2022].A.8.9                                                         |
 | `TRACE`   | **MUST** be able to trace any production release to the change, the artefact and the approval behind it — see [pol-TRUS]                           | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.2                                  |
 | `REVERT`  | **MUST** have a defined rollback or recovery path before a change goes to production                                                               | [ISO 27001:2022].A.8.32, [DORA metrics].recovery-time                          |
