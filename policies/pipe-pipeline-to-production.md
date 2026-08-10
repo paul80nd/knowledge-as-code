@@ -42,7 +42,7 @@ made of, where it is held and whether its origin can be proved is [pol-TRUS]'s._
 | `CONFIG`  | **MUST** hold environment-specific configuration outside the artefact, so the artefact promoted between environments is the one that was built     | [ISO 27001:2022].A.8.9                                                         |
 | `TRACE`   | **MUST** be able to trace any production release to the change, the artefact and the approval behind it — see [pol-TRUS]                           | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.2                                  |
 | `REVERT`  | **MUST** have a defined rollback or recovery path before a change goes to production                                                               | [ISO 27001:2022].A.8.32, [DORA metrics].recovery-time                          |
-| `ASCODE`  | **MUST** hold the pipeline itself in version control, as a reviewed artefact like any other                                                        | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PO.3                                   |
+| `ASCODE`  | **MUST** hold the pipeline itself in version control under [pol-EVER], as a reviewed artefact like any other                                       | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PO.3                                   |
 | `GATES`   | **MUST** carry the safeguards that change approval exists to provide inside the pipeline, rather than treating automation as a reason to drop them | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PO.4                                  |
 | `FLAGS`   | **MUST** treat a flag that changes production behaviour as a controlled, auditable change                                                          | [ISO 27001:2022].A.8.32                                                        |
 | `MANUAL`  | **MUST NOT** hand-edit production, whether code, configuration, infrastructure or schema, other than a flag change made under `FLAGS`              | [ISO 27001:2022].A.8.9, [ISO 27001:2022].A.8.32                                |
@@ -56,6 +56,7 @@ would extend an outage. It is recorded as a deviation under [pol-DEVI] at the ti
 into version control before the incident is closed — otherwise the fix becomes the next outage.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
+[pol-EVER]: ever-everything-in-version-control.md
 [pol-TRUS]: trus-trusted-components.md
 [DORA metrics]: /frameworks.md#dora-metrics
 [ISO 27001:2022]: /frameworks.md#iso27001-2022

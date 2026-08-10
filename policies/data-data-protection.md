@@ -50,7 +50,7 @@ analytical copies and test data.
 | `UNMASK`  | **MUST NOT** place unmasked production or personal data into an environment below production                                                       | [ISO 27001:2022].A.8.11, [UK GDPR].Art.25                          |
 | `SHARE`   | **MUST NOT** send personal data to a third party before a written processing agreement covers it                                                   | [ISO 27001:2022].A.5.14, [UK GDPR].Art.28                          |
 | `RETAIN`  | **MUST NOT** retain sensitive or personal data beyond its defined lifetime without a recorded deviation ([pol-DEVI])                               | [ISO 27001:2022].A.8.10, [UK GDPR].Art.5(1)(e)                     |
-| `LOGS`    | **MUST NOT** write unmasked sensitive personal data into logs or telemetry                                                                         | [ISO 27001:2022].A.8.12, [UK GDPR].Art.5(1)(f)                     |
+| `LOGS`    | **MUST NOT** write unmasked sensitive personal data into logs or telemetry — see [pol-SCRT]                                                        | [ISO 27001:2022].A.8.12, [UK GDPR].Art.5(1)(f)                     |
 | `AGILE`   | COULD change cryptographic algorithm without re-architecting what depends on it, rather than treating the choice as permanent                      |                                                                    |
 | `CLEAR`   | COULD protect sensitive data so that it is never processed in the clear                                                                            | [UK GDPR].Art.32(1)(a)                                             |
 
@@ -64,5 +64,6 @@ hold overrides deletion, and is recorded when it does.
 answer; whether we were entitled to hold it at all is not.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
+[pol-SCRT]: scrt-secrets-are-never-embedded.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
 [UK GDPR]: /frameworks.md#uk-gdpr
