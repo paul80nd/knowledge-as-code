@@ -16,6 +16,10 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a data document adds to those.
+
 **Frontmatter.** Delete this block once the fields above are filled in.
 
 * **`owned-by`** — A single service id. Shared ownership means nobody is answerable, so resolve it before writing the

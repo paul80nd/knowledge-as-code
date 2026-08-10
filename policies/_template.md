@@ -15,6 +15,10 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a policy adds to those.
+
 **Frontmatter.** Delete this block once the fields above are filled in.
 
 * **`id`** — `pol-` plus a four-character mnemonic for the policy's concept, upper-case here and lower-case in the
@@ -109,8 +113,3 @@ Delete this heading if there is nothing to say. An empty section is worse than a
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [{{FRAMEWORK}}]: /frameworks.md#{{framework}}
-
-_(Link definitions, at the very foot, sorted by label. References to another document **by its id** use **shortcut
-reference links** — write `[pol-DEVI]` in the prose and define it once here, so a rename is a one-line change. The label
-is also the display text, so it must be the id exactly as that document carries it. Where you want prose link text
-instead — "recorded as [NFRs](/nfrs)" — use an inline link and no definition.)_

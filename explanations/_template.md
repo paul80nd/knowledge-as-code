@@ -14,6 +14,10 @@ tags:
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what an explanation adds to those.
+
 **Frontmatter.** Delete this block once the fields above are filled in.
 
 * **`status`** — `draft` · `active` · `stale`. `stale` is an honest state — say so rather than let the page quietly rot.

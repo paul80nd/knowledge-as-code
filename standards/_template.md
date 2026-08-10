@@ -18,6 +18,10 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
 
+**Read with [contributing](/knowledge-as-code/contributing.md)** — how links and ids are written, and how a contribution
+is reviewed — and [authoring](/knowledge-as-code/authoring.md), where the prose rules follow the document's tier. What
+is below is only what a standard adds to those.
+
 **Frontmatter.** Delete this block once the fields above are filled in.
 
 * **`id`** — `std-` plus a four-digit number, never reused.
@@ -85,8 +89,3 @@ ADR owns the "why"; this standard owns the "what". Link, don't duplicate.
 - {{YYYY-MM-DD}} — Initial version.
 
 [adr-{{a}}]: {{a}}.md
-
-_(Link definitions, at the very foot, sorted by label. Internal references use **shortcut reference links** — write
-`[adr-0007]` in the prose and define it once here, so a rename is a one-line change. The label is also the display text,
-so it must be the canonical id; where you want prose link text instead, use an inline link. Filename slugs are at most
-30 characters.)_
