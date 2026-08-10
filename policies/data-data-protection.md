@@ -60,6 +60,9 @@ Where a defect genuinely cannot be reproduced without production data, a time-bo
 under a recorded deviation ([pol-DEVI]) that names who approved it, who can see it and when it will be destroyed. Legal
 hold overrides deletion, and is recorded when it does.
 
+`LAWFUL` admits none. Where personal data may be copied, and for how long, is a question a recorded deviation can
+answer; whether we were entitled to hold it at all is not.
+
 [pol-DEVI]: devi-deviations-are-recorded.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
 [UK GDPR]: /frameworks.md#uk-gdpr
