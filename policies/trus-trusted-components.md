@@ -22,12 +22,12 @@ tags: [ dependencies, provenance, supply-chain ]
 
 ## Purpose
 
-We know what our software is made of. Every third-party component we depend on is inventoried and screened, and every
-artefact we deploy traces back to the source change that produced it. Changing a released artefact means releasing a new
-one.
+We know what our software is made of. We list and screen every third-party component we depend on. Every artefact we
+deploy traces back to the source change that produced it. Changing a released artefact means releasing a new one.
 
-Most of what we ship, we did not write. A dependency we cannot enumerate is a vulnerability we cannot answer questions
-about when one is disclosed, and an artefact whose origin we cannot establish is one we are trusting on faith.
+Most of what we ship, we did not write. When a vulnerability is disclosed, the first question is whether we use the
+affected component. A dependency we cannot list is a question we cannot answer. An artefact whose origin we cannot
+establish is one we are trusting on faith.
 
 ## Scope
 
@@ -43,7 +43,7 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 
 | Id        | Clause                                                                                                                                       | Alignment                                     |
 |-----------|----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
-| `INVENT`  | **MUST** maintain a resolvable inventory of what each solution depends on                                                                    | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4 |
+| `INVENT`  | **MUST** maintain an inventory of what each solution depends on, naming each component and the version in use                                | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4 |
 | `SCREEN`  | **MUST** screen a component for known vulnerabilities before we adopt it                                                                     | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4 |
 | `LICENCE` | **MUST** screen a component's licence for terms we cannot accept before we adopt it                                                          | [ISO 27001:2022].A.5.32                       |
 | `MALWARE` | **MUST** scan the artefacts we build for malicious content before we release them                                                            | [ISO 27001:2022].A.8.7                        |
@@ -59,8 +59,8 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 
 ## Exceptions
 
-A component that can no longer be sourced or maintained may be retained under a recorded deviation ([pol-DEVI]) naming
-the risk owner, the compensating controls and the plan to replace it. "It still works" is not a plan.
+A component that can no longer be sourced or maintained may be retained under a recorded deviation ([pol-DEVI]). The
+deviation names the risk owner, the compensating controls and the plan to replace it. "It still works" is not a plan.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-PIPE]: pipe-pipeline-to-production.md

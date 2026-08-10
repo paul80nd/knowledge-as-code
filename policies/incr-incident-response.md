@@ -23,12 +23,12 @@ tags: [ incident-response, learning, postmortem ]
 
 ## Purpose
 
-When something goes wrong, there is a defined way to respond: someone is in charge, severity determines the response,
-what happened is recorded, and the organisation is measurably better afterwards for having been through it.
+When something goes wrong, we have a defined way to respond. Someone is in charge. Severity decides how large the
+response is. We record what happened, and we can show we are better for having been through it.
 
-The response is what turns an incident into either a recovery or a compounding failure, and the review afterwards is the
-only mechanism that converts an expensive hour into something we never pay for twice. Both need to be decided before the
-incident, because nobody designs a good process at three in the morning.
+Respond well and an incident ends in a recovery; respond badly and it becomes a second failure on top of the first.
+Review it afterwards and we do not pay for it twice. Both have to be settled before the incident, because nobody designs
+a good process at three in the morning.
 
 ## Scope
 
@@ -58,10 +58,10 @@ policy owns deciding to recover and doing it, held to the objectives [pol-RECV] 
 
 ## Exceptions
 
-Low-severity events are handled through routine work rather than the full process; the severity classification is what
-decides, and it is applied deliberately rather than by whoever wants the least paperwork. There is no exception to
-recording a significant incident, and none at all to recording a personal data breach — `EVIDENC` binds at every
-severity, because the assessment of whether a breach is notifiable is itself a thing we have to be able to show.
+Low-severity events are handled through routine work rather than the full process. The severity classification decides
+which, and we apply it deliberately rather than letting whoever wants the least paperwork set it. There is no exception
+to recording a significant incident, and none at all to recording a personal data breach. `EVIDENC` binds at every
+severity. Deciding that a breach was not notifiable is itself a decision we have to be able to show.
 
 [pol-DATA]: data-data-protection.md
 [pol-RECV]: recv-recoverability.md
