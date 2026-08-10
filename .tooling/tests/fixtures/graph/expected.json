@@ -3,7 +3,7 @@
     "validated": 6,
     "templates": 2,
     "skipped": 0,
-    "errors": 10,
+    "errors": 11,
     "warnings": 1
   },
   "findings": [
@@ -51,7 +51,14 @@
     },
     {
       "file": "adrs/0001-first.md",
-      "line": 31,
+      "line": 32,
+      "severity": "error",
+      "check": "fragment-resolves",
+      "message": "'#renamed-away' names no heading in '0002-second.md'."
+    },
+    {
+      "file": "adrs/0001-first.md",
+      "line": 33,
       "severity": "warning",
       "check": "bracket-literal",
       "message": "'[an unlinked placeholder]' looks like a reference but has no definition (or use an inline link)."

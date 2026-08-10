@@ -65,5 +65,5 @@ severity, because the assessment of whether a breach is notifiable is itself a t
 
 [pol-DATA]: data-data-protection.md
 [pol-RECV]: recv-recoverability.md
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
+[ISO 27001:2022]: /frameworks.md#iso-27001
 [UK GDPR]: /frameworks.md#uk-gdpr

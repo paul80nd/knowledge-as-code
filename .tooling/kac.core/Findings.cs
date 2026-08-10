@@ -60,6 +60,7 @@ public static class CheckCatalogue
         new("clause-id-unique", Sev.Error, "A clause id is unique within its document."),
         new("clause-modal", Sev.Error, "A clause opens with a modal, bold where it binds."),
         new("link-resolves", Sev.Error, "Every internal link resolves."),
+        new("fragment-resolves", Sev.Error, "A link's `#fragment` names a heading in the document it points at."),
         new("undefined-label", Sev.Error, "A shortcut reference has a link definition."),
         new("label-canonical", Sev.Error, "An id-shaped shortcut label is written as the canonical id."),
         new("related-matches-section", Sev.Error, "A mirrors-section field reconciles with its section."),

@@ -54,4 +54,4 @@ other exposure requires a recorded deviation under [pol-DEVI].
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-EVER]: ever-everything-in-version-control.md
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
+[ISO 27001:2022]: /frameworks.md#iso-27001

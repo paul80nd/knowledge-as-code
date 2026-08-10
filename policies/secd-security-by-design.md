@@ -52,7 +52,7 @@ before its security work is complete, that is a recorded deviation under
 [pol-DEVI], not a judgement call made in the moment.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
-[NIST SSDF 1.1]: /frameworks.md#nist-ssdf-1-1
-[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs-4
+[ISO 27001:2022]: /frameworks.md#iso-27001
+[NIST SSDF 1.1]: /frameworks.md#nist-ssdf
+[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs
 [UK GDPR]: /frameworks.md#uk-gdpr

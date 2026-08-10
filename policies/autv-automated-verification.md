@@ -57,5 +57,5 @@ time, not forgiveness.
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-VURM]: vurm-vulnerability-remediation.md
 [DORA metrics]: /frameworks.md#dora-metrics
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
-[NIST SSDF 1.1]: /frameworks.md#nist-ssdf-1-1
+[ISO 27001:2022]: /frameworks.md#iso-27001
+[NIST SSDF 1.1]: /frameworks.md#nist-ssdf

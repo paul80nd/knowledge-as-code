@@ -98,8 +98,9 @@ clause is unevidenceable and needs rewriting — "consider accessibility" fails,
 during design" passes. The question itself is not published; controls carry evidence.
 
 **Alignment.** Per clause, and only where a genuine mapping exists — an invented mapping is worse than none, and an
-empty cell is honest. Reference-style links resolving into `/frameworks`, with the framework version folded into the id
-(`iso27001-2022`, not `iso27001:2022` — `:` is corpus scope). Clause refs within a framework use `.`.
+empty cell is honest. Reference-style links resolving into `/frameworks`, where the anchor is the framework's name with
+no version and no punctuation (`iso-27001`); the label carries the version (`[ISO 27001:2022]`). Clause refs within a
+framework use `.`.
 
 **`_(aspirational)_`** marks a clause we hold as direction, with no standard expected beneath it. It earns its place on
 a **MUST** or a SHOULD. There it says what the modal cannot: we bind ourselves to this and have not yet built what would

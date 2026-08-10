@@ -73,5 +73,5 @@ exercise depends on the promotion gate holding.
 [pol-KNOW]: know-knowledge-is-written-down.md
 [pol-PIPE]: pipe-pipeline-to-production.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
-[NIST AI RMF 1.0]: /frameworks.md#nist-ai-rmf-1-0
+[ISO 27001:2022]: /frameworks.md#iso-27001
+[NIST AI RMF 1.0]: /frameworks.md#nist-ai-rmf

@@ -23,11 +23,11 @@ exist*, and only one of them survives a change of mind.
 
 ## Obliged
 
-### ISO/IEC 27001:2022 {#iso27001-2022}
+### ISO 27001
 
-**Registered.** We hold certification and are audited against it. Annex A is the control set our security, delivery and
-operations policies map to, and that mapping is the evidence trail an auditor follows from a control back to the
-commitment implementing it.
+**Registered** against ISO/IEC 27001:2022. We hold certification and are audited against it. Annex A is the control set
+our security, delivery and operations policies map to, and that mapping is the evidence trail an auditor follows from a
+control back to the commitment implementing it.
 
 Registration is why the mapping has to be honest rather than generous. A clause mapped to a control it does not really
 implement is worse than no mapping at all — the gap is now hidden behind a reference that looks like coverage. Where
@@ -53,10 +53,11 @@ as gaps rather than leaving in a crowd of controls that were never in scope.
 
 Referenced by: most policies under `category: security`, `delivery` and `operations`.
 
-### UK GDPR and the Data Protection Act 2018 {#uk-gdpr}
+### UK GDPR
 
-**Obliged in law**, wherever we process personal data. The EU GDPR applies in parallel for people in the EU and shares
-the article numbering, so a clause citing `Art.5(1)(e)` cites both; only the supervisory authority differs.
+**Obliged in law**, wherever we process personal data — the UK GDPR and the Data Protection Act 2018 together. The EU
+GDPR applies in parallel for people in the EU and shares the article numbering, so a clause citing `Art.5(1)(e)` cites
+both; only the supervisory authority differs.
 
 This is where [pol-DATA]'s obligations originate. ISO/IEC 27001:2022 covers the same ground in a single control —
 A.5.34, *privacy and protection of personal data* — but a control that says "comply with the applicable law" is a
@@ -66,14 +67,15 @@ decision to break the law rather than a risk to accept.
 
 Referenced by: [pol-DATA], [pol-DERV].
 
-### Public Sector Bodies Accessibility Regulations 2018 {#psbar-2018}
+### PSBAR 2018
 
-**Obliged in law**, in the markets we serve. Sets the accessibility duty on public sector websites and mobile
-applications, including the requirement to publish and maintain an accessibility statement.
+**Obliged in law**, in the markets we serve. The Public Sector Bodies Accessibility Regulations 2018 set the
+accessibility duty on public sector websites and mobile applications, including the requirement to publish and maintain
+an accessibility statement.
 
 Referenced by: [pol-A11Y].
 
-### EN 301 549 {#en-301-549}
+### EN 301 549
 
 **Obliged in law**, as the harmonised European standard the accessibility regulations point at. It is the technical
 expression of the duty [PSBAR 2018] creates, and it incorporates [WCAG 2.2 AA] by reference for web content.
@@ -82,11 +84,11 @@ Referenced by: [pol-A11Y].
 
 ## Self-obligated
 
-### WCAG 2.2 AA {#wcag-22-aa}
+### WCAG
 
-**Self-obligated**, under [pol-A11Y]. We target level AA because the policy says we do, not because a particular market
-has yet required that version of it. Where law obliges an older or narrower target, this is the higher bar and the one
-we hold.
+**Self-obligated** at WCAG 2.2 level AA, under [pol-A11Y]. We target level AA because the policy says we do, not because
+a particular market has yet required that version of it. Where law obliges an older or narrower target, this is the
+higher bar and the one we hold.
 
 Referenced by: [pol-A11Y].
 
@@ -96,7 +98,7 @@ Nothing here binds. A clause cites one of these to say where the thinking came f
 industry already knows rather than inventing it. Citing one is never an argument for keeping a clause we would otherwise
 drop.
 
-### DORA metrics {#dora-metrics}
+### DORA metrics
 
 **Inspiration.** The four delivery-performance measures from the DevOps Research and Assessment programme: deployment
 frequency, lead time for changes, change failure rate, and time to recover from a failed deployment.
@@ -110,7 +112,7 @@ nothing else. If that ever applies to us it goes under Obliged, under its full n
 
 Referenced by: [pol-PIPE], [pol-AUTV].
 
-### Azure Well-Architected Framework {#azure-waf}
+### Azure Well-Architected Framework
 
 **Inspiration.** Microsoft's five pillars for designing and operating a workload: Reliability, Security, Cost
 Optimization, Operational Excellence and Performance Efficiency. Vendor-published rather than standards-body, and
@@ -126,11 +128,12 @@ policy that borrows from established practice and one that appears to have been 
 
 Referenced by: [pol-COST], [pol-RECV], [pol-PERF], [pol-OBSV], [pol-DERV].
 
-### NIST SSDF 1.1 {#nist-ssdf-1-1}
+### NIST SSDF
 
-**Inspiration.** The Secure Software Development Framework, NIST SP 800-218 — around forty practices grouped as `PO`
-prepare the organisation, `PS` protect the software, `PW` produce well-secured software, and `RV` respond to
-vulnerabilities. Cited as `PO.5`, `PW.7`, `RV.2`. Free, and not certifiable: there is no registering against SSDF.
+**Inspiration.** The Secure Software Development Framework, NIST SP 800-218, at version 1.1 — around forty practices
+grouped as `PO` prepare the organisation, `PS` protect the software, `PW` produce well-secured software, and `RV`
+respond to vulnerabilities. Cited as `PO.5`, `PW.7`, `RV.2`. Free, and not certifiable: there is no registering against
+SSDF.
 
 The closest thing to a peer this corpus has. SSDF says what a practice must achieve and leaves the tooling to whoever
 adopts it, which puts it at the same altitude as a policy clause and is why it reaches seven policies rather than one.
@@ -143,11 +146,11 @@ consumers of coding agents, so it does not cover what [pol-AGNT] governs; the AI
 
 Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-PIPE], [pol-ENVS].
 
-### NIST AI RMF 1.0 {#nist-ai-rmf-1-0}
+### NIST AI RMF
 
-**Inspiration.** The AI Risk Management Framework, NIST AI 100-1 — four functions: `GOVERN` (accountability and
-oversight), `MAP` (context and provenance), `MEASURE` (evaluation and verification) and `MANAGE` (risk treatment). Cited
-at function level, for the same reason the Well-Architected pillars are.
+**Inspiration.** The AI Risk Management Framework, NIST AI 100-1, at version 1.0 — four functions: `GOVERN`
+(accountability and oversight), `MAP` (context and provenance), `MEASURE` (evaluation and verification) and `MANAGE`
+(risk treatment). Cited at function level, for the same reason the Well-Architected pillars are.
 
 [pol-AGNT] is the policy this exists for. It previously had only `A.8.30`, *outsourced development* — a control written
 for contracting out a system build, pressed into service for an agent proposing a change. It reads plausibly and is
@@ -161,27 +164,33 @@ makes someone check.
 
 Referenced by: [pol-AGNT].
 
-### OWASP ASVS 4.0 {#owasp-asvs-4}
+### OWASP ASVS
 
-**Inspiration.** The Open Worldwide Application Security Project's Application Security Verification Standard —
-application security requirements in chapters (`V1` architecture and threat modelling, `V2` authentication, `V4` access
-control, `V5` validation and encoding, `V13` APIs and web services), each at three levels of rigour.
+**Inspiration.** The Open Worldwide Application Security Project's Application Security Verification Standard, at
+version 4.0 — application security requirements in chapters (`V1` architecture and threat modelling, `V2`
+authentication, `V4` access control, `V5` validation and encoding, `V13` APIs and web services), each at three levels of
+rigour.
 
 The version is pinned deliberately: ASVS re-chapters between major versions, so `V13` means something specific only
-alongside the version it was written against. Moving to a later one is a re-mapping exercise, and doing it as an edit to
-this heading would silently repoint every citation.
+alongside the version it was written against. Moving to a later one is a re-mapping exercise, which is why the version
+is carried by the label every policy cites it under — `[OWASP ASVS 4.0]` — rather than left to be inferred. A bump has
+to be written out everywhere it is read.
 
 Referenced by: [pol-INTC], [pol-SECD], [pol-ACCS].
 
 ## Adding a framework
 
 1. Decide the posture first. If you cannot say which of the three it is, the corpus is not ready to reference it.
-2. Add a heading under that posture with an explicit anchor — `{#iso27001-2022}`, the version folded in with a hyphen
-   rather than a colon, since `:` scopes ids inside the corpus.
-3. Say what it is, what it obliges, and what changed if the posture is new. A framework we have just become obliged by
+2. Add a heading under that posture, named for the framework and nothing else, using **letters, digits, spaces and
+   hyphens only**. The heading is the anchor: renderers derive one from the heading text and disagree about everything
+   else, since Azure DevOps percent-encodes punctuation into the anchor and GitHub strips it. A name carrying `/`, `:`
+   or `.` therefore has two anchors, and a link that works in the wiki is broken in the editor.
+3. Keep the version out of the heading and put it in the opening line — `**Inspiration.** … at version 1.1`. The anchor
+   then outlives a version bump, and the label each policy cites it under carries the version instead.
+4. Say what it is, what it obliges, and what changed if the posture is new. A framework we have just become obliged by
    reads differently from one we have been certified against for years.
-4. In the citing policy, define the link at the foot — `[ISO 27001:2022]: /frameworks.md#iso27001-2022` — below the
-   corpus references, and cite it per clause rather than per document.
+5. In the citing policy, define the link at the foot — `[ISO 27001:2022]: /frameworks.md#iso-27001` — below the corpus
+   references, and cite it per clause rather than per document.
 
 A framework nothing references does not belong here. If we stop using one, say so and when, rather than deleting the
 entry: a policy clause written under its influence is easier to read with the history intact.
@@ -205,4 +214,4 @@ entry: a policy clause written under its influence is easier to read with the hi
 [pol-TRUS]: policies/trus-trusted-components.md
 [pol-VURM]: policies/vurm-vulnerability-remediation.md
 [PSBAR 2018]: #psbar-2018
-[WCAG 2.2 AA]: #wcag-22-aa
+[WCAG 2.2 AA]: #wcag

@@ -73,4 +73,4 @@ recorded is a decision the implementing process makes.
 [pol-INCR]: incr-incident-response.md
 [pol-KNOW]: know-knowledge-is-written-down.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: /frameworks.md#iso27001-2022
+[ISO 27001:2022]: /frameworks.md#iso-27001
