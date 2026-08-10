@@ -36,8 +36,9 @@ synthesised data would prove the mechanism rather than the restore. [pol-DATA] a
 production, rather than excepting it.
 
 _Boundary: [pol-ENVS] governs separation between environments and [pol-DATA] the handling of what they hold. The restore
-environment sits at production tier, so their rules about lower environments do not reach it — and [pol-ENVS]'s
-prohibition on testing against production binds the live system, not a restore of it._
+environment sits at production tier, so their rules about lower environments do not reach it. [pol-INCR] owns the
+response to an outage: this policy is what makes recovery possible, and deciding to invoke it and running it are
+[pol-INCR]'s._
 
 ## Clauses
 
@@ -65,5 +66,6 @@ deviation under [pol-DEVI], owned by whoever will answer for the downtime.
 [pol-DATA]: data-data-protection.md
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-ENVS]: envs-environment-separation.md
+[pol-INCR]: incr-incident-response.md
 [Azure WAF]: /frameworks.md#azure-waf
 [ISO 27001:2022]: /frameworks.md#iso27001-2022

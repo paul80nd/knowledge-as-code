@@ -42,7 +42,7 @@ temporary and on-demand environments.
 | `BASELIN` | **MUST** be able to state the configuration an environment is running, and reproduce it                                               | [ISO 27001:2022].A.8.9                        |
 | `PROMOTE` | **MUST** promote changes between environments through automation rather than by manual copy                                           | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
 | `MASK`    | **MUST** mask or synthesise the data used below production                                                                            | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
-| `DEBUG`   | **MUST NOT** develop, test or debug against production                                                                                | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
+| `DEBUG`   | **MUST NOT** develop, test or debug against the live production system                                                                | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
 | `REUSE`   | **MUST NOT** reuse a production secret in any environment below production — see [pol-SCRT]                                           | [ISO 27001:2022].A.8.3, [NIST SSDF 1.1].PO.5  |
 | `UNMASK`  | **MUST NOT** place unmasked production or personal data into a lower environment — see [pol-DATA]                                     | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
 | `EPHEM`   | SHOULD be able to create an environment on demand and discard it when the work is done                                                |                                               |

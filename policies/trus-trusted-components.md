@@ -31,7 +31,8 @@ about when one is disclosed, and an artefact whose origin we cannot establish is
 ## Scope
 
 All third-party and open-source components used by systems we build or operate, including transitive dependencies, base
-images and build-time tooling; the third-party and cloud services those systems depend on; and all artefacts we deploy.
+images and build-time tooling; the third-party and cloud services those systems depend on; and every artefact we deploy,
+whether we built it or obtained it from someone else.
 
 _Boundary: this policy governs what we admit into the estate and what we can prove about it. Finding, prioritising and
 closing the vulnerabilities in what we have admitted is [pol-VURM]'s — including whether a finding blocks a release. The
@@ -42,7 +43,8 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 | Id        | Clause                                                                                                                                       | Alignment                                                              |
 |-----------|----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
 | `INVENT`  | **MUST** maintain a resolvable inventory of what each solution depends on                                                                    | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4                          |
-| `SCREEN`  | **MUST** screen a component for known vulnerabilities and for licence terms we can accept before we adopt it                                 | [ISO 27001:2022].A.5.21, [ISO 27001:2022].A.5.32, [NIST SSDF 1.1].PW.4 |
+| `SCREEN`  | **MUST** screen a component for known vulnerabilities before we adopt it                                                                     | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4                          |
+| `LICENCE` | **MUST** screen a component's licence for terms we cannot accept before we adopt it                                                          | [ISO 27001:2022].A.5.32                                                |
 | `MALWARE` | **MUST** scan the artefacts we build for malicious content before we release them                                                            | [ISO 27001:2022].A.8.7                                                 |
 | `SOURCE`  | **MUST** obtain components from sources we have reason to trust                                                                              | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4                          |
 | `CLOUD`   | **MUST** establish which security responsibilities we hold and which the provider holds, before adopting a service                           | [ISO 27001:2022].A.5.23                                                |
@@ -50,7 +52,7 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 | `REPO`    | **MUST** hold build artefacts in a managed repository, versioned and retained so a release can be identified, rolled back and examined later | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3                          |
 | `TRACE`   | **MUST** be able to trace a deployed artefact to the change and the build that produced it — see [pol-PIPE]                                  | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PS.2                          |
 | `REVIEW`  | **MUST** review the components and services we depend on periodically, not only when we adopt them                                           | [ISO 27001:2022].A.5.22                                                |
-| `UNTRUST` | **MUST NOT** introduce a dependency from an untrusted or unverifiable source                                                                 | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4                          |
+| `UNTRUST` | **MUST NOT** introduce a component or artefact from an untrusted or unverifiable source                                                      | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4                          |
 | `MUTATE`  | **MUST NOT** alter a released artefact in place — a change produces a new version                                                            | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3                          |
 | `ATTEST`  | COULD refuse into production any artefact whose origin cannot be cryptographically proven                                                    | [NIST SSDF 1.1].PS.2                                                   |
 

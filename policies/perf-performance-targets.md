@@ -34,7 +34,7 @@ to having them.
 | Id        | Clause                                                                                                                                        | Alignment                                                  |
 |-----------|-----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------|
 | `TARGETS` | **MUST** state performance and capacity targets for systems where performance matters, in terms that can be measured                          | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
-| `VERIFY`  | **MUST** validate against those targets before significant releases, under conditions representative of real load rather than convenient load | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
+| `MEASURE` | **MUST** validate against those targets before significant releases, under conditions representative of real load rather than convenient load | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
 | `DEFECT`  | **MUST** treat a target we no longer meet as a defect, not as a new baseline                                                                  | [Azure WAF].performance-efficiency                         |
 | `PEAK`    | **MUST** understand behaviour at peak and over time, not only at the average case on a quiet afternoon                                        | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
 | `NOTEST`  | **MUST NOT** release a significant change to a performance-sensitive system with no performance validation at all                             | [Azure WAF].performance-efficiency                         |

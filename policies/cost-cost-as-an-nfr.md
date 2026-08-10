@@ -34,7 +34,7 @@ make them meaningful.
 |-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------|
 | `ATTRIB`  | **MUST** attribute the running cost of a system to the service and the team that owns it                                                                                  | [Azure WAF].cost-optimization |
 | `VISIBLE` | **MUST** give the people who own a system visibility of what it costs, at a cadence that lets them act                                                                    | [Azure WAF].cost-optimization |
-| `DESIGN`  | **MUST** treat cost as a design consideration, weighed alongside performance and resilience rather than after them                                                        | [Azure WAF].cost-optimization |
+| `WEIGHED` | **MUST** treat cost as a design consideration, weighed alongside performance and resilience rather than after them                                                        | [Azure WAF].cost-optimization |
 | `SIZING`  | **MUST** size resources against what they actually use, and revisit that as usage changes                                                                                 | [Azure WAF].cost-optimization |
 | `ANOMALY` | **MUST** notice unexpected cost quickly, and treat a sharp unexplained rise as a signal worth investigating — runaway spend is often a defect, and sometimes a compromise | [Azure WAF].cost-optimization |
 | `UNUSED`  | **MUST** remove what we no longer use, including in environments below production                                                                                         | [Azure WAF].cost-optimization |
