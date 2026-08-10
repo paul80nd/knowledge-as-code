@@ -43,9 +43,9 @@ make them meaningful.
 
 ## Exceptions
 
-Deliberate over-provisioning for resilience, performance headroom or a known event is not a breach of this policy; it is
-a cost decision, recorded as one and owned by whoever made it. Short-lived experiments are exempt from right-sizing but
-not from ownership or from being cleaned up.
+Deliberate over-provisioning for resilience, performance headroom or a known event departs from `SIZING`. It is a cost
+decision rather than an oversight, and it is recorded as a deviation under [pol-DEVI], owned by whoever made it.
+Short-lived experiments are exempt from right-sizing but not from ownership or from being cleaned up.
 
 ## Notes
 
@@ -54,4 +54,5 @@ expenditure — so this policy carries no Annex A reference rather than an inven
 What it does align with is the [Azure WAF] Cost Optimization pillar, which is the only kind of alignment this policy
 will ever have: nothing external obliges an organisation to manage its own spend.
 
+[pol-DEVI]: devi-deviations-are-recorded.md
 [Azure WAF]: /frameworks.md#azure-waf

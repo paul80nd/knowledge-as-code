@@ -43,10 +43,13 @@ interfaces, webhooks and any other integration surface others build against.
 
 ## Exceptions
 
-An interface with a single known consumer inside the team that owns it may evolve by agreement rather than by version,
-provided both sides genuinely know every consumer. That assumption is what usually turns out to be wrong, so it is worth
-checking before relying on it. A security fix may break a contract where leaving it intact would leave data exposed;
-consumers are told as soon as it is safe to tell them.
+An interface with a single consumer inside the team that owns it falls outside the Scope above rather than being
+excepted. It comes into scope the moment anyone beyond that team builds against it, and the belief that every consumer
+is known is the one that usually turns out to be wrong.
 
+A security fix may break a contract where leaving it intact would leave data exposed. That is a recorded deviation under
+[pol-DEVI], and consumers are told as soon as it is safe to tell them.
+
+[pol-DEVI]: devi-deviations-are-recorded.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
 [OWASP ASVS 4.0]: /frameworks.md#owasp-asvs-4
