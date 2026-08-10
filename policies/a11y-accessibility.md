@@ -15,17 +15,17 @@ tags: [ accessibility, inclusive-design, legal-obligation ]
 
 ## Purpose
 
-The software we put in front of users is usable by people with disabilities, meeting [WCAG 2.2 AA], because it was
-designed that way rather than corrected afterwards.
+The software we put in front of users works for people with disabilities, and meets [WCAG 2.2 AA]. It does that because
+we designed it that way, not because we corrected it afterwards.
 
-This is an obligation in law in the markets we serve, and it is also simply the difference between software that serves
-its users and software that serves most of them. Accessibility designed in costs a fraction of accessibility
-retrofitted, because the expensive failures are structural ones no late fix reaches.
+The law in the markets we serve requires this. It is also the difference between software that serves its users and
+software that serves most of them. Building it in costs a fraction of fixing it later, because the expensive failures
+are structural, and a late fix does not reach them.
 
 ## Scope
 
-All user-facing applications and interfaces we build. Internal tools are held to the same standard where anyone using
-them may need it — which is to say, always, since we do not know who that is.
+All user-facing applications and interfaces we build. Internal tools meet the same standard, because we do not know
+which of the people using them needs it.
 
 ## Clauses
 
@@ -41,15 +41,14 @@ them may need it — which is to say, always, since we do not know who that is.
 
 ## Exceptions
 
-Where a third-party component we cannot replace falls short of the target standard, the gap is recorded, an equivalent
-route to the same outcome is provided where one is possible, and the statement says so. Recording a gap honestly is
-acceptable; concealing it is not.
+A third-party component we cannot replace may fall short of the target standard. We record the gap, we provide an
+equivalent route to the same outcome where one exists, and the accessibility statement says so. Recording a gap honestly
+is acceptable; concealing it is not.
 
 ## Notes
 
-This policy's driver is legal obligation rather than an information-security framework. Framework alignment is recorded
-per clause where a genuine mapping exists and left absent where it does not; an invented mapping would be worse than
-none.
+What drives this policy is legal obligation rather than an information-security framework, so it carries no ISO/IEC
+27001 reference — see [Policies](/policies.md#why-we-use-them).
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [EN 301 549]: /frameworks.md#en-301-549
