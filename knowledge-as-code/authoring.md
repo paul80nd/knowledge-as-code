@@ -29,7 +29,7 @@ These bind every tier.
 **One idea per sentence.** A sentence carrying two obligations, or a claim and its justification, is two sentences.
 
 **Prefer the short word, and the same word.** Elegant variation is a defect here: two names for one thing reads as two
-things. Where the [glossary](/glossary) distinguishes near-synonyms, the distinction is load-bearing.
+things. Where the [glossary](/glossary.md) distinguishes near-synonyms, the distinction is load-bearing.
 
 **No filler.** Cut *it is important to note*, *in order to*, *it should be borne in mind*, *simply*, *of course*,
 *obviously*. Cut any sentence whose removal loses nothing. Cut any paragraph that only announces the next one.
@@ -48,6 +48,14 @@ never updated, and nobody can tell which one is current.
 
 **Write timelessly.** Describe what is, not what changed, and never as a correction of what was. A paragraph justifying
 a change reads as noise a month later. Change history belongs in the commit message and the changelog.
+
+**Do not count the corpus.** *There are ~190 MUST clauses*, *twenty-two policies*, *71 checks* — a measurement written
+into prose is stale on the next merge, and in a corpus that took this framework and grew its own content it was never
+true at all. Nothing recomputes it and no check will catch it. If a number is load-bearing, generate it or point at the
+command that reports it; if it is only conveying scale, the argument is usually stronger without it, because *the
+rulebook outgrows the budget* holds everywhere and *190 outgrows the budget* holds for one repository on one day. A
+count of a deliberately closed set — four categories, the tiers, an external framework's control count — is a different
+thing: it moves by decision rather than by accumulation, and it may be stated.
 
 ## By tier
 

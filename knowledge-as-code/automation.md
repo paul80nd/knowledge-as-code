@@ -128,9 +128,10 @@ It is the one generated artefact with a hard constraint on its contents:
 - **The glossary is included in full.** Highest value per byte in the corpus.
 - **A hard line budget, enforced by CI.**
 
-The budget is the constraint worth arguing about. There are ~190 **MUST** / **MUST NOT** rules across the standards, and
-they will not fit inside the size where an always-loaded context file stays effective. Past that size adherence
-degrades, so an oversized digest is worse than a short one: it dilutes everything in it.
+The budget is the constraint worth arguing about. A rulebook accumulates: every standard adopted adds **MUST** and
+**MUST NOT** clauses and none of them expire, while the size at which an always-loaded context file stays effective does
+not move. Any corpus that keeps writing standards eventually has more rules than fit. Past that size adherence degrades,
+so an oversized digest is worse than a short one: it dilutes everything in it.
 
 The budget is therefore a forcing function. When it is exceeded, the answer is not to raise it. It is to decide which
 rules are genuinely always-on and which belong in an on-demand skill. That conversation is the point.
@@ -157,10 +158,10 @@ artefacts, and the tool tests the prefix rather than the names — see [taxonomy
 
 **A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
 answers to nothing that needs a filename, so discovering it as a record would report a dozen faults that are the file
-doing its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that
-are not placeholders, the identity line, the required sections, and the links that point at real documents. A defect
-there is not one document's problem but every document's, and it is found by the next author rather than by whoever
-last edited the file.
+doing its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that are
+not placeholders, the identity line, the required sections, and the links that point at real documents. A defect there
+is not one document's problem but every document's, and it is found by the next author rather than by whoever last
+edited the file.
 
 ## Scheduled tasks
 

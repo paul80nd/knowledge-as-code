@@ -30,15 +30,15 @@ the shapes they go in.
 
 ## The seeds come in two kinds
 
-**Some are close to real.** The twenty-two [policies](policies.md) are the clearest case, and the part worth reading on
-their own terms. The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were
+**Some are close to real.** The [policies](policies.md) are the clearest case, and the part worth reading on their own
+terms. The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were
 worked out on them rather than assumed. They are principle-level and stack-agnostic by design, so they name no service
 and invent no domain — which is why they would survive adoption with only the specifics rewritten.
 
 **Others need somewhere to stand.** A service catalogue demonstrates nothing without an estate; an NFR has to apply to
 something; a postmortem needs an incident. Those use **one fictional organisation throughout — Example Libraries, a
-public-library consortium** — so the records form a graph instead of a list. Nine are in [`services/`](services.md)
-today, and the same estate carries the rest as they are seeded.
+public-library consortium** — so the records form a graph instead of a list. [`services/`](services.md) is where that
+estate stands up today, and the same one carries the rest as they are seeded.
 
 It cannot be mistaken for anyone real, by construction. Every hostname is under `example.com`, which
 [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered by anybody. The domain is
@@ -63,18 +63,18 @@ direction as well as the state, and marks the difference — anything unmarked e
 **Planned** or **Aspirational** marker. [Authoring](knowledge-as-code/authoring.md#what-is-not-built-yet) defines them;
 [Principles](knowledge-as-code/principles.md#where-this-is-going) is where most of the unbuilt work is described.
 
-| Built                                                                                                                                      | Planned                                         | Aspirational                                           |
-|--------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|--------------------------------------------------------|
-| `kac validate` — 71 checks: the schema itself, frontmatter, identity, structure, clauses, links, the graph, type setup, type pages         | Tiered corpora — governance above domain        | Published machine-readable corpus contracts            |
-| `kac index` — generates `<type>/_index.md` and the schema and checks tables in each type root page                                         | Explicit corpus dependencies in the lockfile    | Addressing records below document level across corpora |
-| `kac checks` — lists every check the validator implements                                                                                  | Validation against a published upstream version | Agents composing several corpora as one graph          |
-| Three test layers — unit, Reqnroll feature specs, golden fixtures                                                                          |                                                 |                                                        |
+| Built                                                                                                                   | Planned                                         | Aspirational                                           |
+|-------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|--------------------------------------------------------|
+| `kac validate` — the schema itself, frontmatter, identity, structure, clauses, links, the graph, type setup, type pages | Tiered corpora — governance above domain        | Published machine-readable corpus contracts            |
+| `kac index` — generates `<type>/_index.md` and the schema and checks tables in each type root page                      | Explicit corpus dependencies in the lockfile    | Addressing records below document level across corpora |
+| `kac checks` — lists every check the validator implements                                                               | Validation against a published upstream version | Agents composing several corpora as one graph          |
+| Three test layers — unit, Reqnroll feature specs, golden fixtures                                                       |                                                 |                                                        |
 
-**Proven types: ADRs, policies and services.** The other fourteen schemas are written but have never met real content.
-That is the honest limit — the schema will be wrong in ways only real content reveals. Policies alone forced the
-mnemonic id style, a category field, the identity line, the clause table and the seven checks that hold it. Services
-were proven elsewhere: a consumer repository built a full catalogue against this type and returned sixteen findings,
-tracked as issues here. Treat the other fourteen as drafts.
+**Proven types: ADRs, policies and services.** The remaining schemas are written but have never met real content. That
+is the honest limit — the schema will be wrong in ways only real content reveals. Policies alone forced the mnemonic id
+style, a category field, the identity line, the clause table and the checks that hold it. Services were proven
+elsewhere: a consumer repository built a full catalogue against this type and returned a run of findings, tracked as
+issues here. Treat the rest as drafts.
 
 ## Getting started
 
@@ -157,7 +157,7 @@ Stated openly, because they are load-bearing:
   sharp edges were filed against ADO.
 * **The corpus assumes Azure, which is a separate assumption from the one above.** The publishing target shaped the
   mechanism; the cloud shapes only the demonstration content — the Azure Well-Architected entry in
-  [`frameworks.md`](frameworks.md) and the pillars four policies cite from it. AWS and Google publish near-identical
+  [`frameworks.md`](frameworks.md) and the pillars the policies cite from it. AWS and Google publish near-identical
   pillars, so changing it is a relabelling rather than a re-mapping. No clause's wording names a provider, only the
   references beside it.
 * **Seventeen types is a lot.** It is the most likely thing to be wrong here, and the mitigation is a decision table

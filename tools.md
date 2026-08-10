@@ -16,8 +16,8 @@ board, at a size that fits three engineers.
 
 Two problems, one register. Nobody can currently answer *"are we allowed to use this?"* without asking, so the answer
 gets invented per project and the estate accretes four ways of doing the same thing. And nobody can answer *"what are we
-actually depending on?"* without reading seventeen manifests, which matters for licences, for security advisories and
-for the day a dependency is abandoned.
+actually depending on?"* without reading every manifest in the estate, which matters for licences, for security
+advisories and for the day a dependency is abandoned.
 
 Once the register exists, CI can compare it against the real manifests and report drift in both directions — packages in
 use that were never approved, and approved tools nothing uses any more.

@@ -72,8 +72,8 @@ Wherever it lives, four places have to agree, and three of them fail a meta-test
    them or `ChecksTableProblems` fails. `DocRows` is for per-document checks a type page should advertise; the
    undocumented set is for checks a reader of that page cannot act on.
 3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises.
-4. **Two documents** — the checks table in [`README.md`](README.md) beside this file, and the count in the root
-   `README.md`. Neither is generated, so neither will tell you it is now wrong.
+4. **The checks table** in [`README.md`](README.md) beside this file. It is hand-curated rather than generated, so it
+   will not tell you it is now wrong. Nothing else states a check count: `kac checks` reports it, so no prose has to.
 
 `DocRows` is deliberately *not* generated from the catalogue: rows are grouped and hand-worded, so several catalogue ids
 fold into one reader-facing row. An expression rule is the opposite — one id, reporting under its own name — so its row
