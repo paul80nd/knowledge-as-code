@@ -38,7 +38,7 @@ This policy is about the authority of what it produces._
 
 | Id        | Clause                                                                                                                                                                       | Alignment                                         |
 |-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
-| `SOURCE`  | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                    | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
+| `PROV`    | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                    | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
 | `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                        | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].GOVERN |
 | `GATES`   | **MUST** hold agent-produced changes to every gate that applies to our own — the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25, [NIST AI RMF 1.0].MANAGE |
 | `CONFID`  | **MUST** state the confidence an observation actually has, and let unverified ones expire rather than settle into the corpus by age                                          | [NIST AI RMF 1.0].MEASURE                         |
@@ -54,10 +54,11 @@ The acceptance gate has none. Agent-produced work does not become authoritative 
 recorded deviation makes it so — a corpus where some agent output is authoritative and some is not is one where a reader
 cannot tell which they are holding.
 
-What acceptance *looks like* scales with what is being accepted, and that is proportion rather than exception: a
-reviewer merging a change is acceptance; promoting an observation into a standard needs whoever owns that standard. Nor
-is an incident an exception — a fix an agent proposed during one is accepted by the person who applied it, and
-[pol-PIPE] governs reconciling it afterwards.
+What acceptance *looks like* scales with what is being accepted, and that is proportion rather than exception: taking an
+agent's change forward for review is acceptance; promoting an observation into a standard needs whoever owns that
+standard. Acceptance is authorship rather than approval, so [pol-ACCS] still requires a second person to approve the
+release. Nor is an incident an exception — a fix an agent proposed during one is accepted by the person who applied it,
+and [pol-PIPE] governs reconciling it afterwards.
 
 ## Notes
 

@@ -59,6 +59,11 @@ data", "production environments only". Two or three sentences at most.
 Where the boundary is arguable, say which way it falls and why, rather than leaving the reader to infer it. This is also
 where ownership belongs if it needs stating: who is bound is a scope question, not a purpose one.
 
+**The boundary line.** Where a sibling policy covers ground a reader might think is yours, close the section with a line
+in italics opening `_Boundary:_`. Name each policy they would otherwise reach for and say what it owns instead. Write it
+whenever two policies touch the same subject from different sides — the reader who needs it is the one who has arrived
+at the wrong document and does not yet know it. Optional, and worth the two lines wherever the question is real.
+
 ## Clauses
 
 One row per clause. Ordered **MUST**, **MUST NOT**, SHOULD, COULD — binding levels bold, non-binding plain, so the
@@ -76,6 +81,12 @@ them as `pol-{{MNEM}}.{{ID}}`, CI holds every citation to a clause that exists, 
 Prefer the shortest natural word; compress only when there isn't one. They are reconciliation keys, not prose, and every
 report that shows an id shows its clause text alongside — but a CI failure or a diff shows the id alone, so it should
 still be guessable.
+
+**Shared ids.** Where two policies bind the same obligation from their own side, they take the same clause id and each
+signposts the other — `— see [pol-OTHR]` closing the clause, and a boundary line above saying which side owns what. The
+shared id is what makes the binding visible from either document instead of looking like an accident. The rule cuts both
+ways: where two clauses mean different things, they take different ids however natural the same word felt, because one
+id carrying two meanings is what turns a diff into a false reading.
 
 **Writing a clause.** Start with the modal verb; the subject is always us, so don't restate it. One obligation per
 clause — if it needs an "and" joining two different actions, it is two clauses. Keep them implementation-agnostic: a

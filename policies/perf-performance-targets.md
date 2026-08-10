@@ -43,7 +43,9 @@ to having them.
 ## Exceptions
 
 Systems where performance is genuinely not a concern — low-volume internal tooling with no user waiting on it — need no
-targets. That judgement is recorded once rather than assumed repeatedly, because systems acquire users.
+targets. That judgement is a recorded deviation under [pol-DEVI] rather than an assumption repeated, and its review date
+is what catches the system that has since acquired users.
 
+[pol-DEVI]: devi-deviations-are-recorded.md
 [Azure WAF]: /frameworks.md#azure-waf
 [ISO 27001:2022]: /frameworks.md#iso27001-2022

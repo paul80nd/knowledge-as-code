@@ -21,15 +21,15 @@ Where we knowingly depart from one of these policies or the standards beneath th
 carries a named person accepting the risk, and has a date by which it is revisited. A shortcut taken knowing it will
 have to be revisited is the same decision without a rule to break, and is held the same way.
 
-Almost every policy here contains an escape hatch — "without a recorded exception". This policy is what makes those
+Almost every policy here contains an escape hatch — "without a recorded deviation". This policy is what makes those
 words mean something. An exception granted deliberately and reviewed is risk management; the same decision taken
 silently is erosion, and it is indistinguishable afterwards from nobody having known the rule at all.
 
 ## Scope
 
 Any knowing departure from a policy in this section or a standard that implements one, in any environment, and any
-shortcut taken knowing it will have to be revisited. Applies whether the departure is permanent, temporary or made
-under pressure during an incident.
+shortcut taken knowing it will have to be revisited. Applies whether the departure is permanent, temporary or made under
+pressure during an incident.
 
 ## Clauses
 
@@ -49,9 +49,17 @@ under pressure during an incident.
 
 None — an unrecorded exception to the exception policy is exactly the failure mode this exists to prevent.
 
-Two commitments admit no deviation at all, and no record makes them acceptable: embedding a secret ([pol-SCRT]), and
-processing personal data without a lawful basis ([pol-DATA]). Where personal data may be copied, and for how long, is a
-question this policy can answer; whether we were entitled to hold it at all is not.
+Six commitments in this section admit no deviation at all, and no record makes any of them acceptable:
+
+* [pol-SCRT] — embedding a secret, reusing a production secret outside production, or writing one to a log. Its four
+  operational obligations are deviable; those three prohibitions are not.
+* [pol-DATA] — handling personal data on a lawful basis. Its other obligations are deviable.
+* [pol-KNOW] — writing down what is needed to build, run and recover a system. The effort is proportionate to the
+  system; the commitment does not vary.
+* [pol-AGNT] — the acceptance gate. Agent-produced work carries no authority until a person accepts it, and convenience
+  does not make it authoritative.
+* [pol-INCR] — recording a significant incident, and recording a personal data breach whether or not it is notifiable.
+* This policy, for the reason above.
 
 ## Notes
 
@@ -60,6 +68,9 @@ No standard implements this directly; it is cited by the standards that carry an
 it will be defined as a [process](/processes) — this policy is deliberately mechanism-free, because where deviations are
 recorded is a decision the implementing process makes.
 
+[pol-AGNT]: agnt-agents-propose-people-decide.md
 [pol-DATA]: data-data-protection.md
+[pol-INCR]: incr-incident-response.md
+[pol-KNOW]: know-knowledge-is-written-down.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022

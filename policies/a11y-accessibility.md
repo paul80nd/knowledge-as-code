@@ -35,7 +35,7 @@ them may need it — which is to say, always, since we do not know who that is.
 | `VERIFY`  | **MUST** verify conformance against [WCAG 2.2 AA] before a change reaches users                                                        | [WCAG 2.2 AA], [EN 301 549].§9 |
 | `VENDOR`  | **MUST** assess third-party components against [WCAG 2.2 AA] before we adopt them, and record what falls short                         | [EN 301 549].§9                |
 | `PUBLISH` | **MUST** publish an accessibility statement where we are required to, and keep it truthful about the gaps that remain                  | [PSBAR 2018].reg.8             |
-| `REGRESS` | **MUST NOT** ship a change that knowingly makes accessibility worse without a recorded deviation ([pol-DEVI]) and a plan to correct it |                                |
+| `WORSE`   | **MUST NOT** ship a change that knowingly makes accessibility worse without a recorded deviation ([pol-DEVI]) and a plan to correct it |                                |
 | `ASSIST`  | SHOULD test with the assistive technologies people actually use, on the journeys that matter most                                      |                                |
 | `INCLUDE` | COULD involve disabled users in research and testing directly, rather than inferring their experience from a checklist                 |                                |
 

@@ -30,6 +30,15 @@ dependency with no failure path is an outage waiting for its trigger.
 All systems we operate and the data they hold, with depth set by how critical the system is. Covers both designed-in
 fault tolerance and the ability to recover after failure.
 
+Proving a restore needs the data the backup actually holds, so it runs in a controlled restore environment held at
+production tier — the same access controls, the same data handling, and not an environment below production. Masked or
+synthesised data would prove the mechanism rather than the restore. [pol-DATA] and [pol-ENVS] bind that environment as
+production, rather than excepting it.
+
+_Boundary: [pol-ENVS] governs separation between environments and [pol-DATA] the handling of what they hold. The restore
+environment sits at production tier, so their rules about lower environments do not reach it — and [pol-ENVS]'s
+prohibition on testing against production binds the live system, not a restore of it._
+
 ## Clauses
 
 | Id        | Clause                                                                                                             | Alignment                                                                 |
@@ -45,7 +54,7 @@ fault tolerance and the ability to recover after failure.
 | `RETRY`   | **MUST NOT** retry indefinitely, without limit or backoff, against a failing dependency                            | [Azure WAF].reliability                                                   |
 | `REDUND`  | SHOULD run critical services across more than one failure domain                                                   | [ISO 27001:2022].A.8.14                                                   |
 | `SHED`    | SHOULD shed or slow work deliberately under load beyond capacity, rather than failing unpredictably                | [Azure WAF].reliability                                                   |
-| `BREAK`   | COULD prove resilience by causing failure deliberately, rather than waiting to observe one                         | [Azure WAF].reliability                                                   |
+| `CHAOS`   | COULD prove resilience by causing failure deliberately, rather than waiting to observe one                         | [Azure WAF].reliability                                                   |
 
 ## Exceptions
 
@@ -53,6 +62,8 @@ Systems holding no state that cannot be regenerated from source need no data bac
 defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded
 deviation under [pol-DEVI], owned by whoever will answer for the downtime.
 
+[pol-DATA]: data-data-protection.md
 [pol-DEVI]: devi-deviations-are-recorded.md
+[pol-ENVS]: envs-environment-separation.md
 [Azure WAF]: /frameworks.md#azure-waf
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
