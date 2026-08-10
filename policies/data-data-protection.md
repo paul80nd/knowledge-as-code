@@ -35,6 +35,9 @@ the records that would actually cause harm. Classification is what makes proport
 All data held or processed by systems we build or operate, in every environment, including backups, exports, logs,
 analytical copies and test data.
 
+_Boundary: [pol-ENVS] governs the separation between the environments this data moves through, and [pol-SCRT] the
+secrets that protect it. This policy owns what the data itself requires, in whichever environment it sits._
+
 ## Clauses
 
 | Id        | Clause                                                                                                                                             | Alignment                                                          |
@@ -47,7 +50,7 @@ analytical copies and test data.
 | `LOCATE`  | **MUST** know where our sensitive and personal data lives                                                                                          | [ISO 27001:2022].A.5.9, [ISO 27001:2022].A.5.12, [UK GDPR].Art.30  |
 | `XBORDER` | **MUST** hold and process personal data only where a lawful transfer mechanism covers it                                                           | [ISO 27001:2022].A.5.14, [UK GDPR].Art.44                          |
 | `DELETE`  | **MUST** delete data when its defined retention period ends                                                                                        | [ISO 27001:2022].A.8.10, [UK GDPR].Art.17                          |
-| `UNMASK`  | **MUST NOT** place unmasked production or personal data into an environment below production                                                       | [ISO 27001:2022].A.8.11, [UK GDPR].Art.25                          |
+| `UNMASK`  | **MUST NOT** place unmasked production or personal data into an environment below production — see [pol-ENVS]                                      | [ISO 27001:2022].A.8.11, [UK GDPR].Art.25                          |
 | `SHARE`   | **MUST NOT** send personal data to a third party before a written processing agreement covers it                                                   | [ISO 27001:2022].A.5.14, [UK GDPR].Art.28                          |
 | `LINGER`  | **MUST NOT** retain sensitive or personal data beyond its defined lifetime without a recorded deviation ([pol-DEVI])                               | [ISO 27001:2022].A.8.10, [UK GDPR].Art.5(1)(e)                     |
 | `LOGS`    | **MUST NOT** write unmasked sensitive personal data into logs or telemetry — see [pol-SCRT]                                                        | [ISO 27001:2022].A.8.12, [UK GDPR].Art.5(1)(f)                     |
@@ -64,6 +67,7 @@ hold overrides deletion, and is recorded when it does.
 answer; whether we were entitled to hold it at all is not.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
+[pol-ENVS]: envs-environment-separation.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
 [UK GDPR]: /frameworks.md#uk-gdpr
