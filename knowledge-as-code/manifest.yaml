@@ -126,9 +126,11 @@ rules:
     note: >
       OPEN QUESTION — the one judgement call in this manifest. Templates are schema-shaped, so a
       template that drifts from the schema produces records that fail validation, which argues for
-      `synced`. But templates carry example values in the local domain, which argues for `forked`.
-      They are also excluded from validation today, so nothing catches the drift either way.
-      Provisionally `forked`; revisit once a second corpus exists and the cost is visible.
+      `synced`. Validation reports that drift against the template itself, so what `synced` would
+      save is the work of following a schema change rather than a failure nobody sees. Against it, a
+      template carries example values in the local domain — barely, now that the placeholder
+      convention has left one reference to a real record across all of them. Provisionally `forked`;
+      revisit once a second corpus exists and the cost is visible.
 
   - path: "CLAUDE.md"
     layer: forked
