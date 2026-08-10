@@ -22,8 +22,9 @@ The pipeline is the only route into production. Every production change — appl
 schema — arrives through an automated path that is traceable to its source change and its approval, and that can be
 reversed.
 
-A single controlled route is what makes production knowable. Every hand-applied change creates a system whose real state
-exists nowhere but the system itself, and the cost of that lands later, on whoever is trying to rebuild or recover it.
+If every change takes the same route, we can say what is running in production and how it got there. Every hand-applied
+change creates a system whose real state exists nowhere but the system itself, and the cost of that lands later, on
+whoever is trying to rebuild or recover it.
 
 ## Scope
 
