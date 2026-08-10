@@ -34,6 +34,9 @@ standing privilege that nobody needs is simply a breach waiting for an attacker 
 All systems, environments, source repositories, pipelines and data stores we build or operate, for people and for
 machine identities alike. Applies to routine and privileged access.
 
+_Boundary: [pol-AGNT] governs the authority of what an agent produces. Accepting agent work makes the accepting person
+its author; it does not make them its approver, so `DUTIES` still requires a second person to release it._
+
 ## Clauses
 
 | Id        | Clause                                                                                                                | Alignment                                       |
@@ -55,6 +58,7 @@ Break-glass access for incident response is permitted where an individual cannot
 attributable, its use is alerted and recorded, and its use is reviewed afterwards. Any other departure requires a
 recorded deviation under [pol-DEVI].
 
+[pol-AGNT]: agnt-agents-propose-people-decide.md
 [pol-DEVI]: devi-deviations-are-recorded.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
 [OWASP ASVS 4.0]: /frameworks.md#owasp-asvs-4

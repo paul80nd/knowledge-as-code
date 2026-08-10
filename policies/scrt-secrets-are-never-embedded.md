@@ -30,6 +30,9 @@ compromise recoverable.
 All secrets used by any system we build or operate, in every environment, including those used by pipelines, agents and
 machine identities.
 
+_Boundary: this policy owns the exception posture for every clause binding secrets, [pol-ENVS]'s included. Who may reach
+a secret is [pol-ACCS]'s, and what a secret protects is [pol-DATA]'s._
+
 ## Clauses
 
 | Id        | Clause                                                                                                                                       | Alignment               |
@@ -55,6 +58,8 @@ too.
 the ordinary case, and it is a recorded deviation under [pol-DEVI] naming who accepts the risk, what compensates for it
 and when it is revisited.
 
+[pol-ACCS]: accs-access-by-identity.md
+[pol-DATA]: data-data-protection.md
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-ENVS]: envs-environment-separation.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022

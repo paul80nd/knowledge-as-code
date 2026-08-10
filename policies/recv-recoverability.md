@@ -35,6 +35,10 @@ production tier — the same access controls, the same data handling, and not an
 synthesised data would prove the mechanism rather than the restore. [pol-DATA] and [pol-ENVS] bind that environment as
 production, rather than excepting it.
 
+_Boundary: [pol-ENVS] governs separation between environments and [pol-DATA] the handling of what they hold. The restore
+environment sits at production tier, so their rules about lower environments do not reach it — and [pol-ENVS]'s
+prohibition on testing against production binds the live system, not a restore of it._
+
 ## Clauses
 
 | Id        | Clause                                                                                                             | Alignment                                                                 |

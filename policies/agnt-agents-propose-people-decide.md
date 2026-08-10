@@ -54,10 +54,11 @@ The acceptance gate has none. Agent-produced work does not become authoritative 
 recorded deviation makes it so — a corpus where some agent output is authoritative and some is not is one where a reader
 cannot tell which they are holding.
 
-What acceptance *looks like* scales with what is being accepted, and that is proportion rather than exception: a
-reviewer merging a change is acceptance; promoting an observation into a standard needs whoever owns that standard. Nor
-is an incident an exception — a fix an agent proposed during one is accepted by the person who applied it, and
-[pol-PIPE] governs reconciling it afterwards.
+What acceptance *looks like* scales with what is being accepted, and that is proportion rather than exception: taking an
+agent's change forward for review is acceptance; promoting an observation into a standard needs whoever owns that
+standard. Acceptance is authorship rather than approval, so [pol-ACCS] still requires a second person to approve the
+release. Nor is an incident an exception — a fix an agent proposed during one is accepted by the person who applied it,
+and [pol-PIPE] governs reconciling it afterwards.
 
 ## Notes
 
