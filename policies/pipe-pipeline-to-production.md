@@ -44,9 +44,9 @@ made of, where it is held and whether its origin can be proved is [pol-TRUS]'s._
 | `REVERT`  | **MUST** have a defined rollback or recovery path before a change goes to production                                                               | [ISO 27001:2022].A.8.32, [DORA metrics].recovery-time                          |
 | `ASCODE`  | **MUST** hold the pipeline itself in version control, as a reviewed artefact like any other                                                        | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PO.3                                   |
 | `GATES`   | **MUST** carry the safeguards that change approval exists to provide inside the pipeline, rather than treating automation as a reason to drop them | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PO.4                                  |
-| `MANUAL`  | **MUST NOT** hand-edit production, whether code, configuration, infrastructure or schema                                                           | [ISO 27001:2022].A.8.9, [ISO 27001:2022].A.8.32                                |
+| `FLAGS`   | **MUST** treat a flag that changes production behaviour as a controlled, auditable change                                                          | [ISO 27001:2022].A.8.32                                                        |
+| `MANUAL`  | **MUST NOT** hand-edit production, whether code, configuration, infrastructure or schema, other than a flag change made under `FLAGS`              | [ISO 27001:2022].A.8.9, [ISO 27001:2022].A.8.32                                |
 | `LOCAL`   | **MUST NOT** deploy an artefact built outside the pipeline                                                                                         | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
-| `FLAGS`   | SHOULD treat a flag that changes production behaviour as a controlled, auditable change                                                            | [ISO 27001:2022].A.8.32                                                        |
 | `PROGDEL` | COULD release progressively, promoting or reversing on live signals rather than on a decision made beforehand                                      | [DORA metrics].recovery-time                                                   |
 
 ## Exceptions
