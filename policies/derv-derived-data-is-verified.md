@@ -39,7 +39,7 @@ is about its output. Protecting that data, rather than checking it, is [pol-DATA
 |-----------|--------------------------------------------------------------------------------------------------|------------------------------------------------|
 | `EXPECT`  | **MUST** state what a correct output looks like, in terms that can be checked automatically      | [Azure WAF].reliability                        |
 | `CHECK`   | **MUST** check a production output against those expectations before anything downstream uses it | [UK GDPR].Art.5(1)(d), [Azure WAF].reliability |
-| `RECORD`  | **MUST** keep, for each production run, a record of its inputs, its output and its check result  | [Azure WAF].operational-excellence             |
+| `RUNLOG`  | **MUST** keep, for each production run, a record of its inputs, its output and its check result  | [Azure WAF].operational-excellence             |
 | `FAILED`  | **MUST NOT** use a derived output whose checks did not pass                                      |                                                |
 | `LINEAGE` | SHOULD be able to trace a derived value back through the runs that produced it to its source     |                                                |
 
@@ -54,7 +54,7 @@ accepts a wrong answer reaching a decision. "The numbers have always looked abou
 ## Notes
 
 [ISO 27001:2022] treats integrity as protection against unauthorised alteration, and no Annex A control asks whether a
-computation was correct. `A.8.15` covers the logging behind `RECORD` and is claimed by [pol-OBSV]; citing it here as
+computation was correct. `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]; citing it here as
 well would overstate what this policy adds.
 
 [pol-AUTV]: autv-automated-verification.md

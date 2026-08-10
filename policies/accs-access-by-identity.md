@@ -45,7 +45,7 @@ its author; it does not make them its approver, so `DUTIES` still requires a sec
 | `LEAST`   | **MUST** grant the least privilege that allows the work to be done, and no more                                       | [ISO 27001:2022].A.5.15, [ISO 27001:2022].A.8.3 |
 | `DUTIES`  | **MUST** keep the ability to make a change separate from the ability to approve or release it                         | [ISO 27001:2022].A.5.3                          |
 | `AUTHN`   | **MUST** require strong authentication for access to our systems, our code and our data                               | [ISO 27001:2022].A.8.5, [OWASP ASVS 4.0].V2     |
-| `REVIEW`  | **MUST** review access rights periodically, and remove them promptly when a role changes or a person leaves           | [ISO 27001:2022].A.5.18                         |
+| `RECERT`  | **MUST** review access rights periodically, and remove them promptly when a role changes or a person leaves           | [ISO 27001:2022].A.5.18                         |
 | `ADMIN`   | **MUST** control and record the use of privileged administrative tooling                                              | [ISO 27001:2022].A.8.2, [ISO 27001:2022].A.8.18 |
 | `SHARED`  | **MUST NOT** operate shared or generic privileged accounts where individual attribution is lost — see [pol-EVER]      | [ISO 27001:2022].A.8.2                          |
 | `PERSIST` | **MUST NOT** leave standing production access in place beyond what the role genuinely requires                        | [ISO 27001:2022].A.8.2                          |
