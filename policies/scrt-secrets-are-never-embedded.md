@@ -45,8 +45,16 @@ machine identities.
 
 ## Exceptions
 
-None. This commitment does not bend for expediency, prototypes or "temporary" work — a leaked secret does not care why
-it was written down. A secret that has reached source control is treated as compromised and rotated, not deleted and
-forgotten.
+`EMBED`, `REUSE` and `LOGS` admit none, and no recorded deviation makes them acceptable — a leaked secret does not care
+why it was written down. They do not bend for expediency, prototypes or "temporary" work, and a secret that has reached
+source control is treated as compromised and rotated, not deleted and forgotten. [pol-ENVS] binds the same prohibition
+on production credentials below production through its own `CREDS` and `REUSE`; the posture stated here covers those
+too.
 
+`STORE`, `ROTATE`, `KEYS` and `SCAN` bend where they have to. A vendor-issued certificate only the vendor can rotate is
+the ordinary case, and it is a recorded deviation under [pol-DEVI] naming who accepts the risk, what compensates for it
+and when it is revisited.
+
+[pol-DEVI]: devi-deviations-are-recorded.md
+[pol-ENVS]: envs-environment-separation.md
 [ISO 27001:2022]: /frameworks.md#iso27001-2022
