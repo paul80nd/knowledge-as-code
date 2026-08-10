@@ -22,8 +22,8 @@ We build and check every change automatically before it joins the default branch
 check stops it. Quality checks are gates, not advisories.
 
 A check that warns but does not block is a check that will eventually be ignored. Keeping the default branch releasable
-at all times is worth more than any single gate in it. Gating every change is only affordable because machines do the
-checking. A check somebody has to remember to run is a check we do not have.
+is worth more than any single gate in it. Gating every change is only affordable because machines do the checking. A
+check somebody has to remember to run is a check we do not have.
 
 ## Scope
 
