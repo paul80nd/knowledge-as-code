@@ -17,18 +17,20 @@ tags: [ exceptions, governance, risk-acceptance ]
 
 ## Purpose
 
-Where we knowingly depart from one of these policies or the standards beneath them, the departure is written down,
-carries a named person accepting the risk, and has a date by which it is revisited. A shortcut taken knowing it will
-have to be revisited is the same decision without a rule to break, and is held the same way.
+Sometimes we knowingly break one of these policies, or a standard beneath it. When we do, we write down what we did,
+name the person accepting the risk, and set a date to look at it again.
 
-Almost every policy here contains an escape hatch — "without a recorded deviation". This policy is what makes those
-words mean something. An exception granted deliberately and reviewed is risk management; the same decision taken
-silently is erosion, and it is indistinguishable afterwards from nobody having known the rule at all.
+The same holds for a shortcut that breaks no rule: skipping the retry logic to ship on Friday, knowing someone has to
+add it. That is technical debt. Nothing here forbids it, but the debt is real, so we record it the same way.
+
+Almost every policy here leaves a way out, in the words "without a recorded deviation". Those words point here. A
+departure someone decided on, wrote down and gave a review date is risk management. The same departure taken quietly is
+erosion: a year later nobody can tell it from never having known the rule.
 
 ## Scope
 
-Any knowing departure from a policy in this section or a standard that implements one, in any environment, and any
-shortcut taken knowing it will have to be revisited. Applies whether the departure is permanent, temporary or made under
+Any knowing departure from a policy here, or from a standard that implements one, in any environment. Also any shortcut
+taken knowing someone will have to undo it. This binds whether the departure is permanent, temporary, or made under
 pressure during an incident.
 
 ## Clauses
@@ -47,9 +49,9 @@ pressure during an incident.
 
 ## Exceptions
 
-None — an unrecorded exception to the exception policy is exactly the failure mode this exists to prevent.
+None. Departing from this policy means not recording a deviation, which is the one thing it exists to stop.
 
-Six commitments in this section admit no deviation at all, and no record makes any of them acceptable:
+Some commitments here admit no deviation at all, and no record makes any of them acceptable:
 
 * [pol-SCRT] — embedding a secret, reusing a production secret outside production, or writing one to a log. Its four
   operational obligations are deviable; those three prohibitions are not.
@@ -59,14 +61,15 @@ Six commitments in this section admit no deviation at all, and no record makes a
 * [pol-AGNT] — the acceptance gate. Agent-produced work carries no authority until a person accepts it, and convenience
   does not make it authoritative.
 * [pol-INCR] — recording a significant incident, and recording a personal data breach whether or not it is notifiable.
-* This policy, for the reason above.
+* This policy, for the reason given above.
 
 ## Notes
 
-No standard implements this directly; it is cited by the standards that carry an exception clause, and by the
-[controls](/controls) that verify those clauses are honoured. Where the mechanism for recording a deviation is defined,
-it will be defined as a [process](/processes) — this policy is deliberately mechanism-free, because where deviations are
-recorded is a decision the implementing process makes.
+No standard implements this directly. Standards cite it wherever they carry an exception clause, and so do the
+[controls](/controls) that check those clauses are honoured.
+
+This policy says nothing about where a deviation is recorded. That belongs to the [process](/processes) that carries it,
+so that changing where we file deviations does not change what we committed to.
 
 [pol-AGNT]: agnt-agents-propose-people-decide.md
 [pol-DATA]: data-data-protection.md
