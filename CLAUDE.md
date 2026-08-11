@@ -6,15 +6,17 @@ Read `role:` in [`.mechanism.lock`](.mechanism.lock) before you change anything 
 decides whether those directories are yours.
 
 * **`role: source`** — the framework master. `.schema/` and `.tooling/` are yours to change, and what you write
-  propagates to every corpus that has taken a copy. Assume it will be read by someone who cannot see this conversation
-  and cannot ask you what you meant.
+  propagates to every corpus that has taken a copy. A source also holds the tests that prove the tool, and answers for
+  them. Assume all of it will be read by someone who cannot see this conversation and cannot ask you what you meant.
 * **`role: consumer`** — a corpus derived from the framework. `.schema/` and `.tooling/` arrive from upstream, and a
   local edit to either is **drift, not customisation** — `kac mechanism --check` reports it as a defect. Fix it upstream
-  and resync. The exception is adding or deleting a whole type file in `.schema/`, which is a corpus's own decision
-  about what it has adopted.
+  and run `kac mechanism --sync`. A consumer holds the tool and not the tests, because the tool reaches it already
+  proven.
 
 If a change seems to need editing the tool, it almost certainly does not: **adding a knowledge type is adding a YAML
-file to `.schema/`**.
+file to `.schema/`**. Which types a corpus carries is its own decision, and the lock records it. To adopt one, add its
+name to `types:` in [`.mechanism.lock`](.mechanism.lock) and run `kac mechanism --sync`, which brings down the schema
+and seeds the root page and template. To decline one, leave it out of `types:` rather than deleting files afterwards.
 
 ## Before you commit
 

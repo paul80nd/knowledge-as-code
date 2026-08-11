@@ -1,0 +1,2 @@
+# The type schema files this corpus held before the sync: it has adopted adrs and nothing else.
+adrs

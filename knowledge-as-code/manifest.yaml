@@ -7,12 +7,14 @@
 #
 # Read by `kac mechanism --check --against <path-or-url>`, which follows the same discipline as
 # `index --check`: it recomputes, compares, names what is stale, exits non-zero, and never writes.
+# Read again by `kac mechanism --sync`, the one command that acts on what it finds.
 #
 # This file is itself `synced` — every corpus holds the same copy. Per-corpus sync state (which
-# upstream version this corpus is on, and what it has deliberately diverged from) lives in
-# `.mechanism.lock` at the repo root, which is `local`.
+# upstream version this corpus is on, what it has adopted, and what it has deliberately diverged
+# from) lives in `.mechanism.lock` at the repo root, which is `local`. A layer says what a file is;
+# the lock says which of those files this corpus holds.
 
-version: 2
+version: 3
 # The mechanism's version, matched by `upstream.mechanism-version` in each corpus's `.mechanism.lock`.
 # It moves when the shared layer changes shape in a way a corpus has to act on — a renamed artefact, a
 # new file every corpus must carry — rather than on every edit to a synced file. A corpus whose lock
@@ -24,10 +26,22 @@ layers:
     rule: Byte-identical across every corpus running this framework.
     on-drift: error
     notes: >
-      The framework itself — validator, tests, schema, and the documents that describe how the
-      system works. Changes are made upstream and propagated; a local edit here is a defect, not a
+      The framework itself — validator, schema, and the documents that describe how the system
+      works. Changes are made upstream and propagated; a local edit here is a defect, not a
       customisation. Anything in this layer must be free of corpus-specific content, which is why
       the test fixtures are synthetic rather than copied records.
+
+  verification:
+    rule: Synced into a corpus that proves the mechanism; out of the model in one that only runs it.
+    on-drift: error where the corpus holds the layer, ignored where its role declines it
+    notes: >
+      The tests, the fixtures they read, and the guidance for changing the tool — the machinery that
+      shows the framework works. A corpus mirroring the framework carries that machinery and answers
+      for it. A corpus consuming the framework takes a tool already proven upstream, and a fixture
+      tree nobody there will run sits between a reader and the code they came for. `role:` in
+      `.mechanism.lock` decides which of the two a corpus is. `types:` decides which schema files it
+      holds, and the two work alike: each is the corpus stating what it took, and the check reads
+      both before it calls anything missing.
 
   forked:
     rule: Seeded from upstream once, then owned locally. Never reconciled.
@@ -71,15 +85,33 @@ rules:
   - { path: "**/.DS_Store",                layer: ignored }
   - { path: ".claude/settings.local.json", layer: ignored }
 
+  # ── verification: the mechanism proving itself ───────────────────────────────────────────────
+  # Ahead of `.tooling/**`, which would otherwise claim all of these as synced, and ahead of
+  # `generated`, because the fixtures hold golden _index.md files that are shared test data rather
+  # than generated output.
+  - path:
+      - ".tooling/kac-tests.cs"
+      - ".tooling/kac.tests/**"
+      - ".tooling/kac.features/**"
+      - ".tooling/tests/**"
+      - ".tooling/kac.slnx"
+      - ".tooling/CLAUDE.md"
+    layer: verification
+    note: >
+      The three test layers, the fixtures they read, the solution that ties the test projects to the
+      core, and the guidance for changing the tool. The guidance belongs here because proving the
+      tool and changing it are the same work, and a corpus that does neither needs neither. Fixtures
+      must stay synthetic wherever they are held: one built from a real record would ship that
+      corpus's content to every other.
+
   # ── synced: the mechanism's own trees ────────────────────────────────────────────────────────
-  # Ahead of `generated`, because the test fixtures contain golden _index.md files that are shared
-  # test data, not generated output. Everything under `.tooling/` is mechanism whatever it is called.
+  # Also ahead of `generated`, for the reason given above.
   - path: ".tooling/**"
     layer: synced
     note: >
-      Validator, generator, test runner and fixtures. Fixtures are part of the shared layer, so
-      they must stay synthetic — a fixture built from a real record would ship one corpus's content
-      to every other.
+      Validator, generator and the reference for what the tool does. Everything under `.tooling/` is
+      mechanism whatever it is called, and the rule above carves out only the part a corpus running
+      the tool has no use for.
 
   - path: ".schema/**"
     layer: synced
@@ -145,8 +177,9 @@ rules:
       the framework sets filled with content the corpus owns — which is why it is `forked` rather than
       `synced`. The rules digest lands *inside* it as a generated block rather than replacing it, so
       that standing guidance and generated rules share the one page an agent always reads. The nested
-      copies under `.tooling/` and `.schema/` describe the mechanism and are caught by those trees'
-      `synced` rules above, which is right: they change when the mechanism does.
+      copies under `.tooling/` and `.schema/` are guidance for changing the mechanism rather than for
+      working in the corpus, and are caught by the rules above — which is right: they change when the
+      mechanism does, and reach only the corpora that change it.
 
   - path: "frameworks.md"
     layer: forked

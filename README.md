@@ -171,24 +171,32 @@ the repository, and an Azure DevOps wiki published from this tree shows knowledg
 `knowledge-as-code/` is documentation, bar `manifest.yaml`, which stays because it is the authority on the shared and
 local split and both the README and `automation.md` cite it as such.
 
-Adding a knowledge type is adding a YAML file to `.schema/`, not editing the tool.
+Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.mechanism.lock`, not editing the tool.
 
 ## Keeping copies in step
 
 This framework is **copied, not depended on**. An organisation adopting it gets its own cut, free to diverge, with no
 runtime dependency on this repository and nothing to remove if they later want to go their own way.
 
-The cost of that is drift, which is what the manifest is for. Every file resolves to exactly one layer — `synced`,
-`forked`, `generated`, `local` or `ignored` — and each layer has a rule about what divergence means. `.mechanism.lock`
-records which version of the shared layer a corpus is on, any deviation it has deliberately accepted, and — in
-`types:` — which of the framework's types it has adopted.
+Copies drift, and the manifest is how we see it happening. Every file resolves to exactly one layer — `synced`,
+`verification`, `forked`, `generated`, `local` or `ignored` — and each layer has a rule about what divergence means.
+`.mechanism.lock` records which version of the shared layer a corpus is on, any deviation it has deliberately accepted,
+which of the framework's types it has adopted, and whether it is answerable for the mechanism or only runs it.
 
-Declaring the types is what stops a corpus being described by its own folders — a decision it made, rather than the
-shape it happens to have. `validate` holds the corpus to standing up what it declared, every generated list of types is
-written from the declaration, and a type file the corpus declined stops reading as one it is missing.
+A corpus that declares its types states a decision it made, rather than the shape it happens to have. `validate` then
+holds it to standing up everything it declared. Every generated list of types is written from that declaration. A schema
+file for a type the corpus left out stops reading as one it is missing.
 
-A lock that says nothing about types still works. Adoption is read off the folders instead, which is where every corpus
-starts.
+`role:` asks the same question about the mechanism rather than about the knowledge. A consumer holds the tool but not
+the tests and fixtures that prove it, because the tool arrived proven and a fixture tree nobody runs is noise between a
+reader and the code they came for.
+
+`kac mechanism --check` reports how far a copy has drifted. `kac mechanism --sync` brings the shared layers down from
+upstream, seeds the pages a newly adopted type needs, records what it took, and regenerates. Adopting a type is a line
+in the lock and a sync.
+
+A lock that says nothing still works: adoption is read off the folders instead, and everything shared is expected. Every
+corpus starts there.
 
 ## Opinions
 

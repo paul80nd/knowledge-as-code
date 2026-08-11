@@ -78,6 +78,10 @@ foreach (var scenario in scenarios)
     //   index-stale  run `index --check` against a hand-broken corpus, assert staleness is caught (exit 1)
     //   mechanism    run `mechanism --check` (corpus/ as local, reference/ as the source); assert
     //                the synced paths in expected-drift.txt are flagged (exit 1), or in step (exit 0)
+    //   sync         run `mechanism --sync` the same way, then assert the tree it left: the lines in
+    //                expected-sync.txt appear in the output, every path in expected-files.txt is present
+    //                afterwards (or absent, where the line is prefixed `!`), and every
+    //                `<path> :: <text>` in expected-content.txt holds (or does not, prefixed `!`)
     var modePath = Path.Combine(scenario, "mode");
     var mode = File.Exists(modePath) ? File.ReadAllText(modePath).Trim() : "validate";
 
@@ -96,6 +100,9 @@ foreach (var scenario in scenarios)
                 break;
             case "mechanism":
                 RunMechanismScenario(name, scenario, corpusDir);
+                break;
+            case "sync":
+                RunSyncScenario(name, scenario, corpusDir);
                 break;
             default:
                 failures.Add(name);
@@ -220,9 +227,10 @@ void RunIndexScenario(string name, string scenario, bool mustBeStale)
 
 // mechanism: assemble a local corpus (corpus/) and a reference source (reference/), each over the
 // real schema + manifest, then run `mechanism --check --against <reference>`. expected-drift.txt
-// lists the synced paths that must be named in the failure output; absent/empty means "expect in
-// step" (exit 0). Accepted divergences and forked differences are exercised by the fixture but must
-// not fail the run — the golden is the exit code plus the named synced paths, not free-form output.
+// lists what must appear in the failure output — the shared paths named, and any other line the
+// scenario pins; absent/empty means "expect in step" (exit 0). Accepted divergences, forked
+// differences and files the corpus's lock declines are exercised by the fixture but must not fail
+// the run — the golden is the exit code plus the named lines, not free-form output.
 void RunMechanismScenario(string name, string scenario, string corpusDir)
 {
     var referenceDir = Path.Combine(scenario, "reference");
@@ -290,6 +298,98 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
         TryDelete(localTemp);
         TryDelete(refTemp);
     }
+}
+
+// sync: the same two trees, run through `mechanism --sync`. It asserts the one thing the check cannot —
+// the tree afterwards. expected-files.txt carries most of that weight. Each line names a path that must
+// exist in the local corpus once the sync has run; a line prefixed `!` names one that must not. That is
+// how a fixture pins that a declined type was left upstream rather than quietly stood up.
+void RunSyncScenario(string name, string scenario, string corpusDir)
+{
+    var referenceDir = Path.Combine(scenario, "reference");
+    if (!Directory.Exists(referenceDir))
+    {
+        failures.Add(name);
+        Console.WriteLine($"ERROR  {name}  — no reference/ tree in the fixture");
+        return;
+    }
+
+    if (update)
+    {
+        Console.WriteLine($"UPDATE {name}  (sync scenario — nothing to regenerate)");
+        return;
+    }
+
+    var expected = ReadLines(Path.Combine(scenario, "expected-sync.txt"));
+    var expectedFiles = ReadLines(Path.Combine(scenario, "expected-files.txt"));
+    var localTemp = AssembleMechanismTemp(schemaDir, manifestFile, corpusDir, ReadKeptTypes(scenario));
+    var refTemp = AssembleMechanismTemp(schemaDir, manifestFile, referenceDir);
+    try
+    {
+        var (stdout, stderr, exit) = Run(localTemp, "dotnet", kac, "mechanism", "--sync", "--against", refTemp);
+        var output = stderr + stdout;
+
+        var problems = new List<string>();
+        if (exit != 0) problems.Add($"expected a clean sync (exit 0), got exit {exit}");
+        problems.AddRange(expected.Where(l => !output.Contains(l)).Select(l => $"not reported: {l}"));
+
+        foreach (var line in expectedFiles)
+        {
+            var absent = line.StartsWith('!');
+            var rel = absent ? line[1..].Trim() : line;
+            var exists = File.Exists(Path.Combine(localTemp, rel.Replace('/', Path.DirectorySeparatorChar)));
+            if (exists == absent) problems.Add(absent ? $"should not exist: {rel}" : $"missing afterwards: {rel}");
+        }
+
+        // `<path> :: <text>`, or `!<text>` for text that must be gone. These lines pin copy-then-
+        // regenerate: a shared page comes down whole, generated block and all, and is only right once
+        // rebuilt against the types the receiving corpus holds.
+        foreach (var line in ReadLines(Path.Combine(scenario, "expected-content.txt")))
+        {
+            var parts = line.Split("::", 2);
+            if (parts.Length != 2) { problems.Add($"malformed expected-content line: {line}"); continue; }
+
+            var rel = parts[0].Trim();
+            var wanted = parts[1].Trim();
+            var absent = wanted.StartsWith('!');
+            if (absent) wanted = wanted[1..].Trim();
+
+            var full = Path.Combine(localTemp, rel.Replace('/', Path.DirectorySeparatorChar));
+            if (!File.Exists(full)) { problems.Add($"missing afterwards: {rel}"); continue; }
+            if (File.ReadAllText(full).Contains(wanted) == absent)
+                problems.Add(absent ? $"{rel} still says '{wanted}'" : $"{rel} does not say '{wanted}'");
+        }
+
+        if (problems.Count == 0)
+        {
+            Console.WriteLine($"ok     {name}  (synced)");
+        }
+        else
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}");
+            foreach (var p in problems) Console.WriteLine($"         {p}");
+            foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"       | {l}");
+        }
+    }
+    finally
+    {
+        TryDelete(localTemp);
+        TryDelete(refTemp);
+    }
+}
+
+static List<string> ReadLines(string path) =>
+    File.Exists(path)
+        ? [.. File.ReadAllLines(path).Select(l => l.Trim()).Where(l => l.Length > 0 && !l.StartsWith('#'))]
+        : [];
+
+// corpus-schema.txt names the type schema files the local corpus holds *before* the sync, which is the
+// half-adopted state a consumer runs one from. Absent means the corpus holds them all.
+static HashSet<string>? ReadKeptTypes(string scenario)
+{
+    var path = Path.Combine(scenario, "corpus-schema.txt");
+    return File.Exists(path) ? new HashSet<string>(ReadLines(path), StringComparer.Ordinal) : null;
 }
 
 Console.WriteLine();
@@ -382,10 +482,19 @@ static string AssembleTemp(string schemaDir, string corpusDir)
 
 // Like AssembleTemp, but the mechanism check also reads the manifest, so copy the real one in too.
 // The subtree (a corpus/ or reference/) is laid over the top, and may add its own .mechanism.lock.
-static string AssembleMechanismTemp(string schemaDir, string manifestFile, string subtree)
+// `keptTypes`, where a fixture supplies one, names the per-type schema files this side holds. The real
+// `.schema/` cannot express a corpus holding fewer of them than upstream, and that is the state a sync
+// resolves. Underscore-prefixed files belong to no type, so every corpus holds them whatever it adopted.
+static string AssembleMechanismTemp(string schemaDir, string manifestFile, string subtree,
+    HashSet<string>? keptTypes = null)
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
     CopyTree(schemaDir, Path.Combine(temp, ".schema"));
+    if (keptTypes is not null)
+        foreach (var file in Directory.EnumerateFiles(Path.Combine(temp, ".schema"), "*.yaml"))
+            if (!Path.GetFileName(file).StartsWith('_') && !keptTypes.Contains(Path.GetFileNameWithoutExtension(file)))
+                File.Delete(file);
+
     // The schema lives at .schema/, so nothing else creates knowledge-as-code/ for us.
     Directory.CreateDirectory(Path.Combine(temp, "knowledge-as-code"));
     File.Copy(manifestFile, Path.Combine(temp, "knowledge-as-code", "manifest.yaml"));
