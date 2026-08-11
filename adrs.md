@@ -1,37 +1,37 @@
 # Architecture Decision Records (ADRs)
 
-This wiki maintains a log of architecturally significant decisions made for the platform.
+A log of the architecturally significant decisions we have made about the platform.
 
 **[→ ADRs index](adrs/_index.md)**
 
 ## What is an ADR?
 
-An Architecture Decision Record (ADR) is a short Markdown document capturing a single architecturally significant
-decision — the context that led to it, the decision itself, the alternatives weighed, and the consequences for everyone
-working downstream of it.
+An Architecture Decision Record (ADR) is a short Markdown document holding one architecturally significant decision. It
+carries the context that led to the decision, the decision itself, the alternatives we weighed, and the consequences for
+everyone working downstream of it.
 
-ADRs are **immutable once accepted**. When a decision later changes, a new ADR supersedes the old one rather than
-rewriting history. The wiki therefore preserves the reasoning behind both the current architecture *and* how we got
-there.
+ADRs are **immutable once accepted**. When a decision changes, we write a new ADR that supersedes the old one and leave
+the old one where it is. A reader then has the reasoning behind the architecture we run today and the reasoning behind
+the decisions it replaced.
 
 ## Why we use them
 
-The platform spans many repositories, and a significant share of architectural decisions affect more than one of them —
-message contracts, the service bus, auth, deployment ordering, infrastructure patterns. Without a durable record:
+The platform spans many repositories, and many of our architectural decisions land in more than one of them: message
+contracts, the service bus, auth, deployment ordering, infrastructure patterns. Without a durable record:
 
 * The same questions resurface every few months ("why aren't we using Event Grid?", "why is the migration runner
-  separate?") because there is no canonical answer.
-* New contributors can learn the current *shape* of the architecture from code but not the *reasoning* behind it.
-* Engineers working inside individual repos drift away from cross-cutting decisions, because the central rationale is
-  invisible from inside those repos.
+  separate?") because nobody can point at the answer.
+* A new contributor reads the code and learns the *shape* of the architecture, but not the *reasoning* behind it.
+* An engineer working inside one repository drifts away from the decisions that cross several, because nothing in that
+  repository carries the reasoning.
 
 ## Scope: central vs repo-local
 
-ADRs here cover decisions spanning **more than one** repository. Decisions entirely local to a single repository — a
-library choice, an internal naming convention, a refactor approach — belong in that repository, under `/docs/adrs/`.
+An ADR here covers a decision spanning **more than one** repository. A decision entirely local to a single repository —
+a library choice, an internal naming convention, a refactor approach — belongs in that repository, under `/docs/adrs/`.
 
-If a repo-local decision is later superseded by a central one, mark the local ADR superseded and reference the central
-ADR by ID.
+Where a central ADR later supersedes a repo-local one, set the local ADR to superseded and reference the central ADR by
+its id.
 
 ## Metadata
 
@@ -71,21 +71,22 @@ ADR by ID.
 ## Adding an ADR
 
 1. Copy [`_template.md`](adrs/_template.md) to `NNNN-kebab-case-title.md`, where `NNNN` is the next unused four-digit
-   number — check the [index](adrs/_index.md) for the highest in use.
-2. Fill in the frontmatter and sections. Keep it short — narrative paragraphs, not form-filling.
-3. Open a PR. Status starts `proposed`.
+   number. The [index](adrs/_index.md) shows the highest one in use.
+2. Fill in the frontmatter and the sections. Keep it short — narrative paragraphs, not form-filling.
+3. Open a PR. The status starts at `proposed`.
 4. On acceptance, set `status: accepted` and `decided-on`. The index rebuilds itself.
 
 **Conventions**
 
 * **Filename** — `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused. A withdrawn proposal retires its
   number.
-* **Immutability** — once accepted, content is not rewritten beyond status changes and typo fixes. To change a decision,
-  write a new ADR that supersedes the old one.
-* **Superseding** — set the old ADR's `status: superseded` and `superseded-by`, and the new one's
-  `supersedes`. CI checks both directions; a one-sided supersession fails the build.
-* **Prescriptive language** — ADRs establishing defaults or policies may use
-  [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. Decision-style ADRs use plain declarative prose.
+* **Immutability** — once an ADR is accepted, change nothing in it beyond its status and its typos. To change a
+  decision, write a new ADR that supersedes the old one.
+* **Superseding** — set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
+  supersession recorded on one side only fails the build.
+* **Prescriptive language** — an ADR that establishes a default or a policy may use
+  [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. An ADR that records a decision uses plain
+  declarative prose.
 * **Format** — a lean Nygard-style format with an explicit Alternatives Considered section.
   [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example.
 

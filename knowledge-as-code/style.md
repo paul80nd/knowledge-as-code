@@ -101,18 +101,27 @@ Someone really will reach for the repository name. The contrast does work. Now c
 
 Nobody thought it was tidy. That contrast costs the reader a beat spent discarding an alternative they never held.
 
-**State the point plainly first. Add a contrast only where a reader would otherwise get it wrong, and at most once per
-section.** Two contrasts in adjacent paragraphs means the second is decoration. Where you want emphasis and the reader
-is in no danger of the wrong reading, an ordinary declarative carries it: *The id names the deployable.*
+**State the point plainly first, and add a contrast only where a reader would otherwise get it wrong.** Where the reader
+is in no danger of the wrong reading, an ordinary declarative carries the emphasis: *The id names the deployable.*
+
+**Budget one contrast per reading unit.** A run of paragraphs is one unit. A bullet in a list of independent conventions
+is its own, because a reader scans such a list and stops at the one they need. Hold a seven-bullet section to a single
+contrast and the distinction ends up in the line that gets skipped instead of the line that gets read.
+
+Three cases sit outside the budget. A section whose work is to draw a boundary earns one contrast for each neighbour it
+separates from. A bold lead earns one, because that is the line a scanner reads. A phrase the corpus has standardised —
+*link rather than restate* names both a rule id and a schema field — is not yours to spend the budget on.
 
 **The same ceiling applies to any device you like.** One replacement applied everywhere becomes the next mannerism. Swap
 every contrast for the same conditional and you have moved the tic, not removed it. It now sits in the paragraph the
 contrast used to occupy. Three positions are worth watching:
 
-* **The section closer.** A short, quotable line at the end of every section is a rhythm, and a reader meets it as
-  style. Let most sections end on an ordinary sentence.
-* **The em dash.** It bolts a qualification onto a sentence you did not want to commit to. Roughly one per paragraph is
-  plenty. Past that, some of them are full stops.
+* **The section closer.** A short, quotable line closing every section is a rhythm, and a reader meets it as style
+  rather than substance. The individual line is usually fine and the pattern is the defect, so let most sections end on
+  an ordinary sentence. Where two in a row close on a quotable one, rewrite the weaker.
+* **The em dash.** It bolts a qualification onto a sentence you did not want to commit to. Roughly one device to a
+  paragraph is plenty, counting a parenthetical pair as one device. The dash opening a `**Term** — …` bullet is
+  structural and does not count.
 * **The opening reversal.** *Repositories and folders are storage. The relationships are the knowledge.* Once a page at
   most.
 
@@ -188,6 +197,9 @@ Someone will read this in a year, in a repository you have not seen, having miss
   point at the command that reports it.
 * **A closed set may be counted.** Four categories, the tiers, an external framework's control count. Each moves by
   decision rather than by accumulation.
+* **Do not count your own document.** *Check it is none of the four things above* is right today and wrong the moment a
+  fifth bullet lands. Something outside the prose has to close a set before you can count it, and a list one pull
+  request can extend does not.
 
 ## Warmth, concretely
 
@@ -286,8 +298,9 @@ Run these against what you actually wrote. This is a pass over the draft, not a 
 1. **Name the subject of each sentence.** Where the answer is "nothing", rewrite it.
 2. **Read the longest sentence aloud.** If you run out of breath, it is two sentences.
 3. **Mark the shape of each sentence in your longest section.** Four alike in a row means rewrite three.
-4. **Count the contrasts in each section.** More than one, and the rest are decoration.
-5. **Read the last sentence of each section.** Where more than one is a short quotable line, rewrite them.
+4. **Count the contrasts in each reading unit.** More than one, and the rest are decoration. Boundary sections, bold
+   leads and phrases the corpus has standardised are exempt.
+5. **Read the last sentence of each section.** Where two in a row close on a short quotable line, rewrite the weaker.
 6. **Find the line you are proudest of.** Ask what it points at outside itself. Cut it if the answer is nothing.
 7. **Read it as someone who was not in the conversation.** That reader is most of your audience.
 

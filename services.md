@@ -5,10 +5,10 @@ The catalogue of deployable components that make up the platform.
 **[→ Index](services/_index.md)**
 
 > **The records in `services/` are an example estate, not your estate.** They describe a fictional public-library
-> consortium, and they are here so this type has something to demonstrate — a dependency graph, a criticality
-> gradient, and the awkward cases the schema was shaped by. **Delete them before you add your first real service.**
-> The two conventions marked below as *derived from the estate* — the `platform` enum and the tag vocabulary — are
-> illustrations of a method, not defaults to inherit.
+> consortium, and they give this type something to demonstrate: a dependency graph, a criticality gradient, and the
+> awkward cases that shaped the schema. **Delete them before you add your first real service.** The two sections below
+> that derive a convention from that estate — the `platform` enum and the tag vocabulary — show a method for reaching
+> your own values.
 
 ## What is a service?
 
@@ -17,12 +17,12 @@ what the component is for, where its code lives, what it runs on, what it depend
 
 ## Why we use them
 
-This is the **anchor** the rest of the wiki points at. NFRs apply to services. Controls apply to services. Capabilities
-are implemented by services. FAQs affect services. None of those cross-references can be validated — or even written
-consistently — without one canonical list of what a service is and what it is called.
+Services are the **anchor** the rest of the wiki points at. An NFR, a control and an FAQ each name the service they
+concern, and a capability names the services that implement it. Nobody can check those references, or write them the
+same way twice, without one canonical list of what a service is and what it is called.
 
-It is also the answer to the question new contributors and AI sessions ask most often: *which repository does this thing
-live in, and what talks to it?*
+A new contributor or an AI session asks one question more than any other: *which repository does this thing live in, and
+what talks to it?* A service document answers it.
 
 ## Scope
 
@@ -37,8 +37,8 @@ A service document is **descriptive**: it mirrors what is actually deployed. It 
 * **Why it is shaped the way it is** — that is an [ADR](/adrs) or an [explanation](/explanations).
 * **What it promises** — availability and latency targets are NFRs.
 
-Third-party systems we depend on are integrations, not services — the line is whether we deploy it.
-Infrastructure-as-code is not a service either: it deploys services rather than being one.
+A third-party system we depend on is an integration; the line is whether we deploy it. Infrastructure-as-code stays out
+of the catalogue as well, because it deploys services.
 
 ## Metadata
 
@@ -72,38 +72,37 @@ Infrastructure-as-code is not a service either: it deploys services rather than 
 
 ## Adding a service
 
-1. Copy [`_template.md`](services/_template.md) to `<slug>.md`. Services use a **slug id**, not a number —
-   `svc-<name>` — because they have natural stable names.
+1. Copy [`_template.md`](services/_template.md) to `<slug>.md`. Services take a **slug id**, `svc-<name>`, because they
+   have natural stable names.
 2. Fill in the frontmatter. `depends-on` names other service ids; the [index](services/_index.md) is where to find them.
 3. Record environments and URLs, and the data stores it owns.
-4. Keep it current. This is a descriptive document — a service catalogue that disagrees with the estate is worse than
-   none, because everything else trusts it.
+4. Keep it current. Everything else in the wiki trusts this catalogue, so an entry that has drifted from the estate
+   sends the next reader to the wrong repository.
 
 **Conventions**
 
 * **The id names the deployable, not the repository.** A repository shipping three independently deployed apps yields
-  three ids, and the repository's name is in none of them — it is carried by `repo`, which is where to look for the
-  code. This is the single most common thing to get wrong, because a repository list is usually the easiest thing to
-  hand and it is the wrong list.
-* **`repo` takes one value, and sometimes one value is not enough.** It names the repository a change to *this service*
-  is made in. Where the content a service serves comes from elsewhere — an asset surface filled by two pipelines, or by
-  another service at runtime — the field cannot say so and the body must.
-* **Criticality** — `critical` means a customer-facing failure; `important` means degraded service; `supporting`
-  means internal impact only. It drives runbook and NFR prioritisation, so be honest rather than generous. A service
+  three ids, and none of them carries the repository's name. `repo` carries it, and that is where to look for the code.
+  Contributors get this wrong more often than anything else here. A repository list is the easiest list to reach for,
+  and it is the wrong one.
+* **`repo` takes one value, and sometimes one value is not enough.** It names the repository you work in when you change
+  *this service*. Where the content a service serves comes from elsewhere, the field cannot say so and the body must —
+  an asset surface can be filled by two pipelines, or by another service at runtime.
+* **Criticality** — `critical` means a customer-facing failure, `important` means degraded service, and `supporting`
+  means internal impact only. Criticality drives runbook and NFR prioritisation, so grade a service honestly. A service
   graded above one of its own dependencies is not automatically wrong, but it is worth defending in the record.
-* **Dependencies point downward only.** Record what this service calls. There is no generated reverse view today, so a
-  "depended on by" list is maintained by hand and should be assumed stale unless it says otherwise.
+* **Dependencies point downward only.** Record what this service calls. Nothing generates a reverse view today, so
+  anyone who writes a "depended on by" list maintains it by hand. Assume such a list is stale unless it says otherwise.
 * **`depends-on` records calls, not messages.** An edge means this service is configured to reach that one — a URL in
-  its application settings, or a route pointing at it. Publish/subscribe coupling over a message bus is deliberately
-  **not** an edge, because it is not a call and the publisher does not know its consumers. So the event-driven services
-  look unconnected in the graph while being anything but; their topics and queues are recorded in their own
-  `## Operational notes` instead.
+  its application settings, or a route pointing at it. Publish/subscribe coupling over a message bus is deliberately not
+  an edge, because it is not a call and the publisher does not know its consumers. The graph therefore shows an
+  event-driven service as unconnected when it is not, so its topics and queues sit in its own `## Operational notes`.
 * **A bare field means "nothing in this catalogue", not "nothing at all".** A service that calls a legacy system, a
-  third-party integration or anything else outside this catalogue carries a bare `depends-on`, because none of those is
-  an edge. The same holds for `data-stores`. The field records what is here.
-* **Sourcing.** Say where a claim came from — "taken from the application settings the infrastructure declares"
-  weighs differently from "the README says", and a reader deserves to know which they have. Park what is not established
-  as an open question rather than guessing; an unanswered question is cheap and a wrong answer is not.
+  third-party integration or anything else outside this catalogue carries a bare `depends-on`. None of those is an edge.
+  The same holds for `data-stores`. The field records what is here.
+* **Sourcing.** Say where a claim came from. "Taken from the application settings the infrastructure declares" weighs
+  differently from "the README says", and the reader needs to know which one they have. Where you cannot establish
+  something, write it down as an open question. Nobody reading later can tell your guess from a fact.
 
 ### Deriving the `platform` enum
 
@@ -112,17 +111,17 @@ say what deploys it: a service deployed by Terraform is not a Terraform service,
 this catalogue entirely.
 
 **Derive the values from the estate you have, then close the list.** Walk the deployables, group them by the runtime and
-framework a contributor would need to know, and let that be the enum. Do not inherit a list from elsewhere: a value
-nobody can use is offered to an author at exactly the moment they are least able to judge it, and a value the estate
-needs but the enum lacks sends someone to `mixed` who should not be there.
+framework a contributor would need to know, and let that be the enum. Do not inherit a list from elsewhere. A value no
+service can carry reaches an author at exactly the moment they are least able to judge it. A value the estate needs and
+the enum lacks sends someone to `mixed` who does not belong there.
 
-The values shipped in `.schema/services.yaml` are the example estate's, and the example estate exercises all but one of
-them — `terraform` is the value nothing can carry, kept here deliberately so that the case is visible.
+The values in `.schema/services.yaml` are the example estate's, and its services exercise all but one. Nothing can carry
+`terraform`, which stays in the list so that the case is visible.
 
 ### Deriving the tag vocabulary
 
-The **method** below is portable and worth keeping. The **seven-or-so tags** any given estate ends up with are not —
-replace them.
+The **method** below is portable and worth keeping. The handful of **tags** an estate ends up with is not: replace them
+with your own.
 
 One **exposure** tag, then zero or more **traits**:
 
@@ -135,19 +134,18 @@ One **exposure** tag, then zero or more **traits**:
 
 Three rules make the vocabulary small enough to be searchable, and they are the transferable part:
 
-1. **Exposure is about the inbound surface, not the firewall.** A staff portal on the public internet is `internal`,
-   because only staff are meant to reach it.
+1. **Exposure describes the inbound surface.** A staff portal on the public internet is `internal`, because only staff
+   are meant to reach it.
 2. **Never restate another field.** There is no `cdn` tag, because `platform: static` says it; no `monorepo` tag,
    because `repo` says it. A tag that duplicates a field can only ever disagree with it.
-3. **A tag used exactly once belongs in prose.** The example estate considered `email`, `payments` and
-   `legacy-facing` and dropped all three for this reason — each would have described a single service, which is not a
-   search term, it is a sentence. Those facts are recorded in the bodies of the services concerned. In a larger estate
-   the same three might each earn their place; that is a judgement to make against your own catalogue, not to inherit
-   from this one.
+3. **A tag used exactly once belongs in prose.** The example estate considered `email`, `payments` and `legacy-facing`
+   and dropped all three, because each described a single service and nobody searches for a term that matches one
+   document. The bodies of those services carry the facts instead. A larger estate might earn all three back, and that
+   is a judgement to make against your own catalogue.
 
-Nothing enforces the vocabulary. A `values:` list is read from an `enum` field and nowhere else, and one written on
-`tags` is rejected when the schema loads rather than quietly ignored — a vocabulary the validator cannot apply does not
-get to look like one it can. It is prose here for that reason.
+Nothing enforces this vocabulary. The schema reads a `values:` list from an `enum` field and nowhere else, and rejects
+one written on `tags` as it loads rather than ignoring it quietly. So the vocabulary stays in prose, where a reader can
+see that the validator has no part in it.
 
 ## What CI checks
 

@@ -22,6 +22,13 @@ findings. The rest is judgement, and the absence of a check is not permission.
 Where a rule here contradicts the schema, **the schema is right and this page is wrong**. It is executable and this is
 not. Report the contradiction; do not resolve it by editing records.
 
+## Type root pages
+
+A `<type>.md` is a **collection** page. It carries no frontmatter and no `tier`, so the table below never reaches it:
+the tier governs the records inside the folder, not the page describing them. Hold a collection page to
+[style](style.md) alone, and let each section take the shape its content asks for. Scope is descriptive, the numbered
+"Adding a…" steps are procedural, and Conventions sits close to normative without reaching for the keywords.
+
 ## By tier
 
 Style applies throughout, and each tier adds to it. Your document's frontmatter carries its `tier`, so read the row that
@@ -143,9 +150,17 @@ heading it governs, or leading the sentence it governs:
 
 > **Aspirational.** Direction of travel. Neither agreed nor scoped.
 
+> **Declared.** The schema carries the rule and nothing runs it. Generated checks tables render these under *Declared,
+> not yet enforced*, so the marker names a state the tooling already reports.
+
 A marker governs everything up to the next heading at the same or a higher level. Two rules keep it honest: a marked
 section states what would have to be true for the marker to be removed, and **Planned** is not used without an issue to
-point at. A marker that never comes off is a wish wearing a plan's clothes.
+point at.
+
+A declared rule is the one case where prose may name behaviour that does not happen. Write it in the present tense
+about the declaration rather than the behaviour — *`feature-file-orphans` is declared and does not run*, never *CI
+checks the paths*. Prose claiming an unbuilt check as working is a correctness defect, and it is the most common one in
+this corpus. A marker that never comes off is a wish wearing a plan's clothes.
 
 ## Where these rules come from
 
