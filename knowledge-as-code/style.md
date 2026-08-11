@@ -1,7 +1,7 @@
 # Style
 
-How we write — every document, every comment, every clause. [Authoring](authoring.md) covers how a corpus record is
-structured and what each tier requires. This page covers the words.
+How we write — every document, every comment, every clause. [Authoring](authoring.md) adds what a record's tier asks on
+top of this page.
 
 **One idea sits underneath all of it.** Clear writing and warm writing are the same discipline. We make writing hard to
 read when we perform — when we reach for an abstraction, an epigram, or a passive that hides who acts. That puts
@@ -17,6 +17,52 @@ review comments. Where a rule applies to only one of those, it says so.
 
 The rules bind, and the judgement stays yours. A rule that makes a particular sentence worse is a rule to break, and to
 say why in review.
+
+## Anchor what you write to something real
+
+An abstraction works when it sits beside something concrete. It fails when it floats.
+
+**A line anchored to a physical thing lands on first reading. A line built out of abstractions does not.**
+
+> A backup that has never been restored is not a backup.
+
+> Undocumented knowledge is a single point of failure that no amount of redundancy elsewhere compensates for.
+
+The first names something you can point at. The second stacks four abstractions and applies a hardware metaphor to a
+person. Both are reaching for something true. Only one arrives.
+
+The same move works on any claim. **Replace a category with the things inside it.**
+
+> Work produced by an AI agent — code, configuration, documentation, or an observation about how something behaves —
+> enters our estate as a proposal.
+
+> An agent can write code, change configuration, draft documentation, or report something it noticed about a system.
+
+The second names things a reader can picture. We cut nothing and simplified nothing. We swapped a class name for its
+members.
+
+### The test for a memorable line
+
+The backup example above takes a shape we reach for often: *an X that fails some condition is not an X*. The shape is
+fine. Most instances of it are not, and the two look identical on the page.
+
+**Ask what the line points at outside itself.** "A backup that has never been restored" points at an operation you can
+go and run this afternoon, and the reader finishes the sentence knowing what to do. Compare:
+
+> A taxonomy that can only grow by changing code is a taxonomy that stops growing.
+
+That points at nothing but its own premise. It restates "hard to extend" as "will not be extended" and adds a verdict.
+The reader learns our opinion of the situation and nothing about the situation.
+
+Three failing shapes, each of which reads as insight:
+
+* **The restatement.** *A discovery that takes ten minutes to write is a discovery nobody writes.*
+* **The bare reversal.** *Documentation is a view over the graph. The graph is the thing.*
+* **The verdict.** *A check that warns but does not block will eventually be ignored.* This may well be true. It is a
+  claim about the future dressed as a definition.
+
+**One such line per document, and only where it survives the test.** This bites hardest on the line you are pleased
+with. The difference is easier to see the morning after.
 
 ## Name who does what
 
@@ -35,47 +81,51 @@ Same claim, and the reader has it on the first pass.
 **Write subject, verb, object, with a person or a system as the subject.** Use the active voice. Passive is fine where
 the actor is genuinely unknown or genuinely irrelevant, and nowhere else.
 
-**That cleft is one shape of the defect, not the defect.** Any abstract noun in the subject slot does the same work —
-*acceptance*, *authority*, *provenance*, *proportion*. You can cut every cleft and leave the defect in place. A document
-can have every sentence under 25 words and still read cryptically.
+That cleft is one shape of the defect. Any abstract noun in the subject slot does the same work — *acceptance*,
+*authority*, *provenance*, *proportion*. You can cut every cleft and leave the defect in place. A document can have
+every sentence under 25 words and still read cryptically.
 
-Test each sentence by naming its subject. Where the subject is a noun made from a verb rather than a person, a system or
-a document, rewrite until it is one.
+Test each sentence by naming its subject. Where the subject is a noun made from a verb, rewrite until it is a person, a
+system or a document.
 
-**Vary the shape, not only the vocabulary.** One replacement applied everywhere becomes the next mannerism. Swap every
-cleft for the same conditional and you have moved the tic, not removed it. It now sits in the paragraph the cleft used
-to occupy. A reader who meets the same beat in the same position a dozen times reads style rather than substance,
-whichever beat it is.
+Plain-English guidance allows one more use of the passive: it softens an unwelcome sentence by removing the person from
+it. That works in a letter to a customer, and **we decline it here.** An obligation that softens is one a reader cannot
+pin down, and the kind thing in a rule is to say who is bound.
 
-Plain-English guidance allows one more use: the passive softens an unwelcome sentence by removing the person from it.
-That works in a letter to a customer, and **we decline it here.** An obligation that softens is one a reader cannot pin
-down, and the kind thing in a rule is to say who is bound.
+## Vary the shape across a section
 
-## Anchor what you write to something real
+Every rule above works on one sentence. This one works on a page, and our own writing breaks it more than any other.
 
-An abstraction works when it sits beside something concrete. It fails when it floats.
+A sentence can obey every rule here and still be the fortieth in the same shape. Nothing inside a single sentence tells
+you that. The reader feels it as monotony, stops hearing the argument, and starts hearing the writer.
 
-**A line anchored to a physical thing lands on first reading. A line built out of abstractions does not.**
+**Definition by contrast is our house tic.** *X, not Y.* *X rather than Y.* *Not X. Y.* It is a good device, and it
+earns its place where a reader would otherwise land on the wrong reading:
 
-> A backup that has never been restored is not a backup.
+> The id names the deployable, not the repository.
 
-> Undocumented knowledge is a single point of failure that no amount of redundancy elsewhere compensates for.
+Someone really will reach for the repository name. The contrast does work. Now compare:
 
-The first names something you can point at. The second stacks four abstractions and applies a hardware metaphor to a
-person. Both are reaching for something true. Only one arrives.
+> The split is load-bearing rather than tidy.
 
-This bites hardest on the line you are pleased with. Keep it where it names something real, and cut it where it does
-not. The difference is easier to see the morning after.
+Nobody thought it was tidy. That contrast costs the reader a beat spent discarding an alternative they never held.
 
-The same move works on any claim, not only a memorable one. **Replace a category with the things inside it.**
+**State the point plainly first. Add a contrast only where a reader would otherwise get it wrong, and at most once per
+section.** Two contrasts in adjacent paragraphs means the second is decoration. Where you want emphasis and the reader
+is in no danger of the wrong reading, an ordinary declarative carries it: *The id names the deployable.*
 
-> Work produced by an AI agent — code, configuration, documentation, or an observation about how something behaves —
-> enters our estate as a proposal.
+**The same ceiling applies to any device you like.** One replacement applied everywhere becomes the next mannerism. Swap
+every contrast for the same conditional and you have moved the tic, not removed it. It now sits in the paragraph the
+contrast used to occupy. Three positions are worth watching:
 
-> An agent can write code, change configuration, draft documentation, or report something it noticed about a system.
+* **The section closer.** A short, quotable line at the end of every section is a rhythm, and a reader meets it as
+  style. Let most sections end on an ordinary sentence.
+* **The em dash.** It bolts a qualification onto a sentence you did not want to commit to. Roughly one per paragraph is
+  plenty. Past that, some of them are full stops.
+* **The opening reversal.** *Repositories and folders are storage. The relationships are the knowledge.* Once a page at
+  most.
 
-The second names things a reader can picture. We cut nothing and simplified nothing. We swapped a class name for its
-members.
+Read a finished section and mark the shape of each sentence. Where four in a row share one, rewrite three.
 
 ## Say it once, and say it short
 
@@ -84,8 +134,7 @@ members.
   length is a symptom. A 25-word sentence with a person as its subject reads on one pass; a 14-word sentence built on
   two abstractions does not. **When a sentence is hard, fix the subject before you shorten it.** Shorten one whose
   subject is an abstraction and you get a short sentence that is still hard.
-* **Six sentences to a paragraph.** The same kind of ceiling as the sentence one above. Past it, a paragraph is usually
-  carrying a second point that deserves its own.
+* **Six sentences to a paragraph.** Past it, a paragraph is usually carrying a second point that deserves its own.
 * **Prefer the short word, and the same word.** Two names for one thing read as two things. Elegant variation is a
   defect here. Where the glossary distinguishes near-synonyms, the distinction is load-bearing.
 * **Cut filler.** *Simply*, *obviously*, *of course*, *it is important to note*, *in order to*. Delete the word and read
@@ -117,8 +166,6 @@ A reader should be able to move forwards. Each of these sends them back.
   reader already holds the distinction and fails where they do not. Where they might not, state the mechanism first: *a
   person who accepts agent work becomes its author, not its approver.* The frame survives once there is a person inside
   it.
-
-We keep definition by contrast — it is house voice. Use it as a device rather than as a reflex.
 
 ## Use the precise word, and explain it once
 
@@ -209,6 +256,37 @@ quoted back in an audit. They carry the whole weight of precision, and they shou
 
 Standards and checks catch us when we fall. They are not why we do this.
 
+## A worked section
+
+The rules above land on sentences. This is what they look like held together over a page. The subject is a fictional
+incident record; read it for shape.
+
+> ## Why we use them
+>
+> An incident record is the account of one outage: what customers saw, when we noticed, what we changed, and when it
+> ended. One record per incident, written while people still remember it.
+>
+> Two audiences read these. Someone on call next month wants to know whether this has happened before and what worked.
+> Someone planning next quarter's work wants to know which parts of the estate keep producing outages. Both questions
+> need the same facts, so we keep one account and not two.
+>
+> ## Scope
+>
+> An incident is any unplanned loss of service a customer could notice. A failed deployment nobody outside the team saw
+> is not one; record it as a discovery.
+>
+> The record covers the outage. It does not cover the fix. Where the outage produced work, that work is a normal change
+> and goes through the normal route, and the record links to it.
+
+Four things are happening, and none of them is a rule you can apply to a single sentence.
+
+1. **The first sentence names the thing and its parts.** No preamble, and no definition of "incident" in the abstract.
+2. **The sentence shapes vary.** A definition, then two parallel sentences about readers, then a conditional. The one
+   contrast in the passage — *not two* — arrives after the reason for it.
+3. **The scope section says what is excluded and where it goes instead.** A boundary with nowhere to send the reader
+   gets ignored.
+4. **Neither section closes on an epigram.** The last sentence of each states a fact.
+
 ## By medium
 
 **Corpus records.** [Authoring](authoring.md) holds the rules that follow a document's tier. Everything on this page
@@ -228,11 +306,14 @@ is right and lands badly has cost more than it bought.
 
 ## Before you publish
 
-Four checks, in the order that catches most:
+Run these against what you actually wrote. This is a pass over the draft, not a list to keep in mind while writing.
 
-1. **Who does what, in each sentence?** If the answer is "nothing", rewrite it.
+1. **Name the subject of each sentence.** Where the answer is "nothing", rewrite it.
 2. **Read the longest sentence aloud.** If you run out of breath, it is two sentences.
-3. **Find the line you are proudest of.** Ask whether it names something real. Cut it if it does not.
-4. **Read it as someone who was not in the conversation.** That reader is most of your audience.
+3. **Mark the shape of each sentence in your longest section.** Four alike in a row means rewrite three.
+4. **Count the contrasts in each section.** More than one, and the rest are decoration.
+5. **Read the last sentence of each section.** Where more than one is a short quotable line, rewrite them.
+6. **Find the line you are proudest of.** Ask what it points at outside itself. Cut it if the answer is nothing.
+7. **Read it as someone who was not in the conversation.** That reader is most of your audience.
 
 Our debts are recorded in [lineage](lineage.md#language).

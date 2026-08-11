@@ -6,7 +6,23 @@ same regardless of who is holding the keyboard.
 Four pages carry what a contribution needs, and a type's `_template.md` sends you here rather than repeating them.
 [Taxonomy](taxonomy.md) says where a document goes. [Metadata](metadata.md) covers the frontmatter.
 [Style](style.md) holds the rules for the words, which are the same in every document, comment and commit message.
-[Authoring](authoring.md) holds what a document's tier adds on top.
+[Authoring](authoring.md) holds what a document's tier adds on top. This page holds the rest: the link and template
+conventions CI enforces, the review model, and what outranks what when two rules disagree.
+
+## What outranks what
+
+Four sources of rules, in this order.
+
+1. **The schema and the validator.** `.schema/*.yaml`, and what `./kac validate` and `./kac checks` report. These are
+   executable, so they are the authority on anything mechanical: required sections, clause modals, id and filename
+   formats, link forms, and which text rules a type actually declares.
+2. **The type's own pages.** `<type>.md` for what the type holds, `<type>/_template.md` for the sections it must have.
+3. **This page**, for the conventions below.
+4. **[Style](style.md) and [authoring](authoring.md)**, for the prose.
+
+**Where a prose rule contradicts the schema, that is a finding to report and never an instruction to act on.** Say which
+of the two is wrong and leave both alone. Read literally, one wrong bullet in a rulebook can strip a keyword from every
+normative document in the corpus while claiming the rulebook's authority.
 
 ## The shape of a contribution
 

@@ -1,8 +1,7 @@
 # Authoring
 
-How knowledge is **written** here. [Style](style.md) covers the words themselves, in every document this repository
-holds. [Contributing](contributing.md) covers the mechanics — where a document goes, which template to copy, how it is
-reviewed. This page covers what a record's tier asks of its prose on top of those.
+What a record's tier asks of its prose. [Style](style.md) is the floor under this page and binds every document in this
+repository. Read it first. [Contributing](contributing.md) covers the mechanics and says which page owns what.
 
 Two rules carry most of the weight, and both are easier to state than to follow:
 
@@ -23,17 +22,9 @@ findings. The rest is judgement, and the absence of a check is not permission.
 Where a rule here contradicts the schema, **the schema is right and this page is wrong**. It is executable and this is
 not. Report the contradiction; do not resolve it by editing records.
 
-## The floor
-
-[Style](style.md) is the floor, and it binds every document in this repository: name who does what, anchor what you
-write to something real, say it once and say it short, leave nothing to reconstruct, use the precise word and explain it
-once, and write what stays true. Read it before this page.
-
-What follows is what a corpus record asks on top of it.
-
 ## By tier
 
-The floor applies throughout. Each tier adds to it. Your document's frontmatter carries its `tier`, so read the row that
+Style applies throughout, and each tier adds to it. Your document's frontmatter carries its `tier`, so read the row that
 matches it; [taxonomy](taxonomy.md#the-types) groups the corpus's types under the tier each belongs to.
 
 | Tier            | Written as                                                                               |
