@@ -13,12 +13,19 @@ corpus: knowledge-as-code
 role: source
 # One of: source | consumer.
 #
-#   source   — the master copy of the pattern. Changes originate or are reconciled here, and
-#              propagate outward. Exactly one corpus should hold this role.
-#   consumer — receives the synced layer from the source. Local edits to it are drift.
+#   source   — a copy of the pattern that is answerable for it. Changes originate or are reconciled
+#              here, and propagate outward. It carries the `verification` layer: the tests, the
+#              fixtures and the guidance for changing the tool.
+#   consumer — receives the synced layer from a source. Local edits to it are drift. It carries the
+#              tool but not the machinery that proves it, on the grounds that the tool arrives
+#              already proven and a fixture tree nobody runs is noise.
 #
 # A consumer may well be where a change is *authored* — real content is the only thing that
-# reveals a schema is wrong — but the change is not settled until it lands here.
+# reveals a schema is wrong — but the change is not settled until it lands in a source.
+#
+# The role does not decide direction of travel: a source with an upstream is a mirror, and syncs
+# from it like anything else. What cannot be synced into is the corpus at the head of the chain,
+# which is the one naming no upstream at all.
 
 publishing-target: none
 # One of: azure-devops-wiki | github | mkdocs | none. Determines which `forked` publishing files
@@ -30,7 +37,7 @@ publishing-target: none
 
 upstream:
   url:               # unset — this corpus is the source
-  mechanism-version: 2
+  mechanism-version: 3
   synced-from:       # n/a for a source
   synced-on:         "2026-08-08"
 

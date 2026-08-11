@@ -179,16 +179,22 @@ This framework is **copied, not depended on**. An organisation adopting it gets 
 runtime dependency on this repository and nothing to remove if they later want to go their own way.
 
 The cost of that is drift, which is what the manifest is for. Every file resolves to exactly one layer — `synced`,
-`forked`, `generated`, `local` or `ignored` — and each layer has a rule about what divergence means. `.mechanism.lock`
-records which version of the shared layer a corpus is on, any deviation it has deliberately accepted, and — in
-`types:` — which of the framework's types it has adopted.
+`verification`, `forked`, `generated`, `local` or `ignored` — and each layer has a rule about what divergence means.
+`.mechanism.lock` records which version of the shared layer a corpus is on, any deviation it has deliberately accepted,
+which of the framework's types it has adopted, and whether it is answerable for the mechanism or only runs it.
 
 Declaring the types is what stops a corpus being described by its own folders — a decision it made, rather than the
 shape it happens to have. `validate` holds the corpus to standing up what it declared, every generated list of types is
-written from the declaration, and a type file the corpus declined stops reading as one it is missing.
+written from the declaration, and a type file the corpus declined stops reading as one it is missing. `role:` is the
+same decision taken about the mechanism rather than the knowledge: a consumer holds the tool but not the tests and
+fixtures that prove it, on the grounds that it arrived proven and a fixture tree nobody runs is noise.
 
-A lock that says nothing about types still works. Adoption is read off the folders instead, which is where every corpus
-starts.
+`kac mechanism --check` reports how far a copy has drifted; `kac mechanism --sync` brings the shared layers down from
+upstream, seeds the pages a newly adopted type needs, records what it took, and regenerates. Adopting a type is a line
+in the lock and a sync.
+
+A lock that says nothing still works. Adoption is read off the folders instead, and everything shared is expected —
+which is where every corpus starts.
 
 ## Opinions
 

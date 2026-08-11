@@ -1,0 +1,7 @@
+# A shared page arrives whole and is only right once regenerated against the types held here.
+knowledge-as-code/taxonomy.md :: as the reference now words it
+knowledge-as-code/taxonomy.md :: ADRs
+knowledge-as-code/taxonomy.md :: !Runbooks
+# An accepted divergence keeps its own words, and the stamp keeps the lock's.
+knowledge-as-code/contributing.md :: This corpus's own process
+.mechanism.lock :: This corpus takes contributions through its own process.

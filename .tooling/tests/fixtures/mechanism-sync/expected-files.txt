@@ -1,0 +1,11 @@
+# Present once the sync has run. A `!` line is one that must still be absent.
+adrs.md
+adrs/_template.md
+.schema/adrs.yaml
+adrs/_index.md
+# Runbooks is not adopted here, so neither its schema nor its pages come down.
+!runbooks.md
+!runbooks/_template.md
+!.schema/runbooks.yaml
+# This corpus consumes the mechanism rather than proving it.
+!.tooling/kac.tests/SampleTests.cs

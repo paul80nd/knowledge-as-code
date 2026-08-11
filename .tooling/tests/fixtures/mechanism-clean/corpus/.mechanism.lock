@@ -1,6 +1,6 @@
 version: 1
-corpus: test-consumer-clean
-role: consumer
+corpus: test-source
+role: source
 upstream:
   url:
 accepted-divergences: []

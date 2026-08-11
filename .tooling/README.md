@@ -15,7 +15,8 @@ enforces it, so **adding a knowledge type is adding a YAML file, not editing thi
 ./kac index --check       # verify generated output is fresh
 ./kac checks              # list every check the validator implements
 ./kac checks --json       # …as JSON (the test suite reads this)
-./kac mechanism --check --against ../other-corpus   # synced-layer drift vs a reference
+./kac mechanism --check --against ../other-corpus   # shared-layer drift vs a reference
+./kac mechanism --sync                              # take the shared layers from upstream
 ```
 
 `./kac` (Windows: `kac.cmd`) is a launcher at the repo root that wraps `dotnet run .tooling/kac.cs` — run it from the
@@ -282,10 +283,14 @@ Two rules hold this together:
 
 ## `mechanism` — portability
 
-`manifest.yaml` declares each file's layer — `synced`, `forked`, `generated`, `local`, `ignored` — but the declaration
-needs enforcing. `mechanism --check` resolves every tracked file against the manifest and compares the **synced** layer
-against a reference corpus, following the same discipline as `index --check`: recompute, compare, name what differs,
-exit non-zero, never write.
+`manifest.yaml` declares each file's layer — `synced`, `verification`, `forked`, `generated`, `local`, `ignored` — but
+the declaration needs enforcing. `mechanism` is the pair of commands that does: `--check` reports how far this corpus
+has drifted from a reference, and `--sync` takes the shared layers from one.
+
+### `--check`
+
+Resolves every tracked file against the manifest and compares the shared layers against a reference corpus, following
+the same discipline as `index --check`: recompute, compare, name what differs, exit non-zero, never write.
 
 ```bash
 ./kac mechanism --check --against ../other-corpus
@@ -294,17 +299,19 @@ exit non-zero, never write.
 The reference defaults to `upstream.url` in `.mechanism.lock`, so a consumer that records where it synced from can run a
 bare `mechanism --check`. What it reports:
 
-- **synced** files that differ, are missing on either side, or match no manifest rule at all — each an **error** (exit
-  `1`).
+- **synced** and **verification** files that differ, are missing on either side, or match no manifest rule at all — each
+  an **error** (exit `1`).
 - **forked** files are compared too, but only counted: how many differ from the reference is informational and never
   fails.
 - **generated**, **local** and **ignored** files are skipped — each corpus owns its own.
 - **accepted divergences** listed in `.mechanism.lock` are honoured rather than flagged as drift, and any that have
   quietly become identical to the reference again are named as `RESOLVED` so the stale entry can be removed.
-- **types the corpus declined** are skipped. `.schema/<type>.yaml` for a type absent from `types:` in `.mechanism.lock`
-  is neither missing nor drifted — the corpus chose not to adopt it. This is the one part of the synced layer a corpus
-  may legitimately hold less of than upstream, and the lock is where it says so. Without that entry the same absence is
-  a deletion nobody recorded. A lock declaring no `types:` declines nothing.
+- **what the lock declines** is skipped, and counted if the corpus holds it anyway. There are two such decisions, and
+  they work the same way. `.schema/<type>.yaml` for a type absent from `types:` is neither missing nor drifted — the
+  corpus chose not to adopt it. Nor is the `verification` layer in a corpus whose `role:` is `consumer`, which runs a
+  tool proven upstream rather than proving it. Each is the one legitimate way a corpus holds less of a shared layer than
+  upstream does, and the lock is where it says so; without that entry the same absence is a deletion nobody recorded. A
+  lock that declares neither declines nothing.
 
 Comparison is LF-normalised, so line-ending differences never read as drift, and it reads the **authored half** of a
 file: everything between `BEGIN GENERATED` and `END GENERATED` is emptied before the two copies are compared. A shared
@@ -313,7 +320,37 @@ corpus adopted — while the surrounding prose stays byte-identical everywhere. 
 deleting a block rather than regenerating it is still drift, and `index --check` remains the one voice on whether the
 generated half is correct.
 
-`mechanism --sync` — the write half that copies the synced layer into a consumer — is not implemented yet.
+### `--sync`
+
+Takes those layers from the reference, records what it took, and regenerates.
+
+```bash
+./kac mechanism --sync                      # from upstream.url
+./kac mechanism --sync --against ../source   # …or from a local checkout of it
+```
+
+`--against` says *which copy* of the upstream to read; `upstream.url` is the corpus's statement that it takes from one
+at all. A corpus naming no upstream is at the head of the chain and cannot be synced into — it is propagated from. A
+corpus that does name one syncs from it whatever its role, so a mirror of the framework can take tooling and tests down
+like anything else.
+
+What it does, in one pass over both trees:
+
+- **synced** and **verification** files whose authored halves differ are copied down whole. Ones already in step are
+  left alone, so a page's generated block survives when its prose has not moved.
+- **forked** files are *seeded* — copied only where this corpus has none. A forked file that is already here is never
+  reconciled: that is what the layer means.
+- **what the lock declines** is not brought down at all. Declining a type withholds its `.schema/<type>.yaml`, its root
+  page and everything under its folder, so adopting one is adding a line to `types:` and syncing.
+- **accepted divergences** are skipped and named, with the reason recorded beside them. Taking the upstream copy is done
+  by deleting the entry, which keeps the decision in one place.
+- files this corpus holds and the reference does not are **named, not deleted**. Sync copies; emptying a corpus because
+  an upstream tree was smaller is not a decision a tool makes.
+
+It finishes by stamping `upstream.mechanism-version`, `synced-from` and `synced-on` into `.mechanism.lock` — rewriting
+those three lines rather than re-serialising the file, so its commentary survives — and then running `index`. That last
+step is the point of copying pages whole: a shared page arrives with the reference's generated block in it and is only
+right once rebuilt against the types the receiving corpus holds. `index --check` passing is sync's postcondition.
 
 ## Known gaps
 

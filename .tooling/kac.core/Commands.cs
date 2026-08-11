@@ -221,17 +221,22 @@ public static class Commands
         return 1;
     }
 
-    public static int Mechanism(string repoRoot, bool check, string? against)
+    public static int Mechanism(string repoRoot, bool check, bool sync, string? against)
     {
-        if (!check)
-        {
-            Console.Error.WriteLine(
-                "mechanism: specify --check (mechanism --sync is not yet implemented — see issue #6).");
-            return 1;
-        }
+        if (check == sync)
+            return Fail(check
+                ? "mechanism: --check and --sync are the two halves of this command; ask for one."
+                : "mechanism: specify --check to compare against a reference, or --sync to take from one.");
 
-        var manifest = Manifest.Load(repoRoot);
         var lockFile = MechanismLock.Load(repoRoot);
+
+        // A sync needs an upstream declared, not merely a directory to read. `--against` says which copy
+        // of the upstream to take from — a local checkout rather than the URL — while `upstream.url` is
+        // the corpus's statement that it takes from anywhere at all. The corpus at the head of the chain
+        // names none, and is the one thing a sync cannot run against: it is propagated from, not into.
+        if (sync && lockFile.UpstreamUrl is null)
+            return Fail("mechanism: this corpus names no upstream, so there is nothing to sync from. "
+                        + "A corpus that takes from another records it in upstream.url in .mechanism.lock.");
 
         var reference = against ?? lockFile.UpstreamUrl;
         if (string.IsNullOrWhiteSpace(reference))
@@ -241,9 +246,16 @@ public static class Commands
         var refRoot = Path.GetFullPath(reference, repoRoot);
         if (!Directory.Exists(refRoot))
             return Fail($"mechanism: reference corpus not found: {refRoot}");
-        return Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot)
-            ? Fail("mechanism: the reference is this corpus itself — nothing to compare.")
-            : MechanismCheck.Run(repoRoot, refRoot, manifest, lockFile);
+        if (Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot))
+            return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
+
+        // Check reads this corpus's manifest, because what it reports is whether this corpus is in step
+        // with what it believes the boundary to be. Sync reads the reference's, because it is taking that
+        // boundary along with the files it describes.
+        return check
+            ? MechanismCheck.Run(repoRoot, refRoot, Manifest.Load(repoRoot), lockFile)
+            : MechanismSync.Run(repoRoot, refRoot, Manifest.Load(refRoot), lockFile, reference,
+                DateTime.Today.ToString("yyyy-MM-dd"));
 
         static int Fail(string message)
         {
