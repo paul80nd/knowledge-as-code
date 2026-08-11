@@ -52,7 +52,7 @@ doesn't know who that is — name them, or name the role.)_
 
 1. Do the thing. Imperative, one action per step.
 2. Do the next thing.
-    * Sub-steps where a step branches.
+   * Sub-steps where a step branches.
 
 _(Assume the reader has not done this before. No hedging — "typically the order would be" is not followable. If the
 order genuinely varies, say what it depends on.)_

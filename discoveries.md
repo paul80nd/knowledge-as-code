@@ -6,27 +6,26 @@ Things we noticed and haven't verified yet.
 
 ## What is a discovery?
 
-A short, unreviewed note of something observed during work. *"The build fails silently if X."* *"The legacy API returns
-200 with an empty body when Y."* Possibly wrong, possibly already fixed, possibly situational.
+A short, unreviewed note of something you saw while working. *"The build fails silently if X."* *"The legacy API returns
+200 with an empty body when Y."* It may be wrong, already fixed, or true only of the branch you were on.
 
 Deliberately low-ceremony: a title, what you saw, the context you were in, and why it might matter. Nothing more.
 
 ## Why we use them
 
-Capture has to be nearly free or it doesn't happen. Nobody writes up a gotcha if doing so requires a template, an owner
-and two reviewers — so observations are recorded with **no review at all**, marked unverified, and expire on their own
-if nothing promotes them.
+Capture has to be nearly free or it doesn't happen. Nobody writes up a gotcha that costs them a template, an owner and
+two reviewers, so a discovery asks for none of the three. You write what you saw, mark it unverified, and get **no
+review at all**. It expires on its own unless someone promotes it.
 
-The rigour lives at promotion, not capture. That gradient — cheap in, deliberate out — is what lets the corpus grow
-without the average trustworthiness falling.
+A human adds the rigour at promotion. The corpus can then take in everything anyone notices while the documents that
+carry authority stay few and checked.
 
-This is also where AI sessions contribute. A session that discovers something useful has somewhere to put it, and the
-discovery outlives the session.
+AI sessions contribute here too. What a session works out has somewhere to go, and the note outlives the session.
 
 ## Scope
 
-Discoveries are **perishable and carry no authority**. They expire after 90 days by default, and that is a feature: an
-observation nobody has needed in three months was probably situational.
+Discoveries are **perishable and carry no authority**. They expire after 90 days by default, and the short life is
+deliberate: an observation nobody has needed in three months was probably situational.
 
 Boundaries:
 
@@ -75,27 +74,23 @@ Boundaries:
 
 ## Capturing a discovery
 
-Low ceremony on purpose. Copy [`_template.md`](discoveries/_template.md) and fill in a title, what you observed, why it
-might matter, and the context you were in. Set `confidence: unverified` unless you've genuinely proven it. Don't tidy it
-up; don't verify it first; don't write it as an FAQ.
-
-Discoveries expire after 90 days by default. That's a feature — an observation nobody has needed in three months was
-probably situational.
+Low ceremony on purpose. Copy [`_template.md`](discoveries/_template.md) and fill in a title, what you saw, the context
+you were in, and why it might matter. Leave `confidence: unverified` unless you've genuinely proven it. Don't tidy it
+up, don't verify it first, and don't write it as an FAQ.
 
 ## Promoting a discovery to an FAQ
 
-The one flow that crosses tiers, and the one worth getting right.
+The one flow that crosses tiers. Where the observation turns out to be a rule people should follow, promote it to a
+**standard** instead, and that needs an ADR first.
 
 1. A human confirms the observation is real, general, and still current.
 2. Create the FAQ with `promoted-from`, `confirmed-by` and `confirmed-on`.
 3. Set the discovery's `status: promoted` and `promoted-to`.
-4. If the underlying issue is actually a rule people should follow, the promotion target is a **standard**, not an FAQ —
-   and that needs an ADR first.
 
-Promotions proposed automatically arrive as PRs carrying `provenance` back to the passage that produced them. Review
-that provenance; it's the whole reason the field exists. An unverifiable proposal is a rejected proposal.
-
-_(The automatic half is not built yet — see [Automation](/knowledge-as-code/automation.md).)_
+Nothing proposes a promotion automatically yet; [Automation](/knowledge-as-code/automation.md) describes the
+distillation pass that would. Such a proposal arrives as a pull request carrying `provenance` back to the passage that
+produced it. Read that provenance before you accept anything: an unverifiable proposal is a rejected proposal. Checking
+it is the whole reason the field exists.
 
 ## What CI checks
 

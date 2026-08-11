@@ -19,7 +19,7 @@ is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath i
 | [ADR](/adrs)                 | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it.         |
 | [Capability](/capabilities)  | descriptive | What we offer a customer and why, as a hub linking to what implements, tests and constrains it.                  |
 | [Control](/controls)         | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                   |
-| [Data](/data)                | descriptive | Which store owns which entities, how long they are kept, how sensitive they are, and where personal data flows.  |
+| [Data](/data)                | descriptive | Which service owns which data, how long it is kept, how sensitive it is, and where personal data flows.          |
 | [Discovery](/discoveries)    | observed    | Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.               |
 | [Explanation](/explanations) | descriptive | Narrative that helps you understand how something works, or why it is shaped the way it is.                      |
 | [FAQ](/faqs)                 | normative   | A problem with a confirmed fix, promoted from a discovery once a human has verified it.                          |

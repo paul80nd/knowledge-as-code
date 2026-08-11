@@ -7,31 +7,31 @@ What to do when something is broken.
 ## What is a runbook?
 
 An incident-time procedure, read under pressure by someone who may not have seen this failure before. Symptoms first,
-then immediate actions, then a diagnosis tree, then resolution and escalation.
+then the immediate actions, then a diagnosis tree, then resolution and escalation.
 
-Terse, imperative, and structured so the reader can find their branch without reading the whole document.
+Keep it terse and imperative, and structure it so the reader finds their branch without reading the whole document.
 
 ## Why we use them
 
 At 2am nobody reconstructs a recovery sequence from first principles, and the person who knows it is asleep. A runbook
 is the difference between a twenty-minute incident and a two-hour one.
 
-They also make the untested assumption visible. `last-rehearsed: "never"` on a disaster-recovery runbook is a much more
-useful thing to know before the disaster than after it.
+Writing one also exposes the step nobody has tried. A disaster-recovery runbook carrying `last-rehearsed: "never"` says
+the recovery has never been run, while there is still time to run it.
 
 ## Scope
 
-**Broken, not planned.** If you are doing it because you decided to, it is a [process](/processes).
+**Broken, not planned.** If you are doing this because you decided to, it is a [process](/processes).
 
-Runbooks sit next to two other types and the boundaries are worth holding:
+Two other types sit close enough to confuse:
 
 * **[FAQ](/faqs)** — a known problem with a known fix, usually one or two steps, no urgency. If it needs a diagnosis
   tree and an escalation path, it is a runbook.
-* **[Postmortem](/postmortems)** — an account of an incident that happened. A runbook is instructions for one that
-  might. A good postmortem frequently produces a runbook.
+* **[Postmortem](/postmortems)** — an account of an incident that happened. A runbook gives instructions for an incident
+  that has not happened yet. A good postmortem frequently produces a runbook.
 
-Disaster recovery and "ground-zero the estate" belong here, not in processes, however planned the rehearsal is — the
-document is written for the day it isn't.
+Disaster recovery and rebuilding the estate from nothing belong here. You rehearse them deliberately, which makes them
+look like processes. You open the document on a day when the estate is already down.
 
 ## Metadata
 
@@ -66,20 +66,20 @@ document is written for the day it isn't.
 ## Adding a runbook
 
 1. Copy [`_template.md`](runbooks/_template.md) to `<slug>.md`. Runbooks use slug ids — `rbk-estate-rebuild`.
-2. Lead with **symptoms** — what the reader is seeing. That is how they will find this document.
-3. Give immediate actions before diagnosis. Stop the bleeding, then work out why.
+2. Lead with **symptoms** — what the reader is seeing. That is how they find this document.
+3. Give the immediate actions before the diagnosis. Stop the bleeding, then work out why.
 4. Structure the diagnosis as a tree, not prose. Each branch ends in a resolution or an escalation.
-5. Put the escalation path where it can be found without scrolling.
-6. Set `last-rehearsed` honestly, and `requires-access` completely — discovering you lack a permission mid-incident is
-   its own outage.
+5. Put the escalation path where the reader finds it without scrolling.
+6. Set `last-rehearsed` honestly, and name every permission the runbook needs in `requires-access`.
 
 **Conventions**
 
-* **Short sentences, imperative mood.** No background, no rationale. Link to the [explanation](/explanations) if the
-  reader needs the theory afterwards.
-* **No prerequisites the reader can't satisfy at 2am.** If a step needs someone else's approval, say who and how to
+* **Short sentences, imperative mood.** No background, no rationale. Link to an [explanation](/explanations) where the
+  reader wants the theory afterwards.
+* **No prerequisite the reader cannot satisfy at 2am.** Where a step needs someone else's approval, name who and how to
   reach them.
-* **Rehearse on a schedule.** An unrehearsed runbook is flagged by the staleness report, loudly, and that is deliberate.
+* **Rehearse on a schedule.** `rehearsal-frequency` says how often, and `last-rehearsed` records the last time someone
+  did.
 
 ## What CI checks
 

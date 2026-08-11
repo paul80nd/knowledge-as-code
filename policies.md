@@ -6,29 +6,28 @@ The engineering commitments we hold ourselves to — the *what* and the *why*.
 
 ## What is a policy?
 
-A high-level, durable statement of what we commit to and why. Policies are principle-level and largely stack-agnostic:
-*"secrets are never stored in source control"*, *"quality checks are gates, not advisories"*, *"changes to
+A policy states what we commit to and why. It is durable, it is written at the level of principle, and it rarely names a
+technology: *"secrets are never stored in source control"*, *"quality checks are gates, not advisories"*, *"changes to
 non-development environments go through the pipeline"*.
 
-They sit at the top of the normative hierarchy. A policy says what we hold true; a [standard](/standards) says what to
-do about it; a [control](/controls) says how we know it happened; a [process](/processes) says how to do it.
+Policies sit at the top of the normative hierarchy. A policy says what we hold true, a [standard](/standards) says what
+to do about it, a [control](/controls) says how we know it happened, and a [process](/processes) says how to do it.
 
 ## Why we use them
 
-Standards change with the stack. Policies don't — and separating the two means a framework migration doesn't
-accidentally relitigate a security commitment.
+Standards change with the stack and policies do not. Keep the two apart, and replacing a web framework never reopens the
+question of where secrets live.
 
-They also give the standards somewhere to point. A standard that cites no ADR and no policy has no provenance, which is
-usually a sign it is either guidance in disguise or a decision nobody has actually made.
+Policies also give the standards somewhere to point. A standard citing no ADR and no policy has no provenance, and that
+usually means it is guidance in disguise or a decision nobody made.
 
-Policies map their clauses to external frameworks — **ISO/IEC 27001:2022** Annex A most often — in the `Alignment`
-column of the clause table. Per clause, because a policy aligns with a control through one obligation rather than
-through all of them, and an empty cell where no genuine mapping exists is more use than an invented one.
+Each clause maps to external frameworks in the `Alignment` column of the clause table, most often to **ISO/IEC 27001:
+2022** Annex A. The mapping sits on the clause because a policy meets any one control through a single obligation. Leave
+the cell empty where no genuine mapping exists, since an empty cell tells the reader more than an invented one.
 
-What our standing against a framework actually is — bound by certification, self-obligated by a policy of our own, or
-simply borrowed from — is recorded once in [Frameworks](/frameworks.md) and nowhere else. A policy states obligations;
-it does not state our standing, which changes on its own schedule and would otherwise have to be corrected in twenty
-places at once.
+A framework can bind us by certification, bind us because we chose to hold ourselves to it, or serve as something we
+borrow from. [Frameworks](/frameworks.md) records which of the three applies, and no policy repeats it. Our standing
+changes on a schedule of its own, so a policy that carried it would need correcting alongside twenty others.
 
 ## Scope
 
@@ -40,22 +39,23 @@ a tool, a framework or a protocol, it is a [standard](/standards).
 | "Secrets are never stored in source control."   | "Services **MUST** read secrets from Key Vault via workload identity." |
 | "Quality checks are gates that fail the build." | "ESLint **MUST** run with `--max-warnings 0`."                         |
 
-A policy is not a [control](/controls) — it commits, it does not verify. And it is not an [ADR](/adrs): an ADR records a
-specific decision with the alternatives that were weighed; a policy states a position we hold regardless.
+A policy commits and a [control](/controls) verifies, so the two are never the same document. An [ADR](/adrs) records
+one decision and the alternatives weighed against it, where a policy states a position we hold across all such
+decisions.
 
 ## Categories
 
 Every policy carries a `category`: **security**, **delivery**, **operations** or **governance**. It answers *why this
-policy exists* — the broad area of the commitment — where `tags` answer *what topics it touches*. Two different
-questions, so two fields: a secrets policy is `category: security` and `tags: [credentials, key-management, secrets]`.
+policy exists* — the broad area of the commitment — where `tags` answer *what topics it touches*. Two questions need two
+fields: a secrets policy is `category: security` and `tags: [credentials, key-management, secrets]`.
 
-The set is closed and deliberately small. Four categories cut the policy set into groups worth navigating; a fifth would
-have to earn its place by making one of these too crowded to scan, and the pressure for that is easier to judge once
-there are enough policies to feel it.
+The set is closed and deliberately small. Four categories cut the policies into groups worth navigating. A fifth would
+have to earn its place by making one of these too crowded to scan. That pressure is easier to judge once there are
+enough policies to feel it.
 
-Category is metadata, not folder structure. `policies/` stays flat, which means recategorising a policy is a one-line
-edit rather than a file move that rewrites every document linking to it — and the awkward calls here (accessibility
-under governance is the clearest) are the ones most likely to be revisited.
+Category is metadata and `policies/` stays flat. Recategorising a policy is then a one-line edit rather than a file move
+that rewrites every document linking to it. The awkward calls are the ones most likely to be revisited, and
+accessibility under governance is the clearest of them.
 
 ## Metadata
 
@@ -90,39 +90,40 @@ under governance is the clearest) are the ones most likely to be revisited.
 2. Choose a four-character mnemonic for the policy's *concept* — `VURM` for vulnerability remediation, `PIPE` for
    pipeline-to-production. Start it with the same letter as the slug, so the folder still reads alphabetically.
 3. Copy [`_template.md`](policies/_template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
-   upper-case. The H1 is the commitment in plain words; the identity line beneath it carries the id —
+   upper-case. The H1 states the commitment in plain words. The identity line beneath it carries the id —
    ``` `Policy: pol-MNEM` `DRAFT` ``` — and CI checks it against the frontmatter.
 4. Set `category` to whichever of the four the commitment belongs to. If two fit, pick the one a reader looking for this
-   policy would try first; if none does, that is a taxonomy conversation, not a fifth category invented in passing.
+   policy would try first. If none does, that is a taxonomy question, and not a fifth category invented in passing.
 5. State the scope it binds, then the commitment itself as clauses — one obligation per row, each with a short
-   upper-case id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Add any explicit exceptions beneath them. Exceptions
-   stated up front are honest; exceptions discovered later are erosion.
+   upper-case id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Write any explicit exceptions beneath the clauses,
+   where a reader meets them before relying on the rule.
 6. Map clauses to framework controls in the `Alignment` column where a genuine mapping exists, and roll the references
-   up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](/frameworks.md) — decide
-   its posture there before citing it here.
+   up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](/frameworks.md). Decide its
+   posture there before citing it here.
 7. Set `review-by`. Policies change rarely, so an annual review is usually right.
 
 **Conventions**
 
 * **A policy does not state our standing against a framework.** Not "compliant", not "certified", not "registered" — a
-  policy maps its clauses to controls and says nothing about what that mapping is worth. Standing is recorded once,
-  in [Frameworks](/frameworks.md), so that a change of certification is one edit rather than twenty.
+  policy maps its clauses to controls and says nothing about what that mapping is worth. [Frameworks](/frameworks.md)
+  holds the standing, and holds it once.
 * **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice, and
   a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
-  standards against them, so the set of implementers is not knowable from here — and a policy nothing in *this* wiki
-  implements is the normal state rather than a gap to be explained.
-* **A clause is the unit anything else cites.** Written `pol-VURM.TIMEBOX` — the policy id, then the clause id — so a
-  standard, a control or a deviation names the obligation it answers rather than the whole document. Clause ids are
-  immutable for the same reason policy ids are: removing or renaming one silently breaks every citation of it.
+  standards against them, so nobody writing here can know the full set of implementers. A policy that nothing in *this*
+  wiki implements is the normal state rather than a gap to be explained.
+* **A clause is the unit anything else cites.** Write the citation `pol-VURM.TIMEBOX` — the policy id, then the clause
+  id — so a standard, a control or a deviation names the single obligation it answers. Clause ids are immutable for the
+  same reason policy ids are: removing or renaming one breaks every citation of it.
 * **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
-  scope — the id does not move. Standards, controls and processes cite policies by id, and a mnemonic that is reassigned
-  turns every one of those citations into a quiet lie: the reference still resolves, so nothing fails, and the reader is
-  simply told something untrue.
+  scope — the id does not move. Standards, controls and processes cite policies by id. Reassign a mnemonic and every one
+  of those citations tells the reader something untrue: the reference still resolves, so nothing fails and no check
+  fires.
 
   This is why the mnemonic comes from the concept rather than the wording. A policy whose *meaning* has changed enough
-  to invalidate its mnemonic has not been edited — it has been replaced. **Retire the old policy and write a new one**,
-  so the record shows the position we used to hold, the position we hold now, and that they are different positions.
-  Retirement is cheap and keeps the history honest; an id quietly meaning something new destroys it.
+  to invalidate its mnemonic has not been edited. It has been replaced. **Retire the old policy and write a new one**,
+  so the record shows the position we used to hold, the position we hold now, and that the two differ. Retirement is
+  cheap and keeps the history honest. An id that quietly means something new leaves every citation of it pointing at a
+  position we abandoned.
 
 ## What CI checks
 

@@ -38,8 +38,7 @@ us is [pol-DATA]'s.
 
 _Boundary: [pol-RECV] owns being able to recover — the objectives, the backups, and the proof that a restore works. This
 policy owns deciding to recover and doing it, held to the objectives [pol-RECV] set. `ACTIONS` is shared with
-[pol-SECD]: findings become tracked work whether they came from an incident review here or from threat modelling
-there._
+[pol-SECD]: findings become tracked work whether they came from an incident review here or from threat modelling there._
 
 ## Clauses
 

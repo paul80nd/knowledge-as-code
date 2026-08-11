@@ -6,35 +6,36 @@ What actually happened, and why.
 
 ## What is a postmortem?
 
-A blameless account of an incident: the timeline, the impact, the root cause, the contributing factors, what went well,
-and the actions that came out of it.
+A blameless account of one incident: when it began, what customers lost, what caused it, what worked, and the actions it
+left us with.
 
-Immutable once published, like an [ADR](/adrs) — a postmortem is a record of what was understood at the time. New
-understanding produces a new document, not a rewrite.
+Publishing one closes it, as with an [ADR](/adrs): a postmortem holds what we understood at the time. Where we later
+understand the same incident differently, we write another one.
 
 ## Why we use them
 
-The ADR log records what we intended. Postmortems record what the estate did about it — and the gap between the two is
-where most real learning lives.
+The ADR log records what we intended. A postmortem records what the estate did instead, and the gap between the two is
+what we did not know on the day we decided.
 
-They are also the richest source of other knowledge in the corpus. A single incident routinely produces an
-[FAQ](/faqs), a [runbook](/runbooks), a revised [NFR](/nfrs) and occasionally an [ADR](/adrs). And the pattern across
-several postmortems — the recurring root cause nobody noticed was recurring — is the highest-signal thing this wiki can
-tell you.
+One incident routinely produces an [FAQ](/faqs), a [runbook](/runbooks), a revised [NFR](/nfrs) and sometimes an
+[ADR](/adrs). A root cause that recurs shows up in no single account, so read several postmortems together when you want
+to know what keeps breaking.
 
 ## Scope
 
-**Blameless, always.** The output is a system that fails less, not a person who feels worse. Write about decisions and
-conditions, not individuals — "the deploy ran before the migration completed", not "X deployed too early".
+**Blameless.** We write these to make the estate fail less often, and blame does not do that. Write the causal
+statements about decisions, conditions, systems and roles — "the deploy ran before the migration completed", not
+"X deployed too early".
 
 Boundaries:
 
 * **[Runbook](/runbooks)** — instructions for an incident that might happen. A postmortem is an account of one that did.
-* **[FAQ](/faqs)** — a reusable fix. A postmortem is a specific narrative, and often produces an FAQ as a by-product.
-* **A work item** — actions belong in ADO. The postmortem links to them; it is not a tracker.
+* **[FAQ](/faqs)** — a reusable fix, which an incident often produces as a by-product. A postmortem is the account of
+  the incident itself.
+* **A work item** — actions belong in ADO. The postmortem links to them and tracks nothing itself.
 
-Not every incident needs one. Use severity as the trigger and be consistent about it, so the absence of a postmortem
-means something.
+Not every incident needs one. Use severity as the trigger and apply it the same way each time, so that the absence of a
+postmortem means something.
 
 ## Metadata
 
@@ -68,22 +69,22 @@ means something.
 
 ## Adding a postmortem
 
-1. Copy [`_template.md`](postmortems/_template.md) to `NNNN-kebab-slug.md`, named for the symptom rather than the cause.
-2. Write the timeline first, from the evidence, before anyone theorises. `occurred-on` and `detected-on` are separate
-   fields for a reason — the gap between them is often the finding.
-3. State the impact in customer terms, not system terms.
-4. Separate root cause from contributing factors. There is usually one of the first and several of the second.
-5. Include **what went well**. A postmortem that only lists failures teaches half the lesson.
-6. Record actions as links to work items, and fill `prompted` with anything this incident caused to be written.
-7. `status: draft` while it is being assembled; `published` freezes it.
+1. Copy [`_template.md`](postmortems/_template.md) to `NNNN-kebab-slug.md`, named for the symptom customers saw rather
+   than for the cause.
+2. Build the timeline from the evidence, before anyone starts theorising.
+3. State the impact as a customer would describe it.
+4. Separate the root cause from the contributing factors. There is usually one cause and several factors.
+5. Fill in **What went well**. An account listing only failures teaches half the lesson.
+6. Record each action as a link to its work item.
+7. Fill `prompted` with whatever this incident caused someone to write.
+8. Set `status: draft` while you assemble it, and `published` when it is finished.
 
 **Conventions**
 
-* **Immutable once published.** Corrections are limited to typos. A materially different understanding is a new
+* **Immutable once published.** Corrections are limited to typos, and a materially different understanding is a new
   postmortem that references this one.
-* **No names in causal statements.** Roles and systems, not people.
-* **Measure against the [NFRs](/nfrs)** where they exist. If the incident breached a target, say so; if there was no
-  target, that is itself a finding.
+* **Measure the impact against the [NFRs](/nfrs)** where targets exist. Where the incident breached one, say which.
+  Where no target existed, that absence is itself a finding.
 
 ## What CI checks
 

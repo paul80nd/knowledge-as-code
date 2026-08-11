@@ -28,8 +28,8 @@ is reviewed. What is below is only what a tool adds to that.
 * **`versions`** — A range, not a pin: the register states what we stand behind, the manifests state what is installed.
 * **`licence`** — An SPDX identifier — the field nobody wants until they urgently do.
 * **`decided-in`** — An ADR, where one exists.
-* **`successor`** — What replaces this, once the status is `deprecated`. `replaces` is the same edge read the
-  other way, and CI enforces both ends.
+* **`successor`** — What replaces this, once the status is `deprecated`. `replaces` is the same edge read the other way,
+  and CI enforces both ends.
 
 **The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
 reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
@@ -54,8 +54,8 @@ For `rejected`: this entry exists so the evaluation isn't repeated in eighteen m
 
 _(Required while the status is `trial`, and deleted once it is not.)_
 
-What is being evaluated, where it is being evaluated, and what would settle it either way. A trial with no
-decision criteria stays a trial forever.
+What is being evaluated, where it is being evaluated, and what would settle it either way. A trial with no decision
+criteria stays a trial forever.
 
 ## Where it is used
 

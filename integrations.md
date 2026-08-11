@@ -7,24 +7,26 @@ The external systems the platform depends on.
 ## What is an integration?
 
 One document per third-party or external system we depend on but do not deploy: payment gateways, tax-calculation
-services, email delivery, accounting systems, the Azure platform services themselves. What it does, the contract, how it
-authenticates, how it fails, what they promise us, what we do when it doesn't, and who to contact.
+services, email delivery, accounting systems, and the Azure platform services themselves. The record covers what the
+system does for us, the contract we call it under, how it authenticates and how it fails. It also carries what the
+vendor promises us, what we do when they break that promise, and who to contact.
 
 ## Why we use them
 
-A meaningful share of incidents originate outside our estate, and the knowledge needed to diagnose them — which vendor,
-which contract, whose SLA, whose phone number — is exactly the knowledge nobody has written down.
+Some incidents start outside our estate. Whoever picks one up needs to know which vendor runs the system, what the
+contract says, what SLA they signed and who answers the phone when we call. None of that sits in our code or our logs.
 
-Integrations also **cap** what we can promise. An [NFR](/nfrs) built on a dependency with a weaker SLA than the target
-is not a commitment, it is a hope. Recording the vendor's SLA makes that visible before it is tested.
+An integration also caps what we can promise. Where an [NFR](/nfrs) targets more availability than the vendor's SLA
+supports, the vendor's bad day breaks our target. Whoever sets that target can read the vendor's number in `their-sla`
+first, rather than meeting the gap during an incident.
 
 ## Scope
 
-**The line is whether we deploy it.** If we deploy it, it is a [service](/services). If we consume it and someone else
-runs it, it is an integration.
+**The line is whether we deploy it.** If we deploy it, it is a [service](/services). If someone else runs it and we call
+it, it is an integration.
 
-A library or package we depend on is neither — that is a [tool](/tools). The distinction is a running system we call
-versus code we ship.
+A library or package we depend on is a [tool](/tools), because it reaches us as code in our own build and not as a
+system somebody else runs.
 
 Not the place for:
 
@@ -63,19 +65,20 @@ Not the place for:
 ## Adding an integration
 
 1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids — `int-sendgrid`.
-2. Record the contract and the auth mechanism, but not the credentials. Nothing secret goes in this wiki.
-3. Document the **failure modes** and our fallback for each. "It goes down sometimes" is not a failure mode; "returns
+2. Record the contract and how the system authenticates us. Name where the credential is held; nothing secret goes in
+   this wiki.
+3. Write down each way the system fails and what we do instead. "It goes down sometimes" is not a failure mode; "returns
    503 during their maintenance window, we queue and retry" is.
-4. Record `their-sla` as written in the contract, and who to contact when it is breached.
-5. Set `criticality` by what breaks for a customer when it is unavailable.
+4. Copy `their-sla` from the contract, word for word.
+5. Name who to contact when the vendor misses that SLA.
 
 **Conventions**
 
-* **Every integration names a fallback**, or explicitly states there isn't one. An undocumented single point of failure
-  is the most expensive kind.
-* **Record the commercial facts** — cost model, renewal date, account owner. They are rarely written anywhere else and
-  are needed at exactly the wrong moment.
-* **`used-by` resolves to services.** An integration nothing uses is a candidate for retirement.
+* **Every integration names a fallback**, or states plainly that it has none. Where the document says neither, whoever
+  is on call works it out during the incident.
+* **Record the commercial facts** — cost model, renewal date, account owner. Nobody else writes them down, and you want
+  them on the day the vendor raises the price or stops answering.
+* **`used-by` names the services that call this system**, by id. CI fails an id that names no service.
 
 ## What CI checks
 
@@ -105,7 +108,7 @@ Not the place for:
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `fallback-required`         | warning | Every failure mode names a fallback, or the document says there is none.                                        |
+| `fallback-required`         | warning | The Failure modes section mentions a fallback somewhere, or says there is none.                                 |
 | `no-credentials`            | error   | Nothing reads as a token, key, password or connection string.                                                   |
 
 <!-- END GENERATED: checks-integrations -->

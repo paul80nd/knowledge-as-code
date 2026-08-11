@@ -6,35 +6,35 @@ What the product offers its customers, and why.
 
 ## What is a capability?
 
-A single document per product surface — one per customer-visible area of the product — describing what it does, why it
-exists, which services implement it, and where the detail lives.
+One document per customer-visible surface of the product. It records what the surface does, why it exists, which
+services implement it, and where the detail lives.
 
 A capability is a **hub**. It links to the epics that specify it, the feature files that test it, the services that
 implement it and the NFRs that constrain it. It does not restate any of them.
 
 ## Why we use them
 
-Functional detail lives in ADO epics, features and stories. What ADO cannot hold — without disturbing a work-item
-hierarchy that exists for delivery, not documentation — is the layer *above* the epic: the holistic account of what the
-product actually offers and why.
+Functional detail lives in ADO epics, features and stories. ADO holds nothing above the epic: no account of what the
+product offers a customer and why. It could not hold one without disturbing a work-item hierarchy that exists to run
+delivery.
 
-That gap is why nobody can answer "what does the product do?" from a single place today, and why the same context gets
-reconstructed at the start of every significant piece of work.
+Without that account, nobody can answer "what does the product do?" from one place, and everyone starting a significant
+piece of work rebuilds the same context.
 
 ## Scope
 
 One document per **customer-visible surface**, not per epic and not per service. One capability typically spans several
 services; one service often contributes to several capabilities.
 
-**Capabilities link rather than restate.** The moment a capability document starts specifying behaviour, it has begun to
-drift from the ADO items it should be pointing at — and a drifted capability is worse than none, because sessions will
-trust it. If you are writing acceptance criteria, they belong in ADO.
+**Capabilities link rather than restate.** A capability that specifies behaviour has begun to drift from the ADO items
+it should point at. The next session to read it will trust it anyway, which makes a drifted capability worse than none.
+Acceptance criteria go in ADO.
 
 Related but different:
 
-* **Spec** — the per-feature application of standards to a concrete contract lives in the repository that owns the
-  feature, alongside its OpenAPI document and feature files. Same central-vs-local rule as [ADRs](/adrs): cross-repo
-  synthesis lives here, feature-level detail lives with the code.
+* **Spec** — how standards apply to one concrete contract. It lives in the repository that owns the feature, beside its
+  OpenAPI document and feature files. [ADRs](/adrs) split the same way: cross-repo synthesis here, feature-level detail
+  with the code.
 * **[Service](/services)** — a thing we deploy. A capability is a thing a customer gets.
 * **[Explanation](/explanations)** — how something works internally. A capability is what it does externally.
 
@@ -42,17 +42,17 @@ Related but different:
 
 <!-- BEGIN GENERATED: schema-capabilities -->
 
-| Field            | Req | Type   | Notes                                                                                        |
-|------------------|-----|--------|----------------------------------------------------------------------------------------------|
-| `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                        |
-| `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.         |
-| `status` †       | ●   | enum   | Lifecycle of the capability, not of the services behind it.                                  |
-| `owner` †        | ●   | string | A named person, never a team alias.                                                          |
-| `tags` †         |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                             |
-| `implemented-by` | ●   | list   | Service ids. A capability no service implements is a plan.                                   |
-| `ado-epics`      |     | list   | ADO work item ids. Not resolvable by CI; recorded for humans and for the reverse harvest.    |
-| `feature-files`  |     | list   | Repo-relative paths. Checked both ways: a missing path fails, an unclaimed file is reported. |
-| `nfrs`           |     | list   | NFR ids — the targets this capability is held to.                                            |
+| Field            | Req | Type   | Notes                                                                                     |
+|------------------|-----|--------|-------------------------------------------------------------------------------------------|
+| `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                     |
+| `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.      |
+| `status` †       | ●   | enum   | Lifecycle of the capability, not of the services behind it.                               |
+| `owner` †        | ●   | string | A named person, never a team alias.                                                       |
+| `tags` †         |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                          |
+| `implemented-by` | ●   | list   | Service ids. A capability no service implements is a plan.                                |
+| `ado-epics`      |     | list   | ADO work item ids. Not resolvable by CI; recorded for humans and for the reverse harvest. |
+| `feature-files`  |     | list   | Repo-relative paths. Nothing resolves them today.                                         |
+| `nfrs`           |     | list   | NFR ids — the targets this capability is held to.                                         |
 
 **Enum values**
 
@@ -67,16 +67,19 @@ Related but different:
 
 ## Adding a capability
 
-1. Copy [`_template.md`](capabilities/_template.md) to `<slug>.md`. Capabilities use slug ids — `cap-<name>`.
+1. Copy [`_template.md`](capabilities/_template.md) to `<slug>.md`. Capability ids are slugs: `cap-<name>`.
 2. Write the *what* and the *why* in prose. Two or three paragraphs is usually enough.
-3. Fill in `implemented-by`, `ado-epics` and `feature-files` — these are the links that make it a hub.
-4. Resist the urge to explain how it works. Link to the services and explanations that already do.
+3. Fill in `implemented-by`, `ado-epics` and `feature-files`. Those links make it a hub.
+4. Do not explain how it works. Link to the services and explanations that already do.
 
 **Conventions**
 
-* **Hub, not specification.** If a section is longer than the list of links around it, ask whether it belongs in ADO.
-* **Every feature file path is checked** by CI, in both directions — a path that doesn't exist fails, and a feature file
-  claimed by no capability is reported.
+* **Hub, not specification.** `hub-not-specification` weighs the whole document against its outbound links, at roughly
+  forty words each, so a capability that grows a section of its own trips it. Where a section runs longer than the links
+  around it, ask whether the detail belongs in ADO.
+* **Keep the feature file paths honest yourself.** Nothing resolves them: the field holds plain strings, so
+  `ref-resolves` never sees it, and `feature-file-orphans` is declared and does not run. A path that goes stale here
+  goes stale quietly.
 
 ## What CI checks
 

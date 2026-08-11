@@ -42,8 +42,12 @@ Run **one `kac` invocation at a time**. File-based apps share build output and c
 * **How a document is written follows its tier, not its type.**
   [`knowledge-as-code/style.md`](knowledge-as-code/style.md) holds the rules for the words, which are the same in every
   document, comment and commit message. [`knowledge-as-code/authoring.md`](knowledge-as-code/authoring.md) holds what
-  the tier adds. Read both before writing or rewriting any record. A runbook step and an ADR paragraph obey different
-  constraints, and nothing in CI will tell you that you used the wrong ones.
+  the tier adds. [`knowledge-as-code/contributing.md`](knowledge-as-code/contributing.md) holds the link and template
+  conventions CI enforces, and what outranks what when two rules disagree. Read all three before writing or rewriting
+  any record. A runbook step and an ADR paragraph obey different constraints, and nothing in CI will tell you that you
+  used the wrong ones.
+* **Run the checklist at the foot of `style.md` against the draft before you hand it back.** It is a pass over what you
+  wrote, not a list to hold in mind while writing, and the two produce different prose.
 * **Say less, once.** Cut filler, do not restate frontmatter in prose, and cite rather than duplicate. If a paragraph
   would appear in more than one document, it belongs in `knowledge-as-code/` and gets written a single time.
 * **Anything not yet built carries a marker.** Unmarked prose describes what exists today; direction is marked

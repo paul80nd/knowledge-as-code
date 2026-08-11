@@ -72,7 +72,7 @@ fields:
   review-by:
     required: true
     type: date
-    description: Quoted. Drives the staleness report.
+    description: Quoted. The date by which someone confirms this is still true.
 
 sections:
   required: [Target, How it is measured, If it is breached]

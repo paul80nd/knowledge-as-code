@@ -1,27 +1,27 @@
 # Engineering Standards
 
-This wiki maintains the engineering standards for the platform — the normative patterns and practices that teams
-follow when building and reviewing functionality.
+Teams follow these standards when they build and review functionality: the normative patterns and practices of the
+platform.
 
 ## What is a standard?
 
-A standard is a short, living Markdown document that states a rule we follow — what to do, expressed imperatively,
-with concrete examples and a conformance checklist. Standards are the practical, day-to-day rulebook: when you design
-a new endpoint, header, or contract, the relevant standard tells you the shape it must take.
+A standard is a short, living Markdown document that states a rule we follow. It says what to do, imperatively, with
+concrete examples and a conformance checklist you tick a design against. Standards are the day-to-day rulebook. Design a
+new endpoint, header or contract, and the standard for that area tells you the shape it must take.
 
 ## How standards relate to ADRs
 
-[ADRs](/adrs) and standards are two halves of the same record:
+[ADRs](/adrs) and standards are two halves of one record:
 
-* An **ADR** captures a *decision* — the context, the choice, the alternatives weighed, the consequences. It answers
-  *why*, and it is immutable once accepted.
-* A **standard** captures the *resulting practice* — the pattern or rule that the decision produces. It answers
-  *what to do*, and it is maintained in place as the practice matures.
+* An **ADR** captures a decision: the context, the choice, the alternatives weighed, the consequences. It answers *why*,
+  and it is immutable once accepted.
+* A **standard** captures the practice that decision produces. It answers *what to do*, and we edit it in place as the
+  practice matures.
 
-So a standard is the distillation of one or more accepted ADRs into something you can follow without re-reading the
-reasoning each time. Each standard cites the ADR(s) it derives from; the ADR owns the "why", the standard owns the
-"what". A feature **spec** then sits below both — it *applies* the standards to a concrete API and only documents what
-is unique to that feature.
+A standard distils accepted ADRs into something you can follow without reading the reasoning again, and cites what it
+came from: the ADR owns the *why* and the standard owns the *what*. A standard descending from a policy rather than a
+decision cites the policy instead. Below both sits a feature **spec**, which applies the standards to a concrete API and
+documents only what is unique to that feature.
 
 | Layer         | Answers                      | Lifecycle                    |
 |---------------|------------------------------|------------------------------|
@@ -31,53 +31,56 @@ is unique to that feature.
 
 ## Why we use them
 
-The ADR log preserves *reasoning*, but reasoning is the wrong thing to consult when you're mid-build and just need the
-rule. Standards give a single, scannable source of truth for the patterns themselves — so a contributor (or an AI
-session) designing new functionality can find the rule, check their design against a conformance checklist, and link
-back to the ADR only when they need the deeper "why".
+The ADR log preserves the reasoning, and reasoning is the wrong thing to read when you are mid-build and want the rule.
+A standard states the pattern itself, in one place a reader can scan. Someone designing new functionality — a
+contributor or an AI session — finds the rule and checks the design against a conformance checklist. They open the ADR
+only when they want the deeper *why*.
 
 ## Categories
 
-Standards are stated at their true **altitude** along three axes and **composed** — the enforced rule-set for a piece of
-work is the union of the layers that apply (`common ∪ platform ∪ framework ∪ domain`). The axes, and the heuristic for
-placing a rule on the right one, are set out below.
+We state each standard at its true **altitude** on one of four axes — `common`, `platform`, `interface`, `domain` — and
+we **compose** them. The rule-set enforced for a piece of work is the union of the axes that apply to it.
+
+The folders below group the standards a reader goes looking for together. A folder sits on an axis rather than being
+one: `public-api`, `widgets` and `webhooks` all carry `axis: interface`.
 
 * **common** — platform-agnostic principles (testing philosophy, code-quality-as-a-gate). _Active._
-* **platform** — language / runtime / framework specifics: `node/`, `lit/` (future `dotnet/`). _Active._
+* **platform** — language, runtime and framework specifics: `node/`, `lit/` (future `dotnet/`). _Active._
 * **public-api** — public HTTP APIs called directly from customer-embedded widgets and integrations. _Drafted._
-* **widgets** — embedded widgets / web components: how they're built, delivered, and embedded (clients of the public
-  API). _Drafted._
+* **widgets** — embedded widgets and web components, the clients of the public API: how we build, deliver and embed
+  them. _Drafted._
 * **global-styles** — embed theming: the `--<prefix>-*` CSS custom-property contract, stable class hooks, and the
   authoring rules that keep every embedded widget restylable to match the host brand at render time. _Drafted._
-* **webhooks** — public-facing webhooks for third-party integrations (API-key auth, delivery, signing). _Planned._
+* **messaging** — the message bus contract: topic naming, payload shape, delivery guarantees. _Drafted._
+* **webhooks** — public-facing webhooks for third-party integrations: API-key auth, delivery, signing. _Planned._
 * **internal-api** — service-to-service APIs within the platform. _Planned._
 
-Different consumer and trust models carry different rules for auth, caching, and versioning, so the interface/domain
-categories stay distinct; the common and platform axes let a rule live once, at the layer where it is actually true.
+Auth, caching and versioning change with the consumer and the trust model, so the interface and domain categories stay
+distinct. The common and platform axes let a rule live once, at the layer where it is actually true.
 
 ## Where to find them
 
 * **[→ Standards index](standards/_index.md)** — the generated catalogue of every standard, grouped by axis.
-* **[`_template.md`](standards/_template.md)** — copy this to start a new standard; the categories above and the process
+* **[`_template.md`](standards/_template.md)** — copy it to start a new standard. The categories above and the steps
   below cover the rest.
 
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-standards -->
 
-| Field          | Req | Type   | Notes                                                                                         |
-|----------------|-----|--------|-----------------------------------------------------------------------------------------------|
-| `id` †         | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                         |
-| `tier` †       | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.          |
-| `status` †     | ●   | enum   | Plain values only — enforcement notes belong in `verified-by`.                                |
-| `owner` †      | ●   | string | A named person, never a team alias.                                                           |
-| `tags` †       |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                              |
-| `axis`         | ●   | enum   | The layer where the rule is actually true. TODO — four formulations exist; settle before use. |
-| `derived-from` |     | list   | The ADRs this standard distils. Provenance may come from `implements` instead.                |
-| `implements`   |     | list   | Policy ids this standard puts into practice.                                                  |
-| `verified-by`  |     | list   | Control ids that check it.                                                                    |
-| `applies-to`   | ●   | list   | Service ids, or `all`.                                                                        |
-| `review-by`    | ●   | date   | Quoted. Drives the staleness report.                                                          |
+| Field          | Req | Type   | Notes                                                                                |
+|----------------|-----|--------|--------------------------------------------------------------------------------------|
+| `id` †         | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `tier` †       | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
+| `status` †     | ●   | enum   | Plain values only — enforcement notes belong in `verified-by`.                       |
+| `owner` †      | ●   | string | A named person, never a team alias.                                                  |
+| `tags` †       |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| `axis`         | ●   | enum   | The layer where the rule is actually true.                                           |
+| `derived-from` |     | list   | The ADRs this standard distils. Provenance may come from `implements` instead.       |
+| `implements`   |     | list   | Policy ids this standard puts into practice.                                         |
+| `verified-by`  |     | list   | Control ids that check it.                                                           |
+| `applies-to`   | ●   | list   | Service ids, or `all`.                                                               |
+| `review-by`    | ●   | date   | Quoted. The date by which someone confirms this is still true.                       |
 
 **Enum values**
 
@@ -93,14 +96,16 @@ categories stay distinct; the common and platform axes let a rule live once, at 
 
 ## Adding or changing a Standard
 
-Every standard cites at least one ADR in `derived-from`. If there is no ADR, either the decision hasn't been made yet —
-make it — or what you're writing is guidance rather than a standard.
+Name where the standard comes from: an ADR in `derived-from`, a policy in `implements`, or both. `provenance-required`
+fails a standard carrying neither. Where you can name neither, either the decision has not been made — make it — or what
+you are writing is guidance rather than a standard.
 
-Rules use RFC 2119 keywords and must be **testable**. If a rule can't be checked against a concrete artefact, sharpen it
-or move it to the rationale section. Every **MUST** and **MUST NOT** should have a corresponding control, even if that
-control's mechanism is `not-enforced` — an honest gap is more useful than a silent one.
+Write the rules with RFC 2119 keywords, and make each one **testable**. Where a rule cannot be checked against a
+concrete artefact, sharpen it or move it to the rationale section. Every **MUST** and **MUST NOT** should have a
+corresponding control, even where that control's mechanism is `not-enforced`. An honest gap is more useful than a silent
+one.
 
-Standards are living documents. Material changes are recorded in the changelog rather than made silently.
+Standards are living documents, and we edit them in place. Record every material change in the changelog.
 
 ## What CI checks
 

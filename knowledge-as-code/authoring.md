@@ -1,8 +1,7 @@
 # Authoring
 
-How knowledge is **written** here. [Style](style.md) covers the words themselves, in every document this repository
-holds. [Contributing](contributing.md) covers the mechanics — where a document goes, which template to copy, how it is
-reviewed. This page covers what a record's tier asks of its prose on top of those.
+What a record's tier asks of its prose. [Style](style.md) is the floor under this page and binds every document in this
+repository. Read it first. [Contributing](contributing.md) covers the mechanics and says which page owns what.
 
 Two rules carry most of the weight, and both are easier to state than to follow:
 
@@ -23,17 +22,22 @@ findings. The rest is judgement, and the absence of a check is not permission.
 Where a rule here contradicts the schema, **the schema is right and this page is wrong**. It is executable and this is
 not. Report the contradiction; do not resolve it by editing records.
 
-## The floor
+## Type root pages
 
-[Style](style.md) is the floor, and it binds every document in this repository: name who does what, anchor what you
-write to something real, say it once and say it short, leave nothing to reconstruct, use the precise word and explain it
-once, and write what stays true. Read it before this page.
+A `<type>.md` is a **collection** page. It carries no frontmatter and no `tier`, so the table below never reaches it:
+the tier governs the records inside the folder, not the page describing them.
 
-What follows is what a corpus record asks on top of it.
+Hold a collection page to [style](style.md), and borrow each tier's **shape** where a section calls for it without
+taking on its full rule set. A Scope section reads descriptively. The numbered "Adding a…" steps take the procedural
+shape — one action to a step, condition before action — and may carry a short reason, which a procedural record may not.
+Conventions sit close to normative without reaching for the keywords.
+
+The generated block owns what a field means. The prose owns what an author does about it. Where the two say the same
+thing, the prose is the copy to cut, because nobody updates it and the generator rewrites its own.
 
 ## By tier
 
-The floor applies throughout. Each tier adds to it. Your document's frontmatter carries its `tier`, so read the row that
+Style applies throughout, and each tier adds to it. Your document's frontmatter carries its `tier`, so read the row that
 matches it; [taxonomy](taxonomy.md#the-types) groups the corpus's types under the tier each belongs to.
 
 | Tier            | Written as                                                                               |
@@ -65,6 +69,11 @@ reader in that state skims, and a skimmed instruction must still be right.
 ### Normative
 
 The rule must be checkable, and a reader must be able to tell obligation from commentary at a glance.
+
+**The clause rules below bind the types that carry clauses**, which are policies and standards. A control, an NFR and an
+FAQ are normative because a reader may act on them without checking, and they hold no clause table, no Purpose and no
+RFC 2119 keywords. What binds every normative type is the first sentence above: state the thing a reader will act on,
+make it checkable, and keep the argument out of the part that gets quoted.
 
 * **Standards use RFC 2119 keywords, in capitals, leading the clause.** The capitals are what make them normative;
   lower-case *must* is prose. See [lineage](lineage.md#standard).
@@ -113,8 +122,7 @@ The constraint here is structural rather than lexical:
 
 ### Observed
 
-Capture must stay nearly free or it does not happen. A discovery that takes ten minutes to write is a discovery nobody
-writes.
+Capture must stay nearly free or it does not happen.
 
 * **Symptom, cause if known, why it might matter.** Nothing else is required, and `low-ceremony` warns past two hundred
   words — a discovery long enough to need structure has become something else and should be promoted, not padded.
@@ -148,13 +156,22 @@ what is being built — but a reader must never have to guess which they are rea
 **Unmarked prose describes what exists today.** Anything else carries a marker, on its own line, immediately below the
 heading it governs, or leading the sentence it governs:
 
-> **Planned.** Agreed direction, not yet built. An issue exists.
+> **Planned.** Agreed direction, not yet built. Something tracks it — an issue, or the page that owns the plan.
 
 > **Aspirational.** Direction of travel. Neither agreed nor scoped.
 
+> **Declared.** The schema carries the rule and nothing runs it. Generated checks tables render these under *Declared,
+> not yet enforced*, so the marker names a state the tooling already reports.
+
 A marker governs everything up to the next heading at the same or a higher level. Two rules keep it honest: a marked
-section states what would have to be true for the marker to be removed, and **Planned** is not used without an issue to
-point at. A marker that never comes off is a wish wearing a plan's clothes.
+section states what would have to be true for the marker to be removed, and **Planned** points at whatever is tracking
+the work. The removal condition is what keeps a marker honest, and a marker that never comes off is a wish wearing a
+plan's clothes.
+
+A declared rule is the one case where prose may name behaviour that does not happen. Write it in the present tense about
+the declaration rather than the behaviour — *`feature-file-orphans` is declared and does not run*, never *CI checks the
+paths*. Prose claiming an unbuilt check as working is a correctness defect, and it is the most common one in this
+corpus.
 
 ## Where these rules come from
 

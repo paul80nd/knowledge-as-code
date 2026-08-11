@@ -68,7 +68,7 @@ index:
 
 rules:
   - id: fallback-required
-    description: Every failure mode names a fallback, or the document says there is none.
+    description: The Failure modes section mentions a fallback somewhere, or says there is none.
     severity: warning
     # The section as a whole rather than each mode within it: nothing here can tell one failure mode from
     # the next, so this catches the document that never mentions a fallback, not the one missing a case.

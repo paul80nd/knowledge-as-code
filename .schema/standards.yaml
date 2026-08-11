@@ -61,11 +61,11 @@ fields:
     required: true
     type: enum
     values: [common, platform, interface, domain]
-    description: The layer where the rule is actually true. TODO — four formulations exist; settle before use.
+    description: The layer where the rule is actually true.
     notes: >
-      TODO — unresolved. Four formulations exist across the corpus (`standards.md` schema block,
-      `standards.md` prose which names `framework`, `taxonomy.md` which says "interface/domain", and
-      `standards/README.md` which splits differently). Settle before generating.
+      Four axes, and this enum is the authority on them. A folder under `standards/` sits on one axis rather
+      than being one: `public-api`, `widgets` and `webhooks` are all `interface`. The rule-set that binds a
+      piece of work is the union of the axes that apply to it.
 
   derived-from:
     required: false
@@ -108,7 +108,7 @@ fields:
   review-by:
     required: true
     type: date
-    description: Quoted. Drives the staleness report.
+    description: Quoted. The date by which someone confirms this is still true.
 
 sections:
   required: [Summary, Rules, Examples, Conformance checklist, Rationale and provenance]

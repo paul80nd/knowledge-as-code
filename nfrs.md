@@ -7,16 +7,16 @@ Non-functional requirements — what the platform promises about availability, s
 ## What is an NFR?
 
 A stated, measurable target for a quality of service rather than a behaviour: availability, latency budgets, throughput,
-RPO, RTO, capacity assumptions. Each names what it applies to, what the target is, and — critically — how it is
-measured.
+recovery point and recovery time objectives (RPO and RTO), capacity assumptions. Each one names what it applies to, what
+the target is, and how we measure it.
 
 ## Why we use them
 
-Undocumented NFRs are still real; they are just discovered during an incident. Writing them down converts an assumption
-into a commitment somebody has agreed to, and gives [postmortems](/postmortems) something honest to measure against.
+An undocumented NFR is still real, and we discover it during an incident. Write it down and an assumption becomes a
+commitment somebody has agreed to. A [postmortem](/postmortems) then has something honest to measure against.
 
-They also constrain design. An RTO of four hours and an RTO of four minutes produce different architectures, and the
-decision is much cheaper before the fact.
+A target also constrains design. An RTO of four hours and an RTO of four minutes produce different architectures, and
+settling that up front costs a fraction of rebuilding later.
 
 ## Scope
 
@@ -26,11 +26,12 @@ An NFR states a **target**, not a rule and not a mechanism.
 * "Services **MUST** expose a `/health` endpoint" — a [standard](/standards).
 * "The uptime probe alerts at 99.5%" — a [control](/controls).
 
-**An NFR you cannot measure is a wish.** `measured-by` is required, and "we'd notice" is not a measurement method. If
-there is no way to observe it, either build one or write down the target you *can* observe.
+**An NFR you cannot measure is a wish.** `measured-by` is required. Where nothing observes the target today, either
+build the instrument or state the target you *can* observe — "we'd notice" is not a measurement method.
 
-NFRs are also constrained by things outside our control — a third-party [integration](/integrations) with a 99% SLA caps
-anything built on it. Record that in `constrained-by` rather than promising something the estate cannot deliver.
+We cannot promise more than the dependencies we do not run. A third-party [integration](/integrations) with a 99% SLA
+caps everything built on it at 99%. Name that integration in `constrained-by`, and set the target at what the estate can
+deliver.
 
 ## Metadata
 
@@ -47,7 +48,7 @@ anything built on it. Record that in `constrained-by` rather than promising some
 | `target`         | ●   | string | Concrete and arguable — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`. Include the measurement window. |
 | `measured-by`    | ●   | string | An NFR you cannot measure is a wish. "We'd notice" is not a measurement method.                   |
 | `constrained-by` |     | list   | Integrations whose own SLA caps this target.                                                      |
-| `review-by`      | ●   | date   | Quoted. Drives the staleness report.                                                              |
+| `review-by`      | ●   | date   | Quoted. The date by which someone confirms this is still true.                                    |
 
 **Enum values**
 
@@ -64,16 +65,16 @@ anything built on it. Record that in `constrained-by` rather than promising some
 
 1. Copy [`_template.md`](nfrs/_template.md) to `NNNN-kebab-slug.md`.
 2. State the target concretely. "Fast" is not a target; "p95 under 400ms" is.
-3. State how it is measured, and where that measurement can be seen.
-4. Record what breaching it actually means — degraded service, contractual exposure, or nothing much. An NFR with no
-   consequence is documentation theatre.
-5. `status: draft` until someone has agreed it. `agreed` is a commitment, not an aspiration.
+3. Name the instrument that measures it, and say where a reader can find its reading.
+4. Record what breaching it costs — degraded service, contractual exposure, or nothing much. An NFR with no consequence
+   is documentation theatre.
+5. Leave `status: draft` until someone has accepted the target, then set it to `agreed`.
 
 **Conventions**
 
-* **Targets are per capability or per service**, never estate-wide by default — a marketing page and the checkout flow
-  do not deserve the same availability budget.
-* **Record the current actual alongside the target** where it is known. The gap is the useful part.
+* **Scope each target to a capability or a service**, never to the estate by default — a marketing page and the checkout
+  flow do not deserve the same availability budget.
+* **Record the current actual beside the target** where it is known. The gap between the two is the useful part.
 
 ## What CI checks
 

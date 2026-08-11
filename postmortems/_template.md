@@ -74,9 +74,9 @@ failures teaches half the lesson and makes the next one harder to write honestly
 
 ## Actions
 
-| Action | Work item  | Owner |
-|--------|------------|-------|
-|        | #{{item}}  |       |
+| Action | Work item | Owner |
+|--------|-----------|-------|
+|        | #{{item}} |       |
 
 _(Actions live in ADO; this links to them. A postmortem is not a tracker.)_
 
