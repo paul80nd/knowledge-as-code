@@ -11,6 +11,12 @@ detail: >
   Deliberately low-ceremony — a title, an observation, why it might matter — and carrying a confidence level, so
   that "the build fails silently if X" has somewhere to go the moment it is noticed.
 
+versus:
+  faqs: >
+    A discovery is unverified and might be wrong or already fixed. An FAQ has been confirmed by a human and
+    carries authority. Never write straight to an FAQ from a session — capture the discovery and let promotion
+    do the work.
+
 id:
   prefix: dsc
   style: slug

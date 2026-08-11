@@ -128,6 +128,7 @@ Beyond `fields`, each type file declares:
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
 | `summary` / `goes-here`    | What the type is, and what a contributor has in hand when it is the answer — see the note below                  |
 | `detail`                   | The paragraph beneath the one-liner, rendered into the taxonomy's own list of types                              |
+| `versus`                   | How this type differs from another that is easily confused with it — see the note below                          |
 | `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
 | `filename`                 | Pattern and slug length limit                                                                                    |
 | `sections`                 | Required and optional H2s — the required ones are checked for presence                                           |
@@ -155,8 +156,23 @@ the edge a reader is most likely to walk over. It is rendered as prose rather th
 the cell bound — but it is held to being *the framework's* account of the type. Anything local, any example from the
 estate, belongs on `<type>.md`, which is the corpus's to write and never reconciled.
 
+**`versus`** is the one thing a type says about another type rather than about itself: a mapping from another type's
+folder to the paragraph separating the two. It becomes the taxonomy's disambiguation list.
+
+```yaml
+versus:
+  standards: >
+    The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept current.
+```
+
+A pair is written **once**, by the type its heading is titled from — `versus: standards` on `adrs.yaml` renders as
+"ADR vs Standard". Which side that is is a judgement rather than something the tool could derive, so the tool holds the
+two sides against each other instead: a pair both sides declare is two accounts of one distinction with nothing keeping
+them in step, and fails. So does a pair against a folder no schema covers, or against the declaring type itself.
+
 Only the types a corpus has **stood up** — page and folder both present — are rendered, which is what stops a decision
-table offering a route to a type whose page is not there to open.
+table offering a route to a type whose page is not there to open. A disambiguation needs both of its types by the same
+rule: a corpus with no controls is not helped by being told how a standard differs from one.
 
 **`label-plural` is required where `label` is not**, because only one of the two can be derived. A missing `label`
 falls back to the type name capitalised; nothing turns `nfr` into "NFRs" or `glossary` into "Glossary", and appending an
@@ -331,6 +347,7 @@ schema is held against what the tool can act on, and each finding names the file
 | `values: $enums.x` where `_enums.yaml` declares no `x`                               | `schema-unreadable`  |
 | A rule claiming a `severity:` that neither an `expr:` nor a rule class answers       | `schema-dispatch`    |
 | A `ref:` entry naming a folder no schema covers                                      | `schema-dispatch`    |
+| A `versus:` entry naming a folder no schema covers                                   | `schema-dispatch`    |
 | `values:` on any field that is not an `enum`                                         | `schema-dispatch`    |
 | `min-items:` on any field that is not a `list`                                       | `schema-dispatch`    |
 | An `index.order:` that is neither `ascending` nor `descending`                       | `schema-dispatch`    |
@@ -339,6 +356,7 @@ schema is held against what the tool can act on, and each finding names the file
 | A `collection` with no `folder:`, or a `single-document` type declaring one          | `schema-shape`       |
 | A `mirrors-section:` at a section the type's `sections:` block does not declare      | `schema-shape`       |
 | A missing `label-plural:`, `summary:`, `goes-here:` or `detail:`, or a cell too long | `schema-shape`       |
+| A `versus:` against the declaring type itself, or one both sides declare             | `schema-shape`       |
 
 **The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
 style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is

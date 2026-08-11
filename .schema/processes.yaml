@@ -10,6 +10,11 @@ goes-here: A step-by-step for a planned task
 detail: >
   Written to be followed by someone who has not done it before.
 
+versus:
+  runbooks: >
+    Are you doing this because you planned to, or because something is broken? Planned is a process. Broken is a
+    runbook.
+
 id:
   prefix: prc
   style: slug

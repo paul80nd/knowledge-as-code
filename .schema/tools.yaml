@@ -11,6 +11,12 @@ detail: >
   Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
   evaluation.
 
+versus:
+  adrs: >
+    Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR carries the
+    reasoning; the register carries the current state and the version range. Small, uncontroversial adoptions
+    need only the register.
+
 id:
   prefix: tol
   style: slug

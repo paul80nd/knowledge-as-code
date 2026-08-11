@@ -146,6 +146,12 @@ public sealed record RuleSpec
 
 public sealed class TypeSchema
 {
+    // How the schema names this type: the base name of its file, which is the folder for a collection and
+    // the page's stem for a single-document type. It is what `ref:` and `versus:` name, and what a finding
+    // calls the type, so it is carried here rather than being the dictionary key alone — a TypeSchema
+    // handed to a renderer would otherwise have lost the one name the schema knows it by.
+    public string Key { get; init; } = "";
+
     public string TypeName { get; init; } = "";
     public string Label { get; init; } = "";
     public string LabelPlural { get; init; } = "";
@@ -166,6 +172,12 @@ public sealed class TypeSchema
     // of anything local — the examples and the estate belong on the type's own page, which is the corpus's
     // to write.
     public string Detail { get; init; } = "";
+
+    // The calls that are genuinely close, each against one other type. A pair is declared once, by the
+    // type the reader is most likely to have reached for — which is also the type the heading is titled
+    // from, so "ADR vs Standard" lives on `adrs`. Declared order is kept for the messages; the page they
+    // render on sorts them for itself.
+    public IReadOnlyList<(string Other, string Text)> Versus { get; init; } = [];
     public string Shape { get; init; } = CollectionShape;
     public string IdPrefix { get; init; } = "";
     public string IdStyle { get; init; } = "";
@@ -400,7 +412,7 @@ public sealed class Schema
             if (baseName.StartsWith('_')) continue; // _universal, _enums, _tiers
 
             var keys = new KeyReader($".schema/{baseName}.yaml");
-            byFolder[baseName] = ParseType(keys.At(Yaml.LoadFile(file), TheFile), keys, layer);
+            byFolder[baseName] = ParseType(keys.At(Yaml.LoadFile(file), TheFile), keys, layer, baseName);
             unread.AddRange(keys.Unread());
         }
 
@@ -420,7 +432,7 @@ public sealed class Schema
     // one says only that it is the top.
     private const string TheFile = "the file";
 
-    private static TypeSchema ParseType(Level root, KeyReader keys, UniversalLayer layer)
+    private static TypeSchema ParseType(Level root, KeyReader keys, UniversalLayer layer, string key)
     {
         var id = keys.At(root.Get("id"), "the 'id' block");
         var fn = keys.At(root.Get("filename"), "the 'filename' block");
@@ -444,6 +456,7 @@ public sealed class Schema
 
         return new TypeSchema
         {
+            Key = key,
             TypeName = Yaml.Str(root.Get("type")) ?? "",
             Label = Yaml.Str(root.Get("label")) ?? "",
             LabelPlural = Yaml.Str(root.Get("label-plural")) ?? "",
@@ -454,6 +467,7 @@ public sealed class Schema
             Summary = Yaml.Str(root.Get("summary")) ?? "",
             GoesHere = Yaml.Str(root.Get("goes-here")) ?? "",
             Detail = Yaml.Str(root.Get("detail"))?.Trim() ?? "",
+            Versus = [.. Yaml.Map(root.Get("versus")).Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))],
             Shape = Yaml.Str(root.Get("shape")) ?? TypeSchema.CollectionShape,
 
             IdPrefix = Yaml.Str(id.Get("prefix")) ?? "",

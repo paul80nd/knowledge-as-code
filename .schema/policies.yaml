@@ -10,6 +10,12 @@ goes-here: A commitment about how we engineer, at principle level
 detail: >
   Alignment to an external framework is stated clause by clause, as alignment rather than certification.
 
+versus:
+  standards: >
+    A policy is true regardless of stack, framework or year — "we do not store secrets in source control". A
+    standard is specific enough to check — "read secrets from the vault via workload identity". If it would
+    still be true after replacing the entire technology estate, it is a policy.
+
 # A four-character mnemonic, upper-case in the id and lower-case in the filename — pol-VURM in
 # vurm-vulnerability-remediation.md. Policies are long-lived and cited from standards, controls and
 # processes, so the id is what a reader meets most often and it should say something. Draw the mnemonic

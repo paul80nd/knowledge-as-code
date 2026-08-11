@@ -18,9 +18,12 @@ public class SchemaCheckTests
         string shape = TypeSchema.CollectionShape,
         (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
         string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
-        string goesHere = "A widget", string labelPlural = "Widgets", string detail = "It is a widget.") => new()
+        string goesHere = "A widget", string labelPlural = "Widgets", string detail = "It is a widget.",
+        (string Other, string Text)[]? versus = null) => new()
     {
         TypeName = "widget",
+        Key = folder,
+        Versus = versus ?? [],
         Folder = folder,
         Shape = shape,
         IdStyle = idStyle,
@@ -380,4 +383,53 @@ public class SchemaCheckTests
     [Fact]
     public void A_detail_longer_than_a_table_cell_passes()
         => Assert.Empty(Check(Widgets(detail: new string('x', Generator.DescriptionMax * 3))));
+
+    // -- the disambiguations, which are the one thing a type says about another --
+
+    private static Schema TwoTypes(params (string Key, (string Other, string Text)[] Versus)[] types)
+    {
+        var schema = WithTiers();
+        return new Schema
+        {
+            Tiers = schema.Tiers, UniversalOrder = schema.UniversalOrder, Universal = schema.Universal,
+            ByFolder = types.ToDictionary(t => t.Key, t => Widgets(folder: t.Key, versus: t.Versus))
+        };
+    }
+
+    [Fact]
+    public void A_versus_against_a_type_no_schema_covers_is_reported()
+    {
+        var finding = Assert.Single(Check(TwoTypes(("widgets", [("gizmos", "Not a type here.")]))));
+
+        Assert.Equal("schema-dispatch", finding.Check);
+        Assert.Contains("versus: gizmos", finding.Message);
+    }
+
+    [Fact]
+    public void A_versus_against_itself_is_reported()
+    {
+        var finding = Assert.Single(Check(TwoTypes(("widgets", [("widgets", "Widget vs Widget.")]))));
+
+        Assert.Equal("schema-shape", finding.Check);
+        Assert.Contains("against itself", finding.Message);
+    }
+
+    // A pair both sides declare renders twice, with two accounts of one distinction and nothing keeping
+    // them in step. Reported against the second file to declare it, naming the first.
+    [Fact]
+    public void A_pair_declared_from_both_sides_is_reported()
+    {
+        var finding = Assert.Single(Check(TwoTypes(
+            ("adrs", [("widgets", "One account.")]),
+            ("widgets", [("adrs", "And another.")]))));
+
+        Assert.Equal(".schema/widgets.yaml", finding.File);
+        Assert.Contains("'adrs.yaml' already declares", finding.Message);
+    }
+
+    [Fact]
+    public void A_pair_declared_from_one_side_passes()
+        => Assert.Empty(Check(TwoTypes(
+            ("adrs", [("widgets", "One account, written once.")]),
+            ("widgets", []))));
 }

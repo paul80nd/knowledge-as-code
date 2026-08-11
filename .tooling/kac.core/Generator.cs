@@ -87,6 +87,28 @@ public static class Generator
         return string.Join("\n", sections).TrimEnd('\n');
     }
 
+    // The calls that are genuinely close. A pair needs both of its types to say anything at all, so one
+    // adopted and one not leaves the pair out — a corpus with no controls is not helped by being told how
+    // a standard differs from one.
+    //
+    // Sorted by heading, which is what a reader scans. The pair a type declares is rendered from that
+    // type's side, so the heading names the declaring type first and the reader meets the two in the order
+    // the sentence beneath them uses.
+    public static string Disambiguations(IEnumerable<TypeSchema> types)
+    {
+        var stoodUp = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
+
+        var entries = new List<(string Heading, string Text)>();
+        foreach (var t in types)
+        foreach (var (other, text) in t.Versus)
+            if (stoodUp.TryGetValue(other, out var against))
+                entries.Add(($"{t.DisplayName} vs {against.DisplayName}", text));
+
+        return string.Join("\n\n", entries
+            .OrderBy(e => e.Heading, StringComparer.Ordinal)
+            .Select(e => Wrap($"**{e.Heading}.** {e.Text}")));
+    }
+
     // Prose at the corpus's own margin. Generated tables are exempt from it because a cell cannot be
     // broken; a paragraph can, and one long line in a file everything else wraps reads as the generator
     // exempting itself from the rule it is regenerating the file to enforce.

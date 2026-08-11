@@ -23,3 +23,11 @@ it. The context, the choice, the alternatives weighed, the consequences. Immutab
 ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it, not here.
 
 <!-- END GENERATED: types-detail -->
+
+## Disambiguations
+
+<!-- BEGIN GENERATED: types-versus -->
+
+
+
+<!-- END GENERATED: types-versus -->

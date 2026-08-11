@@ -19,6 +19,12 @@ notes: >
 
 stability: experimental
 
+versus:
+  gizmos: >
+    A disambiguation against a type no schema covers, which renders a heading naming nothing.
+  widgets: >
+    And one against itself, which renders "Widget vs Widget".
+
 id:
   prefix: wdg
   style: roman-numeral

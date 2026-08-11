@@ -11,6 +11,12 @@ detail: >
   Imperative throughout — **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
   of work are the union of the layers that apply to it.
 
+versus:
+  controls: >
+    The standard says what to do; the control says how we know it happened. "Secrets **MUST** come from the
+    vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
+    control.
+
 id:
   prefix: std
   style: numbered

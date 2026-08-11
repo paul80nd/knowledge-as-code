@@ -19,6 +19,8 @@ so the golden is the schema pass and nothing else.
   cell it becomes, and no `goes-here:` at all — the two ways one key can fail, taken one each so both are pinned.
   `label-plural:` and `detail:` are present, since a type with nothing to say about itself would report the same fault
   four times and pin nothing extra.
+* **Versus** — a disambiguation against `gizmos`, which no schema covers, and one against `widgets` itself. The third
+  way a pair goes wrong — both sides declaring it — needs two types and is pinned by a unit test instead.
 * **Unknown** — `stability:` at the top of the file and `unique:` on a field, at two levels, because the vocabulary is
   per-level. The `notes:` on the `id` block is the other half of that assertion: it is parsed nowhere and reported
   nowhere, which is what makes closing the rest of the key space possible.

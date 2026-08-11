@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 17,
+    "errors": 19,
     "warnings": 0
   },
   "findings": [
@@ -125,6 +125,20 @@
       "severity": "error",
       "check": "schema-unreadable",
       "message": "rule 'widgets-are-documented' has an expr but no severity — say whether it fails a build or advises an author."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "type 'widgets' declares 'versus: gizmos', and no schema covers that folder — either the type was never adopted here, or the name is wrong."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' declares a 'versus:' against itself — a disambiguation has two sides."
     }
   ]
 }

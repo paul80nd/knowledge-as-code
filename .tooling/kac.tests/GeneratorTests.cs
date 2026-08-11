@@ -252,8 +252,10 @@ public class GeneratorTests
 
     // -- the tables of types --
 
-    private static TypeSchema Type(string label, string plural, string tier, string page, string goesHere) => new()
+    private static TypeSchema Type(string label, string plural, string tier, string page, string goesHere,
+        params (string Other, string Text)[] versus) => new()
     {
+        Key = page[..^3], Versus = versus,
         Label = label, LabelPlural = plural, Tier = tier, Page = page, GoesHere = goesHere,
         Summary = $"What a {label.ToLowerInvariant()} holds.",
         Detail = $"And the edge a reader walks over when they mistake a {label.ToLowerInvariant()} for something else."
@@ -377,6 +379,42 @@ public class GeneratorTests
         };
 
         Assert.Contains(long_, Generator.TypeCatalogue(Tiers, [t]));
+    }
+
+    // -- the calls that are genuinely close --
+
+    private static TypeSchema[] Pair(params (string Other, string Text)[] versus) =>
+    [
+        Type("ADR", "ADRs", "decided", "adrs.md", "A decision", versus),
+        Type("Standard", "Standards", "normative", "standards.md", "A rule")
+    ];
+
+    [Fact]
+    public void A_disambiguation_is_headed_from_the_side_that_declares_it()
+    {
+        var text = Generator.Disambiguations(Pair(("standards", "The ADR is the decision, frozen.")));
+
+        Assert.Contains("**ADR vs Standard.** The ADR is the decision, frozen.", text);
+    }
+
+    // A pair needs both its types: a corpus with no standards is not helped by being told how one differs
+    // from an ADR, and the heading would name a page it cannot open.
+    [Fact]
+    public void A_pair_whose_other_half_is_not_stood_up_is_left_out()
+    {
+        var adrsOnly = Pair(("standards", "The ADR is the decision, frozen."))[..1];
+
+        Assert.Empty(Generator.Disambiguations(adrsOnly));
+    }
+
+    [Fact]
+    public void Disambiguations_are_sorted_by_heading()
+    {
+        var text = Generator.Disambiguations(Pair(
+            ("standards", "Second by heading."), ("zzz", "Never rendered — no such type.")));
+
+        Assert.Contains("ADR vs Standard", text);
+        Assert.DoesNotContain("Never rendered", text);
     }
 
     [Fact]

@@ -64,6 +64,50 @@ public static class SchemaChecks
             foreach (var rule in t.Rules)
                 CheckRule(at, key, rule, f);
         }
+
+        CheckVersus(schema, f);
+    }
+
+    // The disambiguations, which are the one thing a type says about another type rather than about
+    // itself. Three ways that goes wrong, and all three read as working until someone opens the page:
+    // a pair against a type no schema covers renders a heading naming nothing; a pair against itself
+    // renders "ADR vs ADR"; and a pair both sides declare renders twice, with two accounts of the same
+    // distinction that nothing keeps in step.
+    //
+    // Which side declares a pair is a convention rather than a rule the tool could derive — it is the
+    // type the heading is titled from — so the tool holds the two sides against each other and leaves the
+    // choice to whoever writes it.
+    private static void CheckVersus(Schema schema, List<Finding> f)
+    {
+        var declared = new Dictionary<string, string>(StringComparer.Ordinal);
+
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach (var (other, _) in t.Versus)
+        {
+            var at = $".schema/{key}.yaml";
+
+            if (other == key)
+            {
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' declares a 'versus:' against itself — a disambiguation has two sides."));
+                continue;
+            }
+
+            if (!schema.ByFolder.ContainsKey(other))
+            {
+                Dispatch(at, $"type '{key}' declares 'versus: {other}', and no schema covers that folder — either "
+                             + "the type was never adopted here, or the name is wrong.", f);
+                continue;
+            }
+
+            var pair = string.CompareOrdinal(key, other) < 0 ? $"{key}|{other}" : $"{other}|{key}";
+            if (declared.TryGetValue(pair, out var first))
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' declares a 'versus: {other}' that '{first}.yaml' already declares — a pair is "
+                    + "written once, by the type its heading is titled from."));
+            else
+                declared[pair] = key;
+        }
     }
 
     // The two files that between them define a tier, held against each other. `_universal.yaml` gives the

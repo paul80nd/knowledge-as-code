@@ -12,6 +12,20 @@ detail: >
   an overview points at the documents holding the detail instead of repeating them. One that starts accumulating
   facts of its own has become a maintenance liability.
 
+versus:
+  standards: >
+    An explanation helps you understand; a standard tells you what to do. If it says you **MUST** do something,
+    it is a standard however much context surrounds it.
+  processes: >
+    An explanation says how something works; a process says how to perform a task. If a reader is meant to
+    follow it step by step, it is a process.
+  services: >
+    An explanation covers how the pieces fit together; a service document describes one deployable component. If
+    it is about a single component, it is a service.
+  adrs: >
+    An explanation describes the shape something has; an ADR records the choice that gave it that shape, and is
+    frozen at the moment of choosing.
+
 id:
   prefix: exp
   style: slug

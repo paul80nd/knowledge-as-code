@@ -12,6 +12,12 @@ detail: >
   a new ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it,
   not here.
 
+versus:
+  standards: >
+    The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept current. If
+    you are writing "we considered X and rejected it", that is an ADR; if you are writing "you **MUST** do Y",
+    that is a standard. Most substantial changes produce both.
+
 id:
   prefix: adr
   style: numbered

@@ -12,6 +12,11 @@ detail: >
   it, the feature files that test it, and the NFRs that constrain it. A capability that starts accumulating
   detail of its own has stopped being one.
 
+versus:
+  services: >
+    A capability is what a customer gets. A service is a thing we deploy. One capability typically spans several
+    services; one service often contributes to several capabilities.
+
 id:
   prefix: cap
   style: slug

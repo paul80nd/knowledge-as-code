@@ -212,40 +212,57 @@ _reports/              # GENERATED
 
 ## Disambiguations
 
-The calls that are actually close.
+The calls that are actually close. Each is written once, on the type its heading names first, and appears only where the
+corpus holds both sides of it.
+
+<!-- BEGIN GENERATED: types-versus -->
 
 **ADR vs Standard.** The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept
-current. If you're writing "we considered X and rejected it", that's an ADR. If you're writing "you **MUST** do Y",
-that's a standard. Most substantial changes produce both.
-
-**Policy vs Standard.** A policy is true regardless of stack, framework or year — "we do not store secrets in source
-control". A standard is specific enough to check — "use Key Vault via workload identity". If it would still be true
-after replacing the entire technology estate, it's a policy.
-
-**Standard vs Control.** The standard says what to do; the control says how we know it happened. `Secrets MUST come
-from Key Vault` is a standard. `CI runs gitleaks on every PR` is a control. If it can fail a build, it's a control.
-
-**Capability vs Spec.** A *capability* is the product surface — Billing, Search, Notifications — described once, above
-the epic layer, as a hub of links. A *spec* is the per-feature application of standards to a concrete contract, and it
-belongs in the repo that owns the feature, next to the OpenAPI document and the feature files it describes. This follows
-the same central-vs-local rule as ADRs: cross-repo synthesis lives here, feature-level detail lives with the code.
+current. If you are writing "we considered X and rejected it", that is an ADR; if you are writing "you **MUST** do Y",
+that is a standard. Most substantial changes produce both.
 
 **Capability vs Service.** A capability is what a customer gets. A service is a thing we deploy. One capability
 typically spans several services; one service often contributes to several capabilities.
 
 **Discovery vs FAQ.** A discovery is unverified and might be wrong or already fixed. An FAQ has been confirmed by a
-human and carries authority. Never write straight to FAQ from a session — capture as a discovery and let promotion do
+human and carries authority. Never write straight to an FAQ from a session — capture the discovery and let promotion do
 the work.
+
+**Explanation vs ADR.** An explanation describes the shape something has; an ADR records the choice that gave it that
+shape, and is frozen at the moment of choosing.
+
+**Explanation vs Process.** An explanation says how something works; a process says how to perform a task. If a reader
+is meant to follow it step by step, it is a process.
+
+**Explanation vs Service.** An explanation covers how the pieces fit together; a service document describes one
+deployable component. If it is about a single component, it is a service.
+
+**Explanation vs Standard.** An explanation helps you understand; a standard tells you what to do. If it says you
+**MUST** do something, it is a standard however much context surrounds it.
+
+**Policy vs Standard.** A policy is true regardless of stack, framework or year — "we do not store secrets in source
+control". A standard is specific enough to check — "read secrets from the vault via workload identity". If it would
+still be true after replacing the entire technology estate, it is a policy.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
 
-**Tools vs ADR.** Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR carries the
-reasoning; the register carries the current state and version range. Small, uncontroversial adoptions need only the
+**Standard vs Control.** The standard says what to do; the control says how we know it happened. "Secrets **MUST** come
+from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
+control.
+
+**Tool vs ADR.** Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR carries the
+reasoning; the register carries the current state and the version range. Small, uncontroversial adoptions need only the
 register.
 
-**Glossary vs everything.** If a term needs explaining every time it appears, it belongs in the glossary — once — and
-everything else links to it.
+<!-- END GENERATED: types-versus -->
+
+One more call has only one side here. A **capability** is the product surface — Billing, Search, Notifications —
+described once, above the epic layer, as a hub of links. A **spec** is the per-feature application of standards to a
+concrete contract, and it belongs in the repo that owns the feature, next to the API description and the feature files
+it describes. That follows the same central-versus-local rule as a decision record: cross-repo synthesis lives here,
+feature-level detail lives with the code.
+
 
 ## Status of this taxonomy
 
