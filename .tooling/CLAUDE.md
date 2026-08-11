@@ -41,9 +41,9 @@ catalogue entry. `Validator.CheckRules` finds it by the id the schema's `rules:`
 implements is a statement of intent, is skipped, and is rendered on the type page as declared-but-not-enforced — so long
 as it declares no `severity:`, which `SchemaChecks` holds it to.
 
-Only the per-document shape has an interface. The rules still to come that need the whole corpus, a graph walk or git
-history do not fit `RuleContext`, and their interface should be designed against the first real one rather than ahead of
-it.
+Only the per-document shape has an interface. A rule needing the whole corpus, a graph walk or git history does not fit
+`RuleContext`, and its interface is designed against the first real one rather than ahead of it —
+[knowledge-as-code#103](https://github.com/paul80nd/knowledge-as-code/issues/103) is that one.
 
 **A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
 early so a later check does not report nonsense about a document already known to be broken. That order is the design,

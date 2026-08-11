@@ -96,8 +96,8 @@ These must mirror reality, so anything that reads as intent will eventually read
 
 * **Indicative mood, present tense.** *The API authenticates with workload identity.* Not *will authenticate*, not
   *should authenticate*.
-* **No future tense.** A planned service is not a service. Say so plainly and mark it — see
-  [below](#what-is-not-built-yet).
+* **No future tense.** Describe the service that runs today. Where one is agreed and unbuilt, the issue tracker holds
+  it — see [below](#write-what-exists).
 * **No promotion.** *Robust*, *seamless*, *world-class*, *best-in-class* describe nothing and survive no audit.
 * **Never normative.** A **MUST** in an explanation means the rule is now in two places and only one of them is owned.
   `not-normative` warns on RFC 2119 keywords appearing here.
@@ -148,30 +148,23 @@ Three consequences worth stating outright:
   absent edge is absent; it does not need a sentence saying so.
 * **No frontmatter restated in the body.** If the reader needs it rendered, that is the generator's job.
 
-## What is not built yet
+## Write what exists
 
-This framework documents where it is going as well as where it is. That is deliberate — the direction is the reminder of
-what is being built — but a reader must never have to guess which they are reading.
+Every document in this repository describes the corpus and the tooling as they are today. Agreed and unbuilt work goes
+to the issue tracker, where somebody closes it on the day it lands. A sentence about it in a record has nobody to close
+it, and a reader four months later cannot tell the plan from the fact.
 
-**Unmarked prose describes what exists today.** Anything else carries a marker, on its own line, immediately below the
-heading it governs, or leading the sentence it governs:
+That reaches the framework's own pages. [Automation](automation.md) groups the checks the validator runs, and
+[principles](principles.md) describes how the framework works today. A corpus running this framework has no use for the
+framework's roadmap, and leaving the roadmap out is what keeps every copy of these pages identical.
 
-> **Planned.** Agreed direction, not yet built. Something tracks it — an issue, or the page that owns the plan.
+**One unbuilt thing gets written down, because the tooling already reports it.** A type may declare a rule that nothing
+implements, and the generated checks table renders it under *Declared, not yet enforced*. Prose about such a rule states
+the declaration, in the present tense — *`feature-file-orphans` is declared and does not run*, never *CI checks the
+paths*. Claiming an unbuilt check as working is a correctness defect, and it is the most common one in this corpus.
 
-> **Aspirational.** Direction of travel. Neither agreed nor scoped.
-
-> **Declared.** The schema carries the rule and nothing runs it. Generated checks tables render these under *Declared,
-> not yet enforced*, so the marker names a state the tooling already reports.
-
-A marker governs everything up to the next heading at the same or a higher level. Two rules keep it honest: a marked
-section states what would have to be true for the marker to be removed, and **Planned** points at whatever is tracking
-the work. The removal condition is what keeps a marker honest, and a marker that never comes off is a wish wearing a
-plan's clothes.
-
-A declared rule is the one case where prose may name behaviour that does not happen. Write it in the present tense about
-the declaration rather than the behaviour — *`feature-file-orphans` is declared and does not run*, never *CI checks the
-paths*. Prose claiming an unbuilt check as working is a correctness defect, and it is the most common one in this
-corpus.
+Where that needs a marker, `**Declared.**` leads the sentence it governs, and governs everything up to the next heading
+at the same or a higher level.
 
 ## Where these rules come from
 

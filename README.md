@@ -87,17 +87,14 @@ and the policies' `Alignment` columns do something instead of sitting empty. Rew
 
 ## Maturity
 
-**Early.** The mechanism is real and tested; the taxonomy is only partly proven. Documentation here describes the
-direction as well as the state, and marks the difference — anything unmarked exists today, and anything else carries a
-**Planned** or **Aspirational** marker. [Authoring](knowledge-as-code/authoring.md#what-is-not-built-yet) defines them;
-[Principles](knowledge-as-code/principles.md#where-this-is-going) is where most of the unbuilt work is described.
+**Early.** The mechanism is real and tested. `kac` validates the schema, frontmatter, identity, structure, clauses,
+links, the graph and the type setup, and generates the indexes and reference tables from the same pass. Three test
+layers stand behind it — unit tests, Reqnroll feature specs and golden fixtures — and
+[Getting started](#getting-started) has the commands. The taxonomy is the half that is only partly proven.
 
-| Built                                                                                                                   | Planned                                         | Aspirational                                           |
-|-------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|--------------------------------------------------------|
-| `kac validate` — the schema itself, frontmatter, identity, structure, clauses, links, the graph, type setup, type pages | Tiered corpora — governance above domain        | Published machine-readable corpus contracts            |
-| `kac index` — generates `<type>/_index.md` and the schema and checks tables in each type root page                      | Explicit corpus dependencies in the lockfile    | Addressing records below document level across corpora |
-| `kac checks` — lists every check the validator implements                                                               | Validation against a published upstream version | Agents composing several corpora as one graph          |
-| Three test layers — unit, Reqnroll feature specs, golden fixtures                                                       |                                                 |                                                        |
+Every document here describes what exists today, and the
+[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds everything agreed and unbuilt.
+[Write what exists](knowledge-as-code/authoring.md#write-what-exists) is the rule, and says why.
 
 **Proven types: ADRs, policies and services.** The remaining schemas are written but have never met real content. That
 is the honest limit — the schema will be wrong in ways only real content reveals. Policies alone forced the mnemonic id

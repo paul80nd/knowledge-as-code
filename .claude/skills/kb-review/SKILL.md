@@ -75,8 +75,9 @@ Ten categories, ordered by what they cost the reader. Use these names in the rep
    Replace it with a link.
 3. **Duplicated across records.** Two records in the same folder carrying near-identical paragraphs. Flag both: one
    should hold it, or neither should.
-4. **Unmarked aspiration.** Content describing what is intended rather than what exists, with no **Planned** or
-   **Aspirational** marker. This is a correctness finding, not a style one — flag it prominently.
+4. **Aspiration.** Content describing what is intended rather than what exists. A record holds what exists today and the
+   issue tracker holds the rest, so this is a correctness finding rather than a style one — flag it prominently. One
+   exception: a schema rule the tool does not implement, where prose says the rule is declared and does not run.
 5. **Tier violation.** Future tense in a descriptive record. Rationale inside a procedural step. A discovery written
    with the confidence of an FAQ. A condition trailing the action it guards in a runbook.
 6. **Two ideas in one sentence.** The most common single defect. Usually a sentence over about 25 words, or a clause

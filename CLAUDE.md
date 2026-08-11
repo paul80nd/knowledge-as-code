@@ -50,9 +50,9 @@ Run **one `kac` invocation at a time**. File-based apps share build output and c
   wrote, not a list to hold in mind while writing, and the two produce different prose.
 * **Say less, once.** Cut filler, do not restate frontmatter in prose, and cite rather than duplicate. If a paragraph
   would appear in more than one document, it belongs in `knowledge-as-code/` and gets written a single time.
-* **Anything not yet built carries a marker.** Unmarked prose describes what exists today; direction is marked
-  **Planned** or **Aspirational**. Do not write aspirational content unmarked, and do not delete a marker without
-  deleting the gap it describes.
+* **Everything written here describes what exists today.** Agreed and unbuilt work belongs in the issue tracker, never
+  in a document. One exception: a schema rule the tool does not implement, where the prose says the rule is declared and
+  does not run, and the generated checks table carries it.
 * **Comments and documentation are timeless.** Describe the design as it is, not as it changed, and never as a
   correction of what it was. The history of a change belongs in its commit message.
 * **A Markdown edit leaves a whole document, not a diff.** Fold new material into what is already there and delete what

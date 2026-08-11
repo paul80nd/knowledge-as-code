@@ -52,8 +52,6 @@ one: `public-api`, `widgets` and `webhooks` all carry `axis: interface`.
 * **global-styles** — embed theming: the `--<prefix>-*` CSS custom-property contract, stable class hooks, and the
   authoring rules that keep every embedded widget restylable to match the host brand at render time. _Drafted._
 * **messaging** — the message bus contract: topic naming, payload shape, delivery guarantees. _Drafted._
-* **webhooks** — public-facing webhooks for third-party integrations: API-key auth, delivery, signing. _Planned._
-* **internal-api** — service-to-service APIs within the platform. _Planned._
 
 Auth, caching and versioning change with the consumer and the trust model, so the interface and domain categories stay
 distinct. The common and platform axes let a rule live once, at the layer where it is actually true.

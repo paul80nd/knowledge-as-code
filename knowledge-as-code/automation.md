@@ -2,20 +2,16 @@
 
 What CI checks, what it builds, and what it deliberately leaves alone.
 
-> **Part of this is built, part is intent.** Schema validation, link and graph checking, and index generation run on
-> every PR today. Drift detection, the rules digest, the reports and the skills do not exist yet. Two devices mark the
-> difference: a **Status** column on each table, dropped once every row in it is `Done`, and a **Planned** or
-> **Aspirational** marker leading the bullets that describe checks nothing runs. For what is enforced right now,
-> `kac checks` lists every check the validator implements — that command is the authority, this page is the intent.
+`kac checks` lists every check the validator implements, each with its severity and what it asks. That command is the
+authority on what runs. This page groups the same checks so a reader can see what the pipeline is for, and covers the
+generation and the exclusions that sit beside them.
 
-The principle: the pipeline's job is not only to check that documents are *well-formed*, but that they still describe
-**reality**. Schema validation catches typos. Drift detection catches a wiki quietly becoming fiction, which is the
-failure mode that actually matters.
+Every one of those checks reads the corpus. None reads the estate the corpus describes, so a service deleted last month
+still validates cleanly, and a descriptive record is only as true as the person who last read it.
 
 ## Validation
 
-Run on every PR. Failures block merge. A marked bullet is the exception: it describes a check this page intends and
-nothing runs yet, and each section carries its marked bullets last.
+Run on every PR. Failures block merge.
 
 ### Schema
 
@@ -24,7 +20,6 @@ nothing runs yet, and each section carries its marked bullets last.
 - Enum values valid.
 - Dates are quoted strings in `YYYY-MM-DD` form.
 - `id` is unique across the wiki, matches the type's prefix, and matches the folder it sits in.
-- **Aspirational.** Numeric IDs have no gaps and no reuse — including against IDs retired from withdrawn documents.
 - `tier` matches the tier defined for the document's type. A document claiming a tier its folder does not have is a
   placement error, not a metadata error.
 
@@ -35,52 +30,25 @@ nothing runs yet, and each section carries its marked bullets last.
 - Bidirectional pairs agree — `supersedes` / `superseded-by`, `promoted-from` / `promoted-to`,
   `verifies` / `verified-by`. A one-sided link fails. `implements` is deliberately not one of these: it points up from a
   standard to a policy and is never answered from the policy side.
-- **Aspirational.** No document references one that is `superseded`, `retired` or `expired`, except where the reference
-  is explicitly historical (`supersedes`, `promoted-from`, `replaces`).
-- **Planned.** `.index.json` is present, parses, and is not stale relative to the frontmatter it was built from; every
-  `path` in it resolves, every `id` is unique, and every id in a `related` array exists in the file. The artefact it
-  reads is in the [generation table](#generation) and is not built either. Tracked in
-  [knowledge-as-code#7](https://github.com/paul80nd/knowledge-as-code/issues/7).
 
 ### Per-tier rules
 
 - **Normative** — every standard cites an ADR in `derived-from` or a policy in `implements`.
-- **Descriptive** — see [drift](#drift-detection).
 - **Procedural** — `last-rehearsed` present, `"never"` permitted.
 - **Observed** — `expires` present; `provenance` present when `source: dreamed`.
-- **Planned. Decided** — an accepted document's content has not changed. Only status transitions and frontmatter
-  corrections are permitted after acceptance; substantive edits fail with a pointer to the supersession process. It
-  needs the diff against the committed content, so it belongs in a git-aware step rather than in the static validator.
-  Tracked in [knowledge-as-code#10](https://github.com/paul80nd/knowledge-as-code/issues/10).
-- **Aspirational. Normative** — every **MUST** / **MUST NOT** rule is claimed by a control, or the standard declares the
-  gap. `standards.yaml` carries it as `rules-have-controls`, declared and not enforced.
-- **Aspirational. Normative** — `review-by` is present and in the future at time of merge. Only the descriptive types
-  and FAQs carry the field today, so this needs the field before it needs the check.
 
 ### Hygiene
 
 - No credentials, and no data that reads as real. Declared per type, where the risk lives: integrations and data
   documents today.
 - Generated regions are not stale relative to their source.
-- **Planned.** Glossary terms used consistently; a term appearing repeatedly without a glossary entry is flagged
-  (warning, not a failure). Tracked in
-  [knowledge-as-code#14](https://github.com/paul80nd/knowledge-as-code/issues/14).
 
-## Drift detection
+### Rules the schema declares and nothing runs
 
-The checks that compare documents against the estate rather than against the schema. These are the reason Descriptive is
-its own tier.
-
-| Check             | Compares                                   | Flags                                                          | Status  |
-|-------------------|--------------------------------------------|----------------------------------------------------------------|---------|
-| Service catalogue | `services/` vs the ADO repository list     | Services documented but deleted; repos with no document        | Planned |
-| Tooling register  | `tools/` vs package manifests across repos | Packages in use never approved; approved tools now unused      | Planned |
-| Capabilities      | `feature-files` paths vs the repos         | Paths that don't exist; feature files claimed by no capability | Planned |
-| Integrations      | `used-by` vs service dependencies          | Undocumented external calls                                    | Planned |
-| NFRs              | `measured-by` vs monitoring configuration  | Targets with no corresponding alert                            | Planned |
-
-Drift checks run on a schedule rather than per-PR — they depend on state outside this repo, and a failure is a prompt to
-investigate, not a reason to block someone's documentation change.
+A type may declare a rule with a description and no severity. `kac validate` skips it and the type page renders it
+beneath the checks table under *Declared, not yet enforced*, so the gap is reported on the page a reader is already on
+rather than tracked somewhere they will not look. Prose about such a rule states what the schema declares, never what CI
+does.
 
 ## Generation
 
@@ -95,29 +63,20 @@ Generated content lives inside marker blocks in otherwise hand-written files:
 CI rewrites only what's between the markers and fails the build if a block is stale. This keeps one file per purpose —
 humans keep their prose, the machine keeps the tables current, and nobody has to choose.
 
-| Artefact                                    | Built from                               | Lives in                                    | Status  |
-|---------------------------------------------|------------------------------------------|---------------------------------------------|---------|
-| Type indexes                                | Frontmatter across the folder            | `<type>/_index.md`                          | Done    |
-| Repository & launchpad tables               | `services/`                              | Root `README.md`                            | Planned |
-| Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block                | Done    |
-| Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block      | Done    |
-| The way on to each type's fields            | `.schema/` + the types adopted           | `metadata.md` `types-metadata` block        | Done    |
-| Where a document goes                       | `.schema/` + the types adopted           | `taxonomy.md` `types-placement` block       | Done    |
-| The types at length, by tier                | `.schema/` + `_tiers.yaml`               | `taxonomy.md` `types-detail` block          | Done    |
-| The calls that are close                    | `.schema/` + the types adopted           | `taxonomy.md` `types-versus` block          | Done    |
-| How the types relate                        | `ref:` across the schema                 | `taxonomy.md` `types-graph` block (mermaid) | Done    |
-| The same edges, field by field              | `ref:` across the schema                 | `taxonomy.md` `types-edges` block           | Done    |
-| Where the names came from                   | `.schema/` + the types adopted           | `lineage.md` `types-lineage` block          | Done    |
-| Where a name collides                       | `.schema/` + the types adopted           | `lineage.md` `types-collisions` block       | Done    |
-| What this corpus holds                      | `.schema/` + the types adopted           | Root `README.md` `types-index` block        | Done    |
-| Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block       | Planned |
-| Control coverage report                     | `controls/` + standards' rules           | `controls/_index.md`                        | Planned |
-| Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/_index.md`                        | Planned |
-| Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`                     | Planned |
-| Orphan report                               | The link graph                           | `_reports/orphans.md`                       | Planned |
-| Service dependency diagram                  | `depends-on`                             | `services/_index.md` (mermaid)              | Planned |
-| `.order` files                              | Folder contents + type ordering          | Each folder                                 | Planned |
-| `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                                   | Planned |
+| Artefact                         | Built from                     | Lives in                                    |
+|----------------------------------|--------------------------------|---------------------------------------------|
+| Type indexes                     | Frontmatter across the folder  | `<type>/_index.md`                          |
+| Per-type frontmatter reference   | `.schema/`                     | `<type>.md` `schema-*` block                |
+| Universal frontmatter reference  | `.schema/_universal.yaml`      | `metadata.md` `schema-universal` block      |
+| The way on to each type's fields | `.schema/` + the types adopted | `metadata.md` `types-metadata` block        |
+| Where a document goes            | `.schema/` + the types adopted | `taxonomy.md` `types-placement` block       |
+| The types at length, by tier     | `.schema/` + `_tiers.yaml`     | `taxonomy.md` `types-detail` block          |
+| The calls that are close         | `.schema/` + the types adopted | `taxonomy.md` `types-versus` block          |
+| How the types relate             | `ref:` across the schema       | `taxonomy.md` `types-graph` block (mermaid) |
+| The same edges, field by field   | `ref:` across the schema       | `taxonomy.md` `types-edges` block           |
+| Where the names came from        | `.schema/` + the types adopted | `lineage.md` `types-lineage` block          |
+| Where a name collides            | `.schema/` + the types adopted | `lineage.md` `types-collisions` block       |
+| What this corpus holds           | `.schema/` + the types adopted | Root `README.md` `types-index` block        |
 
 Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table, the
 types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table, the strip on
@@ -139,33 +98,6 @@ The graph is written to the subset of Mermaid an Azure DevOps wiki renders. That
 and a diagram exceeding it renders nothing at all rather than an error: `graph` rather than `flowchart`, no subgraphs,
 and no arrow longer than `-->`. A fenced block carries it rather than ADO's `:::` container, which GitHub shows as
 literal text.
-
-### The rules digest — a block inside root `CLAUDE.md`
-
-Root `CLAUDE.md` is hand-written: it is the file an agent always reads, and most of what it needs there — which
-repository this is, what to run before committing, the conventions nothing enforces — is not derivable from the corpus.
-The digest is generated *into* it as a `rules-digest` block, the way a type page carries its schema table, so that
-standing guidance and generated rules arrive together instead of competing for the same filename.
-
-It is the one generated artefact with a hard constraint on its contents:
-
-- **Active standards only** — not draft, not planned.
-- **MUST and MUST NOT only.** SHOULD and MAY stay in the standard.
-- **One line per rule, plus a link.** The digest's job is to make an agent aware the rule exists and know where to read
-  it — not to contain it.
-- **The glossary is included in full.** Highest value per byte in the corpus.
-- **A hard line budget, enforced by CI.**
-
-The budget is the constraint worth arguing about. A rulebook accumulates: every standard adopted adds **MUST** and
-**MUST NOT** clauses and none of them expire, while the size at which an always-loaded context file stays effective does
-not move. Any corpus that keeps writing standards eventually has more rules than fit. Past that size adherence degrades,
-so an oversized digest is worse than a short one: it dilutes everything in it.
-
-The budget is therefore a forcing function. When it is exceeded, the answer is not to raise it. It is to decide which
-rules are genuinely always-on and which belong in an on-demand skill. That conversation is the point.
-
-*Open question: whether the digest needs tiering — a small always-on core plus per-stack digests loaded by skill. Likely
-yes, once the budget first bites.*
 
 ## Exclusions
 
@@ -197,44 +129,16 @@ not placeholders, the identity line, the required sections, and the links that p
 is not one document's problem but every document's, and it is found by the next author rather than by whoever last
 edited the file.
 
-## Scheduled tasks
-
-Run outside CI, on a schedule.
-
-**Staleness sweep** — documents past `review-by`, runbooks past their rehearsal frequency, discoveries past `expires`.
-Expired discoveries with no promotion are closed with a note rather than deleted.
-
-**Drift detection** — the table above.
-
-**The dreamer** — reads local session logs, distills candidate discoveries, and proposes promotions of existing
-discoveries that have accumulated corroboration.
-
-Two rules on the dreamer, both non-negotiable:
-
-1. **It opens a pull request. It never commits.** It proposes knowledge; a human accepts it.
-2. **Every proposal carries `provenance`** — a reference to the session and passage it came from, so review is a
-   thirty-second check rather than an act of faith.
-
-The reason for both: session logs are full of things that were confidently believed and then disproved twenty minutes
-later. A distillation pass that can't tell "we concluded X" from "we briefly thought X" will manufacture doctrine out of
-dead ends. Provenance is what makes that detectable.
-
 ## Skills
 
-The agent-facing machinery. Not automation in the CI sense, but part of the same system.
+The agent-facing machinery. Not automation in the CI sense, and part of the same system.
 
-| Skill           | Purpose                                                                                     | Status  |
-|-----------------|---------------------------------------------------------------------------------------------|---------|
-| `kb-search`     | Where to look by question type; what frontmatter is grep-able; how to follow the link graph | Planned |
-| `kb-contribute` | How to add a document of type X — template, frontmatter, validation                         | Planned |
-| `adr`           | Draft an ADR: next number, template, supersession handling                                  | Planned |
-| `note`          | Capture a discovery mid-session                                                             | Planned |
-| `save` / `load` | Session handover (local storage — see [taxonomy](taxonomy.md))                              | Planned |
-| `conformance`   | Run the relevant conformance checklists against a diff                                      | Planned |
-| `dream`         | The distillation pass                                                                       | Planned |
+[`kb-review`](../.claude/skills/kb-review/SKILL.md) reads a record against the tier rules in
+[authoring](authoring.md) and the sentence rules in [style](style.md), and proposes rewrites. Somebody asks for it, so
+what it returns is a reading rather than a gate. Everything that blocks a merge is above.
 
-These are skills rather than per-folder `CLAUDE.md` files for a specific reason: a subdirectory `CLAUDE.md` loads only
-when a session reads a file in that directory. A session working in a service repository would never trigger one in the
+It is a skill rather than a per-folder `CLAUDE.md` for a specific reason: a subdirectory `CLAUDE.md` loads only when a
+session reads a file in that directory. A session working in a service repository would never trigger one in the
 corpus's `standards/` folder. Skills are selected by description matching and work across repositories, which is the
 actual use case.
 
