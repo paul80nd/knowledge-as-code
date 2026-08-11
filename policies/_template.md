@@ -90,7 +90,8 @@ id carrying two meanings is what turns a diff into a false reading.
 **Writing a clause.** Start with the modal verb; the subject is always us, so don't restate it. One obligation per
 clause — if it needs an "and" joining two different actions, it is two clauses. Keep them implementation-agnostic: a
 clause says what must be true, a standard says how, and if an engineer could action it without a standard beneath it, it
-has escaped downward and belongs in the standard instead.
+has escaped downward and belongs in the standard instead. A clause no standard implements is an ordinary state and takes
+no annotation: the graph reports the gap, and Notes carries the explanation where one is owed.
 
 **The evidenceability test.** Before writing a clause, ask what an auditor would ask to *see*. If you can't answer, the
 clause is unevidenceable and needs rewriting — "consider accessibility" fails, "establish accessibility requirements
@@ -100,11 +101,6 @@ during design" passes. The question itself is not published; controls carry evid
 empty cell is honest. Reference-style links resolving into `/frameworks`, where the anchor is the framework's name with
 no version and no punctuation (`iso-27001`); the label carries the version (`[ISO 27001:2022]`). Clause refs within a
 framework use `.`.
-
-**`_(aspirational)_`** marks a clause we hold as direction, with no standard expected beneath it. It earns its place on
-a **MUST** or a SHOULD. There it says what the modal cannot: we bind ourselves to this and have not yet built what would
-carry it. A COULD is already an aspiration, so the token repeats its modal and is left off. Use it deliberately — an
-aspirational **MUST** is a real and useful state, but a policy where most clauses carry it is a wish list.
 
 ## Exceptions
 
