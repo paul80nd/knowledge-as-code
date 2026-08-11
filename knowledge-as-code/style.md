@@ -87,7 +87,7 @@ members.
 * **Six sentences to a paragraph.** The same kind of ceiling as the sentence one above. Past it, a paragraph is usually
   carrying a second point that deserves its own.
 * **Prefer the short word, and the same word.** Two names for one thing read as two things. Elegant variation is a
-  defect here. Where the [glossary](/glossary.md) distinguishes near-synonyms, the distinction is load-bearing.
+  defect here. Where the glossary distinguishes near-synonyms, the distinction is load-bearing.
 * **Cut filler.** *Simply*, *obviously*, *of course*, *it is important to note*, *in order to*. Delete the word and read
   the sentence again. If nothing was lost, it was filler.
 * **Cut any sentence that only announces the next one.**

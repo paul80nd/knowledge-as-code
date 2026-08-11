@@ -75,27 +75,11 @@ CI also fails on an undefined label or an unused definition, and ignores fenced 
 
 ## How do I contribute…?
 
-Type-specific steps live with the type. The review model below applies to all of them.
+Type-specific steps live with the type: each type's own page says what it holds, what it is not, and what adding one
+asks of you. [Taxonomy](taxonomy.md) has the decision table if you are not sure which you need, and the index at the
+repository root lists what this corpus actually holds.
 
-| To add…                               | See                                 | Tier        |
-|---------------------------------------|-------------------------------------|-------------|
-| An architectural decision             | [adrs.md](/adrs.md)                 | Decided     |
-| A rule people must follow             | [standards.md](/standards.md)       | Normative   |
-| An engineering commitment             | [policies.md](/policies.md)         | Normative   |
-| A check on a rule                     | [controls.md](/controls.md)         | Normative   |
-| A target for uptime or recovery       | [nfrs.md](/nfrs.md)                 | Normative   |
-| A confirmed fix                       | [faqs.md](/faqs.md)                 | Normative   |
-| An explanation of how something works | [explanations.md](/explanations.md) | Descriptive |
-| A component description               | [services.md](/services.md)         | Descriptive |
-| A product surface                     | [capabilities.md](/capabilities.md) | Descriptive |
-| An approved tool                      | [tools.md](/tools.md)               | Descriptive |
-| An external dependency                | [integrations.md](/integrations.md) | Descriptive |
-| Data ownership or retention           | [data.md](/data.md)                 | Descriptive |
-| A term                                | [glossary.md](/glossary.md)         | Descriptive |
-| A planned procedure                   | [processes.md](/processes.md)       | Procedural  |
-| An incident procedure                 | [runbooks.md](/runbooks.md)         | Procedural  |
-| An incident account                   | [postmortems.md](/postmortems.md)   | Decided     |
-| Something you noticed                 | [discoveries.md](/discoveries.md)   | Observed    |
+The review model below applies to all of them.
 
 ## Review by tier
 

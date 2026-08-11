@@ -3,7 +3,7 @@
     "validated": 1,
     "templates": 1,
     "skipped": 0,
-    "errors": 5,
+    "errors": 10,
     "warnings": 0
   },
   "findings": [
@@ -39,8 +39,43 @@
       "file": "knowledge-as-code/taxonomy.md",
       "line": 5,
       "severity": "error",
+      "check": "link-resolves",
+      "message": "link target '/adrs/0001-knowledge-as-code.md' does not resolve."
+    },
+    {
+      "file": "knowledge-as-code/taxonomy.md",
+      "line": 5,
+      "severity": "error",
       "check": "framework-names-types",
       "message": "'/adrs/0001-knowledge-as-code.md' links to a record in 'adrs' from a document every corpus shares. Those records are the first thing a corpus deletes, so the link dies even where the type is used."
+    },
+    {
+      "file": "knowledge-as-code/taxonomy.md",
+      "line": 7,
+      "severity": "error",
+      "check": "link-resolves",
+      "message": "link target '/nowhere.md' does not resolve."
+    },
+    {
+      "file": "knowledge-as-code/taxonomy.md",
+      "line": 8,
+      "severity": "error",
+      "check": "fragment-resolves",
+      "message": "'#no-such-heading' names no heading in '/adrs.md'."
+    },
+    {
+      "file": "knowledge-as-code/taxonomy.md",
+      "line": 8,
+      "severity": "error",
+      "check": "framework-names-types",
+      "message": "'/adrs.md#no-such-heading' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off."
+    },
+    {
+      "file": "knowledge-as-code/taxonomy.md",
+      "line": 10,
+      "severity": "error",
+      "check": "framework-names-types",
+      "message": "'/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off."
     }
   ]
 }

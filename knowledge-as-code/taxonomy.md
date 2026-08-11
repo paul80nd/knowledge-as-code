@@ -135,10 +135,9 @@ level, so that "the build fails silently if X" has somewhere to go the moment it
 
 <!-- END GENERATED: types-detail -->
 
-**Session state** is the one thing with no type: where a piece of work got to, for handover between sessions, and
-**not stored in this repo**. Session logs routinely contain stack traces, connection strings and customer identifiers,
-so they stay local. Only distilled, reviewed discoveries reach the wiki.
-
+**Session state** is the one thing with no type: where a piece of work got to, for handover between sessions, and **not
+stored in this repo**. Session logs routinely contain stack traces, connection strings and customer identifiers, so they
+stay local. Only distilled, reviewed discoveries reach the wiki.
 
 ## How the types relate
 
@@ -149,7 +148,8 @@ whole reason for declaring them rather than writing the link in prose.
 <!-- BEGIN GENERATED: types-graph -->
 
 ```mermaid
-graph LR;
+graph LR
+;
   t_adrs[ADR];
   t_capabilities[Capability];
   t_controls[Control];
@@ -168,24 +168,24 @@ graph LR;
   t_standards[Standard];
   t_tools[Tool];
   t_adrs -->|related| t_adrs;
-  t_adrs -->|superseded-by| t_adrs;
-  t_capabilities -->|implemented-by| t_services;
+  t_adrs -->|superseded - by| t_adrs;
+  t_capabilities -->|implemented - by| t_services;
   t_capabilities -->|nfrs| t_nfrs;
-  t_controls -->|applies-to| t_services;
+  t_controls -->|applies - to| t_services;
   t_controls -->|verifies| t_standards;
-  t_data -->|flows-to| t_services;
-  t_data -->|flows-to| t_integrations;
-  t_data -->|owned-by| t_services;
-  t_discoveries -->|applies-to| t_services;
-  t_discoveries -->|promoted-to| t_faqs;
-  t_discoveries -->|promoted-to| t_standards;
+  t_data -->|flows - to| t_services;
+  t_data -->|flows - to| t_integrations;
+  t_data -->|owned - by| t_services;
+  t_discoveries -->|applies - to| t_services;
+  t_discoveries -->|promoted - to| t_faqs;
+  t_discoveries -->|promoted - to| t_standards;
   t_explanations -->|explains| t_services;
   t_explanations -->|explains| t_capabilities;
-  t_faqs -->|applies-to| t_services;
-  t_integrations -->|used-by| t_services;
-  t_nfrs -->|applies-to| t_services;
-  t_nfrs -->|applies-to| t_capabilities;
-  t_nfrs -->|constrained-by| t_integrations;
+  t_faqs -->|applies - to| t_services;
+  t_integrations -->|used - by| t_services;
+  t_nfrs -->|applies - to| t_services;
+  t_nfrs -->|applies - to| t_capabilities;
+  t_nfrs -->|constrained - by| t_integrations;
   t_postmortems -->|affected| t_services;
   t_postmortems -->|affected| t_capabilities;
   t_postmortems -->|prompted| t_adrs;
@@ -193,14 +193,14 @@ graph LR;
   t_postmortems -->|prompted| t_nfrs;
   t_postmortems -->|prompted| t_faqs;
   t_postmortems -->|prompted| t_standards;
-  t_processes -->|applies-to| t_services;
-  t_runbooks -->|applies-to| t_services;
-  t_services -->|data-stores| t_data;
-  t_services -->|depends-on| t_services;
-  t_standards -->|applies-to| t_services;
-  t_standards -->|derived-from| t_adrs;
+  t_processes -->|applies - to| t_services;
+  t_runbooks -->|applies - to| t_services;
+  t_services -->|data - stores| t_data;
+  t_services -->|depends - on| t_services;
+  t_standards -->|applies - to| t_services;
+  t_standards -->|derived - from| t_adrs;
   t_standards -->|implements| t_policies;
-  t_tools -->|decided-in| t_adrs;
+  t_tools -->|decided - in| t_adrs;
   t_tools -->|replaces| t_tools;
 ```
 
@@ -259,6 +259,40 @@ than in its entirety, so the edge leaves the clause table and lands on a control
 [Frameworks](/frameworks.md) is the far end of every one of those edges, and the only place our standing against a
 framework is recorded. It carries no `ref:` and so appears in no row above.
 
+## Layout
+
+Each type follows the same shape:
+
+```
+<type>.md              # what it is, why, how to contribute — human-written
+<type>/
+  ├── _index.md        # index — GENERATED
+  ├── _template.md     # what humans and agents copy
+  └── <records>.md
+```
+
+`_` is reserved. A leading underscore means the framework's own artefact rather than a knowledge record — the generated
+index and the template inside a type folder, the scaffolding directories alongside them. The tool reads the prefix, not
+the names, so anything under it is excluded from discovery and never validated as a record. A record must therefore not
+take it. The prefix also sorts ahead of letters whether or not a listing folds case, which is what keeps the framework's
+files together at the top of a folder someone is scanning for content.
+
+Alongside the types:
+
+```
+README.md              # orientation
+CLAUDE.md              # agent guidance, with the rules digest generated into it
+frameworks.md          # external frameworks, and what each obliges us to
+knowledge-as-code.md   # the approach
+knowledge-as-code/     # the system's own documentation — outside the taxonomy
+  manifest.yaml        # which files are shared and which are local
+.mechanism.lock        # this corpus's sync state
+.claude/skills/        # agent machinery — SYNCED
+.schema/               # the machine-readable schema — SYNCED
+.tooling/              # validators and generators — SYNCED
+_plan/                 # migration scaffolding — temporary
+_reports/              # GENERATED
+```
 
 ## Disambiguations
 
@@ -312,7 +346,6 @@ described once, above the epic layer, as a hub of links. A **spec** is the per-f
 concrete contract, and it belongs in the repo that owns the feature, next to the API description and the feature files
 it describes. That follows the same central-versus-local rule as a decision record: cross-repo synthesis lives here,
 feature-level detail lives with the code.
-
 
 ## Status of this taxonomy
 

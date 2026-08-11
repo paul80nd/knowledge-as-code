@@ -366,14 +366,27 @@ public static class Validator
 
         foreach (var rel in FrameworkFiles(repoRoot))
         {
+            // Read with the generated blocks emptied. Everything below is a question about what a person
+            // wrote, and a generated block answers to `index --check` instead — it is regenerated from this
+            // corpus, so its links are this corpus's and are right by construction.
             var doc = Doc.Parse(rel, Generator.Authored(Files.ReadLf(Path.Combine(repoRoot, rel))),
                 schema, requireFrontmatter: false);
             if (doc is null) continue;
+
+            // The ordinary link pass, which these documents have never had: they are excluded from
+            // discovery, and the page pass only visits type pages. A dead link here reached the wiki
+            // silently and was found by a reader.
+            LinkChecks.CheckPage(doc, schema, repoRoot, f);
 
             foreach (var link in doc.Links)
             {
                 var target = link.Target.Split('#')[0].TrimEnd('/');
                 if (target.Length == 0 || LinkChecks.IsExternal(target)) continue;
+
+                // Azure DevOps resolves a page with or without its extension, so both forms are the same
+                // link and both are caught. Dropping it here is what lets one lookup answer for `/adrs`
+                // and `/adrs.md` alike.
+                if (target.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) target = target[..^3];
 
                 var slash = target.LastIndexOf('/');
                 var page = slash > 0 ? target[..slash] : target;

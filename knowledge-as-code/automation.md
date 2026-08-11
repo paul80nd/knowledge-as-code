@@ -173,6 +173,12 @@ Stated explicitly rather than left implicit in a glob, so that a validation fail
 widening an exclusion. The `_` rows are the one deliberate glob: the prefix is reserved for the framework's own
 artefacts, and the tool tests the prefix rather than the names — see [taxonomy](taxonomy.md#layout).
 
+**Excluded as a record is not excluded from every check.** The framework's own documents — `knowledge-as-code.md` and
+those beneath it — carry no frontmatter and are validated against no schema, but they still link to things: their links
+and fragments are resolved like any page's, and `framework-names-types` holds them to naming a type rather than linking
+to one. Their generated blocks are emptied before either question is asked, since `index --check` already answers for
+those and their links are written from this corpus.
+
 **A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
 answers to nothing that needs a filename, so discovering it as a record would report a dozen faults that are the file
 doing its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that are
