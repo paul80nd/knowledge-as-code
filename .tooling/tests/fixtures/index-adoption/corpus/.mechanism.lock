@@ -1,0 +1,10 @@
+version: 1
+corpus: test-index-adoption
+role: consumer
+
+types:
+  - adrs
+
+upstream:
+  url:
+accepted-divergences: []
