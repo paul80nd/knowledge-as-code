@@ -1,6 +1,6 @@
 name: A question
 description: About the taxonomy, the sync model, or why something is shaped the way it is.
-labels: [question]
+labels: [ question ]
 
 body:
   - type: markdown

@@ -21,8 +21,8 @@ design problem worth finding on paper.
 
 ## Scope
 
-A data document is **descriptive**: it mirrors what is actually stored. We organise data documents by data domain
-rather than by store, because a domain often spans stores and that spread is the part worth seeing.
+A data document is **descriptive**: it mirrors what is actually stored. We organise data documents by data domain rather
+than by store, because a domain often spans stores and that spread is the part worth seeing.
 
 Not the place for:
 

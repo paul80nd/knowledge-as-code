@@ -97,8 +97,8 @@ distinct. The common and platform axes let a rule live once, at the layer where 
 ## Adding or changing a Standard
 
 Name where the standard comes from: an ADR in `derived-from`, a policy in `implements`, or both. `provenance-required`
-fails a standard carrying neither. Where you can name neither, either the decision has not been made — make it — or
-what you are writing is guidance rather than a standard.
+fails a standard carrying neither. Where you can name neither, either the decision has not been made — make it — or what
+you are writing is guidance rather than a standard.
 
 Write the rules with RFC 2119 keywords, and make each one **testable**. Where a rule cannot be checked against a
 concrete artefact, sharpen it or move it to the rationale section. Every **MUST** and **MUST NOT** should have a

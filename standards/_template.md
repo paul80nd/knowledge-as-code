@@ -26,7 +26,7 @@ is reviewed. What is below is only what a standard adds to that.
 * **`id`** — `std-` plus a four-digit number, never reused.
 * **`status`** — `draft` until agreed, then `active`, and later `deprecated` or `superseded`. Values are lowercase.
 * **`axis`** — Places the standard at its true altitude — the layer where the rule is actually true.
-* **`derived-from`** — The ADR id(s) this standard distils. A standard citing neither an ADR here nor a policy in
+* **`derived-from`** — The ADR id (s) this standard distils. A standard citing neither an ADR here nor a policy in
   `implements` is guidance, not a standard.
 * **`applies-to`** — Service ids, or `all`.
 * **`review-by`** — A quoted `"YYYY-MM-DD"`. Drives the staleness report.
@@ -78,7 +78,7 @@ makes the standard *usable* rather than merely readable.
 
 ## Rationale and provenance
 
-One or two lines on *why*, then link down to the ADR(s) that decided it. Do not restate the ADR's full reasoning — the
+One or two lines on *why*, then link down to the ADR (s) that decided it. Do not restate the ADR's full reasoning — the
 ADR owns the "why"; this standard owns the "what". Link, don't duplicate.
 
 - [adr-{{a}}] — {{what it decided}}

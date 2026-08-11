@@ -33,8 +33,8 @@ One or two sentences on what this explains and who it's for.
 
 ## {{Section}}
 
-Narrative. Link out to the services, capabilities, ADRs and standards that hold the detail
-rather than restating them here.
+Narrative. Link out to the services, capabilities, ADRs and standards that hold the detail rather than restating them
+here.
 
 ## Where the detail lives
 
