@@ -11,6 +11,15 @@ detail: >
   Every integration point needs a deliberate failure mode and a fallback, which is why both are required rather
   than optional, along with who to contact when it is down.
 
+lineage:
+  prior-art: "[Nygard, *Release It!* (2nd ed.)](https://pragprog.com/titles/mnee2/release-it-second-edition/) — integration points"
+  alignment: >
+    That every integration point needs a deliberate failure mode and fallback, which is why those are required
+    fields
+  divergence: >
+    A pattern book, not a document type — and prior art for only half the fields. The commercial ones come from
+    supplier management
+
 id:
   prefix: int
   style: slug

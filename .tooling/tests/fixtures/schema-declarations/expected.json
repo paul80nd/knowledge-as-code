@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 19,
+    "errors": 20,
     "warnings": 0
   },
   "findings": [
@@ -62,6 +62,13 @@
       "severity": "error",
       "check": "schema-shape",
       "message": "type 'widgets' declares no 'goes-here:' — say what a contributor has in hand when this type is the answer, in one line the taxonomy and the corpus index can be generated from."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' declares no 'lineage.prior-art:' — name what the type is nearest to, or say that nothing established fits. Claiming an ancestor a type does not have is worse than admitting none."
     },
     {
       "file": ".schema/widgets.yaml",

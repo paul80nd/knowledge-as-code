@@ -11,6 +11,14 @@ detail: >
   Organised by store rather than by processing activity, which is what makes it useful to an engineer and
   insufficient for a regulator.
 
+lineage:
+  prior-art: "[GDPR Article 30](https://eur-lex.europa.eu/eli/reg/2016/679/oj), records of processing activities"
+  alignment: >
+    Categories of data, recipients, transfers, erasure time limits, security measures
+  divergence: >
+    Article 30 is organised by processing activity and by controller. Ours is organised by store. **A Data
+    document is not a ROPA and does not satisfy Article 30**
+
 notes: >
   Folder is singular because English gives no plural. One of two exceptions to the plural-folder rule,
   alongside `glossary.md`.

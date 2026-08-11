@@ -87,6 +87,23 @@ public static class Generator
         return string.Join("\n", sections).TrimEnd('\n');
     }
 
+    // Where each type's name came from. A type with no useful ancestor carries that as its prior art and
+    // leaves the other two columns empty, which renders as an em dash: the framework has three types it
+    // claims no lineage for, and saying so is the point of the row rather than a gap in it.
+    public static string LineageTable(IEnumerable<TypeSchema> types) =>
+        RenderTable(["Type", "Nearest prior art", "Alignment", "Divergence"],
+            [.. types.Where(t => t.Lineage is not null)
+                .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
+                .Select(t => new List<string>
+                {
+                    $"[{t.DisplayName}]({Link(t)})", Escape(t.Lineage!.PriorArt),
+                    Cell(t.Lineage.Alignment), Cell(t.Lineage.Divergence)
+                })]);
+
+    // An answer that is deliberately absent, written as one. An empty cell in a table of this shape reads
+    // as something nobody got round to.
+    private static string Cell(string text) => text.Length > 0 ? Escape(text) : "—";
+
     // The edges, read off the `ref:` declarations that make them checkable. One row per cross-reference
     // field a type carries, which is one row per thing an author fills in — so a reciprocal pair is two
     // rows rather than one, because it is two fields, and the column naming the counterpart is what says

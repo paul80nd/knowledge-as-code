@@ -11,6 +11,14 @@ detail: >
   It carries provenance back to the observation it came from, so the reader can see how far the fix has been
   taken on trust.
 
+lineage:
+  prior-art: "ITIL Problem Management — the *known error* construct"
+  alignment: >
+    A problem whose cause is understood and whose fix is documented; the observed → analysed → promoted lifecycle
+  divergence: >
+    ITIL binds a known error to a formal problem record and an owning practice. Ours is promoted by any human
+    verification, from anything noticed
+
 id:
   prefix: faq
   style: numbered

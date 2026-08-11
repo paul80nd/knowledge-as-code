@@ -15,6 +15,13 @@ versus:
     Are you doing this because you planned to, or because something is broken? Planned is a process. Broken is a
     runbook.
 
+lineage:
+  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Procedure layer; [Diátaxis how-to guide](https://diataxis.fr/how-to-guides/)"
+  alignment: >
+    Steps that operationalise the standard above them
+  divergence: >
+    Splitting the procedural layer by reading conditions is ours — see [First principles](#first-principles)
+
 id:
   prefix: prc
   style: slug

@@ -19,11 +19,12 @@ public class SchemaCheckTests
         (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
         string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
         string goesHere = "A widget", string labelPlural = "Widgets", string detail = "It is a widget.",
-        (string Other, string Text)[]? versus = null) => new()
+        (string Other, string Text)[]? versus = null, bool lineage = true) => new()
     {
         TypeName = "widget",
         Key = folder,
         Versus = versus ?? [],
+        Lineage = lineage ? new LineageSpec("None.", "", "") : null,
         Folder = folder,
         Shape = shape,
         IdStyle = idStyle,
@@ -383,6 +384,21 @@ public class SchemaCheckTests
     [Fact]
     public void A_detail_longer_than_a_table_cell_passes()
         => Assert.Empty(Check(Widgets(detail: new string('x', Generator.DescriptionMax * 3))));
+
+    [Fact]
+    public void A_type_that_names_no_prior_art_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(lineage: false)));
+
+        Assert.Equal("schema-shape", finding.Check);
+        Assert.Contains("no 'lineage.prior-art:'", finding.Message);
+    }
+
+    // "None" is one of the answers, and the two columns beside it are questions a type with no ancestor
+    // cannot answer — so an empty pair is a settled state rather than an unfinished one.
+    [Fact]
+    public void A_prior_art_of_none_with_nothing_beside_it_passes()
+        => Assert.Empty(Check(Widgets()));
 
     // -- the disambiguations, which are the one thing a type says about another --
 

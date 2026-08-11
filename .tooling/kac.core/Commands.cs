@@ -90,6 +90,9 @@ public static class Commands
             ("types-graph", Generator.RelationDiagram(stoodUp)),
             ("types-edges", Generator.RelationTable(stoodUp)));
 
+        Splice(Path.Combine(repoRoot, "knowledge-as-code", "lineage.md"),
+            ("types-lineage", Generator.LineageTable(stoodUp)));
+
         Splice(Path.Combine(repoRoot, "README.md"),
             ("types-index", Generator.TypesIndex(stoodUp, "knowledge-as-code/taxonomy.md")));
 

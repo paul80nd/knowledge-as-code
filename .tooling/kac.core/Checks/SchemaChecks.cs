@@ -210,6 +210,14 @@ public static class SchemaChecks
                 $"type '{key}' declares no 'detail:' — say what the type carries beyond its first sentence, and the "
                 + "edge a reader is most likely to walk over."));
 
+        // Only the prior art is required, and "none" is one of its answers. What the framework took from an
+        // ancestor and where it parts company are questions a type with no ancestor cannot answer, so an
+        // empty pair is a real state rather than an unfinished one.
+        if (t.Lineage is null)
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"type '{key}' declares no 'lineage.prior-art:' — name what the type is nearest to, or say that "
+                + "nothing established fits. Claiming an ancestor a type does not have is worse than admitting none."));
+
         return;
 
         void Line(string name, string value, string says)

@@ -417,6 +417,40 @@ public class GeneratorTests
         Assert.DoesNotContain("Never rendered", text);
     }
 
+    // -- where the names came from --
+
+    private static TypeSchema Ancestor(string label, string key, LineageSpec? lineage) => new()
+    {
+        Key = key, Label = label, LabelPlural = label + "s", Tier = "decided", Page = $"{key}.md",
+        Summary = "A thing.", Detail = "A longer thing.", GoesHere = "A thing", Lineage = lineage
+    };
+
+    [Fact]
+    public void A_lineage_row_carries_the_prior_art_and_both_sides_of_it()
+    {
+        var table = Generator.LineageTable(
+            [Ancestor("ADR", "adrs", new LineageSpec("[Nygard](https://x)", "The three sections", "Ours spans repos"))]);
+
+        Assert.Contains("| [ADR](/adrs)", table);
+        Assert.Contains("[Nygard](https://x)", table);
+        Assert.Contains("The three sections", table);
+        Assert.Contains("Ours spans repos", table);
+    }
+
+    // Three types have no ancestor, and the row exists to say so. An empty cell would read as unfinished.
+    [Fact]
+    public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
+    {
+        var table = Generator.LineageTable([Ancestor("Discovery", "discoveries", new LineageSpec("None.", "", ""))]);
+
+        Assert.Contains("| None.", table);
+        Assert.Contains("| — ", table);
+    }
+
+    [Fact]
+    public void A_type_that_declares_no_lineage_is_left_out_of_the_table()
+        => Assert.DoesNotContain("Widget", Generator.LineageTable([Ancestor("Widget", "widgets", null)]));
+
     // -- how the types relate --
 
     private static TypeSchema Linked(string label, string key, params (string Field, string[] Refs, string? Back)[] fs)

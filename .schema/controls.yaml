@@ -11,6 +11,14 @@ detail: >
   Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
   honest state and the number worth watching.
 
+lineage:
+  prior-art: "[NIST SP 800-53A Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/a/r5/final), the assessment-procedure construct"
+  alignment: >
+    Objective, method and expected evidence, bound to the requirement it tests
+  divergence: >
+    800-53A procedures assess a federal catalogue inside an authorisation boundary. Ours verify internal
+    standards, with no catalogue and no accreditation
+
 id:
   prefix: ctl
   style: numbered

@@ -16,6 +16,14 @@ versus:
     standard is specific enough to check — "read secrets from the vault via workload identity". If it would
     still be true after replacing the entire technology estate, it is a policy.
 
+lineage:
+  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Policy layer"
+  alignment: >
+    Non-prescriptive statements of intent, with the mandatory language pushed down to the layer below
+  divergence: >
+    HCGF policy is security-scoped and externally driven. Ours is inward-facing engineering intent, and states its
+    obligations as an addressable clause table rather than as prose
+
 # A four-character mnemonic, upper-case in the id and lower-case in the filename — pol-VURM in
 # vurm-vulnerability-remediation.md. Policies are long-lived and cited from standards, controls and
 # processes, so the id is what a reader meets most often and it should say something. Draw the mnemonic

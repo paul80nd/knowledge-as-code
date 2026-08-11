@@ -17,6 +17,9 @@ versus:
     A capability is what a customer gets. A service is a thing we deploy. One capability typically spans several
     services; one service often contributes to several capabilities.
 
+lineage:
+  prior-art: "None that fits — see [Capability](#capability) below"
+
 id:
   prefix: cap
   style: slug

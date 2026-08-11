@@ -10,6 +10,14 @@ goes-here: A description of what a deployable component is and does
 detail: >
   The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
 
+lineage:
+  prior-art: "[Backstage software catalog](https://backstage.io/docs/features/software-catalog/system-model/) — `Component`"
+  alignment: >
+    A deployable unit carrying owner, dependencies and consumed APIs, acting as the hub of the entity graph
+  divergence: >
+    Backstage models APIs, resources, systems and domains as separate kinds. We fold dependencies, data stores and
+    environments into the service document
+
 id:
   prefix: svc
   style: slug

@@ -17,6 +17,13 @@ versus:
     vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
     control.
 
+lineage:
+  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Standard layer; [BCP 14](https://www.rfc-editor.org/rfc/rfc8174) for the grammar"
+  alignment: >
+    Granular, prescriptive requirements; the RFC 2119 keyword set and the all-capitals rule
+  divergence: >
+    We compose standards by union across the axes the type declares. HCGF has no composition model
+
 id:
   prefix: std
   style: numbered

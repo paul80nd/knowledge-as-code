@@ -17,6 +17,9 @@ versus:
     carries authority. Never write straight to an FAQ from a session — capture the discovery and let promotion
     do the work.
 
+lineage:
+  prior-art: "None — see [First principles](#first-principles)"
+
 id:
   prefix: dsc
   style: slug

@@ -17,6 +17,14 @@ versus:
     reasoning; the register carries the current state and the version range. Small, uncontroversial adoptions
     need only the register.
 
+lineage:
+  prior-art: "[Thoughtworks Technology Radar](https://www.thoughtworks.com/radar)"
+  alignment: >
+    Named technologies sorted by stance, with rejections recorded as first-class content
+  divergence: >
+    The Radar is industry opinion, published periodically and explicitly non-binding. Ours is an internal register
+    with binding version ranges
+
 id:
   prefix: tol
   style: slug

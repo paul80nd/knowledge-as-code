@@ -26,6 +26,14 @@ versus:
     An explanation describes the shape something has; an ADR records the choice that gave it that shape, and is
     frozen at the moment of choosing.
 
+lineage:
+  prior-art: "[Diátaxis](https://diataxis.fr/explanation/) — Explanation"
+  alignment: >
+    Name for name. Understanding-oriented, discursive, gives background and considers alternatives
+  divergence: >
+    Diátaxis constrains explanation only against its three siblings. We also forbid it being normative or a
+    catalogue entry, because we have types for those
+
 id:
   prefix: exp
   style: slug

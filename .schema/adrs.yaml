@@ -18,6 +18,14 @@ versus:
     you are writing "we considered X and rejected it", that is an ADR; if you are writing "you **MUST** do Y",
     that is a standard. Most substantial changes produce both.
 
+lineage:
+  prior-art: "[Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011)"
+  alignment: >
+    Context / Decision / Consequences, and the rule that a reversed decision is superseded rather than rewritten
+  divergence: >
+    Nygard scopes decisions to one codebase; ours must affect more than one repository. Mandatory *Alternatives*
+    is ours, not his
+
 id:
   prefix: adr
   style: numbered

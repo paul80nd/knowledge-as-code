@@ -178,6 +178,12 @@ public sealed class TypeSchema
     // from, so "ADR vs Standard" lives on `adrs`. Declared order is kept for the messages; the page they
     // render on sorts them for itself.
     public IReadOnlyList<(string Other, string Text)> Versus { get; init; } = [];
+
+    // Where the type's name came from, and where it parts company with whatever lent it. The framework's
+    // own intellectual debt rather than the corpus's, so it is identical wherever this schema is taken —
+    // which is the difference between it and a corpus's standing against a framework, recorded once in
+    // `frameworks.md` and nowhere near here.
+    public LineageSpec? Lineage { get; init; }
     public string Shape { get; init; } = CollectionShape;
     public string IdPrefix { get; init; } = "";
     public string IdStyle { get; init; } = "";
@@ -336,6 +342,16 @@ internal sealed class KeyReader(string file)
 // beneath it are listed.
 public sealed record TierSpec(string Name, string Label, string Behaviour, string Note);
 
+// A type's prior art, and the two things worth saying about it: what the framework took, and where it
+// deliberately parts company. Links are written inline rather than as reference labels, because the block
+// this renders into cannot see the definitions at the foot of the page it lands on — and a label whose
+// definition is deleted renders as literal brackets rather than as a failure.
+//
+// A type with no useful ancestor says so in `PriorArt` and leaves the other two empty. Claiming an
+// ancestor a type does not have would be worse than admitting none, so the absence is a real answer and
+// renders as one.
+public sealed record LineageSpec(string PriorArt, string Alignment, string Divergence);
+
 public sealed class Schema
 {
     // The one key admitted at every level and required at none. See Level.
@@ -454,6 +470,13 @@ public sealed class Schema
         var filenamePattern = Yaml.Str(fn.Get("pattern"));
         var clauses = keys.At(root.Get("clauses"), "the 'clauses' block");
 
+        // All three read whether or not the block is there, so that a lineage missing only its `prior-art:`
+        // is reported as the shape problem it is rather than as two keys the loader never asked for.
+        var lineage = keys.At(root.Get("lineage"), "the 'lineage' block");
+        var priorArt = Yaml.Str(lineage.Get("prior-art"))?.Trim() ?? "";
+        var alignment = Yaml.Str(lineage.Get("alignment"))?.Trim() ?? "";
+        var divergence = Yaml.Str(lineage.Get("divergence"))?.Trim() ?? "";
+
         return new TypeSchema
         {
             Key = key,
@@ -468,6 +491,7 @@ public sealed class Schema
             GoesHere = Yaml.Str(root.Get("goes-here")) ?? "",
             Detail = Yaml.Str(root.Get("detail"))?.Trim() ?? "",
             Versus = [.. Yaml.Map(root.Get("versus")).Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))],
+            Lineage = priorArt.Length > 0 ? new LineageSpec(priorArt, alignment, divergence) : null,
             Shape = Yaml.Str(root.Get("shape")) ?? TypeSchema.CollectionShape,
 
             IdPrefix = Yaml.Str(id.Get("prefix")) ?? "",
