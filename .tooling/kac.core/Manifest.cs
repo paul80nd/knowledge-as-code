@@ -71,9 +71,9 @@ public class MechanismLock
     public bool Adopted(string type) => Types is null || Types.Contains(type, StringComparer.Ordinal);
 
     // Whether this corpus carries the layer that proves the mechanism. A consumer takes a tool already
-    // proven upstream, so the tests and their fixtures are noise between it and the code it runs;
-    // anything else is answerable for the tool and holds them. A lock that names no role answers yes,
-    // as `Adopted` does: a corpus that has said nothing is held to everything.
+    // proven upstream, so a fixture tree it will never run sits between its readers and the code they
+    // came for. Every other role answers for the tool and holds the tests that prove it. A lock naming no
+    // role answers yes, as `Adopted` does: a corpus that has said nothing is held to everything.
     public bool Verifies => !Role.Equals("consumer", StringComparison.Ordinal);
 
     public static MechanismLock Load(string repoRoot)
@@ -98,13 +98,12 @@ public class MechanismLock
         return lockFile;
     }
 
-    // Record what a sync took: the upstream's mechanism version, where it was taken from, and when.
+    // Record what a sync took: the upstream's mechanism version, where it came from, and when.
     //
-    // Rewritten line by line rather than re-serialised, because the lock is mostly commentary — the
-    // explanation of what each role means and when a divergence is worth accepting is the reason the
-    // file is worth opening, and a YAML round-trip would discard all of it. Only the three lines whose
-    // values a sync owns are touched; a trailing comment on one of them goes with the value it
-    // described, which after a sync is no longer true.
+    // This rewrites three lines rather than re-serialising the file, because the lock is mostly
+    // commentary. Someone opens it to read what each role means and when a divergence is worth
+    // accepting, and a YAML round-trip would throw all of that away. A trailing comment on one of the
+    // three goes with the value it described, which a sync has just made untrue.
     public static void Stamp(string repoRoot, int mechanismVersion, string syncedFrom, string syncedOn)
     {
         var path = Path.Combine(repoRoot, ".mechanism.lock");
@@ -112,8 +111,8 @@ public class MechanismLock
             ? new List<string>(Files.ReadLf(path).Split('\n'))
             : [];
 
-        // A lock with no `upstream:` block has never been synced. Open one rather than fail: the corpus
-        // is being told where it takes from for the first time, which is exactly what this record is.
+        // A lock with no `upstream:` block has never been synced. Open one rather than fail — the corpus
+        // is recording where it takes from for the first time, which is what the block is for.
         var start = lines.FindIndex(l => l.StartsWith("upstream:", StringComparison.Ordinal));
         if (start < 0)
         {

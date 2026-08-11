@@ -1,9 +1,8 @@
 // The `mechanism --sync` engine: bring the shared layers down from a reference corpus, then record
-// what was taken. The write half of the pair whose read half is MechanismCheck.
+// what was taken. MechanismCheck reads the same manifest and the same lock; this half writes.
 //
-// Sync copies and never deletes. A file this corpus holds that the reference does not is reported and
-// left alone: removing it is a decision about the corpus, and a corpus is not something a tool empties
-// because an upstream tree happened to be smaller.
+// Sync copies and never deletes. Where this corpus holds a file the reference does not, sync names it
+// and leaves it alone. Deleting knowledge because an upstream tree was smaller is not a tool's call.
 
 namespace kac.core;
 
@@ -33,8 +32,8 @@ public static class MechanismSync
             var layer = manifest.Resolve(rel);
             if (layer is null)
             {
-                // Only the reference's own tree is sync's to complain about. A local file the manifest
-                // cannot place is a real problem, and `--check` is the voice that says so.
+                // Sync complains only about the reference's own tree. A local file the manifest cannot
+                // place is a real problem, and `--check` is the voice that says so.
                 if (refFiles.Contains(rel)) unclassified.Add(rel);
                 continue;
             }
@@ -59,10 +58,10 @@ public static class MechanismSync
                 continue;
             }
 
-            // Forked is seeded once and never reconciled, so the only question it answers is whether this
-            // corpus has a copy at all. Shared files are compared on their authored half — a page whose
+            // A forked file is seeded once and never reconciled, so the only question here is whether this
+            // corpus has a copy. A shared file is compared on its authored half instead. A page whose
             // generated block is built from local types is in step while that half matches, and copying it
-            // would replace the block with the reference's until the regeneration below undid it.
+            // would swap the block for the reference's until the regeneration below undid the swap.
             if (localFiles.Contains(rel))
             {
                 if (layer is "forked") continue;
@@ -100,8 +99,8 @@ public static class MechanismSync
         }
 
         // Every synced page may carry a generated block built from this corpus's own types, so the copies
-        // above are only right once they have been rebuilt against what this corpus holds. Regenerating
-        // here is what makes `index --check` sync's postcondition rather than the reader's next surprise.
+        // above are only right once rebuilt against what this corpus holds. Regenerating here makes a
+        // passing `index --check` sync's postcondition instead of the reader's next surprise.
         return Regenerate(localRoot);
 
         static void Section(string heading, List<string> paths)
@@ -139,9 +138,9 @@ public static class MechanismSync
     // The pages and folders of types this corpus did not adopt.
     //
     // `Declined` names the schema file, which is all the check needs: a type's root page and template are
-    // `forked`, and the check never asks a corpus to hold a forked file. Sync does seed one that is
-    // absent, so without this it would stand up every type the reference has and leave the corpus holding
-    // pages for types it had declined — with `validate` then reporting each as stood up and not adopted.
+    // `forked`, and the check never asks a corpus to hold a forked file. Sync does seed an absent one.
+    // Without this it would stand up every type the reference has, and `validate` would then report each
+    // of them as stood up and not adopted.
     private static DeclinedPaths DeclinedTypePaths(string refRoot, MechanismLock lockFile)
     {
         if (lockFile.Types is null) return new DeclinedPaths([], []);

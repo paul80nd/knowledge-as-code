@@ -1,3 +1,3 @@
 # Runbooks
 
-A type this corpus has not adopted, so a sync must leave it upstream.
+A type the consuming corpus has not adopted, so a sync leaves it upstream.

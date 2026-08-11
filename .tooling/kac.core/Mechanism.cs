@@ -1,7 +1,8 @@
 // The `mechanism` engines. `--check` resolves every file against the manifest and compares the shared
-// layers against a reference, read-only. `--sync` brings those layers down from one. They read the same
-// manifest and the same lock, and ask one predicate about what this corpus holds, so neither can call a
-// file missing that the other would decline to bring.
+// layers against a reference, read-only. `--sync` brings those layers down from one.
+//
+// Both read the same manifest and the same lock, and both ask one predicate what this corpus holds. So
+// the check can never report a file missing that a sync would decline to bring.
 
 namespace kac.core;
 
@@ -87,9 +88,9 @@ public static class MechanismCheck
             + $"accepted divergences: {acceptedActive}.");
 
         // Held but not asked for: schema files for types this corpus did not adopt, or a fixture tree in
-        // a corpus whose role does not verify the mechanism. Neither is drift — nothing was compared —
-        // but a corpus carrying files no sync will ever refresh should be told rather than left to find
-        // them stale later.
+        // a corpus whose role declines the verification layer. Neither is drift, because nothing was
+        // compared. Say so anyway — no sync will refresh these files, and the alternative is leaving the
+        // reader to find them stale later.
         if (declinedButHeld > 0)
             Console.WriteLine(
                 $"declined: {declinedButHeld} file(s) held here that this corpus's lock does not ask for. "
@@ -114,16 +115,16 @@ public static class MechanismCheck
     }
 
     // Whether this corpus's lock declines the file, so that it is neither missing nor drifted — and, to
-    // `mechanism --sync`, not something to bring down. Both halves are the corpus stating what it has
-    // taken, which is why check and sync ask one predicate rather than two that can disagree.
+    // `mechanism --sync`, not something to bring down. Each answer below is the corpus stating what it
+    // took, so check and sync ask this one predicate rather than two that can disagree.
     //
     // A type the corpus did not adopt takes its schema file with it. The schema is otherwise
-    // byte-identical, which makes this the one place a corpus may hold less of it than upstream does —
-    // and `types:` is what turns that from a deletion nobody recorded into a decision the corpus can be
-    // held to. A corpus that declares no types declines nothing: it is still described by its folders,
-    // and every schema file it has is one it is expected to have.
+    // byte-identical, so this is the only place a corpus may hold less of it than upstream does. `types:`
+    // turns that absence from a deletion nobody recorded into a decision the corpus can be held to. A
+    // corpus that declares no types declines nothing: its folders still describe it, and every schema
+    // file it has is one it is expected to have.
     //
-    // The verification layer goes the same way for a corpus whose role does not carry it.
+    // A corpus whose role is `consumer` declines the verification layer the same way.
     public static bool Declined(string rel, string layer, MechanismLock lockFile) =>
         (layer == "verification" && !lockFile.Verifies)
         || (TypeFile(rel) is { } type && !lockFile.Adopted(type));

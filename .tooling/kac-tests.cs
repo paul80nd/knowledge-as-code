@@ -300,10 +300,10 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// sync: the same two trees, run through `mechanism --sync`. What it asserts is what the check cannot —
-// the tree afterwards. expected-files.txt is the important half: a line is a path that must exist in the
-// local corpus once the sync has run, and a line prefixed `!` one that must not, which is how a fixture
-// pins that a declined type was left alone rather than quietly stood up.
+// sync: the same two trees, run through `mechanism --sync`. It asserts the one thing the check cannot —
+// the tree afterwards. expected-files.txt carries most of that weight. Each line names a path that must
+// exist in the local corpus once the sync has run; a line prefixed `!` names one that must not. That is
+// how a fixture pins that a declined type was left upstream rather than quietly stood up.
 void RunSyncScenario(string name, string scenario, string corpusDir)
 {
     var referenceDir = Path.Combine(scenario, "reference");
@@ -341,9 +341,9 @@ void RunSyncScenario(string name, string scenario, string corpusDir)
             if (exists == absent) problems.Add(absent ? $"should not exist: {rel}" : $"missing afterwards: {rel}");
         }
 
-        // `<path> :: <text>`, or `!<text>` for text that must be gone. This is where copy-then-regenerate
-        // is pinned: a shared page comes down whole, generated block and all, and is only right once it
-        // has been rebuilt against the types the receiving corpus actually holds.
+        // `<path> :: <text>`, or `!<text>` for text that must be gone. These lines pin copy-then-
+        // regenerate: a shared page comes down whole, generated block and all, and is only right once
+        // rebuilt against the types the receiving corpus holds.
         foreach (var line in ReadLines(Path.Combine(scenario, "expected-content.txt")))
         {
             var parts = line.Split("::", 2);
@@ -384,8 +384,8 @@ static List<string> ReadLines(string path) =>
         ? [.. File.ReadAllLines(path).Select(l => l.Trim()).Where(l => l.Length > 0 && !l.StartsWith('#'))]
         : [];
 
-// corpus-schema.txt names the type schema files the local corpus holds *before* the sync — the
-// half-adopted state a consumer is actually in when it runs one. Absent means it holds them all.
+// corpus-schema.txt names the type schema files the local corpus holds *before* the sync, which is the
+// half-adopted state a consumer runs one from. Absent means the corpus holds them all.
 static HashSet<string>? ReadKeptTypes(string scenario)
 {
     var path = Path.Combine(scenario, "corpus-schema.txt");
@@ -482,9 +482,9 @@ static string AssembleTemp(string schemaDir, string corpusDir)
 
 // Like AssembleTemp, but the mechanism check also reads the manifest, so copy the real one in too.
 // The subtree (a corpus/ or reference/) is laid over the top, and may add its own .mechanism.lock.
-// `keptTypes`, where a fixture supplies one, is the set of per-type schema files this side holds —
-// the one asymmetry the real `.schema/` cannot express, and the state a sync exists to resolve. The
-// underscore-prefixed files belong to no type and are held by every corpus whatever it adopted.
+// `keptTypes`, where a fixture supplies one, names the per-type schema files this side holds. The real
+// `.schema/` cannot express a corpus holding fewer of them than upstream, and that is the state a sync
+// resolves. Underscore-prefixed files belong to no type, so every corpus holds them whatever it adopted.
 static string AssembleMechanismTemp(string schemaDir, string manifestFile, string subtree,
     HashSet<string>? keptTypes = null)
 {

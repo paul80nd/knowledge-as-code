@@ -79,8 +79,8 @@ public class ManifestTests
 
     // -- the layer a corpus's role declines --
 
-    // The same decision as declining a type, taken about the tests rather than the schema: a consumer
-    // runs a tool proven upstream, so the fixtures are neither missing nor drifted when it has none.
+    // The same decision as declining a type, taken about the tests rather than about the schema. A
+    // consumer runs a tool proven upstream, so a fixture it does not hold is neither missing nor drifted.
     [Theory]
     [InlineData("consumer", true)]
     [InlineData("source", false)]
@@ -116,7 +116,7 @@ public class ManifestTests
         Assert.Contains("# Why a divergence is worth accepting.", after);
     }
 
-    // A lock that has never been synced has no block to rewrite, and the first sync is what opens one.
+    // A lock that has never been synced has no block to rewrite, so the first sync opens one.
     [Fact]
     public void Stamping_a_lock_with_no_upstream_block_writes_one()
     {

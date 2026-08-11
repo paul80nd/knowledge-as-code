@@ -1,1 +1,1 @@
-// Verification layer, identical on both sides — a source holds it and is answerable for it.
+// Verification layer, identical on both sides — a source holds it and answers for it.

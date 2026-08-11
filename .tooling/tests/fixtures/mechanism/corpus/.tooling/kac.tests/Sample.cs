@@ -1,1 +1,2 @@
-// Local edit to a fixture — the verification layer is compared like any shared file here.
+// Verification layer in a consumer fixture — the lock declines it, so the check counts it rather than
+// comparing it against the reference.

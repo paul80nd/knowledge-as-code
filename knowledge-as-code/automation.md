@@ -245,8 +245,9 @@ customisation. Anything organisation-specific belongs in the corpus, or in the `
 templates and publishing config — where local content is the whole point.
 
 What a corpus takes is its own decision, recorded in `.mechanism.lock` rather than inferred from what it happens to
-hold. `types:` names the knowledge types it has adopted; `role:` says whether it is answerable for the mechanism or
-merely runs it, which decides whether it carries the `verification` layer — the tests and fixtures that prove the tool.
-`kac mechanism --sync` reads both, brings down what was asked for, seeds the forked files a new type needs, records what
-it took, and regenerates. Adopting a type is therefore adding a line to the lock and syncing, and declining one is
-leaving it out rather than deleting files afterwards.
+hold. `types:` names the knowledge types it has adopted. `role:` says whether it answers for the mechanism or only runs
+it, which settles whether it carries the `verification` layer — the tests and fixtures that prove the tool.
+
+`kac mechanism --sync` reads both keys, brings down what the lock asked for, seeds the forked files a new type needs,
+records what it took, and regenerates. So a corpus adopts a type by adding a line to the lock and syncing. It declines
+one by leaving the line out, not by deleting files afterwards.

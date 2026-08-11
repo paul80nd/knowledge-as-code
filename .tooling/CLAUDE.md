@@ -87,14 +87,14 @@ a fixture would only duplicate.
 
 * They share the **real** `.schema/`. `AssembleTemp` copies it beside each fixture corpus, so a schema change ripples
   into every fixture at once — run the golden suite after touching `.schema/`, not just `./kac validate`. A `sync`
-  scenario may narrow one side with `corpus-schema.txt`, naming the type files that side holds *before* the sync; that
-  is the one asymmetry the real schema cannot express, and it is the state a sync exists to resolve.
+  scenario may narrow one side with `corpus-schema.txt`, which names the type files that side holds *before* the sync.
+  The real schema cannot express a corpus holding fewer files than upstream, and that is the state a sync resolves.
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and
   `_template.md` beside it. Types it does not use are simply absent, which is silent. Adding a folder to a fixture
   without standing the type up adds a finding to every scenario that reads it.
 * Only fixtures in **`validate` mode** run the validator. `index`, `index-stale`, `mechanism` and `sync` modes do not,
-  so a new check cannot affect them. `sync` is the only mode that writes: it asserts the tree the command left, not just
-  what it printed, which is why its expectations are files-and-content rather than a findings golden.
+  so a new check cannot affect them. `sync` is the only mode that writes. It asserts the tree the command left rather
+  than only what the command printed, so its expectations name files and their content instead of a findings golden.
 * Regenerate with `dotnet run .tooling/kac-tests.cs -- --update [name]`, then **read the diff**. The command rewrites
   expectations to whatever the tool now produces, so it will happily bless a regression.
 

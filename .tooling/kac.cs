@@ -9,7 +9,8 @@
 //
 //   validate   check the corpus against .schema/*.yaml
 //   index      regenerate _index.md and the generated blocks in <type>.md
-//   mechanism  enforce the portability manifest: synced layer vs a reference
+//   mechanism  enforce the portability manifest: check the shared layers against a
+//              reference corpus, or sync them from one
 //
 // The tool is deliberately free of type-specific rules: everything it enforces is
 // read from the YAML schema, so adding a type is adding a YAML file, not editing C#.
@@ -62,7 +63,7 @@ checks.SetAction(pr => Commands.Checks(repoRoot, pr.GetValue(checksJsonOpt)));
 // recompute, compare, name what is stale, exit non-zero, never write. `--sync` is the write half:
 // it takes those layers from the reference, records what it took, and regenerates.
 var mechCheckOpt = new Option<bool>("--check") { Description = "Compare the shared layers against a reference and report drift; never writes." };
-var mechSyncOpt = new Option<bool>("--sync") { Description = "Take the shared layers from the reference and stamp .mechanism.lock with what was taken." };
+var mechSyncOpt = new Option<bool>("--sync") { Description = "Take the shared layers from the reference, then record what it took in .mechanism.lock." };
 var againstOpt = new Option<string?>("--against") { Description = "Reference corpus (a path). Defaults to upstream.url in .mechanism.lock." };
 var mechanism = new Command("mechanism", "Enforce the portability manifest: compare the shared layers against a reference, or take them from one.")
 {

@@ -6,13 +6,13 @@
 # check.
 #
 # Read by `kac mechanism --check --against <path-or-url>`, which follows the same discipline as
-# `index --check`: it recomputes, compares, names what is stale, exits non-zero, and never writes;
-# and by `kac mechanism --sync`, which is the one command that acts on it.
+# `index --check`: it recomputes, compares, names what is stale, exits non-zero, and never writes.
+# Read again by `kac mechanism --sync`, the one command that acts on what it finds.
 #
 # This file is itself `synced` — every corpus holds the same copy. Per-corpus sync state (which
 # upstream version this corpus is on, what it has adopted, and what it has deliberately diverged
-# from) lives in `.mechanism.lock` at the repo root, which is `local`. A layer says what a file *is*;
-# the lock says which of them this corpus holds.
+# from) lives in `.mechanism.lock` at the repo root, which is `local`. A layer says what a file is;
+# the lock says which of those files this corpus holds.
 
 version: 3
 # The mechanism's version, matched by `upstream.mechanism-version` in each corpus's `.mechanism.lock`.
@@ -33,15 +33,15 @@ layers:
 
   verification:
     rule: Synced into a corpus that proves the mechanism; out of the model in one that only runs it.
-    on-drift: error where the corpus holds the layer, ignored where its role declines it.
+    on-drift: error where the corpus holds the layer, ignored where its role declines it
     notes: >
-      The tests, the fixtures they read, and the guidance for changing the tool — the machinery by
-      which the framework demonstrates that it works. A corpus mirroring the framework carries it and
-      is answerable for it. A corpus consuming the framework takes a tool already proven upstream, so
-      a fixture tree it will never run is noise between it and the code it does run. `role:` in
-      `.mechanism.lock` decides, the same way `types:` decides which schema files a corpus holds:
-      both are the corpus stating what it has taken, and the check reads both before calling anything
-      missing.
+      The tests, the fixtures they read, and the guidance for changing the tool — the machinery that
+      shows the framework works. A corpus mirroring the framework carries that machinery and answers
+      for it. A corpus consuming the framework takes a tool already proven upstream, and a fixture
+      tree nobody there will run sits between a reader and the code they came for. `role:` in
+      `.mechanism.lock` decides which of the two a corpus is. `types:` decides which schema files it
+      holds, and the two work alike: each is the corpus stating what it took, and the check reads
+      both before it calls anything missing.
 
   forked:
     rule: Seeded from upstream once, then owned locally. Never reconciled.
@@ -99,9 +99,10 @@ rules:
     layer: verification
     note: >
       The three test layers, the fixtures they read, the solution that ties the test projects to the
-      core, and the guidance for changing the tool — which is the same work, since a corpus that does
-      not prove the tool does not change it either. Fixtures must stay synthetic wherever they are
-      held: one built from a real record would ship that corpus's content to every other.
+      core, and the guidance for changing the tool. The guidance belongs here because proving the
+      tool and changing it are the same work, and a corpus that does neither needs neither. Fixtures
+      must stay synthetic wherever they are held: one built from a real record would ship that
+      corpus's content to every other.
 
   # ── synced: the mechanism's own trees ────────────────────────────────────────────────────────
   # Also ahead of `generated`, for the reason given above.
@@ -109,7 +110,7 @@ rules:
     layer: synced
     note: >
       Validator, generator and the reference for what the tool does. Everything under `.tooling/` is
-      mechanism whatever it is called; what the rule above carves out is the part a corpus running
+      mechanism whatever it is called, and the rule above carves out only the part a corpus running
       the tool has no use for.
 
   - path: ".schema/**"
