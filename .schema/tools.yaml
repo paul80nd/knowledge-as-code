@@ -41,8 +41,8 @@ fields:
     values: [approved, trial, deprecated, rejected]
     description: '`approved` means approved for new work; existing use that is not approved is drift.'
     notes: >
-      `approved` means approved **for new work**. Something already in use but not approved is drift, and the
-      drift report will say so.
+      `approved` means approved **for new work**. Something already in use but not approved is drift, and
+      finding it is a manual job — `drift-against-manifests` is declared and does not run.
 
   category:
     required: true

@@ -48,7 +48,7 @@ deliver.
 | `target`         | ●   | string | Concrete and arguable — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`. Include the measurement window. |
 | `measured-by`    | ●   | string | An NFR you cannot measure is a wish. "We'd notice" is not a measurement method.                   |
 | `constrained-by` |     | list   | Integrations whose own SLA caps this target.                                                      |
-| `review-by`      | ●   | date   | Quoted. Drives the staleness report.                                                              |
+| `review-by`      | ●   | date   | Quoted. The date by which someone confirms this is still true.                                    |
 
 **Enum values**
 

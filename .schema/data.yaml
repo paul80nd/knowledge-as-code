@@ -79,7 +79,7 @@ index:
 rules:
   - id: no-actual-data
     description: >
-      Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.
+      Fails on an email address outside `example.com`. Nothing catches an identifier or a connection string.
     severity: error
     # example.com is reserved by RFC 2606 and is what every address in this corpus uses, so an address
     # anywhere else is either real or pretending to be, and both are the fault.

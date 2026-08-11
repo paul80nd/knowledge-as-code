@@ -69,10 +69,11 @@ fields:
     required: false
     type: list
     of: string
-    description: 'Repo-relative paths. Checked both ways: a missing path fails, an unclaimed file is reported.'
+    description: Repo-relative paths. Nothing resolves them today.
     notes: >
-      Repo-relative paths. Checked in both directions — a path that does not exist fails, and a feature file
-      claimed by no capability is reported.
+      Repo-relative paths. No check reads them: the field carries plain strings rather than references, so
+      `ref-resolves` never sees it, and `feature-file-orphans` is declared and does not run. A path that goes
+      stale here goes stale silently.
 
   nfrs:
     required: false

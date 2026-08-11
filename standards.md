@@ -75,7 +75,7 @@ distinct. The common and platform axes let a rule live once, at the layer where 
 | `implements`   |     | list   | Policy ids this standard puts into practice.                                                  |
 | `verified-by`  |     | list   | Control ids that check it.                                                                    |
 | `applies-to`   | ●   | list   | Service ids, or `all`.                                                                        |
-| `review-by`    | ●   | date   | Quoted. Drives the staleness report.                                                          |
+| `review-by`    | ●   | date   | Quoted. The date by which someone confirms this is still true.                                |
 
 **Enum values**
 

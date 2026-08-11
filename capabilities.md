@@ -42,17 +42,17 @@ Related but different:
 
 <!-- BEGIN GENERATED: schema-capabilities -->
 
-| Field            | Req | Type   | Notes                                                                                        |
-|------------------|-----|--------|----------------------------------------------------------------------------------------------|
-| `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                        |
-| `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.         |
-| `status` †       | ●   | enum   | Lifecycle of the capability, not of the services behind it.                                  |
-| `owner` †        | ●   | string | A named person, never a team alias.                                                          |
-| `tags` †         |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                             |
-| `implemented-by` | ●   | list   | Service ids. A capability no service implements is a plan.                                   |
-| `ado-epics`      |     | list   | ADO work item ids. Not resolvable by CI; recorded for humans and for the reverse harvest.    |
-| `feature-files`  |     | list   | Repo-relative paths. Checked both ways: a missing path fails, an unclaimed file is reported. |
-| `nfrs`           |     | list   | NFR ids — the targets this capability is held to.                                            |
+| Field            | Req | Type   | Notes                                                                                     |
+|------------------|-----|--------|-------------------------------------------------------------------------------------------|
+| `id` †           | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                     |
+| `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.      |
+| `status` †       | ●   | enum   | Lifecycle of the capability, not of the services behind it.                               |
+| `owner` †        | ●   | string | A named person, never a team alias.                                                       |
+| `tags` †         |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                          |
+| `implemented-by` | ●   | list   | Service ids. A capability no service implements is a plan.                                |
+| `ado-epics`      |     | list   | ADO work item ids. Not resolvable by CI; recorded for humans and for the reverse harvest. |
+| `feature-files`  |     | list   | Repo-relative paths. Nothing resolves them today.                                         |
+| `nfrs`           |     | list   | NFR ids — the targets this capability is held to.                                         |
 
 **Enum values**
 

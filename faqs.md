@@ -53,7 +53,7 @@ Other boundaries:
 | `promoted-from`    |     | id     | The discovery this was promoted from.                                                               |
 | `confirmed-by`     | ●   | string | A named human. An FAQ nobody confirmed is a discovery — this field is what separates the two tiers. |
 | `confirmed-on`     | ●   | date   | Quoted. When a human last confirmed the answer still holds.                                         |
-| `review-by`        | ●   | date   | Quoted. Drives the staleness report.                                                                |
+| `review-by`        | ●   | date   | Quoted. The date by which someone confirms this is still true.                                      |
 
 **Enum values**
 

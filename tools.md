@@ -19,8 +19,9 @@ answers it alone. The estate ends up with several ways of doing one job. Nobody 
 depending on?"* without opening every manifest we own. That second question arrives with a licence review, with a
 security advisory, and on the day a dependency is abandoned.
 
-Once the register exists, CI can compare it against the real manifests and report drift in both directions — packages in
-use that were never approved, and approved tools nothing uses any more.
+**Declared.** `drift-against-manifests` is declared and does not run. Once something implements it, the register can be
+compared against the real manifests in both directions: packages in use that were never approved, and approved tools
+nothing uses any more.
 
 ## Scope
 
@@ -74,8 +75,8 @@ the evaluation we already did.
 
 **Conventions**
 
-* **Approved means approved for new work.** Something already in use but not approved is drift, and the drift report
-  will say so.
+* **Approved means approved for new work.** Something already in use but not approved is drift, and finding it is a
+  manual job until something implements `drift-against-manifests`.
 * **A deprecated entry names its successor.** Set `successor` to whatever took over, so somebody arriving from a
   manifest has somewhere to go next.
 * **Give `versions` a range, not a pin.** The pin belongs in the manifest.

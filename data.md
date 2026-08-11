@@ -112,7 +112,7 @@ exceptions to the plural-folder rule.
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `no-actual-data`            | error   | Fails on anything resembling a record, identifier or connection string. This wiki is broadly readable.          |
+| `no-actual-data`            | error   | Fails on an email address outside `example.com`. Nothing catches an identifier or a connection string.          |
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 

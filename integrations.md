@@ -108,7 +108,7 @@ Not the place for:
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `fallback-required`         | warning | Every failure mode names a fallback, or the document says there is none.                                        |
+| `fallback-required`         | warning | The Failure modes section mentions a fallback somewhere, or says there is none.                                 |
 | `no-credentials`            | error   | Nothing reads as a token, key, password or connection string.                                                   |
 
 <!-- END GENERATED: checks-integrations -->
