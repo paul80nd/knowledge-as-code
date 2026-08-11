@@ -7,6 +7,9 @@ tier: decided
 lifecycle: immutable
 summary: What actually happened during an incident — timeline, impact, root cause, contributing factors, actions.
 goes-here: An account of an incident and what caused it
+detail: >
+  Blameless, and immutable once published. The honest counterpart to the decision log: an ADR records what was
+  intended, a postmortem what the estate did about it.
 
 id:
   prefix: pmt

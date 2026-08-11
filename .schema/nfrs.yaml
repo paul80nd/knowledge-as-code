@@ -7,6 +7,8 @@ tier: normative
 lifecycle: living
 summary: A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.
 goes-here: A target for speed, uptime, or recovery
+detail: >
+  Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
 
 id:
   prefix: nfr

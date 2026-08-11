@@ -7,6 +7,9 @@ tier: descriptive
 lifecycle: living
 summary: The ubiquitous language — terms whose meaning is specific to us, or which are easily confused.
 goes-here: A term whose meaning isn't obvious, or that we use in a specific way
+detail: >
+  Small, high-value, and the one document worth loading into every session. A term that needs explaining every
+  time it appears belongs here once, and everything else links to it.
 
 notes: >
   The only type that is one document rather than a collection, which is what `shape` says. A

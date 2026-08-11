@@ -21,10 +21,18 @@ opening its template and making the same change there — assume that, rather th
 |-------------------|-----------------------------------------------|
 | `_universal.yaml` | Fields every document in the taxonomy carries |
 | `_enums.yaml`     | Enums shared by more than one type            |
+| `_tiers.yaml`     | What each tier is called, and how it behaves  |
 | `<folder>.yaml`   | One per knowledge type, named for its folder  |
 
 Type files are named for the **folder**, not the type — `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a
 document's type from its folder, so folder → schema is an identity lookup with no singularisation step.
+
+A tier is declared twice, deliberately. `_universal.yaml` gives the `tier` field its range, which is what every record
+is validated against; `_tiers.yaml` says what each of those values is called, how a document of it behaves, and — where
+there is one — the thing worth saying before the types beneath it are listed. Neither is derivable from the other, so
+the two are reconciled when the schema loads: a value one knows and the other does not is a record that can carry a tier
+no page can name, or a heading no document will ever sit under. Order is load-bearing in `_tiers.yaml` — it is the order
+every generated list of types is grouped by.
 
 None of them carries a version stamp. Answering "which version of the schema is this corpus on" takes something that
 reconciles the answer against an upstream, and a number nothing compares is a number a corpus can be wrong about
@@ -119,6 +127,7 @@ Beyond `fields`, each type file declares:
 | `label` / `label-plural`   | The display names — "Policy" heads the generated index, "Policies" names the collection in a link                |
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
 | `summary` / `goes-here`    | What the type is, and what a contributor has in hand when it is the answer — see the note below                  |
+| `detail`                   | The paragraph beneath the one-liner, rendered into the taxonomy's own list of types                              |
 | `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
 | `filename`                 | Pattern and slug length limit                                                                                    |
 | `sections`                 | Required and optional H2s — the required ones are checked for presence                                           |
@@ -141,6 +150,11 @@ what the contributor is holding — "a rule people must follow when building" �
 table. Both are required, both are rendered as table cells, and both are held to the same length limit as a rule's
 `description`. The fuller account of a type, with its examples and its edges, stays on `<type>.md`.
 
+**`detail`** is the paragraph the other two are too short to be: what the type carries beyond its first sentence, and
+the edge a reader is most likely to walk over. It is rendered as prose rather than into a table, so it is not held to
+the cell bound — but it is held to being *the framework's* account of the type. Anything local, any example from the
+estate, belongs on `<type>.md`, which is the corpus's to write and never reconciled.
+
 Only the types a corpus has **stood up** — page and folder both present — are rendered, which is what stops a decision
 table offering a route to a type whose page is not there to open.
 
@@ -149,10 +163,9 @@ falls back to the type name capitalised; nothing turns `nfr` into "NFRs" or `glo
 `s` is right for some types and wrong for the rest. The plural is what a generated line uses when it points at the
 type's page rather than at one of its records — "it goes in **Policies**".
 
-**`tier`** is a closed set: `decided`, `normative`, `descriptive`, `procedural`, `observed`. It is what every validation
-rule, review expectation and language rule keys off, and it is written into the frontmatter of every record of the type,
-so a sixth would be a word the corpus carries and nothing means anything by. A type declaring one fails
-`schema-dispatch`.
+**`tier`** must be one `_tiers.yaml` declares. It is what every validation rule, review expectation and language rule
+keys off, and it is written into the frontmatter of every record of the type, so a tier neither file knows is a word the
+corpus carries and nothing means anything by.
 
 **`index`.** `sort:` is one column or several — `sort: [severity, id]` sorts on the first and breaks ties with the
 next — and a type declaring none is sorted by `id`, the one column every document carries. `order:` is `ascending`
@@ -310,22 +323,22 @@ wrote it holds every one of them. So a declaration the tool does nothing with is
 behaviour the validator applies, and a `ref:` reads as a target being checked. Before any document is validated, the
 schema is held against what the tool can act on, and each finding names the file and the key.
 
-| Reported                                                                        | Check                |
-|---------------------------------------------------------------------------------|----------------------|
-| A key at any level the loader never reads, `notes:` excepted                    | `schema-unknown-key` |
-| An `expr:` that will not compile, or that names no `severity:` or `message:`    | `schema-unreadable`  |
-| A `required-when:` outside its three forms                                      | `schema-unreadable`  |
-| `values: $enums.x` where `_enums.yaml` declares no `x`                          | `schema-unreadable`  |
-| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers  | `schema-dispatch`    |
-| A `ref:` entry naming a folder no schema covers                                 | `schema-dispatch`    |
-| `values:` on any field that is not an `enum`                                    | `schema-dispatch`    |
-| `min-items:` on any field that is not a `list`                                  | `schema-dispatch`    |
-| An `index.order:` that is neither `ascending` nor `descending`                  | `schema-dispatch`    |
-| A `tier:` outside the five the generated lists are grouped by                   | `schema-dispatch`    |
-| An `id.style` or a `shape:` with no code behind the value                       | `schema-dispatch`    |
-| A `collection` with no `folder:`, or a `single-document` type declaring one     | `schema-shape`       |
-| A `mirrors-section:` at a section the type's `sections:` block does not declare | `schema-shape`       |
-| A missing `label-plural:`, `summary:` or `goes-here:`, or one too long for a cell | `schema-shape`     |
+| Reported                                                                             | Check                |
+|--------------------------------------------------------------------------------------|----------------------|
+| A key at any level the loader never reads, `notes:` excepted                         | `schema-unknown-key` |
+| An `expr:` that will not compile, or that names no `severity:` or `message:`         | `schema-unreadable`  |
+| A `required-when:` outside its three forms                                           | `schema-unreadable`  |
+| `values: $enums.x` where `_enums.yaml` declares no `x`                               | `schema-unreadable`  |
+| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers       | `schema-dispatch`    |
+| A `ref:` entry naming a folder no schema covers                                      | `schema-dispatch`    |
+| `values:` on any field that is not an `enum`                                         | `schema-dispatch`    |
+| `min-items:` on any field that is not a `list`                                       | `schema-dispatch`    |
+| An `index.order:` that is neither `ascending` nor `descending`                       | `schema-dispatch`    |
+| A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows       | `schema-shape`       |
+| An `id.style` or a `shape:` with no code behind the value                            | `schema-dispatch`    |
+| A `collection` with no `folder:`, or a `single-document` type declaring one          | `schema-shape`       |
+| A `mirrors-section:` at a section the type's `sections:` block does not declare      | `schema-shape`       |
+| A missing `label-plural:`, `summary:`, `goes-here:` or `detail:`, or a cell too long | `schema-shape`       |
 
 **The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
 style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is

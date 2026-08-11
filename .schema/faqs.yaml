@@ -7,6 +7,9 @@ tier: normative
 lifecycle: living
 summary: A problem with a confirmed fix, promoted from a discovery once a human has verified it.
 goes-here: A problem with a known, confirmed fix
+detail: >
+  It carries provenance back to the observation it came from, so the reader can see how far the fix has been
+  taken on trust.
 
 id:
   prefix: faq

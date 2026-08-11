@@ -59,21 +59,71 @@ public static class Generator
             [.. types.OrderBy(t => t.GoesHere, StringComparer.Ordinal)
                 .Select(t => new List<string> { Escape(t.GoesHere), $"[{t.PluralName}]({Link(t)})" })]);
 
+    // The types at length, under the tier that decides how each behaves. What the decision table answers
+    // in a line, this answers in a paragraph — and it is grouped by tier rather than sorted flat, because
+    // the reader who has got this far is learning the shape of the taxonomy rather than looking one type
+    // up.
+    //
+    // A tier no stood-up type sits in is left out entirely. A heading with nothing under it tells a reader
+    // the corpus has a gap where it has in fact made a choice.
+    public static string TypeCatalogue(IReadOnlyList<TierSpec> tiers, IEnumerable<TypeSchema> types)
+    {
+        var byTier = types.ToLookup(t => t.Tier, StringComparer.Ordinal);
+        var sections = new List<string>();
+
+        foreach (var tier in tiers)
+        {
+            var members = byTier[tier.Name].OrderBy(t => t.DisplayName, StringComparer.Ordinal).ToList();
+            if (members.Count == 0) continue;
+
+            var section = new StringBuilder($"### {tier.Label} — {tier.Behaviour}\n");
+            if (tier.Note.Length > 0) section.Append($"\n{Wrap(tier.Note)}\n");
+            foreach (var t in members)
+                section.Append($"\n{Wrap($"**[{t.PluralName}]({Link(t)})** — {t.Summary} {t.Detail}")}\n");
+
+            sections.Add(section.ToString());
+        }
+
+        return string.Join("\n", sections).TrimEnd('\n');
+    }
+
+    // Prose at the corpus's own margin. Generated tables are exempt from it because a cell cannot be
+    // broken; a paragraph can, and one long line in a file everything else wraps reads as the generator
+    // exempting itself from the rule it is regenerating the file to enforce.
+    private const int Margin = 120;
+
+    private static string Wrap(string text)
+    {
+        var line = new StringBuilder();
+        var wrapped = new StringBuilder();
+
+        foreach (var word in text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (line.Length > 0 && line.Length + 1 + word.Length > Margin)
+            {
+                wrapped.Append(line).Append('\n');
+                line.Clear();
+            }
+
+            if (line.Length > 0) line.Append(' ');
+            line.Append(word);
+        }
+
+        return wrapped.Append(line).ToString();
+    }
+
     // The corpus's own index of types, for whoever arrives at the repository root: what each holds, and
     // one way on to the taxonomy, which is where the question "so where does mine go" is answered. The
     // pointer sits inside the block so that it cannot drift above the table or be edited away.
     //
     // Sorted by name, which is what a reader looking one up already knows. Tier is a column rather than a
     // grouping here for the same reason — it is worth seeing beside a type and is not how anyone arrives.
-    //
-    // Its line break is written rather than computed. A table is exempt from the corpus's 120-column wrap
-    // and a sentence is not, so the one sentence here is broken where it would be broken by hand.
     public static string TypesIndex(IEnumerable<TypeSchema> types, string taxonomyPath) =>
         RenderTable(["Type", "Tier", "What it holds"],
             [.. types.OrderBy(t => t.DisplayName, StringComparer.Ordinal).Select(t => new List<string>
                 { $"[{t.DisplayName}]({Link(t)})", t.Tier, Escape(t.Summary) })])
-        + $"\n\n**Where does a document go?** The [taxonomy]({taxonomyPath}) has the decision table, and the calls\n"
-        + "that are genuinely close.";
+        + "\n\n" + Wrap($"**Where does a document go?** The [taxonomy]({taxonomyPath}) has the decision table, "
+                        + "what each type is and is not, and the calls that are genuinely close.");
 
     // The rows of an index, in the order the type's `index` block asks for. Sorting on several columns
     // is a sort by the first, ties broken by the next; the direction applies to the whole ordering,

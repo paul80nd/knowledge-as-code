@@ -83,18 +83,26 @@ public static class Commands
         // stood up, and neither can name a type whose page is not there to open.
         var stoodUp = Corpus.StoodUp(schema, repoRoot);
 
-        Splice(Path.Combine(repoRoot, "knowledge-as-code", "taxonomy.md"), "types-placement",
-            Generator.PlacementTable(stoodUp));
-        Splice(Path.Combine(repoRoot, "README.md"), "types-index",
-            Generator.TypesIndex(stoodUp, "knowledge-as-code/taxonomy.md"));
+        Splice(Path.Combine(repoRoot, "knowledge-as-code", "taxonomy.md"),
+            ("types-placement", Generator.PlacementTable(stoodUp)),
+            ("types-detail", Generator.TypeCatalogue(schema.Tiers, stoodUp)));
 
-        // A page that is not there is skipped, and one carrying no marker resolves to itself — the
-        // generator fills in structure the corpus has declared and never invents it, which is what lets
-        // a corpus decline a block by deleting its markers rather than by arguing with the tool.
-        void Splice(string path, string block, string inner)
+        Splice(Path.Combine(repoRoot, "README.md"),
+            ("types-index", Generator.TypesIndex(stoodUp, "knowledge-as-code/taxonomy.md")));
+
+        // Every block a page carries, spliced into one text and offered as one target — a page is written
+        // once, so two blocks in the same file cannot each overwrite the other's work.
+        //
+        // A page that is not there is skipped, and one carrying no marker resolves to itself: the generator
+        // fills in structure the corpus has declared and never invents it, which is what lets a corpus
+        // decline a block by deleting its markers rather than by arguing with the tool.
+        void Splice(string path, params (string Block, string Inner)[] blocks)
         {
             if (!File.Exists(path)) return;
-            targets.Add((path, Generator.SpliceBlock(Files.ReadLf(path), block, inner)));
+
+            var text = Files.ReadLf(path);
+            foreach (var (block, inner) in blocks) text = Generator.SpliceBlock(text, block, inner);
+            targets.Add((path, text));
         }
 
         if (check)

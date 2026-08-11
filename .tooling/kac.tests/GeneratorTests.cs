@@ -255,8 +255,18 @@ public class GeneratorTests
     private static TypeSchema Type(string label, string plural, string tier, string page, string goesHere) => new()
     {
         Label = label, LabelPlural = plural, Tier = tier, Page = page, GoesHere = goesHere,
-        Summary = $"What a {label.ToLowerInvariant()} holds."
+        Summary = $"What a {label.ToLowerInvariant()} holds.",
+        Detail = $"And the edge a reader walks over when they mistake a {label.ToLowerInvariant()} for something else."
     };
+
+    private static readonly List<TierSpec> Tiers =
+    [
+        new("decided", "Decided", "immutable once accepted", ""),
+        new("normative", "Normative", "living, owned, reviewed", "The rules, and what verifies them."),
+        new("descriptive", "Descriptive", "living, must mirror reality", ""),
+        new("procedural", "Procedural", "living, must be rehearsed", ""),
+        new("observed", "Observed", "perishable, unreviewed until promoted", "")
+    ];
 
     private static TypeSchema[] Four() =>
     [
@@ -308,6 +318,65 @@ public class GeneratorTests
         Assert.True(index.IndexOf("| [ADR]", StringComparison.Ordinal)
                     < index.IndexOf("[taxonomy]", StringComparison.Ordinal));
         Assert.All(index.Split('\n').Where(l => !l.StartsWith('|')), l => Assert.True(l.Length <= 120));
+    }
+
+    // -- the types at length --
+
+    // Tier order comes from the schema, not the alphabet: Decided leads and Observed closes.
+    [Fact]
+    public void The_catalogue_runs_in_the_order_the_tiers_are_declared()
+    {
+        var order = PositionsOf(Generator.TypeCatalogue(Tiers, Four()),
+            "### Decided", "### Normative", "### Procedural");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    // A heading with nothing under it reads as a gap in the corpus rather than as a choice it made.
+    [Fact]
+    public void A_tier_no_stood_up_type_sits_in_gets_no_heading()
+    {
+        var catalogue = Generator.TypeCatalogue(Tiers, Four());
+
+        Assert.Contains("### Decided", catalogue);
+        Assert.DoesNotContain("### Descriptive", catalogue);
+        Assert.DoesNotContain("### Observed", catalogue);
+    }
+
+    [Fact]
+    public void A_tier_note_is_rendered_before_the_types_beneath_it()
+    {
+        var catalogue = Generator.TypeCatalogue(Tiers, Four());
+        var order = PositionsOf(catalogue, "### Normative", "The rules, and what verifies them.", "[Controls]");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    [Fact]
+    public void A_catalogue_entry_names_the_collection_and_carries_both_halves_of_the_prose()
+    {
+        var catalogue = Generator.TypeCatalogue(Tiers, Four());
+
+        Assert.Contains("**[ADRs](/adrs)** — What a adr holds. And the edge", catalogue);
+    }
+
+    // Prose wraps at the margin the corpus holds every other paragraph to; a table cell cannot be broken
+    // and is exempt, which is why the wrap belongs to the prose renderers rather than to RenderTable.
+    [Fact]
+    public void Catalogue_prose_wraps_at_the_corpus_margin()
+        => Assert.All(Generator.TypeCatalogue(Tiers, Four()).Split('\n'), l => Assert.True(l.Length <= 120));
+
+    [Fact]
+    public void A_word_longer_than_the_margin_is_left_whole_on_its_own_line()
+    {
+        var long_ = new string('x', 200);
+        var t = new TypeSchema
+        {
+            Label = "Widget", LabelPlural = "Widgets", Tier = "decided", Page = "widgets.md",
+            Summary = "Short.", Detail = long_
+        };
+
+        Assert.Contains(long_, Generator.TypeCatalogue(Tiers, [t]));
     }
 
     [Fact]

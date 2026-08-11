@@ -7,6 +7,9 @@ tier: descriptive
 lifecycle: living
 summary: The approved-software register — what is chosen, rejected or deprecated, and the version ranges we stand behind.
 goes-here: A tool or package we've approved, rejected, or are trialling
+detail: >
+  Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
+  evaluation.
 
 id:
   prefix: tol

@@ -7,6 +7,9 @@ tier: descriptive
 lifecycle: living
 summary: "An external system we depend on: the contract, the auth, the failure modes, their SLA and our fallback."
 goes-here: A third-party or external system we depend on
+detail: >
+  Every integration point needs a deliberate failure mode and a fallback, which is why both are required rather
+  than optional, along with who to contact when it is down.
 
 id:
   prefix: int

@@ -7,6 +7,9 @@ tier: normative
 lifecycle: living
 summary: The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.
 goes-here: A rule people must follow when building
+detail: >
+  Imperative throughout — **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
+  of work are the union of the layers that apply to it.
 
 id:
   prefix: std

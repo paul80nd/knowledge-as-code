@@ -5,8 +5,10 @@ folder: services
 page: services.md
 tier: descriptive
 lifecycle: living
-summary: "One deployable component: purpose, repo, platform, environments, dependencies, criticality, owner."
+summary: "One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner."
 goes-here: A description of what a deployable component is and does
+detail: >
+  The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
 
 id:
   prefix: svc

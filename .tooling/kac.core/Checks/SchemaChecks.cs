@@ -28,7 +28,9 @@ public static class SchemaChecks
         // Walked in declared order, here and below, so that a schema with several faults reports them
         // in the order someone reading the file would meet them.
         UnreadKeys(".schema/_enums.yaml", schema, f);
+        UnreadKeys(".schema/_tiers.yaml", schema, f);
         UnreadKeys(".schema/_universal.yaml", schema, f);
+        CheckTiers(schema, f);
         foreach (var name in schema.UniversalOrder)
             if (schema.Universal.TryGetValue(name, out var spec))
                 CheckField(".schema/_universal.yaml", name, spec, schema, null, f);
@@ -48,10 +50,11 @@ public static class SchemaChecks
                 Dispatch(at, $"type '{key}' declares 'index.order: {t.IndexOrder}', which the generator does "
                              + $"not read. An index is written {List(Generator.IndexOrders)}.", f);
 
-            if (!TypeSchema.Tiers.Contains(t.Tier))
-                Dispatch(at, $"type '{key}' declares 'tier: {t.Tier}', which nothing acts on. Tier decides how a "
-                             + "document behaves, and is written into the frontmatter of every record of the type; "
-                             + $"the tiers are {Ordered(TypeSchema.Tiers)}.", f);
+            if (schema.Tiers.All(tier => tier.Name != t.Tier))
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' declares 'tier: {t.Tier}', and '_tiers.yaml' declares no such tier. Tier decides "
+                    + "how a document behaves and is written into the frontmatter of every record of the type; the "
+                    + $"tiers are {Ordered(schema.Tiers.Select(tier => tier.Name))}."));
 
             CheckProse(at, key, t, f);
 
@@ -61,6 +64,38 @@ public static class SchemaChecks
             foreach (var rule in t.Rules)
                 CheckRule(at, key, rule, f);
         }
+    }
+
+    // The two files that between them define a tier, held against each other. `_universal.yaml` gives the
+    // `tier` field its range, which is what every record is validated against; `_tiers.yaml` says what each
+    // of those values is called and means, which is what a generated page renders. Neither is derivable
+    // from the other, and a tier declared in one and not the other is silent in both directions — a record
+    // admitted with a tier no page can name, or a heading no document will ever sit under.
+    //
+    // Reported against `_tiers.yaml` whichever side is short, because that is the file whose entries are
+    // cheap to add: widening the field's range is a change to what every corpus may carry.
+    private static void CheckTiers(Schema schema, List<Finding> f)
+    {
+        if (!schema.Universal.TryGetValue("tier", out var field)) return;
+
+        const string at = ".schema/_tiers.yaml";
+        var declared = schema.Tiers.Select(t => t.Name).ToList();
+        var admitted = field.Values ?? [];
+
+        foreach (var value in admitted.Where(v => !declared.Contains(v)))
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"the 'tier' field admits '{value}', and no tier here declares it — a record may carry a tier that "
+                + "nothing can name on a page."));
+
+        foreach (var tier in declared.Where(t => !admitted.Contains(t)))
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"tier '{tier}' is declared here and the 'tier' field in '_universal.yaml' does not admit it — no "
+                + "document can ever carry it."));
+
+        foreach (var tier in schema.Tiers.Where(t => t.Label.Length == 0 || t.Behaviour.Length == 0))
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"tier '{tier.Name}' declares no {(tier.Label.Length == 0 ? "'label:'" : "'behaviour:'")} — both head "
+                + "the tier's section in the generated taxonomy."));
     }
 
     // A key the loader never asked for. Every other check here reads a declaration and asks whether code
@@ -123,6 +158,14 @@ public static class SchemaChecks
         Line("label-plural", t.LabelPlural, "what a folder of these is called — \"ADRs\", \"Policies\", \"NFRs\"");
         Line("summary", t.Summary, "what the type is");
         Line("goes-here", t.GoesHere, "what a contributor has in hand when this type is the answer");
+
+        // Not held to the cell bound: `detail:` is the paragraph the other three are too short to be, and
+        // it is rendered as prose rather than into a table.
+        if (t.Detail.Length == 0)
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"type '{key}' declares no 'detail:' — say what the type carries beyond its first sentence, and the "
+                + "edge a reader is most likely to walk over."));
+
         return;
 
         void Line(string name, string value, string says)

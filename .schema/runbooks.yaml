@@ -7,6 +7,8 @@ tier: procedural
 lifecycle: living
 summary: "An incident-time procedure read under pressure: terse, imperative, structured as a decision tree."
 goes-here: A step-by-step for when something is broken
+detail: >
+  Disaster recovery and estate rebuild live here.
 
 id:
   prefix: rbk

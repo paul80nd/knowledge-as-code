@@ -7,6 +7,9 @@ tier: observed
 lifecycle: perishable
 summary: Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.
 goes-here: Something surprising you noticed and haven't verified
+detail: >
+  Deliberately low-ceremony — a title, an observation, why it might matter — and carrying a confidence level, so
+  that "the build fails silently if X" has somewhere to go the moment it is noticed.
 
 id:
   prefix: dsc

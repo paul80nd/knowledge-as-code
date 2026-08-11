@@ -102,6 +102,7 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block           | Done    |
 | Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block | Done    |
 | Where a document goes                       | `.schema/` + the types stood up          | `taxonomy.md` `types-placement` block  | Done    |
+| The types at length, by tier                | `.schema/` + `_tiers.yaml`               | `taxonomy.md` `types-detail` block     | Done    |
 | What this corpus holds                      | `.schema/` + the types stood up          | Root `README.md` `types-index` block   | Done    |
 | Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block  | Planned |
 | Control coverage report                     | `controls/` + standards' rules           | `controls/_index.md`                   | Planned |
@@ -112,11 +113,11 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | `.order` files                              | Folder contents + type ordering          | Each folder                            | Planned |
 | `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                              | Planned |
 
-Two of those blocks describe the corpus rather than the schema. The taxonomy's decision table and the type index at the
-repository root list the types **this** corpus has stood up — page and folder both present — so a corpus that adopted
-five of the framework's types is offered five, and every row opens. That is also why the two are safe to share: the
-mechanism check compares the authored half of a page and ignores what lies between the markers, so the prose stays
-byte-identical in every corpus while the tables beneath it differ.
+Three of those blocks describe the corpus rather than the schema. The taxonomy's decision table, its list of the types
+at length, and the index at the repository root all cover the types **this** corpus has stood up — page and folder both
+present — so a corpus that adopted five of the framework's types is offered five, and every row opens. That is also why
+they are safe to share: the mechanism check compares the authored half of a page and ignores what lies between the
+markers, so the prose stays byte-identical in every corpus while what sits beneath it differs.
 
 ### The rules digest — a block inside root `CLAUDE.md`
 

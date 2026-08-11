@@ -7,6 +7,10 @@ tier: descriptive
 lifecycle: living
 summary: What we offer a customer and why, as a hub linking to what implements, tests and constrains it.
 goes-here: A description of what we offer a customer, and why
+detail: >
+  A hub, sitting above the epic layer: it links to the work items that detail it, the services that implement
+  it, the feature files that test it, and the NFRs that constrain it. A capability that starts accumulating
+  detail of its own has stopped being one.
 
 id:
   prefix: cap

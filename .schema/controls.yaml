@@ -7,6 +7,9 @@ tier: normative
 lifecycle: living
 summary: "How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves."
 goes-here: A check that proves a rule is being followed
+detail: >
+  Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
+  honest state and the number worth watching.
 
 id:
   prefix: ctl

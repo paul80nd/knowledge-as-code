@@ -18,7 +18,7 @@ public class SchemaCheckTests
         string shape = TypeSchema.CollectionShape,
         (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
         string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
-        string goesHere = "A widget", string labelPlural = "Widgets") => new()
+        string goesHere = "A widget", string labelPlural = "Widgets", string detail = "It is a widget.") => new()
     {
         TypeName = "widget",
         Folder = folder,
@@ -28,14 +28,32 @@ public class SchemaCheckTests
         Summary = summary,
         GoesHere = goesHere,
         LabelPlural = labelPlural,
+        Detail = detail,
         FieldOrder = [.. (fields ?? []).Select(x => x.Name)],
         Fields = (fields ?? []).ToDictionary(x => x.Name, x => x.Spec),
         Rules = rules ?? [],
         OptionalSections = sections ?? []
     };
 
-    private static List<Finding> Check(TypeSchema widgets) =>
-        Check(new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["widgets"] = widgets } });
+    // The tiers a type may claim, and the field that admits them, as a sound schema carries them — so a
+    // case declaring nothing about tiers reports nothing about them. CheckTiers has its own cases below.
+    private static readonly string[] TierNames = ["decided", "normative", "descriptive", "procedural", "observed"];
+
+    private static Schema WithTiers(TypeSchema? widgets = null, IEnumerable<string>? tiers = null,
+        IEnumerable<string>? admitted = null) => new()
+    {
+        Tiers = [.. (tiers ?? TierNames).Select(t => new TierSpec(t, t, "how it behaves", ""))],
+        UniversalOrder = ["tier"],
+        Universal = new Dictionary<string, FieldSpec>
+        {
+            ["tier"] = new() { Name = "tier", Type = "enum", Values = [.. admitted ?? TierNames] }
+        },
+        ByFolder = widgets is null
+            ? new Dictionary<string, TypeSchema>()
+            : new Dictionary<string, TypeSchema> { ["widgets"] = widgets }
+    };
+
+    private static List<Finding> Check(TypeSchema widgets) => Check(WithTiers(widgets));
 
     private static List<Finding> Check(Schema schema)
     {
@@ -259,17 +277,51 @@ public class SchemaCheckTests
     [InlineData("descriptive")]
     [InlineData("procedural")]
     [InlineData("observed")]
-    public void Every_tier_the_generated_lists_group_by_passes(string tier)
+    public void Every_declared_tier_passes(string tier)
         => Assert.Empty(Check(Widgets(tier: tier)));
 
-    // A sixth tier would sort silently to the end of every table the type appears in.
+    // A type claiming a tier nothing declares has no heading to sit under and no behaviour to inherit.
     [Fact]
-    public void A_tier_outside_the_five_is_reported()
+    public void A_tier_no_file_declares_is_reported()
     {
         var finding = Assert.Single(Check(Widgets(tier: "experimental")));
 
-        Assert.Equal("schema-dispatch", finding.Check);
+        Assert.Equal("schema-shape", finding.Check);
         Assert.Contains("experimental", finding.Message);
+    }
+
+    // -- the two files that between them define a tier --
+
+    [Fact]
+    public void A_tier_the_field_admits_and_no_file_names_is_reported()
+    {
+        var finding = Assert.Single(Check(WithTiers(admitted: [.. TierNames, "experimental"])));
+
+        Assert.Equal(".schema/_tiers.yaml", finding.File);
+        Assert.Contains("admits 'experimental'", finding.Message);
+    }
+
+    [Fact]
+    public void A_tier_declared_that_no_document_may_carry_is_reported()
+    {
+        var finding = Assert.Single(Check(WithTiers(tiers: [.. TierNames, "experimental"])));
+
+        Assert.Equal(".schema/_tiers.yaml", finding.File);
+        Assert.Contains("does not admit it", finding.Message);
+    }
+
+    [Fact]
+    public void A_tier_with_nothing_to_head_its_section_is_reported()
+    {
+        var schema = WithTiers();
+        var tiers = schema.Tiers.Select(t => t.Name == "observed" ? t with { Label = "" } : t).ToList();
+
+        var finding = Assert.Single(Check(new Schema
+        {
+            Tiers = tiers, UniversalOrder = schema.UniversalOrder, Universal = schema.Universal
+        }));
+
+        Assert.Contains("declares no 'label:'", finding.Message);
     }
 
     // Required where `label:` is not, because a singular can be derived from the type name and a plural
@@ -314,4 +366,18 @@ public class SchemaCheckTests
     [Fact]
     public void A_summary_at_the_bound_passes()
         => Assert.Empty(Check(Widgets(summary: new string('x', Generator.DescriptionMax))));
+
+    [Fact]
+    public void A_type_with_no_paragraph_beneath_its_one_liner_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(detail: "")));
+
+        Assert.Equal("schema-shape", finding.Check);
+        Assert.Contains("no 'detail:'", finding.Message);
+    }
+
+    // The paragraph is prose, not a cell, so the bound the other three are held to does not apply to it.
+    [Fact]
+    public void A_detail_longer_than_a_table_cell_passes()
+        => Assert.Empty(Check(Widgets(detail: new string('x', Generator.DescriptionMax * 3))));
 }

@@ -7,6 +7,8 @@ tier: procedural
 lifecycle: living
 summary: A planned procedure followed deliberately — releasing, onboarding, provisioning, rotating a secret.
 goes-here: A step-by-step for a planned task
+detail: >
+  Written to be followed by someone who has not done it before.
 
 id:
   prefix: prc

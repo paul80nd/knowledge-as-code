@@ -7,6 +7,10 @@ tier: descriptive
 lifecycle: living
 summary: Narrative that helps you understand how something works, or why it is shaped the way it is.
 goes-here: A narrative of how something works or why it's shaped that way
+detail: >
+  Architecture overviews, conceptual walkthroughs, how the pieces fit together. It links rather than restates:
+  an overview points at the documents holding the detail instead of repeating them. One that starts accumulating
+  facts of its own has become a maintenance liability.
 
 id:
   prefix: exp

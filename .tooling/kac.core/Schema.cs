@@ -160,6 +160,12 @@ public sealed class TypeSchema
     // introduces it.
     public string Summary { get; init; } = "";
     public string GoesHere { get; init; } = "";
+
+    // The paragraph beneath the one-liner: what the type carries beyond its first sentence, and the edge
+    // a reader is most likely to walk over. It is the type as the framework defines it, so it stays free
+    // of anything local — the examples and the estate belong on the type's own page, which is the corpus's
+    // to write.
+    public string Detail { get; init; } = "";
     public string Shape { get; init; } = CollectionShape;
     public string IdPrefix { get; init; } = "";
     public string IdStyle { get; init; } = "";
@@ -206,13 +212,6 @@ public sealed class TypeSchema
     // single-document type from a collection whose folder key was lost.
     public const string CollectionShape = "collection";
     public const string SingleDocumentShape = "single-document";
-
-    // The five tiers, in the order the framework states them. A closed set, like the two shapes above:
-    // tier is what every validation rule, review expectation and language rule keys off, and it is
-    // written into the frontmatter of every record of the type — so a sixth would be a word the corpus
-    // carries and nothing means anything by. Read by SchemaChecks.
-    public static readonly List<string> Tiers =
-        ["decided", "normative", "descriptive", "procedural", "observed"];
 
     public bool IsSingleDocument => Shape == SingleDocumentShape;
 
@@ -320,10 +319,21 @@ internal sealed class KeyReader(string file)
         levels.SelectMany(l => l.Unread().Select(key => new UnreadKey(file, l.Where, key)));
 }
 
+// One tier: the word a document carries in its frontmatter, what it is called on a page, how a document
+// of that tier behaves, and — where the tier has one — the thing worth saying about it before the types
+// beneath it are listed.
+public sealed record TierSpec(string Name, string Label, string Behaviour, string Note);
+
 public sealed class Schema
 {
     // The one key admitted at every level and required at none. See Level.
     public const string Commentary = "notes";
+
+    // The tiers as `_tiers.yaml` declares them, in declared order — which is the order every generated
+    // list of types is grouped by. The vocabulary itself belongs to the universal `tier` field; these are
+    // the same values with the prose a frontmatter enum has no room for, and SchemaChecks holds the two
+    // against each other.
+    public IReadOnlyList<TierSpec> Tiers { get; init; } = [];
 
     public IReadOnlyList<string> UniversalOrder { get; init; } = [];
     public IReadOnlyDictionary<string, FieldSpec> Universal { get; init; } = new Dictionary<string, FieldSpec>();
@@ -358,6 +368,18 @@ public sealed class Schema
             enums[name] = Yaml.StrList(enumKeys.At(node, $"enum '{name}'").Get("values"));
         unread.AddRange(enumKeys.Unread());
 
+        var tierKeys = new KeyReader(".schema/_tiers.yaml");
+        var tiersRoot = tierKeys.At(Yaml.LoadFile(Path.Combine(dir, "_tiers.yaml")), TheFile);
+        var tiers = new List<TierSpec>();
+        foreach (var (name, node) in Yaml.Map(tiersRoot.Get("tiers")))
+        {
+            var tier = tierKeys.At(node, $"tier '{name}'");
+            tiers.Add(new TierSpec(name, Yaml.Str(tier.Get("label")) ?? "",
+                Yaml.Str(tier.Get("behaviour"))?.Trim() ?? "", Yaml.Str(tier.Get("note"))?.Trim() ?? ""));
+        }
+
+        unread.AddRange(tierKeys.Unread());
+
         var universalKeys = new KeyReader(".schema/_universal.yaml");
         var uni = universalKeys.At(Yaml.LoadFile(Path.Combine(dir, "_universal.yaml")), TheFile);
         var universalOrder = new List<string>();
@@ -375,7 +397,7 @@ public sealed class Schema
         foreach (var file in Directory.GetFiles(dir, "*.yaml").OrderBy(f => f))
         {
             var baseName = Path.GetFileNameWithoutExtension(file);
-            if (baseName.StartsWith('_')) continue; // _universal, _enums
+            if (baseName.StartsWith('_')) continue; // _universal, _enums, _tiers
 
             var keys = new KeyReader($".schema/{baseName}.yaml");
             byFolder[baseName] = ParseType(keys.At(Yaml.LoadFile(file), TheFile), keys, layer);
@@ -384,6 +406,7 @@ public sealed class Schema
 
         return new Schema
         {
+            Tiers = tiers,
             UniversalOrder = layer.Order,
             Universal = layer.Fields,
             Reserved = layer.Reserved,
@@ -430,6 +453,7 @@ public sealed class Schema
             Lifecycle = Yaml.Str(root.Get("lifecycle")) ?? "",
             Summary = Yaml.Str(root.Get("summary")) ?? "",
             GoesHere = Yaml.Str(root.Get("goes-here")) ?? "",
+            Detail = Yaml.Str(root.Get("detail"))?.Trim() ?? "",
             Shape = Yaml.Str(root.Get("shape")) ?? TypeSchema.CollectionShape,
 
             IdPrefix = Yaml.Str(id.Get("prefix")) ?? "",

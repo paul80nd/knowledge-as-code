@@ -30,12 +30,12 @@ is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath i
 | [Postmortem](/postmortems)   | decided     | What actually happened during an incident — timeline, impact, root cause, contributing factors, actions.         |
 | [Process](/processes)        | procedural  | A planned procedure followed deliberately — releasing, onboarding, provisioning, rotating a secret.              |
 | [Runbook](/runbooks)         | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.                |
-| [Service](/services)         | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, criticality, owner.               |
+| [Service](/services)         | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.               |
 | [Standard](/standards)       | normative   | The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.                         |
 | [Tool](/tools)               | descriptive | The approved-software register — what is chosen, rejected or deprecated, and the version ranges we stand behind. |
 
-**Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, and the calls
-that are genuinely close.
+**Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
+and is not, and the calls that are genuinely close.
 
 <!-- END GENERATED: types-index -->
 
@@ -60,9 +60,9 @@ the shapes they go in.
 ## The seeds come in two kinds
 
 **Some are close to real.** The [policies](policies.md) are the clearest case, and the part worth reading on their own
-terms. The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were
-worked out on them rather than assumed. They are principle-level and stack-agnostic by design, so they name no service
-and invent no domain — which is why they would survive adoption with only the specifics rewritten.
+terms. The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were worked out
+on them rather than assumed. They are principle-level and stack-agnostic by design, so they name no service and invent
+no domain — which is why they would survive adoption with only the specifics rewritten.
 
 **Others need somewhere to stand.** A service catalogue demonstrates nothing without an estate; an NFR has to apply to
 something; a postmortem needs an incident. Those use **one fictional organisation throughout — Example Libraries, a
