@@ -17,7 +17,7 @@ This page is the way in. The detail lives beneath it:
 | Understand what CI checks and builds         | [Automation](knowledge-as-code/automation.md)     |
 | See where the taxonomy's names came from     | [Lineage](knowledge-as-code/lineage.md)           |
 
-The decision to work this way is recorded in [adr-0001](/adrs/0001-knowledge-as-code.md).
+Working this way is itself a decision, and a corpus that holds ADRs should record it as one.
 
 ## The problem
 
@@ -49,16 +49,16 @@ than it otherwise would.
 Four layers, each citing the one above it. This is the conventional policy hierarchy, used deliberately rather than
 inventing a vocabulary — [lineage](knowledge-as-code/lineage.md) records where it comes from and where it diverges.
 
-| Layer                                        | Answers                         | Changes         | Example                                                                |
-|----------------------------------------------|---------------------------------|-----------------|------------------------------------------------------------------------|
-| [Policy](/policies)                          | What do we commit to, and why?  | Rarely          | "Secrets are never stored in source control."                          |
-| [Standard](/standards)                       | What must I do as a result?     | With practice   | "Services **MUST** read secrets from Key Vault via workload identity." |
-| [Control](/controls)                         | How do we know it's being done? | With tooling    | "CI runs secret scanning on every PR; failures block merge."           |
-| [Process](/processes) / [Runbook](/runbooks) | How do I actually do it?        | With the estate | "Rotating a Key Vault secret."                                         |
+| Layer             | Answers                         | Changes         | Example                                                                      |
+|-------------------|---------------------------------|-----------------|------------------------------------------------------------------------------|
+| Policy            | What do we commit to, and why?  | Rarely          | "Secrets are never stored in source control."                                |
+| Standard          | What must I do as a result?     | With practice   | "Services **MUST** read secrets from a managed vault via workload identity." |
+| Control           | How do we know it's being done? | With tooling    | "CI runs secret scanning on every PR; failures block merge."                 |
+| Process / Runbook | How do I actually do it?        | With the estate | "Rotating a secret in the vault."                                            |
 
-[ADRs](/adrs) sit alongside rather than inside this hierarchy. An ADR records a *decision* and is immutable; a standard
-records the *resulting practice* and is maintained in place. The ADR owns the "why", the standard owns the "what", and
-the standard cites the ADR rather than restating it.
+ADRs sit alongside rather than inside this hierarchy. An ADR records a *decision* and is immutable; a standard records
+the *resulting practice* and is maintained in place. The ADR owns the "why", the standard owns the "what", and the
+standard cites the ADR rather than restating it.
 
 Where a policy corresponds to an external framework it says so, clause by clause. That is **alignment, not
 certification**: it means the framework covers the same ground, not that anyone is audited against it. What this corpus

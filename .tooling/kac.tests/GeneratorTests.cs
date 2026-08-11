@@ -250,6 +250,382 @@ public class GeneratorTests
         Assert.Contains("reciprocal", table);
     }
 
+    // -- the tables of types --
+
+    private static TypeSchema Type(string label, string plural, string tier, string page, string goesHere,
+        params (string Other, string Text)[] versus) => new()
+    {
+        Key = page[..^3], Versus = versus,
+        Label = label, LabelPlural = plural, Tier = tier, Page = page, GoesHere = goesHere,
+        Summary = $"What a {label.ToLowerInvariant()} holds.",
+        Detail = $"And the edge a reader walks over when they mistake a {label.ToLowerInvariant()} for something else."
+    };
+
+    private static readonly List<TierSpec> Tiers =
+    [
+        new("decided", "Decided", "immutable once accepted", ""),
+        new("normative", "Normative", "living, owned, reviewed", "The rules, and what verifies them."),
+        new("descriptive", "Descriptive", "living, must mirror reality", ""),
+        new("procedural", "Procedural", "living, must be rehearsed", ""),
+        new("observed", "Observed", "perishable, unreviewed until promoted", "")
+    ];
+
+    private static TypeSchema[] Four() =>
+    [
+        Type("Runbook", "Runbooks", "procedural", "runbooks.md", "A step-by-step for when something is broken"),
+        Type("ADR", "ADRs", "decided", "adrs.md", "A decision that affects more than one repo"),
+        Type("Standard", "Standards", "normative", "standards.md", "A rule people must follow when building"),
+        Type("Control", "Controls", "normative", "controls.md", "A check that proves a rule is being followed")
+    ];
+
+    private static List<int> PositionsOf(string text, params string[] needles) =>
+        [.. needles.Select(n => text.IndexOf(n, StringComparison.Ordinal))];
+
+    // The decision table is read down its left column, so that is the column it is ordered by.
+    [Fact]
+    public void The_decision_table_is_sorted_by_what_the_reader_is_holding()
+    {
+        var order = PositionsOf(Generator.PlacementTable(Four()),
+            "A check that", "A decision that", "A rule people", "A step-by-step");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    // It points at the collection, so it names the collection.
+    [Fact]
+    public void The_decision_table_names_a_type_in_the_plural()
+    {
+        var rows = Generator.PlacementTable(Four());
+
+        Assert.Contains("[ADRs](/adrs)", rows);      // the link form ADO renders and LinkChecks resolves
+        Assert.DoesNotContain("[ADR](", rows);
+    }
+
+    // A lookup table, ordered by the one thing the reader already knows. Tier is a column, not a grouping.
+    [Fact]
+    public void The_corpus_index_is_sorted_by_type_name()
+    {
+        var order = PositionsOf(Generator.TypesIndex(Four(), "taxonomy.md"),
+            "[ADR]", "[Control]", "[Runbook]", "[Standard]");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    [Fact]
+    public void The_corpus_index_carries_the_way_on_to_the_taxonomy_inside_the_block()
+    {
+        var index = Generator.TypesIndex(Four(), "knowledge-as-code/taxonomy.md");
+
+        Assert.Contains("[taxonomy](knowledge-as-code/taxonomy.md)", index);
+        Assert.True(index.IndexOf("| [ADR]", StringComparison.Ordinal)
+                    < index.IndexOf("[taxonomy]", StringComparison.Ordinal));
+        Assert.All(index.Split('\n').Where(l => !l.StartsWith('|')), l => Assert.True(l.Length <= 120));
+    }
+
+    // -- the types at length --
+
+    // Tier order comes from the schema, not the alphabet: Decided leads and Observed closes.
+    [Fact]
+    public void The_catalogue_runs_in_the_order_the_tiers_are_declared()
+    {
+        var order = PositionsOf(Generator.TypeCatalogue(Tiers, Four()),
+            "### Decided", "### Normative", "### Procedural");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    // A heading with nothing under it reads as a gap in the corpus rather than as a choice it made.
+    [Fact]
+    public void A_tier_no_stood_up_type_sits_in_gets_no_heading()
+    {
+        var catalogue = Generator.TypeCatalogue(Tiers, Four());
+
+        Assert.Contains("### Decided", catalogue);
+        Assert.DoesNotContain("### Descriptive", catalogue);
+        Assert.DoesNotContain("### Observed", catalogue);
+    }
+
+    [Fact]
+    public void A_tier_note_is_rendered_before_the_types_beneath_it()
+    {
+        var catalogue = Generator.TypeCatalogue(Tiers, Four());
+        var order = PositionsOf(catalogue, "### Normative", "The rules, and what verifies them.", "[Controls]");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    [Fact]
+    public void A_catalogue_entry_names_the_collection_and_carries_both_halves_of_the_prose()
+    {
+        var catalogue = Generator.TypeCatalogue(Tiers, Four());
+
+        Assert.Contains("**[ADRs](/adrs)** — What a adr holds. And the edge", catalogue);
+    }
+
+    // Prose wraps at the margin the corpus holds every other paragraph to; a table cell cannot be broken
+    // and is exempt, which is why the wrap belongs to the prose renderers rather than to RenderTable.
+    [Fact]
+    public void Catalogue_prose_wraps_at_the_corpus_margin()
+        => Assert.All(Generator.TypeCatalogue(Tiers, Four()).Split('\n'), l => Assert.True(l.Length <= 120));
+
+    // A link broken after its label's first word still renders, but it reads badly and a formatter meeting
+    // it puts it back — after which the generator writes it out broken again on the next run.
+    [Fact]
+    public void A_link_label_is_never_broken_across_lines()
+    {
+        var t = new TypeSchema
+        {
+            Key = "widgets", Label = "Widget", LabelPlural = "Widgets", Tier = "decided", Page = "widgets.md",
+            Summary = "Short.",
+            Detail = "Padding to push the link past the margin so the wrap has to choose a break near it, and then "
+                     + "some more padding after that, before [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) lands."
+        };
+
+        var catalogue = Generator.TypeCatalogue(Tiers, [t]);
+
+        Assert.Contains("[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119)", catalogue);
+    }
+
+    [Fact]
+    public void A_word_longer_than_the_margin_is_left_whole_on_its_own_line()
+    {
+        var long_ = new string('x', 200);
+        var t = new TypeSchema
+        {
+            Label = "Widget", LabelPlural = "Widgets", Tier = "decided", Page = "widgets.md",
+            Summary = "Short.", Detail = long_
+        };
+
+        Assert.Contains(long_, Generator.TypeCatalogue(Tiers, [t]));
+    }
+
+    // -- the calls that are genuinely close --
+
+    private static TypeSchema[] Pair(params (string Other, string Text)[] versus) =>
+    [
+        Type("ADR", "ADRs", "decided", "adrs.md", "A decision", versus),
+        Type("Standard", "Standards", "normative", "standards.md", "A rule")
+    ];
+
+    [Fact]
+    public void A_disambiguation_is_headed_from_the_side_that_declares_it()
+    {
+        var text = Generator.Disambiguations(Pair(("standards", "The ADR is the decision, frozen.")));
+
+        Assert.Contains("**ADR vs Standard.** The ADR is the decision, frozen.", text);
+    }
+
+    // A pair needs both its types: a corpus with no standards is not helped by being told how one differs
+    // from an ADR, and the heading would name a page it cannot open.
+    [Fact]
+    public void A_pair_whose_other_half_is_not_stood_up_is_left_out()
+    {
+        var adrsOnly = Pair(("standards", "The ADR is the decision, frozen."))[..1];
+
+        Assert.Empty(Generator.Disambiguations(adrsOnly));
+    }
+
+    [Fact]
+    public void Disambiguations_are_sorted_by_heading()
+    {
+        var text = Generator.Disambiguations(Pair(
+            ("standards", "Second by heading."), ("zzz", "Never rendered — no such type.")));
+
+        Assert.Contains("ADR vs Standard", text);
+        Assert.DoesNotContain("Never rendered", text);
+    }
+
+    // -- the way on to each type's own fields --
+
+    [Fact]
+    public void The_metadata_strip_links_each_type_at_the_heading_its_field_table_sits_under()
+    {
+        var strip = Generator.MetadataStrip(Four());
+
+        Assert.Contains("[ADR](/adrs#metadata)", strip);
+        Assert.Contains(" · ", strip);
+    }
+
+    // A single-document type has no records, so nothing generates a field table for it to be linked to.
+    [Fact]
+    public void A_single_document_type_is_left_out_of_the_metadata_strip()
+    {
+        var glossary = new TypeSchema
+        {
+            Key = "glossary", Label = "Glossary", LabelPlural = "Glossary", Tier = "descriptive",
+            Page = "glossary.md", Shape = TypeSchema.SingleDocumentShape,
+            Summary = "Terms.", Detail = "The terms.", GoesHere = "A term"
+        };
+
+        Assert.DoesNotContain("Glossary", Generator.MetadataStrip([.. Four(), glossary]));
+    }
+
+    [Fact]
+    public void The_metadata_strip_wraps_at_the_corpus_margin()
+        => Assert.All(Generator.MetadataStrip(Four()).Split('\n'), l => Assert.True(l.Length <= 120));
+
+    // -- where the names came from --
+
+    private static TypeSchema Ancestor(string label, string key, LineageSpec? lineage) => new()
+    {
+        Key = key, Label = label, LabelPlural = label + "s", Tier = "decided", Page = $"{key}.md",
+        Summary = "A thing.", Detail = "A longer thing.", GoesHere = "A thing", Lineage = lineage
+    };
+
+    [Fact]
+    public void A_lineage_row_carries_the_prior_art_and_both_sides_of_it()
+    {
+        var table = Generator.LineageTable(
+            [Ancestor("ADR", "adrs", new LineageSpec("[Nygard](https://x)", "The three sections", "Ours spans repos"))]);
+
+        Assert.Contains("| [ADR](/adrs)", table);
+        Assert.Contains("[Nygard](https://x)", table);
+        Assert.Contains("The three sections", table);
+        Assert.Contains("Ours spans repos", table);
+    }
+
+    // Three types have no ancestor, and the row exists to say so. An empty cell would read as unfinished.
+    [Fact]
+    public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
+    {
+        var table = Generator.LineageTable([Ancestor("Discovery", "discoveries", new LineageSpec("None.", "", ""))]);
+
+        Assert.Contains("| None.", table);
+        Assert.Contains("| — ", table);
+    }
+
+    [Fact]
+    public void A_type_that_declares_no_lineage_is_left_out_of_the_table()
+        => Assert.DoesNotContain("Widget", Generator.LineageTable([Ancestor("Widget", "widgets", null)]));
+
+    // -- words a reader arrives already holding --
+
+    private static TypeSchema Colliding(string label, string key, string collision) => new()
+    {
+        Key = key, Label = label, LabelPlural = label + "s", Tier = "normative", Page = $"{key}.md",
+        Summary = "A thing.", Detail = "A longer thing.", GoesHere = "A thing", Collision = collision
+    };
+
+    // Most types collide with nothing, and a heading over a paragraph saying a word means what it says
+    // would be worse than the silence.
+    [Fact]
+    public void Only_a_type_that_collides_with_something_gets_a_heading()
+    {
+        var text = Generator.Collisions(
+            [Colliding("Control", "controls", "Elsewhere it is the safeguard."), Colliding("ADR", "adrs", "")]);
+
+        Assert.Contains("### Control", text);
+        Assert.DoesNotContain("### ADR", text);
+    }
+
+    // A blank line in the folded scalar comes back as a newline, and each paragraph is wrapped on its own.
+    [Fact]
+    public void A_collision_of_several_paragraphs_renders_as_several()
+    {
+        var text = Generator.Collisions([Colliding("Control", "controls", "First para.\nSecond para.")]);
+
+        Assert.Contains("First para.\n\nSecond para.", text);
+    }
+
+    [Fact]
+    public void Collisions_are_sorted_by_type_name()
+    {
+        var order = PositionsOf(Generator.Collisions(
+            [Colliding("Standard", "standards", "An external body publishes one."),
+             Colliding("Control", "controls", "Elsewhere it is the safeguard.")]),
+            "### Control", "### Standard");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    [Fact]
+    public void Collision_prose_wraps_at_the_corpus_margin()
+    {
+        const string para = "A paragraph long enough that the generator has to break it somewhere sensible, which is "
+                            + "the whole point of wrapping prose a person did not lay out by hand.";
+
+        Assert.All(Generator.Collisions([Colliding("Control", "controls", para)]).Split('\n'),
+            l => Assert.True(l.Length <= 120));
+    }
+
+    // -- how the types relate --
+
+    private static TypeSchema Linked(string label, string key, params (string Field, string[] Refs, string? Back)[] fs)
+    {
+        var fields = fs.ToDictionary(f => f.Field,
+            f => new FieldSpec { Name = f.Field, Type = "list", Of = "id", Refs = f.Refs, Reciprocal = f.Back });
+
+        return new TypeSchema
+        {
+            Key = key, Label = label, LabelPlural = label + "s", Tier = "normative", Page = $"{key}.md",
+            Summary = "A thing.", Detail = "A longer thing.", GoesHere = "A thing",
+            FieldOrder = [.. fs.Select(f => f.Field)], Fields = fields
+        };
+    }
+
+    private static TypeSchema[] Graph() =>
+    [
+        Linked("Standard", "standards", ("implements", ["policies"], null), ("verified-by", ["controls"], "verifies")),
+        Linked("Control", "controls", ("verifies", ["standards"], "verified-by")),
+        Linked("Policy", "policies")
+    ];
+
+    [Fact]
+    public void The_relation_table_carries_both_halves_of_a_reciprocal_pair()
+    {
+        var table = Generator.RelationTable(Graph());
+
+        Assert.Contains("| Standard | `verified-by`", table);
+        Assert.Contains("| Control  | `verifies`", table);
+        Assert.Contains("`verifies`    |", table);   // …each naming the other in the last column
+    }
+
+    // A one-directional edge has nobody obliged to answer it, and the empty cell is what says so.
+    [Fact]
+    public void A_one_directional_edge_names_no_counterpart()
+        => Assert.Matches(@"\| Standard \| `implements`\s+\| Policy\s+\|\s+\|", Generator.RelationTable(Graph()));
+
+    // The field would resolve against no document, so the row would promise an edge that cannot exist.
+    [Fact]
+    public void An_edge_at_a_type_the_corpus_has_not_stood_up_is_dropped()
+    {
+        var table = Generator.RelationTable(Graph()[..2]);   // policies not stood up
+
+        Assert.DoesNotContain("implements", table);
+        Assert.Contains("verifies", table);
+    }
+
+    // The subset of Mermaid an Azure DevOps wiki renders: `graph`, never `flowchart`; no subgraphs; and
+    // no arrow longer than `-->`. Exceeding it fails silently in the wiki, so it is pinned here.
+    [Fact]
+    public void The_diagram_stays_inside_what_an_ADO_wiki_renders()
+    {
+        var diagram = Generator.RelationDiagram(Graph());
+
+        Assert.StartsWith("```mermaid\ngraph LR;\n", diagram);
+        Assert.DoesNotContain("flowchart", diagram);
+        Assert.DoesNotContain("subgraph", diagram);
+        Assert.DoesNotContain("--->", diagram);
+
+        // No pipes: a markdown formatter scanning for tables reformats what it finds between them, and a
+        // fenced block is no protection.
+        Assert.DoesNotContain("|", diagram);
+    }
+
+    // One relationship, one arrow — where the table has two rows, because an author has two fields.
+    [Fact]
+    public void A_reciprocal_pair_is_drawn_once()
+    {
+        var diagram = Generator.RelationDiagram(Graph());
+
+        Assert.Contains("t_controls -- verifies --> t_standards;", diagram);
+        Assert.DoesNotContain("verified-by", diagram);
+    }
+
+    [Fact]
+    public void A_type_with_no_edges_is_still_drawn()
+        => Assert.Contains("t_policies[Policy];", Generator.RelationDiagram(Graph()));
+
     [Fact]
     public void SpliceBlock_replaces_only_between_the_named_markers()
     {
@@ -263,10 +639,74 @@ public class GeneratorTests
         Assert.EndsWith("\nafter", result);
     }
 
+    // A corpus that adopted few types has blocks with nothing to say — no pair of its types is easily
+    // confused, none of its words collides. Two blank lines between the markers reads as deleted content.
+    [Fact]
+    public void SpliceBlock_closes_an_empty_block_on_the_next_line()
+    {
+        const string text = "<!-- BEGIN GENERATED: x -->\n\nOLD\n\n<!-- END GENERATED: x -->";
+
+        Assert.Equal("<!-- BEGIN GENERATED: x -->\n<!-- END GENERATED: x -->",
+            Generator.SpliceBlock(text, "x", ""));
+    }
+
     [Fact]
     public void SpliceBlock_leaves_text_untouched_when_the_marker_is_absent()
     {
         const string text = "no markers here";
         Assert.Equal(text, Generator.SpliceBlock(text, "missing", "NEW"));
+    }
+
+    // Authored is what `mechanism --check` compares, so what it keeps and what it drops decides whether a
+    // shared page may carry a corpus-specific table.
+    [Fact]
+    public void Authored_drops_what_a_generated_block_holds_and_keeps_the_markers()
+    {
+        const string local = "prose\n<!-- BEGIN GENERATED: a -->\n\n| one |\n\n<!-- END GENERATED: a -->\nafter";
+        const string reference = "prose\n<!-- BEGIN GENERATED: a -->\n\n| another |\n\n<!-- END GENERATED: a -->\nafter";
+
+        Assert.Equal(Generator.Authored(reference), Generator.Authored(local));
+        Assert.Contains("<!-- BEGIN GENERATED: a -->", Generator.Authored(local));
+        Assert.Contains("<!-- END GENERATED: a -->", Generator.Authored(local));
+        Assert.DoesNotContain("one", Generator.Authored(local));
+    }
+
+    [Fact]
+    public void Authored_still_sees_a_difference_in_the_prose_around_a_block()
+    {
+        const string local = "prose\n<!-- BEGIN GENERATED: a -->\nX\n<!-- END GENERATED: a -->\n";
+        const string reference = "other prose\n<!-- BEGIN GENERATED: a -->\nX\n<!-- END GENERATED: a -->\n";
+
+        Assert.NotEqual(Generator.Authored(reference), Generator.Authored(local));
+    }
+
+    [Fact]
+    public void Authored_empties_every_block_on_a_page_that_carries_several()
+    {
+        const string text = "a\n<!-- BEGIN GENERATED: one -->\nX\n<!-- END GENERATED: one -->\n"
+                            + "b\n<!-- BEGIN GENERATED: two -->\nY\n<!-- END GENERATED: two -->\nc";
+
+        var authored = Generator.Authored(text);
+
+        Assert.DoesNotContain("X", authored);
+        Assert.DoesNotContain("Y", authored);
+        Assert.Contains("\nb\n", authored);
+    }
+
+    [Fact]
+    public void Authored_compares_the_whole_page_where_a_block_is_never_closed()
+    {
+        // The generator cannot follow the structure, so nothing is treated as generated and the drift
+        // stays visible rather than being masked by a marker someone deleted half of.
+        const string text = "a\n<!-- BEGIN GENERATED: one -->\nX\n";
+
+        Assert.Equal(text, Generator.Authored(text));
+    }
+
+    [Fact]
+    public void Authored_leaves_a_page_with_no_blocks_exactly_as_it_is()
+    {
+        const string text = "just prose\n";
+        Assert.Equal(text, Generator.Authored(text));
     }
 }

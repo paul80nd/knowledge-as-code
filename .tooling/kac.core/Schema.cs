@@ -146,12 +146,51 @@ public sealed record RuleSpec
 
 public sealed class TypeSchema
 {
+    // How the schema names this type: the base name of its file, which is the folder for a collection and
+    // the page's stem for a single-document type. It is what `ref:` and `versus:` name, and what a finding
+    // calls the type, so it is carried here rather than being the dictionary key alone — a TypeSchema
+    // handed to a renderer would otherwise have lost the one name the schema knows it by.
+    public string Key { get; init; } = "";
+
     public string TypeName { get; init; } = "";
     public string Label { get; init; } = "";
+    public string LabelPlural { get; init; } = "";
     public string Folder { get; init; } = "";
     public string Page { get; init; } = "";
     public string Tier { get; init; } = "";
     public string Lifecycle { get; init; } = "";
+
+    // What this type is, in one line, and what a reader has in hand when it is the answer. Both are
+    // rendered rather than read by a check: the taxonomy's decision table and the corpus's own index are
+    // generated from them, so a type says what it is once, here, instead of once in every page that
+    // introduces it.
+    public string Summary { get; init; } = "";
+    public string GoesHere { get; init; } = "";
+
+    // The paragraph beneath the one-liner: what the type carries beyond its first sentence, and the edge
+    // a reader is most likely to walk over. It is the type as the framework defines it, so it stays free
+    // of anything local — the examples and the estate belong on the type's own page, which is the corpus's
+    // to write.
+    public string Detail { get; init; } = "";
+
+    // The calls that are genuinely close, each against one other type. A pair is declared once, by the
+    // type the reader is most likely to have reached for — which is also the type the heading is titled
+    // from, so "ADR vs Standard" lives on `adrs`. Declared order is kept for the messages; the page they
+    // render on sorts them for itself.
+    public IReadOnlyList<(string Other, string Text)> Versus { get; init; } = [];
+
+    // Where the type's name came from, and where it parts company with whatever lent it. The framework's
+    // own intellectual debt rather than the corpus's, so it is identical wherever this schema is taken —
+    // which is the difference between it and a corpus's standing against a framework, recorded once in
+    // `frameworks.md` and nowhere near here.
+    public LineageSpec? Lineage { get; init; }
+
+    // Where this type's name already means something else to a reader arriving from another framework, and
+    // what they will get wrong because of it. Empty for most types: a word only collides where somebody
+    // else got there first, and inventing a collision to fill the key would waste the warning.
+    //
+    // Paragraphs are separated by a blank line in the schema and rendered as paragraphs.
+    public string Collision { get; init; } = "";
     public string Shape { get; init; } = CollectionShape;
     public string IdPrefix { get; init; } = "";
     public string IdStyle { get; init; } = "";
@@ -209,6 +248,15 @@ public sealed class TypeSchema
         !string.IsNullOrEmpty(Label) ? Label
         : !string.IsNullOrEmpty(TypeName) ? char.ToUpperInvariant(TypeName[0]) + TypeName[1..]
         : IdPrefix.ToUpperInvariant();
+
+    // How the *collection* is named — "ADRs", "Policies", "NFRs", "Data". Where a generated line points at
+    // the type's page rather than at one of its records, this is the name that belongs on the link.
+    //
+    // Declared with no fallback worth the name, which is why `label-plural:` is required where `label:` is
+    // not: nothing turns `nfr` into "NFRs" and `glossary` into "Glossary", and appending an `s` produces a
+    // word for some types and a mistake for the rest. The fallback exists only so that a hand-built
+    // TypeSchema renders something.
+    public string PluralName => !string.IsNullOrEmpty(LabelPlural) ? LabelPlural : DisplayName;
 
     // Whether this type declares a given rule. The reader-facing checks table uses it to show a
     // rule's row only on the pages whose schema actually carries the rule.
@@ -296,10 +344,31 @@ internal sealed class KeyReader(string file)
         levels.SelectMany(l => l.Unread().Select(key => new UnreadKey(file, l.Where, key)));
 }
 
+// One tier: the word a document carries in its frontmatter, what it is called on a page, how a document
+// of that tier behaves, and — where the tier has one — the thing worth saying about it before the types
+// beneath it are listed.
+public sealed record TierSpec(string Name, string Label, string Behaviour, string Note);
+
+// A type's prior art, and the two things worth saying about it: what the framework took, and where it
+// deliberately parts company. Links are written inline rather than as reference labels, because the block
+// this renders into cannot see the definitions at the foot of the page it lands on — and a label whose
+// definition is deleted renders as literal brackets rather than as a failure.
+//
+// A type with no useful ancestor says so in `PriorArt` and leaves the other two empty. Claiming an
+// ancestor a type does not have would be worse than admitting none, so the absence is a real answer and
+// renders as one.
+public sealed record LineageSpec(string PriorArt, string Alignment, string Divergence);
+
 public sealed class Schema
 {
     // The one key admitted at every level and required at none. See Level.
     public const string Commentary = "notes";
+
+    // The tiers as `_tiers.yaml` declares them, in declared order — which is the order every generated
+    // list of types is grouped by. The vocabulary itself belongs to the universal `tier` field; these are
+    // the same values with the prose a frontmatter enum has no room for, and SchemaChecks holds the two
+    // against each other.
+    public IReadOnlyList<TierSpec> Tiers { get; init; } = [];
 
     public IReadOnlyList<string> UniversalOrder { get; init; } = [];
     public IReadOnlyDictionary<string, FieldSpec> Universal { get; init; } = new Dictionary<string, FieldSpec>();
@@ -334,6 +403,18 @@ public sealed class Schema
             enums[name] = Yaml.StrList(enumKeys.At(node, $"enum '{name}'").Get("values"));
         unread.AddRange(enumKeys.Unread());
 
+        var tierKeys = new KeyReader(".schema/_tiers.yaml");
+        var tiersRoot = tierKeys.At(Yaml.LoadFile(Path.Combine(dir, "_tiers.yaml")), TheFile);
+        var tiers = new List<TierSpec>();
+        foreach (var (name, node) in Yaml.Map(tiersRoot.Get("tiers")))
+        {
+            var tier = tierKeys.At(node, $"tier '{name}'");
+            tiers.Add(new TierSpec(name, Yaml.Str(tier.Get("label")) ?? "",
+                Yaml.Str(tier.Get("behaviour"))?.Trim() ?? "", Yaml.Str(tier.Get("note"))?.Trim() ?? ""));
+        }
+
+        unread.AddRange(tierKeys.Unread());
+
         var universalKeys = new KeyReader(".schema/_universal.yaml");
         var uni = universalKeys.At(Yaml.LoadFile(Path.Combine(dir, "_universal.yaml")), TheFile);
         var universalOrder = new List<string>();
@@ -351,15 +432,16 @@ public sealed class Schema
         foreach (var file in Directory.GetFiles(dir, "*.yaml").OrderBy(f => f))
         {
             var baseName = Path.GetFileNameWithoutExtension(file);
-            if (baseName.StartsWith('_')) continue; // _universal, _enums
+            if (baseName.StartsWith('_')) continue; // _universal, _enums, _tiers
 
             var keys = new KeyReader($".schema/{baseName}.yaml");
-            byFolder[baseName] = ParseType(keys.At(Yaml.LoadFile(file), TheFile), keys, layer);
+            byFolder[baseName] = ParseType(keys.At(Yaml.LoadFile(file), TheFile), keys, layer, baseName);
             unread.AddRange(keys.Unread());
         }
 
         return new Schema
         {
+            Tiers = tiers,
             UniversalOrder = layer.Order,
             Universal = layer.Fields,
             Reserved = layer.Reserved,
@@ -373,7 +455,7 @@ public sealed class Schema
     // one says only that it is the top.
     private const string TheFile = "the file";
 
-    private static TypeSchema ParseType(Level root, KeyReader keys, UniversalLayer layer)
+    private static TypeSchema ParseType(Level root, KeyReader keys, UniversalLayer layer, string key)
     {
         var id = keys.At(root.Get("id"), "the 'id' block");
         var fn = keys.At(root.Get("filename"), "the 'filename' block");
@@ -395,14 +477,29 @@ public sealed class Schema
         var filenamePattern = Yaml.Str(fn.Get("pattern"));
         var clauses = keys.At(root.Get("clauses"), "the 'clauses' block");
 
+        // All three read whether or not the block is there, so that a lineage missing only its `prior-art:`
+        // is reported as the shape problem it is rather than as two keys the loader never asked for.
+        var lineage = keys.At(root.Get("lineage"), "the 'lineage' block");
+        var priorArt = Yaml.Str(lineage.Get("prior-art"))?.Trim() ?? "";
+        var alignment = Yaml.Str(lineage.Get("alignment"))?.Trim() ?? "";
+        var divergence = Yaml.Str(lineage.Get("divergence"))?.Trim() ?? "";
+
         return new TypeSchema
         {
+            Key = key,
             TypeName = Yaml.Str(root.Get("type")) ?? "",
             Label = Yaml.Str(root.Get("label")) ?? "",
+            LabelPlural = Yaml.Str(root.Get("label-plural")) ?? "",
             Folder = Yaml.Str(root.Get("folder")) ?? "",
             Page = Yaml.Str(root.Get("page")) ?? "",
             Tier = Yaml.Str(root.Get("tier")) ?? "",
             Lifecycle = Yaml.Str(root.Get("lifecycle")) ?? "",
+            Summary = Yaml.Str(root.Get("summary")) ?? "",
+            GoesHere = Yaml.Str(root.Get("goes-here")) ?? "",
+            Detail = Yaml.Str(root.Get("detail"))?.Trim() ?? "",
+            Versus = [.. Yaml.Map(root.Get("versus")).Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))],
+            Lineage = priorArt.Length > 0 ? new LineageSpec(priorArt, alignment, divergence) : null,
+            Collision = Yaml.Str(root.Get("collision"))?.Trim() ?? "",
             Shape = Yaml.Str(root.Get("shape")) ?? TypeSchema.CollectionShape,
 
             IdPrefix = Yaml.Str(id.Get("prefix")) ?? "",

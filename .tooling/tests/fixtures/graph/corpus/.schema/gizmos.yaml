@@ -1,9 +1,17 @@
 type: gizmo
 label: Gizmo
+label-plural: Gizmos
 folder: gizmos
 page: gizmos.md
 tier: descriptive
 lifecycle: living
+summary: A fixture type, carrying the two lines every type owes so that only the mirroring is under test here.
+goes-here: A gizmo, which is a thing this fixture has and nothing else does
+detail: >
+  Carrying the lines every type owes so that only the mirroring is under test here.
+
+lineage:
+  prior-art: None — a fixture type has no ancestor to claim.
 
 notes: >
   A fixture type laid over the real schema so that the mirroring check is exercised against a section

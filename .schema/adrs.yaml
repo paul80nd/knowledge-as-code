@@ -1,9 +1,30 @@
 type: adr
 label: ADR
+label-plural: ADRs
 folder: adrs
 page: adrs.md
 tier: decided
 lifecycle: immutable
+summary: An architecturally significant decision affecting more than one repository, and the reasoning behind it.
+goes-here: A decision that affects more than one repo, and its reasoning
+detail: >
+  The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded by
+  a new ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it,
+  not here.
+
+versus:
+  standards: >
+    The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept current. If
+    you are writing "we considered X and rejected it", that is an ADR; if you are writing "you **MUST** do Y",
+    that is a standard. Most substantial changes produce both.
+
+lineage:
+  prior-art: "[Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011)"
+  alignment: >
+    Context / Decision / Consequences, and the rule that a reversed decision is superseded rather than rewritten
+  divergence: >
+    Nygard scopes decisions to one codebase; ours must affect more than one repository. Mandatory *Alternatives*
+    is ours, not his
 
 id:
   prefix: adr

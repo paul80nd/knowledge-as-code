@@ -1,9 +1,22 @@
 type: data
 label: Data
+label-plural: Data
 folder: data
 page: data.md
 tier: descriptive
 lifecycle: living
+summary: Which store owns which entities, how long they are kept, how sensitive they are, and where personal data flows.
+goes-here: Where data lives, how long we keep it, and how sensitive it is
+detail: >
+  Organised by store rather than by processing activity. An engineer can use it; a regulator cannot.
+
+lineage:
+  prior-art: "[GDPR Article 30](https://eur-lex.europa.eu/eli/reg/2016/679/oj), records of processing activities"
+  alignment: >
+    Categories of data, recipients, transfers, erasure time limits, security measures
+  divergence: >
+    Article 30 is organised by processing activity and by controller. Ours is organised by store. **A Data
+    document is not a ROPA and does not satisfy Article 30**
 
 notes: >
   Folder is singular because English gives no plural. One of two exceptions to the plural-folder rule,

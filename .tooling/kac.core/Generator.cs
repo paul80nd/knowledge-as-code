@@ -42,6 +42,267 @@ public static class Generator
     public static readonly IReadOnlySet<string> IndexOrders =
         new HashSet<string>(["ascending", Descending], StringComparer.Ordinal);
 
+    // How a type is linked to from a generated block: the page without its extension, root-relative. The
+    // form Azure DevOps renders as a wiki page and the link check resolves back to the file.
+    private static string Link(TypeSchema t) =>
+        "/" + (t.Page.EndsWith(".md", StringComparison.Ordinal) ? t.Page[..^3] : t.Page);
+
+    // The decision table — what a contributor has in hand, and where it goes. The corpus's own types
+    // only: a row pointing at a type this corpus never adopted is a dead link in the wiki and an
+    // invitation to file a document nowhere.
+    //
+    // Sorted on the left column, because that is the column being read. A reader arrives holding
+    // something and scans for it, so the table is ordered the way it is searched rather than by the
+    // answer they do not have yet. The link carries the plural: it points at the collection.
+    public static string PlacementTable(IEnumerable<TypeSchema> types) =>
+        RenderTable(["You have…", "It goes in"],
+            [.. types.OrderBy(t => t.GoesHere, StringComparer.Ordinal)
+                .Select(t => new List<string> { Escape(t.GoesHere), $"[{t.PluralName}]({Link(t)})" })]);
+
+    // The types at length, under the tier that decides how each behaves. What the decision table answers
+    // in a line, this answers in a paragraph — and it is grouped by tier rather than sorted flat, because
+    // the reader who has got this far is learning the shape of the taxonomy rather than looking one type
+    // up.
+    //
+    // A tier no adopted type sits in is left out entirely. A heading with nothing under it tells a reader
+    // the corpus has a gap where it has in fact made a choice.
+    public static string TypeCatalogue(IReadOnlyList<TierSpec> tiers, IEnumerable<TypeSchema> types)
+    {
+        var byTier = types.ToLookup(t => t.Tier, StringComparer.Ordinal);
+        var sections = new List<string>();
+
+        foreach (var tier in tiers)
+        {
+            var members = byTier[tier.Name].OrderBy(t => t.DisplayName, StringComparer.Ordinal).ToList();
+            if (members.Count == 0) continue;
+
+            var section = new StringBuilder($"### {tier.Label} — {tier.Behaviour}\n");
+            if (tier.Note.Length > 0) section.Append($"\n{Wrap(tier.Note)}\n");
+            foreach (var t in members)
+                section.Append($"\n{Wrap($"**[{t.PluralName}]({Link(t)})** — {t.Summary} {t.Detail}")}\n");
+
+            sections.Add(section.ToString());
+        }
+
+        return string.Join("\n", sections).TrimEnd('\n');
+    }
+
+    // One way on to each type's own field reference. Collection types only: a single-document type has no
+    // records, so nothing generates a field table for it and its fields are described on its own page.
+    //
+    // The anchor is the heading the `schema-*` block sits under. Keeping that heading is the type page's
+    // side of the bargain, and the link check holds it there.
+    public static string MetadataStrip(IEnumerable<TypeSchema> types) =>
+        Wrap(string.Join(" · ", types
+            .Where(t => !t.IsSingleDocument)
+            .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
+            .Select(t => $"[{t.DisplayName}]({Link(t)}#metadata)")));
+
+    // Where each type's name came from. A type with no useful ancestor carries that as its prior art and
+    // leaves the other two columns empty, which renders as an em dash. Saying a type has no ancestor is the
+    // point of its row rather than a gap in it.
+    public static string LineageTable(IEnumerable<TypeSchema> types) =>
+        RenderTable(["Type", "Nearest prior art", "Alignment", "Divergence"],
+            [.. types.Where(t => t.Lineage is not null)
+                .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
+                .Select(t => new List<string>
+                {
+                    $"[{t.DisplayName}]({Link(t)})", Escape(t.Lineage!.PriorArt),
+                    Cell(t.Lineage.Alignment), Cell(t.Lineage.Divergence)
+                })]);
+
+    // An answer that is deliberately absent, written as one. An empty cell in a table of this shape reads
+    // as something nobody got round to.
+    private static string Cell(string text) => text.Length > 0 ? Escape(text) : "—";
+
+    // The words a reader arrives already holding, and what they will take them to mean. Only the types
+    // that collide with something appear: most do not, and a heading over a paragraph explaining that a
+    // word means what it says would be worse than the silence.
+    //
+    // Ordered by name. The section it replaces ran most-dangerous-first, which no declaration carries — and
+    // the entry that claims to be the most dangerous still says so wherever it lands.
+    public static string Collisions(IEnumerable<TypeSchema> types) =>
+        string.Join("\n\n", types
+            .Where(t => t.Collision.Length > 0)
+            .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
+            .Select(t => $"### {t.DisplayName}\n\n{Paragraphs(t.Collision)}"));
+
+    // A folded scalar carrying more than one paragraph: YAML gives back a newline where the schema had a
+    // blank line, and each paragraph is wrapped on its own.
+    private static string Paragraphs(string text) =>
+        string.Join("\n\n", text.Split('\n')
+            .Select(p => p.Trim())
+            .Where(p => p.Length > 0)
+            .Select(Wrap));
+
+    // The edges, read off the `ref:` declarations that make them checkable. One row per cross-reference
+    // field a type carries, which is one row per thing an author fills in. A reciprocal pair is two rows
+    // rather than one, because it is two fields, and the last column names the counterpart that ties them.
+    //
+    // A target the corpus has not adopted is dropped from the row, and a row left pointing nowhere goes
+    // with it. The field would resolve against no document in any case; showing it would promise an edge
+    // this corpus cannot have.
+    public static string RelationTable(IEnumerable<TypeSchema> types)
+    {
+        var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
+        var rows = new List<List<string>>();
+
+        foreach (var (t, name, field, targets) in Edges(types, adopted))
+            rows.Add([t.DisplayName, $"`{name}`", string.Join(", ", targets.Select(x => x.DisplayName)),
+                field.Reciprocal is { } back ? $"`{back}`" : ""]);
+
+        return RenderTable(["From", "Field", "Points at", "Answered by"], rows);
+    }
+
+    // Every cross-reference a stood-up type declares at another stood-up type, in a fixed order: by the
+    // type a reader would look up, then by the field they would write.
+    private static IEnumerable<(TypeSchema From, string Field, FieldSpec Spec, List<TypeSchema> To)> Edges(
+        IEnumerable<TypeSchema> types, Dictionary<string, TypeSchema> adopted)
+    {
+        foreach (var t in types.OrderBy(t => t.DisplayName, StringComparer.Ordinal))
+        foreach (var name in t.FieldOrder.OrderBy(n => n, StringComparer.Ordinal))
+        {
+            if (!t.Fields.TryGetValue(name, out var field) || field.Refs.Count == 0) continue;
+
+            var targets = field.Refs.Where(adopted.ContainsKey).Select(r => adopted[r]).ToList();
+            if (targets.Count > 0) yield return (t, name, field, targets);
+        }
+    }
+
+    // The same edges as a diagram, which answers a different question from the table: what shape the graph
+    // is, rather than which field to write. A reciprocal pair is one edge here and two rows there, and both
+    // are right — the graph has one relationship where an author has two fields to fill in.
+    //
+    // Written to the subset of Mermaid an Azure DevOps wiki renders, which is narrower than Mermaid's own
+    // and fails silently where it is exceeded: `graph`, never `flowchart`; `-->`, never a longer arrow; and
+    // no subgraphs, because ADO does not support links crossing one. GitHub renders this subset too, so the
+    // fenced form is used rather than ADO's `:::` container, which GitHub shows as literal text.
+    //
+    // Edges are labelled `-- text -->` rather than `-->|text|`. The two are the same diagram, but a
+    // markdown formatter reading a file for tables finds pipes in the second and reformats what it takes
+    // for cells — `superseded-by` came back as `superseded - by`, inside a fenced block it should never
+    // have entered. `index --check` catches it, which is the guard working; not provoking it is better.
+    public static string RelationDiagram(IEnumerable<TypeSchema> types)
+    {
+        var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
+        var diagram = new StringBuilder("```mermaid\ngraph LR;\n");
+
+        foreach (var t in adopted.Values.OrderBy(t => t.DisplayName, StringComparer.Ordinal))
+            diagram.Append($"  {Node(t.Key)}[{t.DisplayName}];\n");
+
+        // Reciprocal halves collapse into the one edge they describe; whichever half is met first names it.
+        var drawn = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var (from, name, field, targets) in Edges(types, adopted))
+        foreach (var to in targets)
+        {
+            var pair = string.CompareOrdinal(from.Key, to.Key) < 0
+                ? $"{from.Key}|{to.Key}"
+                : $"{to.Key}|{from.Key}";
+            if (field.Reciprocal is not null && !drawn.Add(pair)) continue;
+
+            diagram.Append($"  {Node(from.Key)} -- {name} --> {Node(to.Key)};\n");
+        }
+
+        return diagram.Append("```").ToString();
+    }
+
+    // A mermaid node id. Prefixed and reduced to word characters so that a type whose folder carries a
+    // hyphen, or is spelled `end`, cannot collide with the diagram's own grammar.
+    private static string Node(string key) =>
+        "t_" + new string([.. key.Select(c => char.IsLetterOrDigit(c) ? c : '_')]);
+
+    // The calls that are genuinely close. A pair needs both of its types to say anything at all, so one
+    // adopted and one not leaves the pair out — a corpus with no controls is not helped by being told how
+    // a standard differs from one.
+    //
+    // Sorted by heading, because that is the line a reader scans. The pair a type declares is rendered from
+    // that type's side, so the heading names the declaring type first and the reader meets the two in the
+    // order the sentence beneath them uses.
+    public static string Disambiguations(IEnumerable<TypeSchema> types)
+    {
+        var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
+
+        var entries = new List<(string Heading, string Text)>();
+        foreach (var t in types)
+        foreach (var (other, text) in t.Versus)
+            if (adopted.TryGetValue(other, out var against))
+                entries.Add(($"{t.DisplayName} vs {against.DisplayName}", text));
+
+        return string.Join("\n\n", entries
+            .OrderBy(e => e.Heading, StringComparer.Ordinal)
+            .Select(e => Wrap($"**{e.Heading}.** {e.Text}")));
+    }
+
+    // Prose at the corpus's own margin. Generated tables are exempt from it because a cell cannot be
+    // broken; a paragraph can, and one long line in a file everything else wraps reads as the generator
+    // exempting itself from the rule it is regenerating the file to enforce.
+    private const int Margin = 120;
+
+    private static string Wrap(string text)
+    {
+        var line = new StringBuilder();
+        var wrapped = new StringBuilder();
+
+        foreach (var word in Unbreakable(text))
+        {
+            if (line.Length > 0 && line.Length + 1 + word.Length > Margin)
+            {
+                wrapped.Append(line).Append('\n');
+                line.Clear();
+            }
+
+            if (line.Length > 0) line.Append(' ');
+            line.Append(word);
+        }
+
+        return wrapped.Append(line).ToString();
+    }
+
+    // The units a line may be broken between. Words, except that a markdown link is one unit however many
+    // spaces its label holds: `[RFC 2119](…)` broken after `RFC` still renders, but it reads badly in the
+    // source and a formatter meeting it will put it back — and the generator would then write it out
+    // again on the next run. A word longer than the margin is left whole, a URL being the usual case.
+    private static IEnumerable<string> Unbreakable(string text)
+    {
+        var words = text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
+        var link = new StringBuilder();
+
+        foreach (var word in words)
+        {
+            if (link.Length == 0 && !word.StartsWith('[') && !word.StartsWith("**[", StringComparison.Ordinal))
+            {
+                yield return word;
+                continue;
+            }
+
+            if (link.Length > 0) link.Append(' ');
+            link.Append(word);
+
+            // Closed once the target that follows the label has closed too. A bracket in prose that never
+            // reaches one is released at the end, rather than swallowing the rest of the paragraph.
+            if (word.Contains(')', StringComparison.Ordinal))
+            {
+                yield return link.ToString();
+                link.Clear();
+            }
+        }
+
+        if (link.Length > 0) yield return link.ToString();
+    }
+
+    // The corpus's own index of types, for whoever arrives at the repository root: what each holds, and
+    // one way on to the taxonomy, which is where the question "so where does mine go" is answered. The
+    // pointer sits inside the block so that it cannot drift above the table or be edited away.
+    //
+    // Sorted by name, because a reader looking a type up already knows its name. Tier is a column rather
+    // than a grouping for the same reason: worth seeing beside a type, and not how anyone arrives.
+    public static string TypesIndex(IEnumerable<TypeSchema> types, string taxonomyPath) =>
+        RenderTable(["Type", "Tier", "What it holds"],
+            [.. types.OrderBy(t => t.DisplayName, StringComparer.Ordinal).Select(t => new List<string>
+                { $"[{t.DisplayName}]({Link(t)})", t.Tier, Escape(t.Summary) })])
+        + "\n\n" + Wrap($"**Where does a document go?** The [taxonomy]({taxonomyPath}) has the decision table, "
+                        + "what each type is and is not, and the calls that are genuinely close.");
+
     // The rows of an index, in the order the type's `index` block asks for. Sorting on several columns
     // is a sort by the first, ties broken by the next; the direction applies to the whole ordering,
     // because a type that wanted one column each way would be asking for two questions in one key.
@@ -258,7 +519,8 @@ public static class Generator
     // are documented.
     private static readonly HashSet<string> IntentionallyUndocumented =
         new(["type", "list", "bracket-literal", "type-setup", "generated-block", "template-fields",
-            "schema-unknown-key", "schema-unreadable", "schema-dispatch", "schema-shape"], StringComparer.Ordinal);
+            "framework-names-types", "schema-unknown-key", "schema-unreadable", "schema-dispatch", "schema-shape"],
+            StringComparer.Ordinal);
 
     // The curated rows, then a row for each expression rule the type declares. A core check is worded
     // here because several ids fold into one reader-facing row; an expression rule is one id reporting
@@ -341,15 +603,58 @@ public static class Generator
         return problems;
     }
 
+    private const string BeginMarker = "<!-- BEGIN GENERATED: ";
+    private const string EndMarker = "<!-- END GENERATED: ";
+    private const string MarkerClose = " -->";
+
     public static string SpliceBlock(string text, string name, string inner)
     {
-        var begin = $"<!-- BEGIN GENERATED: {name} -->";
-        var end = $"<!-- END GENERATED: {name} -->";
+        var begin = $"{BeginMarker}{name}{MarkerClose}";
+        var end = $"{EndMarker}{name}{MarkerClose}";
         var bi = text.IndexOf(begin, StringComparison.Ordinal);
         if (bi < 0) return text;
         var ei = text.IndexOf(end, bi, StringComparison.Ordinal);
         if (ei < 0) return text;
-        return text[..(bi + begin.Length)] + "\n\n" + inner + "\n\n" + text[ei..];
+
+        // A block with nothing to say closes on the next line. Padding it out to the usual blank line
+        // either side leaves two of them and reads as content someone deleted. Several blocks are
+        // legitimately empty in a corpus that adopted few types: no pair of its types is easily confused,
+        // and none of the words it kept collides with anything.
+        var body = inner.Length == 0 ? "\n" : $"\n\n{inner}\n\n";
+        return text[..(bi + begin.Length)] + body + text[ei..];
+    }
+
+    // A page with its generated blocks emptied, leaving the markers and everything a person wrote.
+    //
+    // `mechanism --check` compares this, so a shared page may carry a block derived from the corpus holding
+    // it. Two corpora running the same framework hold the same prose and a
+    // different table beneath it, and both are correct. The division is exact: `index --check` answers
+    // for the generated half against the local schema, `mechanism --check` for the authored half against
+    // the reference, and neither has an opinion about the other's.
+    //
+    // The markers stay, so deleting a block — rather than regenerating it — is still drift. An unclosed
+    // marker leaves the rest of the page compared as written, which is the honest reading of a file whose
+    // structure the generator can no longer follow.
+    public static string Authored(string text)
+    {
+        var sb = new StringBuilder();
+        var at = 0;
+
+        while (true)
+        {
+            var bi = text.IndexOf(BeginMarker, at, StringComparison.Ordinal);
+            if (bi < 0) break;
+            var opened = text.IndexOf(MarkerClose, bi, StringComparison.Ordinal);
+            if (opened < 0) break;
+            opened += MarkerClose.Length;
+            var ei = text.IndexOf(EndMarker, opened, StringComparison.Ordinal);
+            if (ei < 0) break;
+
+            sb.Append(text, at, opened - at);
+            at = ei;
+        }
+
+        return sb.Append(text, at, text.Length - at).ToString();
     }
 
     // Deterministic GFM table: fixed column widths, single-space padding, LF joins,

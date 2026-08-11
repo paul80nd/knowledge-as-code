@@ -1,9 +1,23 @@
 type: nfr
 label: NFR
+label-plural: NFRs
 folder: nfrs
 page: nfrs.md
 tier: normative
 lifecycle: living
+summary: A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.
+goes-here: A target for speed, uptime, or recovery
+detail: >
+  Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
+
+lineage:
+  prior-art: "[ISO/IEC 25010:2023](https://www.iso.org/standard/78176.html) product quality model"
+  alignment: >
+    Quality characteristics that exist to be specified, measured and evaluated — the measurement obligation is
+    25010's premise
+  divergence: >
+    25010 is a taxonomy of characteristics, not a document type. RPO and RTO come from continuity practice, and
+    per-service budgets from SLO practice
 
 id:
   prefix: nfr

@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 14,
+    "errors": 20,
     "warnings": 0
   },
   "findings": [
@@ -41,6 +41,34 @@
       "severity": "error",
       "check": "schema-dispatch",
       "message": "type 'widgets' declares 'index.order: newest-first', which the generator does not read. An index is written 'ascending', 'descending'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' declares 'tier: experimental', and '_tiers.yaml' declares no such tier. Tier decides how a document behaves and is written into the frontmatter of every record of the type; the tiers are 'decided', 'normative', 'descriptive', 'procedural', 'observed'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' has a 206-character 'summary:'; the limit is 120. It is rendered as a table cell — the fuller account belongs on widgets.md."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' declares no 'goes-here:' — say what a contributor has in hand when this type is the answer, in one line the taxonomy and the corpus index can be generated from."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' declares no 'lineage.prior-art:' — name what the type is nearest to, or say that nothing established fits. Claiming an ancestor a type does not have is worse than admitting none."
     },
     {
       "file": ".schema/widgets.yaml",
@@ -104,6 +132,20 @@
       "severity": "error",
       "check": "schema-unreadable",
       "message": "rule 'widgets-are-documented' has an expr but no severity — say whether it fails a build or advises an author."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "type 'widgets' declares 'versus: gizmos', and no schema covers that folder — either the type was never adopted here, or the name is wrong."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' declares a 'versus:' against itself — a disambiguation has two sides."
     }
   ]
 }

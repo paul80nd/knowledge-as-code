@@ -1,9 +1,23 @@
 type: glossary
 label: Glossary
+label-plural: Glossary
 shape: single-document
 page: glossary.md
 tier: descriptive
 lifecycle: living
+summary: The ubiquitous language — terms whose meaning is specific to us, or which are easily confused.
+goes-here: A term whose meaning isn't obvious, or that we use in a specific way
+detail: >
+  Small, high-value, and the one document worth loading into every session. A term that needs explaining every
+  time it appears belongs here once, and everything else links to it.
+
+lineage:
+  prior-art: "Evans, *Domain-Driven Design* — ubiquitous language"
+  alignment: >
+    A rigorous shared vocabulary maintained against ambiguity, used identically by everyone
+  divergence: >
+    DDD scopes the language to a bounded context and expects a word to differ across contexts. Ours is corpus-wide
+    and single-valued
 
 notes: >
   The only type that is one document rather than a collection, which is what `shape` says. A

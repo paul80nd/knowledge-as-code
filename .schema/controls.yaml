@@ -1,9 +1,34 @@
 type: control
 label: Control
+label-plural: Controls
 folder: controls
 page: controls.md
 tier: normative
 lifecycle: living
+summary: "How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves."
+goes-here: A check that proves a rule is being followed
+detail: >
+  Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
+  honest state and the number worth watching.
+
+lineage:
+  prior-art: "[NIST SP 800-53A Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/a/r5/final), the assessment-procedure construct"
+  alignment: >
+    Objective, method and expected evidence, bound to the requirement it tests
+  divergence: >
+    800-53A procedures assess a federal catalogue inside an authorisation boundary. Ours verify internal
+    standards, with no catalogue and no accreditation
+
+collision: >
+  **The most dangerous word in the taxonomy.** In [NIST SP
+  800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC 27002 and
+  ComplianceForge, a *control* **is the safeguard itself** — the technical, administrative or physical measure
+  that reduces risk. Here, a control is the **verification that a rule is being followed**, which those
+  frameworks call an assessment procedure, a test, or a metric.
+
+  A reader with a governance background will misread this type on sight, and will read a coverage report as
+  claiming safeguards exist when it claims only that checks exist. Say which sense is meant whenever the word
+  crosses into a compliance conversation.
 
 id:
   prefix: ctl

@@ -1,9 +1,27 @@
 type: runbook
 label: Runbook
+label-plural: Runbooks
 folder: runbooks
 page: runbooks.md
 tier: procedural
 lifecycle: living
+summary: "An incident-time procedure read under pressure: terse, imperative, structured as a decision tree."
+goes-here: A step-by-step for when something is broken
+detail: >
+  Disaster recovery and estate rebuild live here.
+
+lineage:
+  prior-art: "[Google SRE](https://sre.google/sre-book/introduction/) — the playbook"
+  alignment: >
+    Recording the response ahead of time rather than improvising it; Google measures roughly a threefold
+    improvement in mean time to recovery
+  divergence: >
+    Google specifies no form. We mandate one: terse, imperative, structured as a decision tree
+
+collision: >
+  The industry uses *runbook* and *playbook* interchangeably, and Google's SRE material uses the latter. We use
+  *runbook* because *playbook* also names an executable artefact in configuration-management tooling, and a word
+  that means both a document and a program is a word that will be misread in a repository holding both.
 
 id:
   prefix: rbk

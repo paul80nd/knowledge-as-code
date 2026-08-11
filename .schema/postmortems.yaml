@@ -1,9 +1,24 @@
 type: postmortem
 label: Postmortem
+label-plural: Postmortems
 folder: postmortems
 page: postmortems.md
 tier: decided
 lifecycle: immutable
+summary: What actually happened during an incident — timeline, impact, root cause, contributing factors, actions.
+goes-here: An account of an incident and what caused it
+detail: >
+  Blameless, and immutable once published. The honest counterpart to the decision log: an ADR records what was
+  intended, a postmortem what the estate did about it.
+
+lineage:
+  prior-art: "[Google SRE, *Postmortem Culture*](https://sre.google/sre-book/postmortem-culture/)"
+  alignment: >
+    The field set — impact, actions, root cause, follow-up — and blamelessness defined as causes without
+    indictment
+  divergence: >
+    Google reviews before publication and treats the document as living; ours is immutable once published. We
+    separate root cause from contributing factors
 
 id:
   prefix: pmt

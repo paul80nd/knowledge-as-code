@@ -29,11 +29,12 @@ public static class MechanismCheck
             var inLocal = localFiles.Contains(rel);
             var inRef = refFiles.Contains(rel);
 
+            if (Declined(rel, lockFile)) continue;
+
             switch (layer)
             {
                 case "synced":
-                    var identical = inLocal && inRef
-                                            && Files.ReadLf(Path.Combine(localRoot, rel)) == Files.ReadLf(Path.Combine(refRoot, rel));
+                    var identical = inLocal && inRef && Same(localRoot, refRoot, rel);
 
                     if (accepted.Contains(rel))
                     {
@@ -52,8 +53,7 @@ public static class MechanismCheck
                     if (inLocal && inRef)
                     {
                         forkedShared++;
-                        if (Files.ReadLf(Path.Combine(localRoot, rel)) != Files.ReadLf(Path.Combine(refRoot, rel)))
-                            forkedDiffer++;
+                        if (!Same(localRoot, refRoot, rel)) forkedDiffer++;
                     }
                     break;
 
@@ -95,6 +95,34 @@ public static class MechanismCheck
             return paths.Count;
         }
     }
+
+    // Whether this path is a type the corpus declined, and so is neither missing nor drifted.
+    //
+    // The schema is otherwise byte-identical, which makes this the one place a corpus may hold less of it
+    // than upstream does — and `types:` in the lock is what turns that from a deletion nobody recorded
+    // into a decision the corpus can be held to. A corpus that declares no types declines nothing: it is
+    // still described by its folders, and every schema file it has is one it is expected to have.
+    public static bool Declined(string rel, MechanismLock lockFile) =>
+        TypeFile(rel) is { } type && !lockFile.Adopted(type);
+
+    // The type a schema file declares, or null where the path is not one. `.schema/` holds a file per type
+    // beside the underscore-prefixed files that belong to no type, and the type's name is the file's —
+    // which is the same identity `ref:` and `versus:` use, and the same one `types:` names.
+    private static string? TypeFile(string rel)
+    {
+        if (!rel.StartsWith(".schema/", StringComparison.Ordinal)) return null;
+        if (!rel.EndsWith(".yaml", StringComparison.Ordinal)) return null;
+
+        var name = rel[".schema/".Length..^".yaml".Length];
+        return name.Length > 0 && name[0] != '_' && !name.Contains('/') ? name : null;
+    }
+
+    // Whether two copies of a file say the same thing. LF-normalised, so a working copy checked out with
+    // CRLF never reads as drift, and compared on the authored half alone — see Generator.Authored for why
+    // a shared page may hold a different table in each corpus and still be in step.
+    private static bool Same(string localRoot, string refRoot, string rel) =>
+        Generator.Authored(Files.ReadLf(Path.Combine(localRoot, rel)))
+        == Generator.Authored(Files.ReadLf(Path.Combine(refRoot, rel)));
 
     // Every tracked (and not-ignored) file, relative and forward-slashed. The walk lets the check
     // run in a non-git tree (the test harness assembles one), skipping only .git.

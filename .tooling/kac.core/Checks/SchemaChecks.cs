@@ -28,7 +28,9 @@ public static class SchemaChecks
         // Walked in declared order, here and below, so that a schema with several faults reports them
         // in the order someone reading the file would meet them.
         UnreadKeys(".schema/_enums.yaml", schema, f);
+        UnreadKeys(".schema/_tiers.yaml", schema, f);
         UnreadKeys(".schema/_universal.yaml", schema, f);
+        CheckTiers(schema, f);
         foreach (var name in schema.UniversalOrder)
             if (schema.Universal.TryGetValue(name, out var spec))
                 CheckField(".schema/_universal.yaml", name, spec, schema, null, f);
@@ -48,12 +50,96 @@ public static class SchemaChecks
                 Dispatch(at, $"type '{key}' declares 'index.order: {t.IndexOrder}', which the generator does "
                              + $"not read. An index is written {List(Generator.IndexOrders)}.", f);
 
+            if (schema.Tiers.All(tier => tier.Name != t.Tier))
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' declares 'tier: {t.Tier}', and '_tiers.yaml' declares no such tier. Tier decides "
+                    + "how a document behaves and is written into the frontmatter of every record of the type; the "
+                    + $"tiers are {Ordered(schema.Tiers.Select(tier => tier.Name))}."));
+
+            CheckProse(at, key, t, f);
+
             foreach (var name in t.FieldOrder)
                 CheckField(at, name, t.Fields[name], schema, t, f);
 
             foreach (var rule in t.Rules)
                 CheckRule(at, key, rule, f);
         }
+
+        CheckVersus(schema, f);
+    }
+
+    // The disambiguations, which are the one thing a type says about another type rather than about
+    // itself. Three ways that goes wrong, and all three read as working until someone opens the page:
+    // a pair against a type no schema covers renders a heading naming nothing; a pair against itself
+    // renders "ADR vs ADR"; and a pair both sides declare renders twice, with two accounts of the same
+    // distinction that nothing keeps in step.
+    //
+    // Which side declares a pair is a convention rather than a rule the tool could derive — it is the
+    // type the heading is titled from — so the tool holds the two sides against each other and leaves the
+    // choice to whoever writes it.
+    private static void CheckVersus(Schema schema, List<Finding> f)
+    {
+        var declared = new Dictionary<string, string>(StringComparer.Ordinal);
+
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach (var (other, _) in t.Versus)
+        {
+            var at = $".schema/{key}.yaml";
+
+            if (other == key)
+            {
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' declares a 'versus:' against itself — a disambiguation has two sides."));
+                continue;
+            }
+
+            if (!schema.ByFolder.ContainsKey(other))
+            {
+                Dispatch(at, $"type '{key}' declares 'versus: {other}', and no schema covers that folder — either "
+                             + "the type was never adopted here, or the name is wrong.", f);
+                continue;
+            }
+
+            var pair = string.CompareOrdinal(key, other) < 0 ? $"{key}|{other}" : $"{other}|{key}";
+            if (declared.TryGetValue(pair, out var first))
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' declares a 'versus: {other}' that '{first}.yaml' already declares — a pair is "
+                    + "written once, by the type its heading is titled from."));
+            else
+                declared[pair] = key;
+        }
+    }
+
+    // The two files that between them define a tier, held against each other. `_universal.yaml` gives the
+    // `tier` field its range, and every record is validated against it. `_tiers.yaml` says what each of
+    // those values is called and means, which a generated page renders. Neither is derivable from the
+    // other, and a tier declared in one and not the other is silent in both directions — a record
+    // admitted with a tier no page can name, or a heading no document will ever sit under.
+    //
+    // Reported against `_tiers.yaml` whichever side is short, because that is the file whose entries are
+    // cheap to add: widening the field's range is a change to what every corpus may carry.
+    private static void CheckTiers(Schema schema, List<Finding> f)
+    {
+        if (!schema.Universal.TryGetValue("tier", out var field)) return;
+
+        const string at = ".schema/_tiers.yaml";
+        var declared = schema.Tiers.Select(t => t.Name).ToList();
+        var admitted = field.Values ?? [];
+
+        foreach (var value in admitted.Where(v => !declared.Contains(v)))
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"the 'tier' field admits '{value}', and no tier here declares it — a record may carry a tier that "
+                + "nothing can name on a page."));
+
+        foreach (var tier in declared.Where(t => !admitted.Contains(t)))
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"tier '{tier}' is declared here and the 'tier' field in '_universal.yaml' does not admit it — no "
+                + "document can ever carry it."));
+
+        foreach (var tier in schema.Tiers.Where(t => t.Label.Length == 0 || t.Behaviour.Length == 0))
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"tier '{tier.Name}' declares no {(tier.Label.Length == 0 ? "'label:'" : "'behaviour:'")} — both head "
+                + "the tier's section in the generated taxonomy."));
     }
 
     // A key the loader never asked for. Every other check here reads a declaration and asks whether code
@@ -98,6 +184,53 @@ public static class SchemaChecks
                     $"type '{key}' is single-document and declares 'folder: {t.Folder}' — its page is the "
                     + "document, so there is no folder of records to name."));
                 break;
+        }
+    }
+
+    // What a type says about itself, which every generated list of types is written from. Each is
+    // required, because a type that declares none of them still appears in those lists — as a row with an
+    // empty cell, which reads as an oversight in the page rather than in the schema it came from.
+    //
+    // `label-plural:` is here and `label:` is not, because only one of them can be derived. A singular
+    // falls back to the type name capitalised; nothing turns `nfr` into "NFRs".
+    //
+    // The bound is the one a rule's description is held to, for the same reason: these are table cells a
+    // reader scans, and the sentence that will not fit in one is the sentence that belongs on the type's
+    // own page.
+    private static void CheckProse(string at, string key, TypeSchema t, List<Finding> f)
+    {
+        Line("label-plural", t.LabelPlural, "what a folder of these is called — \"ADRs\", \"Policies\", \"NFRs\"");
+        Line("summary", t.Summary, "what the type is");
+        Line("goes-here", t.GoesHere, "what a contributor has in hand when this type is the answer");
+
+        // Not held to the cell bound: `detail:` is the paragraph the other three are too short to be, and
+        // it is rendered as prose rather than into a table.
+        if (t.Detail.Length == 0)
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"type '{key}' declares no 'detail:' — say what the type carries beyond its first sentence, and the "
+                + "edge a reader is most likely to walk over."));
+
+        // Only the prior art is required, and "none" is one of its answers. What the framework took from an
+        // ancestor and where it parts company are questions a type with no ancestor cannot answer, so an
+        // empty pair is a real state rather than an unfinished one.
+        if (t.Lineage is null)
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"type '{key}' declares no 'lineage.prior-art:' — name what the type is nearest to, or say that "
+                + "nothing established fits. Claiming an ancestor a type does not have is worse than admitting none."));
+
+        return;
+
+        void Line(string name, string value, string says)
+        {
+            if (value.Length == 0)
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' declares no '{name}:' — say {says}, in one line the taxonomy and the "
+                    + "corpus index can be generated from."));
+            else if (value.Length > Generator.DescriptionMax)
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' has a {value.Length}-character '{name}:'; the limit is "
+                    + $"{Generator.DescriptionMax}. It is rendered as a table cell — the fuller account belongs "
+                    + $"on {(t.Page.Length > 0 ? t.Page : $"{key}.md")}."));
         }
     }
 
@@ -175,4 +308,9 @@ public static class SchemaChecks
 
     private static string List(IEnumerable<string> values)
         => string.Join(", ", values.Order(StringComparer.Ordinal).Select(v => $"'{v}'"));
+
+    // A vocabulary whose order is part of what it declares, quoted as declared. Sorting the tiers would
+    // misstate the one thing the reader has to take from them.
+    private static string Ordered(IEnumerable<string> values)
+        => string.Join(", ", values.Select(v => $"'{v}'"));
 }

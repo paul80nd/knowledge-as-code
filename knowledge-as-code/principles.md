@@ -68,8 +68,8 @@ The most important tier is the one carrying the least authority.
 
 Capture has to be nearly free or it does not happen. Nobody writes up a gotcha if doing so requires a template, an owner
 and two reviewers — so observations are recorded with no review at all, marked unverified, and expire on their own if
-nothing promotes them. The rigour lives at promotion instead: a [discovery](/discoveries) becomes an [FAQ](/faqs) when
-a human confirms it, and the FAQ carries provenance back to the observation.
+nothing promotes them. The rigour lives at promotion instead: a discovery becomes an FAQ when a human confirms it, and
+the FAQ carries provenance back to the observation.
 
 That gradient is what lets a corpus grow without its average trustworthiness falling. Cheap in, expensive up.
 
@@ -118,8 +118,8 @@ tiered model should never land on an organisation that does not need it.
 > [knowledge-as-code#93](https://github.com/paul80nd/knowledge-as-code/issues/93).
 
 A larger organisation has several bounded contexts and one governance conversation. Without a way to share, each context
-copies the standards and controls it is bound by, and the copies drift — which [one authoritative
-owner](#one-authoritative-owner) says is the failure to avoid.
+copies the standards and controls it is bound by, and the copies drift —
+which [one authoritative owner](#one-authoritative-owner) says is the failure to avoid.
 
 The intended shape is three layers. The **framework** holds schema, validator and skills. A **governance corpus** holds
 the organisation-wide layer — policies, standards, controls, tools, glossary, cross-cutting decisions — changing slowly

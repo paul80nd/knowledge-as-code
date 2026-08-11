@@ -95,20 +95,46 @@ Generated content lives inside marker blocks in otherwise hand-written files:
 CI rewrites only what's between the markers and fails the build if a block is stale. This keeps one file per purpose —
 humans keep their prose, the machine keeps the tables current, and nobody has to choose.
 
-| Artefact                                    | Built from                               | Lives in                               | Status  |
-|---------------------------------------------|------------------------------------------|----------------------------------------|---------|
-| Type indexes                                | Frontmatter across the folder            | `<type>/_index.md`                     | Done    |
-| Repository & launchpad tables               | `services/`                              | Root `README.md`                       | Planned |
-| Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block           | Done    |
-| Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block | Done    |
-| Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block  | Planned |
-| Control coverage report                     | `controls/` + standards' rules           | `controls/_index.md`                   | Planned |
-| Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/_index.md`                   | Planned |
-| Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`                | Planned |
-| Orphan report                               | The link graph                           | `_reports/orphans.md`                  | Planned |
-| Service dependency diagram                  | `depends-on`                             | `services/_index.md` (mermaid)         | Planned |
-| `.order` files                              | Folder contents + type ordering          | Each folder                            | Planned |
-| `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                              | Planned |
+| Artefact                                    | Built from                               | Lives in                                    | Status  |
+|---------------------------------------------|------------------------------------------|---------------------------------------------|---------|
+| Type indexes                                | Frontmatter across the folder            | `<type>/_index.md`                          | Done    |
+| Repository & launchpad tables               | `services/`                              | Root `README.md`                            | Planned |
+| Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block                | Done    |
+| Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block      | Done    |
+| The way on to each type's fields            | `.schema/` + the types stood up          | `metadata.md` `types-metadata` block        | Done    |
+| Where a document goes                       | `.schema/` + the types stood up          | `taxonomy.md` `types-placement` block       | Done    |
+| The types at length, by tier                | `.schema/` + `_tiers.yaml`               | `taxonomy.md` `types-detail` block          | Done    |
+| The calls that are close                    | `.schema/` + the types stood up          | `taxonomy.md` `types-versus` block          | Done    |
+| How the types relate                        | `ref:` across the schema                 | `taxonomy.md` `types-graph` block (mermaid) | Done    |
+| The same edges, field by field              | `ref:` across the schema                 | `taxonomy.md` `types-edges` block           | Done    |
+| Where the names came from                   | `.schema/` + the types stood up          | `lineage.md` `types-lineage` block          | Done    |
+| Where a name collides                       | `.schema/` + the types adopted           | `lineage.md` `types-collisions` block       | Done    |
+| What this corpus holds                      | `.schema/` + the types stood up          | Root `README.md` `types-index` block        | Done    |
+| Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block       | Planned |
+| Control coverage report                     | `controls/` + standards' rules           | `controls/_index.md`                        | Planned |
+| Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/_index.md`                        | Planned |
+| Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`                     | Planned |
+| Orphan report                               | The link graph                           | `_reports/orphans.md`                       | Planned |
+| Service dependency diagram                  | `depends-on`                             | `services/_index.md` (mermaid)              | Planned |
+| `.order` files                              | Folder contents + type ordering          | Each folder                                 | Planned |
+| `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                                   | Planned |
+
+Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table, the
+types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table, the strip on
+`metadata.md` and the index at the repository root, covers the types **this** corpus holds. A corpus that adopted five
+of the framework's types is offered five, and every row opens.
+
+The corpus decides which five, and records that in `types:` in `.mechanism.lock`. A corpus that has not declared is read
+off its folders instead: a type counts where both halves are there, the page and the folder. That answer is the weaker
+one, because it cannot tell a type nobody wanted from one somebody has not finished adding.
+
+Blocks that differ between corpora are still safe to share. The mechanism check compares the authored half of a page and
+ignores what lies between the markers, so the prose stays byte-identical everywhere while what sits beneath it does not.
+
+The graph is written to the subset of Mermaid an Azure DevOps wiki renders. That subset is narrower than Mermaid's own,
+and a diagram exceeding it renders nothing at all rather than an error: `graph` rather than `flowchart`, no subgraphs,
+and no arrow longer than `-->`. A fenced block carries it rather than ADO's `:::` container, which GitHub shows as
+literal text.
 
 ### The rules digest — a block inside root `CLAUDE.md`
 
@@ -116,8 +142,6 @@ Root `CLAUDE.md` is hand-written: it is the file an agent always reads, and most
 repository this is, what to run before committing, the conventions nothing enforces — is not derivable from the corpus.
 The digest is generated *into* it as a `rules-digest` block, the way a type page carries its schema table, so that
 standing guidance and generated rules arrive together instead of competing for the same filename.
-
-That means the digest also waits on generated blocks being able to target a page that is not a type page.
 
 It is the one generated artefact with a hard constraint on its contents:
 
@@ -155,6 +179,12 @@ Not part of the taxonomy, carry no taxonomy frontmatter, and are excluded from s
 Stated explicitly rather than left implicit in a glob, so that a validation failure is never resolved by quietly
 widening an exclusion. The `_` rows are the one deliberate glob: the prefix is reserved for the framework's own
 artefacts, and the tool tests the prefix rather than the names — see [taxonomy](taxonomy.md#layout).
+
+**Excluded as a record is not excluded from every check.** The framework's own documents — `knowledge-as-code.md` and
+those beneath it — carry no frontmatter and are validated against no schema, but they still link to things: their links
+and fragments are resolved like any page's, and `framework-names-types` holds them to naming a type rather than linking
+to one. Their generated blocks are emptied before either question is asked, since `index --check` already answers for
+those and their links are written from this corpus.
 
 **A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
 answers to nothing that needs a filename, so discovering it as a record would report a dozen faults that are the file

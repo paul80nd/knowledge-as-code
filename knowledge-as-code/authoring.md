@@ -33,15 +33,16 @@ What follows is what a corpus record asks on top of it.
 
 ## By tier
 
-The floor applies throughout. Each tier adds to it.
+The floor applies throughout. Each tier adds to it. Your document's frontmatter carries its `tier`, so read the row that
+matches it; [taxonomy](taxonomy.md#the-types) groups the corpus's types under the tier each belongs to.
 
-| Tier            | Types                                                                     | Written as                                                                               |
-|-----------------|---------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| **Procedural**  | processes, runbooks                                                       | One action per step, imperative, condition before action. No rationale in a step.        |
-| **Normative**   | policies, standards, controls, nfrs, faqs                                 | One obligation per clause, testable, keyword leading. Rationale lives in Purpose.        |
-| **Descriptive** | services, capabilities, tools, integrations, data, glossary, explanations | Indicative, present tense. State what is. No future tense — a plan is not a description. |
-| **Decided**     | adrs, postmortems                                                         | Prose earns its keep. Constrain structure and length, not vocabulary.                    |
-| **Observed**    | discoveries                                                               | Symptom, cause, why it might matter. Three sentences beat three paragraphs.              |
+| Tier            | Written as                                                                               |
+|-----------------|------------------------------------------------------------------------------------------|
+| **Procedural**  | One action per step, imperative, condition before action. No rationale in a step.        |
+| **Normative**   | One obligation per clause, testable, keyword leading. Rationale lives in Purpose.        |
+| **Descriptive** | Indicative, present tense. State what is. No future tense — a plan is not a description. |
+| **Decided**     | Prose earns its keep. Constrain structure and length, not vocabulary.                    |
+| **Observed**    | Symptom, cause, why it might matter. Three sentences beat three paragraphs.              |
 
 ### Procedural
 
@@ -52,12 +53,12 @@ reader in that state skims, and a skimmed instruction must still be right.
 * **The condition comes first.** `If the queue depth exceeds 1000, restart the consumer` — never `Restart the consumer
   if the queue depth exceeds 1000`. A reader who stops halfway through the second form does the wrong thing.
 * **Twenty words to a step.** Tighter than the floor, because the reader is not reading carefully.
-* **No rationale inside a step.** Why the step exists goes in the section preamble or an [explanation](/explanations).
+* **No rationale inside a step.** Why the step exists goes in the section preamble or an explanation.
 * **State the outcome.** A step the reader cannot confirm succeeded is a step they will repeat.
 * **Warnings precede the step they guard**, never follow it.
 * **Do not hedge an order.** *Typically*, *usually* and *normally* in a step tell a reader under pressure that the
-  sequence is negotiable. If it genuinely is, say what decides it. `no-hedged-ordering` warns on this in a
-  [process](/processes); nothing catches it in a runbook.
+  sequence is negotiable. If it genuinely is, say what decides it. `no-hedged-ordering` warns on this in a process;
+  nothing catches it in a runbook.
 * **A runbook opens with Symptoms**, because that is how a reader who does not yet know which document they need finds
   it. `symptoms-first` is an error, not a warning.
 
@@ -65,10 +66,10 @@ reader in that state skims, and a skimmed instruction must still be right.
 
 The rule must be checkable, and a reader must be able to tell obligation from commentary at a glance.
 
-* **[Standards](/standards) use RFC 2119 keywords, in capitals, leading the clause.** The capitals are what make them
-  normative; lower-case *must* is prose. See [lineage](lineage.md#standard).
-* **[Policies](/policies) carry modals in their clauses and nowhere else.** Purpose and Scope are written as
-  commitment — what we hold to, and why. The clause table states the obligation and opens each row with its keyword;
+* **Standards use RFC 2119 keywords, in capitals, leading the clause.** The capitals are what make them normative;
+  lower-case *must* is prose. See [lineage](lineage.md#standard).
+* **Policies carry modals in their clauses and nowhere else.** Purpose and Scope are written as commitment — what we
+  hold to, and why. The clause table states the obligation and opens each row with its keyword;
   `clauses` is an error if a row does not. What separates a policy clause from a standard's is altitude, not grammar:
   a policy clause stays true when the whole technology estate is replaced.
 * **One obligation per clause.** If a clause cannot be failed in exactly one way, split it —
@@ -89,12 +90,12 @@ These must mirror reality, so anything that reads as intent will eventually read
 * **No future tense.** A planned service is not a service. Say so plainly and mark it — see
   [below](#what-is-not-built-yet).
 * **No promotion.** *Robust*, *seamless*, *world-class*, *best-in-class* describe nothing and survive no audit.
-* **Never normative.** A **MUST** in an [explanation](/explanations) means the rule is now in two places and only one of
-  them is owned. `not-normative` warns on RFC 2119 keywords appearing here.
-* **Link rather than restate.** A [capability](/capabilities) and an [explanation](/explanations) are hubs, and their
-  length is judged against how much they link — `hub-not-specification` and `links-rather-than-restates` warn at roughly
-  forty words per outbound link. One accumulating facts of its own has become a liability, which is what that ratio
-  measures. The other descriptive types have no such rule and are held to it by judgement alone.
+* **Never normative.** A **MUST** in an explanation means the rule is now in two places and only one of them is owned.
+  `not-normative` warns on RFC 2119 keywords appearing here.
+* **Link rather than restate.** A capability and an explanation are hubs, and their length is judged against how much
+  they link — `hub-not-specification` and `links-rather-than-restates` warn at roughly forty words per outbound link.
+  One accumulating facts of its own has become a liability, which is what that ratio measures. The other descriptive
+  types have no such rule and are held to it by judgement alone.
 
 ### Decided
 
@@ -112,8 +113,8 @@ The constraint here is structural rather than lexical:
 
 ### Observed
 
-Capture must stay nearly free or it does not happen. A [discovery](/discoveries) that takes ten minutes to write is a
-discovery nobody writes.
+Capture must stay nearly free or it does not happen. A discovery that takes ten minutes to write is a discovery nobody
+writes.
 
 * **Symptom, cause if known, why it might matter.** Nothing else is required, and `low-ceremony` warns past two hundred
   words — a discovery long enough to need structure has become something else and should be promoted, not padded.

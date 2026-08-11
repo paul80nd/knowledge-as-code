@@ -136,20 +136,21 @@ The single-page types — the glossary — have no records to identify and carry
 
 ## Per-type fields
 
-Each type's fields are documented on its own page, generated from the schema:
+Each type's fields are documented on its own page, generated into it from `.schema/` — so a reader working in one folder
+has what they need without leaving it, and there is still one definition.
 
-[ADR](/adrs#metadata) · [Standard](/standards#metadata) · [Policy](/policies#metadata) ·
-[Control](/controls#metadata) · [NFR](/nfrs#metadata) · [Service](/services#metadata) ·
-[Capability](/capabilities#metadata) · [Process](/processes#metadata) · [Explanation](/explanations#metadata) ·
-[Runbook](/runbooks#metadata) · [Tools](/tools#metadata) ·
-[Integration](/integrations#metadata) · [Data](/data#metadata) · [FAQ](/faqs#metadata) ·
-[Discovery](/discoveries#metadata) · [Postmortem](/postmortems#metadata)
+<!-- BEGIN GENERATED: types-metadata -->
 
-They are generated into those pages from `.schema/`, so a reader working in one folder has what they need without
-leaving it, and there is still one definition.
+[ADR](/adrs#metadata) · [Capability](/capabilities#metadata) · [Control](/controls#metadata) · [Data](/data#metadata) ·
+[Discovery](/discoveries#metadata) · [Explanation](/explanations#metadata) · [FAQ](/faqs#metadata) ·
+[Integration](/integrations#metadata) · [NFR](/nfrs#metadata) · [Policy](/policies#metadata) ·
+[Postmortem](/postmortems#metadata) · [Process](/processes#metadata) · [Runbook](/runbooks#metadata) ·
+[Service](/services#metadata) · [Standard](/standards#metadata) · [Tool](/tools#metadata)
 
-[Glossary](/glossary.md) is the exception: a single document rather than a collection, so its two fields — `status` and
-`review-by` — live in its own frontmatter and are described on the page itself, not in a generated per-type table.
+<!-- END GENERATED: types-metadata -->
+
+A single-document type is the exception. It has no records, so nothing generates a field table for it: its own
+frontmatter carries the few fields it has, and the page describes them itself.
 
 ## Example
 

@@ -1,9 +1,16 @@
 type: widget
 label: Widget
+label-plural: Widgets
 # No `folder:`, and the type is a collection — so its records have nowhere to live.
 page: widgets.md
-tier: descriptive
+tier: experimental
 lifecycle: living
+summary: >-
+  A summary long enough to be the paragraph it should have pointed at, which is the one thing a cell in a
+  generated table cannot be — and no `goes-here:` at all, which is the other half of the same assertion.
+detail: >
+  The paragraph the summary above was trying to be. Present and sound, so that the length and the absence
+  beside it are the only things this type says wrong about itself.
 
 notes: >
   A type that exists only to be wrong. Every declaration below was accepted in silence before the
@@ -11,6 +18,12 @@ notes: >
   someone with every reason to believe it could.
 
 stability: experimental
+
+versus:
+  gizmos: >
+    A disambiguation against a type no schema covers, which renders a heading naming nothing.
+  widgets: >
+    And one against itself, which renders "Widget vs Widget".
 
 id:
   prefix: wdg

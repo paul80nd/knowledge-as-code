@@ -66,15 +66,43 @@ public static class Commands
             targets.Add((pagePath, text));
         }
 
-        // metadata.md documents the universal fields for the whole taxonomy. It is not a type page —
-        // it has no records and no folder — but it is derived from the same schema, so it is generated
-        // on the same pass rather than hand-maintained beside it.
-        var metadataPath = Path.Combine(repoRoot, "knowledge-as-code", "metadata.md");
-        if (File.Exists(metadataPath))
+        // The pages that describe the taxonomy to a reader rather than to the tool. Each lists types, and
+        // the list is the half that was wrong in every corpus that adopted some of them — so each is
+        // generated from the types this corpus adopted, and none can name a type whose page is not there
+        // to open. `metadata.md` also carries the universal field table, which is the schema's alone.
+        var adopted = Corpus.Adopted(schema, repoRoot, corpus.Lock);
+
+        Splice(Path.Combine(repoRoot, "knowledge-as-code", "metadata.md"),
+            ("schema-universal", Generator.UniversalSchemaTable(schema)),
+            ("types-metadata", Generator.MetadataStrip(adopted)));
+
+        Splice(Path.Combine(repoRoot, "knowledge-as-code", "taxonomy.md"),
+            ("types-placement", Generator.PlacementTable(adopted)),
+            ("types-detail", Generator.TypeCatalogue(schema.Tiers, adopted)),
+            ("types-versus", Generator.Disambiguations(adopted)),
+            ("types-graph", Generator.RelationDiagram(adopted)),
+            ("types-edges", Generator.RelationTable(adopted)));
+
+        Splice(Path.Combine(repoRoot, "knowledge-as-code", "lineage.md"),
+            ("types-lineage", Generator.LineageTable(adopted)),
+            ("types-collisions", Generator.Collisions(adopted)));
+
+        Splice(Path.Combine(repoRoot, "README.md"),
+            ("types-index", Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md")));
+
+        // Every block a page carries, spliced into one text and offered as one target — a page is written
+        // once, so two blocks in the same file cannot each overwrite the other's work.
+        //
+        // A page that is not there is skipped, and one carrying no marker resolves to itself: the generator
+        // fills in structure the corpus has declared and never invents it. Deleting the markers is how a
+        // corpus declines a block, rather than by arguing with the tool.
+        void Splice(string path, params (string Block, string Inner)[] blocks)
         {
-            var text = Generator.SpliceBlock(Files.ReadLf(metadataPath), "schema-universal",
-                Generator.UniversalSchemaTable(schema));
-            targets.Add((metadataPath, text));
+            if (!File.Exists(path)) return;
+
+            var text = Files.ReadLf(path);
+            foreach (var (block, inner) in blocks) text = Generator.SpliceBlock(text, block, inner);
+            targets.Add((path, text));
         }
 
         if (check)

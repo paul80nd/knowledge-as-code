@@ -1,0 +1,32 @@
+{
+  "summary": {
+    "validated": 0,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 3,
+    "warnings": 0
+  },
+  "findings": [
+    {
+      "file": ".mechanism.lock",
+      "line": null,
+      "severity": "error",
+      "check": "type-setup",
+      "message": "'widgets' is adopted here and no schema covers it — either '.schema/widgets.yaml' has not been synced from upstream, or the name is wrong."
+    },
+    {
+      "file": ".mechanism.lock",
+      "line": null,
+      "severity": "error",
+      "check": "type-setup",
+      "message": "type 'adrs' is stood up here and is not in 'types:' — every generated list leaves it out while the corpus holds it. Adopt it, or delete what was built."
+    },
+    {
+      "file": ".mechanism.lock",
+      "line": null,
+      "severity": "error",
+      "check": "type-setup",
+      "message": "type 'runbooks' is adopted here and is not stood up — add runbooks.md and its folder, or drop it from 'types:' if it was not wanted."
+    }
+  ]
+}

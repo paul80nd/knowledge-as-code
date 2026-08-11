@@ -21,10 +21,18 @@ opening its template and making the same change there — assume that, rather th
 |-------------------|-----------------------------------------------|
 | `_universal.yaml` | Fields every document in the taxonomy carries |
 | `_enums.yaml`     | Enums shared by more than one type            |
+| `_tiers.yaml`     | What each tier is called, and how it behaves  |
 | `<folder>.yaml`   | One per knowledge type, named for its folder  |
 
 Type files are named for the **folder**, not the type — `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a
 document's type from its folder, so folder → schema is an identity lookup with no singularisation step.
+
+A tier is declared twice, deliberately. `_universal.yaml` gives the `tier` field its range, and every record is
+validated against it. `_tiers.yaml` says what each of those values is called, how a document of it behaves, and — where
+there is one — the thing worth saying before the types beneath it are listed. Neither is derivable from the other, so
+the two are reconciled when the schema loads: a value one knows and the other does not is a record that can carry a tier
+no page can name, or a heading no document will ever sit under. Order is load-bearing in `_tiers.yaml` — it is the order
+every generated list of types is grouped by.
 
 None of them carries a version stamp. Answering "which version of the schema is this corpus on" takes something that
 reconciles the answer against an upstream, and a number nothing compares is a number a corpus can be wrong about
@@ -71,6 +79,10 @@ these files. See [What the schema is held to](#what-the-schema-is-held-to). Ever
 against the corpus as `ref-resolves`, whether or not the field also declares a `reciprocal:` — the one-directional edges
 are the ones no counterpart holds in step, so they are the ones a check has to hold.
 
+Between them the `ref:` declarations *are* the graph, and the taxonomy renders them as one: a diagram of how the types
+relate, and a table of the field behind each edge. Nothing else declares an edge, so a relationship written only as
+prose is one nothing can check, and it appears in neither.
+
 `mirrors-section` names an H2 the type declares — any of them, and a type may mirror two fields against two sections —
 and holds the ids in the field against the ids the section links to, in a bullet or in prose alike, in both directions
 and case-insensitively. It is for a field carried in frontmatter and repeated in the body, where the two drift apart
@@ -116,8 +128,13 @@ Beyond `fields`, each type file declares:
 |----------------------------|------------------------------------------------------------------------------------------------------------------|
 | `type` / `folder` / `page` | Identity, and where the type lives                                                                               |
 | `shape`                    | `collection` (the default) or `single-document` — see the note below                                             |
-| `label`                    | The singular display name — "Policy", "ADR" — used to head the generated index                                   |
+| `label` / `label-plural`   | The display names — "Policy" heads the generated index, "Policies" names the collection in a link                |
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
+| `summary` / `goes-here`    | What the type is, and what a contributor has in hand when it is the answer — see the note below                  |
+| `detail`                   | The paragraph beneath the one-liner, rendered into the taxonomy's own list of types                              |
+| `versus`                   | How this type differs from another that is easily confused with it — see the note below                          |
+| `lineage`                  | The type's prior art, what the framework took from it, and where it parts company                                |
+| `collision`                | Where the type's name already means something else, and what a reader will get wrong                             |
 | `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
 | `filename`                 | Pattern and slug length limit                                                                                    |
 | `sections`                 | Required and optional H2s — the required ones are checked for presence                                           |
@@ -132,6 +149,65 @@ its `folder:`; a single-document type declares none, because it has none, and no
 It is declared rather than inferred. An absent `folder:` and a deliberate `folder: null` are the same string once
 parsed, so a shape read off the folder cannot tell a single-document type from a collection whose folder key was lost.
 It defaults to `collection`, so only the type that is not one has to say so.
+
+**`summary` and `goes-here`.** The two lines a type says about itself, and the reason a corpus's pages can describe the
+corpus rather than the framework's full range. `summary` is what the type holds — "the rulebook, imperative, RFC 2119"
+— and heads the type's row in the repository's own index. `goes-here` is the same type from the other side, phrased as
+what the contributor is holding — "a rule people must follow when building" — and is the row in the taxonomy's decision
+table. Both are required, both are rendered as table cells, and both are held to the same length limit as a rule's
+`description`. The fuller account of a type, with its examples and its edges, stays on `<type>.md`.
+
+**`detail`** is the paragraph the other two are too short to be: what the type carries beyond its first sentence, and
+the edge a reader is most likely to walk over. It is rendered as prose rather than into a table, so it is not held to
+the cell bound — but it is held to being *the framework's* account of the type. Anything local, any example from the
+estate, belongs on `<type>.md`, which is the corpus's to write and never reconciled.
+
+**`versus`** is the one thing a type says about another type rather than about itself: a mapping from another type's
+folder to the paragraph separating the two. It becomes the taxonomy's disambiguation list.
+
+```yaml
+versus:
+  standards: >
+    The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept current.
+```
+
+A pair is written **once**, by the type its heading is titled from — `versus: standards` on `adrs.yaml` renders as
+"ADR vs Standard". Which side that is is a judgement rather than something the tool could derive, so the tool holds the
+two sides against each other instead: a pair both sides declare is two accounts of one distinction with nothing keeping
+them in step, and fails. So does a pair against a folder no schema covers, or against the declaring type itself.
+
+**`lineage`** records where the type's name came from — `prior-art`, and the `alignment` and `divergence` beside it. It
+is the framework's own intellectual debt, identical wherever this schema is taken. A corpus's *standing* against a
+framework is the other thing entirely: that belongs wholly to the corpus, and `frameworks.md` records it alone.
+
+Only `prior-art` is required, and "none" is one of its answers. Some types have no useful ancestor, and claiming one is
+worse than admitting none. What was taken and where it diverges are questions such a type cannot answer, so leaving both
+empty is a settled state and renders as an em dash.
+
+**`collision`** is for a type whose name a reader arrives already holding — `control` means the safeguard itself in
+every governance framework, `capability` sits below an epic in SAFe and above one here. Say what the word means
+elsewhere and what the reader will therefore get wrong. Most types collide with nothing and leave it out; inventing a
+collision to fill the key spends a warning a reader would otherwise trust.
+
+Paragraphs are separated by a blank line, and the generator wraps each on its own.
+
+Write the links in `lineage` and `collision` **inline**. The block either renders into cannot see the reference
+definitions at the foot of the page it lands on, and a label whose definition is deleted renders as literal brackets
+rather than as a failure. A URL is never broken across lines whatever the margin, here or anywhere: folding one puts a
+space in the middle of it.
+
+Only the types a corpus has adopted are rendered, so a decision table never offers a route to a type whose page is not
+there to open. A disambiguation needs both of its types by the same rule: a corpus with no controls is not helped by
+being told how a standard differs from one.
+
+**`label-plural` is required where `label` is not**, because only one of the two can be derived. A missing `label`
+falls back to the type name capitalised; nothing turns `nfr` into "NFRs" or `glossary` into "Glossary", and appending an
+`s` is right for some types and wrong for the rest. The plural is what a generated line uses when it points at the
+type's page rather than at one of its records — "it goes in **Policies**".
+
+**`tier`** must be one `_tiers.yaml` declares. It is what every validation rule, review expectation and language rule
+keys off, and it is written into the frontmatter of every record of the type, so a tier neither file knows is a word the
+corpus carries and nothing means anything by.
 
 **`index`.** `sort:` is one column or several — `sort: [severity, id]` sorts on the first and breaks ties with the
 next — and a type declaring none is sorted by `id`, the one column every document carries. `order:` is `ascending`
@@ -289,29 +365,34 @@ wrote it holds every one of them. So a declaration the tool does nothing with is
 behaviour the validator applies, and a `ref:` reads as a target being checked. Before any document is validated, the
 schema is held against what the tool can act on, and each finding names the file and the key.
 
-| Reported                                                                        | Check                |
-|---------------------------------------------------------------------------------|----------------------|
-| A key at any level the loader never reads, `notes:` excepted                    | `schema-unknown-key` |
-| An `expr:` that will not compile, or that names no `severity:` or `message:`    | `schema-unreadable`  |
-| A `required-when:` outside its three forms                                      | `schema-unreadable`  |
-| `values: $enums.x` where `_enums.yaml` declares no `x`                          | `schema-unreadable`  |
-| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers  | `schema-dispatch`    |
-| A `ref:` entry naming a folder no schema covers                                 | `schema-dispatch`    |
-| `values:` on any field that is not an `enum`                                    | `schema-dispatch`    |
-| `min-items:` on any field that is not a `list`                                  | `schema-dispatch`    |
-| An `index.order:` that is neither `ascending` nor `descending`                  | `schema-dispatch`    |
-| An `id.style` or a `shape:` with no code behind the value                       | `schema-dispatch`    |
-| A `collection` with no `folder:`, or a `single-document` type declaring one     | `schema-shape`       |
-| A `mirrors-section:` at a section the type's `sections:` block does not declare | `schema-shape`       |
+| Reported                                                                               | Check                |
+|----------------------------------------------------------------------------------------|----------------------|
+| A key at any level the loader never reads, `notes:` excepted                           | `schema-unknown-key` |
+| An `expr:` that will not compile, or that names no `severity:` or `message:`           | `schema-unreadable`  |
+| A `required-when:` outside its three forms                                             | `schema-unreadable`  |
+| `values: $enums.x` where `_enums.yaml` declares no `x`                                 | `schema-unreadable`  |
+| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers         | `schema-dispatch`    |
+| A `ref:` entry naming a folder no schema covers                                        | `schema-dispatch`    |
+| A `versus:` entry naming a folder no schema covers                                     | `schema-dispatch`    |
+| `values:` on any field that is not an `enum`                                           | `schema-dispatch`    |
+| `min-items:` on any field that is not a `list`                                         | `schema-dispatch`    |
+| An `index.order:` that is neither `ascending` nor `descending`                         | `schema-dispatch`    |
+| A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows         | `schema-shape`       |
+| An `id.style` or a `shape:` with no code behind the value                              | `schema-dispatch`    |
+| A `collection` with no `folder:`, or a `single-document` type declaring one            | `schema-shape`       |
+| A `mirrors-section:` at a section the type's `sections:` block does not declare        | `schema-shape`       |
+| A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:` | `schema-shape`       |
+| A `versus:` against the declaring type itself, or one both sides declare               | `schema-shape`       |
 
 **The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
 style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is
 therefore read from the code that dispatches it, so adding a name without a branch beneath is the mistake this pass
 exists to prevent.
 
-The two `schema-shape` rows ask something else. There the tool acts on whatever the value says — any section is
-reconciled, any folder is read — and what makes it sound is a second declaration in the same file: the `folder:` beside
-a `shape:`, the `sections:` block beside a `mirrors-section:`.
+The `schema-shape` rows ask something else. There the tool acts on whatever the value says — any section is reconciled,
+any folder is read, any sentence is rendered — and what makes it sound is a second declaration in the same file, or the
+shape of the page the value lands on: the `folder:` beside a `shape:`, the `sections:` block beside a
+`mirrors-section:`, the width of the table cell a `summary:` becomes.
 
 The key vocabulary is read the same way, and there is no list of permitted keys anywhere: the loader records what it
 asks each mapping for, and whatever is left over is reported. So a key gains its meaning and its admission in the same

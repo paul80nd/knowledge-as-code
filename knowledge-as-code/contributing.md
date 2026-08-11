@@ -34,13 +34,21 @@ lower-case in the filename. `{{a}}` and `{{b}}` stand for *another* document, an
 CI checks templates — `template-fields`, and everything a copy inherits — so the mark has to survive YAML, and in two
 places it does not:
 
-* **A placeholder cannot sit in a flow sequence.** `related: [ adr-{{a}} ]` is a parse error, because a plain scalar
-  in flow context may not contain a brace. Write the list as a block sequence.
+* **A placeholder cannot sit in a flow sequence.** `related: [ adr-{{a}} ]` is a parse error, because a plain scalar in
+  flow context may not contain a brace. Write the list as a block sequence.
 * **A placeholder opening a value has to be quoted.** `review-by: {{date}}` is read as a flow mapping rather than as
   text, so the field arrives holding nothing. Write `review-by: "{{date}}"`. A placeholder that follows something —
   `svc-{{slug}}` — needs no quotes.
 
 ### Links
+
+One rule applies only to the documents under `knowledge-as-code/` and to `knowledge-as-code.md` above them: they **name
+a type and never link to one**. Every corpus holds the same copy of those files, and a corpus that never adopted
+standards has no `/standards` page to open. A link into a type's folder is worse again: the records it points at are the
+first thing a corpus deletes.
+
+Where a link is genuinely wanted, put it in a generated block. Those are written from the types the corpus adopted, so
+they can only name pages that exist. `framework-names-types` holds you to this.
 
 **References to another document by its id use shortcut reference links** — the label is the id and doubles as the
 display text:
@@ -69,27 +77,10 @@ CI also fails on an undefined label or an unused definition, and ignores fenced 
 
 ## How do I contribute…?
 
-Type-specific steps live with the type. The review model below applies to all of them.
+Type-specific steps live with the type. Each type's page says what that type holds, what it is not, and what it asks of
+you when you add one. If you are not sure which type you need, [taxonomy](taxonomy.md) has the decision table.
 
-| To add…                               | See                                 | Tier        |
-|---------------------------------------|-------------------------------------|-------------|
-| An architectural decision             | [adrs.md](/adrs.md)                 | Decided     |
-| A rule people must follow             | [standards.md](/standards.md)       | Normative   |
-| An engineering commitment             | [policies.md](/policies.md)         | Normative   |
-| A check on a rule                     | [controls.md](/controls.md)         | Normative   |
-| A target for uptime or recovery       | [nfrs.md](/nfrs.md)                 | Normative   |
-| A confirmed fix                       | [faqs.md](/faqs.md)                 | Normative   |
-| An explanation of how something works | [explanations.md](/explanations.md) | Descriptive |
-| A component description               | [services.md](/services.md)         | Descriptive |
-| A product surface                     | [capabilities.md](/capabilities.md) | Descriptive |
-| An approved tool                      | [tools.md](/tools.md)               | Descriptive |
-| An external dependency                | [integrations.md](/integrations.md) | Descriptive |
-| Data ownership or retention           | [data.md](/data.md)                 | Descriptive |
-| A term                                | [glossary.md](/glossary.md)         | Descriptive |
-| A planned procedure                   | [processes.md](/processes.md)       | Procedural  |
-| An incident procedure                 | [runbooks.md](/runbooks.md)         | Procedural  |
-| An incident account                   | [postmortems.md](/postmortems.md)   | Decided     |
-| Something you noticed                 | [discoveries.md](/discoveries.md)   | Observed    |
+The review model below applies to every type.
 
 ## Review by tier
 
