@@ -11,6 +11,10 @@ public static class GitFiles
     // Tracked + untracked-but-not-ignored files, relative and forward-slashed, or null when git is
     // unavailable or this is not a repo (the caller then falls back to Walk). git ls-files respects
     // .gitignore, .git/info/exclude and global excludes, and never lists .git/ itself.
+    //
+    // A file the index still holds and the working tree no longer does is dropped, so that both listings
+    // answer the same question: what the corpus is right now. Deleting a record and asking what the corpus
+    // looks like is one action, and the answer cannot be a file every caller then goes on to read.
     public static List<string>? Tracked(string root)
     {
         try
@@ -31,7 +35,11 @@ public static class GitFiles
             p.WaitForExit();
             if (p.ExitCode != 0) return null;
             return
-                [.. stdout.Result.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)];
+            [
+                .. stdout.Result
+                    .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Where(rel => File.Exists(Path.Combine(root, rel)))
+            ];
         }
         catch
         {

@@ -1,5 +1,8 @@
-// Unit test for the non-git fallback walk (GitFiles.Walk), driven through a real temp tree.
-// GitFiles.Tracked (the git ls-files path) and Corpus.Discover are covered by the golden suite.
+// Unit tests for the two file listings, driven through real temp trees: the non-git fallback walk
+// (GitFiles.Walk), and the one place GitFiles.Tracked differs from `git ls-files`. The golden suite
+// assembles a non-git tree, so what git reports is only asked here. Corpus.Discover is covered there.
+
+using System.Diagnostics;
 
 using kac.core;
 
@@ -30,6 +33,60 @@ public class GitFilesTests
         finally
         {
             dir.Delete(recursive: true);
+        }
+    }
+
+    // `git ls-files --cached` lists a file the index holds whether or not the working tree still has it,
+    // so a deletion nobody has staged yet would otherwise reach every caller as a path to read.
+    [Fact]
+    public void Tracked_drops_a_file_the_working_tree_no_longer_has()
+    {
+        var dir = Directory.CreateTempSubdirectory("kac-tracked-");
+        try
+        {
+            File.WriteAllText(Path.Combine(dir.FullName, "kept.md"), "");
+            File.WriteAllText(Path.Combine(dir.FullName, "gone.md"), "");
+
+            // No git on this machine is the state Tracked answers null for, and the callers walk instead.
+            if (!Git(dir.FullName, "init", "-q", ".")) return;
+            Git(dir.FullName, "add", "-A");
+            Git(dir.FullName, "-c", "user.email=test@example.com", "-c", "user.name=Test",
+                "-c", "commit.gpgsign=false", "commit", "-qm", "fixture");
+
+            File.Delete(Path.Combine(dir.FullName, "gone.md"));
+
+            var tracked = GitFiles.Tracked(dir.FullName);
+            Assert.NotNull(tracked);
+            Assert.Contains("kept.md", tracked);
+            Assert.DoesNotContain("gone.md", tracked);
+        }
+        finally
+        {
+            dir.Delete(recursive: true);
+        }
+    }
+
+    private static bool Git(string root, params string[] args)
+    {
+        var psi = new ProcessStartInfo("git")
+        {
+            WorkingDirectory = root,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+        foreach (var a in args) psi.ArgumentList.Add(a);
+
+        try
+        {
+            using var p = Process.Start(psi);
+            if (p is null) return false;
+            p.WaitForExit();
+            return p.ExitCode == 0;
+        }
+        catch
+        {
+            return false;
         }
     }
 }
