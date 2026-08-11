@@ -74,10 +74,12 @@ Related but different:
 
 **Conventions**
 
-* **Hub, not specification.** Where a section is longer than the list of links around it, ask whether the detail belongs
-  in ADO.
-* **Feature file paths are reconciled in both directions** — a path here that no longer exists is reported, and so is a
-  feature file no capability claims. `feature-file-orphans` owns that and does not yet run, as the table below records.
+* **Hub, not specification.** `hub-not-specification` weighs the whole document against its outbound links, at roughly
+  forty words each, so a capability that grows a section of its own trips it. Where a section runs longer than the links
+  around it, ask whether the detail belongs in ADO.
+* **Keep the feature file paths honest yourself.** Nothing resolves them: the field holds plain strings, so
+  `ref-resolves` never sees it, and `feature-file-orphans` is declared and does not run. A path that goes stale here
+  goes stale quietly.
 
 ## What CI checks
 

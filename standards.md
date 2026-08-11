@@ -18,9 +18,10 @@ new endpoint, header or contract, and the standard for that area tells you the s
 * A **standard** captures the practice that decision produces. It answers *what to do*, and we edit it in place as the
   practice matures.
 
-A standard distils one or more accepted ADRs into something you can follow without reading the reasoning again. Each
-standard cites the ADRs it derives from: the ADR owns the *why* and the standard owns the *what*. Below both sits a
-feature **spec**, which applies the standards to a concrete API and documents only what is unique to that feature.
+A standard distils accepted ADRs into something you can follow without reading the reasoning again, and cites what it
+came from: the ADR owns the *why* and the standard owns the *what*. A standard descending from a policy rather than a
+decision cites the policy instead. Below both sits a feature **spec**, which applies the standards to a concrete API and
+documents only what is unique to that feature.
 
 | Layer         | Answers                      | Lifecycle                    |
 |---------------|------------------------------|------------------------------|
@@ -37,8 +38,11 @@ only when they want the deeper *why*.
 
 ## Categories
 
-We state each standard at its true **altitude** along three axes, and we **compose** them. The rule-set enforced for a
-piece of work is the union of the layers that apply (`common ∪ platform ∪ framework ∪ domain`).
+We state each standard at its true **altitude** on one of four axes — `common`, `platform`, `interface`, `domain` — and
+we **compose** them. The rule-set enforced for a piece of work is the union of the axes that apply to it.
+
+The folders below group the standards a reader goes looking for together. A folder sits on an axis rather than being
+one: `public-api`, `widgets` and `webhooks` all carry `axis: interface`.
 
 * **common** — platform-agnostic principles (testing philosophy, code-quality-as-a-gate). _Active._
 * **platform** — language, runtime and framework specifics: `node/`, `lit/` (future `dotnet/`). _Active._
@@ -47,6 +51,7 @@ piece of work is the union of the layers that apply (`common ∪ platform ∪ fr
   them. _Drafted._
 * **global-styles** — embed theming: the `--<prefix>-*` CSS custom-property contract, stable class hooks, and the
   authoring rules that keep every embedded widget restylable to match the host brand at render time. _Drafted._
+* **messaging** — the message bus contract: topic naming, payload shape, delivery guarantees. _Drafted._
 * **webhooks** — public-facing webhooks for third-party integrations: API-key auth, delivery, signing. _Planned._
 * **internal-api** — service-to-service APIs within the platform. _Planned._
 
@@ -63,19 +68,19 @@ distinct. The common and platform axes let a rule live once, at the layer where 
 
 <!-- BEGIN GENERATED: schema-standards -->
 
-| Field          | Req | Type   | Notes                                                                                         |
-|----------------|-----|--------|-----------------------------------------------------------------------------------------------|
-| `id` †         | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                         |
-| `tier` †       | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.          |
-| `status` †     | ●   | enum   | Plain values only — enforcement notes belong in `verified-by`.                                |
-| `owner` †      | ●   | string | A named person, never a team alias.                                                           |
-| `tags` †       |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                              |
-| `axis`         | ●   | enum   | The layer where the rule is actually true. TODO — four formulations exist; settle before use. |
-| `derived-from` |     | list   | The ADRs this standard distils. Provenance may come from `implements` instead.                |
-| `implements`   |     | list   | Policy ids this standard puts into practice.                                                  |
-| `verified-by`  |     | list   | Control ids that check it.                                                                    |
-| `applies-to`   | ●   | list   | Service ids, or `all`.                                                                        |
-| `review-by`    | ●   | date   | Quoted. The date by which someone confirms this is still true.                                |
+| Field          | Req | Type   | Notes                                                                                |
+|----------------|-----|--------|--------------------------------------------------------------------------------------|
+| `id` †         | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `tier` †       | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
+| `status` †     | ●   | enum   | Plain values only — enforcement notes belong in `verified-by`.                       |
+| `owner` †      | ●   | string | A named person, never a team alias.                                                  |
+| `tags` †       |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| `axis`         | ●   | enum   | The layer where the rule is actually true.                                           |
+| `derived-from` |     | list   | The ADRs this standard distils. Provenance may come from `implements` instead.       |
+| `implements`   |     | list   | Policy ids this standard puts into practice.                                         |
+| `verified-by`  |     | list   | Control ids that check it.                                                           |
+| `applies-to`   | ●   | list   | Service ids, or `all`.                                                               |
+| `review-by`    | ●   | date   | Quoted. The date by which someone confirms this is still true.                       |
 
 **Enum values**
 
@@ -91,8 +96,9 @@ distinct. The common and platform axes let a rule live once, at the layer where 
 
 ## Adding or changing a Standard
 
-Cite at least one ADR in `derived-from`. Where no ADR exists, either the decision has not been made — make it — or what
-you are writing is guidance rather than a standard.
+Name where the standard comes from: an ADR in `derived-from`, a policy in `implements`, or both. `provenance-required`
+fails a standard carrying neither. Where you can name neither, either the decision has not been made — make it — or
+what you are writing is guidance rather than a standard.
 
 Write the rules with RFC 2119 keywords, and make each one **testable**. Where a rule cannot be checked against a
 concrete artefact, sharpen it or move it to the rationale section. Every **MUST** and **MUST NOT** should have a

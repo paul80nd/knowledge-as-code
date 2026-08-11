@@ -90,8 +90,8 @@ constrains it. A hub, sitting above the epic layer: it links to the work items t
 implement it, the feature files that test it, and the NFRs that constrain it. A capability that starts accumulating
 detail of its own has stopped being one.
 
-**[Data](/data)** — Which store owns which entities, how long they are kept, how sensitive they are, and where personal
-data flows. Organised by store rather than by processing activity. An engineer can use it; a regulator cannot.
+**[Data](/data)** — Which service owns which data, how long it is kept, how sensitive it is, and where personal data
+flows. Organised by data domain rather than by processing activity. An engineer can use it; a regulator cannot.
 
 **[Explanations](/explanations)** — Narrative that helps you understand how something works, or why it is shaped the way
 it is. Architecture overviews, conceptual walkthroughs, how the pieces fit together. It links rather than restates: an

@@ -25,8 +25,9 @@ id:
   style: numbered
   width: 4
   notes: >
-    TODO — `pmt-` may collide with an organisation's own abbreviations and read ambiguously. `inc-` is the obvious
-    alternative but describes the incident rather than the document. Settle before the first record.
+    `pmt-` names the document, which is what every other prefix here does — `adr-`, `pol-`, `std-`, `ctl-`. `inc-`
+    names the incident instead, and an incident can produce more than one record, so the id would promise an identity
+    it does not hold.
 
 filename:
   pattern: '^\d{4}-[a-z0-9-]+\.md$'

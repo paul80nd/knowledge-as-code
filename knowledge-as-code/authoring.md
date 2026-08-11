@@ -70,6 +70,11 @@ reader in that state skims, and a skimmed instruction must still be right.
 
 The rule must be checkable, and a reader must be able to tell obligation from commentary at a glance.
 
+**The clause rules below bind the types that carry clauses**, which are policies and standards. A control, an NFR and an
+FAQ are normative because a reader may act on them without checking, and they hold no clause table, no Purpose and no
+RFC 2119 keywords. What binds every normative type is the first sentence above: state the thing a reader will act on,
+make it checkable, and keep the argument out of the part that gets quoted.
+
 * **Standards use RFC 2119 keywords, in capitals, leading the clause.** The capitals are what make them normative;
   lower-case *must* is prose. See [lineage](lineage.md#standard).
 * **Policies carry modals in their clauses and nowhere else.** Purpose and Scope are written as commitment — what we
@@ -151,7 +156,7 @@ what is being built — but a reader must never have to guess which they are rea
 **Unmarked prose describes what exists today.** Anything else carries a marker, on its own line, immediately below the
 heading it governs, or leading the sentence it governs:
 
-> **Planned.** Agreed direction, not yet built. An issue exists.
+> **Planned.** Agreed direction, not yet built. Something tracks it — an issue, or the page that owns the plan.
 
 > **Aspirational.** Direction of travel. Neither agreed nor scoped.
 
@@ -159,13 +164,14 @@ heading it governs, or leading the sentence it governs:
 > not yet enforced*, so the marker names a state the tooling already reports.
 
 A marker governs everything up to the next heading at the same or a higher level. Two rules keep it honest: a marked
-section states what would have to be true for the marker to be removed, and **Planned** is not used without an issue to
-point at.
+section states what would have to be true for the marker to be removed, and **Planned** points at whatever is tracking
+the work. The removal condition is what keeps a marker honest, and a marker that never comes off is a wish wearing a
+plan's clothes.
 
 A declared rule is the one case where prose may name behaviour that does not happen. Write it in the present tense about
 the declaration rather than the behaviour — *`feature-file-orphans` is declared and does not run*, never *CI checks the
 paths*. Prose claiming an unbuilt check as working is a correctness defect, and it is the most common one in this
-corpus. A marker that never comes off is a wish wearing a plan's clothes.
+corpus.
 
 ## Where these rules come from
 

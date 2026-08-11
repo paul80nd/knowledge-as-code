@@ -17,7 +17,9 @@ Three sources of rules, in this order:
    formats, link forms, and which text rules a type actually declares.
 2. **The type's own pages.** `<type>.md` for what the type is meant to hold, `<type>/_template.md` for the sections it
    must have.
-3. **[`knowledge-as-code/style.md`](../../../knowledge-as-code/style.md) and
+3. **[`knowledge-as-code/contributing.md`](../../../knowledge-as-code/contributing.md).** The link and template
+   conventions CI enforces, and the same precedence list stated in full. Read it before you touch a link.
+4. **[`knowledge-as-code/style.md`](../../../knowledge-as-code/style.md) and
    [`knowledge-as-code/authoring.md`](../../../knowledge-as-code/authoring.md).** The prose rules — style for the words,
    which are the same everywhere, and authoring for what a document's tier adds. Read both in full, every time. This
    skill is the procedure for applying them and does not restate them.
@@ -150,7 +152,8 @@ Nothing checks these. They are yours:
 
 * **Every identifier unchanged.** The validator catches a rename that breaks a link inside this corpus; it cannot see a
   citation from another one.
-* **Definitions at the foot, sorted by label.** `unused-definition` and `undefined-label` fire; the ordering does not.
+* **Link form and definition order**, per [contributing](../../../knowledge-as-code/contributing.md#links).
+  `unused-definition` and `undefined-label` fire; the ordering does not.
 * **Prose wrapped at 120 columns**, tables exempt. `.editorconfig` says so and no check enforces it.
 * **Nothing changed inside a generated block.** The validator checks that the markers survive, not the content between
   them.
