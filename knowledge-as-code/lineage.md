@@ -47,7 +47,6 @@ type with no useful ancestor says so: three of them have none, and claiming one 
 
 <!-- END GENERATED: types-lineage -->
 
-
 ## Collisions
 
 Five of these words already mean something else to a reader arriving from another framework. Where the collision is
@@ -106,7 +105,7 @@ document and a program is a word that will be misread in a repository holding bo
 
 Three things here have no useful ancestor, and claiming one would be worse than admitting none.
 
-**[Discovery](/discoveries).** Nothing established defines a document type that is low-ceremony, explicitly unverified,
+**Discovery.** Nothing established defines a document type that is low-ceremony, explicitly unverified,
 confidence-scored, self-expiring, and carries a defined promotion path into a reviewed type. A lab notebook, a fleeting
 note and an agile spike each share the provisional quality and none of the rest. The combination of an expiry and a
 confidence level is the most novel thing in this taxonomy.

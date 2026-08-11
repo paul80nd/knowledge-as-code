@@ -34,13 +34,19 @@ lower-case in the filename. `{{a}}` and `{{b}}` stand for *another* document, an
 CI checks templates — `template-fields`, and everything a copy inherits — so the mark has to survive YAML, and in two
 places it does not:
 
-* **A placeholder cannot sit in a flow sequence.** `related: [ adr-{{a}} ]` is a parse error, because a plain scalar
-  in flow context may not contain a brace. Write the list as a block sequence.
+* **A placeholder cannot sit in a flow sequence.** `related: [ adr-{{a}} ]` is a parse error, because a plain scalar in
+  flow context may not contain a brace. Write the list as a block sequence.
 * **A placeholder opening a value has to be quoted.** `review-by: {{date}}` is read as a flow mapping rather than as
   text, so the field arrives holding nothing. Write `review-by: "{{date}}"`. A placeholder that follows something —
   `svc-{{slug}}` — needs no quotes.
 
 ### Links
+
+One rule applies only to the documents under `knowledge-as-code/`, and to `knowledge-as-code.md` above them: they **name
+a type and never link to one**. Every corpus running the framework holds the same copy, so a link that resolves here
+says nothing about where it is read — and a link into a type's folder is worse still, since the records it points at are
+the first thing a corpus deletes. Where a link is genuinely wanted, it belongs in a generated block, which is written
+from the types the corpus actually stood up. `framework-names-types` enforces this.
 
 **References to another document by its id use shortcut reference links** — the label is the id and doubles as the
 display text:

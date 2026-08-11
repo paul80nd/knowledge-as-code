@@ -19,10 +19,12 @@ Feature: Corpus shape checks
     When I validate the corpus
     Then validation reports 1 documents and 0 skipped
     And the findings are exactly:
-      | file         | line | check           | message                                                                                                                 |
-      | adrs.md      |      | generated-block | the 'schema-adrs' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both. |
-      | adrs.md      | 6    | link-resolves   | link target '/nope.md' does not resolve.                                                                                |
-      | glossary.md  | 1    | id-format       | id 'not-glossary' must be 'glossary', the value the type declares.                                                      |
+      | file                          | line | check                 | message                                                                                                                                                                                              |
+      | adrs.md                       |      | generated-block       | the 'schema-adrs' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both.                                                                        |
+      | adrs.md                       | 6    | link-resolves         | link target '/nope.md' does not resolve.                                                                                                                                                             |
+      | glossary.md                   | 1    | id-format             | id 'not-glossary' must be 'glossary', the value the type declares.                                                                                                                                   |
+      | knowledge-as-code/taxonomy.md | 4    | framework-names-types | '/adrs' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off.                   |
+      | knowledge-as-code/taxonomy.md | 5    | framework-names-types | '/adrs/0001-knowledge-as-code.md' links to a record in 'adrs' from a document every corpus shares. Those records are the first thing a corpus deletes, so the link dies even where the type is used. |
 
   # The count is the assertion here. A template is checked and is not a document: it holds no id, takes no
   # place in an index, and answers to nothing corpus-wide. Were it discovered as a record instead, this

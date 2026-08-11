@@ -72,6 +72,12 @@ public static class Validator
                 CheckDocument(template, schema, repoRoot, findings, DocKind.Template);
         }
 
+        // The framework's own documentation, held to the one rule that is about where it will be read
+        // rather than about what it says. Skipped when the run is narrowed, like the other checks that
+        // ask about the shape of the corpus rather than about a document.
+        if (corpus.Paths.Count == 0)
+            CheckFrameworkDocs(schema, repoRoot, findings);
+
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
         CheckCorpus(corpus.Docs, findings);
 
@@ -334,6 +340,73 @@ public static class Validator
             if (missing.Count > 0)
                 f.Add(new Finding(at, null, Sev.Error, "type-setup",
                     $"type '{key}' has a '{folder}/' folder but is not fully set up — add {string.Join(", ", missing)}."));
+        }
+    }
+
+    // The documents describing the framework itself, wherever a corpus keeps them.
+    private static readonly string[] FrameworkDocs =
+        ["knowledge-as-code.md", "knowledge-as-code/"];
+
+    // The framework's own documentation is shared byte-for-byte by every corpus running it, so it has to
+    // read correctly in a corpus that adopted three types and in one that adopted seventeen. A link to a
+    // type page cannot: it either resolves or is a dead end, depending on a decision the page cannot see.
+    //
+    // So a framework document names a type and never links to one. Where a link is genuinely wanted, the
+    // list it belongs in is generated from the types the corpus stood up, and a generated block is exempt
+    // for exactly that reason — it is written against this corpus rather than against the framework.
+    //
+    // Checked here rather than left to `link-resolves`, which would report it only downstream: every type
+    // page exists in the corpus that writes these documents, so the defect is invisible precisely where it
+    // can be fixed.
+    private static void CheckFrameworkDocs(Schema schema, string repoRoot, List<Finding> f)
+    {
+        var pages = schema.ByFolder.Values
+            .Where(t => !string.IsNullOrEmpty(t.Page))
+            .ToDictionary(t => "/" + t.Page[..^".md".Length], t => t.Key, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var rel in FrameworkFiles(repoRoot))
+        {
+            var doc = Doc.Parse(rel, Generator.Authored(Files.ReadLf(Path.Combine(repoRoot, rel))),
+                schema, requireFrontmatter: false);
+            if (doc is null) continue;
+
+            foreach (var link in doc.Links)
+            {
+                var target = link.Target.Split('#')[0].TrimEnd('/');
+                if (target.Length == 0 || LinkChecks.IsExternal(target)) continue;
+
+                var slash = target.LastIndexOf('/');
+                var page = slash > 0 ? target[..slash] : target;
+                if (!pages.TryGetValue(page, out var type)) continue;
+
+                // A path *into* a type's folder names a record rather than the type, which is worse: every
+                // corpus is told to delete the records it inherits, so that link is dead even where the
+                // type was adopted.
+                f.Add(new Finding(rel, link.Line, Sev.Error, "framework-names-types", slash > 0
+                    ? $"'{link.Target}' links to a record in '{type}' from a document every corpus shares. Those "
+                      + "records are the first thing a corpus deletes, so the link dies even where the type is used."
+                    : $"'{link.Target}' links to the '{type}' type from a document every corpus shares. Name the type "
+                      + "instead: a corpus that has not adopted it reads a dead link, and one that has is no worse "
+                      + "off."));
+            }
+        }
+    }
+
+    private static IEnumerable<string> FrameworkFiles(string repoRoot)
+    {
+        foreach (var entry in FrameworkDocs)
+        {
+            var full = Path.Combine(repoRoot, entry);
+
+            if (!entry.EndsWith('/'))
+            {
+                if (File.Exists(full)) yield return entry;
+                continue;
+            }
+
+            if (!Directory.Exists(full)) continue;
+            foreach (var path in Directory.EnumerateFiles(full, "*.md").Order(StringComparer.Ordinal))
+                yield return entry + Path.GetFileName(path);
         }
     }
 

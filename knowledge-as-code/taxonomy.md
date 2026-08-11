@@ -320,5 +320,5 @@ Not all types are proven. Which are and which are drafts is recorded once, in th
 [README](../README.md#maturity).
 
 Changing the taxonomy — adding a type, merging two, moving a type between tiers — is a larger act than editing any
-document within it, and should be recorded as an ADR superseding or amending
-[adr-0001](/adrs/0001-knowledge-as-code.md).
+document within it. Where a corpus holds ADRs, it belongs in one, amending whichever recorded the taxonomy in the first
+place.
