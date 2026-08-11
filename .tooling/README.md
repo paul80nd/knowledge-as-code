@@ -303,14 +303,14 @@ bare `mechanism --check`. What it reports:
   quietly become identical to the reference again are named as `RESOLVED` so the stale entry can be removed.
 - **types the corpus declined** are skipped. `.schema/<type>.yaml` for a type absent from `types:` in `.mechanism.lock`
   is neither missing nor drifted — the corpus chose not to adopt it. This is the one part of the synced layer a corpus
-  may legitimately hold less of than upstream, and the lock is what makes that a decision rather than a deletion nobody
-  recorded. A lock declaring no `types:` declines nothing.
+  may legitimately hold less of than upstream, and the lock is where it says so. Without that entry the same absence is
+  a deletion nobody recorded. A lock declaring no `types:` declines nothing.
 
 Comparison is LF-normalised, so line-ending differences never read as drift, and it reads the **authored half** of a
 file: everything between `BEGIN GENERATED` and `END GENERATED` is emptied before the two copies are compared. A shared
 page may therefore carry a block derived from the corpus holding it — the taxonomy's own tables list the types that
-corpus has stood up — while the surrounding prose stays byte-identical everywhere. The markers themselves are compared,
-so deleting a block rather than regenerating it is still drift, and `index --check` remains the one voice on whether the
+corpus adopted — while the surrounding prose stays byte-identical everywhere. The markers themselves are compared, so
+deleting a block rather than regenerating it is still drift, and `index --check` remains the one voice on whether the
 generated half is correct.
 
 `mechanism --sync` — the write half that copies the synced layer into a consumer — is not implemented yet.

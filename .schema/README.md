@@ -27,8 +27,8 @@ opening its template and making the same change there — assume that, rather th
 Type files are named for the **folder**, not the type — `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a
 document's type from its folder, so folder → schema is an identity lookup with no singularisation step.
 
-A tier is declared twice, deliberately. `_universal.yaml` gives the `tier` field its range, which is what every record
-is validated against; `_tiers.yaml` says what each of those values is called, how a document of it behaves, and — where
+A tier is declared twice, deliberately. `_universal.yaml` gives the `tier` field its range, and every record is
+validated against it. `_tiers.yaml` says what each of those values is called, how a document of it behaves, and — where
 there is one — the thing worth saying before the types beneath it are listed. Neither is derivable from the other, so
 the two are reconciled when the schema loads: a value one knows and the other does not is a record that can carry a tier
 no page can name, or a heading no document will ever sit under. Order is load-bearing in `_tiers.yaml` — it is the order
@@ -80,8 +80,8 @@ against the corpus as `ref-resolves`, whether or not the field also declares a `
 are the ones no counterpart holds in step, so they are the ones a check has to hold.
 
 Between them the `ref:` declarations *are* the graph, and the taxonomy renders them as one: a diagram of how the types
-relate, and a table of the field behind each edge. Nothing else declares an edge, which is why a relationship written
-only as prose is one nothing can check — and why it appears in neither.
+relate, and a table of the field behind each edge. Nothing else declares an edge, so a relationship written only as
+prose is one nothing can check, and it appears in neither.
 
 `mirrors-section` names an H2 the type declares — any of them, and a type may mirror two fields against two sections —
 and holds the ids in the field against the ids the section links to, in a bullet or in prose alike, in both directions
@@ -175,21 +175,21 @@ A pair is written **once**, by the type its heading is titled from — `versus: 
 two sides against each other instead: a pair both sides declare is two accounts of one distinction with nothing keeping
 them in step, and fails. So does a pair against a folder no schema covers, or against the declaring type itself.
 
-**`lineage`** records where the type's name came from — `prior-art`, and the `alignment` and `divergence` beside it.
-It is the framework's own intellectual debt, identical wherever this schema is taken, which is what separates it from a
-corpus's *standing* against a framework: that belongs wholly to the corpus and is recorded in `frameworks.md` alone.
+**`lineage`** records where the type's name came from — `prior-art`, and the `alignment` and `divergence` beside it. It
+is the framework's own intellectual debt, identical wherever this schema is taken. A corpus's *standing* against a
+framework is the other thing entirely: that belongs wholly to the corpus, and `frameworks.md` records it alone.
 
-Only `prior-art` is required, and "none" is one of its answers — three types here have no useful ancestor, and claiming
-one would be worse than admitting none. What was taken and where it diverges are questions such a type cannot answer,
-so leaving both empty is a settled state and renders as an em dash.
+Only `prior-art` is required, and "none" is one of its answers. Some types have no useful ancestor, and claiming one is
+worse than admitting none. What was taken and where it diverges are questions such a type cannot answer, so leaving both
+empty is a settled state and renders as an em dash.
 
 Write its links **inline**. The block this renders into cannot see the reference definitions at the foot of the page it
 lands on, and a label whose definition is deleted renders as literal brackets rather than as a failure. A URL is never
 broken across lines whatever the margin, here or anywhere: folding one puts a space in the middle of it.
 
-Only the types a corpus has **stood up** — page and folder both present — are rendered, which is what stops a decision
-table offering a route to a type whose page is not there to open. A disambiguation needs both of its types by the same
-rule: a corpus with no controls is not helped by being told how a standard differs from one.
+Only the types a corpus has adopted are rendered, so a decision table never offers a route to a type whose page is not
+there to open. A disambiguation needs both of its types by the same rule: a corpus with no controls is not helped by
+being told how a standard differs from one.
 
 **`label-plural` is required where `label` is not**, because only one of the two can be derived. A missing `label`
 falls back to the type name capitalised; nothing turns `nfr` into "NFRs" or `glossary` into "Glossary", and appending an
@@ -356,24 +356,24 @@ wrote it holds every one of them. So a declaration the tool does nothing with is
 behaviour the validator applies, and a `ref:` reads as a target being checked. Before any document is validated, the
 schema is held against what the tool can act on, and each finding names the file and the key.
 
-| Reported                                                                               | Check                  |
-|----------------------------------------------------------------------------------------|------------------------|
-| A key at any level the loader never reads, `notes:` excepted                           | `schema-unknown-key`   |
-| An `expr:` that will not compile, or that names no `severity:` or `message:`           | `schema-unreadable`    |
-| A `required-when:` outside its three forms                                             | `schema-unreadable`    |
-| `values: $enums.x` where `_enums.yaml` declares no `x`                                 | `schema-unreadable`    |
-| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers         | `schema-dispatch`      |
-| A `ref:` entry naming a folder no schema covers                                        | `schema-dispatch`      |
-| A `versus:` entry naming a folder no schema covers                                     | `schema-dispatch`      |
-| `values:` on any field that is not an `enum`                                           | `schema-dispatch`      |
-| `min-items:` on any field that is not a `list`                                         | `schema-dispatch`      |
-| An `index.order:` that is neither `ascending` nor `descending`                         | `schema-dispatch`      |
-| A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows         | `schema-shape`         |
-| An `id.style` or a `shape:` with no code behind the value                              | `schema-dispatch`      |
-| A `collection` with no `folder:`, or a `single-document` type declaring one            | `schema-shape`         |
-| A `mirrors-section:` at a section the type's `sections:` block does not declare        | `schema-shape`         |
-| A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:` | `schema-shape`         |
-| A `versus:` against the declaring type itself, or one both sides declare               | `schema-shape`         |
+| Reported                                                                               | Check                |
+|----------------------------------------------------------------------------------------|----------------------|
+| A key at any level the loader never reads, `notes:` excepted                           | `schema-unknown-key` |
+| An `expr:` that will not compile, or that names no `severity:` or `message:`           | `schema-unreadable`  |
+| A `required-when:` outside its three forms                                             | `schema-unreadable`  |
+| `values: $enums.x` where `_enums.yaml` declares no `x`                                 | `schema-unreadable`  |
+| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers         | `schema-dispatch`    |
+| A `ref:` entry naming a folder no schema covers                                        | `schema-dispatch`    |
+| A `versus:` entry naming a folder no schema covers                                     | `schema-dispatch`    |
+| `values:` on any field that is not an `enum`                                           | `schema-dispatch`    |
+| `min-items:` on any field that is not a `list`                                         | `schema-dispatch`    |
+| An `index.order:` that is neither `ascending` nor `descending`                         | `schema-dispatch`    |
+| A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows         | `schema-shape`       |
+| An `id.style` or a `shape:` with no code behind the value                              | `schema-dispatch`    |
+| A `collection` with no `folder:`, or a `single-document` type declaring one            | `schema-shape`       |
+| A `mirrors-section:` at a section the type's `sections:` block does not declare        | `schema-shape`       |
+| A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:` | `schema-shape`       |
+| A `versus:` against the declaring type itself, or one both sides declare               | `schema-shape`       |
 
 **The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
 style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is

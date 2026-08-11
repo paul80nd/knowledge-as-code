@@ -68,7 +68,7 @@ public static class Commands
 
         // The pages that describe the taxonomy to a reader rather than to the tool. Each lists types, and
         // the list is the half that was wrong in every corpus that adopted some of them — so each is
-        // generated from what this corpus has stood up, and none can name a type whose page is not there
+        // generated from the types this corpus adopted, and none can name a type whose page is not there
         // to open. `metadata.md` also carries the universal field table, which is the schema's alone.
         var adopted = Corpus.Adopted(schema, repoRoot, corpus.Lock);
 
@@ -93,8 +93,8 @@ public static class Commands
         // once, so two blocks in the same file cannot each overwrite the other's work.
         //
         // A page that is not there is skipped, and one carrying no marker resolves to itself: the generator
-        // fills in structure the corpus has declared and never invents it, which is what lets a corpus
-        // decline a block by deleting its markers rather than by arguing with the tool.
+        // fills in structure the corpus has declared and never invents it. Deleting the markers is how a
+        // corpus declines a block, rather than by arguing with the tool.
         void Splice(string path, params (string Block, string Inner)[] blocks)
         {
             if (!File.Exists(path)) return;

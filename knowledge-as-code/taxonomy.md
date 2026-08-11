@@ -91,8 +91,7 @@ implement it, the feature files that test it, and the NFRs that constrain it. A 
 detail of its own has stopped being one.
 
 **[Data](/data)** — Which store owns which entities, how long they are kept, how sensitive they are, and where personal
-data flows. Organised by store rather than by processing activity, which is what makes it useful to an engineer and
-insufficient for a regulator.
+data flows. Organised by store rather than by processing activity. An engineer can use it; a regulator cannot.
 
 **[Explanations](/explanations)** — Narrative that helps you understand how something works, or why it is shaped the way
 it is. Architecture overviews, conceptual walkthroughs, how the pieces fit together. It links rather than restates: an
@@ -104,8 +103,8 @@ confused. Small, high-value, and the one document worth loading into every sessi
 time it appears belongs here once, and everything else links to it.
 
 **[Integrations](/integrations)** — An external system we depend on: the contract, the auth, the failure modes, their
-SLA and our fallback. Every integration point needs a deliberate failure mode and a fallback, which is why both are
-required rather than optional, along with who to contact when it is down.
+SLA and our fallback. Every integration point needs a deliberate failure mode and a fallback, so the type requires both.
+It also names who to call when the system is down.
 
 **[Services](/services)** — One deployable component: purpose, repo, platform, environments, dependencies, data stores,
 owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
@@ -142,8 +141,8 @@ stay local. Only distilled, reviewed discoveries reach the wiki.
 ## How the types relate
 
 The edges carry as much value as the nodes, and they are the part that breaks silently. Every one below is a
-cross-reference field the schema declares, so CI can check that it resolves to a document that exists — which is the
-whole reason for declaring them rather than writing the link in prose.
+cross-reference field the schema declares, so CI can check that it resolves to a document that exists. That is why they
+are declared rather than written as a link in prose.
 
 <!-- BEGIN GENERATED: types-graph -->
 
@@ -246,8 +245,8 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 <!-- END GENERATED: types-edges -->
 
 Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, `verifies` / `verified-by`,
-`promoted-from` / `promoted-to`. A one-sided link fails the build, which is what the last column above is for — a field
-with nothing in it is answered by nobody and is nobody's job to keep in step.
+`promoted-from` / `promoted-to`. A one-sided link fails the build. The last column above is where you read that off: an
+empty cell means nobody answers that edge, and nobody has to keep it in step.
 
 Not every edge is a pair. A standard's `implements` points up at a policy and is never answered from the policy side:
 policies are the layer a downstream corpus inherits, standards the layer it writes for itself, so what implements a

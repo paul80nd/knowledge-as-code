@@ -21,4 +21,5 @@ been asked of these documents: they are excluded from discovery, and the page pa
 Silent, and deliberately so: the link inside the generated block, which is written from the types the corpus stood up,
 and every type named in prose rather than linked.
 
-Two of its links draw two findings each, which is not double-reporting: a link that both should not be there and does not resolve is wrong twice over, and the real corpus sees only the first of the two because the record it names exists.
+Two of its links draw two findings each. That is not double-reporting: a link that should not be there and does not
+resolve is wrong twice over. The real corpus sees only one of the two, because the record it names exists.

@@ -118,22 +118,22 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | `.order` files                              | Folder contents + type ordering          | Each folder                                 | Planned |
 | `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                                   | Planned |
 
-Eight of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table,
-the types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table, the strip
-on `metadata.md` and the index at the repository root, all cover the types **this** corpus holds. A corpus that adopted
-five of the framework's types is offered five, and every row opens.
+Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table, the
+types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table, the strip on
+`metadata.md` and the index at the repository root, covers the types **this** corpus holds. A corpus that adopted five
+of the framework's types is offered five, and every row opens.
 
-Which types those are is the corpus's own decision, recorded in `types:` in `.mechanism.lock`. A corpus that has not
-declared is read off its folders instead — a type counts where both halves are there, the page and the folder — which is
-the weaker answer, because it cannot tell a type nobody wanted from one somebody has not finished adding.
+The corpus decides which five, and records that in `types:` in `.mechanism.lock`. A corpus that has not declared is read
+off its folders instead: a type counts where both halves are there, the page and the folder. That answer is the weaker
+one, because it cannot tell a type nobody wanted from one somebody has not finished adding.
 
-That the blocks differ between corpora is also why they are safe to share: the mechanism check compares the authored
-half of a page and ignores what lies between the markers, so the prose stays byte-identical everywhere while what sits
-beneath it does not.
+Blocks that differ between corpora are still safe to share. The mechanism check compares the authored half of a page and
+ignores what lies between the markers, so the prose stays byte-identical everywhere while what sits beneath it does not.
 
-The graph is written to the subset of Mermaid an Azure DevOps wiki renders, which is narrower than Mermaid's own and
-fails silently where it is exceeded: `graph` rather than `flowchart`, no subgraphs, and no arrow longer than `-->`. It
-uses a fenced block rather than ADO's `:::` container, which GitHub would render as literal text.
+The graph is written to the subset of Mermaid an Azure DevOps wiki renders. That subset is narrower than Mermaid's own,
+and a diagram exceeding it renders nothing at all rather than an error: `graph` rather than `flowchart`, no subgraphs,
+and no arrow longer than `-->`. A fenced block carries it rather than ADO's `:::` container, which GitHub shows as
+literal text.
 
 ### The rules digest — a block inside root `CLAUDE.md`
 

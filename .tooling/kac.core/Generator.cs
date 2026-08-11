@@ -48,7 +48,7 @@ public static class Generator
         "/" + (t.Page.EndsWith(".md", StringComparison.Ordinal) ? t.Page[..^3] : t.Page);
 
     // The decision table — what a contributor has in hand, and where it goes. The corpus's own types
-    // only: a row pointing at a type this corpus never stood up is a dead link in the wiki and an
+    // only: a row pointing at a type this corpus never adopted is a dead link in the wiki and an
     // invitation to file a document nowhere.
     //
     // Sorted on the left column, because that is the column being read. A reader arrives holding
@@ -64,7 +64,7 @@ public static class Generator
     // the reader who has got this far is learning the shape of the taxonomy rather than looking one type
     // up.
     //
-    // A tier no stood-up type sits in is left out entirely. A heading with nothing under it tells a reader
+    // A tier no adopted type sits in is left out entirely. A heading with nothing under it tells a reader
     // the corpus has a gap where it has in fact made a choice.
     public static string TypeCatalogue(IReadOnlyList<TierSpec> tiers, IEnumerable<TypeSchema> types)
     {
@@ -90,8 +90,8 @@ public static class Generator
     // One way on to each type's own field reference. Collection types only: a single-document type has no
     // records, so nothing generates a field table for it and its fields are described on its own page.
     //
-    // The anchor is the heading the `schema-*` block sits under. That the heading is still called that is
-    // the type page's side of the bargain, and the link check is what holds it.
+    // The anchor is the heading the `schema-*` block sits under. Keeping that heading is the type page's
+    // side of the bargain, and the link check holds it there.
     public static string MetadataStrip(IEnumerable<TypeSchema> types) =>
         Wrap(string.Join(" · ", types
             .Where(t => !t.IsSingleDocument)
@@ -99,8 +99,8 @@ public static class Generator
             .Select(t => $"[{t.DisplayName}]({Link(t)}#metadata)")));
 
     // Where each type's name came from. A type with no useful ancestor carries that as its prior art and
-    // leaves the other two columns empty, which renders as an em dash: the framework has three types it
-    // claims no lineage for, and saying so is the point of the row rather than a gap in it.
+    // leaves the other two columns empty, which renders as an em dash. Saying a type has no ancestor is the
+    // point of its row rather than a gap in it.
     public static string LineageTable(IEnumerable<TypeSchema> types) =>
         RenderTable(["Type", "Nearest prior art", "Alignment", "Divergence"],
             [.. types.Where(t => t.Lineage is not null)
@@ -116,19 +116,18 @@ public static class Generator
     private static string Cell(string text) => text.Length > 0 ? Escape(text) : "—";
 
     // The edges, read off the `ref:` declarations that make them checkable. One row per cross-reference
-    // field a type carries, which is one row per thing an author fills in — so a reciprocal pair is two
-    // rows rather than one, because it is two fields, and the column naming the counterpart is what says
-    // they belong together.
+    // field a type carries, which is one row per thing an author fills in. A reciprocal pair is two rows
+    // rather than one, because it is two fields, and the last column names the counterpart that ties them.
     //
-    // A target the corpus has not stood up is dropped from the row, and a row left pointing nowhere goes
+    // A target the corpus has not adopted is dropped from the row, and a row left pointing nowhere goes
     // with it. The field would resolve against no document in any case; showing it would promise an edge
     // this corpus cannot have.
     public static string RelationTable(IEnumerable<TypeSchema> types)
     {
-        var stoodUp = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
+        var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
         var rows = new List<List<string>>();
 
-        foreach (var (t, name, field, targets) in Edges(types, stoodUp))
+        foreach (var (t, name, field, targets) in Edges(types, adopted))
             rows.Add([t.DisplayName, $"`{name}`", string.Join(", ", targets.Select(x => x.DisplayName)),
                 field.Reciprocal is { } back ? $"`{back}`" : ""]);
 
@@ -138,14 +137,14 @@ public static class Generator
     // Every cross-reference a stood-up type declares at another stood-up type, in a fixed order: by the
     // type a reader would look up, then by the field they would write.
     private static IEnumerable<(TypeSchema From, string Field, FieldSpec Spec, List<TypeSchema> To)> Edges(
-        IEnumerable<TypeSchema> types, Dictionary<string, TypeSchema> stoodUp)
+        IEnumerable<TypeSchema> types, Dictionary<string, TypeSchema> adopted)
     {
         foreach (var t in types.OrderBy(t => t.DisplayName, StringComparer.Ordinal))
         foreach (var name in t.FieldOrder.OrderBy(n => n, StringComparer.Ordinal))
         {
             if (!t.Fields.TryGetValue(name, out var field) || field.Refs.Count == 0) continue;
 
-            var targets = field.Refs.Where(stoodUp.ContainsKey).Select(r => stoodUp[r]).ToList();
+            var targets = field.Refs.Where(adopted.ContainsKey).Select(r => adopted[r]).ToList();
             if (targets.Count > 0) yield return (t, name, field, targets);
         }
     }
@@ -165,15 +164,15 @@ public static class Generator
     // have entered. `index --check` catches it, which is the guard working; not provoking it is better.
     public static string RelationDiagram(IEnumerable<TypeSchema> types)
     {
-        var stoodUp = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
+        var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
         var diagram = new StringBuilder("```mermaid\ngraph LR;\n");
 
-        foreach (var t in stoodUp.Values.OrderBy(t => t.DisplayName, StringComparer.Ordinal))
+        foreach (var t in adopted.Values.OrderBy(t => t.DisplayName, StringComparer.Ordinal))
             diagram.Append($"  {Node(t.Key)}[{t.DisplayName}];\n");
 
         // Reciprocal halves collapse into the one edge they describe; whichever half is met first names it.
         var drawn = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var (from, name, field, targets) in Edges(types, stoodUp))
+        foreach (var (from, name, field, targets) in Edges(types, adopted))
         foreach (var to in targets)
         {
             var pair = string.CompareOrdinal(from.Key, to.Key) < 0
@@ -196,17 +195,17 @@ public static class Generator
     // adopted and one not leaves the pair out — a corpus with no controls is not helped by being told how
     // a standard differs from one.
     //
-    // Sorted by heading, which is what a reader scans. The pair a type declares is rendered from that
-    // type's side, so the heading names the declaring type first and the reader meets the two in the order
-    // the sentence beneath them uses.
+    // Sorted by heading, because that is the line a reader scans. The pair a type declares is rendered from
+    // that type's side, so the heading names the declaring type first and the reader meets the two in the
+    // order the sentence beneath them uses.
     public static string Disambiguations(IEnumerable<TypeSchema> types)
     {
-        var stoodUp = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
+        var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
 
         var entries = new List<(string Heading, string Text)>();
         foreach (var t in types)
         foreach (var (other, text) in t.Versus)
-            if (stoodUp.TryGetValue(other, out var against))
+            if (adopted.TryGetValue(other, out var against))
                 entries.Add(($"{t.DisplayName} vs {against.DisplayName}", text));
 
         return string.Join("\n\n", entries
@@ -243,8 +242,8 @@ public static class Generator
     // one way on to the taxonomy, which is where the question "so where does mine go" is answered. The
     // pointer sits inside the block so that it cannot drift above the table or be edited away.
     //
-    // Sorted by name, which is what a reader looking one up already knows. Tier is a column rather than a
-    // grouping here for the same reason — it is worth seeing beside a type and is not how anyone arrives.
+    // Sorted by name, because a reader looking a type up already knows its name. Tier is a column rather
+    // than a grouping for the same reason: worth seeing beside a type, and not how anyone arrives.
     public static string TypesIndex(IEnumerable<TypeSchema> types, string taxonomyPath) =>
         RenderTable(["Type", "Tier", "What it holds"],
             [.. types.OrderBy(t => t.DisplayName, StringComparer.Ordinal).Select(t => new List<string>
@@ -569,8 +568,8 @@ public static class Generator
 
     // A page with its generated blocks emptied, leaving the markers and everything a person wrote.
     //
-    // This is what `mechanism --check` compares, which is what lets a shared page carry a block derived
-    // from the corpus holding it. Two corpora running the same framework hold the same prose and a
+    // `mechanism --check` compares this, so a shared page may carry a block derived from the corpus holding
+    // it. Two corpora running the same framework hold the same prose and a
     // different table beneath it, and both are correct. The division is exact: `index --check` answers
     // for the generated half against the local schema, `mechanism --check` for the authored half against
     // the reference, and neither has an opinion about the other's.

@@ -111,9 +111,9 @@ public static class SchemaChecks
     }
 
     // The two files that between them define a tier, held against each other. `_universal.yaml` gives the
-    // `tier` field its range, which is what every record is validated against; `_tiers.yaml` says what each
-    // of those values is called and means, which is what a generated page renders. Neither is derivable
-    // from the other, and a tier declared in one and not the other is silent in both directions — a record
+    // `tier` field its range, and every record is validated against it. `_tiers.yaml` says what each of
+    // those values is called and means, which a generated page renders. Neither is derivable from the
+    // other, and a tier declared in one and not the other is silent in both directions — a record
     // admitted with a tier no page can name, or a heading no document will ever sit under.
     //
     // Reported against `_tiers.yaml` whichever side is short, because that is the file whose entries are

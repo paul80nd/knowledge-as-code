@@ -42,11 +42,13 @@ places it does not:
 
 ### Links
 
-One rule applies only to the documents under `knowledge-as-code/`, and to `knowledge-as-code.md` above them: they **name
-a type and never link to one**. Every corpus running the framework holds the same copy, so a link that resolves here
-says nothing about where it is read — and a link into a type's folder is worse still, since the records it points at are
-the first thing a corpus deletes. Where a link is genuinely wanted, it belongs in a generated block, which is written
-from the types the corpus actually stood up. `framework-names-types` enforces this.
+One rule applies only to the documents under `knowledge-as-code/` and to `knowledge-as-code.md` above them: they **name
+a type and never link to one**. Every corpus holds the same copy of those files, and a corpus that never adopted
+standards has no `/standards` page to open. A link into a type's folder is worse again: the records it points at are the
+first thing a corpus deletes.
+
+Where a link is genuinely wanted, put it in a generated block. Those are written from the types the corpus adopted, so
+they can only name pages that exist. `framework-names-types` holds you to this.
 
 **References to another document by its id use shortcut reference links** — the label is the id and doubles as the
 display text:
@@ -75,11 +77,10 @@ CI also fails on an undefined label or an unused definition, and ignores fenced 
 
 ## How do I contribute…?
 
-Type-specific steps live with the type: each type's own page says what it holds, what it is not, and what adding one
-asks of you. [Taxonomy](taxonomy.md) has the decision table if you are not sure which you need, and the index at the
-repository root lists what this corpus actually holds.
+Type-specific steps live with the type. Each type's page says what that type holds, what it is not, and what it asks of
+you when you add one. If you are not sure which type you need, [taxonomy](taxonomy.md) has the decision table.
 
-The review model below applies to all of them.
+The review model below applies to every type.
 
 ## Review by tier
 

@@ -423,7 +423,7 @@ public static class Validator
                 if (target.Length == 0 || LinkChecks.IsExternal(target)) continue;
 
                 // Azure DevOps resolves a page with or without its extension, so both forms are the same
-                // link and both are caught. Dropping it here is what lets one lookup answer for `/adrs`
+                // link and both are caught. Dropping the extension here lets one lookup answer for `/adrs`
                 // and `/adrs.md` alike.
                 if (target.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) target = target[..^3];
 

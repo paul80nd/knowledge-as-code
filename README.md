@@ -131,9 +131,9 @@ as they are — that is the half you want to receive updates to.
 this corpus has built, so a type you have not stood up yet is a valid, silent state. That is what makes it possible to
 take the whole schema and grow into it one type at a time.
 
-**Say which types you kept** in `types:` in `.mechanism.lock`. Until you do, the tool reads your folders and cannot tell
-a type you did not want from one you have not finished adding; once you do, it holds you to the list and every generated
-page is written from it.
+**Say which types you kept** in `types:` in `.mechanism.lock`. Until you do, the tool reads your folders, and it cannot
+tell a type you did not want from one you have not finished adding. Once you do, it holds you to the list, and every
+generated page is written from it.
 
 The example records are every `<type>/*.md` that is not `_index.md` or `_template.md`. `./kac validate` covers them, so
 they are held to the same standard as real content and a schema change that breaks them fails CI here rather than in
@@ -183,10 +183,12 @@ The cost of that is drift, which is what the manifest is for. Every file resolve
 records which version of the shared layer a corpus is on, any deviation it has deliberately accepted, and — in
 `types:` — which of the framework's types it has adopted.
 
-That last one is what stops a corpus being described by its own folders. Adoption is a decision, so `validate` holds the
-corpus to having stood up what it declared, every generated list of types is written from the declaration, and a type
-file the corpus declined stops reading as one it is missing. A lock that says nothing about types still works:
-adoption is read off the folders instead, which is the state every corpus is in before it declares.
+Declaring the types is what stops a corpus being described by its own folders — a decision it made, rather than the
+shape it happens to have. `validate` holds the corpus to standing up what it declared, every generated list of types is
+written from the declaration, and a type file the corpus declined stops reading as one it is missing.
+
+A lock that says nothing about types still works. Adoption is read off the folders instead, which is where every corpus
+starts.
 
 ## Opinions
 
