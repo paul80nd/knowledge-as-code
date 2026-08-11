@@ -108,6 +108,7 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | How the types relate                        | `ref:` across the schema                 | `taxonomy.md` `types-graph` block (mermaid) | Done    |
 | The same edges, field by field              | `ref:` across the schema                 | `taxonomy.md` `types-edges` block           | Done    |
 | Where the names came from                   | `.schema/` + the types stood up          | `lineage.md` `types-lineage` block          | Done    |
+| Where a name collides                       | `.schema/` + the types adopted           | `lineage.md` `types-collisions` block       | Done    |
 | What this corpus holds                      | `.schema/` + the types stood up          | Root `README.md` `types-index` block        | Done    |
 | Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block       | Planned |
 | Control coverage report                     | `controls/` + standards' rules           | `controls/_index.md`                        | Planned |

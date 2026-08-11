@@ -368,6 +368,24 @@ public class GeneratorTests
     public void Catalogue_prose_wraps_at_the_corpus_margin()
         => Assert.All(Generator.TypeCatalogue(Tiers, Four()).Split('\n'), l => Assert.True(l.Length <= 120));
 
+    // A link broken after its label's first word still renders, but it reads badly and a formatter meeting
+    // it puts it back — after which the generator writes it out broken again on the next run.
+    [Fact]
+    public void A_link_label_is_never_broken_across_lines()
+    {
+        var t = new TypeSchema
+        {
+            Key = "widgets", Label = "Widget", LabelPlural = "Widgets", Tier = "decided", Page = "widgets.md",
+            Summary = "Short.",
+            Detail = "Padding to push the link past the margin so the wrap has to choose a break near it, and then "
+                     + "some more padding after that, before [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) lands."
+        };
+
+        var catalogue = Generator.TypeCatalogue(Tiers, [t]);
+
+        Assert.Contains("[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119)", catalogue);
+    }
+
     [Fact]
     public void A_word_longer_than_the_margin_is_left_whole_on_its_own_line()
     {
@@ -480,6 +498,56 @@ public class GeneratorTests
     public void A_type_that_declares_no_lineage_is_left_out_of_the_table()
         => Assert.DoesNotContain("Widget", Generator.LineageTable([Ancestor("Widget", "widgets", null)]));
 
+    // -- words a reader arrives already holding --
+
+    private static TypeSchema Colliding(string label, string key, string collision) => new()
+    {
+        Key = key, Label = label, LabelPlural = label + "s", Tier = "normative", Page = $"{key}.md",
+        Summary = "A thing.", Detail = "A longer thing.", GoesHere = "A thing", Collision = collision
+    };
+
+    // Most types collide with nothing, and a heading over a paragraph saying a word means what it says
+    // would be worse than the silence.
+    [Fact]
+    public void Only_a_type_that_collides_with_something_gets_a_heading()
+    {
+        var text = Generator.Collisions(
+            [Colliding("Control", "controls", "Elsewhere it is the safeguard."), Colliding("ADR", "adrs", "")]);
+
+        Assert.Contains("### Control", text);
+        Assert.DoesNotContain("### ADR", text);
+    }
+
+    // A blank line in the folded scalar comes back as a newline, and each paragraph is wrapped on its own.
+    [Fact]
+    public void A_collision_of_several_paragraphs_renders_as_several()
+    {
+        var text = Generator.Collisions([Colliding("Control", "controls", "First para.\nSecond para.")]);
+
+        Assert.Contains("First para.\n\nSecond para.", text);
+    }
+
+    [Fact]
+    public void Collisions_are_sorted_by_type_name()
+    {
+        var order = PositionsOf(Generator.Collisions(
+            [Colliding("Standard", "standards", "An external body publishes one."),
+             Colliding("Control", "controls", "Elsewhere it is the safeguard.")]),
+            "### Control", "### Standard");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    [Fact]
+    public void Collision_prose_wraps_at_the_corpus_margin()
+    {
+        const string para = "A paragraph long enough that the generator has to break it somewhere sensible, which is "
+                            + "the whole point of wrapping prose a person did not lay out by hand.";
+
+        Assert.All(Generator.Collisions([Colliding("Control", "controls", para)]).Split('\n'),
+            l => Assert.True(l.Length <= 120));
+    }
+
     // -- how the types relate --
 
     private static TypeSchema Linked(string label, string key, params (string Field, string[] Refs, string? Back)[] fs)
@@ -569,6 +637,17 @@ public class GeneratorTests
         Assert.DoesNotContain("OLD", result);
         Assert.StartsWith("before\n", result);
         Assert.EndsWith("\nafter", result);
+    }
+
+    // A corpus that adopted few types has blocks with nothing to say — no pair of its types is easily
+    // confused, none of its words collides. Two blank lines between the markers reads as deleted content.
+    [Fact]
+    public void SpliceBlock_closes_an_empty_block_on_the_next_line()
+    {
+        const string text = "<!-- BEGIN GENERATED: x -->\n\nOLD\n\n<!-- END GENERATED: x -->";
+
+        Assert.Equal("<!-- BEGIN GENERATED: x -->\n<!-- END GENERATED: x -->",
+            Generator.SpliceBlock(text, "x", ""));
     }
 
     [Fact]

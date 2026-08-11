@@ -184,6 +184,13 @@ public sealed class TypeSchema
     // which is the difference between it and a corpus's standing against a framework, recorded once in
     // `frameworks.md` and nowhere near here.
     public LineageSpec? Lineage { get; init; }
+
+    // Where this type's name already means something else to a reader arriving from another framework, and
+    // what they will get wrong because of it. Empty for most types: a word only collides where somebody
+    // else got there first, and inventing a collision to fill the key would waste the warning.
+    //
+    // Paragraphs are separated by a blank line in the schema and rendered as paragraphs.
+    public string Collision { get; init; } = "";
     public string Shape { get; init; } = CollectionShape;
     public string IdPrefix { get; init; } = "";
     public string IdStyle { get; init; } = "";
@@ -492,6 +499,7 @@ public sealed class Schema
             Detail = Yaml.Str(root.Get("detail"))?.Trim() ?? "",
             Versus = [.. Yaml.Map(root.Get("versus")).Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))],
             Lineage = priorArt.Length > 0 ? new LineageSpec(priorArt, alignment, divergence) : null,
+            Collision = Yaml.Str(root.Get("collision"))?.Trim() ?? "",
             Shape = Yaml.Str(root.Get("shape")) ?? TypeSchema.CollectionShape,
 
             IdPrefix = Yaml.Str(id.Get("prefix")) ?? "",

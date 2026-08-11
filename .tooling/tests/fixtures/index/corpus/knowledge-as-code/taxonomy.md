@@ -27,9 +27,6 @@ ADR rather than rewritten. A decision local to a single repository belongs in th
 ## Disambiguations
 
 <!-- BEGIN GENERATED: types-versus -->
-
-
-
 <!-- END GENERATED: types-versus -->
 
 ## How the types relate

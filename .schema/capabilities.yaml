@@ -20,6 +20,22 @@ versus:
 lineage:
   prior-art: "None that fits — see [Capability](#capability) below"
 
+collision: >
+  **The weakest row in the set, and the one carrying two collisions at once.**
+
+  [ArchiMate](https://pubs.opengroup.org/architecture/archimate3-doc/ch-Strategy-Layer.html) defines a
+  capability as an *ability an organisation possesses*. Ours is what the organisation *offers a customer* —
+  which in ArchiMate's own vocabulary is a Product, a Business Service, or a Value Stream. The concepts are
+  adjacent but not the same, and ArchiMate's Value Stream is the closer fit.
+
+  [SAFe](https://framework.scaledagile.com/features-and-capabilities) defines a capability as large solution
+  functionality spanning multiple trains within a programme increment — which sits **below** an epic. Ours sits
+  **above** the epic layer. The hierarchy is inverted relative to the framework in which most engineering
+  organisations will have met the word.
+
+  Neither mapping holds. This type is best read as unrelated to both, and the name is a live question rather
+  than a settled one.
+
 id:
   prefix: cap
   style: slug

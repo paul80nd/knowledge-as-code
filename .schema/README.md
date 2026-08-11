@@ -134,6 +134,7 @@ Beyond `fields`, each type file declares:
 | `detail`                   | The paragraph beneath the one-liner, rendered into the taxonomy's own list of types                              |
 | `versus`                   | How this type differs from another that is easily confused with it — see the note below                          |
 | `lineage`                  | The type's prior art, what the framework took from it, and where it parts company                                |
+| `collision`                | Where the type's name already means something else, and what a reader will get wrong                             |
 | `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
 | `filename`                 | Pattern and slug length limit                                                                                    |
 | `sections`                 | Required and optional H2s — the required ones are checked for presence                                           |
@@ -183,9 +184,17 @@ Only `prior-art` is required, and "none" is one of its answers. Some types have 
 worse than admitting none. What was taken and where it diverges are questions such a type cannot answer, so leaving both
 empty is a settled state and renders as an em dash.
 
-Write its links **inline**. The block this renders into cannot see the reference definitions at the foot of the page it
-lands on, and a label whose definition is deleted renders as literal brackets rather than as a failure. A URL is never
-broken across lines whatever the margin, here or anywhere: folding one puts a space in the middle of it.
+**`collision`** is for a type whose name a reader arrives already holding — `control` means the safeguard itself in
+every governance framework, `capability` sits below an epic in SAFe and above one here. Say what the word means
+elsewhere and what the reader will therefore get wrong. Most types collide with nothing and leave it out; inventing a
+collision to fill the key spends a warning a reader would otherwise trust.
+
+Paragraphs are separated by a blank line, and the generator wraps each on its own.
+
+Write the links in `lineage` and `collision` **inline**. The block either renders into cannot see the reference
+definitions at the foot of the page it lands on, and a label whose definition is deleted renders as literal brackets
+rather than as a failure. A URL is never broken across lines whatever the margin, here or anywhere: folding one puts a
+space in the middle of it.
 
 Only the types a corpus has adopted are rendered, so a decision table never offers a route to a type whose page is not
 there to open. A disambiguation needs both of its types by the same rule: a corpus with no controls is not helped by

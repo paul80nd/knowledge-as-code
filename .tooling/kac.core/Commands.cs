@@ -84,7 +84,8 @@ public static class Commands
             ("types-edges", Generator.RelationTable(adopted)));
 
         Splice(Path.Combine(repoRoot, "knowledge-as-code", "lineage.md"),
-            ("types-lineage", Generator.LineageTable(adopted)));
+            ("types-lineage", Generator.LineageTable(adopted)),
+            ("types-collisions", Generator.Collisions(adopted)));
 
         Splice(Path.Combine(repoRoot, "README.md"),
             ("types-index", Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md")));

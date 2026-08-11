@@ -49,45 +49,38 @@ type with no useful ancestor says so: three of them have none, and claiming one 
 
 ## Collisions
 
-Five of these words already mean something else to a reader arriving from another framework. Where the collision is
+Some of these words already mean something else to a reader arriving from another framework. Where the collision is
 severe, the type's own root page repeats the warning — a reader who never opens this page still needs it.
 
-### Control
-
-**The most dangerous word in the taxonomy.** In [NIST SP 800-53][80053], ISO/IEC 27001 Annex A, ISO/IEC 27002 and
-ComplianceForge, a *control* **is the safeguard itself** — the technical, administrative or physical measure that
-reduces risk. Here, a control is the **verification that a rule is being followed**, which those frameworks call an
-assessment procedure, a test, or a metric.
-
-A reader with a governance background will misread this type on sight, and will read a coverage report as claiming
-safeguards exist when it claims only that checks exist. Say which sense is meant whenever the word crosses into a
-compliance conversation.
+<!-- BEGIN GENERATED: types-collisions -->
 
 ### Capability
 
 **The weakest row in the set, and the one carrying two collisions at once.**
 
-[ArchiMate][archimate] defines a capability as an *ability an organisation possesses*. Ours is what the organisation
-*offers a customer* — which in ArchiMate's own vocabulary is a Product, a Business Service, or a Value Stream. The
-concepts are adjacent but not the same, and ArchiMate's Value Stream is the closer fit.
+[ArchiMate](https://pubs.opengroup.org/architecture/archimate3-doc/ch-Strategy-Layer.html) defines a capability as an
+*ability an organisation possesses*. Ours is what the organisation *offers a customer* — which in ArchiMate's own
+vocabulary is a Product, a Business Service, or a Value Stream. The concepts are adjacent but not the same, and
+ArchiMate's Value Stream is the closer fit.
 
-[SAFe][safe] defines a capability as large solution functionality spanning multiple trains within a programme
-increment — which sits **below** an epic. Ours sits **above** the epic layer. The hierarchy is inverted relative to the
-framework in which most engineering organisations will have met the word.
+[SAFe](https://framework.scaledagile.com/features-and-capabilities) defines a capability as large solution functionality
+spanning multiple trains within a programme increment — which sits **below** an epic. Ours sits **above** the epic
+layer. The hierarchy is inverted relative to the framework in which most engineering organisations will have met the
+word.
 
 Neither mapping holds. This type is best read as unrelated to both, and the name is a live question rather than a
 settled one.
 
-### Standard
+### Control
 
-In ordinary engineering conversation a *standard* is something an external body publishes — an ISO, an IEEE, an RFC.
-Here it is an internal rulebook. The collision is unavoidable, since the governance frameworks we take the layering from
-have the same problem, but it is worth saying aloud.
+**The most dangerous word in the taxonomy.** In [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final),
+ISO/IEC 27001 Annex A, ISO/IEC 27002 and ComplianceForge, a *control* **is the safeguard itself** — the technical,
+administrative or physical measure that reduces risk. Here, a control is the **verification that a rule is being
+followed**, which those frameworks call an assessment procedure, a test, or a metric.
 
-The grammar is worth being precise about too. The keyword set comes from **BCP 14**, which is [RFC 2119][rfc2119]
-*and* [RFC 8174][rfc8174] together. RFC 8174 is what establishes that the keywords carry their normative meaning **only
-when written in capitals** — which is the rule the standards type actually depends on. Citing RFC 2119 alone leaves that
-rule unsupported.
+A reader with a governance background will misread this type on sight, and will read a coverage report as claiming
+safeguards exist when it claims only that checks exist. Say which sense is meant whenever the word crosses into a
+compliance conversation.
 
 ### Policy
 
@@ -100,6 +93,19 @@ information security management system will read our policies as binding and be 
 The industry uses *runbook* and *playbook* interchangeably, and Google's SRE material uses the latter. We use *runbook*
 because *playbook* also names an executable artefact in configuration-management tooling, and a word that means both a
 document and a program is a word that will be misread in a repository holding both.
+
+### Standard
+
+In ordinary engineering conversation a *standard* is something an external body publishes — an ISO, an IEEE, an RFC.
+Here it is an internal rulebook. The collision is unavoidable, since the governance frameworks we take the layering from
+have the same problem, but it is worth saying aloud.
+
+The grammar is worth being precise about too. The keyword set comes from **BCP 14**, which is
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) *and* [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174) together.
+RFC 8174 establishes that the keywords carry their normative meaning **only when written in capitals**, and that is the
+rule this type depends on. Citing RFC 2119 alone leaves it unsupported.
+
+<!-- END GENERATED: types-collisions -->
 
 ## First principles
 
@@ -160,11 +166,6 @@ secondary sources rather than from the rule text, so this corpus states its own 
 
 Where a claim here is later found wrong, correct the row. Do not soften it.
 
-[80053]: https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final
-[archimate]: https://pubs.opengroup.org/architecture/archimate3-doc/ch-Strategy-Layer.html
 [diataxis]: https://diataxis.fr/
 [iso24495]: https://www.iso.org/standard/78907.html
-[rfc2119]: https://www.rfc-editor.org/rfc/rfc2119
-[rfc8174]: https://www.rfc-editor.org/rfc/rfc8174
-[safe]: https://framework.scaledagile.com/features-and-capabilities
 [ste]: https://www.asd-ste100.org/

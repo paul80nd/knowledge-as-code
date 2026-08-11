@@ -115,6 +115,26 @@ public static class Generator
     // as something nobody got round to.
     private static string Cell(string text) => text.Length > 0 ? Escape(text) : "—";
 
+    // The words a reader arrives already holding, and what they will take them to mean. Only the types
+    // that collide with something appear: most do not, and a heading over a paragraph explaining that a
+    // word means what it says would be worse than the silence.
+    //
+    // Ordered by name. The section it replaces ran most-dangerous-first, which no declaration carries — and
+    // the entry that claims to be the most dangerous still says so wherever it lands.
+    public static string Collisions(IEnumerable<TypeSchema> types) =>
+        string.Join("\n\n", types
+            .Where(t => t.Collision.Length > 0)
+            .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
+            .Select(t => $"### {t.DisplayName}\n\n{Paragraphs(t.Collision)}"));
+
+    // A folded scalar carrying more than one paragraph: YAML gives back a newline where the schema had a
+    // blank line, and each paragraph is wrapped on its own.
+    private static string Paragraphs(string text) =>
+        string.Join("\n\n", text.Split('\n')
+            .Select(p => p.Trim())
+            .Where(p => p.Length > 0)
+            .Select(Wrap));
+
     // The edges, read off the `ref:` declarations that make them checkable. One row per cross-reference
     // field a type carries, which is one row per thing an author fills in. A reciprocal pair is two rows
     // rather than one, because it is two fields, and the last column names the counterpart that ties them.
@@ -223,7 +243,7 @@ public static class Generator
         var line = new StringBuilder();
         var wrapped = new StringBuilder();
 
-        foreach (var word in text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries))
+        foreach (var word in Unbreakable(text))
         {
             if (line.Length > 0 && line.Length + 1 + word.Length > Margin)
             {
@@ -236,6 +256,38 @@ public static class Generator
         }
 
         return wrapped.Append(line).ToString();
+    }
+
+    // The units a line may be broken between. Words, except that a markdown link is one unit however many
+    // spaces its label holds: `[RFC 2119](…)` broken after `RFC` still renders, but it reads badly in the
+    // source and a formatter meeting it will put it back — and the generator would then write it out
+    // again on the next run. A word longer than the margin is left whole, a URL being the usual case.
+    private static IEnumerable<string> Unbreakable(string text)
+    {
+        var words = text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
+        var link = new StringBuilder();
+
+        foreach (var word in words)
+        {
+            if (link.Length == 0 && !word.StartsWith('[') && !word.StartsWith("**[", StringComparison.Ordinal))
+            {
+                yield return word;
+                continue;
+            }
+
+            if (link.Length > 0) link.Append(' ');
+            link.Append(word);
+
+            // Closed once the target that follows the label has closed too. A bracket in prose that never
+            // reaches one is released at the end, rather than swallowing the rest of the paragraph.
+            if (word.Contains(')', StringComparison.Ordinal))
+            {
+                yield return link.ToString();
+                link.Clear();
+            }
+        }
+
+        if (link.Length > 0) yield return link.ToString();
     }
 
     // The corpus's own index of types, for whoever arrives at the repository root: what each holds, and
@@ -563,7 +615,13 @@ public static class Generator
         if (bi < 0) return text;
         var ei = text.IndexOf(end, bi, StringComparison.Ordinal);
         if (ei < 0) return text;
-        return text[..(bi + begin.Length)] + "\n\n" + inner + "\n\n" + text[ei..];
+
+        // A block with nothing to say closes on the next line. Padding it out to the usual blank line
+        // either side leaves two of them and reads as content someone deleted. Several blocks are
+        // legitimately empty in a corpus that adopted few types: no pair of its types is easily confused,
+        // and none of the words it kept collides with anything.
+        var body = inner.Length == 0 ? "\n" : $"\n\n{inner}\n\n";
+        return text[..(bi + begin.Length)] + body + text[ei..];
     }
 
     // A page with its generated blocks emptied, leaving the markers and everything a person wrote.

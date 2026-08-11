@@ -24,6 +24,12 @@ lineage:
     HCGF policy is security-scoped and externally driven. Ours is inward-facing engineering intent, and states its
     obligations as an addressable clause table rather than as prose
 
+collision: >
+  In ISO/IEC 27001 an information security policy is a mandatory, auditable artefact. Here, a policy is the
+  deliberately **non-binding** layer: it states intent, and the standard beneath it carries the obligation. A
+  reader arriving from an information security management system will read our policies as binding and be wrong
+  about it.
+
 # A four-character mnemonic, upper-case in the id and lower-case in the filename — pol-VURM in
 # vurm-vulnerability-remediation.md. Policies are long-lived and cited from standards, controls and
 # processes, so the id is what a reader meets most often and it should say something. Draw the mnemonic

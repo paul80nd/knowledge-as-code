@@ -18,6 +18,11 @@ lineage:
   divergence: >
     Google specifies no form. We mandate one: terse, imperative, structured as a decision tree
 
+collision: >
+  The industry uses *runbook* and *playbook* interchangeably, and Google's SRE material uses the latter. We use
+  *runbook* because *playbook* also names an executable artefact in configuration-management tooling, and a word
+  that means both a document and a program is a word that will be misread in a repository holding both.
+
 id:
   prefix: rbk
   style: slug
