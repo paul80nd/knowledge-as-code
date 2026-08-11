@@ -155,9 +155,8 @@ paywalled, so the known-error definition behind the FAQ row rests on the publish
 **ISO standards** are paywalled, so 25010's characteristics and 24495-1's principles are taken from the issuing body's
 public descriptions rather than from the standards. **ArchiMate and TOGAF** are licence-gated beyond their public
 specification pages. **ASD-STE100's** licensing terms and issue details are read from the specification's own front
-matter and the maintenance group's published material; the numeric writing rules are corroborated from specialist
-secondary sources rather than from the rule text, which is why this corpus states its own limits rather than quoting
-theirs.
+matter and the maintenance group's published material. The numeric writing rules are corroborated from specialist
+secondary sources rather than from the rule text, so this corpus states its own limits instead of quoting theirs.
 
 Where a claim here is later found wrong, correct the row. Do not soften it.
 

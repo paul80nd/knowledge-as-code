@@ -33,15 +33,16 @@ What follows is what a corpus record asks on top of it.
 
 ## By tier
 
-The floor applies throughout. Each tier adds to it.
+The floor applies throughout. Each tier adds to it. Your document's frontmatter carries its `tier`, so read the row that
+matches it; [taxonomy](taxonomy.md#the-types) groups the corpus's types under the tier each belongs to.
 
-| Tier            | Types                                                                     | Written as                                                                               |
-|-----------------|---------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| **Procedural**  | processes, runbooks                                                       | One action per step, imperative, condition before action. No rationale in a step.        |
-| **Normative**   | policies, standards, controls, nfrs, faqs                                 | One obligation per clause, testable, keyword leading. Rationale lives in Purpose.        |
-| **Descriptive** | services, capabilities, tools, integrations, data, glossary, explanations | Indicative, present tense. State what is. No future tense — a plan is not a description. |
-| **Decided**     | adrs, postmortems                                                         | Prose earns its keep. Constrain structure and length, not vocabulary.                    |
-| **Observed**    | discoveries                                                               | Symptom, cause, why it might matter. Three sentences beat three paragraphs.              |
+| Tier            | Written as                                                                               |
+|-----------------|------------------------------------------------------------------------------------------|
+| **Procedural**  | One action per step, imperative, condition before action. No rationale in a step.        |
+| **Normative**   | One obligation per clause, testable, keyword leading. Rationale lives in Purpose.        |
+| **Descriptive** | Indicative, present tense. State what is. No future tense — a plan is not a description. |
+| **Decided**     | Prose earns its keep. Constrain structure and length, not vocabulary.                    |
+| **Observed**    | Symptom, cause, why it might matter. Three sentences beat three paragraphs.              |
 
 ### Procedural
 
