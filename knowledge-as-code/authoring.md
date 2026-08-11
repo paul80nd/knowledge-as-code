@@ -25,9 +25,15 @@ not. Report the contradiction; do not resolve it by editing records.
 ## Type root pages
 
 A `<type>.md` is a **collection** page. It carries no frontmatter and no `tier`, so the table below never reaches it:
-the tier governs the records inside the folder, not the page describing them. Hold a collection page to
-[style](style.md) alone, and let each section take the shape its content asks for. Scope is descriptive, the numbered
-"Adding a…" steps are procedural, and Conventions sits close to normative without reaching for the keywords.
+the tier governs the records inside the folder, not the page describing them.
+
+Hold a collection page to [style](style.md), and borrow each tier's **shape** where a section calls for it without
+taking on its full rule set. A Scope section reads descriptively. The numbered "Adding a…" steps take the procedural
+shape — one action to a step, condition before action — and may carry a short reason, which a procedural record may not.
+Conventions sit close to normative without reaching for the keywords.
+
+The generated block owns what a field means. The prose owns what an author does about it. Where the two say the same
+thing, the prose is the copy to cut, because nobody updates it and the generator rewrites its own.
 
 ## By tier
 
@@ -111,8 +117,7 @@ The constraint here is structural rather than lexical:
 
 ### Observed
 
-Capture must stay nearly free or it does not happen. A discovery that takes ten minutes to write is a discovery nobody
-writes.
+Capture must stay nearly free or it does not happen.
 
 * **Symptom, cause if known, why it might matter.** Nothing else is required, and `low-ceremony` warns past two hundred
   words — a discovery long enough to need structure has become something else and should be promoted, not padded.
@@ -157,10 +162,10 @@ A marker governs everything up to the next heading at the same or a higher level
 section states what would have to be true for the marker to be removed, and **Planned** is not used without an issue to
 point at.
 
-A declared rule is the one case where prose may name behaviour that does not happen. Write it in the present tense
-about the declaration rather than the behaviour — *`feature-file-orphans` is declared and does not run*, never *CI
-checks the paths*. Prose claiming an unbuilt check as working is a correctness defect, and it is the most common one in
-this corpus. A marker that never comes off is a wish wearing a plan's clothes.
+A declared rule is the one case where prose may name behaviour that does not happen. Write it in the present tense about
+the declaration rather than the behaviour — *`feature-file-orphans` is declared and does not run*, never *CI checks the
+paths*. Prose claiming an unbuilt check as working is a correctness defect, and it is the most common one in this
+corpus. A marker that never comes off is a wish wearing a plan's clothes.
 
 ## Where these rules come from
 

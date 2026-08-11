@@ -7,25 +7,25 @@ Problems we have hit before, with the fix that worked.
 ## What is an FAQ?
 
 One document per problem: the symptom as you would actually encounter it, what causes it, how to fix it, and why it
-happens. Confirmed by a human, so it carries authority.
+happens. A human has confirmed it, so an FAQ carries authority.
 
-Add one when an investigation cost real time. Future you will be grateful, and so will the next session that hits it.
+Add one when an investigation cost real time. You will hit the same problem again, and so will the next session.
 
 ## Why we use them
 
-The same problems resurface, and the cost is paid again by whoever hits them next. An FAQ converts two hours of
-debugging into a thirty-second search — provided it is findable, which is what `symptom-keywords` is for.
+The same problems come back, and the next person to hit one pays the cost again. An FAQ turns two hours of debugging
+into a thirty-second search, provided the words that person searches for are in `symptom-keywords`.
 
-They are also the destination for the promotion path: a [discovery](/discoveries) that turns out to be real, general and
-current becomes an FAQ.
+An FAQ is also where the promotion path ends: a [discovery](/discoveries) that turns out to be real, general and current
+becomes one.
 
 ## Scope
 
-An FAQ is **confirmed**. A human has verified the problem is real, the fix works, and both are still current. That is
-what separates it from a [discovery](/discoveries), which is captured cheaply and might be wrong or already fixed.
+An FAQ is **confirmed**. A human has verified that the problem is real, that the fix works, and that both are still
+current. Nobody reviews a [discovery](/discoveries), which is captured cheaply and might be wrong or already fixed.
 
-**Never write straight to an FAQ from a session.** Capture as a discovery and let promotion do the work — an agent
-cannot confirm its own observations.
+**Never write straight to an FAQ from a session.** An agent cannot confirm its own observations, so capture a discovery
+and let a human confirm it at promotion.
 
 Other boundaries:
 
@@ -33,7 +33,8 @@ Other boundaries:
   fix, not a decision procedure.
 * **[Standard](/standards)** — if the real answer is "people should stop doing the thing that causes this", the fix is a
   rule, and that needs an [ADR](/adrs) first.
-* **One problem per document.** A page of assorted gotchas cannot be found by symptom, which defeats the purpose.
+* **One problem per document.** Someone arriving with a symptom matches the first one on the page and never reads the
+  second.
 
 ## Metadata
 
@@ -69,10 +70,10 @@ Other boundaries:
 1. Copy [`_template.md`](faqs/_template.md) to `<slug>.md`, named for the symptom rather than the cause — that is what
    people search for.
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
-3. Be generous with `symptom-keywords`. Include the literal error text, the service names, and the words someone would
-   type who doesn't yet know what is wrong.
-4. Record `confirmed-by` and `confirmed-on` — a named person and a real date. An FAQ nobody confirmed is a discovery.
-5. Set `review-by`. Fixes go stale when the thing they fix gets rewritten.
+3. Over-fill `symptom-keywords`: the literal error text, the service names, and the words someone types before they know
+   what is wrong.
+4. Record `confirmed-by` and `confirmed-on` — a named person, and the date they confirmed it.
+5. Set `review-by`. A fix goes stale when the thing it fixes gets rewritten.
 
 **Conventions**
 

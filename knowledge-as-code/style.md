@@ -104,13 +104,16 @@ Nobody thought it was tidy. That contrast costs the reader a beat spent discardi
 **State the point plainly first, and add a contrast only where a reader would otherwise get it wrong.** Where the reader
 is in no danger of the wrong reading, an ordinary declarative carries the emphasis: *The id names the deployable.*
 
-**Budget one contrast per reading unit.** A run of paragraphs is one unit. A bullet in a list of independent conventions
-is its own, because a reader scans such a list and stops at the one they need. Hold a seven-bullet section to a single
-contrast and the distinction ends up in the line that gets skipped instead of the line that gets read.
+**Budget one contrast per reading unit.** A run of paragraphs is one unit, and so is a numbered procedure, because a
+reader works through it in order. A bullet in an unordered list of independent items is its own unit, because a reader
+scans such a list and stops at the one they need. Hold a seven-bullet section to a single contrast and the distinction
+ends up in the line that gets skipped instead of the line that gets read.
 
-Three cases sit outside the budget. A section whose work is to draw a boundary earns one contrast for each neighbour it
-separates from. A bold lead earns one, because that is the line a scanner reads. A phrase the corpus has standardised —
-*link rather than restate* names both a rule id and a schema field — is not yours to spend the budget on.
+Three cases sit outside the budget. A bold lead earns one, because that is the line a scanner reads. A phrase the corpus
+has standardised — *link rather than restate* names both a rule id and a schema field — is not yours to spend a budget
+on. A section whose work is to draw a boundary earns one contrast for each neighbour it separates from, and the
+neighbours are the ones a reader genuinely confuses it with. Naming more than three means the section has become a
+taxonomy, and the taxonomy already has a page.
 
 **The same ceiling applies to any device you like.** One replacement applied everywhere becomes the next mannerism. Swap
 every contrast for the same conditional and you have moved the tic, not removed it. It now sits in the paragraph the
@@ -251,30 +254,30 @@ quoted back in an audit. They carry the whole weight of precision, and they shou
 
 ## A worked section
 
-The rules above land on sentences. This is what they look like held together over a page. The subject is a fictional
-incident record; read it for shape.
+The rules above land on sentences. This is what they look like held together over a page. The type is invented and no
+corpus holds it, so read the passage for its shape and leave its sentences here.
 
 > ## Why we use them
 >
-> An incident record is the account of one outage: what customers saw, when we noticed, what we changed, and when it
-> ended. One record per incident, written while people still remember it.
+> A vendor record is the account of one supplier we pay: what we buy, what we send them, and what stops working on the
+> day they stop answering. One record per supplier, held by whoever signs the invoices.
 >
-> Two audiences read these. Someone on call next month wants to know whether this has happened before and what worked.
-> Someone planning next quarter's work wants to know which parts of the estate keep producing outages. Both questions
-> need the same facts, so we keep one account and not two.
+> Two audiences read these. Someone preparing a renewal wants to know what we bought and what leaving would cost.
+> Someone answering an auditor wants to know which suppliers hold borrower data. The purchase ledger answers the first
+> question and not the second, so we keep an account of each supplier here.
 >
 > ## Scope
 >
-> An incident is any unplanned loss of service a customer could notice. A failed deployment nobody outside the team saw
-> is not one; record it as a discovery.
+> A vendor is a third party we pay for a service that reaches our systems, our data or our readers. The window cleaners
+> are a purchase, and the finance system is the right home for them.
 >
-> The record covers the outage. It does not cover the fix. Where the outage produced work, that work is a normal change
-> and goes through the normal route, and the record links to it.
+> The record covers the commercial relationship. It does not cover the code that calls the supplier's API. Where our
+> software makes that call, an integration record covers it and links here.
 
 Two things are happening that no single-sentence rule would catch.
 
 1. **The sentence shapes vary.** A definition, then two parallel sentences about readers, then a conditional. The one
-   contrast in the passage — *not two* — arrives after the reason for it.
+   contrast in the passage — *and not the second* — arrives after the reason for it.
 2. **Neither section closes on an epigram.** The last sentence of each states a fact.
 
 ## By medium
