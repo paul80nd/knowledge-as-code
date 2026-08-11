@@ -87,6 +87,17 @@ public static class Generator
         return string.Join("\n", sections).TrimEnd('\n');
     }
 
+    // One way on to each type's own field reference. Collection types only: a single-document type has no
+    // records, so nothing generates a field table for it and its fields are described on its own page.
+    //
+    // The anchor is the heading the `schema-*` block sits under. That the heading is still called that is
+    // the type page's side of the bargain, and the link check is what holds it.
+    public static string MetadataStrip(IEnumerable<TypeSchema> types) =>
+        Wrap(string.Join(" · ", types
+            .Where(t => !t.IsSingleDocument)
+            .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
+            .Select(t => $"[{t.DisplayName}]({Link(t)}#metadata)")));
+
     // Where each type's name came from. A type with no useful ancestor carries that as its prior art and
     // leaves the other two columns empty, which renders as an em dash: the framework has three types it
     // claims no lineage for, and saying so is the point of the row rather than a gap in it.

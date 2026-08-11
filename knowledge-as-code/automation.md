@@ -95,31 +95,33 @@ Generated content lives inside marker blocks in otherwise hand-written files:
 CI rewrites only what's between the markers and fails the build if a block is stale. This keeps one file per purpose —
 humans keep their prose, the machine keeps the tables current, and nobody has to choose.
 
-| Artefact                                    | Built from                               | Lives in                                    | Status  |
-|---------------------------------------------|------------------------------------------|---------------------------------------------|---------|
-| Type indexes                                | Frontmatter across the folder            | `<type>/_index.md`                          | Done    |
-| Repository & launchpad tables               | `services/`                              | Root `README.md`                            | Planned |
-| Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block                | Done    |
-| Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block      | Done    |
-| Where a document goes                       | `.schema/` + the types stood up          | `taxonomy.md` `types-placement` block       | Done    |
-| The types at length, by tier                | `.schema/` + `_tiers.yaml`               | `taxonomy.md` `types-detail` block          | Done    |
-| The calls that are close                    | `.schema/` + the types stood up          | `taxonomy.md` `types-versus` block          | Done    |
-| How the types relate                        | `ref:` across the schema                 | `taxonomy.md` `types-graph` block (mermaid) | Done    |
-| The same edges, field by field              | `ref:` across the schema                 | `taxonomy.md` `types-edges` block           | Done    |
-| Where the names came from                   | `.schema/` + the types stood up          | `lineage.md` `types-lineage` block          | Done    |
-| What this corpus holds                      | `.schema/` + the types stood up          | Root `README.md` `types-index` block        | Done    |
-| Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block       | Planned |
-| Control coverage report                     | `controls/` + standards' rules           | `controls/_index.md`                        | Planned |
-| Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/_index.md`                        | Planned |
-| Staleness report                            | `review-by`, `last-rehearsed`, `expires` | `_reports/staleness.md`                     | Planned |
-| Orphan report                               | The link graph                           | `_reports/orphans.md`                       | Planned |
-| Service dependency diagram                  | `depends-on`                             | `services/_index.md` (mermaid)              | Planned |
-| `.order` files                              | Folder contents + type ordering          | Each folder                                 | Planned |
-| `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                                   | Planned |
+| Artefact                                      | Built from                                 | Lives in                                      | Status    |
+|-----------------------------------------------|--------------------------------------------|-----------------------------------------------|-----------|
+| Type indexes                                  | Frontmatter across the folder              | `<type>/_index.md`                            | Done      |
+| Repository & launchpad tables                 | `services/`                                | Root `README.md`                              | Planned   |
+| Per-type frontmatter reference                | `.schema/`                                 | `<type>.md` `schema-*` block                  | Done      |
+| Universal frontmatter reference               | `.schema/_universal.yaml`                  | `metadata.md` `schema-universal` block        | Done      |
+| The way on to each type's fields              | `.schema/` + the types stood up            | `metadata.md` `types-metadata` block          | Done      |
+| Where a document goes                         | `.schema/` + the types stood up            | `taxonomy.md` `types-placement` block         | Done      |
+| The types at length, by tier                  | `.schema/` + `_tiers.yaml`                 | `taxonomy.md` `types-detail` block            | Done      |
+| The calls that are close                      | `.schema/` + the types stood up            | `taxonomy.md` `types-versus` block            | Done      |
+| How the types relate                          | `ref:` across the schema                   | `taxonomy.md` `types-graph` block (mermaid)   | Done      |
+| The same edges, field by field                | `ref:` across the schema                   | `taxonomy.md` `types-edges` block             | Done      |
+| Where the names came from                     | `.schema/` + the types stood up            | `lineage.md` `types-lineage` block            | Done      |
+| What this corpus holds                        | `.schema/` + the types stood up            | Root `README.md` `types-index` block          | Done      |
+| Rules digest                                  | Active standards                           | Root `CLAUDE.md` `rules-digest` block         | Planned   |
+| Control coverage report                       | `controls/` + standards' rules             | `controls/_index.md`                          | Planned   |
+| Framework alignment matrix                    | Policy clause tables' `Alignment`          | `policies/_index.md`                          | Planned   |
+| Staleness report                              | `review-by`, `last-rehearsed`, `expires`   | `_reports/staleness.md`                       | Planned   |
+| Orphan report                                 | The link graph                             | `_reports/orphans.md`                         | Planned   |
+| Service dependency diagram                    | `depends-on`                               | `services/_index.md` (mermaid)                | Planned   |
+| `.order` files                                | Folder contents + type ordering            | Each folder                                   | Planned   |
+| `.index.json` — machine-readable corpus map   | Frontmatter across all types               | Repo root                                     | Planned   |
 
-Seven of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table,
-the types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table and the
-index at the repository root, all cover the types **this** corpus has stood up, page and folder both present. A corpus
+Eight of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table,
+the types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table, the strip
+on `metadata.md` and the index at the repository root, all cover the types **this** corpus has stood up, page and folder
+both present. A corpus
 that adopted five of the framework's types is offered five, and every row opens. That is also why they are safe to
 share: the mechanism check compares the authored half of a page and ignores what lies between the markers, so the prose
 stays byte-identical in every corpus while what sits beneath it differs.

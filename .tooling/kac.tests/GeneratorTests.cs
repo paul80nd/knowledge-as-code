@@ -417,6 +417,35 @@ public class GeneratorTests
         Assert.DoesNotContain("Never rendered", text);
     }
 
+    // -- the way on to each type's own fields --
+
+    [Fact]
+    public void The_metadata_strip_links_each_type_at_the_heading_its_field_table_sits_under()
+    {
+        var strip = Generator.MetadataStrip(Four());
+
+        Assert.Contains("[ADR](/adrs#metadata)", strip);
+        Assert.Contains(" · ", strip);
+    }
+
+    // A single-document type has no records, so nothing generates a field table for it to be linked to.
+    [Fact]
+    public void A_single_document_type_is_left_out_of_the_metadata_strip()
+    {
+        var glossary = new TypeSchema
+        {
+            Key = "glossary", Label = "Glossary", LabelPlural = "Glossary", Tier = "descriptive",
+            Page = "glossary.md", Shape = TypeSchema.SingleDocumentShape,
+            Summary = "Terms.", Detail = "The terms.", GoesHere = "A term"
+        };
+
+        Assert.DoesNotContain("Glossary", Generator.MetadataStrip([.. Four(), glossary]));
+    }
+
+    [Fact]
+    public void The_metadata_strip_wraps_at_the_corpus_margin()
+        => Assert.All(Generator.MetadataStrip(Four()).Split('\n'), l => Assert.True(l.Length <= 120));
+
     // -- where the names came from --
 
     private static TypeSchema Ancestor(string label, string key, LineageSpec? lineage) => new()

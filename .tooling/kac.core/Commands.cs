@@ -66,22 +66,15 @@ public static class Commands
             targets.Add((pagePath, text));
         }
 
-        // metadata.md documents the universal fields for the whole taxonomy. It is not a type page —
-        // it has no records and no folder — but it is derived from the same schema, so it is generated
-        // on the same pass rather than hand-maintained beside it.
-        var metadataPath = Path.Combine(repoRoot, "knowledge-as-code", "metadata.md");
-        if (File.Exists(metadataPath))
-        {
-            var text = Generator.SpliceBlock(Files.ReadLf(metadataPath), "schema-universal",
-                Generator.UniversalSchemaTable(schema));
-            targets.Add((metadataPath, text));
-        }
-
-        // The two pages that describe the taxonomy to a reader rather than to the tool: the taxonomy
-        // itself, and the corpus's front door. Both list types, and the list is the half that was wrong
-        // in every corpus that adopted some of them — so both are generated from what this corpus has
-        // stood up, and neither can name a type whose page is not there to open.
+        // The pages that describe the taxonomy to a reader rather than to the tool. Each lists types, and
+        // the list is the half that was wrong in every corpus that adopted some of them — so each is
+        // generated from what this corpus has stood up, and none can name a type whose page is not there
+        // to open. `metadata.md` also carries the universal field table, which is the schema's alone.
         var stoodUp = Corpus.StoodUp(schema, repoRoot);
+
+        Splice(Path.Combine(repoRoot, "knowledge-as-code", "metadata.md"),
+            ("schema-universal", Generator.UniversalSchemaTable(schema)),
+            ("types-metadata", Generator.MetadataStrip(stoodUp)));
 
         Splice(Path.Combine(repoRoot, "knowledge-as-code", "taxonomy.md"),
             ("types-placement", Generator.PlacementTable(stoodUp)),
