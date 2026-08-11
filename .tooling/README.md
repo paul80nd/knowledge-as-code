@@ -301,6 +301,10 @@ bare `mechanism --check`. What it reports:
 - **generated**, **local** and **ignored** files are skipped — each corpus owns its own.
 - **accepted divergences** listed in `.mechanism.lock` are honoured rather than flagged as drift, and any that have
   quietly become identical to the reference again are named as `RESOLVED` so the stale entry can be removed.
+- **types the corpus declined** are skipped. `.schema/<type>.yaml` for a type absent from `types:` in `.mechanism.lock`
+  is neither missing nor drifted — the corpus chose not to adopt it. This is the one part of the synced layer a corpus
+  may legitimately hold less of than upstream, and the lock is what makes that a decision rather than a deletion nobody
+  recorded. A lock declaring no `types:` declines nothing.
 
 Comparison is LF-normalised, so line-ending differences never read as drift, and it reads the **authored half** of a
 file: everything between `BEGIN GENERATED` and `END GENERATED` is emptied before the two copies are compared. A shared

@@ -39,8 +39,8 @@ ADR rather than rewritten. A decision local to a single repository belongs in th
 ```mermaid
 graph LR;
   t_adrs[ADR];
-  t_adrs -->|related| t_adrs;
-  t_adrs -->|superseded-by| t_adrs;
+  t_adrs -- related --> t_adrs;
+  t_adrs -- superseded-by --> t_adrs;
 ```
 
 <!-- END GENERATED: types-graph -->

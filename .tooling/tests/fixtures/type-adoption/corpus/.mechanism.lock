@@ -1,0 +1,11 @@
+version: 1
+corpus: test-adoption
+role: consumer
+
+types:
+  - runbooks
+  - widgets
+
+upstream:
+  url:
+accepted-divergences: []

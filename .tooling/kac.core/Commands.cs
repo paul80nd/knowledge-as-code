@@ -70,24 +70,24 @@ public static class Commands
         // the list is the half that was wrong in every corpus that adopted some of them — so each is
         // generated from what this corpus has stood up, and none can name a type whose page is not there
         // to open. `metadata.md` also carries the universal field table, which is the schema's alone.
-        var stoodUp = Corpus.StoodUp(schema, repoRoot);
+        var adopted = Corpus.Adopted(schema, repoRoot, corpus.Lock);
 
         Splice(Path.Combine(repoRoot, "knowledge-as-code", "metadata.md"),
             ("schema-universal", Generator.UniversalSchemaTable(schema)),
-            ("types-metadata", Generator.MetadataStrip(stoodUp)));
+            ("types-metadata", Generator.MetadataStrip(adopted)));
 
         Splice(Path.Combine(repoRoot, "knowledge-as-code", "taxonomy.md"),
-            ("types-placement", Generator.PlacementTable(stoodUp)),
-            ("types-detail", Generator.TypeCatalogue(schema.Tiers, stoodUp)),
-            ("types-versus", Generator.Disambiguations(stoodUp)),
-            ("types-graph", Generator.RelationDiagram(stoodUp)),
-            ("types-edges", Generator.RelationTable(stoodUp)));
+            ("types-placement", Generator.PlacementTable(adopted)),
+            ("types-detail", Generator.TypeCatalogue(schema.Tiers, adopted)),
+            ("types-versus", Generator.Disambiguations(adopted)),
+            ("types-graph", Generator.RelationDiagram(adopted)),
+            ("types-edges", Generator.RelationTable(adopted)));
 
         Splice(Path.Combine(repoRoot, "knowledge-as-code", "lineage.md"),
-            ("types-lineage", Generator.LineageTable(stoodUp)));
+            ("types-lineage", Generator.LineageTable(adopted)));
 
         Splice(Path.Combine(repoRoot, "README.md"),
-            ("types-index", Generator.TypesIndex(stoodUp, "knowledge-as-code/taxonomy.md")));
+            ("types-index", Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md")));
 
         // Every block a page carries, spliced into one text and offered as one target — a page is written
         // once, so two blocks in the same file cannot each overwrite the other's work.

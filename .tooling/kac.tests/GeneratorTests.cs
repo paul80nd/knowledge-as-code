@@ -538,6 +538,10 @@ public class GeneratorTests
         Assert.DoesNotContain("flowchart", diagram);
         Assert.DoesNotContain("subgraph", diagram);
         Assert.DoesNotContain("--->", diagram);
+
+        // No pipes: a markdown formatter scanning for tables reformats what it finds between them, and a
+        // fenced block is no protection.
+        Assert.DoesNotContain("|", diagram);
     }
 
     // One relationship, one arrow — where the table has two rows, because an author has two fields.
@@ -546,7 +550,7 @@ public class GeneratorTests
     {
         var diagram = Generator.RelationDiagram(Graph());
 
-        Assert.Contains("t_controls -->|verifies| t_standards;", diagram);
+        Assert.Contains("t_controls -- verifies --> t_standards;", diagram);
         Assert.DoesNotContain("verified-by", diagram);
     }
 

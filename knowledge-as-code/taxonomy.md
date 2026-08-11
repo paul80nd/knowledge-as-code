@@ -148,8 +148,7 @@ whole reason for declaring them rather than writing the link in prose.
 <!-- BEGIN GENERATED: types-graph -->
 
 ```mermaid
-graph LR
-;
+graph LR;
   t_adrs[ADR];
   t_capabilities[Capability];
   t_controls[Control];
@@ -167,41 +166,41 @@ graph LR
   t_services[Service];
   t_standards[Standard];
   t_tools[Tool];
-  t_adrs -->|related| t_adrs;
-  t_adrs -->|superseded - by| t_adrs;
-  t_capabilities -->|implemented - by| t_services;
-  t_capabilities -->|nfrs| t_nfrs;
-  t_controls -->|applies - to| t_services;
-  t_controls -->|verifies| t_standards;
-  t_data -->|flows - to| t_services;
-  t_data -->|flows - to| t_integrations;
-  t_data -->|owned - by| t_services;
-  t_discoveries -->|applies - to| t_services;
-  t_discoveries -->|promoted - to| t_faqs;
-  t_discoveries -->|promoted - to| t_standards;
-  t_explanations -->|explains| t_services;
-  t_explanations -->|explains| t_capabilities;
-  t_faqs -->|applies - to| t_services;
-  t_integrations -->|used - by| t_services;
-  t_nfrs -->|applies - to| t_services;
-  t_nfrs -->|applies - to| t_capabilities;
-  t_nfrs -->|constrained - by| t_integrations;
-  t_postmortems -->|affected| t_services;
-  t_postmortems -->|affected| t_capabilities;
-  t_postmortems -->|prompted| t_adrs;
-  t_postmortems -->|prompted| t_runbooks;
-  t_postmortems -->|prompted| t_nfrs;
-  t_postmortems -->|prompted| t_faqs;
-  t_postmortems -->|prompted| t_standards;
-  t_processes -->|applies - to| t_services;
-  t_runbooks -->|applies - to| t_services;
-  t_services -->|data - stores| t_data;
-  t_services -->|depends - on| t_services;
-  t_standards -->|applies - to| t_services;
-  t_standards -->|derived - from| t_adrs;
-  t_standards -->|implements| t_policies;
-  t_tools -->|decided - in| t_adrs;
-  t_tools -->|replaces| t_tools;
+  t_adrs -- related --> t_adrs;
+  t_adrs -- superseded-by --> t_adrs;
+  t_capabilities -- implemented-by --> t_services;
+  t_capabilities -- nfrs --> t_nfrs;
+  t_controls -- applies-to --> t_services;
+  t_controls -- verifies --> t_standards;
+  t_data -- flows-to --> t_services;
+  t_data -- flows-to --> t_integrations;
+  t_data -- owned-by --> t_services;
+  t_discoveries -- applies-to --> t_services;
+  t_discoveries -- promoted-to --> t_faqs;
+  t_discoveries -- promoted-to --> t_standards;
+  t_explanations -- explains --> t_services;
+  t_explanations -- explains --> t_capabilities;
+  t_faqs -- applies-to --> t_services;
+  t_integrations -- used-by --> t_services;
+  t_nfrs -- applies-to --> t_services;
+  t_nfrs -- applies-to --> t_capabilities;
+  t_nfrs -- constrained-by --> t_integrations;
+  t_postmortems -- affected --> t_services;
+  t_postmortems -- affected --> t_capabilities;
+  t_postmortems -- prompted --> t_adrs;
+  t_postmortems -- prompted --> t_runbooks;
+  t_postmortems -- prompted --> t_nfrs;
+  t_postmortems -- prompted --> t_faqs;
+  t_postmortems -- prompted --> t_standards;
+  t_processes -- applies-to --> t_services;
+  t_runbooks -- applies-to --> t_services;
+  t_services -- data-stores --> t_data;
+  t_services -- depends-on --> t_services;
+  t_standards -- applies-to --> t_services;
+  t_standards -- derived-from --> t_adrs;
+  t_standards -- implements --> t_policies;
+  t_tools -- decided-in --> t_adrs;
+  t_tools -- replaces --> t_tools;
 ```
 
 <!-- END GENERATED: types-graph -->

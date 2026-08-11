@@ -29,6 +29,8 @@ public static class MechanismCheck
             var inLocal = localFiles.Contains(rel);
             var inRef = refFiles.Contains(rel);
 
+            if (Declined(rel, lockFile)) continue;
+
             switch (layer)
             {
                 case "synced":
@@ -92,6 +94,27 @@ public static class MechanismCheck
             foreach (var p in paths) Console.Error.WriteLine($"  {p}");
             return paths.Count;
         }
+    }
+
+    // Whether this path is a type the corpus declined, and so is neither missing nor drifted.
+    //
+    // The schema is otherwise byte-identical, which makes this the one place a corpus may hold less of it
+    // than upstream does — and `types:` in the lock is what turns that from a deletion nobody recorded
+    // into a decision the corpus can be held to. A corpus that declares no types declines nothing: it is
+    // still described by its folders, and every schema file it has is one it is expected to have.
+    public static bool Declined(string rel, MechanismLock lockFile) =>
+        TypeFile(rel) is { } type && !lockFile.Adopted(type);
+
+    // The type a schema file declares, or null where the path is not one. `.schema/` holds a file per type
+    // beside the underscore-prefixed files that belong to no type, and the type's name is the file's —
+    // which is the same identity `ref:` and `versus:` use, and the same one `types:` names.
+    private static string? TypeFile(string rel)
+    {
+        if (!rel.StartsWith(".schema/", StringComparison.Ordinal)) return null;
+        if (!rel.EndsWith(".yaml", StringComparison.Ordinal)) return null;
+
+        var name = rel[".schema/".Length..^".yaml".Length];
+        return name.Length > 0 && name[0] != '_' && !name.Contains('/') ? name : null;
     }
 
     // Whether two copies of a file say the same thing. LF-normalised, so a working copy checked out with

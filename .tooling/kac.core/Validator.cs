@@ -85,7 +85,7 @@ public static class Validator
         // asking about one document is not asking about the shape of the corpus, and answering
         // anyway would bury the reply.
         if (corpus.Paths.Count == 0)
-            CheckTypeSetup(schema, repoRoot, corpus.Files, findings);
+            CheckTypeSetup(schema, repoRoot, corpus.Files, corpus.Lock, findings);
 
         return findings;
     }
@@ -302,8 +302,10 @@ public static class Validator
     // is not part of the corpus, so the answer is the same in a fresh clone as on the machine that
     // happened to create it.
     public static void CheckTypeSetup(Schema schema, string repoRoot, IEnumerable<string> corpusFiles,
-        List<Finding> f)
+        MechanismLock lockFile, List<Finding> f)
     {
+        CheckAdoption(schema, repoRoot, lockFile, f);
+
         var folders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var rel in corpusFiles)
         {
@@ -340,6 +342,43 @@ public static class Validator
             if (missing.Count > 0)
                 f.Add(new Finding(at, null, Sev.Error, "type-setup",
                     $"type '{key}' has a '{folder}/' folder but is not fully set up — add {string.Join(", ", missing)}."));
+        }
+    }
+
+    // What the corpus says it has adopted, held against the schema it took and the folders it built.
+    //
+    // A corpus that declares no `types:` is not asked any of this: adoption is read off its folders
+    // instead, so every question below answers itself. Declaring is what turns "these are the folders that
+    // happen to be here" into "these are the types we chose", and only the second can be wrong.
+    private static void CheckAdoption(Schema schema, string repoRoot, MechanismLock lockFile, List<Finding> f)
+    {
+        if (lockFile.Types is not { } declared) return;
+
+        const string at = ".mechanism.lock";
+
+        foreach (var name in declared.Where(n => !schema.ByFolder.ContainsKey(n)))
+            f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                $"'{name}' is adopted here and no schema covers it — either '.schema/{name}.yaml' has not been synced "
+                + "from upstream, or the name is wrong."));
+
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        {
+            var stoodUp = Corpus.StoodUp(t, repoRoot);
+            var adopted = declared.Contains(key, StringComparer.Ordinal);
+
+            // Declared and not built is the state a sync exists to resolve, so it is reported as work
+            // outstanding rather than as a contradiction.
+            if (adopted && !stoodUp)
+                f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                    $"type '{key}' is adopted here and is not stood up — add {t.Page} and its folder, or drop it from "
+                    + "'types:' if it was not wanted."));
+
+            // Built and not declared is the other way round, and is how a corpus drifts back to inferring:
+            // the pages would leave the type out while the corpus plainly holds it.
+            if (!adopted && stoodUp)
+                f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                    $"type '{key}' is stood up here and is not in 'types:' — every generated list leaves it out while "
+                    + "the corpus holds it. Adopt it, or delete what was built."));
         }
     }
 

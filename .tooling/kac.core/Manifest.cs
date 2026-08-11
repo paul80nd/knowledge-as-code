@@ -51,6 +51,20 @@ public class MechanismLock
     public string? UpstreamUrl;
     public readonly List<AcceptedDivergence> Accepted = [];
 
+    // The types this corpus has adopted, named as the schema names them. This is a statement of intent
+    // rather than a description: the corpus says which of the framework's types it wants, and everything
+    // else follows from that — what is generated, what a sync brings down, and what `validate` holds the
+    // corpus to having stood up.
+    //
+    // Null where the lock says nothing, which is not the same as an empty list. A corpus that has not
+    // declared yet is read off its own folders instead, so adopting the key is a change a corpus makes
+    // when it is ready rather than one the tool forces on the version that arrives without it.
+    public List<string>? Types;
+
+    // Whether a type is this corpus's. An undeclared corpus answers yes to everything and leaves the
+    // question to the filesystem; the callers that ask are the ones that already know what is on disk.
+    public bool Adopted(string type) => Types is null || Types.Contains(type, StringComparer.Ordinal);
+
     public static MechanismLock Load(string repoRoot)
     {
         var path = Path.Combine(repoRoot, ".mechanism.lock");
@@ -61,6 +75,9 @@ public class MechanismLock
         lockFile.Role = Yaml.Str(Yaml.Get(root, "role")) ?? "";
         var url = Yaml.Str(Yaml.Get(Yaml.Get(root, "upstream"), "url"));
         lockFile.UpstreamUrl = string.IsNullOrWhiteSpace(url) ? null : url;
+
+        if (Yaml.Get(root, "types") is YamlSequenceNode types)
+            lockFile.Types = [.. types.Children.Select(Yaml.Str).OfType<string>()];
 
         if (Yaml.Get(root, "accepted-divergences") is YamlSequenceNode seq)
             foreach (var item in seq.Children)

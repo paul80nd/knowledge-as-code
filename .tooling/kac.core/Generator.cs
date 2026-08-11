@@ -158,6 +158,11 @@ public static class Generator
     // and fails silently where it is exceeded: `graph`, never `flowchart`; `-->`, never a longer arrow; and
     // no subgraphs, because ADO does not support links crossing one. GitHub renders this subset too, so the
     // fenced form is used rather than ADO's `:::` container, which GitHub shows as literal text.
+    //
+    // Edges are labelled `-- text -->` rather than `-->|text|`. The two are the same diagram, but a
+    // markdown formatter reading a file for tables finds pipes in the second and reformats what it takes
+    // for cells — `superseded-by` came back as `superseded - by`, inside a fenced block it should never
+    // have entered. `index --check` catches it, which is the guard working; not provoking it is better.
     public static string RelationDiagram(IEnumerable<TypeSchema> types)
     {
         var stoodUp = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
@@ -176,7 +181,7 @@ public static class Generator
                 : $"{to.Key}|{from.Key}";
             if (field.Reciprocal is not null && !drawn.Add(pair)) continue;
 
-            diagram.Append($"  {Node(from.Key)} -->|{name}| {Node(to.Key)};\n");
+            diagram.Append($"  {Node(from.Key)} -- {name} --> {Node(to.Key)};\n");
         }
 
         return diagram.Append("```").ToString();

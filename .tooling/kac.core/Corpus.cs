@@ -12,6 +12,11 @@ public sealed class LoadedCorpus
     public required string RepoRoot;
     public required Schema Schema;
 
+    // What this corpus records about itself: which types it has adopted, and where it stands against the
+    // framework it took. Carried here because adoption decides what is generated and what the corpus is
+    // held to having built, so every entry point needs the same answer.
+    public required MechanismLock Lock;
+
     // Every file, before exclusion — what CheckTypeSetup asks about which folders exist.
     public required List<string> Files;
 
@@ -74,6 +79,7 @@ public static class Corpus
         {
             RepoRoot = repoRoot,
             Schema = schema,
+            Lock = MechanismLock.Load(repoRoot),
             Files = files,
             Docs = docs,
             Templates = DiscoverTemplates(repoRoot, schema, paths),
@@ -82,22 +88,40 @@ public static class Corpus
         };
     }
 
-    // The types this corpus actually holds, in schema order. The schema declares every type the tool
-    // manages; a corpus adopts as many of them as it has use for, and this is the difference between the
-    // two. Everything generated about the taxonomy reads it, so a corpus's own pages describe the corpus
-    // rather than the framework's full range.
+    // The types this corpus holds, in schema order. The schema declares every type the tool manages; a
+    // corpus adopts as many of them as it has use for, and this is the difference between the two.
+    // Everything generated about the taxonomy reads it, so a corpus's own pages describe the corpus rather
+    // than the framework's full range.
     //
-    // Stood up means both halves are there — the page and the folder of records — which is the same bar
-    // CheckTypeSetup holds a type to, because a type is set up as both or as neither. A half-built type
-    // is left out here and reported there: generating a row for it would answer a defect with a link that
-    // resolves to one of the two files that exist.
-    public static List<TypeSchema> StoodUp(Schema schema, string repoRoot) =>
-    [
-        .. schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value)
-            .Where(t => !string.IsNullOrEmpty(t.Page)
-                        && File.Exists(Path.Combine(repoRoot, t.Page))
-                        && (t.IsSingleDocument || Directory.Exists(Path.Combine(repoRoot, t.Folder))))
-    ];
+    // Two answers to the same question, and which one is given is the point. Where `.mechanism.lock`
+    // declares `types:`, that is the answer: adoption is a decision the corpus records, and the pages
+    // follow the decision. Where it does not, the answer is read off the filesystem — a type is adopted if
+    // both halves are there, the page and the folder, which is the bar CheckTypeSetup holds a type to
+    // because a type is stood up as both or as neither.
+    //
+    // The inferred answer is the weaker one: it cannot tell a type nobody wanted from a type somebody has
+    // not finished adding, which is exactly what `types:` exists to say. It is the reading a corpus gets
+    // until it declares, so that taking a newer framework never requires editing the lock in the same
+    // breath.
+    public static List<TypeSchema> Adopted(Schema schema, string repoRoot, MechanismLock lockFile)
+    {
+        var declared = lockFile.Types;
+
+        return
+        [
+            .. schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value)
+                .Where(t => declared is not null
+                    ? declared.Contains(t.Key, StringComparer.Ordinal)
+                    : StoodUp(t, repoRoot))
+        ];
+    }
+
+    // Whether both halves of a type are on disk. A half-built type is not adopted: generating a row for it
+    // would answer a defect with a link resolving to whichever of the two files exists.
+    public static bool StoodUp(TypeSchema t, string repoRoot) =>
+        !string.IsNullOrEmpty(t.Page)
+        && File.Exists(Path.Combine(repoRoot, t.Page))
+        && (t.IsSingleDocument || Directory.Exists(Path.Combine(repoRoot, t.Folder)));
 
     // The template of every collection type that has one. Asked of the filesystem rather than of the
     // file listing, as type-setup asks it: the question is whether the file a contributor would copy is
