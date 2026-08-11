@@ -1,9 +1,12 @@
 type: policy
 label: Policy
+label-plural: Policies
 folder: policies
 page: policies.md
 tier: normative
 lifecycle: living
+summary: "A high-level engineering commitment: the what and the why, largely stack-agnostic and changing rarely."
+goes-here: A commitment about how we engineer, at principle level
 
 # A four-character mnemonic, upper-case in the id and lower-case in the filename — pol-VURM in
 # vurm-vulnerability-remediation.md. Policies are long-lived and cited from standards, controls and

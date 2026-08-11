@@ -1,9 +1,12 @@
 type: glossary
 label: Glossary
+label-plural: Glossary
 shape: single-document
 page: glossary.md
 tier: descriptive
 lifecycle: living
+summary: The ubiquitous language — terms whose meaning is specific to us, or which are easily confused.
+goes-here: A term whose meaning isn't obvious, or that we use in a specific way
 
 notes: >
   The only type that is one document rather than a collection, which is what `shape` says. A

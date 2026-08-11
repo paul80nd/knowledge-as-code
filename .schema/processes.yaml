@@ -1,9 +1,12 @@
 type: process
 label: Process
+label-plural: Processes
 folder: processes
 page: processes.md
 tier: procedural
 lifecycle: living
+summary: A planned procedure followed deliberately — releasing, onboarding, provisioning, rotating a secret.
+goes-here: A step-by-step for a planned task
 
 id:
   prefix: prc

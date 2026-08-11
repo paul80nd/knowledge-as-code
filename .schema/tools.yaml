@@ -1,9 +1,12 @@
 type: tool
 label: Tool
+label-plural: Tools
 folder: tools
 page: tools.md
 tier: descriptive
 lifecycle: living
+summary: The approved-software register — what is chosen, rejected or deprecated, and the version ranges we stand behind.
+goes-here: A tool or package we've approved, rejected, or are trialling
 
 id:
   prefix: tol

@@ -116,8 +116,9 @@ Beyond `fields`, each type file declares:
 |----------------------------|------------------------------------------------------------------------------------------------------------------|
 | `type` / `folder` / `page` | Identity, and where the type lives                                                                               |
 | `shape`                    | `collection` (the default) or `single-document` — see the note below                                             |
-| `label`                    | The singular display name — "Policy", "ADR" — used to head the generated index                                   |
+| `label` / `label-plural`   | The display names — "Policy" heads the generated index, "Policies" names the collection in a link                |
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
+| `summary` / `goes-here`    | What the type is, and what a contributor has in hand when it is the answer — see the note below                  |
 | `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
 | `filename`                 | Pattern and slug length limit                                                                                    |
 | `sections`                 | Required and optional H2s — the required ones are checked for presence                                           |
@@ -132,6 +133,26 @@ its `folder:`; a single-document type declares none, because it has none, and no
 It is declared rather than inferred. An absent `folder:` and a deliberate `folder: null` are the same string once
 parsed, so a shape read off the folder cannot tell a single-document type from a collection whose folder key was lost.
 It defaults to `collection`, so only the type that is not one has to say so.
+
+**`summary` and `goes-here`.** The two lines a type says about itself, and the reason a corpus's pages can describe the
+corpus rather than the framework's full range. `summary` is what the type holds — "the rulebook, imperative, RFC 2119"
+— and heads the type's row in the repository's own index. `goes-here` is the same type from the other side, phrased as
+what the contributor is holding — "a rule people must follow when building" — and is the row in the taxonomy's decision
+table. Both are required, both are rendered as table cells, and both are held to the same length limit as a rule's
+`description`. The fuller account of a type, with its examples and its edges, stays on `<type>.md`.
+
+Only the types a corpus has **stood up** — page and folder both present — are rendered, which is what stops a decision
+table offering a route to a type whose page is not there to open.
+
+**`label-plural` is required where `label` is not**, because only one of the two can be derived. A missing `label`
+falls back to the type name capitalised; nothing turns `nfr` into "NFRs" or `glossary` into "Glossary", and appending an
+`s` is right for some types and wrong for the rest. The plural is what a generated line uses when it points at the
+type's page rather than at one of its records — "it goes in **Policies**".
+
+**`tier`** is a closed set: `decided`, `normative`, `descriptive`, `procedural`, `observed`. It is what every validation
+rule, review expectation and language rule keys off, and it is written into the frontmatter of every record of the type,
+so a sixth would be a word the corpus carries and nothing means anything by. A type declaring one fails
+`schema-dispatch`.
 
 **`index`.** `sort:` is one column or several — `sort: [severity, id]` sorts on the first and breaks ties with the
 next — and a type declaring none is sorted by `id`, the one column every document carries. `order:` is `ascending`
@@ -300,18 +321,21 @@ schema is held against what the tool can act on, and each finding names the file
 | `values:` on any field that is not an `enum`                                    | `schema-dispatch`    |
 | `min-items:` on any field that is not a `list`                                  | `schema-dispatch`    |
 | An `index.order:` that is neither `ascending` nor `descending`                  | `schema-dispatch`    |
+| A `tier:` outside the five the generated lists are grouped by                   | `schema-dispatch`    |
 | An `id.style` or a `shape:` with no code behind the value                       | `schema-dispatch`    |
 | A `collection` with no `folder:`, or a `single-document` type declaring one     | `schema-shape`       |
 | A `mirrors-section:` at a section the type's `sections:` block does not declare | `schema-shape`       |
+| A missing `label-plural:`, `summary:` or `goes-here:`, or one too long for a cell | `schema-shape`     |
 
 **The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
 style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is
 therefore read from the code that dispatches it, so adding a name without a branch beneath is the mistake this pass
 exists to prevent.
 
-The two `schema-shape` rows ask something else. There the tool acts on whatever the value says — any section is
-reconciled, any folder is read — and what makes it sound is a second declaration in the same file: the `folder:` beside
-a `shape:`, the `sections:` block beside a `mirrors-section:`.
+The `schema-shape` rows ask something else. There the tool acts on whatever the value says — any section is reconciled,
+any folder is read, any sentence is rendered — and what makes it sound is a second declaration in the same file, or the
+shape of the page the value lands on: the `folder:` beside a `shape:`, the `sections:` block beside a
+`mirrors-section:`, the width of the table cell a `summary:` becomes.
 
 The key vocabulary is read the same way, and there is no list of permitted keys anywhere: the loader records what it
 asks each mapping for, and whatever is left over is reported. So a key gains its meaning and its admission in the same

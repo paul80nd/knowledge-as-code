@@ -10,6 +10,35 @@ guessing.
 This repository is the **framework master**: the mechanism, and a demonstration corpus to fork. Why it is built this way
 is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath it.
 
+## The knowledge types
+
+<!-- BEGIN GENERATED: types-index -->
+
+| Type                         | Tier        | What it holds                                                                                                    |
+|------------------------------|-------------|------------------------------------------------------------------------------------------------------------------|
+| [ADR](/adrs)                 | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it.         |
+| [Capability](/capabilities)  | descriptive | What we offer a customer and why, as a hub linking to what implements, tests and constrains it.                  |
+| [Control](/controls)         | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                   |
+| [Data](/data)                | descriptive | Which store owns which entities, how long they are kept, how sensitive they are, and where personal data flows.  |
+| [Discovery](/discoveries)    | observed    | Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.               |
+| [Explanation](/explanations) | descriptive | Narrative that helps you understand how something works, or why it is shaped the way it is.                      |
+| [FAQ](/faqs)                 | normative   | A problem with a confirmed fix, promoted from a discovery once a human has verified it.                          |
+| [Glossary](/glossary)        | descriptive | The ubiquitous language — terms whose meaning is specific to us, or which are easily confused.                   |
+| [Integration](/integrations) | descriptive | An external system we depend on: the contract, the auth, the failure modes, their SLA and our fallback.          |
+| [NFR](/nfrs)                 | normative   | A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.                 |
+| [Policy](/policies)          | normative   | A high-level engineering commitment: the what and the why, largely stack-agnostic and changing rarely.           |
+| [Postmortem](/postmortems)   | decided     | What actually happened during an incident — timeline, impact, root cause, contributing factors, actions.         |
+| [Process](/processes)        | procedural  | A planned procedure followed deliberately — releasing, onboarding, provisioning, rotating a secret.              |
+| [Runbook](/runbooks)         | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.                |
+| [Service](/services)         | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, criticality, owner.               |
+| [Standard](/standards)       | normative   | The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.                         |
+| [Tool](/tools)               | descriptive | The approved-software register — what is chosen, rejected or deprecated, and the version ranges we stand behind. |
+
+**Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, and the calls
+that are genuinely close.
+
+<!-- END GENERATED: types-index -->
+
 ## What is here
 
 Two halves, and the split is the point.

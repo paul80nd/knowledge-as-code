@@ -1,9 +1,12 @@
 type: standard
 label: Standard
+label-plural: Standards
 folder: standards
 page: standards.md
 tier: normative
 lifecycle: living
+summary: The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.
+goes-here: A rule people must follow when building
 
 id:
   prefix: std

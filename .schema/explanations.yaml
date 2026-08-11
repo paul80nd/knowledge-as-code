@@ -1,9 +1,12 @@
 type: explanation
 label: Explanation
+label-plural: Explanations
 folder: explanations
 page: explanations.md
 tier: descriptive
 lifecycle: living
+summary: Narrative that helps you understand how something works, or why it is shaped the way it is.
+goes-here: A narrative of how something works or why it's shaped that way
 
 id:
   prefix: exp

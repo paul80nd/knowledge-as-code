@@ -1,9 +1,12 @@
 type: capability
 label: Capability
+label-plural: Capabilities
 folder: capabilities
 page: capabilities.md
 tier: descriptive
 lifecycle: living
+summary: What we offer a customer and why, as a hub linking to what implements, tests and constrains it.
+goes-here: A description of what we offer a customer, and why
 
 id:
   prefix: cap

@@ -42,6 +42,39 @@ public static class Generator
     public static readonly IReadOnlySet<string> IndexOrders =
         new HashSet<string>(["ascending", Descending], StringComparer.Ordinal);
 
+    // How a type is linked to from a generated block: the page without its extension, root-relative. The
+    // form Azure DevOps renders as a wiki page and the link check resolves back to the file.
+    private static string Link(TypeSchema t) =>
+        "/" + (t.Page.EndsWith(".md", StringComparison.Ordinal) ? t.Page[..^3] : t.Page);
+
+    // The decision table — what a contributor has in hand, and where it goes. The corpus's own types
+    // only: a row pointing at a type this corpus never stood up is a dead link in the wiki and an
+    // invitation to file a document nowhere.
+    //
+    // Sorted on the left column, because that is the column being read. A reader arrives holding
+    // something and scans for it, so the table is ordered the way it is searched rather than by the
+    // answer they do not have yet. The link carries the plural: it points at the collection.
+    public static string PlacementTable(IEnumerable<TypeSchema> types) =>
+        RenderTable(["You have…", "It goes in"],
+            [.. types.OrderBy(t => t.GoesHere, StringComparer.Ordinal)
+                .Select(t => new List<string> { Escape(t.GoesHere), $"[{t.PluralName}]({Link(t)})" })]);
+
+    // The corpus's own index of types, for whoever arrives at the repository root: what each holds, and
+    // one way on to the taxonomy, which is where the question "so where does mine go" is answered. The
+    // pointer sits inside the block so that it cannot drift above the table or be edited away.
+    //
+    // Sorted by name, which is what a reader looking one up already knows. Tier is a column rather than a
+    // grouping here for the same reason — it is worth seeing beside a type and is not how anyone arrives.
+    //
+    // Its line break is written rather than computed. A table is exempt from the corpus's 120-column wrap
+    // and a sentence is not, so the one sentence here is broken where it would be broken by hand.
+    public static string TypesIndex(IEnumerable<TypeSchema> types, string taxonomyPath) =>
+        RenderTable(["Type", "Tier", "What it holds"],
+            [.. types.OrderBy(t => t.DisplayName, StringComparer.Ordinal).Select(t => new List<string>
+                { $"[{t.DisplayName}]({Link(t)})", t.Tier, Escape(t.Summary) })])
+        + $"\n\n**Where does a document go?** The [taxonomy]({taxonomyPath}) has the decision table, and the calls\n"
+        + "that are genuinely close.";
+
     // The rows of an index, in the order the type's `index` block asks for. Sorting on several columns
     // is a sort by the first, ties broken by the next; the direction applies to the whole ordering,
     // because a type that wanted one column each way would be asking for two questions in one key.
@@ -341,15 +374,52 @@ public static class Generator
         return problems;
     }
 
+    private const string BeginMarker = "<!-- BEGIN GENERATED: ";
+    private const string EndMarker = "<!-- END GENERATED: ";
+    private const string MarkerClose = " -->";
+
     public static string SpliceBlock(string text, string name, string inner)
     {
-        var begin = $"<!-- BEGIN GENERATED: {name} -->";
-        var end = $"<!-- END GENERATED: {name} -->";
+        var begin = $"{BeginMarker}{name}{MarkerClose}";
+        var end = $"{EndMarker}{name}{MarkerClose}";
         var bi = text.IndexOf(begin, StringComparison.Ordinal);
         if (bi < 0) return text;
         var ei = text.IndexOf(end, bi, StringComparison.Ordinal);
         if (ei < 0) return text;
         return text[..(bi + begin.Length)] + "\n\n" + inner + "\n\n" + text[ei..];
+    }
+
+    // A page with its generated blocks emptied, leaving the markers and everything a person wrote.
+    //
+    // This is what `mechanism --check` compares, which is what lets a shared page carry a block derived
+    // from the corpus holding it. Two corpora running the same framework hold the same prose and a
+    // different table beneath it, and both are correct. The division is exact: `index --check` answers
+    // for the generated half against the local schema, `mechanism --check` for the authored half against
+    // the reference, and neither has an opinion about the other's.
+    //
+    // The markers stay, so deleting a block — rather than regenerating it — is still drift. An unclosed
+    // marker leaves the rest of the page compared as written, which is the honest reading of a file whose
+    // structure the generator can no longer follow.
+    public static string Authored(string text)
+    {
+        var sb = new StringBuilder();
+        var at = 0;
+
+        while (true)
+        {
+            var bi = text.IndexOf(BeginMarker, at, StringComparison.Ordinal);
+            if (bi < 0) break;
+            var opened = text.IndexOf(MarkerClose, bi, StringComparison.Ordinal);
+            if (opened < 0) break;
+            opened += MarkerClose.Length;
+            var ei = text.IndexOf(EndMarker, opened, StringComparison.Ordinal);
+            if (ei < 0) break;
+
+            sb.Append(text, at, opened - at);
+            at = ei;
+        }
+
+        return sb.Append(text, at, text.Length - at).ToString();
     }
 
     // Deterministic GFM table: fixed column widths, single-space padding, LF joins,

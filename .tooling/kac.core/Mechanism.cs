@@ -32,8 +32,7 @@ public static class MechanismCheck
             switch (layer)
             {
                 case "synced":
-                    var identical = inLocal && inRef
-                                            && Files.ReadLf(Path.Combine(localRoot, rel)) == Files.ReadLf(Path.Combine(refRoot, rel));
+                    var identical = inLocal && inRef && Same(localRoot, refRoot, rel);
 
                     if (accepted.Contains(rel))
                     {
@@ -52,8 +51,7 @@ public static class MechanismCheck
                     if (inLocal && inRef)
                     {
                         forkedShared++;
-                        if (Files.ReadLf(Path.Combine(localRoot, rel)) != Files.ReadLf(Path.Combine(refRoot, rel)))
-                            forkedDiffer++;
+                        if (!Same(localRoot, refRoot, rel)) forkedDiffer++;
                     }
                     break;
 
@@ -95,6 +93,13 @@ public static class MechanismCheck
             return paths.Count;
         }
     }
+
+    // Whether two copies of a file say the same thing. LF-normalised, so a working copy checked out with
+    // CRLF never reads as drift, and compared on the authored half alone — see Generator.Authored for why
+    // a shared page may hold a different table in each corpus and still be in step.
+    private static bool Same(string localRoot, string refRoot, string rel) =>
+        Generator.Authored(Files.ReadLf(Path.Combine(localRoot, rel)))
+        == Generator.Authored(Files.ReadLf(Path.Combine(refRoot, rel)));
 
     // Every tracked (and not-ignored) file, relative and forward-slashed. The walk lets the check
     // run in a non-git tree (the test harness assembles one), skipping only .git.

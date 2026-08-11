@@ -48,6 +48,13 @@ public static class SchemaChecks
                 Dispatch(at, $"type '{key}' declares 'index.order: {t.IndexOrder}', which the generator does "
                              + $"not read. An index is written {List(Generator.IndexOrders)}.", f);
 
+            if (!TypeSchema.Tiers.Contains(t.Tier))
+                Dispatch(at, $"type '{key}' declares 'tier: {t.Tier}', which nothing acts on. Tier decides how a "
+                             + "document behaves, and is written into the frontmatter of every record of the type; "
+                             + $"the tiers are {Ordered(TypeSchema.Tiers)}.", f);
+
+            CheckProse(at, key, t, f);
+
             foreach (var name in t.FieldOrder)
                 CheckField(at, name, t.Fields[name], schema, t, f);
 
@@ -98,6 +105,37 @@ public static class SchemaChecks
                     $"type '{key}' is single-document and declares 'folder: {t.Folder}' — its page is the "
                     + "document, so there is no folder of records to name."));
                 break;
+        }
+    }
+
+    // What a type says about itself, which every generated list of types is written from. Each is
+    // required, because a type that declares none of them still appears in those lists — as a row with an
+    // empty cell, which reads as an oversight in the page rather than in the schema it came from.
+    //
+    // `label-plural:` is here and `label:` is not, because only one of them can be derived. A singular
+    // falls back to the type name capitalised; nothing turns `nfr` into "NFRs".
+    //
+    // The bound is the one a rule's description is held to, for the same reason: these are table cells a
+    // reader scans, and the sentence that will not fit in one is the sentence that belongs on the type's
+    // own page.
+    private static void CheckProse(string at, string key, TypeSchema t, List<Finding> f)
+    {
+        Line("label-plural", t.LabelPlural, "what a folder of these is called — \"ADRs\", \"Policies\", \"NFRs\"");
+        Line("summary", t.Summary, "what the type is");
+        Line("goes-here", t.GoesHere, "what a contributor has in hand when this type is the answer");
+        return;
+
+        void Line(string name, string value, string says)
+        {
+            if (value.Length == 0)
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' declares no '{name}:' — say {says}, in one line the taxonomy and the "
+                    + "corpus index can be generated from."));
+            else if (value.Length > Generator.DescriptionMax)
+                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                    $"type '{key}' has a {value.Length}-character '{name}:'; the limit is "
+                    + $"{Generator.DescriptionMax}. It is rendered as a table cell — the fuller account belongs "
+                    + $"on {(t.Page.Length > 0 ? t.Page : $"{key}.md")}."));
         }
     }
 
@@ -175,4 +213,9 @@ public static class SchemaChecks
 
     private static string List(IEnumerable<string> values)
         => string.Join(", ", values.Order(StringComparer.Ordinal).Select(v => $"'{v}'"));
+
+    // A vocabulary whose order is part of what it declares, quoted as declared. Sorting the tiers would
+    // misstate the one thing the reader has to take from them.
+    private static string Ordered(IEnumerable<string> values)
+        => string.Join(", ", values.Select(v => $"'{v}'"));
 }

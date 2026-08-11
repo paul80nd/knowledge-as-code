@@ -77,6 +77,26 @@ public static class Commands
             targets.Add((metadataPath, text));
         }
 
+        // The two pages that describe the taxonomy to a reader rather than to the tool: the taxonomy
+        // itself, and the corpus's front door. Both list types, and the list is the half that was wrong
+        // in every corpus that adopted some of them — so both are generated from what this corpus has
+        // stood up, and neither can name a type whose page is not there to open.
+        var stoodUp = Corpus.StoodUp(schema, repoRoot);
+
+        Splice(Path.Combine(repoRoot, "knowledge-as-code", "taxonomy.md"), "types-placement",
+            Generator.PlacementTable(stoodUp));
+        Splice(Path.Combine(repoRoot, "README.md"), "types-index",
+            Generator.TypesIndex(stoodUp, "knowledge-as-code/taxonomy.md"));
+
+        // A page that is not there is skipped, and one carrying no marker resolves to itself — the
+        // generator fills in structure the corpus has declared and never invents it, which is what lets
+        // a corpus decline a block by deleting its markers rather than by arguing with the tool.
+        void Splice(string path, string block, string inner)
+        {
+            if (!File.Exists(path)) return;
+            targets.Add((path, Generator.SpliceBlock(Files.ReadLf(path), block, inner)));
+        }
+
         if (check)
         {
             var stale = targets.Where(x => !File.Exists(x.path) || Files.ReadLf(x.path) != x.content)

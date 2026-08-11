@@ -1,9 +1,12 @@
 type: service
 label: Service
+label-plural: Services
 folder: services
 page: services.md
 tier: descriptive
 lifecycle: living
+summary: "One deployable component: purpose, repo, platform, environments, dependencies, criticality, owner."
+goes-here: A description of what a deployable component is and does
 
 id:
   prefix: svc

@@ -1,9 +1,12 @@
 type: data
 label: Data
+label-plural: Data
 folder: data
 page: data.md
 tier: descriptive
 lifecycle: living
+summary: Which store owns which entities, how long they are kept, how sensitive they are, and where personal data flows.
+goes-here: Where data lives, how long we keep it, and how sensitive it is
 
 notes: >
   Folder is singular because English gives no plural. One of two exceptions to the plural-folder rule,

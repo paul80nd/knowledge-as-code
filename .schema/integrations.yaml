@@ -1,9 +1,12 @@
 type: integration
 label: Integration
+label-plural: Integrations
 folder: integrations
 page: integrations.md
 tier: descriptive
 lifecycle: living
+summary: "An external system we depend on: the contract, the auth, the failure modes, their SLA and our fallback."
+goes-here: A third-party or external system we depend on
 
 id:
   prefix: int

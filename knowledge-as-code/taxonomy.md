@@ -8,29 +8,38 @@ quickest route to the right answer; the [disambiguations](#disambiguations) expl
 
 ## Where does this go?
 
-| You have…                                                            | It goes in                      |
-|----------------------------------------------------------------------|---------------------------------|
-| A decision that affects more than one repo, and its reasoning        | [ADRs](/adrs)                   |
-| A rule people must follow when building                              | [Standards](/standards)         |
-| A commitment about how we engineer, at principle level               | [Policies](/policies)           |
-| A check that proves a rule is being followed                         | [Controls](/controls)           |
-| A target for speed, uptime, or recovery                              | [NFRs](/nfrs)                   |
-| A step-by-step for a planned task                                    | [Processes](/processes)         |
-| A step-by-step for when something is broken                          | [Runbooks](/runbooks)           |
-| A narrative of how something works or why it's shaped that way       | [Explanations](/explanations)   |
-| A description of what a deployable component is and does             | [Services](/services)           |
-| A description of what we offer a customer, and why                   | [Capabilities](/capabilities)   |
-| A tool or package we've approved, rejected, or are trialling         | [Tools](/tools)                 |
-| A third-party or external system we depend on                        | [Integrations](/integrations)   |
-| Where data lives, how long we keep it, and how sensitive it is       | [Data](/data)                   |
-| A term whose meaning isn't obvious, or that we use in a specific way | [Glossary](/glossary)           |
-| A problem with a known, confirmed fix                                | [FAQs](/faqs)                   |
-| Something surprising you noticed and haven't verified                | [Discoveries](/discoveries)     |
-| An account of an incident and what caused it                         | [Postmortems](/postmortems)     |
-| Where you got to, mid-piece-of-work                                  | Session state (local, not here) |
+The types **this corpus holds**, generated from the schema and ordered by what you are holding rather than by where it
+ends up — so a corpus that has adopted five of them is offered five, and every row opens.
+
+<!-- BEGIN GENERATED: types-placement -->
+
+| You have…                                                            | It goes in                    |
+|----------------------------------------------------------------------|-------------------------------|
+| A check that proves a rule is being followed                         | [Controls](/controls)         |
+| A commitment about how we engineer, at principle level               | [Policies](/policies)         |
+| A decision that affects more than one repo, and its reasoning        | [ADRs](/adrs)                 |
+| A description of what a deployable component is and does             | [Services](/services)         |
+| A description of what we offer a customer, and why                   | [Capabilities](/capabilities) |
+| A narrative of how something works or why it's shaped that way       | [Explanations](/explanations) |
+| A problem with a known, confirmed fix                                | [FAQs](/faqs)                 |
+| A rule people must follow when building                              | [Standards](/standards)       |
+| A step-by-step for a planned task                                    | [Processes](/processes)       |
+| A step-by-step for when something is broken                          | [Runbooks](/runbooks)         |
+| A target for speed, uptime, or recovery                              | [NFRs](/nfrs)                 |
+| A term whose meaning isn't obvious, or that we use in a specific way | [Glossary](/glossary)         |
+| A third-party or external system we depend on                        | [Integrations](/integrations) |
+| A tool or package we've approved, rejected, or are trialling         | [Tools](/tools)               |
+| An account of an incident and what caused it                         | [Postmortems](/postmortems)   |
+| Something surprising you noticed and haven't verified                | [Discoveries](/discoveries)   |
+| Where data lives, how long we keep it, and how sensitive it is       | [Data](/data)                 |
+
+<!-- END GENERATED: types-placement -->
+
+Where you got to mid-piece-of-work is the one thing on nobody's list: session logs stay local and never reach the wiki.
 
 If nothing fits, raise it rather than improvising. A missing type is a taxonomy conversation; a `misc/` folder is a
-slow-motion failure.
+slow-motion failure. The framework declares more types than any one corpus stands up, so the answer may be to adopt one
+rather than to invent one.
 
 ## The types
 

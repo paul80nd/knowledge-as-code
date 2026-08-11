@@ -82,6 +82,23 @@ public static class Corpus
         };
     }
 
+    // The types this corpus actually holds, in schema order. The schema declares every type the tool
+    // manages; a corpus adopts as many of them as it has use for, and this is the difference between the
+    // two. Everything generated about the taxonomy reads it, so a corpus's own pages describe the corpus
+    // rather than the framework's full range.
+    //
+    // Stood up means both halves are there — the page and the folder of records — which is the same bar
+    // CheckTypeSetup holds a type to, because a type is set up as both or as neither. A half-built type
+    // is left out here and reported there: generating a row for it would answer a defect with a link that
+    // resolves to one of the two files that exist.
+    public static List<TypeSchema> StoodUp(Schema schema, string repoRoot) =>
+    [
+        .. schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value)
+            .Where(t => !string.IsNullOrEmpty(t.Page)
+                        && File.Exists(Path.Combine(repoRoot, t.Page))
+                        && (t.IsSingleDocument || Directory.Exists(Path.Combine(repoRoot, t.Folder))))
+    ];
+
     // The template of every collection type that has one. Asked of the filesystem rather than of the
     // file listing, as type-setup asks it: the question is whether the file a contributor would copy is
     // there, and a type whose template is untracked has a different problem from one with none.

@@ -102,7 +102,13 @@ rules:
     note: "Agent machinery — kb-review, with kb-search, kb-contribute and friends still to come."
 
   - { path: "knowledge-as-code/manifest.yaml",   layer: synced, note: "This file." }
-  - { path: "knowledge-as-code/taxonomy.md",     layer: synced }
+  - path: "knowledge-as-code/taxonomy.md"
+    layer: synced
+    note: >
+      Shared prose around a generated block. The decision table is built from the types this corpus has stood up, so
+      the file differs between corpora by design — which is why `mechanism --check` compares the authored half of a
+      page and leaves what lies between the markers to `index --check`. Every synced page may do this; this is the
+      first that does.
   - { path: "knowledge-as-code/metadata.md",     layer: synced }
   - { path: "knowledge-as-code/contributing.md", layer: synced }
   - { path: "knowledge-as-code/style.md",        layer: synced }
@@ -175,7 +181,12 @@ rules:
     layer: forked
 
   # ── local ────────────────────────────────────────────────────────────────────────────────────
-  - { path: "README.md",                        layer: local, note: "Orientation for this corpus." }
+  - path: "README.md"
+    layer: local
+    note: >
+      Orientation for this corpus, and wholly its own — which is why the index of types it carries arrives as a
+      generated block rather than as shared prose. A corpus decides what its front page says and where the block sits
+      in it; deleting the markers declines the block outright.
   - path:
       - ".github/CONTRIBUTING.md"
       - ".github/SECURITY.md"

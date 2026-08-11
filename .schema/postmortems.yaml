@@ -1,9 +1,12 @@
 type: postmortem
 label: Postmortem
+label-plural: Postmortems
 folder: postmortems
 page: postmortems.md
 tier: decided
 lifecycle: immutable
+summary: What actually happened during an incident — timeline, impact, root cause, contributing factors, actions.
+goes-here: An account of an incident and what caused it
 
 id:
   prefix: pmt

@@ -101,6 +101,8 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Repository & launchpad tables               | `services/`                              | Root `README.md`                       | Planned |
 | Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block           | Done    |
 | Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block | Done    |
+| Where a document goes                       | `.schema/` + the types stood up          | `taxonomy.md` `types-placement` block  | Done    |
+| What this corpus holds                      | `.schema/` + the types stood up          | Root `README.md` `types-index` block   | Done    |
 | Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block  | Planned |
 | Control coverage report                     | `controls/` + standards' rules           | `controls/_index.md`                   | Planned |
 | Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/_index.md`                   | Planned |
@@ -110,14 +112,18 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | `.order` files                              | Folder contents + type ordering          | Each folder                            | Planned |
 | `.index.json` — machine-readable corpus map | Frontmatter across all types             | Repo root                              | Planned |
 
+Two of those blocks describe the corpus rather than the schema. The taxonomy's decision table and the type index at the
+repository root list the types **this** corpus has stood up — page and folder both present — so a corpus that adopted
+five of the framework's types is offered five, and every row opens. That is also why the two are safe to share: the
+mechanism check compares the authored half of a page and ignores what lies between the markers, so the prose stays
+byte-identical in every corpus while the tables beneath it differ.
+
 ### The rules digest — a block inside root `CLAUDE.md`
 
 Root `CLAUDE.md` is hand-written: it is the file an agent always reads, and most of what it needs there — which
 repository this is, what to run before committing, the conventions nothing enforces — is not derivable from the corpus.
 The digest is generated *into* it as a `rules-digest` block, the way a type page carries its schema table, so that
 standing guidance and generated rules arrive together instead of competing for the same filename.
-
-That means the digest also waits on generated blocks being able to target a page that is not a type page.
 
 It is the one generated artefact with a hard constraint on its contents:
 

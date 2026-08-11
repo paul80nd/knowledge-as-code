@@ -1,9 +1,12 @@
 type: discovery
 label: Discovery
+label-plural: Discoveries
 folder: discoveries
 page: discoveries.md
 tier: observed
 lifecycle: perishable
+summary: Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.
+goes-here: Something surprising you noticed and haven't verified
 
 id:
   prefix: dsc

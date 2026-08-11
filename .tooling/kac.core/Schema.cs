@@ -148,10 +148,18 @@ public sealed class TypeSchema
 {
     public string TypeName { get; init; } = "";
     public string Label { get; init; } = "";
+    public string LabelPlural { get; init; } = "";
     public string Folder { get; init; } = "";
     public string Page { get; init; } = "";
     public string Tier { get; init; } = "";
     public string Lifecycle { get; init; } = "";
+
+    // What this type is, in one line, and what a reader has in hand when it is the answer. Both are
+    // rendered rather than read by a check: the taxonomy's decision table and the corpus's own index are
+    // generated from them, so a type says what it is once, here, instead of once in every page that
+    // introduces it.
+    public string Summary { get; init; } = "";
+    public string GoesHere { get; init; } = "";
     public string Shape { get; init; } = CollectionShape;
     public string IdPrefix { get; init; } = "";
     public string IdStyle { get; init; } = "";
@@ -199,6 +207,13 @@ public sealed class TypeSchema
     public const string CollectionShape = "collection";
     public const string SingleDocumentShape = "single-document";
 
+    // The five tiers, in the order the framework states them. A closed set, like the two shapes above:
+    // tier is what every validation rule, review expectation and language rule keys off, and it is
+    // written into the frontmatter of every record of the type — so a sixth would be a word the corpus
+    // carries and nothing means anything by. Read by SchemaChecks.
+    public static readonly List<string> Tiers =
+        ["decided", "normative", "descriptive", "procedural", "observed"];
+
     public bool IsSingleDocument => Shape == SingleDocumentShape;
 
     // How a single document of this type is named in generated prose — "Policy", "ADR", "NFR". Declared
@@ -209,6 +224,15 @@ public sealed class TypeSchema
         !string.IsNullOrEmpty(Label) ? Label
         : !string.IsNullOrEmpty(TypeName) ? char.ToUpperInvariant(TypeName[0]) + TypeName[1..]
         : IdPrefix.ToUpperInvariant();
+
+    // How the *collection* is named — "ADRs", "Policies", "NFRs", "Data". Where a generated line points at
+    // the type's page rather than at one of its records, this is the name that belongs on the link.
+    //
+    // Declared with no fallback worth the name, which is why `label-plural:` is required where `label:` is
+    // not: nothing turns `nfr` into "NFRs" and `glossary` into "Glossary", and appending an `s` produces a
+    // word for some types and a mistake for the rest. The fallback exists only so that a hand-built
+    // TypeSchema renders something.
+    public string PluralName => !string.IsNullOrEmpty(LabelPlural) ? LabelPlural : DisplayName;
 
     // Whether this type declares a given rule. The reader-facing checks table uses it to show a
     // rule's row only on the pages whose schema actually carries the rule.
@@ -399,10 +423,13 @@ public sealed class Schema
         {
             TypeName = Yaml.Str(root.Get("type")) ?? "",
             Label = Yaml.Str(root.Get("label")) ?? "",
+            LabelPlural = Yaml.Str(root.Get("label-plural")) ?? "",
             Folder = Yaml.Str(root.Get("folder")) ?? "",
             Page = Yaml.Str(root.Get("page")) ?? "",
             Tier = Yaml.Str(root.Get("tier")) ?? "",
             Lifecycle = Yaml.Str(root.Get("lifecycle")) ?? "",
+            Summary = Yaml.Str(root.Get("summary")) ?? "",
+            GoesHere = Yaml.Str(root.Get("goes-here")) ?? "",
             Shape = Yaml.Str(root.Get("shape")) ?? TypeSchema.CollectionShape,
 
             IdPrefix = Yaml.Str(id.Get("prefix")) ?? "",

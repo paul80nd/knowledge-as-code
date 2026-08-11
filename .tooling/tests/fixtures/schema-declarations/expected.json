@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 14,
+    "errors": 17,
     "warnings": 0
   },
   "findings": [
@@ -41,6 +41,27 @@
       "severity": "error",
       "check": "schema-dispatch",
       "message": "type 'widgets' declares 'index.order: newest-first', which the generator does not read. An index is written 'ascending', 'descending'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "type 'widgets' declares 'tier: experimental', which nothing acts on. Tier decides how a document behaves, and is written into the frontmatter of every record of the type; the tiers are 'decided', 'normative', 'descriptive', 'procedural', 'observed'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' has a 206-character 'summary:'; the limit is 120. It is rendered as a table cell — the fuller account belongs on widgets.md."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' declares no 'goes-here:' — say what a contributor has in hand when this type is the answer, in one line the taxonomy and the corpus index can be generated from."
     },
     {
       "file": ".schema/widgets.yaml",

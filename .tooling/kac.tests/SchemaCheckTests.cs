@@ -12,15 +12,22 @@ namespace kac.tests;
 
 public class SchemaCheckTests
 {
+    // The defaults are what a sound type carries, so that a case reports the one fault it declares and
+    // nothing else. Each is overridable, because each has its own cases further down.
     private static TypeSchema Widgets(string idStyle = "slug", string folder = "widgets",
         string shape = TypeSchema.CollectionShape,
         (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
-        string[]? sections = null) => new()
+        string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
+        string goesHere = "A widget", string labelPlural = "Widgets") => new()
     {
         TypeName = "widget",
         Folder = folder,
         Shape = shape,
         IdStyle = idStyle,
+        Tier = tier,
+        Summary = summary,
+        GoesHere = goesHere,
+        LabelPlural = labelPlural,
         FieldOrder = [.. (fields ?? []).Select(x => x.Name)],
         Fields = (fields ?? []).ToDictionary(x => x.Name, x => x.Spec),
         Rules = rules ?? [],
@@ -243,4 +250,68 @@ public class SchemaCheckTests
         Assert.Equal("schema-dispatch", finding.Check);
         Assert.Contains("chapter", finding.Message);
     }
+
+    // -- what a type says about itself --
+
+    [Theory]
+    [InlineData("decided")]
+    [InlineData("normative")]
+    [InlineData("descriptive")]
+    [InlineData("procedural")]
+    [InlineData("observed")]
+    public void Every_tier_the_generated_lists_group_by_passes(string tier)
+        => Assert.Empty(Check(Widgets(tier: tier)));
+
+    // A sixth tier would sort silently to the end of every table the type appears in.
+    [Fact]
+    public void A_tier_outside_the_five_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(tier: "experimental")));
+
+        Assert.Equal("schema-dispatch", finding.Check);
+        Assert.Contains("experimental", finding.Message);
+    }
+
+    // Required where `label:` is not, because a singular can be derived from the type name and a plural
+    // cannot — an `s` appended to `nfr` is not "NFRs".
+    [Fact]
+    public void A_type_that_does_not_name_its_collection_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(labelPlural: "")));
+
+        Assert.Equal("schema-shape", finding.Check);
+        Assert.Contains("no 'label-plural:'", finding.Message);
+    }
+
+    [Fact]
+    public void A_type_that_does_not_say_what_it_is_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(summary: "")));
+
+        Assert.Equal("schema-shape", finding.Check);
+        Assert.Contains("no 'summary:'", finding.Message);
+    }
+
+    [Fact]
+    public void A_type_that_does_not_say_what_goes_in_it_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(goesHere: "")));
+
+        Assert.Equal("schema-shape", finding.Check);
+        Assert.Contains("no 'goes-here:'", finding.Message);
+    }
+
+    // Held to the bound a rule's description is held to, and for the same reason: both are table cells.
+    [Fact]
+    public void A_summary_too_long_for_the_cell_it_becomes_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(summary: new string('x', Generator.DescriptionMax + 1))));
+
+        Assert.Equal("schema-shape", finding.Check);
+        Assert.Contains($"the limit is {Generator.DescriptionMax}", finding.Message);
+    }
+
+    [Fact]
+    public void A_summary_at_the_bound_passes()
+        => Assert.Empty(Check(Widgets(summary: new string('x', Generator.DescriptionMax))));
 }

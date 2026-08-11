@@ -250,6 +250,66 @@ public class GeneratorTests
         Assert.Contains("reciprocal", table);
     }
 
+    // -- the tables of types --
+
+    private static TypeSchema Type(string label, string plural, string tier, string page, string goesHere) => new()
+    {
+        Label = label, LabelPlural = plural, Tier = tier, Page = page, GoesHere = goesHere,
+        Summary = $"What a {label.ToLowerInvariant()} holds."
+    };
+
+    private static TypeSchema[] Four() =>
+    [
+        Type("Runbook", "Runbooks", "procedural", "runbooks.md", "A step-by-step for when something is broken"),
+        Type("ADR", "ADRs", "decided", "adrs.md", "A decision that affects more than one repo"),
+        Type("Standard", "Standards", "normative", "standards.md", "A rule people must follow when building"),
+        Type("Control", "Controls", "normative", "controls.md", "A check that proves a rule is being followed")
+    ];
+
+    private static List<int> PositionsOf(string text, params string[] needles) =>
+        [.. needles.Select(n => text.IndexOf(n, StringComparison.Ordinal))];
+
+    // The decision table is read down its left column, so that is the column it is ordered by.
+    [Fact]
+    public void The_decision_table_is_sorted_by_what_the_reader_is_holding()
+    {
+        var order = PositionsOf(Generator.PlacementTable(Four()),
+            "A check that", "A decision that", "A rule people", "A step-by-step");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    // It points at the collection, so it names the collection.
+    [Fact]
+    public void The_decision_table_names_a_type_in_the_plural()
+    {
+        var rows = Generator.PlacementTable(Four());
+
+        Assert.Contains("[ADRs](/adrs)", rows);      // the link form ADO renders and LinkChecks resolves
+        Assert.DoesNotContain("[ADR](", rows);
+    }
+
+    // A lookup table, ordered by the one thing the reader already knows. Tier is a column, not a grouping.
+    [Fact]
+    public void The_corpus_index_is_sorted_by_type_name()
+    {
+        var order = PositionsOf(Generator.TypesIndex(Four(), "taxonomy.md"),
+            "[ADR]", "[Control]", "[Runbook]", "[Standard]");
+
+        Assert.Equal(order.Order(), order);
+    }
+
+    [Fact]
+    public void The_corpus_index_carries_the_way_on_to_the_taxonomy_inside_the_block()
+    {
+        var index = Generator.TypesIndex(Four(), "knowledge-as-code/taxonomy.md");
+
+        Assert.Contains("[taxonomy](knowledge-as-code/taxonomy.md)", index);
+        Assert.True(index.IndexOf("| [ADR]", StringComparison.Ordinal)
+                    < index.IndexOf("[taxonomy]", StringComparison.Ordinal));
+        Assert.All(index.Split('\n').Where(l => !l.StartsWith('|')), l => Assert.True(l.Length <= 120));
+    }
+
     [Fact]
     public void SpliceBlock_replaces_only_between_the_named_markers()
     {
@@ -268,5 +328,58 @@ public class GeneratorTests
     {
         const string text = "no markers here";
         Assert.Equal(text, Generator.SpliceBlock(text, "missing", "NEW"));
+    }
+
+    // Authored is what `mechanism --check` compares, so what it keeps and what it drops decides whether a
+    // shared page may carry a corpus-specific table.
+    [Fact]
+    public void Authored_drops_what_a_generated_block_holds_and_keeps_the_markers()
+    {
+        const string local = "prose\n<!-- BEGIN GENERATED: a -->\n\n| one |\n\n<!-- END GENERATED: a -->\nafter";
+        const string reference = "prose\n<!-- BEGIN GENERATED: a -->\n\n| another |\n\n<!-- END GENERATED: a -->\nafter";
+
+        Assert.Equal(Generator.Authored(reference), Generator.Authored(local));
+        Assert.Contains("<!-- BEGIN GENERATED: a -->", Generator.Authored(local));
+        Assert.Contains("<!-- END GENERATED: a -->", Generator.Authored(local));
+        Assert.DoesNotContain("one", Generator.Authored(local));
+    }
+
+    [Fact]
+    public void Authored_still_sees_a_difference_in_the_prose_around_a_block()
+    {
+        const string local = "prose\n<!-- BEGIN GENERATED: a -->\nX\n<!-- END GENERATED: a -->\n";
+        const string reference = "other prose\n<!-- BEGIN GENERATED: a -->\nX\n<!-- END GENERATED: a -->\n";
+
+        Assert.NotEqual(Generator.Authored(reference), Generator.Authored(local));
+    }
+
+    [Fact]
+    public void Authored_empties_every_block_on_a_page_that_carries_several()
+    {
+        const string text = "a\n<!-- BEGIN GENERATED: one -->\nX\n<!-- END GENERATED: one -->\n"
+                            + "b\n<!-- BEGIN GENERATED: two -->\nY\n<!-- END GENERATED: two -->\nc";
+
+        var authored = Generator.Authored(text);
+
+        Assert.DoesNotContain("X", authored);
+        Assert.DoesNotContain("Y", authored);
+        Assert.Contains("\nb\n", authored);
+    }
+
+    [Fact]
+    public void Authored_compares_the_whole_page_where_a_block_is_never_closed()
+    {
+        // The generator cannot follow the structure, so nothing is treated as generated and the drift
+        // stays visible rather than being masked by a marker someone deleted half of.
+        const string text = "a\n<!-- BEGIN GENERATED: one -->\nX\n";
+
+        Assert.Equal(text, Generator.Authored(text));
+    }
+
+    [Fact]
+    public void Authored_leaves_a_page_with_no_blocks_exactly_as_it_is()
+    {
+        const string text = "just prose\n";
+        Assert.Equal(text, Generator.Authored(text));
     }
 }

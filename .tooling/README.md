@@ -295,8 +295,14 @@ bare `mechanism --check`. What it reports:
 - **accepted divergences** listed in `.mechanism.lock` are honoured rather than flagged as drift, and any that have
   quietly become identical to the reference again are named as `RESOLVED` so the stale entry can be removed.
 
-Comparison is LF-normalised, so line-ending differences never read as drift. `mechanism --sync` — the write half that
-copies the synced layer into a consumer — is not implemented yet.
+Comparison is LF-normalised, so line-ending differences never read as drift, and it reads the **authored half** of a
+file: everything between `BEGIN GENERATED` and `END GENERATED` is emptied before the two copies are compared. A shared
+page may therefore carry a block derived from the corpus holding it — the taxonomy's own tables list the types that
+corpus has stood up — while the surrounding prose stays byte-identical everywhere. The markers themselves are compared,
+so deleting a block rather than regenerating it is still drift, and `index --check` remains the one voice on whether the
+generated half is correct.
+
+`mechanism --sync` — the write half that copies the synced layer into a consumer — is not implemented yet.
 
 ## Known gaps
 

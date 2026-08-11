@@ -1,9 +1,12 @@
 type: control
 label: Control
+label-plural: Controls
 folder: controls
 page: controls.md
 tier: normative
 lifecycle: living
+summary: "How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves."
+goes-here: A check that proves a rule is being followed
 
 id:
   prefix: ctl

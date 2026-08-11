@@ -1,9 +1,12 @@
 type: adr
 label: ADR
+label-plural: ADRs
 folder: adrs
 page: adrs.md
 tier: decided
 lifecycle: immutable
+summary: An architecturally significant decision affecting more than one repository, and the reasoning behind it.
+goes-here: A decision that affects more than one repo, and its reasoning
 
 id:
   prefix: adr

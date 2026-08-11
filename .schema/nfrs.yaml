@@ -1,9 +1,12 @@
 type: nfr
 label: NFR
+label-plural: NFRs
 folder: nfrs
 page: nfrs.md
 tier: normative
 lifecycle: living
+summary: A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.
+goes-here: A target for speed, uptime, or recovery
 
 id:
   prefix: nfr
