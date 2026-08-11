@@ -101,15 +101,15 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Repository & launchpad tables               | `services/`                              | Root `README.md`                            | Planned |
 | Per-type frontmatter reference              | `.schema/`                               | `<type>.md` `schema-*` block                | Done    |
 | Universal frontmatter reference             | `.schema/_universal.yaml`                | `metadata.md` `schema-universal` block      | Done    |
-| The way on to each type's fields            | `.schema/` + the types stood up          | `metadata.md` `types-metadata` block        | Done    |
-| Where a document goes                       | `.schema/` + the types stood up          | `taxonomy.md` `types-placement` block       | Done    |
+| The way on to each type's fields            | `.schema/` + the types adopted           | `metadata.md` `types-metadata` block        | Done    |
+| Where a document goes                       | `.schema/` + the types adopted           | `taxonomy.md` `types-placement` block       | Done    |
 | The types at length, by tier                | `.schema/` + `_tiers.yaml`               | `taxonomy.md` `types-detail` block          | Done    |
-| The calls that are close                    | `.schema/` + the types stood up          | `taxonomy.md` `types-versus` block          | Done    |
+| The calls that are close                    | `.schema/` + the types adopted           | `taxonomy.md` `types-versus` block          | Done    |
 | How the types relate                        | `ref:` across the schema                 | `taxonomy.md` `types-graph` block (mermaid) | Done    |
 | The same edges, field by field              | `ref:` across the schema                 | `taxonomy.md` `types-edges` block           | Done    |
-| Where the names came from                   | `.schema/` + the types stood up          | `lineage.md` `types-lineage` block          | Done    |
+| Where the names came from                   | `.schema/` + the types adopted           | `lineage.md` `types-lineage` block          | Done    |
 | Where a name collides                       | `.schema/` + the types adopted           | `lineage.md` `types-collisions` block       | Done    |
-| What this corpus holds                      | `.schema/` + the types stood up          | Root `README.md` `types-index` block        | Done    |
+| What this corpus holds                      | `.schema/` + the types adopted           | Root `README.md` `types-index` block        | Done    |
 | Rules digest                                | Active standards                         | Root `CLAUDE.md` `rules-digest` block       | Planned |
 | Control coverage report                     | `controls/` + standards' rules           | `controls/_index.md`                        | Planned |
 | Framework alignment matrix                  | Policy clause tables' `Alignment`        | `policies/_index.md`                        | Planned |
@@ -127,6 +127,10 @@ of the framework's types is offered five, and every row opens.
 The corpus decides which five, and records that in `types:` in `.mechanism.lock`. A corpus that has not declared is read
 off its folders instead: a type counts where both halves are there, the page and the folder. That answer is the weaker
 one, because it cannot tell a type nobody wanted from one somebody has not finished adding.
+
+The same five bound generation itself. A type the corpus declined gets no index and no reference tables, whatever
+`.schema/` still says about it, so nothing is written that the lists above would not name. A page or folder left behind
+from a type the corpus once held is left where it is, and `validate` is what says it should not be there.
 
 Blocks that differ between corpora are still safe to share. The mechanism check compares the authored half of a page and
 ignores what lies between the markers, so the prose stays byte-identical everywhere while what sits beneath it does not.

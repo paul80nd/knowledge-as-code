@@ -269,8 +269,15 @@ corpus, and still catches genuine disorder (`tags` before `id`, `related` before
 | `<!-- … checks-<type> -->` block in `<type>.md`      | the checks the validator implements     | The "What CI checks" table. Rows a type cannot trip — a rule it does not declare, a reciprocal or mirrors-section field it does not have — are omitted, so each page lists only its own checks.                                               |
 
 Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of `<type>.md` is byte-preserved. Every
-type is regenerated whether or not it holds records: the blocks derive from the schema alone, and an index that waits
-for its first record is a dead link from the type page until then.
+adopted type is regenerated whether or not it holds records: the blocks derive from the schema alone, and an index that
+waits for its first record is a dead link from the type page until then.
+
+Generation covers the types the corpus adopted and no others. `types:` in `.mechanism.lock` decides, and a corpus that
+has not declared is read off its folders — a type counts where both halves are there, the page and the folder. A type
+the corpus declined is left alone whatever `.schema/` says about it, down to the hand-written text between markers on a
+page left behind: writing there would create an artefact no generated list of this corpus's types names, and
+`index --check` would then hold the corpus to keeping it fresh. Standing a type up without adopting it is a defect
+`validate` reports.
 
 Two rules hold this together:
 

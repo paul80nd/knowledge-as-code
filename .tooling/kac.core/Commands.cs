@@ -35,15 +35,20 @@ public static class Commands
         // Compute the full intended content of every affected file.
         var targets = new List<(string path, string content)>();
 
-        // Every collection type gets an index, populated or not — each type page links to one, so a
-        // withheld file is a dead link rather than a tidy absence. A single-document type is its own
+        // The types this corpus took, which is what everything below is generated from. The schema
+        // declares the framework's full range and a corpus adopts as much of it as it has use for, so
+        // generating per schema type would write pages for types the corpus declined — files no list of
+        // its types names, and which `index --check` then holds it to keeping fresh.
+        var adopted = Corpus.Adopted(schema, repoRoot, corpus.Lock);
+
+        // Every adopted collection type gets an index, populated or not — each type page links to one, so
+        // a withheld file is a dead link rather than a tidy absence. A single-document type is its own
         // index and has nothing to generate.
         //
         // A folder absent from disk is skipped rather than created: the generator populates structure
-        // the corpus has declared, and never invents it. `validate` is the one voice that says a
-        // declared type is not set up, so a missing folder is reported there rather than papered over
-        // here.
-        foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key))
+        // the corpus has declared, and never invents it. `validate` is the one voice that says an adopted
+        // type is not set up, so a missing folder is reported there rather than papered over here.
+        foreach (var t in adopted)
         {
             if (t.IsSingleDocument || string.IsNullOrEmpty(t.Folder)) continue;
             if (!Directory.Exists(Path.Combine(repoRoot, t.Folder))) continue;
@@ -51,27 +56,25 @@ public static class Commands
             targets.Add((Path.Combine(repoRoot, t.Folder, Artefact.Index), Generator.IndexPage(t, docs)));
         }
 
-        // The schema and checks blocks derive from the schema alone, so every type gets them whether or
-        // not it holds records yet. Restricting this to populated types would leave the markers on an
-        // empty page holding hand-written text nothing checks, to be overwritten by whoever adds the
+        // The schema and checks blocks derive from the schema alone, so every adopted type gets them
+        // whether or not it holds records yet. Restricting this to populated types would leave the markers
+        // on an empty page holding hand-written text nothing checks, to be overwritten by whoever adds the
         // type's first record — surfacing the drift at the least convenient moment.
-        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key))
+        foreach (var t in adopted)
         {
             var pagePath = Path.Combine(repoRoot, t.Page);
             if (!File.Exists(pagePath)) continue;
 
             var text = Files.ReadLf(pagePath);
-            text = Generator.SpliceBlock(text, $"schema-{key}", Generator.SchemaTable(t, schema));
-            text = Generator.SpliceBlock(text, $"checks-{key}", Generator.ChecksTable(t));
+            text = Generator.SpliceBlock(text, $"schema-{t.Key}", Generator.SchemaTable(t, schema));
+            text = Generator.SpliceBlock(text, $"checks-{t.Key}", Generator.ChecksTable(t));
             targets.Add((pagePath, text));
         }
 
         // The pages that describe the taxonomy to a reader rather than to the tool. Each lists types, and
-        // the list is the half that was wrong in every corpus that adopted some of them — so each is
-        // generated from the types this corpus adopted, and none can name a type whose page is not there
-        // to open. `metadata.md` also carries the universal field table, which is the schema's alone.
-        var adopted = Corpus.Adopted(schema, repoRoot, corpus.Lock);
-
+        // the list is the half that was wrong in every corpus that adopted some of them — so none can name
+        // a type whose page is not there to open. `metadata.md` also carries the universal field table,
+        // which is the schema's alone.
         Splice(Path.Combine(repoRoot, "knowledge-as-code", "metadata.md"),
             ("schema-universal", Generator.UniversalSchemaTable(schema)),
             ("types-metadata", Generator.MetadataStrip(adopted)));
