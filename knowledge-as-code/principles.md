@@ -3,8 +3,8 @@
 Why the framework is shaped the way it is. [Taxonomy](taxonomy.md) says what the types are; this page says what they are
 for, and what the design will not trade away.
 
-These are meant to outlast the implementation. Where a principle is not yet fully built, it is marked — see
-[what is not built yet](authoring.md#what-is-not-built-yet) for what the markers mean.
+These are meant to outlast the implementation. Each describes how the framework works today; where one is only partly
+built, the tracker holds the rest.
 
 ## Behaviour before subject
 
@@ -102,69 +102,14 @@ validation that fails rather than warns — is at least partly this.
 
 It does not replace human ownership. It means humans and agents work against one model rather than two.
 
-## Deployment models
+## One corpus, one bounded context
 
-### A single corpus
+A corpus is one repository holding everything: policies, standards, services, runbooks and the rest, with the mechanism
+alongside. One product, one estate, one governance conversation.
 
-One repository holding everything: policies, standards, services, runbooks and the rest, with the mechanism alongside.
-This is the whole model for a single bounded context — one product, one estate, one governance conversation.
+Most of this page rests on that boundary. The validator fails a one-sided link because it can see both ends of it. An
+owner is authoritative because there is a single place the record could be. A session clones the repository and has the
+whole graph, with nobody to ask for the rest of it.
 
-It is the first-class case and will stay so. Nothing below is required to use this framework, and the complexity of the
-tiered model should never land on an organisation that does not need it.
-
-### Tiered corpora
-
-> **Planned.** The shape is agreed. None of the mechanism described here is built — tracked in
-> [knowledge-as-code#93](https://github.com/paul80nd/knowledge-as-code/issues/93).
-
-A larger organisation has several bounded contexts and one governance conversation. Without a way to share, each context
-copies the standards and controls it is bound by, and the copies drift —
-which [one authoritative owner](#one-authoritative-owner) says is the failure to avoid.
-
-The intended shape is three layers. The **framework** holds schema, validator and skills. A **governance corpus** holds
-the organisation-wide layer — policies, standards, controls, tools, glossary, cross-cutting decisions — changing slowly
-and approved broadly. **Domain corpora** hold the bounded context's own knowledge — capabilities, services, data,
-runbooks, local decisions — changing quickly and owned locally.
-
-The relationship is consumption, not containment. A domain corpus does not belong to the governance corpus; it consumes
-it, and remains free to hold decisions the governance layer has no opinion about.
-
-This would be complete when a domain corpus can validate a reference to a governance record it does not hold, and a
-coverage report can span the boundary.
-
-## Where this is going
-
-Each of these follows from a principle above and is not yet built.
-
-**Explicit dependencies.**
-
-> **Planned.** A corpus declares what it consumes, in its lockfile, by name and version. Dependencies are declared and
-> never inferred from folder structure or naming convention — the same discipline `manifest.yaml` already applies to the
-> shared layer, extended from files to corpora. Tracked in
-> [knowledge-as-code#93](https://github.com/paul80nd/knowledge-as-code/issues/93).
-
-**Versioned consumption.**
-
-> **Planned.** A corpus validates against a published version of an upstream corpus, never against the current state of
-> another repository's default branch. Validation that depends on someone else's uncommitted afternoon is not
-> reproducible, and the argument is the one that already applies to software packages. Tracked in
-> [knowledge-as-code#93](https://github.com/paul80nd/knowledge-as-code/issues/93).
-
-**Published contracts.**
-
-> **Aspirational.** A corpus publishes a machine-readable description of its graph — records, types, statuses, and the
-> anchors within them — as a build artefact. Consumers import the description rather than cloning the repository, which
-> makes the coupling explicit and the build cheap.
-
-**Addressing below the document.**
-
-> **Aspirational** across corpus boundaries. Within a corpus this partly exists: a policy aligns with an external
-> framework through a single clause rather than in its entirety, so the edge leaves the clause and not the document.
-> Extending that to standards, and then across a corpus boundary, is what would make coverage analysis and evidence
-> mapping precise rather than approximate. The notation is not settled and should be settled once, not per type.
-
-**Agents composing several corpora.**
-
-> **Aspirational.** A session working in a domain context loads the domain corpus, the governance corpus above it and
-> the framework's own rules, and sees one graph. This is the point of the tiered model rather than a consequence of it —
-> everything else is machinery for making that composition trustworthy.
+Nothing here asks a corpus to reach outside itself. An organisation running one bounded context needs the mechanism in
+this repository and nothing beyond it.

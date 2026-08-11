@@ -158,5 +158,6 @@ Trunk-based. Short-lived branches, PR into `main`, wiki publishes from `main`.
 pipeline that pushes fixes into the PR branch produces bot commits, re-triggers itself, and makes "who changed this"
 unanswerable — a bad trade for a repository whose value is a trustworthy history.
 
-**[The dreamer](automation.md#scheduled-tasks) has its own identity** — a service account that can open pull requests
-and cannot merge them. That is the technical form of "proposes, never commits".
+**An agent proposing knowledge has its own identity** — a service account that can open pull requests and cannot merge
+them. A human accepts what it proposes, and the branch policy is what makes that true rather than a convention anyone
+has to remember.
