@@ -6,18 +6,18 @@ The packages, services and utilities we have approved, rejected, or are triallin
 
 ## What is a tool entry?
 
-A record of something we build with: a package, a framework, a linter, a hosted service, a CLI. What it is for, whether
-it is approved, which versions we stand behind, its licence, and what we chose it over.
+A record of something we build with: a package, a framework, a linter, a hosted service, a CLI. It says what the tool is
+for, whether it is approved, which versions we stand behind, its licence, and what we chose it over.
 
-Collectively this is a lightweight software approval register — the thing a larger organisation would call an approval
-board, at a size that fits three engineers.
+Together the entries are a lightweight software approval register. A larger organisation would run one as an approval
+board; three engineers run it as a folder of records.
 
 ## Why we use them
 
-Two problems, one register. Nobody can currently answer *"are we allowed to use this?"* without asking, so the answer
-gets invented per project and the estate accretes four ways of doing the same thing. And nobody can answer *"what are we
-actually depending on?"* without reading every manifest in the estate, which matters for licences, for security
-advisories and for the day a dependency is abandoned.
+Two problems, one register. Nobody can answer *"are we allowed to use this?"* without asking around, so each project
+answers it alone. The estate ends up with several ways of doing one job. Nobody can answer *"what are we actually
+depending on?"* without opening every manifest we own. That second question arrives with a licence review, with a
+security advisory, and on the day a dependency is abandoned.
 
 Once the register exists, CI can compare it against the real manifests and report drift in both directions — packages in
 use that were never approved, and approved tools nothing uses any more.
@@ -27,12 +27,12 @@ use that were never approved, and approved tools nothing uses any more.
 A tool is something we **build with**, not something we run. A running system we call is an
 [integration](/integrations); something we deploy is a [service](/services).
 
-The register records **current state**; an [ADR](/adrs) records the **decision** where there was one worth recording.
-Small, uncontroversial adoptions need only a register entry — not every package choice deserves a decision record. A
-contested or expensive choice deserves both, and the entry cites the ADR in `decided-in`.
+The register records **current state**; an [ADR](/adrs) records the **decision**, where there was one worth recording. A
+small, uncontroversial adoption needs only a register entry. A contested or expensive choice earns both, and the entry
+cites the ADR in `decided-in`.
 
-`rejected` entries earn their place. Recording what we considered and turned down is what stops the same evaluation
-being repeated in eighteen months.
+A `rejected` entry earns its place. Somebody proposes the same package eighteen months later, and the entry hands them
+the evaluation we already did.
 
 ## Metadata
 
@@ -66,19 +66,19 @@ being repeated in eighteen months.
 ## Adding a tool
 
 1. Copy [`_template.md`](tools/_template.md) to `<slug>.md`. Tools use slug ids — `tol-vitest`.
-2. Set `status`. `trial` is for something being evaluated in one place; promote or reject it rather than leaving it
-   there indefinitely.
-3. Record the `licence` as an SPDX identifier. This is the field nobody wants until they urgently do.
-4. Note what it replaces, if anything, so the deprecation path is visible.
-5. Cite `decided-in` where an ADR exists. If the choice was contested and no ADR exists, that is a prompt to write one.
+2. Set `status`. `trial` covers something being evaluated in one place; promote or reject it rather than leaving it
+   there.
+3. Record the `licence` as an SPDX identifier.
+4. Where this tool takes over from an older one, name the older tool in `replaces`, so the deprecation path is visible.
+5. Cite `decided-in` where an ADR exists. Where the choice was contested and no ADR exists, write one.
 
 **Conventions**
 
 * **Approved means approved for new work.** Something already in use but not approved is drift, and the drift report
   will say so.
-* **Deprecated needs a successor** — mark what replaces it, or the entry is just a complaint.
-* **Version ranges, not pinned versions.** The register states what we stand behind; the manifests state what is
-  installed.
+* **A deprecated entry names its successor.** Set `successor` to whatever took over, so somebody arriving from a
+  manifest has somewhere to go next.
+* **Give `versions` a range, not a pin.** The pin belongs in the manifest.
 
 ## What CI checks
 

@@ -6,8 +6,8 @@ Problems we have hit before, with the fix that worked.
 
 ## What is an FAQ?
 
-One document per problem: the symptom as you would actually encounter it, what causes it, how to fix it, and why it
-happens. A human has confirmed it, so an FAQ carries authority.
+One document per problem: the symptom as you would encounter it, what causes it, how to fix it, and why it happens. A
+human has confirmed it, so an FAQ carries authority.
 
 Add one when an investigation cost real time. You will hit the same problem again, and so will the next session.
 
@@ -16,13 +16,14 @@ Add one when an investigation cost real time. You will hit the same problem agai
 The same problems come back, and the next person to hit one pays the cost again. An FAQ turns two hours of debugging
 into a thirty-second search, provided the words that person searches for are in `symptom-keywords`.
 
-An FAQ is also where the promotion path ends: a [discovery](/discoveries) that turns out to be real, general and current
-becomes one.
+A [discovery](/discoveries) can also become an FAQ. A human promotes it once the observation proves real, general and
+current.
 
 ## Scope
 
 An FAQ is **confirmed**. A human has verified that the problem is real, that the fix works, and that both are still
-current. Nobody reviews a [discovery](/discoveries), which is captured cheaply and might be wrong or already fixed.
+current. A [discovery](/discoveries) arrives with none of that verification: nobody reviews one, and it might be wrong
+or already fixed.
 
 **Never write straight to an FAQ from a session.** An agent cannot confirm its own observations, so capture a discovery
 and let a human confirm it at promotion.
@@ -70,9 +71,8 @@ Other boundaries:
 1. Copy [`_template.md`](faqs/_template.md) to `<slug>.md`, named for the symptom rather than the cause — that is what
    people search for.
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
-3. Over-fill `symptom-keywords`: the literal error text, the service names, and the words someone types before they know
-   what is wrong.
-4. Record `confirmed-by` and `confirmed-on` — a named person, and the date they confirmed it.
+3. Over-fill `symptom-keywords` with the search terms that failed you the day you hit the problem.
+4. Name whoever verified the fix in `confirmed-by`, and date the verification in `confirmed-on`.
 5. Set `review-by`. A fix goes stale when the thing it fixes gets rewritten.
 
 **Conventions**

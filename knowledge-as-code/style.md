@@ -59,6 +59,10 @@ did not bring.
 **One such line per document, and only where it survives the test.** This bites hardest on the line you are pleased
 with, and the difference is easier to see the morning after.
 
+The budget counts the lines you wrote. A line the schema owns and the generator renders — *an NFR you cannot measure is
+a wish* — is not yours to spend it on, and rewriting it here would only put the page out of step with the schema. Where
+such a line reads badly, fix it in the schema.
+
 ## Name who does what
 
 The most common way our writing goes wrong is by deleting the actor.
@@ -109,11 +113,14 @@ reader works through it in order. A bullet in an unordered list of independent i
 scans such a list and stops at the one they need. Hold a seven-bullet section to a single contrast and the distinction
 ends up in the line that gets skipped instead of the line that gets read.
 
-Three cases sit outside the budget. A bold lead earns one, because that is the line a scanner reads. A phrase the corpus
-has standardised — *link rather than restate* names both a rule id and a schema field — is not yours to spend a budget
-on. A section whose work is to draw a boundary earns one contrast for each neighbour it separates from, and the
-neighbours are the ones a reader genuinely confuses it with. Naming more than three means the section has become a
-taxonomy, and the taxonomy already has a page.
+Three cases sit outside the budget, and each overrides the unit rather than competing with it. A bold lead earns one,
+because that is the line a scanner reads. A phrase the corpus has standardised — *link rather than restate* names both a
+rule id and a schema field — is not yours to spend a budget on. A section whose work is to draw a boundary earns one
+contrast for each neighbour it separates from, and the neighbours are the ones a reader genuinely confuses it with.
+Naming more than three means the section has become a taxonomy, and the taxonomy already has a page.
+
+**Count the distinction, not the wording.** *A discovery arrives with none of that verification* draws the same line as
+*verified, not observed* and spends the same budget. A contrast you rephrased into a plain sentence is still a contrast.
 
 **The same ceiling applies to any device you like.** One replacement applied everywhere becomes the next mannerism. Swap
 every contrast for the same conditional and you have moved the tic, not removed it. It now sits in the paragraph the
@@ -257,6 +264,10 @@ quoted back in an audit. They carry the whole weight of precision, and they shou
 The rules above land on sentences. This is what they look like held together over a page. The type is invented and no
 corpus holds it, so read the passage for its shape and leave its sentences here.
 
+The shape is reusable and the wording is not. Where a page you are writing already opens the way this one does, vary it:
+three pages in a row beginning *Two audiences read these* is the monotony this section warns about, whoever wrote the
+sentence first.
+
 > ## Why we use them
 >
 > A vendor record is the account of one supplier we pay: what we buy, what we send them, and what stops working on the
@@ -298,13 +309,17 @@ is right and lands badly has cost more than it bought.
 
 Run these against what you actually wrote. This is a pass over the draft, not a list to keep in mind while writing.
 
-1. **Name the subject of each sentence.** Where the answer is "nothing", rewrite it.
-2. **Read the longest sentence aloud.** If you run out of breath, it is two sentences.
+1. **Name the subject of each sentence.** Where the answer is "nothing", rewrite it. A definition may open on a
+   fragment — *One document per deployable component* — because the heading above supplies the subject.
+2. **Read the longest sentence aloud.** If you run out of breath, it is two sentences. A sentence carrying four parallel
+   items may run past 25 words and still land on one pass.
 3. **Mark the shape of each sentence in your longest section.** Four alike in a row means rewrite three.
-4. **Count the contrasts in each reading unit.** More than one, and the rest are decoration. Boundary sections, bold
-   leads and phrases the corpus has standardised are exempt.
-5. **Read the last sentence of each section.** Where two in a row close on a short quotable line, rewrite the weaker.
-6. **Find the line you are proudest of.** Ask what it points at outside itself. Cut it if the answer is nothing.
-7. **Read it as someone who was not in the conversation.** That reader is most of your audience.
+4. **Count the contrasts in each reading unit**, counting distinctions rather than wordings. More than one, and the rest
+   are decoration. Boundary sections, bold leads and phrases the corpus has standardised are exempt.
+5. **Count the em dashes in each paragraph.** More than one device means some of them are full stops.
+6. **Read the last sentence of each section.** Where two in a row close on a short quotable line, rewrite the weaker.
+7. **Find the line you are proudest of.** Ask what it points at outside itself. Cut it if the answer is nothing, and
+   leave it where the schema owns it.
+8. **Read it as someone who was not in the conversation.** That reader is most of your audience.
 
 Our debts are recorded in [lineage](lineage.md#language).

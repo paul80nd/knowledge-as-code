@@ -6,33 +6,33 @@ Where data lives, how long we keep it, and how sensitive it is.
 
 ## What is a data document?
 
-One per data domain: which entities it covers, which [service](/services) owns them, what store they live in, how
-sensitive they are, how long we keep them, and where they flow.
+One document per data domain. It names the entities in the domain, the [service](/services) that owns them, and the
+stores they live in. The rest of the record says how sensitive they are, how long we keep them, and where they flow.
 
 ## Why we use them
 
-Two audiences, one document. For anyone building something, it answers the question asked constantly and answered
-inconsistently: *where do bookings actually live, and who owns them?* For the [policy](/policies) tier, it is the
-evidence — an auditor's first question is what personal data exists and how long it is kept, and the answer should not
-require an archaeology exercise.
+Two readers arrive with different questions. Someone building a feature wants to know where bookings actually live and
+which service owns them. Ask around and the answers disagree. Someone answering an auditor wants to know what personal
+data we hold and how long we keep it. Nobody should have to read a database schema to answer that. A data document
+answers the first question the same way every time, and gives the [policy](/policies) tier its evidence for the second.
 
-Recording ownership also surfaces the cases where two services believe they own the same entity, which is a design
-problem worth finding on paper.
+An author filling in `owned-by` also finds the entities that two services both believe they own. That disagreement is a
+design problem worth finding on paper.
 
 ## Scope
 
-Data documents are **descriptive** — they mirror what is actually stored. They are organised by data domain rather than
-by store, because a domain often spans stores and that is the interesting part.
+A data document is **descriptive**: it mirrors what is actually stored. We organise data documents by data domain
+rather than by store, because a domain often spans stores and that spread is the part worth seeing.
 
 Not the place for:
 
 * **Schema definitions** — those live with the code that owns them.
-* **How to query it** — that is a [process](/processes) or a service document.
-* **Retention rules as commitments** — the *commitment* is a [policy](/policies); this records the *actual* retention.
-  Where they differ, that gap is worth knowing about.
+* **How to query the data** — that is a [process](/processes) or the service's own document.
+* **Retention rules as commitments** — a [policy](/policies) holds the commitment, and a data document records what the
+  store actually does.
 
-Note the folder is singular — `data/` — because English gives no plural. It is the one exception alongside
-[`glossary.md`](/glossary).
+The folder is singular — `data/` — because English gives no plural. It and [`glossary.md`](/glossary) are the two
+exceptions to the plural-folder rule.
 
 ## Metadata
 
@@ -70,20 +70,19 @@ Note the folder is singular — `data/` — because English gives no plural. It 
 
 ## Adding a data document
 
-1. Copy [`_template.md`](data/_template.md) to `<slug>.md`. Data documents use slug ids — `dat-<name>`.
-2. Name the entities it covers and the single service that owns them. If two services claim ownership, resolve that
-   before writing the document.
-3. Classify honestly. Customer names, email addresses and payment histories are `personal`; anything special-category
-   needs a lawful basis recorded.
-4. State `retention` concretely — "indefinitely" is an answer, and a revealing one.
-5. Record `flows-to`: which services and [integrations](/integrations) receive this data. Data leaving the estate is the
-   part that matters most.
+1. Copy [`_template.md`](data/_template.md) to `<slug>.md`. Data documents take slug ids, `dat-<name>`.
+2. Name the entities the domain covers and the one service that owns them. If two services claim the same entity,
+   resolve the claim before you write the document.
+3. Classify honestly. Customer names, email addresses and payment histories are `personal`. Where the classification is
+   `special-category`, record the lawful basis for holding it.
+4. State `retention` concretely. "Indefinitely" is an answer, and a revealing one.
+5. Record `flows-to`: the services and [integrations](/integrations) that receive this data.
 
 **Conventions**
 
-* **One owning service per domain.** Shared ownership means nobody is answerable.
+* **A `personal` or `special-category` classification requires a `retention`.** Leave it out and `required-field` fails
+  the build.
 * **Never put actual data here** — no sample records, no identifiers, no connection strings.
-* **Personal data without a stated retention** is reported by CI. It is the first thing anyone external will ask.
 
 ## What CI checks
 
