@@ -142,28 +142,113 @@ so they stay local. Only distilled, reviewed discoveries reach the wiki.
 
 ## How the types relate
 
-The edges carry as much value as the nodes, and they are the part that breaks silently. CI validates that every
-reference resolves to a document that exists and is not superseded.
+The edges carry as much value as the nodes, and they are the part that breaks silently. Every one below is a
+cross-reference field the schema declares, so CI can check that it resolves to a document that exists — which is the
+whole reason for declaring them rather than writing the link in prose.
 
+<!-- BEGIN GENERATED: types-graph -->
+
+```mermaid
+graph LR;
+  t_adrs[ADR];
+  t_capabilities[Capability];
+  t_controls[Control];
+  t_data[Data];
+  t_discoveries[Discovery];
+  t_explanations[Explanation];
+  t_faqs[FAQ];
+  t_glossary[Glossary];
+  t_integrations[Integration];
+  t_nfrs[NFR];
+  t_policies[Policy];
+  t_postmortems[Postmortem];
+  t_processes[Process];
+  t_runbooks[Runbook];
+  t_services[Service];
+  t_standards[Standard];
+  t_tools[Tool];
+  t_adrs -->|related| t_adrs;
+  t_adrs -->|superseded-by| t_adrs;
+  t_capabilities -->|implemented-by| t_services;
+  t_capabilities -->|nfrs| t_nfrs;
+  t_controls -->|applies-to| t_services;
+  t_controls -->|verifies| t_standards;
+  t_data -->|flows-to| t_services;
+  t_data -->|flows-to| t_integrations;
+  t_data -->|owned-by| t_services;
+  t_discoveries -->|applies-to| t_services;
+  t_discoveries -->|promoted-to| t_faqs;
+  t_discoveries -->|promoted-to| t_standards;
+  t_explanations -->|explains| t_services;
+  t_explanations -->|explains| t_capabilities;
+  t_faqs -->|applies-to| t_services;
+  t_integrations -->|used-by| t_services;
+  t_nfrs -->|applies-to| t_services;
+  t_nfrs -->|applies-to| t_capabilities;
+  t_nfrs -->|constrained-by| t_integrations;
+  t_postmortems -->|affected| t_services;
+  t_postmortems -->|affected| t_capabilities;
+  t_postmortems -->|prompted| t_adrs;
+  t_postmortems -->|prompted| t_runbooks;
+  t_postmortems -->|prompted| t_nfrs;
+  t_postmortems -->|prompted| t_faqs;
+  t_postmortems -->|prompted| t_standards;
+  t_processes -->|applies-to| t_services;
+  t_runbooks -->|applies-to| t_services;
+  t_services -->|data-stores| t_data;
+  t_services -->|depends-on| t_services;
+  t_standards -->|applies-to| t_services;
+  t_standards -->|derived-from| t_adrs;
+  t_standards -->|implements| t_policies;
+  t_tools -->|decided-in| t_adrs;
+  t_tools -->|replaces| t_tools;
 ```
-Policy <──implements── Standard ──verified-by──> Control ──applies-to──> Service
-   │                      │                                                ▲
- clause                   └──derived-from──> ADR                           │
-   │                                          ▲                            │
-   └──aligns-with──> Framework                │                            │
-                     (frameworks.md)     prompted-by                       │
-                                          Postmortem                       │
-Capability ──implemented-by────────────────────────────────────────────────┘
-    │
-    ├──detailed-by──────> ADO epics & features
-    ├──tested-by────────> feature files
-    └──constrained-by───> NFR
 
-Discovery ──promoted-to──> FAQ ──relates-to──> Service | Capability
-```
+<!-- END GENERATED: types-graph -->
 
-Reciprocal pairs must agree in both directions: `supersedes`/`superseded-by`, `verifies`/`verified-by`,
-`promoted-from`/`promoted-to`. A one-sided link fails the build.
+The spine runs down the normative hierarchy: a standard implements a policy, a control verifies a standard, and both
+land on a service. Everything else hangs off that. The same edges, field by field:
+
+<!-- BEGIN GENERATED: types-edges -->
+
+| From        | Field            | Points at                        | Answered by     |
+|-------------|------------------|----------------------------------|-----------------|
+| ADR         | `related`        | ADR                              |                 |
+| ADR         | `superseded-by`  | ADR                              | `supersedes`    |
+| ADR         | `supersedes`     | ADR                              | `superseded-by` |
+| Capability  | `implemented-by` | Service                          |                 |
+| Capability  | `nfrs`           | NFR                              |                 |
+| Control     | `applies-to`     | Service                          |                 |
+| Control     | `verifies`       | Standard                         | `verified-by`   |
+| Data        | `flows-to`       | Service, Integration             |                 |
+| Data        | `owned-by`       | Service                          |                 |
+| Discovery   | `applies-to`     | Service                          |                 |
+| Discovery   | `promoted-to`    | FAQ, Standard                    | `promoted-from` |
+| Explanation | `explains`       | Service, Capability              |                 |
+| FAQ         | `applies-to`     | Service                          |                 |
+| FAQ         | `promoted-from`  | Discovery                        | `promoted-to`   |
+| Integration | `used-by`        | Service                          |                 |
+| NFR         | `applies-to`     | Service, Capability              |                 |
+| NFR         | `constrained-by` | Integration                      |                 |
+| Postmortem  | `affected`       | Service, Capability              |                 |
+| Postmortem  | `prompted`       | ADR, Runbook, NFR, FAQ, Standard |                 |
+| Process     | `applies-to`     | Service                          |                 |
+| Runbook     | `applies-to`     | Service                          |                 |
+| Service     | `data-stores`    | Data                             |                 |
+| Service     | `depends-on`     | Service                          |                 |
+| Standard    | `applies-to`     | Service                          |                 |
+| Standard    | `derived-from`   | ADR                              |                 |
+| Standard    | `implements`     | Policy                           |                 |
+| Standard    | `verified-by`    | Control                          | `verifies`      |
+| Tool        | `decided-in`     | ADR                              |                 |
+| Tool        | `replaces`       | Tool                             | `successor`     |
+| Tool        | `successor`      | Tool                             | `replaces`      |
+
+<!-- END GENERATED: types-edges -->
+
+Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, `verifies` / `verified-by`,
+`promoted-from` / `promoted-to`. A one-sided link fails the build, which is what the last column above is for — a field
+with nothing in it is answered by nobody and is nobody's job to keep in step.
 
 Not every edge is a pair. A standard's `implements` points up at a policy and is never answered from the policy side:
 policies are the layer a downstream corpus inherits, standards the layer it writes for itself, so what implements a
@@ -172,43 +257,8 @@ policy is not knowable from where the policy sits.
 Nor does every edge leave from a whole document. A policy aligns with a framework through a single **clause** rather
 than in its entirety, so the edge leaves the clause table and lands on a control — `pol-SCRT.KEYS` to Annex A A.8.24.
 [Frameworks](/frameworks.md) is the far end of every one of those edges, and the only place our standing against a
-framework is recorded.
+framework is recorded. It carries no `ref:` and so appears in no row above.
 
-## Layout
-
-Each type follows the same shape:
-
-```
-<type>.md              # what it is, why, how to contribute — human-written
-<type>/
-  ├── _index.md        # index — GENERATED
-  ├── _template.md     # what humans and agents copy
-  └── <records>.md
-```
-
-`_` is reserved. A leading underscore means the framework's own artefact rather than a knowledge record — the generated
-index and the template inside a type folder, the scaffolding directories alongside them. The tool reads the prefix, not
-the names, so anything under it is excluded from discovery and never validated as a record. A record must therefore not
-take it. The prefix also sorts ahead of letters whether or not a listing folds case, which is what keeps the framework's
-files together at the top of a folder someone is scanning for content.
-
-Alongside the types:
-
-```
-README.md              # orientation
-CLAUDE.md              # agent guidance, with the rules digest generated into it
-glossary.md
-frameworks.md          # external frameworks, and what each obliges us to
-knowledge-as-code.md   # the approach
-knowledge-as-code/     # the system's own documentation — outside the taxonomy
-  manifest.yaml        # which files are shared and which are local
-.mechanism.lock        # this corpus's sync state
-.claude/skills/        # agent machinery — SYNCED
-.schema/               # the machine-readable schema — SYNCED
-.tooling/              # validators and generators — SYNCED
-_plan/                 # migration scaffolding — temporary
-_reports/              # GENERATED
-```
 
 ## Disambiguations
 

@@ -87,6 +87,78 @@ public static class Generator
         return string.Join("\n", sections).TrimEnd('\n');
     }
 
+    // The edges, read off the `ref:` declarations that make them checkable. One row per cross-reference
+    // field a type carries, which is one row per thing an author fills in — so a reciprocal pair is two
+    // rows rather than one, because it is two fields, and the column naming the counterpart is what says
+    // they belong together.
+    //
+    // A target the corpus has not stood up is dropped from the row, and a row left pointing nowhere goes
+    // with it. The field would resolve against no document in any case; showing it would promise an edge
+    // this corpus cannot have.
+    public static string RelationTable(IEnumerable<TypeSchema> types)
+    {
+        var stoodUp = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
+        var rows = new List<List<string>>();
+
+        foreach (var (t, name, field, targets) in Edges(types, stoodUp))
+            rows.Add([t.DisplayName, $"`{name}`", string.Join(", ", targets.Select(x => x.DisplayName)),
+                field.Reciprocal is { } back ? $"`{back}`" : ""]);
+
+        return RenderTable(["From", "Field", "Points at", "Answered by"], rows);
+    }
+
+    // Every cross-reference a stood-up type declares at another stood-up type, in a fixed order: by the
+    // type a reader would look up, then by the field they would write.
+    private static IEnumerable<(TypeSchema From, string Field, FieldSpec Spec, List<TypeSchema> To)> Edges(
+        IEnumerable<TypeSchema> types, Dictionary<string, TypeSchema> stoodUp)
+    {
+        foreach (var t in types.OrderBy(t => t.DisplayName, StringComparer.Ordinal))
+        foreach (var name in t.FieldOrder.OrderBy(n => n, StringComparer.Ordinal))
+        {
+            if (!t.Fields.TryGetValue(name, out var field) || field.Refs.Count == 0) continue;
+
+            var targets = field.Refs.Where(stoodUp.ContainsKey).Select(r => stoodUp[r]).ToList();
+            if (targets.Count > 0) yield return (t, name, field, targets);
+        }
+    }
+
+    // The same edges as a diagram, which answers a different question from the table: what shape the graph
+    // is, rather than which field to write. A reciprocal pair is one edge here and two rows there, and both
+    // are right — the graph has one relationship where an author has two fields to fill in.
+    //
+    // Written to the subset of Mermaid an Azure DevOps wiki renders, which is narrower than Mermaid's own
+    // and fails silently where it is exceeded: `graph`, never `flowchart`; `-->`, never a longer arrow; and
+    // no subgraphs, because ADO does not support links crossing one. GitHub renders this subset too, so the
+    // fenced form is used rather than ADO's `:::` container, which GitHub shows as literal text.
+    public static string RelationDiagram(IEnumerable<TypeSchema> types)
+    {
+        var stoodUp = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
+        var diagram = new StringBuilder("```mermaid\ngraph LR;\n");
+
+        foreach (var t in stoodUp.Values.OrderBy(t => t.DisplayName, StringComparer.Ordinal))
+            diagram.Append($"  {Node(t.Key)}[{t.DisplayName}];\n");
+
+        // Reciprocal halves collapse into the one edge they describe; whichever half is met first names it.
+        var drawn = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var (from, name, field, targets) in Edges(types, stoodUp))
+        foreach (var to in targets)
+        {
+            var pair = string.CompareOrdinal(from.Key, to.Key) < 0
+                ? $"{from.Key}|{to.Key}"
+                : $"{to.Key}|{from.Key}";
+            if (field.Reciprocal is not null && !drawn.Add(pair)) continue;
+
+            diagram.Append($"  {Node(from.Key)} -->|{name}| {Node(to.Key)};\n");
+        }
+
+        return diagram.Append("```").ToString();
+    }
+
+    // A mermaid node id. Prefixed and reduced to word characters so that a type whose folder carries a
+    // hyphen, or is spelled `end`, cannot collide with the diagram's own grammar.
+    private static string Node(string key) =>
+        "t_" + new string([.. key.Select(c => char.IsLetterOrDigit(c) ? c : '_')]);
+
     // The calls that are genuinely close. A pair needs both of its types to say anything at all, so one
     // adopted and one not leaves the pair out — a corpus with no controls is not helped by being told how
     // a standard differs from one.

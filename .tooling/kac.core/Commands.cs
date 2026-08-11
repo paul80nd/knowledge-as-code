@@ -86,7 +86,9 @@ public static class Commands
         Splice(Path.Combine(repoRoot, "knowledge-as-code", "taxonomy.md"),
             ("types-placement", Generator.PlacementTable(stoodUp)),
             ("types-detail", Generator.TypeCatalogue(schema.Tiers, stoodUp)),
-            ("types-versus", Generator.Disambiguations(stoodUp)));
+            ("types-versus", Generator.Disambiguations(stoodUp)),
+            ("types-graph", Generator.RelationDiagram(stoodUp)),
+            ("types-edges", Generator.RelationTable(stoodUp)));
 
         Splice(Path.Combine(repoRoot, "README.md"),
             ("types-index", Generator.TypesIndex(stoodUp, "knowledge-as-code/taxonomy.md")));

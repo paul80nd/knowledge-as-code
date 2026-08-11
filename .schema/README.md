@@ -79,6 +79,10 @@ these files. See [What the schema is held to](#what-the-schema-is-held-to). Ever
 against the corpus as `ref-resolves`, whether or not the field also declares a `reciprocal:` — the one-directional edges
 are the ones no counterpart holds in step, so they are the ones a check has to hold.
 
+Between them the `ref:` declarations *are* the graph, and the taxonomy renders them as one: a diagram of how the types
+relate, and a table of the field behind each edge. Nothing else declares an edge, which is why a relationship written
+only as prose is one nothing can check — and why it appears in neither.
+
 `mirrors-section` names an H2 the type declares — any of them, and a type may mirror two fields against two sections —
 and holds the ids in the field against the ids the section links to, in a bullet or in prose alike, in both directions
 and case-insensitively. It is for a field carried in frontmatter and repeated in the body, where the two drift apart

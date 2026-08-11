@@ -417,6 +417,80 @@ public class GeneratorTests
         Assert.DoesNotContain("Never rendered", text);
     }
 
+    // -- how the types relate --
+
+    private static TypeSchema Linked(string label, string key, params (string Field, string[] Refs, string? Back)[] fs)
+    {
+        var fields = fs.ToDictionary(f => f.Field,
+            f => new FieldSpec { Name = f.Field, Type = "list", Of = "id", Refs = f.Refs, Reciprocal = f.Back });
+
+        return new TypeSchema
+        {
+            Key = key, Label = label, LabelPlural = label + "s", Tier = "normative", Page = $"{key}.md",
+            Summary = "A thing.", Detail = "A longer thing.", GoesHere = "A thing",
+            FieldOrder = [.. fs.Select(f => f.Field)], Fields = fields
+        };
+    }
+
+    private static TypeSchema[] Graph() =>
+    [
+        Linked("Standard", "standards", ("implements", ["policies"], null), ("verified-by", ["controls"], "verifies")),
+        Linked("Control", "controls", ("verifies", ["standards"], "verified-by")),
+        Linked("Policy", "policies")
+    ];
+
+    [Fact]
+    public void The_relation_table_carries_both_halves_of_a_reciprocal_pair()
+    {
+        var table = Generator.RelationTable(Graph());
+
+        Assert.Contains("| Standard | `verified-by`", table);
+        Assert.Contains("| Control  | `verifies`", table);
+        Assert.Contains("`verifies`    |", table);   // …each naming the other in the last column
+    }
+
+    // A one-directional edge has nobody obliged to answer it, and the empty cell is what says so.
+    [Fact]
+    public void A_one_directional_edge_names_no_counterpart()
+        => Assert.Matches(@"\| Standard \| `implements`\s+\| Policy\s+\|\s+\|", Generator.RelationTable(Graph()));
+
+    // The field would resolve against no document, so the row would promise an edge that cannot exist.
+    [Fact]
+    public void An_edge_at_a_type_the_corpus_has_not_stood_up_is_dropped()
+    {
+        var table = Generator.RelationTable(Graph()[..2]);   // policies not stood up
+
+        Assert.DoesNotContain("implements", table);
+        Assert.Contains("verifies", table);
+    }
+
+    // The subset of Mermaid an Azure DevOps wiki renders: `graph`, never `flowchart`; no subgraphs; and
+    // no arrow longer than `-->`. Exceeding it fails silently in the wiki, so it is pinned here.
+    [Fact]
+    public void The_diagram_stays_inside_what_an_ADO_wiki_renders()
+    {
+        var diagram = Generator.RelationDiagram(Graph());
+
+        Assert.StartsWith("```mermaid\ngraph LR;\n", diagram);
+        Assert.DoesNotContain("flowchart", diagram);
+        Assert.DoesNotContain("subgraph", diagram);
+        Assert.DoesNotContain("--->", diagram);
+    }
+
+    // One relationship, one arrow — where the table has two rows, because an author has two fields.
+    [Fact]
+    public void A_reciprocal_pair_is_drawn_once()
+    {
+        var diagram = Generator.RelationDiagram(Graph());
+
+        Assert.Contains("t_controls -->|verifies| t_standards;", diagram);
+        Assert.DoesNotContain("verified-by", diagram);
+    }
+
+    [Fact]
+    public void A_type_with_no_edges_is_still_drawn()
+        => Assert.Contains("t_policies[Policy];", Generator.RelationDiagram(Graph()));
+
     [Fact]
     public void SpliceBlock_replaces_only_between_the_named_markers()
     {

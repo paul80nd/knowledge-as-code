@@ -31,3 +31,26 @@ ADR rather than rewritten. A decision local to a single repository belongs in th
 
 
 <!-- END GENERATED: types-versus -->
+
+## How the types relate
+
+<!-- BEGIN GENERATED: types-graph -->
+
+```mermaid
+graph LR;
+  t_adrs[ADR];
+  t_adrs -->|related| t_adrs;
+  t_adrs -->|superseded-by| t_adrs;
+```
+
+<!-- END GENERATED: types-graph -->
+
+<!-- BEGIN GENERATED: types-edges -->
+
+| From | Field           | Points at | Answered by     |
+|------|-----------------|-----------|-----------------|
+| ADR  | `related`       | ADR       |                 |
+| ADR  | `superseded-by` | ADR       | `supersedes`    |
+| ADR  | `supersedes`    | ADR       | `superseded-by` |
+
+<!-- END GENERATED: types-edges -->
