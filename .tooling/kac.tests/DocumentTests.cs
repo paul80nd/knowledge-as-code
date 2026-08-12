@@ -73,6 +73,7 @@ public class DocumentTests
     [InlineData("## Context\n\nWhy.\n", "Why.")]
     [InlineData("## Context\n\n### A sub-heading\n\nWhy.\n", "### A sub-heading\n\nWhy.")]
     [InlineData("## Context\n\nWhy.\n\n## Decision\n\nWhat.\n", "Why.")]
+    [InlineData("## Context\n\nWhy.\n\n# A second title\n\nMore.\n", "Why.")]
     [InlineData("## Context\n", "")]
     [InlineData("## Context\n\n## Decision\n", "")]
     public void A_section_body_runs_to_the_next_heading_at_its_level_or_above(string body, string expected)

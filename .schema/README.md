@@ -226,8 +226,9 @@ trips it actually reads, or in a `#` comment for an intention that has no messag
 every one of these grew to two or three sentences, and `schema-shape` now says so when the schema loads. An intention's
 description is bound too — it renders in *Declared, not yet enforced* on the same page.
 
-Two ids keep a hand-written class instead — `y-statement-present` and `alternatives-have-verdicts`, both on the
-decision-record type — because what they ask needs more than the grammar can say. Every remaining id is a statement of
+Three ids keep a hand-written class instead — `y-statement-present` and `alternatives-have-verdicts` on the
+decision-record type, and `terms-are-alphabetical` on the glossary — because what they ask needs more than the grammar
+can say. Every remaining id is a statement of
 intent: a behaviour someone wants, written down, that no code answers to yet. **An intention declares no `severity:`**,
 which is what tells the tool it is one; the type page renders them beneath the checks table under *Declared, not yet
 enforced*, so a reader can see both what a build will say about their document and what has been written down and not

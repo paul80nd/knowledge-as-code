@@ -32,10 +32,10 @@ public static class Md
         return sb.ToString().Trim();
     }
 
-    // Whether a stretch of a document says anything, which is a letter or a digit. Read on the source
-    // as written rather than on the rendered blocks: a horizontal rule, a bullet marker left behind or
-    // an em dash standing in for the words is a stretch nobody has written yet, and the AST would offer
-    // all three as content.
+    // Whether a stretch of a document says anything: a letter or a digit somewhere in it. Read on the
+    // source as written, so that a horizontal rule, a bullet marker left behind or an em dash standing
+    // in for the words counts as nothing written — the rendered blocks would offer all three as
+    // content.
     public static bool HasContent(ReadOnlySpan<char> text)
     {
         foreach (var c in text)

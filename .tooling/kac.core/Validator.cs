@@ -235,20 +235,21 @@ public static class Validator
                 Err("required-section", $"missing required section '## {sec}'.");
 
         // -- a section that is nothing but its heading --
-        // `required-section` asks whether the heading is there, and a heading satisfies it by existing.
-        // An author with nothing to say cannot delete a required one, so what is left is a heading with
-        // a blank under it, which reads as a finished document to everyone but the person who needed the
-        // section.
+        // `required-section` is answered by a heading existing, and an author with nothing to say cannot
+        // delete a required one, so what they leave is a blank beneath it — which reads as a finished
+        // document to everyone but the person who needed the section. An optional section reaches the
+        // same state from the other side, emptied during a cleanup with the heading left behind, and the
+        // remedy differs enough to be worth two wordings.
         //
-        // Asked of the optional sections too, where the fault is the same and arrives by a different
-        // route: a section emptied out during a cleanup leaves its heading behind, and nothing else would
-        // notice. The remedy differs, so the two are worded apart. A section the schema never declared is
-        // the author's own and is not judged here.
-        //
-        // Not asked of a template, whose headings stand empty for the copy to fill.
+        // A section the schema never declared is the author's own. A template's stand empty for the copy
+        // to fill. The clause section is left to `clause-table`, which is looking at the same blank and
+        // can say what belongs there.
         if (kind == DocKind.Record)
             foreach (var s in d.Sections.Where(s => !Md.HasContent(d.Text.AsSpan()[s.BodyStart..s.BodyEnd])))
             {
+                if (t.Clauses is { } clauses
+                    && string.Equals(s.Title, clauses.Section, StringComparison.OrdinalIgnoreCase)) continue;
+
                 if (t.RequiredSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
                     Err("empty-section", $"required section '## {s.Title}' has nothing under it.", s.Line);
                 else if (t.OptionalSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
@@ -729,7 +730,6 @@ public static class Validator
     // what kind of document this is, which one it is, and whether it is in force. Each half is checked
     // against the frontmatter separately, because "this says Standard" and "this says the wrong id" are
     // different mistakes with different fixes and a reader deserves to be told which they made.
-    //
     private static void CheckIdentity(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
         Action<string, string, int?> err)
     {
@@ -889,5 +889,4 @@ public static class Validator
 
         return result;
     }
-
 }

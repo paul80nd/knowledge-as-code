@@ -412,6 +412,14 @@ public static class Generator
         return Escape(f.TableText ?? "");
     }
 
+    // What a description may run to. The checks table is read by scanning — a reader wants to know which
+    // row is the one they tripped, not to read a paragraph about each of forty-odd — and a cell that runs
+    // to several sentences is one that has taken on the message's job as well as its own. A description
+    // says what is verified; a rule's `message:` says what to do about it, and is where the author who
+    // tripped it will read the reasoning. Held here because the table is what makes this a limit, and read
+    // by SchemaChecks so a schema's own rules are held to the same bound as the rows written below.
+    public const int DescriptionMax = 120;
+
     // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that `kac index`
     // splices into every type page. It is deliberately NOT the raw catalogue — related checks are folded
     // into one row (the three `id-*` checks read as one `id` row) and worded for a human skim. Generating
@@ -422,14 +430,6 @@ public static class Generator
     // type's own schema whether the check can fire at all — so a policy page does not advertise that its
     // documents are checked for Y-statements. Read from the schema rather than hand-listed per type, so
     // declaring a rule remains the only thing needed to document it.
-    // What a description may run to. The checks table is read by scanning — a reader wants to know which
-    // row is the one they tripped, not to read a paragraph about each of forty-odd — and a cell that runs
-    // to several sentences is one that has taken on the message's job as well as its own. A description
-    // says what is verified; a rule's `message:` says what to do about it, and is where the author who
-    // tripped it will read the reasoning. Held here because the table is what makes this a limit, and read
-    // by SchemaChecks so a schema's own rules are held to the same bound as the rows written below.
-    public const int DescriptionMax = 120;
-
     private static readonly (string Label, string[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
         ("frontmatter-parses", ["frontmatter-parses"], "Frontmatter is present and is a valid YAML mapping.", null),

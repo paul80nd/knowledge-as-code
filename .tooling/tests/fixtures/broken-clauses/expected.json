@@ -1,12 +1,19 @@
 {
   "summary": {
-    "validated": 12,
+    "validated": 13,
     "templates": 1,
     "skipped": 0,
-    "errors": 10,
+    "errors": 11,
     "warnings": 2
   },
   "findings": [
+    {
+      "file": "policies/blnk-empty-clause-section.md",
+      "line": 24,
+      "severity": "error",
+      "check": "clause-table",
+      "message": "the '## Clauses' section holds no table — write one row per obligation, headed 'Id | Clause | Alignment'."
+    },
     {
       "file": "policies/bold-binding-not-bold.md",
       "line": 27,

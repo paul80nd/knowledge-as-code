@@ -56,9 +56,9 @@ public sealed class Facts(Doc doc)
     public bool FieldMatches(string name, string pattern) =>
         doc.FrontScalar(name) is { Length: > 0 } value && Pattern(pattern).IsMatch(value);
 
-    // The same question asked of one section — from its heading down to the next one at the same level
-    // or above. False where the document has no such section, so a rule naming a section reads as
-    // satisfied rather than throwing; whether the section ought to be there is `required-section`'s.
+    // The same question asked of one section's body. False where the document has no such section, so a
+    // rule naming a section reads as satisfied rather than throwing; whether the section ought to be
+    // there is `required-section`'s.
     public bool SectionMatches(string title, string pattern) =>
         SectionText(title) is { } text && Pattern(pattern).IsMatch(text);
 
@@ -74,9 +74,9 @@ public sealed class Facts(Doc doc)
 
     private string? body;
 
-    // The source of one section, found on the heading text rather than on any id, because that is what
-    // the schema names it by everywhere else. Case-insensitive for the same reason `section()` is, and
-    // the first of two headings of the same name, which is the one a rule naming it means.
+    // The source of one section — the first of them, where a document repeats a heading, which is the
+    // one a rule naming it means. Found on the heading text, because that is what the schema names a
+    // section by everywhere else, and case-insensitively for the same reason `section()` is.
     private string? SectionText(string title) =>
         doc.Sections.FirstOrDefault(s => string.Equals(s.Title, title, StringComparison.OrdinalIgnoreCase))
             is { } section

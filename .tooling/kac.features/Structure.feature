@@ -1,5 +1,5 @@
 Feature: Document structure checks
-  kac checks the filename, id, H1, identity line and required sections of each document. Driven
+  kac checks the filename, id, H1, identity line and sections of each document. Driven
   in-process against the broken-structure fixture — the same corpus its JSON golden pins.
 
   Background:
@@ -19,7 +19,7 @@ Feature: Document structure checks
       |      | required-section    | missing required section '## Consequences'.                 |
       | 1    | id-matches-filename | id 'adr-0009' number does not match filename number '0004'. |
 
-  Scenario: A heading with nothing under it is reported, and the wording follows whether the section can be deleted
+  Scenario: An empty section is reported, and the wording follows what the author can do about it
     When I validate the corpus
     Then the findings for "adrs/0011-headings-with-no-body.md" are exactly:
       | line | check         | message                                                                     |

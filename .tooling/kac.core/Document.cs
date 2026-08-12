@@ -33,10 +33,10 @@ public class ClauseRow
 }
 
 // One H2 and what stands under it: the heading as written, the line it sits on, and where its body
-// begins and ends in the document's text. The boundaries are found once, here, because two checks ask
-// different questions of the same stretch — whether anything is written under the heading, and whether
-// what is written matches a pattern a rule supplies — and a second reading of where a section stops
-// would be a place for the two answers to disagree.
+// begins and ends in the document's text. The body runs to the next heading at the same level or
+// above, so a sub-heading and everything beneath it stand inside the section above them. Found once
+// here, because two checks read the same stretch — whether anything is written under the heading, and
+// whether what is written matches a pattern a rule supplies.
 public record Section(string Title, int Line, int BodyStart, int BodyEnd);
 
 // What is being read. A record is a document of the corpus; a template is the file every record of its
@@ -148,10 +148,8 @@ public class Doc
             } // signalled as a parse error downstream
         }
 
-        // H1 and H2 in one walk, over the headings that divide the document rather than all of them: a
-        // section runs from its heading to the next one at the same level or above, so what a section
-        // holds can only be measured against its siblings. A deeper heading and everything under it are
-        // inside the section, which is why an H3 counts as content.
+        // H1 and H2 in one walk, over the headings that divide the document: an H2's body ends at the
+        // next of them, so where a section stops is a question about its siblings.
         var divisions = ast.Descendants<HeadingBlock>().Where(h => h.Level <= 2).ToList();
         for (var i = 0; i < divisions.Count; i++)
         {
