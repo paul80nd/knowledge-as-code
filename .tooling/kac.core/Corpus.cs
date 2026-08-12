@@ -101,8 +101,8 @@ public static class Corpus
     //
     // The inferred answer is the weaker one: it cannot tell a type nobody wanted from a type somebody has
     // not finished adding, which is exactly what `types:` exists to say. It is the reading a corpus gets
-    // until it declares, so that taking a newer framework never requires editing the descriptor in the same
-    // breath.
+    // until it declares, so that taking a newer framework never requires editing the descriptor in the
+    // same breath.
     public static List<TypeSchema> Adopted(Schema schema, string repoRoot, CorpusDescriptor descriptor)
     {
         var declared = descriptor.Types;

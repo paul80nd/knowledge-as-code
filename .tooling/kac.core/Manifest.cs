@@ -61,9 +61,9 @@ public class CorpusDescriptor
     // else follows from that — what is generated, what a sync brings down, and what `validate` holds the
     // corpus to having stood up.
     //
-    // Null where the descriptor says nothing, which is not the same as an empty list. A corpus that has not
-    // declared yet is read off its own folders instead, so adopting the key is a change a corpus makes
-    // when it is ready rather than one the tool forces on the version that arrives without it.
+    // Null where the descriptor says nothing, which is not the same as an empty list. A corpus that has
+    // not declared yet is read off its own folders instead, so adopting the key is a change a corpus
+    // makes when it is ready rather than one the tool forces on the version that arrives without it.
     public List<string>? Types;
 
     // Whether a type is this corpus's. An undeclared corpus answers yes to everything and leaves the
@@ -72,8 +72,8 @@ public class CorpusDescriptor
 
     // Whether this corpus carries the layer that proves the mechanism. A consumer takes a tool already
     // proven upstream, so a fixture tree it will never run sits between its readers and the code they
-    // came for. Every other role answers for the tool and holds the tests that prove it. A descriptor naming no
-    // role answers yes, as `Adopted` does: a corpus that has said nothing is held to everything.
+    // came for. Every other role answers for the tool and holds the tests that prove it. A descriptor
+    // naming no role answers yes, as `Adopted` does: a corpus that has said nothing is held to everything.
     public bool Verifies => !Role.Equals("consumer", StringComparison.Ordinal);
 
     public static CorpusDescriptor Load(string repoRoot)
@@ -111,8 +111,8 @@ public class CorpusDescriptor
             ? new List<string>(Files.ReadLf(path).Split('\n'))
             : [];
 
-        // A descriptor with no `upstream:` block has never been synced. Open one rather than fail — the corpus
-        // is recording where it takes from for the first time, which is what the block is for.
+        // A descriptor with no `upstream:` block has never been synced. Open one rather than fail — the
+        // corpus is recording where it takes from for the first time, which is what the block is for.
         var start = lines.FindIndex(l => l.StartsWith("upstream:", StringComparison.Ordinal));
         if (start < 0)
         {

@@ -164,9 +164,9 @@ kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
 ```
 
 The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.corpus.yaml` — so the markdown stays the visible half of
-the repository, and an Azure DevOps wiki published from this tree shows knowledge rather than machinery. What remains in
-`knowledge-as-code/` is documentation, bar `manifest.yaml`, which stays because it is the authority on the shared and
-local split and both the README and `automation.md` cite it as such.
+the repository, and an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
+`knowledge-as-code/` holds documentation, with one exception. `manifest.yaml` sits there because it is the authority on
+what is shared and what is local, and both this README and `automation.md` cite it.
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
 
@@ -182,18 +182,18 @@ which of the framework's types it has adopted, and whether it is answerable for 
 
 A corpus that declares its types states a decision it made, rather than the shape it happens to have. `validate` then
 holds it to standing up everything it declared. Every generated list of types is written from that declaration. A schema
-file for a type the corpus left out stops reading as one it is missing.
+file for a type the corpus left out no longer reads as something missing.
 
-`role:` asks the same question about the mechanism rather than about the knowledge. A consumer holds the tool but not
-the tests and fixtures that prove it, because the tool arrived proven and a fixture tree nobody runs is noise between a
-reader and the code they came for.
+`role:` asks what a corpus took of the mechanism, as `types:` asks what it took of the knowledge. A consumer holds the
+tool but not the tests and fixtures that prove it, because the tool arrived proven and a fixture tree nobody runs is
+noise between a reader and the code they came for.
 
 `kac mechanism --check` reports how far a copy has drifted. `kac mechanism --sync` brings the shared layers down from
 upstream, seeds the pages a newly adopted type needs, records what it took, and regenerates. Adopting a type is a line
 in the descriptor and a sync.
 
-A descriptor that says nothing still works: adoption is read off the folders instead, and everything shared is
-expected. Every corpus starts there.
+A descriptor that says nothing still works: the tool reads adoption off the folders, and expects every shared file to
+be there. Every corpus starts that way.
 
 ## Opinions
 

@@ -273,10 +273,11 @@ adopted type is regenerated whether or not it holds records: the blocks derive f
 waits for its first record is a dead link from the type page until then.
 
 Generation covers the types the corpus adopted and no others. `types:` in `.corpus.yaml` decides, and a corpus that
-has not declared is read off its folders — a type counts where both halves are there, the page and the folder. A type
-the corpus declined is left alone whatever `.schema/` says about it, down to the hand-written text between markers on a
-page left behind: writing there would create an artefact no generated list of this corpus's types names, and
-`index --check` would then hold the corpus to keeping it fresh. Standing a type up without adopting it is a defect
+has not declared is read off its folders — a type counts where both halves are there, the page and the folder.
+
+A type the corpus declined is left alone whatever `.schema/` says about it, down to the hand-written text between the
+markers on a page left behind. Writing there would create an artefact no generated list of this corpus's types names,
+and `index --check` would then hold the corpus to keeping it fresh. Standing a type up without adopting it is a defect
 `validate` reports.
 
 Two rules hold this together:
@@ -309,7 +310,7 @@ bare `mechanism --check`. It reports:
 
 - **synced** and **verification** files that differ, are missing on either side, or match no manifest rule — each an
   **error** (exit `1`).
-- **forked** files that differ — counted, never failed on. Divergence here is the point of the layer.
+- **forked** files that differ — counted, never failed on, because a forked file is meant to diverge.
 - **generated**, **local** and **ignored** files — skipped, because each corpus owns its own.
 - **accepted divergences** named in `.corpus.yaml` — honoured rather than flagged, and reported as `RESOLVED` once
   they match the reference again, so you can delete the stale entry.
@@ -317,9 +318,9 @@ bare `mechanism --check`. It reports:
 
 A corpus declines in two ways, and both work alike. Leaving a type out of `types:` leaves out its `.schema/<type>.yaml`,
 so that file is neither missing nor drifted. Setting `role:` to `consumer` does the same for the `verification` layer,
-because a consumer runs a tool proven upstream instead of proving it. These are the only two ways a corpus may hold less
-of a shared layer than upstream does, and the descriptor is where it says so. Without that entry the same absence reads
-as a deletion nobody recorded. A descriptor that declares neither declines nothing.
+because a consumer runs a tool proven upstream instead of proving it. These are the only ways a corpus may hold less of
+a shared layer than upstream does, and the descriptor is where it says so. Without that entry the same absence reads as
+a deletion nobody recorded. A descriptor that declares neither takes the whole shared layer.
 
 `--check` normalises line endings before it compares, so a working copy checked out with CRLF never reads as drift. It
 then compares the **authored half** of each file, emptying everything between `BEGIN GENERATED` and `END GENERATED`
@@ -347,7 +348,7 @@ In one pass over both trees:
 - **synced** and **verification** files come down whole where their authored halves differ. A file already in step stays
   as it is, so a page's generated block survives when the prose around it has not moved.
 - **forked** files are *seeded*: copied only where this corpus has none. Sync never reconciles a forked file that is
-  already here — that is what the layer means.
+  already here.
 - **What the descriptor declines** never comes down. Leaving a type out withholds its `.schema/<type>.yaml`, its root
   page and everything under its folder, so adopting one means adding a line to `types:` and syncing.
 - **Accepted divergences** are skipped and named, with their recorded reason beside them. Delete the entry to take the

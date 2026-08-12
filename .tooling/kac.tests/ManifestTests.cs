@@ -33,10 +33,10 @@ public class ManifestTests
 
     // -- the types a corpus has adopted --
 
-    // The two answers are different states, not the same one written two ways. A descriptor that says nothing
-    // leaves adoption to the filesystem, so nothing it holds can be surplus to what it declared.
+    // The two answers are different states, not the same one written two ways. A descriptor that says
+    // nothing leaves adoption to the filesystem, so nothing it holds can be surplus to what it declared.
     [Fact]
-    public void A_lock_declaring_no_types_adopts_everything()
+    public void A_descriptor_declaring_no_types_adopts_everything()
     {
         var descriptor = new CorpusDescriptor();
 
@@ -46,7 +46,7 @@ public class ManifestTests
     }
 
     [Fact]
-    public void A_lock_declaring_types_declines_the_schema_files_of_the_rest()
+    public void A_descriptor_declaring_types_declines_the_schema_files_of_the_rest()
     {
         var descriptor = new CorpusDescriptor { Types = ["adrs"] };
 
@@ -68,7 +68,7 @@ public class ManifestTests
         => Assert.False(MechanismCheck.Declined(path, "synced", new CorpusDescriptor { Types = ["adrs"] }));
 
     [Fact]
-    public void Types_are_read_from_the_lock()
+    public void Types_are_read_from_the_descriptor()
     {
         var dir = Directory.CreateTempSubdirectory().FullName;
         File.WriteAllText(Path.Combine(dir, ".corpus.yaml"),

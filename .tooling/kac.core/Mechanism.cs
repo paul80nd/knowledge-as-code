@@ -1,8 +1,8 @@
 // The `mechanism` engines. `--check` resolves every file against the manifest and compares the shared
 // layers against a reference, read-only. `--sync` brings those layers down from one.
 //
-// Both read the same manifest and the same descriptor, and both ask one predicate what this corpus holds. So
-// the check can never report a file missing that a sync would decline to bring.
+// Both read the same manifest and the same descriptor, and both ask one predicate what this corpus
+// holds. So the check can never report a file missing that a sync would decline to bring.
 
 namespace kac.core;
 
@@ -114,9 +114,9 @@ public static class MechanismCheck
         }
     }
 
-    // Whether this corpus's descriptor declines the file, so that it is neither missing nor drifted — and, to
-    // `mechanism --sync`, not something to bring down. Each answer below is the corpus stating what it
-    // took, so check and sync ask this one predicate rather than two that can disagree.
+    // Whether this corpus's descriptor declines the file, so that it is neither missing nor drifted —
+    // and, to `mechanism --sync`, not something to bring down. Each answer below is the corpus stating
+    // what it took, so check and sync ask this one predicate rather than two that can disagree.
     //
     // A type the corpus did not adopt takes its schema file with it. The schema is otherwise
     // byte-identical, so this is the only place a corpus may hold less of it than upstream does. `types:`
