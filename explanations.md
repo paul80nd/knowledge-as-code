@@ -90,7 +90,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `filename / slug-length`     | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
 | `h1`                         | error   | The document has an H1.                                                                                         |
 | `identity`                   | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
-| `required-section`           | error   | Every required section heading is present.                                                                      |
+| `sections`                   | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
 | `placeholder-left`           | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`              | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`            | error   | Every shortcut reference has a link definition.                                                                 |

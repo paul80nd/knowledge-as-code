@@ -54,6 +54,7 @@ public static class CheckCatalogue
         new("identity-id", Sev.Error, "The identity line's id matches the frontmatter id."),
         new("identity-status", Sev.Error, "The identity line's status is the frontmatter status, upper-case."),
         new("required-section", Sev.Error, "Every required section heading is present."),
+        new("empty-section", Sev.Error, "A section the type declares has something written under it."),
         new("placeholder-left", Sev.Error, "A record carries no `{{…}}` left unfilled from its template."),
         new("clause-table", Sev.Error, "The clause section holds a table of Id and Clause rows."),
         new("clause-id-format", Sev.Error, "A clause id is a code span matching the type's pattern."),

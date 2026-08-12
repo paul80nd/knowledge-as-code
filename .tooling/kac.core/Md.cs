@@ -32,6 +32,18 @@ public static class Md
         return sb.ToString().Trim();
     }
 
+    // Whether a stretch of a document says anything: a letter or a digit somewhere in it. Read on the
+    // source as written, so that a horizontal rule, a bullet marker left behind or an em dash standing
+    // in for the words counts as nothing written — the rendered blocks would offer all three as
+    // content.
+    public static bool HasContent(ReadOnlySpan<char> text)
+    {
+        foreach (var c in text)
+            if (char.IsLetterOrDigit(c))
+                return true;
+        return false;
+    }
+
     // A fragment of a document quoted back in a finding, cut to what a terminal line can hold beside
     // the rest of the message.
     public static string Snippet(string s, int max = 60) => s.Length > max ? s[..(max - 3)] + "…" : s;

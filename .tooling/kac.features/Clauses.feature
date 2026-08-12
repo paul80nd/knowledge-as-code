@@ -18,6 +18,12 @@ Feature: Clause table checks
       | line | check       | message                                                            |
       | 25   | clause-table | the clause table has no rows — a policy that binds nothing binds nobody. |
 
+  Scenario: An empty clause section is reported by the check that can say what belongs there
+    When I validate the corpus
+    Then the findings for "policies/blnk-empty-clause-section.md" are exactly:
+      | line | check        | message                                                                                  |
+      | 24   | clause-table | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause \| Alignment'. |
+
   Scenario: A clause id is a code span, matches the type's pattern, and is used once
     When I validate the corpus
     Then the findings for "policies/span-id-not-code.md" are exactly:
@@ -62,9 +68,10 @@ Feature: Clause table checks
 
   Scenario: The whole corpus produces exactly these findings and nothing else
     When I validate the corpus
-    Then validation reports 12 documents and 0 skipped
+    Then validation reports 13 documents and 0 skipped
     And the findings are exactly:
       | file                                       | severity | line | check            | message                                                                                            |
+      | policies/blnk-empty-clause-section.md      | error    | 24   | clause-table     | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause \| Alignment'. |
       | policies/bold-binding-not-bold.md          | error    | 27   | clause-modal     | 'MUST' binds — write it bold, `**MUST**`.                                                          |
       | policies/case-lower-clause-id.md           | error    | 27   | clause-id-format | clause id 'clean' does not match ^[A-Z][A-Z0-9]{1,6}$.                                             |
       | policies/cmpd-two-obligations.md           | warning  | 28   | clause-compound  | clause 'CLEAN' carries a second 'MUST' — one obligation per clause, or the citation is ambiguous.  |

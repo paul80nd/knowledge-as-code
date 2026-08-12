@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 21,
+    "validated": 22,
     "templates": 3,
     "skipped": 0,
-    "errors": 25,
+    "errors": 27,
     "warnings": 1
   },
   "findings": [
@@ -69,6 +69,20 @@
       "severity": "error",
       "check": "placeholder-left",
       "message": "'{{the pressure to get something committed}}' is a placeholder the template left for you to fill in."
+    },
+    {
+      "file": "adrs/0011-headings-with-no-body.md",
+      "line": 32,
+      "severity": "error",
+      "check": "empty-section",
+      "message": "required section '## Consequences' has nothing under it."
+    },
+    {
+      "file": "adrs/0011-headings-with-no-body.md",
+      "line": 34,
+      "severity": "error",
+      "check": "empty-section",
+      "message": "section '## Related' has nothing under it — write it or delete the heading."
     },
     {
       "file": "policies/agnt-identity-malformed.md",

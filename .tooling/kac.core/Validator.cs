@@ -231,8 +231,31 @@ public static class Validator
 
         // -- required sections --
         foreach (var sec in t.RequiredSections)
-            if (!d.H2.Any(h => string.Equals(h, sec, StringComparison.OrdinalIgnoreCase)))
+            if (!d.Sections.Any(s => string.Equals(s.Title, sec, StringComparison.OrdinalIgnoreCase)))
                 Err("required-section", $"missing required section '## {sec}'.");
+
+        // -- a section that is nothing but its heading --
+        // `required-section` is answered by a heading existing, and an author with nothing to say cannot
+        // delete a required one, so what they leave is a blank beneath it — which reads as a finished
+        // document to everyone but the person who needed the section. An optional section reaches the
+        // same state from the other side, emptied during a cleanup with the heading left behind, and the
+        // remedy differs enough to be worth two wordings.
+        //
+        // A section the schema never declared is the author's own. A template's stand empty for the copy
+        // to fill. The clause section is left to `clause-table`, which is looking at the same blank and
+        // can say what belongs there.
+        if (kind == DocKind.Record)
+            foreach (var s in d.Sections.Where(s => !Md.HasContent(d.Text.AsSpan()[s.BodyStart..s.BodyEnd])))
+            {
+                if (t.Clauses is { } clauses
+                    && string.Equals(s.Title, clauses.Section, StringComparison.OrdinalIgnoreCase)) continue;
+
+                if (t.RequiredSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
+                    Err("empty-section", $"required section '## {s.Title}' has nothing under it.", s.Line);
+                else if (t.OptionalSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
+                    Err("empty-section",
+                        $"section '## {s.Title}' has nothing under it — write it or delete the heading.", s.Line);
+            }
 
         // -- placeholders left from the template --
         // The other half of the convention: `{{…}}` means "supply this", so a record still carrying one
@@ -707,7 +730,6 @@ public static class Validator
     // what kind of document this is, which one it is, and whether it is in force. Each half is checked
     // against the frontmatter separately, because "this says Standard" and "this says the wrong id" are
     // different mistakes with different fixes and a reader deserves to be told which they made.
-    //
     private static void CheckIdentity(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
         Action<string, string, int?> err)
     {
@@ -867,5 +889,4 @@ public static class Validator
 
         return result;
     }
-
 }

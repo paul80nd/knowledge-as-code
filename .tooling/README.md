@@ -143,6 +143,7 @@ an intention, and the type page renders those beneath the checks table as *Decla
 | `identity-type`                   | error | The line's type name is the `label` the folder's schema declares.                         |
 | `identity-id` / `identity-status` | error | The line's id and status are the frontmatter's, the status upper-cased.                   |
 | `required-section`                | error | Every heading in `sections.required` is present.                                          |
+| `empty-section`                   | error | A heading `sections` declares carries something. A template's may stand empty.            |
 | `placeholder-left`                | error | No `{{…}}` the template left to fill in survives into a record, outside code.             |
 
 ### Clauses (from `<type>.yaml`'s `clauses:` block)
@@ -184,7 +185,7 @@ A type that declares no `clauses:` block is checked for none of these.
 A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
 by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
 editing this tool; [`../.schema/README.md`](../.schema/README.md) is the reference for what one may say. Only the last
-two need more than the grammar can say, and each is a class in `kac.core/Rules/` with its own unit tests.
+three need more than the grammar can say, and each is a class in `kac.core/Rules/` with its own unit tests.
 
 The table below is every rule that runs. The schema declares roughly as many again that do not — intentions, carrying a
 `description:` and no `severity:`, rendered on their type page under *Declared, not yet enforced*. Naming a severity
@@ -205,7 +206,6 @@ without running is the one arrangement this forbids, and `schema-dispatch` is wh
 | `no-hedged-ordering`            | processes    | warning | No "typically", "usually" or "normally" inside *Steps*.                                                                               |
 | `posture-belongs-to-frameworks` | policies     | warning | No claim of standing beside a framework's name — that belongs in `frameworks.md`.                                                     |
 | `target-is-measurable`          | nfrs         | warning | `measured-by` names an instrument rather than hedging — "monitored", "where practical" answer nothing.                                |
-| `what-went-well-required`       | postmortems  | warning | Something follows the *What went well* heading. `sections` can require the heading and not its contents.                              |
 | `mechanism-has-evidence`        | controls     | warning | A control whose `mechanism` is not `not-enforced` names where the proof of it lives.                                                  |
 | `one-problem-per-document`      | faqs         | warning | One *Symptom* section, because an FAQ is found by its symptom.                                                                        |
 | `trial-has-criteria`            | tools        | warning | A tool in `trial` carries a *Trial criteria* section; without one the trial has no way to end.                                        |

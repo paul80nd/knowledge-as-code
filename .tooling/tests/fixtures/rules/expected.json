@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 22,
+    "validated": 21,
     "templates": 16,
     "skipped": 0,
     "errors": 7,
-    "warnings": 14
+    "warnings": 13
   },
   "findings": [
     {
@@ -111,13 +111,6 @@
       "severity": "error",
       "check": "detected-not-before-occurred",
       "message": "`detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are right, the earlier one is when it started."
-    },
-    {
-      "file": "postmortems/0002-nothing-recorded-as-well.md",
-      "line": 1,
-      "severity": "warning",
-      "check": "what-went-well-required",
-      "message": "The What went well section is empty. An incident that taught nothing about what held is half a lesson, and the half nobody writes down is the half that stops being true."
     },
     {
       "file": "processes/rotate-a-signing-key.md",

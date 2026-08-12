@@ -26,9 +26,9 @@
 ## Writing a rule
 
 * **A rule restating something the schema already declares is worse than no rule.** A `reciprocal:`, a
-  `mirrors-section:`, a `required-when:`, a scalar type, a required section — each has been written out as a rule at
-  some point, and each read as outstanding work for as long as it survived. Before writing one, read the field
-  declaration and the `sections:` block; the rule may already be answered.
+  `mirrors-section:`, a `required-when:`, a scalar type, a required section, a section left as a bare heading — each has
+  been written out as a rule at some point, and each read as outstanding work for as long as it survived. Before writing
+  one, read the field declaration and the `sections:` block; the rule may already be answered.
 
 * **A rule you have not built declares no `severity:`.** That absence is what says "declared, not enforced", and the
   type page renders it as such. Naming a level nothing fires at fails the schema-load pass, because it reads as enforced

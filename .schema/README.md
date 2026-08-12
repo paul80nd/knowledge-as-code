@@ -136,7 +136,7 @@ Beyond `fields`, each type file declares:
 | `collision`                | Where the type's name already means something else, and what a reader will get wrong                             |
 | `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
 | `filename`                 | Pattern and slug length limit                                                                                    |
-| `sections`                 | Required and optional H2s — the required ones are checked for presence                                           |
+| `sections`                 | Required and optional H2s — the required ones for presence, and either kind for holding something                |
 | `clauses`                  | The clause table's section, id pattern and modals, where a type states its obligations as addressable rows       |
 | `index`                    | Columns, sort columns and direction for the generated index — see the note below                                 |
 | `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |
@@ -226,8 +226,9 @@ trips it actually reads, or in a `#` comment for an intention that has no messag
 every one of these grew to two or three sentences, and `schema-shape` now says so when the schema loads. An intention's
 description is bound too — it renders in *Declared, not yet enforced* on the same page.
 
-Two ids keep a hand-written class instead — `y-statement-present` and `alternatives-have-verdicts`, both on the
-decision-record type — because what they ask needs more than the grammar can say. Every remaining id is a statement of
+Three ids keep a hand-written class instead — `y-statement-present` and `alternatives-have-verdicts` on the
+decision-record type, and `terms-are-alphabetical` on the glossary — because what they ask needs more than the grammar
+can say. Every remaining id is a statement of
 intent: a behaviour someone wants, written down, that no code answers to yet. **An intention declares no `severity:`**,
 which is what tells the tool it is one; the type page renders them beneath the checks table under *Declared, not yet
 enforced*, so a reader can see both what a build will say about their document and what has been written down and not
