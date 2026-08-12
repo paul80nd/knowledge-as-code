@@ -277,8 +277,8 @@ rules:
   the same sentence.
 * A rule carrying an `expr:` **must** declare a severity and a message. A rule claiming to be finished is held to being
   able to report, and one that cannot is a schema error rather than a check that never fires.
-* A rule without an `expr:` keeps `id` + `description`, declares no severity, and is rendered as an intention — unless
-  a rule class answers to its id, which declares a severity like any rule that runs.
+* A rule without an `expr:` keeps `id` + `description`, declares no severity, and is rendered as an intention. Where a
+  rule class answers to its id, the rule declares a severity like any other that runs.
 
 Expression *strings*, not nested predicate objects: several rules are conditionals (`A implies B`) or ratios, and those
 read cleanly inline but become ugly YAML trees.

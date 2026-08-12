@@ -503,7 +503,7 @@ public static class Generator
         ("terms-alphabetical", ["terms-alphabetical"], "A glossary's entries read in alphabetical order.",
             t => t.HasRule("terms-are-alphabetical")),
         ("dependency-cycle", ["dependency-cycle"],
-            "A cycle in the graph these records form among themselves, naming the records on it. Reported, not failed.",
+            "A cycle in the dependency graph these records form, naming every record the loop runs through.",
             t => t.HasRule("no-dependency-cycles"))
     ];
 

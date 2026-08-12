@@ -224,7 +224,7 @@ without running is the one arrangement this forbids, and `schema-dispatch` is wh
 | `y-statement`                   | adrs         | warning | A block-quote follows the H1, states all six moves, and is within `max-words` (60).                                                   |
 | `alternatives-verdict`          | adrs         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
 | `terms-alphabetical`            | glossary     | warning | A glossary's entries read in alphabetical order, compared without regard to casing, and the message names the entry that moved.       |
-| `dependency-cycle`              | services     | warning | A loop in `depends-on`, named as the route it runs — some loops are real, so it is reported and never failed.                         |
+| `dependency-cycle`              | services     | warning | A loop in `depends-on`, named as the route it runs. Two services that call each other are a fact about the estate.                    |
 
 The three length rules are ratios or ceilings whose numbers are judgements rather than measurements — no corpus has yet
 held enough of these types to calibrate them. Each is pinned by a fixture, so changing one is visible.

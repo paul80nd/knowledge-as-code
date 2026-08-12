@@ -22,12 +22,11 @@ marked as such below, because the argument for why a rule needs a class reads di
   `changelog-on-material-change`. All four ask the same question: what changed in this commit versus the committed
   content, and was it substantive? One mechanism answers all of them, and it is the largest single piece of work left.
 * **Cross-document — 7.** `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`,
-  `redefinitions-are-reciprocal`, and the glossary pair `undefined-terms` and `unused-terms`. Each is an `ICorpusRule`,
-  handed the records and the `byId` index `Validator.CheckCorpus` already builds — the interface the graph rule below is
-  written against. The reciprocal one is the hardest, because it holds an entry inside one document against an entry
-  inside another.
-* **Graph — 1.** `no-dependency-cycles`, **written**. A loop is a property of the set of edges, and every one of them
-  was reasonable where it was written, so nobody adding an edge is in a position to see it.
+  `redefinitions-are-reciprocal`, and the glossary pair `undefined-terms` and `unused-terms`. Each fits `ICorpusRule`,
+  which hands a rule the records and the `byId` index `Validator.CheckCorpus` already builds. The reciprocal one is the
+  hardest, because it holds an entry inside one document against an entry inside another.
+* **Graph — 1.** `no-dependency-cycles`, **written**. A loop lives in the set of edges and no document holds it, so the
+  walk needs every record and the message has to name the ones it runs through.
 * **Per-part — 5.** `alternatives-have-verdicts` and `terms-are-alphabetical`, both **written**, beside
   `terms-are-singular`, `carried-in-full-by-digest` and `escalation-required`, which are not. Each judges the parts of
   one document — bullets under a heading, entries in a glossary, branches of a diagnosis tree — and its message has to
@@ -41,20 +40,20 @@ signal you are rebuilding OPA. Write a rule class.
 
 **A rule that does need C# is a class, not an arm.** One file in `kac.core/Rules/`, with its own unit tests, and a line
 in the registry beside it. It declares the checks it `Emits`, and `CheckCatalogue.All` reads them from there — so
-implementing it and registering it are the same edit, and its id cannot drift from its catalogue entry. Both
-dispatchers find a rule by the id the schema's `rules:` block declares; a rule id nothing implements is a statement of
-intent, is skipped, and is rendered on the type page as declared-but-not-enforced — so long as it declares no
-`severity:`, which `SchemaChecks` holds it to.
+implementing it and registering it are the same edit, and its id cannot drift from its catalogue entry. A dispatcher
+finds a rule by the id the schema's `rules:` block declares; a rule id nothing implements is a statement of intent, is
+skipped, and is rendered on the type page as declared-but-not-enforced — so long as it declares no `severity:`, which
+`SchemaChecks` holds it to.
 
 **Which interface follows from what the rule has to read.** `IDocumentRule` is handed one document through a
 `RuleContext`, runs from `Validator.CheckRules` as that document is checked, and reports against it. `ICorpusRule` is
 handed every record and the `byId` index through a `CorpusRuleContext`, runs once from `Validator.CheckCorpusRules`,
-and names the document each finding belongs against — which is rarely the one that would have been in hand. The split
-is not tidiness: a run narrowed to given paths still runs the document rules and skips the corpus ones, because a
-question about the set answered from a handful of its members is answered wrongly and with no sign of it.
+and names the document each finding belongs against, which is rarely the one that would have been in hand. What a rule
+is handed also decides when it runs: a pass narrowed to given paths still applies the document rules and skips the
+corpus ones, because a question about the set answered from a handful of its members is answered wrongly and with no
+sign of it.
 
-A rule needing git history has neither, and its interface is designed against the first real one rather than ahead of
-it.
+A rule needing git history fits neither. Design its interface against the first real one.
 
 **A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
 early so a later check does not report nonsense about a document already known to be broken. That order is the design,
@@ -80,8 +79,8 @@ Wherever it lives, four places have to agree, and three of them fail a meta-test
 
 1. **`CheckCatalogue.All`** in `Findings.cs` — the registry. `kac checks` reads it, and so does the coverage gate.
 2. **`Generator.DocRows`** *or* **`Generator.IntentionallyUndocumented`** — every catalogue id must appear in one of
-   them or `ChecksTableProblems` fails. `DocRows` is for per-document checks a type page should advertise; the
-   undocumented set is for checks a reader of that page cannot act on.
+   them or `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one
+   of its records; the undocumented set is for checks a reader of that page cannot act on.
 3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises.
 4. **The checks table** in [`README.md`](README.md) beside this file. It is hand-curated rather than generated, so it
    will not tell you it is now wrong. Nothing else states a check count: `kac checks` reports it, so no prose has to.

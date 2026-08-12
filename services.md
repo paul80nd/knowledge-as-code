@@ -184,7 +184,7 @@ words worth keeping are the ones thrown away.
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `dependency-cycle`          | warning | A cycle in the graph these records form among themselves, naming the records on it. Reported, not failed.       |
+| `dependency-cycle`          | warning | A cycle in the dependency graph these records form, naming every record the loop runs through.                  |
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
