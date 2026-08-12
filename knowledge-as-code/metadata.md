@@ -83,6 +83,17 @@ Carried by every document in the taxonomy.
 `id` is the anchor for every cross-reference — see [IDs](#ids); `status` values are set by each type and are listed
 under [per-type fields](#per-type-fields).
 
+`tags` are **entry points**: the word a reader arrives with, on a document that does not use it. One document may be the
+only one carrying a tag, and often is — a searcher who types `payments` wanted the one service that handles them. What a
+tag must never do is restate another field, since the two can only ever disagree.
+
+**Grouping is a different job, and a tag does it badly.** A value like `public` or `internal` is worth carrying because
+several documents share it and it divides a type into groups worth browsing; that same value, used once, has failed at
+the only thing it was for. The two tests are opposite, which is why they belong in two fields. A type wanting the
+grouping job declares a list field of its own with `min-records:`, the floor on how many records must carry each value,
+and CI warns below it. The service type declares one, named `facets`, and its page records how it reached its
+vocabulary. Membership is never declared in the schema: what a corpus groups by is the corpus's to settle.
+
 Deliberately absent, and why:
 
 | Not a field           | Because                                          |
