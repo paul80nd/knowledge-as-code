@@ -21,8 +21,8 @@ be assigned one.
 * **Questions.** About the taxonomy, the sync model, or why something is shaped the way it is.
 * **Corrections of fact.** Most valuable where the documentation and the tool disagree.
 
-The maintainer reads all three. Some will sit, and some will be closed without action — that is a judgement about
-scope, not about the person who raised it.
+The maintainer reads all three. Some will sit, and some will be closed without action — that is a judgement about scope,
+not about the person who raised it.
 
 ## Pull requests
 

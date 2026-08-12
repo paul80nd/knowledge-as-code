@@ -50,8 +50,7 @@ any organisation, shared byte-for-byte between every corpus running this framewo
 to use it, and a template to copy. Opinionated, and meant to be forked — you take them once, localise the examples to
 your own domain, and never reconcile them again.
 
-Which files fall on which side is declared in [`.tooling/manifest.yaml`](.tooling/manifest.yaml), not asserted in
-prose.
+Which files fall on which side is declared in [`.tooling/manifest.yaml`](.tooling/manifest.yaml), not asserted in prose.
 
 **What does not live here** is anybody's actual knowledge. Every record in this repository is illustrative and is meant
 to be deleted. A corpus derived from this one holds its organisation's policies, services and decisions; this one holds
@@ -162,8 +161,8 @@ kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
 .tooling/              # the kac tool: entrypoint + kac.core library, the manifest, its tests and fixtures
 ```
 
-The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.corpus.yaml` — so the markdown stays the visible half of
-the repository, and an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
+The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.corpus.yaml` — so the markdown stays the visible half of the
+repository, and an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
 `knowledge-as-code/` holds documentation and nothing else: what the tool reads lives beside the tool.
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
@@ -190,8 +189,8 @@ noise between a reader and the code they came for.
 upstream, seeds the pages a newly adopted type needs, records what it took, and regenerates. Adopting a type is a line
 in the descriptor and a sync.
 
-A descriptor that says nothing still works: the tool reads adoption off the folders, and expects every shared file to
-be there. Every corpus starts that way.
+A descriptor that says nothing still works: the tool reads adoption off the folders, and expects every shared file to be
+there. Every corpus starts that way.
 
 ## Opinions
 

@@ -28,8 +28,8 @@ That split lets the mechanism improve without touching anyone's content, and let
 inheriting someone else's opinions about accessibility. It also turns *which of these files are mine?* into a question
 `kac mechanism --check` answers.
 
-Which files fall on which side is declared in [`manifest.yaml`](../.tooling/manifest.yaml), not asserted in prose.
-Every file resolves to exactly one layer, and each layer has a rule about what divergence means.
+Which files fall on which side is declared in [`manifest.yaml`](../.tooling/manifest.yaml), not asserted in prose. Every
+file resolves to exactly one layer, and each layer has a rule about what divergence means.
 
 ## Schema before prose
 

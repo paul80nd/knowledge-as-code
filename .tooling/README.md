@@ -275,8 +275,8 @@ Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of 
 adopted type is regenerated whether or not it holds records: the blocks derive from the schema alone, and an index that
 waits for its first record is a dead link from the type page until then.
 
-Generation covers the types the corpus adopted and no others. `types:` in `.corpus.yaml` decides, and a corpus that
-has not declared is read off its folders — a type counts where both halves are there, the page and the folder.
+Generation covers the types the corpus adopted and no others. `types:` in `.corpus.yaml` decides, and a corpus that has
+not declared is read off its folders — a type counts where both halves are there, the page and the folder.
 
 A type the corpus declined is left alone whatever `.schema/` says about it, down to the hand-written text between the
 markers on a page left behind. Writing there would create an artefact no generated list of this corpus's types names,
@@ -316,8 +316,8 @@ bare `mechanism --check`. It reports:
   **error** (exit `1`).
 - **forked** files that differ — counted, never failed on, because a forked file is meant to diverge.
 - **generated**, **local** and **ignored** files — skipped, because each corpus owns its own.
-- **accepted divergences** named in `.corpus.yaml` — honoured rather than flagged, and reported as `RESOLVED` once
-  they match the reference again, so you can delete the stale entry.
+- **accepted divergences** named in `.corpus.yaml` — honoured rather than flagged, and reported as `RESOLVED` once they
+  match the reference again, so you can delete the stale entry.
 - **what the descriptor declines** — skipped, and counted where the corpus holds it anyway.
 
 A corpus declines in two ways, and both work alike. Leaving a type out of `types:` leaves out its `.schema/<type>.yaml`,
