@@ -84,7 +84,7 @@ public static class Validator
         // rather than about what it says. Skipped when the run is narrowed, like the other checks that
         // ask about the shape of the corpus rather than about a document.
         if (corpus.Paths.Count == 0)
-            CheckFrameworkDocs(schema, repoRoot, findings);
+            CheckFrameworkDocs(schema, repoRoot, corpus.Docs, findings);
 
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
         CheckCorpus(corpus.Docs, findings);
@@ -382,9 +382,11 @@ public static class Validator
         }
     }
 
-    // The documents describing the framework itself, wherever a corpus keeps them.
+    // The documents describing the framework itself, wherever a corpus keeps them. The glossary of the
+    // framework's own vocabulary is one of them: it is a record, filed under a type and validated like
+    // any other, and it is also shared byte-for-byte, so it is held to the rule below as well.
     private static readonly string[] FrameworkDocs =
-        ["knowledge-as-code.md", "knowledge-as-code/"];
+        ["knowledge-as-code.md", "knowledge-as-code/", "glossary/knowledge-as-code.md"];
 
     // The framework's own documentation is shared byte-for-byte by every corpus running it, so it has to
     // read correctly in a corpus that adopted three types and in one that adopted seventeen. A link to a
@@ -397,8 +399,13 @@ public static class Validator
     // Checked here rather than left to `link-resolves`, which would report it only downstream: every type
     // page exists in the corpus that writes these documents, so the defect is invisible precisely where it
     // can be fixed.
-    private static void CheckFrameworkDocs(Schema schema, string repoRoot, List<Finding> f)
+    private static void CheckFrameworkDocs(Schema schema, string repoRoot, IEnumerable<Doc> docs,
+        List<Finding> f)
     {
+        // The ones already validated as records. They have had the link pass, so giving them a second
+        // would report every dead link twice.
+        var checkedAsRecords = new HashSet<string>(docs.Select(d => d.Rel), StringComparer.OrdinalIgnoreCase);
+
         var pages = schema.ByFolder.Values
             .Where(t => !string.IsNullOrEmpty(t.Page))
             .ToDictionary(t => "/" + t.Page[..^".md".Length], t => t.Key, StringComparer.OrdinalIgnoreCase);
@@ -412,10 +419,10 @@ public static class Validator
                 schema, requireFrontmatter: false);
             if (doc is null) continue;
 
-            // The ordinary link pass, which these documents have never had: they are excluded from
-            // discovery, and the page pass only visits type pages. A dead link here reached the wiki
-            // silently and was found by a reader.
-            LinkChecks.CheckPage(doc, schema, repoRoot, f);
+            // The ordinary link pass, which the documents excluded from discovery have never had: the
+            // page pass only visits type pages, so a dead link in one reached the wiki silently and was
+            // found by a reader. A framework document that is also a record has had it already.
+            if (!checkedAsRecords.Contains(rel)) LinkChecks.CheckPage(doc, schema, repoRoot, f);
 
             foreach (var link in doc.Links)
             {

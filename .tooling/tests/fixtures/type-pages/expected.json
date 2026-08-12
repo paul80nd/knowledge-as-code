@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 0,
-    "templates": 1,
+    "validated": 1,
+    "templates": 2,
     "skipped": 0,
-    "errors": 10,
+    "errors": 12,
     "warnings": 0
   },
   "findings": [
@@ -27,6 +27,20 @@
       "severity": "error",
       "check": "link-resolves",
       "message": "link target '/nope.md' does not resolve."
+    },
+    {
+      "file": "glossary/knowledge-as-code.md",
+      "line": 18,
+      "severity": "error",
+      "check": "link-resolves",
+      "message": "link target '/nope.md' does not resolve."
+    },
+    {
+      "file": "glossary/knowledge-as-code.md",
+      "line": 18,
+      "severity": "error",
+      "check": "framework-names-types",
+      "message": "'/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off."
     },
     {
       "file": "knowledge-as-code/taxonomy.md",

@@ -6,6 +6,12 @@ while `index --check` still calls the page fresh; and it carries a record's fron
 behind by a type that used to be a single document looks like. Nothing else would report that: a page is forked, so it
 is never compared against upstream.
 
+`glossary/knowledge-as-code.md` is the framework's own vocabulary: a record, and a document every corpus shares. It is
+the one file that gets both passes, so it is where the two are held apart. Its link to a type page is reported once, for
+naming a type. Its link to a page that does not exist is reported **once and not twice** — a record has already had the
+link pass, and the framework pass leaves it alone. `glossary.md` and `glossary/_template.md` are sound and are here only
+so `type-setup` stays quiet about the folder.
+
 `adrs/_template.md` is valid, so `type-setup` stays silent and the fixture asserts one thing. The scenario that
 breaks a template deliberately is `broken-template`.
 
