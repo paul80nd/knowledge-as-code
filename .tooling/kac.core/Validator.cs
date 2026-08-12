@@ -48,7 +48,19 @@ public static class Validator
             CheckGeneratedBlocks(t.Page, text, [$"schema-{key}", $"checks-{key}"], findings);
 
             var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
-            if (page is not null) LinkChecks.CheckPage(page, schema, repoRoot, findings);
+            if (page is null) continue;
+
+            // A page is not a record, so frontmatter on one is left over rather than wrong in place.
+            // The case that produces it is a type that used to be a single document: the folder arrives
+            // in a sync, the old page survives beside it still holding the content, and nothing else
+            // says so — a page is forked, and a forked file is never compared against upstream.
+            if (page.FrontStartLine > 0)
+                findings.Add(new Finding(t.Page, page.FrontStartLine, Sev.Error, "page-frontmatter",
+                    "the page carries frontmatter — it describes the records beneath it and is not one, so it has "
+                    + $"no id, tier or status of its own. Move what it holds into '{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/' "
+                    + "as a record, and delete the block."));
+
+            LinkChecks.CheckPage(page, schema, repoRoot, findings);
         }
 
         // The template each collection type carries. It is the one file in a type that every future

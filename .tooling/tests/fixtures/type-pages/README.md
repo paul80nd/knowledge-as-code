@@ -1,8 +1,10 @@
 Type pages, and the two passes they get.
 
-`adrs.md` is a type page: no frontmatter, checked for links and for its generated blocks. It has an
-unresolvable link, and its `schema-adrs` block has lost its BEGIN marker — which leaves `kac index` writing nothing
-there while `index --check` still calls the page fresh.
+`adrs.md` is a type page, checked for links, for its generated blocks, and for carrying no frontmatter. It has an
+unresolvable link; its `schema-adrs` block has lost its BEGIN marker, which leaves `kac index` writing nothing there
+while `index --check` still calls the page fresh; and it carries a record's frontmatter, which is what a page left
+behind by a type that used to be a single document looks like. Nothing else would report that: a page is forked, so it
+is never compared against upstream.
 
 `adrs/_template.md` is valid, so `type-setup` stays silent and the fixture asserts one thing. The scenario that
 breaks a template deliberately is `broken-template`.

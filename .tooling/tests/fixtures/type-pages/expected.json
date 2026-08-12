@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 1,
     "skipped": 0,
-    "errors": 9,
+    "errors": 10,
     "warnings": 0
   },
   "findings": [
@@ -16,7 +16,14 @@
     },
     {
       "file": "adrs.md",
-      "line": 6,
+      "line": 1,
+      "severity": "error",
+      "check": "page-frontmatter",
+      "message": "the page carries frontmatter — it describes the records beneath it and is not one, so it has no id, tier or status of its own. Move what it holds into 'adrs/' as a record, and delete the block."
+    },
+    {
+      "file": "adrs.md",
+      "line": 14,
       "severity": "error",
       "check": "link-resolves",
       "message": "link target '/nope.md' does not resolve."

@@ -1,7 +1,15 @@
+---
+id: adrs
+tier: decided
+status: draft
+owner: alex.doe
+---
+
 # ADRs
 
-A collection type's page. It is not a record — no frontmatter, no identity line — but it carries links and the two
-generated blocks, and both are checked.
+A type's page. It is not a record, and the frontmatter above is what a page looks like when the type it describes used
+to be a single document: the folder arrived and the page survived beside it. It carries links and the two generated
+blocks as well, and all three are checked.
 
 This link points at [a page that does not exist](/nope.md).
 
