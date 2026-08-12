@@ -180,6 +180,7 @@ graph LR;
   t_explanations -- explains --> t_services;
   t_explanations -- explains --> t_capabilities;
   t_faqs -- applies-to --> t_services;
+  t_glossary -- narrows --> t_glossary;
   t_integrations -- used-by --> t_services;
   t_nfrs -- applies-to --> t_services;
   t_nfrs -- applies-to --> t_capabilities;
@@ -225,6 +226,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Explanation | `explains`       | Service, Capability              |                 |
 | FAQ         | `applies-to`     | Service                          |                 |
 | FAQ         | `promoted-from`  | Discovery                        | `promoted-to`   |
+| Glossary    | `narrows`        | Glossary                         |                 |
 | Integration | `used-by`        | Service                          |                 |
 | NFR         | `applies-to`     | Service, Capability              |                 |
 | NFR         | `constrained-by` | Integration                      |                 |

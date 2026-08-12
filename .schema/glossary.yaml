@@ -54,20 +54,32 @@ fields:
     values: [draft, active]
     description: '`draft` while the terms are still settling.'
 
+  narrows:
+    required: false
+    type: id
+    ref: glossary
+    description: The more general glossary this one narrows, where one sits above it.
+    notes: >
+      Absent on a glossary nothing sits above — the corpus-wide one, and the framework's own. It records the
+      ordering the resolution rule reads, so "the most general glossary that admits this term" is a question a
+      reader can answer from the index rather than from knowing the estate. A glossary every corpus shares
+      leaves it empty even where that corpus has a more general one, because a shared file cannot name a
+      record only one corpus holds.
+
   review-by:
     required: true
     type: date
     description: Quoted. A glossary is reviewed whole, rather than a term at a time.
 
 sections:
-  required: [Terms]
-  optional: [Scope]
+  required: [Scope, Terms]
+  optional: []
   notes: >
-    `Scope` says which context this glossary admits, and is worth writing wherever a corpus holds more than
-    one. The terms themselves are H3s under `Terms`, and a cross-reference names their anchors.
+    `Scope` says which context this glossary admits, which is what a contributor holding a word reads to
+    place it. The terms themselves are H3s under `Terms`, and a cross-reference names their anchors.
 
 index:
-  columns: [id, title, status, owner, review-by]
+  columns: [id, title, narrows, status, owner, review-by]
   sort: id
 
 rules:

@@ -3,6 +3,7 @@ id: gls-knowledge-as-code
 tier: descriptive
 status: draft
 owner: paul.law
+narrows:
 review-by: "2027-08-12"
 tags: [ framework ]
 ---

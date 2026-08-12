@@ -3,6 +3,7 @@ id: gls-search
 tier: descriptive
 status: draft
 owner: mira.okonjo
+narrows: gls-example-libraries
 review-by: "2027-08-12"
 tags: [ search ]
 ---

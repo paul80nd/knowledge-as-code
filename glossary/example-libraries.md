@@ -3,6 +3,7 @@ id: gls-example-libraries
 tier: descriptive
 status: draft
 owner: robin.hale
+narrows:
 review-by: "2027-08-12"
 tags: [ catalogue, lending ]
 ---

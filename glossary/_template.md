@@ -3,6 +3,7 @@ id: gls-{{slug}}
 tier: descriptive
 status: draft
 owner:
+narrows:
 review-by:
 tags:
 ---
@@ -22,6 +23,8 @@ Never a topic: a file called "infrastructure terms" starts an argument about pla
 **Frontmatter.** Delete this block once the fields above are filled in.
 
 * **`status`** — `draft` · `active`. `draft` while the terms are still settling.
+* **`narrows`** — The more general glossary this one sits inside. Left empty by the corpus-wide glossary, which
+  nothing sits above.
 * **`review-by`** — A quoted date. The whole glossary is reviewed at once.
 
 **The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a

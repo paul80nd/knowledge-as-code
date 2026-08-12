@@ -57,7 +57,7 @@ the shared one still reads correctly in a corpus that never had the other half.
 
 1. Choose the glossary — the most general one that admits the term.
 2. Where no glossary covers the context, copy [`_template.md`](glossary/_template.md) to a kebab-case filename named for
-   the context.
+   the context, and set `narrows` to the glossary it sits inside.
 3. Add an H3 in alphabetical position.
 4. One sentence of definition. If it needs a paragraph, the paragraph belongs in an
    [explanation](/explanations) and the entry links to it.
@@ -88,6 +88,7 @@ a digest, so nothing runs the rule and the limit is yours to keep.
 | `status` †  | ●   | enum   | `draft` while the terms are still settling.                                          |
 | `owner` †   | ●   | string | A named person, never a team alias.                                                  |
 | `tags` †    |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| `narrows`   |     | id     | The more general glossary this one narrows, where one sits above it.                 |
 | `review-by` | ●   | date   | Quoted. A glossary is reviewed whole, rather than a term at a time.                  |
 
 **Enum values**
@@ -127,6 +128,7 @@ a digest, so nothing runs the rule and the limit is yours to keep.
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
