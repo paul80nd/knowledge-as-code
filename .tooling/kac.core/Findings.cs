@@ -36,7 +36,7 @@ public static class CheckCatalogue
         new("required-field", Sev.Error, "Every required (and required-when) field is present."),
         new("bare-key", Sev.Error, "An absent value is a bare key, not null / ~ / \"\" / —."),
         new("date-quoted", Sev.Error, "A date field is a quoted string."),
-        new("date-format", Sev.Error, "A date field is YYYY-MM-DD in shape."),
+        new("date-format", Sev.Error, "A date field is a YYYY-MM-DD day on the calendar."),
         new("enum", Sev.Error, "An enum value is a scalar in the declared range."),
         new("enum-lowercase", Sev.Error, "An enum value is lowercase."),
         new("list", Sev.Error, "A list field is a YAML sequence."),
