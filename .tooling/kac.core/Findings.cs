@@ -84,8 +84,10 @@ public static class CheckCatalogue
         new("bracket-literal", Sev.Warning, "A [...] in prose that looks like a broken reference."),
 
         // The rules that need C# declare what they report, so implementing one and registering it is
-        // the same edit. Restating them here is how an id and its catalogue entry drift apart.
-        .. DocumentRules.All.SelectMany(r => r.Emits)
+        // the same edit. Restating them here is how an id and its catalogue entry drift apart. Both
+        // registries answer the same way, whether a rule reads one document or the whole corpus.
+        .. DocumentRules.All.SelectMany(r => r.Emits),
+        .. CorpusRules.All.SelectMany(r => r.Emits)
     ];
 
     // The catalogue as it stands for a given corpus: the checks above, which every corpus gets, plus one

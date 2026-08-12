@@ -224,6 +224,26 @@ public class Doc
             where ((YamlScalarNode)kv.Key).Value == key
             select (kv.Value as YamlScalarNode)?.Value).FirstOrDefault();
 
+    // What a field holds, read as a list however it is written. A scalar is the one-entry case rather
+    // than a separate shape, so a check over the values of a field asks the same question of
+    // `depends-on: [svc-a, svc-b]` and of `successor: tol-vault` — whether either shape is the one the
+    // schema declared is the field's own check, and is answered before this is asked.
+    public List<string> FrontList(string key)
+    {
+        var values = new List<string>();
+        if (Front is null) return values;
+
+        foreach (var kv in Front.Children)
+        {
+            if (((YamlScalarNode)kv.Key).Value != key) continue;
+            if (kv.Value is YamlSequenceNode seq)
+                values.AddRange(seq.Children.OfType<YamlScalarNode>().Select(s => s.Value).OfType<string>());
+            else if ((kv.Value as YamlScalarNode)?.Value is { Length: > 0 } scalar) values.Add(scalar);
+        }
+
+        return values;
+    }
+
     // Walk the top-level blocks to the H1, then look at the one after it. A paragraph whose first
     // inline is a code span is taken as an attempted identity line and its code spans are collected —
     // taken as attempted, rather than as correct, so a line with the wrong number of spans is reported

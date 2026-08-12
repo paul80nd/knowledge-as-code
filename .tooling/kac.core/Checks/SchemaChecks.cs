@@ -258,9 +258,10 @@ public static class SchemaChecks
                 + "declares no such section — name a section the type has, or add it."));
     }
 
-    // A rule says what it is by what it carries. An `expr:` is a rule that is finished; a matching
-    // `IDocumentRule` is a rule finished in C#; and a rule carrying neither is an intention the schema
-    // records, which the type page renders as declared-but-not-enforced and nothing pretends to run.
+    // A rule says what it is by what it carries. An `expr:` is a rule that is finished; an id one of the
+    // rule registries answers to is a rule finished in C#; and a rule carrying neither is an intention
+    // the schema records, which the type page renders as declared-but-not-enforced and nothing pretends
+    // to run.
     //
     // What no rule may do is claim a `severity:` with nothing behind it. Severity is the statement that
     // something acts on this — it is what puts a rule in the catalogue and in `kac checks` — so a rule
@@ -282,12 +283,14 @@ public static class SchemaChecks
                 + $"limit is {Generator.DescriptionMax}. A description says what is checked — the reasoning "
                 + "belongs in its 'message:', where the author who trips it reads it."));
 
-        if (rule.Compiled is not null || DocumentRules.ByRuleId.ContainsKey(rule.Id)) return;
+        if (rule.Compiled is not null
+            || DocumentRules.ByRuleId.ContainsKey(rule.Id)
+            || CorpusRules.ByRuleId.ContainsKey(rule.Id)) return;
 
         if (rule.Severity is { } severity)
             Dispatch(at, $"rule '{rule.Id}' on type '{key}' declares 'severity: "
                          + $"{severity.ToString().ToLowerInvariant()}' and nothing dispatches it — give it an "
-                         + "'expr:', implement it as a DocumentRule, or drop the severity and leave it "
+                         + "'expr:', implement it as a rule class, or drop the severity and leave it "
                          + "declared as an intention.", f);
     }
 

@@ -501,7 +501,10 @@ public static class Generator
         ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.",
             t => t.HasRule("alternatives-have-verdicts")),
         ("terms-alphabetical", ["terms-alphabetical"], "A glossary's entries read in alphabetical order.",
-            t => t.HasRule("terms-are-alphabetical"))
+            t => t.HasRule("terms-are-alphabetical")),
+        ("dependency-cycle", ["dependency-cycle"],
+            "A cycle in the graph these records form among themselves, naming the records on it. Reported, not failed.",
+            t => t.HasRule("no-dependency-cycles"))
     ];
 
     // Catalogue checks the reader-facing table deliberately does not surface: `type` (an internal
@@ -564,7 +567,9 @@ public static class Generator
     private static string Intentions(TypeSchema t)
     {
         var intended = t.Rules
-            .Where(r => r.Compiled is null && !DocumentRules.ByRuleId.ContainsKey(r.Id))
+            .Where(r => r.Compiled is null
+                        && !DocumentRules.ByRuleId.ContainsKey(r.Id)
+                        && !CorpusRules.ByRuleId.ContainsKey(r.Id))
             .ToList();
         if (intended.Count == 0) return "";
 

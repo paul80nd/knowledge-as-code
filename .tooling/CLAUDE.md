@@ -15,17 +15,19 @@ reports "something here is wrong" where it could have named the missing piece ha
 nothing in the gate will notice. Cost is the second question, and it only ever argues for converting a rule that has
 already passed the first — a schema with no C# behind it was never the aim.
 
-Eighteen rules fail that test, and they cluster, which is worth knowing before starting one. Three are written and are
+Eighteen rules fail that test, and they cluster, which is worth knowing before starting one. Four are written and are
 marked as such below, because the argument for why a rule needs a class reads differently beside a class that exists.
 
 * **Git history — 4.** `immutable-after-accepted`, `immutable-after-published`, `changelog-begins-at-active`,
   `changelog-on-material-change`. All four ask the same question: what changed in this commit versus the committed
   content, and was it substantive? One mechanism answers all of them, and it is the largest single piece of work left.
 * **Cross-document — 7.** `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`,
-  `redefinitions-are-reciprocal`, and the glossary pair `undefined-terms` and `unused-terms`. `Validator.CheckCorpus`
-  already builds a `byId` index and resolves clause citations and reciprocals against it; these are more of that. The
-  reciprocal one is the hardest, because it holds an entry inside one document against an entry inside another.
-* **Graph — 1.** `no-dependency-cycles`.
+  `redefinitions-are-reciprocal`, and the glossary pair `undefined-terms` and `unused-terms`. Each is an `ICorpusRule`,
+  handed the records and the `byId` index `Validator.CheckCorpus` already builds — the interface the graph rule below is
+  written against. The reciprocal one is the hardest, because it holds an entry inside one document against an entry
+  inside another.
+* **Graph — 1.** `no-dependency-cycles`, **written**. A loop is a property of the set of edges, and every one of them
+  was reasonable where it was written, so nobody adding an edge is in a position to see it.
 * **Per-part — 5.** `alternatives-have-verdicts` and `terms-are-alphabetical`, both **written**, beside
   `terms-are-singular`, `carried-in-full-by-digest` and `escalation-required`, which are not. Each judges the parts of
   one document — bullets under a heading, entries in a glossary, branches of a diagnosis tree — and its message has to
@@ -37,16 +39,22 @@ marked as such below, because the argument for why a rule needs a class reads di
 **If you find yourself wanting loops, joins or quantifiers in the grammar to reach one of these, stop** — that is the
 signal you are rebuilding OPA. Write a rule class.
 
-**A rule that does need C# is a class, not an arm.** One file in `kac.core/Rules/` implementing `IDocumentRule`, with
-its own unit tests, and a line in `DocumentRules.All`. It declares the checks it `Emits`, and `CheckCatalogue.All`
-reads them from there — so implementing it and registering it are the same edit, and its id cannot drift from its
-catalogue entry. `Validator.CheckRules` finds it by the id the schema's `rules:` block declares; a rule id nothing
-implements is a statement of intent, is skipped, and is rendered on the type page as declared-but-not-enforced — so long
-as it declares no `severity:`, which `SchemaChecks` holds it to.
+**A rule that does need C# is a class, not an arm.** One file in `kac.core/Rules/`, with its own unit tests, and a line
+in the registry beside it. It declares the checks it `Emits`, and `CheckCatalogue.All` reads them from there — so
+implementing it and registering it are the same edit, and its id cannot drift from its catalogue entry. Both
+dispatchers find a rule by the id the schema's `rules:` block declares; a rule id nothing implements is a statement of
+intent, is skipped, and is rendered on the type page as declared-but-not-enforced — so long as it declares no
+`severity:`, which `SchemaChecks` holds it to.
 
-Only the per-document shape has an interface. A rule needing the whole corpus, a graph walk or git history does not fit
-`RuleContext`, and its interface is designed against the first real one rather than ahead of it —
-[knowledge-as-code#103](https://github.com/paul80nd/knowledge-as-code/issues/103) is that one.
+**Which interface follows from what the rule has to read.** `IDocumentRule` is handed one document through a
+`RuleContext`, runs from `Validator.CheckRules` as that document is checked, and reports against it. `ICorpusRule` is
+handed every record and the `byId` index through a `CorpusRuleContext`, runs once from `Validator.CheckCorpusRules`,
+and names the document each finding belongs against — which is rarely the one that would have been in hand. The split
+is not tidiness: a run narrowed to given paths still runs the document rules and skips the corpus ones, because a
+question about the set answered from a handful of its members is answered wrongly and with no sign of it.
+
+A rule needing git history has neither, and its interface is designed against the first real one rather than ahead of
+it.
 
 **A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
 early so a later check does not report nonsense about a document already known to be broken. That order is the design,
@@ -58,7 +66,7 @@ is the case for extracting: a second copy of that shape anywhere would be a plac
 
 **`Checks/SchemaChecks.cs` reads no document at all.** It runs once, before the corpus, and asks whether the schema
 declares anything the tool cannot act on. A vocabulary it tests must be read from the code that dispatches the value —
-`IdChecks.IdStyles`, `Generator.IndexOrders`, `DocumentRules.ByRuleId` — never restated there, because a copy is a list
+`IdChecks.IdStyles`, `Generator.IndexOrders`, the two `ByRuleId` maps — never restated there, because a copy is a list
 of what is spelled correctly rather than of what runs. The key vocabulary follows the same rule with no list at all:
 `Schema.Load` reads every mapping through a `Level` that records what it was asked for, so adding a
 `Get` is what admits a key. Adding one without the code that reads what it parsed into moves the failure from

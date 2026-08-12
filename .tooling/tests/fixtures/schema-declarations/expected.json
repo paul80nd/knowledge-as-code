@@ -124,7 +124,7 @@
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "rule 'widgets-are-blue' on type 'widgets' declares 'severity: warning' and nothing dispatches it — give it an 'expr:', implement it as a DocumentRule, or drop the severity and leave it declared as an intention."
+      "message": "rule 'widgets-are-blue' on type 'widgets' declares 'severity: warning' and nothing dispatches it — give it an 'expr:', implement it as a rule class, or drop the severity and leave it declared as an intention."
     },
     {
       "file": ".schema/widgets.yaml",
