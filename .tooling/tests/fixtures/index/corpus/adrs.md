@@ -66,7 +66,7 @@ byte-preserved.
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `related-matches-section`   | error   | A field that mirrors a section reconciles with the ids in that section.                                         |
-| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `y-statement`               | warning | A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.                         |
