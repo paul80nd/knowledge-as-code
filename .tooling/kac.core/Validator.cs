@@ -597,7 +597,7 @@ public static class Validator
 
                     if (admits.Count == 0 || target.Type is null || admits.Contains(target.Type)) continue;
                     f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "ref-resolves",
-                        $"'{name}' points at '{targetId}', which is {WithArticle(target.Type.DisplayName)}, "
+                        $"'{name}' points at '{targetId}', which is {WithArticle(target.Type)}, "
                         + $"not {OneOf(admits)}."));
                 }
             }
@@ -646,7 +646,7 @@ public static class Validator
     // order the declaration lists them, which is the order whoever wrote it chose.
     private static string OneOf(List<TypeSchema> types)
     {
-        var names = types.Select(t => WithArticle(t.DisplayName)).ToList();
+        var names = types.Select(WithArticle).ToList();
         return names.Count switch
         {
             1 => names[0],
@@ -655,12 +655,21 @@ public static class Validator
         };
     }
 
-    // "a" or "an", by how the name is read aloud rather than by how it is spelled. A label written in
-    // capitals is read letter by letter, so the article follows the name of its first letter — "an ADR",
+    // A type as a sentence names one of its records: "an ADR", "a Service", "Data". Both declarations
+    // decide it, so a message reads as English for every label a schema may carry.
+    //
+    // A type whose singular and plural are the same word is a mass noun and takes no article — "this is
+    // Data" — which the schema already says, in declaring `label:` and `label-plural:` alike. Otherwise
+    // the article follows how the label is read aloud rather than how it is spelled: a label in capitals
+    // is read letter by letter, so it takes the article the name of its first letter wants — "an ADR",
     // "an NFR" — and the letters read with an opening vowel are the whole of that exception.
-    private static string WithArticle(string name)
+    private static string WithArticle(TypeSchema t)
     {
+        var name = t.DisplayName;
         if (name.Length == 0) return name;
+        if (!string.IsNullOrEmpty(t.LabelPlural) && string.Equals(t.Label, t.LabelPlural, StringComparison.Ordinal))
+            return name;
+
         var vowel = name.All(char.IsAsciiLetterUpper)
             ? "AEFHILMNORSX".Contains(name[0])
             : "AEIOU".Contains(char.ToUpperInvariant(name[0]));
@@ -921,7 +930,7 @@ public static class Validator
         var gotStatus = d.IdentitySpans[1].Trim();
 
         if (!string.Equals(gotType, t.DisplayName, StringComparison.Ordinal))
-            err("identity-type", $"identity line says '{gotType}', but this is a {t.DisplayName}.", d.IdentityLine);
+            err("identity-type", $"identity line says '{gotType}', but this is {WithArticle(t)}.", d.IdentityLine);
 
         // Compared against the frontmatter rather than the filename: the id is what every citation uses,
         // and id-matches-filename already ties the frontmatter back to the file. Where the frontmatter

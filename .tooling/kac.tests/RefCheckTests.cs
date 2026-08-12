@@ -32,8 +32,18 @@ public class RefCheckTests
 
     [Fact]
     public void A_declaration_naming_several_types_offers_them_all_when_none_matches()
-        => Assert.Equal("'promoted-to' points at 'giz-widget', which is a Gizmo, not an ADR or a Service.",
-            Assert.Single(Refs(Field("promoted-to", "adrs", "services"), "giz-widget")).Message);
+        => Assert.Equal("'promoted-to' points at 'dat-borrowers', which is Data, not an ADR or a Service.",
+            Assert.Single(Refs(Field("promoted-to", "adrs", "services"), "dat-borrowers")).Message);
+
+    // A type whose singular and plural are one word takes no article, at either end of the message.
+    [Fact]
+    public void A_type_whose_label_is_a_mass_noun_is_named_without_an_article()
+    {
+        Assert.Equal("'data-stores' points at 'svc-catalogue', which is a Service, not Data.",
+            Assert.Single(Refs(Field("data-stores", "data"), "svc-catalogue")).Message);
+        Assert.Equal("'supersedes' points at 'dat-borrowers', which is Data, not an ADR.",
+            Assert.Single(Refs(Field("supersedes", "adrs"), "dat-borrowers")).Message);
+    }
 
     // An id nothing carries is the other half of this check, and the type question cannot be asked of a
     // document that is not there.
@@ -73,8 +83,8 @@ public class RefCheckTests
         new() { Name = name, Type = "id", Refs = refs, Reciprocal = "superseded-by" };
 
     // Three types, so that a field can name one, two or none of them. The labels are the real ones
-    // because the article a message reaches for follows how the label is read aloud — "an ADR", "a
-    // Service" — and nothing else would show that.
+    // because how a message names a type is read off them: the article follows how the label sounds —
+    // "an ADR", "a Service" — and a label whose plural is the same word takes none.
     //
     // The cast is fixed: an ADR carrying the field, and one document of each type to aim it at. An id
     // outside the cast is the target that does not exist.
@@ -82,19 +92,20 @@ public class RefCheckTests
     {
         var adrs = new TypeSchema
         {
-            Key = "adrs", Folder = "adrs", Label = "ADR", FieldOrder = [field.Name],
+            Key = "adrs", Folder = "adrs", Label = "ADR", LabelPlural = "ADRs", FieldOrder = [field.Name],
             Fields = new Dictionary<string, FieldSpec> { [field.Name] = field }
         };
-        var services = new TypeSchema { Key = "services", Folder = "services", Label = "Service" };
-        var gizmos = new TypeSchema { Key = "gizmos", Folder = "gizmos", Label = "Gizmo" };
+        var services = new TypeSchema
+            { Key = "services", Folder = "services", Label = "Service", LabelPlural = "Services" };
+        var data = new TypeSchema { Key = "data", Folder = "data", Label = "Data", LabelPlural = "Data" };
 
         var schema = new Schema
         {
             ByFolder = new Dictionary<string, TypeSchema>
-                { ["adrs"] = adrs, ["services"] = services, ["gizmos"] = gizmos }
+                { ["adrs"] = adrs, ["services"] = services, ["data"] = data }
         };
 
-        string[] cast = ["adrs/adr-0002.md", "services/svc-catalogue.md", "gizmos/giz-widget.md"];
+        string[] cast = ["adrs/adr-0002.md", "services/svc-catalogue.md", "data/dat-borrowers.md"];
 
         var docs = cast
             .Select(rel => Parse(schema, rel, Path.GetFileNameWithoutExtension(rel), null))
