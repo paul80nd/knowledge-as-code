@@ -240,6 +240,12 @@ public static class SchemaChecks
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-items:', which only a "
                          + "list's length is read against — declare it 'type: list', or drop the floor.", f);
 
+        // `min-records` counts how often each entry recurs across the type, so it reads a list of values
+        // the same way. A scalar field holds one value per record and the count would be its own.
+        if (spec.MinRecords is not null && spec.Type != "list")
+            Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-records:', which is read "
+                         + "against the entries of a list — declare it 'type: list', or drop the floor.", f);
+
         // Any section reconciles, so this is not a vocabulary the tool holds — which is why nothing
         // else would catch a section the type never offers. The reconciliation would run against a
         // heading no record may carry and report every id in the field as missing from it.

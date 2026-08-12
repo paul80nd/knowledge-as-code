@@ -37,9 +37,15 @@ Feature: Warning-level checks
       | severity | line | check       | message                                                                                                                  |
       | warning  | 13   | y-statement | Y-statement is missing "facing" and "rather than". The six moves are what make it a Y-statement rather than a summary of one. |
 
-  Scenario: The corpus as a whole warns six times and errors not at all
+  Scenario: A value below its field's floor is reported against each record carrying it
     When I validate the corpus
-    Then validation reports 6 documents and 0 skipped
+    Then the findings for "gadgets/alone.md" are exactly:
+      | severity | line | check       | message                                                                                                                  |
+      | warning  | 1    | min-records | 'facets: singular' is carried by 1 gadget record — the schema asks for at least 2, because a value here is meant to group records. One that does not belongs in a field that is free to be unique. |
+
+  Scenario: The corpus as a whole warns seven times and errors not at all
+    When I validate the corpus
+    Then validation reports 9 documents and 0 skipped
     And the findings are exactly:
       | file                                 | severity | line | check                | message                                                                                                                  |
       | adrs/0001-warnings.md                | warning  |      | unused-definition    | link definition '[unused-ref]' is never referenced.                                                                      |
@@ -48,3 +54,4 @@ Feature: Warning-level checks
       | adrs/0003-long-y-statement.md        | warning  | 13   | y-statement          | Y-statement is 95 words; keep it under 60.                                                                               |
       | adrs/0004-incomplete-y-statement.md  | warning  | 13   | y-statement          | Y-statement is missing "facing" and "rather than". The six moves are what make it a Y-statement rather than a summary of one. |
       | policies/ordn-ordinal-not-natural.md | warning  | 7    | list-order           | 'aligns-with' is not in alphabetical order — 'ISO27001:2022 A.8.7' should come before 'ISO27001:2022 A.8.29'.            |
+      | gadgets/alone.md                     | warning  | 1    | min-records          | 'facets: singular' is carried by 1 gadget record — the schema asks for at least 2, because a value here is meant to group records. One that does not belongs in a field that is free to be unique. |

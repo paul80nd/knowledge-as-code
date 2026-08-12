@@ -90,6 +90,12 @@ public static class Validator
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
         CheckCorpus(corpus.Docs, findings);
 
+        // How often a value recurs is a question about the whole of a type, so a narrowed run cannot
+        // answer it: every value in one document is carried by one document. Skipped there, like the
+        // other checks that ask about the corpus rather than about a record.
+        if (corpus.Paths.Count == 0)
+            CheckMinRecords(corpus.Docs, findings);
+
         // Whether each declared type is stood up. Skipped when the run is narrowed to given paths:
         // asking about one document is not asking about the shape of the corpus, and answering
         // anyway would bury the reply.
@@ -542,7 +548,7 @@ public static class Validator
                 var spec = d.Type.Fields[name];
                 if (spec.Refs.Count == 0) continue;
                 if (spec.Type != "id" && (spec.Type != "list" || spec.Of != "id")) continue;
-                foreach (var targetId in FrontIdList(d, name))
+                foreach (var targetId in FrontList(d, name))
                 {
                     if (spec.IsLiteral(targetId) || byId.ContainsKey(targetId)) continue;
                     f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "ref-resolves",
@@ -561,15 +567,56 @@ public static class Validator
             {
                 var spec = d.Type.Fields[name];
                 if (spec.Reciprocal is null || spec.Refs.Count == 0) continue;
-                foreach (var targetId in FrontIdList(d, name))
+                foreach (var targetId in FrontList(d, name))
                 {
                     if (!byId.TryGetValue(targetId, out var target)) continue;
 
-                    var back = FrontIdList(target, spec.Reciprocal);
+                    var back = FrontList(target, spec.Reciprocal);
                     var selfId = d.FrontScalar("id");
                     if (!back.Any(b => string.Equals(b, selfId, StringComparison.OrdinalIgnoreCase)))
                         f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "reciprocal",
                             $"'{name}: {targetId}' is not reciprocated — {target.Rel} must list '{spec.Reciprocal}: {selfId}'."));
+                }
+            }
+        }
+    }
+
+    // A field whose values are meant to group records, held to grouping some. Where a type declares
+    // `min-records:` on a list field, each value in it is counted across every record of that type, and a
+    // value carried by fewer records than the floor is reported against each record that carries it.
+    //
+    // A warning, and permanently one. The corpus decides what its vocabulary is — the schema only says
+    // that a value in this field is for dividing the type into groups — and a value newly introduced is
+    // below the floor on the day it is written, on the way to being above it.
+    private static void CheckMinRecords(List<Doc> docs, List<Finding> f)
+    {
+        foreach (var group in docs.Where(d => d.Type is not null).GroupBy(d => d.Type!))
+        {
+            var type = group.Key;
+            foreach (var name in type.FieldOrder)
+            {
+                if (type.Fields[name].MinRecords is not { } floor) continue;
+
+                // Counted case-insensitively, matching how a reader searches, so `Public` and `public`
+                // are one value falling short rather than two. Counted once per record as well: a record
+                // listing a value twice is still one record carrying it, which is what the floor asks
+                // about.
+                var carried = group
+                    .Select(d => (Doc: d,
+                        Values: FrontList(d, name).Distinct(StringComparer.OrdinalIgnoreCase).ToList()))
+                    .ToList();
+                var count = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+                foreach (var value in carried.SelectMany(c => c.Values))
+                    count[value] = count.GetValueOrDefault(value) + 1;
+
+                foreach (var (doc, values) in carried)
+                foreach (var value in values.Where(v => count[v] < floor).Order(StringComparer.Ordinal))
+                {
+                    var carriers = Count(count[value], $"{type.TypeName} record", $"{type.TypeName} records");
+                    f.Add(new Finding(doc.Rel, doc.FrontStartLine, Sev.Warning, "min-records",
+                        $"'{name}: {value}' is carried by {carriers} — the schema asks for at least {floor}, "
+                        + "because a value here is meant to group records. One that does not belongs in a field "
+                        + "that is free to be unique."));
                 }
             }
         }
@@ -800,7 +847,7 @@ public static class Validator
             var refTypes = spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>().ToList();
             if (refTypes.Count == 0) continue;
 
-            var inFront = new HashSet<string>(FrontIdList(d, spec.Name), StringComparer.OrdinalIgnoreCase);
+            var inFront = new HashSet<string>(FrontList(d, spec.Name), StringComparer.OrdinalIgnoreCase);
             var inSection = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var link in d.MirroredSectionLinks.GetValueOrDefault(section, []))
             {
@@ -885,7 +932,7 @@ public static class Validator
     private static int? Line(YamlNode node, Doc d)
         => node.Start.Line > 0 ? (int)node.Start.Line + d.FrontStartLine - 1 : d.FrontStartLine;
 
-    private static List<string> FrontIdList(Doc d, string key)
+    private static List<string> FrontList(Doc d, string key)
     {
         var result = new List<string>();
         if (d.Front is null) return result;
