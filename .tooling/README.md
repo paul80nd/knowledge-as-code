@@ -86,7 +86,13 @@ gets the naming rule and not a second link pass, which would report every dead l
 
 **Type pages get a pass of their own.** A page — `adrs.md`, `services.md` — is not a record and carries no frontmatter,
 so the structural checks do not apply. It is checked for link resolution, undefined and non-canonical labels, unused
-definitions, both markers of each generated block, and frontmatter it should not be carrying.
+definitions, and frontmatter it should not be carrying.
+
+**Every file carrying a generated block gets one more.** A type's page and the framework's own pages alike are held to
+still having both markers of each block `index` writes into them, read from the same list `index` writes from. A block
+whose markers have gone is written by nothing and, without this, reported by nothing: `index --check` compares the file
+against what the generator would produce, and what it would produce for a file it cannot find a marker in is the file as
+it stands.
 
 ## Checks
 
@@ -117,21 +123,21 @@ intention, and the type page renders those beneath the checks table as *Declared
 
 ### Frontmatter (from `_universal.yaml` + `<type>.yaml`)
 
-| Check                                             | Level   | What it enforces                                                                                                                                                  |
-|---------------------------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `frontmatter-parses`                              | error   | The block is valid YAML and a mapping.                                                                                                                            |
-| `unknown-key`                                     | error   | Every key is a universal field, a type field, or a reserved ADO key.                                                                                              |
-| `key-order`                                       | error   | Order is a **topological extension** of the schema's declared field orders — see below.                                                                           |
-| `required-field`                                  | error   | Every `required` field (and every `required-when` field whose condition holds) is present.                                                                        |
-| `bare-key`                                        | error   | An absent value is a bare key (`decided-on:`), never `null`, `~`, `""`, `''` or `—`.                                                                              |
-| `date-quoted` / `date-format`                     | error   | `type: date` fields are quoted, `YYYY-MM-DD` in shape, and a day the calendar has — `2026-13-40` fails.                                                           |
-| `enum` / `enum-lowercase`                         | error   | `type: enum` values are in range and lowercase.                                                                                                                   |
-| `field-pattern`                                   | error   | A field's value matches its declared `pattern:` — per entry for a list, per value for a scalar.                                                                   |
-| `min-items`                                       | error   | A `type: list` field carries at least the `min-items:` its schema declares. Reported against the field — no entry is at fault.                                    |
+| Check                                             | Level   | What it enforces                                                                                                                                                                     |
+|---------------------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `frontmatter-parses`                              | error   | The block is valid YAML and a mapping.                                                                                                                                               |
+| `unknown-key`                                     | error   | Every key is a universal field, a type field, or a reserved ADO key.                                                                                                                 |
+| `key-order`                                       | error   | Order is a **topological extension** of the schema's declared field orders — see below.                                                                                              |
+| `required-field`                                  | error   | Every `required` field (and every `required-when` field whose condition holds) is present.                                                                                           |
+| `bare-key`                                        | error   | An absent value is a bare key (`decided-on:`), never `null`, `~`, `""`, `''` or `—`.                                                                                                 |
+| `date-quoted` / `date-format`                     | error   | `type: date` fields are quoted, `YYYY-MM-DD` in shape, and a day the calendar has — `2026-13-40` fails.                                                                              |
+| `enum` / `enum-lowercase`                         | error   | `type: enum` values are in range and lowercase.                                                                                                                                      |
+| `field-pattern`                                   | error   | A field's value matches its declared `pattern:` — per entry for a list, per value for a scalar.                                                                                      |
+| `min-items`                                       | error   | A `type: list` field carries at least the `min-items:` its schema declares. Reported against the field — no entry is at fault.                                                       |
 | `min-records`                                     | warning | Each entry of a `type: list` field declaring `min-records:` is carried by at least that many records of the type. For a field whose values group documents rather than describe one. |
-| `list-order`                                      | warning | A `type: list` field's entries are in alphabetical order, digit runs compared as numbers (`A.8.7` before `A.8.29`). Only the first pair out of order is reported. |
-| `tier-matches-type`                               | error   | `tier` equals the tier the type declares.                                                                                                                         |
-| `id-prefix` / `id-format` / `id-matches-filename` | error   | `id` has the type's prefix, its discriminator has the shape the `id.style` declares, and that discriminator matches the filename's.                               |
+| `list-order`                                      | warning | A `type: list` field's entries are in alphabetical order, digit runs compared as numbers (`A.8.7` before `A.8.29`). Only the first pair out of order is reported.                    |
+| `tier-matches-type`                               | error   | `tier` equals the tier the type declares.                                                                                                                                            |
+| `id-prefix` / `id-format` / `id-matches-filename` | error   | `id` has the type's prefix, its discriminator has the shape the `id.style` declares, and that discriminator matches the filename's.                                                  |
 
 ### Identity & structure (from `<type>.yaml`)
 
@@ -175,7 +181,7 @@ A type that declares no `clauses:` block is checked for none of these.
 | `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`). Whether the target exists is `ref-resolves`, so a dangling reference is reported once rather than twice.                                                                                                                                                                                                                                                                |
 | `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `_template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. Skipped when the run is narrowed to paths.                                                                                                                                                                                                                       |
 | `framework-names-types`   | error   | The framework's own documentation — `knowledge-as-code.md`, `knowledge-as-code/` and the framework's own glossary — names a type rather than linking to one, and never links a record inside a type's folder. Those files are byte-identical in every corpus, so a link resolving here says nothing about where it is read. Generated blocks are exempt: they are written from the types the corpus stood up. Skipped when the run is narrowed to paths. |
-| `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                                                                                                                                                                                                |
+| `generated-block`         | error   | Every file `kac index` writes a block into still carries both of that block's markers. `SpliceBlock` leaves the file alone when a marker is missing, and `index --check` then calls it fresh, so nothing else can notice. `README.md` is the exception: it belongs to the corpus, so deleting its markers is how the corpus declines the block.                                                                                                          |
 | `page-frontmatter`        | error   | A type page carries no frontmatter of its own. It describes the records beneath it and is not one, so a block on it is left over from a type that used to be a single document — the folder arrives in a sync and the page survives beside it. A page is forked, so nothing compares it against upstream.                                                                                                                                                |
 | `template-fields`         | error   | A type's `_template.md` carries no key the type does not declare, carries every field it requires, and holds each in a form YAML reads as a value — a placeholder opening one has to be quoted. A defect here is every future document's, found by the next author rather than the last.                                                                                                                                                                 |
 | `unused-definition`       | warning | A link definition that nothing references.                                                                                                                                                                                                                                                                                                                                                                                                               |
@@ -272,8 +278,14 @@ corpus, and still catches genuine disorder (`tags` before `id`, `related` before
 | `<!-- … schema-<type> -->` block in `<type>.md`      | `_universal.yaml` + the type's `fields` | The frontmatter reference table — universal fields first, marked `†`, then the type's own. Each row renders the field's `description`, falling back to `notes` where the schema declares none.                                     |
 | `<!-- … schema-universal -->` block in `metadata.md` | `_universal.yaml`                       | The universal field reference, documented once for the taxonomy rather than per type.                                                                                                                                              |
 | `<!-- … checks-<type> -->` block in `<type>.md`      | the checks the validator implements     | The "What CI checks" table. Rows a type cannot trip — a rule it does not declare, a reciprocal or mirrors-section field it does not have — are omitted, so each page lists only its own checks.                                    |
+| five blocks in `knowledge-as-code/taxonomy.md`       | the adopted types                       | `types-placement`, `types-detail`, `types-versus`, `types-graph`, `types-edges` — the decision table, the catalogue by tier, the disambiguations, the relation diagram and its edges.                                              |
+| `<!-- … types-metadata -->` block in `metadata.md`   | the adopted types                       | Which types carry which of the fields the universal table above it describes.                                                                                                                                                      |
+| two blocks in `knowledge-as-code/lineage.md`         | the adopted types                       | `types-lineage` and `types-collisions` — where each type's name came from, and where it already means something else to a reader.                                                                                                  |
+| `<!-- … types-index -->` block in `README.md`        | the adopted types                       | The corpus's own index of the types it carries. The one block a corpus may decline, by deleting the markers, because the file is the corpus's own.                                                                                 |
 
-Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of `<type>.md` is byte-preserved. Every
+`GeneratedFiles` holds that list, so `validate` holds a corpus to the same files and blocks this writes.
+
+Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of the file is byte-preserved. Every
 adopted type is regenerated whether or not it holds records: the blocks derive from the schema alone, and an index that
 waits for its first record is a dead link from the type page until then.
 
