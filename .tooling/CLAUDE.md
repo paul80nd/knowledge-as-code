@@ -15,21 +15,24 @@ reports "something here is wrong" where it could have named the missing piece ha
 nothing in the gate will notice. Cost is the second question, and it only ever argues for converting a rule that has
 already passed the first — a schema with no C# behind it was never the aim.
 
-Sixteen rules fail that test, and they cluster, which is worth knowing before starting one:
+Eighteen rules fail that test, and they cluster, which is worth knowing before starting one. Three are written, and
+each is marked as such below: the argument for why a rule needs a class is worth reading beside a class that exists.
 
 * **Git history — 4.** `immutable-after-accepted`, `immutable-after-published`, `changelog-begins-at-active`,
   `changelog-on-material-change`. All four ask the same question: what changed in this commit versus the committed
   content, and was it substantive? One mechanism answers all of them, and it is the largest single piece of work left.
-* **Cross-document — 6.** `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`, and
-  the corpus-wide glossary pair `undefined-terms` and `unused-terms`. `Validator.CheckCorpus` already builds a
-  `byId` index and resolves clause citations and reciprocals against it; these are more of that.
+* **Cross-document — 7.** `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`,
+  `redefinitions-are-reciprocal`, and the glossary pair `undefined-terms` and `unused-terms`. `Validator.CheckCorpus`
+  already builds a `byId` index and resolves clause citations and reciprocals against it; these are more of that. The
+  reciprocal one is the hardest, because it holds an entry inside one document against an entry inside another.
 * **Graph — 1.** `no-dependency-cycles`.
-* **Per-part — 4.** `alternatives-have-verdicts`, `terms-are-singular`, `carried-in-full-by-digest` and
-  `escalation-required`. Each judges the parts of one document — bullets under a heading, entries in a glossary,
-  branches of a diagnosis tree — and its message has to name the part that failed. Only the first is written.
-* **A fixed form — 1.** `y-statement-present`. A Y-statement is six moves in one block-quote, and the message worth
-  reading names the move that is absent. An expression could report that the block-quote is not a Y-statement, which is
-  the one thing the author already knows.
+* **Per-part — 5.** `alternatives-have-verdicts` and `terms-are-alphabetical`, both **written**, then
+  `terms-are-singular`, `carried-in-full-by-digest` and `escalation-required`. Each judges the parts of one document —
+  bullets under a heading, entries in a glossary, branches of a diagnosis tree — and its message has to name the part
+  that failed.
+* **A fixed form — 1.** `y-statement-present`, **written**. A Y-statement is six moves in one block-quote, and the
+  message worth reading names the move that is absent. An expression could report that the block-quote is not a
+  Y-statement, which is the one thing the author already knows.
 
 **If you find yourself wanting loops, joins or quantifiers in the grammar to reach one of these, stop** — that is the
 signal you are rebuilding OPA. Write a rule class.
