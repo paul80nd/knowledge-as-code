@@ -146,10 +146,10 @@ public sealed record RuleSpec
 
 public sealed class TypeSchema
 {
-    // How the schema names this type: the base name of its file, which is the folder for a collection and
-    // the page's stem for a single-document type. It is what `ref:` and `versus:` name, and what a finding
-    // calls the type, so it is carried here rather than being the dictionary key alone — a TypeSchema
-    // handed to a renderer would otherwise have lost the one name the schema knows it by.
+    // How the schema names this type: the base name of its file, which is the folder its records live
+    // in. It is what `ref:` and `versus:` name, and what a finding calls the type, so it is carried here
+    // rather than being the dictionary key alone — a TypeSchema handed to a renderer would otherwise
+    // have lost the one name the schema knows it by.
     public string Key { get; init; } = "";
 
     public string TypeName { get; init; } = "";
@@ -191,10 +191,8 @@ public sealed class TypeSchema
     //
     // Paragraphs are separated by a blank line in the schema and rendered as paragraphs.
     public string Collision { get; init; } = "";
-    public string Shape { get; init; } = CollectionShape;
     public string IdPrefix { get; init; } = "";
     public string IdStyle { get; init; } = "";
-    public string IdValue { get; init; } = "";
     public int IdWidth { get; init; }
     public string? FilenamePattern { get; init; }
     public Regex? FilenameRegex { get; init; } // FilenamePattern compiled — the message quotes the source
@@ -230,15 +228,6 @@ public sealed class TypeSchema
     // Every field a document of this type is judged against, in the order the schema declares them, with
     // each type override already resolved against the universal field it refines.
     public IReadOnlyList<FieldSpec> DeclaredFields { get; init; } = [];
-
-    // The two shapes a type can take. Most are a folder of records; the glossary is one document read
-    // end to end. Declared rather than inferred: an absent `folder:` and a deliberate `folder: null`
-    // are the same string once parsed, so inferring the shape from the folder cannot tell a
-    // single-document type from a collection whose folder key was lost.
-    public const string CollectionShape = "collection";
-    public const string SingleDocumentShape = "single-document";
-
-    public bool IsSingleDocument => Shape == SingleDocumentShape;
 
     // How a single document of this type is named in generated prose — "Policy", "ADR", "NFR". Declared
     // by the schema rather than derived, because no rule turns `policy` into "Policy" and `adr` into
@@ -500,12 +489,10 @@ public sealed class Schema
             Versus = [.. Yaml.Map(root.Get("versus")).Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))],
             Lineage = priorArt.Length > 0 ? new LineageSpec(priorArt, alignment, divergence) : null,
             Collision = Yaml.Str(root.Get("collision"))?.Trim() ?? "",
-            Shape = Yaml.Str(root.Get("shape")) ?? TypeSchema.CollectionShape,
 
             IdPrefix = Yaml.Str(id.Get("prefix")) ?? "",
             IdStyle = Yaml.Str(id.Get("style")) ?? "",
             IdWidth = Yaml.Int(id.Get("width"), 4),
-            IdValue = Yaml.Str(id.Get("value")) ?? "",
 
             FilenamePattern = filenamePattern,
             FilenameRegex = CompilePattern(filenamePattern),

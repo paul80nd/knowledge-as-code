@@ -126,8 +126,7 @@ Beyond `fields`, each type file declares:
 
 | Key                        | Purpose                                                                                                          |
 |----------------------------|------------------------------------------------------------------------------------------------------------------|
-| `type` / `folder` / `page` | Identity, and where the type lives                                                                               |
-| `shape`                    | `collection` (the default) or `single-document` — see the note below                                             |
+| `type` / `folder` / `page` | Identity, and where the type lives — see the note below                                                          |
 | `label` / `label-plural`   | The display names — "Policy" heads the generated index, "Policies" names the collection in a link                |
 | `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
 | `summary` / `goes-here`    | What the type is, and what a contributor has in hand when it is the answer — see the note below                  |
@@ -142,13 +141,9 @@ Beyond `fields`, each type file declares:
 | `index`                    | Columns, sort columns and direction for the generated index — see the note below                                 |
 | `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |
 
-**`shape`.** Most types are a **collection** — a folder of records, a page describing them, and a template to copy. The
-glossary is a **single-document** type: one document read end to end, whose page *is* the record. A collection declares
-its `folder:`; a single-document type declares none, because it has none, and nothing indexes it.
-
-It is declared rather than inferred. An absent `folder:` and a deliberate `folder: null` are the same string once
-parsed, so a shape read off the folder cannot tell a single-document type from a collection whose folder key was lost.
-It defaults to `collection`, so only the type that is not one has to say so.
+**`folder`.** A type is a folder of records, a page describing them, and a template to copy. `folder:` names the first
+of those and is required. The check reads the value rather than the key, because an absent `folder:` and a deliberate
+`folder: null` are the same string once parsed. A type that lost the key reads exactly like one that never had it.
 
 **`summary` and `goes-here`.** The two lines a type says about itself, and the reason a corpus's pages can describe the
 corpus rather than the framework's full range. `summary` is what the type holds — "the rulebook, imperative, RFC 2119"
@@ -215,11 +210,10 @@ next — and a type declaring none is sorted by `id`, the one column every docum
 column each way is asking two questions with one key. A postmortem index is the case for `descending`: the incident
 someone is looking for is almost always the most recent.
 
-**`id.style`.** Four styles are dispatched: `numbered`, `slug`, `mnemonic` and `literal`, and a fifth name fails when
-the schema loads. Each is read in full. The first three are a prefix and a discriminator — four digits, a lower-case
-slug, a fixed-width upper-case mnemonic — checked for shape and then for agreement with the same discriminator in the
-filename, which is what keeps a record's id and its path naming the same document. `literal` is the whole id, declared
-by the type: single-document types have one document and so one name for it, and no filename to agree with.
+**`id.style`.** Three styles are dispatched: `numbered`, `slug` and `mnemonic`, and a fourth name fails when the schema
+loads. Each is a prefix and a discriminator — four digits, a lower-case slug, a fixed-width upper-case mnemonic —
+checked for shape and then for agreement with the same discriminator in the filename, which is what keeps a record's id
+and its path naming the same document.
 
 **`rules`.** A rule declaring an `expr:` runs. It is evaluated against every document of its type, reports under its own
 id, is listed by `kac checks`, and renders its own row into the generated `## What CI checks` block from its
@@ -378,21 +372,21 @@ schema is held against what the tool can act on, and each finding names the file
 | `min-items:` on any field that is not a `list`                                         | `schema-dispatch`    |
 | An `index.order:` that is neither `ascending` nor `descending`                         | `schema-dispatch`    |
 | A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows         | `schema-shape`       |
-| An `id.style` or a `shape:` with no code behind the value                              | `schema-dispatch`    |
-| A `collection` with no `folder:`, or a `single-document` type declaring one            | `schema-shape`       |
+| An `id.style` with no code behind the value                                            | `schema-dispatch`    |
+| A type declaring no `folder:`                                                          | `schema-shape`       |
 | A `mirrors-section:` at a section the type's `sections:` block does not declare        | `schema-shape`       |
 | A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:` | `schema-shape`       |
 | A `versus:` against the declaring type itself, or one both sides declare               | `schema-shape`       |
 
-**The question is whether code acts on the value, not whether the key is spelled correctly.** `style: literal` is a real
-style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is
+**The question is whether code acts on the value, not whether the key is spelled correctly.** `style: mnemonic` is a
+real style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is
 therefore read from the code that dispatches it, so adding a name without a branch beneath is the mistake this pass
 exists to prevent.
 
 The `schema-shape` rows ask something else. There the tool acts on whatever the value says — any section is reconciled,
 any folder is read, any sentence is rendered — and what makes it sound is a second declaration in the same file, or the
-shape of the page the value lands on: the `folder:` beside a `shape:`, the `sections:` block beside a
-`mirrors-section:`, the width of the table cell a `summary:` becomes.
+shape of the page the value lands on: the `sections:` block beside a `mirrors-section:`, the width of the table cell a
+`summary:` becomes.
 
 The key vocabulary is read the same way, and there is no list of permitted keys anywhere: the loader records what it
 asks each mapping for, and whatever is left over is reported. So a key gains its meaning and its admission in the same

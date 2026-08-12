@@ -11,7 +11,6 @@ Feature: Corpus shape checks
     And the findings are exactly:
       | file                 | line | check      | message                                                                                    |
       | .schema/data.yaml    |      | type-setup | type 'data' has data.md but no 'data/' — a type is set up as both or neither.               |
-      | .schema/glossary.yaml |     | type-setup | type 'glossary' is single-document, so 'glossary/' must not exist — its page is the document. |
       | .schema/tools.yaml   |      | type-setup | type 'tools' has a 'tools/' folder but is not fully set up — add tools.md, tools/_template.md. |
 
   Scenario: A collection's page is checked for its generated markers and its links
@@ -21,8 +20,10 @@ Feature: Corpus shape checks
     And the findings are exactly:
       | file                          | line | check                 | message                                                                                                                                                                                               |
       | adrs.md                       |      | generated-block       | the 'schema-adrs' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both.                                                                         |
-      | adrs.md                       | 6    | link-resolves         | link target '/nope.md' does not resolve.                                                                                                                                                              |
-      | glossary.md                   | 1    | id-format             | id 'not-glossary' must be 'glossary', the value the type declares.                                                                                                                                    |
+      | adrs.md                       | 1    | page-frontmatter      | the page carries frontmatter — it describes the records beneath it and is not one, so it has no id, tier or status of its own. Move what it holds into 'adrs/' as a record, and delete the block.      |
+      | adrs.md                       | 14   | link-resolves         | link target '/nope.md' does not resolve.                                                                                                                                                              |
+      | glossary/knowledge-as-code.md | 18   | link-resolves         | link target '/nope.md' does not resolve.                                                                                                                                                              |
+      | glossary/knowledge-as-code.md | 18   | framework-names-types | '/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off.                 |
       | knowledge-as-code/taxonomy.md | 4    | framework-names-types | '/adrs' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off.                    |
       | knowledge-as-code/taxonomy.md | 5    | link-resolves         | link target '/adrs/0001-knowledge-as-code.md' does not resolve.                                                                                                                                       |
       | knowledge-as-code/taxonomy.md | 5    | framework-names-types | '/adrs/0001-knowledge-as-code.md' links to a record in 'adrs' from a document every corpus shares. Those records are the first thing a corpus deletes, so the link dies even where the type is used.  |

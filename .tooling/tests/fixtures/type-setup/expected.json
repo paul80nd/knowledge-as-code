@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 3,
+    "errors": 2,
     "warnings": 0
   },
   "findings": [
@@ -13,13 +13,6 @@
       "severity": "error",
       "check": "type-setup",
       "message": "type 'data' has data.md but no 'data/' — a type is set up as both or neither."
-    },
-    {
-      "file": ".schema/glossary.yaml",
-      "line": null,
-      "severity": "error",
-      "check": "type-setup",
-      "message": "type 'glossary' is single-document, so 'glossary/' must not exist — its page is the document."
     },
     {
       "file": ".schema/tools.yaml",

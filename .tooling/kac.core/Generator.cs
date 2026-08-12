@@ -87,14 +87,12 @@ public static class Generator
         return string.Join("\n", sections).TrimEnd('\n');
     }
 
-    // One way on to each type's own field reference. Collection types only: a single-document type has no
-    // records, so nothing generates a field table for it and its fields are described on its own page.
+    // One way on to each type's own field reference.
     //
     // The anchor is the heading the `schema-*` block sits under. Keeping that heading is the type page's
     // side of the bargain, and the link check holds it there.
     public static string MetadataStrip(IEnumerable<TypeSchema> types) =>
         Wrap(string.Join(" · ", types
-            .Where(t => !t.IsSingleDocument)
             .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
             .Select(t => $"[{t.DisplayName}]({Link(t)}#metadata)")));
 
@@ -450,20 +448,17 @@ public static class Generator
             "List entries read in alphabetical order, with numbers compared as numbers.", null),
         ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
         // Which of the three shapes an id takes is the type's to decide, so the row says that a shape is
-        // held to rather than listing the styles a reader could be on any of. A `literal` id is not one
-        // of the three: it is a single declared value, with no prefix to carry and no filename to agree
-        // with, and the row a single-document type shows says so instead.
+        // held to rather than listing the styles a reader could be on any of.
         ("id", ["id-prefix", "id-format", "id-matches-filename"],
             "`id` carries the type's prefix, takes the shape the type declares, and names the same document "
-            + "as the filename.", t => t.IdStyle != "literal"),
-        ("id", ["id-format"], "`id` is the one value the type declares.", t => t.IdStyle == "literal"),
+            + "as the filename.", null),
         ("id-unique", ["id-unique"], "`id` is unique across the whole wiki.", null),
         ("filename / slug-length", ["filename-pattern", "slug-length"],
             "Filename matches the pattern; the slug is within 30 characters.", null),
         ("h1", ["h1"], "The document has an H1.", null),
         ("identity", ["identity", "identity-type", "identity-id", "identity-status"],
             "An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.",
-            t => !t.IsSingleDocument),
+            null),
         ("required-section", ["required-section"], "Every required section heading is present.", null),
         ("placeholder-left", ["placeholder-left"],
             "No `{{…}}` from the template is left unfilled, outside code.", null),
@@ -499,7 +494,9 @@ public static class Generator
             "A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.",
             t => t.HasRule("y-statement-present")),
         ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.",
-            t => t.HasRule("alternatives-have-verdicts"))
+            t => t.HasRule("alternatives-have-verdicts")),
+        ("terms-alphabetical", ["terms-alphabetical"], "A glossary's entries read in alphabetical order.",
+            t => t.HasRule("terms-are-alphabetical"))
     ];
 
     // Catalogue checks the reader-facing table deliberately does not surface: `type` (an internal
@@ -518,8 +515,9 @@ public static class Generator
     // generated from. Their audience is whoever edits `.schema/`, and `.schema/README.md` is where they
     // are documented.
     private static readonly HashSet<string> IntentionallyUndocumented =
-        new(["type", "list", "bracket-literal", "type-setup", "generated-block", "template-fields",
-            "framework-names-types", "schema-unknown-key", "schema-unreadable", "schema-dispatch", "schema-shape"],
+        new(["type", "list", "bracket-literal", "type-setup", "generated-block", "page-frontmatter",
+            "template-fields", "framework-names-types", "schema-unknown-key", "schema-unreadable",
+            "schema-dispatch", "schema-shape"],
             StringComparer.Ordinal);
 
     // The curated rows, then a row for each expression rule the type declares. A core check is worded

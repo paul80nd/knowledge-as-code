@@ -30,11 +30,10 @@ public static class Validator
         foreach (var doc in corpus.Docs)
             CheckDocument(doc, schema, repoRoot, findings);
 
-        // A collection type's page is not a record — it carries no frontmatter and describes the
-        // documents beneath it rather than being one — so the structural checks do not apply. What it
-        // does carry is links, and the generated blocks, and it is the page every record links back
-        // to and every contributor reads first. A single-document type's page is absent from this
-        // pass because it is a record, already checked above.
+        // A type's page is not a record — it carries no frontmatter and describes the documents
+        // beneath it rather than being one — so the structural checks do not apply. What it does carry
+        // is links, and the generated blocks, and it is the page every record links back to and every
+        // contributor reads first.
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             if (string.IsNullOrEmpty(t.Page)) continue;
@@ -45,14 +44,23 @@ public static class Validator
 
             var text = File.ReadAllText(full);
 
-            // Every type page carries the two generated blocks, whatever its shape.
+            // Every type page carries the two generated blocks.
             CheckGeneratedBlocks(t.Page, text, [$"schema-{key}", $"checks-{key}"], findings);
 
-            // The link pass is only for a collection's page. A single-document type's page has
-            // already had it, as a record, along with everything else.
-            if (t.IsSingleDocument) continue;
             var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
-            if (page is not null) LinkChecks.CheckPage(page, schema, repoRoot, findings);
+            if (page is null) continue;
+
+            // A page is not a record, so frontmatter on one is a leftover. It comes from a type that
+            // used to be a single document: the folder arrives in a sync and the old page survives
+            // beside it, still holding the content. Nothing else says so, because a page is forked and
+            // a forked file is never compared against upstream.
+            if (page.FrontStartLine > 0)
+                findings.Add(new Finding(t.Page, page.FrontStartLine, Sev.Error, "page-frontmatter",
+                    "the page carries frontmatter — it describes the records beneath it and is not one, so it has "
+                    + $"no id, tier or status of its own. Move what it holds into '{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/' "
+                    + "as a record, and delete the block."));
+
+            LinkChecks.CheckPage(page, schema, repoRoot, findings);
         }
 
         // The template each collection type carries. It is the one file in a type that every future
@@ -76,7 +84,7 @@ public static class Validator
         // rather than about what it says. Skipped when the run is narrowed, like the other checks that
         // ask about the shape of the corpus rather than about a document.
         if (corpus.Paths.Count == 0)
-            CheckFrameworkDocs(schema, repoRoot, findings);
+            CheckFrameworkDocs(schema, repoRoot, corpus.Docs, findings);
 
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
         CheckCorpus(corpus.Docs, findings);
@@ -318,14 +326,6 @@ public static class Validator
             var at = $".schema/{key}.yaml";
             var pageExists = !string.IsNullOrEmpty(t.Page) && File.Exists(Path.Combine(repoRoot, t.Page));
 
-            if (t.IsSingleDocument)
-            {
-                if (folders.Contains(key))
-                    f.Add(new Finding(at, null, Sev.Error, "type-setup",
-                        $"type '{key}' is single-document, so '{key}/' must not exist — its page is the document."));
-                continue;
-            }
-
             var folder = string.IsNullOrEmpty(t.Folder) ? key : t.Folder;
             if (!folders.Contains(folder))
             {
@@ -382,9 +382,11 @@ public static class Validator
         }
     }
 
-    // The documents describing the framework itself, wherever a corpus keeps them.
+    // The documents describing the framework itself, wherever a corpus keeps them. The framework's own
+    // glossary is one of them, and the only one that is also a record: it is filed under a type and
+    // validated like any other. Being shared byte-for-byte is what brings it here as well.
     private static readonly string[] FrameworkDocs =
-        ["knowledge-as-code.md", "knowledge-as-code/"];
+        ["knowledge-as-code.md", "knowledge-as-code/", "glossary/knowledge-as-code.md"];
 
     // The framework's own documentation is shared byte-for-byte by every corpus running it, so it has to
     // read correctly in a corpus that adopted three types and in one that adopted seventeen. A link to a
@@ -397,8 +399,13 @@ public static class Validator
     // Checked here rather than left to `link-resolves`, which would report it only downstream: every type
     // page exists in the corpus that writes these documents, so the defect is invisible precisely where it
     // can be fixed.
-    private static void CheckFrameworkDocs(Schema schema, string repoRoot, List<Finding> f)
+    private static void CheckFrameworkDocs(Schema schema, string repoRoot, IEnumerable<Doc> docs,
+        List<Finding> f)
     {
+        // The ones already validated as records. They have had the link pass, so giving them a second
+        // would report every dead link twice.
+        var checkedAsRecords = new HashSet<string>(docs.Select(d => d.Rel), StringComparer.OrdinalIgnoreCase);
+
         var pages = schema.ByFolder.Values
             .Where(t => !string.IsNullOrEmpty(t.Page))
             .ToDictionary(t => "/" + t.Page[..^".md".Length], t => t.Key, StringComparer.OrdinalIgnoreCase);
@@ -412,10 +419,10 @@ public static class Validator
                 schema, requireFrontmatter: false);
             if (doc is null) continue;
 
-            // The ordinary link pass, which these documents have never had: they are excluded from
-            // discovery, and the page pass only visits type pages. A dead link here reached the wiki
-            // silently and was found by a reader.
-            LinkChecks.CheckPage(doc, schema, repoRoot, f);
+            // The ordinary link pass, which the documents excluded from discovery have never had: the
+            // page pass only visits type pages, so a dead link in one reached the wiki silently and was
+            // found by a reader. A framework document that is also a record has had it already.
+            if (!checkedAsRecords.Contains(rel)) LinkChecks.CheckPage(doc, schema, repoRoot, f);
 
             foreach (var link in doc.Links)
             {
@@ -701,13 +708,10 @@ public static class Validator
     // against the frontmatter separately, because "this says Standard" and "this says the wrong id" are
     // different mistakes with different fixes and a reader deserves to be told which they made.
     //
-    // Every collection type carries one. A single-document type has no records to identify — its page
-    // is the document — so it is skipped, on the shape the schema declares rather than on a folder
-    // happening to be absent.
     private static void CheckIdentity(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
         Action<string, string, int?> err)
     {
-        if (d.H1 is null || t.IsSingleDocument) return;
+        if (d.H1 is null) return;
 
         var id = present.TryGetValue("id", out var idNode) ? Scalar(idNode) : null;
         var status = present.TryGetValue("status", out var statusNode) ? Scalar(statusNode) : null;

@@ -1,9 +1,9 @@
 {
   "summary": {
     "validated": 1,
-    "templates": 1,
+    "templates": 2,
     "skipped": 0,
-    "errors": 10,
+    "errors": 12,
     "warnings": 0
   },
   "findings": [
@@ -16,17 +16,31 @@
     },
     {
       "file": "adrs.md",
-      "line": 6,
+      "line": 1,
+      "severity": "error",
+      "check": "page-frontmatter",
+      "message": "the page carries frontmatter — it describes the records beneath it and is not one, so it has no id, tier or status of its own. Move what it holds into 'adrs/' as a record, and delete the block."
+    },
+    {
+      "file": "adrs.md",
+      "line": 14,
       "severity": "error",
       "check": "link-resolves",
       "message": "link target '/nope.md' does not resolve."
     },
     {
-      "file": "glossary.md",
-      "line": 1,
+      "file": "glossary/knowledge-as-code.md",
+      "line": 18,
       "severity": "error",
-      "check": "id-format",
-      "message": "id 'not-glossary' must be 'glossary', the value the type declares."
+      "check": "link-resolves",
+      "message": "link target '/nope.md' does not resolve."
+    },
+    {
+      "file": "glossary/knowledge-as-code.md",
+      "line": 18,
+      "severity": "error",
+      "check": "framework-names-types",
+      "message": "'/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off."
     },
     {
       "file": "knowledge-as-code/taxonomy.md",

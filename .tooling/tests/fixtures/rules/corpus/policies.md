@@ -1,7 +1,7 @@
 # Policies
 
-Fixture scaffolding. A stood-up type needs a page beside its folder, so this stands in for the real one — type pages
-are excluded from validation, so nothing here is asserted.
+Fixture scaffolding. A stood-up type needs a page beside its folder, so this stands in for the real one. It is checked
+as any type page is: its links, both pairs of generated markers, and carrying no frontmatter of its own.
 
 ## Metadata
 

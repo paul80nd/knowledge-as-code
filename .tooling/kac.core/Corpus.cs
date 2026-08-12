@@ -121,7 +121,7 @@ public static class Corpus
     public static bool StoodUp(TypeSchema t, string repoRoot) =>
         !string.IsNullOrEmpty(t.Page)
         && File.Exists(Path.Combine(repoRoot, t.Page))
-        && (t.IsSingleDocument || Directory.Exists(Path.Combine(repoRoot, t.Folder)));
+        && Directory.Exists(Path.Combine(repoRoot, t.Folder));
 
     // The template of every collection type that has one. Asked of the filesystem rather than of the
     // file listing, as type-setup asks it: the question is whether the file a contributor would copy is
@@ -136,8 +136,6 @@ public static class Corpus
         var result = new List<string>();
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
-            if (t.IsSingleDocument) continue; // one document, and it is the page — nothing to copy
-
             var rel = $"{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/{Artefact.Template}";
             if (pathFilter.Count > 0 && !pathFilter.Any(p => rel == p || rel.StartsWith(p + "/"))) continue;
             if (File.Exists(Path.Combine(repoRoot, rel))) result.Add(rel);
@@ -150,22 +148,13 @@ public static class Corpus
     // a type, and within the given subtrees.
     private static List<string> Discover(List<string> files, Schema schema, List<string> paths)
     {
-        // Type pages at the repo root — adrs.md, services.md, data.md, … A collection type's page is
-        // prose about its records and is checked separately, as a page. A single-document type's page
-        // *is* its record, so it stays in the corpus and is validated like any other document.
+        // Type pages at the repo root — adrs.md, services.md, data.md, … Each is prose about its
+        // records and is checked separately, as a page.
         var typePages = new HashSet<string>(
-            schema.ByFolder.Values.Where(t => !t.IsSingleDocument)
-                .Select(t => t.Page).Where(p => !string.IsNullOrEmpty(p)),
+            schema.ByFolder.Values.Select(t => t.Page).Where(p => !string.IsNullOrEmpty(p)),
             StringComparer.OrdinalIgnoreCase);
 
         var typeFolders = new HashSet<string>(schema.ByFolder.Keys, StringComparer.OrdinalIgnoreCase);
-
-        // A single-document type's page, which is a record living at the repo root rather than inside
-        // a type folder — so it has to be let through the folder test at the end of IsExcluded.
-        var recordPages = new HashSet<string>(
-            schema.ByFolder.Values.Where(t => t.IsSingleDocument)
-                .Select(t => t.Page).Where(p => !string.IsNullOrEmpty(p)),
-            StringComparer.OrdinalIgnoreCase);
 
         var pathFilter = paths.Select(p => p.Replace('\\', '/').TrimEnd('/')).ToList();
 
@@ -174,7 +163,7 @@ public static class Corpus
         {
             var rel = raw.Replace('\\', '/');
             if (!rel.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) continue;
-            if (IsExcluded(rel, typePages, typeFolders, recordPages)) continue;
+            if (IsExcluded(rel, typePages, typeFolders)) continue;
             if (pathFilter.Count > 0 && !pathFilter.Any(p => rel == p || rel.StartsWith(p + "/"))) continue;
             result.Add(rel);
         }
@@ -182,8 +171,7 @@ public static class Corpus
         return [.. result.OrderBy(r => r, StringComparer.Ordinal)];
     }
 
-    private static bool IsExcluded(string rel, HashSet<string> typePages, HashSet<string> typeFolders,
-        HashSet<string> recordPages)
+    private static bool IsExcluded(string rel, HashSet<string> typePages, HashSet<string> typeFolders)
     {
         var parts = rel.Split('/');
         var top = parts[0];
@@ -203,7 +191,6 @@ public static class Corpus
             if (name.Equals("README.md", StringComparison.OrdinalIgnoreCase)) return true;
             if (name.Equals("CLAUDE.md", StringComparison.OrdinalIgnoreCase)) return true;
             if (typePages.Contains(name)) return true;
-            if (recordPages.Contains(name)) return false;
         }
 
         // Only look inside folders that map to a type; everything else (legacy root

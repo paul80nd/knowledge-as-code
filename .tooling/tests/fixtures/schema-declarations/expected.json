@@ -26,14 +26,14 @@
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' is a collection and declares no 'folder:' — say which folder holds its records, or declare it 'shape: single-document'."
+      "message": "type 'widgets' declares no 'folder:' — say which folder holds its records."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "type 'widgets' declares 'id.style: roman-numeral', which no id check reads. The styles the tool applies are 'literal', 'mnemonic', 'numbered', 'slug'."
+      "message": "type 'widgets' declares 'id.style: roman-numeral', which no id check reads. The styles the tool applies are 'mnemonic', 'numbered', 'slug'."
     },
     {
       "file": ".schema/widgets.yaml",

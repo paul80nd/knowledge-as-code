@@ -18,9 +18,6 @@ public class IdCheckTests
     private static TypeSchema Slug() => new()
         { Folder = "tools", IdPrefix = "tol", IdStyle = "slug" };
 
-    private static TypeSchema Literal() => new()
-        { IdPrefix = "gls", IdStyle = "literal", IdValue = "glossary" };
-
     // -- the prefix, which is the type --
 
     [Fact]
@@ -90,15 +87,6 @@ public class IdCheckTests
     [InlineData("tol-bad-name", "tools/Bad_Name.md")]
     public void A_filename_that_carries_no_discriminator_is_left_to_filename_pattern(string id, string rel)
         => Assert.Empty(Run(id, rel, TypeFor(rel)));
-
-    // -- literal, the style with no filename to agree with --
-
-    [Fact]
-    public void A_literal_id_is_the_value_the_type_declares()
-    {
-        Assert.Empty(Run("glossary", "glossary.md", Literal()));
-        Assert.Equal("id-format", Assert.Single(Run("gls-glossary", "glossary.md", Literal())).Check);
-    }
 
     // -- what slug-max measures --
 

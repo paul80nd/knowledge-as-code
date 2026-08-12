@@ -30,12 +30,13 @@ them sparingly, and derive rather than state wherever possible.
 * **Type name** — singular. An *ADR*, a *standard*, a *control*.
 
 * **Folder and page** — plural. `adrs/`, `standards/`, `controls/`. The folder is a collection, and CI infers a
-  document's type from it, so the mapping is a rule rather than a lookup. Two types take the singular because English
-  has no plural to give: `data/` is a mass noun, and `glossary.md` is one document rather than a collection.
+  document's type from it, so the mapping is a rule rather than a lookup. Two types take the singular: `data/` is a mass
+  noun, and a corpus has one `glossary/` held in several files, one per bounded context. The singular says those files
+  are one vocabulary presented in sections.
 
 * **ID prefix** — singular, since an ID names a single document. `adr-0017`, `std-0004`.
 
-* **ID style** — set per type by the schema, and one of four shapes.
+* **ID style** — set per type by the schema, and one of three shapes.
 
   *Numbered* (`adr-0017`) suits anything chronological: the id records the order things happened, which is information
   none of the others can carry.
@@ -48,9 +49,6 @@ them sparingly, and derive rather than state wherever possible.
   id, lower-case in the filename, and its first letter matches the slug's so the folder still reads alphabetically. A
   mnemonic makes a claim a number never does, so it is drawn from the concept rather than the current wording, and it is
   immutable once the document is active.
-
-  *Literal* is the whole id, written into the schema by the type that carries it. A single-document type has one
-  document and so one name for it: the glossary's id is `glossary`, and there is nothing to discriminate between.
 
 * **Slug length** — the filename slug (excluding the `NNNN-` or `mnem-` prefix) is at most 30 characters. The filename
   is a handle, not a title: it identifies the document at a glance while the H1 carries the full descriptive title. CI
@@ -96,7 +94,7 @@ Deliberately absent, and why:
 
 ## IDs
 
-Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing-api`. Which of the four
+Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing-api`. Which of the three
 [ID styles](#naming) a type uses is set by its schema.
 
 Numeric IDs are zero-padded to four digits, allocated sequentially, and **never reused** — if a document is withdrawn
@@ -132,8 +130,6 @@ upper-case on the line because it is read as a stamp. CI holds all three to the 
 identity line took that job, and the split is worth it: a title that competes with a handle is a worse title, and
 generated indexes had to strip the ID back off to fill a column that already held it.
 
-The single-page types — the glossary — have no records to identify and carry no identity line.
-
 ## Per-type fields
 
 Each type's fields are documented on its own page, generated into it from `.schema/` — so a reader working in one folder
@@ -143,14 +139,12 @@ has what they need without leaving it, and there is still one definition.
 
 [ADR](/adrs#metadata) · [Capability](/capabilities#metadata) · [Control](/controls#metadata) · [Data](/data#metadata) ·
 [Discovery](/discoveries#metadata) · [Explanation](/explanations#metadata) · [FAQ](/faqs#metadata) ·
-[Integration](/integrations#metadata) · [NFR](/nfrs#metadata) · [Policy](/policies#metadata) ·
-[Postmortem](/postmortems#metadata) · [Process](/processes#metadata) · [Runbook](/runbooks#metadata) ·
-[Service](/services#metadata) · [Standard](/standards#metadata) · [Tool](/tools#metadata)
+[Glossary](/glossary#metadata) · [Integration](/integrations#metadata) · [NFR](/nfrs#metadata) ·
+[Policy](/policies#metadata) · [Postmortem](/postmortems#metadata) · [Process](/processes#metadata) ·
+[Runbook](/runbooks#metadata) · [Service](/services#metadata) · [Standard](/standards#metadata) ·
+[Tool](/tools#metadata)
 
 <!-- END GENERATED: types-metadata -->
-
-A single-document type is the exception. It has no records, so nothing generates a field table for it: its own
-frontmatter carries the few fields it has, and the page describes them itself.
 
 ## Example
 

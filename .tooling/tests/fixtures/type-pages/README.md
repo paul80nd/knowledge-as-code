@@ -1,11 +1,16 @@
-Type pages, and the two passes they get.
+Type pages, and the passes they get.
 
-`adrs.md` is a collection's page: no frontmatter, checked for links and for its generated blocks. It has an
-unresolvable link, and its `schema-adrs` block has lost its BEGIN marker — which leaves `kac index` writing nothing
-there while `index --check` still calls the page fresh.
+`adrs.md` is a type page, checked for its links, its generated blocks and its frontmatter. It fails all three. Its link
+resolves to nothing. Its `schema-adrs` block has lost its BEGIN marker, which leaves `kac index` writing nothing there
+while `index --check` still calls the page fresh. And it carries a record's frontmatter, the residue of a type that used
+to be a single document. Nothing else would report that last one: a page is forked, so it is never compared against
+upstream.
 
-`glossary.md` is a single-document type's page, so it is a record. Its id disagrees with the literal value
-`glossary.yaml` declares.
+`glossary/knowledge-as-code.md` is the framework's own vocabulary: a record, and a document every corpus shares. It is
+the one file that gets both passes, so it is where the two are held apart. Its link to a type page is reported once, for
+naming a type. Its link to a page that does not exist is reported **once and not twice** — a record has already had the
+link pass, and the framework pass leaves it alone. `glossary.md` and `glossary/_template.md` are sound and are here only
+so `type-setup` stays quiet about the folder.
 
 `adrs/_template.md` is valid, so `type-setup` stays silent and the fixture asserts one thing. The scenario that
 breaks a template deliberately is `broken-template`.

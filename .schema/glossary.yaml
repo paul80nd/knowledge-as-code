@@ -1,41 +1,50 @@
 type: glossary
 label: Glossary
-label-plural: Glossary
-shape: single-document
+label-plural: Glossaries
+folder: glossary
 page: glossary.md
 tier: descriptive
 lifecycle: living
 summary: The ubiquitous language — terms whose meaning is specific to us, or which are easily confused.
 goes-here: A term whose meaning isn't obvious, or that we use in a specific way
 detail: >
-  Small, high-value, and the one document worth loading into every session. A term that needs explaining every
-  time it appears belongs here once, and everything else links to it.
+  One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
+  time it appears belongs in the most general glossary that admits it, and everything else links to it.
 
 lineage:
   prior-art: "Evans, *Domain-Driven Design* — ubiquitous language"
   alignment: >
-    A rigorous shared vocabulary maintained against ambiguity, used identically by everyone
+    A rigorous shared vocabulary maintained against ambiguity, scoped to a bounded context and used identically
+    within it
   divergence: >
-    DDD scopes the language to a bounded context and expects a word to differ across contexts. Ours is corpus-wide
-    and single-valued
+    Evans' language is spoken as much as written, and lives in the model and the code. Ours is a set of
+    documents, and nothing holds the code to agreeing with them
 
 notes: >
-  The only type that is one document rather than a collection, which is what `shape` says. A
-  single-document type declares no `folder:` — there are no per-term files and no per-record schema, so the
-  frontmatter below belongs to `glossary.md` itself. Terms are H3 headings and their anchors are their
-  identifiers, and nothing generates an index because the document is its own.
+  Folder is singular because a corpus has one glossary, held in several files. One of two exceptions to the
+  plural-folder rule, alongside `data/`.
+
+  A glossary covers one bounded context or product surface — the framework itself, or a system that names
+  things its own way. Never a topic. A term goes in the most general glossary that admits it, and a narrower
+  one redefines it only where the meaning genuinely differs.
 
   A term is an H3 heading, a one-sentence definition, an optional `**Not:** …` line naming what it is most often
   confused with, and optional links to the owning service or an explanation. Those `**Not:**` lines are the most
-  useful content in the file. One paragraph per term, because the file is read end to end and every paragraph is
-  paid for by every reader. The list is alphabetical and flat — no A–Z sub-headings — so that it
-  reads end to end and greps cleanly. All of that is held by whoever reviews the file: the rules below that would
-  read a term's shape are declared and not built, and no check parses an entry.
+  useful content in the file. One paragraph per term, because a glossary is read end to end and every paragraph
+  is paid for by every reader. The list is alphabetical and flat — no A–Z sub-headings — so that it scans and
+  greps cleanly. Only that order is checked. The rules below that would read a term's shape are declared and not
+  built, so the rest is held by whoever reviews the file.
 
 id:
-  prefix: null
-  style: literal
-  value: glossary
+  prefix: gls
+  style: slug
+  notes: >
+    Named for the context rather than for the words it holds, so the corpus-wide glossary takes the corpus's own
+    name and a system's glossary takes the system's.
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
 
 fields:
 
@@ -45,28 +54,52 @@ fields:
     values: [draft, active]
     description: '`draft` while the terms are still settling.'
 
+  narrows:
+    required: false
+    type: id
+    ref: glossary
+    description: The more general glossary this one narrows, where one sits above it.
+    notes: >
+      Absent on a glossary nothing sits above — the corpus-wide one, and the framework's own. It records the
+      ordering the resolution rule reads, so "the most general glossary that admits this term" becomes a
+      question a reader answers from the index rather than from knowing the estate. A glossary every corpus
+      shares leaves it empty even where that corpus has a more general one, because a shared file cannot
+      name a record only one corpus holds.
+
   review-by:
     required: true
     type: date
-    description: Quoted. The whole file is reviewed at once.
+    description: Quoted. A glossary is reviewed whole, rather than a term at a time.
 
 sections:
-  required:
-    - "What is the glossary?"
-    - "Why we use it"
-    - "Scope"
-    - "Terms"
-    - "Adding a term"
+  required: [Scope, Terms]
   optional: []
+  notes: >
+    `Scope` says which context this glossary admits, and a contributor holding a word reads it to decide
+    whether the word belongs here. The terms themselves are H3s under `Terms`, and a cross-reference names
+    their anchors.
+
+index:
+  columns: [id, title, narrows, status, owner, review-by]
+  sort: id
 
 rules:
+  - id: redefinitions-are-reciprocal
+    description: Where a narrower glossary redefines a term, each of the two entries names the other.
+    # The reference runs upward only where the general glossary is synced: a file every corpus shares
+    # cannot name a record only this one holds.
   - id: carried-in-full-by-digest
-    description: No glossary entry runs beyond one paragraph.
-    # This file is read end to end, so every entry's length is paid by every reader.
+    description: No entry runs beyond one paragraph, and a digest carries the glossaries most general first.
+    # A glossary is read end to end, so every entry's length is paid by every reader. With several of them,
+    # "carry the glossary in full" names no single file: the digest takes them most general first and cuts
+    # off when its budget is spent, which three glossaries are enough to do.
   - id: undefined-terms
     description: >
       Reports terms appearing more than N times across the corpus with no glossary entry.
   - id: unused-terms
-    description: Reports glossary entries not used anywhere else.
+    description: Reports entries nothing uses, where a use inside the term's own context counts as one.
+  - id: terms-are-alphabetical
+    description: A glossary's entries read in alphabetical order, compared without regard to casing.
+    severity: warning
   - id: terms-are-singular
     description: Entry headings are singular and in canonical casing.

@@ -446,20 +446,6 @@ public class GeneratorTests
         Assert.Contains(" · ", strip);
     }
 
-    // A single-document type has no records, so nothing generates a field table for it to be linked to.
-    [Fact]
-    public void A_single_document_type_is_left_out_of_the_metadata_strip()
-    {
-        var glossary = new TypeSchema
-        {
-            Key = "glossary", Label = "Glossary", LabelPlural = "Glossary", Tier = "descriptive",
-            Page = "glossary.md", Shape = TypeSchema.SingleDocumentShape,
-            Summary = "Terms.", Detail = "The terms.", GoesHere = "A term"
-        };
-
-        Assert.DoesNotContain("Glossary", Generator.MetadataStrip([.. Four(), glossary]));
-    }
-
     [Fact]
     public void The_metadata_strip_wraps_at_the_corpus_margin()
         => Assert.All(Generator.MetadataStrip(Four()).Split('\n'), l => Assert.True(l.Length <= 120));
