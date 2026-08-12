@@ -18,3 +18,16 @@ up rather than from the framework's full range, and naming a type in prose: an A
 | A choice  | [ADRs](/adrs) |
 
 <!-- END GENERATED: types-placement -->
+
+<!-- BEGIN GENERATED: types-detail -->
+<!-- END GENERATED: types-detail -->
+
+<!-- BEGIN GENERATED: types-versus -->
+<!-- END GENERATED: types-versus -->
+
+The block below has lost its BEGIN marker, so `kac index` stops writing the relation diagram and says nothing.
+
+<!-- END GENERATED: types-graph -->
+
+<!-- BEGIN GENERATED: types-edges -->
+<!-- END GENERATED: types-edges -->

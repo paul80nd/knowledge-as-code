@@ -28,9 +28,8 @@ marked as such below, because the argument for why a rule needs a class reads di
 * **Graph — 1.** `no-dependency-cycles`.
 * **Per-part — 5.** `alternatives-have-verdicts` and `terms-are-alphabetical`, both **written**, beside
   `terms-are-singular`, `carried-in-full-by-digest` and `escalation-required`, which are not. Each judges the parts of
-  one document —
-  bullets under a heading, entries in a glossary, branches of a diagnosis tree — and its message has to name the part
-  that failed.
+  one document — bullets under a heading, entries in a glossary, branches of a diagnosis tree — and its message has to
+  name the part that failed.
 * **A fixed form — 1.** `y-statement-present`, **written**. A Y-statement is six moves in one block-quote, and the
   message worth reading names the move that is absent. An expression could report that the block-quote is not a
   Y-statement, which is the one thing the author already knows.
@@ -86,6 +85,18 @@ comes from its `description:` and writing one into `DocRows` would duplicate it.
 **The coverage gate reads ids, not branches.** A check with two ways to fail is green once a fixture trips either one. A
 rule reporting three faults under one id needs a fixture for each, and unit tests beside the rule class for the branches
 a fixture would only duplicate.
+
+## Adding a generated block
+
+**`kac.core/GeneratedFiles.cs` is the one list of what `index` writes and where.** Adding a block is one entry there,
+naming it beside the renderer that fills it, and nothing else: `Commands.Index` writes what the list says and
+`Validator.CheckAll` holds the corpus to the same list, so a block cannot be written under a name nothing checks or
+checked for under a name nothing writes. `Blocks` projects the names out without calling a renderer, which is what lets
+`validate` ask what a file should carry without building any of it.
+
+The flag on each entry says whether the markers have to be there. It is false for `README.md` alone, because that file
+belongs to the corpus and deleting the markers is how the corpus declines the block. Everywhere else the file arrives
+from the framework carrying them, and one that has gone is a block that stopped being written in silence.
 
 ## The fixtures
 

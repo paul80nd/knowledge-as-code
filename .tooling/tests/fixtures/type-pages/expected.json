@@ -3,7 +3,7 @@
     "validated": 1,
     "templates": 2,
     "skipped": 0,
-    "errors": 12,
+    "errors": 13,
     "warnings": 0
   },
   "findings": [
@@ -41,6 +41,13 @@
       "severity": "error",
       "check": "framework-names-types",
       "message": "'/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off."
+    },
+    {
+      "file": "knowledge-as-code/taxonomy.md",
+      "line": null,
+      "severity": "error",
+      "check": "generated-block",
+      "message": "the 'types-graph' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both."
     },
     {
       "file": "knowledge-as-code/taxonomy.md",

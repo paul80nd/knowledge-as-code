@@ -1,4 +1,4 @@
-Type pages, and the passes they get.
+Type pages and framework documents, and the passes they get.
 
 `adrs.md` is a type page, checked for its links, its generated blocks and its frontmatter. It fails all three. Its link
 resolves to nothing. Its `schema-adrs` block has lost its BEGIN marker, which leaves `kac index` writing nothing there
@@ -15,7 +15,12 @@ so `type-setup` stays quiet about the folder.
 `adrs/_template.md` is valid, so `type-setup` stays silent and the fixture asserts one thing. The scenario that
 breaks a template deliberately is `broken-template`.
 
-`knowledge-as-code/taxonomy.md` is a framework document, and gets two passes nothing used to give it.
+`knowledge-as-code/taxonomy.md` is a framework document, and gets three passes: its markers, its links, and the naming
+rule.
+
+It carries the five blocks `kac index` writes into it, and the `types-graph` pair has lost its BEGIN marker. One pass
+reads one list and holds a type's page and a framework document to it alike, so the fault reads here exactly as it does
+on `adrs.md` above. A document excluded from discovery is reached at all only because the generator's list names it.
 
 `framework-names-types` reports its link to a type page and its link to a record inside a type's folder — three in all,
 since it links the ADR page in both the extensionless and the `.md` form and Azure DevOps resolves either.

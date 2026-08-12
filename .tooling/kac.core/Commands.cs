@@ -21,96 +21,15 @@ public static class Commands
     public static int Index(string repoRoot, bool check)
     {
         var corpus = Corpus.Load(repoRoot, []);
-        var schema = corpus.Schema;
 
-        // Grouped by type. A document whose folder maps to no schema has nothing to be indexed under;
-        // validate is the voice that says so.
-        var byType = new Dictionary<string, List<Doc>>();
-        foreach (var doc in corpus.Docs)
-        {
-            if (doc.Type is null) continue;
-            (byType.TryGetValue(doc.Type.Folder, out var list) ? list : byType[doc.Type.Folder] = []).Add(doc);
-        }
-
-        // Compute the full intended content of every affected file.
-        var targets = new List<(string path, string content)>();
-
-        // The types this corpus took, which is what everything below is generated from. The schema
-        // declares the framework's full range and a corpus adopts as much of it as it has use for, so
-        // generating per schema type would write pages for types the corpus declined — files no list of
-        // its types names, and which `index --check` then holds it to keeping fresh.
-        var adopted = Corpus.Adopted(schema, repoRoot, corpus.Descriptor);
-
-        // Every adopted type gets an index, populated or not — each type page links to one, so a
-        // withheld file is a dead link rather than a tidy absence.
-        //
-        // A folder absent from disk is skipped rather than created: the generator populates structure
-        // the corpus has declared, and never invents it. `validate` is the one voice that says an adopted
-        // type is not set up, so a missing folder is reported there rather than papered over here.
-        foreach (var t in adopted)
-        {
-            if (string.IsNullOrEmpty(t.Folder)) continue;
-            if (!Directory.Exists(Path.Combine(repoRoot, t.Folder))) continue;
-            var docs = byType.TryGetValue(t.Folder, out var found) ? found : [];
-            targets.Add((Path.Combine(repoRoot, t.Folder, Artefact.Index), Generator.IndexPage(t, docs)));
-        }
-
-        // The schema and checks blocks derive from the schema alone, so every adopted type gets them
-        // whether or not it holds records yet. Restricting this to populated types would leave the markers
-        // on an empty page holding hand-written text nothing checks, to be overwritten by whoever adds the
-        // type's first record — surfacing the drift at the least convenient moment.
-        foreach (var t in adopted)
-        {
-            var pagePath = Path.Combine(repoRoot, t.Page);
-            if (!File.Exists(pagePath)) continue;
-
-            var text = Files.ReadLf(pagePath);
-            text = Generator.SpliceBlock(text, $"schema-{t.Key}", Generator.SchemaTable(t, schema));
-            text = Generator.SpliceBlock(text, $"checks-{t.Key}", Generator.ChecksTable(t));
-            targets.Add((pagePath, text));
-        }
-
-        // The pages that describe the taxonomy to a reader rather than to the tool. Each lists types, and
-        // the list is the half that was wrong in every corpus that adopted some of them — so none can name
-        // a type whose page is not there to open. `metadata.md` also carries the universal field table,
-        // which is the schema's alone.
-        Splice(Path.Combine(repoRoot, "knowledge-as-code", "metadata.md"),
-            ("schema-universal", Generator.UniversalSchemaTable(schema)),
-            ("types-metadata", Generator.MetadataStrip(adopted)));
-
-        Splice(Path.Combine(repoRoot, "knowledge-as-code", "taxonomy.md"),
-            ("types-placement", Generator.PlacementTable(adopted)),
-            ("types-detail", Generator.TypeCatalogue(schema.Tiers, adopted)),
-            ("types-versus", Generator.Disambiguations(adopted)),
-            ("types-graph", Generator.RelationDiagram(adopted)),
-            ("types-edges", Generator.RelationTable(adopted)));
-
-        Splice(Path.Combine(repoRoot, "knowledge-as-code", "lineage.md"),
-            ("types-lineage", Generator.LineageTable(adopted)),
-            ("types-collisions", Generator.Collisions(adopted)));
-
-        Splice(Path.Combine(repoRoot, "README.md"),
-            ("types-index", Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md")));
-
-        // Every block a page carries, spliced into one text and offered as one target — a page is written
-        // once, so two blocks in the same file cannot each overwrite the other's work.
-        //
-        // A page that is not there is skipped, and one carrying no marker resolves to itself: the generator
-        // fills in structure the corpus has declared and never invents it. Deleting the markers is how a
-        // corpus declines a block, rather than by arguing with the tool.
-        void Splice(string path, params (string Block, string Inner)[] blocks)
-        {
-            if (!File.Exists(path)) return;
-
-            var text = Files.ReadLf(path);
-            foreach (var (block, inner) in blocks) text = Generator.SpliceBlock(text, block, inner);
-            targets.Add((path, text));
-        }
+        // What every generated file should hold. `GeneratedFiles` owns which files those are and which
+        // blocks each carries, so that `validate` holds a corpus to the same list this writes.
+        var targets = GeneratedFiles.Targets(corpus);
 
         if (check)
         {
-            var stale = targets.Where(x => !File.Exists(x.path) || Files.ReadLf(x.path) != x.content)
-                .Select(x => Path.GetRelativePath(repoRoot, x.path).Replace('\\', '/'))
+            var stale = targets.Where(x => !File.Exists(x.Path) || Files.ReadLf(x.Path) != x.Content)
+                .Select(x => Path.GetRelativePath(repoRoot, x.Path).Replace('\\', '/'))
                 .ToList();
             if (stale.Count == 0)
             {

@@ -31,10 +31,27 @@ public static class Validator
         foreach (var doc in corpus.Docs)
             CheckDocument(doc, schema, repoRoot, findings);
 
+        // Every file `kac index` writes a block into, held to still carrying the markers to write between.
+        // Driven from the list the generator writes from, so every file it writes is a file this visits: a
+        // type's page and the framework's own pages are one question and get one answer.
+        //
+        // A file that is not on disk is skipped: its absence is type-setup's to report for a page, and no
+        // fault at all for a framework document a corpus has not taken.
+        foreach (var file in GeneratedFiles.Blocks(Corpus.Adopted(schema, repoRoot, corpus.Descriptor)))
+        {
+            if (!file.MarkersRequired) continue;
+            if (corpus.Paths.Count > 0
+                && !corpus.Paths.Any(p => file.Path == p.Replace('\\', '/').TrimEnd('/'))) continue;
+
+            var full = Path.Combine(repoRoot, file.Path);
+            if (!File.Exists(full)) continue;
+
+            CheckGeneratedBlocks(file.Path, File.ReadAllText(full), file.Blocks, findings);
+        }
+
         // A type's page is not a record — it carries no frontmatter and describes the documents
         // beneath it rather than being one — so the structural checks do not apply. What it does carry
-        // is links, and the generated blocks, and it is the page every record links back to and every
-        // contributor reads first.
+        // is links, and it is the page every record links back to and every contributor reads first.
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             if (string.IsNullOrEmpty(t.Page)) continue;
@@ -44,10 +61,6 @@ public static class Validator
             if (!File.Exists(full)) continue; // absence is type-setup's to report, not this pass's
 
             var text = File.ReadAllText(full);
-
-            // Every type page carries the two generated blocks.
-            CheckGeneratedBlocks(t.Page, text, [$"schema-{key}", $"checks-{key}"], findings);
-
             var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
             if (page is null) continue;
 
@@ -301,10 +314,14 @@ public static class Validator
     }
 
     // The markers a generated block lives between. `Generator.SpliceBlock` looks for the pair and
-    // returns the text untouched when either is missing, so a page that loses one silently stops
+    // returns the text untouched when either is missing, so a file that loses one silently stops
     // being generated into — and `index --check` agrees it is fresh, because what the generator would
     // write is exactly what is already there. Nothing else can notice, which is why this is a check
     // on the markers rather than on the content between them.
+    //
+    // Asked of every file `GeneratedFiles.Blocks` names, and of every block it names there: a block whose
+    // markers have both gone is the same fault as one that lost a single marker, and is the quieter of
+    // the two. `README.md` is the exception, and answers for itself — see `BlockFile.MarkersRequired`.
     public static void CheckGeneratedBlocks(string rel, string text, IEnumerable<string> names,
         List<Finding> f)
     {

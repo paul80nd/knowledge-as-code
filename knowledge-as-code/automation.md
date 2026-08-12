@@ -121,6 +121,10 @@ and fragments are resolved like any page's, and `framework-names-types` holds th
 to one. Their generated blocks are emptied before either question is asked, since `index --check` already answers for
 those and their links are written from this corpus.
 
+The markers are a question of their own, and are asked of the file as it stands. A block that has lost one stops being
+written, and `index --check` reads the file as fresh, so a document holding a generated block is held to still having
+the markers to write between however it is otherwise excluded.
+
 **A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
 answers to nothing that needs a filename, so discovering it as a record would report a dozen faults that are the file
 doing its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that are
