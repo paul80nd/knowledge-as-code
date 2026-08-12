@@ -112,11 +112,7 @@ public class Doc
         if (fmBlock is null && requireFrontmatter) return null; // not migrated — caller counts and skips
 
         var top = rel.Split('/')[0];
-        // A single-document type has no folder: its page at the repo root *is* the record, so the
-        // type is found by the page name rather than by the directory above it.
-        if (!schema.ByFolder.TryGetValue(top, out var type) && !rel.Contains('/'))
-            type = schema.ByFolder.Values.FirstOrDefault(
-                t => t.IsSingleDocument && string.Equals(t.Page, rel, StringComparison.OrdinalIgnoreCase));
+        schema.ByFolder.TryGetValue(top, out var type);
 
         var doc = new Doc { Rel = rel, Folder = top, Type = type, Text = text, Ast = ast };
 

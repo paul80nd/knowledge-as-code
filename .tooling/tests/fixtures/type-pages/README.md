@@ -1,12 +1,8 @@
 Type pages, and the two passes they get.
 
-`adrs.md` is a collection's page: no frontmatter, checked for links and for its generated blocks. It has an
+`adrs.md` is a type page: no frontmatter, checked for links and for its generated blocks. It has an
 unresolvable link, and its `schema-adrs` block has lost its BEGIN marker — which leaves `kac index` writing nothing
 there while `index --check` still calls the page fresh.
-
-`trinkets.md` is a single-document type's page, so it is a record. Its id disagrees with the literal value
-`trinkets.yaml` declares. That type is the fixture's own, laid over the real schema: no type the framework declares is
-single-document, so the shape and its `literal` id style need a type of their own to be tested against.
 
 `adrs/_template.md` is valid, so `type-setup` stays silent and the fixture asserts one thing. The scenario that
 breaks a template deliberately is `broken-template`.

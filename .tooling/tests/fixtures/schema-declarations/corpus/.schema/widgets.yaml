@@ -1,7 +1,7 @@
 type: widget
 label: Widget
 label-plural: Widgets
-# No `folder:`, and the type is a collection — so its records have nowhere to live.
+# No `folder:`, so its records have nowhere to live.
 page: widgets.md
 tier: experimental
 lifecycle: living

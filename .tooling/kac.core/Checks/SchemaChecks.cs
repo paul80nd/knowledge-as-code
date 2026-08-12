@@ -13,7 +13,7 @@ namespace kac.core;
 // corpus never adopted reads as a link that is being checked. Both were, until this pass.
 //
 // The question asked of each value is not "is this key spelled right" but "is there code that acts on
-// this value". `style: literal` is a real style and would pass a spelling test; what makes it sound is
+// this value". `style: mnemonic` is a real style and would pass a spelling test; what makes it sound is
 // the branch in IdChecks. So each vocabulary here is read from the code that dispatches it rather than
 // restated.
 //
@@ -40,7 +40,7 @@ public static class SchemaChecks
             var at = $".schema/{key}.yaml";
 
             UnreadKeys(at, schema, f);
-            CheckShape(at, key, t, f);
+            CheckFolder(at, key, t, f);
 
             if (!IdChecks.IdStyles.Contains(t.IdStyle))
                 Dispatch(at, $"type '{key}' declares 'id.style: {t.IdStyle}', which no id check reads. "
@@ -158,33 +158,14 @@ public static class SchemaChecks
                 + "or write what it was saying as 'notes:', the one key every level admits."));
     }
 
-    // A type is a folder of records or a single document, and the two disagree about `folder:` rather
-    // than merely differing: a collection with no folder has nowhere to put a record, and a
-    // single-document type with one has somewhere it must not. Both are silent otherwise — an absent
-    // `folder:` and a deliberate `folder: null` parse to the same empty string, which is the reason
-    // `shape:` is declared rather than inferred from the folder in the first place.
-    private static void CheckShape(string at, string key, TypeSchema t, List<Finding> f)
+    // A type is a folder of records, and `folder:` is what says which folder. Asked of the value rather
+    // than of the key, because an absent `folder:` and a deliberate `folder: null` parse to the same
+    // empty string and a type with neither has nowhere to put a record.
+    private static void CheckFolder(string at, string key, TypeSchema t, List<Finding> f)
     {
-        if (t.Shape is not (TypeSchema.CollectionShape or TypeSchema.SingleDocumentShape))
-        {
-            Dispatch(at, $"type '{key}' declares 'shape: {t.Shape}', which nothing acts on. A type is "
-                         + $"'{TypeSchema.CollectionShape}' or '{TypeSchema.SingleDocumentShape}'.", f);
-            return;
-        }
-
-        switch (t.IsSingleDocument)
-        {
-            case false when string.IsNullOrEmpty(t.Folder):
-                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
-                    $"type '{key}' is a collection and declares no 'folder:' — say which folder holds its "
-                    + "records, or declare it 'shape: single-document'."));
-                break;
-            case true when !string.IsNullOrEmpty(t.Folder):
-                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
-                    $"type '{key}' is single-document and declares 'folder: {t.Folder}' — its page is the "
-                    + "document, so there is no folder of records to name."));
-                break;
-        }
+        if (string.IsNullOrEmpty(t.Folder))
+            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                $"type '{key}' declares no 'folder:' — say which folder holds its records."));
     }
 
     // What a type says about itself, which every generated list of types is written from. Each is

@@ -15,7 +15,6 @@ public class SchemaCheckTests
     // The defaults are what a sound type carries, so that a case reports the one fault it declares and
     // nothing else. Each is overridable, because each has its own cases further down.
     private static TypeSchema Widgets(string idStyle = "slug", string folder = "widgets",
-        string shape = TypeSchema.CollectionShape,
         (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
         string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
         string goesHere = "A widget", string labelPlural = "Widgets", string detail = "It is a widget.",
@@ -26,7 +25,6 @@ public class SchemaCheckTests
         Versus = versus ?? [],
         Lineage = lineage ? new LineageSpec("None.", "", "") : null,
         Folder = folder,
-        Shape = shape,
         IdStyle = idStyle,
         Tier = tier,
         Summary = summary,
@@ -238,39 +236,18 @@ public class SchemaCheckTests
     [InlineData("numbered")]
     [InlineData("mnemonic")]
     [InlineData("slug")]
-    [InlineData("literal")]
     public void Every_style_the_id_checks_apply_passes(string style)
         => Assert.Empty(Check(Widgets(idStyle: style)));
 
-    // A collection with no folder has nowhere to put a record; a single-document type with one has
-    // somewhere it must not. Both were indistinguishable from a type that simply lost the key.
+    // A type with no folder has nowhere to put a record, and an absent key and a deliberate
+    // `folder: null` are the same empty string by the time this reads it.
     [Fact]
-    public void A_collection_with_no_folder_is_reported()
+    public void A_type_with_no_folder_is_reported()
     {
         var finding = Assert.Single(Check(Widgets(folder: "")));
 
         Assert.Equal("schema-shape", finding.Check);
         Assert.Contains("no 'folder:'", finding.Message);
-    }
-
-    [Fact]
-    public void A_single_document_type_declaring_a_folder_is_reported()
-    {
-        var finding = Assert.Single(Check(Widgets(idStyle: "literal", shape: TypeSchema.SingleDocumentShape)));
-
-        Assert.Equal("schema-shape", finding.Check);
-        Assert.Contains("folder: widgets", finding.Message);
-    }
-
-    // The shape decides which of the two folder rules applies, so a shape nothing reads is reported on
-    // its own and the folder is left alone — there is no telling which rule it should have met.
-    [Fact]
-    public void A_shape_the_tool_does_not_act_on_is_reported()
-    {
-        var finding = Assert.Single(Check(Widgets(shape: "chapter")));
-
-        Assert.Equal("schema-dispatch", finding.Check);
-        Assert.Contains("chapter", finding.Message);
     }
 
     // -- what a type says about itself --

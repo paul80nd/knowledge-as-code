@@ -36,7 +36,7 @@ them sparingly, and derive rather than state wherever possible.
 
 * **ID prefix** — singular, since an ID names a single document. `adr-0017`, `std-0004`.
 
-* **ID style** — set per type by the schema, and one of four shapes.
+* **ID style** — set per type by the schema, and one of three shapes.
 
   *Numbered* (`adr-0017`) suits anything chronological: the id records the order things happened, which is information
   none of the others can carry.
@@ -49,9 +49,6 @@ them sparingly, and derive rather than state wherever possible.
   id, lower-case in the filename, and its first letter matches the slug's so the folder still reads alphabetically. A
   mnemonic makes a claim a number never does, so it is drawn from the concept rather than the current wording, and it is
   immutable once the document is active.
-
-  *Literal* is the whole id, written into the schema by the type that carries it. A single-document type has one
-  document and so one name for it, and nothing to discriminate between.
 
 * **Slug length** — the filename slug (excluding the `NNNN-` or `mnem-` prefix) is at most 30 characters. The filename
   is a handle, not a title: it identifies the document at a glance while the H1 carries the full descriptive title. CI
@@ -97,7 +94,7 @@ Deliberately absent, and why:
 
 ## IDs
 
-Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing-api`. Which of the four
+Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing-api`. Which of the three
 [ID styles](#naming) a type uses is set by its schema.
 
 Numeric IDs are zero-padded to four digits, allocated sequentially, and **never reused** — if a document is withdrawn
@@ -133,8 +130,6 @@ upper-case on the line because it is read as a stamp. CI holds all three to the 
 identity line took that job, and the split is worth it: a title that competes with a handle is a worse title, and
 generated indexes had to strip the ID back off to fill a column that already held it.
 
-A single-document type has no record to identify and carries no identity line.
-
 ## Per-type fields
 
 Each type's fields are documented on its own page, generated into it from `.schema/` — so a reader working in one folder
@@ -150,9 +145,6 @@ has what they need without leaving it, and there is still one definition.
 [Tool](/tools#metadata)
 
 <!-- END GENERATED: types-metadata -->
-
-A single-document type is the exception. It has no records, so nothing generates a field table for it: its own
-frontmatter carries the few fields it has, and the page describes them itself.
 
 ## Example
 

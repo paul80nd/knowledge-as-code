@@ -12,12 +12,11 @@ Feature: Corpus shape checks
       | file                 | line | check      | message                                                                                    |
       | .schema/data.yaml    |      | type-setup | type 'data' has data.md but no 'data/' — a type is set up as both or neither.               |
       | .schema/tools.yaml   |      | type-setup | type 'tools' has a 'tools/' folder but is not fully set up — add tools.md, tools/_template.md. |
-      | .schema/trinkets.yaml |     | type-setup | type 'trinkets' is single-document, so 'trinkets/' must not exist — its page is the document. |
 
   Scenario: A collection's page is checked for its generated markers and its links
     Given the type-pages fixture corpus
     When I validate the corpus
-    Then validation reports 1 documents and 0 skipped
+    Then validation reports 0 documents and 0 skipped
     And the findings are exactly:
       | file                          | line | check                 | message                                                                                                                                                                                               |
       | adrs.md                       |      | generated-block       | the 'schema-adrs' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both.                                                                         |
@@ -29,7 +28,6 @@ Feature: Corpus shape checks
       | knowledge-as-code/taxonomy.md | 8    | fragment-resolves     | '#no-such-heading' names no heading in '/adrs.md'.                                                                                                                                                    |
       | knowledge-as-code/taxonomy.md | 8    | framework-names-types | '/adrs.md#no-such-heading' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off. |
       | knowledge-as-code/taxonomy.md | 10   | framework-names-types | '/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off.                 |
-      | trinkets.md                   | 1    | id-format             | id 'not-trinkets' must be 'trinkets', the value the type declares.                                                                                                                                    |
 
   # The count is the assertion here. A template is checked and is not a document: it holds no id, takes no
   # place in an index, and answers to nothing corpus-wide. Were it discovered as a record instead, this

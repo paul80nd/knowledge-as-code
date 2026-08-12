@@ -30,11 +30,10 @@ public static class Validator
         foreach (var doc in corpus.Docs)
             CheckDocument(doc, schema, repoRoot, findings);
 
-        // A collection type's page is not a record — it carries no frontmatter and describes the
-        // documents beneath it rather than being one — so the structural checks do not apply. What it
-        // does carry is links, and the generated blocks, and it is the page every record links back
-        // to and every contributor reads first. A single-document type's page is absent from this
-        // pass because it is a record, already checked above.
+        // A type's page is not a record — it carries no frontmatter and describes the documents
+        // beneath it rather than being one — so the structural checks do not apply. What it does carry
+        // is links, and the generated blocks, and it is the page every record links back to and every
+        // contributor reads first.
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             if (string.IsNullOrEmpty(t.Page)) continue;
@@ -45,12 +44,9 @@ public static class Validator
 
             var text = File.ReadAllText(full);
 
-            // Every type page carries the two generated blocks, whatever its shape.
+            // Every type page carries the two generated blocks.
             CheckGeneratedBlocks(t.Page, text, [$"schema-{key}", $"checks-{key}"], findings);
 
-            // The link pass is only for a collection's page. A single-document type's page has
-            // already had it, as a record, along with everything else.
-            if (t.IsSingleDocument) continue;
             var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
             if (page is not null) LinkChecks.CheckPage(page, schema, repoRoot, findings);
         }
@@ -317,14 +313,6 @@ public static class Validator
         {
             var at = $".schema/{key}.yaml";
             var pageExists = !string.IsNullOrEmpty(t.Page) && File.Exists(Path.Combine(repoRoot, t.Page));
-
-            if (t.IsSingleDocument)
-            {
-                if (folders.Contains(key))
-                    f.Add(new Finding(at, null, Sev.Error, "type-setup",
-                        $"type '{key}' is single-document, so '{key}/' must not exist — its page is the document."));
-                continue;
-            }
 
             var folder = string.IsNullOrEmpty(t.Folder) ? key : t.Folder;
             if (!folders.Contains(folder))
@@ -701,13 +689,10 @@ public static class Validator
     // against the frontmatter separately, because "this says Standard" and "this says the wrong id" are
     // different mistakes with different fixes and a reader deserves to be told which they made.
     //
-    // Every collection type carries one. A single-document type has no records to identify — its page
-    // is the document — so it is skipped, on the shape the schema declares rather than on a folder
-    // happening to be absent.
     private static void CheckIdentity(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
         Action<string, string, int?> err)
     {
-        if (d.H1 is null || t.IsSingleDocument) return;
+        if (d.H1 is null) return;
 
         var id = present.TryGetValue("id", out var idNode) ? Scalar(idNode) : null;
         var status = present.TryGetValue("status", out var statusNode) ? Scalar(statusNode) : null;

@@ -41,16 +41,15 @@ public static class Commands
         // its types names, and which `index --check` then holds it to keeping fresh.
         var adopted = Corpus.Adopted(schema, repoRoot, corpus.Descriptor);
 
-        // Every adopted collection type gets an index, populated or not — each type page links to one, so
-        // a withheld file is a dead link rather than a tidy absence. A single-document type is its own
-        // index and has nothing to generate.
+        // Every adopted type gets an index, populated or not — each type page links to one, so a
+        // withheld file is a dead link rather than a tidy absence.
         //
         // A folder absent from disk is skipped rather than created: the generator populates structure
         // the corpus has declared, and never invents it. `validate` is the one voice that says an adopted
         // type is not set up, so a missing folder is reported there rather than papered over here.
         foreach (var t in adopted)
         {
-            if (t.IsSingleDocument || string.IsNullOrEmpty(t.Folder)) continue;
+            if (string.IsNullOrEmpty(t.Folder)) continue;
             if (!Directory.Exists(Path.Combine(repoRoot, t.Folder))) continue;
             var docs = byType.TryGetValue(t.Folder, out var found) ? found : [];
             targets.Add((Path.Combine(repoRoot, t.Folder, Artefact.Index), Generator.IndexPage(t, docs)));

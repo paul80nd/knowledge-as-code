@@ -10,11 +10,9 @@ namespace kac.core;
 // what lets a link to a file be read as a citation of an id. `_universal.yaml` states the asymmetry it
 // defends: a filename may be corrected, an id may not.
 //
-// Three styles carry a discriminator and one does not. `numbered` and `mnemonic` put a fixed-width one
-// at the head of a longer filename — 0007-…, vurm-… — so the rest of the name is a slug the author
-// chose, and that rest is what `slug-max` measures. A `slug` id is the whole filename stem, with no head
-// to skip. A `literal` id is declared by the type: a single-document type has one document and so one
-// name for it, and no filename to agree with.
+// `numbered` and `mnemonic` put a fixed-width discriminator at the head of a longer filename — 0007-…,
+// vurm-… — so the rest of the name is a slug the author chose, and that rest is what `slug-max`
+// measures. A `slug` id is the whole filename stem, with no head to skip.
 //
 // The shape of a discriminator is stated here once and read three ways: forwards, holding an id to its
 // filename; backwards, reading a link's filename as the id it cites; and sideways, deciding whether a
@@ -28,20 +26,10 @@ public static class IdChecks
     // is dispatched rather than a list of what is spelled correctly: adding a name here without a branch
     // beneath is the mistake it exists to prevent.
     public static readonly IReadOnlySet<string> IdStyles =
-        new HashSet<string>(["numbered", "mnemonic", "slug", "literal"], StringComparer.Ordinal);
+        new HashSet<string>(["numbered", "mnemonic", "slug"], StringComparer.Ordinal);
 
     public static void Check(string id, int? line, string rel, TypeSchema t, Action<string, string, int?> err)
     {
-        // A `literal` id is the whole id, declared by the schema — the single-document types, where
-        // there is one document and so one name for it. There is no prefix to carry and no filename
-        // discriminator to agree with, so this is the whole check.
-        if (t.IdStyle == "literal")
-        {
-            if (!string.Equals(id, t.IdValue, StringComparison.Ordinal))
-                err("id-format", $"id '{id}' must be '{t.IdValue}', the value the type declares.", line);
-            return;
-        }
-
         var expectPrefix = t.IdPrefix + "-";
         if (!id.StartsWith(expectPrefix, StringComparison.Ordinal))
         {

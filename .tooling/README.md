@@ -81,13 +81,9 @@ not records and are excluded from discovery, but they are still Markdown that li
 and fragment resolution like a type page, and for `framework-names-types`. Generated blocks are emptied first —
 `index --check` answers for those, and their links are written from this corpus rather than from the framework.
 
-**Type pages get a pass of their own**, chosen by the type's `shape`:
-
-- a **`collection`** page — `adrs.md`, `services.md` — is not a record and carries no frontmatter, so the structural
-  checks do not apply. It is checked for link resolution, undefined and non-canonical labels, unused definitions, and
-  that its generated blocks still have their markers.
-- a **`single-document`** page *is* the record, so it is validated like any other document, plus the same
-  generated-block check.
+**Type pages get a pass of their own.** A page — `adrs.md`, `services.md` — is not a record and carries no frontmatter,
+so the structural checks do not apply. It is checked for link resolution, undefined and non-canonical labels, unused
+definitions, and that its generated blocks still have their markers.
 
 ## Checks
 
@@ -106,15 +102,15 @@ name the schema file and the key rather than a record.
 |----------------------|-------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `schema-unknown-key` | error | A key the loader never reads, at any level — `notes:` excepted, which every level admits as commentary. The vocabulary is recorded as the loader asks for each key, never listed.                                                                                               |
 | `schema-unreadable`  | error | A declaration the loader cannot read as written: an `expr:` that does not compile or names no `severity:` or `message:`, a `required-when:` outside its vocabulary, `values: $enums.x` naming no enum.                                                                          |
-| `schema-dispatch`    | error | A value nothing acts on: a rule id claiming a `severity:` that neither an `expr:` nor a `DocumentRule` answers, a `ref:` at a folder no schema covers, `values:` on anything but an enum, `min-items:` on anything but a list, an unknown `id.style`, `shape` or `index.order`. |
-| `schema-shape`       | error | Two declarations of one type that contradict each other: a `collection` naming no `folder:` or a `single-document` type naming one, a `mirrors-section:` at a section the type's `sections:` block does not declare.                                                            |
+| `schema-dispatch`    | error | A value nothing acts on: a rule id claiming a `severity:` that neither an `expr:` nor a `DocumentRule` answers, a `ref:` at a folder no schema covers, `values:` on anything but an enum, `min-items:` on anything but a list, an unknown `id.style` or `index.order`. |
+| `schema-shape`       | error | A type declaring no `folder:`, so its records have nowhere to live, or a `mirrors-section:` at a section the type's `sections:` block does not declare.                                                                                                                         |
 
-Of a value, the question asked is not whether it is spelled correctly but whether code acts on it — `style: literal` is
-a real style, and what makes it sound is the branch in `CheckId`. Of a key, the question is whether the loader reads it
-at all, answered by the loader itself: it records what it asks each mapping for, and `schema-unknown-key` reports the
-remainder. Neither vocabulary is written down beside the check, because a copy is a list of what is spelled correctly
-rather than of what runs. A rule declaring no `severity:` is exempt by design: that is how the schema records an
-intention, and the type page renders those beneath the checks table as *Declared, not yet enforced*.
+Of a value, the question asked is not whether it is spelled correctly but whether code acts on it — `style: mnemonic`
+is a real style, and what makes it sound is the branch in `CheckId`. Of a key, the question is whether the loader reads
+it at all, answered by the loader itself: it records what it asks each mapping for, and `schema-unknown-key` reports
+the remainder. Neither vocabulary is written down beside the check, because a copy is a list of what is spelled
+correctly rather than of what runs. A rule declaring no `severity:` is exempt by design: that is how the schema records
+an intention, and the type page renders those beneath the checks table as *Declared, not yet enforced*.
 
 ### Frontmatter (from `_universal.yaml` + `<type>.yaml`)
 
@@ -172,7 +168,7 @@ A type that declares no `clauses:` block is checked for none of these.
 | `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                                                                                                                                                      |
 | `ref-resolves`            | error   | An id in a field declaring a `ref:` names a document that exists — for a `type: id` and a `type: list, of: id` alike, and whether or not the field also reciprocates. A literal the field admits (`applies-to: [all]`) is not an id and is skipped.                                                                                                                                                                        |
 | `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`). Whether the target exists is `ref-resolves`, so a dangling reference is reported once rather than twice.                                                                                                                                                                                                                                  |
-| `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `_template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. A `single-document` type has a page and no folder. Skipped when the run is narrowed to paths.                                                                                                                                      |
+| `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `_template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. Skipped when the run is narrowed to paths.                                                                                                                                      |
 | `framework-names-types`   | error   | The framework's own documentation — `knowledge-as-code.md` and `knowledge-as-code/` — names a type rather than linking to one, and never links a record inside a type's folder. Those files are byte-identical in every corpus, so a link resolving here says nothing about where it is read. Generated blocks are exempt: they are written from the types the corpus stood up. Skipped when the run is narrowed to paths. |
 | `generated-block`         | error   | A type page still carries both markers of each block `kac index` writes into it. `SpliceBlock` leaves the page alone when a marker is missing, and `index --check` then calls the page fresh, so nothing else can notice.                                                                                                                                                                                                  |
 | `template-fields`         | error   | A type's `_template.md` carries no key the type does not declare, carries every field it requires, and holds each in a form YAML reads as a value — a placeholder opening one has to be quoted. A defect here is every future document's, found by the next author rather than the last.                                                                                                                                   |
