@@ -21,7 +21,7 @@ public static class ClauseChecks
         Action<string, string, int?> warn)
     {
         if (t.Clauses is not { } spec) return;
-        if (!d.H2.Any(h => string.Equals(h, spec.Section, StringComparison.OrdinalIgnoreCase))) return;
+        if (!d.Sections.Any(s => string.Equals(s.Title, spec.Section, StringComparison.OrdinalIgnoreCase))) return;
 
         var headers = string.Join(" | ", spec.Columns);
 

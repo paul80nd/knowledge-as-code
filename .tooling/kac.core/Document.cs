@@ -32,6 +32,13 @@ public class ClauseRow
     public int Line;
 }
 
+// One H2 and what stands under it: the heading as written, the line it sits on, and where its body
+// begins and ends in the document's text. The boundaries are found once, here, because two checks ask
+// different questions of the same stretch — whether anything is written under the heading, and whether
+// what is written matches a pattern a rule supplies — and a second reading of where a section stops
+// would be a place for the two answers to disagree.
+public record Section(string Title, int Line, int BodyStart, int BodyEnd);
+
 // What is being read. A record is a document of the corpus; a template is the file every record of its
 // type is copied from. The two are held to different questions — a template has no id of its own, no
 // filename to agree with and no values filled in — and this is what the checks branch on, so that
@@ -81,7 +88,7 @@ public class Doc
     public int ClauseTableLine;
     public readonly List<(string Ref, int Line)> ClauseRefs = [];
 
-    public readonly List<string> H2 = [];
+    public readonly List<Section> Sections = [];
     public readonly List<LinkRef> Links = [];
     public readonly List<string> DefinedLabels = [];
     public readonly HashSet<string> UsedLabels = new(StringComparer.OrdinalIgnoreCase);
@@ -141,19 +148,26 @@ public class Doc
             } // signalled as a parse error downstream
         }
 
-        foreach (var h in ast.Descendants<HeadingBlock>())
+        // H1 and H2 in one walk, over the headings that divide the document rather than all of them: a
+        // section runs from its heading to the next one at the same level or above, so what a section
+        // holds can only be measured against its siblings. A deeper heading and everything under it are
+        // inside the section, which is why an H3 counts as content.
+        var divisions = ast.Descendants<HeadingBlock>().Where(h => h.Level <= 2).ToList();
+        for (var i = 0; i < divisions.Count; i++)
         {
+            var h = divisions[i];
             var txt = Md.PlainText(h.Inline);
-            switch (h.Level)
+            if (h.Level == 1)
             {
-                case 1 when doc.H1 is null:
-                    doc.H1 = txt;
-                    doc.H1Line = h.Line + 1;
-                    break;
-                case 2:
-                    doc.H2.Add(txt);
-                    break;
+                if (doc.H1 is not null) continue;
+                doc.H1 = txt;
+                doc.H1Line = h.Line + 1;
+                continue;
             }
+
+            var from = Math.Min(h.Span.End + 1, text.Length);
+            var to = i + 1 < divisions.Count ? divisions[i + 1].Span.Start : text.Length;
+            doc.Sections.Add(new Section(txt, h.Line + 1, from, Math.Max(from, to)));
         }
 
         // Identity line — the block immediately after the H1, when it is a paragraph opening with a

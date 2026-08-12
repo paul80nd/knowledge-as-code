@@ -67,6 +67,52 @@ public class DocumentTests
         Assert.Null(doc.IdentitySpans);
     }
 
+    // A section runs to the next heading at its own level or above, so a sub-heading and everything
+    // under it belong to the section above them, and a second H1 ends the section it follows.
+    [Theory]
+    [InlineData("## Context\n\nWhy.\n", "Why.")]
+    [InlineData("## Context\n\n### A sub-heading\n\nWhy.\n", "### A sub-heading\n\nWhy.")]
+    [InlineData("## Context\n\nWhy.\n\n## Decision\n\nWhat.\n", "Why.")]
+    [InlineData("## Context\n", "")]
+    [InlineData("## Context\n\n## Decision\n", "")]
+    public void A_section_body_runs_to_the_next_heading_at_its_level_or_above(string body, string expected)
+    {
+        var doc = Doc.Parse("adrs/0001-a-title.md",
+            $"---\nid: adr-0001\n---\n\n# A title\n\n{body}", new Schema());
+
+        Assert.NotNull(doc);
+        var section = doc.Sections[0];
+        Assert.Equal(expected, doc.Text[section.BodyStart..section.BodyEnd].Trim());
+    }
+
+    // Every H2 in document order, each carrying the line it sits on, so a check reporting one can point
+    // at the heading rather than at the document.
+    [Fact]
+    public void Sections_are_read_in_order_with_their_lines()
+    {
+        var doc = Doc.Parse("adrs/0001-a-title.md",
+            "---\nid: adr-0001\n---\n\n# A title\n\n## Context\n\nWhy.\n\n## Decision\n\nWhat.\n", new Schema());
+
+        Assert.NotNull(doc);
+        Assert.Equal(["Context", "Decision"], doc.Sections.Select(s => s.Title));
+        Assert.Equal([7, 11], doc.Sections.Select(s => s.Line));
+    }
+
+    // What `empty-section` reads a section's body for. A comment counts, because someone wrote it for
+    // the next author; a rule, a bullet marker left behind and an em dash standing in for the words do
+    // not, and the rendered blocks would offer all three as content.
+    [Theory]
+    [InlineData("Why.", true)]
+    [InlineData("### A sub-heading", true)]
+    [InlineData("<!-- a note to whoever writes this -->", true)]
+    [InlineData("", false)]
+    [InlineData("\n\n", false)]
+    [InlineData("---", false)]
+    [InlineData("—", false)]
+    [InlineData("*", false)]
+    public void Content_is_a_letter_or_a_digit(string text, bool expected)
+        => Assert.Equal(expected, Md.HasContent(text));
+
     // A schema declaring clauses, for the parse tests below: the folder must map to a type carrying a
     // ClauseSpec, since a type that declares none is never read for a clause table at all.
     private static Schema WithClauses()

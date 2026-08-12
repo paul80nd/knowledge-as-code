@@ -26,17 +26,17 @@ public sealed class Facts(Doc doc)
     // Case-insensitive, matching required-section: a heading is prose a person wrote, and '## context'
     // is the section the schema means however it was capitalised.
     public bool Section(string title) =>
-        doc.H2.Any(h => string.Equals(h, title, StringComparison.OrdinalIgnoreCase));
+        doc.Sections.Any(s => string.Equals(s.Title, title, StringComparison.OrdinalIgnoreCase));
 
     // How many times that heading appears. `section()` answers whether a document has one; this answers
     // whether it has more than one, which is a different fault — a page carrying two of a heading that
     // names the thing it is about is two documents that have been filed as one.
     public int SectionCount(string title) =>
-        doc.H2.Count(h => string.Equals(h, title, StringComparison.OrdinalIgnoreCase));
+        doc.Sections.Count(s => string.Equals(s.Title, title, StringComparison.OrdinalIgnoreCase));
 
     // Empty where the document has no H2 at all, so a rule naming the first section reads false rather
     // than throwing on a document that has none.
-    public string FirstSection() => doc.H2.Count > 0 ? doc.H2[0] : "";
+    public string FirstSection() => doc.Sections.Count > 0 ? doc.Sections[0].Title : "";
 
     public int Links() => doc.Links.Count;
 
@@ -75,21 +75,13 @@ public sealed class Facts(Doc doc)
     private string? body;
 
     // The source of one section, found on the heading text rather than on any id, because that is what
-    // the schema names it by everywhere else. Case-insensitive for the same reason `section()` is.
-    private string? SectionText(string title)
-    {
-        var headings = doc.Ast.OfType<HeadingBlock>().Where(h => h.Level <= 2).ToList();
-        for (var i = 0; i < headings.Count; i++)
-        {
-            if (!string.Equals(Md.PlainText(headings[i].Inline), title, StringComparison.OrdinalIgnoreCase))
-                continue;
-            var from = headings[i].Span.End + 1;
-            var to = i + 1 < headings.Count ? headings[i + 1].Span.Start : doc.Text.Length;
-            return from >= to ? "" : doc.Text[from..to];
-        }
-
-        return null;
-    }
+    // the schema names it by everywhere else. Case-insensitive for the same reason `section()` is, and
+    // the first of two headings of the same name, which is the one a rule naming it means.
+    private string? SectionText(string title) =>
+        doc.Sections.FirstOrDefault(s => string.Equals(s.Title, title, StringComparison.OrdinalIgnoreCase))
+            is { } section
+            ? doc.Text[section.BodyStart..section.BodyEnd]
+            : null;
 
     // Schema patterns are few and fixed, and every document of a type asks the same ones, so they are
     // parsed once for the life of the process rather than once per document.

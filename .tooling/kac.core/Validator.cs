@@ -231,8 +231,30 @@ public static class Validator
 
         // -- required sections --
         foreach (var sec in t.RequiredSections)
-            if (!d.H2.Any(h => string.Equals(h, sec, StringComparison.OrdinalIgnoreCase)))
+            if (!d.Sections.Any(s => string.Equals(s.Title, sec, StringComparison.OrdinalIgnoreCase)))
                 Err("required-section", $"missing required section '## {sec}'.");
+
+        // -- a section that is nothing but its heading --
+        // `required-section` asks whether the heading is there, and a heading satisfies it by existing.
+        // An author with nothing to say cannot delete a required one, so what is left is a heading with
+        // a blank under it, which reads as a finished document to everyone but the person who needed the
+        // section.
+        //
+        // Asked of the optional sections too, where the fault is the same and arrives by a different
+        // route: a section emptied out during a cleanup leaves its heading behind, and nothing else would
+        // notice. The remedy differs, so the two are worded apart. A section the schema never declared is
+        // the author's own and is not judged here.
+        //
+        // Not asked of a template, whose headings stand empty for the copy to fill.
+        if (kind == DocKind.Record)
+            foreach (var s in d.Sections.Where(s => !Md.HasContent(d.Text.AsSpan()[s.BodyStart..s.BodyEnd])))
+            {
+                if (t.RequiredSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
+                    Err("empty-section", $"required section '## {s.Title}' has nothing under it.", s.Line);
+                else if (t.OptionalSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
+                    Err("empty-section",
+                        $"section '## {s.Title}' has nothing under it — write it or delete the heading.", s.Line);
+            }
 
         // -- placeholders left from the template --
         // The other half of the convention: `{{…}}` means "supply this", so a record still carrying one

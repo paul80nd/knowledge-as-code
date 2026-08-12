@@ -136,7 +136,7 @@ Beyond `fields`, each type file declares:
 | `collision`                | Where the type's name already means something else, and what a reader will get wrong                             |
 | `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
 | `filename`                 | Pattern and slug length limit                                                                                    |
-| `sections`                 | Required and optional H2s — the required ones are checked for presence                                           |
+| `sections`                 | Required and optional H2s — the required ones for presence, and either kind for holding something                |
 | `clauses`                  | The clause table's section, id pattern and modals, where a type states its obligations as addressable rows       |
 | `index`                    | Columns, sort columns and direction for the generated index — see the note below                                 |
 | `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |

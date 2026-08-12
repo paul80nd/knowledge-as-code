@@ -143,6 +143,7 @@ an intention, and the type page renders those beneath the checks table as *Decla
 | `identity-type`                   | error | The line's type name is the `label` the folder's schema declares.                         |
 | `identity-id` / `identity-status` | error | The line's id and status are the frontmatter's, the status upper-cased.                   |
 | `required-section`                | error | Every heading in `sections.required` is present.                                          |
+| `empty-section`                   | error | A heading `sections` declares has something under it. A template's may stand empty.       |
 | `placeholder-left`                | error | No `{{…}}` the template left to fill in survives into a record, outside code.             |
 
 ### Clauses (from `<type>.yaml`'s `clauses:` block)
@@ -205,7 +206,6 @@ without running is the one arrangement this forbids, and `schema-dispatch` is wh
 | `no-hedged-ordering`            | processes    | warning | No "typically", "usually" or "normally" inside *Steps*.                                                                               |
 | `posture-belongs-to-frameworks` | policies     | warning | No claim of standing beside a framework's name — that belongs in `frameworks.md`.                                                     |
 | `target-is-measurable`          | nfrs         | warning | `measured-by` names an instrument rather than hedging — "monitored", "where practical" answer nothing.                                |
-| `what-went-well-required`       | postmortems  | warning | Something follows the *What went well* heading. `sections` can require the heading and not its contents.                              |
 | `mechanism-has-evidence`        | controls     | warning | A control whose `mechanism` is not `not-enforced` names where the proof of it lives.                                                  |
 | `one-problem-per-document`      | faqs         | warning | One *Symptom* section, because an FAQ is found by its symptom.                                                                        |
 | `trial-has-criteria`            | tools        | warning | A tool in `trial` carries a *Trial criteria* section; without one the trial has no way to end.                                        |

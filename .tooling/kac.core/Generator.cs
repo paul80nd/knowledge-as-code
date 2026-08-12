@@ -459,7 +459,8 @@ public static class Generator
         ("identity", ["identity", "identity-type", "identity-id", "identity-status"],
             "An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.",
             null),
-        ("required-section", ["required-section"], "Every required section heading is present.", null),
+        ("sections", ["required-section", "empty-section"],
+            "Every required section heading is present, and no declared section is left as a bare heading.", null),
         ("placeholder-left", ["placeholder-left"],
             "No `{{…}}` from the template is left unfilled, outside code.", null),
         // The pipe is escaped because this text lands in a table cell: GFM splits a cell on a bare `|`

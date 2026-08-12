@@ -107,7 +107,7 @@ postmortem means something.
 | `filename / slug-length`       | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
 | `h1`                           | error   | The document has an H1.                                                                                         |
 | `identity`                     | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
-| `required-section`             | error   | Every required section heading is present.                                                                      |
+| `sections`                     | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
 | `placeholder-left`             | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`                | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`              | error   | Every shortcut reference has a link definition.                                                                 |
@@ -115,7 +115,6 @@ postmortem means something.
 | `ref-resolves`                 | error   | An id in a field that references another document names one that exists.                                        |
 | `unused-definition`            | warning | A link definition that nothing references.                                                                      |
 | `detected-not-before-occurred` | error   | `detected-on` is on or after `occurred-on`.                                                                     |
-| `what-went-well-required`      | warning | The What went well section has something under it, not just the heading.                                        |
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
