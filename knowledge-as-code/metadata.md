@@ -17,10 +17,10 @@ them sparingly, and derive rather than state wherever possible.
    shift. `"2026-06-12"` renders as written.
 4. **Enums are lowercase, hyphenated.** They are grep targets first and prose second.
 5. **Lists use YAML sequences** — ADO renders either form as separate cells, so the choice is about reading the source.
-   `tags` takes the compact flow form, `tags: [ a, b ]`: it is search metadata rather than content, and a block list
-   gives the least interesting field in the block the most lines. Every other list stays block, one entry per line —
-   entries stay individually reviewable in a diff, and a validation finding can point at the entry that caused it rather
-   than at the field.
+   Search metadata takes the compact flow form, `tags: [ a, b ]`: it is how a document is found rather than what it
+   says, and a block list gives the least interesting fields in the block the most lines. Every other list stays block,
+   one entry per line — entries stay individually reviewable in a diff, and a validation finding can point at the entry
+   that caused it rather than at the field.
 6. **Lists are alphabetical.** No list field's sequence carries meaning, so alphabetical is the order that scan-reads
    and the one two authors will agree on without discussion. Numbers inside an entry compare as numbers, so
    `ISO27001:2022 A.8.7` comes before `ISO27001:2022 A.8.29`. CI warns on a list that is out of order.
@@ -82,6 +82,17 @@ Carried by every document in the taxonomy.
 
 `id` is the anchor for every cross-reference — see [IDs](#ids); `status` values are set by each type and are listed
 under [per-type fields](#per-type-fields).
+
+`tags` are **entry points**: the word a reader arrives with, on a document that does not use it. One document may be the
+only one carrying a tag, and often is — a searcher who types `payments` wanted the one service that handles them. What a
+tag must never do is restate another field, since the two can only ever disagree.
+
+**Grouping is a different job, and a tag does it badly.** A value like `public` or `internal` is worth carrying because
+several documents share it and it divides a type into groups worth browsing; that same value, used once, has failed at
+the only thing it was for. The two tests are opposite, which is why they belong in two fields. A type wanting the
+grouping job declares a list field of its own with `min-records:`, the floor on how many records must carry each value,
+and CI warns below it. The service type declares one, named `facets`, and its page records how it reached its
+vocabulary. Membership is never declared in the schema: what a corpus groups by is the corpus's to settle.
 
 Deliberately absent, and why:
 

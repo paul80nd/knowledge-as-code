@@ -447,6 +447,9 @@ public static class Generator
             t => t.AnyField(f => f.MinItems is not null)),
         ("list-order", ["list-order"],
             "List entries read in alphabetical order, with numbers compared as numbers.", null),
+        ("min-records", ["min-records"],
+            "A value in a grouping field is carried by at least as many records as the schema asks for.",
+            t => t.AnyField(f => f.MinRecords is not null)),
         ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
         // Which of the three shapes an id takes is the type's to decide, so the row says that a shape is
         // held to rather than listing the styles a reader could be on any of.

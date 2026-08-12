@@ -55,6 +55,7 @@ fields:
     pattern: '<regex>'          # additional constraint
     allow-literal: [ ... ]      # words admitted in place of a value of the declared type
     min-items: <n>              # when type is list: the floor on its length
+    min-records: <n>            # when type is list: the floor on how many records carry each entry
     description: >              # one line, rendered into the generated Metadata table
     notes: >                    # the longer why; schema-only, and the fallback when there is no description
 ```
@@ -102,6 +103,15 @@ answer outside its type does not have to widen into a string and give up every c
 `min-items` is the floor on a list's length, read only from a `type: list` field, for the field whose value is its
 breadth: a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill, and nothing else holds it to more
 than a single entry.
+
+`min-records` is the other floor, and counts the opposite way: how many records of the type carry each entry, rather
+than how many entries one record carries. It is what a field says when its values are there to divide the type into
+groups — `internal` earns its place by naming several services, where a value carried by one record divides nothing and
+belongs in a field that is free to be unique. The count is per type, case-insensitive, and once per record however often
+one record repeats a value; the finding is a **warning** reported against each record carrying the short value; and the
+floor is a number rather than a flag because an estate large enough will want more than two. Membership is never
+declared: the corpus decides what its vocabulary is, and the schema says only that a value in this field is meant to be
+shared.
 
 `description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
 and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room
@@ -370,7 +380,7 @@ schema is held against what the tool can act on, and each finding names the file
 | A `ref:` entry naming a folder no schema covers                                        | `schema-dispatch`    |
 | A `versus:` entry naming a folder no schema covers                                     | `schema-dispatch`    |
 | `values:` on any field that is not an `enum`                                           | `schema-dispatch`    |
-| `min-items:` on any field that is not a `list`                                         | `schema-dispatch`    |
+| `min-items:` or `min-records:` on any field that is not a `list`                       | `schema-dispatch`    |
 | An `index.order:` that is neither `ascending` nor `descending`                         | `schema-dispatch`    |
 | A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows         | `schema-shape`       |
 | An `id.style` with no code behind the value                                            | `schema-dispatch`    |

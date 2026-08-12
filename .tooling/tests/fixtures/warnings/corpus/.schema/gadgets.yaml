@@ -1,0 +1,51 @@
+type: gadget
+label: Gadget
+label-plural: Gadgets
+folder: gadgets
+page: gadgets.md
+tier: descriptive
+lifecycle: living
+summary: A fixture type, carrying the two lines every type owes so that only the grouping floor is under test here.
+goes-here: A gadget, which is a thing this fixture has and nothing else does
+
+detail: >
+  Carrying the lines every type owes so that only the grouping floor is under test here.
+
+lineage:
+  prior-art: None — a fixture type has no ancestor to claim.
+
+notes: >
+  A fixture type laid over the real schema so that `min-records` is exercised against a field that
+  declares it. No real type does yet, and a check no fixture can reach is one the coverage gate
+  fails on.
+
+id:
+  prefix: gad
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [live, retired]
+    description: Where the gadget is in its life.
+
+  facets:
+    required: false
+    type: list
+    of: string
+    pattern: '^[a-z0-9-]+$'
+    min-records: 2
+    description: Slices the set — a value that groups gadgets, never one that describes a single gadget.
+
+sections:
+  required: [What it does]
+
+index:
+  columns: [id, title, status, owner]
+  sort: id

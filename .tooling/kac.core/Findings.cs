@@ -76,6 +76,8 @@ public static class CheckCatalogue
         new("ref-resolves", Sev.Error, "An id in a field with a ref names a document that exists."),
         new("reciprocal", Sev.Error, "A reciprocal field agrees in both directions."),
         new("list-order", Sev.Warning, "A list field's entries are in alphabetical order."),
+        new("min-records", Sev.Warning,
+            "A value in a grouping field is carried by at least as many records as its floor."),
         new("clause-order", Sev.Warning, "Clause rows are grouped by binding level."),
         new("clause-compound", Sev.Warning, "A clause carries one obligation, not two."),
         new("unused-definition", Sev.Warning, "A link definition that nothing references."),

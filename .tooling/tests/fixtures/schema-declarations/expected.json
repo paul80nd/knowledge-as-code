@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 20,
+    "errors": 21,
     "warnings": 0
   },
   "findings": [
@@ -111,6 +111,13 @@
       "severity": "error",
       "check": "schema-dispatch",
       "message": "field 'retention' is 'type: string' and declares 'min-items:', which only a list's length is read against — declare it 'type: list', or drop the floor."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "field 'retention' is 'type: string' and declares 'min-records:', which is read against the entries of a list — declare it 'type: list', or drop the floor."
     },
     {
       "file": ".schema/widgets.yaml",

@@ -7,7 +7,7 @@ The catalogue of deployable components that make up the platform.
 > **The records in `services/` are an example estate, not your estate.** They describe a fictional public-library
 > consortium, and they give this type something to demonstrate: a dependency graph, a criticality gradient, and the
 > awkward cases that shaped the schema. **Delete them before you add your first real service.** The two sections below
-> that derive a convention from that estate — the `platform` enum and the tag vocabulary — show a method for reaching
+> that derive a convention from that estate — the `platform` enum and the facet vocabulary — show a method for reaching
 > your own values.
 
 ## What is a service?
@@ -56,6 +56,7 @@ of the catalogue as well, because it deploys services.
 | `criticality` | ●   | enum   | Judged by what a customer experiences when it is unavailable.                        |
 | `depends-on`  |     | list   | Downward only — what this service calls.                                             |
 | `data-stores` |     | list   | Data ids this service owns or reads.                                                 |
+| `facets`      |     | list   | Slices the catalogue — one exposure, then any traits. Each value groups services.    |
 
 **Enum values**
 
@@ -118,34 +119,41 @@ the enum lacks sends someone to `mixed` who does not belong there.
 The values in `.schema/services.yaml` are the example estate's, and its services exercise all but one. Nothing can carry
 `terraform`, which stays in the list so that the case is visible.
 
-### Deriving the tag vocabulary
+### Deriving the facet vocabulary
 
-The **method** below is portable and worth keeping. The handful of **tags** an estate ends up with is not: replace them
-with your own.
+A **facet** slices the catalogue, so it earns its place by grouping: one nothing else carries has failed at the only
+thing it was for. `facets` declares `min-records: 2` and CI warns on a value a single service carries. The **method**
+below is portable and worth keeping. The handful of values an estate ends up with is not: replace them with your own.
 
-One **exposure** tag, then zero or more **traits**:
+One **exposure**, then zero or more **traits**:
 
-| Tag            | Means                                                                                          |
+| Facet          | Means                                                                                          |
 |----------------|------------------------------------------------------------------------------------------------|
 | `public`       | Has an inbound surface a customer or member of the public can reach. Exactly one of these two. |
 | `internal`     | Inbound only from staff or from other services in this catalogue.                              |
 | `event-driven` | Publishes to or consumes from the message bus.                                                 |
 | `scheduled`    | Runs on a timer as well as, or instead of, on request.                                         |
 
-Three rules make the vocabulary small enough to be searchable, and they are the transferable part:
+Two rules keep the vocabulary small enough to browse, and they are the transferable part:
 
 1. **Exposure describes the inbound surface.** A staff portal on the public internet is `internal`, because only staff
    are meant to reach it.
-2. **Never restate another field.** There is no `cdn` tag, because `platform: static` says it; no `monorepo` tag,
-   because `repo` says it. A tag that duplicates a field can only ever disagree with it.
-3. **A tag used exactly once belongs in prose.** The example estate considered `email`, `payments` and `legacy-facing`
-   and dropped all three, because each described a single service and nobody searches for a term that matches one
-   document. The bodies of those services carry the facts instead. A larger estate might earn all three back, and that
-   is a judgement to make against your own catalogue.
+2. **Never restate another field.** There is no `cdn` facet, because `platform: static` says it; no `monorepo` facet,
+   because `repo` says it. A value that duplicates a field can only ever disagree with it.
 
-Nothing enforces this vocabulary. The schema reads a `values:` list from an `enum` field and nowhere else, and rejects
-one written on `tags` as it loads rather than ignoring it quietly. So the vocabulary stays in prose, where a reader can
-see that the validator has no part in it.
+Membership stays a judgement. The floor holds the shape of the vocabulary — that every value in it groups — and no
+declaration anywhere says which words this estate chose. That is the corpus's to decide and this page's to record.
+
+### What a tag is for instead
+
+A **tag** brings a reader's word to a service that does not use it. `payments` reaches Reservations, `renewals` reaches
+Notices, `legacy` reaches Lending — each carried by one document, which is exactly right: a searcher arriving with that
+word wanted that service. Tags are free-form, and CI holds them to nothing beyond their shape.
+
+So the two tests pull opposite ways, and that is the whole reason for two fields. A word matching a single service fails
+as a facet and succeeds as a tag; a word several services share divides the catalogue and belongs in `facets`, where the
+floor holds it to doing so. Judged as one field, the second kind reads as a vocabulary that never converged, and the
+words worth keeping are the ones thrown away.
 
 ## What CI checks
 
@@ -162,6 +170,7 @@ see that the validator has no part in it.
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `min-records`               | warning | A value in a grouping field is carried by at least as many records as the schema asks for.                      |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
 | `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                           |

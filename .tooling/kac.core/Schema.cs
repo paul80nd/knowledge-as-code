@@ -40,6 +40,11 @@ public sealed class FieldSpec
     // over-filled — a FAQ's search keywords — has nothing else holding it to more than one entry.
     public int? MinItems { get; init; }
 
+    // The floor on how many records of the type carry a given value, where the schema sets one. It is
+    // what a field says when its values are meant to group documents rather than describe one: a value
+    // below the floor divides nothing, and belongs in a field that is free to be unique.
+    public int? MinRecords { get; init; }
+
     // Why this declaration could not be read, where it could not be. Carried on the spec rather than
     // thrown at load so that one unreadable field is one finding naming the file and the key, and the
     // rest of the schema still loads: a corpus is told what is wrong with it, not handed a stack trace.
@@ -598,6 +603,7 @@ public sealed class Schema
             MirrorsSection = Yaml.Str(node.Get("mirrors-section")),
             AllowLiteral = Yaml.StrList(node.Get("allow-literal")),
             MinItems = Yaml.NullableInt(node.Get("min-items")),
+            MinRecords = Yaml.NullableInt(node.Get("min-records")),
             Description = Collapse(Yaml.Str(node.Get("description"))),
             Notes = Collapse(Yaml.Str(node.Get("notes"))),
             Problem = problem

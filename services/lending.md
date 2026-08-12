@@ -8,7 +8,8 @@ criticality: critical
 depends-on:
 data-stores:
 owner: dev.raman
-tags: [ internal ]
+facets: [ internal ]
+tags: [ legacy, loans ]
 ---
 
 # Lending

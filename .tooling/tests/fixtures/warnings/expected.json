@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 6,
-    "templates": 2,
+    "validated": 9,
+    "templates": 3,
     "skipped": 0,
     "errors": 0,
-    "warnings": 6
+    "warnings": 7
   },
   "findings": [
     {
@@ -41,6 +41,13 @@
       "severity": "warning",
       "check": "y-statement",
       "message": "Y-statement is missing \"facing\" and \"rather than\". The six moves are what make it a Y-statement rather than a summary of one."
+    },
+    {
+      "file": "gadgets/alone.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "min-records",
+      "message": "'facets: singular' is carried by 1 gadget record — the schema asks for at least 2, because a value here is meant to group records. One that does not belongs in a field that is free to be unique."
     },
     {
       "file": "policies/ordn-ordinal-not-natural.md",
