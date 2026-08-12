@@ -8,7 +8,8 @@ public static class DocumentRules
     public static readonly IReadOnlyList<IDocumentRule> All =
     [
         new YStatementPresent(),
-        new AlternativesHaveVerdicts()
+        new AlternativesHaveVerdicts(),
+        new TermsAreAlphabetical()
     ];
 
     public static readonly IReadOnlyDictionary<string, IDocumentRule> ByRuleId =

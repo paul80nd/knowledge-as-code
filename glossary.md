@@ -130,6 +130,7 @@ a digest, so nothing runs the rule and the limit is yours to keep.
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
+| `terms-alphabetical`        | warning | A glossary's entries read in alphabetical order.                                                                |
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 

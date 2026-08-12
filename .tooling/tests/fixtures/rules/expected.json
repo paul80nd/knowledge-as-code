@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 21,
-    "templates": 15,
+    "validated": 22,
+    "templates": 16,
     "skipped": 0,
     "errors": 7,
-    "warnings": 13
+    "warnings": 14
   },
   "findings": [
     {
@@ -69,6 +69,13 @@
       "severity": "warning",
       "check": "one-problem-per-document",
       "message": "This carries more than one Symptom section, so it is more than one FAQ. Someone arriving with a symptom matches on the first one and never reads the second — split it."
+    },
+    {
+      "file": "glossary/out-of-order.md",
+      "line": 30,
+      "severity": "warning",
+      "check": "terms-alphabetical",
+      "message": "'Branch' is out of order — it belongs before 'Item'."
     },
     {
       "file": "integrations/payment-gateway.md",

@@ -32,8 +32,8 @@ notes: >
   confused with, and optional links to the owning service or an explanation. Those `**Not:**` lines are the most
   useful content in the file. One paragraph per term, because a glossary is read end to end and every paragraph
   is paid for by every reader. The list is alphabetical and flat — no A–Z sub-headings — so that it scans and
-  greps cleanly. All of that is held by whoever reviews the file: the rules below that would read a term's shape
-  are declared and not built, and no check parses an entry.
+  greps cleanly. Only that order is checked. The rules below that would read a term's shape are declared and not
+  built, so the rest is held by whoever reviews the file.
 
 id:
   prefix: gls
@@ -97,5 +97,8 @@ rules:
       Reports terms appearing more than N times across the corpus with no glossary entry.
   - id: unused-terms
     description: Reports entries nothing uses, where a use inside the term's own context counts as one.
+  - id: terms-are-alphabetical
+    description: A glossary's entries read in alphabetical order, compared without regard to casing.
+    severity: warning
   - id: terms-are-singular
     description: Entry headings are singular and in canonical casing.

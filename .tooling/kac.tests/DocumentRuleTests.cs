@@ -121,6 +121,39 @@ public class DocumentRuleTests
 
     // -- driving a rule --
 
+    // -- terms-are-alphabetical --
+
+    [Fact]
+    public void Entries_in_order_are_left_alone()
+        => Assert.Empty(Run(new TermsAreAlphabetical(),
+            Adr("## Terms\n\n### Borrower\n\nOne.\n\n### Item\n\nTwo.\n\n### Title\n\nThree.")));
+
+    // The message names the entry that moved and the one it should precede, which is the whole reason
+    // this is a class: an author told only that the file is unsorted has to find the entry themselves.
+    [Fact]
+    public void An_entry_out_of_place_names_itself_and_where_it_belongs()
+    {
+        var found = Run(new TermsAreAlphabetical(),
+            Adr("## Terms\n\n### Borrower\n\nOne.\n\n### Item\n\nTwo.\n\n### Branch\n\nThree."));
+
+        Assert.Equal("terms-alphabetical", Single(found).Check);
+        Assert.Equal("'Branch' is out of order — it belongs before 'Item'.", Single(found).Message);
+    }
+
+    // Casing is the entry's own — a glossary holds `ADR` beside `Borrower` — so ordering it by code
+    // point would report a run of initialisms that a reader scans as correctly placed.
+    [Fact]
+    public void Casing_does_not_decide_the_order()
+        => Assert.Empty(Run(new TermsAreAlphabetical(),
+            Adr("## Terms\n\n### ADR\n\nOne.\n\n### Borrower\n\nTwo.\n\n### corpus\n\nThree.")));
+
+    // Each entry is judged against the one before it, so a file with two words in the wrong place
+    // reports both rather than stopping at the first.
+    [Fact]
+    public void Every_entry_out_of_place_is_reported()
+        => Assert.Equal(2, Run(new TermsAreAlphabetical(),
+            Adr("## Terms\n\n### Item\n\nOne.\n\n### Borrower\n\nTwo.\n\n### Adr\n\nThree.")).Count);
+
     private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null)
     {
         var found = new List<Finding>();

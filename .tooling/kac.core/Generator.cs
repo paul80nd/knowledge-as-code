@@ -494,7 +494,9 @@ public static class Generator
             "A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.",
             t => t.HasRule("y-statement-present")),
         ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.",
-            t => t.HasRule("alternatives-have-verdicts"))
+            t => t.HasRule("alternatives-have-verdicts")),
+        ("terms-alphabetical", ["terms-alphabetical"], "A glossary's entries read in alphabetical order.",
+            t => t.HasRule("terms-are-alphabetical"))
     ];
 
     // Catalogue checks the reader-facing table deliberately does not surface: `type` (an internal

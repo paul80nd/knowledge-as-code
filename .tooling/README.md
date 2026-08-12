@@ -212,6 +212,7 @@ without running is the one arrangement this forbids, and `schema-dispatch` is wh
 | `deprecated-has-successor`      | tools        | warning | A deprecated tool names its `successor`, so the reader is sent somewhere rather than told a dead end.                                 |
 | `y-statement`                   | adrs         | warning | A block-quote follows the H1, states all six moves, and is within `max-words` (60).                                                   |
 | `alternatives-verdict`          | adrs         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
+| `terms-alphabetical`            | glossary     | warning | A glossary's entries read in alphabetical order, compared without regard to casing, and the message names the entry that moved.       |
 
 The three length rules are ratios or ceilings whose numbers are judgements rather than measurements — no corpus has yet
 held enough of these types to calibrate them. Each is pinned by a fixture, so changing one is visible.
