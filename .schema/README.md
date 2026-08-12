@@ -107,10 +107,11 @@ than a single entry.
 `min-records` is the other floor, and counts the opposite way: how many records of the type carry each entry, rather
 than how many entries one record carries. It is what a field says when its values are there to divide the type into
 groups — `internal` earns its place by naming several services, where a value carried by one record divides nothing and
-belongs in a field that is free to be unique. The count is case-insensitive and per type, the finding is a **warning**
-reported against each record carrying the short value, and the floor is a number rather than a flag because an estate
-large enough will want more than two. Membership is never declared: the corpus decides what its vocabulary is, and the
-schema says only that a value in this field is meant to be shared.
+belongs in a field that is free to be unique. The count is per type, case-insensitive, and once per record however often
+one record repeats a value; the finding is a **warning** reported against each record carrying the short value; and the
+floor is a number rather than a flag because an estate large enough will want more than two. Membership is never
+declared: the corpus decides what its vocabulary is, and the schema says only that a value in this field is meant to be
+shared.
 
 `description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
 and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room

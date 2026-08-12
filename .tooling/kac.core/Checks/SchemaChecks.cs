@@ -240,8 +240,9 @@ public static class SchemaChecks
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-items:', which only a "
                          + "list's length is read against — declare it 'type: list', or drop the floor.", f);
 
-        // `min-records` counts how often each entry recurs across the type, so it reads a list of values
-        // the same way. A scalar field holds one value per record and the count would be its own.
+        // `min-records` is read from a list's entries and nowhere else. A scalar could in principle be
+        // counted the same way and is not, which makes it exactly the kind of declaration this pass exists
+        // to report: one a reader would take as enforced.
         if (spec.MinRecords is not null && spec.Type != "list")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-records:', which is read "
                          + "against the entries of a list — declare it 'type: list', or drop the floor.", f);

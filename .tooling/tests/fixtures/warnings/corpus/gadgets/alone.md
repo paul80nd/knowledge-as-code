@@ -12,6 +12,6 @@ facets: [ inbound, singular ]
 
 ## What it does
 
-Carries `singular`, which no other gadget carries. A value that divides the set into one is what `min-records` reports,
-and this record is the only one it can be reported against. Its `inbound` stays quiet, so the finding names the value
-rather than the document.
+Carries `singular`, which no other gadget carries, and `inbound`, which two others do. A value that divides the set into
+one is what `min-records` reports, and this record is the only one it can be reported against. Only the short value is
+named, so a record carrying both gets one finding rather than a verdict on its whole field.

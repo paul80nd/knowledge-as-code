@@ -17,10 +17,10 @@ them sparingly, and derive rather than state wherever possible.
    shift. `"2026-06-12"` renders as written.
 4. **Enums are lowercase, hyphenated.** They are grep targets first and prose second.
 5. **Lists use YAML sequences** — ADO renders either form as separate cells, so the choice is about reading the source.
-   `tags` takes the compact flow form, `tags: [ a, b ]`: it is search metadata rather than content, and a block list
-   gives the least interesting field in the block the most lines. Every other list stays block, one entry per line —
-   entries stay individually reviewable in a diff, and a validation finding can point at the entry that caused it rather
-   than at the field.
+   Search metadata takes the compact flow form, `tags: [ a, b ]`: it is how a document is found rather than what it
+   says, and a block list gives the least interesting fields in the block the most lines. Every other list stays block,
+   one entry per line — entries stay individually reviewable in a diff, and a validation finding can point at the entry
+   that caused it rather than at the field.
 6. **Lists are alphabetical.** No list field's sequence carries meaning, so alphabetical is the order that scan-reads
    and the one two authors will agree on without discussion. Numbers inside an entry compare as numbers, so
    `ISO27001:2022 A.8.7` comes before `ISO27001:2022 A.8.29`. CI warns on a list that is out of order.

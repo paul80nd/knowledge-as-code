@@ -581,9 +581,9 @@ public static class Validator
         }
     }
 
-    // A field whose values are meant to group records, held to grouping some. Where a type declares
-    // `min-records:` on a list field, each value in it is counted across every record of that type, and a
-    // value carried by fewer records than the floor is reported against each record that carries it.
+    // Where a type declares `min-records:` on a list field, each value in that field is counted across the
+    // records of the type, and one carried by fewer records than the floor is reported against every record
+    // carrying it.
     //
     // A warning, and permanently one. The corpus decides what its vocabulary is — the schema only says
     // that a value in this field is for dividing the type into groups — and a value newly introduced is
