@@ -8,7 +8,8 @@ criticality: supporting
 depends-on:
 data-stores:
 owner: dev.raman
-tags: [ internal, scheduled ]
+facets: [ internal, scheduled ]
+tags: [ monitoring ]
 ---
 
 # Shelf Audit

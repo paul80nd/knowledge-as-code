@@ -9,7 +9,8 @@ depends-on:
   - svc-lending
 data-stores:
 owner: mira.okonjo
-tags: [ public ]
+facets: [ public ]
+tags: [ holds, payments ]
 ---
 
 # Reservations

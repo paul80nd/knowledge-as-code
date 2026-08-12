@@ -56,6 +56,7 @@ of the catalogue as well, because it deploys services.
 | `criticality` | ●   | enum   | Judged by what a customer experiences when it is unavailable.                        |
 | `depends-on`  |     | list   | Downward only — what this service calls.                                             |
 | `data-stores` |     | list   | Data ids this service owns or reads.                                                 |
+| `facets`      |     | list   | Slices the catalogue — one exposure, then any traits. Each value groups services.    |
 
 **Enum values**
 
@@ -162,6 +163,7 @@ see that the validator has no part in it.
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `min-records`               | warning | A value in a grouping field is carried by at least as many records as the schema asks for.                      |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
 | `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                           |

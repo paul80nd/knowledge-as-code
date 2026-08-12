@@ -9,7 +9,8 @@ depends-on:
   - svc-lending
 data-stores:
 owner: robin.hale
-tags: [ internal ]
+facets: [ internal ]
+tags: [ holdings ]
 ---
 
 # Catalogue API

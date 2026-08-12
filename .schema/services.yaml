@@ -73,6 +73,20 @@ fields:
     ref: data
     description: Data ids this service owns or reads.
 
+  facets:
+    required: false
+    type: list
+    of: string
+    pattern: '^[a-z0-9-]+$'
+    min-records: 2
+    description: Slices the catalogue — one exposure, then any traits. Each value groups services.
+    notes: >
+      What `tags` cannot be, and the reason the two are separate fields. A facet divides the catalogue into
+      groups worth browsing, so a value only means something once several services share it: `internal` is an
+      answer to "which of these is reachable from outside", where a word describing one service answers
+      nothing and belongs in `tags`. The floor holds that distinction and nothing else — which values the
+      estate settles on is the estate's to decide, and the type page records how these ones were reached.
+
 sections:
   required: [What it does, Where it lives, Environments]
   optional: [Dependencies, Data, Operational notes]

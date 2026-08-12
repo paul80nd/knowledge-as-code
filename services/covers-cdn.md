@@ -9,7 +9,8 @@ depends-on:
   - svc-thumbnailer
 data-stores:
 owner: dev.raman
-tags: [ public ]
+facets: [ public ]
+tags: [ jackets ]
 ---
 
 # Covers CDN

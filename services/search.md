@@ -8,7 +8,8 @@ criticality: important
 depends-on:
 data-stores:
 owner: mira.okonjo
-tags: [ event-driven, internal ]
+facets: [ event-driven, internal ]
+tags: [ discovery, indexing ]
 ---
 
 # Search

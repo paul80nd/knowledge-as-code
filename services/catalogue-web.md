@@ -11,7 +11,8 @@ depends-on:
   - svc-search
 data-stores:
 owner: robin.hale
-tags: [ public ]
+facets: [ public ]
+tags: [ discovery ]
 ---
 
 # Catalogue

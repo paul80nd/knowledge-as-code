@@ -8,7 +8,8 @@ criticality: important
 depends-on:
 data-stores:
 owner: mira.okonjo
-tags: [ event-driven, internal, scheduled ]
+facets: [ event-driven, internal, scheduled ]
+tags: [ email, renewals ]
 ---
 
 # Notices
