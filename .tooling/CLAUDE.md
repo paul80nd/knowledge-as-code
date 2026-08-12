@@ -4,65 +4,62 @@
 
 ## Adding or changing a check
 
-**First ask whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
+**Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
 `expr:` on a rule in `.schema/<type>.yaml` — see [`../.schema/README.md`](../.schema/README.md) for what one may say.
-That costs the YAML and a fixture, and nothing below applies: the catalogue, the checks table and `kac checks` all pick
-it up from the schema.
+That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks table and
+`kac checks` all pick it up from the schema.
 
-**The test is what the author is told.** Write the expression when one fixed message says everything the code would have
-said. Write the code where it can name *which* part of the document is at fault and a single string cannot. A rule that
-reports "something here is wrong" where it could have named the missing piece has been made cheaper and worse, and
-nothing in the gate will notice. Cost is the second question, and it only ever argues for converting a rule that has
+**What decides it is what the author is told.** Write the expression where one fixed message says everything the code
+would have said. Write the code where it can name *which* part of the document is at fault and a single string cannot.
+A rule reporting "something here is wrong" where it could have named the missing piece has been made cheaper and worse,
+and nothing in the gate will notice. Cost is the second question, and it only ever argues for converting a rule that has
 already passed the first — a schema with no C# behind it was never the aim.
 
-Eighteen rules fail that test, and they cluster, which is worth knowing before starting one. Three are written and are
-marked as such below, because the argument for why a rule needs a class reads differently beside a class that exists.
+Eighteen rules fail that test and they cluster, which is worth knowing before starting one. Four are written, and the
+argument for a class reads differently beside a class that exists.
 
-* **Git history — 4.** `immutable-after-accepted`, `immutable-after-published`, `changelog-begins-at-active`,
-  `changelog-on-material-change`. All four ask the same question: what changed in this commit versus the committed
-  content, and was it substantive? One mechanism answers all of them, and it is the largest single piece of work left.
-* **Cross-document — 7.** `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`,
-  `redefinitions-are-reciprocal`, and the glossary pair `undefined-terms` and `unused-terms`. `Validator.CheckCorpus`
-  already builds a `byId` index and resolves clause citations and reciprocals against it; these are more of that. The
-  reciprocal one is the hardest, because it holds an entry inside one document against an entry inside another.
-* **Graph — 1.** `no-dependency-cycles`.
-* **Per-part — 5.** `alternatives-have-verdicts` and `terms-are-alphabetical`, both **written**, beside
-  `terms-are-singular`, `carried-in-full-by-digest` and `escalation-required`, which are not. Each judges the parts of
-  one document — bullets under a heading, entries in a glossary, branches of a diagnosis tree — and its message has to
-  name the part that failed.
-* **A fixed form — 1.** `y-statement-present`, **written**. A Y-statement is six moves in one block-quote, and the
-  message worth reading names the move that is absent. An expression could report that the block-quote is not a
-  Y-statement, which is the one thing the author already knows.
+| Cluster            | Rules                                                                                                                                                       | Why code                                                                                                                                                                                                               |
+|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Git history**    | `immutable-after-accepted`, `immutable-after-published`, `changelog-begins-at-active`, `changelog-on-material-change`                                       | All four ask what changed in this commit against the committed content, and whether it was substantive. One mechanism answers them, and it is the largest piece of work left.                                          |
+| **Cross-document** | `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`, `redefinitions-are-reciprocal`, `undefined-terms`, `unused-terms` | Each fits `ICorpusRule`. `redefinitions-are-reciprocal` is the hardest: it holds an entry inside one document against an entry inside another.                                                                         |
+| **Graph**          | `no-dependency-cycles` — **written**                                                                                                                        | A loop lives in the set of edges and no document holds it, so the walk needs every record and the message has to name the ones it runs through.                                                                        |
+| **Per-part**       | `alternatives-have-verdicts` and `terms-are-alphabetical` — **written** — beside `terms-are-singular`, `carried-in-full-by-digest`, `escalation-required`   | Each judges the parts of one document — bullets under a heading, entries in a glossary, branches of a diagnosis tree — and its message has to name the part that failed.                                               |
+| **A fixed form**   | `y-statement-present` — **written**                                                                                                                         | A Y-statement is six moves in one block-quote, and the message worth reading names the move that is absent. An expression could only report that the block-quote is not a Y-statement, which the author already knows. |
 
-**If you find yourself wanting loops, joins or quantifiers in the grammar to reach one of these, stop** — that is the
-signal you are rebuilding OPA. Write a rule class.
+**Wanting loops, joins or quantifiers in the grammar to reach one of these is the signal to stop** — that way lies
+rebuilding OPA. Write a rule class.
 
-**A rule that does need C# is a class, not an arm.** One file in `kac.core/Rules/` implementing `IDocumentRule`, with
-its own unit tests, and a line in `DocumentRules.All`. It declares the checks it `Emits`, and `CheckCatalogue.All`
-reads them from there — so implementing it and registering it are the same edit, and its id cannot drift from its
-catalogue entry. `Validator.CheckRules` finds it by the id the schema's `rules:` block declares; a rule id nothing
-implements is a statement of intent, is skipped, and is rendered on the type page as declared-but-not-enforced — so long
-as it declares no `severity:`, which `SchemaChecks` holds it to.
+**A rule that needs C# is a class, not an arm.** One file in `kac.core/Rules/`, its own unit tests, and a line in the
+registry beside it. It declares the checks it `Emits` and `CheckCatalogue.All` reads them from there, so implementing a
+rule and registering it are one edit and its id cannot drift from its catalogue entry. A dispatcher finds it by the id
+the schema's `rules:` block declares. A rule id nothing implements is a statement of intent: skipped, and rendered on
+the type page as declared-but-not-enforced, so long as it declares no `severity:` — which `SchemaChecks` holds it to.
 
-Only the per-document shape has an interface. A rule needing the whole corpus, a graph walk or git history does not fit
-`RuleContext`, and its interface is designed against the first real one rather than ahead of it —
-[knowledge-as-code#103](https://github.com/paul80nd/knowledge-as-code/issues/103) is that one.
+**Which interface follows from what the rule has to read.**
+
+| Interface       | Given                                                            | Runs from                    | Reports                                       |
+|-----------------|------------------------------------------------------------------|------------------------------|-----------------------------------------------|
+| `IDocumentRule` | one document, through a `RuleContext`                            | `Validator.CheckRules`       | against that document                         |
+| `ICorpusRule`   | every record and the `byId` index, through a `CorpusRuleContext` | `Validator.CheckCorpusRules` | against the document it names, rarely its own |
+
+What a rule is handed also decides when it runs: a pass narrowed to given paths applies the document rules and skips the
+corpus ones, because a question about the set answered from a handful of its members is answered wrongly and with no
+sign of it. A rule needing git history fits neither interface. Design that one against the first real case.
 
 **A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
 early so a later check does not report nonsense about a document already known to be broken. That order is the design,
 so core checks are called in sequence and never looked up in a registry. Where a group of them is self-contained —
 `Checks/IdChecks.cs`, `Checks/LinkChecks.cs`, `Checks/ClauseChecks.cs` — it is a static class of its own with unit
 tests; the rest stay in `Validator.cs`, and extracting one buys nothing unless it has logic worth testing directly.
-`IdChecks` is the shape of an id and of the filename that carries it, which three passes read in three directions, and
-is the case for extracting: a second copy of that shape anywhere would be a place for the styles to disagree silently.
+`IdChecks` is the case for extracting: three passes read the shape of an id and of the filename carrying it, in three
+directions, and a second copy of that shape would be a place for the styles to disagree silently.
 
 **`Checks/SchemaChecks.cs` reads no document at all.** It runs once, before the corpus, and asks whether the schema
-declares anything the tool cannot act on. A vocabulary it tests must be read from the code that dispatches the value —
-`IdChecks.IdStyles`, `Generator.IndexOrders`, `DocumentRules.ByRuleId` — never restated there, because a copy is a list
-of what is spelled correctly rather than of what runs. The key vocabulary follows the same rule with no list at all:
-`Schema.Load` reads every mapping through a `Level` that records what it was asked for, so adding a
-`Get` is what admits a key. Adding one without the code that reads what it parsed into moves the failure from
-`schema-unknown-key` to `schema-dispatch` rather than removing it.
+declares anything the tool cannot act on. Read every vocabulary it tests from the code that dispatches the value —
+`IdChecks.IdStyles`, `Generator.IndexOrders`, the two `ByRuleId` maps — because a copy is a list of what is spelled
+correctly rather than of what runs. The key vocabulary needs no list at all: `Schema.Load` reads every mapping through a
+`Level` that records what it was asked for, so adding a `Get` is what admits a key. Adding one without the code that
+reads what it parsed into moves the failure from `schema-unknown-key` to `schema-dispatch` rather than removing it.
 
 Not every question there is about a vocabulary. A `mirrors-section:` names any section and the code acts on whatever it
 names, so what makes it sound is the type's own `sections:` block — one declaration held against another in the same
@@ -72,15 +69,15 @@ Wherever it lives, four places have to agree, and three of them fail a meta-test
 
 1. **`CheckCatalogue.All`** in `Findings.cs` — the registry. `kac checks` reads it, and so does the coverage gate.
 2. **`Generator.DocRows`** *or* **`Generator.IntentionallyUndocumented`** — every catalogue id must appear in one of
-   them or `ChecksTableProblems` fails. `DocRows` is for per-document checks a type page should advertise; the
-   undocumented set is for checks a reader of that page cannot act on.
+   them or `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one
+   of its records; the undocumented set is for checks a reader of that page cannot act on.
 3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises.
 4. **The checks table** in [`README.md`](README.md) beside this file. It is hand-curated rather than generated, so it
-   will not tell you it is now wrong. Nothing else states a check count: `kac checks` reports it, so no prose has to.
+   will not tell you it is now wrong. No prose states a check count: `kac checks` reports it.
 
 `DocRows` is deliberately *not* generated from the catalogue: rows are grouped and hand-worded, so several catalogue ids
 fold into one reader-facing row. An expression rule is the opposite — one id, reporting under its own name — so its row
-comes from its `description:` and writing one into `DocRows` would duplicate it.
+comes from its `description:`, and writing one into `DocRows` would duplicate it.
 
 **The coverage gate reads ids, not branches.** A check with two ways to fail is green once a fixture trips either one. A
 rule reporting three faults under one id needs a fixture for each, and unit tests beside the rule class for the branches
@@ -116,9 +113,9 @@ from the framework carrying them, and one that has gone is a block that stopped 
   into every fixture at once — run the golden suite after touching `.schema/`, not just `./kac validate`. A `sync`
   scenario may narrow one side with `corpus-schema.txt`, which names the type files that side holds *before* the sync.
   The real schema cannot express a corpus holding fewer files than upstream, and that is the state a sync resolves.
-* A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and
-  `_template.md` beside it. Types it does not use are simply absent, which is silent. Adding a folder to a fixture
-  without standing the type up adds a finding to every scenario that reads it.
+* A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`
+  beside it. Types it does not use are simply absent, which is silent. Adding a folder to a fixture without standing the
+  type up adds a finding to every scenario that reads it.
 * Only fixtures in **`validate` mode** run the validator. `index`, `index-stale`, `mechanism` and `sync` modes do not,
   so a new check cannot affect them. `sync` is the only mode that writes. It asserts the tree the command left rather
   than only what the command printed, so its expectations name files and their content instead of a findings golden.
@@ -127,10 +124,10 @@ from the framework carrying them, and one that has gone is a block that stopped 
 
 ## The feature specs pin more than findings
 
-A scenario asserting a whole corpus — `Structure.feature`, `Shape.feature` — pins how many documents the fixture holds,
+A scenario asserting a whole corpus — `Structure.feature`, `Shape.feature` — pins how many documents the fixture holds
 as well as every finding it produces. Adding a file to a fixture changes that count, and regenerating the goldens will
 not tell you: the golden layer and the feature layer assert different things about the same corpus.
 
 `Harness` runs `Corpus.Load` then `Validator.CheckAll` — the two calls `Commands.Validate` makes. Keep it that way: a
-harness that assembles its own subset of the sequence leaves whole checks unreachable from a spec, and every spec goes
-on passing.
+harness assembling its own subset of the sequence leaves whole checks unreachable from a spec, and every spec goes on
+passing.

@@ -111,7 +111,7 @@ name the schema file and the key rather than a record.
 |----------------------|-------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `schema-unknown-key` | error | A key the loader never reads, at any level — `notes:` excepted, which every level admits as commentary. The vocabulary is recorded as the loader asks for each key, never listed.                                                                                      |
 | `schema-unreadable`  | error | A declaration the loader cannot read as written: an `expr:` that does not compile or names no `severity:` or `message:`, a `required-when:` outside its vocabulary, `values: $enums.x` naming no enum.                                                                 |
-| `schema-dispatch`    | error | A value nothing acts on: a rule id claiming a `severity:` that neither an `expr:` nor a `DocumentRule` answers, a `ref:` at a folder no schema covers, `values:` on anything but an enum, `min-items:` on anything but a list, an unknown `id.style` or `index.order`. |
+| `schema-dispatch`    | error | A value nothing acts on: a rule id claiming a `severity:` that neither an `expr:` nor a rule class answers, a `ref:` at a folder no schema covers, `values:` on anything but an enum, `min-items:` on anything but a list, an unknown `id.style` or `index.order`. |
 | `schema-shape`       | error | A type declaring no `folder:`, so its records have nowhere to live, or a `mirrors-section:` at a section the type's `sections:` block does not declare.                                                                                                                |
 
 Of a value, the question asked is not whether it is spelled correctly but whether code acts on it — `style: mnemonic`
@@ -192,7 +192,11 @@ A type that declares no `clauses:` block is checked for none of these.
 A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
 by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
 editing this tool; [`../.schema/README.md`](../.schema/README.md) is the reference for what one may say. Only the last
-three need more than the grammar can say, and each is a class in `kac.core/Rules/` with its own unit tests.
+four need more than the grammar can say, and each is a class in `kac.core/Rules/` with its own unit tests.
+
+The last of those four asks about the records together rather than about each one. `dependency-cycle` is reported once
+per loop against the lowest id on it, and is skipped when a run is narrowed to given paths: a graph read from a handful
+of its records has no loops in it, whatever the corpus holds.
 
 The table below is every rule that runs. The schema declares roughly as many again that do not — intentions, carrying a
 `description:` and no `severity:`, rendered on their type page under *Declared, not yet enforced*. Naming a severity
@@ -220,6 +224,7 @@ without running is the one arrangement this forbids, and `schema-dispatch` is wh
 | `y-statement`                   | adrs         | warning | A block-quote follows the H1, states all six moves, and is within `max-words` (60).                                                   |
 | `alternatives-verdict`          | adrs         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
 | `terms-alphabetical`            | glossary     | warning | A glossary's entries read in alphabetical order, compared without regard to casing, and the message names the entry that moved.       |
+| `dependency-cycle`              | services     | warning | A loop in `depends-on`, named as the route it runs. Two services that call each other are a fact about the estate.                    |
 
 The three length rules are ratios or ceilings whose numbers are judgements rather than measurements — no corpus has yet
 held enough of these types to calibrate them. Each is pinned by a fixture, so changing one is visible.
@@ -245,13 +250,14 @@ pipeline, leaving all the markdown and frontmatter extraction untouched, while a
 dependency and breaking the single-file, no-build-step design. A small hand-rolled evaluator buys the one property worth
 having — new rules as data — at a fraction of that. `RuleExpr.cs` says when that judgement expires.
 
-| File                      | Holds                                                                              |
-|---------------------------|------------------------------------------------------------------------------------|
-| `kac.core/Facts.cs`       | the fact functions, and nothing else an expression can reach                       |
-| `kac.core/RuleExpr.cs`    | lexer, recursive-descent parser, type checker, evaluator — no dependencies         |
-| `RuleSpec` in `Schema.cs` | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load            |
-| `kac.core/Rules/`         | one class per rule that needs C#, and the registry the dispatcher looks them up in |
-| `Validator.CheckRules`    | evaluates every compiled rule, and looks up by id the ones that are not            |
+| File                           | Holds                                                                                 |
+|--------------------------------|-----------------------------------------------------------------------------------------|
+| `kac.core/Facts.cs`            | the fact functions, and nothing else an expression can reach                          |
+| `kac.core/RuleExpr.cs`         | lexer, recursive-descent parser, type checker, evaluator — no dependencies            |
+| `RuleSpec` in `Schema.cs`      | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load               |
+| `kac.core/Rules/`              | one class per rule that needs C#, and the registry each dispatcher looks them up in   |
+| `Validator.CheckRules`         | evaluates every compiled rule, and looks up by id the ones that are not               |
+| `Validator.CheckCorpusRules`   | runs the rules that read every record at once, over the index the corpus checks build |
 
 `CheckRules` emits at the rule's own severity, which is why it is not `CheckWarnings`. `Facts` is built per document and
 discarded once its rules have run, which is what makes `words()` safe to memoise there rather than on the immutable

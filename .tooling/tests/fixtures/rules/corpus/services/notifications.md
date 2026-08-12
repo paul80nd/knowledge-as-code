@@ -5,7 +5,7 @@ status: live
 repo: notifications
 platform: azure-function
 criticality: important
-depends-on:
+depends-on: [svc-catalogue]
 data-stores:
 owner: alex.doe
 ---
@@ -17,7 +17,8 @@ owner: alex.doe
 ## What it does
 
 Sends the messages the borrower notifications capability describes. It is the target of that capability's
-`implemented-by`, and of the catalogue's `depends-on`.
+`implemented-by`, and of the catalogue's `depends-on` — which it points back at, so the two of them are the
+cycle `no-dependency-cycles` reports.
 
 ## Where it lives
 

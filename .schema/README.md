@@ -236,14 +236,14 @@ trips it actually reads, or in a `#` comment for an intention that has no messag
 every one of these grew to two or three sentences, and `schema-shape` now says so when the schema loads. An intention's
 description is bound too — it renders in *Declared, not yet enforced* on the same page.
 
-Three ids keep a hand-written class instead — `y-statement-present` and `alternatives-have-verdicts` on the
-decision-record type, and `terms-are-alphabetical` on the glossary — because what they ask needs more than the grammar
-can say. Every remaining id is a statement of
-intent: a behaviour someone wants, written down, that no code answers to yet. **An intention declares no `severity:`**,
-which is what tells the tool it is one; the type page renders them beneath the checks table under *Declared, not yet
-enforced*, so a reader can see both what a build will say about their document and what has been written down and not
-built. A rule naming a severity that nothing dispatches is the one arrangement that reads as enforced from every angle
-and is not, and it fails when the schema loads.
+Four ids keep a hand-written class instead, because what they ask needs more than the grammar can say:
+`y-statement-present` and `alternatives-have-verdicts` on the decision-record type, `terms-are-alphabetical` on the
+glossary, and `no-dependency-cycles` on the service type, whose question is about the records together rather than about
+any one of them. Every remaining id is a statement of intent: a behaviour someone wants, written down, that no code
+answers to yet. **An intention declares no `severity:`**, which is what tells the tool it is one; the type page renders
+them beneath the checks table under *Declared, not yet enforced*, so a reader can see both what a build will say about
+their document and what has been written down and not built. A rule naming a severity that nothing dispatches is the one
+arrangement that reads as enforced from every angle and is not, and it fails when the schema loads.
 
 Not every statement of intent is waiting for an expression, and counting them as though they were makes the ruleset look
 less finished than it is. Ten will never be an expression. Eight are not validator work in any form: seven say
@@ -277,7 +277,8 @@ rules:
   the same sentence.
 * A rule carrying an `expr:` **must** declare a severity and a message. A rule claiming to be finished is held to being
   able to report, and one that cannot is a schema error rather than a check that never fires.
-* A rule without an `expr:` keeps `id` + `description`, declares no severity, and is rendered as an intention.
+* A rule without an `expr:` keeps `id` + `description`, declares no severity, and is rendered as an intention. Where a
+  rule class answers to its id, the rule declares a severity like any other that runs.
 
 Expression *strings*, not nested predicate objects: several rules are conditionals (`A implies B`) or ratios, and those
 read cleanly inline but become ugly YAML trees.

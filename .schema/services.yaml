@@ -96,10 +96,12 @@ index:
   sort: id
 
 rules:
-  # A cycle is a property of the graph and cannot be seen from inside one document, so this one waits on the
-  # whole-corpus rule interface rather than on an afternoon. Issue #103 carries both.
+  # A loop lives in the set of edges and no one document holds it, so this is a corpus rule and not an
+  # expression. It warns and never fails: two services that call each other are a fact about the estate, and
+  # the message names the services on the loop so a reader can judge which kind they have.
   - id: no-dependency-cycles
-    description: A cycle in the dependency graph is reported, not failed — some are legitimate.
+    description: A cycle in the dependency graph, naming the services the loop runs through.
+    severity: warning
   # The state this compares against lives outside the repository, so it can never run in the per-PR pass that
   # every other rule here runs in. Issue #15 carries it, alongside the same question for the other types.
   - id: drift-against-repos

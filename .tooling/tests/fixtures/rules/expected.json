@@ -4,7 +4,7 @@
     "templates": 16,
     "skipped": 0,
     "errors": 7,
-    "warnings": 13
+    "warnings": 14
   },
   "findings": [
     {
@@ -125,6 +125,13 @@
       "severity": "error",
       "check": "symptoms-first",
       "message": "Symptoms must be the first section. Someone reaching for this at 2am matches on what they are seeing, not on what the document is called."
+    },
+    {
+      "file": "services/catalogue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "dependency-cycle",
+      "message": "'depends-on' forms a cycle: svc-catalogue → svc-notifications → svc-catalogue."
     },
     {
       "file": "standards/common/error-responses.md",

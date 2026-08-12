@@ -100,8 +100,16 @@ public static class Validator
         if (corpus.Paths.Count == 0)
             CheckFrameworkDocs(schema, repoRoot, corpus.Docs, findings);
 
-        // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand.
-        CheckCorpus(corpus.Docs, findings);
+        // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand. The index they build is
+        // handed on rather than built again: it is the corpus's one account of which id names which
+        // document, and a second one would be free to answer differently.
+        var byId = CheckCorpus(corpus.Docs, findings);
+
+        // The rules whose question is about the set — a cycle in a dependency graph, a term nothing
+        // uses. Skipped on a narrowed run for the reason the checks below it are: a question about the
+        // corpus answered from a handful of its records is answered wrongly, and confidently.
+        if (corpus.Paths.Count == 0)
+            CheckCorpusRules(schema, corpus.Docs, byId, findings);
 
         // How often a value recurs is a question about the whole of a type, so a narrowed run cannot
         // answer it: every value in one document is carried by one document. Skipped there, like the
@@ -516,7 +524,10 @@ public static class Validator
         }
     }
 
-    public static void CheckCorpus(List<Doc> docs, List<Finding> f)
+    // The questions that need every record in hand, and the index of them that answering leaves behind:
+    // which document each id names, first writer winning, which is exactly what a corpus rule asks for
+    // next.
+    public static Dictionary<string, Doc> CheckCorpus(List<Doc> docs, List<Finding> f)
     {
         // id uniqueness across the whole wiki.
         var byId = new Dictionary<string, Doc>(StringComparer.OrdinalIgnoreCase);
@@ -565,7 +576,7 @@ public static class Validator
                 var spec = d.Type.Fields[name];
                 if (spec.Refs.Count == 0) continue;
                 if (spec.Type != "id" && (spec.Type != "list" || spec.Of != "id")) continue;
-                foreach (var targetId in FrontList(d, name))
+                foreach (var targetId in d.FrontList(name))
                 {
                     if (spec.IsLiteral(targetId) || byId.ContainsKey(targetId)) continue;
                     f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "ref-resolves",
@@ -584,11 +595,11 @@ public static class Validator
             {
                 var spec = d.Type.Fields[name];
                 if (spec.Reciprocal is null || spec.Refs.Count == 0) continue;
-                foreach (var targetId in FrontList(d, name))
+                foreach (var targetId in d.FrontList(name))
                 {
                     if (!byId.TryGetValue(targetId, out var target)) continue;
 
-                    var back = FrontList(target, spec.Reciprocal);
+                    var back = target.FrontList(spec.Reciprocal);
                     var selfId = d.FrontScalar("id");
                     if (!back.Any(b => string.Equals(b, selfId, StringComparison.OrdinalIgnoreCase)))
                         f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "reciprocal",
@@ -596,6 +607,30 @@ public static class Validator
                 }
             }
         }
+
+        return byId;
+    }
+
+    // The type's `rules:` again, for the rules that read the corpus rather than a document. Driven from
+    // the schema rather than from the types the records happen to cover, because a rule belongs to its
+    // type whether or not the corpus has stood that type up — a rule reporting on an empty set is the
+    // rule's answer to give, not the dispatcher's to withhold.
+    //
+    // A finding names the document the rule chose, so the reporting pair takes one where `CheckRules`
+    // closes over it. Everything else is the same dispatch: found by the id the schema declares, and
+    // silent where nothing implements it.
+    private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
+        List<Finding> f)
+    {
+        void Report(Sev severity, Doc at, string check, string message, int? line)
+            => f.Add(new Finding(at.Rel, line, severity, check, message));
+
+        foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach (var rule in t.Rules)
+            if (CorpusRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
+                implementation.Check(new CorpusRuleContext(docs, byId, t, rule,
+                    (at, c, m, l) => Report(Sev.Error, at, c, m, l),
+                    (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
     }
 
     // Where a type declares `min-records:` on a list field, each value in that field is counted across the
@@ -620,7 +655,7 @@ public static class Validator
                 // about.
                 var carried = group
                     .Select(d => (Doc: d,
-                        Values: FrontList(d, name).Distinct(StringComparer.OrdinalIgnoreCase).ToList()))
+                        Values: d.FrontList(name).Distinct(StringComparer.OrdinalIgnoreCase).ToList()))
                     .ToList();
                 var count = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
                 foreach (var value in carried.SelectMany(c => c.Values))
@@ -864,7 +899,7 @@ public static class Validator
             var refTypes = spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>().ToList();
             if (refTypes.Count == 0) continue;
 
-            var inFront = new HashSet<string>(FrontList(d, spec.Name), StringComparer.OrdinalIgnoreCase);
+            var inFront = new HashSet<string>(d.FrontList(spec.Name), StringComparer.OrdinalIgnoreCase);
             var inSection = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var link in d.MirroredSectionLinks.GetValueOrDefault(section, []))
             {
@@ -948,19 +983,4 @@ public static class Validator
 
     private static int? Line(YamlNode node, Doc d)
         => node.Start.Line > 0 ? (int)node.Start.Line + d.FrontStartLine - 1 : d.FrontStartLine;
-
-    private static List<string> FrontList(Doc d, string key)
-    {
-        var result = new List<string>();
-        if (d.Front is null) return result;
-        foreach (var kv in d.Front.Children)
-            if (((YamlScalarNode)kv.Key).Value == key)
-            {
-                if (kv.Value is YamlSequenceNode seq)
-                    result.AddRange(seq.Children.Select(Scalar).OfType<string>());
-                else if (Scalar(kv.Value) is { Length: > 0 } s) result.Add(s);
-            }
-
-        return result;
-    }
 }
