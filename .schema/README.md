@@ -115,7 +115,7 @@ a sixth value costs nothing in the width of the main table.
 
 **Conventions the validator enforces globally**
 
-* Dates are quoted strings in `YYYY-MM-DD` form.
+* Dates are quoted strings in `YYYY-MM-DD` form, naming a day the calendar has.
 * An absent value is a **bare key** (`decided-on:`) — never `null`, `~`, `""`, `—` or `TBD`.
 * Enum values are lowercase and hyphenated.
 * Unknown keys fail, except the Azure DevOps reserved keys listed in `_universal.yaml` under `reserved`.

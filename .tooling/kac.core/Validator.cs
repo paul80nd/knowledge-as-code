@@ -1,3 +1,4 @@
+using System.Globalization;
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
@@ -626,6 +627,9 @@ public static class Validator
             _ => false
         };
 
+    // Shape then calendar, under one id: both answers leave the author with the same thing to do, and the
+    // message is what tells them which they wrote — `2026/06/12` is not written as a date at all, where
+    // `2026-13-40` is written as one and names a day that has never existed.
     private static void CheckDate(string name, YamlNode node, Doc d, Action<string, string, int?> err)
     {
         var sc = node as YamlScalarNode;
@@ -633,8 +637,11 @@ public static class Validator
         var quoted = sc?.Style is ScalarStyle.DoubleQuoted or ScalarStyle.SingleQuoted;
         if (!quoted)
             err("date-quoted", $"'{name}' date must be quoted, e.g. \"{v}\".", Line(node, d));
-        if (!IsIsoDate(v))
+
+        if (!IsIsoShape(v))
             err("date-format", $"'{name}' must be a YYYY-MM-DD date, got '{v}'.", Line(node, d));
+        else if (!DateOnly.TryParseExact(v, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+            err("date-format", $"'{name}' is not a date on the calendar, got '{v}'.", Line(node, d));
     }
 
     private static void CheckEnum(string name, YamlNode node, FieldSpec spec, Doc d, Action<string, string, int?> err)
@@ -862,7 +869,10 @@ public static class Validator
     private static bool IsBareKey(YamlNode node)
         => node is YamlScalarNode { Style: ScalarStyle.Plain } sc && string.IsNullOrEmpty(sc.Value);
 
-    private static bool IsIsoDate(string v)
+    // Written as a date, which is a question about the characters. Whether those characters name a day is
+    // `DateOnly`'s to answer, and asking it here as well would be two tests of the same string with one
+    // able to disagree with the other.
+    private static bool IsIsoShape(string v)
         => v.Length == 10 && v[4] == '-' && v[7] == '-'
            && v[..4].All(char.IsDigit) && v[5..7].All(char.IsDigit) && v[8..].All(char.IsDigit);
 

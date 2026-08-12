@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 6,
+    "validated": 7,
     "templates": 3,
     "skipped": 0,
-    "errors": 8,
+    "errors": 9,
     "warnings": 0
   },
   "findings": [
@@ -48,6 +48,13 @@
       "severity": "error",
       "check": "field-pattern",
       "message": "'tags' entry 'trailing_underscore' does not match ^[a-z0-9-]+$."
+    },
+    {
+      "file": "adrs/0005-impossible-date.md",
+      "line": 4,
+      "severity": "error",
+      "check": "date-format",
+      "message": "'decided-on' is not a date on the calendar, got '2026-13-40'."
     },
     {
       "file": "faqs/too-few-keywords.md",
