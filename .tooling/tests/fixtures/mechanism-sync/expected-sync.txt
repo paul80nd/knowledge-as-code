@@ -5,4 +5,4 @@ SEEDED — the corpus's own from here on, copied because it had none
 adrs/_template.md
 SKIPPED — accepted divergences, left as they are
 This corpus takes contributions through its own process.
-Recorded in .mechanism.lock as mechanism version
+Recorded in .corpus.yaml as mechanism version

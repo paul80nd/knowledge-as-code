@@ -9,8 +9,8 @@ private until there is a fix, and you get a thread to answer questions in.
 Do not open a public issue for a suspected vulnerability. Anything that is merely a bug — including one that looks
 alarming — is a normal issue.
 
-This repository has one maintainer and nothing running behind it. Reports are acknowledged when the maintainer sees
-them, usually within a week. There is no service level and no bounty.
+This repository has one maintainer and nothing running behind it. The maintainer acknowledges a report on seeing it,
+usually within a week. There is no service level and no bounty.
 
 ## In scope
 
@@ -30,8 +30,8 @@ them, usually within a week. There is no service level and no bounty.
 * **Rendering in the published wiki.** That belongs to the publishing target, not to this repository.
 * **Scanner output with no demonstrated path to impact.**
 
-CI executes untrusted code by design: a pull request's own source is what `dotnet run .tooling/kac.cs` runs. That is
-contained by the `pull_request` trigger rather than `pull_request_target`, a read-only `contents` permission, and no
+CI executes untrusted code by design: `dotnet run .tooling/kac.cs` runs a pull request's own source. Three things
+contain it — the `pull_request` trigger rather than `pull_request_target`, a read-only `contents` permission, and no
 secrets reachable from the job. A report that this is dangerous needs to show an escape from that containment.
 
 ## Versions
@@ -39,5 +39,5 @@ secrets reachable from the job. A report that this is dangerous needs to show an
 There are no releases and no supported-version matrix. Fixes land on `main`.
 
 This framework is copied, not depended on, so nothing here can push a fix to you. A corpus running it holds its own cut
-and records the version in `.mechanism.lock`; picking up a fix means resyncing that copy. Watching this repository is
-the only notification channel.
+and records the version in `.corpus.yaml`; picking up a fix means resyncing that copy. Watch this repository — there is
+no other notification channel.

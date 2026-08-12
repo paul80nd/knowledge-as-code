@@ -32,7 +32,7 @@ if (repoRoot is null)
 
 var kacSource = Path.Combine(repoRoot, ".tooling", "kac.cs");
 var schemaDir = Path.Combine(repoRoot, ".schema");
-var manifestFile = Path.Combine(repoRoot, "knowledge-as-code", "manifest.yaml");
+var manifestFile = Path.Combine(repoRoot, ".tooling", "manifest.yaml");
 var fixturesDir = Path.Combine(repoRoot, ".tooling", "tests", "fixtures");
 
 var rawArgs = args.ToList();
@@ -229,7 +229,7 @@ void RunIndexScenario(string name, string scenario, bool mustBeStale)
 // real schema + manifest, then run `mechanism --check --against <reference>`. expected-drift.txt
 // lists what must appear in the failure output — the shared paths named, and any other line the
 // scenario pins; absent/empty means "expect in step" (exit 0). Accepted divergences, forked
-// differences and files the corpus's lock declines are exercised by the fixture but must not fail
+// differences and files the corpus's descriptor declines are exercised by the fixture but must not fail
 // the run — the golden is the exit code plus the named lines, not free-form output.
 void RunMechanismScenario(string name, string scenario, string corpusDir)
 {
@@ -481,7 +481,7 @@ static string AssembleTemp(string schemaDir, string corpusDir)
 }
 
 // Like AssembleTemp, but the mechanism check also reads the manifest, so copy the real one in too.
-// The subtree (a corpus/ or reference/) is laid over the top, and may add its own .mechanism.lock.
+// The subtree (a corpus/ or reference/) is laid over the top, and may add its own .corpus.yaml.
 // `keptTypes`, where a fixture supplies one, names the per-type schema files this side holds. The real
 // `.schema/` cannot express a corpus holding fewer of them than upstream, and that is the state a sync
 // resolves. Underscore-prefixed files belong to no type, so every corpus holds them whatever it adopted.
@@ -495,9 +495,9 @@ static string AssembleMechanismTemp(string schemaDir, string manifestFile, strin
             if (!Path.GetFileName(file).StartsWith('_') && !keptTypes.Contains(Path.GetFileNameWithoutExtension(file)))
                 File.Delete(file);
 
-    // The schema lives at .schema/, so nothing else creates knowledge-as-code/ for us.
-    Directory.CreateDirectory(Path.Combine(temp, "knowledge-as-code"));
-    File.Copy(manifestFile, Path.Combine(temp, "knowledge-as-code", "manifest.yaml"));
+    // The schema lives at .schema/, so nothing else creates .tooling/ for us.
+    Directory.CreateDirectory(Path.Combine(temp, ".tooling"));
+    File.Copy(manifestFile, Path.Combine(temp, ".tooling", "manifest.yaml"));
     CopyTree(subtree, temp);
     return temp;
 }

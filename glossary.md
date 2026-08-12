@@ -20,8 +20,8 @@ it carries its own frontmatter as one descriptive document; there are no per-ter
 
 ## Why we use it
 
-It is the highest value-per-byte content in the wiki, and the only document included *in full* in the generated rules
-digest that every session loads.
+It is the highest value-per-byte content in the wiki, and the one page a contributor can read in full before starting
+work.
 
 The reason is specific. The terms particular to the domain are often not interchangeable, and neighbouring terms are
 easily confused. A contributor — human or agent — who doesn't know the distinctions will produce work that is plausible,
@@ -31,7 +31,7 @@ mean something precise; this is where that precision lives.
 ## Scope
 
 A term belongs here if it is **specific to the domain, or easily confused with something else**. General industry
-vocabulary does not — we are not writing a dictionary, and every entry costs digest budget.
+vocabulary does not — we are not writing a dictionary, and every entry lengthens the page everyone reads.
 
 Not the place for:
 
@@ -44,7 +44,7 @@ Not the place for:
 
 _(One entry per term, alphabetical, flat — no A–Z subheadings. Each is an H3, singular, in its canonical casing:
 a one-sentence definition, an optional `**Not:**` line naming what it is confused with, and links out where the detail
-lives. One paragraph maximum — the digest carries this whole file.)_
+lives. One paragraph maximum — this file is read whole.)_
 
 ### Example term
 
@@ -67,7 +67,8 @@ Owned by [svc-lending]. See [adr-0001].
 * **Cross-references use the heading anchor** — `[tenant](/glossary#tenant)`. The anchor is the term's identifier; there
   are no numeric ids.
 * **Terms are singular and in canonical casing.** `Term`, not `terms`.
-* **Keep it tight.** CI enforces a budget on the generated digest, and this file is carried in full.
+* **Keep it tight.** The schema declares `carried-in-full-by-digest` — no entry beyond one paragraph — and nothing runs
+  it, so the limit is yours to keep.
 
 ## Metadata
 

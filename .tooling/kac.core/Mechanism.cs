@@ -1,16 +1,16 @@
 // The `mechanism` engines. `--check` resolves every file against the manifest and compares the shared
 // layers against a reference, read-only. `--sync` brings those layers down from one.
 //
-// Both read the same manifest and the same lock, and both ask one predicate what this corpus holds. So
-// the check can never report a file missing that a sync would decline to bring.
+// Both read the same manifest and the same descriptor, and both ask one predicate what this corpus
+// holds. So the check can never report a file missing that a sync would decline to bring.
 
 namespace kac.core;
 
 public static class MechanismCheck
 {
-    public static int Run(string localRoot, string refRoot, Manifest manifest, MechanismLock lockFile)
+    public static int Run(string localRoot, string refRoot, Manifest manifest, CorpusDescriptor descriptor)
     {
-        var accepted = lockFile.Accepted.Select(a => a.Path).ToHashSet(StringComparer.Ordinal);
+        var accepted = descriptor.Accepted.Select(a => a.Path).ToHashSet(StringComparer.Ordinal);
         var localFiles = ListFiles(localRoot);
         var refFiles = ListFiles(refRoot);
 
@@ -33,7 +33,7 @@ public static class MechanismCheck
             var inLocal = localFiles.Contains(rel);
             var inRef = refFiles.Contains(rel);
 
-            if (Declined(rel, layer, lockFile))
+            if (Declined(rel, layer, descriptor))
             {
                 if (inLocal) declinedButHeld++;
                 continue;
@@ -78,7 +78,7 @@ public static class MechanismCheck
 
         if (resolvedDivergence.Count > 0)
         {
-            Console.WriteLine("RESOLVED — accepted divergences that are now identical again (delete them from .mechanism.lock):");
+            Console.WriteLine("RESOLVED — accepted divergences that are now identical again (delete them from .corpus.yaml):");
             foreach (var p in resolvedDivergence) Console.WriteLine($"  {p}");
         }
 
@@ -93,7 +93,7 @@ public static class MechanismCheck
         // reader to find them stale later.
         if (declinedButHeld > 0)
             Console.WriteLine(
-                $"declined: {declinedButHeld} file(s) held here that this corpus's lock does not ask for. "
+                $"declined: {declinedButHeld} file(s) held here that this corpus's descriptor does not ask for. "
                 + "They are not synced or compared; delete them, or adopt what they belong to.");
 
         if (errors > 0)
@@ -114,9 +114,9 @@ public static class MechanismCheck
         }
     }
 
-    // Whether this corpus's lock declines the file, so that it is neither missing nor drifted — and, to
-    // `mechanism --sync`, not something to bring down. Each answer below is the corpus stating what it
-    // took, so check and sync ask this one predicate rather than two that can disagree.
+    // Whether this corpus's descriptor declines the file, so that it is neither missing nor drifted —
+    // and, to `mechanism --sync`, not something to bring down. Each answer below is the corpus stating
+    // what it took, so check and sync ask this one predicate rather than two that can disagree.
     //
     // A type the corpus did not adopt takes its schema file with it. The schema is otherwise
     // byte-identical, so this is the only place a corpus may hold less of it than upstream does. `types:`
@@ -125,9 +125,9 @@ public static class MechanismCheck
     // file it has is one it is expected to have.
     //
     // A corpus whose role is `consumer` declines the verification layer the same way.
-    public static bool Declined(string rel, string layer, MechanismLock lockFile) =>
-        (layer == "verification" && !lockFile.Verifies)
-        || (TypeFile(rel) is { } type && !lockFile.Adopted(type));
+    public static bool Declined(string rel, string layer, CorpusDescriptor descriptor) =>
+        (layer == "verification" && !descriptor.Verifies)
+        || (TypeFile(rel) is { } type && !descriptor.Adopted(type));
 
     // The type a schema file declares, or null where the path is not one. `.schema/` holds a file per type
     // beside the underscore-prefixed files that belong to no type, and the type's name is the file's —

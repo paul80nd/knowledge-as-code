@@ -1,0 +1,97 @@
+# knowledge-as-code — corpus descriptor
+#
+# Says what this corpus is and where it stands against the shared framework.
+#
+# The portability manifest (`.tooling/manifest.yaml`) defines what is shared
+# between corpora. This file records:
+# - the part this corpus plays in the framework, and where it publishes
+# - which framework version it runs, and where it takes that from
+# - which record types it has adopted
+# - any accepted differences from the shared baseline
+#
+# The file is this corpus's own: never synced, never reconciled. It sits at the
+# repository root rather than with the shared mechanism.
+#
+# Written by `kac mechanism --sync`. Read by `kac mechanism --check`.
+
+# The version of this file's own format.
+version: 1
+
+# The name of this corpus.
+corpus: knowledge-as-code
+
+# The role of this corpus. One of: source | consumer.
+role: source
+
+# source
+#   A corpus that answers for the framework. We introduce, verify or reconcile
+#   framework changes here, then share them with the corpora that took a copy.
+#
+#   A source carries the verification layer: the tests, the fixtures they read
+#   and the guidance for changing the tool.
+#
+# consumer
+#   A corpus that takes framework content from a source. It carries the tool and
+#   uses it, and holds none of the machinery that proves the tool, because the
+#   tool reaches it already proven.
+#
+# Any corpus may author a change, and real content is the only thing that reveals
+# a schema is wrong. A change is not settled until a source accepts it.
+#
+# The role says what part a corpus plays. It does not set the direction of travel:
+# a source may itself sync from another source further upstream.
+
+# How this corpus is published. One of: azure-devops-wiki | github | mkdocs | none.
+publishing-target: none
+
+# Recorded rather than inferred, so `kac mechanism --check` can name the publishing
+# file this corpus is missing.
+#
+# `none` says this corpus is not published. This repository is the framework itself,
+# and carries `azure-pipelines.yml` and `.order` as seeds for corpora that are.
+
+# Where this corpus takes the framework from, if anywhere.
+upstream:
+  # URL or path of the upstream corpus.
+  url: # unset — this corpus is the source
+
+  # Framework version currently adopted from the upstream corpus.
+  mechanism-version: 3
+
+  # Where the most recent sync took the framework from.
+  synced-from: # n/a for a source
+
+  # Date of the most recent successful sync.
+  synced-on: "2026-08-08"
+
+# The record types this corpus has adopted.
+# Validation and index generation cover the types listed here.
+#
+# A corpus that omits the key has not declared yet, and the tool reads adoption
+# off the folders it finds instead. Declaring turns "these folders happen to be
+# here" into "these are the types we chose", which validation can then hold the
+# corpus to.
+#types:
+#  - adrs
+#  - policies
+
+# Files in the `synced` layer that this corpus deliberately holds differently.
+#
+# Each entry records:
+# - the file
+# - why it differs
+# - when the divergence started
+# - when to look at it again
+#
+# `kac mechanism --check` reports these as accepted rather than as errors, and
+# `--sync` steps over them. Delete an entry once the file matches upstream again.
+#
+# Example:
+#
+# accepted-divergences:
+#   - path: .tooling/kac.cs
+#     reason: Pinned to .NET 8 because the local build agent does not provide .NET 10.
+#     since: 2026-08-03
+#     revisit: When the build agent image is upgraded.
+
+accepted-divergences: []

@@ -2,8 +2,8 @@
 
 ## First: which repository is this?
 
-Read `role:` in [`.mechanism.lock`](.mechanism.lock) before you change anything under `.schema/` or `.tooling/`. It
-decides whether those directories are yours.
+Read `role:` in [`.corpus.yaml`](.corpus.yaml) before you change anything under `.schema/` or `.tooling/`. It decides
+whether those directories are yours.
 
 * **`role: source`** — the framework master. `.schema/` and `.tooling/` are yours to change, and what you write
   propagates to every corpus that has taken a copy. A source also holds the tests that prove the tool, and answers for
@@ -14,9 +14,9 @@ decides whether those directories are yours.
   proven.
 
 If a change seems to need editing the tool, it almost certainly does not: **adding a knowledge type is adding a YAML
-file to `.schema/`**. Which types a corpus carries is its own decision, and the lock records it. To adopt one, add its
-name to `types:` in [`.mechanism.lock`](.mechanism.lock) and run `kac mechanism --sync`, which brings down the schema
-and seeds the root page and template. To decline one, leave it out of `types:` rather than deleting files afterwards.
+file to `.schema/`**. Which types a corpus carries is its own decision, and the descriptor records it. To adopt one, add
+its name to `types:` in [`.corpus.yaml`](.corpus.yaml) and run `kac mechanism --sync`, which brings down the schema and
+seeds the root page and template. To decline one, leave it out of `types:` rather than deleting files afterwards.
 
 ## Before you commit
 
@@ -53,12 +53,12 @@ Run **one `kac` invocation at a time**. File-based apps share build output and c
 * **Everything written here describes what exists today.** Agreed and unbuilt work belongs in the issue tracker, never
   in a document. One exception: a schema rule the tool does not implement, where the prose says the rule is declared and
   does not run, and the generated checks table carries it.
-* **Comments and documentation are timeless.** Describe the design as it is, not as it changed, and never as a
-  correction of what it was. The history of a change belongs in its commit message.
+* **Comments and documentation are timeless.** Describe the design as it stands today, never as a correction of what it
+  was. The history of a change belongs in its commit message.
 * **A Markdown edit leaves a whole document, not a diff.** Fold new material into what is already there and delete what
   it supersedes, so the file reads in one voice and someone arriving cold cannot tell which paragraph is the newest.
-  Give each point the detail it earns and make it once — length is not thoroughness, and a paragraph justifying a change
-  is a paragraph that will read as noise a month later.
+  Give each point the detail it earns and make it once. A paragraph justifying a change will read as noise a month
+  later.
 * **Branch and open a PR.** Pushes to `main` are rejected.
 * **Example records use one fictional estate** — Example Libraries, a public-library consortium, on `example.com`
   (reserved by RFC 2606). Extend it rather than inventing a second one; [`README.md`](README.md) explains why.

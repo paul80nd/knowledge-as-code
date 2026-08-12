@@ -16,43 +16,42 @@ that were true at a moment, both become misleading if edited afterwards, both ar
 they share a tier, and the tier carries the rules: the review bar, the validation, the language, the expectation of
 immutability.
 
-This is what stops the taxonomy from needing new machinery every time it grows. A new kind of knowledge does not need a
-new mechanism. It needs a tier.
+The taxonomy therefore grows without new machinery. A new kind of knowledge does not need a new mechanism. It needs a
+tier.
 
 ## The mechanism is separable from the knowledge
 
 A corpus has two halves. The **mechanism** — schema, validator, generator, agent skills — is generic and identical
 everywhere. The **knowledge** is the organisation's, and is shared with nobody.
 
-The split is load-bearing rather than tidy. It is what lets the mechanism improve without touching anyone's content,
-what lets an organisation take a copy without inheriting someone else's opinions about accessibility, and what makes
-"which of these files are mine?" a question with a checkable answer rather than a judgement call.
+That split lets the mechanism improve without touching anyone's content, and lets an organisation take a copy without
+inheriting someone else's opinions about accessibility. It also turns *which of these files are mine?* into a question
+`kac mechanism --check` answers.
 
-Which files fall on which side is declared in [`manifest.yaml`](manifest.yaml), not asserted in prose. Every file
-resolves to exactly one layer, and each layer has a rule about what divergence means.
+Which files fall on which side is declared in [`manifest.yaml`](../.tooling/manifest.yaml), not asserted in prose. Every
+file resolves to exactly one layer, and each layer has a rule about what divergence means.
 
 ## Schema before prose
 
 The authoritative form of a record is structured. Prose renders it.
 
-An index is generated from frontmatter rather than maintained beside it. A cross-reference is validated rather than
-trusted. A type's schema table is derived from the schema file rather than written to match it. Anything a machine can
-derive, a human should not be maintaining — because the copy a human maintains is the copy that goes stale, and nothing
-will say so.
+An index is generated from frontmatter rather than maintained beside it. A cross-reference is validated on every build.
+A type's schema table is derived from the schema file it documents. Where a machine could derive something and a person
+maintains it instead, the person's copy is the one that goes stale, and nothing will say so.
 
-This is also why **adding a knowledge type is adding a YAML file**, not editing the tool. A taxonomy that can only grow
-by changing code is a taxonomy that stops growing.
+This is also why **adding a knowledge type is adding a YAML file**, not editing the tool: a corpus grows its taxonomy
+without waiting on a change to the code.
 
 ## Knowledge is a graph
 
 Repositories and folders are storage. The relationships are the knowledge.
 
 A policy is implemented by a standard, verified by a control, applied to a service, contributing to a capability. That
-chain is meaningful regardless of which folder each record sits in, and it is the part that carries the value — a
-service document is a fact, but a service document that can tell you which standards bind it is an answer.
+chain is meaningful regardless of which folder each record sits in, and it carries the value: a service document is a
+fact, but a service document that can tell you which standards bind it is an answer.
 
 It is also the part that breaks silently, which is why reciprocal edges must agree in both directions and a one-sided
-link fails the build. Documentation is a view over the graph. The graph is the thing.
+link fails the build.
 
 ## One authoritative owner
 
@@ -64,31 +63,29 @@ because the second failure is visible.
 
 ## Cheap capture, deliberate promotion
 
-The most important tier is the one carrying the least authority.
-
 Capture has to be nearly free or it does not happen. Nobody writes up a gotcha if doing so requires a template, an owner
-and two reviewers — so observations are recorded with no review at all, marked unverified, and expire on their own if
-nothing promotes them. The rigour lives at promotion instead: a discovery becomes an FAQ when a human confirms it, and
-the FAQ carries provenance back to the observation.
+and two reviewers. So an observation is recorded with no review at all, marked unverified, and expires on its own if
+nothing promotes it.
 
-That gradient is what lets a corpus grow without its average trustworthiness falling. Cheap in, expensive up.
+The rigour lives at promotion. A discovery becomes an FAQ when a human confirms it, and the FAQ carries provenance back
+to the observation. That gradient lets a corpus grow without its average trustworthiness falling.
 
 ## Trust before coverage
 
 The failure mode of a wiki is not too little content. It is content nobody believes.
 
 Every mechanism here serves that: generated indexes cannot be stale, validated links cannot rot quietly, immutable
-decisions cannot be quietly rewritten, and a rule with no control is recorded as unenforced rather than assumed. A
-corpus that is half the size and entirely believed is worth more than one that is complete and doubted.
+decisions cannot be quietly rewritten, and a rule with no control is recorded as unenforced rather than assumed. Each of
+those makes a record harder to add, and that is the trade this framework takes.
 
 ## Copied, not depended on
 
 An organisation adopting this framework gets its own cut. No runtime dependency, no upstream to ask permission from,
 nothing to remove if they later go their own way.
 
-The cost is drift, and drift is met with a manifest and a lockfile rather than with a prohibition. A corpus records
-which version of the shared layer it is on and which divergences it has deliberately accepted, so that a necessary
-deviation does not have to masquerade as an accident.
+The cost is drift. A manifest and a descriptor answer it: a corpus records which version of the shared layer it is on
+and which divergences it has deliberately accepted, so that a necessary deviation does not have to masquerade as an
+accident.
 
 ## Readable and writable by agents
 
@@ -100,7 +97,7 @@ a human guesses correctly, an agent needs a decision table for. Authority that a
 in a field. Almost every design choice here — typed documents, explicit tiers, a glossary treated as load-bearing,
 validation that fails rather than warns — is at least partly this.
 
-It does not replace human ownership. It means humans and agents work against one model rather than two.
+It does not replace human ownership: humans and agents work against one model.
 
 ## One corpus, one bounded context
 

@@ -5,6 +5,9 @@ is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **`kac.core`
 `dotnet run` builds and runs it with no build step to manage. The schema is the source of truth: `kac` reads it and
 enforces it, so **adding a knowledge type is adding a YAML file, not editing this tool**.
 
+Two declarations the tool reads sit here too: [`manifest.yaml`](manifest.yaml), which says which files a corpus shares
+with the framework, and each corpus's own `.corpus.yaml` at the repository root.
+
 ## Running
 
 ```bash
@@ -272,11 +275,12 @@ Only the region **between** each `BEGIN`/`END` marker is rewritten; the rest of 
 adopted type is regenerated whether or not it holds records: the blocks derive from the schema alone, and an index that
 waits for its first record is a dead link from the type page until then.
 
-Generation covers the types the corpus adopted and no others. `types:` in `.mechanism.lock` decides, and a corpus that
-has not declared is read off its folders — a type counts where both halves are there, the page and the folder. A type
-the corpus declined is left alone whatever `.schema/` says about it, down to the hand-written text between markers on a
-page left behind: writing there would create an artefact no generated list of this corpus's types names, and
-`index --check` would then hold the corpus to keeping it fresh. Standing a type up without adopting it is a defect
+Generation covers the types the corpus adopted and no others. `types:` in `.corpus.yaml` decides, and a corpus that has
+not declared is read off its folders — a type counts where both halves are there, the page and the folder.
+
+A type the corpus declined is left alone whatever `.schema/` says about it, down to the hand-written text between the
+markers on a page left behind. Writing there would create an artefact no generated list of this corpus's types names,
+and `index --check` would then hold the corpus to keeping it fresh. Standing a type up without adopting it is a defect
 `validate` reports.
 
 Two rules hold this together:
@@ -290,9 +294,10 @@ Two rules hold this together:
 
 ## `mechanism` — portability
 
-`manifest.yaml` declares each file's layer — `synced`, `verification`, `forked`, `generated`, `local`, `ignored`. Copies
-drift away from a declaration nobody enforces, so `mechanism` enforces this one from both ends. `--check` reports how
-far a corpus has moved from a reference. `--sync` takes the shared layers from one.
+[`manifest.yaml`](manifest.yaml), beside this file, declares each file's layer — `synced`, `verification`, `forked`,
+`generated`, `local`, `ignored`. Copies drift away from a declaration nobody enforces, so `mechanism` enforces this one
+from both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the shared layers from
+one.
 
 ### `--check`
 
@@ -304,22 +309,22 @@ write.
 ./kac mechanism --check --against ../other-corpus
 ```
 
-The reference defaults to `upstream.url` in `.mechanism.lock`, so a corpus that recorded where it synced from can run a
+The reference defaults to `upstream.url` in `.corpus.yaml`, so a corpus that recorded where it synced from can run a
 bare `mechanism --check`. It reports:
 
 - **synced** and **verification** files that differ, are missing on either side, or match no manifest rule — each an
   **error** (exit `1`).
-- **forked** files that differ — counted, never failed on. Divergence here is the point of the layer.
+- **forked** files that differ — counted, never failed on, because a forked file is meant to diverge.
 - **generated**, **local** and **ignored** files — skipped, because each corpus owns its own.
-- **accepted divergences** named in `.mechanism.lock` — honoured rather than flagged, and reported as `RESOLVED` once
-  they match the reference again, so you can delete the stale entry.
-- **what the lock declines** — skipped, and counted where the corpus holds it anyway.
+- **accepted divergences** named in `.corpus.yaml` — honoured rather than flagged, and reported as `RESOLVED` once they
+  match the reference again, so you can delete the stale entry.
+- **what the descriptor declines** — skipped, and counted where the corpus holds it anyway.
 
 A corpus declines in two ways, and both work alike. Leaving a type out of `types:` leaves out its `.schema/<type>.yaml`,
 so that file is neither missing nor drifted. Setting `role:` to `consumer` does the same for the `verification` layer,
-because a consumer runs a tool proven upstream instead of proving it. These are the only two ways a corpus may hold less
-of a shared layer than upstream does, and the lock is where it says so. Without that entry the same absence reads as a
-deletion nobody recorded. A lock that declares neither declines nothing.
+because a consumer runs a tool proven upstream instead of proving it. These are the only ways a corpus may hold less of
+a shared layer than upstream does, and the descriptor is where it says so. Without that entry the same absence reads as
+a deletion nobody recorded. A descriptor that declares neither takes the whole shared layer.
 
 `--check` normalises line endings before it compares, so a working copy checked out with CRLF never reads as drift. It
 then compares the **authored half** of each file, emptying everything between `BEGIN GENERATED` and `END GENERATED`
@@ -347,18 +352,19 @@ In one pass over both trees:
 - **synced** and **verification** files come down whole where their authored halves differ. A file already in step stays
   as it is, so a page's generated block survives when the prose around it has not moved.
 - **forked** files are *seeded*: copied only where this corpus has none. Sync never reconciles a forked file that is
-  already here — that is what the layer means.
-- **What the lock declines** never comes down. Leaving a type out withholds its `.schema/<type>.yaml`, its root page and
-  everything under its folder, so adopting one means adding a line to `types:` and syncing.
+  already here.
+- **What the descriptor declines** never comes down. Leaving a type out withholds its `.schema/<type>.yaml`, its root
+  page and everything under its folder, so adopting one means adding a line to `types:` and syncing.
 - **Accepted divergences** are skipped and named, with their recorded reason beside them. Delete the entry to take the
   upstream copy, which keeps the decision in one place.
 - Files this corpus holds and the reference does not are **named, not deleted**. Sync copies. Emptying a corpus because
   an upstream tree was smaller is not a decision a tool makes.
 
-Sync then stamps `upstream.mechanism-version`, `synced-from` and `synced-on` into `.mechanism.lock`. It rewrites those
-three lines rather than re-serialising the file, so the lock's commentary survives. Finally it runs `index`. Copying a
-page whole is only safe because of that last step: the page arrives carrying the reference's generated block, and is
-right only once rebuilt against the types the receiving corpus holds. A passing `index --check` is sync's postcondition.
+Sync then stamps `upstream.mechanism-version`, `synced-from` and `synced-on` into `.corpus.yaml`. It rewrites those
+three lines rather than re-serialising the file, so the descriptor's commentary survives. Finally it runs `index`.
+Copying a page whole is only safe because of that last step: the page arrives carrying the reference's generated block,
+and is right only once rebuilt against the types the receiving corpus holds. A passing `index --check` is sync's
+postcondition.
 
 ## Known gaps
 

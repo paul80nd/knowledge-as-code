@@ -39,7 +39,7 @@ public static class Commands
         // declares the framework's full range and a corpus adopts as much of it as it has use for, so
         // generating per schema type would write pages for types the corpus declined — files no list of
         // its types names, and which `index --check` then holds it to keeping fresh.
-        var adopted = Corpus.Adopted(schema, repoRoot, corpus.Lock);
+        var adopted = Corpus.Adopted(schema, repoRoot, corpus.Descriptor);
 
         // Every adopted collection type gets an index, populated or not — each type page links to one, so
         // a withheld file is a dead link rather than a tidy absence. A single-document type is its own
@@ -231,20 +231,20 @@ public static class Commands
                 ? "mechanism: --check and --sync are the two halves of this command; ask for one."
                 : "mechanism: specify --check to compare against a reference, or --sync to take from one.");
 
-        var lockFile = MechanismLock.Load(repoRoot);
+        var descriptor = CorpusDescriptor.Load(repoRoot);
 
         // A sync needs a declared upstream, and not just a directory it can read. `--against` says which
         // copy of the upstream to take from — a local checkout rather than the URL. `upstream.url` says
         // the corpus takes from an upstream at all. The corpus at the head of the chain names none:
         // changes leave it and none arrive, so a sync has nowhere to run from.
-        if (sync && lockFile.UpstreamUrl is null)
+        if (sync && descriptor.UpstreamUrl is null)
             return Fail("mechanism: this corpus names no upstream, so there is nothing to sync from. "
-                        + "A corpus that takes from another records it in upstream.url in .mechanism.lock.");
+                        + "A corpus that takes from another records it in upstream.url in .corpus.yaml.");
 
-        var reference = against ?? lockFile.UpstreamUrl;
+        var reference = against ?? descriptor.UpstreamUrl;
         if (string.IsNullOrWhiteSpace(reference))
             return Fail("mechanism: no reference to compare against. Pass --against <path>, "
-                        + "or set upstream.url in .mechanism.lock.");
+                        + "or set upstream.url in .corpus.yaml.");
 
         var refRoot = Path.GetFullPath(reference, repoRoot);
         if (!Directory.Exists(refRoot))
@@ -256,8 +256,8 @@ public static class Commands
         // boundary it believes in. Sync reads the reference's, because it takes that boundary down along
         // with the files the boundary describes.
         return check
-            ? MechanismCheck.Run(repoRoot, refRoot, Manifest.Load(repoRoot), lockFile)
-            : MechanismSync.Run(repoRoot, refRoot, Manifest.Load(refRoot), lockFile, reference,
+            ? MechanismCheck.Run(repoRoot, refRoot, Manifest.Load(repoRoot), descriptor)
+            : MechanismSync.Run(repoRoot, refRoot, Manifest.Load(refRoot), descriptor, reference,
                 DateTime.Today.ToString("yyyy-MM-dd"));
 
         static int Fail(string message)

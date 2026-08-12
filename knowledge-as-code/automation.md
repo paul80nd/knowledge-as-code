@@ -46,9 +46,8 @@ Run on every PR. Failures block merge.
 ### Rules the schema declares and nothing runs
 
 A type may declare a rule with a description and no severity. `kac validate` skips it and the type page renders it
-beneath the checks table under *Declared, not yet enforced*, so the gap is reported on the page a reader is already on
-rather than tracked somewhere they will not look. Prose about such a rule states what the schema declares, never what CI
-does.
+beneath the checks table under *Declared, not yet enforced*, so the gap is reported on the page a reader is already on.
+Prose about such a rule states what the schema declares, never what CI does.
 
 ## Generation
 
@@ -81,23 +80,23 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table, the
 types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table, the strip on
 `metadata.md` and the index at the repository root, covers the types **this** corpus holds. A corpus that adopted five
-of the framework's types is offered five, and every row opens.
+of the framework's types gets five rows, and each one links to a page it holds.
 
-The corpus decides which five, and records that in `types:` in `.mechanism.lock`. A corpus that has not declared is read
+The corpus decides which five, and records that in `types:` in `.corpus.yaml`. A corpus that has not declared is read
 off its folders instead: a type counts where both halves are there, the page and the folder. That answer is the weaker
 one, because it cannot tell a type nobody wanted from one somebody has not finished adding.
 
 The same five bound generation itself. A type the corpus declined gets no index and no reference tables, whatever
 `.schema/` still says about it, so nothing is written that the lists above would not name. A page or folder left behind
-from a type the corpus once held is left where it is, and `validate` is what says it should not be there.
+from a type the corpus once held is left where it is, and `validate` says it should not be there.
 
 Blocks that differ between corpora are still safe to share. The mechanism check compares the authored half of a page and
 ignores what lies between the markers, so the prose stays byte-identical everywhere while what sits beneath it does not.
 
 The graph is written to the subset of Mermaid an Azure DevOps wiki renders. That subset is narrower than Mermaid's own,
-and a diagram exceeding it renders nothing at all rather than an error: `graph` rather than `flowchart`, no subgraphs,
-and no arrow longer than `-->`. A fenced block carries it rather than ADO's `:::` container, which GitHub shows as
-literal text.
+and a diagram exceeding it renders nothing at all, with no error to say why: `graph` rather than `flowchart`, no
+subgraphs, and no arrow longer than `-->`. A fenced block carries it rather than ADO's `:::` container, which GitHub
+shows as literal text.
 
 ## Exclusions
 
@@ -126,36 +125,35 @@ those and their links are written from this corpus.
 answers to nothing that needs a filename, so discovering it as a record would report a dozen faults that are the file
 doing its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that are
 not placeholders, the identity line, the required sections, and the links that point at real documents. A defect there
-is not one document's problem but every document's, and it is found by the next author rather than by whoever last
-edited the file.
+becomes every document's problem, and the next author is the one who finds it.
 
 ## Skills
 
-The agent-facing machinery. Not automation in the CI sense, and part of the same system.
+The agent-facing machinery. None of it runs in CI, and it belongs to the same system.
 
 [`kb-review`](../.claude/skills/kb-review/SKILL.md) reads a record against the tier rules in
 [authoring](authoring.md) and the sentence rules in [style](style.md), and proposes rewrites. Somebody asks for it, so
-what it returns is a reading rather than a gate. Everything that blocks a merge is above.
+what it returns is a reading. Everything that blocks a merge is above.
 
 It is a skill rather than a per-folder `CLAUDE.md` for a specific reason: a subdirectory `CLAUDE.md` loads only when a
 session reads a file in that directory. A session working in a service repository would never trigger one in the
-corpus's `standards/` folder. Skills are selected by description matching and work across repositories, which is the
-actual use case.
+corpus's `standards/` folder. Skills are selected by description matching and work across repositories, which is what
+reviewing a record needs.
 
 ## Portability
 
 Everything in this document describes **mechanism**, not corpus content. The validators, generators, schema and skills
 are deliberately free of organisation specifics so they can be lifted to another organisation as a unit.
 
-Which files that covers is not a matter of judgement. [`manifest.yaml`](manifest.yaml) declares it and
+Which files that covers is not a matter of judgement. [`manifest.yaml`](../.tooling/manifest.yaml) declares it and
 `kac mechanism --check` enforces it: a file in the `synced` layer carrying corpus-specific content is a defect, not a
 customisation. Anything organisation-specific belongs in the corpus, or in the `forked` layer — the type root pages,
-templates and publishing config — where local content is the whole point.
+templates and publishing config — which exist to be filled with local content.
 
-What a corpus takes is its own decision, recorded in `.mechanism.lock` rather than inferred from what it happens to
-hold. `types:` names the knowledge types it has adopted. `role:` says whether it answers for the mechanism or only runs
-it, which settles whether it carries the `verification` layer — the tests and fixtures that prove the tool.
+What a corpus takes is its own decision, recorded in `.corpus.yaml` rather than inferred from what it happens to hold.
+`types:` names the knowledge types it has adopted. `role:` says whether it answers for the mechanism or only runs it,
+which settles whether it carries the `verification` layer — the tests and fixtures that prove the tool.
 
-`kac mechanism --sync` reads both keys, brings down what the lock asked for, seeds the forked files a new type needs,
-records what it took, and regenerates. So a corpus adopts a type by adding a line to the lock and syncing. It declines
-one by leaving the line out, not by deleting files afterwards.
+`kac mechanism --sync` reads both keys, brings down what the descriptor asked for, seeds the forked files a new type
+needs, records what it took, and regenerates. So a corpus adopts a type by adding a line to the descriptor and syncing.
+It declines one by leaving the line out, not by deleting files afterwards.
