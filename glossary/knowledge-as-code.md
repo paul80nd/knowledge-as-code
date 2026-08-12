@@ -11,7 +11,7 @@ tags: [ framework ]
 
 `Glossary: gls-knowledge-as-code` `DRAFT`
 
-The words the framework uses about itself, and which a corpus running it inherits unchanged.
+The words the framework uses about itself, which every corpus running it inherits unchanged.
 
 ## Scope
 
@@ -31,12 +31,11 @@ A validation the tool runs, reported under its own id and listed in the generate
 
 A corpus that takes the framework from somewhere else, holding the tool without the tests that prove it.
 
-**Not:** a lesser corpus. Any corpus may author a change, and real content is what reveals a schema is wrong.
+**Not:** a lesser corpus. Any corpus may author a change, and only real content reveals that a schema is wrong.
 
 ### Corpus
 
-One repository of knowledge records, with the schema and tooling it runs and the descriptor at its root that says which
-part it plays.
+One repository of knowledge records, with the schema and tooling it runs and a descriptor saying which part it plays.
 
 **Not:** the wiki, which is how a corpus is published and read.
 
@@ -51,14 +50,14 @@ A local edit to a file the framework owns, which the mechanism check reports as 
 The shared mechanism a corpus runs: the schema, the tooling and the documentation that travel between corpora.
 
 **Not:** an external framework such as ISO 27001, which is what the frameworks register means by the word. Both senses
-are live in every corpus, and the register is the one that carries a compliance posture.
+are live in every corpus, and only the register carries a compliance posture.
 
 ### Record
 
 A knowledge document filed under a type, carrying frontmatter, an id and an identity line.
 
-**Not:** every file the tool reads. A template is checked and is not a record, and a type's root page describes records
-rather than being one.
+**Not:** every file the tool reads. A template is checked and holds no id; a type's root page describes records instead
+of being one.
 
 ### Rule
 
@@ -71,5 +70,5 @@ not yet enforced*.
 
 A corpus that answers for the framework, carrying the tests and fixtures that prove the tool.
 
-**Not:** upstream. The role says what part a corpus plays rather than which way content travels, and a source may itself
+**Not:** upstream. The role says what part a corpus plays rather than which way content travels. A source may itself
 sync from a source further upstream.

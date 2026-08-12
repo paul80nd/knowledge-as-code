@@ -11,13 +11,12 @@ tags: [ catalogue, lending ]
 
 `Glossary: gls-example-libraries` `DRAFT`
 
-The words the consortium uses across all of its systems.
+The words the consortium uses across its systems.
 
 ## Scope
 
-Vocabulary any team here is expected to share: readers, the things they borrow, and the places they borrow them from. A
-word one system uses differently belongs in that system's glossary, and the entry here names the glossary that holds
-the other meaning.
+Vocabulary every team here shares: readers, the things they borrow, and the places they borrow them from. A word one
+system uses differently belongs in that system's glossary, and the entry for that word points there.
 
 ## Terms
 
@@ -25,7 +24,7 @@ the other meaning.
 
 A person holding a library card, which one branch issues and every branch honours.
 
-**Not:** a reader. Anyone may read in a branch; borrowing is what the card is for.
+**Not:** a reader. Anyone may read in a branch, and the card is for borrowing.
 
 ### Branch
 

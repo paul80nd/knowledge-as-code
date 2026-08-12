@@ -31,9 +31,8 @@ them sparingly, and derive rather than state wherever possible.
 
 * **Folder and page** — plural. `adrs/`, `standards/`, `controls/`. The folder is a collection, and CI infers a
   document's type from it, so the mapping is a rule rather than a lookup. Two types take the singular: `data/` is a mass
-  noun, and a corpus has one `glossary/` held in several files, one per bounded context. Naming that folder for the
-  collection rather than for its members keeps every citation of it, and the plural reads as a set of unrelated
-  vocabularies rather than as one presented in sections.
+  noun, and a corpus has one `glossary/` held in several files, one per bounded context. The singular says those files
+  are one vocabulary presented in sections.
 
 * **ID prefix** — singular, since an ID names a single document. `adr-0017`, `std-0004`.
 

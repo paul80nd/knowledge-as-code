@@ -8,8 +8,8 @@ lifecycle: living
 summary: A synthetic single-document type, standing in for the shape rather than for anything a corpus holds.
 goes-here: A thing that exists only so the single-document shape has a type to be pointed at
 detail: >
-  Declared by a fixture and by nothing else. The framework carries the shape, and the checks that read it
-  need a type to read it from.
+  Declared by a fixture and by nothing else. The framework carries the shape, and the checks that act on
+  it need a type declaring it.
 
 lineage:
   prior-art: None — a fixture's type rather than the framework's

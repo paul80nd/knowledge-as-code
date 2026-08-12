@@ -24,23 +24,23 @@ notes: >
   Folder is singular because a corpus has one glossary, held in several files. One of two exceptions to the
   plural-folder rule, alongside `data/`.
 
-  A glossary covers one bounded context or product surface — the framework itself, a system that names things
-  its own way — and never a topic. A term goes in the most general glossary that admits it, and a narrower one
-  redefines it only where the meaning genuinely differs.
+  A glossary covers one bounded context or product surface — the framework itself, or a system that names
+  things its own way. Never a topic. A term goes in the most general glossary that admits it, and a narrower
+  one redefines it only where the meaning genuinely differs.
 
   A term is an H3 heading, a one-sentence definition, an optional `**Not:** …` line naming what it is most often
   confused with, and optional links to the owning service or an explanation. Those `**Not:**` lines are the most
   useful content in the file. One paragraph per term, because a glossary is read end to end and every paragraph
-  is paid for by every reader. The list is alphabetical and flat — no A–Z sub-headings — so that it reads end to
-  end and greps cleanly. All of that is held by whoever reviews the file: the rules below that would read a
-  term's shape are declared and not built, and no check parses an entry.
+  is paid for by every reader. The list is alphabetical and flat — no A–Z sub-headings — so that it scans and
+  greps cleanly. All of that is held by whoever reviews the file: the rules below that would read a term's shape
+  are declared and not built, and no check parses an entry.
 
 id:
   prefix: gls
   style: slug
   notes: >
     Named for the context rather than for the words it holds, so the corpus-wide glossary takes the corpus's own
-    name and a system's takes the system's.
+    name and a system's glossary takes the system's.
 
 filename:
   pattern: '^[a-z0-9-]+\.md$'
@@ -64,7 +64,7 @@ sections:
   optional: [Scope]
   notes: >
     `Scope` says which context this glossary admits, and is worth writing wherever a corpus holds more than
-    one. The terms themselves are H3s under `Terms`, and their anchors are what a cross-reference names.
+    one. The terms themselves are H3s under `Terms`, and a cross-reference names their anchors.
 
 index:
   columns: [id, title, status, owner, review-by]

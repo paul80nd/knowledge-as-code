@@ -27,9 +27,8 @@ Never a topic: a file called "infrastructure terms" starts an argument about pla
 **The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
 reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
-**A glossary every corpus shares names a type and cites no record.** Service ownership and citations are this corpus's,
-and a corpus that took this file has neither. Where an entry is destined upstream, leave both out and say the sentence
-in full instead.
+**A glossary every corpus shares names a type and cites no record.** An owning service and a record citation are this
+corpus's, and a corpus that took the file has neither. Leave both out of an entry meant to travel upstream.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
@@ -38,7 +37,7 @@ One sentence naming the context these words belong to.
 ## Scope
 
 Which words this glossary admits, and which neighbouring glossary holds the rest. A term belongs to the most general
-glossary that admits it, so say what makes this context different rather than what it contains.
+glossary that admits it, so say what makes this context its own rather than listing what it holds.
 
 ## Terms
 
