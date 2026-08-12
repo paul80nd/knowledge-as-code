@@ -44,19 +44,20 @@ public static class Commands
             return 1;
         }
 
-        var written = 0;
-        foreach (var (path, content) in targets)
-        {
-            if (File.Exists(path) && Files.ReadLf(path) == content) continue;
-            File.WriteAllText(path, content);
-            Console.WriteLine($"wrote {Path.GetRelativePath(repoRoot, path).Replace('\\', '/')}");
-            written++;
-        }
-
-        Console.WriteLine(written == 0
-            ? "index already up to date; nothing written."
-            : $"index updated {written} file(s).");
+        ReportWritten(repoRoot, GeneratedFiles.Write(targets));
         return 0;
+    }
+
+    // What a regeneration wrote. Shared with `mechanism --sync`, which ends by regenerating, so that a
+    // sync reports the files it rebuilt in the words `index` uses for the same work.
+    private static void ReportWritten(string repoRoot, List<string> written)
+    {
+        foreach (var path in written)
+            Console.WriteLine($"wrote {Path.GetRelativePath(repoRoot, path).Replace('\\', '/')}");
+
+        Console.WriteLine(written.Count == 0
+            ? "index already up to date; nothing written."
+            : $"index updated {written.Count} file(s).");
     }
 
     private static int Report(List<Finding> findings, int validated, int templates, int skipped, bool json)
@@ -170,17 +171,133 @@ public static class Commands
         if (Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot))
             return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
 
+        // Whether two copies of a file say the same thing, which is the one question either engine asks of
+        // the disk. Passed in, so each engine decides from listings and a predicate rather than from a tree.
+        bool Same(string rel) => MechanismCheck.Same(repoRoot, refRoot, rel);
+
+        var localFiles = MechanismCheck.ListFiles(repoRoot);
+        var refFiles = MechanismCheck.ListFiles(refRoot);
+
         // Check reads this corpus's manifest, because it reports whether this corpus is in step with the
         // boundary it believes in. Sync reads the reference's, because it takes that boundary down along
         // with the files the boundary describes.
-        return check
-            ? MechanismCheck.Run(repoRoot, refRoot, Manifest.Load(repoRoot), descriptor)
-            : MechanismSync.Run(repoRoot, refRoot, Manifest.Load(refRoot), descriptor, reference,
-                DateTime.Today.ToString("yyyy-MM-dd"));
+        if (check)
+            return ReportMechanism(
+                MechanismCheck.Classify(localFiles, refFiles, Manifest.Load(repoRoot), descriptor, Same),
+                refRoot);
+
+        var manifest = Manifest.Load(refRoot);
+        var plan = MechanismSync.Plan(localFiles, refFiles, manifest, descriptor,
+            MechanismSync.DeclinedTypePaths(refRoot, descriptor), Same);
+
+        var today = DateTime.Today.ToString("yyyy-MM-dd");
+        MechanismSync.Apply(plan, repoRoot, refRoot, manifest, reference, today);
+        return ReportSync(plan, repoRoot, manifest.Version, reference, today);
 
         static int Fail(string message)
         {
             Console.Error.WriteLine(message);
+            return 1;
+        }
+    }
+
+    private static int ReportMechanism(MechanismReport report, string refRoot)
+    {
+        Console.WriteLine($"mechanism: comparing the synced layer against {refRoot}");
+        Section("DRIFT — synced files differ from the reference", report.Drift);
+        Section("MISSING LOCALLY — synced files in the reference but not here", report.MissingLocally);
+        Section("MISSING UPSTREAM — synced files here but not in the reference", report.MissingUpstream);
+        Section("UNCLASSIFIED — files matching no manifest rule", report.Unclassified);
+
+        if (report.ResolvedDivergence.Count > 0)
+        {
+            Console.WriteLine("RESOLVED — accepted divergences that are now identical again (delete them from .corpus.yaml):");
+            foreach (var p in report.ResolvedDivergence) Console.WriteLine($"  {p}");
+        }
+
+        Console.WriteLine(
+            $"synced: {report.SyncedInStep} in step, {report.Drift.Count} drifted; "
+            + $"forked: {report.ForkedShared} shared ({report.ForkedDiffer} differ, informational); "
+            + $"accepted divergences: {report.AcceptedActive}.");
+
+        // Held but not asked for: schema files for types this corpus did not adopt, or a fixture tree in
+        // a corpus whose role declines the verification layer. Neither is drift, because nothing was
+        // compared. Say so anyway — no sync will refresh these files, and the alternative is leaving the
+        // reader to find them stale later.
+        if (report.DeclinedButHeld > 0)
+            Console.WriteLine(
+                $"declined: {report.DeclinedButHeld} file(s) held here that this corpus's descriptor does not ask for. "
+                + "They are not synced or compared; delete them, or adopt what they belong to.");
+
+        if (report.Problems > 0)
+        {
+            Console.Error.WriteLine($"mechanism check failed — {report.Problems} synced-layer problem(s) above.");
+            return 1;
+        }
+
+        Console.WriteLine("mechanism: synced layer in step.");
+        return 0;
+
+        static void Section(string heading, IReadOnlyList<string> paths)
+        {
+            if (paths.Count == 0) return;
+            Console.Error.WriteLine($"{heading}:");
+            foreach (var p in paths) Console.Error.WriteLine($"  {p}");
+        }
+    }
+
+    private static int ReportSync(SyncPlan plan, string repoRoot, int mechanismVersion, string reference,
+        string today)
+    {
+        Console.WriteLine($"mechanism: syncing the shared layers from {reference}");
+        Section("UPDATED — brought down from the reference", plan.Updated);
+        Section("SEEDED — the corpus's own from here on, copied because it had none", plan.Seeded);
+        Section("SKIPPED — accepted divergences, left as they are", plan.Skipped);
+        Section("HELD HERE, NOT UPSTREAM — shared files the reference does not have (sync never deletes)",
+            plan.HeldHere);
+
+        Console.WriteLine(
+            $"synced: {plan.Updated.Count} updated, {plan.InStep} already in step; seeded {plan.Seeded.Count}; "
+            + $"skipped {plan.Skipped.Count}; declined {plan.Declined}. "
+            + $"Recorded in .corpus.yaml as mechanism version {mechanismVersion}, taken {today}.");
+
+        if (plan.ReferenceIsUnsound)
+        {
+            Console.Error.WriteLine("UNCLASSIFIED — files in the reference matching no manifest rule, so not copied:");
+            foreach (var p in plan.Unclassified) Console.Error.WriteLine($"  {p}");
+            Console.Error.WriteLine("mechanism sync: the reference's manifest does not resolve its own tree — fix it there.");
+            return 1;
+        }
+
+        // Every synced page may carry a generated block built from this corpus's own types, so the copies
+        // above are only right once rebuilt against what this corpus holds. Regenerating here makes a
+        // passing `index --check` sync's postcondition instead of the reader's next surprise.
+        return Regenerate(repoRoot);
+
+        static void Section(string heading, IReadOnlyList<string> paths)
+        {
+            if (paths.Count == 0) return;
+            Console.WriteLine($"{heading}:");
+            foreach (var p in paths) Console.WriteLine($"  {p}");
+        }
+    }
+
+    // The corpus is loaded here rather than by the caller because a sync has just replaced the schema, and
+    // a schema this corpus cannot yet read is the one failure worth surviving: the files are already in
+    // place, and saying so is more use than a stack trace over a half-finished tree.
+    private static int Regenerate(string repoRoot)
+    {
+        try
+        {
+            ReportWritten(repoRoot, GeneratedFiles.Write(GeneratedFiles.Targets(Corpus.Load(repoRoot, []))));
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"mechanism sync: regeneration failed — {ex.Message}");
+            Console.Error.WriteLine(
+                "mechanism sync: the files are in place but the generated blocks were not rebuilt. "
+                + "Run ./kac validate to see what the corpus is missing, then ./kac index.");
             return 1;
         }
     }

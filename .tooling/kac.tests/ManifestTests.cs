@@ -1,5 +1,6 @@
-// Unit tests for Manifest.Resolve — the first-rule-wins glob layering. Manifest.Load,
-// CorpusDescriptor.Load and the MechanismCheck engine are covered by the golden 'mechanism' scenario.
+// Unit tests for Manifest.Resolve — the first-rule-wins glob layering. Manifest.Load and
+// CorpusDescriptor.Load read files and are covered by the golden 'mechanism' scenario; the engines that
+// read what they return are in MechanismTests.
 
 using kac.core;
 

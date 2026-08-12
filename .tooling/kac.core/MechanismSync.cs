@@ -3,27 +3,55 @@
 //
 // Sync copies and never deletes. Where this corpus holds a file the reference does not, sync names it
 // and leaves it alone. Deleting knowledge because an upstream tree was smaller is not a tool's call.
+//
+// Deciding and doing are two steps. `Plan` says what the sync comes to and touches nothing; `Apply`
+// carries it out. So what a sync would do to a corpus is a question that can be asked, and answered,
+// without a corpus.
 
 namespace kac.core;
 
+// What a sync comes to. Every list is a set of paths the reader should be told about; `Updated` and
+// `Seeded` are also, and only, the files to copy — named once, so no second list can disagree with
+// this one about what a sync touches.
+public sealed record SyncPlan(
+    IReadOnlyList<string> Updated,      // shared, to be copied down because the authored halves differ
+    IReadOnlyList<string> Seeded,       // forked, to be copied because this corpus has none
+    IReadOnlyList<string> Skipped,      // accepted divergences, left as they are — path and reason
+    IReadOnlyList<string> HeldHere,     // shared, here but not in the reference
+    IReadOnlyList<string> Unclassified, // in the reference, matching no manifest rule
+    int InStep,
+    int Declined)
+{
+    // The files to copy, which is what `Updated` and `Seeded` mean.
+    public IEnumerable<string> Copies => Updated.Concat(Seeded);
+
+    // A reference whose own manifest cannot place its own tree. Sync copies what it could resolve and
+    // then stops: the rest is a defect upstream, and guessing at it is how a corpus takes a file nobody
+    // meant to share.
+    public bool ReferenceIsUnsound => Unclassified.Count > 0;
+}
+
 public static class MechanismSync
 {
+    // What syncing from this reference would come to, decided from listings rather than a filesystem.
+    //
     // `manifest` is the *reference's*, because the boundary comes down with the files it describes: a
     // corpus on an older manifest would otherwise resolve the new upstream tree by the old rules and
     // silently skip whatever the rules had not yet heard of.
-    public static int Run(string localRoot, string refRoot, Manifest manifest, CorpusDescriptor descriptor,
-        string reference, string today)
+    //
+    // `declinedTypes` is the reference's pages and folders for types this corpus did not adopt, which
+    // the caller resolves from the reference's schema — see `DeclinedTypePaths`. `same` answers whether
+    // two copies of a path say the same thing.
+    public static SyncPlan Plan(IReadOnlySet<string> localFiles, IReadOnlySet<string> refFiles,
+        Manifest manifest, CorpusDescriptor descriptor, DeclinedPaths declinedTypes, Func<string, bool> same)
     {
         var accepted = descriptor.Accepted.ToDictionary(a => a.Path, a => a.Reason, StringComparer.Ordinal);
-        var localFiles = MechanismCheck.ListFiles(localRoot);
-        var refFiles = MechanismCheck.ListFiles(refRoot);
-        var declinedTypes = DeclinedTypePaths(refRoot, descriptor);
 
-        var updated = new List<string>();      // shared, copied down because the authored halves differed
-        var seeded = new List<string>();       // forked, copied because this corpus had none
-        var skipped = new List<string>();      // accepted divergences, left as they are
-        var heldHere = new List<string>();     // shared, here but not in the reference
-        var unclassified = new List<string>(); // in the reference, matching no manifest rule
+        var updated = new List<string>();
+        var seeded = new List<string>();
+        var skipped = new List<string>();
+        var heldHere = new List<string>();
+        var unclassified = new List<string>();
         var inStep = 0;
         var declined = 0;
 
@@ -61,71 +89,32 @@ public static class MechanismSync
             // A forked file is seeded once and never reconciled, so the only question here is whether this
             // corpus has a copy. A shared file is compared on its authored half instead. A page whose
             // generated block is built from local types is in step while that half matches, and copying it
-            // would swap the block for the reference's until the regeneration below undid the swap.
+            // would swap the block for the reference's until the regeneration afterwards undid the swap.
             if (localFiles.Contains(rel))
             {
                 if (layer is "forked") continue;
-                if (MechanismCheck.Same(localRoot, refRoot, rel)) { inStep++; continue; }
+                if (same(rel)) { inStep++; continue; }
             }
             else if (layer is "forked")
             {
-                Copy(refRoot, localRoot, rel);
                 seeded.Add(rel);
                 continue;
             }
 
-            Copy(refRoot, localRoot, rel);
             updated.Add(rel);
         }
 
-        Console.WriteLine($"mechanism: syncing the shared layers from {reference}");
-        Section("UPDATED — brought down from the reference", updated);
-        Section("SEEDED — the corpus's own from here on, copied because it had none", seeded);
-        Section("SKIPPED — accepted divergences, left as they are", skipped);
-        Section("HELD HERE, NOT UPSTREAM — shared files the reference does not have (sync never deletes)", heldHere);
-
-        CorpusDescriptor.Stamp(localRoot, manifest.Version, reference, today);
-        Console.WriteLine(
-            $"synced: {updated.Count} updated, {inStep} already in step; seeded {seeded.Count}; "
-            + $"skipped {skipped.Count}; declined {declined}. "
-            + $"Recorded in .corpus.yaml as mechanism version {manifest.Version}, taken {today}.");
-
-        if (unclassified.Count > 0)
-        {
-            Console.Error.WriteLine("UNCLASSIFIED — files in the reference matching no manifest rule, so not copied:");
-            foreach (var p in unclassified) Console.Error.WriteLine($"  {p}");
-            Console.Error.WriteLine("mechanism sync: the reference's manifest does not resolve its own tree — fix it there.");
-            return 1;
-        }
-
-        // Every synced page may carry a generated block built from this corpus's own types, so the copies
-        // above are only right once rebuilt against what this corpus holds. Regenerating here makes a
-        // passing `index --check` sync's postcondition instead of the reader's next surprise.
-        return Regenerate(localRoot);
-
-        static void Section(string heading, List<string> paths)
-        {
-            if (paths.Count == 0) return;
-            Console.WriteLine($"{heading}:");
-            foreach (var p in paths) Console.WriteLine($"  {p}");
-        }
+        return new SyncPlan(updated, seeded, skipped, heldHere, unclassified, inStep, declined);
     }
 
-    private static int Regenerate(string localRoot)
+    // Carry the plan out: copy what it names, then record what was taken. Copying and stamping are one
+    // step because a corpus holding the reference's files and not saying so has taken a sync it cannot
+    // be held to.
+    public static void Apply(SyncPlan plan, string localRoot, string refRoot, Manifest manifest,
+        string reference, string today)
     {
-        try
-        {
-            if (Commands.Index(localRoot, check: false) == 0) return 0;
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"mechanism sync: regeneration failed — {ex.Message}");
-        }
-
-        Console.Error.WriteLine(
-            "mechanism sync: the files are in place but the generated blocks were not rebuilt. "
-            + "Run ./kac validate to see what the corpus is missing, then ./kac index.");
-        return 1;
+        foreach (var rel in plan.Copies) Copy(refRoot, localRoot, rel);
+        CorpusDescriptor.Stamp(localRoot, manifest.Version, reference, today);
     }
 
     private static void Copy(string fromRoot, string toRoot, string rel)
@@ -141,7 +130,7 @@ public static class MechanismSync
     // `forked`, and the check never asks a corpus to hold a forked file. Sync does seed an absent one.
     // Without this it would stand up every type the reference has, and `validate` would then report each
     // of them as stood up and not adopted.
-    private static DeclinedPaths DeclinedTypePaths(string refRoot, CorpusDescriptor descriptor)
+    public static DeclinedPaths DeclinedTypePaths(string refRoot, CorpusDescriptor descriptor)
     {
         if (descriptor.Types is null) return new DeclinedPaths([], []);
 
@@ -156,10 +145,10 @@ public static class MechanismSync
 
         return new DeclinedPaths(files, folders);
     }
+}
 
-    private record DeclinedPaths(HashSet<string> Files, List<string> Folders)
-    {
-        public bool Declines(string rel) =>
-            Files.Contains(rel) || Folders.Any(f => rel.StartsWith(f, StringComparison.Ordinal));
-    }
+public record DeclinedPaths(HashSet<string> Files, List<string> Folders)
+{
+    public bool Declines(string rel) =>
+        Files.Contains(rel) || Folders.Any(f => rel.StartsWith(f, StringComparison.Ordinal));
 }

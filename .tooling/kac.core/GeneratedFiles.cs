@@ -90,6 +90,25 @@ public static class GeneratedFiles
         return targets;
     }
 
+    // Write every target whose content has moved, and answer with what was written. A file already
+    // holding what it should is left alone rather than rewritten, so a regeneration that changes nothing
+    // touches nothing and says so.
+    //
+    // `index` and `mechanism --sync` both end here, so a sync writes what an index would write and the
+    // two cannot come to different files.
+    public static List<string> Write(IEnumerable<(string Path, string Content)> targets)
+    {
+        var written = new List<string>();
+        foreach (var (path, content) in targets)
+        {
+            if (File.Exists(path) && Files.ReadLf(path) == content) continue;
+            File.WriteAllText(path, content);
+            written.Add(path);
+        }
+
+        return written;
+    }
+
     private readonly record struct Block(string Name, Func<Schema, string> Render);
 
     private readonly record struct FileSpec(string Path, bool MarkersRequired, Block[] Blocks);

@@ -3,22 +3,49 @@
 //
 // Both read the same manifest and the same descriptor, and both ask one predicate what this corpus
 // holds. So the check can never report a file missing that a sync would decline to bring.
+//
+// Each engine answers in a value and prints nothing. What a corpus stands at is a question with an
+// answer, and a caller that can only read the answer off a console can only be a person — see
+// Commands.ReportMechanism for the half that writes it out.
 
 namespace kac.core;
 
+// Where every file stands against the reference. The lists are faults, in the order a reader should
+// act on them; the counts are the corpus in step, which is worth a line and not a list.
+public sealed record MechanismReport(
+    IReadOnlyList<string> Drift,              // synced, both present, content differs
+    IReadOnlyList<string> MissingLocally,     // synced, in the reference but not here
+    IReadOnlyList<string> MissingUpstream,    // synced, here but not in the reference
+    IReadOnlyList<string> Unclassified,       // matches no manifest rule
+    IReadOnlyList<string> ResolvedDivergence, // accepted, but now identical again
+    int SyncedInStep,
+    int ForkedShared,
+    int ForkedDiffer,
+    int AcceptedActive,
+    int DeclinedButHeld)
+{
+    // What makes the check fail. Resolved divergences and the counts are reported and are not faults:
+    // one is a tidy-up the corpus can make when it likes, and the rest are the corpus being right.
+    public int Problems => Drift.Count + MissingLocally.Count + MissingUpstream.Count + Unclassified.Count;
+}
+
 public static class MechanismCheck
 {
-    public static int Run(string localRoot, string refRoot, Manifest manifest, CorpusDescriptor descriptor)
+    // Where this corpus stands against a reference, decided from listings rather than from a filesystem.
+    //
+    // `same` answers whether two copies of a path say the same thing; the caller supplies it, so the
+    // whole classification is decidable from in-memory sets and every arm of it can be asserted without
+    // two trees on disk. `Same` below is what a command passes.
+    public static MechanismReport Classify(IReadOnlySet<string> localFiles, IReadOnlySet<string> refFiles,
+        Manifest manifest, CorpusDescriptor descriptor, Func<string, bool> same)
     {
         var accepted = descriptor.Accepted.Select(a => a.Path).ToHashSet(StringComparer.Ordinal);
-        var localFiles = ListFiles(localRoot);
-        var refFiles = ListFiles(refRoot);
 
-        var drift = new List<string>();           // synced, both present, content differs
-        var missingLocally = new List<string>();  // synced, in the reference but not here
-        var missingUpstream = new List<string>(); // synced, here but not in the reference
-        var unclassified = new List<string>();    // matches no manifest rule
-        var resolvedDivergence = new List<string>(); // accepted, but now identical again
+        var drift = new List<string>();
+        var missingLocally = new List<string>();
+        var missingUpstream = new List<string>();
+        var unclassified = new List<string>();
+        var resolvedDivergence = new List<string>();
         var syncedInStep = 0;
         var forkedShared = 0;
         var forkedDiffer = 0;
@@ -43,7 +70,7 @@ public static class MechanismCheck
             {
                 case "synced":
                 case "verification":
-                    var identical = inLocal && inRef && Same(localRoot, refRoot, rel);
+                    var identical = inLocal && inRef && same(rel);
 
                     if (accepted.Contains(rel))
                     {
@@ -62,56 +89,17 @@ public static class MechanismCheck
                     if (inLocal && inRef)
                     {
                         forkedShared++;
-                        if (!Same(localRoot, refRoot, rel)) forkedDiffer++;
+                        if (!same(rel)) forkedDiffer++;
                     }
+
                     break;
 
                 // generated / local / ignored: each corpus owns these; nothing to compare.
             }
         }
 
-        Console.WriteLine($"mechanism: comparing the synced layer against {refRoot}");
-        var errors = Section("DRIFT — synced files differ from the reference", drift)
-                     + Section("MISSING LOCALLY — synced files in the reference but not here", missingLocally)
-                     + Section("MISSING UPSTREAM — synced files here but not in the reference", missingUpstream)
-                     + Section("UNCLASSIFIED — files matching no manifest rule", unclassified);
-
-        if (resolvedDivergence.Count > 0)
-        {
-            Console.WriteLine("RESOLVED — accepted divergences that are now identical again (delete them from .corpus.yaml):");
-            foreach (var p in resolvedDivergence) Console.WriteLine($"  {p}");
-        }
-
-        Console.WriteLine(
-            $"synced: {syncedInStep} in step, {drift.Count} drifted; "
-            + $"forked: {forkedShared} shared ({forkedDiffer} differ, informational); "
-            + $"accepted divergences: {acceptedActive}.");
-
-        // Held but not asked for: schema files for types this corpus did not adopt, or a fixture tree in
-        // a corpus whose role declines the verification layer. Neither is drift, because nothing was
-        // compared. Say so anyway — no sync will refresh these files, and the alternative is leaving the
-        // reader to find them stale later.
-        if (declinedButHeld > 0)
-            Console.WriteLine(
-                $"declined: {declinedButHeld} file(s) held here that this corpus's descriptor does not ask for. "
-                + "They are not synced or compared; delete them, or adopt what they belong to.");
-
-        if (errors > 0)
-        {
-            Console.Error.WriteLine($"mechanism check failed — {errors} synced-layer problem(s) above.");
-            return 1;
-        }
-
-        Console.WriteLine("mechanism: synced layer in step.");
-        return 0;
-
-        static int Section(string heading, List<string> paths)
-        {
-            if (paths.Count == 0) return 0;
-            Console.Error.WriteLine($"{heading}:");
-            foreach (var p in paths) Console.Error.WriteLine($"  {p}");
-            return paths.Count;
-        }
+        return new MechanismReport(drift, missingLocally, missingUpstream, unclassified, resolvedDivergence,
+            syncedInStep, forkedShared, forkedDiffer, acceptedActive, declinedButHeld);
     }
 
     // Whether this corpus's descriptor declines the file, so that it is neither missing nor drifted —
