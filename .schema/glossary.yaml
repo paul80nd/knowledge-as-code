@@ -27,8 +27,8 @@ notes: >
 
   A term is an H3 heading, a one-sentence definition, an optional `**Not:** …` line naming what it is most often
   confused with, and optional links to the owning service or an explanation. Those `**Not:**` lines are the most
-  useful content in the file. One paragraph per term, because the rules digest carries this file whole and every
-  paragraph is spent from the same budget. The list is alphabetical and flat — no A–Z sub-headings — so that it
+  useful content in the file. One paragraph per term, because the file is read end to end and every paragraph is
+  paid for by every reader. The list is alphabetical and flat — no A–Z sub-headings — so that it
   reads end to end and greps cleanly. All of that is held by whoever reviews the file: the rules below that would
   read a term's shape are declared and not built, and no check parses an entry.
 
@@ -62,7 +62,7 @@ sections:
 rules:
   - id: carried-in-full-by-digest
     description: No glossary entry runs beyond one paragraph.
-    # The generated rules digest carries this file whole, so every entry consumes budget directly.
+    # This file is read end to end, so every entry's length is paid by every reader.
   - id: undefined-terms
     description: >
       Reports terms appearing more than N times across the corpus with no glossary entry.
