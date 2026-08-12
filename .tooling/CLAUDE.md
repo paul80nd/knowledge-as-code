@@ -86,6 +86,18 @@ comes from its `description:` and writing one into `DocRows` would duplicate it.
 rule reporting three faults under one id needs a fixture for each, and unit tests beside the rule class for the branches
 a fixture would only duplicate.
 
+## Where the console is
+
+**`kac.core` answers in values and `Commands` writes them out.** `Validator.CheckAll` returns findings,
+`MechanismCheck.Classify` returns a report, `MechanismSync.Plan` returns a plan, and none of them prints. The exit code
+is `Commands`'s too, derived from the value it was handed.
+
+That is what makes each of them testable from a set of strings rather than from a tree and a subprocess. The two
+mechanism engines take the file listings and a `Func<string, bool>` answering whether two copies of a path say the same
+thing, so the whole classification is decidable without a filesystem — a new arm is a unit test, not a fixture corpus.
+Deciding and doing stay apart on the sync side as well: `Plan` names what a sync comes to, `Apply` carries it out, and
+the files it copies are the ones the plan already reports.
+
 ## Adding a generated block
 
 **`kac.core/GeneratedFiles.cs` is the one list of what `index` writes and where.** Adding a block is one entry there,
