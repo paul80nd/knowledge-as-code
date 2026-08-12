@@ -65,8 +65,8 @@ no domain — which is why they would survive adoption with only the specifics r
 
 **Others need somewhere to stand.** A service catalogue demonstrates nothing without an estate; an NFR has to apply to
 something; a postmortem needs an incident. Those use **one fictional organisation throughout — Example Libraries, a
-public-library consortium** — so the records form a graph instead of a list. [`services/`](services.md) is where that
-estate stands up today, and the same one carries the rest as they are seeded.
+public-library consortium** — so the records form a graph instead of a list. [`services/`](services.md) and
+[`glossary/`](glossary.md) are where that estate stands up today, and the same one carries the rest as they are seeded.
 
 It cannot be mistaken for anyone real, by construction. Every hostname is under `example.com`, which
 [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered by anybody. The domain is

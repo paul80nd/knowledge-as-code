@@ -4,6 +4,12 @@ The words we use, and what we mean by them.
 
 **[→ Index](glossary/_index.md)**
 
+> **Two of the records in `glossary/` are an example estate, not your estate.** `example-libraries.md` and `search.md`
+> describe a fictional public-library consortium, and they are here to demonstrate what a second glossary buys: one
+> word, `title`, that the estate and one system inside it mean differently. **Delete them before you add your first real
+> glossary.** `knowledge-as-code.md` stays — it is the framework's own vocabulary rather than an example of one, it
+> arrives synced, and editing it here is drift.
+
 ## What is a glossary?
 
 The ubiquitous language of one bounded context — one entry per term whose meaning is specific to us, or which is easily
