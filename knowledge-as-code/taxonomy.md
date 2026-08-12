@@ -26,7 +26,7 @@ ends up — so a corpus that has adopted five of them is offered five, and every
 | A step-by-step for a planned task                                    | [Processes](/processes)       |
 | A step-by-step for when something is broken                          | [Runbooks](/runbooks)         |
 | A target for speed, uptime, or recovery                              | [NFRs](/nfrs)                 |
-| A term whose meaning isn't obvious, or that we use in a specific way | [Glossary](/glossary)         |
+| A term whose meaning isn't obvious, or that we use in a specific way | [Glossaries](/glossary)       |
 | A third-party or external system we depend on                        | [Integrations](/integrations) |
 | A tool or package we've approved, rejected, or are trialling         | [Tools](/tools)               |
 | An account of an incident and what caused it                         | [Postmortems](/postmortems)   |
@@ -98,9 +98,9 @@ it is. Architecture overviews, conceptual walkthroughs, how the pieces fit toget
 overview points at the documents holding the detail instead of repeating them. One that starts accumulating facts of its
 own has become a maintenance liability.
 
-**[Glossary](/glossary)** — The ubiquitous language — terms whose meaning is specific to us, or which are easily
-confused. Small, high-value, and the one document worth loading into every session. A term that needs explaining every
-time it appears belongs here once, and everything else links to it.
+**[Glossaries](/glossary)** — The ubiquitous language — terms whose meaning is specific to us, or which are easily
+confused. One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
+time it appears belongs in the most general glossary that admits it, and everything else links to it.
 
 **[Integrations](/integrations)** — An external system we depend on: the contract, the auth, the failure modes, their
 SLA and our fallback. Every integration point needs a deliberate failure mode and a fallback, so the type requires both.

@@ -31,7 +31,7 @@ Not the place for:
 * **Retention rules as commitments** — a [policy](/policies) holds the commitment, and a data document records what the
   store actually does.
 
-The folder is singular — `data/` — because English gives no plural. It and [`glossary.md`](/glossary) are the two
+The folder is singular — `data/` — because English gives no plural. It and [`glossary/`](/glossary) are the two
 exceptions to the plural-folder rule.
 
 ## Metadata

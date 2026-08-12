@@ -156,6 +156,14 @@ rules:
     layer: synced
     note: High-level framework overview shared by all corpora.
 
+  - path: "glossary/knowledge-as-code.md"
+    layer: synced
+    note: >
+      The framework's own vocabulary, inherited word for word. A corpus writes its
+      own glossaries beside it and leaves this one alone. A record rather than a
+      page, so it is matched by name: the rules above reach pages and templates,
+      and everything else in a type folder is the corpus's own.
+
   # ── forked ─────────────────────────────────────────────────────────────────
 
   - path: "azure-pipelines.yml"

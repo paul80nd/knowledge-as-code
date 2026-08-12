@@ -11,8 +11,8 @@ Feature: Corpus shape checks
     And the findings are exactly:
       | file                 | line | check      | message                                                                                    |
       | .schema/data.yaml    |      | type-setup | type 'data' has data.md but no 'data/' — a type is set up as both or neither.               |
-      | .schema/glossary.yaml |     | type-setup | type 'glossary' is single-document, so 'glossary/' must not exist — its page is the document. |
       | .schema/tools.yaml   |      | type-setup | type 'tools' has a 'tools/' folder but is not fully set up — add tools.md, tools/_template.md. |
+      | .schema/trinkets.yaml |     | type-setup | type 'trinkets' is single-document, so 'trinkets/' must not exist — its page is the document. |
 
   Scenario: A collection's page is checked for its generated markers and its links
     Given the type-pages fixture corpus
@@ -22,7 +22,6 @@ Feature: Corpus shape checks
       | file                          | line | check                 | message                                                                                                                                                                                               |
       | adrs.md                       |      | generated-block       | the 'schema-adrs' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both.                                                                         |
       | adrs.md                       | 6    | link-resolves         | link target '/nope.md' does not resolve.                                                                                                                                                              |
-      | glossary.md                   | 1    | id-format             | id 'not-glossary' must be 'glossary', the value the type declares.                                                                                                                                    |
       | knowledge-as-code/taxonomy.md | 4    | framework-names-types | '/adrs' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off.                    |
       | knowledge-as-code/taxonomy.md | 5    | link-resolves         | link target '/adrs/0001-knowledge-as-code.md' does not resolve.                                                                                                                                       |
       | knowledge-as-code/taxonomy.md | 5    | framework-names-types | '/adrs/0001-knowledge-as-code.md' links to a record in 'adrs' from a document every corpus shares. Those records are the first thing a corpus deletes, so the link dies even where the type is used.  |
@@ -30,6 +29,7 @@ Feature: Corpus shape checks
       | knowledge-as-code/taxonomy.md | 8    | fragment-resolves     | '#no-such-heading' names no heading in '/adrs.md'.                                                                                                                                                    |
       | knowledge-as-code/taxonomy.md | 8    | framework-names-types | '/adrs.md#no-such-heading' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off. |
       | knowledge-as-code/taxonomy.md | 10   | framework-names-types | '/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off.                 |
+      | trinkets.md                   | 1    | id-format             | id 'not-trinkets' must be 'trinkets', the value the type declares.                                                                                                                                    |
 
   # The count is the assertion here. A template is checked and is not a document: it holds no id, takes no
   # place in an index, and answers to nothing corpus-wide. Were it discovered as a record instead, this

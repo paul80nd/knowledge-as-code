@@ -1,0 +1,41 @@
+type: trinket
+label: Trinket
+label-plural: Trinkets
+shape: single-document
+page: trinkets.md
+tier: descriptive
+lifecycle: living
+summary: A synthetic single-document type, standing in for the shape rather than for anything a corpus holds.
+goes-here: A thing that exists only so the single-document shape has a type to be pointed at
+detail: >
+  Declared by a fixture and by nothing else. The framework carries the shape, and the checks that read it
+  need a type to read it from.
+
+lineage:
+  prior-art: None — a fixture's type rather than the framework's
+
+notes: >
+  Sound in every other respect, so the one fault a scenario is pointed at is the only thing its golden
+  carries.
+
+id:
+  prefix: trk
+  style: literal
+  value: trinkets
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, active]
+    description: Whether the page has settled.
+
+  review-by:
+    required: true
+    type: date
+    description: Quoted. The page is reviewed whole.
+
+sections:
+  required: [What is a trinket?]
+  optional: []

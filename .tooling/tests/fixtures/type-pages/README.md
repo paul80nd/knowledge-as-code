@@ -4,8 +4,9 @@ Type pages, and the two passes they get.
 unresolvable link, and its `schema-adrs` block has lost its BEGIN marker — which leaves `kac index` writing nothing
 there while `index --check` still calls the page fresh.
 
-`glossary.md` is a single-document type's page, so it is a record. Its id disagrees with the literal value
-`glossary.yaml` declares.
+`trinkets.md` is a single-document type's page, so it is a record. Its id disagrees with the literal value
+`trinkets.yaml` declares. That type is the fixture's own, laid over the real schema: no type the framework declares is
+single-document, so the shape and its `literal` id style need a type of their own to be tested against.
 
 `adrs/_template.md` is valid, so `type-setup` stays silent and the fixture asserts one thing. The scenario that
 breaks a template deliberately is `broken-template`.

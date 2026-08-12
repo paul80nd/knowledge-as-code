@@ -22,13 +22,6 @@
       "message": "link target '/nope.md' does not resolve."
     },
     {
-      "file": "glossary.md",
-      "line": 1,
-      "severity": "error",
-      "check": "id-format",
-      "message": "id 'not-glossary' must be 'glossary', the value the type declares."
-    },
-    {
       "file": "knowledge-as-code/taxonomy.md",
       "line": 4,
       "severity": "error",
@@ -76,6 +69,13 @@
       "severity": "error",
       "check": "framework-names-types",
       "message": "'/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off."
+    },
+    {
+      "file": "trinkets.md",
+      "line": 1,
+      "severity": "error",
+      "check": "id-format",
+      "message": "id 'not-trinkets' must be 'trinkets', the value the type declares."
     }
   ]
 }

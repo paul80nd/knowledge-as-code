@@ -30,8 +30,10 @@ them sparingly, and derive rather than state wherever possible.
 * **Type name** — singular. An *ADR*, a *standard*, a *control*.
 
 * **Folder and page** — plural. `adrs/`, `standards/`, `controls/`. The folder is a collection, and CI infers a
-  document's type from it, so the mapping is a rule rather than a lookup. Two types take the singular because English
-  has no plural to give: `data/` is a mass noun, and `glossary.md` is one document rather than a collection.
+  document's type from it, so the mapping is a rule rather than a lookup. Two types take the singular: `data/` is a mass
+  noun, and a corpus has one `glossary/` held in several files, one per bounded context. Naming that folder for the
+  collection rather than for its members keeps every citation of it, and the plural reads as a set of unrelated
+  vocabularies rather than as one presented in sections.
 
 * **ID prefix** — singular, since an ID names a single document. `adr-0017`, `std-0004`.
 
@@ -50,7 +52,7 @@ them sparingly, and derive rather than state wherever possible.
   immutable once the document is active.
 
   *Literal* is the whole id, written into the schema by the type that carries it. A single-document type has one
-  document and so one name for it: the glossary's id is `glossary`, and there is nothing to discriminate between.
+  document and so one name for it, and nothing to discriminate between.
 
 * **Slug length** — the filename slug (excluding the `NNNN-` or `mnem-` prefix) is at most 30 characters. The filename
   is a handle, not a title: it identifies the document at a glance while the H1 carries the full descriptive title. CI
@@ -132,7 +134,7 @@ upper-case on the line because it is read as a stamp. CI holds all three to the 
 identity line took that job, and the split is worth it: a title that competes with a handle is a worse title, and
 generated indexes had to strip the ID back off to fill a column that already held it.
 
-The single-page types — the glossary — have no records to identify and carry no identity line.
+A single-document type has no record to identify and carries no identity line.
 
 ## Per-type fields
 
@@ -143,9 +145,10 @@ has what they need without leaving it, and there is still one definition.
 
 [ADR](/adrs#metadata) · [Capability](/capabilities#metadata) · [Control](/controls#metadata) · [Data](/data#metadata) ·
 [Discovery](/discoveries#metadata) · [Explanation](/explanations#metadata) · [FAQ](/faqs#metadata) ·
-[Integration](/integrations#metadata) · [NFR](/nfrs#metadata) · [Policy](/policies#metadata) ·
-[Postmortem](/postmortems#metadata) · [Process](/processes#metadata) · [Runbook](/runbooks#metadata) ·
-[Service](/services#metadata) · [Standard](/standards#metadata) · [Tool](/tools#metadata)
+[Glossary](/glossary#metadata) · [Integration](/integrations#metadata) · [NFR](/nfrs#metadata) ·
+[Policy](/policies#metadata) · [Postmortem](/postmortems#metadata) · [Process](/processes#metadata) ·
+[Runbook](/runbooks#metadata) · [Service](/services#metadata) · [Standard](/standards#metadata) ·
+[Tool](/tools#metadata)
 
 <!-- END GENERATED: types-metadata -->
 

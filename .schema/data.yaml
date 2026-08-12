@@ -20,7 +20,7 @@ lineage:
 
 notes: >
   Folder is singular because English gives no plural. One of two exceptions to the plural-folder rule,
-  alongside `glossary.md`.
+  alongside `glossary/`.
 
 id:
   prefix: dat

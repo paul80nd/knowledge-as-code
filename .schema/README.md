@@ -142,9 +142,9 @@ Beyond `fields`, each type file declares:
 | `index`                    | Columns, sort columns and direction for the generated index — see the note below                                 |
 | `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |
 
-**`shape`.** Most types are a **collection** — a folder of records, a page describing them, and a template to copy. The
-glossary is a **single-document** type: one document read end to end, whose page *is* the record. A collection declares
-its `folder:`; a single-document type declares none, because it has none, and nothing indexes it.
+**`shape`.** Most types are a **collection** — a folder of records, a page describing them, and a template to copy. A
+**single-document** type is one document read end to end, whose page *is* the record. A collection declares its
+`folder:`; a single-document type declares none, because it has none, and nothing indexes it.
 
 It is declared rather than inferred. An absent `folder:` and a deliberate `folder: null` are the same string once
 parsed, so a shape read off the folder cannot tell a single-document type from a collection whose folder key was lost.
