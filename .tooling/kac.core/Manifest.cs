@@ -5,7 +5,7 @@ namespace kac.core;
 // Portability manifest & mechanism sync state
 // ---------------------------------------------------------------------------
 
-// One rule from knowledge-as-code/manifest.yaml: a set of path globs that all resolve to one layer.
+// One rule from .tooling/manifest.yaml: a set of path globs that all resolve to one layer.
 public record ManifestRule(IReadOnlyList<string> Patterns, string Layer);
 
 public class Manifest
@@ -19,7 +19,7 @@ public class Manifest
     public static Manifest Load(string repoRoot)
     {
         var m = new Manifest();
-        var root = Yaml.LoadFile(Path.Combine(repoRoot, "knowledge-as-code", "manifest.yaml"));
+        var root = Yaml.LoadFile(Path.Combine(repoRoot, ".tooling", "manifest.yaml"));
         if (int.TryParse(Yaml.Str(Yaml.Get(root, "version")), out var version)) m.Version = version;
         if (Yaml.Get(root, "rules") is YamlSequenceNode rules)
             foreach (var rule in rules.Children)

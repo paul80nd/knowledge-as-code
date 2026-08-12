@@ -5,6 +5,9 @@ is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **`kac.core`
 `dotnet run` builds and runs it with no build step to manage. The schema is the source of truth: `kac` reads it and
 enforces it, so **adding a knowledge type is adding a YAML file, not editing this tool**.
 
+Two declarations the tool reads sit here too: [`manifest.yaml`](manifest.yaml), which says which files a corpus shares
+with the framework, and each corpus's own `.corpus.yaml` at the repository root.
+
 ## Running
 
 ```bash
@@ -291,9 +294,10 @@ Two rules hold this together:
 
 ## `mechanism` — portability
 
-`manifest.yaml` declares each file's layer — `synced`, `verification`, `forked`, `generated`, `local`, `ignored`. Copies
-drift away from a declaration nobody enforces, so `mechanism` enforces this one from both ends. `--check` reports how
-far a corpus has moved from a reference. `--sync` takes the shared layers from one.
+[`manifest.yaml`](manifest.yaml), beside this file, declares each file's layer — `synced`, `verification`, `forked`,
+`generated`, `local`, `ignored`. Copies drift away from a declaration nobody enforces, so `mechanism` enforces this one
+from both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the shared layers from
+one.
 
 ### `--check`
 

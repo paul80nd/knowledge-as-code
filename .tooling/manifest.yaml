@@ -106,9 +106,9 @@ rules:
   - path: ".tooling/**"
     layer: synced
     note: >
-      The validator, the generator, the sync command and the reference for what the
-      tool does. The rule above carves out the part a corpus running the tool has
-      no use for.
+      The validator, the generator, the sync command, this manifest, and the reference
+      for what the tool does. The rule above carves out the part a corpus running the
+      tool has no use for.
 
   - path: ".schema/**"
     layer: synced
@@ -135,8 +135,6 @@ rules:
     note: >
       Agent skills. `kb-review` reads a record against the authoring and style rules
       and proposes rewrites.
-
-  - { path: "knowledge-as-code/manifest.yaml", layer: synced, note: "This manifest." }
 
   - path: "knowledge-as-code/taxonomy.md"
     layer: synced

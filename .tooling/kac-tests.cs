@@ -32,7 +32,7 @@ if (repoRoot is null)
 
 var kacSource = Path.Combine(repoRoot, ".tooling", "kac.cs");
 var schemaDir = Path.Combine(repoRoot, ".schema");
-var manifestFile = Path.Combine(repoRoot, "knowledge-as-code", "manifest.yaml");
+var manifestFile = Path.Combine(repoRoot, ".tooling", "manifest.yaml");
 var fixturesDir = Path.Combine(repoRoot, ".tooling", "tests", "fixtures");
 
 var rawArgs = args.ToList();
@@ -495,9 +495,9 @@ static string AssembleMechanismTemp(string schemaDir, string manifestFile, strin
             if (!Path.GetFileName(file).StartsWith('_') && !keptTypes.Contains(Path.GetFileNameWithoutExtension(file)))
                 File.Delete(file);
 
-    // The schema lives at .schema/, so nothing else creates knowledge-as-code/ for us.
-    Directory.CreateDirectory(Path.Combine(temp, "knowledge-as-code"));
-    File.Copy(manifestFile, Path.Combine(temp, "knowledge-as-code", "manifest.yaml"));
+    // The schema lives at .schema/, so nothing else creates .tooling/ for us.
+    Directory.CreateDirectory(Path.Combine(temp, ".tooling"));
+    File.Copy(manifestFile, Path.Combine(temp, ".tooling", "manifest.yaml"));
     CopyTree(subtree, temp);
     return temp;
 }

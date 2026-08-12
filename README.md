@@ -50,8 +50,8 @@ any organisation, shared byte-for-byte between every corpus running this framewo
 to use it, and a template to copy. Opinionated, and meant to be forked — you take them once, localise the examples to
 your own domain, and never reconcile them again.
 
-Which files fall on which side is declared in [`knowledge-as-code/manifest.yaml`](knowledge-as-code/manifest.yaml), not
-asserted in prose.
+Which files fall on which side is declared in [`.tooling/manifest.yaml`](.tooling/manifest.yaml), not asserted in
+prose.
 
 **What does not live here** is anybody's actual knowledge. Every record in this repository is illustrative and is meant
 to be deleted. A corpus derived from this one holds its organisation's policies, services and decisions; this one holds
@@ -154,19 +154,17 @@ knowledge-as-code/     # the system's own documentation
   ├── authoring.md     # what a document's tier adds to that
   ├── principles.md    # why the framework is shaped this way
   ├── lineage.md       # where the taxonomy's names came from
-  ├── automation.md    # what is generated, validated and scheduled
-  └── manifest.yaml    # which files are shared, which are local
+  └── automation.md    # what is generated, validated and scheduled
 kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
 .corpus.yaml           # what this corpus is, and where it takes the framework from
 .claude/skills/        # agent skills, shared with every corpus
 .schema/               # the machine-readable schema — the source of truth
-.tooling/              # the kac tool: entrypoint + kac.core library, plus its tests and fixtures
+.tooling/              # the kac tool: entrypoint + kac.core library, the manifest, its tests and fixtures
 ```
 
 The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.corpus.yaml` — so the markdown stays the visible half of
 the repository, and an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
-`knowledge-as-code/` holds documentation, with one exception. `manifest.yaml` sits there because it is the authority on
-what is shared and what is local, and both this README and `automation.md` cite it.
+`knowledge-as-code/` holds documentation and nothing else: what the tool reads lives beside the tool.
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
 

@@ -2,8 +2,8 @@
 #
 # Says what this corpus is and where it stands against the shared framework.
 #
-# The portability manifest (`knowledge-as-code/manifest.yaml`) defines what is
-# shared between corpora. This file records:
+# The portability manifest (`.tooling/manifest.yaml`) defines what is shared
+# between corpora. This file records:
 # - the part this corpus plays in the framework, and where it publishes
 # - which framework version it runs, and where it takes that from
 # - which record types it has adopted

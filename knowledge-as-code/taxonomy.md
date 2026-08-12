@@ -283,11 +283,10 @@ CLAUDE.md              # agent guidance for working in this repository
 frameworks.md          # external frameworks, and what each obliges us to
 knowledge-as-code.md   # the approach
 knowledge-as-code/     # the system's own documentation — outside the taxonomy
-  manifest.yaml        # which files are shared and which are local
 .corpus.yaml           # what this corpus is, and where it takes the framework from
 .claude/skills/        # agent machinery — SYNCED
 .schema/               # the machine-readable schema — SYNCED
-.tooling/              # validators and generators — SYNCED
+.tooling/              # validators, generators and the manifest — SYNCED
 _plan/                 # migration scaffolding — temporary
 _reports/              # GENERATED
 ```

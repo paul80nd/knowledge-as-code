@@ -145,7 +145,7 @@ reviewing a record needs.
 Everything in this document describes **mechanism**, not corpus content. The validators, generators, schema and skills
 are deliberately free of organisation specifics so they can be lifted to another organisation as a unit.
 
-Which files that covers is not a matter of judgement. [`manifest.yaml`](manifest.yaml) declares it and
+Which files that covers is not a matter of judgement. [`manifest.yaml`](../.tooling/manifest.yaml) declares it and
 `kac mechanism --check` enforces it: a file in the `synced` layer carrying corpus-specific content is a defect, not a
 customisation. Anything organisation-specific belongs in the corpus, or in the `forked` layer — the type root pages,
 templates and publishing config — which exist to be filled with local content.
