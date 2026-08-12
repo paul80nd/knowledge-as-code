@@ -112,6 +112,7 @@ public class RefCheckTests
             .Prepend(Parse(schema, "adrs/adr-0001.md", "adr-0001", $"{field.Name}: {target}"))
             .OfType<Doc>()
             .ToList();
+        Assert.Equal(cast.Length + 1, docs.Count); // a document that did not parse would quietly shrink the corpus
 
         var found = new List<Finding>();
         Validator.CheckCorpus(schema, docs, found);

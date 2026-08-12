@@ -31,17 +31,19 @@ public class IdentityLineTests
     private static TypeSchema Type(string key, string label, string plural) =>
         new() { Key = key, Folder = key, Label = label, LabelPlural = plural };
 
-    // The whole document pass runs, since the identity line is read where a reader meets it — beneath
-    // the H1 of a document that has one. Everything else it reports is about the fields this hand-built
-    // type does not declare, so the one check under test is the one taken back.
+    // The whole document pass runs, because the identity line is read where a reader meets it: beneath
+    // the H1, against the type the folder resolves to. The pass has plenty else to say about a document
+    // this bare, so the finding under test is picked out of what it produced. Nothing here links
+    // anywhere, which is what leaves the repository root free to be any real directory.
     private static string IdentityType(TypeSchema type, string id)
     {
         var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { [type.Key] = type } };
         var text = $"---\nid: {id}\n---\n\n# A record\n\n`Standard: {id}` `DRAFT`\n";
         var doc = Doc.Parse($"{type.Folder}/{id}.md", text, schema);
+        Assert.NotNull(doc);
 
         var found = new List<Finding>();
-        Validator.CheckDocument(doc!, schema, Directory.GetCurrentDirectory(), found);
+        Validator.CheckDocument(doc, schema, Directory.GetCurrentDirectory(), found);
         return Assert.Single(found, x => x.Check == "identity-type").Message;
     }
 }

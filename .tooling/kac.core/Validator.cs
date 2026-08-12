@@ -581,10 +581,7 @@ public static class Validator
                 if (spec.Refs.Count == 0) continue;
                 if (spec.Type != "id" && (spec.Type != "list" || spec.Of != "id")) continue;
 
-                // A `ref:` at a folder no schema covers is `schema-dispatch`'s to report, and leaves
-                // nothing here to hold a target to — the existence half still runs.
-                var admits = Admitted(spec, schema);
-
+                var admitted = Admitted(spec, schema);
                 foreach (var targetId in d.FrontList(name))
                 {
                     if (spec.IsLiteral(targetId)) continue;
@@ -595,10 +592,10 @@ public static class Validator
                         continue;
                     }
 
-                    if (admits.Count == 0 || target.Type is null || admits.Contains(target.Type)) continue;
+                    if (Admits(admitted, target)) continue;
                     f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "ref-resolves",
-                        $"'{name}' points at '{targetId}', which is {WithArticle(target.Type)}, "
-                        + $"not {OneOf(admits)}."));
+                        $"'{name}' points at '{targetId}', which is {WithArticle(target.Type!)}, "
+                        + $"not {OneOf(admitted)}."));
                 }
             }
         }
@@ -613,7 +610,7 @@ public static class Validator
             {
                 var spec = d.Type.Fields[name];
                 if (spec.Reciprocal is null || spec.Refs.Count == 0) continue;
-                var admits = Admitted(spec, schema);
+                var admitted = Admitted(spec, schema);
                 foreach (var targetId in d.FrontList(name))
                 {
                     if (!byId.TryGetValue(targetId, out var target)) continue;
@@ -621,7 +618,7 @@ public static class Validator
                     // A target of the wrong type carries no counterpart field to answer with, so asking
                     // would report one fault twice — once as the wrong type and once as a silence that
                     // is nothing but its consequence.
-                    if (admits.Count > 0 && target.Type is not null && !admits.Contains(target.Type)) continue;
+                    if (!Admits(admitted, target)) continue;
 
                     var back = target.FrontList(spec.Reciprocal);
                     var selfId = d.FrontScalar("id");
@@ -642,6 +639,12 @@ public static class Validator
     private static List<TypeSchema> Admitted(FieldSpec spec, Schema schema) =>
         [.. spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>()];
 
+    // Whether a field may point at the document its id landed on. Where the question cannot be put the
+    // answer is yes, which leaves the target to the checks that can: a `ref:` at a folder no schema
+    // covers is `schema-dispatch`'s to report, and a document in a folder no type covers is `type`'s.
+    private static bool Admits(List<TypeSchema> admitted, Doc target) =>
+        admitted.Count == 0 || target.Type is null || admitted.Contains(target.Type);
+
     // The types named as a reader would say them aloud — "a Service", "an FAQ or a Standard" — in the
     // order the declaration lists them, which is the order whoever wrote it chose.
     private static string OneOf(List<TypeSchema> types)
@@ -653,27 +656,6 @@ public static class Validator
             2 => $"{names[0]} or {names[1]}",
             _ => $"{string.Join(", ", names[..^1])}, or {names[^1]}"
         };
-    }
-
-    // A type as a sentence names one of its records: "an ADR", "a Service", "Data". Both declarations
-    // decide it, so a message reads as English for every label a schema may carry.
-    //
-    // A type whose singular and plural are the same word is a mass noun and takes no article — "this is
-    // Data" — which the schema already says, in declaring `label:` and `label-plural:` alike. Otherwise
-    // the article follows how the label is read aloud rather than how it is spelled: a label in capitals
-    // is read letter by letter, so it takes the article the name of its first letter wants — "an ADR",
-    // "an NFR" — and the letters read with an opening vowel are the whole of that exception.
-    private static string WithArticle(TypeSchema t)
-    {
-        var name = t.DisplayName;
-        if (name.Length == 0) return name;
-        if (!string.IsNullOrEmpty(t.LabelPlural) && string.Equals(t.Label, t.LabelPlural, StringComparison.Ordinal))
-            return name;
-
-        var vowel = name.All(char.IsAsciiLetterUpper)
-            ? "AEFHILMNORSX".Contains(name[0])
-            : "AEIOU".Contains(char.ToUpperInvariant(name[0]));
-        return vowel ? $"an {name}" : $"a {name}";
     }
 
     // The type's `rules:` again, for the rules that read the corpus rather than a document. Driven from
@@ -1043,6 +1025,28 @@ public static class Validator
     private static bool LooksLikeId(string v) => v.Contains('-') && v == v.ToLowerInvariant();
 
     private static string Count(int n, string one, string many) => $"{n} {(n == 1 ? one : many)}";
+
+    // One record of a type, named in a sentence: "an ADR", "a Service", "Data". Read from the two labels
+    // the schema declares, so every message that names a type reads as English whatever a corpus calls
+    // its own.
+    //
+    // A type whose singular and plural are the same word is a mass noun and takes no article — "this is
+    // Data" — which the schema has already said in declaring `label:` and `label-plural:` alike.
+    // Otherwise the article follows how the label is read aloud rather than how it is spelled: a label in
+    // capitals is read letter by letter, so it takes what the name of its first letter wants — "an ADR",
+    // "an NFR" — and the letters read with an opening vowel are the whole of that exception.
+    private static string WithArticle(TypeSchema t)
+    {
+        var name = t.DisplayName;
+        if (name.Length == 0) return name;
+        if (!string.IsNullOrEmpty(t.LabelPlural) && string.Equals(t.Label, t.LabelPlural, StringComparison.Ordinal))
+            return name;
+
+        var vowel = name.All(char.IsAsciiLetterUpper)
+            ? "AEFHILMNORSX".Contains(name[0])
+            : "AEIOU".Contains(char.ToUpperInvariant(name[0]));
+        return vowel ? $"an {name}" : $"a {name}";
+    }
 
     private static string? Scalar(YamlNode node) => (node as YamlScalarNode)?.Value;
 

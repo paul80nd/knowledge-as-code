@@ -78,9 +78,10 @@ schema loads — a `values:` list on a `type: list` field and a `ref:` at a fold
 naming the file and the key, because a vocabulary or a target nothing applies is a promise to whoever takes a copy of
 these files. See [What the schema is held to](#what-the-schema-is-held-to). Every id the field then carries is resolved
 against the corpus as `ref-resolves`, whether or not the field also declares a `reciprocal:` — the one-directional edges
-are the ones no counterpart holds in step, so they are the ones a check has to hold. The target is held to the folders
-the `ref:` names as well as to existing: an id of the wrong type resolves to a real page, so it reads as deliberate to
-whoever follows it, and the declaration is the only place the intended type is written down.
+are the ones no counterpart holds in step, so they are the ones a check has to hold. Both halves of the declaration are
+asked: that the id names a document, and that the document is of a type the `ref:` names. An id of the wrong type lands
+on a real page and so reads as deliberate to whoever follows it, and this line is the only place the type it should
+have named is written down.
 
 Between them the `ref:` declarations *are* the graph, and the taxonomy renders them as one: a diagram of how the types
 relate, and a table of the field behind each edge. Nothing else declares an edge, so a relationship written only as
