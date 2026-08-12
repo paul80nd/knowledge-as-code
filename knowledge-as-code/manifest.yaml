@@ -8,7 +8,8 @@
 # which may differ, and which to ignore. `--sync` is the one command that acts on
 # what it finds.
 #
-# `.mechanism.lock` holds each corpus's own sync state.
+# `.corpus.yaml` at each repository root says what that corpus is and where it
+# takes the framework from.
 
 # The version of the shared framework's shape.
 version: 3
@@ -21,7 +22,7 @@ version: 3
 #
 # Do not increment for normal content changes to synced files.
 #
-# `upstream.mechanism-version` in each corpus's `.mechanism.lock` records the
+# `upstream.mechanism-version` in each corpus's `.corpus.yaml` records the
 # version that corpus took.
 
 layers:
@@ -40,7 +41,7 @@ layers:
     notes: >
       The tests, the fixtures they read, and the guidance for changing the tool.
       A consumer takes a tool already proven upstream and holds none of this.
-      `role:` in `.mechanism.lock` says which kind of corpus this is.
+      `role:` in `.corpus.yaml` says which kind of corpus this is.
 
   forked:
     rule: Created from upstream and then owned locally.
@@ -226,7 +227,7 @@ rules:
     note: Contribution, security and issue-management guidance specific to this corpus.
 
   - { path: "LICENSE",         layer: local, note: "MIT; a derived corpus may relicense its own copy." }
-  - { path: ".mechanism.lock", layer: local, note: "This corpus's sync state." }
+  - { path: ".corpus.yaml", layer: local, note: "What this corpus is, and where it takes the framework from." }
   - { path: "_plan/**",        layer: local, note: "Temporary planning and migration content." }
 
   # Anything the rules above do not name belongs to the corpus that holds it.

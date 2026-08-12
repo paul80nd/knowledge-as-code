@@ -2,7 +2,7 @@
 
 ## First: which repository is this?
 
-Read `role:` in [`.mechanism.lock`](.mechanism.lock) before you change anything under `.schema/` or `.tooling/`. It
+Read `role:` in [`.corpus.yaml`](.corpus.yaml) before you change anything under `.schema/` or `.tooling/`. It
 decides whether those directories are yours.
 
 * **`role: source`** — the framework master. `.schema/` and `.tooling/` are yours to change, and what you write
@@ -14,8 +14,8 @@ decides whether those directories are yours.
   proven.
 
 If a change seems to need editing the tool, it almost certainly does not: **adding a knowledge type is adding a YAML
-file to `.schema/`**. Which types a corpus carries is its own decision, and the lock records it. To adopt one, add its
-name to `types:` in [`.mechanism.lock`](.mechanism.lock) and run `kac mechanism --sync`, which brings down the schema
+file to `.schema/`**. Which types a corpus carries is its own decision, and the descriptor records it. To adopt one,
+add its name to `types:` in [`.corpus.yaml`](.corpus.yaml) and run `kac mechanism --sync`, which brings down the schema
 and seeds the root page and template. To decline one, leave it out of `types:` rather than deleting files afterwards.
 
 ## Before you commit

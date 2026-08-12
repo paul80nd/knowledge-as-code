@@ -85,7 +85,7 @@ public static class Validator
         // asking about one document is not asking about the shape of the corpus, and answering
         // anyway would bury the reply.
         if (corpus.Paths.Count == 0)
-            CheckTypeSetup(schema, repoRoot, corpus.Files, corpus.Lock, findings);
+            CheckTypeSetup(schema, repoRoot, corpus.Files, corpus.Descriptor, findings);
 
         return findings;
     }
@@ -302,9 +302,9 @@ public static class Validator
     // is not part of the corpus, so the answer is the same in a fresh clone as on the machine that
     // happened to create it.
     public static void CheckTypeSetup(Schema schema, string repoRoot, IEnumerable<string> corpusFiles,
-        MechanismLock lockFile, List<Finding> f)
+        CorpusDescriptor descriptor, List<Finding> f)
     {
-        CheckAdoption(schema, repoRoot, lockFile, f);
+        CheckAdoption(schema, repoRoot, descriptor, f);
 
         var folders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var rel in corpusFiles)
@@ -350,11 +350,11 @@ public static class Validator
     // A corpus that declares no `types:` is not asked any of this: adoption is read off its folders
     // instead, so every question below answers itself. Declaring is what turns "these are the folders that
     // happen to be here" into "these are the types we chose", and only the second can be wrong.
-    private static void CheckAdoption(Schema schema, string repoRoot, MechanismLock lockFile, List<Finding> f)
+    private static void CheckAdoption(Schema schema, string repoRoot, CorpusDescriptor descriptor, List<Finding> f)
     {
-        if (lockFile.Types is not { } declared) return;
+        if (descriptor.Types is not { } declared) return;
 
-        const string at = ".mechanism.lock";
+        const string at = ".corpus.yaml";
 
         foreach (var name in declared.Where(n => !schema.ByFolder.ContainsKey(n)))
             f.Add(new Finding(at, null, Sev.Error, "type-setup",

@@ -8,21 +8,21 @@
   },
   "findings": [
     {
-      "file": ".mechanism.lock",
+      "file": ".corpus.yaml",
       "line": null,
       "severity": "error",
       "check": "type-setup",
       "message": "'widgets' is adopted here and no schema covers it — either '.schema/widgets.yaml' has not been synced from upstream, or the name is wrong."
     },
     {
-      "file": ".mechanism.lock",
+      "file": ".corpus.yaml",
       "line": null,
       "severity": "error",
       "check": "type-setup",
       "message": "type 'adrs' is stood up here and is not in 'types:' — every generated list leaves it out while the corpus holds it. Adopt it, or delete what was built."
     },
     {
-      "file": ".mechanism.lock",
+      "file": ".corpus.yaml",
       "line": null,
       "severity": "error",
       "check": "type-setup",

@@ -86,7 +86,7 @@ corpus that is half the size and entirely believed is worth more than one that i
 An organisation adopting this framework gets its own cut. No runtime dependency, no upstream to ask permission from,
 nothing to remove if they later go their own way.
 
-The cost is drift, and drift is met with a manifest and a lockfile rather than with a prohibition. A corpus records
+The cost is drift, and drift is met with a manifest and a descriptor rather than with a prohibition. A corpus records
 which version of the shared layer it is on and which divergences it has deliberately accepted, so that a necessary
 deviation does not have to masquerade as an accident.
 

@@ -15,7 +15,7 @@ public sealed class LoadedCorpus
     // What this corpus records about itself: which types it has adopted, and where it stands against the
     // framework it took. Carried here because adoption decides what is generated and what the corpus is
     // held to having built, so every entry point needs the same answer.
-    public required MechanismLock Lock;
+    public required CorpusDescriptor Descriptor;
 
     // Every file, before exclusion — what CheckTypeSetup asks about which folders exist.
     public required List<string> Files;
@@ -79,7 +79,7 @@ public static class Corpus
         {
             RepoRoot = repoRoot,
             Schema = schema,
-            Lock = MechanismLock.Load(repoRoot),
+            Descriptor = CorpusDescriptor.Load(repoRoot),
             Files = files,
             Docs = docs,
             Templates = DiscoverTemplates(repoRoot, schema, paths),
@@ -93,7 +93,7 @@ public static class Corpus
     // Everything generated about the taxonomy reads it, so a corpus's own pages describe the corpus rather
     // than the framework's full range.
     //
-    // Two answers to the same question, and which one is given is the point. Where `.mechanism.lock`
+    // Two answers to the same question, and which one is given is the point. Where `.corpus.yaml`
     // declares `types:`, that is the answer: adoption is a decision the corpus records, and the pages
     // follow the decision. Where it does not, the answer is read off the filesystem — a type is adopted if
     // both halves are there, the page and the folder, which is the bar CheckTypeSetup holds a type to
@@ -101,11 +101,11 @@ public static class Corpus
     //
     // The inferred answer is the weaker one: it cannot tell a type nobody wanted from a type somebody has
     // not finished adding, which is exactly what `types:` exists to say. It is the reading a corpus gets
-    // until it declares, so that taking a newer framework never requires editing the lock in the same
+    // until it declares, so that taking a newer framework never requires editing the descriptor in the same
     // breath.
-    public static List<TypeSchema> Adopted(Schema schema, string repoRoot, MechanismLock lockFile)
+    public static List<TypeSchema> Adopted(Schema schema, string repoRoot, CorpusDescriptor descriptor)
     {
-        var declared = lockFile.Types;
+        var declared = descriptor.Types;
 
         return
         [

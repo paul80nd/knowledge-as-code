@@ -83,7 +83,7 @@ types at length, the disambiguations, the graph and the edges beneath it — alo
 `metadata.md` and the index at the repository root, covers the types **this** corpus holds. A corpus that adopted five
 of the framework's types is offered five, and every row opens.
 
-The corpus decides which five, and records that in `types:` in `.mechanism.lock`. A corpus that has not declared is read
+The corpus decides which five, and records that in `types:` in `.corpus.yaml`. A corpus that has not declared is read
 off its folders instead: a type counts where both halves are there, the page and the folder. That answer is the weaker
 one, because it cannot tell a type nobody wanted from one somebody has not finished adding.
 
@@ -152,10 +152,10 @@ Which files that covers is not a matter of judgement. [`manifest.yaml`](manifest
 customisation. Anything organisation-specific belongs in the corpus, or in the `forked` layer — the type root pages,
 templates and publishing config — where local content is the whole point.
 
-What a corpus takes is its own decision, recorded in `.mechanism.lock` rather than inferred from what it happens to
-hold. `types:` names the knowledge types it has adopted. `role:` says whether it answers for the mechanism or only runs
-it, which settles whether it carries the `verification` layer — the tests and fixtures that prove the tool.
+What a corpus takes is its own decision, recorded in `.corpus.yaml` rather than inferred from what it happens to hold.
+`types:` names the knowledge types it has adopted. `role:` says whether it answers for the mechanism or only runs it,
+which settles whether it carries the `verification` layer — the tests and fixtures that prove the tool.
 
-`kac mechanism --sync` reads both keys, brings down what the lock asked for, seeds the forked files a new type needs,
-records what it took, and regenerates. So a corpus adopts a type by adding a line to the lock and syncing. It declines
-one by leaving the line out, not by deleting files afterwards.
+`kac mechanism --sync` reads both keys, brings down what the descriptor asked for, seeds the forked files a new type
+needs, records what it took, and regenerates. So a corpus adopts a type by adding a line to the descriptor and syncing.
+It declines one by leaving the line out, not by deleting files afterwards.

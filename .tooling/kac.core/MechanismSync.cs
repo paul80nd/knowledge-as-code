@@ -1,5 +1,5 @@
 // The `mechanism --sync` engine: bring the shared layers down from a reference corpus, then record
-// what was taken. MechanismCheck reads the same manifest and the same lock; this half writes.
+// what was taken. MechanismCheck reads the same manifest and the same descriptor; this half writes.
 //
 // Sync copies and never deletes. Where this corpus holds a file the reference does not, sync names it
 // and leaves it alone. Deleting knowledge because an upstream tree was smaller is not a tool's call.
@@ -11,13 +11,13 @@ public static class MechanismSync
     // `manifest` is the *reference's*, because the boundary comes down with the files it describes: a
     // corpus on an older manifest would otherwise resolve the new upstream tree by the old rules and
     // silently skip whatever the rules had not yet heard of.
-    public static int Run(string localRoot, string refRoot, Manifest manifest, MechanismLock lockFile,
+    public static int Run(string localRoot, string refRoot, Manifest manifest, CorpusDescriptor descriptor,
         string reference, string today)
     {
-        var accepted = lockFile.Accepted.ToDictionary(a => a.Path, a => a.Reason, StringComparer.Ordinal);
+        var accepted = descriptor.Accepted.ToDictionary(a => a.Path, a => a.Reason, StringComparer.Ordinal);
         var localFiles = MechanismCheck.ListFiles(localRoot);
         var refFiles = MechanismCheck.ListFiles(refRoot);
-        var declinedTypes = DeclinedTypePaths(refRoot, lockFile);
+        var declinedTypes = DeclinedTypePaths(refRoot, descriptor);
 
         var updated = new List<string>();      // shared, copied down because the authored halves differed
         var seeded = new List<string>();       // forked, copied because this corpus had none
@@ -40,7 +40,7 @@ public static class MechanismSync
 
             if (layer is not ("synced" or "verification" or "forked")) continue;
 
-            if (MechanismCheck.Declined(rel, layer, lockFile) || declinedTypes.Declines(rel))
+            if (MechanismCheck.Declined(rel, layer, descriptor) || declinedTypes.Declines(rel))
             {
                 declined++;
                 continue;
@@ -84,11 +84,11 @@ public static class MechanismSync
         Section("SKIPPED — accepted divergences, left as they are", skipped);
         Section("HELD HERE, NOT UPSTREAM — shared files the reference does not have (sync never deletes)", heldHere);
 
-        MechanismLock.Stamp(localRoot, manifest.Version, reference, today);
+        CorpusDescriptor.Stamp(localRoot, manifest.Version, reference, today);
         Console.WriteLine(
             $"synced: {updated.Count} updated, {inStep} already in step; seeded {seeded.Count}; "
             + $"skipped {skipped.Count}; declined {declined}. "
-            + $"Recorded in .mechanism.lock as mechanism version {manifest.Version}, taken {today}.");
+            + $"Recorded in .corpus.yaml as mechanism version {manifest.Version}, taken {today}.");
 
         if (unclassified.Count > 0)
         {
@@ -141,15 +141,15 @@ public static class MechanismSync
     // `forked`, and the check never asks a corpus to hold a forked file. Sync does seed an absent one.
     // Without this it would stand up every type the reference has, and `validate` would then report each
     // of them as stood up and not adopted.
-    private static DeclinedPaths DeclinedTypePaths(string refRoot, MechanismLock lockFile)
+    private static DeclinedPaths DeclinedTypePaths(string refRoot, CorpusDescriptor descriptor)
     {
-        if (lockFile.Types is null) return new DeclinedPaths([], []);
+        if (descriptor.Types is null) return new DeclinedPaths([], []);
 
         var files = new HashSet<string>(StringComparer.Ordinal);
         var folders = new List<string>();
         foreach (var (name, type) in Schema.Load(refRoot).ByFolder)
         {
-            if (lockFile.Adopted(name)) continue;
+            if (descriptor.Adopted(name)) continue;
             if (!string.IsNullOrEmpty(type.Page)) files.Add(type.Page);
             folders.Add((string.IsNullOrEmpty(type.Folder) ? name : type.Folder) + "/");
         }

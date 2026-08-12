@@ -32,7 +32,7 @@ that nobody spends an evening on work that was never going to land.
 
 This framework is **copied, not depended on**. The intended way to use it is to take your own cut: clone it, delete the
 types you do not want, and change whatever you like in your copy. There is no runtime dependency on this repository and
-nothing to remove if you later go your own way. The [README](../README.md) explains the model, and `.mechanism.lock`
+nothing to remove if you later go your own way. The [README](../README.md) explains the model, and `.corpus.yaml`
 records which version of the shared layer a copy is running and where it has deliberately stepped away.
 
 A copy that diverges is the design working, not a failure to contribute upstream.

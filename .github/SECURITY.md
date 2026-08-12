@@ -39,5 +39,5 @@ secrets reachable from the job. A report that this is dangerous needs to show an
 There are no releases and no supported-version matrix. Fixes land on `main`.
 
 This framework is copied, not depended on, so nothing here can push a fix to you. A corpus running it holds its own cut
-and records the version in `.mechanism.lock`; picking up a fix means resyncing that copy. Watching this repository is
+and records the version in `.corpus.yaml`; picking up a fix means resyncing that copy. Watching this repository is
 the only notification channel.

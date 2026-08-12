@@ -1,6 +1,6 @@
 A corpus that adopted one of the two types it holds files for.
 
-`.mechanism.lock` names `adrs` and nothing else. `policies` is stood up all the same — a page, a folder and a template
+`.corpus.yaml` names `adrs` and nothing else. `policies` is stood up all the same — a page, a folder and a template
 left behind by the copy the corpus began as — and `.schema/` covers both, as it covers every type the framework
 declares.
 

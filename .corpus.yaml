@@ -1,6 +1,6 @@
-# knowledge-as-code — corpus sync state
+# knowledge-as-code — corpus descriptor
 #
-# Records this corpus's relationship with the shared framework.
+# Says what this corpus is and where it stands against the shared framework.
 #
 # The portability manifest (`knowledge-as-code/manifest.yaml`) defines what is
 # shared between corpora. This file records:

@@ -128,7 +128,7 @@ as they are — that is the half you want to receive updates to.
 this corpus has built, so a type you have not stood up yet is a valid, silent state. That is what makes it possible to
 take the whole schema and grow into it one type at a time.
 
-**Say which types you kept** in `types:` in `.mechanism.lock`. Until you do, the tool reads your folders, and it cannot
+**Say which types you kept** in `types:` in `.corpus.yaml`. Until you do, the tool reads your folders, and it cannot
 tell a type you did not want from one you have not finished adding. Once you do, it holds you to the list, and every
 generated page is written from it.
 
@@ -157,18 +157,18 @@ knowledge-as-code/     # the system's own documentation
   ├── automation.md    # what is generated, validated and scheduled
   └── manifest.yaml    # which files are shared, which are local
 kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
-.mechanism.lock        # this corpus's sync state
+.corpus.yaml           # what this corpus is, and where it takes the framework from
 .claude/skills/        # agent skills, shared with every corpus
 .schema/               # the machine-readable schema — the source of truth
 .tooling/              # the kac tool: entrypoint + kac.core library, plus its tests and fixtures
 ```
 
-The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.mechanism.lock` — so the markdown stays the visible half of
+The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.corpus.yaml` — so the markdown stays the visible half of
 the repository, and an Azure DevOps wiki published from this tree shows knowledge rather than machinery. What remains in
 `knowledge-as-code/` is documentation, bar `manifest.yaml`, which stays because it is the authority on the shared and
 local split and both the README and `automation.md` cite it as such.
 
-Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.mechanism.lock`, not editing the tool.
+Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
 
 ## Keeping copies in step
 
@@ -177,7 +177,7 @@ runtime dependency on this repository and nothing to remove if they later want t
 
 Copies drift, and the manifest is how we see it happening. Every file resolves to exactly one layer — `synced`,
 `verification`, `forked`, `generated`, `local` or `ignored` — and each layer has a rule about what divergence means.
-`.mechanism.lock` records which version of the shared layer a corpus is on, any deviation it has deliberately accepted,
+`.corpus.yaml` records which version of the shared layer a corpus is on, any deviation it has deliberately accepted,
 which of the framework's types it has adopted, and whether it is answerable for the mechanism or only runs it.
 
 A corpus that declares its types states a decision it made, rather than the shape it happens to have. `validate` then
@@ -190,10 +190,10 @@ reader and the code they came for.
 
 `kac mechanism --check` reports how far a copy has drifted. `kac mechanism --sync` brings the shared layers down from
 upstream, seeds the pages a newly adopted type needs, records what it took, and regenerates. Adopting a type is a line
-in the lock and a sync.
+in the descriptor and a sync.
 
-A lock that says nothing still works: adoption is read off the folders instead, and everything shared is expected. Every
-corpus starts there.
+A descriptor that says nothing still works: adoption is read off the folders instead, and everything shared is
+expected. Every corpus starts there.
 
 ## Opinions
 
