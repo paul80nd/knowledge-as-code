@@ -61,8 +61,10 @@ sections:
 
 rules:
   - id: carried-in-full-by-digest
-    description: No glossary entry runs beyond one paragraph.
-    # This file is read end to end, so every entry's length is paid by every reader.
+    description: No entry runs beyond one paragraph, and a digest carries the glossaries most general first.
+    # A glossary is read end to end, so every entry's length is paid by every reader. With several of them,
+    # "carry the glossary in full" names no single file: the digest takes them most general first and cuts
+    # off when its budget is spent, which three areas are enough to do.
   - id: undefined-terms
     description: >
       Reports terms appearing more than N times across the corpus with no glossary entry.

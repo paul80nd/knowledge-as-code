@@ -15,13 +15,14 @@ The words we use, and what we mean by them.
 The ubiquitous language of the domain — one entry per term whose meaning is specific to us, or which is easily confused
 with a neighbouring term.
 
-Unlike every other type, this is a **single document rather than a collection**. It is meant to be read end to end, and
-it carries its own frontmatter as one descriptive document; there are no per-term files and no per-term metadata.
+One file per bounded context, collected under `glossary/`. The folder's index lists every term A–Z with its definition
+and the glossary that owns it, so the vocabulary reads end to end from one page. Every other type's index gives a row
+per record, and the departure is deliberate: here a record is a file of terms.
 
 ## Why we use it
 
-It is the highest value-per-byte content in the wiki, and the one page a contributor can read in full before starting
-work.
+It is the highest value-per-byte content in the wiki, and the index is the one page a contributor can read in full
+before starting work.
 
 The reason is specific. The terms particular to the domain are often not interchangeable, and neighbouring terms are
 easily confused. A contributor — human or agent — who doesn't know the distinctions will produce work that is plausible,
@@ -40,11 +41,21 @@ Not the place for:
 * **A full explanation of a pattern** — that is an [explanation](/explanations). A glossary entry is a sentence, and
   links out for the rest.
 
+**Split by bounded context or product surface, never by topic.** A glossary covers the language of one context — the
+framework itself, a product area, a system that names things its own way. A file called "infrastructure terms" starts an
+argument about placement every time somebody adds a word, and the words drift while the argument runs.
+
+**A term goes in the most general glossary that admits it.** A glossary admits a term when the term belongs to its
+context: a word the whole estate uses sits in the corpus-wide file, and a word only lending uses sits with lending. A
+narrower glossary redefines a term the general one carries only where the meaning genuinely differs. Each of the two
+entries then names the other, and without that `hold` has two definitions and a reader who finds one has no way of
+knowing about the other.
+
 ## Terms
 
 _(One entry per term, alphabetical, flat — no A–Z subheadings. Each is an H3, singular, in its canonical casing:
 a one-sentence definition, an optional `**Not:**` line naming what it is confused with, and links out where the detail
-lives. One paragraph maximum — this file is read whole.)_
+lives. One paragraph maximum — a glossary is read whole.)_
 
 ### Example term
 
@@ -56,19 +67,24 @@ Owned by [svc-lending]. See [adr-0001].
 
 ## Adding a term
 
-1. Add an H3 in alphabetical position. Do not create a file — this type has no folder.
-2. One sentence of definition. If it needs a paragraph, the paragraph belongs in an
+1. Choose the glossary — the most general one that admits the term.
+2. Add an H3 in alphabetical position.
+3. One sentence of definition. If it needs a paragraph, the paragraph belongs in an
    [explanation](/explanations) and the entry links to it.
-3. Add a `**Not:**` line wherever confusion is plausible. Those lines are the most useful content here.
-4. Name the owning [service](/services) where the concept has one.
+4. Add a `**Not:**` line wherever confusion is plausible. Those lines are the most useful content here.
+5. Name the owning [service](/services) where the concept has one.
+6. Where a narrower glossary redefines a term the general one carries, add a reference from each entry to the other.
 
 **Conventions**
 
-* **Cross-references use the heading anchor** — `[tenant](/glossary#tenant)`. The anchor is the term's identifier; there
-  are no numeric ids.
+* **Cross-references name the owning glossary and the term's anchor** — `[hold](/glossary/lending.md#hold)`. The anchor
+  is the term's identifier; there are no numeric ids.
 * **Terms are singular and in canonical casing.** `Term`, not `terms`.
-* **Keep it tight.** The schema declares `carried-in-full-by-digest` — no entry beyond one paragraph — and nothing runs
-  it, so the limit is yours to keep.
+
+**Declared.** `carried-in-full-by-digest` holds an entry to one paragraph, and takes the glossaries into the digest
+[adr-0001] provides for, most general first. The digest cuts off when its budget is spent rather than overrunning it,
+and three areas are enough to spend it. So the ordering decides which vocabulary a session arrives holding. Nothing
+generates a digest, so nothing runs the rule and the limit is yours to keep.
 
 ## Metadata
 
@@ -126,12 +142,12 @@ so these fields describe `glossary.md` itself.
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                        | What it would verify                                                                |
-|-----------------------------|-------------------------------------------------------------------------------------|
-| `carried-in-full-by-digest` | No glossary entry runs beyond one paragraph.                                        |
-| `undefined-terms`           | Reports terms appearing more than N times across the corpus with no glossary entry. |
-| `unused-terms`              | Reports glossary entries not used anywhere else.                                    |
-| `terms-are-singular`        | Entry headings are singular and in canonical casing.                                |
+| Rule                        | What it would verify                                                                        |
+|-----------------------------|---------------------------------------------------------------------------------------------|
+| `carried-in-full-by-digest` | No entry runs beyond one paragraph, and a digest carries the glossaries most general first. |
+| `undefined-terms`           | Reports terms appearing more than N times across the corpus with no glossary entry.         |
+| `unused-terms`              | Reports glossary entries not used anywhere else.                                            |
+| `terms-are-singular`        | Entry headings are singular and in canonical casing.                                        |
 
 <!-- END GENERATED: checks-glossary -->
 
