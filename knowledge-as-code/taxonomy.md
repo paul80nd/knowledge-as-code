@@ -279,7 +279,7 @@ Alongside the types:
 
 ```
 README.md              # orientation
-CLAUDE.md              # agent guidance, with the rules digest generated into it
+CLAUDE.md              # agent guidance for working in this repository
 frameworks.md          # external frameworks, and what each obliges us to
 knowledge-as-code.md   # the approach
 knowledge-as-code/     # the system's own documentation — outside the taxonomy

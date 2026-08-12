@@ -177,9 +177,9 @@ rules:
   - path: "CLAUDE.md"
     layer: forked
     note: >
-      Corpus-specific agent guidance built on a common framework structure. The rules
-      digest arrives as a generated block inside it, so standing guidance and generated
-      rules share the one page an agent always reads.
+      Corpus-specific agent guidance built on a common framework structure. Hand-written
+      throughout, and forked rather than synced because a corpus fills that structure with
+      its own conventions.
 
   - path: "frameworks.md"
     layer: forked

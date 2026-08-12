@@ -53,12 +53,12 @@ Run **one `kac` invocation at a time**. File-based apps share build output and c
 * **Everything written here describes what exists today.** Agreed and unbuilt work belongs in the issue tracker, never
   in a document. One exception: a schema rule the tool does not implement, where the prose says the rule is declared and
   does not run, and the generated checks table carries it.
-* **Comments and documentation are timeless.** Describe the design as it is, not as it changed, and never as a
-  correction of what it was. The history of a change belongs in its commit message.
+* **Comments and documentation are timeless.** Describe the design as it stands today, never as a correction of what it
+  was. The history of a change belongs in its commit message.
 * **A Markdown edit leaves a whole document, not a diff.** Fold new material into what is already there and delete what
   it supersedes, so the file reads in one voice and someone arriving cold cannot tell which paragraph is the newest.
-  Give each point the detail it earns and make it once — length is not thoroughness, and a paragraph justifying a change
-  is a paragraph that will read as noise a month later.
+  Give each point the detail it earns and make it once. A paragraph justifying a change will read as noise a month
+  later.
 * **Branch and open a PR.** Pushes to `main` are rejected.
 * **Example records use one fictional estate** — Example Libraries, a public-library consortium, on `example.com`
   (reserved by RFC 2606). Extend it rather than inventing a second one; [`README.md`](README.md) explains why.
