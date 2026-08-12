@@ -10,8 +10,8 @@ review-by: "2027-08-07"
 
 `Glossary: gls-out-of-order` `DRAFT`
 
-Covering `terms-alphabetical`. Two entries are in place and the third was added at the foot of the file rather than in
-its position, which is how the order goes wrong in practice.
+Covering `terms-alphabetical`. Two entries are in place, and the third was added at the foot of the file rather than in
+its position. That is how the order goes wrong in practice.
 
 ## Scope
 

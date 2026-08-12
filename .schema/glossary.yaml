@@ -61,10 +61,10 @@ fields:
     description: The more general glossary this one narrows, where one sits above it.
     notes: >
       Absent on a glossary nothing sits above — the corpus-wide one, and the framework's own. It records the
-      ordering the resolution rule reads, so "the most general glossary that admits this term" is a question a
-      reader can answer from the index rather than from knowing the estate. A glossary every corpus shares
-      leaves it empty even where that corpus has a more general one, because a shared file cannot name a
-      record only one corpus holds.
+      ordering the resolution rule reads, so "the most general glossary that admits this term" becomes a
+      question a reader answers from the index rather than from knowing the estate. A glossary every corpus
+      shares leaves it empty even where that corpus has a more general one, because a shared file cannot
+      name a record only one corpus holds.
 
   review-by:
     required: true
@@ -75,8 +75,9 @@ sections:
   required: [Scope, Terms]
   optional: []
   notes: >
-    `Scope` says which context this glossary admits, which is what a contributor holding a word reads to
-    place it. The terms themselves are H3s under `Terms`, and a cross-reference names their anchors.
+    `Scope` says which context this glossary admits, and a contributor holding a word reads it to decide
+    whether the word belongs here. The terms themselves are H3s under `Terms`, and a cross-reference names
+    their anchors.
 
 index:
   columns: [id, title, narrows, status, owner, review-by]
@@ -91,7 +92,7 @@ rules:
     description: No entry runs beyond one paragraph, and a digest carries the glossaries most general first.
     # A glossary is read end to end, so every entry's length is paid by every reader. With several of them,
     # "carry the glossary in full" names no single file: the digest takes them most general first and cuts
-    # off when its budget is spent, which three areas are enough to do.
+    # off when its budget is spent, which three glossaries are enough to do.
   - id: undefined-terms
     description: >
       Reports terms appearing more than N times across the corpus with no glossary entry.

@@ -86,7 +86,7 @@ gets the naming rule and not a second link pass, which would report every dead l
 
 **Type pages get a pass of their own.** A page — `adrs.md`, `services.md` — is not a record and carries no frontmatter,
 so the structural checks do not apply. It is checked for link resolution, undefined and non-canonical labels, unused
-definitions, that its generated blocks still have their markers, and that no frontmatter has been left on it.
+definitions, both markers of each generated block, and frontmatter it should not be carrying.
 
 ## Checks
 

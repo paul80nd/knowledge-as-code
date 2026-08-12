@@ -158,9 +158,9 @@ public static class SchemaChecks
                 + "or write what it was saying as 'notes:', the one key every level admits."));
     }
 
-    // A type is a folder of records, and `folder:` is what says which folder. Asked of the value rather
-    // than of the key, because an absent `folder:` and a deliberate `folder: null` parse to the same
-    // empty string and a type with neither has nowhere to put a record.
+    // A type is a folder of records, and `folder:` names it. The check asks after the value rather than
+    // the key, because an absent `folder:` and a deliberate `folder: null` parse to the same empty
+    // string. A type with neither has nowhere to put a record.
     private static void CheckFolder(string at, string key, TypeSchema t, List<Finding> f)
     {
         if (string.IsNullOrEmpty(t.Folder))

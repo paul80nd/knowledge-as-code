@@ -146,10 +146,10 @@ public sealed record RuleSpec
 
 public sealed class TypeSchema
 {
-    // How the schema names this type: the base name of its file, which is the folder its records live in.
-    // It is what `ref:` and `versus:` name, and what a finding
-    // calls the type, so it is carried here rather than being the dictionary key alone — a TypeSchema
-    // handed to a renderer would otherwise have lost the one name the schema knows it by.
+    // How the schema names this type: the base name of its file, which is the folder its records live
+    // in. It is what `ref:` and `versus:` name, and what a finding calls the type, so it is carried here
+    // rather than being the dictionary key alone — a TypeSchema handed to a renderer would otherwise
+    // have lost the one name the schema knows it by.
     public string Key { get; init; } = "";
 
     public string TypeName { get; init; } = "";

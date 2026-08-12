@@ -11,8 +11,8 @@ namespace kac.core;
 // defends: a filename may be corrected, an id may not.
 //
 // `numbered` and `mnemonic` put a fixed-width discriminator at the head of a longer filename — 0007-…,
-// vurm-… — so the rest of the name is a slug the author chose, and that rest is what `slug-max`
-// measures. A `slug` id is the whole filename stem, with no head to skip.
+// vurm-… — so the rest of the name is a slug the author chose, and `slug-max` measures that rest. A
+// `slug` id is the whole filename stem, with no head to skip.
 //
 // The shape of a discriminator is stated here once and read three ways: forwards, holding an id to its
 // filename; backwards, reading a link's filename as the id it cites; and sideways, deciding whether a
@@ -98,8 +98,7 @@ public static class IdChecks
     }
 
     // What a filename carries of the id, and nothing of the slug beside it. Null where the name does not
-    // open with a discriminator in the shape the style declares — including for `literal`, which has no
-    // filename to be named by.
+    // open with a discriminator in the shape the style declares.
     public static string? FilenameDiscriminator(string rel, TypeSchema t)
     {
         var name = Path.GetFileName(rel);

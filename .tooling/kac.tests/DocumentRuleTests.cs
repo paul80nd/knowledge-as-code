@@ -128,8 +128,8 @@ public class DocumentRuleTests
         => Assert.Empty(Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### Borrower\n\nOne.\n\n### Item\n\nTwo.\n\n### Title\n\nThree.")));
 
-    // The message names the entry that moved and the one it should precede, which is the whole reason
-    // this is a class: an author told only that the file is unsorted has to find the entry themselves.
+    // The message names the entry that moved and the one it belongs before. That is the whole reason
+    // this is a class: an author told only that the file is unsorted has to find the word themselves.
     [Fact]
     public void An_entry_out_of_place_names_itself_and_where_it_belongs()
     {
@@ -140,8 +140,8 @@ public class DocumentRuleTests
         Assert.Equal("'Branch' is out of order — it belongs before 'Item'.", Single(found).Message);
     }
 
-    // Casing is the entry's own — a glossary holds `ADR` beside `Borrower` — so ordering it by code
-    // point would report a run of initialisms that a reader scans as correctly placed.
+    // Casing is the entry's own — a glossary holds `ADR` beside `Borrower` — so ordering by code point
+    // would report every initialism as misplaced where a reader scans them as fine.
     [Fact]
     public void Casing_does_not_decide_the_order()
         => Assert.Empty(Run(new TermsAreAlphabetical(),

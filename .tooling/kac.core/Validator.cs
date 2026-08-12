@@ -50,10 +50,10 @@ public static class Validator
             var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
             if (page is null) continue;
 
-            // A page is not a record, so frontmatter on one is left over rather than wrong in place.
-            // The case that produces it is a type that used to be a single document: the folder arrives
-            // in a sync, the old page survives beside it still holding the content, and nothing else
-            // says so — a page is forked, and a forked file is never compared against upstream.
+            // A page is not a record, so frontmatter on one is a leftover. It comes from a type that
+            // used to be a single document: the folder arrives in a sync and the old page survives
+            // beside it, still holding the content. Nothing else says so, because a page is forked and
+            // a forked file is never compared against upstream.
             if (page.FrontStartLine > 0)
                 findings.Add(new Finding(t.Page, page.FrontStartLine, Sev.Error, "page-frontmatter",
                     "the page carries frontmatter — it describes the records beneath it and is not one, so it has "
@@ -382,9 +382,9 @@ public static class Validator
         }
     }
 
-    // The documents describing the framework itself, wherever a corpus keeps them. The glossary of the
-    // framework's own vocabulary is one of them: it is a record, filed under a type and validated like
-    // any other, and it is also shared byte-for-byte, so it is held to the rule below as well.
+    // The documents describing the framework itself, wherever a corpus keeps them. The framework's own
+    // glossary is one of them, and the only one that is also a record: it is filed under a type and
+    // validated like any other. Being shared byte-for-byte is what brings it here as well.
     private static readonly string[] FrameworkDocs =
         ["knowledge-as-code.md", "knowledge-as-code/", "glossary/knowledge-as-code.md"];
 

@@ -143,7 +143,7 @@ Beyond `fields`, each type file declares:
 
 **`folder`.** A type is a folder of records, a page describing them, and a template to copy. `folder:` names the first
 of those and is required. The check reads the value rather than the key, because an absent `folder:` and a deliberate
-`folder: null` are the same string once parsed, and a type that lost the key reads exactly like one that never had it.
+`folder: null` are the same string once parsed. A type that lost the key reads exactly like one that never had it.
 
 **`summary` and `goes-here`.** The two lines a type says about itself, and the reason a corpus's pages can describe the
 corpus rather than the framework's full range. `summary` is what the type holds — "the rulebook, imperative, RFC 2119"
