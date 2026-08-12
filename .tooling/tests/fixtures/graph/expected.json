@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 6,
+    "validated": 7,
     "templates": 2,
     "skipped": 0,
-    "errors": 11,
+    "errors": 12,
     "warnings": 1
   },
   "findings": [
@@ -83,6 +83,13 @@
       "severity": "error",
       "check": "ref-resolves",
       "message": "'superseded-by' points at 'adr-0099', which does not exist."
+    },
+    {
+      "file": "adrs/0005-mistyped.md",
+      "line": 1,
+      "severity": "error",
+      "check": "ref-resolves",
+      "message": "'superseded-by' points at 'giz-mirrored', which is a Gizmo, not an ADR."
     },
     {
       "file": "gizmos/adrift.md",

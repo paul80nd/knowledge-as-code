@@ -102,7 +102,7 @@ deliver.
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
-| `ref-resolves`              | error   | An id in a field that references another document names one that exists.                                        |
+| `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `target-is-measurable`      | warning | `measured-by` names an instrument, not a hedge — "monitored", "as needed", "where practical".                   |
 

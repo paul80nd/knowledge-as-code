@@ -103,7 +103,7 @@ public static class Validator
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand. The index they build is
         // handed on rather than built again: it is the corpus's one account of which id names which
         // document, and a second one would be free to answer differently.
-        var byId = CheckCorpus(corpus.Docs, findings);
+        var byId = CheckCorpus(schema, corpus.Docs, findings);
 
         // The rules whose question is about the set — a cycle in a dependency graph, a term nothing
         // uses. Skipped on a narrowed run for the reason the checks below it are: a question about the
@@ -527,7 +527,7 @@ public static class Validator
     // The questions that need every record in hand, and the index of them that answering leaves behind:
     // which document each id names, first writer winning, which is exactly what a corpus rule asks for
     // next.
-    public static Dictionary<string, Doc> CheckCorpus(List<Doc> docs, List<Finding> f)
+    public static Dictionary<string, Doc> CheckCorpus(Schema schema, List<Doc> docs, List<Finding> f)
     {
         // id uniqueness across the whole wiki.
         var byId = new Dictionary<string, Doc>(StringComparer.OrdinalIgnoreCase);
@@ -562,12 +562,16 @@ public static class Validator
 
         // Referenced ids — every field the schema gives a `ref:`. The declaration names the type an id
         // in this field belongs to, which reads to whoever holds these files as a target the tool
-        // answers for. Asked of every ref field alike, reciprocal or not: a one-directional edge —
-        // `depends-on`, the estate's own dependency graph — has no counterpart obliged to keep it in
-        // step, which makes it the edge with least behind it rather than the one to leave alone.
+        // answers for, so both halves of it are asked: that the id names a document, and that the
+        // document is of a type the declaration admits. Asked of every ref field alike, reciprocal or
+        // not: a one-directional edge — `depends-on`, the estate's own dependency graph — has no
+        // counterpart obliged to keep it in step, which makes it the edge with least behind it rather
+        // than the one to leave alone.
         //
-        // Only the target's existence is asked. A literal the field admits is not an id and is skipped,
-        // as it is everywhere else.
+        // The wrong type is the quieter of the two faults. A dangling id is visibly broken to anyone who
+        // follows it; one of the wrong type lands on a real page, so it reads as intentional, and
+        // whatever walks the edge afterwards — `no-dependency-cycles`, for one — takes it at its word.
+        // A literal the field admits is not an id and is skipped, as it is everywhere else.
         foreach (var d in docs)
         {
             if (d.Type is null) continue;
@@ -576,18 +580,32 @@ public static class Validator
                 var spec = d.Type.Fields[name];
                 if (spec.Refs.Count == 0) continue;
                 if (spec.Type != "id" && (spec.Type != "list" || spec.Of != "id")) continue;
+
+                // A `ref:` at a folder no schema covers is `schema-dispatch`'s to report, and leaves
+                // nothing here to hold a target to — the existence half still runs.
+                var admits = Admitted(spec, schema);
+
                 foreach (var targetId in d.FrontList(name))
                 {
-                    if (spec.IsLiteral(targetId) || byId.ContainsKey(targetId)) continue;
+                    if (spec.IsLiteral(targetId)) continue;
+                    if (!byId.TryGetValue(targetId, out var target))
+                    {
+                        f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "ref-resolves",
+                            $"'{name}' points at '{targetId}', which does not exist."));
+                        continue;
+                    }
+
+                    if (admits.Count == 0 || target.Type is null || admits.Contains(target.Type)) continue;
                     f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "ref-resolves",
-                        $"'{name}' points at '{targetId}', which does not exist."));
+                        $"'{name}' points at '{targetId}', which is {WithArticle(target.Type.DisplayName)}, "
+                        + $"not {OneOf(admits)}."));
                 }
             }
         }
 
-        // reciprocal fields (e.g. supersedes / superseded-by). Whether the target exists is `ref-resolves`
-        // above; what is left here is the one question this field asks, which is whether the document at
-        // the other end points back.
+        // reciprocal fields (e.g. supersedes / superseded-by). Whether the target exists, and whether it
+        // is a document this field may point at, are `ref-resolves`'s above; what is left here is the one
+        // question this field asks, which is whether the document at the other end points back.
         foreach (var d in docs)
         {
             if (d.Type is null) continue;
@@ -595,9 +613,15 @@ public static class Validator
             {
                 var spec = d.Type.Fields[name];
                 if (spec.Reciprocal is null || spec.Refs.Count == 0) continue;
+                var admits = Admitted(spec, schema);
                 foreach (var targetId in d.FrontList(name))
                 {
                     if (!byId.TryGetValue(targetId, out var target)) continue;
+
+                    // A target of the wrong type carries no counterpart field to answer with, so asking
+                    // would report one fault twice — once as the wrong type and once as a silence that
+                    // is nothing but its consequence.
+                    if (admits.Count > 0 && target.Type is not null && !admits.Contains(target.Type)) continue;
 
                     var back = target.FrontList(spec.Reciprocal);
                     var selfId = d.FrontScalar("id");
@@ -609,6 +633,38 @@ public static class Validator
         }
 
         return byId;
+    }
+
+    // The types a ref field may point at, as the schema's own objects. A document's type is resolved the
+    // same way, so what a target is held against is one object compared with the same object: a type
+    // answers to the name of its schema file and to the folder it declares, and neither name has to be
+    // the one the other side wrote.
+    private static List<TypeSchema> Admitted(FieldSpec spec, Schema schema) =>
+        [.. spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>()];
+
+    // The types named as a reader would say them aloud — "a Service", "an FAQ or a Standard" — in the
+    // order the declaration lists them, which is the order whoever wrote it chose.
+    private static string OneOf(List<TypeSchema> types)
+    {
+        var names = types.Select(t => WithArticle(t.DisplayName)).ToList();
+        return names.Count switch
+        {
+            1 => names[0],
+            2 => $"{names[0]} or {names[1]}",
+            _ => $"{string.Join(", ", names[..^1])}, or {names[^1]}"
+        };
+    }
+
+    // "a" or "an", by how the name is read aloud rather than by how it is spelled. A label written in
+    // capitals is read letter by letter, so the article follows the name of its first letter — "an ADR",
+    // "an NFR" — and the letters read with an opening vowel are the whole of that exception.
+    private static string WithArticle(string name)
+    {
+        if (name.Length == 0) return name;
+        var vowel = name.All(char.IsAsciiLetterUpper)
+            ? "AEFHILMNORSX".Contains(name[0])
+            : "AEIOU".Contains(char.ToUpperInvariant(name[0]));
+        return vowel ? $"an {name}" : $"a {name}";
     }
 
     // The type's `rules:` again, for the rules that read the corpus rather than a document. Driven from
