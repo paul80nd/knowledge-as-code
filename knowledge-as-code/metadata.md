@@ -12,13 +12,13 @@ them sparingly, and derive rather than state wherever possible.
 A record holds three kinds of thing, and each has one home.
 
 **Frontmatter is metadata about the record** — what identifies it, places it in the taxonomy, and describes it as a
-whole. One value to a field, or a set of them. It is what an index sorts on, what a citation resolves against, and what
-an agent greps for.
+whole. A field carries one value, or a set of them. An index sorts on it, a citation resolves against it, and an agent
+greps it.
 
 **A table in the body carries the record's parts**, where a part needs a rule or an address of its own. A policy's
 obligations are the case in this corpus: `## Clauses` holds one row per obligation, each with an id that a standard or
-a control cites as `pol-VURM.TIMEBOX`. The type declares that table in its schema — the section holding it, its
-columns, the pattern a row id takes — and CI reads the rows out of the body and holds them to the declaration.
+a control cites as `pol-VURM.TIMEBOX`. The type declares that table in its schema — the section holding it, its columns,
+the pattern a row id takes. CI reads the rows out of the body and holds them to that declaration.
 
 **Everything else is prose**, in the section where it belongs.
 
@@ -141,9 +141,10 @@ stale. A document whose meaning has moved that far is replaced and the old one r
 Two separators reach past an id, each with one job. [Contributing](contributing.md) holds the link form a reference is
 written in.
 
-**`.` addresses a part of a document.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it. A type carrying
-addressable parts declares them in its schema — `clauses:` on a policy — and CI resolves each citation against the
-document it names, so a reference to a part that does not exist fails the build.
+**`.` addresses a part of a document.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it. The parts a
+document offers are the rows of the table its type declares, described under
+[What a record carries](#what-a-record-carries). CI resolves each citation against the document it names, so a reference
+to a part that does not exist fails the build.
 
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, document, part. A
 record this corpus holds is cited bare, and qualifying one is an error: two spellings of a single obligation defeat
@@ -214,7 +215,8 @@ tags: [ public-api, http ]
 
 ## Adding a field
 
-A new field appears as a column on every document of that type, so it needs to justify itself. Before adding one, check
-that the information is not already derivable from git, the folder, the H1, or an existing link. If it is genuinely new,
+The first question is whether the content belongs in frontmatter at all, and
+[What a record carries](#what-a-record-carries) answers it. Then check that git, the folder, the H1 or an existing link
+does not already hold the fact, since a field costs every document of the type a column. If it is new,
 declare it in the type's `.schema/<folder>.yaml`, add it to that type's `_template.md`, and run `./kac index` so the
 generated tables carry it. The validator reads the schema, so it needs no change of its own.

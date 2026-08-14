@@ -29,11 +29,11 @@ Type files are named for the **folder**, not the type — `adrs.yaml`, `services
 document's type from its folder, so folder → schema is an identity lookup with no singularisation step.
 
 A tier is declared twice, deliberately. `_universal.yaml` gives the `tier` field its range, and every record is
-validated against it. `_tiers.yaml` says what each of those values is called, how a document of it behaves, and — where
-there is one — the thing worth saying before the types beneath it are listed. Neither is derivable from the other, so
-the two are reconciled when the schema loads: a value one knows and the other does not is a record that can carry a tier
-no page can name, or a heading no document will ever sit under. Order is load-bearing in `_tiers.yaml` — it is the order
-every generated list of types is grouped by.
+validated against it. `_tiers.yaml` says what each of those values is called, how a document of it behaves, and, where
+there is one, the thing worth saying before the types beneath it are listed. Neither is derivable from the other, so the
+two are reconciled when the schema loads: a value one knows and the other does not is a record that can carry a tier no
+page can name, or a heading no document will ever sit under. Order is load-bearing in `_tiers.yaml`. Every generated
+list of types is grouped in the order it sets.
 
 None of them carries a version stamp. Answering "which version of the schema is this corpus on" takes something that
 reconciles the answer against an upstream, and a number nothing compares is a number a corpus can be wrong about
@@ -139,10 +139,10 @@ rather than the key, because an absent `folder:` and a deliberate `folder: null`
 that lost the key reads exactly like one that never had it.
 
 **`summary` and `goes-here`** are the two lines a type says about itself, and the reason a corpus's pages can describe
-the corpus rather than the framework's full range. `summary` is what the type holds — "the rulebook, imperative, RFC
-2119" — and heads the type's row in the repository's own index. `goes-here` is the same type from the other side,
-phrased as what the contributor is holding — "a rule people must follow when building" — and is the row in the
-taxonomy's decision table. Both are rendered as table cells and held to the same length limit as a rule's
+the corpus rather than the framework's full range. `summary` is what the type holds, in the words "the rulebook,
+imperative, RFC 2119", and it heads the type's row in the repository's own index. `goes-here` is the same type from the
+other side, phrased as what the contributor is holding: "a rule people must follow when building". It fills the row in
+the taxonomy's decision table. Both are rendered as table cells and held to the same length limit as a rule's
 `description`. The fuller account of a type, with its examples and its edges, stays on `<type>.md`.
 
 **`detail`** is the paragraph the other two are too short to be. It is rendered as prose rather than into a table, so it
@@ -176,7 +176,8 @@ every governance framework, `capability` sits below an epic in SAFe and above on
 elsewhere and what the reader will therefore get wrong. Most types collide with nothing and leave it out; inventing a
 collision to fill the key spends a warning a reader would otherwise trust.
 
-Paragraphs are separated by a blank line, and the generator wraps each on its own.
+A `collision` running to more than one paragraph separates them with a blank line, and the generator wraps each on its
+own.
 
 Write the links in `lineage` and `collision` **inline**. The block either renders into cannot see the reference
 definitions at the foot of the page it lands on, and a label whose definition is deleted renders as literal brackets
@@ -190,12 +191,12 @@ being told how a standard differs from one.
 **`clauses`** declares a table every record of the type carries in its body: the section holding it, its columns, the
 pattern a row id takes, and the modals that open a binding row and an advisory one. `kac` reads the rows out of the
 document and holds them to that declaration, and a `pol-VURM.TIMEBOX` citation resolves against them from anywhere in
-the corpus. A type with no `clauses:` block is checked for none, so the block is also how a type says it has addressable
-parts at all. Which of a record's content belongs in a table like this, and which belongs in frontmatter, is settled in
-[Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
+the corpus. A type with no `clauses:` block is not checked for clauses at all, so declaring one is how a type says its
+records have addressable parts. Which of a record's content belongs in a table like this, and which belongs in
+frontmatter, is settled in [Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
 
-Nothing is generated from those rows. The parser reads them for the checks, and no generated block renders a body table
-or a view derived from one, so anything a corpus wants built out of them is a tool change.
+The parser reads those rows for the checks, and nothing renders them: no generated block carries a body table or a view
+derived from one, so a corpus wanting one needs a tool change.
 
 **`index.order`** applies to the sort as a whole rather than to one column of it; a type wanting one column each way is
 asking two questions with one key. A postmortem index is the case for `descending`: the incident someone is looking for
