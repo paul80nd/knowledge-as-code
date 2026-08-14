@@ -16,7 +16,7 @@ one.
 
 ## Why we use them
 
-Narrative that has no home either goes unwritten or piles up at the top level of the wiki, with no owner and no review
+Narrative that has no home either goes unwritten or piles up at the top level of the corpus, with no owner and no review
 date. That is how a page goes stale. The type gives every explanation an owner and a `review-by`, like every other
 record.
 

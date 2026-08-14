@@ -121,7 +121,7 @@ typos and status transitions. To change a decision, write a new one that superse
 
 ## For AI sessions
 
-If you are an agent contributing to this wiki:
+If you are an agent contributing to this corpus:
 
 * **Capture as discoveries, not FAQs.** You cannot confirm your own observations. `source: session`,
   `confidence: unverified`.
@@ -136,7 +136,7 @@ If you are an agent contributing to this wiki:
 ## What not to add
 
 * Content duplicated from an ADO work item — link instead.
-* Anything containing secrets, connection strings, tokens or customer data. This wiki is broadly readable.
+* Anything containing secrets, connection strings, tokens or customer data. This corpus is broadly readable.
 * Raw session logs. Distilled discoveries only.
 * Speculative documentation for work not yet started — that's what the backlog is for.
 * A document that fits no type. Raise the gap instead.

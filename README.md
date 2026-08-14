@@ -1,6 +1,6 @@
 # knowledge-as-code
 
-A structured, validated engineering wiki that both people and AI sessions can read from and contribute to.
+A structured, validated engineering corpus that both people and AI sessions can read from and contribute to.
 
 Plain markdown in git, reviewed by PR, published as a wiki. What makes it more than a folder of documents is that
 **every document has a type, and every type has a schema** — so an index can be generated rather than maintained, a
@@ -105,8 +105,8 @@ issues here. Treat the rest as drafts.
 Requires the **.NET 10 SDK**. `kac` runs via `dotnet run` — no build step to manage.
 
 ```bash
-git clone https://github.com/paul80nd/knowledge-as-code.git my-wiki
-cd my-wiki
+git clone https://github.com/paul80nd/knowledge-as-code.git my-corpus
+cd my-corpus
 
 ./kac validate                     # validate the corpus
 ./kac index                        # regenerate indexes and generated blocks

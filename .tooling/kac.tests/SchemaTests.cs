@@ -15,7 +15,7 @@ public class SchemaTests
             ["id"] = new() { Name = "id" },
             ["status"] = new() { Name = "status" } // universal status
         },
-        Reserved = ["wiki"]
+        Reserved = ["title"]
     };
 
     private static TypeSchema SampleType() => new()
@@ -42,9 +42,9 @@ public class SchemaTests
     public void KnownKeys_spans_universal_type_and_reserved_deduplicated()
     {
         // 'status' appears in both universal and the type's field order — it collapses to one entry.
-        var keys = TypeSchema.DeriveKnownKeys(["id", "status"], ["status", "date"], ["wiki"]);
+        var keys = TypeSchema.DeriveKnownKeys(["id", "status"], ["status", "date"], ["title"]);
 
-        Assert.Equal(["date", "id", "status", "wiki"], keys.Order(StringComparer.Ordinal));
+        Assert.Equal(["date", "id", "status", "title"], keys.Order(StringComparer.Ordinal));
     }
 
     // Pairs span the whole chain rather than neighbouring keys, so a document that omits an intermediate

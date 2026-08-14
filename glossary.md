@@ -19,12 +19,12 @@ glossary, so a reader opens the context they are working in and reads its vocabu
 
 ## Why we use them
 
-A glossary is the highest value-per-byte content in the wiki, and the corpus-wide one is what a contributor can read in
-full before starting work.
+A glossary is the highest value-per-byte content in the corpus, and the corpus-wide one is what a contributor can read
+in full before starting work.
 
 The terms particular to the domain are often not interchangeable, and neighbouring terms are easily confused. A
 contributor — human or agent — who doesn't know the distinctions will produce work that is plausible, confident and
-subtly wrong, in code and in documentation alike. Every other document in this wiki assumes these terms mean something
+subtly wrong, in code and in documentation alike. Every other document here assumes these terms mean something
 precise; this is where that precision lives.
 
 ## Scope

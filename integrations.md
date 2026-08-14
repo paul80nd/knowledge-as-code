@@ -66,7 +66,7 @@ Not the place for:
 
 1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids — `int-sendgrid`.
 2. Record the contract and how the system authenticates us. Name where the credential is held; nothing secret goes in
-   this wiki.
+   this corpus.
 3. Write down each way the system fails and what we do instead. "It goes down sometimes" is not a failure mode; "returns
    503 during their maintenance window, we queue and retry" is.
 4. Copy `their-sla` from the contract, word for word.

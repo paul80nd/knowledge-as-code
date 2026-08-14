@@ -78,7 +78,7 @@ _(Especially anything crossing outside the estate.)_
 
 ---
 
-_(**Never put actual data here** — no sample records, no identifiers, no connection strings. This wiki is broadly
+_(**Never put actual data here** — no sample records, no identifiers, no connection strings. This corpus is broadly
 readable.)_
 
 [adr-{{a}}]: /adrs/{{a}}.md

@@ -110,7 +110,7 @@ accessibility under governance is the clearest of them.
 * **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice, and
   a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
   standards against them, so nobody writing here can know the full set of implementers. A policy that nothing in *this*
-  wiki implements is the normal state rather than a gap to be explained.
+  corpus implements is the normal state rather than a gap to be explained.
 * **A clause is the unit anything else cites.** A standard, a control or a deviation names the single obligation it
   answers, in the form [Metadata](/knowledge-as-code/metadata.md#referring-to-an-id) sets out. Clause ids are immutable
   for the same reason policy ids are: removing or renaming one breaks every citation of it.

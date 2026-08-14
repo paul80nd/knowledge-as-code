@@ -39,7 +39,7 @@ The customer-visible behaviour, in customer terms. Two or three paragraphs at mo
 
 ## Why it exists
 
-The problem it solves and who for. This is the part nothing else in the wiki holds — the ADO epics describe *what* gets
+The problem it solves and who for. This is the part nothing else here holds — the ADO epics describe *what* gets
 built, not *why the surface exists at all*.
 
 ## Surfaces

@@ -4,7 +4,7 @@
 // kac-tests — the golden-file test suite for kac.
 //
 // Each fixture under .tooling/tests/fixtures/<scenario>/ is a deliberately-broken (or deliberately-clean)
-// mini-wiki. The runner assembles a throwaway repo root from the real schema plus the fixture's
+// mini-corpus. The runner assembles a throwaway repo root from the real schema plus the fixture's
 // corpus, runs `kac validate --json` against it, and diffs the findings against the scenario's
 // committed golden (expected.json). The golden captures the whole findings set for the corpus, so an
 // accidental extra finding shows up as a diff — which is the point.

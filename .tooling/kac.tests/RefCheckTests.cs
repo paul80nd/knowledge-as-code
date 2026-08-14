@@ -1,8 +1,8 @@
 using kac.core;
 
 // In-process unit tests for `ref-resolves`, which is answered across the whole corpus rather than
-// within a document. What a fixture would have to build for each of these is a second mini-wiki with a
-// second schema over it, so the graphs are handed to the check directly: one ADR carrying the field
+// within a document. What a fixture would have to build for each of these is a second mini-corpus with
+// a second schema over it, so the graphs are handed to the check directly: one ADR carrying the field
 // under test, and a document of each type for it to point at.
 
 namespace kac.tests;

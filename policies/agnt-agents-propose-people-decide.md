@@ -62,7 +62,7 @@ applies it has accepted it. [pol-PIPE] governs putting that fix back into versio
 
 ## Notes
 
-This wiki already works the way this policy describes. When someone records an observation here, it goes in as a
+This corpus already works the way this policy describes. When someone records an observation here, it goes in as a
 [discovery](/discoveries). A discovery names its source, says how confident we are, and expires unless someone confirms
 it. It cannot confirm itself. It becomes an [FAQ](/faqs) or a [standard](/standards) only when a person promotes it.
 [adr-0001] records why, and says what we lose if that promotion step is skipped.
