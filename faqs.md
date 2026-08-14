@@ -43,7 +43,7 @@ Other boundaries:
 
 | Field              | Req | Type   | Notes                                                                                               |
 |--------------------|-----|--------|-----------------------------------------------------------------------------------------------------|
-| `id` †             | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                               |
+| `id` †             | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.                             |
 | `tier` †           | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                |
 | `status` †         | ●   | enum   | `fixed-upstream` means the cause is gone; the entry stays for whoever searches for it.              |
 | `owner` †          | ●   | string | A named person, never a team alias.                                                                 |
@@ -100,7 +100,7 @@ Other boundaries:
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                           |
+| `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |
 | `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |

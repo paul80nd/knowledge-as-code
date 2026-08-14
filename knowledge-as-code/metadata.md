@@ -85,7 +85,7 @@ Carried by every document in the taxonomy.
 
 | Field    | Req | Type   | Notes                                                                                |
 |----------|-----|--------|--------------------------------------------------------------------------------------|
-| `id`     | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `id`     | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.              |
 | `tier`   | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
 | `status` | ●   | enum   | Values vary by type.                                                                 |
 | `owner`  | ●   | string | A named person, never a team alias.                                                  |

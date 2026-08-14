@@ -12,9 +12,9 @@ fields:
   id:
     required: true
     type: string
-    description: Stable, unique across the wiki, never reused. Format set by the type.
+    description: Stable, unique across the corpus, never reused. Format set by the type.
     notes: >
-      Stable, unique across the whole wiki, never reused. Format and width are set by the type's `id` block.
+      Stable, unique across the whole corpus, never reused. Format and width are set by the type's `id` block.
       The id is the anchor for every cross-reference; filenames may be corrected, ids may not.
 
   tier:
