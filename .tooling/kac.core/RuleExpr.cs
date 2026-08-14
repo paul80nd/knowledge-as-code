@@ -75,6 +75,12 @@ public static class RuleExpr
             ["field_matches"] = ([ValueType.Str, ValueType.Str], ValueType.Bool)
         };
 
+    // The callable surface by name, for the meta-test holding the reference table in
+    // `.schema/README.md` against it. Exposed for the reason `IdChecks.IdStyles` is: a reader learns
+    // what an expression may call from a page, and the page has to be a list of what runs rather than
+    // a list of what is spelled correctly.
+    public static IReadOnlyCollection<string> FunctionNames => Functions.Keys;
+
     // Parse and type-check. Throws RuleExprException on anything wrong, because a rule that cannot be
     // compiled is a rule nobody can rely on, and the moment to say so is the moment the schema loads.
     public static Expr Compile(string source)

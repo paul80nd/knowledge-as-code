@@ -43,8 +43,8 @@ silently — so the stamp and its reader arrive together, or not at all. Tracked
 ## The shape of a type file
 
 **[`meta/type.schema.json`](meta/type.schema.json) is the reference for the keys** — every one a type file may carry,
-what its value may be, and what each is for. Each type file opens with a modeline pointing at it, so an editor with
-YAML language-server support offers the keys, describes them on hover, and marks a wrong one as it is typed:
+what its value may be, and what each is for. Each type file opens with a modeline pointing at it, so an editor with YAML
+language-server support offers the keys, describes them on hover, and marks a wrong one as it is typed:
 
 ```yaml
 # yaml-language-server: $schema=./meta/type.schema.json
@@ -321,10 +321,11 @@ That is what lets `matches` find a credential pasted into a fenced block — the
 `**MUST**`, an obligation the rendered text would have flattened into an ordinary word. Do not simplify one onto the
 other; a unit test pins the difference.
 
-Adding a fact is adding one method to `Facts` and one row to `RuleExpr.Functions`, which is what the type checker reads.
-The grammar never changes. `section_count()` and `field_matches()` were each written for a single rule and each turned
-out to answer a question the next corpus will ask again, which is the usual shape of a new fact — and the reason
-reaching for the grammar instead is almost always the wrong move.
+Adding a fact is adding one method to `Facts`, one row to `RuleExpr.Functions`, which is what the type checker reads,
+and one row to the table above — which is held against the registry, so the three cannot come apart quietly. The grammar
+never changes. `section_count()` and `field_matches()` were each written for a single rule and each turned out to answer
+a question the next corpus will ask again, which is the usual shape of a new fact — and the reason reaching for the
+grammar instead is almost always the wrong move.
 
 ## What the schema is held to
 
@@ -333,24 +334,33 @@ wrote it holds every one of them. So a declaration the tool does nothing with is
 behaviour the validator applies, and a `ref:` reads as a target being checked. Before any document is validated, the
 schema is held against what the tool can act on, and each finding names the file and the key.
 
-| Reported                                                                               | Check                |
-|----------------------------------------------------------------------------------------|----------------------|
-| A key at any level the loader never reads, `notes:` excepted                           | `schema-unknown-key` |
-| An `expr:` that will not compile, or that names no `severity:` or `message:`           | `schema-unreadable`  |
-| A `required-when:` outside its three forms                                             | `schema-unreadable`  |
-| `values: $enums.x` where `_enums.yaml` declares no `x`                                 | `schema-unreadable`  |
-| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers         | `schema-dispatch`    |
-| A `ref:` entry naming a folder no schema covers                                        | `schema-dispatch`    |
-| A `versus:` entry naming a folder no schema covers                                     | `schema-dispatch`    |
-| `values:` on any field that is not an `enum`                                           | `schema-dispatch`    |
-| `min-items:` or `min-records:` on any field that is not a `list`                       | `schema-dispatch`    |
-| An `index.order:` that is neither `ascending` nor `descending`                         | `schema-dispatch`    |
-| A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows         | `schema-shape`       |
-| An `id.style` with no code behind the value                                            | `schema-dispatch`    |
-| A type declaring no `folder:`                                                          | `schema-shape`       |
-| A `mirrors-section:` at a section the type's `sections:` block does not declare        | `schema-shape`       |
-| A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:` | `schema-shape`       |
-| A `versus:` against the declaring type itself, or one both sides declare               | `schema-shape`       |
+| Reported                                                                                 | Check                |
+|------------------------------------------------------------------------------------------|----------------------|
+| A key at any level the loader never reads, `notes:` excepted                             | `schema-unknown-key` |
+| An `expr:` that will not compile, or that names no `severity:` or `message:`             | `schema-unreadable`  |
+| A `required-when:` outside its three forms                                               | `schema-unreadable`  |
+| `values: $enums.x` where `_enums.yaml` declares no `x`                                   | `schema-unreadable`  |
+| A rule claiming a `severity:` that neither an `expr:` nor a rule class answers           | `schema-dispatch`    |
+| A rule class reporting under a check id `_checks.yaml` does not declare                  | `schema-dispatch`    |
+| A `ref:` entry naming a folder no schema covers                                          | `schema-dispatch`    |
+| A `versus:` entry naming a folder no schema covers                                       | `schema-dispatch`    |
+| `values:` on any field that is not an `enum`                                             | `schema-dispatch`    |
+| `min-items:` or `min-records:` on any field that is not a `list`                         | `schema-dispatch`    |
+| An `index.order:` that is neither `ascending` nor `descending`                           | `schema-dispatch`    |
+| A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows           | `schema-shape`       |
+| A tier declaring no `label:` or no `behaviour:` — both head its section in the taxonomy  | `schema-shape`       |
+| An `id.style` with no code behind the value                                              | `schema-dispatch`    |
+| A type declaring no `folder:`                                                            | `schema-shape`       |
+| A `mirrors-section:` at a section the type's `sections:` block does not declare          | `schema-shape`       |
+| A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:`   | `schema-shape`       |
+| A `label-plural:`, `summary:` or `goes-here:` past 120 characters — they render as cells | `schema-shape`       |
+| A rule `description:` past 120 characters, for the same reason                           | `schema-shape`       |
+| A `versus:` against the declaring type itself, or one both sides declare                 | `schema-shape`       |
+
+The rows are grouped by trigger where the catalogue holds one entry per check, so the table is written by hand. The
+check ids in it are held against the catalogue in both directions, which catches one renamed, retired or introduced.
+What it cannot catch is an id growing a second way to fail, since nothing in the code tells one arm from another — the
+`schema-declarations` fixture trips the arms and pins what each of them says.
 
 **The question is whether code acts on the value, not whether the key is spelled correctly.** `style: mnemonic` is a
 real style and would pass a spelling test; what makes it sound is the branch that reads it. Each vocabulary above is
@@ -365,8 +375,7 @@ shape of the page the value lands on: the `sections:` block beside a `mirrors-se
 The key vocabulary is read the same way, and there is no list of permitted keys anywhere: the loader records what it
 asks each mapping for, and whatever is left over is reported. So a key gains its meaning and its admission in the same
 edit, and a key that stops being read stops being admitted without anyone having to remember. `meta/type.schema.json`
-holds a list and is the exception that proves it: it can be behind, which is why it advises an author and gates
-nothing.
+holds a list and is the exception that proves it: it can be behind, which is why it advises an author and gates nothing.
 
 A `ref:` at a type the corpus never adopted is reported for the same reason as one that is misspelled: whether the
 folder was deleted here or never existed upstream, the field claims a target nothing can resolve. Re-adopt the type file
