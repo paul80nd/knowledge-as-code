@@ -13,12 +13,13 @@ namespace kac.core;
 // order a reader scans, not the order their code points fall in.
 public sealed class TermsAreAlphabetical : IDocumentRule
 {
-    public string RuleId => "terms-are-alphabetical";
+    public RuleId RuleId => new("terms-are-alphabetical");
 
-    public IReadOnlyList<CheckDef> Emits =>
-    [
-        new("terms-alphabetical", Sev.Warning, "A glossary's entries are in alphabetical order.")
-    ];
+    // A field because every report below names it: one place to change, so what the rule declares it
+    // emits and what it actually reports cannot come apart. `_checks.yaml` declares what it means.
+    private static readonly CheckId Reports = new("terms-alphabetical");
+
+    public IReadOnlyList<CheckId> Emits => [Reports];
 
     public void Check(RuleContext ctx)
     {
@@ -27,7 +28,7 @@ public sealed class TermsAreAlphabetical : IDocumentRule
         foreach (var (term, line) in Entries(ctx.Doc))
         {
             if (previous is not null && string.Compare(term, previous, StringComparison.OrdinalIgnoreCase) < 0)
-                ctx.Warn("terms-alphabetical",
+                ctx.Warn(Reports,
                     $"'{Md.Snippet(term)}' is out of order — it belongs before '{Md.Snippet(previous)}'.", line);
 
             previous = term;

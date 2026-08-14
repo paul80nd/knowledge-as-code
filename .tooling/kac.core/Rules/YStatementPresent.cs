@@ -6,12 +6,13 @@ namespace kac.core;
 // worth reading, and it needs a list the grammar has no way to hold.
 public sealed class YStatementPresent : IDocumentRule
 {
-    public string RuleId => "y-statement-present";
+    public RuleId RuleId => new("y-statement-present");
 
-    public IReadOnlyList<CheckDef> Emits =>
-    [
-        new("y-statement", Sev.Warning, "A short Y-statement block-quote, stating all six moves, follows the H1.")
-    ];
+    // A field because every report below names it: one place to change, so what the rule declares it
+    // emits and what it actually reports cannot come apart. `_checks.yaml` declares what it means.
+    private static readonly CheckId Reports = new("y-statement");
+
+    public IReadOnlyList<CheckId> Emits => [Reports];
 
     public void Check(RuleContext ctx)
     {
@@ -19,7 +20,7 @@ public sealed class YStatementPresent : IDocumentRule
 
         if (d.YStatement is null)
         {
-            warn("y-statement", "no Y-statement block-quote follows the H1.", d.H1Line);
+            warn(Reports, "no Y-statement block-quote follows the H1.", d.H1Line);
             return;
         }
 
@@ -28,7 +29,7 @@ public sealed class YStatementPresent : IDocumentRule
 
         var missing = MissingMoves(text);
         if (missing.Count > 0)
-            warn("y-statement",
+            warn(Reports,
                 $"Y-statement is missing {QuotedList(missing)}. The six moves are what make it a "
                 + "Y-statement rather than a summary of one.", line);
 
@@ -37,7 +38,7 @@ public sealed class YStatementPresent : IDocumentRule
         var max = ctx.Spec.MaxWords ?? 60;
         var words = text.Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
         if (words > max)
-            warn("y-statement", $"Y-statement is {words} words; keep it under {max}.", line);
+            warn(Reports, $"Y-statement is {words} words; keep it under {max}.", line);
     }
 
     // The six moves, in the order they are written.
@@ -52,7 +53,7 @@ public sealed class YStatementPresent : IDocumentRule
         var words = new string(text.Select(c => char.IsLetterOrDigit(c) ? char.ToLowerInvariant(c) : ' ').ToArray())
             .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
         var haystack = $" {string.Join(' ', words)} ";
-        return Moves.Where(m => !haystack.Contains($" {m} ", StringComparison.Ordinal)).ToList();
+        return [.. Moves.Where(m => !haystack.Contains($" {m} ", StringComparison.Ordinal))];
     }
 
     // The moves as a sentence reads them: "facing", "rather than" and "accepting".

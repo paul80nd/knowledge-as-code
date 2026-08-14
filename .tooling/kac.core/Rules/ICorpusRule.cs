@@ -18,9 +18,9 @@ public interface ICorpusRule
     // The id in the type schema's `rules:` block, and what the rule reports under — the same pair
     // `IDocumentRule` declares, for the same reasons, so the catalogue is assembled from the rules
     // rather than restated beside them.
-    string RuleId { get; }
+    RuleId RuleId { get; }
 
-    IReadOnlyList<CheckDef> Emits { get; }
+    IReadOnlyList<CheckId> Emits { get; }
 
     void Check(CorpusRuleContext ctx);
 }
@@ -36,8 +36,8 @@ public sealed record CorpusRuleContext(
     IReadOnlyDictionary<string, Doc> ById,
     TypeSchema Type,
     RuleSpec Spec,
-    Action<Doc, string, string, int?> Err,
-    Action<Doc, string, string, int?> Warn)
+    Action<Doc, CheckId, string, int?> Err,
+    Action<Doc, CheckId, string, int?> Warn)
 {
     // The records of the type whose schema declares the rule. Most of what a corpus rule asks is asked
     // of these; `Docs` is there for the rules whose question reaches outside the type, as a glossary's

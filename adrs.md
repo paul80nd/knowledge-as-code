@@ -122,7 +122,7 @@ See [Contributing](/knowledge-as-code/contributing.md) for the review model that
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `y-statement`               | warning | A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.                         |
+| `y-statement`               | warning | A Y-statement block-quote follows the H1, states all six moves, and is within its word ceiling.                 |
 | `alternatives-verdict`      | warning | Each Alternatives Considered bullet states a verdict.                                                           |
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.

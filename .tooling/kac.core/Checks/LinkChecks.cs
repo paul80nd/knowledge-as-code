@@ -12,8 +12,8 @@ public static class LinkChecks
     // A page that is not a record gets these and nothing else.
     public static void CheckPage(Doc d, Schema schema, string repoRoot, List<Finding> f) =>
         Check(d, schema, repoRoot,
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Error, check, msg)),
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, check, msg)));
+            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId(check), msg)),
+            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, new CheckId(check), msg)));
 
     public static void Check(Doc d, Schema schema, string repoRoot, Action<string, string, int?> err,
         Action<string, string, int?> warn, DocKind kind = DocKind.Record)
@@ -130,7 +130,7 @@ public static class LinkChecks
     // The file a link target names, or null where nothing is there. Returns the path that exists so a
     // caller can go on to read it — which of the two forms below resolved is not the caller's business,
     // but the file it found is.
-    public static string? Resolve(string repoRoot, string fromRel, string target)
+    private static string? Resolve(string repoRoot, string fromRel, string target)
     {
         var hash = target.IndexOf('#');
         if (hash >= 0) target = target[..hash];

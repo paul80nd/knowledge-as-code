@@ -24,7 +24,7 @@ public class IdCheckTests
     public void An_id_under_the_wrong_prefix_is_reported_and_stops()
     {
         var found = Run("xyz-0006", "adrs/0006-a.md", Numbered());
-        Assert.Equal("id-prefix", Assert.Single(found).Check);
+        Assert.Equal("id-prefix", Assert.Single(found).Check.Value);
     }
 
     // -- the shape of the discriminator, style by style --
@@ -34,27 +34,27 @@ public class IdCheckTests
     [InlineData("adr-00071")]    // too many
     [InlineData("adr-007a")]     // not digits
     public void A_numbered_id_is_the_declared_width_in_digits(string id)
-        => Assert.Equal("id-format", Assert.Single(Run(id, "adrs/0007-a.md", Numbered())).Check);
+        => Assert.Equal("id-format", Assert.Single(Run(id, "adrs/0007-a.md", Numbered())).Check.Value);
 
     [Theory]
     [InlineData("pol-VU")]       // too short
     [InlineData("pol-vurm")]     // lower-case
     [InlineData("pol-1URM")]     // opens with a digit
     public void A_mnemonic_id_is_upper_case_and_opens_with_a_letter(string id)
-        => Assert.Equal("id-format", Assert.Single(Run(id, "policies/vurm-a.md", Mnemonic())).Check);
+        => Assert.Equal("id-format", Assert.Single(Run(id, "policies/vurm-a.md", Mnemonic())).Check.Value);
 
     [Theory]
     [InlineData("tol-Site_Server")]  // capitals and an underscore
     [InlineData("tol-site server")]  // a space
     [InlineData("tol-Ripgrep")]
     public void A_slug_id_is_lower_case_letters_digits_and_hyphens(string id)
-        => Assert.Equal("id-format", Assert.Single(Run(id, "tools/site-server.md", Slug())).Check);
+        => Assert.Equal("id-format", Assert.Single(Run(id, "tools/site-server.md", Slug())).Check.Value);
 
     // The shape is asked first, so a malformed id is one finding rather than two — the filename it does
     // not match is not worth saying while the id itself is unreadable.
     [Fact]
     public void A_malformed_id_is_not_also_held_to_the_filename()
-        => Assert.Equal("id-format", Assert.Single(Run("adr-7", "adrs/0004-a.md", Numbered())).Check);
+        => Assert.Equal("id-format", Assert.Single(Run("adr-7", "adrs/0004-a.md", Numbered())).Check.Value);
 
     // -- agreement with the filename --
 
@@ -63,7 +63,7 @@ public class IdCheckTests
     [InlineData("pol-DEVI", "policies/pipe-disagrees.md")]
     [InlineData("tol-names-another-tool", "tools/id-disagrees.md")]
     public void An_id_naming_a_different_document_than_its_file_is_reported(string id, string rel)
-        => Assert.Equal("id-matches-filename", Assert.Single(Run(id, rel, TypeFor(rel))).Check);
+        => Assert.Equal("id-matches-filename", Assert.Single(Run(id, rel, TypeFor(rel))).Check.Value);
 
     [Theory]
     [InlineData("adr-0004", "adrs/0004-missing.md")]
@@ -77,7 +77,7 @@ public class IdCheckTests
     [Fact]
     public void A_slug_is_compared_whole_and_not_as_a_prefix()
         => Assert.Equal("id-matches-filename",
-            Assert.Single(Run("tol-site", "tools/site-server.md", Slug())).Check);
+            Assert.Single(Run("tol-site", "tools/site-server.md", Slug())).Check.Value);
 
     // Where the filename carries no discriminator in the style's shape it has failed filename-pattern,
     // and one broken name is one finding rather than two.
@@ -98,7 +98,7 @@ public class IdCheckTests
     public void The_discriminator_is_excluded_from_the_slug_but_a_slug_id_is_measured_whole()
     {
         var underNumbered = Assert.Single(Filename($"adrs/0003-{TooLong}.md", Numbered()));
-        Assert.Equal("slug-length", underNumbered.Check);
+        Assert.Equal("slug-length", underNumbered.Check.Value);
         Assert.Contains($"slug '{TooLong}' is 36 characters", underNumbered.Message);
 
         var underSlug = Assert.Single(Filename($"tools/0003-{TooLong}.md", Slug()));
@@ -210,7 +210,7 @@ public class IdCheckTests
     private static List<Finding> Collect(Action<Action<string, string, int?>> check)
     {
         var found = new List<Finding>();
-        check((c, msg, line) => found.Add(new Finding("", line, Sev.Error, c, msg)));
+        check((c, msg, line) => found.Add(new Finding("", line, Sev.Error, new CheckId(c), msg)));
         return found;
     }
 }

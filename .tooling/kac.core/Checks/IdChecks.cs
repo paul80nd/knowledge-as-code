@@ -99,7 +99,7 @@ public static class IdChecks
 
     // What a filename carries of the id, and nothing of the slug beside it. Null where the name does not
     // open with a discriminator in the shape the style declares.
-    public static string? FilenameDiscriminator(string rel, TypeSchema t)
+    private static string? FilenameDiscriminator(string rel, TypeSchema t)
     {
         var name = Path.GetFileName(rel);
         switch (t.IdStyle)

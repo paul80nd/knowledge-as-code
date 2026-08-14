@@ -9,6 +9,6 @@ public static class CorpusRules
         new NoDependencyCycles()
     ];
 
-    public static readonly IReadOnlyDictionary<string, ICorpusRule> ByRuleId =
-        All.ToDictionary(r => r.RuleId, StringComparer.Ordinal);
+    public static readonly IReadOnlyDictionary<RuleId, ICorpusRule> ByRuleId =
+        All.ToDictionary(r => r.RuleId);
 }

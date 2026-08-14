@@ -9,18 +9,19 @@ namespace kac.core;
 // not tell the author which line to go back to.
 public sealed class AlternativesHaveVerdicts : IDocumentRule
 {
-    public string RuleId => "alternatives-have-verdicts";
+    public RuleId RuleId => new("alternatives-have-verdicts");
 
-    public IReadOnlyList<CheckDef> Emits =>
-    [
-        new("alternatives-verdict", Sev.Warning, "Each Alternatives Considered bullet states an outcome.")
-    ];
+    // A field because every report below names it: one place to change, so what the rule declares it
+    // emits and what it actually reports cannot come apart. `_checks.yaml` declares what it means.
+    private static readonly CheckId Reports = new("alternatives-verdict");
+
+    public IReadOnlyList<CheckId> Emits => [Reports];
 
     public void Check(RuleContext ctx)
     {
         foreach (var (text, line) in Bullets(ctx.Doc))
             if (!HasVerdict(text))
-                ctx.Warn("alternatives-verdict",
+                ctx.Warn(Reports,
                     $"Alternatives Considered bullet has no verdict: \"{Md.Snippet(text)}\".", line);
     }
 

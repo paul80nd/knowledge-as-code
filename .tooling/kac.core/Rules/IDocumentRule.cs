@@ -15,12 +15,12 @@ public interface IDocumentRule
 {
     // The id in the type schema's `rules:` block. What the dispatcher looks the rule up by, and what
     // decides whether a type has adopted it.
-    string RuleId { get; }
+    RuleId RuleId { get; }
 
-    // What this rule reports under, which is usually not RuleId: `y-statement-present` emits
-    // `y-statement`. Naming both here makes that gap deliberate, and lets the catalogue be assembled
-    // from the rules rather than restated beside them.
-    IReadOnlyList<CheckDef> Emits { get; }
+    // The check ids this rule reports under, which are usually not RuleId: `y-statement-present` emits
+    // `y-statement`. Naming both here makes that gap deliberate, and gives it two types so the pair
+    // cannot swap. What each id means is `_checks.yaml`'s to say.
+    IReadOnlyList<CheckId> Emits { get; }
 
     void Check(RuleContext ctx);
 }
@@ -31,5 +31,5 @@ public sealed record RuleContext(
     Doc Doc,
     TypeSchema Type,
     RuleSpec Spec,
-    Action<string, string, int?> Err,
-    Action<string, string, int?> Warn);
+    Action<CheckId, string, int?> Err,
+    Action<CheckId, string, int?> Warn);

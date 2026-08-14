@@ -18,13 +18,11 @@ public class DocumentRuleTests
         Assert.All(DocumentRules.All, r => Assert.NotEmpty(r.Emits));
     }
 
-    // Each rule's catalogue entries reach `kac checks` through CheckCatalogue, so implementing a rule
-    // and registering its checks is one edit rather than two files that can disagree.
+    // What each emitted id *means* is `_checks.yaml`'s to say. Here the ids only have to be ids.
     [Fact]
-    public void The_catalogue_carries_what_the_rules_declare()
+    public void Every_emitted_id_is_a_usable_check_id()
     {
-        var ids = CheckCatalogue.All.Select(c => c.Id).ToHashSet(StringComparer.Ordinal);
-        Assert.All(DocumentRules.All.SelectMany(r => r.Emits), e => Assert.Contains(e.Id, ids));
+        Assert.All(DocumentRules.All.SelectMany(r => r.Emits), e => Assert.NotEmpty(e.Value));
     }
 
     // -- y-statement-present: three ways to fail, one check id --
@@ -33,7 +31,7 @@ public class DocumentRuleTests
     public void A_document_with_no_block_quote_is_told_the_Y_statement_is_absent()
     {
         var found = Run(new YStatementPresent(), Adr("Nothing follows the H1 but prose."));
-        Assert.Equal("y-statement", Single(found).Check);
+        Assert.Equal("y-statement", Single(found).Check.Value);
         Assert.Equal("no Y-statement block-quote follows the H1.", Single(found).Message);
     }
 
@@ -44,7 +42,7 @@ public class DocumentRuleTests
             Adr("> **In the context of** a summary, **we decided** to drop two moves, **to achieve**\n"
                 + "> brevity, **accepting** that it is no longer a Y-statement."));
 
-        Assert.Equal("y-statement", Single(found).Check);
+        Assert.Equal("y-statement", Single(found).Check.Value);
         Assert.StartsWith("Y-statement is missing \"facing\" and \"rather than\".", Single(found).Message);
     }
 
@@ -63,9 +61,10 @@ public class DocumentRuleTests
     {
         var body = "> " + string.Join(" ", Enumerable.Repeat("word", 40)) + " **in the context of** x,"
                    + " **facing** y, **we decided** z, **rather than** w, **to achieve** v, **accepting** u.";
-        var found = Run(new YStatementPresent(), Adr(body), new RuleSpec { Id = "y-statement-present", MaxWords = 20 });
+        var found = Run(new YStatementPresent(), Adr(body),
+            new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = 20 });
 
-        Assert.Equal("y-statement", Single(found).Check);
+        Assert.Equal("y-statement", Single(found).Check.Value);
         Assert.Contains("keep it under 20.", Single(found).Message);
     }
 
@@ -74,12 +73,13 @@ public class DocumentRuleTests
     [Fact]
     public void The_ceiling_is_the_schemas_and_a_Y_statement_within_it_is_silent()
     {
-        var body = "> **In the context of** a fixture, **facing** a ceiling, **we decided** to stay under it,\n"
-                   + "> **rather than** over, **to achieve** silence, **accepting** nothing.";
+        const string body =
+            "> **In the context of** a fixture, **facing** a ceiling, **we decided** to stay under it,\n"
+            + "> **rather than** over, **to achieve** silence, **accepting** nothing.";
 
         Assert.Empty(Run(new YStatementPresent(), Adr(body)));
         Assert.NotEmpty(Run(new YStatementPresent(), Adr(body),
-            new RuleSpec { Id = "y-statement-present", MaxWords = 5 }));
+            new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = 5 }));
     }
 
     // The moves are matched on the rendered text, so the bold that marks them in the corpus is optional
@@ -102,7 +102,7 @@ public class DocumentRuleTests
                 + "* **A message queue** — we might explore this in a future revision.\n"
                 + "* **A second database** — rejected: one is enough.\n"));
 
-        Assert.Equal("alternatives-verdict", Single(found).Check);
+        Assert.Equal("alternatives-verdict", Single(found).Check.Value);
         Assert.Contains("A message queue", Single(found).Message);
     }
 
@@ -134,7 +134,7 @@ public class DocumentRuleTests
         var found = Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### Borrower\n\nOne.\n\n### Item\n\nTwo.\n\n### Branch\n\nThree."));
 
-        Assert.Equal("terms-alphabetical", Single(found).Check);
+        Assert.Equal("terms-alphabetical", Single(found).Check.Value);
         Assert.Equal("'Branch' is out of order — it belongs before 'Item'.", Single(found).Message);
     }
 
@@ -157,13 +157,14 @@ public class DocumentRuleTests
     private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null)
     {
         var found = new List<Finding>();
-        void Report(Sev severity, string check, string message, int? line) =>
-            found.Add(new Finding(doc.Rel, line, severity, check, message));
 
         rule.Check(new RuleContext(doc, doc.Type!, spec ?? new RuleSpec { Id = rule.RuleId },
             (c, m, l) => Report(Sev.Error, c, m, l),
             (c, m, l) => Report(Sev.Warning, c, m, l)));
         return found;
+
+        void Report(Sev severity, CheckId check, string message, int? line) =>
+            found.Add(new Finding(doc.Rel, line, severity, check, message));
     }
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);

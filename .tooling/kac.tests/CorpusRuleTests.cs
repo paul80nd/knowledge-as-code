@@ -18,11 +18,11 @@ public class CorpusRuleTests
         Assert.All(CorpusRules.All, r => Assert.NotEmpty(r.Emits));
     }
 
+    // As on the document side: what an emitted id means is `_checks.yaml`'s to say, not this test's.
     [Fact]
-    public void The_catalogue_carries_what_the_rules_declare()
+    public void Every_emitted_id_is_a_usable_check_id()
     {
-        var ids = CheckCatalogue.All.Select(c => c.Id).ToHashSet(StringComparer.Ordinal);
-        Assert.All(CorpusRules.All.SelectMany(r => r.Emits), e => Assert.Contains(e.Id, ids));
+        Assert.All(CorpusRules.All.SelectMany(r => r.Emits), e => Assert.NotEmpty(e.Value));
     }
 
     // -- no-dependency-cycles --
@@ -39,7 +39,7 @@ public class CorpusRuleTests
     {
         var found = Cycles(("svc-a", ["svc-b"]), ("svc-b", ["svc-a"]));
 
-        Assert.Equal("dependency-cycle", Single(found).Check);
+        Assert.Equal("dependency-cycle", Single(found).Check.Value);
         Assert.Equal(Sev.Warning, Single(found).Severity);
         Assert.Equal("'depends-on' forms a cycle: svc-a → svc-b → svc-a.", Single(found).Message);
     }
@@ -142,14 +142,15 @@ public class CorpusRuleTests
         var byId = docs.ToDictionary(d => d.FrontScalar("id")!, d => d, StringComparer.OrdinalIgnoreCase);
 
         var found = new List<Finding>();
-        void Report(Sev severity, Doc at, string check, string message, int? line)
-            => found.Add(new Finding(at.Rel, line, severity, check, message));
 
         new NoDependencyCycles().Check(new CorpusRuleContext(docs, byId, type,
-            new RuleSpec { Id = "no-dependency-cycles" },
+            new RuleSpec { Id = new RuleId("no-dependency-cycles") },
             (at, c, m, l) => Report(Sev.Error, at, c, m, l),
             (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
         return found;
+
+        void Report(Sev severity, Doc at, CheckId check, string message, int? line)
+            => found.Add(new Finding(at.Rel, line, severity, check, message));
     }
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);

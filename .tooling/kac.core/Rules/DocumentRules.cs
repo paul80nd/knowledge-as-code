@@ -12,6 +12,6 @@ public static class DocumentRules
         new TermsAreAlphabetical()
     ];
 
-    public static readonly IReadOnlyDictionary<string, IDocumentRule> ByRuleId =
-        All.ToDictionary(r => r.RuleId, StringComparer.Ordinal);
+    public static readonly IReadOnlyDictionary<RuleId, IDocumentRule> ByRuleId =
+        All.ToDictionary(r => r.RuleId);
 }

@@ -20,7 +20,7 @@ public class ClauseCheckTests
     public void A_section_with_no_table_says_what_to_write()
     {
         var found = Run("## Clauses\n\nProse where a table should be.\n");
-        Assert.Equal("clause-table", Assert.Single(found).Check);
+        Assert.Equal("clause-table", Assert.Single(found).Check.Value);
         Assert.Contains("headed 'Id | Clause'", Assert.Single(found).Message);
     }
 
@@ -28,7 +28,7 @@ public class ClauseCheckTests
     public void A_mis_headed_table_names_both_headings_and_stops()
     {
         var found = Run("## Clauses\n\n| Ref | Rule |\n|-----|------|\n| `LOGS` | not a modal in sight |\n");
-        Assert.Equal("clause-table", Assert.Single(found).Check);
+        Assert.Equal("clause-table", Assert.Single(found).Check.Value);
     }
 
     // Reported and stopped rather than left to the row checks, which would find nothing and say nothing.
@@ -36,7 +36,7 @@ public class ClauseCheckTests
     public void An_empty_table_binds_nobody()
     {
         var found = Run(Header);
-        Assert.Equal("clause-table", Assert.Single(found).Check);
+        Assert.Equal("clause-table", Assert.Single(found).Check.Value);
         Assert.Contains("binds nothing binds nobody", Assert.Single(found).Message);
     }
 
@@ -55,7 +55,7 @@ public class ClauseCheckTests
     public void A_row_that_opens_with_no_modal_is_not_an_obligation()
     {
         var found = Run(Header + "| `LOGS` | Audit logs are retained for a year. |\n");
-        Assert.Equal("clause-modal", Assert.Single(found).Check);
+        Assert.Equal("clause-modal", Assert.Single(found).Check.Value);
         Assert.Contains("MUST, MUST NOT, SHOULD", Assert.Single(found).Message);
     }
 
@@ -64,7 +64,7 @@ public class ClauseCheckTests
     public void A_binding_modal_written_plain_is_reported()
     {
         var found = Run(Header + "| `LOGS` | MUST be retained for a year. |\n");
-        Assert.Equal("clause-modal", Assert.Single(found).Check);
+        Assert.Equal("clause-modal", Assert.Single(found).Check.Value);
         Assert.Contains("write it bold", Assert.Single(found).Message);
     }
 
@@ -85,7 +85,7 @@ public class ClauseCheckTests
     public void A_second_modal_in_one_row_is_two_obligations_sharing_an_id()
     {
         var found = Run(Header + "| `LOGS` | **MUST** be retained and SHOULD be indexed. |\n");
-        Assert.Equal("clause-compound", Assert.Single(found).Check);
+        Assert.Equal("clause-compound", Assert.Single(found).Check.Value);
         Assert.Contains("carries a second 'SHOULD'", Assert.Single(found).Message);
     }
 
@@ -95,7 +95,7 @@ public class ClauseCheckTests
     public void An_id_that_is_not_a_code_span_is_a_word_rather_than_a_handle()
     {
         var found = Run(Header + "| LOGS | **MUST** be retained. |\n");
-        Assert.Equal("clause-id-format", Assert.Single(found).Check);
+        Assert.Equal("clause-id-format", Assert.Single(found).Check.Value);
         Assert.Contains("write it as `LOGS`", Assert.Single(found).Message);
     }
 
@@ -115,7 +115,7 @@ public class ClauseCheckTests
         var found = Run(Header
                         + "| `LOGS` | **MUST** be retained. |\n"
                         + "| `LOGS` | **MUST** be indexed. |\n");
-        Assert.Equal("clause-id-unique", Assert.Single(found).Check);
+        Assert.Equal("clause-id-unique", Assert.Single(found).Check.Value);
     }
 
     // -- the ordering, reported once --
@@ -129,7 +129,7 @@ public class ClauseCheckTests
                         + "| `CCC` | **MUST** be first too. |\n"
                         + "| `DDD` | **MUST** and again. |\n");
 
-        var order = found.Where(f => f.Check == "clause-order").ToList();
+        var order = found.Where(f => f.Check.Value == "clause-order").ToList();
         Assert.Single(order);
         Assert.Contains("'CCC' is a 'MUST' but follows a 'SHOULD'", order[0].Message);
     }
@@ -148,7 +148,7 @@ public class ClauseCheckTests
     {
         var found = Notation("Answering `pol-VURM:TIMEBOX` in full.\n");
         var one = Assert.Single(found);
-        Assert.Equal("clause-ref", one.Check);
+        Assert.Equal("clause-ref", one.Check.Value);
         Assert.Contains("'pol-VURM.TIMEBOX'", one.Message);
     }
 
@@ -186,8 +186,8 @@ public class ClauseCheckTests
 
         var found = new List<Finding>();
         ClauseChecks.Check(doc, type,
-            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, check, msg)),
-            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Warning, check, msg)));
+            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, new CheckId(check), msg)),
+            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Warning, new CheckId(check), msg)));
         return found;
     }
 
@@ -197,7 +197,7 @@ public class ClauseCheckTests
 
         var found = new List<Finding>();
         ClauseChecks.CheckNotation(doc,
-            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, check, msg)));
+            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, new CheckId(check), msg)));
         return found;
     }
 

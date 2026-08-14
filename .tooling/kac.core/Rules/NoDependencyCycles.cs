@@ -14,12 +14,13 @@ namespace kac.core;
 // field is renamed, and say so in silence.
 public sealed class NoDependencyCycles : ICorpusRule
 {
-    public string RuleId => "no-dependency-cycles";
+    public RuleId RuleId => new("no-dependency-cycles");
 
-    public IReadOnlyList<CheckDef> Emits =>
-    [
-        new("dependency-cycle", Sev.Warning, "A cycle in a type's own dependency graph is reported, not failed.")
-    ];
+    // A field because every report below names it: one place to change, so what the rule declares it
+    // emits and what it actually reports cannot come apart. `_checks.yaml` declares what it means.
+    private static readonly CheckId Reports = new("dependency-cycle");
+
+    public IReadOnlyList<CheckId> Emits => [Reports];
 
     public void Check(CorpusRuleContext ctx)
     {
@@ -70,6 +71,7 @@ public sealed class NoDependencyCycles : ICorpusRule
 
         foreach (var id in edges.Keys.Order(StringComparer.Ordinal))
             Visit(id);
+        return;
 
         void Visit(string id)
         {
@@ -100,7 +102,7 @@ public sealed class NoDependencyCycles : ICorpusRule
             if (!reported.Add(route)) return;
 
             var at = records[rotated[0]];
-            ctx.Warn(at, "dependency-cycle", $"'{field.Name}' forms a cycle: {route}.", at.FrontStartLine);
+            ctx.Warn(at, Reports, $"'{field.Name}' forms a cycle: {route}.", at.FrontStartLine);
         }
     }
 }

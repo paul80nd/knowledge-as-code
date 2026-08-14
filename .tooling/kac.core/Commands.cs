@@ -72,7 +72,7 @@ public static class Commands
                     .. findings
                         .OrderBy(f => f.File).ThenBy(f => f.Line ?? 0)
                         .Select(f => new ValidateFinding(
-                            f.File, f.Line, f.Severity.ToString().ToLowerInvariant(), f.Check, f.Message))
+                            f.File, f.Line, f.Severity.ToString().ToLowerInvariant(), f.Check.Value, f.Message))
                 ]);
 
             Console.WriteLine(JsonSerializer.Serialize(report, KacJson.Relaxed.ValidateReport));
@@ -103,7 +103,8 @@ public static class Commands
 
     public static int Checks(string repoRoot, bool json)
     {
-        var catalogue = CheckCatalogue.For(Schema.Load(repoRoot));
+        var schema = Schema.Load(repoRoot);
+        var catalogue = CheckCatalogue.For(schema);
 
         // The catalogue is always valid data, so emit it either way; the reader-facing table's
         // fidelity to it is a separate signal, reported to stderr and via the exit code below. This
@@ -114,7 +115,7 @@ public static class Commands
             var report = new ChecksReport(
             [
                 .. catalogue.Select(c =>
-                    new CheckInfo(c.Id, c.Severity.ToString().ToLowerInvariant(), c.Summary))
+                    new CheckInfo(c.Id.Value, c.Severity.ToString().ToLowerInvariant(), c.Summary))
             ]);
             Console.WriteLine(JsonSerializer.Serialize(report, KacJson.Relaxed.ChecksReport));
         }
@@ -130,13 +131,14 @@ public static class Commands
             Console.WriteLine($"{catalogue.Count} checks.");
         }
 
-        var problems = Generator.ChecksTableProblems();
+        var problems = Generator.ChecksTableProblems(schema);
         if (problems.Count == 0) return 0;
 
         Console.Error.WriteLine("checks: the reader-facing checks table is out of step with the catalogue:");
         foreach (var p in problems) Console.Error.WriteLine($"  {p}");
         Console.Error.WriteLine(
-            "fix Generator.DocRows (or IntentionallyUndocumented) in .tooling/kac.core/Generator.cs.");
+            "fix Generator.DocRows in .tooling/kac.core/Generator.cs, or the check's 'on-type-page:' "
+            + "in .schema/_checks.yaml.");
         return 1;
     }
 
@@ -168,10 +170,6 @@ public static class Commands
         if (Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot))
             return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
 
-        // Whether two copies of a file say the same thing, which is the one question either engine asks of
-        // the disk. Passed in, so each engine decides from listings and a predicate rather than from a tree.
-        bool Same(string rel) => MechanismCheck.Same(repoRoot, refRoot, rel);
-
         var localFiles = MechanismCheck.ListFiles(repoRoot);
         var refFiles = MechanismCheck.ListFiles(refRoot);
 
@@ -190,6 +188,10 @@ public static class Commands
         var today = DateTime.Today.ToString("yyyy-MM-dd");
         MechanismSync.Apply(plan, repoRoot, refRoot, manifest, reference, today);
         return ReportSync(plan, repoRoot, manifest.Version, reference, today);
+
+        // Whether two copies of a file say the same thing, which is the one question either engine asks of
+        // the disk. Passed in, so each engine decides from listings and a predicate rather than from a tree.
+        bool Same(string rel) => MechanismCheck.Same(repoRoot, refRoot, rel);
 
         static int Fail(string message)
         {

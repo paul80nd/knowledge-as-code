@@ -83,7 +83,7 @@ public sealed class ClauseSpec(string idPattern, List<string> binding, List<stri
     public string IdPattern { get; } = idPattern;
     public Regex? IdPatternRegex { get; } = Schema.CompilePattern(idPattern);
 
-    public IReadOnlyList<string> Binding { get; } = binding;  // written bold — these oblige
+    public IReadOnlyList<string> Binding { get; } = binding; // written bold — these oblige
     public IReadOnlyList<string> Advisory { get; } = advisory; // written plain — these recommend
 
     // The order rows must appear in: binding levels before advisory ones, each as the type declares it.
@@ -121,7 +121,7 @@ public sealed record RequiredWhen(string Field, bool Negated, IReadOnlyList<stri
 // enforced" rather than a default level.
 public sealed record RuleSpec
 {
-    public required string Id { get; init; }
+    public required RuleId Id { get; init; }
 
     // The rule in the schema's own words, whitespace folded so it can be rendered into a table cell.
     public string? Description { get; init; }
@@ -254,7 +254,7 @@ public sealed class TypeSchema
 
     // Whether this type declares a given rule. The reader-facing checks table uses it to show a
     // rule's row only on the pages whose schema actually carries the rule.
-    public bool HasRule(string id) => Rules.Any(r => string.Equals(r.Id, id, StringComparison.Ordinal));
+    public bool HasRule(RuleId id) => Rules.Any(r => r.Id == id);
 
     // Whether any field on this type declares the given FieldSpec property — the same question for
     // schema-driven core checks (reciprocal, mirrors-section) that only fire when a field opts in.
@@ -353,7 +353,7 @@ public sealed record TierSpec(string Name, string Label, string Behaviour, strin
 // renders as one.
 public sealed record LineageSpec(string PriorArt, string Alignment, string Divergence);
 
-public sealed class Schema
+public sealed partial class Schema
 {
     // The one key admitted at every level and required at none. See Level.
     public const string Commentary = "notes";
@@ -364,11 +364,18 @@ public sealed class Schema
     // against each other.
     public IReadOnlyList<TierSpec> Tiers { get; init; } = [];
 
+    // Every check the validator can emit, as `_checks.yaml` declares it. The schema is where a check is
+    // defined: its severity, the words a reader meets, the reasoning, and the concern it belongs to.
+    // The code decides what runs, and `SchemaChecks` holds the two against each other.
+    public IReadOnlyList<CheckDef> Checks { get; init; } = [];
+
     public IReadOnlyList<string> UniversalOrder { get; init; } = [];
     public IReadOnlyDictionary<string, FieldSpec> Universal { get; init; } = new Dictionary<string, FieldSpec>();
     public IReadOnlyList<string> Reserved { get; init; } = [];
+
     public IReadOnlyDictionary<string, IReadOnlyList<string>> Enums { get; init; } =
         new Dictionary<string, IReadOnlyList<string>>();
+
     public IReadOnlyDictionary<string, TypeSchema> ByFolder { get; init; } = new Dictionary<string, TypeSchema>();
 
     // Every key these files carry that the loader never asked for, in the order it would be met reading
@@ -409,6 +416,22 @@ public sealed class Schema
 
         unread.AddRange(tierKeys.Unread());
 
+        var checkKeys = new KeyReader(".schema/_checks.yaml");
+        var checksRoot = checkKeys.At(Yaml.LoadFile(Path.Combine(dir, "_checks.yaml")), TheFile);
+        var checks = new List<CheckDef>();
+        foreach (var (id, node) in Yaml.Map(checksRoot.Get("checks")))
+        {
+            var check = checkKeys.At(node, $"check '{id}'");
+            checks.Add(new CheckDef(new CheckId(id),
+                Yaml.Str(check.Get("severity")) == "warning" ? Sev.Warning : Sev.Error,
+                Yaml.Str(check.Get("description"))?.Trim() ?? "",
+                Yaml.Str(check.Get("notes"))?.Trim() ?? "",
+                // Most checks belong on a type page, so the key is written only where one does not.
+                Yaml.Str(check.Get("on-type-page")) is not "false"));
+        }
+
+        unread.AddRange(checkKeys.Unread());
+
         var universalKeys = new KeyReader(".schema/_universal.yaml");
         var uni = universalKeys.At(Yaml.LoadFile(Path.Combine(dir, "_universal.yaml")), TheFile);
         var universalOrder = new List<string>();
@@ -436,6 +459,7 @@ public sealed class Schema
         return new Schema
         {
             Tiers = tiers,
+            Checks = checks,
             UniversalOrder = layer.Order,
             Universal = layer.Fields,
             Reserved = layer.Reserved,
@@ -656,7 +680,7 @@ public sealed class Schema
 
         return new RuleSpec
         {
-            Id = id,
+            Id = new RuleId(id),
             Description = Collapse(Yaml.Str(rule.Get("description"))),
             Severity = severity,
             Expr = source,
@@ -676,8 +700,7 @@ public sealed class Schema
     {
         if (string.IsNullOrWhiteSpace(condition)) return null;
 
-        var inList = System.Text.RegularExpressions.Regex.Match(
-            condition, @"^\s*(\S+)\s+in\s*\[(.*)\]\s*$");
+        var inList = InListRegex().Match(condition);
         if (inList.Success)
             return new RequiredWhen(inList.Groups[1].Value,
                 false,
@@ -710,7 +733,9 @@ public sealed class Schema
     // every declaration that uses the list form.
     private static IReadOnlyList<string> StrOrList(YamlNode? node) => node is YamlSequenceNode
         ? Yaml.StrList(node)
-        : Yaml.Str(node) is { } single ? [single] : [];
+        : Yaml.Str(node) is { } single
+            ? [single]
+            : [];
 
     // A pattern the schema declares, held as a Regex so the expression is parsed once at load rather
     // than looked up in the framework's cache on every value it is applied to. Interpreted rather than
@@ -721,4 +746,7 @@ public sealed class Schema
 
     private static string? Collapse(string? s) =>
         s is null ? null : string.Join(" ", s.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+
+    [GeneratedRegex(@"^\s*(\S+)\s+in\s*\[(.*)\]\s*$")]
+    private static partial Regex InListRegex();
 }

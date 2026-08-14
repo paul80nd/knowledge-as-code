@@ -129,7 +129,7 @@ public static class GeneratedFiles
             specs.Add(new FileSpec(t.Page, true,
             [
                 new Block($"schema-{t.Key}", schema => Generator.SchemaTable(t, schema)),
-                new Block($"checks-{t.Key}", _ => Generator.ChecksTable(t))
+                new Block($"checks-{t.Key}", s => Generator.ChecksTable(s, t))
             ]));
         }
 

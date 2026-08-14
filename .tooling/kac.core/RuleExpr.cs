@@ -29,7 +29,9 @@ namespace kac.core;
 // else has reason to look inside one, and nothing outside this assembly can make one.
 public abstract record Expr
 {
-    private protected Expr() { }
+    private protected Expr()
+    {
+    }
 }
 
 internal sealed record Lit(object? Value) : Expr;
@@ -335,7 +337,8 @@ public static class RuleExpr
                             $"'{token.Text}' must be called with parentheses, in '{source}'.");
                     var args = new List<Expr>();
                     if (Peek().Kind != ")")
-                        do args.Add(Implies());
+                        do
+                            args.Add(Implies());
                         while (Take(","));
                     if (Next().Kind != ")")
                         throw new RuleExprException($"expected ')' closing '{token.Text}(' in '{source}'.");
@@ -364,7 +367,12 @@ public static class RuleExpr
             var i = 0;
             while (i < s.Length)
             {
-                if (char.IsWhiteSpace(s[i])) { i++; continue; }
+                if (char.IsWhiteSpace(s[i]))
+                {
+                    i++;
+                    continue;
+                }
+
                 var start = i;
 
                 if (s[i] == '\'')
@@ -410,7 +418,11 @@ public static class RuleExpr
                 else
                 {
                     var two = i + 1 < s.Length ? s[i..(i + 2)] : "";
-                    if (two is "==" or "!=" or "<=" or ">=") { tokens.Add(("op", two, start)); i += 2; }
+                    if (two is "==" or "!=" or "<=" or ">=")
+                    {
+                        tokens.Add(("op", two, start));
+                        i += 2;
+                    }
                     else if (s[i] is '<' or '>' or '+' or '-' or '*' or '/')
                     {
                         tokens.Add(("op", s[i].ToString(), start));

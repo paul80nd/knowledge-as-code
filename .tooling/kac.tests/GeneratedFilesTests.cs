@@ -100,7 +100,7 @@ public class GeneratedBlockCheckTests
     {
         var finding = Assert.Single(Check(Whole.Replace(deleted, ""), "types-index"));
 
-        Assert.Equal("generated-block", finding.Check);
+        Assert.Equal("generated-block", finding.Check.Value);
         Assert.Contains(expected, finding.Message);
     }
 
