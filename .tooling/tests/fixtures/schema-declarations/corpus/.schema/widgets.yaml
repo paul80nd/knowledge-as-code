@@ -84,3 +84,8 @@ rules:
     description: A widget says what it is for.
     expr: "words() > 0"
     message: This widget is empty.
+
+  - id: widgets-are-named
+    description: A widget carries a name someone would search for.
+    severity: warning
+    expr: "present('title')"
