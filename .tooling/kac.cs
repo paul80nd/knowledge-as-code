@@ -33,15 +33,11 @@ if (repoRoot is null)
     return 2;
 }
 
-var pathsArg = new Argument<string[]>("paths")
-{
-    Arity = ArgumentArity.ZeroOrMore,
-    Description = "Subtrees or files to validate (default: the whole repo)."
-};
+// `validate` takes no paths: several of its checks ask about the shape of the corpus rather than
+// about a document, and a subset cannot answer them. It is the whole corpus or nothing.
 var jsonOpt = new Option<bool>("--json") { Description = "Emit the summary and findings as JSON." };
 var validate = new Command("validate", "Check the corpus against .schema/*.yaml.")
 {
-    pathsArg,
     jsonOpt
 };
 validate.SetAction(pr => Commands.Validate(repoRoot, pr.GetValue(jsonOpt)));

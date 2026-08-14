@@ -336,7 +336,7 @@ checks:
       colon where the dot belongs is reported here too, naming the form to write: the parser reads a
       citation by its separator, so one spelled with a colon would otherwise reach no clause and be seen
       by nothing. The separator is legible in the single file and the resolution needs the whole corpus,
-      so the two halves run in different passes and a narrowed run still reports the separator.
+      so the two halves run in different passes.
 
   ref-resolves:
     severity: error
@@ -387,8 +387,7 @@ checks:
     on-type-page: false
     description: A type the schema declares is stood up as both a page and a folder, or as neither.
     notes: >
-      A declared type nobody has built yet is silent; half of one is not. Skipped when the run is
-      narrowed to paths, because asking about one document is not asking about the shape of the corpus.
+      A declared type nobody has built yet is silent; half of one is not.
 
       Not advertised on a type page, which is one of the two files it reports the absence of.
 
@@ -400,7 +399,7 @@ checks:
       And never link a record inside a type's folder. Those files are byte-identical in every corpus, so
       a link resolving here says nothing about where it is read: a corpus that never adopted standards
       has no `/standards` page to open. Generated blocks are exempt, being written from the types the
-      corpus stood up. Skipped when the run is narrowed to paths.
+      corpus stood up.
 
       Not advertised on a type page: it reads the framework's own documents rather than a corpus's
       records.
@@ -469,6 +468,4 @@ checks:
     description: The records' `depends-on` edges form no loop.
     notes: >
       A loop lives in the set of edges and no single record holds it, so the message names the route it
-      runs through. Reported once per loop, against the lowest id on it, and skipped when a run is
-      narrowed to paths — a graph read from a handful of its records has no loops in it, whatever the
-      corpus holds.
+      runs through. Reported once per loop, against the lowest id on it.

@@ -44,9 +44,9 @@ declared-but-not-enforced, so long as it declares no `severity:` — which `Sche
 | `IDocumentRule` | one document, through a `RuleContext`                            | `Validator.CheckRules`       | against that document                         |
 | `ICorpusRule`   | every record and the `byId` index, through a `CorpusRuleContext` | `Validator.CheckCorpusRules` | against the document it names, rarely its own |
 
-What a rule is handed also decides when it runs: a pass narrowed to given paths applies the document rules and skips the
-corpus ones, because a question about the set answered from a handful of its members is answered wrongly and with no
-sign of it. A rule needing git history fits neither interface. Design that one against the first real case.
+Choose by what the rule has to read, and take the narrower one wherever it will do: a rule handed every record to judge
+one document reads as though it needs them all, and nothing in its signature says otherwise. A rule needing git history
+fits neither interface. Design that one against the first real case.
 
 **A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
 early so a later check does not report nonsense about a document already known to be broken. That order is the design,
