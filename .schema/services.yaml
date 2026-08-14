@@ -47,7 +47,7 @@ fields:
   platform:
     required: true
     type: enum
-    values: [dotnet-web, dotnet-api, azure-function, static, typescript, terraform, mixed]
+    values: [dotnet-web, dotnet-api, azure-function, static, typescript, mixed]
     description: What it is built on. Drives which standards apply.
 
   criticality:
