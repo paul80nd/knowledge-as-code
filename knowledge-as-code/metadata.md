@@ -7,6 +7,25 @@ Azure DevOps renders frontmatter as a table at the top of the page, so **every f
 every document of that type**. Fields are therefore a design decision about the reader as much as about the schema. Add
 them sparingly, and derive rather than state wherever possible.
 
+## What a record carries
+
+A record holds three kinds of thing, and each has one home.
+
+**Frontmatter is metadata about the record** — what identifies it, places it in the taxonomy, and describes it as a
+whole. A field carries one value, or a set of them. An index sorts on it, a citation resolves against it, and an agent
+greps it.
+
+**A table in the body carries the record's parts**, where a part needs a rule or an address of its own. A policy's
+obligations are the case in this corpus: `## Clauses` holds one row per obligation, each with an id that a standard or
+a control cites as `pol-VURM.TIMEBOX`. The type declares that table in its schema — the section holding it, its columns,
+the pattern a row id takes. CI reads the rows out of the body and holds them to that declaration.
+
+**Everything else is prose**, in the section where it belongs.
+
+The question to ask of a table is whether anything has to address a row: a citation that must resolve, a check that must
+fire. Where nothing does, it is prose set in columns, and the schema says nothing about it. A part moved into
+frontmatter reaches the reader as a metadata table written for a machine, and leaves the page they are already reading.
+
 ## Principles
 
 1. **Derive what the system already knows.** Document type comes from the folder. Tier comes from the type. Title comes
@@ -122,9 +141,10 @@ stale. A document whose meaning has moved that far is replaced and the old one r
 Two separators reach past an id, each with one job. [Contributing](contributing.md) holds the link form a reference is
 written in.
 
-**`.` addresses a part of a document.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it. A type carrying
-addressable parts declares them in its schema — `clauses:` on a policy — and CI resolves each citation against the
-document it names, so a reference to a part that does not exist fails the build.
+**`.` addresses a part of a document.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it. The parts a
+document offers are the rows of the table its type declares, described under
+[What a record carries](#what-a-record-carries). CI resolves each citation against the document it names, so a reference
+to a part that does not exist fails the build.
 
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, document, part. A
 record this corpus holds is cited bare, and qualifying one is an error: two spellings of a single obligation defeat
@@ -195,7 +215,8 @@ tags: [ public-api, http ]
 
 ## Adding a field
 
-A new field appears as a column on every document of that type, so it needs to justify itself. Before adding one, check
-that the information is not already derivable from git, the folder, the H1, or an existing link. If it is genuinely new,
+The first question is whether the content belongs in frontmatter at all, and
+[What a record carries](#what-a-record-carries) answers it. Then check that git, the folder, the H1 or an existing link
+does not already hold the fact, since a field costs every document of the type a column. If it is new,
 declare it in the type's `.schema/<folder>.yaml`, add it to that type's `_template.md`, and run `./kac index` so the
 generated tables carry it. The validator reads the schema, so it needs no change of its own.
