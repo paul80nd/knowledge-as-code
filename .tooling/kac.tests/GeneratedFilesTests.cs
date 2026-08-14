@@ -73,10 +73,11 @@ public class GeneratedFilesTests
     }
 }
 
-// What a regeneration comes to, decided from a listing and a set of records. `Plan` reads nothing, so
-// each of these is a corpus written out rather than a tree assembled in a temp directory — which is what
-// the `index`, `index-adoption` and `index-stale` fixtures had to be to reach the same branches. Those
-// stay: they pin the tree a command leaves behind, where these pin what it decided to leave.
+// What a regeneration comes to, decided from a listing and a set of records. `Plan` reads nothing, so the
+// corpus each case needs is written out here in a few lines.
+//
+// The `index`, `index-adoption` and `index-stale` fixtures cover the same ground through the CLI. They pin
+// the tree a command leaves behind; these pin what it decided to leave.
 public class GeneratedFilePlanTests
 {
     private static TypeSchema Type(string key) => new()
