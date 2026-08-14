@@ -9,8 +9,15 @@
 //
 //   validate   check the corpus against .schema/*.yaml
 //   index      regenerate _index.md and the generated blocks in <type>.md
+//   checks     list every check the validator implements
 //   mechanism  enforce the portability manifest: check the shared layers against a
 //              reference corpus, or sync them from one
+//
+// This file is only the CLI surface: it wires System.CommandLine to Commands and does the repo-root
+// pre-flight. Every subcommand's logic lives in the kac.core project, referenced by the #:project
+// directive above — one class per file, named for what it holds. Four carry the substance: Schema.cs
+// loads .schema/*.yaml, Document.cs parses a record, Validator.cs holds the checks, Generator.cs
+// builds the generated blocks.
 //
 // The tool is deliberately free of type-specific rules: everything it enforces is
 // read from the YAML schema, so adding a type is adding a YAML file, not editing C#.
@@ -26,7 +33,6 @@ if (repoRoot is null)
     return 2;
 }
 
-// validate — check the corpus against the schema.
 var pathsArg = new Argument<string[]>("paths")
 {
     Arity = ArgumentArity.ZeroOrMore,
@@ -40,7 +46,6 @@ var validate = new Command("validate", "Check the corpus against .schema/*.yaml.
 };
 validate.SetAction(pr => Commands.Validate(repoRoot, [.. pr.GetValue(pathsArg) ?? []], pr.GetValue(jsonOpt)));
 
-// index — regenerate _index.md and the generated blocks in <type>.md.
 var checkOpt = new Option<bool>("--check") { Description = "Fail if a generated file is stale instead of writing it." };
 var index = new Command("index", "Regenerate _index.md and the generated blocks in <type>.md.")
 {
@@ -48,9 +53,8 @@ var index = new Command("index", "Regenerate _index.md and the generated blocks 
 };
 index.SetAction(pr => Commands.Index(repoRoot, pr.GetValue(checkOpt)));
 
-// checks — list every check the validator implements. Its purpose is machinery, not humans:
-// the test suite reads `checks --json` to assert every rule is exercised by a fixture, so a
-// new rule cannot ship without a golden covering it.
+// `checks` is machinery before it is documentation: the test suite reads `checks --json` to assert
+// every rule is exercised by a fixture, so a new rule cannot ship without a golden covering it.
 var checksJsonOpt = new Option<bool>("--json") { Description = "Emit the check catalogue as JSON." };
 var checks = new Command("checks", "List every check the validator implements.")
 {
@@ -93,11 +97,3 @@ static string? FindRepoRoot(string start)
 
     return null;
 }
-
-// ---------------------------------------------------------------------------
-// This file is only the CLI surface: it wires System.CommandLine to Commands and does the repo-root
-// pre-flight. Every subcommand's logic — and all the mechanics — live in the kac.core project,
-// referenced via the #:project directive at the top, one class per file and named for what it holds.
-// Four of them carry the substance: Schema.cs loads .schema/*.yaml, Document.cs parses a record,
-// Validator.cs holds the checks, Generator.cs builds the generated blocks. The rest are helpers.
-// ---------------------------------------------------------------------------

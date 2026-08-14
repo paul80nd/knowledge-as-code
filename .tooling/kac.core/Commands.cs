@@ -1,7 +1,5 @@
 using System.Text.Json;
 
-// JsonSerializer for the --json output paths
-
 // ---------------------------------------------------------------------------
 // Subcommands — the orchestration behind each CLI verb. The entrypoint (.tooling/kac.cs) only wires
 // System.CommandLine to these; all the work lives here and in the rest of kac.core.
@@ -67,8 +65,7 @@ public static class Commands
 
         if (json)
         {
-            // Emitted through the source generator (KacJson), not reflection — the core is
-            // AOT-friendly. See Json.cs for the output models.
+            // Through the source generator rather than reflection — see Json.cs.
             var report = new ValidateReport(
                 new ValidateSummary(validated, templates, skipped, errors, warnings),
                 [

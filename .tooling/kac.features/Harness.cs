@@ -1,8 +1,8 @@
-// Test harness for the BDD pilot: assemble a throwaway repo root (the real schema plus a fixture
-// corpus) and run the validate pipeline in-process against kac.core. It calls Corpus.Load and
+// The harness behind every behaviour spec: assemble a throwaway repo root (the real schema plus a
+// fixture corpus) and run the validate pipeline in-process against kac.core. It calls Corpus.Load and
 // Validator.CheckAll — the same two calls `kac validate` makes, so a check cannot be visible to the
-// command and invisible here — and returns the findings rather than printing them. That is the clean
-// seam BDD steps bind to: a List<Finding> with no Console involved.
+// command and invisible here — and returns the findings rather than printing them. That is the seam
+// the steps bind to: a List<Finding> with no Console involved.
 
 using kac.core;
 

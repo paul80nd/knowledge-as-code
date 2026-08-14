@@ -5,8 +5,7 @@
 // and leaves it alone. Deleting knowledge because an upstream tree was smaller is not a tool's call.
 //
 // Deciding and doing are two steps. `Plan` says what the sync comes to and touches nothing; `Apply`
-// carries it out. So what a sync would do to a corpus is a question that can be asked, and answered,
-// without a corpus.
+// carries it out. So what a sync comes to can be asked and answered without a corpus on disk.
 
 namespace kac.core;
 
@@ -22,7 +21,6 @@ public sealed record SyncPlan(
     int InStep,
     int Declined)
 {
-    // The files to copy, which is what `Updated` and `Seeded` mean.
     public IEnumerable<string> Copies => Updated.Concat(Seeded);
 
     // A reference whose own manifest cannot place its own tree. Sync copies what it could resolve and

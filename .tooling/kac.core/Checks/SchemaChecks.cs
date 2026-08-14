@@ -10,7 +10,7 @@ namespace kac.core;
 // it exists because those files are copied into corpora whose authors cannot ask what a key meant. A
 // declaration nothing dispatches is not inert to a reader: `rules:` is documented as behaviour the
 // validator applies, so a rule id no code answers to reads as a commitment, and a `ref:` at a type the
-// corpus never adopted reads as a link that is being checked. Both were, until this pass.
+// corpus never adopted reads as a link that is being checked.
 //
 // The question asked of each value is not "is this key spelled right" but "is there code that acts on
 // this value". `style: mnemonic` is a real style and would pass a spelling test; what makes it sound is

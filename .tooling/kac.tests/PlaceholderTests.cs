@@ -24,9 +24,9 @@ public class PlaceholderTests
     public void Anything_without_the_mark_is_a_value(string? value)
         => Assert.False(Placeholder.In(value));
 
-    // The stand-in words the templates used before the mark was settled. They are ordinary text now, so
-    // a template still writing one gets the finding it has coming rather than a silent exemption — and
-    // `example` stays available as a slug a real document may want.
+    // Words that read as stand-ins and are not the mark. Each is ordinary text, so a template writing
+    // one gets the finding it has coming rather than a silent exemption — and `example` stays available
+    // as a slug a real document may want.
     [Theory]
     [InlineData("adr-NNNN")]
     [InlineData("pol-XXXX")]

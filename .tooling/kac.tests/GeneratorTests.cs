@@ -470,7 +470,7 @@ public class GeneratorTests
         Assert.Contains("Ours spans repos", table);
     }
 
-    // Three types have no ancestor, and the row exists to say so. An empty cell would read as unfinished.
+    // A type may have no ancestor, and its row exists to say so. An empty cell would read as unfinished.
     [Fact]
     public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
     {

@@ -119,7 +119,7 @@ public class ManifestTests
 
     // A descriptor that has never been synced has no block to rewrite, so the first sync opens one.
     [Fact]
-    public void Stamping_a_lock_with_no_upstream_block_writes_one()
+    public void Stamping_a_descriptor_with_no_upstream_block_writes_one()
     {
         var dir = Directory.CreateTempSubdirectory().FullName;
         File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "role: consumer\n");

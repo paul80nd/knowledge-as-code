@@ -119,8 +119,6 @@ public class DocumentRuleTests
     public void A_verdict_is_an_outcome_word_or_a_contrastive_cue(string bullet, bool settled)
         => Assert.Equal(settled, AlternativesHaveVerdicts.HasVerdict(bullet));
 
-    // -- driving a rule --
-
     // -- terms-are-alphabetical --
 
     [Fact]
@@ -153,6 +151,8 @@ public class DocumentRuleTests
     public void Every_entry_out_of_place_is_reported()
         => Assert.Equal(2, Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### Item\n\nOne.\n\n### Borrower\n\nTwo.\n\n### Adr\n\nThree.")).Count);
+
+    // -- driving a rule --
 
     private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null)
     {

@@ -4,9 +4,8 @@
 // Both read the same manifest and the same descriptor, and both ask one predicate what this corpus
 // holds. So the check can never report a file missing that a sync would decline to bring.
 //
-// Each engine answers in a value and prints nothing. What a corpus stands at is a question with an
-// answer, and a caller that can only read the answer off a console can only be a person — see
-// Commands.ReportMechanism for the half that writes it out.
+// Each engine answers in a value and prints nothing, so a caller other than a person can act on what
+// it says. Commands.ReportMechanism is the half that writes it out.
 
 namespace kac.core;
 
