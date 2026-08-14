@@ -165,7 +165,7 @@ A type that declares no `clauses:` block is checked for none of these.
 | `clause-modal`     | error   | Each clause opens with a declared modal; `binding` ones are bold, `advisory` ones plain.                                                                        |
 | `clause-order`     | warning | Rows are grouped `binding` then `advisory`, in declared order. Reported once, on the row that breaks it.                                                        |
 | `clause-compound`  | warning | A clause carries one modal, not two — a second is two obligations sharing an id.                                                                                |
-| `clause-ref`       | error   | A `pol-VURM.TIMEBOX` code span is separated by a dot and resolves: the document exists and carries that clause. Applies to every type, since anything may cite a clause. The separator is judged per document; resolution needs the corpus. |
+| `clause-ref`       | error   | A `pol-VURM.TIMEBOX` code span resolves: the document exists and carries that clause. Applies to every type, since anything may cite a clause. A colon where the dot belongs is reported here too, naming the form to write. |
 
 ### Links & the graph
 

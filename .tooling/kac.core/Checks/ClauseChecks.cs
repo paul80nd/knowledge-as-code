@@ -99,11 +99,10 @@ public static class ClauseChecks
     // two with a colon. Reported under `clause-ref` because a reader meets one question — does this
     // citation reach the obligation it claims to — and the separator is the first way of answering no.
     //
-    // Asked of every document rather than only of the ones carrying a clause table, since a citation is
-    // written where the obligation is answered — a standard, a control, a deviation — and none of those
-    // declares a clause table of its own. Asked per document rather than beside the other two, which
-    // need `byId`:
-    // this fault is legible in the one file, so a run narrowed to that file still reports it.
+    // Every document is asked, including the ones declaring no clause table of their own: a citation is
+    // written where the obligation is answered, which is a standard, a control or a deviation. The
+    // other two ways need `byId` and run over the corpus. This one is legible in the single file, so it
+    // sits here and a run narrowed to that file still reports it.
     //
     // Left unchecked it is silent. The parser reads a citation by its separator, so a colon-separated
     // one is never collected, the resolution checks never see it, and the build passes on a reference

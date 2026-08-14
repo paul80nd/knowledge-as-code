@@ -88,9 +88,9 @@ public class Doc
     public int ClauseTableLine;
     public readonly List<(string Ref, int Line)> ClauseRefs = [];
 
-    // Citations of a part written with a colon, which the corpus does not use. Collected separately
-    // from `ClauseRefs` so the validator can name the notation rather than report the citation as
-    // unresolved: the two are different faults and only one of them is the author's spelling.
+    // Citations of a part written with a colon, which is not the separator the corpus uses. Collected
+    // apart from `ClauseRefs` so the validator can name the separator and quote the form to write. A
+    // citation reaching no clause and one spelled wrongly need different words back.
     public readonly List<(string Ref, int Line)> ColonCitations = [];
 
     public readonly List<Section> Sections = [];

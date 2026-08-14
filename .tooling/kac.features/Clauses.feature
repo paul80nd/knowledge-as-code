@@ -1,7 +1,7 @@
 Feature: Clause table checks
   A policy binds in its clause table and nowhere else, so kac checks the table's shape, each row's id and
-  each row's modal, and holds every citation of a clause to a clause that exists. Driven in-process against
-  the broken-clauses fixture — the same corpus its JSON golden pins.
+  each row's modal, and holds every citation of a clause to the separator the corpus writes and to a clause
+  that exists. Driven in-process against the broken-clauses fixture — the same corpus its JSON golden pins.
 
   Background:
     Given the broken-clauses fixture corpus
@@ -66,7 +66,7 @@ Feature: Clause table checks
       | line | check      | message                                        |
       | 16   | clause-ref | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist. |
 
-  Scenario: A citation separated by a colon is reported as the separator it is
+  Scenario: A citation separated by a colon is told the form to write
     When I validate the corpus
     Then the findings for "policies/coln-colon-separator.md" are exactly:
       | line | check      | message                                                              |

@@ -72,7 +72,7 @@ public static class CheckCatalogue
         new("template-fields", Sev.Error, "A type's template carries the fields a copy of it needs, usably."),
         new("generated-block", Sev.Error, "A page carrying a generated block still has both of its markers."),
         new("page-frontmatter", Sev.Error, "A type's page carries no frontmatter — it describes records, and is not one."),
-        new("clause-ref", Sev.Error, "A pol-XXXX.CLAUSE citation is separated by a dot and names a clause that exists."),
+        new("clause-ref", Sev.Error, "A pol-XXXX.CLAUSE citation names a clause that exists."),
         new("ref-resolves", Sev.Error,
             "An id in a field with a ref names a document that exists, of a type the ref names."),
         new("reciprocal", Sev.Error, "A reciprocal field agrees in both directions."),

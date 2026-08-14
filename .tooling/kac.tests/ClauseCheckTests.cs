@@ -141,8 +141,6 @@ public class ClauseCheckTests
                             + "| `BBB` | **MUST NOT** leave the tenancy. |\n"
                             + "| `CCC` | SHOULD be indexed. |\n"));
 
-    // -- driving the check --
-
     // -- the notation a citation is written in --
 
     [Fact]
@@ -180,29 +178,35 @@ public class ClauseCheckTests
         Assert.Single(Notation("Answering `pol-VURM:TIMEBOX` in full.\n", declareClauses: false));
     }
 
-    private static List<Finding> Notation(string body, bool declareClauses = true)
-    {
-        var type = new TypeSchema { Folder = "policies", Clauses = declareClauses ? Spec() : null };
-        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["policies"] = type } };
-        var doc = Doc.Parse("policies/scrt-security.md", $"---\nid: pol-SCRT\n---\n\n# A policy\n\n{body}", schema);
-        Assert.NotNull(doc);
-
-        var found = new List<Finding>();
-        ClauseChecks.CheckNotation(doc, (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, check, msg)));
-        return found;
-    }
+    // -- driving the checks --
 
     private static List<Finding> Run(string body, bool declareClauses = true)
     {
-        var type = new TypeSchema { Folder = "policies", Clauses = declareClauses ? Spec() : null };
-        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["policies"] = type } };
-        var doc = Doc.Parse("policies/scrt-security.md", $"---\nid: pol-SCRT\n---\n\n# A policy\n\n{body}", schema);
-        Assert.NotNull(doc);
+        var (doc, type) = Parse(body, declareClauses);
 
         var found = new List<Finding>();
         ClauseChecks.Check(doc, type,
             (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, check, msg)),
             (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Warning, check, msg)));
         return found;
+    }
+
+    private static List<Finding> Notation(string body, bool declareClauses = true)
+    {
+        var (doc, _) = Parse(body, declareClauses);
+
+        var found = new List<Finding>();
+        ClauseChecks.CheckNotation(doc,
+            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, check, msg)));
+        return found;
+    }
+
+    private static (Doc, TypeSchema) Parse(string body, bool declareClauses)
+    {
+        var type = new TypeSchema { Folder = "policies", Clauses = declareClauses ? Spec() : null };
+        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["policies"] = type } };
+        var doc = Doc.Parse("policies/scrt-security.md", $"---\nid: pol-SCRT\n---\n\n# A policy\n\n{body}", schema);
+        Assert.NotNull(doc);
+        return (doc, type);
     }
 }
