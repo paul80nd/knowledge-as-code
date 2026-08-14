@@ -39,7 +39,11 @@ fails `fragment-resolves`. It also leaves [an unlinked placeholder] in prose, wh
 ## Consequences
 
 The golden pins the `link-resolves`, `fragment-resolves`, `undefined-label`, `ref-resolves`, `reciprocal` and
-`related-matches-section` findings.
+`related-matches-section` findings. The checklist below warns nothing: a checkbox is a marker, and the golden pins
+that silence.
+
+- [ ] a box left to tick
+- [x] one already ticked
 
 ## Related
 

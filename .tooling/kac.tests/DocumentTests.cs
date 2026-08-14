@@ -114,6 +114,31 @@ public class DocumentTests
     public void Content_is_a_letter_or_a_digit(string text, bool expected)
         => Assert.Equal(expected, Md.HasContent(text));
 
+    // What the bracket scan hands the validator to report as `bracket-literal` or `undefined-label`.
+    // Position decides a checkbox: `[ ]` opening a list item is a marker, and the same brackets in
+    // the middle of a sentence are a candidate reference like any other.
+    [Fact]
+    public void A_checkbox_is_read_as_a_marker_and_a_bracket_in_prose_as_a_candidate_reference()
+    {
+        var doc = Doc.Parse("adrs/0001-a-title.md", """
+                                                    ---
+                                                    id: adr-0001
+                                                    ---
+
+                                                    # A title
+
+                                                    - [ ] a box to tick
+                                                    - [x] one already ticked
+                                                    - [ADR-0099] opening an item, and no checkbox
+                                                    - a bullet mentioning [a placeholder] in passing
+
+                                                    Prose marking a choice [x] in the middle of a line.
+                                                    """, new Schema());
+
+        Assert.NotNull(doc);
+        Assert.Equal(["ADR-0099", "a placeholder", "x"], doc.BareBracketTokens.Select(t => t.inner));
+    }
+
     // A schema declaring clauses, for the parse tests below: the folder must map to a type carrying a
     // ClauseSpec, since a type that declares none is never read for a clause table at all.
     private static Schema WithClauses()

@@ -54,12 +54,13 @@ public static class LinkChecks
                 CheckFragment(Files.ReadLf(file), fragment, path, link.Line, err);
         }
 
-        // undefined shortcut/reference labels left as literal '[x]'. Id-shaped is an error — the author
-        // meant to reference a document; anything else is only a warning, since '[x]' in prose is legal.
+        // undefined shortcut/reference labels left as literal '[label]'. Id-shaped is an error — the
+        // author meant to reference a document; anything else is only a warning, since a bracket in
+        // prose is legal.
         //
-        // Not asked of a template, where a bracket in prose is as likely to be a demonstration of the
-        // form as a reference to anything — `[{{FRAMEWORK}}]`, a task-list box in a checklist a
-        // contributor is being shown how to write.
+        // Not asked of a template, where a bracket in prose is as likely to demonstrate the form as to
+        // reference anything. Guidance citing `[pol-DEVI]` shows an author what a clause pointing at
+        // another policy looks like, and defines no label because it links to nothing.
         var defined = new HashSet<string>(d.DefinedLabels, StringComparer.OrdinalIgnoreCase);
         if (kind == DocKind.Record)
             foreach (var (inner, line) in d.BareBracketTokens)

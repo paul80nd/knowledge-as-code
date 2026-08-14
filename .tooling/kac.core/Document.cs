@@ -102,11 +102,15 @@ public class Doc
     public IReadOnlyDictionary<string, List<LinkRef>> MirroredSectionLinks =
         new Dictionary<string, List<LinkRef>>(StringComparer.OrdinalIgnoreCase);
 
-    // The two extensions every record depends on: the frontmatter block, and the pipe tables a clause
-    // section is written as. A built pipeline is immutable, so one is shared across every parse rather
-    // than assembled per document.
+    // The extensions every record depends on: the frontmatter block, the pipe tables a clause section
+    // is written as, and task lists. A `[ ]` at the head of a list item is a checkbox, and the same
+    // brackets mid-sentence are prose, so what they mean depends on where the block puts them. The
+    // bracket scan below reads inlines and cannot ask. Markdig can: with task lists on, the checkbox
+    // parses as an inline of its own and breaks the run of literals the scan reads, while a `[x]`
+    // typed mid-sentence still reaches it. A built pipeline is immutable, so it is built once here
+    // and shared across every parse.
     private static readonly MarkdownPipeline Pipeline =
-        new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().Build();
+        new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().UseTaskLists().Build();
 
     // `requireFrontmatter: false` is for a type page of a collection type. It carries no frontmatter
     // and is not a record, but it holds links and generated blocks that are worth checking, so it is
@@ -201,11 +205,11 @@ public class Doc
 
         // Bare [bracket] tokens left in prose (an undefined shortcut ref like [ADR-0099] renders as
         // literal text). Markdig emits a failed link opener '[' as its own literal inline and leaves
-        // the ']' in the following sibling, so the brackets never survive in one literal — the run
-        // of consecutive literal siblings must be rejoined before scanning. A real link or code span
-        // is a non-literal inline and so naturally breaks the run, which is what keeps code and
-        // resolved links excluded. Driven from each leaf block's root inline, because Descendants
-        // <ContainerInline> yields only nested containers, never the root that holds the run.
+        // the ']' in the following sibling, so the brackets never survive in one literal: the scan
+        // rejoins the run of consecutive literal siblings first. A real link or code span is a
+        // non-literal inline and breaks the run, which is what keeps code and resolved links out.
+        // Driven from each leaf block's root inline, because `Descendants<ContainerInline>` yields
+        // only nested containers and never the root that holds the run.
         foreach (var leaf in ast.Descendants<LeafBlock>())
             if (leaf.Inline is not null)
                 ScanContainer(leaf.Inline, doc.BareBracketTokens);
