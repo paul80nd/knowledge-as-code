@@ -142,8 +142,8 @@ public class CorpusRuleTests
         var byId = docs.ToDictionary(d => d.FrontScalar("id")!, d => d, StringComparer.OrdinalIgnoreCase);
 
         var found = new List<Finding>();
-        void Report(Sev severity, Doc at, string check, string message, int? line)
-            => found.Add(new Finding(at.Rel, line, severity, new CheckId(check), message));
+        void Report(Sev severity, Doc at, CheckId check, string message, int? line)
+            => found.Add(new Finding(at.Rel, line, severity, check, message));
 
         new NoDependencyCycles().Check(new CorpusRuleContext(docs, byId, type,
             new RuleSpec { Id = new RuleId("no-dependency-cycles") },

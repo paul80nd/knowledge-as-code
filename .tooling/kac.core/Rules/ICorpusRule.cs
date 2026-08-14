@@ -36,8 +36,8 @@ public sealed record CorpusRuleContext(
     IReadOnlyDictionary<string, Doc> ById,
     TypeSchema Type,
     RuleSpec Spec,
-    Action<Doc, string, string, int?> Err,
-    Action<Doc, string, string, int?> Warn)
+    Action<Doc, CheckId, string, int?> Err,
+    Action<Doc, CheckId, string, int?> Warn)
 {
     // The records of the type whose schema declares the rule. Most of what a corpus rule asks is asked
     // of these; `Docs` is there for the rules whose question reaches outside the type, as a glossary's

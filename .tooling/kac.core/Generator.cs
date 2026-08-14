@@ -497,16 +497,29 @@ public static class Generator
             t => t.AnyField(f => f.Reciprocal is not null)),
         ("unused-definition", [new("unused-definition")], "A link definition that nothing references.", null),
         ("y-statement", [new("y-statement")],
-            "A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.",
-            t => t.HasRule(new RuleId("y-statement-present"))),
+            "A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.", null),
         ("alternatives-verdict", [new("alternatives-verdict")], "Each Alternatives Considered bullet states a verdict.",
-            t => t.HasRule(new RuleId("alternatives-have-verdicts"))),
-        ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.",
-            t => t.HasRule(new RuleId("terms-are-alphabetical"))),
+            null),
+        ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
         ("dependency-cycle", [new("dependency-cycle")],
-            "A cycle in the dependency graph these records form, naming every record the loop runs through.",
-            t => t.HasRule(new RuleId("no-dependency-cycles")))
+            "A cycle in the dependency graph these records form, naming every record the loop runs through.", null)
     ];
+
+    // Which rule class reports under which check id, read from the registries rather than written out.
+    // A row whose checks come from a rule class belongs on a type page only where that type declares
+    // the rule — and naming the rule id here instead would let a rename stop a page advertising the
+    // check, silently and correctly-looking.
+    private static readonly IReadOnlyDictionary<CheckId, RuleId> RuleByCheck =
+        DocumentRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId)))
+            .Concat(CorpusRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId))))
+            .ToDictionary(x => x.Check, x => x.RuleId);
+
+    // A row applies where its own predicate allows it and where the type declares whatever rule class
+    // reports its checks. A row naming no rule-class check is unconstrained by the second half.
+    private static bool Applies((string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When) row,
+        TypeSchema t) =>
+        (row.When is null || row.When(t))
+        && row.Ids.All(id => !RuleByCheck.TryGetValue(id, out var rule) || t.HasRule(rule));
 
     // The curated rows, then a row for each expression rule the type declares. A core check is worded
     // here because several ids fold into one reader-facing row; an expression rule is one id reporting
@@ -518,7 +531,7 @@ public static class Generator
     {
         var severity = schema.Checks.ToDictionary(c => c.Id, c => c.Severity);
         List<string> headers = ["Check", "Level", "What it verifies"];
-        var rows = DocRows.Where(r => r.When is null || r.When(t)).Select(r => new List<string>
+        var rows = DocRows.Where(r => Applies(r, t)).Select(r => new List<string>
         {
             $"`{r.Label}`",
             severity.GetValueOrDefault(r.Ids[0], Sev.Error).ToString().ToLowerInvariant(),

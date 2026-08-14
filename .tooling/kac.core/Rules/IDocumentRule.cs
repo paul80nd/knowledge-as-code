@@ -31,5 +31,5 @@ public sealed record RuleContext(
     Doc Doc,
     TypeSchema Type,
     RuleSpec Spec,
-    Action<string, string, int?> Err,
-    Action<string, string, int?> Warn);
+    Action<CheckId, string, int?> Err,
+    Action<CheckId, string, int?> Warn);

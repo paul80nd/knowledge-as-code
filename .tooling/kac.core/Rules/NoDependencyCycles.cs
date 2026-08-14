@@ -16,7 +16,11 @@ public sealed class NoDependencyCycles : ICorpusRule
 {
     public RuleId RuleId => new("no-dependency-cycles");
 
-    public IReadOnlyList<CheckId> Emits => [new("dependency-cycle")];
+    // A field because every report below names it: one place to change, so what the rule declares it
+    // emits and what it actually reports cannot come apart. `_checks.yaml` declares what it means.
+    private static readonly CheckId Reports = new("dependency-cycle");
+
+    public IReadOnlyList<CheckId> Emits => [Reports];
 
     public void Check(CorpusRuleContext ctx)
     {
@@ -97,7 +101,7 @@ public sealed class NoDependencyCycles : ICorpusRule
             if (!reported.Add(route)) return;
 
             var at = records[rotated[0]];
-            ctx.Warn(at, "dependency-cycle", $"'{field.Name}' forms a cycle: {route}.", at.FrontStartLine);
+            ctx.Warn(at, Reports, $"'{field.Name}' forms a cycle: {route}.", at.FrontStartLine);
         }
     }
 }

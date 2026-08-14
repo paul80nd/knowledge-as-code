@@ -663,8 +663,8 @@ public static class Validator
     private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
         List<Finding> f)
     {
-        void Report(Sev severity, Doc at, string check, string message, int? line)
-            => f.Add(new Finding(at.Rel, line, severity, new CheckId(check), message));
+        void Report(Sev severity, Doc at, CheckId check, string message, int? line)
+            => f.Add(new Finding(at.Rel, line, severity, check, message));
 
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         foreach (var rule in t.Rules)
@@ -990,7 +990,10 @@ public static class Validator
             // A rule with neither an `expr:` nor an implementation is a statement of intent, and is
             // skipped in silence: the schema records what someone wanted, and nothing answers to it yet.
             if (DocumentRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
-                implementation.Check(new RuleContext(d, t, rule, err, warn));
+                // The rule surface speaks in CheckId, where a core check reports through a literal
+                // written beside it. Adapted here, at the one boundary between the two.
+                implementation.Check(new RuleContext(d, t, rule,
+                    (c, m, l) => err(c.Value, m, l), (c, m, l) => warn(c.Value, m, l)));
         }
     }
 

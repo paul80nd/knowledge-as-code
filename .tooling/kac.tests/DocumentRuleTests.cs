@@ -155,8 +155,8 @@ public class DocumentRuleTests
     private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null)
     {
         var found = new List<Finding>();
-        void Report(Sev severity, string check, string message, int? line) =>
-            found.Add(new Finding(doc.Rel, line, severity, new CheckId(check), message));
+        void Report(Sev severity, CheckId check, string message, int? line) =>
+            found.Add(new Finding(doc.Rel, line, severity, check, message));
 
         rule.Check(new RuleContext(doc, doc.Type!, spec ?? new RuleSpec { Id = rule.RuleId },
             (c, m, l) => Report(Sev.Error, c, m, l),
