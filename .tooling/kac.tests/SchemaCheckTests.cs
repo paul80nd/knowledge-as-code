@@ -114,7 +114,8 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(rules:
         [
-            new RuleSpec { Id = new RuleId("widgets-are-blue"), Problem = "rule 'widgets-are-blue': unknown fact 'colour'." }
+            new RuleSpec
+                { Id = new RuleId("widgets-are-blue"), Problem = "rule 'widgets-are-blue': unknown fact 'colour'." }
         ])));
 
         Assert.Equal("schema-unreadable", finding.Check.Value);
@@ -143,7 +144,8 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(fields:
         [
-            ("promoted-to", new FieldSpec { Name = "promoted-to", Type = "list", Of = "id", Refs = ["widgets", "gadgets"] })
+            ("promoted-to",
+                new FieldSpec { Name = "promoted-to", Type = "list", Of = "id", Refs = ["widgets", "gadgets"] })
         ])));
 
         Assert.Contains("ref: gadgets", finding.Message);

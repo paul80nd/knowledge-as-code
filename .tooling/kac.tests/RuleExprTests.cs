@@ -101,7 +101,7 @@ public class RuleExprTests
         const string rule = "present('detected-on') and present('occurred-on') "
                             + "implies field('detected-on') >= field('occurred-on')";
 
-        Assert.True(Eval(rule));                                                        // neither present
+        Assert.True(Eval(rule)); // neither present
         Assert.True(Eval(rule, "id: adr-0001\ndetected-on: \"2026-06-12\"\noccurred-on: \"2026-06-11\""));
         Assert.False(Eval(rule, "id: adr-0001\ndetected-on: \"2026-06-10\"\noccurred-on: \"2026-06-11\""));
     }
@@ -118,13 +118,13 @@ public class RuleExprTests
     [Theory]
     [InlineData("present('id') or present('nope')", true)]
     [InlineData("present('id') and present('nope')", false)]
-    [InlineData("present('nope') implies present('nope')", true)]  // false implies anything
+    [InlineData("present('nope') implies present('nope')", true)] // false implies anything
     [InlineData("present('id') implies present('nope')", false)]
     [InlineData("not present('nope')", true)]
     [InlineData("words() <= links() * 40", true)]
     [InlineData("(1 + 2) * 3 == 9", true)]
-    [InlineData("1 + 2 * 3 == 7", true)]                           // precedence, not left to right
-    [InlineData("4 / 0 == 0", true)]                               // division by zero yields zero
+    [InlineData("1 + 2 * 3 == 7", true)] // precedence, not left to right
+    [InlineData("4 / 0 == 0", true)]     // division by zero yields zero
     public void The_grammar_evaluates_as_declared(string expr, bool expected)
         => Assert.Equal(expected, Eval(expr, body: "One [link](/a.md)."));
 
@@ -134,16 +134,16 @@ public class RuleExprTests
     // fires, so each is a load-time failure rather than a quiet false.
 
     [Theory]
-    [InlineData("field('status')", "yes/no")]                    // not a question
+    [InlineData("field('status')", "yes/no")] // not a question
     [InlineData("words()", "yes/no")]
-    [InlineData("wordcount() > 3", "not a fact")]                // unknown function
-    [InlineData("field()", "1 argument")]                        // wrong arity
+    [InlineData("wordcount() > 3", "not a fact")] // unknown function
+    [InlineData("field()", "1 argument")]         // wrong arity
     [InlineData("field('a', 'b')", "1 argument")]
-    [InlineData("words() == 'three'", "cannot compare")]         // number against text
-    [InlineData("field('a') * 2 > 3", "wants a number")]         // arithmetic on text
+    [InlineData("words() == 'three'", "cannot compare")]          // number against text
+    [InlineData("field('a') * 2 > 3", "wants a number")]          // arithmetic on text
     [InlineData("present('a') < present('b')", "cannot compare")] // ordering yes/no answers
-    [InlineData("words() >", "expected a value")]                // truncated
-    [InlineData("words() 3", "unexpected")]                      // two expressions
+    [InlineData("words() >", "expected a value")]                 // truncated
+    [InlineData("words() 3", "unexpected")]                       // two expressions
     [InlineData("field('unterminated", "unterminated string")]
     [InlineData("words() # 3", "unexpected character")]
     [InlineData("present", "must be called with parentheses")]

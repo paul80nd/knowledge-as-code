@@ -21,7 +21,8 @@ public class SchemaTests
     private static TypeSchema SampleType() => new()
     {
         FieldOrder = ["status", "date"],
-        Fields = new Dictionary<string, FieldSpec> { ["status"] = new() { Name = "status", Required = true } } // per-type override
+        Fields = new Dictionary<string, FieldSpec>
+            { ["status"] = new() { Name = "status", Required = true } } // per-type override
     };
 
     [Fact]

@@ -25,10 +25,10 @@ public class LinkRef
 // to judge against and the words to say what was expected.
 public class ClauseRow
 {
-    public string? IdSpan;    // the Id cell's content when it is exactly one code span
-    public string IdText = "";  // the Id cell flattened, for quoting back when it is not
-    public string Text = "";    // the Clause cell flattened
-    public string? BoldLead;    // the leading bold run's text, when the cell opens with one
+    public string? IdSpan;     // the Id cell's content when it is exactly one code span
+    public string IdText = ""; // the Id cell flattened, for quoting back when it is not
+    public string Text = "";   // the Clause cell flattened
+    public string? BoldLead;   // the leading bold run's text, when the cell opens with one
     public int Line;
 }
 

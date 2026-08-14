@@ -45,8 +45,10 @@ public class GeneratedFilesTests
         var files = GeneratedFiles.Blocks([]);
 
         Assert.Equal(
-            ["knowledge-as-code/metadata.md", "knowledge-as-code/taxonomy.md",
-                "knowledge-as-code/lineage.md", "README.md"],
+            [
+                "knowledge-as-code/metadata.md", "knowledge-as-code/taxonomy.md",
+                "knowledge-as-code/lineage.md", "README.md"
+            ],
             files.Select(f => f.Path));
     }
 
@@ -83,12 +85,12 @@ public class GeneratedBlockCheckTests
     }
 
     private const string Whole = """
-        # A page
+                                 # A page
 
-        <!-- BEGIN GENERATED: types-index -->
-        a table
-        <!-- END GENERATED: types-index -->
-        """;
+                                 <!-- BEGIN GENERATED: types-index -->
+                                 a table
+                                 <!-- END GENERATED: types-index -->
+                                 """;
 
     [Fact]
     public void A_block_with_both_markers_is_silent() => Assert.Empty(Check(Whole, "types-index"));

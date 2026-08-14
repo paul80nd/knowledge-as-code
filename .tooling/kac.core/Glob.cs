@@ -16,14 +16,20 @@ public static class Glob
     {
         var sb = new StringBuilder("^");
         var i = 0;
-        if (glob.StartsWith("**/")) { sb.Append("(?:.*/)?"); i = 3; }
+        if (glob.StartsWith("**/"))
+        {
+            sb.Append("(?:.*/)?");
+            i = 3;
+        }
+
         for (; i < glob.Length; i++)
         {
             var c = glob[i];
             switch (c)
             {
                 case '*' when i + 1 < glob.Length && glob[i + 1] == '*':
-                    sb.Append(".*"); i++;
+                    sb.Append(".*");
+                    i++;
                     break;
                 case '*':
                     sb.Append("[^/]*");
@@ -39,6 +45,7 @@ public static class Glob
                 }
             }
         }
+
         sb.Append('$');
         return new Regex(sb.ToString(), RegexOptions.CultureInvariant);
     }

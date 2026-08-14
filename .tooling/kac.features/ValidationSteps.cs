@@ -11,7 +11,8 @@ public sealed class ValidationSteps
     private ValidationResult? _result;
 
     private ValidationResult Result =>
-        _result ?? throw new InvalidOperationException("validate the corpus first (missing 'When I validate the corpus')");
+        _result ?? throw new InvalidOperationException(
+            "validate the corpus first (missing 'When I validate the corpus')");
 
     [Given("the (.*) fixture corpus")]
     public void GivenTheFixtureCorpus(string name) => _fixture = name;

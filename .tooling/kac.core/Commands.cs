@@ -210,7 +210,8 @@ public static class Commands
 
         if (report.ResolvedDivergence.Count > 0)
         {
-            Console.WriteLine("RESOLVED — accepted divergences that are now identical again (delete them from .corpus.yaml):");
+            Console.WriteLine(
+                "RESOLVED — accepted divergences that are now identical again (delete them from .corpus.yaml):");
             foreach (var p in report.ResolvedDivergence) Console.WriteLine($"  {p}");
         }
 
@@ -264,7 +265,8 @@ public static class Commands
         {
             Console.Error.WriteLine("UNCLASSIFIED — files in the reference matching no manifest rule, so not copied:");
             foreach (var p in plan.Unclassified) Console.Error.WriteLine($"  {p}");
-            Console.Error.WriteLine("mechanism sync: the reference's manifest does not resolve its own tree — fix it there.");
+            Console.Error.WriteLine(
+                "mechanism sync: the reference's manifest does not resolve its own tree — fix it there.");
             return 1;
         }
 

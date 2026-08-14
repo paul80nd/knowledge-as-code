@@ -8,12 +8,12 @@ namespace kac.tests;
 public class GlobTests
 {
     [Theory]
-    [InlineData("adrs/0001-x.md", "adrs/*.md", true)]      // * matches within one segment
-    [InlineData("adrs/sub/0001.md", "adrs/*.md", false)]   // * does not cross a '/'
-    [InlineData("a/b/c.md", "**/*.md", true)]              // leading **/ matches at any depth
-    [InlineData("c.md", "**/*.md", true)]                  // ...including the root
+    [InlineData("adrs/0001-x.md", "adrs/*.md", true)]                // * matches within one segment
+    [InlineData("adrs/sub/0001.md", "adrs/*.md", false)]             // * does not cross a '/'
+    [InlineData("a/b/c.md", "**/*.md", true)]                        // leading **/ matches at any depth
+    [InlineData("c.md", "**/*.md", true)]                            // ...including the root
     [InlineData(".tooling/kac.core/Schema.cs", ".tooling/**", true)] // ** spans segments
-    [InlineData("axmd", "a.md", false)]                    // the '.' is a literal, not any-char
+    [InlineData("axmd", "a.md", false)]                              // the '.' is a literal, not any-char
     public void IsMatch_matches_expected(string path, string pattern, bool expected)
         => Assert.Equal(expected, Glob.IsMatch(path, pattern));
 }

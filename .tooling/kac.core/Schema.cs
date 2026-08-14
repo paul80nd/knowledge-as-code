@@ -14,11 +14,11 @@ public sealed class FieldSpec
 {
     public required string Name { get; init; }
     public bool Required { get; init; }
-    public string? RequiredWhen { get; init; } // as written, for the message that quotes it
+    public string? RequiredWhen { get; init; }                // as written, for the message that quotes it
     public RequiredWhen? RequiredWhenCondition { get; init; } // as parsed, for the check that applies it
-    public string Type { get; init; } = "string"; // string|date|enum|id|list|bool|int
-    public string? Of { get; init; } // element type when Type == list
-    public IReadOnlyList<string>? Values { get; init; } // enum values (resolved)
+    public string Type { get; init; } = "string";             // string|date|enum|id|list|bool|int
+    public string? Of { get; init; }                          // element type when Type == list
+    public IReadOnlyList<string>? Values { get; init; }       // enum values (resolved)
 
     // The folders an id in this field may belong to. A list because several fields point at more than
     // one type — a discovery is promoted to a FAQ or a standard — and a scalar `ref:` is the one-entry
@@ -27,7 +27,7 @@ public sealed class FieldSpec
 
     public string? Reciprocal { get; init; } // field on the target that must point back
     public string? Pattern { get; init; }
-    public Regex? PatternRegex { get; init; } // Pattern compiled — the message still quotes the source string
+    public Regex? PatternRegex { get; init; }    // Pattern compiled — the message still quotes the source string
     public string? MirrorsSection { get; init; } // section whose ids this field must mirror
 
     // Words admitted beside the field's declared type — `applies-to: [all]`, `last-rehearsed: never`. A
@@ -83,7 +83,7 @@ public sealed class ClauseSpec(string idPattern, List<string> binding, List<stri
     public string IdPattern { get; } = idPattern;
     public Regex? IdPatternRegex { get; } = Schema.CompilePattern(idPattern);
 
-    public IReadOnlyList<string> Binding { get; } = binding; // written bold — these oblige
+    public IReadOnlyList<string> Binding { get; } = binding;   // written bold — these oblige
     public IReadOnlyList<string> Advisory { get; } = advisory; // written plain — these recommend
 
     // The order rows must appear in: binding levels before advisory ones, each as the type declares it.

@@ -11,8 +11,8 @@ customisation. `kac mechanism --check` reports it. Fix it upstream and run `kac 
 tool and none of the tests, because the tool reaches it already proven.
 
 **Adding a knowledge type is adding a YAML file to `.schema/`.** A corpus adopts a type by adding its name to `types:`
-in `.corpus.yaml` and running `kac mechanism --sync`, which brings down the schema and seeds the root page and
-template. To decline a type, leave it out of `types:` rather than deleting files afterwards.
+in `.corpus.yaml` and running `kac mechanism --sync`, which brings down the schema and seeds the root page and template.
+To decline a type, leave it out of `types:` rather than deleting files afterwards.
 
 ## Before you commit
 

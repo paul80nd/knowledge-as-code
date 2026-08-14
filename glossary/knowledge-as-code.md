@@ -81,8 +81,8 @@ written for a machine.
 
 ### Layer
 
-Which kind of file this is: synced, forked, generated, local, verification or ignored. The portability manifest
-declares it once, and the mechanism check reads it to decide what a difference from upstream means.
+Which kind of file this is: synced, forked, generated, local, verification or ignored. The portability manifest declares
+it once, and the mechanism check reads it to decide what a difference from upstream means.
 
 ### Lifecycle
 
@@ -112,8 +112,8 @@ A knowledge document filed under a type, carrying frontmatter, an id and an iden
 
 A behaviour a type declares in its schema, which either dispatches to a check or stands as a declared intention.
 
-**Not:** a check. A check runs; a rule may be a statement of intent, and the type's page says which under *Declared,
-not yet enforced*.
+**Not:** a check. A check runs; a rule may be a statement of intent, and the type's page says which under *Declared, not
+yet enforced*.
 
 ### Source
 
@@ -131,13 +131,12 @@ down.
 
 The file a contributor copies to start a record, held to the fields its type declares.
 
-**Not:** a record. It carries no id and appears in no index. The tool checks it anyway, so that every copy starts
-sound.
+**Not:** a record. It carries no id and appears in no index. The tool checks it anyway, so that every copy starts sound.
 
 ### Tier
 
-What a record's type says about how far it may be trusted and how it must be written — decided, normative,
-descriptive, procedural or observed.
+What a record's type says about how far it may be trusted and how it must be written — decided, normative, descriptive,
+procedural or observed.
 
 **Not:** type. Several types share a tier, and the writing rules and the review bar follow the tier.
 

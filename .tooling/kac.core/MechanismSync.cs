@@ -91,7 +91,11 @@ public static class MechanismSync
             if (localFiles.Contains(rel))
             {
                 if (layer is "forked") continue;
-                if (same(rel)) { inStep++; continue; }
+                if (same(rel))
+                {
+                    inStep++;
+                    continue;
+                }
             }
             else if (layer is "forked")
             {

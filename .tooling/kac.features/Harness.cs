@@ -29,7 +29,10 @@ public static class Harness
         finally
         {
             try { Directory.Delete(temp, recursive: true); }
-            catch { /* best-effort cleanup */ }
+            catch
+            {
+                /* best-effort cleanup */
+            }
         }
     }
 

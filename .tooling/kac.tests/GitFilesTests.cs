@@ -3,7 +3,6 @@
 // assembles a non-git tree, so what git reports is only asked here. Corpus.Discover is covered there.
 
 using System.Diagnostics;
-
 using kac.core;
 
 namespace kac.tests;
@@ -27,7 +26,7 @@ public class GitFilesTests
             Assert.Equal(["a.md", "sub/b.md"], md);
 
             var all = GitFiles.Walk(dir.FullName, "*", ".git");
-            Assert.Contains("x.txt", all);         // the '*' pattern picks up non-.md
+            Assert.Contains("x.txt", all);           // the '*' pattern picks up non-.md
             Assert.DoesNotContain(".git/c.md", all); // ...but the skipped dir is still dropped
         }
         finally
