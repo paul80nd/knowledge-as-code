@@ -95,6 +95,25 @@ public static class ClauseChecks
         }
     }
 
+    // The third way a citation fails, beside naming no document and naming no clause: separating the
+    // two with a colon. Reported under `clause-ref` because a reader meets one question — does this
+    // citation reach the obligation it claims to — and the separator is the first way of answering no.
+    //
+    // Every document is asked, including the ones declaring no clause table of their own: a citation is
+    // written where the obligation is answered, which is a standard, a control or a deviation. The
+    // other two ways need `byId` and run over the corpus. This one is legible in the single file, so it
+    // sits here and a run narrowed to that file still reports it.
+    //
+    // Left unchecked it is silent. The parser reads a citation by its separator, so a colon-separated
+    // one is never collected, the resolution checks never see it, and the build passes on a reference
+    // the reader has every reason to trust.
+    public static void CheckNotation(Doc d, Action<string, string, int?> err)
+    {
+        foreach (var (citation, line) in d.ColonCitations)
+            err("clause-ref", $"'{citation}' separates its clause with a colon — write "
+                              + $"'{citation.Replace(':', '.')}'.", line);
+    }
+
     private static void CheckId(ClauseRow row, ClauseSpec spec, HashSet<string> seen,
         Action<string, string, int?> err)
     {

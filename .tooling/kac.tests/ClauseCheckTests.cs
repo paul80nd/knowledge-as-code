@@ -141,19 +141,72 @@ public class ClauseCheckTests
                             + "| `BBB` | **MUST NOT** leave the tenancy. |\n"
                             + "| `CCC` | SHOULD be indexed. |\n"));
 
-    // -- driving the check --
+    // -- the notation a citation is written in --
+
+    [Fact]
+    public void A_colon_separated_citation_names_the_form_to_write()
+    {
+        var found = Notation("Answering `pol-VURM:TIMEBOX` in full.\n");
+        var one = Assert.Single(found);
+        Assert.Equal("clause-ref", one.Check);
+        Assert.Contains("'pol-VURM.TIMEBOX'", one.Message);
+    }
+
+    [Fact]
+    public void A_dot_separated_citation_passes_the_notation_check()
+    {
+        Assert.Empty(Notation("Answering `pol-VURM.TIMEBOX` in full.\n"));
+    }
+
+    // A shortcode carries no type prefix and no hyphen, so a scoped reference is not a citation with the
+    // wrong separator and must not be reported as one.
+    [Theory]
+    [InlineData("eng:pol-VURM")]
+    [InlineData("eng:pol-VURM.TIMEBOX")]
+    [InlineData("Policy: pol-VURM")]
+    [InlineData("ISO27001:2022 A.8.25")]
+    public void A_colon_the_corpus_does_use_is_left_alone(string span)
+    {
+        Assert.Empty(Notation($"Written as `{span}` here.\n"));
+    }
+
+    // The check reads no clause table, so it runs on a type that declares none — which is every type a
+    // citation is actually written in.
+    [Fact]
+    public void The_notation_is_checked_where_no_clauses_are_declared()
+    {
+        Assert.Single(Notation("Answering `pol-VURM:TIMEBOX` in full.\n", declareClauses: false));
+    }
+
+    // -- driving the checks --
 
     private static List<Finding> Run(string body, bool declareClauses = true)
     {
-        var type = new TypeSchema { Folder = "policies", Clauses = declareClauses ? Spec() : null };
-        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["policies"] = type } };
-        var doc = Doc.Parse("policies/scrt-security.md", $"---\nid: pol-SCRT\n---\n\n# A policy\n\n{body}", schema);
-        Assert.NotNull(doc);
+        var (doc, type) = Parse(body, declareClauses);
 
         var found = new List<Finding>();
         ClauseChecks.Check(doc, type,
             (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, check, msg)),
             (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Warning, check, msg)));
         return found;
+    }
+
+    private static List<Finding> Notation(string body, bool declareClauses = true)
+    {
+        var (doc, _) = Parse(body, declareClauses);
+
+        var found = new List<Finding>();
+        ClauseChecks.CheckNotation(doc,
+            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, check, msg)));
+        return found;
+    }
+
+    private static (Doc, TypeSchema) Parse(string body, bool declareClauses)
+    {
+        var type = new TypeSchema { Folder = "policies", Clauses = declareClauses ? Spec() : null };
+        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["policies"] = type } };
+        var doc = Doc.Parse("policies/scrt-security.md", $"---\nid: pol-SCRT\n---\n\n# A policy\n\n{body}", schema);
+        Assert.NotNull(doc);
+        return (doc, type);
     }
 }

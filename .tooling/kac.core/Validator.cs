@@ -289,6 +289,10 @@ public static class Validator
         // they are neither unique nor citable and are not asked to be.
         if (kind == DocKind.Record) ClauseChecks.Check(d, t, Err, Warn);
 
+        // The notation a citation is written in, which any document may get wrong and a template may
+        // demonstrate wrongly for every record copied from it.
+        ClauseChecks.CheckNotation(d, Err);
+
         LinkChecks.Check(d, schema, repoRoot, Err, Warn, kind);
 
         // -- related mirrors ## Related --

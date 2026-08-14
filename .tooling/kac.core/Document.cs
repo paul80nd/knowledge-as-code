@@ -88,6 +88,11 @@ public class Doc
     public int ClauseTableLine;
     public readonly List<(string Ref, int Line)> ClauseRefs = [];
 
+    // Citations of a part written with a colon, which is not the separator the corpus uses. Collected
+    // apart from `ClauseRefs` so the validator can name the separator and quote the form to write. A
+    // citation reaching no clause and one spelled wrongly need different words back.
+    public readonly List<(string Ref, int Line)> ColonCitations = [];
+
     public readonly List<Section> Sections = [];
     public readonly List<LinkRef> Links = [];
     public readonly List<string> DefinedLabels = [];
@@ -181,8 +186,11 @@ public class Doc
         // Clause table, and the citations of one anywhere in the document.
         if (type?.Clauses is { } clauseSpec) ReadClauses(ast, doc, clauseSpec.Section);
         foreach (var code in ast.Descendants<CodeInline>())
-            if (code.Content is { } content && ClauseCitation.IsMatch(content))
-                doc.ClauseRefs.Add((content, code.Line + 1));
+        {
+            if (code.Content is not { } content) continue;
+            if (ClauseCitation.IsMatch(content)) doc.ClauseRefs.Add((content, code.Line + 1));
+            else if (ColonCitation.IsMatch(content)) doc.ColonCitations.Add((content, code.Line + 1));
+        }
 
         // Links (inline + resolved reference/shortcut). Iterating LinkInline naturally
         // excludes code — code spans and fenced/indented blocks carry no LinkInline.
@@ -270,6 +278,12 @@ public class Doc
     // report as unresolved rather than one the parser should quietly decline to see.
     private static readonly System.Text.RegularExpressions.Regex ClauseCitation =
         new(@"^[a-z]{2,4}-[A-Za-z0-9]+\.[A-Za-z0-9]+$");
+
+    // The same citation with a colon where the dot belongs, as `std-A11Y:WCAG`. An id has to sit on the
+    // left for this to match, which is what keeps a scoped reference — `eng:pol-VURM`, a shortcode and
+    // then an id — out of it: a shortcode carries no type prefix and no hyphen before the colon.
+    private static readonly System.Text.RegularExpressions.Regex ColonCitation =
+        new(@"^[a-z]{2,4}-[A-Za-z0-9]+:[A-Za-z0-9]+$");
 
     // The clause table: the first table under the H2 the schema names, read down to the next H2. Rows are
     // taken whole and unjudged — the header row supplies `ClauseHeaders`, every other row a `ClauseRow`,
