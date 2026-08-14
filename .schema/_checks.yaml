@@ -1,0 +1,496 @@
+# Every check the validator implements, defined once.
+#
+# A type's own `rules:` block declares the checks that belong to one type. This file declares the rest:
+# the checks that run against every document, whatever folder it sits in, and the ones that read the
+# schema or the corpus rather than a record.
+#
+# `description` says what the check proves correct, in the words a reader meets — in `kac checks`, and
+# in the generated tables on `.tooling/README.md`. It is held to the same 120 characters a rule's
+# description is, and for the same reason: it lands in a table cell whose column is padded to its widest
+# row.
+#
+# `notes` is the reasoning, the boundary and the mechanics, which belong here where there is room for
+# them. Why a check exists, what it deliberately does not cover, when it is skipped. What the code does
+# to answer the question stays beside the code.
+#
+# `group` is the concern the check belongs to, and decides the table it renders into. `severity` is what
+# it reports at; `warning` does not fail the build.
+#
+# The set of ids here is held against the set the tool can emit, in both directions: a check the code
+# reports with no entry, or an entry nothing reports, fails `schema-dispatch` when the schema loads.
+
+groups:
+  schema: The schema itself, before any document is read against it
+  frontmatter: The frontmatter block, and the values in it
+  identity: The document's name, its identity line and its sections
+  clauses: The clause table, for a type that declares one
+  links: Links, references and the graph they form
+  content: A type's own content rules, where the question needs more than an expression
+
+checks:
+
+  # ── schema ───────────────────────────────────────────────────────────────────
+
+  schema-unknown-key:
+    group: schema
+    severity: error
+    description: Every key in these files is one the loader reads.
+    notes: >
+      `notes:` is the exception, admitted at every level as commentary. There is no list of permitted
+      keys anywhere: the loader records what it asks each mapping for and the remainder is reported, so
+      a key gains its meaning and its admission in one edit, and a key that stops being read stops being
+      admitted without anyone having to remember.
+
+  schema-unreadable:
+    group: schema
+    severity: error
+    description: A declaration the loader can read as written.
+    notes: >
+      An `expr:` that will not compile or names no `severity:` or `message:`, a `required-when:` outside
+      its three forms, `values: $enums.x` naming an enum `_enums.yaml` does not declare.
+
+  schema-dispatch:
+    group: schema
+    severity: error
+    description: A declared value is one the tool acts on.
+    notes: >
+      The question is whether code acts on the value, not whether it is spelled correctly: `style:
+      mnemonic` would pass a spelling test, and what makes it sound is the branch that reads it. Covers
+      a rule id claiming a `severity:` nothing answers, a `ref:` or a `versus:` at a folder no schema
+      covers, `values:` on anything but an enum, `min-items:` on anything but a list, an unknown
+      `id.style` or `index.order`, and a check id declared here that nothing emits.
+
+  schema-shape:
+    group: schema
+    severity: error
+    description: A type's declarations are well-formed and agree with one another.
+    notes: >
+      Where `schema-dispatch` asks whether code acts on a value, this asks whether a second declaration
+      in the same file agrees with it. A type declaring no `folder:` has nowhere for its records to
+      live; a `mirrors-section:` names a section the `sections:` block must also declare; a
+      `description:` past 120 characters widens every row of the table it lands in.
+
+  # ── frontmatter ──────────────────────────────────────────────────────────────
+
+  type:
+    group: frontmatter
+    severity: error
+    description: The document's folder maps to a type schema.
+    notes: >
+      Discovery excludes any folder that maps to no type, so no discovered document reaches this. It
+      guards the callers that hand a document in directly, and the coverage gate lists it as
+      unreachable rather than demanding a fixture for it.
+
+  frontmatter-parses:
+    group: frontmatter
+    severity: error
+    description: The frontmatter block is present and is a valid YAML mapping.
+    notes: >
+      Reported and stopped: nothing below it can be judged, and a document whose frontmatter did not
+      parse would otherwise report every field in it as missing.
+
+  unknown-key:
+    group: frontmatter
+    severity: error
+    description: Every frontmatter key is a universal field, a type field, or a reserved ADO key.
+
+  key-order:
+    group: frontmatter
+    severity: error
+    description: Key order is a topological extension of the schema's declared field orders.
+    notes: >
+      Every pair the schema orders must hold, and a genuinely unconstrained pair is free. A total order
+      would make the schema's field sequence a second obligation on every document, where what is
+      actually wanted is that the universal keys precede the type's.
+
+  required-field:
+    group: frontmatter
+    severity: error
+    description: Every required field is present, and every `required-when` field whose condition holds.
+    notes: >
+      Where the field a `required-when:` names is absent the condition does not hold, `!=` included:
+      that absence is already being reported, and requiring a second field on top of it would report one
+      omission as two.
+
+  bare-key:
+    group: frontmatter
+    severity: error
+    description: An absent value is a bare key — never `null`, `~`, `""`, `''` or an em dash.
+    notes: >
+      One spelling of absence, so a search for a field nobody has filled in finds all of them. Each of
+      the alternatives reads as a value to something.
+
+  date-quoted:
+    group: frontmatter
+    severity: error
+    description: A date field is a quoted string.
+    notes: >
+      Unquoted, YAML reads it as a datetime and Azure DevOps renders it with a locale format and a
+      timezone shift, so the page shows a date the file does not carry.
+
+  date-format:
+    group: frontmatter
+    severity: error
+    description: A date field is `YYYY-MM-DD` and names a day the calendar has.
+
+  enum:
+    group: frontmatter
+    severity: error
+    description: An enum value is a scalar the field's declared range carries.
+
+  enum-lowercase:
+    group: frontmatter
+    severity: error
+    description: An enum value is lowercase.
+    notes: Enums are grep targets first and prose second, and two casings of one value are two values to search for.
+
+  list:
+    group: frontmatter
+    severity: error
+    description: A list field is written as a YAML sequence.
+
+  min-items:
+    group: frontmatter
+    severity: error
+    description: A list field carries at least the `min-items:` its schema declares.
+    notes: >
+      Reported against the field rather than an entry, because no entry is at fault. For the field whose
+      value is its breadth — a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill.
+
+  min-records:
+    group: frontmatter
+    severity: warning
+    description: Each entry of a grouping field is carried by at least as many records as its floor.
+    notes: >
+      The opposite count to `min-items`: how many records carry each value, rather than how many values
+      one record carries. It is what a field says when its values divide the type into groups worth
+      browsing — a value carried by one record divides nothing, and belongs in a field free to be unique.
+      Counted per type, case-insensitively, once per record however often one repeats a value.
+
+  field-pattern:
+    group: frontmatter
+    severity: error
+    description: A value matches the `pattern:` its field declares — per entry for a list, per value for a scalar.
+
+  list-order:
+    group: frontmatter
+    severity: warning
+    description: A list field's entries read in alphabetical order, with digit runs compared as numbers.
+    notes: >
+      No list field's sequence carries meaning, so alphabetical is the order that scan-reads and the one
+      two authors agree on without discussion. Numbers compare as numbers, so `A.8.7` precedes `A.8.29`.
+      Only the first pair out of order is reported.
+
+  tier-matches-type:
+    group: frontmatter
+    severity: error
+    description: "`tier` equals the tier the type declares."
+
+  id-prefix:
+    group: frontmatter
+    severity: error
+    description: "`id` carries the type's prefix."
+
+  id-format:
+    group: frontmatter
+    severity: error
+    description: The id's discriminator has the shape the type's `id.style` declares.
+
+  id-matches-filename:
+    group: frontmatter
+    severity: error
+    description: The id's discriminator matches the filename's, so both name the same document.
+
+  # ── identity ─────────────────────────────────────────────────────────────────
+
+  filename-pattern:
+    group: identity
+    severity: error
+    description: The filename matches the type's `filename.pattern`.
+
+  slug-length:
+    group: identity
+    severity: error
+    description: The slug — the filename minus any `NNNN-` or mnemonic prefix — is within `slug-max`.
+    notes: >
+      A filename is a handle and the H1 carries the title. A slug that will not go under the limit is
+      usually a document doing two things, so narrowing the scope beats abbreviating harder.
+
+  h1:
+    group: identity
+    severity: error
+    description: The document has an H1. Its text is the title, and nothing constrains it.
+
+  identity:
+    group: identity
+    severity: error
+    description: "An identity line of two code spans follows the H1 — `` `Type: id` `STATUS` ``."
+    notes: >
+      A reader arrives at a record from a citation, so the top of the page answers what kind of document
+      this is, which one, and whether it is in force. Frontmatter answers all three and renders as a
+      table a reader may never look at.
+
+  identity-type:
+    group: identity
+    severity: error
+    description: The identity line's type name is the `label` the folder's schema declares.
+
+  identity-id:
+    group: identity
+    severity: error
+    description: The identity line's id is the frontmatter's, character for character.
+
+  identity-status:
+    group: identity
+    severity: error
+    description: The identity line's status is the frontmatter's, upper-cased.
+    notes: >
+      Lower-case in frontmatter because a machine reads it, upper-case on the line because a person
+      reads it as a stamp. A document cannot go active and leave the line saying DRAFT.
+
+  required-section:
+    group: identity
+    severity: error
+    description: Every heading in `sections.required` is present.
+
+  empty-section:
+    group: identity
+    severity: error
+    description: A section the type declares carries something under its heading.
+    notes: >
+      An author with nothing to say cannot delete a required heading, so what they leave is a blank
+      beneath it, which reads as a finished document to everyone but the person who needed the section.
+      A template's sections stand empty for the copy to fill. The clause section is left to
+      `clause-table`, which is looking at the same blank and can say what belongs there.
+
+  placeholder-left:
+    group: identity
+    severity: error
+    description: No `{{…}}` from the template survives into a record, outside code.
+    notes: >
+      Easy to do and easy to miss: the file has an id, a title and every section, so every other check
+      passes and it reads as complete until someone follows a link to `{{a}}.md`. Reported once, naming
+      the first — an unfinished copy holds a dozen.
+
+  # ── clauses ──────────────────────────────────────────────────────────────────
+
+  clause-table:
+    group: clauses
+    severity: error
+    description: The declared section holds a table headed with the block's `columns`, and at least one row.
+    notes: >
+      A missing table, a mis-headed one and an empty one are three faults the parser tells apart. Each
+      is reported and stops the pass, because nothing beneath a broken table can be judged. A missing
+      section is `required-section`'s to report, and saying it twice would make one fault look like two.
+
+  clause-id-format:
+    group: clauses
+    severity: error
+    description: Each clause id is a single code span matching the block's `id-pattern`.
+    notes: A code span because an id is a handle rather than a word, and flattened text cannot tell the two apart.
+
+  clause-id-unique:
+    group: clauses
+    severity: error
+    description: Clause ids are unique within the document, so a citation names one obligation.
+    notes: Compared ordinally — two ids differing only in case are not two clauses a reader could tell apart either.
+
+  clause-modal:
+    group: clauses
+    severity: error
+    description: Each clause opens with a declared modal, bold where it binds and plain where it does not.
+    notes: >
+      Bold carries the binding level visually, and a reader skimming a long table reads the weight
+      before the words. A binding modal written plain reads as advice; an advisory one written bold
+      reads as an obligation.
+
+  clause-order:
+    group: clauses
+    severity: warning
+    description: Clause rows are grouped by binding level, in the order the type declares.
+    notes: >
+      Reported once, against the first row that breaks the grouping: a table sorted wholly the wrong way
+      would otherwise report every row after the first.
+
+  clause-compound:
+    group: clauses
+    severity: warning
+    description: A clause carries one obligation, not two sharing an id.
+    notes: A second modal in a row means a citation of that id can only ever name half of what it means.
+
+  # ── links ────────────────────────────────────────────────────────────────────
+
+  link-resolves:
+    group: links
+    severity: error
+    description: Every internal link resolves, in any of the forms the wiki accepts.
+    notes: >
+      Repo-relative, wiki-root-absolute (a leading `/` is the repo root), inline, reference and shortcut
+      reference links, with the `.md` optional because Azure DevOps resolves both. External
+      `http(s)`, `mailto` and `tel` links are skipped.
+
+  fragment-resolves:
+    group: links
+    severity: error
+    description: A link's `#fragment` names a heading in the document it points at.
+    notes: >
+      The anchor is the heading lower-cased, spaces hyphenated and punctuation dropped, which is the one
+      form every renderer agrees on. Azure DevOps percent-encodes what GitHub discards, so a heading
+      carrying `/`, `:` or `.` has two anchors — it fails here rather than only in the published wiki.
+
+  undefined-label:
+    group: links
+    severity: error
+    description: A shortcut label shaped like any type's id has a link definition.
+
+  label-canonical:
+    group: links
+    severity: error
+    description: An id-shaped shortcut label is written as the canonical id.
+    notes: >
+      Prefix lower-case, mnemonic upper-case, slug lower-case. Reference and definition match
+      case-insensitively, so a mis-cased label resolves and nothing else would catch it — while the
+      label is its own display text, and shows the reader an id that does not exist.
+
+  clause-ref:
+    group: links
+    severity: error
+    description: A clause reference resolves — the document exists and carries that clause.
+    notes: >
+      Written `pol-VURM.TIMEBOX`, and checked wherever it appears, since any type may cite a clause. A
+      colon where the dot belongs is reported here too, naming the form to write: the parser reads a
+      citation by its separator, so one spelled with a colon would otherwise reach no clause and be seen
+      by nothing. The separator is legible in the single file and the resolution needs the whole corpus,
+      so the two halves run in different passes and a narrowed run still reports the separator.
+
+  ref-resolves:
+    group: links
+    severity: error
+    description: An id in a field declaring a `ref:` names a document that exists, of a type the `ref:` names.
+    notes: >
+      Both halves are asked, of a scalar and a list alike, and whether or not the field also declares a
+      `reciprocal:` — a one-directional edge has no counterpart obliged to keep it in step, which makes
+      it the edge with least behind it. The wrong type is the quieter fault: it lands on a real page, so
+      it reads as intentional and whatever walks the edge afterwards takes it at its word. A literal the
+      field admits, such as `applies-to: [all]`, is not an id and is skipped.
+
+  reciprocal:
+    group: links
+    severity: error
+    description: A field declaring a `reciprocal:` agrees with its counterpart in both directions.
+    notes: >
+      Whether the target exists, and whether it is of a type the field may point at, are `ref-resolves`,
+      so a dangling or wrong-type reference is reported once rather than twice.
+
+  related-matches-section:
+    group: links
+    severity: error
+    description: A field declaring a `mirrors-section:` reconciles with the ids that section links to.
+    notes: >
+      In both directions and case-insensitively, in a bullet or in prose alike. Both directions is the
+      part to weigh before declaring one: a section mentioning an id the field does not carry is a
+      finding as much as the reverse, so the field has to be the whole truth about what the section
+      names.
+
+  id-unique:
+    group: links
+    severity: error
+    description: An id is unique across the whole wiki.
+
+  unused-definition:
+    group: links
+    severity: warning
+    description: Every link definition is referenced by something.
+
+  bracket-literal:
+    group: links
+    severity: warning
+    description: A `[...]` left in prose that reads as a reference has a definition behind it.
+    notes: >
+      A heuristic sibling of `undefined-label`, for the bracket that never became a link at all. Where
+      the brackets sit decides a checkbox: `- [ ]` opening a list item is a marker, and the same
+      brackets mid-sentence still warn. Use an inline link where the brackets are deliberate.
+
+  type-setup:
+    group: links
+    severity: error
+    description: A type the schema declares is stood up as both a page and a folder, or as neither.
+    notes: >
+      A declared type nobody has built yet is silent; half of one is not. Skipped when the run is
+      narrowed to paths, because asking about one document is not asking about the shape of the corpus.
+
+  framework-names-types:
+    group: links
+    severity: error
+    description: The framework's own documents name a type rather than linking to one.
+    notes: >
+      And never link a record inside a type's folder. Those files are byte-identical in every corpus, so
+      a link resolving here says nothing about where it is read: a corpus that never adopted standards
+      has no `/standards` page to open. Generated blocks are exempt, being written from the types the
+      corpus stood up. Skipped when the run is narrowed to paths.
+
+  template-fields:
+    group: links
+    severity: error
+    description: A type's template carries the fields a copy of it needs, usably, and no key the type does not declare.
+    notes: >
+      A placeholder opening a value has to be quoted, or YAML reads `review-by: {{date}}` as a mapping
+      rather than as text. A defect here belongs to every future document and is found by the next
+      author rather than the last.
+
+  generated-block:
+    group: links
+    severity: error
+    description: Every file `kac index` writes a block into still carries both of that block's markers.
+    notes: >
+      A block whose markers have gone is written by nothing and, without this, reported by nothing:
+      `index --check` compares a file against what the generator would produce, and for a file it can
+      find no marker in that is the file as it stands. The corpus's own `README.md` is the exception,
+      where deleting the markers is how a corpus declines the block.
+
+  page-frontmatter:
+    group: links
+    severity: error
+    description: A type page carries no frontmatter of its own.
+    notes: >
+      A page describes the records beneath it and is not one, so it has no id, tier or status. A block
+      on one is left over from a type that used to be a single document. Nothing else would say so,
+      because a page is forked and a forked file is never compared against upstream.
+
+  # ── content ──────────────────────────────────────────────────────────────────
+  #
+  # The four whose question needs more than the expression grammar can ask. Each is a class in
+  # `kac.core/Rules/`, dispatched by the rule id its type declares, and reports under the id here.
+
+  y-statement:
+    group: content
+    severity: warning
+    description: A Y-statement block-quote follows the H1, states all six moves, and is within `max-words`.
+    notes: >
+      The message names the move that is absent, which is why this is a class: an expression could
+      report only that the block-quote is not a Y-statement, and that is the one thing its author
+      already knows.
+
+  alternatives-verdict:
+    group: content
+    severity: warning
+    description: Each *Alternatives Considered* bullet states an outcome.
+    notes: >
+      Heuristic: an explicit verdict word, or a contrastive or negative-outcome cue. An option listed
+      only to be dismissed in a clause was not genuinely considered.
+
+  terms-alphabetical:
+    group: content
+    severity: warning
+    description: A glossary's entries read in alphabetical order.
+    notes: Compared without regard to casing, and the message names the entry that moved.
+
+  dependency-cycle:
+    group: content
+    severity: warning
+    description: The records' `depends-on` edges form no loop.
+    notes: >
+      A loop lives in the set of edges and no single record holds it, so the message names the route it
+      runs through. Reported once per loop, against the lowest id on it, and skipped when a run is
+      narrowed to paths — a graph read from a handful of its records has no loops in it, whatever the
+      corpus holds.
