@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
 type: faq
 label: FAQ
 label-plural: FAQs
