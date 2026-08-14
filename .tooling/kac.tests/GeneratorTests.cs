@@ -56,8 +56,8 @@ public class GeneratorTests
 
         Assert.Contains("# Control Index (CTL)", page);
         Assert.Contains("Nothing here yet", page);
-        Assert.Contains("_template.md", page);   // an empty index points at the way to fill it
-        Assert.DoesNotContain("| Id |", page);  // …rather than a table with headers and no rows
+        Assert.Contains("_template.md", page); // an empty index points at the way to fill it
+        Assert.DoesNotContain("| Id |", page); // …rather than a table with headers and no rows
     }
 
     [Fact]
@@ -72,8 +72,10 @@ public class GeneratorTests
     // a direction. Each is a value the loader reads and the golden 'index' scenario cannot reach, because
     // the fixture corpora it runs over hold one type whose index sorts by id.
     private static List<Doc> Rows(params (string Id, string Severity)[] rows) =>
-        [.. rows.Select(r => Doc.Parse($"runbooks/{r.Id}.md",
-            $"---\nid: {r.Id}\nseverity: {r.Severity}\n---\n\n# {r.Id}\n", new Schema())!)];
+    [
+        .. rows.Select(r => Doc.Parse($"runbooks/{r.Id}.md",
+            $"---\nid: {r.Id}\nseverity: {r.Severity}\n---\n\n# {r.Id}\n", new Schema())!)
+    ];
 
     [Fact]
     public void IndexPage_sorts_by_id_where_the_type_declares_no_sort()
@@ -167,11 +169,11 @@ public class GeneratorTests
 
         var table = Generator.SchemaTable(t, s);
 
-        Assert.Contains("`id` †", table);         // universal fields are marked…
-        Assert.Contains("`status` †", table);     // …including one the type redeclares
+        Assert.Contains("`id` †", table);     // universal fields are marked…
+        Assert.Contains("`status` †", table); // …including one the type redeclares
         Assert.Contains("`own-field`", table);
         Assert.DoesNotContain("`own-field` †", table);
-        Assert.Contains("REFINED", table);        // EffectiveField wins over the universal declaration
+        Assert.Contains("REFINED", table); // EffectiveField wins over the universal declaration
         Assert.DoesNotContain("VARIES BY TYPE", table);
         Assert.True(table.IndexOf("`id`", StringComparison.Ordinal)
                     < table.IndexOf("`own-field`", StringComparison.Ordinal)); // universal first
@@ -329,7 +331,7 @@ public class GeneratorTests
     {
         var rows = Generator.PlacementTable(Four());
 
-        Assert.Contains("[ADRs](/adrs)", rows);      // the link form ADO renders and LinkChecks resolves
+        Assert.Contains("[ADRs](/adrs)", rows); // the link form ADO renders and LinkChecks resolves
         Assert.DoesNotContain("[ADR](", rows);
     }
 
@@ -494,7 +496,9 @@ public class GeneratorTests
     public void A_lineage_row_carries_the_prior_art_and_both_sides_of_it()
     {
         var table = Generator.LineageTable(
-            [Ancestor("ADR", "adrs", new LineageSpec("[Nygard](https://x)", "The three sections", "Ours spans repos"))]);
+        [
+            Ancestor("ADR", "adrs", new LineageSpec("[Nygard](https://x)", "The three sections", "Ours spans repos"))
+        ]);
 
         Assert.Contains("| [ADR](/adrs)", table);
         Assert.Contains("[Nygard](https://x)", table);
@@ -549,8 +553,10 @@ public class GeneratorTests
     public void Collisions_are_sorted_by_type_name()
     {
         var order = PositionsOf(Generator.Collisions(
-            [Colliding("Standard", "standards", "An external body publishes one."),
-             Colliding("Control", "controls", "Elsewhere it is the safeguard.")]),
+            [
+                Colliding("Standard", "standards", "An external body publishes one."),
+                Colliding("Control", "controls", "Elsewhere it is the safeguard.")
+            ]),
             "### Control", "### Standard");
 
         Assert.Equal(order.Order(), order);
@@ -595,7 +601,7 @@ public class GeneratorTests
 
         Assert.Contains("| Standard | `verified-by`", table);
         Assert.Contains("| Control  | `verifies`", table);
-        Assert.Contains("`verifies`    |", table);   // …each naming the other in the last column
+        Assert.Contains("`verifies`    |", table); // …each naming the other in the last column
     }
 
     // A one-directional edge has nobody obliged to answer it, and the empty cell is what says so.
@@ -607,7 +613,7 @@ public class GeneratorTests
     [Fact]
     public void An_edge_at_a_type_the_corpus_has_not_stood_up_is_dropped()
     {
-        var table = Generator.RelationTable(Graph()[..2]);   // policies not stood up
+        var table = Generator.RelationTable(Graph()[..2]); // policies not stood up
 
         Assert.DoesNotContain("implements", table);
         Assert.Contains("verifies", table);
@@ -681,7 +687,8 @@ public class GeneratorTests
     public void Authored_drops_what_a_generated_block_holds_and_keeps_the_markers()
     {
         const string local = "prose\n<!-- BEGIN GENERATED: a -->\n\n| one |\n\n<!-- END GENERATED: a -->\nafter";
-        const string reference = "prose\n<!-- BEGIN GENERATED: a -->\n\n| another |\n\n<!-- END GENERATED: a -->\nafter";
+        const string reference =
+            "prose\n<!-- BEGIN GENERATED: a -->\n\n| another |\n\n<!-- END GENERATED: a -->\nafter";
 
         Assert.Equal(Generator.Authored(reference), Generator.Authored(local));
         Assert.Contains("<!-- BEGIN GENERATED: a -->", Generator.Authored(local));

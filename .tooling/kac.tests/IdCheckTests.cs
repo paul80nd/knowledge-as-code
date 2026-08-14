@@ -30,22 +30,22 @@ public class IdCheckTests
     // -- the shape of the discriminator, style by style --
 
     [Theory]
-    [InlineData("adr-7")]        // too few digits
-    [InlineData("adr-00071")]    // too many
-    [InlineData("adr-007a")]     // not digits
+    [InlineData("adr-7")]     // too few digits
+    [InlineData("adr-00071")] // too many
+    [InlineData("adr-007a")]  // not digits
     public void A_numbered_id_is_the_declared_width_in_digits(string id)
         => Assert.Equal("id-format", Assert.Single(Run(id, "adrs/0007-a.md", Numbered())).Check.Value);
 
     [Theory]
-    [InlineData("pol-VU")]       // too short
-    [InlineData("pol-vurm")]     // lower-case
-    [InlineData("pol-1URM")]     // opens with a digit
+    [InlineData("pol-VU")]   // too short
+    [InlineData("pol-vurm")] // lower-case
+    [InlineData("pol-1URM")] // opens with a digit
     public void A_mnemonic_id_is_upper_case_and_opens_with_a_letter(string id)
         => Assert.Equal("id-format", Assert.Single(Run(id, "policies/vurm-a.md", Mnemonic())).Check.Value);
 
     [Theory]
-    [InlineData("tol-Site_Server")]  // capitals and an underscore
-    [InlineData("tol-site server")]  // a space
+    [InlineData("tol-Site_Server")] // capitals and an underscore
+    [InlineData("tol-site server")] // a space
     [InlineData("tol-Ripgrep")]
     public void A_slug_id_is_lower_case_letters_digits_and_hyphens(string id)
         => Assert.Equal("id-format", Assert.Single(Run(id, "tools/site-server.md", Slug())).Check.Value);
@@ -67,7 +67,7 @@ public class IdCheckTests
 
     [Theory]
     [InlineData("adr-0004", "adrs/0004-missing.md")]
-    [InlineData("pol-VURM", "policies/vurm-a.md")]        // upper in the id, lower in the filename
+    [InlineData("pol-VURM", "policies/vurm-a.md")] // upper in the id, lower in the filename
     [InlineData("tol-site-server", "tools/site-server.md")]
     public void An_id_agreeing_with_its_filename_is_silent(string id, string rel)
         => Assert.Empty(Run(id, rel, TypeFor(rel)));
@@ -120,8 +120,8 @@ public class IdCheckTests
     // always upper-case, a slug always lower-case. `label-canonical` is the difference between the two.
     [Theory]
     [InlineData("adr-0001", "adr-0001")]
-    [InlineData("ADR-0001", "adr-0001")]   // the prefix is matched without case and written back lower
-    [InlineData("pol-scrt", "pol-SCRT")]   // a mnemonic is written upper
+    [InlineData("ADR-0001", "adr-0001")] // the prefix is matched without case and written back lower
+    [InlineData("pol-scrt", "pol-SCRT")] // a mnemonic is written upper
     [InlineData("POL-Scrt", "pol-SCRT")]
     [InlineData("tol-Ripgrep", "tol-ripgrep")]
     public void An_id_shaped_label_is_recognised_and_given_its_canonical_form(string label, string expected)
@@ -132,25 +132,25 @@ public class IdCheckTests
 
     // Anything else is prose in brackets, and warns as `bracket-literal` rather than erroring.
     [Theory]
-    [InlineData("adr-001")]        // too few digits for the declared width
-    [InlineData("adr-00011")]      // too many
-    [InlineData("adr-000a")]       // not digits
-    [InlineData("pol-1SCR")]       // a mnemonic opens with a letter
-    [InlineData("xyz-0001")]       // no type carries that prefix
+    [InlineData("adr-001")]   // too few digits for the declared width
+    [InlineData("adr-00011")] // too many
+    [InlineData("adr-000a")]  // not digits
+    [InlineData("pol-1SCR")]  // a mnemonic opens with a letter
+    [InlineData("xyz-0001")]  // no type carries that prefix
     [InlineData("an unlinked placeholder")]
-    [InlineData("-0001")]          // nothing before the dash
-    [InlineData("adr-")]           // nothing after it
+    [InlineData("-0001")] // nothing before the dash
+    [InlineData("adr-")]  // nothing after it
     public void Anything_else_is_prose_in_brackets(string label)
         => Assert.False(IdChecks.TryCanonicalId(label, SchemaWith(Numbered(), Mnemonic(), Slug()), out _));
 
     // -- which id does a link cite? --
 
     [Theory]
-    [InlineData("0007-a-decision.md", "adr-0007")]           // relative, from a document in the folder
+    [InlineData("0007-a-decision.md", "adr-0007")] // relative, from a document in the folder
     [InlineData("/adrs/0007-a-decision.md", "adr-0007")]
     [InlineData("../adrs/0007-a-decision.md", "adr-0007")]
-    [InlineData("0007-a-decision.md#context", "adr-0007")]   // a fragment addresses within the target
-    [InlineData("0007-a-decision?raw=1", "adr-0007")]        // the extension may be left off
+    [InlineData("0007-a-decision.md#context", "adr-0007")] // a fragment addresses within the target
+    [InlineData("0007-a-decision?raw=1", "adr-0007")]      // the extension may be left off
     public void A_link_to_a_numbered_record_is_read_as_its_id(string target, string expected)
         => Assert.Equal(expected, Cite(target, "adrs/0001-first.md", Numbered()));
 
@@ -172,16 +172,16 @@ public class IdCheckTests
     [Theory]
     [InlineData("/tools.md", "tools/fd.md")]
     [InlineData("../tools.md", "tools/fd.md")]
-    [InlineData("/services/lending.md", "tools/fd.md")]   // a record, but of another type
+    [InlineData("/services/lending.md", "tools/fd.md")] // a record, but of another type
     [InlineData("https://example.com/tools/ripgrep.md", "tools/fd.md")]
     public void A_link_outside_the_type_s_folder_cites_no_id(string target, string fromRel)
         => Assert.Null(Cite(target, fromRel, Slug()));
 
     [Theory]
-    [InlineData("/adrs.md")]            // the type page, not a record
+    [InlineData("/adrs.md")] // the type page, not a record
     [InlineData("/adrs/_template.md")]
     [InlineData("/adrs/007-too-few.md")]
-    [InlineData("#a-heading-here")]     // a fragment addressing this document
+    [InlineData("#a-heading-here")] // a fragment addressing this document
     public void A_link_to_anything_else_cites_no_id(string target)
         => Assert.Null(Cite(target, "adrs/0001-first.md", Numbered()));
 

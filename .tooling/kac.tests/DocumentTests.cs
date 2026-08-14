@@ -23,7 +23,7 @@ public class DocumentTests
         var doc = Doc.Parse("adrs/0001-a-title.md", text, new Schema());
 
         Assert.NotNull(doc);
-        Assert.Equal(["id", "status"], doc.FrontKeys);       // order preserved
+        Assert.Equal(["id", "status"], doc.FrontKeys); // order preserved
         Assert.Equal("adr-0001", doc.FrontScalar("id"));
         Assert.Equal("ADR-0001: A title", doc.H1);
     }
@@ -54,10 +54,10 @@ public class DocumentTests
     // Without that anchor a document that opened with prose would borrow an identity line from further
     // down the page and the missing-line check could never fire.
     [Theory]
-    [InlineData("## Purpose\n")]                                  // straight into a section
-    [InlineData("Some opening prose.\n\n`Policy: pol-SCRT` `DRAFT`\n")]  // line, but not first
-    [InlineData("> A Y-statement block-quote.\n")]                // the wrong kind of block
-    [InlineData("")]                                              // nothing at all after the H1
+    [InlineData("## Purpose\n")]                                        // straight into a section
+    [InlineData("Some opening prose.\n\n`Policy: pol-SCRT` `DRAFT`\n")] // line, but not first
+    [InlineData("> A Y-statement block-quote.\n")]                      // the wrong kind of block
+    [InlineData("")]                                                    // nothing at all after the H1
     public void No_identity_line_when_the_block_after_the_h1_is_something_else(string after)
     {
         var doc = Doc.Parse("policies/scrt-a-title.md",
@@ -183,9 +183,9 @@ public class DocumentTests
             },
             second =>
             {
-                Assert.Null(second.IdSpan);       // written as prose, so no span to report
+                Assert.Null(second.IdSpan); // written as prose, so no span to report
                 Assert.Equal("PLAIN", second.IdText);
-                Assert.Null(second.BoldLead);     // …and no bold run opening the clause
+                Assert.Null(second.BoldLead); // …and no bold run opening the clause
             });
     }
 

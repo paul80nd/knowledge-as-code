@@ -20,7 +20,11 @@ public record Finding(string File, int? Line, Sev Severity, CheckId Check, strin
 // the schema, the template or the page itself has no row there — it is real, and it is not theirs to
 // act on. True unless a check says otherwise.
 public readonly record struct CheckDef(
-    CheckId Id, Sev Severity, string Summary, string Notes = "", bool OnTypePage = true);
+    CheckId Id,
+    Sev Severity,
+    string Summary,
+    string Notes = "",
+    bool OnTypePage = true);
 
 public static class CheckCatalogue
 {

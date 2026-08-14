@@ -54,7 +54,11 @@ public static class MechanismCheck
         foreach (var rel in localFiles.Union(refFiles).OrderBy(r => r, StringComparer.Ordinal))
         {
             var layer = manifest.Resolve(rel);
-            if (layer is null) { unclassified.Add(rel); continue; }
+            if (layer is null)
+            {
+                unclassified.Add(rel);
+                continue;
+            }
 
             var inLocal = localFiles.Contains(rel);
             var inRef = refFiles.Contains(rel);
