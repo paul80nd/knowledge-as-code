@@ -170,10 +170,6 @@ public static class Commands
         if (Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot))
             return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
 
-        // Whether two copies of a file say the same thing, which is the one question either engine asks of
-        // the disk. Passed in, so each engine decides from listings and a predicate rather than from a tree.
-        bool Same(string rel) => MechanismCheck.Same(repoRoot, refRoot, rel);
-
         var localFiles = MechanismCheck.ListFiles(repoRoot);
         var refFiles = MechanismCheck.ListFiles(refRoot);
 
@@ -192,6 +188,10 @@ public static class Commands
         var today = DateTime.Today.ToString("yyyy-MM-dd");
         MechanismSync.Apply(plan, repoRoot, refRoot, manifest, reference, today);
         return ReportSync(plan, repoRoot, manifest.Version, reference, today);
+
+        // Whether two copies of a file say the same thing, which is the one question either engine asks of
+        // the disk. Passed in, so each engine decides from listings and a predicate rather than from a tree.
+        bool Same(string rel) => MechanismCheck.Same(repoRoot, refRoot, rel);
 
         static int Fail(string message)
         {

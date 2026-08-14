@@ -53,7 +53,7 @@ public sealed class YStatementPresent : IDocumentRule
         var words = new string(text.Select(c => char.IsLetterOrDigit(c) ? char.ToLowerInvariant(c) : ' ').ToArray())
             .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
         var haystack = $" {string.Join(' ', words)} ";
-        return Moves.Where(m => !haystack.Contains($" {m} ", StringComparison.Ordinal)).ToList();
+        return [.. Moves.Where(m => !haystack.Contains($" {m} ", StringComparison.Ordinal))];
     }
 
     // The moves as a sentence reads them: "facing", "rather than" and "accepting".

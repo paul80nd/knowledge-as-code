@@ -61,7 +61,8 @@ public class DocumentRuleTests
     {
         var body = "> " + string.Join(" ", Enumerable.Repeat("word", 40)) + " **in the context of** x,"
                    + " **facing** y, **we decided** z, **rather than** w, **to achieve** v, **accepting** u.";
-        var found = Run(new YStatementPresent(), Adr(body), new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = 20 });
+        var found = Run(new YStatementPresent(), Adr(body),
+            new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = 20 });
 
         Assert.Equal("y-statement", Single(found).Check.Value);
         Assert.Contains("keep it under 20.", Single(found).Message);
@@ -72,8 +73,9 @@ public class DocumentRuleTests
     [Fact]
     public void The_ceiling_is_the_schemas_and_a_Y_statement_within_it_is_silent()
     {
-        var body = "> **In the context of** a fixture, **facing** a ceiling, **we decided** to stay under it,\n"
-                   + "> **rather than** over, **to achieve** silence, **accepting** nothing.";
+        const string body =
+            "> **In the context of** a fixture, **facing** a ceiling, **we decided** to stay under it,\n"
+            + "> **rather than** over, **to achieve** silence, **accepting** nothing.";
 
         Assert.Empty(Run(new YStatementPresent(), Adr(body)));
         Assert.NotEmpty(Run(new YStatementPresent(), Adr(body),
@@ -155,13 +157,14 @@ public class DocumentRuleTests
     private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null)
     {
         var found = new List<Finding>();
-        void Report(Sev severity, CheckId check, string message, int? line) =>
-            found.Add(new Finding(doc.Rel, line, severity, check, message));
 
         rule.Check(new RuleContext(doc, doc.Type!, spec ?? new RuleSpec { Id = rule.RuleId },
             (c, m, l) => Report(Sev.Error, c, m, l),
             (c, m, l) => Report(Sev.Warning, c, m, l)));
         return found;
+
+        void Report(Sev severity, CheckId check, string message, int? line) =>
+            found.Add(new Finding(doc.Rel, line, severity, check, message));
     }
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);

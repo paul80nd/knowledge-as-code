@@ -194,7 +194,7 @@ public class GeneratorTests
         };
 
         var table = Generator.SchemaTable(t, new Schema());
-        var main = table.Split("**Enum values**", StringSplitOptions.None)[0];
+        var main = table.Split("**Enum values**")[0];
         var row = main.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
 
         // Values are what blows a column's width out, so they belong below in a table of their own,
@@ -222,7 +222,7 @@ public class GeneratorTests
         };
 
         var table = Generator.SchemaTable(t, new Schema());
-        var main = table.Split("**Conditionally required**", StringSplitOptions.None)[0];
+        var main = table.Split("**Conditionally required**")[0];
 
         // The condition has to be quoted exactly, so it is the half that cannot be trimmed to fit.
         Assert.DoesNotContain("classification in", main);

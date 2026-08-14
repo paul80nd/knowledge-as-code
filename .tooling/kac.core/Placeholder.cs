@@ -16,15 +16,11 @@ namespace kac.core;
 //
 // The mark is only meaningful in a template. A record carrying one is an unfinished copy rather than a
 // document with a placeholder in it, so nothing here is asked of a record.
-public static class Placeholder
+public static partial class Placeholder
 {
-    public const string Mark = "{{";
+    private const string Mark = "{{";
 
     public static bool In(string? value) => value?.Contains(Mark, StringComparison.Ordinal) ?? false;
-
-    // A whole placeholder, for quoting back at whoever left one in. Tolerant of an unclosed mark, which
-    // is still a placeholder to a reader and still wants reporting.
-    private static readonly Regex Token = new(@"\{\{[^}\n]*\}?\}?", RegexOptions.Compiled);
 
     // Every placeholder a record still carries, in document order — the frontmatter, the identity line,
     // the prose and the link targets.
@@ -53,7 +49,7 @@ public static class Placeholder
     }
 
     private static IEnumerable<(string, int)> From(string? text, int line) =>
-        text is null ? [] : Token.Matches(text).Select(m => (m.Value, line));
+        text is null ? [] : TokenRegex().Matches(text).Select(m => (m.Value, line));
 
     // Every scalar the mapping holds at any depth, values only — a key carrying the mark is a key the
     // schema does not declare, and unknown-key has already said so in its own words.
@@ -68,4 +64,9 @@ public static class Placeholder
 
     private static int NodeLine(YamlNode node, Doc d)
         => node.Start.Line > 0 ? (int)node.Start.Line + d.FrontStartLine - 1 : d.FrontStartLine;
+
+    // A whole placeholder, for quoting back at whoever left one in. Tolerant of an unclosed mark, which
+    // is still a placeholder to a reader and still wants reporting.
+    [GeneratedRegex(@"\{\{[^}\n]*\}?\}?")]
+    private static partial Regex TokenRegex();
 }

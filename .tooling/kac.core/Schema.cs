@@ -83,7 +83,7 @@ public sealed class ClauseSpec(string idPattern, List<string> binding, List<stri
     public string IdPattern { get; } = idPattern;
     public Regex? IdPatternRegex { get; } = Schema.CompilePattern(idPattern);
 
-    public IReadOnlyList<string> Binding { get; } = binding;  // written bold — these oblige
+    public IReadOnlyList<string> Binding { get; } = binding; // written bold — these oblige
     public IReadOnlyList<string> Advisory { get; } = advisory; // written plain — these recommend
 
     // The order rows must appear in: binding levels before advisory ones, each as the type declares it.
@@ -353,7 +353,7 @@ public sealed record TierSpec(string Name, string Label, string Behaviour, strin
 // renders as one.
 public sealed record LineageSpec(string PriorArt, string Alignment, string Divergence);
 
-public sealed class Schema
+public sealed partial class Schema
 {
     // The one key admitted at every level and required at none. See Level.
     public const string Commentary = "notes";
@@ -372,8 +372,10 @@ public sealed class Schema
     public IReadOnlyList<string> UniversalOrder { get; init; } = [];
     public IReadOnlyDictionary<string, FieldSpec> Universal { get; init; } = new Dictionary<string, FieldSpec>();
     public IReadOnlyList<string> Reserved { get; init; } = [];
+
     public IReadOnlyDictionary<string, IReadOnlyList<string>> Enums { get; init; } =
         new Dictionary<string, IReadOnlyList<string>>();
+
     public IReadOnlyDictionary<string, TypeSchema> ByFolder { get; init; } = new Dictionary<string, TypeSchema>();
 
     // Every key these files carry that the loader never asked for, in the order it would be met reading
@@ -698,8 +700,7 @@ public sealed class Schema
     {
         if (string.IsNullOrWhiteSpace(condition)) return null;
 
-        var inList = System.Text.RegularExpressions.Regex.Match(
-            condition, @"^\s*(\S+)\s+in\s*\[(.*)\]\s*$");
+        var inList = InListRegex().Match(condition);
         if (inList.Success)
             return new RequiredWhen(inList.Groups[1].Value,
                 false,
@@ -732,7 +733,9 @@ public sealed class Schema
     // every declaration that uses the list form.
     private static IReadOnlyList<string> StrOrList(YamlNode? node) => node is YamlSequenceNode
         ? Yaml.StrList(node)
-        : Yaml.Str(node) is { } single ? [single] : [];
+        : Yaml.Str(node) is { } single
+            ? [single]
+            : [];
 
     // A pattern the schema declares, held as a Regex so the expression is parsed once at load rather
     // than looked up in the framework's cache on every value it is applied to. Interpreted rather than
@@ -743,4 +746,7 @@ public sealed class Schema
 
     private static string? Collapse(string? s) =>
         s is null ? null : string.Join(" ", s.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+
+    [GeneratedRegex(@"^\s*(\S+)\s+in\s*\[(.*)\]\s*$")]
+    private static partial Regex InListRegex();
 }

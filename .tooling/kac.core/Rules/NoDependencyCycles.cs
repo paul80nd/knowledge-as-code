@@ -71,6 +71,7 @@ public sealed class NoDependencyCycles : ICorpusRule
 
         foreach (var id in edges.Keys.Order(StringComparer.Ordinal))
             Visit(id);
+        return;
 
         void Visit(string id)
         {

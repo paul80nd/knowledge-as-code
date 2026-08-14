@@ -16,7 +16,7 @@ namespace kac.core;
 // discovered as a record in the first place.
 public static class Artefact
 {
-    public const char Prefix = '_';
+    private const char Prefix = '_';
 
     // The index `kac index` writes into every collection type's folder.
     public const string Index = "_index.md";

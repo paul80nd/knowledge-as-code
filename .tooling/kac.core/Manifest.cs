@@ -27,11 +27,14 @@ public class Manifest
                 var pathNode = Yaml.Get(rule, "path");
                 var patterns = pathNode is YamlSequenceNode
                     ? Yaml.StrList(pathNode)
-                    : Yaml.Str(pathNode) is { } single ? [single] : [];
+                    : Yaml.Str(pathNode) is { } single
+                        ? [single]
+                        : [];
                 var layer = Yaml.Str(Yaml.Get(rule, "layer"));
                 if (patterns.Count > 0 && layer is not null)
                     m.Rules.Add(new ManifestRule(patterns, layer));
             }
+
         return m;
     }
 
@@ -136,6 +139,7 @@ public class CorpusDescriptor
             .Select(s => Line(s.key, s.value)));
 
         File.WriteAllText(path, string.Join('\n', lines).TrimEnd('\n') + "\n");
+        return;
 
         static string Line(string key, string value) => $"  {key + ":",-18} {value}";
 

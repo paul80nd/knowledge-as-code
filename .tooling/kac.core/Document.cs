@@ -49,7 +49,7 @@ public enum DocKind
     Template
 }
 
-public class Doc
+public partial class Doc
 {
     public required string Rel;
     public required string Folder;
@@ -188,8 +188,8 @@ public class Doc
         foreach (var code in ast.Descendants<CodeInline>())
         {
             if (code.Content is not { } content) continue;
-            if (ClauseCitation.IsMatch(content)) doc.ClauseRefs.Add((content, code.Line + 1));
-            else if (ColonCitation.IsMatch(content)) doc.ColonCitations.Add((content, code.Line + 1));
+            if (ClauseCitationRegex().IsMatch(content)) doc.ClauseRefs.Add((content, code.Line + 1));
+            else if (ColonCitationRegex().IsMatch(content)) doc.ColonCitations.Add((content, code.Line + 1));
         }
 
         // Links (inline + resolved reference/shortcut). Iterating LinkInline naturally
@@ -269,21 +269,21 @@ public class Doc
 
         if (blocks[i + 1] is not ParagraphBlock { Inline: { FirstChild: CodeInline } inline } p) return;
 
-        doc.IdentitySpans = [.. inline.Descendants<CodeInline>().Select(c => c.Content ?? "")];
+        doc.IdentitySpans = [.. inline.Descendants<CodeInline>().Select(c => c.Content)];
         doc.IdentityLine = p.Line + 1;
     }
 
     // A code span shaped like a citation of a clause — an id, a dot, and a clause id, as `pol-VURM.TIMEBOX`.
     // Deliberately loose on case and width: a mis-cased or over-long citation is one the validator should
     // report as unresolved rather than one the parser should quietly decline to see.
-    private static readonly System.Text.RegularExpressions.Regex ClauseCitation =
-        new(@"^[a-z]{2,4}-[A-Za-z0-9]+\.[A-Za-z0-9]+$");
+    [System.Text.RegularExpressions.GeneratedRegex(@"^[a-z]{2,4}-[A-Za-z0-9]+\.[A-Za-z0-9]+$")]
+    private static partial System.Text.RegularExpressions.Regex ClauseCitationRegex();
 
     // The same citation with a colon where the dot belongs, as `std-A11Y:WCAG`. An id has to sit on the
     // left for this to match, which is what keeps a scoped reference — `eng:pol-VURM`, a shortcode and
     // then an id — out of it: a shortcode carries no type prefix and no hyphen before the colon.
-    private static readonly System.Text.RegularExpressions.Regex ColonCitation =
-        new(@"^[a-z]{2,4}-[A-Za-z0-9]+:[A-Za-z0-9]+$");
+    [System.Text.RegularExpressions.GeneratedRegex("^[a-z]{2,4}-[A-Za-z0-9]+:[A-Za-z0-9]+$")]
+    private static partial System.Text.RegularExpressions.Regex ColonCitationRegex();
 
     // The clause table: the first table under the H2 the schema names, read down to the next H2. Rows are
     // taken whole and unjudged — the header row supplies `ClauseHeaders`, every other row a `ClauseRow`,
@@ -312,7 +312,7 @@ public class Doc
 
                 if (row.IsHeader)
                 {
-                    doc.ClauseHeaders = [.. cells.Select(c => Md.PlainText(c))];
+                    doc.ClauseHeaders = [.. cells.Select(Md.PlainText)];
                     continue;
                 }
 

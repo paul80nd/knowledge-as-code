@@ -49,7 +49,7 @@ public static class Corpus
     //
     // git ls-files respects .gitignore, .git/info/exclude and global excludes, and never lists .git/
     // itself — exactly the "respect .gitignore" requirement; the walk is the non-git fallback.
-    public static List<string> AllFiles(string repoRoot) =>
+    private static List<string> AllFiles(string repoRoot) =>
         GitFiles.Tracked(repoRoot) ?? GitFiles.Walk(repoRoot, "*.md", SkipDirs);
 
     // Load the schema, list the files, and parse every record — everything an entry point needs
@@ -105,9 +105,7 @@ public static class Corpus
         return
         [
             .. schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value)
-                .Where(t => declared is not null
-                    ? declared.Contains(t.Key, StringComparer.Ordinal)
-                    : StoodUp(t, repoRoot))
+                .Where(t => declared?.Contains(t.Key, StringComparer.Ordinal) ?? StoodUp(t, repoRoot))
         ];
     }
 

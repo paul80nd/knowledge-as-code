@@ -312,7 +312,8 @@ public static class Validator
         void Warn(string check, string msg, int? line = null) =>
             f.Add(new Finding(d.Rel, line, Sev.Warning, new CheckId(check), msg));
 
-        void Err(string check, string msg, int? line = null) => f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId(check), msg));
+        void Err(string check, string msg, int? line = null) =>
+            f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId(check), msg));
     }
 
     // The markers a generated block lives between. `Generator.SpliceBlock` looks for the pair and
@@ -335,7 +336,7 @@ public static class Validator
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block is missing its "
                     + (begin < 0 && end < 0 ? "markers" : begin < 0 ? "BEGIN marker" : "END marker")
-                    + $" — `kac index` writes between them and leaves the page alone without both."));
+                    + " — `kac index` writes between them and leaves the page alone without both."));
             else if (end < begin)
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block's END marker comes before its BEGIN marker."));
@@ -358,7 +359,7 @@ public static class Validator
     // A folder counts as present when it holds tracked files. An empty directory git has never seen
     // is not part of the corpus, so the answer is the same in a fresh clone as on the machine that
     // happened to create it.
-    public static void CheckTypeSetup(Schema schema, string repoRoot, IEnumerable<string> corpusFiles,
+    private static void CheckTypeSetup(Schema schema, string repoRoot, IEnumerable<string> corpusFiles,
         CorpusDescriptor descriptor, List<Finding> f)
     {
         CheckAdoption(schema, repoRoot, descriptor, f);
@@ -663,15 +664,16 @@ public static class Validator
     private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
         List<Finding> f)
     {
-        void Report(Sev severity, Doc at, CheckId check, string message, int? line)
-            => f.Add(new Finding(at.Rel, line, severity, check, message));
-
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         foreach (var rule in t.Rules)
             if (CorpusRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
                 implementation.Check(new CorpusRuleContext(docs, byId, t, rule,
                     (at, c, m, l) => Report(Sev.Error, at, c, m, l),
                     (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
+        return;
+
+        void Report(Sev severity, Doc at, CheckId check, string message, int? line)
+            => f.Add(new Finding(at.Rel, line, severity, check, message));
     }
 
     // Where a type declares `min-records:` on a list field, each value in that field is counted across the

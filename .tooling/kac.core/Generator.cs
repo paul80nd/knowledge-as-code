@@ -28,10 +28,11 @@ public static class Generator
         var body = docs.Count == 0
             ? $"_Nothing here yet — copy [`{Artefact.Template}`]({Artefact.Template}) to add the first._"
             : RenderTable(
-                t.IndexColumns.Select(Humanize).ToList(),
-                Sorted(t, docs)
-                    .Select(d => t.IndexColumns.Select(c => Cell(d, c)).ToList())
-                    .ToList());
+                [.. t.IndexColumns.Select(Humanize)],
+                [
+                    .. Sorted(t, docs)
+                        .Select(d => t.IndexColumns.Select(c => Cell(d, c)).ToList())
+                ]);
 
         return $"{Banner}\n\n# {title}\n\n{body}\n";
     }
@@ -39,6 +40,7 @@ public static class Generator
     // The two directions an index is written in. Read by SchemaChecks, so a type declaring a third word
     // is told at load rather than sorted the default way and left looking deliberate.
     public const string Descending = "descending";
+
     public static readonly IReadOnlySet<string> IndexOrders =
         new HashSet<string>(["ascending", Descending], StringComparer.Ordinal);
 
@@ -56,8 +58,10 @@ public static class Generator
     // answer they do not have yet. The link carries the plural: it points at the collection.
     public static string PlacementTable(IEnumerable<TypeSchema> types) =>
         RenderTable(["You have…", "It goes in"],
-            [.. types.OrderBy(t => t.GoesHere, StringComparer.Ordinal)
-                .Select(t => new List<string> { Escape(t.GoesHere), $"[{t.PluralName}]({Link(t)})" })]);
+        [
+            .. types.OrderBy(t => t.GoesHere, StringComparer.Ordinal)
+                .Select(t => new List<string> { Escape(t.GoesHere), $"[{t.PluralName}]({Link(t)})" })
+        ]);
 
     // The types at length, under the tier that decides how each behaves. What the decision table answers
     // in a line, this answers in a paragraph — and it is grouped by tier rather than sorted flat, because
@@ -101,13 +105,15 @@ public static class Generator
     // point of its row rather than a gap in it.
     public static string LineageTable(IEnumerable<TypeSchema> types) =>
         RenderTable(["Type", "Nearest prior art", "Alignment", "Divergence"],
-            [.. types.Where(t => t.Lineage is not null)
+        [
+            .. types.Where(t => t.Lineage is not null)
                 .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
                 .Select(t => new List<string>
                 {
                     $"[{t.DisplayName}]({Link(t)})", Escape(t.Lineage!.PriorArt),
                     Cell(t.Lineage.Alignment), Cell(t.Lineage.Divergence)
-                })]);
+                })
+        ]);
 
     // An answer that is deliberately absent, written as one. An empty cell in a table of this shape reads
     // as something nobody got round to.
@@ -146,8 +152,10 @@ public static class Generator
         var rows = new List<List<string>>();
 
         foreach (var (t, name, field, targets) in Edges(types, adopted))
-            rows.Add([t.DisplayName, $"`{name}`", string.Join(", ", targets.Select(x => x.DisplayName)),
-                field.Reciprocal is { } back ? $"`{back}`" : ""]);
+            rows.Add([
+                t.DisplayName, $"`{name}`", string.Join(", ", targets.Select(x => x.DisplayName)),
+                field.Reciprocal is { } back ? $"`{back}`" : ""
+            ]);
 
         return RenderTable(["From", "Field", "Points at", "Answered by"], rows);
     }
@@ -296,8 +304,10 @@ public static class Generator
     // than a grouping for the same reason: worth seeing beside a type, and not how anyone arrives.
     public static string TypesIndex(IEnumerable<TypeSchema> types, string taxonomyPath) =>
         RenderTable(["Type", "Tier", "What it holds"],
-            [.. types.OrderBy(t => t.DisplayName, StringComparer.Ordinal).Select(t => new List<string>
-                { $"[{t.DisplayName}]({Link(t)})", t.Tier, Escape(t.Summary) })])
+        [
+            .. types.OrderBy(t => t.DisplayName, StringComparer.Ordinal).Select(t => new List<string>
+                { $"[{t.DisplayName}]({Link(t)})", t.Tier, Escape(t.Summary) })
+        ])
         + "\n\n" + Wrap($"**Where does a document go?** The [taxonomy]({taxonomyPath}) has the decision table, "
                         + "what each type is and is not, and the calls that are genuinely close.");
 
@@ -343,10 +353,10 @@ public static class Generator
     {
         List<string> headers = ["Field", "Req", "Type", "Notes"];
         var universal = s.UniversalOrder.Where(n => s.EffectiveField(t, n) is not null).ToList();
-        var own = t.FieldOrder.Where(n => !universal.Contains(n));
+        var own = t.FieldOrder.Where(n => !universal.Contains(n)).ToList();
 
-        var rows = universal.Select(n => Row(n, s.EffectiveField(t, n)!, true))
-            .Concat(own.Select(n => Row(n, t.Fields[n], false)))
+        var rows = universal.Select(n => FieldRow(n, s.EffectiveField(t, n)!, true))
+            .Concat(own.Select(n => FieldRow(n, t.Fields[n], false)))
             .ToList();
 
         var order = universal.Concat(own).ToList();
@@ -357,7 +367,7 @@ public static class Generator
             : $"{table}\n\n† Carried by every document in the taxonomy — see "
               + "[Metadata](/knowledge-as-code/metadata.md).";
 
-        static List<string> Row(string name, FieldSpec f, bool universal) =>
+        static List<string> FieldRow(string name, FieldSpec f, bool universal) =>
             [$"`{name}`{(universal ? " †" : "")}", f.Required ? "●" : "", f.Type, NotesFor(f)];
     }
 
@@ -432,7 +442,8 @@ public static class Generator
     // declaring a rule remains the only thing needed to document it.
     private static readonly (string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
-        ("frontmatter-parses", [new("frontmatter-parses")], "Frontmatter is present and is a valid YAML mapping.", null),
+        ("frontmatter-parses", [new("frontmatter-parses")], "Frontmatter is present and is a valid YAML mapping.",
+            null),
         ("unknown-key", [new("unknown-key")], "Every frontmatter key is a schema field or a reserved ADO key.", null),
         ("key-order", [new("key-order")], "Key order is a topological extension of the schema's field order.", null),
         ("required-field", [new("required-field")], "Required and conditionally-required fields are present.", null),
@@ -583,6 +594,7 @@ public static class Generator
         var catalogue = schema.Checks.Select(c => c.Id).ToHashSet();
         var advertised = schema.Checks.Where(c => c.OnTypePage).Select(c => c.Id).ToHashSet();
         var documented = DocRows.SelectMany(r => r.Ids).ToHashSet();
+
         var problems = new List<string>();
 
         foreach (var id in documented.Where(id => !catalogue.Contains(id)).Order())

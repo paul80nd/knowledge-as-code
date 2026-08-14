@@ -130,7 +130,7 @@ public static class LinkChecks
     // The file a link target names, or null where nothing is there. Returns the path that exists so a
     // caller can go on to read it — which of the two forms below resolved is not the caller's business,
     // but the file it found is.
-    public static string? Resolve(string repoRoot, string fromRel, string target)
+    private static string? Resolve(string repoRoot, string fromRel, string target)
     {
         var hash = target.IndexOf('#');
         if (hash >= 0) target = target[..hash];
