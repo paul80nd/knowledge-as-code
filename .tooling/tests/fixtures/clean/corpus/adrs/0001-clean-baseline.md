@@ -11,7 +11,7 @@ owner: alex.doe
 `ADR: adr-0001` `ACCEPTED`
 
 > **In the context of** the kac test suite, **facing** the need for a known-good corpus, **we decided** to keep one
-> fully valid ADR here, **rather than** pointing the tests at the live wiki, **to achieve** a stable zero-findings
+> fully valid ADR here, **rather than** pointing the tests at the live corpus, **to achieve** a stable zero-findings
 > baseline that catches false positives, **accepting** that this fixture must be maintained alongside the rules.
 
 ## Context

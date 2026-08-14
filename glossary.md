@@ -19,12 +19,12 @@ glossary, so a reader opens the context they are working in and reads its vocabu
 
 ## Why we use them
 
-A glossary is the highest value-per-byte content in the wiki, and the corpus-wide one is what a contributor can read in
-full before starting work.
+A glossary is the highest value-per-byte content in the corpus, and the corpus-wide one is what a contributor can read
+in full before starting work.
 
 The terms particular to the domain are often not interchangeable, and neighbouring terms are easily confused. A
 contributor — human or agent — who doesn't know the distinctions will produce work that is plausible, confident and
-subtly wrong, in code and in documentation alike. Every other document in this wiki assumes these terms mean something
+subtly wrong, in code and in documentation alike. Every other document here assumes these terms mean something
 precise; this is where that precision lives.
 
 ## Scope
@@ -83,7 +83,7 @@ a digest, so nothing runs the rule and the limit is yours to keep.
 
 | Field       | Req | Type   | Notes                                                                                |
 |-------------|-----|--------|--------------------------------------------------------------------------------------|
-| `id` †      | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `id` †      | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.              |
 | `tier` †    | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
 | `status` †  | ●   | enum   | `draft` while the terms are still settling.                                          |
 | `owner` †   | ●   | string | A named person, never a team alias.                                                  |
@@ -119,7 +119,7 @@ a digest, so nothing runs the rule and the limit is yours to keep.
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                           |
+| `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |
 | `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |

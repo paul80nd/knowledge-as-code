@@ -1,6 +1,6 @@
 # Metadata
 
-Every document in the taxonomy opens with a YAML frontmatter block. This is what makes the wiki machine-readable: CI
+Every document in the taxonomy opens with a YAML frontmatter block. This is what makes the corpus machine-readable: CI
 validates it, indexes are generated from it, and agent sessions grep it to find things.
 
 Azure DevOps renders frontmatter as a table at the top of the page, so **every field you add appears as a column on
@@ -85,7 +85,7 @@ Carried by every document in the taxonomy.
 
 | Field    | Req | Type   | Notes                                                                                |
 |----------|-----|--------|--------------------------------------------------------------------------------------|
-| `id`     | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `id`     | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.              |
 | `tier`   | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
 | `status` | ●   | enum   | Values vary by type.                                                                 |
 | `owner`  | ●   | string | A named person, never a team alias.                                                  |
@@ -132,8 +132,8 @@ before acceptance, its number is retired. Mnemonic IDs are allocated by meaning 
 next one to take: pick a four-character mnemonic for the concept that no document of that type already holds. A slug is
 the thing's own name.
 
-The ID is the anchor for every cross-reference in the wiki, and it is what a shortcut link label must say. Filenames may
-be corrected; IDs may not — which binds hardest on a mnemonic, because unlike a number it makes a claim that can go
+The ID is the anchor for every cross-reference in the corpus, and it is what a shortcut link label must say. Filenames
+may be corrected; IDs may not — which binds hardest on a mnemonic, because unlike a number it makes a claim that can go
 stale. A document whose meaning has moved that far is replaced and the old one retired, not renamed.
 
 ## Referring to an id
@@ -169,7 +169,7 @@ starts: what kind of document is this, which one is it, and is it in force. Fron
 renders as a metadata table an Azure DevOps reader may never look at, and it is written for a machine. The identity line
 is the same three facts written for a person, at the one place their eye already is.
 
-The ID appears exactly as the frontmatter carries it, so there is one casing of an ID across the wiki rather than a
+The ID appears exactly as the frontmatter carries it, so there is one casing of an ID across the corpus rather than a
 second invented for headings. The status is the exception: lower-case in frontmatter because a machine reads it,
 upper-case on the line because it is read as a stamp. CI holds all three to the frontmatter — a document cannot go
 `active` and leave the line saying `DRAFT`.

@@ -366,7 +366,7 @@ checks:
 
   id-unique:
     severity: error
-    description: An id is unique across the whole wiki.
+    description: An id is unique across the whole corpus.
 
   unused-definition:
     severity: warning

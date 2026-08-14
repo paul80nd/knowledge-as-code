@@ -1,4 +1,4 @@
-# CI for the knowledge-as-code wiki.
+# CI for the knowledge-as-code corpus.
 #
 # Runs the kac validator and the generated-content freshness check on pull
 # requests into main. It NEVER writes or commits generated files: `index --check`

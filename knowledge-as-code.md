@@ -1,6 +1,6 @@
 # Knowledge as Code
 
-This wiki is not a document store. It is a structured, validated, machine-readable body of knowledge that happens to
+This corpus is not a document store. It is a structured, validated, machine-readable body of knowledge that happens to
 render as a wiki: maintained in git, reviewed through pull requests, and readable *and writable* by AI coding sessions
 as well as people.
 
@@ -91,8 +91,8 @@ can contradict each other is a defect waiting to happen.
 
 ## What this is not
 
-* **Not a replacement for the work tracker.** Work items own delivery. This wiki owns durable knowledge. Where they
-  overlap, the wiki links rather than copies.
+* **Not a replacement for the work tracker.** Work items own delivery. This corpus owns durable knowledge. Where they
+  overlap, it links rather than copies.
 * **Not a document dump.** Every document has a type, a tier, an owner and a reason to exist. Content that fits no type
   is a prompt to discuss the taxonomy, not to create a `misc/` folder.
 * **Not certified compliance.** See the note on alignment above.

@@ -17,7 +17,7 @@ what the component is for, where its code lives, what it runs on, what it depend
 
 ## Why we use them
 
-Services are the **anchor** the rest of the wiki points at. An NFR, a control and an FAQ each name the service they
+Services are the **anchor** the rest of the corpus points at. An NFR, a control and an FAQ each name the service they
 concern, and a capability names the services that implement it. Nobody can check those references, or write them the
 same way twice, without one canonical list of what a service is and what it is called.
 
@@ -46,7 +46,7 @@ of the catalogue as well, because it deploys services.
 
 | Field         | Req | Type   | Notes                                                                                |
 |---------------|-----|--------|--------------------------------------------------------------------------------------|
-| `id` †        | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `id` †        | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.              |
 | `tier` †      | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
 | `status` †    | ●   | enum   | Where the service is in its life.                                                    |
 | `owner` †     | ●   | string | A named person, never a team alias.                                                  |
@@ -77,7 +77,7 @@ of the catalogue as well, because it deploys services.
    have natural stable names.
 2. Fill in the frontmatter. `depends-on` names other service ids; the [index](services/_index.md) is where to find them.
 3. Record environments and URLs, and the data stores it owns.
-4. Keep it current. Everything else in the wiki trusts this catalogue, so an entry that has drifted from the estate
+4. Keep it current. Everything else in the corpus trusts this catalogue, so an entry that has drifted from the estate
    sends the next reader to the wrong repository.
 
 **Conventions**
@@ -172,7 +172,7 @@ words worth keeping are the ones thrown away.
 | `min-records`               | warning | A value in a grouping field is carried by at least as many records as the schema asks for.                      |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                           |
+| `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |
 | `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |

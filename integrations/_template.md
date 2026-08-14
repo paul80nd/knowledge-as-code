@@ -46,7 +46,7 @@ The role it plays, and which parts of the product would stop working without it.
 | **Auth**     | {{mechanism — never the credentials}}   |
 | **Docs**     | {{link to their documentation}}         |
 
-_(Nothing secret goes in this wiki. Name the mechanism and where the credential is stored, not the credential.)_
+_(Nothing secret goes in this corpus. Name the mechanism and where the credential is stored, not the credential.)_
 
 ## Failure modes
 

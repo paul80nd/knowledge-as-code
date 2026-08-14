@@ -63,7 +63,7 @@ accessibility under governance is the clearest of them.
 
 | Field         | Req | Type   | Notes                                                                                |
 |---------------|-----|--------|--------------------------------------------------------------------------------------|
-| `id` †        | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `id` †        | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.              |
 | `tier` †      | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
 | `status` †    | ●   | enum   | `draft` until agreed; `retired` rather than deleted.                                 |
 | `owner` †     | ●   | string | A named person, never a team alias.                                                  |
@@ -110,7 +110,7 @@ accessibility under governance is the clearest of them.
 * **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice, and
   a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
   standards against them, so nobody writing here can know the full set of implementers. A policy that nothing in *this*
-  wiki implements is the normal state rather than a gap to be explained.
+  corpus implements is the normal state rather than a gap to be explained.
 * **A clause is the unit anything else cites.** A standard, a control or a deviation names the single obligation it
   answers, in the form [Metadata](/knowledge-as-code/metadata.md#referring-to-an-id) sets out. Clause ids are immutable
   for the same reason policy ids are: removing or renaming one breaks every citation of it.
@@ -142,7 +142,7 @@ accessibility under governance is the clearest of them.
 | `list-order`                     | warning | List entries read in alphabetical order, with numbers compared as numbers.                                               |
 | `tier-matches-type`              | error   | `tier` matches the tier the type declares.                                                                               |
 | `id`                             | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename.          |
-| `id-unique`                      | error   | `id` is unique across the whole wiki.                                                                                    |
+| `id-unique`                      | error   | `id` is unique across the whole corpus.                                                                                  |
 | `filename / slug-length`         | error   | Filename matches the pattern; the slug is within 30 characters.                                                          |
 | `h1`                             | error   | The document has an H1.                                                                                                  |
 | `identity`                       | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.                 |

@@ -40,7 +40,7 @@ Not the place for:
 
 | Field         | Req | Type   | Notes                                                                                |
 |---------------|-----|--------|--------------------------------------------------------------------------------------|
-| `id` †        | ●   | string | Stable, unique across the wiki, never reused. Format set by the type.                |
+| `id` †        | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.              |
 | `tier` †      | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
 | `status` †    | ●   | enum   | Whether the integration is live, on trial, or retired.                               |
 | `owner` †     | ●   | string | A named person, never a team alias.                                                  |
@@ -66,7 +66,7 @@ Not the place for:
 
 1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids — `int-sendgrid`.
 2. Record the contract and how the system authenticates us. Name where the credential is held; nothing secret goes in
-   this wiki.
+   this corpus.
 3. Write down each way the system fails and what we do instead. "It goes down sometimes" is not a failure mode; "returns
    503 during their maintenance window, we queue and retry" is.
 4. Copy `their-sla` from the contract, word for word.
@@ -97,7 +97,7 @@ Not the place for:
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
-| `id-unique`                 | error   | `id` is unique across the whole wiki.                                                                           |
+| `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |
 | `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |

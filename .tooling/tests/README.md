@@ -1,8 +1,8 @@
 # `.tooling/tests` — the kac golden-file suite
 
-`kac-tests` runs `kac` against deliberately-broken (and deliberately-clean) mini-wikis and diffs the findings against a
-committed golden. It is an **integration** suite: it exercises the real rules end to end, not the C# internals. The unit
-tests (`kac.tests`) and the Reqnroll behaviour specs (`kac.features`) live alongside it — see
+`kac-tests` runs `kac` against deliberately-broken (and deliberately-clean) mini-corpora and diffs the findings against
+a committed golden. It is an **integration** suite: it exercises the real rules end to end, not the C# internals. The
+unit tests (`kac.tests`) and the Reqnroll behaviour specs (`kac.features`) live alongside it — see
 [`../README.md`](../README.md#tests) for what each layer is for.
 
 ```bash
@@ -16,7 +16,7 @@ id `kac` no longer emits, stale generated output, or a reachable check with no f
 
 ## How a scenario runs
 
-Each `fixtures/<scenario>/` is a mini-wiki minus its schema. A `mode` file (absent ⇒ `validate`) selects what is
+Each `fixtures/<scenario>/` is a mini-corpus minus its schema. A `mode` file (absent ⇒ `validate`) selects what is
 asserted:
 
 ```

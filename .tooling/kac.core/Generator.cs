@@ -467,7 +467,7 @@ public static class Generator
         ("id", [new("id-prefix"), new("id-format"), new("id-matches-filename")],
             "`id` carries the type's prefix, takes the shape the type declares, and names the same document "
             + "as the filename.", null),
-        ("id-unique", [new("id-unique")], "`id` is unique across the whole wiki.", null),
+        ("id-unique", [new("id-unique")], "`id` is unique across the whole corpus.", null),
         ("filename / slug-length", [new("filename-pattern"), new("slug-length")],
             "Filename matches the pattern; the slug is within 30 characters.", null),
         ("h1", [new("h1")], "The document has an H1.", null),

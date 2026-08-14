@@ -1,6 +1,6 @@
 # Taxonomy
 
-The kinds of knowledge this wiki holds, what each is for, and — more usefully — what each is *not*.
+The kinds of knowledge this corpus holds, what each is for, and — more usefully — what each is *not*.
 
 Most mistakes here are placement mistakes, not writing mistakes. Someone writes a good document and puts it in the wrong
 folder, where it either duplicates something or is never found. The [decision table](#where-does-this-go) below is the
@@ -35,7 +35,8 @@ ends up — so a corpus that has adopted five of them is offered five, and every
 
 <!-- END GENERATED: types-placement -->
 
-Where you got to mid-piece-of-work is the one thing on nobody's list: session logs stay local and never reach the wiki.
+Where you got to mid-piece-of-work is the one thing on nobody's list: session logs stay local and never reach
+the corpus.
 
 If nothing fits, raise it rather than improvising. A missing type is a taxonomy conversation; a `misc/` folder is a
 slow-motion failure. The framework declares more types than any one corpus stands up, so the answer may be to adopt one
@@ -136,7 +137,7 @@ level, so that "the build fails silently if X" has somewhere to go the moment it
 
 **Session state** is the one thing with no type: where a piece of work got to, for handover between sessions, and **not
 stored in this repo**. Session logs routinely contain stack traces, connection strings and customer identifiers, so they
-stay local. Only distilled, reviewed discoveries reach the wiki.
+stay local. Only distilled, reviewed discoveries reach the corpus.
 
 ## How the types relate
 

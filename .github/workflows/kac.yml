@@ -1,4 +1,4 @@
-# CI for the knowledge-as-code wiki (GitHub Actions).
+# CI for the knowledge-as-code corpus (GitHub Actions).
 #
 # The GitHub equivalent of azure-pipelines.yml: runs the kac validator and the
 # generated-content freshness check on pull requests into main. It NEVER writes

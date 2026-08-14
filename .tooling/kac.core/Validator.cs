@@ -500,7 +500,7 @@ public static class Validator
     // next.
     public static Dictionary<string, Doc> CheckCorpus(Schema schema, List<Doc> docs, List<Finding> f)
     {
-        // id uniqueness across the whole wiki.
+        // id uniqueness across the whole corpus.
         var byId = new Dictionary<string, Doc>(StringComparer.OrdinalIgnoreCase);
         foreach (var d in docs)
         {

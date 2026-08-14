@@ -19,7 +19,7 @@ Run on every PR. Failures block merge.
 - Required fields present for the document's type (type inferred from folder).
 - Enum values valid.
 - Dates are quoted strings in `YYYY-MM-DD` form.
-- `id` is unique across the wiki, matches the type's prefix, and matches the folder it sits in.
+- `id` is unique across the corpus, matches the type's prefix, and matches the folder it sits in.
 - `tier` matches the tier defined for the document's type. A document claiming a tier its folder does not have is a
   placement error, not a metadata error.
 
