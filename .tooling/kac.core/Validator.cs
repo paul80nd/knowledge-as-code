@@ -137,7 +137,6 @@ public static class Validator
 
         var t = d.Type;
 
-        // -- frontmatter parses --
         if (d.Front is null)
         {
             Err("frontmatter-parses", "frontmatter is not a valid YAML mapping.");
@@ -158,8 +157,7 @@ public static class Validator
                 if (!t.KnownKeys.Contains(k))
                     Err("unknown-key", $"unknown frontmatter key '{k}'.", d.FrontStartLine);
 
-        // -- key order --
-        // The actual order must be a topological extension of the chains the schema declares: every
+        // The key order must be a topological extension of the chains the schema declares: every
         // pair it orders must hold, and genuinely unconstrained pairs are free. See
         // TypeSchema.DeriveKeyOrderEdges for why the constraint is a pair set rather than a total order.
         CheckKeyOrder(d, t, Err);
@@ -204,7 +202,6 @@ public static class Validator
             // the file has not been filled in.
             if (kind == DocKind.Template && HasPlaceholder(node)) continue;
 
-            // absent values must be bare keys, never null / ~ / "" / —
             if (IsAbsentValue(node))
             {
                 if (!IsBareKey(node))
@@ -233,14 +230,12 @@ public static class Validator
                 CheckPattern(name, "value", node, spec, d, Err);
         }
 
-        // -- tier matches type --
         if (present.TryGetValue("tier", out var tierNode) && Scalar(tierNode) is { } tier && tier != t.Tier)
             Err("tier-matches-type", $"tier '{tier}' does not match the '{t.TypeName}' type tier '{t.Tier}'.",
                 Line(tierNode, d));
 
-        // -- id: prefix, shape, agreement with the filename --
-        // -- filename pattern + slug length --
-        // Neither is asked of a template. It has no id — `svc-{{slug}}` is the instruction to allocate
+        // -- the id, the filename, and the agreement between them --
+        // None of it is asked of a template. It has no id — `svc-{{slug}}` is the instruction to allocate
         // one — and `_template.md` is a reserved name that no type's filename pattern matches or should.
         // What the identity line below still asks is that the template agrees with itself.
         if (kind == DocKind.Record)
@@ -251,13 +246,9 @@ public static class Validator
             IdChecks.CheckFilename(d.Rel, t, Err);
         }
 
-        // -- H1 present --
         CheckH1(d, Err);
-
-        // -- identity line beneath the H1 agrees with the frontmatter --
         CheckIdentity(d, t, present, Err);
 
-        // -- required sections --
         foreach (var sec in t.RequiredSections)
             if (!d.Sections.Any(s => string.Equals(s.Title, sec, StringComparison.OrdinalIgnoreCase)))
                 Err("required-section", $"missing required section '## {sec}'.");
@@ -298,7 +289,6 @@ public static class Validator
         // they are neither unique nor citable and are not asked to be.
         if (kind == DocKind.Record) ClauseChecks.Check(d, t, Err, Warn);
 
-        // -- links resolve --
         LinkChecks.Check(d, schema, repoRoot, Err, Warn, kind);
 
         // -- related mirrors ## Related --

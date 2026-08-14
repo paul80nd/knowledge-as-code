@@ -4,10 +4,10 @@
 // kac-tests — the golden-file test suite for kac.
 //
 // Each fixture under .tooling/tests/fixtures/<scenario>/ is a deliberately-broken (or deliberately-clean)
-// mini-wiki. The runner assembles a throwaway repo root from the REAL schema plus the fixture's
+// mini-wiki. The runner assembles a throwaway repo root from the real schema plus the fixture's
 // corpus, runs `kac validate --json` against it, and diffs the findings against the scenario's
-// committed golden (expected.json). Because the golden captures the WHOLE findings set for the
-// corpus, an accidental extra finding shows up as a diff — that is the point.
+// committed golden (expected.json). The golden captures the whole findings set for the corpus, so an
+// accidental extra finding shows up as a diff — which is the point.
 //
 //   dotnet run .tooling/kac-tests.cs                 # run every scenario, fail on any mismatch
 //   dotnet run .tooling/kac-tests.cs -- clean        # run only scenarios whose name contains "clean"
@@ -397,7 +397,7 @@ Console.WriteLine();
 // -- coverage meta-test --
 // Every reachable check must be exercised by some fixture, and both directions fail the build: a
 // check with no fixture, and a golden naming a check the catalogue does not hold — which is a rename
-// that left a stale golden. Coverage is a property of the WHOLE suite, so it is only computed on a
+// that left a stale golden. Coverage is a property of the whole suite, so it is only computed on a
 // full run; a filtered run would undercount and read as a regression.
 if (filters.Count == 0)
 {

@@ -6,20 +6,20 @@
 // dependencies. `../.schema/README.md` is the reference for what an expression may say; this comment is
 // about the boundary, because this is the file someone stands in when they want to cross it.
 //
-// THE GRAMMAR IS FROZEN. It has no variables, no user-defined functions, no quantifiers and no
+// The grammar is frozen. It has no variables, no user-defined functions, no quantifiers and no
 // collections, and that is the property being bought rather than a shortfall to be corrected. A rule
 // that will not fit almost always wants a new fact — one method on `Facts`, one row in `Functions`
 // below — and reaching for the grammar instead is the move to distrust. A rule that genuinely needs
 // loops, joins or quantifiers is a rule class in `Rules/`, and wanting them here is the signal that
 // OPA is being rebuilt by increments.
 //
-// WHEN TO ABANDON THIS. The moment a real need appears for variables, function definitions or
+// When to abandon this: the moment a real need appears for variables, function definitions or
 // quantifiers — a need, not a rule that could be written another way — swap this for CEL (Common
 // Expression Language; a .NET port exists). The `expr:` strings largely carry over and the engine drops
 // in. Not before: the dependency is not worth it at this size, which is the same judgement that
 // rejected OPA/Rego and is recorded with its reasoning in `../README.md`.
 //
-// NON-GOALS, so that a later reader does not mistake an absence for an oversight: a general policy
+// Non-goals, so that a later reader does not mistake an absence for an oversight: a general policy
 // engine, rules-as-data beyond this grammar, a date or collection type system, runtime or
 // tenant-specific rule sets, and replacing any check that stays C#.
 

@@ -102,8 +102,8 @@ public class CorpusDescriptor
     //
     // This rewrites three lines rather than re-serialising the file, because the descriptor is mostly
     // commentary. Someone opens it to read what each role means and when a divergence is worth
-    // accepting, and a YAML round-trip would throw all of that away. A trailing comment on one of the
-    // three goes with the value it described, which a sync has just made untrue.
+    // accepting, and a YAML round-trip would throw all of that away. Rewriting a line does drop any
+    // trailing comment on it, which is right: that comment described the value the sync just replaced.
     public static void Stamp(string repoRoot, int mechanismVersion, string syncedFrom, string syncedOn)
     {
         var path = Path.Combine(repoRoot, ".corpus.yaml");

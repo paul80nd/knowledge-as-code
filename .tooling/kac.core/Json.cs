@@ -34,10 +34,10 @@ public partial class KacJson : JsonSerializerContext
 {
     private static KacJson? _relaxed;
 
-    // Shared context for CLI output: the source-generated metadata from Default, plus
-    // relaxed escaping so quotes and dashes in messages stay human-readable rather than
-    // becoming ' / —. Lazily initialised so it does not touch the generator's Default
-    // during static construction (their init order across the partial is unspecified).
+    // Shared context for CLI output: the source-generated metadata from Default, plus relaxed escaping,
+    // so a quote or an em dash in a finding reaches the reader as itself rather than as a numeric
+    // escape. Lazily initialised so it does not touch the generator's Default during static
+    // construction, whose order across the partial is unspecified.
     public static KacJson Relaxed => _relaxed ??= new KacJson(new JsonSerializerOptions(Default.Options)
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping

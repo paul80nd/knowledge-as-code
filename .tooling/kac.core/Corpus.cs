@@ -88,21 +88,16 @@ public static class Corpus
         };
     }
 
-    // The types this corpus holds, in schema order. The schema declares every type the tool manages; a
-    // corpus adopts as many of them as it has use for, and this is the difference between the two.
-    // Everything generated about the taxonomy reads it, so a corpus's own pages describe the corpus rather
-    // than the framework's full range.
+    // The types this corpus holds, in schema order. The schema declares every type the tool manages and a
+    // corpus adopts as many as it has use for, so everything generated about the taxonomy reads this and
+    // describes the corpus instead of the framework's full range.
     //
-    // Two answers to the same question, and which one is given is the point. Where `.corpus.yaml`
-    // declares `types:`, that is the answer: adoption is a decision the corpus records, and the pages
-    // follow the decision. Where it does not, the answer is read off the filesystem — a type is adopted if
-    // both halves are there, the page and the folder, which is the bar CheckTypeSetup holds a type to
-    // because a type is stood up as both or as neither.
-    //
-    // The inferred answer is the weaker one: it cannot tell a type nobody wanted from a type somebody has
-    // not finished adding, which is exactly what `types:` exists to say. It is the reading a corpus gets
-    // until it declares, so that taking a newer framework never requires editing the descriptor in the
-    // same breath.
+    // `.corpus.yaml` answers where it declares `types:`, because adoption is a decision the corpus
+    // records and the pages follow the decision. Otherwise the filesystem answers: a type counts as
+    // adopted where both halves are there, the page and the folder, which is the bar CheckTypeSetup holds
+    // a type to. That reading cannot tell a type nobody wanted from one somebody has not finished adding,
+    // which is what `types:` exists to say. It stands until the corpus declares, so taking a newer
+    // framework never means editing the descriptor in the same breath.
     public static List<TypeSchema> Adopted(Schema schema, string repoRoot, CorpusDescriptor descriptor)
     {
         var declared = descriptor.Types;

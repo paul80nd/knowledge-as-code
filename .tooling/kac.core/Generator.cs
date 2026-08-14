@@ -117,8 +117,8 @@ public static class Generator
     // that collide with something appear: most do not, and a heading over a paragraph explaining that a
     // word means what it says would be worse than the silence.
     //
-    // Ordered by name. The section it replaces ran most-dangerous-first, which no declaration carries — and
-    // the entry that claims to be the most dangerous still says so wherever it lands.
+    // Ordered by name, because no declaration says which collision is the most dangerous — and the entry
+    // that claims to be still says so wherever it lands.
     public static string Collisions(IEnumerable<TypeSchema> types) =>
         string.Join("\n\n", types
             .Where(t => t.Collision.Length > 0)
@@ -421,7 +421,7 @@ public static class Generator
     public const int DescriptionMax = 120;
 
     // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that `kac index`
-    // splices into every type page. It is deliberately NOT the raw catalogue — related checks are folded
+    // splices into every type page. It is deliberately not the raw catalogue — related checks are folded
     // into one row (the three `id-*` checks read as one `id` row) and worded for a human skim. Generating
     // it from the catalogue instead would change what the table means, so each row names the catalogue
     // ids it stands for and ChecksTableProblems verifies the coverage, leaving the wording hand-tuned.
@@ -508,21 +508,22 @@ public static class Generator
             t => t.HasRule("no-dependency-cycles"))
     ];
 
-    // Catalogue checks the reader-facing table deliberately does not surface: `type` (an internal
-    // folder→schema guard a well-formed document never trips), `list` (a low-level YAML-shape check
-    // subsumed by the field descriptions) and `bracket-literal` (a heuristic sibling of
-    // undefined-label). Every OTHER catalogue id must appear in DocRows — ChecksTableProblems fails
-    // otherwise, so a new check cannot silently go undocumented.
-    // `type-setup` joins them for a different reason: it checks whether the type is stood up at all,
-    // and this table is rendered onto the very page whose absence it reports. A reader who can see the
-    // row does not need it.
-    // `generated-block` joins them alongside `type-setup`, for the same reason: both are checks on
-    // the type page itself rather than on a document of that type, and this table describes what a
-    // contributor's document is held to.
-    // The three `schema-*` checks join them for the furthest-out version of that reason: they read the
-    // schema rather than any document, and what they report is a defect in the file this very table is
-    // generated from. Their audience is whoever edits `.schema/`, and `.schema/README.md` is where they
-    // are documented.
+    // Catalogue checks the reader-facing table deliberately does not surface. Every other catalogue id
+    // must appear in DocRows — ChecksTableProblems fails otherwise, so a new check cannot go
+    // undocumented in silence.
+    //
+    // `type`, `list` and `bracket-literal` are too low-level to act on: a folder→schema guard a
+    // well-formed document never trips, a YAML-shape check the field descriptions subsume, and a
+    // heuristic sibling of `undefined-label`.
+    //
+    // `type-setup`, `generated-block` and `page-frontmatter` read the type page, `template-fields` the
+    // template, and `framework-names-types` the framework's own documents. This table is rendered onto
+    // the type page and says what a contributor's document is held to, so none of the five is theirs to
+    // act on — `type-setup` least of all, since it reports the absence of the page carrying the row.
+    //
+    // The `schema-*` checks read the schema rather than any document, and report a defect in the file
+    // this table is generated from. Their audience is whoever edits `.schema/`, which `.schema/README.md`
+    // documents.
     private static readonly HashSet<string> IntentionallyUndocumented =
         new(["type", "list", "bracket-literal", "type-setup", "generated-block", "page-frontmatter",
             "template-fields", "framework-names-types", "schema-unknown-key", "schema-unreadable",

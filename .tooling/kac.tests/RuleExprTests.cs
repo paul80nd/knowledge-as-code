@@ -171,7 +171,8 @@ public class RuleExprTests
             body: "Configure it:\n\n```\nAWS_KEY=AKIA123456\n```\n"));
 
     // The flattened text a word count walks carries no fenced code at all, so the two facts genuinely
-    // see different documents. Pinned so that nobody 'simplifies' one onto the other.
+    // see different documents. Pinned, so that folding one onto the other fails here rather than in a
+    // corpus with a credential in it.
     [Fact]
     public void Words_does_not_see_what_matches_does()
         => Assert.True(Eval("words() == 4 and matches('secret')",
