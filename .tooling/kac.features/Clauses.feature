@@ -66,15 +66,22 @@ Feature: Clause table checks
       | line | check      | message                                        |
       | 16   | clause-ref | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist. |
 
+  Scenario: A citation separated by a colon is reported as the separator it is
+    When I validate the corpus
+    Then the findings for "policies/coln-colon-separator.md" are exactly:
+      | line | check      | message                                                              |
+      | 16   | clause-ref | 'pol-COLN:CLEAN' separates its clause with a colon — write 'pol-COLN.CLEAN'. |
+
   Scenario: The whole corpus produces exactly these findings and nothing else
     When I validate the corpus
-    Then validation reports 13 documents and 0 skipped
+    Then validation reports 14 documents and 0 skipped
     And the findings are exactly:
       | file                                       | severity | line | check            | message                                                                                            |
       | policies/blnk-empty-clause-section.md      | error    | 24   | clause-table     | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause \| Alignment'. |
       | policies/bold-binding-not-bold.md          | error    | 27   | clause-modal     | 'MUST' binds — write it bold, `**MUST**`.                                                          |
       | policies/case-lower-clause-id.md           | error    | 27   | clause-id-format | clause id 'clean' does not match ^[A-Z][A-Z0-9]{1,6}$.                                             |
       | policies/cmpd-two-obligations.md           | warning  | 28   | clause-compound  | clause 'CLEAN' carries a second 'MUST' — one obligation per clause, or the citation is ambiguous.  |
+      | policies/coln-colon-separator.md           | error    | 16   | clause-ref       | 'pol-COLN:CLEAN' separates its clause with a colon — write 'pol-COLN.CLEAN'.                       |
       | policies/cref-unknown-clause.md            | error    | 16   | clause-ref       | 'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry.   |
       | policies/dupe-repeated-id.md               | error    | 28   | clause-id-unique | clause id 'SAME' is used twice — a citation of it names two obligations.                           |
       | policies/empt-no-rows.md                   | error    | 25   | clause-table     | the clause table has no rows — a policy that binds nothing binds nobody.                           |

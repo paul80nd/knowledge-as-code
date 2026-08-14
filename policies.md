@@ -150,7 +150,7 @@ accessibility under governance is the clearest of them.
 | `placeholder-left`               | error   | No `{{…}}` from the template is left unfilled, outside code.                                                             |
 | `clauses`                        | error   | The clause section is a table of `Id \| Clause` rows, each id a unique code span and each clause opening with its modal. |
 | `clause-order / clause-compound` | warning | Clause rows are grouped by binding level, and each carries a single obligation.                                          |
-| `clause-ref`                     | error   | A `pol-XXXX.CLAUSE` citation names a clause that exists.                                                                 |
+| `clause-ref`                     | error   | A `pol-XXXX.CLAUSE` citation separates the clause with a dot and names one that exists.                                  |
 | `link-resolves`                  | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.                       |
 | `undefined-label`                | error   | Every shortcut reference has a link definition.                                                                          |
 | `label-canonical`                | error   | A shortcut label that names a document is written as that document's id.                                                 |

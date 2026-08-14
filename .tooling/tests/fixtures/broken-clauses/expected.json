@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 13,
+    "validated": 14,
     "templates": 1,
     "skipped": 0,
-    "errors": 11,
+    "errors": 12,
     "warnings": 2
   },
   "findings": [
@@ -34,6 +34,13 @@
       "severity": "warning",
       "check": "clause-compound",
       "message": "clause 'CLEAN' carries a second 'MUST' — one obligation per clause, or the citation is ambiguous."
+    },
+    {
+      "file": "policies/coln-colon-separator.md",
+      "line": 16,
+      "severity": "error",
+      "check": "clause-ref",
+      "message": "'pol-COLN:CLEAN' separates its clause with a colon — write 'pol-COLN.CLEAN'."
     },
     {
       "file": "policies/cref-unknown-clause.md",

@@ -480,7 +480,8 @@ public static class Generator
         // written and any document may carry one; what this predicate scopes is the documentation, and
         // a type with no clauses in sight has no reason to describe how they are cited.
         ("clause-ref", ["clause-ref"],
-            "A `pol-XXXX.CLAUSE` citation names a clause that exists.", t => t.Clauses is not null),
+            "A `pol-XXXX.CLAUSE` citation separates the clause with a dot and names one that exists.",
+            t => t.Clauses is not null),
         ("link-resolves", ["link-resolves", "fragment-resolves"],
             "Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.",
             null),
