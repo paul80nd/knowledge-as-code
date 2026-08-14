@@ -4,21 +4,19 @@
 
 namespace kac.core;
 
-// The corpus as one loaded thing: the schema it is judged against, the file listing the shape checks
-// ask about, and every record parsed. Every entry point begins by building one of these, so there is
-// a single account of what "the corpus" is rather than one per command that can drift out of step.
+// The corpus as one loaded thing: the schema it is judged against, what it holds, and every record
+// parsed. Every entry point begins by building one of these, so there is a single account of what "the
+// corpus" is rather than one per command that can drift out of step.
 public sealed class LoadedCorpus
 {
     public required string RepoRoot;
     public required Schema Schema;
 
-    // What this corpus records about itself: which types it has adopted, and where it stands against the
-    // framework it took. Carried here because adoption decides what is generated and what the corpus is
-    // held to having built, so every entry point needs the same answer.
+    // What this corpus records about itself: where it stands against the framework it took, and which
+    // types it declares. `Adopted` below is the resolved answer, which is what the rest of the tool reads.
     public required CorpusDescriptor Descriptor;
 
-    // Every path the corpus holds, and a way to read one. The corpus's single account of what is there,
-    // so that discovery and every check asking whether a file exists answer from one listing.
+    // Every path the corpus holds, and a way to read one.
     public required Tree Tree;
 
     // The types this corpus took. Resolved once, here, because it decides both what is generated and what
@@ -43,19 +41,17 @@ public static class Corpus
 {
     private static readonly string[] SkipDirs = [".git", ".idea", ".claude"];
 
-    // Every file the corpus contains, before any exclusion. Used to ask whether a folder is really
-    // there: an empty directory git has never seen is not part of the corpus, and counting it as one
-    // makes the answer depend on which machine is asking.
+    // Every file the corpus contains, before any exclusion — what `Tree` is built over.
     //
     // git ls-files respects .gitignore, .git/info/exclude and global excludes, and never lists .git/
     // itself — exactly the "respect .gitignore" requirement; the walk is the non-git fallback.
     private static List<string> AllFiles(string repoRoot) =>
         GitFiles.Tracked(repoRoot) ?? GitFiles.Walk(repoRoot, "*.md", SkipDirs);
 
-    // Load the schema, list the files, and parse every record — everything an entry point needs
-    // before it can ask a question. The listing is taken once and carried on the result: discovery
-    // and the type-setup check both want it, and a second `git ls-files` costs more than every check
-    // in the tool put together.
+    // Load the schema, list the files, and parse every record — everything an entry point needs before it
+    // can ask a question. The listing is taken once and carried on the result as a `Tree`: everything
+    // downstream asks it what the corpus holds, and a second `git ls-files` costs more than every check in
+    // the tool put together.
     public static LoadedCorpus Load(string repoRoot)
     {
         var schema = Schema.Load(repoRoot);
