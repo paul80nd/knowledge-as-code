@@ -17,8 +17,13 @@ public sealed class LoadedCorpus
     // held to having built, so every entry point needs the same answer.
     public required CorpusDescriptor Descriptor;
 
-    // Every file, before exclusion — what CheckTypeSetup asks about which folders exist.
-    public required List<string> Files;
+    // Every path the corpus holds, and a way to read one. The corpus's single account of what is there,
+    // so that discovery and every check asking whether a file exists answer from one listing.
+    public required Tree Tree;
+
+    // The types this corpus took. Resolved once, here, because it decides both what is generated and what
+    // the corpus is held to having built — two entry points asking separately could answer differently.
+    public required List<TypeSchema> Adopted;
 
     // The records: every discovered document that carries frontmatter, in corpus order.
     public required List<Doc> Docs;
@@ -55,6 +60,9 @@ public static class Corpus
     {
         var schema = Schema.Load(repoRoot);
         var files = AllFiles(repoRoot);
+        var tree = new Tree(
+            new HashSet<string>(files.Select(f => f.Replace('\\', '/')), StringComparer.Ordinal),
+            rel => Files.ReadLf(Path.Combine(repoRoot, rel)));
 
         var docs = new List<Doc>();
         var skipped = 0;
@@ -70,12 +78,15 @@ public static class Corpus
             docs.Add(doc);
         }
 
+        var descriptor = CorpusDescriptor.Load(repoRoot);
+
         return new LoadedCorpus
         {
             RepoRoot = repoRoot,
             Schema = schema,
-            Descriptor = CorpusDescriptor.Load(repoRoot),
-            Files = files,
+            Descriptor = descriptor,
+            Tree = tree,
+            Adopted = Adopted(schema, repoRoot, descriptor),
             Docs = docs,
             Templates = DiscoverTemplates(repoRoot, schema),
             SkippedNoFrontmatter = skipped

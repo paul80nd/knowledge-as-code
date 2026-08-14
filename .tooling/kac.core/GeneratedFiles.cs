@@ -50,7 +50,7 @@ public static class GeneratedFiles
         // declares the framework's full range and a corpus adopts as much of it as it has use for, so
         // generating per schema type would write pages for types the corpus declined — files no list of
         // its types names, and which `index --check` then holds it to keeping fresh.
-        var adopted = Corpus.Adopted(schema, repoRoot, corpus.Descriptor);
+        var adopted = corpus.Adopted;
 
         // Grouped by type. A document whose folder maps to no schema has nothing to be indexed under;
         // validate is the voice that says so.

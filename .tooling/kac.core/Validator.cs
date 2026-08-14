@@ -34,7 +34,7 @@ public static class Validator
         //
         // A file that is not on disk is skipped: its absence is type-setup's to report for a page, and no
         // fault at all for a framework document a corpus has not taken.
-        foreach (var file in GeneratedFiles.Blocks(Corpus.Adopted(schema, repoRoot, corpus.Descriptor)))
+        foreach (var file in GeneratedFiles.Blocks(corpus.Adopted))
         {
             if (!file.MarkersRequired) continue;
 
@@ -104,7 +104,7 @@ public static class Validator
         CheckMinRecords(corpus.Docs, findings);
 
         // Whether each declared type is stood up.
-        CheckTypeSetup(schema, repoRoot, corpus.Files, corpus.Descriptor, findings);
+        CheckTypeSetup(schema, repoRoot, corpus.Tree, corpus.Descriptor, findings);
 
         return findings;
     }
@@ -342,17 +342,10 @@ public static class Validator
     // A folder counts as present when it holds tracked files. An empty directory git has never seen
     // is not part of the corpus, so the answer is the same in a fresh clone as on the machine that
     // happened to create it.
-    private static void CheckTypeSetup(Schema schema, string repoRoot, IEnumerable<string> corpusFiles,
+    private static void CheckTypeSetup(Schema schema, string repoRoot, Tree tree,
         CorpusDescriptor descriptor, List<Finding> f)
     {
         CheckAdoption(schema, repoRoot, descriptor, f);
-
-        var folders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var rel in corpusFiles)
-        {
-            var slash = rel.Replace('\\', '/').IndexOf('/');
-            if (slash > 0) folders.Add(rel.Replace('\\', '/')[..slash]);
-        }
 
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
@@ -360,7 +353,7 @@ public static class Validator
             var pageExists = !string.IsNullOrEmpty(t.Page) && File.Exists(Path.Combine(repoRoot, t.Page));
 
             var folder = string.IsNullOrEmpty(t.Folder) ? key : t.Folder;
-            if (!folders.Contains(folder))
+            if (!tree.HasFolder(folder))
             {
                 if (pageExists)
                     f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
