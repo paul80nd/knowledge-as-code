@@ -86,7 +86,7 @@ public static class Corpus
             Schema = schema,
             Descriptor = descriptor,
             Tree = tree,
-            Adopted = Adopted(schema, repoRoot, descriptor),
+            Adopted = Adopted(schema, tree, descriptor),
             Docs = docs,
             Templates = DiscoverTemplates(repoRoot, schema),
             SkippedNoFrontmatter = skipped
@@ -103,23 +103,26 @@ public static class Corpus
     // a type to. That reading cannot tell a type nobody wanted from one somebody has not finished adding,
     // which is what `types:` exists to say. It stands until the corpus declares, so taking a newer
     // framework never means editing the descriptor in the same breath.
-    public static List<TypeSchema> Adopted(Schema schema, string repoRoot, CorpusDescriptor descriptor)
+    public static List<TypeSchema> Adopted(Schema schema, Tree tree, CorpusDescriptor descriptor)
     {
         var declared = descriptor.Types;
 
         return
         [
             .. schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value)
-                .Where(t => declared?.Contains(t.Key, StringComparer.Ordinal) ?? StoodUp(t, repoRoot))
+                .Where(t => declared?.Contains(t.Key, StringComparer.Ordinal) ?? StoodUp(t, tree))
         ];
     }
 
-    // Whether both halves of a type are on disk. A half-built type is not adopted: generating a row for it
-    // would answer a defect with a link resolving to whichever of the two files exists.
-    public static bool StoodUp(TypeSchema t, string repoRoot) =>
+    // Whether both halves of a type are in the corpus. A half-built type is not adopted: generating a row
+    // for it would answer a defect with a link resolving to whichever of the two exists.
+    //
+    // Asked of the listing, as `CheckTypeSetup` asks it, so that one voice does not generate an index into
+    // a folder the other reports as absent.
+    public static bool StoodUp(TypeSchema t, Tree tree) =>
         !string.IsNullOrEmpty(t.Page)
-        && File.Exists(Path.Combine(repoRoot, t.Page))
-        && Directory.Exists(Path.Combine(repoRoot, t.Folder));
+        && tree.Exists(t.Page)
+        && tree.HasFolder(t.Folder);
 
     // The template of every collection type that has one. Asked of the filesystem rather than of the
     // file listing, as type-setup asks it: the question is whether the file a contributor would copy is

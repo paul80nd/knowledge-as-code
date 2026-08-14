@@ -345,12 +345,12 @@ public static class Validator
     private static void CheckTypeSetup(Schema schema, string repoRoot, Tree tree,
         CorpusDescriptor descriptor, List<Finding> f)
     {
-        CheckAdoption(schema, repoRoot, descriptor, f);
+        CheckAdoption(schema, tree, descriptor, f);
 
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             var at = $".schema/{key}.yaml";
-            var pageExists = !string.IsNullOrEmpty(t.Page) && File.Exists(Path.Combine(repoRoot, t.Page));
+            var pageExists = !string.IsNullOrEmpty(t.Page) && tree.Exists(t.Page);
 
             var folder = string.IsNullOrEmpty(t.Folder) ? key : t.Folder;
             if (!tree.HasFolder(folder))
@@ -376,7 +376,7 @@ public static class Validator
     // A corpus that declares no `types:` is not asked any of this: adoption is read off its folders
     // instead, so every question below answers itself. Declaring is what turns "these are the folders that
     // happen to be here" into "these are the types we chose", and only the second can be wrong.
-    private static void CheckAdoption(Schema schema, string repoRoot, CorpusDescriptor descriptor, List<Finding> f)
+    private static void CheckAdoption(Schema schema, Tree tree, CorpusDescriptor descriptor, List<Finding> f)
     {
         if (descriptor.Types is not { } declared) return;
 
@@ -389,7 +389,7 @@ public static class Validator
 
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
-            var stoodUp = Corpus.StoodUp(t, repoRoot);
+            var stoodUp = Corpus.StoodUp(t, tree);
             var adopted = declared.Contains(key, StringComparer.Ordinal);
 
             // Declared and not built is the state a sync exists to resolve, so it is reported as work
