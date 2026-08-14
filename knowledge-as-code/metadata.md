@@ -117,6 +117,23 @@ The ID is the anchor for every cross-reference in the wiki, and it is what a sho
 be corrected; IDs may not — which binds hardest on a mnemonic, because unlike a number it makes a claim that can go
 stale. A document whose meaning has moved that far is replaced and the old one retired, not renamed.
 
+## Referring to an id
+
+Two separators reach past an id, each with one job. [Contributing](contributing.md) holds the link form a reference is
+written in.
+
+**`.` addresses a part of a document.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it. A type carrying
+addressable parts declares them in its schema — `clauses:` on a policy — and CI resolves each citation against the
+document it names, so a reference to a part that does not exist fails the build.
+
+**`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, document, part. A
+record this corpus holds is cited bare, and qualifying one is an error: two spellings of a single obligation defeat
+search. The form is reserved and carries nothing today, since no corpus yet imports another.
+
+**A shortcode is declared by the corpus it names**, in its `.corpus.yaml`, and reaches every corpus consuming that one.
+It is immutable for the reason an id is, and more strictly: a rename invalidates citations in repositories its owner
+cannot edit. It may not take a type prefix's spelling, since `std:pol-VURM` reads as a standard.
+
 ## The identity line
 
 Every record carries one line directly beneath its H1 — the type, the ID, then the status in upper case:

@@ -111,9 +111,9 @@ accessibility under governance is the clearest of them.
   a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
   standards against them, so nobody writing here can know the full set of implementers. A policy that nothing in *this*
   wiki implements is the normal state rather than a gap to be explained.
-* **A clause is the unit anything else cites.** Write the citation `pol-VURM.TIMEBOX` — the policy id, then the clause
-  id — so a standard, a control or a deviation names the single obligation it answers. Clause ids are immutable for the
-  same reason policy ids are: removing or renaming one breaks every citation of it.
+* **A clause is the unit anything else cites.** A standard, a control or a deviation names the single obligation it
+  answers, in the form [Metadata](/knowledge-as-code/metadata.md#referring-to-an-id) sets out. Clause ids are immutable
+  for the same reason policy ids are: removing or renaming one breaks every citation of it.
 * **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
   scope — the id does not move. Standards, controls and processes cite policies by id. Reassign a mnemonic and every one
   of those citations tells the reader something untrue: the reference still resolves, so nothing fails and no check
