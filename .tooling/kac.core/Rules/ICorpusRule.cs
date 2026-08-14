@@ -18,9 +18,9 @@ public interface ICorpusRule
     // The id in the type schema's `rules:` block, and what the rule reports under — the same pair
     // `IDocumentRule` declares, for the same reasons, so the catalogue is assembled from the rules
     // rather than restated beside them.
-    string RuleId { get; }
+    RuleId RuleId { get; }
 
-    IReadOnlyList<string> Emits { get; }
+    IReadOnlyList<CheckId> Emits { get; }
 
     void Check(CorpusRuleContext ctx);
 }

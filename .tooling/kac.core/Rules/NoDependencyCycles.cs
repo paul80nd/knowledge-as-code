@@ -14,12 +14,9 @@ namespace kac.core;
 // field is renamed, and say so in silence.
 public sealed class NoDependencyCycles : ICorpusRule
 {
-    public string RuleId => "no-dependency-cycles";
+    public RuleId RuleId => new("no-dependency-cycles");
 
-    public IReadOnlyList<string> Emits =>
-    [
-        "dependency-cycle"
-    ];
+    public IReadOnlyList<CheckId> Emits => [new("dependency-cycle")];
 
     public void Check(CorpusRuleContext ctx)
     {

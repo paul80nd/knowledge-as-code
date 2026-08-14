@@ -9,12 +9,9 @@ namespace kac.core;
 // not tell the author which line to go back to.
 public sealed class AlternativesHaveVerdicts : IDocumentRule
 {
-    public string RuleId => "alternatives-have-verdicts";
+    public RuleId RuleId => new("alternatives-have-verdicts");
 
-    public IReadOnlyList<string> Emits =>
-    [
-        "alternatives-verdict"
-    ];
+    public IReadOnlyList<CheckId> Emits => [new("alternatives-verdict")];
 
     public void Check(RuleContext ctx)
     {

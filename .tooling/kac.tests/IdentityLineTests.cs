@@ -44,6 +44,6 @@ public class IdentityLineTests
 
         var found = new List<Finding>();
         Validator.CheckDocument(doc, schema, Directory.GetCurrentDirectory(), found);
-        return Assert.Single(found, x => x.Check == "identity-type").Message;
+        return Assert.Single(found, x => x.Check.Value == "identity-type").Message;
     }
 }

@@ -121,7 +121,7 @@ public sealed record RequiredWhen(string Field, bool Negated, IReadOnlyList<stri
 // enforced" rather than a default level.
 public sealed record RuleSpec
 {
-    public required string Id { get; init; }
+    public required RuleId Id { get; init; }
 
     // The rule in the schema's own words, whitespace folded so it can be rendered into a table cell.
     public string? Description { get; init; }
@@ -254,7 +254,7 @@ public sealed class TypeSchema
 
     // Whether this type declares a given rule. The reader-facing checks table uses it to show a
     // rule's row only on the pages whose schema actually carries the rule.
-    public bool HasRule(string id) => Rules.Any(r => string.Equals(r.Id, id, StringComparison.Ordinal));
+    public bool HasRule(RuleId id) => Rules.Any(r => r.Id == id);
 
     // Whether any field on this type declares the given FieldSpec property — the same question for
     // schema-driven core checks (reciprocal, mirrors-section) that only fire when a field opts in.
@@ -429,7 +429,7 @@ public sealed class Schema
         foreach (var (id, node) in Yaml.Map(checksRoot.Get("checks")))
         {
             var check = checkKeys.At(node, $"check '{id}'");
-            checks.Add(new CheckDef(id,
+            checks.Add(new CheckDef(new CheckId(id),
                 Yaml.Str(check.Get("severity")) == "warning" ? Sev.Warning : Sev.Error,
                 Yaml.Str(check.Get("description"))?.Trim() ?? "",
                 Yaml.Str(check.Get("group"))?.Trim() ?? "",
@@ -687,7 +687,7 @@ public sealed class Schema
 
         return new RuleSpec
         {
-            Id = id,
+            Id = new RuleId(id),
             Description = Collapse(Yaml.Str(rule.Get("description"))),
             Severity = severity,
             Expr = source,

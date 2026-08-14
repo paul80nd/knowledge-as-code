@@ -430,82 +430,82 @@ public static class Generator
     // type's own schema whether the check can fire at all — so a policy page does not advertise that its
     // documents are checked for Y-statements. Read from the schema rather than hand-listed per type, so
     // declaring a rule remains the only thing needed to document it.
-    private static readonly (string Label, string[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
+    private static readonly (string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
-        ("frontmatter-parses", ["frontmatter-parses"], "Frontmatter is present and is a valid YAML mapping.", null),
-        ("unknown-key", ["unknown-key"], "Every frontmatter key is a schema field or a reserved ADO key.", null),
-        ("key-order", ["key-order"], "Key order is a topological extension of the schema's field order.", null),
-        ("required-field", ["required-field"], "Required and conditionally-required fields are present.", null),
-        ("bare-key", ["bare-key"], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`.", null),
-        ("date-quoted / date-format", ["date-quoted", "date-format"],
+        ("frontmatter-parses", [new("frontmatter-parses")], "Frontmatter is present and is a valid YAML mapping.", null),
+        ("unknown-key", [new("unknown-key")], "Every frontmatter key is a schema field or a reserved ADO key.", null),
+        ("key-order", [new("key-order")], "Key order is a topological extension of the schema's field order.", null),
+        ("required-field", [new("required-field")], "Required and conditionally-required fields are present.", null),
+        ("bare-key", [new("bare-key")], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`.", null),
+        ("date-quoted / date-format", [new("date-quoted"), new("date-format")],
             "Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.", null),
-        ("enum", ["enum", "enum-lowercase"], "Enum values are in range and lowercase.", null),
-        ("field-pattern", ["field-pattern"],
+        ("enum", [new("enum"), new("enum-lowercase")], "Enum values are in range and lowercase.", null),
+        ("field-pattern", [new("field-pattern")],
             "Values match the pattern their field declares (e.g. `tags`).", null),
-        ("min-items", ["min-items"],
+        ("min-items", [new("min-items")],
             "A list field carries at least as many entries as its schema asks for.",
             t => t.AnyField(f => f.MinItems is not null)),
-        ("list-order", ["list-order"],
+        ("list-order", [new("list-order")],
             "List entries read in alphabetical order, with numbers compared as numbers.", null),
-        ("min-records", ["min-records"],
+        ("min-records", [new("min-records")],
             "A value in a grouping field is carried by at least as many records as the schema asks for.",
             t => t.AnyField(f => f.MinRecords is not null)),
-        ("tier-matches-type", ["tier-matches-type"], "`tier` matches the tier the type declares.", null),
+        ("tier-matches-type", [new("tier-matches-type")], "`tier` matches the tier the type declares.", null),
         // Which of the three shapes an id takes is the type's to decide, so the row says that a shape is
         // held to rather than listing the styles a reader could be on any of.
-        ("id", ["id-prefix", "id-format", "id-matches-filename"],
+        ("id", [new("id-prefix"), new("id-format"), new("id-matches-filename")],
             "`id` carries the type's prefix, takes the shape the type declares, and names the same document "
             + "as the filename.", null),
-        ("id-unique", ["id-unique"], "`id` is unique across the whole wiki.", null),
-        ("filename / slug-length", ["filename-pattern", "slug-length"],
+        ("id-unique", [new("id-unique")], "`id` is unique across the whole wiki.", null),
+        ("filename / slug-length", [new("filename-pattern"), new("slug-length")],
             "Filename matches the pattern; the slug is within 30 characters.", null),
-        ("h1", ["h1"], "The document has an H1.", null),
-        ("identity", ["identity", "identity-type", "identity-id", "identity-status"],
+        ("h1", [new("h1")], "The document has an H1.", null),
+        ("identity", [new("identity"), new("identity-type"), new("identity-id"), new("identity-status")],
             "An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.",
             null),
-        ("sections", ["required-section", "empty-section"],
+        ("sections", [new("required-section"), new("empty-section")],
             "Every required section heading is present, and no declared section is left as a bare heading.", null),
-        ("placeholder-left", ["placeholder-left"],
+        ("placeholder-left", [new("placeholder-left")],
             "No `{{…}}` from the template is left unfilled, outside code.", null),
         // The pipe is escaped because this text lands in a table cell: GFM splits a cell on a bare `|`
         // even inside a code span, so an unescaped one would break the row it is describing.
-        ("clauses", ["clause-table", "clause-id-format", "clause-id-unique", "clause-modal"],
+        ("clauses", [new("clause-table"), new("clause-id-format"), new("clause-id-unique"), new("clause-modal")],
             "The clause section is a table of `Id \\| Clause` rows, each id a unique code span and each "
             + "clause opening with its modal.", t => t.Clauses is not null),
-        ("clause-order / clause-compound", ["clause-order", "clause-compound"],
+        ("clause-order / clause-compound", [new("clause-order"), new("clause-compound")],
             "Clause rows are grouped by binding level, and each carries a single obligation.",
             t => t.Clauses is not null),
         // Shown on the pages inside the clause machinery — the types that declare clauses — rather than
         // on every page. The check itself runs corpus-wide, since a citation is checked where it is
         // written and any document may carry one; what this predicate scopes is the documentation, and
         // a type with no clauses in sight has no reason to describe how they are cited.
-        ("clause-ref", ["clause-ref"],
+        ("clause-ref", [new("clause-ref")],
             "A `pol-XXXX.CLAUSE` citation names a clause that exists.", t => t.Clauses is not null),
-        ("link-resolves", ["link-resolves", "fragment-resolves"],
+        ("link-resolves", [new("link-resolves"), new("fragment-resolves")],
             "Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.",
             null),
-        ("undefined-label", ["undefined-label"], "Every shortcut reference has a link definition.", null),
-        ("label-canonical", ["label-canonical"],
+        ("undefined-label", [new("undefined-label")], "Every shortcut reference has a link definition.", null),
+        ("label-canonical", [new("label-canonical")],
             "A shortcut label that names a document is written as that document's id.", null),
-        ("related-matches-section", ["related-matches-section"],
+        ("related-matches-section", [new("related-matches-section")],
             "A field that mirrors a section reconciles with the ids in that section.",
             t => t.AnyField(f => f.MirrorsSection is not null)),
-        ("ref-resolves", ["ref-resolves"],
+        ("ref-resolves", [new("ref-resolves")],
             "An id in a field that references another document names one that exists, of the type the field names.",
             t => t.AnyField(f => f.Refs.Count > 0)),
-        ("reciprocal", ["reciprocal"], "A reciprocal field and its counterpart agree in both directions.",
+        ("reciprocal", [new("reciprocal")], "A reciprocal field and its counterpart agree in both directions.",
             t => t.AnyField(f => f.Reciprocal is not null)),
-        ("unused-definition", ["unused-definition"], "A link definition that nothing references.", null),
-        ("y-statement", ["y-statement"],
+        ("unused-definition", [new("unused-definition")], "A link definition that nothing references.", null),
+        ("y-statement", [new("y-statement")],
             "A Y-statement block-quote follows the H1, states all six moves, and is within 60 words.",
-            t => t.HasRule("y-statement-present")),
-        ("alternatives-verdict", ["alternatives-verdict"], "Each Alternatives Considered bullet states a verdict.",
-            t => t.HasRule("alternatives-have-verdicts")),
-        ("terms-alphabetical", ["terms-alphabetical"], "A glossary's entries read in alphabetical order.",
-            t => t.HasRule("terms-are-alphabetical")),
-        ("dependency-cycle", ["dependency-cycle"],
+            t => t.HasRule(new RuleId("y-statement-present"))),
+        ("alternatives-verdict", [new("alternatives-verdict")], "Each Alternatives Considered bullet states a verdict.",
+            t => t.HasRule(new RuleId("alternatives-have-verdicts"))),
+        ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.",
+            t => t.HasRule(new RuleId("terms-are-alphabetical"))),
+        ("dependency-cycle", [new("dependency-cycle")],
             "A cycle in the dependency graph these records form, naming every record the loop runs through.",
-            t => t.HasRule("no-dependency-cycles"))
+            t => t.HasRule(new RuleId("no-dependency-cycles")))
     ];
 
     // Catalogue checks the reader-facing table deliberately does not surface. Every other catalogue id
@@ -524,11 +524,12 @@ public static class Generator
     // The `schema-*` checks read the schema rather than any document, and report a defect in the file
     // this table is generated from. Their audience is whoever edits `.schema/`, which `.schema/README.md`
     // documents.
-    private static readonly HashSet<string> IntentionallyUndocumented =
-        new(["type", "list", "bracket-literal", "type-setup", "generated-block", "page-frontmatter",
-            "template-fields", "framework-names-types", "schema-unknown-key", "schema-unreadable",
-            "schema-dispatch", "schema-shape"],
-            StringComparer.Ordinal);
+    private static readonly HashSet<CheckId> IntentionallyUndocumented =
+    [
+        new("type"), new("list"), new("bracket-literal"), new("type-setup"), new("generated-block"),
+        new("page-frontmatter"), new("template-fields"), new("framework-names-types"),
+        new("schema-unknown-key"), new("schema-unreadable"), new("schema-dispatch"), new("schema-shape")
+    ];
 
     // The curated rows, then a row for each expression rule the type declares. A core check is worded
     // here because several ids fold into one reader-facing row; an expression rule is one id reporting
@@ -588,18 +589,18 @@ public static class Generator
     // resolve. `kac checks` calls this and fails on a non-empty result, which the test suite asserts.
     public static IReadOnlyList<string> ChecksTableProblems(Schema schema)
     {
-        var catalogue = schema.Checks.Select(c => c.Id).ToHashSet(StringComparer.Ordinal);
-        var documented = DocRows.SelectMany(r => r.Ids).ToHashSet(StringComparer.Ordinal);
+        var catalogue = schema.Checks.Select(c => c.Id).ToHashSet();
+        var documented = DocRows.SelectMany(r => r.Ids).ToHashSet();
         var problems = new List<string>();
 
-        foreach (var id in documented.Where(id => !catalogue.Contains(id)).Order(StringComparer.Ordinal))
+        foreach (var id in documented.Where(id => !catalogue.Contains(id)).Order())
             problems.Add($"the checks table documents '{id}', which is not a catalogue check (stale row).");
         foreach (var id in catalogue.Where(id => !documented.Contains(id) && !IntentionallyUndocumented.Contains(id))
-                     .Order(StringComparer.Ordinal))
+                     .Order())
             problems.Add(
                 $"catalogue check '{id}' is neither in the checks table nor waived in IntentionallyUndocumented.");
         foreach (var id in IntentionallyUndocumented.Where(id => documented.Contains(id) || !catalogue.Contains(id))
-                     .Order(StringComparer.Ordinal))
+                     .Order())
             problems.Add(
                 $"'{id}' is waived in IntentionallyUndocumented but is documented or unknown — drop the waiver.");
 

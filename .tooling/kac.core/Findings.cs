@@ -10,12 +10,12 @@ public enum Sev
     Warning
 }
 
-public record Finding(string File, int? Line, Sev Severity, string Check, string Message);
+public record Finding(string File, int? Line, Sev Severity, CheckId Check, string Message);
 
 // One check as the schema declares it. `Summary` is what a reader meets — in `kac checks` and in the
 // generated tables; `Notes` is the reasoning and the boundary, which only someone reading the schema
 // wants; `Group` is the concern it belongs to, and so the table it renders into.
-public readonly record struct CheckDef(string Id, Sev Severity, string Summary, string Group = "", string Notes = "");
+public readonly record struct CheckDef(CheckId Id, Sev Severity, string Summary, string Group = "", string Notes = "");
 
 public static class CheckCatalogue
 {
@@ -35,6 +35,7 @@ public static class CheckCatalogue
         .. schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal)
             .SelectMany(kv => kv.Value.Rules)
             .Where(r => r.Compiled is not null)
-            .Select(r => new CheckDef(r.Id, r.Severity ?? Sev.Warning, r.Description ?? r.Message ?? r.Id))
+            .Select(r => new CheckDef(new CheckId(r.Id.Value), r.Severity ?? Sev.Warning,
+                r.Description ?? r.Message ?? r.Id.Value))
     ];
 }

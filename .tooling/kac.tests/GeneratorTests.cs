@@ -25,7 +25,7 @@ public class GeneratorTests
     {
         // The other direction, and the one a new check trips: declared in the schema, rendered by
         // nothing, and waived nowhere.
-        var schema = new Schema { Checks = [new CheckDef("invented-check", Sev.Error, "Something new.")] };
+        var schema = new Schema { Checks = [new CheckDef(new CheckId("invented-check"), Sev.Error, "Something new.")] };
 
         var problems = Generator.ChecksTableProblems(schema);
 
@@ -254,8 +254,8 @@ public class GeneratorTests
             },
             Rules =
             [
-                new RuleSpec { Id = "y-statement-present" },
-                new RuleSpec { Id = "alternatives-have-verdicts" }
+                new RuleSpec { Id = new RuleId("y-statement-present") },
+                new RuleSpec { Id = new RuleId("alternatives-have-verdicts") }
             ]
         };
 

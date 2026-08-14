@@ -72,7 +72,7 @@ public static class Commands
                     .. findings
                         .OrderBy(f => f.File).ThenBy(f => f.Line ?? 0)
                         .Select(f => new ValidateFinding(
-                            f.File, f.Line, f.Severity.ToString().ToLowerInvariant(), f.Check, f.Message))
+                            f.File, f.Line, f.Severity.ToString().ToLowerInvariant(), f.Check.Value, f.Message))
                 ]);
 
             Console.WriteLine(JsonSerializer.Serialize(report, KacJson.Relaxed.ValidateReport));
@@ -115,7 +115,7 @@ public static class Commands
             var report = new ChecksReport(
             [
                 .. catalogue.Select(c =>
-                    new CheckInfo(c.Id, c.Severity.ToString().ToLowerInvariant(), c.Summary))
+                    new CheckInfo(c.Id.Value, c.Severity.ToString().ToLowerInvariant(), c.Summary))
             ]);
             Console.WriteLine(JsonSerializer.Serialize(report, KacJson.Relaxed.ChecksReport));
         }

@@ -6,12 +6,9 @@ namespace kac.core;
 // worth reading, and it needs a list the grammar has no way to hold.
 public sealed class YStatementPresent : IDocumentRule
 {
-    public string RuleId => "y-statement-present";
+    public RuleId RuleId => new("y-statement-present");
 
-    public IReadOnlyList<string> Emits =>
-    [
-        "y-statement"
-    ];
+    public IReadOnlyList<CheckId> Emits => [new("y-statement")];
 
     public void Check(RuleContext ctx)
     {

@@ -69,7 +69,7 @@ public static class Validator
             // beside it, still holding the content. Nothing else says so, because a page is forked and
             // a forked file is never compared against upstream.
             if (page.FrontStartLine > 0)
-                findings.Add(new Finding(t.Page, page.FrontStartLine, Sev.Error, "page-frontmatter",
+                findings.Add(new Finding(t.Page, page.FrontStartLine, Sev.Error, new CheckId("page-frontmatter"),
                     "the page carries frontmatter — it describes the records beneath it and is not one, so it has "
                     + $"no id, tier or status of its own. Move what it holds into '{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/' "
                     + "as a record, and delete the block."));
@@ -88,7 +88,7 @@ public static class Validator
         {
             var template = Doc.Parse(rel, File.ReadAllText(Path.Combine(repoRoot, rel)), schema);
             if (template is null)
-                findings.Add(new Finding(rel, null, Sev.Error, "template-fields",
+                findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
                     "the template carries no frontmatter — a document copied from it starts with none."));
             else
                 CheckDocument(template, schema, repoRoot, findings, DocKind.Template);
@@ -310,9 +310,9 @@ public static class Validator
         return;
 
         void Warn(string check, string msg, int? line = null) =>
-            f.Add(new Finding(d.Rel, line, Sev.Warning, check, msg));
+            f.Add(new Finding(d.Rel, line, Sev.Warning, new CheckId(check), msg));
 
-        void Err(string check, string msg, int? line = null) => f.Add(new Finding(d.Rel, line, Sev.Error, check, msg));
+        void Err(string check, string msg, int? line = null) => f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId(check), msg));
     }
 
     // The markers a generated block lives between. `Generator.SpliceBlock` looks for the pair and
@@ -332,12 +332,12 @@ public static class Validator
             var begin = text.IndexOf($"<!-- BEGIN GENERATED: {name} -->", StringComparison.Ordinal);
             var end = text.IndexOf($"<!-- END GENERATED: {name} -->", StringComparison.Ordinal);
             if (begin < 0 || end < 0)
-                f.Add(new Finding(rel, null, Sev.Error, "generated-block",
+                f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block is missing its "
                     + (begin < 0 && end < 0 ? "markers" : begin < 0 ? "BEGIN marker" : "END marker")
                     + $" — `kac index` writes between them and leaves the page alone without both."));
             else if (end < begin)
-                f.Add(new Finding(rel, null, Sev.Error, "generated-block",
+                f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block's END marker comes before its BEGIN marker."));
         }
     }
@@ -379,7 +379,7 @@ public static class Validator
             if (!folders.Contains(folder))
             {
                 if (pageExists)
-                    f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                    f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
                         $"type '{key}' has {t.Page} but no '{folder}/' — a type is set up as both or neither."));
                 continue;
             }
@@ -389,7 +389,7 @@ public static class Validator
             if (!File.Exists(Path.Combine(repoRoot, folder, Artefact.Template)))
                 missing.Add($"{folder}/{Artefact.Template}");
             if (missing.Count > 0)
-                f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
                     $"type '{key}' has a '{folder}/' folder but is not fully set up — add {string.Join(", ", missing)}."));
         }
     }
@@ -406,7 +406,7 @@ public static class Validator
         const string at = ".corpus.yaml";
 
         foreach (var name in declared.Where(n => !schema.ByFolder.ContainsKey(n)))
-            f.Add(new Finding(at, null, Sev.Error, "type-setup",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
                 $"'{name}' is adopted here and no schema covers it — either '.schema/{name}.yaml' has not been synced "
                 + "from upstream, or the name is wrong."));
 
@@ -418,14 +418,14 @@ public static class Validator
             // Declared and not built is the state a sync exists to resolve, so it is reported as work
             // outstanding rather than as a contradiction.
             if (adopted && !stoodUp)
-                f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
                     $"type '{key}' is adopted here and is not stood up — add {t.Page} and its folder, or drop it from "
                     + "'types:' if it was not wanted."));
 
             // Built and not declared is the other way round, and is how a corpus drifts back to inferring:
             // the pages would leave the type out while the corpus plainly holds it.
             if (!adopted && stoodUp)
-                f.Add(new Finding(at, null, Sev.Error, "type-setup",
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
                     $"type '{key}' is stood up here and is not in 'types:' — every generated list leaves it out while "
                     + "the corpus holds it. Adopt it, or delete what was built."));
         }
@@ -490,7 +490,7 @@ public static class Validator
                 // A path *into* a type's folder names a record rather than the type, which is worse: every
                 // corpus is told to delete the records it inherits, so that link is dead even where the
                 // type was adopted.
-                f.Add(new Finding(rel, link.Line, Sev.Error, "framework-names-types", slash > 0
+                f.Add(new Finding(rel, link.Line, Sev.Error, new CheckId("framework-names-types"), slash > 0
                     ? $"'{link.Target}' links to a record in '{type}' from a document every corpus shares. Those "
                       + "records are the first thing a corpus deletes, so the link dies even where the type is used."
                     : $"'{link.Target}' links to the '{type}' type from a document every corpus shares. Name the type "
@@ -530,7 +530,7 @@ public static class Validator
             var id = d.FrontScalar("id");
             if (id is null) continue;
             if (byId.TryGetValue(id, out var other))
-                f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "id-unique",
+                f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, new CheckId("id-unique"),
                     $"id '{id}' is also used by {other.Rel}."));
             else
                 byId[id] = d;
@@ -547,10 +547,10 @@ public static class Validator
             var (docId, clauseId) = (citation[..dot], citation[(dot + 1)..]);
 
             if (!byId.TryGetValue(docId, out var target))
-                f.Add(new Finding(d.Rel, line, Sev.Error, "clause-ref",
+                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("clause-ref"),
                     $"'{citation}' cites '{docId}', which does not exist."));
             else if (!target.Clauses.Any(c => string.Equals(c.IdSpan, clauseId, StringComparison.Ordinal)))
-                f.Add(new Finding(d.Rel, line, Sev.Error, "clause-ref",
+                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("clause-ref"),
                     $"'{citation}' cites a clause '{clauseId}' that {target.Rel} does not carry."));
         }
 
@@ -581,13 +581,13 @@ public static class Validator
                     if (spec.IsLiteral(targetId)) continue;
                     if (!byId.TryGetValue(targetId, out var target))
                     {
-                        f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "ref-resolves",
+                        f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, new CheckId("ref-resolves"),
                             $"'{name}' points at '{targetId}', which does not exist."));
                         continue;
                     }
 
                     if (Admits(admitted, target)) continue;
-                    f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "ref-resolves",
+                    f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, new CheckId("ref-resolves"),
                         $"'{name}' points at '{targetId}', which is {WithArticle(target.Type!)}, "
                         + $"not {OneOf(admitted)}."));
                 }
@@ -617,7 +617,7 @@ public static class Validator
                     var back = target.FrontList(spec.Reciprocal);
                     var selfId = d.FrontScalar("id");
                     if (!back.Any(b => string.Equals(b, selfId, StringComparison.OrdinalIgnoreCase)))
-                        f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, "reciprocal",
+                        f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, new CheckId("reciprocal"),
                             $"'{name}: {targetId}' is not reciprocated — {target.Rel} must list '{spec.Reciprocal}: {selfId}'."));
                 }
             }
@@ -664,7 +664,7 @@ public static class Validator
         List<Finding> f)
     {
         void Report(Sev severity, Doc at, string check, string message, int? line)
-            => f.Add(new Finding(at.Rel, line, severity, check, message));
+            => f.Add(new Finding(at.Rel, line, severity, new CheckId(check), message));
 
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         foreach (var rule in t.Rules)
@@ -706,7 +706,7 @@ public static class Validator
                 foreach (var value in values.Where(v => count[v] < floor).Order(StringComparer.Ordinal))
                 {
                     var carriers = Count(count[value], $"{type.TypeName} record", $"{type.TypeName} records");
-                    f.Add(new Finding(doc.Rel, doc.FrontStartLine, Sev.Warning, "min-records",
+                    f.Add(new Finding(doc.Rel, doc.FrontStartLine, Sev.Warning, new CheckId("min-records"),
                         $"'{name}: {value}' is carried by {carriers} — the schema asks for at least {floor}, "
                         + "because a value here is meant to group records. One that does not belongs in a field "
                         + "that is free to be unique."));
@@ -980,7 +980,10 @@ public static class Validator
                 facts ??= new Facts(d);
                 if (RuleExpr.Eval(compiled, facts)) continue;
                 var report = rule.Severity == Sev.Error ? err : warn;
-                report(rule.Id, rule.Message!, d.FrontStartLine);
+                // An expression rule reports under its own rule id, which is the one place the two ids are
+                // deliberately the same string. Written out so that sameness is a decision rather than a
+                // type the compiler let through.
+                report(rule.Id.Value, rule.Message!, d.FrontStartLine);
                 continue;
             }
 

@@ -13,12 +13,9 @@ namespace kac.core;
 // order a reader scans, not the order their code points fall in.
 public sealed class TermsAreAlphabetical : IDocumentRule
 {
-    public string RuleId => "terms-are-alphabetical";
+    public RuleId RuleId => new("terms-are-alphabetical");
 
-    public IReadOnlyList<string> Emits =>
-    [
-        "terms-alphabetical"
-    ];
+    public IReadOnlyList<CheckId> Emits => [new("terms-alphabetical")];
 
     public void Check(RuleContext ctx)
     {

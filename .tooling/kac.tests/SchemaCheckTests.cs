@@ -71,9 +71,9 @@ public class SchemaCheckTests
     public void A_rule_claiming_a_severity_that_nothing_dispatches_is_reported()
     {
         var finding = Assert.Single(Check(Widgets(
-            rules: [new RuleSpec { Id = "widgets-are-blue", Severity = Sev.Warning }])));
+            rules: [new RuleSpec { Id = new RuleId("widgets-are-blue"), Severity = Sev.Warning }])));
 
-        Assert.Equal("schema-dispatch", finding.Check);
+        Assert.Equal("schema-dispatch", finding.Check.Value);
         Assert.Equal(".schema/widgets.yaml", finding.File);
         Assert.Contains("widgets-are-blue", finding.Message);
     }
@@ -83,7 +83,7 @@ public class SchemaCheckTests
     [Fact]
     public void A_rule_with_no_severity_is_an_intention_and_passes()
         => Assert.Empty(Check(Widgets(
-            rules: [new RuleSpec { Id = "widgets-are-blue", Description = "One day." }])));
+            rules: [new RuleSpec { Id = new RuleId("widgets-are-blue"), Description = "One day." }])));
 
     // What the loader could not read at all, reported where it was written rather than thrown.
     [Fact]
@@ -91,10 +91,10 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(rules:
         [
-            new RuleSpec { Id = "widgets-are-blue", Problem = "rule 'widgets-are-blue': unknown fact 'colour'." }
+            new RuleSpec { Id = new RuleId("widgets-are-blue"), Problem = "rule 'widgets-are-blue': unknown fact 'colour'." }
         ])));
 
-        Assert.Equal("schema-unreadable", finding.Check);
+        Assert.Equal("schema-unreadable", finding.Check.Value);
         Assert.Equal(".schema/widgets.yaml", finding.File);
         Assert.Contains("unknown fact", finding.Message);
     }
@@ -109,7 +109,7 @@ public class SchemaCheckTests
             ("stored-in", new FieldSpec { Name = "stored-in", Type = "list", Of = "id", Refs = ["data"] })
         ])));
 
-        Assert.Equal("schema-dispatch", finding.Check);
+        Assert.Equal("schema-dispatch", finding.Check.Value);
         Assert.Contains("ref: data", finding.Message);
     }
 
@@ -135,7 +135,7 @@ public class SchemaCheckTests
             ("tags", new FieldSpec { Name = "tags", Type = "list", Of = "string", Values = ["public", "internal"] })
         ])));
 
-        Assert.Equal("schema-dispatch", finding.Check);
+        Assert.Equal("schema-dispatch", finding.Check.Value);
         Assert.Contains("'tags'", finding.Message);
     }
 
@@ -157,7 +157,7 @@ public class SchemaCheckTests
                 { Name = "related", Type = "list", Of = "id", Refs = ["widgets"], MirrorsSection = "See also" })
         ], sections: ["Summary"])));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("See also", finding.Message);
     }
 
@@ -169,10 +169,10 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(rules:
         [
-            new RuleSpec { Id = "very-wordy", Description = new string('x', Generator.DescriptionMax + 1) }
+            new RuleSpec { Id = new RuleId("very-wordy"), Description = new string('x', Generator.DescriptionMax + 1) }
         ])));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains($"the limit is {Generator.DescriptionMax}", finding.Message);
     }
 
@@ -181,20 +181,20 @@ public class SchemaCheckTests
     [Fact]
     public void The_bound_holds_for_a_rule_that_is_dispatched_too()
     {
-        var implemented = DocumentRules.All.SelectMany(r => r.Emits).First();
+        var implemented = DocumentRules.All.First().RuleId;
         var finding = Assert.Single(Check(Widgets(rules:
         [
             new RuleSpec { Id = implemented, Description = new string('x', Generator.DescriptionMax + 1) }
         ])));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
     }
 
     [Fact]
     public void A_description_at_the_bound_passes()
         => Assert.Empty(Check(Widgets(rules:
         [
-            new RuleSpec { Id = "just-fits", Description = new string('x', Generator.DescriptionMax) }
+            new RuleSpec { Id = new RuleId("just-fits"), Description = new string('x', Generator.DescriptionMax) }
         ])));
 
     // Any section the type declares reconciles, not one fixed name.
@@ -228,7 +228,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(idStyle: "roman-numeral")));
 
-        Assert.Equal("schema-dispatch", finding.Check);
+        Assert.Equal("schema-dispatch", finding.Check.Value);
         Assert.Contains("roman-numeral", finding.Message);
     }
 
@@ -246,7 +246,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(folder: "")));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("no 'folder:'", finding.Message);
     }
 
@@ -267,7 +267,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(tier: "experimental")));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("experimental", finding.Message);
     }
 
@@ -312,7 +312,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(labelPlural: "")));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("no 'label-plural:'", finding.Message);
     }
 
@@ -321,7 +321,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(summary: "")));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("no 'summary:'", finding.Message);
     }
 
@@ -330,7 +330,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(goesHere: "")));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("no 'goes-here:'", finding.Message);
     }
 
@@ -340,7 +340,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(summary: new string('x', Generator.DescriptionMax + 1))));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains($"the limit is {Generator.DescriptionMax}", finding.Message);
     }
 
@@ -353,7 +353,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(detail: "")));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("no 'detail:'", finding.Message);
     }
 
@@ -367,7 +367,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(lineage: false)));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("no 'lineage.prior-art:'", finding.Message);
     }
 
@@ -394,7 +394,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(TwoTypes(("widgets", [("gizmos", "Not a type here.")]))));
 
-        Assert.Equal("schema-dispatch", finding.Check);
+        Assert.Equal("schema-dispatch", finding.Check.Value);
         Assert.Contains("versus: gizmos", finding.Message);
     }
 
@@ -403,7 +403,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(TwoTypes(("widgets", [("widgets", "Widget vs Widget.")]))));
 
-        Assert.Equal("schema-shape", finding.Check);
+        Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("against itself", finding.Message);
     }
 

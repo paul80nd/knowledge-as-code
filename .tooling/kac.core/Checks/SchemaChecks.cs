@@ -51,7 +51,7 @@ public static class SchemaChecks
                              + $"not read. An index is written {List(Generator.IndexOrders)}.", f);
 
             if (schema.Tiers.All(tier => tier.Name != t.Tier))
-                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares 'tier: {t.Tier}', and '_tiers.yaml' declares no such tier. Tier decides "
                     + "how a document behaves and is written into the frontmatter of every record of the type; the "
                     + $"tiers are {Ordered(schema.Tiers.Select(tier => tier.Name))}."));
@@ -88,7 +88,7 @@ public static class SchemaChecks
 
             if (other == key)
             {
-                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares a 'versus:' against itself — a disambiguation has two sides."));
                 continue;
             }
@@ -102,7 +102,7 @@ public static class SchemaChecks
 
             var pair = string.CompareOrdinal(key, other) < 0 ? $"{key}|{other}" : $"{other}|{key}";
             if (declared.TryGetValue(pair, out var first))
-                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares a 'versus: {other}' that '{first}.yaml' already declares — a pair is "
                     + "written once, by the type its heading is titled from."));
             else
@@ -127,17 +127,17 @@ public static class SchemaChecks
         var admitted = field.Values ?? [];
 
         foreach (var value in admitted.Where(v => !declared.Contains(v)))
-            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"the 'tier' field admits '{value}', and no tier here declares it — a record may carry a tier that "
                 + "nothing can name on a page."));
 
         foreach (var tier in declared.Where(t => !admitted.Contains(t)))
-            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"tier '{tier}' is declared here and the 'tier' field in '_universal.yaml' does not admit it — no "
                 + "document can ever carry it."));
 
         foreach (var tier in schema.Tiers.Where(t => t.Label.Length == 0 || t.Behaviour.Length == 0))
-            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"tier '{tier.Name}' declares no {(tier.Label.Length == 0 ? "'label:'" : "'behaviour:'")} — both head "
                 + "the tier's section in the generated taxonomy."));
     }
@@ -153,7 +153,7 @@ public static class SchemaChecks
     private static void UnreadKeys(string at, Schema schema, List<Finding> f)
     {
         foreach (var key in schema.UnreadKeys.Where(k => k.File == at))
-            f.Add(new Finding(at, null, Sev.Error, "schema-unknown-key",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unknown-key"),
                 $"{key.Where} declares '{key.Key}', which the loader does not read — implement it, drop it, "
                 + "or write what it was saying as 'notes:', the one key every level admits."));
     }
@@ -164,7 +164,7 @@ public static class SchemaChecks
     private static void CheckFolder(string at, string key, TypeSchema t, List<Finding> f)
     {
         if (string.IsNullOrEmpty(t.Folder))
-            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares no 'folder:' — say which folder holds its records."));
     }
 
@@ -187,7 +187,7 @@ public static class SchemaChecks
         // Not held to the cell bound: `detail:` is the paragraph the other three are too short to be, and
         // it is rendered as prose rather than into a table.
         if (t.Detail.Length == 0)
-            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares no 'detail:' — say what the type carries beyond its first sentence, and the "
                 + "edge a reader is most likely to walk over."));
 
@@ -195,7 +195,7 @@ public static class SchemaChecks
         // ancestor and where it parts company are questions a type with no ancestor cannot answer, so an
         // empty pair is a real state rather than an unfinished one.
         if (t.Lineage is null)
-            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares no 'lineage.prior-art:' — name what the type is nearest to, or say that "
                 + "nothing established fits. Claiming an ancestor a type does not have is worse than admitting none."));
 
@@ -204,11 +204,11 @@ public static class SchemaChecks
         void Line(string name, string value, string says)
         {
             if (value.Length == 0)
-                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares no '{name}:' — say {says}, in one line the taxonomy and the "
                     + "corpus index can be generated from."));
             else if (value.Length > Generator.DescriptionMax)
-                f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' has a {value.Length}-character '{name}:'; the limit is "
                     + $"{Generator.DescriptionMax}. It is rendered as a table cell — the fuller account belongs "
                     + $"on {(t.Page.Length > 0 ? t.Page : $"{key}.md")}."));
@@ -222,7 +222,7 @@ public static class SchemaChecks
         List<Finding> f)
     {
         if (spec.Problem is { } problem)
-            f.Add(new Finding(at, null, Sev.Error, "schema-unreadable", problem));
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unreadable"), problem));
 
         foreach (var folder in spec.Refs.Where(folder => !schema.ByFolder.ContainsKey(folder)))
             Dispatch(at, $"field '{name}' declares 'ref: {folder}', and no schema covers that folder — "
@@ -253,7 +253,7 @@ public static class SchemaChecks
         if (t is not null && spec.MirrorsSection is { } section
                           && !t.RequiredSections.Concat(t.OptionalSections)
                               .Contains(section, StringComparer.OrdinalIgnoreCase))
-            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"field '{name}' declares 'mirrors-section: {section}', and the type's 'sections:' block "
                 + "declares no such section — name a section the type has, or add it."));
     }
@@ -271,14 +271,14 @@ public static class SchemaChecks
     {
         if (rule.Problem is { } problem)
         {
-            f.Add(new Finding(at, null, Sev.Error, "schema-unreadable", problem));
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unreadable"), problem));
             return;
         }
 
         // Asked of every rule, before the dispatched ones are let go: a rule that runs is a rule whose
         // description reaches the type page, and that is the row a reader has to scan past.
         if (rule.Description is { } description && description.Length > Generator.DescriptionMax)
-            f.Add(new Finding(at, null, Sev.Error, "schema-shape",
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"rule '{rule.Id}' on type '{key}' has a {description.Length}-character description; the "
                 + $"limit is {Generator.DescriptionMax}. A description says what is checked — the reasoning "
                 + "belongs in its 'message:', where the author who trips it reads it."));
@@ -295,7 +295,7 @@ public static class SchemaChecks
     }
 
     private static void Dispatch(string at, string message, List<Finding> f)
-        => f.Add(new Finding(at, null, Sev.Error, "schema-dispatch", message));
+        => f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-dispatch"), message));
 
     private static string List(IEnumerable<string> values)
         => string.Join(", ", values.Order(StringComparer.Ordinal).Select(v => $"'{v}'"));

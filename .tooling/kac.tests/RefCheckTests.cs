@@ -20,7 +20,7 @@ public class RefCheckTests
     {
         var found = Refs(Field("supersedes", "adrs"), "svc-catalogue");
 
-        Assert.Equal("ref-resolves", Assert.Single(found).Check);
+        Assert.Equal("ref-resolves", Assert.Single(found).Check.Value);
         Assert.Equal("'supersedes' points at 'svc-catalogue', which is a Service, not an ADR.",
             Assert.Single(found).Message);
     }
@@ -67,12 +67,12 @@ public class RefCheckTests
     [Fact]
     public void A_wrong_type_target_on_a_reciprocal_field_is_reported_once()
         => Assert.Equal("ref-resolves",
-            Assert.Single(Refs(Reciprocating("supersedes", "adrs"), "svc-catalogue")).Check);
+            Assert.Single(Refs(Reciprocating("supersedes", "adrs"), "svc-catalogue")).Check.Value);
 
     // Where the target is of the right type, the same field asks the question this one is named for.
     [Fact]
     public void A_target_of_the_right_type_is_still_held_to_pointing_back()
-        => Assert.Equal("reciprocal", Assert.Single(Refs(Reciprocating("supersedes", "adrs"), "adr-0002")).Check);
+        => Assert.Equal("reciprocal", Assert.Single(Refs(Reciprocating("supersedes", "adrs"), "adr-0002")).Check.Value);
 
     // -- driving the check --
 

@@ -61,7 +61,7 @@ public sealed class ValidationSteps
 
     // (severity, line, check, message) for one finding — the shape both assertions compare on.
     private static (string, int?, string, string) Row(Finding f)
-        => (f.Severity.ToString().ToLowerInvariant(), f.Line, f.Check, f.Message);
+        => (f.Severity.ToString().ToLowerInvariant(), f.Line, f.Check.Value, f.Message);
 
     private static int? Line(string cell) => string.IsNullOrWhiteSpace(cell) ? null : int.Parse(cell);
 }

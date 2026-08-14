@@ -12,8 +12,8 @@ public static class LinkChecks
     // A page that is not a record gets these and nothing else.
     public static void CheckPage(Doc d, Schema schema, string repoRoot, List<Finding> f) =>
         Check(d, schema, repoRoot,
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Error, check, msg)),
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, check, msg)));
+            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId(check), msg)),
+            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, new CheckId(check), msg)));
 
     public static void Check(Doc d, Schema schema, string repoRoot, Action<string, string, int?> err,
         Action<string, string, int?> warn, DocKind kind = DocKind.Record)
