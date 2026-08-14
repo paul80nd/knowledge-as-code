@@ -13,8 +13,9 @@ knowledge, not correcting facts, and not moving documents between types.
 Three sources of rules, in this order:
 
 1. **The schema and the validator.** `.schema/*.yaml`, and what `./kac validate` and `./kac checks` report. These are
-   executable, so they are the authority on anything mechanical: required sections, clause modals, id and filename
-   formats, link forms, and which text rules a type actually declares.
+   the authority on anything mechanical: required sections, clause modals, id and filename formats, link forms, and
+   which text rules a type declares. The type's `rules:` block is the wider of the two — it carries rules the tool does
+   not implement, which bind an author even though nothing fails.
 2. **The type's own pages.** `<type>.md` for what the type is meant to hold, `<type>/_template.md` for the sections it
    must have.
 3. **[`knowledge-as-code/contributing.md`](../../../knowledge-as-code/contributing.md).** The link and template
@@ -37,20 +38,24 @@ appearing to improve it.
 
 ## Never do these
 
-* **Never rewrite the substance of a Decided-tier record** — any [ADR](../../../adrs.md) or
-  [postmortem](../../../postmortems.md). These are immutable once accepted. You may fix a typo or a broken link.
-  Everything else, including "tightening", is prohibited: to change a decision, a new one supersedes it. If a Decided
-  record genuinely reads badly, report it and stop.
+* **Never rewrite the substance of a settled Decided-tier record** — an [ADR](../../../adrs.md) at `accepted`, a
+  [postmortem](../../../postmortems.md) at `published`. The status field is the test, not the tier:
+  `immutable-after-accepted` and `immutable-after-published` are written against it. You may fix a typo or a broken
+  link. Everything else, including "tightening", is prohibited: to change a decision, a new one supersedes it. If a
+  settled record genuinely reads badly, report it and stop. Before that point the record is under review and its wording
+  is in scope — but the decision itself, and the weighing behind it, remain the author's.
 * **Never edit between `<!-- BEGIN GENERATED -->` and `<!-- END GENERATED -->`.** Change the frontmatter or the schema
   and regenerate.
 * **Never change an identifier.** Document ids, clause ids and link reference labels are referenced from elsewhere in
   the graph and from other corpora. A renamed clause id is a broken edge.
 * **Never change meaning to save words.** Losing a qualifier, an exception or a scope boundary is a defect, not a
   saving. When a sentence is long because the obligation is genuinely conditional, leave it long.
-* **Never change frontmatter** other than to correct a demonstrable error, and say so explicitly if you do.
+* **Never change frontmatter** other than to correct a demonstrable error in the record in front of you, and say so
+  explicitly if you do. Where the same error runs across a folder, or the field is one CI groups or resolves on, it is a
+  migration rather than a review edit: report it as separate work and change nothing.
 * **Never delete a section the type's `_template.md` requires**, even if it is thin. An empty required section is a
   content gap to report, not a formatting problem to fix.
-* **Never edit a `_template.md` or a `<type>.md`.** A defect in every record of a type is a template defect — see below.
+* **Never edit a `_template.md` or a `<type>.md`.** A defect either of them caused is still theirs — see below.
 
 ## What the validator gives you, and what it does not
 
@@ -58,10 +63,13 @@ appearing to improve it.
 so a clean corpus is the normal state rather than the lucky one. It is your regression baseline: run it again at the end
 and compare. It is not a source of findings, and it will not hand you a starting list.
 
-**Then run `./kac checks` to establish which text rules apply to the type in front of you.** Each is declared on a
-single type — `low-ceremony` on discoveries, `not-normative` on explanations, `symptoms-first` on runbooks — and most
-types declare none at all. For `services/`, not one text rule fires. Do not report a check's findings as your own, and
-do not read the absence of a check as permission.
+**Then establish which text rules apply to the type in front of you.** `./kac checks` lists what the validator
+implements, across every type at once; `.schema/<type>.yaml`'s `rules:` block lists what your type declares. Read the
+second and use the first to tell which of those rules actually run. Each text rule is declared on a single type —
+`low-ceremony` on discoveries, `not-normative` on explanations, `symptoms-first` on runbooks — and most types declare
+none at all. For `services/`, not one text rule fires. Do not report a check's findings as your own, and do not read the
+absence of a check as permission: a declared rule with no code behind it binds you exactly as much as one that fails the
+build.
 
 ## What to look for
 
@@ -104,13 +112,15 @@ case and the lecture about it arrive in the same paragraph. Separate them:
 
 ## Template defects
 
-**A defect appearing in every record of a type is a defect in that type's `_template.md`, not in the records.**
-`services/_template.md` tells authors that a consumers list "is maintained by hand and will go stale. Say so", and the
-caveat duly appears in three records where *not record content* says it should appear in none.
+**A defect the template or the type page caused belongs to that file, not to the records.** The test is causation, not
+tally: name the line responsible and the defect is the template's however few records carry it, and where you cannot,
+it is a record defect however many do. `services/_template.md` tells authors that a consumers list "is maintained by
+hand and will go stale. Say so", and the caveat duly appears in three records where *not record content* says it should
+appear in none. An example in a template's frontmatter is the most contagious line of all, because every author copies
+it.
 
-Name the template line responsible, and leave the records alone. **Fixing the template is out of scope for a review** —
-in a `role: source` repository as much as anywhere, because it changes every record of the type and every corpus
-downstream. Propose it as separate work.
+Leave the records alone, and **fixing the template is out of scope for a review** — in a `role: source` repository as
+much as anywhere, because it changes every record of the type and every corpus downstream. Propose it as separate work.
 
 ## When there is nothing to find
 
@@ -126,19 +136,28 @@ decide. That list is worth more than a larger diff.
 
 1. **Establish scope.** One record, a type folder, or a named set. If asked to review "the corpus", propose an order —
    by tier, worst offenders first — and confirm before starting. Do not silently review a hundred documents.
-2. **Run `./kac validate` and `./kac checks`.** Baseline, and the rules that apply to this type.
+2. **Run `./kac validate` and `./kac checks`, and read the type's `rules:` block.** Baseline, what the tool enforces,
+   and what the type declares.
 3. **Read `style.md` and `authoring.md`.** In full. Then the type's `<type>.md` for what the type is meant to contain,
    and its `_template.md` for the sections it must have.
 4. **For each record**, in this order:
-   a. Read the frontmatter. Note the `tier`, the `status`, and whether it is Decided. b. Read the record whole before
-   changing anything. c. Identify findings against the floor, then against the tier's rules, then against
-   [intent, not administration](../../../knowledge-as-code/authoring.md#intent-not-administration). d. **Rewrite the
-   whole document, not a diff of fragments** — the result must read in one voice, and a reader arriving cold must not be
-   able to tell which paragraph is newest.
-5. **Check what you produced** against the checklist below.
-6. **Run `./kac validate`** again and, if any frontmatter changed, `./kac index`. A rewrite that fails validation is not
+   a. Read the frontmatter. Note the `tier`, and the `status` — whether a Decided record has settled. b. Read the record
+   whole before changing anything. c. Identify findings against the floor, then against the tier's rules, then against
+   [intent, not administration](../../../knowledge-as-code/authoring.md#intent-not-administration). d. **Edit at the
+   scale the findings interact at** — the sentence where a finding is local, the section as a unit where several
+   findings argue the same point across it, the whole document only where most of its paragraphs are in scope. What must
+   be whole is the result: a reader arriving cold must not be able to tell which paragraph is newest.
+5. **Then read the set.** Sibling records against each other: the same fact stated in two, one caveat worded three ways,
+   two records that disagree outright. Nothing inside a single record shows these, and they are the findings a reader of
+   the folder feels most. Where two records contradict each other on fact, report it and change neither — deciding which
+   is true is the owner's.
+6. **Walk the ten categories once each, over the whole set.** A reviewer settles into whichever category the first
+   record rewarded and finishes feeling finished. Naming the ten in turn is what makes two runs over the same folder
+   agree, and agreement is worth more than any single run's perceptiveness.
+7. **Check what you produced** against the checklist below.
+8. **Run `./kac validate`** again and, if any frontmatter changed, `./kac index`. A rewrite that fails validation is not
    a rewrite.
-7. **Report** in the shape given below. Propose; do not commit. Open a PR if asked — pushes to `main` are rejected.
+9. **Report** in the shape given below. Propose; do not commit. Open a PR if asked — pushes to `main` are rejected.
 
 ## Before you hand it back
 
@@ -155,7 +174,9 @@ Nothing checks these. They are yours:
   citation from another one.
 * **Link form and definition order**, per [contributing](../../../knowledge-as-code/contributing.md#links).
   `unused-definition` and `undefined-label` fire; the ordering does not.
-* **Prose wrapped at 120 columns**, tables exempt. `.editorconfig` says so and no check enforces it.
+* **Prose wrapped at 120 columns**, tables and link definitions exempt. `.editorconfig` says so and no check enforces
+  it. A line carrying an inline link still wraps — before the link, since only the URL itself cannot be broken, and only
+  a definition whose URL is longer than the margin is genuinely exempt.
 * **Nothing changed inside a generated block.** The validator checks that the markers survive, not the content between
   them.
 * **Nothing added that was not in the original** — with one carve-out: **a link that replaces restated content is not an
