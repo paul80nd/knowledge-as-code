@@ -16,8 +16,9 @@
 # `group` is the concern the check belongs to, and decides the table it renders into. `severity` is what
 # it reports at; `warning` does not fail the build.
 #
-# The set of ids here is held against the set the tool can emit, in both directions: a check the code
-# reports with no entry, or an entry nothing reports, fails `schema-dispatch` when the schema loads.
+# A check id a rule class reports under and this file does not declare fails `schema-dispatch` when the
+# schema loads. The other way round is the coverage gate's to answer: every other check reports through
+# a literal written where the check is, so an entry nothing reports is found by no fixture reaching it.
 
 groups:
   schema: The schema itself, before any document is read against it
@@ -57,8 +58,13 @@ checks:
       The question is whether code acts on the value, not whether it is spelled correctly: `style:
       mnemonic` would pass a spelling test, and what makes it sound is the branch that reads it. Covers
       a rule id claiming a `severity:` nothing answers, a `ref:` or a `versus:` at a folder no schema
-      covers, `values:` on anything but an enum, `min-items:` on anything but a list, an unknown
-      `id.style` or `index.order`, and a check id declared here that nothing emits.
+      covers, `values:` on anything but an enum, `min-items:` on anything but a list, and an unknown
+      `id.style` or `index.order`.
+
+      It runs the other way too, for the one part of the code a registry can name: a check id a rule
+      class reports under that this file does not declare. A check declared here and reported by
+      nothing cannot be found at load, since every other check reports through a literal written where
+      the check is — the coverage gate answers that one, by failing on a check no fixture can reach.
 
   schema-shape:
     group: schema

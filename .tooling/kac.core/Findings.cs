@@ -38,4 +38,12 @@ public static class CheckCatalogue
             .Select(r => new CheckDef(new CheckId(r.Id.Value), r.Severity ?? Sev.Warning,
                 r.Description ?? r.Message ?? r.Id.Value))
     ];
+
+    // The check ids the rule classes report under — the code side of the catalogue, and the whole of it
+    // that a registry can name. Every other check reports through a literal written where the check is.
+    public static IReadOnlyList<CheckId> EmittedByRules() =>
+    [
+        .. DocumentRules.All.SelectMany(r => r.Emits),
+        .. CorpusRules.All.SelectMany(r => r.Emits)
+    ];
 }

@@ -29,8 +29,10 @@ public static class SchemaChecks
         // in the order someone reading the file would meet them.
         UnreadKeys(".schema/_enums.yaml", schema, f);
         UnreadKeys(".schema/_tiers.yaml", schema, f);
+        UnreadKeys(".schema/_checks.yaml", schema, f);
         UnreadKeys(".schema/_universal.yaml", schema, f);
         CheckTiers(schema, f);
+        CheckDeclaredChecks(schema, f);
         foreach (var name in schema.UniversalOrder)
             if (schema.Universal.TryGetValue(name, out var spec))
                 CheckField(".schema/_universal.yaml", name, spec, schema, null, f);
@@ -292,6 +294,37 @@ public static class SchemaChecks
                          + $"{severity.ToString().ToLowerInvariant()}' and nothing dispatches it — give it an "
                          + "'expr:', implement it as a rule class, or drop the severity and leave it "
                          + "declared as an intention.", f);
+    }
+
+    // `_checks.yaml` against the code that reports, in the one direction a load can answer.
+    //
+    // A rule class names the check ids it reports under, so an id it emits that nothing here declares is
+    // a finding a reader would meet with no entry behind it: no severity, no description, and a blank
+    // cell wherever the tables render it. That is decidable from the registry, so it is decided here.
+    //
+    // The other direction — an entry nothing ever reports — is not. A core check reports through a
+    // literal string written where the check is, and no registry holds those; the coverage gate answers
+    // it instead, by failing on a declared check no fixture can reach.
+    //
+    // The group is a second declaration in the same file, so a check naming one `groups:` does not is
+    // `schema-shape` rather than a dispatch question: the tool acts on whatever the value says, and
+    // what makes it sound is the block above it.
+    private static void CheckDeclaredChecks(Schema schema, List<Finding> f)
+    {
+        const string at = ".schema/_checks.yaml";
+        var declared = schema.Checks.Select(c => c.Id).ToHashSet();
+        var groups = schema.CheckGroups.Select(g => g.Name).ToHashSet(StringComparer.Ordinal);
+
+        foreach (var check in schema.Checks.Where(c => !groups.Contains(c.Group)))
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"check '{check.Id}' declares 'group: {check.Group}', which 'groups:' does not name. A group "
+                + $"decides the table the check renders into; the groups are "
+                + $"{Ordered(schema.CheckGroups.Select(g => g.Name))}."));
+
+        foreach (var id in CheckCatalogue.EmittedByRules().Where(id => !declared.Contains(id)).Distinct())
+            Dispatch(at, $"a rule class reports under '{id}', which this file does not declare. A check "
+                         + "reaches a reader through its entry here, so one without an entry has no severity, "
+                         + "no description, and nothing to render.", f);
     }
 
     private static void Dispatch(string at, string message, List<Finding> f)
