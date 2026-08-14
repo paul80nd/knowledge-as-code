@@ -11,8 +11,8 @@ so the golden is the schema pass and nothing else.
 
 * **Unreadable** — an `expr:` that does not compile, an `expr:` with no `severity:`, an `expr:` with no `message:`, a
   `required-when:` outside the vocabulary, and `values: $enums.sensitivity` where `_enums.yaml` declares no such enum.
-  The two halves of "say what a rule does about a document it fails" are taken one each, since one rule cannot omit
-  both and report the second.
+  The loader asks for severity first, so a rule omitting both reports only the missing severity. The two faults
+  therefore need a rule each.
 * **Undispatched** — a rule claiming `severity: warning` that nothing implements, `id.style: roman-numeral`,
   `index.order: newest-first`, `tier: experimental`, `ref: gizmos` at a folder no schema covers, a `values:` list on a
   `type: list` field, and a `min-items:` on a `type: string` field.
