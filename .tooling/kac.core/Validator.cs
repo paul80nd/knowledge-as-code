@@ -26,7 +26,7 @@ public static class Validator
         SchemaChecks.Check(schema, findings);
 
         foreach (var doc in corpus.Docs)
-            CheckDocument(doc, schema, repoRoot, findings);
+            CheckDocument(doc, schema, corpus.Tree, findings);
 
         // Every file `kac index` writes a block into, held to still carrying the markers to write between.
         // Driven from the list the generator writes from, so every file it writes is a file this visits: a
@@ -67,7 +67,7 @@ public static class Validator
                     + $"no id, tier or status of its own. Move what it holds into '{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/' "
                     + "as a record, and delete the block."));
 
-            LinkChecks.CheckPage(page, schema, repoRoot, findings);
+            LinkChecks.CheckPage(page, schema, corpus.Tree, findings);
         }
 
         // The template each collection type carries. It is the one file in a type that every future
@@ -84,12 +84,12 @@ public static class Validator
                 findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
                     "the template carries no frontmatter — a document copied from it starts with none."));
             else
-                CheckDocument(template, schema, repoRoot, findings, DocKind.Template);
+                CheckDocument(template, schema, corpus.Tree, findings, DocKind.Template);
         }
 
         // The framework's own documentation, held to the one rule that is about where it will be read
         // rather than about what it says.
-        CheckFrameworkDocs(schema, repoRoot, corpus.Docs, findings);
+        CheckFrameworkDocs(schema, repoRoot, corpus.Tree, corpus.Docs, findings);
 
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand. The index they build is
         // handed on rather than built again: it is the corpus's one account of which id names which
@@ -109,7 +109,7 @@ public static class Validator
         return findings;
     }
 
-    public static void CheckDocument(Doc d, Schema schema, string repoRoot, List<Finding> f,
+    public static void CheckDocument(Doc d, Schema schema, Tree tree, List<Finding> f,
         DocKind kind = DocKind.Record)
     {
         if (d.Type is null)
@@ -276,7 +276,7 @@ public static class Validator
         // demonstrate wrongly for every record copied from it.
         ClauseChecks.CheckNotation(d, Err);
 
-        LinkChecks.Check(d, schema, repoRoot, Err, Warn, kind);
+        LinkChecks.Check(d, schema, tree, Err, Warn, kind);
 
         // -- related mirrors ## Related --
         // A reconciliation between two halves of the same document, both of which are examples in a
@@ -425,7 +425,7 @@ public static class Validator
     // Checked here rather than left to `link-resolves`, which would report it only downstream: every type
     // page exists in the corpus that writes these documents, so the defect is invisible precisely where it
     // can be fixed.
-    private static void CheckFrameworkDocs(Schema schema, string repoRoot, IEnumerable<Doc> docs,
+    private static void CheckFrameworkDocs(Schema schema, string repoRoot, Tree tree, IEnumerable<Doc> docs,
         List<Finding> f)
     {
         // The ones already validated as records. They have had the link pass, so giving them a second
@@ -441,14 +441,14 @@ public static class Validator
             // Read with the generated blocks emptied. Everything below is a question about what a person
             // wrote, and a generated block answers to `index --check` instead — it is regenerated from this
             // corpus, so its links are this corpus's and are right by construction.
-            var doc = Doc.Parse(rel, Generator.Authored(Files.ReadLf(Path.Combine(repoRoot, rel))),
+            var doc = Doc.Parse(rel, Generator.Authored(tree.Read(rel)),
                 schema, requireFrontmatter: false);
             if (doc is null) continue;
 
             // The ordinary link pass, which the documents excluded from discovery have never had: the
             // page pass only visits type pages, so a dead link in one reached the wiki silently and was
             // found by a reader. A framework document that is also a record has had it already.
-            if (!checkedAsRecords.Contains(rel)) LinkChecks.CheckPage(doc, schema, repoRoot, f);
+            if (!checkedAsRecords.Contains(rel)) LinkChecks.CheckPage(doc, schema, tree, f);
 
             foreach (var link in doc.Links)
             {

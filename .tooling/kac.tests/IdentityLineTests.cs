@@ -34,7 +34,7 @@ public class IdentityLineTests
     // The whole document pass runs, because the identity line is read where a reader meets it: beneath
     // the H1, against the type the folder resolves to. The pass has plenty else to say about a document
     // this bare, so the finding under test is picked out of what it produced. Nothing here links
-    // anywhere, which is what leaves the repository root free to be any real directory.
+    // anywhere, which is what leaves the corpus free to be an empty one.
     private static string IdentityType(TypeSchema type, string id)
     {
         var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { [type.Key] = type } };
@@ -43,7 +43,7 @@ public class IdentityLineTests
         Assert.NotNull(doc);
 
         var found = new List<Finding>();
-        Validator.CheckDocument(doc, schema, Directory.GetCurrentDirectory(), found);
+        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found);
         return Assert.Single(found, x => x.Check.Value == "identity-type").Message;
     }
 }

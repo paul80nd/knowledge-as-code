@@ -10,12 +10,12 @@ namespace kac.core;
 public static class LinkChecks
 {
     // A page that is not a record gets these and nothing else.
-    public static void CheckPage(Doc d, Schema schema, string repoRoot, List<Finding> f) =>
-        Check(d, schema, repoRoot,
+    public static void CheckPage(Doc d, Schema schema, Tree tree, List<Finding> f) =>
+        Check(d, schema, tree,
             (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId(check), msg)),
             (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, new CheckId(check), msg)));
 
-    public static void Check(Doc d, Schema schema, string repoRoot, Action<string, string, int?> err,
+    public static void Check(Doc d, Schema schema, Tree tree, Action<string, string, int?> err,
         Action<string, string, int?> warn, DocKind kind = DocKind.Record)
     {
         foreach (var link in d.Links)
@@ -41,7 +41,7 @@ public static class LinkChecks
                 continue;
             }
 
-            var file = Resolve(repoRoot, d.Rel, target);
+            var file = Resolve(tree, d.Rel, target);
             if (file is null)
             {
                 err("link-resolves", $"link target '{target}' does not resolve.", link.Line);
@@ -51,7 +51,7 @@ public static class LinkChecks
             // Only a Markdown file offers headings to land on. A link into anything else carries a
             // fragment the corpus cannot judge, and silence is the honest answer.
             if (file.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
-                CheckFragment(Files.ReadLf(file), fragment, path, link.Line, err);
+                CheckFragment(tree.Read(file), fragment, path, link.Line, err);
         }
 
         // undefined shortcut/reference labels left as literal '[label]'. Id-shaped is an error — the
@@ -115,22 +115,13 @@ public static class LinkChecks
         err("fragment-resolves", $"'#{fragment}' names no heading in '{page}'.", line);
     }
 
-    public static bool ResolveTarget(string repoRoot, string fromRel, string target)
-        => Resolve(repoRoot, fromRel, target) is not null || StripsToNothing(target);
-
-    private static bool StripsToNothing(string target)
-    {
-        var hash = target.IndexOf('#');
-        if (hash >= 0) target = target[..hash];
-        var q = target.IndexOf('?');
-        if (q >= 0) target = target[..q];
-        return target.Length == 0;
-    }
-
-    // The file a link target names, or null where nothing is there. Returns the path that exists so a
-    // caller can go on to read it — which of the two forms below resolved is not the caller's business,
-    // but the file it found is.
-    private static string? Resolve(string repoRoot, string fromRel, string target)
+    // The corpus path a link target names, or null where the corpus holds nothing there. Returns the path
+    // that resolved so a caller can go on to read it — which of the two forms below answered is not the
+    // caller's business, but the file it found is.
+    //
+    // Asked of the corpus rather than of the disk, so a link resolves in a fresh clone exactly where it
+    // resolves here. A file the repository ignores is not something a reader can follow.
+    private static string? Resolve(Tree tree, string fromRel, string target)
     {
         var hash = target.IndexOf('#');
         if (hash >= 0) target = target[..hash];
@@ -138,23 +129,46 @@ public static class LinkChecks
         if (q >= 0) target = target[..q];
         if (target.Length == 0) return null; // pure fragment — no file of its own
 
-        string basePath;
-        if (target.StartsWith('/'))
-            basePath = Path.Combine(repoRoot, target.TrimStart('/'));
-        else
-        {
-            var fromDir = Path.GetDirectoryName(Path.Combine(repoRoot, fromRel)) ?? repoRoot;
-            basePath = Path.GetFullPath(Path.Combine(fromDir, target));
-        }
+        var rel = target.StartsWith('/')
+            ? Descend("", target.TrimStart('/'))
+            : Descend(Folder(fromRel), target);
 
-        basePath = basePath.Replace('\\', '/');
+        if (rel is null) return null; // climbed out of the corpus, so nothing it could name
 
         // A directory is deliberately not a target. In Azure DevOps `data.md` is the page and `data/`
         // is its children — one node — so `/data` is a link to the page, which the `.md` form below
         // already resolves. Accepting the directory as well would resolve a link to a type whose page
-        // has gone, and would do it inconsistently: git cannot track an empty directory, so the same
-        // link passes on the machine that created the folder and fails in CI.
-        if (File.Exists(basePath)) return basePath;
-        return File.Exists(basePath + ".md") ? basePath + ".md" : null; // ADO resolves links with .md omitted
+        // has gone.
+        if (tree.Exists(rel)) return rel;
+        return tree.Exists(rel + ".md") ? rel + ".md" : null; // ADO resolves links with .md omitted
+    }
+
+    private static string Folder(string rel)
+    {
+        var slash = rel.Replace('\\', '/').LastIndexOf('/');
+        return slash < 0 ? "" : rel.Replace('\\', '/')[..slash];
+    }
+
+    // `base/target` with '.' and '..' resolved, as a corpus path. Null where '..' climbs above the root:
+    // there is no such file, and letting it wrap round to a path that happens to exist would resolve a
+    // link nobody could follow.
+    private static string? Descend(string baseDir, string target)
+    {
+        var parts = new List<string>();
+        var combined = baseDir.Length == 0 ? target : baseDir + "/" + target;
+        foreach (var segment in combined.Replace('\\', '/').Split('/'))
+        {
+            if (segment is "" or ".") continue;
+            if (segment != "..")
+            {
+                parts.Add(segment);
+                continue;
+            }
+
+            if (parts.Count == 0) return null;
+            parts.RemoveAt(parts.Count - 1);
+        }
+
+        return string.Join('/', parts);
     }
 }
