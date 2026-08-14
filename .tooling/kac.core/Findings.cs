@@ -12,16 +12,15 @@ public enum Sev
 
 public record Finding(string File, int? Line, Sev Severity, CheckId Check, string Message);
 
-// One check as the schema declares it. `Summary` is what a reader meets — in `kac checks` and in the
-// generated tables; `Notes` is the reasoning and the boundary, which only someone reading the schema
-// wants; `Group` is the concern it belongs to, and so the table it renders into.
+// One check as the schema declares it. `Summary` is what a reader meets, which `kac checks` prints,
+// and `Notes` is the reasoning and the boundary, which only someone reading the schema wants.
 //
 // `OnTypePage` says whether the check belongs in the "What CI checks" table generated onto a type
 // page. That table tells whoever writes a record what their document is held to, so a check reading
 // the schema, the template or the page itself has no row there — it is real, and it is not theirs to
 // act on. True unless a check says otherwise.
 public readonly record struct CheckDef(
-    CheckId Id, Sev Severity, string Summary, string Group = "", string Notes = "", bool OnTypePage = true);
+    CheckId Id, Sev Severity, string Summary, string Notes = "", bool OnTypePage = true);
 
 public static class CheckCatalogue
 {

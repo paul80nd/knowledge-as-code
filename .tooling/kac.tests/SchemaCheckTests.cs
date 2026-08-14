@@ -42,19 +42,15 @@ public class SchemaCheckTests
     private static readonly string[] TierNames = ["decided", "normative", "descriptive", "procedural", "observed"];
 
     // What `_checks.yaml` carries in a sound schema: an entry for every id the rule classes report
-    // under, each in a group the file names. Defaulted here for the same reason the tiers are — a case
-    // about a field should not also report that the catalogue is incomplete.
-    private const string Group = "content";
-
+    // under. Defaulted here for the same reason the tiers are — a case about a field should not also
+    // report that the catalogue is incomplete.
     private static IReadOnlyList<CheckDef> SoundChecks() =>
-        [.. CheckCatalogue.EmittedByRules().Select(id => new CheckDef(id, Sev.Warning, "It is checked.", Group))];
+        [.. CheckCatalogue.EmittedByRules().Select(id => new CheckDef(id, Sev.Warning, "It is checked."))];
 
     private static Schema WithTiers(TypeSchema? widgets = null, IEnumerable<string>? tiers = null,
-        IEnumerable<string>? admitted = null, IReadOnlyList<CheckDef>? checks = null,
-        IReadOnlyList<(string, string)>? groups = null) => new()
+        IEnumerable<string>? admitted = null, IReadOnlyList<CheckDef>? checks = null) => new()
     {
         Checks = checks ?? SoundChecks(),
-        CheckGroups = groups ?? [(Group, "The rules a type declares")],
         Tiers = [.. (tiers ?? TierNames).Select(t => new TierSpec(t, t, "how it behaves", ""))],
         UniversalOrder = ["tier"],
         Universal = new Dictionary<string, FieldSpec>
@@ -89,22 +85,6 @@ public class SchemaCheckTests
         Assert.Equal("schema-dispatch", finding.Check.Value);
         Assert.Equal(".schema/_checks.yaml", finding.File);
         Assert.Contains(CheckCatalogue.EmittedByRules()[0].Value, finding.Message);
-    }
-
-    // The group is a second declaration in the same file, so this is a shape question rather than a
-    // dispatch one: the generator renders whatever group a check names, into a table that has to exist.
-    [Fact]
-    public void A_check_naming_a_group_the_file_does_not_declare_is_reported()
-    {
-        var checks = SoundChecks()
-            .Append(new CheckDef(new CheckId("widget-shape"), Sev.Error, "Widgets are widget-shaped.", "invented"))
-            .ToList();
-
-        var finding = Assert.Single(Check(WithTiers(checks: checks)));
-
-        Assert.Equal("schema-shape", finding.Check.Value);
-        Assert.Equal(".schema/_checks.yaml", finding.File);
-        Assert.Contains("'group: invented'", finding.Message);
     }
 
     // -- rules --
@@ -255,7 +235,6 @@ public class SchemaCheckTests
         var schema = new Schema
         {
             Checks = SoundChecks(),
-            CheckGroups = [(Group, "The rules a type declares")],
             UniversalOrder = ["tags"],
             Universal = new Dictionary<string, FieldSpec>
             {
@@ -345,7 +324,7 @@ public class SchemaCheckTests
         var finding = Assert.Single(Check(new Schema
         {
             Tiers = tiers, UniversalOrder = schema.UniversalOrder, Universal = schema.Universal,
-            Checks = schema.Checks, CheckGroups = schema.CheckGroups
+            Checks = schema.Checks
         }));
 
         Assert.Contains("declares no 'label:'", finding.Message);
@@ -431,7 +410,7 @@ public class SchemaCheckTests
         return new Schema
         {
             Tiers = schema.Tiers, UniversalOrder = schema.UniversalOrder, Universal = schema.Universal,
-            Checks = schema.Checks, CheckGroups = schema.CheckGroups,
+            Checks = schema.Checks,
             ByFolder = types.ToDictionary(t => t.Key, t => Widgets(folder: t.Key, versus: t.Versus))
         };
     }

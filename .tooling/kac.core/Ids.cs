@@ -14,8 +14,9 @@ namespace kac.core;
 //
 // There is no conversion from string either: an id enters the program where one is declared — the
 // schema, or a rule class naming what it emits — rather than wherever a literal is convenient.
-// Ordered, because findings and catalogue entries are listed for people to read and an id is what
-// they are listed by. Ordinal, like every other comparison over these files.
+//
+// Ordered, because findings and catalogue entries are listed for people to read and an id is what they
+// are listed by. Ordinal, like every other comparison over these files.
 public readonly record struct CheckId(string Value) : IComparable<CheckId>
 {
     public int CompareTo(CheckId other) => string.CompareOrdinal(Value, other.Value);

@@ -4,36 +4,27 @@
 # the checks that run against every document, whatever folder it sits in, and the ones that read the
 # schema or the corpus rather than a record.
 #
-# `description` says what the check proves correct, in the words a reader meets — in `kac checks`, and
-# in the generated tables on `.tooling/README.md`. It is held to the same 120 characters a rule's
-# description is, and for the same reason: it lands in a table cell whose column is padded to its widest
-# row.
+# `description` says what the check proves correct, in the words a reader meets — `kac checks` prints
+# it. It is held to the same 120 characters a rule's description is, and for the same reason: it lands
+# in a table cell whose column is padded to its widest row.
 #
 # `notes` is the reasoning, the boundary and the mechanics, which belong here where there is room for
 # them. Why a check exists, what it deliberately does not cover, when it is skipped. What the code does
 # to answer the question stays beside the code.
 #
-# `group` is the concern the check belongs to, and decides the table it renders into. `severity` is what
-# it reports at; `warning` does not fail the build.
+# `severity` is what the check reports at; `warning` does not fail the build. `on-type-page: false`
+# withholds it from the table generated onto a type page, for a check whose subject is the schema, a
+# template or the page itself rather than a record somebody wrote.
 #
 # A check id a rule class reports under and this file does not declare fails `schema-dispatch` when the
 # schema loads. The other way round is the coverage gate's to answer: every other check reports through
 # a literal written where the check is, so an entry nothing reports is found by no fixture reaching it.
-
-groups:
-  schema: The schema itself, before any document is read against it
-  frontmatter: The frontmatter block, and the values in it
-  identity: The document's name, its identity line and its sections
-  clauses: The clause table, for a type that declares one
-  links: Links, references and the graph they form
-  content: A type's own content rules, where the question needs more than an expression
 
 checks:
 
   # ── schema ───────────────────────────────────────────────────────────────────
 
   schema-unknown-key:
-    group: schema
     severity: error
     on-type-page: false
     description: Every key in these files is one the loader reads.
@@ -47,7 +38,6 @@ checks:
       is written for them.
 
   schema-unreadable:
-    group: schema
     severity: error
     on-type-page: false
     description: A declaration the loader can read as written.
@@ -58,7 +48,6 @@ checks:
       Not advertised on a type page, for the reason `schema-unknown-key` is not.
 
   schema-dispatch:
-    group: schema
     severity: error
     on-type-page: false
     description: A declared value is one the tool acts on.
@@ -77,7 +66,6 @@ checks:
       Not advertised on a type page, for the reason `schema-unknown-key` is not.
 
   schema-shape:
-    group: schema
     severity: error
     on-type-page: false
     description: A type's declarations are well-formed and agree with one another.
@@ -92,7 +80,6 @@ checks:
   # ── frontmatter ──────────────────────────────────────────────────────────────
 
   type:
-    group: frontmatter
     severity: error
     on-type-page: false
     description: The document's folder maps to a type schema.
@@ -105,7 +92,6 @@ checks:
       trips.
 
   frontmatter-parses:
-    group: frontmatter
     severity: error
     description: The frontmatter block is present and is a valid YAML mapping.
     notes: >
@@ -113,12 +99,10 @@ checks:
       parse would otherwise report every field in it as missing.
 
   unknown-key:
-    group: frontmatter
     severity: error
     description: Every frontmatter key is a universal field, a type field, or a reserved ADO key.
 
   key-order:
-    group: frontmatter
     severity: error
     description: Key order is a topological extension of the schema's declared field orders.
     notes: >
@@ -127,7 +111,6 @@ checks:
       actually wanted is that the universal keys precede the type's.
 
   required-field:
-    group: frontmatter
     severity: error
     description: Every required field is present, and every `required-when` field whose condition holds.
     notes: >
@@ -136,7 +119,6 @@ checks:
       omission as two.
 
   bare-key:
-    group: frontmatter
     severity: error
     description: An absent value is a bare key — never `null`, `~`, `""`, `''` or an em dash.
     notes: >
@@ -144,7 +126,6 @@ checks:
       the alternatives reads as a value to something.
 
   date-quoted:
-    group: frontmatter
     severity: error
     description: A date field is a quoted string.
     notes: >
@@ -152,23 +133,19 @@ checks:
       timezone shift, so the page shows a date the file does not carry.
 
   date-format:
-    group: frontmatter
     severity: error
     description: A date field is `YYYY-MM-DD` and names a day the calendar has.
 
   enum:
-    group: frontmatter
     severity: error
     description: An enum value is a scalar the field's declared range carries.
 
   enum-lowercase:
-    group: frontmatter
     severity: error
     description: An enum value is lowercase.
     notes: Enums are grep targets first and prose second, and two casings of one value are two values to search for.
 
   list:
-    group: frontmatter
     severity: error
     on-type-page: false
     description: A list field is written as a YAML sequence.
@@ -177,7 +154,6 @@ checks:
       are lists.
 
   min-items:
-    group: frontmatter
     severity: error
     description: A list field carries at least the `min-items:` its schema declares.
     notes: >
@@ -185,7 +161,6 @@ checks:
       value is its breadth — a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill.
 
   min-records:
-    group: frontmatter
     severity: warning
     description: Each entry of a grouping field is carried by at least as many records as its floor.
     notes: >
@@ -195,12 +170,10 @@ checks:
       Counted per type, case-insensitively, once per record however often one repeats a value.
 
   field-pattern:
-    group: frontmatter
     severity: error
     description: A value matches the `pattern:` its field declares — per entry for a list, per value for a scalar.
 
   list-order:
-    group: frontmatter
     severity: warning
     description: A list field's entries read in alphabetical order, with digit runs compared as numbers.
     notes: >
@@ -209,34 +182,28 @@ checks:
       Only the first pair out of order is reported.
 
   tier-matches-type:
-    group: frontmatter
     severity: error
     description: "`tier` equals the tier the type declares."
 
   id-prefix:
-    group: frontmatter
     severity: error
     description: "`id` carries the type's prefix."
 
   id-format:
-    group: frontmatter
     severity: error
     description: The id's discriminator has the shape the type's `id.style` declares.
 
   id-matches-filename:
-    group: frontmatter
     severity: error
     description: The id's discriminator matches the filename's, so both name the same document.
 
   # ── identity ─────────────────────────────────────────────────────────────────
 
   filename-pattern:
-    group: identity
     severity: error
     description: The filename matches the type's `filename.pattern`.
 
   slug-length:
-    group: identity
     severity: error
     description: The slug — the filename minus any `NNNN-` or mnemonic prefix — is within `slug-max`.
     notes: >
@@ -244,12 +211,10 @@ checks:
       usually a document doing two things, so narrowing the scope beats abbreviating harder.
 
   h1:
-    group: identity
     severity: error
     description: The document has an H1. Its text is the title, and nothing constrains it.
 
   identity:
-    group: identity
     severity: error
     description: "An identity line of two code spans follows the H1 — `` `Type: id` `STATUS` ``."
     notes: >
@@ -258,17 +223,14 @@ checks:
       table a reader may never look at.
 
   identity-type:
-    group: identity
     severity: error
     description: The identity line's type name is the `label` the folder's schema declares.
 
   identity-id:
-    group: identity
     severity: error
     description: The identity line's id is the frontmatter's, character for character.
 
   identity-status:
-    group: identity
     severity: error
     description: The identity line's status is the frontmatter's, upper-cased.
     notes: >
@@ -276,12 +238,10 @@ checks:
       reads it as a stamp. A document cannot go active and leave the line saying DRAFT.
 
   required-section:
-    group: identity
     severity: error
     description: Every heading in `sections.required` is present.
 
   empty-section:
-    group: identity
     severity: error
     description: A section the type declares carries something under its heading.
     notes: >
@@ -291,7 +251,6 @@ checks:
       `clause-table`, which is looking at the same blank and can say what belongs there.
 
   placeholder-left:
-    group: identity
     severity: error
     description: No `{{…}}` from the template survives into a record, outside code.
     notes: >
@@ -302,7 +261,6 @@ checks:
   # ── clauses ──────────────────────────────────────────────────────────────────
 
   clause-table:
-    group: clauses
     severity: error
     description: The declared section holds a table headed with the block's `columns`, and at least one row.
     notes: >
@@ -311,19 +269,16 @@ checks:
       section is `required-section`'s to report, and saying it twice would make one fault look like two.
 
   clause-id-format:
-    group: clauses
     severity: error
     description: Each clause id is a single code span matching the block's `id-pattern`.
     notes: A code span because an id is a handle rather than a word, and flattened text cannot tell the two apart.
 
   clause-id-unique:
-    group: clauses
     severity: error
     description: Clause ids are unique within the document, so a citation names one obligation.
     notes: Compared ordinally — two ids differing only in case are not two clauses a reader could tell apart either.
 
   clause-modal:
-    group: clauses
     severity: error
     description: Each clause opens with a declared modal, bold where it binds and plain where it does not.
     notes: >
@@ -332,7 +287,6 @@ checks:
       reads as an obligation.
 
   clause-order:
-    group: clauses
     severity: warning
     description: Clause rows are grouped by binding level, in the order the type declares.
     notes: >
@@ -340,7 +294,6 @@ checks:
       would otherwise report every row after the first.
 
   clause-compound:
-    group: clauses
     severity: warning
     description: A clause carries one obligation, not two sharing an id.
     notes: A second modal in a row means a citation of that id can only ever name half of what it means.
@@ -348,7 +301,6 @@ checks:
   # ── links ────────────────────────────────────────────────────────────────────
 
   link-resolves:
-    group: links
     severity: error
     description: Every internal link resolves, in any of the forms the wiki accepts.
     notes: >
@@ -357,7 +309,6 @@ checks:
       `http(s)`, `mailto` and `tel` links are skipped.
 
   fragment-resolves:
-    group: links
     severity: error
     description: A link's `#fragment` names a heading in the document it points at.
     notes: >
@@ -366,12 +317,10 @@ checks:
       carrying `/`, `:` or `.` has two anchors — it fails here rather than only in the published wiki.
 
   undefined-label:
-    group: links
     severity: error
     description: A shortcut label shaped like any type's id has a link definition.
 
   label-canonical:
-    group: links
     severity: error
     description: An id-shaped shortcut label is written as the canonical id.
     notes: >
@@ -380,7 +329,6 @@ checks:
       label is its own display text, and shows the reader an id that does not exist.
 
   clause-ref:
-    group: links
     severity: error
     description: A clause reference resolves — the document exists and carries that clause.
     notes: >
@@ -391,7 +339,6 @@ checks:
       so the two halves run in different passes and a narrowed run still reports the separator.
 
   ref-resolves:
-    group: links
     severity: error
     description: An id in a field declaring a `ref:` names a document that exists, of a type the `ref:` names.
     notes: >
@@ -402,7 +349,6 @@ checks:
       field admits, such as `applies-to: [all]`, is not an id and is skipped.
 
   reciprocal:
-    group: links
     severity: error
     description: A field declaring a `reciprocal:` agrees with its counterpart in both directions.
     notes: >
@@ -410,7 +356,6 @@ checks:
       so a dangling or wrong-type reference is reported once rather than twice.
 
   related-matches-section:
-    group: links
     severity: error
     description: A field declaring a `mirrors-section:` reconciles with the ids that section links to.
     notes: >
@@ -420,30 +365,24 @@ checks:
       names.
 
   id-unique:
-    group: links
     severity: error
     description: An id is unique across the whole wiki.
 
   unused-definition:
-    group: links
     severity: warning
     description: Every link definition is referenced by something.
 
   bracket-literal:
-    group: links
     severity: warning
     on-type-page: false
     description: A `[...]` left in prose that reads as a reference has a definition behind it.
     notes: >
-      A heuristic sibling of `undefined-label`, for the bracket that never became a link at all. Where
-      the brackets sit decides a checkbox: `- [ ]` opening a list item is a marker, and the same
-      brackets mid-sentence still warn. Use an inline link where the brackets are deliberate.
-
-      Not advertised on a type page, being a heuristic sibling of `undefined-label` rather than a rule
-      of its own.
+      A heuristic sibling of `undefined-label`, for the bracket that never became a link at all, and
+      not advertised on a type page for that reason. Where the brackets sit decides a checkbox: `- [ ]`
+      opening a list item is a marker, and the same brackets mid-sentence still warn. Use an inline link
+      where the brackets are deliberate.
 
   type-setup:
-    group: links
     severity: error
     on-type-page: false
     description: A type the schema declares is stood up as both a page and a folder, or as neither.
@@ -454,7 +393,6 @@ checks:
       Not advertised on a type page, which is one of the two files it reports the absence of.
 
   framework-names-types:
-    group: links
     severity: error
     on-type-page: false
     description: The framework's own documents name a type rather than linking to one.
@@ -468,7 +406,6 @@ checks:
       records.
 
   template-fields:
-    group: links
     severity: error
     on-type-page: false
     description: A type's template carries the fields a copy of it needs, usably, and no key the type does not declare.
@@ -480,7 +417,6 @@ checks:
       Not advertised on a type page: it reads the template rather than any record copied from it.
 
   generated-block:
-    group: links
     severity: error
     on-type-page: false
     description: Every file `kac index` writes a block into still carries both of that block's markers.
@@ -493,7 +429,6 @@ checks:
       Not advertised on a type page: it reads that page rather than any record written under it.
 
   page-frontmatter:
-    group: links
     severity: error
     on-type-page: false
     description: A type page carries no frontmatter of its own.
@@ -510,7 +445,6 @@ checks:
   # `kac.core/Rules/`, dispatched by the rule id its type declares, and reports under the id here.
 
   y-statement:
-    group: content
     severity: warning
     description: A Y-statement block-quote follows the H1, states all six moves, and is within `max-words`.
     notes: >
@@ -519,7 +453,6 @@ checks:
       already knows.
 
   alternatives-verdict:
-    group: content
     severity: warning
     description: Each *Alternatives Considered* bullet states an outcome.
     notes: >
@@ -527,13 +460,11 @@ checks:
       only to be dismissed in a clause was not genuinely considered.
 
   terms-alphabetical:
-    group: content
     severity: warning
     description: A glossary's entries read in alphabetical order.
     notes: Compared without regard to casing, and the message names the entry that moved.
 
   dependency-cycle:
-    group: content
     severity: warning
     description: The records' `depends-on` edges form no loop.
     notes: >

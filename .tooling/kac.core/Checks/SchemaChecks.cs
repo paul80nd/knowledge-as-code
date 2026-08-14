@@ -306,20 +306,10 @@ public static class SchemaChecks
     // literal string written where the check is, and no registry holds those; the coverage gate answers
     // it instead, by failing on a declared check no fixture can reach.
     //
-    // The group is a second declaration in the same file, so a check naming one `groups:` does not is
-    // `schema-shape` rather than a dispatch question: the tool acts on whatever the value says, and
-    // what makes it sound is the block above it.
     private static void CheckDeclaredChecks(Schema schema, List<Finding> f)
     {
         const string at = ".schema/_checks.yaml";
         var declared = schema.Checks.Select(c => c.Id).ToHashSet();
-        var groups = schema.CheckGroups.Select(g => g.Name).ToHashSet(StringComparer.Ordinal);
-
-        foreach (var check in schema.Checks.Where(c => !groups.Contains(c.Group)))
-            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"check '{check.Id}' declares 'group: {check.Group}', which 'groups:' does not name. A group "
-                + $"decides the table the check renders into; the groups are "
-                + $"{Ordered(schema.CheckGroups.Select(g => g.Name))}."));
 
         foreach (var id in CheckCatalogue.EmittedByRules().Where(id => !declared.Contains(id)).Distinct())
             Dispatch(at, $"a rule class reports under '{id}', which this file does not declare. A check "

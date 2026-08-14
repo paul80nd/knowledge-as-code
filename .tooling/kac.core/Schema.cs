@@ -369,11 +369,6 @@ public sealed class Schema
     // The code decides what runs, and `SchemaChecks` holds the two against each other.
     public IReadOnlyList<CheckDef> Checks { get; init; } = [];
 
-    // The concerns checks are grouped under, in declared order — which is the order the generated
-    // tables render in. A group with no checks under it renders as nothing rather than as an empty
-    // table.
-    public IReadOnlyList<(string Name, string Label)> CheckGroups { get; init; } = [];
-
     public IReadOnlyList<string> UniversalOrder { get; init; } = [];
     public IReadOnlyDictionary<string, FieldSpec> Universal { get; init; } = new Dictionary<string, FieldSpec>();
     public IReadOnlyList<string> Reserved { get; init; } = [];
@@ -421,10 +416,6 @@ public sealed class Schema
 
         var checkKeys = new KeyReader(".schema/_checks.yaml");
         var checksRoot = checkKeys.At(Yaml.LoadFile(Path.Combine(dir, "_checks.yaml")), TheFile);
-        var checkGroups = new List<(string Name, string Label)>();
-        foreach (var (name, node) in Yaml.Map(checksRoot.Get("groups")))
-            checkGroups.Add((name, Yaml.Str(node)?.Trim() ?? ""));
-
         var checks = new List<CheckDef>();
         foreach (var (id, node) in Yaml.Map(checksRoot.Get("checks")))
         {
@@ -432,7 +423,6 @@ public sealed class Schema
             checks.Add(new CheckDef(new CheckId(id),
                 Yaml.Str(check.Get("severity")) == "warning" ? Sev.Warning : Sev.Error,
                 Yaml.Str(check.Get("description"))?.Trim() ?? "",
-                Yaml.Str(check.Get("group"))?.Trim() ?? "",
                 Yaml.Str(check.Get("notes"))?.Trim() ?? "",
                 // Most checks belong on a type page, so the key is written only where one does not.
                 Yaml.Str(check.Get("on-type-page")) is not "false"));
@@ -468,7 +458,6 @@ public sealed class Schema
         {
             Tiers = tiers,
             Checks = checks,
-            CheckGroups = checkGroups,
             UniversalOrder = layer.Order,
             Universal = layer.Fields,
             Reserved = layer.Reserved,
