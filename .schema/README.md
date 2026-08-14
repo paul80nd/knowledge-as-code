@@ -17,12 +17,13 @@ opening its template and making the same change there — assume that, rather th
 
 ## Files
 
-| File              | Contents                                      |
-|-------------------|-----------------------------------------------|
-| `_universal.yaml` | Fields every document in the taxonomy carries |
-| `_enums.yaml`     | Enums shared by more than one type            |
-| `_tiers.yaml`     | What each tier is called, and how it behaves  |
-| `<folder>.yaml`   | One per knowledge type, named for its folder  |
+| File                    | Contents                                      |
+|-------------------------|-----------------------------------------------|
+| `_universal.yaml`       | Fields every document in the taxonomy carries |
+| `_enums.yaml`           | Enums shared by more than one type            |
+| `_tiers.yaml`           | What each tier is called, and how it behaves  |
+| `<folder>.yaml`         | One per knowledge type, named for its folder  |
+| `meta/type.schema.json` | The shape of a `<folder>.yaml` — see below    |
 
 Type files are named for the **folder**, not the type — `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a
 document's type from its folder, so folder → schema is an identity lookup with no singularisation step.
@@ -39,59 +40,58 @@ reconciles the answer against an upstream, and a number nothing compares is a nu
 silently — so the stamp and its reader arrive together, or not at all. Tracked in
 [knowledge-as-code#16](https://github.com/paul80nd/knowledge-as-code/issues/16).
 
-## Field specification
+## The shape of a type file
+
+**[`meta/type.schema.json`](meta/type.schema.json) is the reference for the keys** — every one a type file may carry,
+what its value may be, and what each is for. Each type file opens with a modeline pointing at it, so an editor with
+YAML language-server support offers the keys, describes them on hover, and marks a wrong one as it is typed:
 
 ```yaml
-fields:
-  <name>:
-    required: true|false        # default false
-    required-when: '<other> == <value>' | '<other> != <value>' | '<other> in [a, b]'
-    type: string|date|enum|id|list|bool|int
-    of: id|string               # element type, when type is list
-    values: [ ... ]             # when type is enum, or an $enums.<name> reference
-    ref: <folder> | [ ... ]     # when type is id or list-of-id: which type(s) the id may belong to
-    reciprocal: <field>         # the field on the target that must point back
-    mirrors-section: <H2>       # a section of the record whose ids this field must agree with
-    pattern: '<regex>'          # additional constraint
-    allow-literal: [ ... ]      # words admitted in place of a value of the declared type
-    min-items: <n>              # when type is list: the floor on its length
-    min-records: <n>            # when type is list: the floor on how many records carry each entry
-    description: >              # one line, rendered into the generated Metadata table
-    notes: >                    # the longer why; schema-only, and the fallback when there is no description
+# yaml-language-server: $schema=./meta/type.schema.json
 ```
+
+It answers shape and vocabulary — whether `required:` is a boolean, whether `fields:` is a mapping rather than a
+sequence, whether `tier:` is a word the tiers declare. What it cannot answer is anything spanning two files or reading
+the code: whether an `$enums.` name is declared, whether a `ref:` names an adopted folder, whether a rule is dispatched,
+whether a `summary:` fits the cell it renders into. Those are [what the schema is held to](#what-the-schema-is-held-to),
+and `kac` answers them when the schema loads.
+
+**No build reads it.** It is an editor's view of a contract `kac` enforces, so a schema file written outside an editor
+meets the same gate as one written in it, and neither is admitted by the JSON alone.
+
+[Fields](#fields) and [Types](#types) below carry the reasoning the schema has no room for: why a key is shaped as it
+is, and the edge to weigh before reaching for it.
+
+## Fields
 
 **Every key in these files is one the loader reads, and `notes:` is the one exception.** A key nothing reads is a
 declaration in a file documented as the contract the tool enforces, so it is reported at load like any other — see
-[What the schema is held to](#what-the-schema-is-held-to). `notes:` is admitted at every level and parsed only here on a
+[What the schema is held to](#what-the-schema-is-held-to). `notes:` is admitted at every level and parsed only on a
 field, which is how something worth saying and not worth acting on gets said: these files are read by people who cannot
 ask what a key was for, and a schema that could not explain itself would be worse than one with a loose vocabulary.
 Everything else is implemented, dropped, or rewritten as a note.
 
-`required-when` takes those three forms and no others — a condition the loader cannot read is reported against the field
-that declares it rather than reading as one that never holds. It tests one other field of the same document; a condition
-needing more than that is a rule with an `expr:`, not a field declaration. Where the field it names is absent the
-condition does not hold, `!=` included: `required-field` is already reporting that absence, and requiring a second field
-on top would report one omission as two.
+`required-when` tests one other field of the same document, and a condition needing more than that is a rule with an
+`expr:`, not a field declaration. A form the loader cannot read is reported against the field that declares it rather
+than reading as one that never holds. Where the field it names is absent the condition does not hold, `!=` included:
+`required-field` is already reporting that absence, and requiring a second field on top would report one omission as
+two.
 
-`values:` is read from an `enum` and nowhere else, and `ref:` names one folder or several. Both are checked when the
-schema loads — a `values:` list on a `type: list` field and a `ref:` at a folder no schema covers are each reported
-naming the file and the key, because a vocabulary or a target nothing applies is a promise to whoever takes a copy of
-these files. See [What the schema is held to](#what-the-schema-is-held-to). Every id the field then carries is resolved
-against the corpus as `ref-resolves`, whether or not the field also declares a `reciprocal:` — the one-directional edges
-are the ones no counterpart holds in step, so they are the ones a check has to hold. Both halves of the declaration are
-asked: that the id names a document, and that the document is of a type the `ref:` names. An id of the wrong type lands
-on a real page and so reads as deliberate to whoever follows it, and this line is the only place the type it should have
-named is written down.
+A `values:` list on a field that is not an enum, and a `ref:` at a folder no schema covers, are each reported naming the
+file and the key, because a vocabulary or a target nothing applies is a promise to whoever takes a copy of these files.
+Every id a `ref:` field carries is then resolved against the corpus as `ref-resolves`, whether or not the field also
+declares a `reciprocal:` — the one-directional edges are the ones no counterpart holds in step, so they are the ones a
+check has to hold. Both halves of the declaration are asked: that the id names a document, and that the document is of a
+type the `ref:` names. An id of the wrong type lands on a real page and so reads as deliberate to whoever follows it,
+and this line is the only place the type it should have named is written down.
 
 Between them the `ref:` declarations *are* the graph, and the taxonomy renders them as one: a diagram of how the types
 relate, and a table of the field behind each edge. Nothing else declares an edge, so a relationship written only as
 prose is one nothing can check, and it appears in neither.
 
-`mirrors-section` names an H2 the type declares — any of them, and a type may mirror two fields against two sections —
-and holds the ids in the field against the ids the section links to, in a bullet or in prose alike, in both directions
-and case-insensitively. It is for a field carried in frontmatter and repeated in the body, where the two drift apart
-quietly: `related` against `## Related` on an ADR is the case in this corpus. A name the type's `sections:` block does
-not offer is reported when the schema loads, since it would reconcile against a heading no record may carry.
+`mirrors-section` is for a field carried in frontmatter and repeated in the body, where the two drift apart quietly:
+`related` against `## Related` on an ADR is the case in this corpus. It holds the ids in the field against the ids the
+section links to, in a bullet or in prose alike, and case-insensitively.
 
 Both directions is the part to weigh before declaring one. A section that mentions an id the field does not carry is a
 finding as much as the reverse, so the field has to be the whole truth about what the section names — a prose aside
@@ -99,22 +99,21 @@ about something deliberately *not* in the field will fail. `services` is the cas
 not mirror `## Dependencies`: `svc-search` names the two services whose events it consumes, and the whole point of that
 paragraph is that neither is an edge.
 
-`allow-literal` admits a word beside the field's declared type — `applies-to: [all]` on a list of service ids,
-`last-rehearsed: "never"` on a date. A listed value is taken as written and nothing further is asked of it; on a list it
-exempts the entry rather than the field, so the ids beside it are still ids. It exists so that a field with one honest
-answer outside its type does not have to widen into a string and give up every check on the values it usually carries.
-`min-items` is the floor on a list's length, read only from a `type: list` field, for the field whose value is its
-breadth: a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill, and nothing else holds it to more
-than a single entry.
+`allow-literal` exists so that a field with one honest answer outside its type does not have to widen into a string and
+give up every check on the values it usually carries — `applies-to: [all]` on a list of service ids,
+`last-rehearsed: "never"` on a date. On a list it exempts the entry rather than the field, so the ids beside it are
+still ids.
 
-`min-records` is the other floor, and counts the opposite way: how many records of the type carry each entry, rather
-than how many entries one record carries. It is what a field says when its values are there to divide the type into
-groups — `internal` earns its place by naming several services, where a value carried by one record divides nothing and
-belongs in a field that is free to be unique. The count is per type, case-insensitive, and once per record however often
-one record repeats a value; the finding is a **warning** reported against each record carrying the short value; and the
-floor is a number rather than a flag because an estate large enough will want more than two. Membership is never
-declared: the corpus decides what its vocabulary is, and the schema says only that a value in this field is meant to be
-shared.
+`min-items` is for the field whose value is its breadth: a FAQ's `symptom-keywords` is the one the schema tells authors
+to over-fill, and nothing else holds it to more than a single entry.
+
+`min-records` counts the opposite way — how many records of the type carry each entry, rather than how many entries one
+record carries. It is what a field says when its values are there to divide the type into groups: `internal` earns its
+place by naming several services, where a value carried by one record divides nothing and belongs in a field that is
+free to be unique. The count is per type, case-insensitive, and once per record however often one record repeats a
+value; the finding is a **warning** reported against each record carrying the short value; and the floor is a number
+rather than a flag because an estate large enough will want more than two. Membership is never declared: the corpus
+decides what its vocabulary is, and the schema says only that a value in this field is meant to be shared.
 
 `description` and `notes` answer different questions. `description` is what a reader of the type page needs at a glance
 and is what the Metadata table renders; `notes` is the reasoning, which belongs here in the schema where there is room
@@ -133,42 +132,22 @@ a sixth value costs nothing in the width of the main table.
 * Enum values are lowercase and hyphenated.
 * Unknown keys fail, except the Azure DevOps reserved keys listed in `_universal.yaml` under `reserved`.
 
-## Type specification
+## Types
 
-Beyond `fields`, each type file declares:
+**`folder`.** A type is a folder of records, a page describing them, and a template to copy. The check reads the value
+rather than the key, because an absent `folder:` and a deliberate `folder: null` are the same string once parsed. A type
+that lost the key reads exactly like one that never had it.
 
-| Key                        | Purpose                                                                                                          |
-|----------------------------|------------------------------------------------------------------------------------------------------------------|
-| `type` / `folder` / `page` | Identity, and where the type lives — see the note below                                                          |
-| `label` / `label-plural`   | The display names — "Policy" heads the generated index, "Policies" names the collection in a link                |
-| `tier` / `lifecycle`       | Fixed for the type; `tier` is written into frontmatter as a reader-facing trust signal, and CI checks it matches |
-| `summary` / `goes-here`    | What the type is, and what a contributor has in hand when it is the answer — see the note below                  |
-| `detail`                   | The paragraph beneath the one-liner, rendered into the taxonomy's own list of types                              |
-| `versus`                   | How this type differs from another that is easily confused with it — see the note below                          |
-| `lineage`                  | The type's prior art, what the framework took from it, and where it parts company                                |
-| `collision`                | Where the type's name already means something else, and what a reader will get wrong                             |
-| `id`                       | Prefix, style and width — see the note below on which styles the validator acts on                               |
-| `filename`                 | Pattern and slug length limit                                                                                    |
-| `sections`                 | Required and optional H2s — the required ones for presence, and either kind for holding something                |
-| `clauses`                  | The clause table's section, id pattern and modals, where a type states its obligations as addressable rows       |
-| `index`                    | Columns, sort columns and direction for the generated index — see the note below                                 |
-| `rules`                    | Type-level behaviours — see the note below on which of them run                                                  |
-
-**`folder`.** A type is a folder of records, a page describing them, and a template to copy. `folder:` names the first
-of those and is required. The check reads the value rather than the key, because an absent `folder:` and a deliberate
-`folder: null` are the same string once parsed. A type that lost the key reads exactly like one that never had it.
-
-**`summary` and `goes-here`.** The two lines a type says about itself, and the reason a corpus's pages can describe the
-corpus rather than the framework's full range. `summary` is what the type holds — "the rulebook, imperative, RFC 2119"
-— and heads the type's row in the repository's own index. `goes-here` is the same type from the other side, phrased as
-what the contributor is holding — "a rule people must follow when building" — and is the row in the taxonomy's decision
-table. Both are required, both are rendered as table cells, and both are held to the same length limit as a rule's
+**`summary` and `goes-here`** are the two lines a type says about itself, and the reason a corpus's pages can describe
+the corpus rather than the framework's full range. `summary` is what the type holds — "the rulebook, imperative, RFC
+2119" — and heads the type's row in the repository's own index. `goes-here` is the same type from the other side,
+phrased as what the contributor is holding — "a rule people must follow when building" — and is the row in the
+taxonomy's decision table. Both are rendered as table cells and held to the same length limit as a rule's
 `description`. The fuller account of a type, with its examples and its edges, stays on `<type>.md`.
 
-**`detail`** is the paragraph the other two are too short to be: what the type carries beyond its first sentence, and
-the edge a reader is most likely to walk over. It is rendered as prose rather than into a table, so it is not held to
-the cell bound — but it is held to being *the framework's* account of the type. Anything local, any example from the
-estate, belongs on `<type>.md`, which is the corpus's to write and never reconciled.
+**`detail`** is the paragraph the other two are too short to be. It is rendered as prose rather than into a table, so it
+is not held to the cell bound — but it is held to being *the framework's* account of the type. Anything local, any
+example from the estate, belongs on `<type>.md`, which is the corpus's to write and never reconciled.
 
 **`versus`** is the one thing a type says about another type rather than about itself: a mapping from another type's
 folder to the paragraph separating the two. It becomes the taxonomy's disambiguation list.
@@ -184,9 +163,9 @@ A pair is written **once**, by the type its heading is titled from — `versus: 
 two sides against each other instead: a pair both sides declare is two accounts of one distinction with nothing keeping
 them in step, and fails. So does a pair against a folder no schema covers, or against the declaring type itself.
 
-**`lineage`** records where the type's name came from — `prior-art`, and the `alignment` and `divergence` beside it. It
-is the framework's own intellectual debt, identical wherever this schema is taken. A corpus's *standing* against a
-framework is the other thing entirely: that belongs wholly to the corpus, and `frameworks.md` records it alone.
+**`lineage`** is the framework's own intellectual debt, identical wherever this schema is taken. A corpus's *standing*
+against a framework is the other thing entirely: that belongs wholly to the corpus, and `frameworks.md` records it
+alone.
 
 Only `prior-art` is required, and "none" is one of its answers. Some types have no useful ancestor, and claiming one is
 worse than admitting none. What was taken and where it diverges are questions such a type cannot answer, so leaving both
@@ -208,25 +187,9 @@ Only the types a corpus has adopted are rendered, so a decision table never offe
 there to open. A disambiguation needs both of its types by the same rule: a corpus with no controls is not helped by
 being told how a standard differs from one.
 
-**`label-plural` is required where `label` is not**, because only one of the two can be derived. A missing `label`
-falls back to the type name capitalised; nothing turns `nfr` into "NFRs" or `glossary` into "Glossary", and appending an
-`s` is right for some types and wrong for the rest. The plural is what a generated line uses when it points at the
-type's page rather than at one of its records — "it goes in **Policies**".
-
-**`tier`** must be one `_tiers.yaml` declares. It is what every validation rule, review expectation and language rule
-keys off, and it is written into the frontmatter of every record of the type, so a tier neither file knows is a word the
-corpus carries and nothing means anything by.
-
-**`index`.** `sort:` is one column or several — `sort: [severity, id]` sorts on the first and breaks ties with the
-next — and a type declaring none is sorted by `id`, the one column every document carries. `order:` is `ascending`
-(the default) or `descending`, and applies to the sort as a whole rather than to one column of it; a type wanting one
-column each way is asking two questions with one key. A postmortem index is the case for `descending`: the incident
-someone is looking for is almost always the most recent.
-
-**`id.style`.** Three styles are dispatched: `numbered`, `slug` and `mnemonic`, and a fourth name fails when the schema
-loads. Each is a prefix and a discriminator — four digits, a lower-case slug, a fixed-width upper-case mnemonic —
-checked for shape and then for agreement with the same discriminator in the filename, which is what keeps a record's id
-and its path naming the same document.
+**`index.order`** applies to the sort as a whole rather than to one column of it; a type wanting one column each way is
+asking two questions with one key. A postmortem index is the case for `descending`: the incident someone is looking for
+is almost always the most recent.
 
 **`rules`.** A rule declaring an `expr:` runs. It is evaluated against every document of its type, reports under its own
 id, is listed by `kac checks`, and renders its own row into the generated `## What CI checks` block from its
@@ -254,10 +217,6 @@ less finished than it is. Ten will never be an expression. Eight are not validat
 `kac` has no execution model for them, while `coverage-report` is a generator and belongs with `kac index`. The other
 two are not rules about a document at all: `blameless` needs a list of personal names, since no regular expression tells
 `Alex Doe` from `Root Cause`, and `human-confirmed` is a `pattern:` on a field.
-
-Reciprocity and section mirroring are declared on the **field**, not here: `reciprocal:` and `mirrors-section:` drive
-them. So does a conditional requirement, through `required-when:`. A `rules:` entry restating any of those has no
-effect — an entry that duplicates a declaration reads as a second, weaker source for the same obligation.
 
 ## Rule expressions
 
@@ -405,7 +364,9 @@ shape of the page the value lands on: the `sections:` block beside a `mirrors-se
 
 The key vocabulary is read the same way, and there is no list of permitted keys anywhere: the loader records what it
 asks each mapping for, and whatever is left over is reported. So a key gains its meaning and its admission in the same
-edit, and a key that stops being read stops being admitted without anyone having to remember.
+edit, and a key that stops being read stops being admitted without anyone having to remember. `meta/type.schema.json`
+holds a list and is the exception that proves it: it can be behind, which is why it advises an author and gates
+nothing.
 
 A `ref:` at a type the corpus never adopted is reported for the same reason as one that is misspelled: whether the
 folder was deleted here or never existed upstream, the field claims a target nothing can resolve. Re-adopt the type file

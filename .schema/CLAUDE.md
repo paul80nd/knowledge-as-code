@@ -1,6 +1,7 @@
 # Changing the schema
 
-[`README.md`](README.md) is the reference for the keys. This is what will bite you. In a corpus that declares
+[`meta/type.schema.json`](meta/type.schema.json) is the reference for the keys and [`README.md`](README.md) is the
+reasoning behind them. This is what will bite you. In a corpus that declares
 `role: consumer`, these files arrive from upstream: author the change here and take it down with
 `kac mechanism --sync`, because a local edit is drift.
 
@@ -12,7 +13,10 @@ golden expectations in `.tooling/tests/fixtures/`: run `dotnet run .tooling/kac-
 * **A key you invent is rejected, and `notes:` is how you say the thing anyway.** The key space is closed at every
   level: the loader records what it asks each mapping for, and anything left over fails as `schema-unknown-key`. A new
   key means an edit to `.tooling/kac.core/Schema.cs` **and** to the code that reads what it parsed into — finding it
-  parsed is not enough, since a value nothing dispatches fails the same pass one step later.
+  parsed is not enough, since a value nothing dispatches fails the same pass one step later. Declare it in
+  [`meta/type.schema.json`](meta/type.schema.json) in the same edit: nothing in CI reads that file, so a key missing
+  from it is one an editor marks red while the build stays green, and the mistake surfaces as distrust of the tooling
+  rather than as a finding.
 
 * **Field order is load-bearing.** `key-order` requires a document's frontmatter to be a topological extension of the
   universal order followed by the type's. Reordering fields here can invalidate documents that were correct, and the
