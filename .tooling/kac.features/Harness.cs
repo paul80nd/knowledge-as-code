@@ -22,7 +22,7 @@ public static class Harness
             CopyTree(schemaDir, Path.Combine(temp, ".schema"));
             CopyTree(corpusDir, temp);
 
-            var corpus = Corpus.Load(temp, []);
+            var corpus = Corpus.Load(temp);
             return new ValidationResult(Validator.CheckAll(corpus), corpus.Docs.Count,
                 corpus.SkippedNoFrontmatter);
         }

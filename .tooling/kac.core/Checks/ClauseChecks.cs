@@ -102,7 +102,7 @@ public static class ClauseChecks
     // Every document is asked, including the ones declaring no clause table of their own: a citation is
     // written where the obligation is answered, which is a standard, a control or a deviation. The
     // other two ways need `byId` and run over the corpus. This one is legible in the single file, so it
-    // sits here and a run narrowed to that file still reports it.
+    // sits here.
     //
     // Left unchecked it is silent. The parser reads a citation by its separator, so a colon-separated
     // one is never collected, the resolution checks never see it, and the build passes on a reference

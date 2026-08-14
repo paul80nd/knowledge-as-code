@@ -32,11 +32,6 @@ public sealed class LoadedCorpus
     // Discovered but not migrated. Reported rather than dropped, so a corpus part-way through
     // adoption reads as part-way through rather than as smaller than it is.
     public required int SkippedNoFrontmatter;
-
-    // The subtrees this load was narrowed to, empty for the whole repo. Held because it decides more
-    // than which documents were read: a run narrowed to one document is not asking about the shape of
-    // the corpus, and the checks that answer that are skipped.
-    public required List<string> Paths;
 }
 
 public static class Corpus
@@ -56,14 +51,14 @@ public static class Corpus
     // before it can ask a question. The listing is taken once and carried on the result: discovery
     // and the type-setup check both want it, and a second `git ls-files` costs more than every check
     // in the tool put together.
-    public static LoadedCorpus Load(string repoRoot, List<string> paths)
+    public static LoadedCorpus Load(string repoRoot)
     {
         var schema = Schema.Load(repoRoot);
         var files = AllFiles(repoRoot);
 
         var docs = new List<Doc>();
         var skipped = 0;
-        foreach (var rel in Discover(files, schema, paths))
+        foreach (var rel in Discover(files, schema))
         {
             var doc = Doc.Parse(rel, File.ReadAllText(Path.Combine(repoRoot, rel)), schema);
             if (doc is null)
@@ -82,9 +77,8 @@ public static class Corpus
             Descriptor = CorpusDescriptor.Load(repoRoot),
             Files = files,
             Docs = docs,
-            Templates = DiscoverTemplates(repoRoot, schema, paths),
-            SkippedNoFrontmatter = skipped,
-            Paths = paths
+            Templates = DiscoverTemplates(repoRoot, schema),
+            SkippedNoFrontmatter = skipped
         };
     }
 
@@ -122,15 +116,12 @@ public static class Corpus
     //
     // A type with no template is skipped in silence — its absence is type-setup's to report, and a type
     // nobody has stood up yet is a valid, quiet state.
-    private static List<string> DiscoverTemplates(string repoRoot, Schema schema, List<string> paths)
+    private static List<string> DiscoverTemplates(string repoRoot, Schema schema)
     {
-        var pathFilter = paths.Select(p => p.Replace('\\', '/').TrimEnd('/')).ToList();
-
         var result = new List<string>();
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             var rel = $"{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/{Artefact.Template}";
-            if (pathFilter.Count > 0 && !pathFilter.Any(p => rel == p || rel.StartsWith(p + "/"))) continue;
             if (File.Exists(Path.Combine(repoRoot, rel))) result.Add(rel);
         }
 
@@ -138,8 +129,8 @@ public static class Corpus
     }
 
     // Which of the listed files are records to validate: markdown, inside a folder the schema maps to
-    // a type, and within the given subtrees.
-    private static List<string> Discover(List<string> files, Schema schema, List<string> paths)
+    // a type.
+    private static List<string> Discover(List<string> files, Schema schema)
     {
         // Type pages at the repo root — adrs.md, services.md, data.md, … Each is prose about its
         // records and is checked separately, as a page.
@@ -149,15 +140,12 @@ public static class Corpus
 
         var typeFolders = new HashSet<string>(schema.ByFolder.Keys, StringComparer.OrdinalIgnoreCase);
 
-        var pathFilter = paths.Select(p => p.Replace('\\', '/').TrimEnd('/')).ToList();
-
         var result = new List<string>();
         foreach (var raw in files)
         {
             var rel = raw.Replace('\\', '/');
             if (!rel.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) continue;
             if (IsExcluded(rel, typePages, typeFolders)) continue;
-            if (pathFilter.Count > 0 && !pathFilter.Any(p => rel == p || rel.StartsWith(p + "/"))) continue;
             result.Add(rel);
         }
 

@@ -11,8 +11,7 @@ with the framework, and each corpus's own `.corpus.yaml` at the repository root.
 ## Running
 
 ```bash
-./kac validate            # validate the whole repo
-./kac validate adrs/      # validate a subtree or file
+./kac validate            # validate the corpus
 ./kac validate --json     # machine-readable summary + findings
 ./kac index               # regenerate indexes and blocks
 ./kac index --check       # verify generated output is fresh
@@ -129,8 +128,7 @@ editing this tool; [`../.schema/README.md`](../.schema/README.md) is the referen
 class each in `kac.core/Rules/`, with unit tests beside them, for the questions the grammar cannot ask.
 
 `dependency-cycle` is the one that asks about the records together rather than about each one. It is reported once per
-loop against the lowest id on it, and skipped when a run is narrowed to given paths: a graph read from a handful of its
-records has no loops in it, whatever the corpus holds.
+loop against the lowest id on it.
 
 The schema declares roughly as many rules again that do not run — intentions, carrying a `description:` and no
 `severity:`, rendered on their type page under *Declared, not yet enforced*. Naming a severity without running is the

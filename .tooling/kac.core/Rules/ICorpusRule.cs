@@ -8,11 +8,10 @@ namespace kac.core;
 // defines, a store no service claims: each is a property of the set, and none of them is visible from
 // inside a member of it.
 //
-// Separate from `IDocumentRule` rather than a wider context on it, because what a rule is handed
-// decides when it may run. A document rule answers about whatever documents were asked about, so a run
-// narrowed to one path still runs it; a corpus rule answers about the corpus, and on a subset would
-// answer confidently and wrongly. The dispatcher acts on that difference, and one interface carrying
-// both would leave it nowhere to read it from.
+// Separate from `IDocumentRule` rather than a wider context on it, so that what a rule may read is
+// legible from the interface it implements. A rule handed the whole corpus to judge one document is a
+// rule whose reach nothing can see; declaring the narrower interface is how a rule says it needs no
+// more than the document in front of it. The dispatcher runs each from its own pass.
 public interface ICorpusRule
 {
     // The id in the type schema's `rules:` block, and what the rule reports under — the same pair
