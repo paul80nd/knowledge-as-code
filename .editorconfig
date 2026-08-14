@@ -38,6 +38,12 @@ ij_markdown_keep_line_breaks_inside_text_blocks = false
 # file that differs from what the generator would write.
 ij_markdown_format_tables = true
 
+# A fixture corpus is an input, and the goldens and feature specs pin the line a finding lands
+# on. Reflowing one moves the assertion out from under the test.
+[.tooling/tests/fixtures/**.md]
+ij_markdown_wrap_text_if_long = false
+ij_markdown_keep_line_breaks_inside_text_blocks = true
+
 [*.{yaml,yml}]
 indent_size = 2
 
@@ -46,6 +52,11 @@ indent_size = 2
 ij_yaml_spaces_within_brackets = false
 
 [*.json]
+indent_size = 2
+
+# Two columns a level, as Cucumber's own reference writes it. The IntelliJ formatter puts
+# Scenario on the margin and, where a file has no Background, the steps too — so skip these.
+[*.feature]
 indent_size = 2
 
 # MSBuild indents by two and spaces the self-closing slash; the second is an IntelliJ key.
