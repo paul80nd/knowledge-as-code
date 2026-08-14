@@ -20,18 +20,17 @@ public static class Commands
     {
         var corpus = Corpus.Load(repoRoot);
 
-        // What every generated file should hold. `GeneratedFiles` owns which files those are and which
-        // blocks each carries, so that `validate` holds a corpus to the same list this writes.
-        var targets = GeneratedFiles.Targets(corpus);
+        // What every generated file should hold, beside what it holds now. `GeneratedFiles` owns which
+        // files those are and which blocks each carries, so that `validate` holds a corpus to the same
+        // list this writes.
+        var plan = GeneratedFiles.Plan(corpus.Schema, corpus.Adopted, corpus.Docs, corpus.Tree);
 
         if (check)
         {
-            var stale = targets.Where(x => !File.Exists(x.Path) || Files.ReadLf(x.Path) != x.Content)
-                .Select(x => Path.GetRelativePath(repoRoot, x.Path).Replace('\\', '/'))
-                .ToList();
+            var stale = plan.Where(f => f.Stale).Select(f => f.Path).ToList();
             if (stale.Count == 0)
             {
-                Console.WriteLine($"index is up to date ({targets.Count} generated file(s)).");
+                Console.WriteLine($"index is up to date ({plan.Count} generated file(s)).");
                 return 0;
             }
 
@@ -42,16 +41,15 @@ public static class Commands
             return 1;
         }
 
-        ReportWritten(repoRoot, GeneratedFiles.Write(targets));
+        ReportWritten(GeneratedFiles.Write(repoRoot, plan));
         return 0;
     }
 
     // What a regeneration wrote. Shared with `mechanism --sync`, which ends by regenerating, so that a
     // sync reports the files it rebuilt in the words `index` uses for the same work.
-    private static void ReportWritten(string repoRoot, List<string> written)
+    private static void ReportWritten(List<string> written)
     {
-        foreach (var path in written)
-            Console.WriteLine($"wrote {Path.GetRelativePath(repoRoot, path).Replace('\\', '/')}");
+        foreach (var path in written) Console.WriteLine($"wrote {path}");
 
         Console.WriteLine(written.Count == 0
             ? "index already up to date; nothing written."
@@ -290,7 +288,9 @@ public static class Commands
     {
         try
         {
-            ReportWritten(repoRoot, GeneratedFiles.Write(GeneratedFiles.Targets(Corpus.Load(repoRoot))));
+            var corpus = Corpus.Load(repoRoot);
+            ReportWritten(GeneratedFiles.Write(repoRoot,
+                GeneratedFiles.Plan(corpus.Schema, corpus.Adopted, corpus.Docs, corpus.Tree)));
             return 0;
         }
         catch (Exception ex)

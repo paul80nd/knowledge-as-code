@@ -28,82 +28,87 @@ public static class GeneratedFiles
     // Which blocks each file carries. Reads no disk and renders nothing, so a caller can ask what a corpus
     // ought to hold without building a single table.
     //
-    // Takes the adopted types rather than the descriptor: adoption is a question the corpus answers from
-    // `.corpus.yaml` or, undeclared, from the filesystem — see `Corpus.Adopted` — and resolving it here
-    // would put a directory read behind a list of names.
+    // Takes the adopted types rather than the descriptor: adoption is resolved once, when the corpus is
+    // loaded — see `Corpus.Adopted` — so that what is generated and what the corpus is held to having
+    // built cannot be answered differently.
     public static List<BlockFile> Blocks(IReadOnlyList<TypeSchema> adopted) =>
     [
         .. Declare(adopted).Select(spec =>
             new BlockFile(spec.Path, [.. spec.Blocks.Select(b => b.Name)], spec.MarkersRequired))
     ];
 
-    // Every generated file and the full content it should hold, in the order `index` writes them.
-    //
-    // A file that is not on disk is skipped rather than created: the generator populates structure the
-    // corpus has declared and never invents it. `validate` is the one voice that says an adopted type is
-    // not set up, so a missing page is reported there rather than papered over here.
-    public static List<(string Path, string Content)> Targets(LoadedCorpus corpus)
+    // One generated file: where it goes, what the corpus holds there now, and what it should hold.
+    // `Current` is null where the corpus holds nothing at that path yet, which is a file to write rather
+    // than a file that has drifted.
+    public readonly record struct GeneratedFile(string Path, string? Current, string Wanted)
     {
-        var (schema, repoRoot) = (corpus.Schema, corpus.RepoRoot);
+        public bool Stale => Current != Wanted;
+    }
 
-        // The types this corpus took, which is what everything below is generated from. The schema
-        // declares the framework's full range and a corpus adopts as much of it as it has use for, so
-        // generating per schema type would write pages for types the corpus declined — files no list of
-        // its types names, and which `index --check` then holds it to keeping fresh.
-        var adopted = Corpus.Adopted(schema, repoRoot, corpus.Descriptor);
-
+    // Every generated file and what it should hold, in the order `index` writes them.
+    //
+    // Reads nothing and writes nothing: everything it needs arrives in its arguments, so what `index`
+    // comes to is decidable from a listing and a set of records. `Write` is the half that acts.
+    //
+    // A file the corpus does not hold is skipped rather than created — the generator populates structure
+    // the corpus has declared and never invents it. `validate` is the one voice that says an adopted type
+    // is not set up, so a missing page is reported there rather than papered over here. An `_index.md` is
+    // the exception: it is written whether or not it is there, because each type page links to one and a
+    // withheld file is a dead link rather than a tidy absence.
+    public static List<GeneratedFile> Plan(Schema schema, IReadOnlyList<TypeSchema> adopted,
+        IEnumerable<Doc> docs, Tree tree)
+    {
         // Grouped by type. A document whose folder maps to no schema has nothing to be indexed under;
         // validate is the voice that says so.
         var byType = new Dictionary<string, List<Doc>>();
-        foreach (var doc in corpus.Docs)
+        foreach (var doc in docs)
         {
             if (doc.Type is null) continue;
             (byType.TryGetValue(doc.Type.Folder, out var list) ? list : byType[doc.Type.Folder] = []).Add(doc);
         }
 
-        var targets = new List<(string, string)>();
+        var plan = new List<GeneratedFile>();
 
-        // Every adopted type gets an index, populated or not — each type page links to one, so a
-        // withheld file is a dead link rather than a tidy absence. Written whole, so it carries no
-        // markers and `Blocks` does not name it.
+        // Written whole, so it carries no markers and `Blocks` does not name it.
         foreach (var t in adopted)
         {
             if (string.IsNullOrEmpty(t.Folder)) continue;
-            if (!Directory.Exists(Path.Combine(repoRoot, t.Folder))) continue;
-            var docs = byType.TryGetValue(t.Folder, out var found) ? found : [];
-            targets.Add((Path.Combine(repoRoot, t.Folder, Artefact.Index), Generator.IndexPage(t, docs)));
+            if (!tree.HasFolder(t.Folder)) continue;
+            var rel = $"{t.Folder}/{Artefact.Index}";
+            var records = byType.TryGetValue(t.Folder, out var found) ? found : [];
+            plan.Add(new GeneratedFile(rel, tree.Exists(rel) ? tree.Read(rel) : null, Generator.IndexPage(t, records)));
         }
 
-        // Every block a file carries, spliced into one text and offered as one target — a file is written
+        // Every block a file carries, spliced into one text and offered as one entry — a file is written
         // once, so two blocks in the same file cannot each overwrite the other's work. A file carrying no
         // marker resolves to itself, which is what lets a corpus decline the one block it may.
         foreach (var spec in Declare(adopted))
         {
-            var full = Path.Combine(repoRoot, spec.Path);
-            if (!File.Exists(full)) continue;
+            if (!tree.Exists(spec.Path)) continue;
 
-            var text = Files.ReadLf(full);
-            foreach (var block in spec.Blocks) text = Generator.SpliceBlock(text, block.Name, block.Render(schema));
-            targets.Add((full, text));
+            var current = tree.Read(spec.Path);
+            var wanted = current;
+            foreach (var block in spec.Blocks) wanted = Generator.SpliceBlock(wanted, block.Name, block.Render(schema));
+            plan.Add(new GeneratedFile(spec.Path, current, wanted));
         }
 
-        return targets;
+        return plan;
     }
 
-    // Write every target whose content has moved, and answer with what was written. A file already
-    // holding what it should is left alone rather than rewritten, so a regeneration that changes nothing
-    // touches nothing and says so.
+    // Write every entry whose content has moved, and answer with what was written. A file already holding
+    // what it should is left alone rather than rewritten, so a regeneration that changes nothing touches
+    // nothing and says so — which the plan has already decided, so this asks the disk nothing.
     //
     // `index` and `mechanism --sync` both end here, so a sync writes what an index would write and the
     // two cannot come to different files.
-    public static List<string> Write(IEnumerable<(string Path, string Content)> targets)
+    public static List<string> Write(string repoRoot, IEnumerable<GeneratedFile> plan)
     {
         var written = new List<string>();
-        foreach (var (path, content) in targets)
+        foreach (var file in plan)
         {
-            if (File.Exists(path) && Files.ReadLf(path) == content) continue;
-            File.WriteAllText(path, content);
-            written.Add(path);
+            if (!file.Stale) continue;
+            File.WriteAllText(Path.Combine(repoRoot, file.Path), file.Wanted);
+            written.Add(file.Path);
         }
 
         return written;

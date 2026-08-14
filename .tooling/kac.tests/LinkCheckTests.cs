@@ -1,8 +1,13 @@
 using kac.core;
 
-// In-process unit tests for the decision the link pass turns on: whether a target resolves on disk. It
-// is fiddly, it is quiet when wrong, and the goldens can only reach it through a whole corpus. Whether a
-// bracketed label is an id is asked here too, but answered in IdChecks and tested beside it.
+// In-process unit tests for the decision the link pass turns on: whether a target names something the
+// corpus holds. It is fiddly, it is quiet when wrong, and the goldens can only reach it through a whole
+// corpus. Whether a bracketed label is an id is asked here too, but answered in IdChecks and tested
+// beside it.
+//
+// Driven through `LinkChecks.CheckPage`, which is what the validator calls, against a `Tree` built from a
+// listing. The resolver reads the corpus rather than the disk, so the corpus a test needs is a set of
+// paths and the text behind them.
 
 namespace kac.tests;
 
@@ -13,38 +18,48 @@ public class LinkCheckTests
     [Fact]
     public void A_target_resolves_absolute_from_the_root_or_relative_to_the_document()
     {
-        var root = TempCorpus();
-
-        Assert.True(LinkChecks.ResolveTarget(root, "adrs/0001-a.md", "/adrs/0002-b.md"));
-        Assert.True(LinkChecks.ResolveTarget(root, "adrs/0001-a.md", "0002-b.md"));
-        Assert.True(LinkChecks.ResolveTarget(root, "adrs/0001-a.md", "../adrs.md"));
-        Assert.False(LinkChecks.ResolveTarget(root, "adrs/0001-a.md", "/adrs/0099-gone.md"));
+        Assert.Empty(Unresolved("adrs/0001-a.md", "[b](/adrs/0002-b.md)"));
+        Assert.Empty(Unresolved("adrs/0001-a.md", "[b](0002-b.md)"));
+        Assert.Empty(Unresolved("adrs/0001-a.md", "[up](../adrs.md)"));
+        Assert.Single(Unresolved("adrs/0001-a.md", "[gone](/adrs/0099-gone.md)"));
     }
 
     // Azure DevOps resolves a link with the extension left off, so the corpus is written that way and
     // the check has to follow.
     [Fact]
     public void The_md_extension_may_be_omitted()
-        => Assert.True(LinkChecks.ResolveTarget(TempCorpus(), "adrs/0001-a.md", "/adrs/0002-b"));
+        => Assert.Empty(Unresolved("adrs/0001-a.md", "[b](/adrs/0002-b)"));
 
     // A directory is deliberately not a target: `/adrs` is a link to the page `adrs.md`, and accepting
-    // the folder as well would resolve a link to a type whose page has gone. Git cannot track an empty
-    // directory either, so the same link would pass locally and fail in CI.
+    // the folder as well would resolve a link to a type whose page has gone.
     [Fact]
     public void A_directory_is_not_a_target_but_the_page_beside_it_is()
     {
-        var root = TempCorpus();
-        Assert.True(LinkChecks.ResolveTarget(root, "index.md", "/adrs"));      // resolves as adrs.md
-        Assert.False(LinkChecks.ResolveTarget(root, "index.md", "/pictures")); // a folder with no page
+        Assert.Empty(Unresolved("index.md", "[adrs](/adrs)"));       // resolves as adrs.md
+        Assert.Single(Unresolved("index.md", "[pics](/pictures)"));  // a folder with no page
     }
 
-    // A fragment or a query is addressing within a target, not a different one.
+    // A file the repository ignores is not in the corpus. It is on the disk of whoever created it and in
+    // no clone, so a link to one is dead everywhere the corpus is read.
+    [Fact]
+    public void A_target_the_corpus_does_not_hold_does_not_resolve()
+        => Assert.Single(Unresolved("index.md", "[draft](/_plan/notes.md)"));
+
+    // A fragment or a query addresses within a target rather than naming a different one.
     [Theory]
-    [InlineData("/adrs/0002-b.md#context")]
-    [InlineData("/adrs/0002-b.md?raw=1")]
-    [InlineData("#a-heading-in-this-document")]
-    public void A_fragment_or_query_is_stripped_before_the_target_is_looked_up(string target)
-        => Assert.True(LinkChecks.ResolveTarget(TempCorpus(), "adrs/0001-a.md", target));
+    [InlineData("[b](/adrs/0002-b.md#context)")]
+    [InlineData("[b](/adrs/0002-b.md?raw=1)")]
+    public void A_fragment_or_query_is_stripped_before_the_target_is_looked_up(string markdown)
+        => Assert.Empty(Unresolved("adrs/0001-a.md", markdown));
+
+    // A fragment with nothing before it names a heading in this document, so it never reaches the
+    // resolver at all.
+    [Fact]
+    public void A_bare_fragment_names_a_heading_in_this_document()
+    {
+        Assert.Empty(Findings("adrs/0001-a.md", "# Context\n\n[here](#context)\n"));
+        Assert.Single(Findings("adrs/0001-a.md", "# Context\n\n[there](#decision)\n"));
+    }
 
     [Theory]
     [InlineData("https://example.com/a", true)]
@@ -54,17 +69,39 @@ public class LinkCheckTests
     public void An_external_target_is_left_alone(string target, bool external)
         => Assert.Equal(external, LinkChecks.IsExternal(target));
 
-    // A corpus on disk, because the resolver asks the filesystem and mocking that would only pin the
-    // mock. Built once per class and left for the runner to clear.
-    private static string TempCorpus()
+    // -- the corpus these are asked against --
+
+    private static List<string> Unresolved(string fromRel, string markdown) =>
+    [
+        .. Findings(fromRel, markdown).Where(f => f.Check.Value == "link-resolves").Select(f => f.Message)
+    ];
+
+    private static List<Finding> Findings(string fromRel, string markdown)
     {
-        var root = Path.Combine(Path.GetTempPath(), "kac-link-tests");
-        Directory.CreateDirectory(Path.Combine(root, "adrs"));
-        Directory.CreateDirectory(Path.Combine(root, "pictures"));
-        File.WriteAllText(Path.Combine(root, "adrs.md"), "# ADRs\n");
-        File.WriteAllText(Path.Combine(root, "index.md"), "# Index\n");
-        File.WriteAllText(Path.Combine(root, "adrs", "0001-a.md"), "# A\n");
-        File.WriteAllText(Path.Combine(root, "adrs", "0002-b.md"), "# B\n");
-        return root;
+        var schema = new Schema();
+        var doc = Doc.Parse(fromRel, markdown, schema, requireFrontmatter: false)!;
+        var findings = new List<Finding>();
+        LinkChecks.CheckPage(doc, schema, Corpus(), findings);
+        return findings;
     }
+
+    // What the corpus holds, as a listing. `_plan/notes.md` is deliberately absent: it is the file on
+    // disk that git ignores, and the point of the test above is that the two are not the same question.
+    private static Tree Corpus() => new(
+        new HashSet<string>(StringComparer.Ordinal)
+        {
+            "adrs.md",
+            "index.md",
+            "adrs/0001-a.md",
+            "adrs/0002-b.md",
+            "pictures/cat.png"
+        },
+        rel => rel switch
+        {
+            "adrs.md" => "# ADRs\n",
+            "index.md" => "# Index\n",
+            "adrs/0001-a.md" => "# A\n",
+            "adrs/0002-b.md" => "# B\n\n## Context\n",
+            _ => ""
+        });
 }

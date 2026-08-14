@@ -34,7 +34,7 @@ if (repoRoot is null)
 }
 
 // `validate` takes no paths: several of its checks ask about the shape of the corpus rather than
-// about a document, and a subset cannot answer them. It is the whole corpus or nothing.
+// about a document, and a subset cannot answer them.
 var jsonOpt = new Option<bool>("--json") { Description = "Emit the summary and findings as JSON." };
 var validate = new Command("validate", "Check the corpus against .schema/*.yaml.")
 {

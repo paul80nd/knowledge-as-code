@@ -73,6 +73,113 @@ public class GeneratedFilesTests
     }
 }
 
+// What a regeneration comes to, decided from a listing and a set of records. `Plan` reads nothing, so the
+// corpus each case needs is written out here in a few lines.
+//
+// The `index`, `index-adoption` and `index-stale` fixtures cover the same ground through the CLI. They pin
+// the tree a command leaves behind; these pin what it decided to leave.
+public class GeneratedFilePlanTests
+{
+    private static TypeSchema Type(string key) => new()
+    {
+        Key = key,
+        TypeName = key,
+        Folder = key,
+        Page = $"{key}.md"
+    };
+
+    private const string Markers = """
+                                   # ADRs
+
+                                   <!-- BEGIN GENERATED: schema-adrs -->
+                                   stale
+                                   <!-- END GENERATED: schema-adrs -->
+
+                                   <!-- BEGIN GENERATED: checks-adrs -->
+                                   stale
+                                   <!-- END GENERATED: checks-adrs -->
+                                   """;
+
+    private static Tree Corpus(params (string Path, string Text)[] files) => new(
+        new HashSet<string>(files.Select(f => f.Path), StringComparer.Ordinal),
+        rel => files.First(f => f.Path == rel).Text);
+
+    private static List<GeneratedFiles.GeneratedFile> Plan(IReadOnlyList<TypeSchema> adopted, Tree tree)
+        => GeneratedFiles.Plan(new Schema(), adopted, [], tree);
+
+    [Fact]
+    public void An_adopted_type_whose_folder_the_corpus_holds_gets_an_index()
+    {
+        var plan = Plan([Type("adrs")], Corpus(("adrs/0001-a.md", "# A")));
+
+        Assert.Contains(plan, f => f.Path == "adrs/_index.md");
+    }
+
+    // The folder is the half that says the type is really here. Without it there is nowhere to put an
+    // index, and `validate` is the voice that says the type is half set up.
+    [Fact]
+    public void An_adopted_type_whose_folder_is_absent_gets_nothing()
+    {
+        var plan = Plan([Type("adrs")], Corpus(("adrs.md", "# ADRs")));
+
+        Assert.DoesNotContain(plan, f => f.Path == "adrs/_index.md");
+    }
+
+    [Fact]
+    public void A_type_the_corpus_declined_is_not_in_the_plan()
+    {
+        var plan = Plan([], Corpus(("adrs/0001-a.md", "# A"), ("adrs.md", Markers)));
+
+        Assert.DoesNotContain(plan, f => f.Path.StartsWith("adrs"));
+    }
+
+    // An index is written whether or not one is there, because the type page links to it.
+    [Fact]
+    public void An_index_the_corpus_does_not_hold_yet_is_written_rather_than_skipped()
+    {
+        var file = Assert.Single(Plan([Type("adrs")], Corpus(("adrs/0001-a.md", "# A"))),
+            f => f.Path == "adrs/_index.md");
+
+        Assert.Null(file.Current);
+        Assert.True(file.Stale);
+    }
+
+    // A page is not: the generator populates structure the corpus declared and never invents it.
+    [Fact]
+    public void A_block_carrying_file_the_corpus_does_not_hold_is_skipped()
+    {
+        var plan = Plan([Type("adrs")], Corpus(("adrs/0001-a.md", "# A")));
+
+        Assert.DoesNotContain(plan, f => f.Path == "adrs.md");
+    }
+
+    [Fact]
+    public void A_page_holding_what_it_should_is_not_stale()
+    {
+        var first = Assert.Single(Plan([Type("adrs")], Corpus(("adrs/0001-a.md", "# A"), ("adrs.md", Markers))),
+            f => f.Path == "adrs.md");
+
+        // Feed the rendered text back in: what the plan wanted is what the corpus now holds.
+        var second = Assert.Single(
+            Plan([Type("adrs")], Corpus(("adrs/0001-a.md", "# A"), ("adrs.md", first.Wanted))),
+            f => f.Path == "adrs.md");
+
+        Assert.True(first.Stale);
+        Assert.False(second.Stale);
+    }
+
+    // A file with no markers left resolves to itself, which is how `README.md` declines its block.
+    [Fact]
+    public void A_file_that_carries_no_marker_is_left_as_it_is()
+    {
+        var file = Assert.Single(Plan([], Corpus(("README.md", "# A corpus\n\nno block here.\n"))),
+            f => f.Path == "README.md");
+
+        Assert.Equal(file.Current, file.Wanted);
+        Assert.False(file.Stale);
+    }
+}
+
 // The marker check itself. The golden fixture trips one of these; the rest are here, because the coverage
 // gate reads ids rather than branches and would call the check covered on the strength of the first.
 public class GeneratedBlockCheckTests
