@@ -7,6 +7,25 @@ Azure DevOps renders frontmatter as a table at the top of the page, so **every f
 every document of that type**. Fields are therefore a design decision about the reader as much as about the schema. Add
 them sparingly, and derive rather than state wherever possible.
 
+## What a record carries
+
+A record holds three kinds of thing, and each has one home.
+
+**Frontmatter is metadata about the record** — what identifies it, places it in the taxonomy, and describes it as a
+whole. One value to a field, or a set of them. It is what an index sorts on, what a citation resolves against, and what
+an agent greps for.
+
+**A table in the body carries the record's parts**, where a part needs a rule or an address of its own. A policy's
+obligations are the case in this corpus: `## Clauses` holds one row per obligation, each with an id that a standard or
+a control cites as `pol-VURM.TIMEBOX`. The type declares that table in its schema — the section holding it, its
+columns, the pattern a row id takes — and CI reads the rows out of the body and holds them to the declaration.
+
+**Everything else is prose**, in the section where it belongs.
+
+The question to ask of a table is whether anything has to address a row: a citation that must resolve, a check that must
+fire. Where nothing does, it is prose set in columns, and the schema says nothing about it. A part moved into
+frontmatter reaches the reader as a metadata table written for a machine, and leaves the page they are already reading.
+
 ## Principles
 
 1. **Derive what the system already knows.** Document type comes from the folder. Tier comes from the type. Title comes

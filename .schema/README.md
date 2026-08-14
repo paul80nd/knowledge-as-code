@@ -187,6 +187,16 @@ Only the types a corpus has adopted are rendered, so a decision table never offe
 there to open. A disambiguation needs both of its types by the same rule: a corpus with no controls is not helped by
 being told how a standard differs from one.
 
+**`clauses`** declares a table every record of the type carries in its body: the section holding it, its columns, the
+pattern a row id takes, and the modals that open a binding row and an advisory one. `kac` reads the rows out of the
+document and holds them to that declaration, and a `pol-VURM.TIMEBOX` citation resolves against them from anywhere in
+the corpus. A type with no `clauses:` block is checked for none, so the block is also how a type says it has addressable
+parts at all. Which of a record's content belongs in a table like this, and which belongs in frontmatter, is settled in
+[Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
+
+Nothing is generated from those rows. The parser reads them for the checks, and no generated block renders a body table
+or a view derived from one, so anything a corpus wants built out of them is a tool change.
+
 **`index.order`** applies to the sort as a whole rather than to one column of it; a type wanting one column each way is
 asking two questions with one key. A postmortem index is the case for `descending`: the incident someone is looking for
 is almost always the most recent.
