@@ -7,12 +7,29 @@ namespace kac.tests;
 
 public class GeneratorTests
 {
+    // The reader-facing table must stay a faithful, complete view of the catalogue, and the catalogue
+    // now comes from `_checks.yaml`. `kac checks` reconciles the two against the real schema and exits
+    // non-zero on any drift, which the golden suite asserts — the one place the shipped file is read.
     [Fact]
-    public void ChecksTableProblems_is_empty_for_the_shipped_catalogue()
+    public void ChecksTableProblems_names_a_row_the_catalogue_does_not_carry()
     {
-        // The reader-facing table must stay a faithful, complete view of the catalogue. `kac checks`
-        // enforces this out-of-process for CI; this is the same invariant, unit-testable in-process.
-        Assert.Empty(Generator.ChecksTableProblems());
+        // A catalogue carrying none of the curated rows: each is a row naming a check that does not
+        // exist, which has to be reported rather than quietly rendered onto every type page.
+        var problems = Generator.ChecksTableProblems(new Schema());
+
+        Assert.Contains(problems, p => p.Contains("'frontmatter-parses'") && p.Contains("stale row"));
+    }
+
+    [Fact]
+    public void ChecksTableProblems_names_a_check_no_row_documents()
+    {
+        // The other direction, and the one a new check trips: declared in the schema, rendered by
+        // nothing, and waived nowhere.
+        var schema = new Schema { Checks = [new CheckDef("invented-check", Sev.Error, "Something new.")] };
+
+        var problems = Generator.ChecksTableProblems(schema);
+
+        Assert.Contains(problems, p => p.Contains("'invented-check'") && p.Contains("neither in the checks table"));
     }
 
     [Fact]
@@ -216,7 +233,7 @@ public class GeneratorTests
         // A type declaring no rules and no reciprocal/mirrors-section field: the schema-conditional
         // rows must not appear. Unconditional rows would tell a policy reader their documents are
         // checked for Y-statements, which is the ADR-shaped table advertised on every page.
-        var table = Generator.ChecksTable(new TypeSchema());
+        var table = Generator.ChecksTable(new Schema(), new TypeSchema());
 
         Assert.DoesNotContain("y-statement", table);
         Assert.DoesNotContain("alternatives-verdict", table);
@@ -242,7 +259,7 @@ public class GeneratorTests
             ]
         };
 
-        var table = Generator.ChecksTable(t);
+        var table = Generator.ChecksTable(new Schema(), t);
 
         Assert.Contains("y-statement", table);
         Assert.Contains("alternatives-verdict", table);

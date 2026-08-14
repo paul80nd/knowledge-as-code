@@ -18,11 +18,11 @@ public class CorpusRuleTests
         Assert.All(CorpusRules.All, r => Assert.NotEmpty(r.Emits));
     }
 
+    // As on the document side: what an emitted id means is `_checks.yaml`'s to say, not this test's.
     [Fact]
-    public void The_catalogue_carries_what_the_rules_declare()
+    public void Every_emitted_id_is_a_usable_check_id()
     {
-        var ids = CheckCatalogue.All.Select(c => c.Id).ToHashSet(StringComparer.Ordinal);
-        Assert.All(CorpusRules.All.SelectMany(r => r.Emits), e => Assert.Contains(e.Id, ids));
+        Assert.All(CorpusRules.All.SelectMany(r => r.Emits), Assert.NotEmpty);
     }
 
     // -- no-dependency-cycles --

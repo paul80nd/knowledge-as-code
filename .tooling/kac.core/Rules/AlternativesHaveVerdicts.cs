@@ -11,9 +11,9 @@ public sealed class AlternativesHaveVerdicts : IDocumentRule
 {
     public string RuleId => "alternatives-have-verdicts";
 
-    public IReadOnlyList<CheckDef> Emits =>
+    public IReadOnlyList<string> Emits =>
     [
-        new("alternatives-verdict", Sev.Warning, "Each Alternatives Considered bullet states an outcome.")
+        "alternatives-verdict"
     ];
 
     public void Check(RuleContext ctx)

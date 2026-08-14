@@ -8,9 +8,9 @@ public sealed class YStatementPresent : IDocumentRule
 {
     public string RuleId => "y-statement-present";
 
-    public IReadOnlyList<CheckDef> Emits =>
+    public IReadOnlyList<string> Emits =>
     [
-        new("y-statement", Sev.Warning, "A short Y-statement block-quote, stating all six moves, follows the H1.")
+        "y-statement"
     ];
 
     public void Check(RuleContext ctx)

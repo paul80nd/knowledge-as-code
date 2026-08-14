@@ -181,7 +181,7 @@ public class SchemaCheckTests
     [Fact]
     public void The_bound_holds_for_a_rule_that_is_dispatched_too()
     {
-        var implemented = DocumentRules.All.SelectMany(r => r.Emits).First().Id;
+        var implemented = DocumentRules.All.SelectMany(r => r.Emits).First();
         var finding = Assert.Single(Check(Widgets(rules:
         [
             new RuleSpec { Id = implemented, Description = new string('x', Generator.DescriptionMax + 1) }

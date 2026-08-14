@@ -16,9 +16,9 @@ public sealed class NoDependencyCycles : ICorpusRule
 {
     public string RuleId => "no-dependency-cycles";
 
-    public IReadOnlyList<CheckDef> Emits =>
+    public IReadOnlyList<string> Emits =>
     [
-        new("dependency-cycle", Sev.Warning, "A cycle in a type's own dependency graph is reported, not failed.")
+        "dependency-cycle"
     ];
 
     public void Check(CorpusRuleContext ctx)

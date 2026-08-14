@@ -20,7 +20,7 @@ public interface ICorpusRule
     // rather than restated beside them.
     string RuleId { get; }
 
-    IReadOnlyList<CheckDef> Emits { get; }
+    IReadOnlyList<string> Emits { get; }
 
     void Check(CorpusRuleContext ctx);
 }

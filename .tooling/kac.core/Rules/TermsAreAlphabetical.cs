@@ -15,9 +15,9 @@ public sealed class TermsAreAlphabetical : IDocumentRule
 {
     public string RuleId => "terms-are-alphabetical";
 
-    public IReadOnlyList<CheckDef> Emits =>
+    public IReadOnlyList<string> Emits =>
     [
-        new("terms-alphabetical", Sev.Warning, "A glossary's entries are in alphabetical order.")
+        "terms-alphabetical"
     ];
 
     public void Check(RuleContext ctx)

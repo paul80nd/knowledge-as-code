@@ -103,7 +103,8 @@ public static class Commands
 
     public static int Checks(string repoRoot, bool json)
     {
-        var catalogue = CheckCatalogue.For(Schema.Load(repoRoot));
+        var schema = Schema.Load(repoRoot);
+        var catalogue = CheckCatalogue.For(schema);
 
         // The catalogue is always valid data, so emit it either way; the reader-facing table's
         // fidelity to it is a separate signal, reported to stderr and via the exit code below. This
@@ -130,7 +131,7 @@ public static class Commands
             Console.WriteLine($"{catalogue.Count} checks.");
         }
 
-        var problems = Generator.ChecksTableProblems();
+        var problems = Generator.ChecksTableProblems(schema);
         if (problems.Count == 0) return 0;
 
         Console.Error.WriteLine("checks: the reader-facing checks table is out of step with the catalogue:");

@@ -364,6 +364,16 @@ public sealed class Schema
     // against each other.
     public IReadOnlyList<TierSpec> Tiers { get; init; } = [];
 
+    // Every check the validator can emit, as `_checks.yaml` declares it. The schema is where a check is
+    // defined: its severity, the words a reader meets, the reasoning, and the concern it belongs to.
+    // The code decides what runs, and `SchemaChecks` holds the two against each other.
+    public IReadOnlyList<CheckDef> Checks { get; init; } = [];
+
+    // The concerns checks are grouped under, in declared order — which is the order the generated
+    // tables render in. A group with no checks under it renders as nothing rather than as an empty
+    // table.
+    public IReadOnlyList<(string Name, string Label)> CheckGroups { get; init; } = [];
+
     public IReadOnlyList<string> UniversalOrder { get; init; } = [];
     public IReadOnlyDictionary<string, FieldSpec> Universal { get; init; } = new Dictionary<string, FieldSpec>();
     public IReadOnlyList<string> Reserved { get; init; } = [];
@@ -409,6 +419,25 @@ public sealed class Schema
 
         unread.AddRange(tierKeys.Unread());
 
+        var checkKeys = new KeyReader(".schema/_checks.yaml");
+        var checksRoot = checkKeys.At(Yaml.LoadFile(Path.Combine(dir, "_checks.yaml")), TheFile);
+        var checkGroups = new List<(string Name, string Label)>();
+        foreach (var (name, node) in Yaml.Map(checksRoot.Get("groups")))
+            checkGroups.Add((name, Yaml.Str(node)?.Trim() ?? ""));
+
+        var checks = new List<CheckDef>();
+        foreach (var (id, node) in Yaml.Map(checksRoot.Get("checks")))
+        {
+            var check = checkKeys.At(node, $"check '{id}'");
+            checks.Add(new CheckDef(id,
+                Yaml.Str(check.Get("severity")) == "warning" ? Sev.Warning : Sev.Error,
+                Yaml.Str(check.Get("description"))?.Trim() ?? "",
+                Yaml.Str(check.Get("group"))?.Trim() ?? "",
+                Yaml.Str(check.Get("notes"))?.Trim() ?? ""));
+        }
+
+        unread.AddRange(checkKeys.Unread());
+
         var universalKeys = new KeyReader(".schema/_universal.yaml");
         var uni = universalKeys.At(Yaml.LoadFile(Path.Combine(dir, "_universal.yaml")), TheFile);
         var universalOrder = new List<string>();
@@ -436,6 +465,8 @@ public sealed class Schema
         return new Schema
         {
             Tiers = tiers,
+            Checks = checks,
+            CheckGroups = checkGroups,
             UniversalOrder = layer.Order,
             Universal = layer.Fields,
             Reserved = layer.Reserved,

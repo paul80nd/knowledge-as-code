@@ -18,13 +18,11 @@ public class DocumentRuleTests
         Assert.All(DocumentRules.All, r => Assert.NotEmpty(r.Emits));
     }
 
-    // Each rule's catalogue entries reach `kac checks` through CheckCatalogue, so implementing a rule
-    // and registering its checks is one edit rather than two files that can disagree.
+    // What each emitted id *means* is `_checks.yaml`'s to say. Here the ids only have to be ids.
     [Fact]
-    public void The_catalogue_carries_what_the_rules_declare()
+    public void Every_emitted_id_is_a_usable_check_id()
     {
-        var ids = CheckCatalogue.All.Select(c => c.Id).ToHashSet(StringComparer.Ordinal);
-        Assert.All(DocumentRules.All.SelectMany(r => r.Emits), e => Assert.Contains(e.Id, ids));
+        Assert.All(DocumentRules.All.SelectMany(r => r.Emits), Assert.NotEmpty);
     }
 
     // -- y-statement-present: three ways to fail, one check id --

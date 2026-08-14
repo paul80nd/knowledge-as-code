@@ -536,9 +536,9 @@ public static class Generator
     // it here would be the same sentence in two files, drifting apart at the first edit.
     //
     // Beneath both, the rules the type declares and nothing runs. See Intentions.
-    public static string ChecksTable(TypeSchema t)
+    public static string ChecksTable(Schema schema, TypeSchema t)
     {
-        var severity = CheckCatalogue.All.ToDictionary(c => c.Id, c => c.Severity);
+        var severity = schema.Checks.ToDictionary(c => c.Id, c => c.Severity);
         List<string> headers = ["Check", "Level", "What it verifies"];
         var rows = DocRows.Where(r => r.When is null || r.When(t)).Select(r => new List<string>
         {
@@ -586,9 +586,9 @@ public static class Generator
     // Reconcile the curated table with the catalogue. Empty means the reader-facing table is a
     // faithful, complete view of what the validator enforces; any entry is a drift a human must
     // resolve. `kac checks` calls this and fails on a non-empty result, which the test suite asserts.
-    public static IReadOnlyList<string> ChecksTableProblems()
+    public static IReadOnlyList<string> ChecksTableProblems(Schema schema)
     {
-        var catalogue = CheckCatalogue.All.Select(c => c.Id).ToHashSet(StringComparer.Ordinal);
+        var catalogue = schema.Checks.Select(c => c.Id).ToHashSet(StringComparer.Ordinal);
         var documented = DocRows.SelectMany(r => r.Ids).ToHashSet(StringComparer.Ordinal);
         var problems = new List<string>();
 

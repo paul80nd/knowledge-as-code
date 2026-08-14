@@ -17,10 +17,10 @@ public interface IDocumentRule
     // decides whether a type has adopted it.
     string RuleId { get; }
 
-    // What this rule reports under, which is usually not RuleId: `y-statement-present` emits
-    // `y-statement`. Naming both here makes that gap deliberate, and lets the catalogue be assembled
-    // from the rules rather than restated beside them.
-    IReadOnlyList<CheckDef> Emits { get; }
+    // The check ids this rule reports under, which are usually not RuleId: `y-statement-present` emits
+    // `y-statement`. Naming both here makes that gap deliberate. What each id means is `_checks.yaml`'s
+    // to say, and declaring one here that the schema does not is a finding when the schema loads.
+    IReadOnlyList<string> Emits { get; }
 
     void Check(RuleContext ctx);
 }
