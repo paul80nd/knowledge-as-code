@@ -46,8 +46,8 @@ argument about placement every time somebody adds a word, and the words drift wh
 **A term goes in the most general glossary that admits it.** A glossary admits a term when the term belongs to its
 context, so a word the whole estate uses sits in the corpus-wide file and a word only search uses sits with search. A
 narrower glossary redefines a term the general one carries only where the meaning genuinely differs. Each of the two
-entries then names the other. Without that, `title` has two definitions and a reader who finds one has no way of
-knowing about the other.
+entries then names the other. Without that, `title` has two definitions and a reader who finds one has no way of knowing
+about the other.
 
 **A glossary every corpus shares points upward only.** [gls-knowledge-as-code] holds the framework's own vocabulary and
 is synced, so an entry in it cannot name a record this corpus alone has. The narrower entry carries the reference, and

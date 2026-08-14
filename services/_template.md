@@ -40,8 +40,8 @@ is reviewed. What is below is only what a service adds to that.
 * **`facets`** — one exposure, then any traits that apply. These slice the catalogue, so a value earns its place by
   grouping several services and CI warns on one that does not. The vocabulary and the reasoning behind it are on
   [the type page](/services); it is derived from the estate, so read it before inventing a facet.
-* **`tags`** — words a reader would search for that this service does not otherwise say. One service may be the only
-  one carrying a tag; that is what separates a tag from a facet. Never restate another field.
+* **`tags`** — words a reader would search for that this service does not otherwise say. One service may be the only one
+  carrying a tag; that is what separates a tag from a facet. Never restate another field.
 
 **The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
 reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

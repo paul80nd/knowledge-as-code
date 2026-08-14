@@ -34,18 +34,18 @@ golden expectations in `.tooling/tests/fixtures/`: run `dotnet run .tooling/kac-
   type page renders it as such. Naming a level nothing fires at fails the schema-load pass, because it reads as enforced
   everywhere a reader looks — the checks table, `kac checks`, the catalogue — and is not.
 
-* **`required-when` is a different language and stays one.** It reads `==`, `!=` and `in [...]`, tests one field
-  against one other, and lives on the field. A condition needing more than that is a rule with an `expr:`. It also
-  produces an *error* at the moment its condition holds, where a rule chooses its own severity — so a
-  fill-this-in-or-else obligation is `required-when`, and a should-have-done-this is a rule.
+* **`required-when` is a different language and stays one.** It reads `==`, `!=` and `in [...]`, tests one field against
+  one other, and lives on the field. A condition needing more than that is a rule with an `expr:`. It also produces an
+  *error* at the moment its condition holds, where a rule chooses its own severity — so a fill-this-in-or-else
+  obligation is `required-when`, and a should-have-done-this is a rule.
 
 * **Thresholds are judgements.** `words() <= links() * 40` and `words() <= 200` were chosen, not measured — no corpus
   has held enough of those types to calibrate them. Each is pinned by a fixture so moving one is visible. A ratio fails
   a document linking to nothing at any length, which for a capability or an explanation is the intended reading.
 
-* **The text rules are heuristics** and will be tuned wrong first. That is the argument for holding their patterns
-  here: tuning a regex in the schema is an edit a corpus owner makes, where the same regex in C# is a release every
-  corpus has to take.
+* **The text rules are heuristics** and will be tuned wrong first. That is the argument for holding their patterns here:
+  tuning a regex in the schema is an edit a corpus owner makes, where the same regex in C# is a release every corpus has
+  to take.
 
 * **A rule reporting several faults under one id needs a fixture for each.** The coverage gate reads ids, not branches,
   so the second way to fail is green on the first one's fixture.
