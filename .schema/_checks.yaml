@@ -35,6 +35,7 @@ checks:
   schema-unknown-key:
     group: schema
     severity: error
+    on-type-page: false
     description: Every key in these files is one the loader reads.
     notes: >
       `notes:` is the exception, admitted at every level as commentary. There is no list of permitted
@@ -42,17 +43,24 @@ checks:
       a key gains its meaning and its admission in one edit, and a key that stops being read stops being
       admitted without anyone having to remember.
 
+      Not advertised on a type page. Its audience is whoever edits `.schema/`, and `.schema/README.md`
+      is written for them.
+
   schema-unreadable:
     group: schema
     severity: error
+    on-type-page: false
     description: A declaration the loader can read as written.
     notes: >
       An `expr:` that will not compile or names no `severity:` or `message:`, a `required-when:` outside
       its three forms, `values: $enums.x` naming an enum `_enums.yaml` does not declare.
 
+      Not advertised on a type page, for the reason `schema-unknown-key` is not.
+
   schema-dispatch:
     group: schema
     severity: error
+    on-type-page: false
     description: A declared value is one the tool acts on.
     notes: >
       The question is whether code acts on the value, not whether it is spelled correctly: `style:
@@ -66,9 +74,12 @@ checks:
       nothing cannot be found at load, since every other check reports through a literal written where
       the check is — the coverage gate answers that one, by failing on a check no fixture can reach.
 
+      Not advertised on a type page, for the reason `schema-unknown-key` is not.
+
   schema-shape:
     group: schema
     severity: error
+    on-type-page: false
     description: A type's declarations are well-formed and agree with one another.
     notes: >
       Where `schema-dispatch` asks whether code acts on a value, this asks whether a second declaration
@@ -76,16 +87,22 @@ checks:
       live; a `mirrors-section:` names a section the `sections:` block must also declare; a
       `description:` past 120 characters widens every row of the table it lands in.
 
+      Not advertised on a type page, for the reason `schema-unknown-key` is not.
+
   # ── frontmatter ──────────────────────────────────────────────────────────────
 
   type:
     group: frontmatter
     severity: error
+    on-type-page: false
     description: The document's folder maps to a type schema.
     notes: >
       Discovery excludes any folder that maps to no type, so no discovered document reaches this. It
       guards the callers that hand a document in directly, and the coverage gate lists it as
       unreachable rather than demanding a fixture for it.
+
+      It is not advertised on a type page: a folder-to-schema guard a well-formed document never
+      trips.
 
   frontmatter-parses:
     group: frontmatter
@@ -153,7 +170,11 @@ checks:
   list:
     group: frontmatter
     severity: error
+    on-type-page: false
     description: A list field is written as a YAML sequence.
+    notes: >
+      Not advertised on a type page — the field descriptions above the table already say which fields
+      are lists.
 
   min-items:
     group: frontmatter
@@ -411,23 +432,31 @@ checks:
   bracket-literal:
     group: links
     severity: warning
+    on-type-page: false
     description: A `[...]` left in prose that reads as a reference has a definition behind it.
     notes: >
       A heuristic sibling of `undefined-label`, for the bracket that never became a link at all. Where
       the brackets sit decides a checkbox: `- [ ]` opening a list item is a marker, and the same
       brackets mid-sentence still warn. Use an inline link where the brackets are deliberate.
 
+      Not advertised on a type page, being a heuristic sibling of `undefined-label` rather than a rule
+      of its own.
+
   type-setup:
     group: links
     severity: error
+    on-type-page: false
     description: A type the schema declares is stood up as both a page and a folder, or as neither.
     notes: >
       A declared type nobody has built yet is silent; half of one is not. Skipped when the run is
       narrowed to paths, because asking about one document is not asking about the shape of the corpus.
 
+      Not advertised on a type page, which is one of the two files it reports the absence of.
+
   framework-names-types:
     group: links
     severity: error
+    on-type-page: false
     description: The framework's own documents name a type rather than linking to one.
     notes: >
       And never link a record inside a type's folder. Those files are byte-identical in every corpus, so
@@ -435,18 +464,25 @@ checks:
       has no `/standards` page to open. Generated blocks are exempt, being written from the types the
       corpus stood up. Skipped when the run is narrowed to paths.
 
+      Not advertised on a type page: it reads the framework's own documents rather than a corpus's
+      records.
+
   template-fields:
     group: links
     severity: error
+    on-type-page: false
     description: A type's template carries the fields a copy of it needs, usably, and no key the type does not declare.
     notes: >
       A placeholder opening a value has to be quoted, or YAML reads `review-by: {{date}}` as a mapping
       rather than as text. A defect here belongs to every future document and is found by the next
       author rather than the last.
 
+      Not advertised on a type page: it reads the template rather than any record copied from it.
+
   generated-block:
     group: links
     severity: error
+    on-type-page: false
     description: Every file `kac index` writes a block into still carries both of that block's markers.
     notes: >
       A block whose markers have gone is written by nothing and, without this, reported by nothing:
@@ -454,14 +490,19 @@ checks:
       find no marker in that is the file as it stands. The corpus's own `README.md` is the exception,
       where deleting the markers is how a corpus declines the block.
 
+      Not advertised on a type page: it reads that page rather than any record written under it.
+
   page-frontmatter:
     group: links
     severity: error
+    on-type-page: false
     description: A type page carries no frontmatter of its own.
     notes: >
       A page describes the records beneath it and is not one, so it has no id, tier or status. A block
       on one is left over from a type that used to be a single document. Nothing else would say so,
       because a page is forked and a forked file is never compared against upstream.
+
+      Not advertised on a type page: it reads that page rather than any record written under it.
 
   # ── content ──────────────────────────────────────────────────────────────────
   #

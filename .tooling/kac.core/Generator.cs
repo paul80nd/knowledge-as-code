@@ -508,29 +508,6 @@ public static class Generator
             t => t.HasRule(new RuleId("no-dependency-cycles")))
     ];
 
-    // Catalogue checks the reader-facing table deliberately does not surface. Every other catalogue id
-    // must appear in DocRows — ChecksTableProblems fails otherwise, so a new check cannot go
-    // undocumented in silence.
-    //
-    // `type`, `list` and `bracket-literal` are too low-level to act on: a folder→schema guard a
-    // well-formed document never trips, a YAML-shape check the field descriptions subsume, and a
-    // heuristic sibling of `undefined-label`.
-    //
-    // `type-setup`, `generated-block` and `page-frontmatter` read the type page, `template-fields` the
-    // template, and `framework-names-types` the framework's own documents. This table is rendered onto
-    // the type page and says what a contributor's document is held to, so none of the five is theirs to
-    // act on — `type-setup` least of all, since it reports the absence of the page carrying the row.
-    //
-    // The `schema-*` checks read the schema rather than any document, and report a defect in the file
-    // this table is generated from. Their audience is whoever edits `.schema/`, which `.schema/README.md`
-    // documents.
-    private static readonly HashSet<CheckId> IntentionallyUndocumented =
-    [
-        new("type"), new("list"), new("bracket-literal"), new("type-setup"), new("generated-block"),
-        new("page-frontmatter"), new("template-fields"), new("framework-names-types"),
-        new("schema-unknown-key"), new("schema-unreadable"), new("schema-dispatch"), new("schema-shape")
-    ];
-
     // The curated rows, then a row for each expression rule the type declares. A core check is worded
     // here because several ids fold into one reader-facing row; an expression rule is one id reporting
     // under its own name, and its `description:` in the schema is already that row written out. Copying
@@ -590,19 +567,17 @@ public static class Generator
     public static IReadOnlyList<string> ChecksTableProblems(Schema schema)
     {
         var catalogue = schema.Checks.Select(c => c.Id).ToHashSet();
+        var advertised = schema.Checks.Where(c => c.OnTypePage).Select(c => c.Id).ToHashSet();
         var documented = DocRows.SelectMany(r => r.Ids).ToHashSet();
         var problems = new List<string>();
 
         foreach (var id in documented.Where(id => !catalogue.Contains(id)).Order())
-            problems.Add($"the checks table documents '{id}', which is not a catalogue check (stale row).");
-        foreach (var id in catalogue.Where(id => !documented.Contains(id) && !IntentionallyUndocumented.Contains(id))
-                     .Order())
-            problems.Add(
-                $"catalogue check '{id}' is neither in the checks table nor waived in IntentionallyUndocumented.");
-        foreach (var id in IntentionallyUndocumented.Where(id => documented.Contains(id) || !catalogue.Contains(id))
-                     .Order())
-            problems.Add(
-                $"'{id}' is waived in IntentionallyUndocumented but is documented or unknown — drop the waiver.");
+            problems.Add($"the checks table documents '{id}', which the schema does not declare (stale row).");
+        foreach (var id in advertised.Where(id => !documented.Contains(id)).Order())
+            problems.Add($"check '{id}' has no row in the checks table. Write one, or declare "
+                         + "'on-type-page: false' where the schema declares the check.");
+        foreach (var id in documented.Where(id => catalogue.Contains(id) && !advertised.Contains(id)).Order())
+            problems.Add($"check '{id}' declares 'on-type-page: false' and has a row anyway — drop one of the two.");
 
         // The rows written above, held to the bound a schema's rules are held to. Nothing else would
         // notice: these are C# literals rendered into a generated table, so a row that grows past it

@@ -24,12 +24,27 @@ public class GeneratorTests
     public void ChecksTableProblems_names_a_check_no_row_documents()
     {
         // The other direction, and the one a new check trips: declared in the schema, rendered by
-        // nothing, and waived nowhere.
+        // nothing, and not waived.
         var schema = new Schema { Checks = [new CheckDef(new CheckId("invented-check"), Sev.Error, "Something new.")] };
 
         var problems = Generator.ChecksTableProblems(schema);
 
-        Assert.Contains(problems, p => p.Contains("'invented-check'") && p.Contains("neither in the checks table"));
+        Assert.Contains(problems, p => p.Contains("'invented-check'") && p.Contains("no row in the checks table"));
+    }
+
+    // A check waived and rendered at once: the two declarations disagree, and the page would advertise
+    // a check the schema says a record author cannot act on.
+    [Fact]
+    public void ChecksTableProblems_names_a_waived_check_that_has_a_row_anyway()
+    {
+        var schema = new Schema
+        {
+            Checks = [new CheckDef(new CheckId("frontmatter-parses"), Sev.Error, "Parsed.", OnTypePage: false)]
+        };
+
+        var problems = Generator.ChecksTableProblems(schema);
+
+        Assert.Contains(problems, p => p.Contains("'frontmatter-parses'") && p.Contains("has a row anyway"));
     }
 
     [Fact]

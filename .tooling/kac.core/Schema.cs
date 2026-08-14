@@ -433,7 +433,9 @@ public sealed class Schema
                 Yaml.Str(check.Get("severity")) == "warning" ? Sev.Warning : Sev.Error,
                 Yaml.Str(check.Get("description"))?.Trim() ?? "",
                 Yaml.Str(check.Get("group"))?.Trim() ?? "",
-                Yaml.Str(check.Get("notes"))?.Trim() ?? ""));
+                Yaml.Str(check.Get("notes"))?.Trim() ?? "",
+                // Most checks belong on a type page, so the key is written only where one does not.
+                Yaml.Str(check.Get("on-type-page")) is not "false"));
         }
 
         unread.AddRange(checkKeys.Unread());

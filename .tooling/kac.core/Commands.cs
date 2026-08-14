@@ -137,7 +137,8 @@ public static class Commands
         Console.Error.WriteLine("checks: the reader-facing checks table is out of step with the catalogue:");
         foreach (var p in problems) Console.Error.WriteLine($"  {p}");
         Console.Error.WriteLine(
-            "fix Generator.DocRows (or IntentionallyUndocumented) in .tooling/kac.core/Generator.cs.");
+            "fix Generator.DocRows in .tooling/kac.core/Generator.cs, or the check's 'on-type-page:' "
+            + "in .schema/_checks.yaml.");
         return 1;
     }
 

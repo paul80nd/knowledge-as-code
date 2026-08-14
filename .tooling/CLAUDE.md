@@ -72,9 +72,11 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
 1. **An entry in [`../.schema/_checks.yaml`](../.schema/_checks.yaml)** — the declaration. Its `description:` is what
    `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the boundary. A check a rule class
    reports under with no entry here fails `schema-dispatch` when the schema loads.
-2. **`Generator.DocRows`** *or* **`Generator.IntentionallyUndocumented`** — every declared check must appear in one of
-   them or `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one
-   of its records; the undocumented set is for checks a reader of that page cannot act on.
+2. **A row in `Generator.DocRows`**, unless the check declares `on-type-page: false` — one or the other, or
+   `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one of its
+   records; the flag is for a check that reads the schema, the template or the page itself, which is real and is not
+   theirs to act on. Rows are grouped and hand-worded, so several checks fold into one; the flag sits with the check
+   because it is a fact about the check.
 3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises, and that is also
    what catches a check declared in the schema and reported by nothing.
 
