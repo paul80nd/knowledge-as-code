@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 21,
+    "errors": 22,
     "warnings": 0
   },
   "findings": [
@@ -139,6 +139,13 @@
       "severity": "error",
       "check": "schema-unreadable",
       "message": "rule 'widgets-are-documented' has an expr but no severity — say whether it fails a build or advises an author."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-unreadable",
+      "message": "rule 'widgets-are-named' has an expr but no message — an author has to be told what to do about it."
     },
     {
       "file": ".schema/widgets.yaml",
