@@ -44,7 +44,7 @@ var validate = new Command("validate", "Check the corpus against .schema/*.yaml.
     pathsArg,
     jsonOpt
 };
-validate.SetAction(pr => Commands.Validate(repoRoot, [.. pr.GetValue(pathsArg) ?? []], pr.GetValue(jsonOpt)));
+validate.SetAction(pr => Commands.Validate(repoRoot, pr.GetValue(jsonOpt)));
 
 var checkOpt = new Option<bool>("--check") { Description = "Fail if a generated file is stale instead of writing it." };
 var index = new Command("index", "Regenerate _index.md and the generated blocks in <type>.md.")

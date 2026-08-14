@@ -9,16 +9,16 @@ namespace kac.core;
 
 public static class Commands
 {
-    public static int Validate(string repoRoot, List<string> paths, bool json)
+    public static int Validate(string repoRoot, bool json)
     {
-        var corpus = Corpus.Load(repoRoot, paths);
+        var corpus = Corpus.Load(repoRoot);
         var findings = Validator.CheckAll(corpus);
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
     public static int Index(string repoRoot, bool check)
     {
-        var corpus = Corpus.Load(repoRoot, []);
+        var corpus = Corpus.Load(repoRoot);
 
         // What every generated file should hold. `GeneratedFiles` owns which files those are and which
         // blocks each carries, so that `validate` holds a corpus to the same list this writes.
@@ -290,7 +290,7 @@ public static class Commands
     {
         try
         {
-            ReportWritten(repoRoot, GeneratedFiles.Write(GeneratedFiles.Targets(Corpus.Load(repoRoot, []))));
+            ReportWritten(repoRoot, GeneratedFiles.Write(GeneratedFiles.Targets(Corpus.Load(repoRoot))));
             return 0;
         }
         catch (Exception ex)

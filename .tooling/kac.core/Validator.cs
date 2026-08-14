@@ -22,10 +22,7 @@ public static class Validator
         var (schema, repoRoot) = (corpus.Schema, corpus.RepoRoot);
         var findings = new List<Finding>();
 
-        // The schema first, because it decides how every document below is read. Reported even when the
-        // run is narrowed to given paths — unlike the corpus-shape checks, this is not a question about
-        // the corpus but about the terms it was judged on, and those hold however few documents were
-        // asked about.
+        // The schema first, because it decides how every document below is read.
         SchemaChecks.Check(schema, findings);
 
         foreach (var doc in corpus.Docs)
@@ -40,8 +37,6 @@ public static class Validator
         foreach (var file in GeneratedFiles.Blocks(Corpus.Adopted(schema, repoRoot, corpus.Descriptor)))
         {
             if (!file.MarkersRequired) continue;
-            if (corpus.Paths.Count > 0
-                && !corpus.Paths.Any(p => file.Path == p.Replace('\\', '/').TrimEnd('/'))) continue;
 
             var full = Path.Combine(repoRoot, file.Path);
             if (!File.Exists(full)) continue;
@@ -55,8 +50,6 @@ public static class Validator
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             if (string.IsNullOrEmpty(t.Page)) continue;
-            if (corpus.Paths.Count > 0
-                && !corpus.Paths.Any(p => t.Page == p.Replace('\\', '/').TrimEnd('/'))) continue;
             var full = Path.Combine(repoRoot, t.Page);
             if (!File.Exists(full)) continue; // absence is type-setup's to report, not this pass's
 
@@ -95,10 +88,8 @@ public static class Validator
         }
 
         // The framework's own documentation, held to the one rule that is about where it will be read
-        // rather than about what it says. Skipped when the run is narrowed, like the other checks that
-        // ask about the shape of the corpus rather than about a document.
-        if (corpus.Paths.Count == 0)
-            CheckFrameworkDocs(schema, repoRoot, corpus.Docs, findings);
+        // rather than about what it says.
+        CheckFrameworkDocs(schema, repoRoot, corpus.Docs, findings);
 
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand. The index they build is
         // handed on rather than built again: it is the corpus's one account of which id names which
@@ -106,22 +97,14 @@ public static class Validator
         var byId = CheckCorpus(schema, corpus.Docs, findings);
 
         // The rules whose question is about the set — a cycle in a dependency graph, a term nothing
-        // uses. Skipped on a narrowed run for the reason the checks below it are: a question about the
-        // corpus answered from a handful of its records is answered wrongly, and confidently.
-        if (corpus.Paths.Count == 0)
-            CheckCorpusRules(schema, corpus.Docs, byId, findings);
+        // uses.
+        CheckCorpusRules(schema, corpus.Docs, byId, findings);
 
-        // How often a value recurs is a question about the whole of a type, so a narrowed run cannot
-        // answer it: every value in one document is carried by one document. Skipped there, like the
-        // other checks that ask about the corpus rather than about a record.
-        if (corpus.Paths.Count == 0)
-            CheckMinRecords(corpus.Docs, findings);
+        // How often a value recurs is a question about the whole of a type.
+        CheckMinRecords(corpus.Docs, findings);
 
-        // Whether each declared type is stood up. Skipped when the run is narrowed to given paths:
-        // asking about one document is not asking about the shape of the corpus, and answering
-        // anyway would bury the reply.
-        if (corpus.Paths.Count == 0)
-            CheckTypeSetup(schema, repoRoot, corpus.Files, corpus.Descriptor, findings);
+        // Whether each declared type is stood up.
+        CheckTypeSetup(schema, repoRoot, corpus.Files, corpus.Descriptor, findings);
 
         return findings;
     }
