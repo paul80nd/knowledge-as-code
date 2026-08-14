@@ -4,21 +4,24 @@
 
 namespace kac.core;
 
-// The corpus as one loaded thing: the schema it is judged against, the file listing the shape checks
-// ask about, and every record parsed. Every entry point begins by building one of these, so there is
-// a single account of what "the corpus" is rather than one per command that can drift out of step.
+// The corpus as one loaded thing: the schema it is judged against, what it holds, and every record
+// parsed. Every entry point begins by building one of these, so there is a single account of what "the
+// corpus" is rather than one per command that can drift out of step.
 public sealed class LoadedCorpus
 {
     public required string RepoRoot;
     public required Schema Schema;
 
-    // What this corpus records about itself: which types it has adopted, and where it stands against the
-    // framework it took. Carried here because adoption decides what is generated and what the corpus is
-    // held to having built, so every entry point needs the same answer.
+    // What this corpus records about itself: where it stands against the framework it took, and which
+    // types it declares. `Adopted` below is the resolved answer, which is what the rest of the tool reads.
     public required CorpusDescriptor Descriptor;
 
-    // Every file, before exclusion — what CheckTypeSetup asks about which folders exist.
-    public required List<string> Files;
+    // Every path the corpus holds, and a way to read one.
+    public required Tree Tree;
+
+    // The types this corpus took. Resolved once, here, because it decides both what is generated and what
+    // the corpus is held to having built — two entry points asking separately could answer differently.
+    public required List<TypeSchema> Adopted;
 
     // The records: every discovered document that carries frontmatter, in corpus order.
     public required List<Doc> Docs;
@@ -38,23 +41,24 @@ public static class Corpus
 {
     private static readonly string[] SkipDirs = [".git", ".idea", ".claude"];
 
-    // Every file the corpus contains, before any exclusion. Used to ask whether a folder is really
-    // there: an empty directory git has never seen is not part of the corpus, and counting it as one
-    // makes the answer depend on which machine is asking.
+    // Every file the corpus contains, before any exclusion — what `Tree` is built over.
     //
     // git ls-files respects .gitignore, .git/info/exclude and global excludes, and never lists .git/
     // itself — exactly the "respect .gitignore" requirement; the walk is the non-git fallback.
     private static List<string> AllFiles(string repoRoot) =>
         GitFiles.Tracked(repoRoot) ?? GitFiles.Walk(repoRoot, "*.md", SkipDirs);
 
-    // Load the schema, list the files, and parse every record — everything an entry point needs
-    // before it can ask a question. The listing is taken once and carried on the result: discovery
-    // and the type-setup check both want it, and a second `git ls-files` costs more than every check
-    // in the tool put together.
+    // Load the schema, list the files, and parse every record — everything an entry point needs before it
+    // can ask a question. The listing is taken once and carried on the result as a `Tree`: everything
+    // downstream asks it what the corpus holds, and a second `git ls-files` costs more than every check in
+    // the tool put together.
     public static LoadedCorpus Load(string repoRoot)
     {
         var schema = Schema.Load(repoRoot);
         var files = AllFiles(repoRoot);
+        var tree = new Tree(
+            new HashSet<string>(files.Select(f => f.Replace('\\', '/')), StringComparer.Ordinal),
+            rel => Files.ReadLf(Path.Combine(repoRoot, rel)));
 
         var docs = new List<Doc>();
         var skipped = 0;
@@ -70,12 +74,15 @@ public static class Corpus
             docs.Add(doc);
         }
 
+        var descriptor = CorpusDescriptor.Load(repoRoot);
+
         return new LoadedCorpus
         {
             RepoRoot = repoRoot,
             Schema = schema,
-            Descriptor = CorpusDescriptor.Load(repoRoot),
-            Files = files,
+            Descriptor = descriptor,
+            Tree = tree,
+            Adopted = Adopted(schema, tree, descriptor),
             Docs = docs,
             Templates = DiscoverTemplates(repoRoot, schema),
             SkippedNoFrontmatter = skipped
@@ -92,23 +99,26 @@ public static class Corpus
     // a type to. That reading cannot tell a type nobody wanted from one somebody has not finished adding,
     // which is what `types:` exists to say. It stands until the corpus declares, so taking a newer
     // framework never means editing the descriptor in the same breath.
-    public static List<TypeSchema> Adopted(Schema schema, string repoRoot, CorpusDescriptor descriptor)
+    public static List<TypeSchema> Adopted(Schema schema, Tree tree, CorpusDescriptor descriptor)
     {
         var declared = descriptor.Types;
 
         return
         [
             .. schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value)
-                .Where(t => declared?.Contains(t.Key, StringComparer.Ordinal) ?? StoodUp(t, repoRoot))
+                .Where(t => declared?.Contains(t.Key, StringComparer.Ordinal) ?? StoodUp(t, tree))
         ];
     }
 
-    // Whether both halves of a type are on disk. A half-built type is not adopted: generating a row for it
-    // would answer a defect with a link resolving to whichever of the two files exists.
-    public static bool StoodUp(TypeSchema t, string repoRoot) =>
+    // Whether both halves of a type are in the corpus. A half-built type is not adopted: generating a row
+    // for it would answer a defect with a link resolving to whichever of the two exists.
+    //
+    // Asked of the listing, as `CheckTypeSetup` asks it, so that one voice does not generate an index into
+    // a folder the other reports as absent.
+    public static bool StoodUp(TypeSchema t, Tree tree) =>
         !string.IsNullOrEmpty(t.Page)
-        && File.Exists(Path.Combine(repoRoot, t.Page))
-        && Directory.Exists(Path.Combine(repoRoot, t.Folder));
+        && tree.Exists(t.Page)
+        && tree.HasFolder(t.Folder);
 
     // The template of every collection type that has one. Asked of the filesystem rather than of the
     // file listing, as type-setup asks it: the question is whether the file a contributor would copy is

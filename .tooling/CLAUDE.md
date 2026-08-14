@@ -99,8 +99,12 @@ is `Commands`'s too, derived from the value it was handed.
 That is what makes each of them testable from a set of strings rather than from a tree and a subprocess. The two
 mechanism engines take the file listings and a `Func<string, bool>` answering whether two copies of a path say the same
 thing, so the whole classification is decidable without a filesystem — a new arm is a unit test, not a fixture corpus.
-Deciding and doing stay apart on the sync side as well: `Plan` names what a sync comes to, `Apply` carries it out, and
-the files it copies are the ones the plan already reports.
+`Tree` strikes the same bargain for the corpus itself: a listing, and a `Func` that reads one of its paths. A test can
+then ask `GeneratedFiles.Plan` or the link pass about a corpus nobody ever wrote to disk.
+
+Deciding and doing stay apart on both sides. `MechanismSync.Plan` names what a sync comes to and `Apply` carries it out;
+`GeneratedFiles.Plan` names what a regeneration comes to and `Write` carries it out. In each case the files acted on are
+the ones the plan already reports, so nothing is decided twice.
 
 ## Adding a generated block
 
@@ -108,7 +112,8 @@ the files it copies are the ones the plan already reports.
 naming it beside the renderer that fills it, and nothing else: `Commands.Index` writes what the list says and
 `Validator.CheckAll` holds the corpus to the same list, so a block cannot be written under a name nothing checks or
 checked for under a name nothing writes. `Blocks` projects the names out without calling a renderer, which is what lets
-`validate` ask what a file should carry without building any of it.
+`validate` ask what a file should carry without building any of it. `Plan` renders them against what the corpus holds
+now, so `index` and `index --check` read one answer between them.
 
 The flag on each entry says whether the markers have to be there. It is false for `README.md` alone, because that file
 belongs to the corpus and deleting the markers is how the corpus declines the block. Everywhere else the file arrives

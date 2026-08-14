@@ -9,9 +9,8 @@ namespace kac.core;
 // inside a member of it.
 //
 // Separate from `IDocumentRule` rather than a wider context on it, so that what a rule may read is
-// legible from the interface it implements. A rule handed the whole corpus to judge one document is a
-// rule whose reach nothing can see; declaring the narrower interface is how a rule says it needs no
-// more than the document in front of it. The dispatcher runs each from its own pass.
+// legible from the interface it implements. The dispatcher runs each from its own pass, and
+// `../../CLAUDE.md` holds the test for which one a new rule wants.
 public interface ICorpusRule
 {
     // The id in the type schema's `rules:` block, and what the rule reports under — the same pair
