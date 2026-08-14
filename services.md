@@ -60,12 +60,12 @@ of the catalogue as well, because it deploys services.
 
 **Enum values**
 
-| Field         | Values                                                                                           |
-|---------------|--------------------------------------------------------------------------------------------------|
-| `tier`        | `decided` · `normative` · `descriptive` · `procedural` · `observed`                              |
-| `status`      | `live` · `building` · `deprecated` · `retired`                                                   |
-| `platform`    | `dotnet-web` · `dotnet-api` · `azure-function` · `static` · `typescript` · `terraform` · `mixed` |
-| `criticality` | `critical` · `important` · `supporting`                                                          |
+| Field         | Values                                                                             |
+|---------------|------------------------------------------------------------------------------------|
+| `tier`        | `decided` · `normative` · `descriptive` · `procedural` · `observed`                |
+| `status`      | `live` · `building` · `deprecated` · `retired`                                     |
+| `platform`    | `dotnet-web` · `dotnet-api` · `azure-function` · `static` · `typescript` · `mixed` |
+| `criticality` | `critical` · `important` · `supporting`                                            |
 
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
@@ -116,8 +116,7 @@ framework a contributor would need to know, and let that be the enum. Do not inh
 service can carry reaches an author at exactly the moment they are least able to judge it. A value the estate needs and
 the enum lacks sends someone to `mixed` who does not belong there.
 
-The values in `.schema/services.yaml` are the example estate's, and its services exercise all but one. Nothing can carry
-`terraform`, which stays in the list so that the case is visible.
+The values in `.schema/services.yaml` are the example estate's, reached that way. Replace them with your own.
 
 ### Deriving the facet vocabulary
 

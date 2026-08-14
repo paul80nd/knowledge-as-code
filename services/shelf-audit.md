@@ -38,7 +38,8 @@ mailbox. Whether an unread nightly email is the right home for that signal is th
 Terraform configuration, applied from a workstation against a dedicated workspace rather than from source control. It
 runs in a pay-as-you-go subscription rather than the per-environment subscriptions the rest of the estate uses.
 
-`platform` is `mixed`, not `terraform` — Terraform deploys this service rather than being what it is built on.
+`platform` is `mixed`: a PowerShell function and a workflow app are two runtimes. Terraform deploys this service rather
+than being what it is built on, so it does not decide the field.
 
 ## Environments
 
