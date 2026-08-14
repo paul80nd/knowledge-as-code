@@ -10,8 +10,8 @@ That costs the YAML and a fixture, and nothing else on this page applies: the ca
 `kac checks` all pick it up from the schema.
 
 **What decides it is what the author is told.** Write the expression where one fixed message says everything the code
-would have said. Write the code where it can name *which* part of the document is at fault and a single string cannot.
-A rule reporting "something here is wrong" where it could have named the missing piece has been made cheaper and worse,
+would have said. Write the code where it can name *which* part of the document is at fault and a single string cannot. A
+rule reporting "something here is wrong" where it could have named the missing piece has been made cheaper and worse,
 and nothing in the gate will notice. Cost is the second question, and it only ever argues for converting a rule that has
 already passed the first — a schema with no C# behind it was never the aim.
 
@@ -30,10 +30,12 @@ argument for a class reads differently beside a class that exists.
 rebuilding OPA. Write a rule class.
 
 **A rule that needs C# is a class, not an arm.** One file in `kac.core/Rules/`, its own unit tests, and a line in the
-registry beside it. It declares the checks it `Emits` and `CheckCatalogue.All` reads them from there, so implementing a
-rule and registering it are one edit and its id cannot drift from its catalogue entry. A dispatcher finds it by the id
-the schema's `rules:` block declares. A rule id nothing implements is a statement of intent: skipped, and rendered on
-the type page as declared-but-not-enforced, so long as it declares no `severity:` — which `SchemaChecks` holds it to.
+registry beside it. It declares the check ids it `Emits`, and each of those needs an entry in `_checks.yaml` saying what
+it means — `schema-dispatch` reports one that has none, so implementing a rule and declaring what it reports cannot come
+apart. A dispatcher finds the rule by the id the schema's `rules:` block declares, which is a `RuleId` and usually not
+the `CheckId` it reports under: `y-statement-present` emits `y-statement`, and the two types are what keep that
+deliberate. A rule id nothing implements is a statement of intent: skipped, and rendered on the type page as
+declared-but-not-enforced, so long as it declares no `severity:` — which `SchemaChecks` holds it to.
 
 **Which interface follows from what the rule has to read.**
 
@@ -65,15 +67,19 @@ Not every question there is about a vocabulary. A `mirrors-section:` names any s
 names, so what makes it sound is the type's own `sections:` block — one declaration held against another in the same
 file, which is `schema-shape` rather than `schema-dispatch`.
 
-Wherever it lives, four places have to agree, and three of them fail a meta-test rather than a test you were looking at:
+Wherever it lives, three places have to agree, and each fails a meta-test rather than a test you were looking at:
 
-1. **`CheckCatalogue.All`** in `Findings.cs` — the registry. `kac checks` reads it, and so does the coverage gate.
-2. **`Generator.DocRows`** *or* **`Generator.IntentionallyUndocumented`** — every catalogue id must appear in one of
+1. **An entry in [`../.schema/_checks.yaml`](../.schema/_checks.yaml)** — the declaration. Its `description:` is what
+   `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the boundary. A check a rule class
+   reports under with no entry here fails `schema-dispatch` when the schema loads.
+2. **`Generator.DocRows`** *or* **`Generator.IntentionallyUndocumented`** — every declared check must appear in one of
    them or `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one
    of its records; the undocumented set is for checks a reader of that page cannot act on.
-3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises.
-4. **The checks table** in [`README.md`](README.md) beside this file. It is hand-curated rather than generated, so it
-   will not tell you it is now wrong. No prose states a check count: `kac checks` reports it.
+3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises, and that is also
+   what catches a check declared in the schema and reported by nothing.
+
+No prose states a check count: `kac checks` reports it. [`README.md`](README.md) beside this file carries no table of
+checks either — it points at the schema, so there is nothing there to go quietly out of date.
 
 `DocRows` is deliberately *not* generated from the catalogue: rows are grouped and hand-worded, so several catalogue ids
 fold into one reader-facing row. An expression rule is the opposite — one id, reporting under its own name — so its row

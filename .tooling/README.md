@@ -96,23 +96,23 @@ it stands.
 
 ## Checks
 
-All rules are read from the schema; nothing below is hard-coded per type. A rule marked **warning**
-is `severity: warning` in the schema (or a core check that reports at that level) and does **not**
-fail the build.
+All checks are read from the schema; nothing here is hard-coded per type. A check marked **warning** does not fail the
+build.
 
-### The schema itself (`.schema/*.yaml`)
+**A check is defined once, in the schema.** [`../.schema/_checks.yaml`](../.schema/_checks.yaml) declares the checks
+that run against every document, one entry each: its severity, the group it belongs to, what it proves correct, and the
+reasoning behind it. A type's own rules are declared beside the type, in `../.schema/<type>.yaml`. Between them they are
+every check the validator can emit.
+
+**`kac checks` prints what runs**, read from the schema of the corpus it is run in, and exits non-zero where the
+reader-facing table on a type page has drifted from it.
+
+### The schema itself
 
 Before any document is read, the schema is held against what the tool can act on. A declaration nothing dispatches is
 not harmlessly inert: `rules:` is documented as behaviour the validator applies, so a rule id no code answers to reads
 as a commitment — and these files are copied into corpora whose authors cannot ask what a key was meant to do. Findings
 name the schema file and the key rather than a record.
-
-| Check                | Level | What it enforces                                                                                                                                                                                                                                                       |
-|----------------------|-------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `schema-unknown-key` | error | A key the loader never reads, at any level — `notes:` excepted, which every level admits as commentary. The vocabulary is recorded as the loader asks for each key, never listed.                                                                                      |
-| `schema-unreadable`  | error | A declaration the loader cannot read as written: an `expr:` that does not compile or names no `severity:` or `message:`, a `required-when:` outside its vocabulary, `values: $enums.x` naming no enum.                                                                 |
-| `schema-dispatch`    | error | A value nothing acts on: a rule id claiming a `severity:` that neither an `expr:` nor a rule class answers, a `ref:` at a folder no schema covers, `values:` on anything but an enum, `min-items:` on anything but a list, an unknown `id.style` or `index.order`. |
-| `schema-shape`       | error | A type declaring no `folder:`, so its records have nowhere to live, or a `mirrors-section:` at a section the type's `sections:` block does not declare.                                                                                                                |
 
 Of a value, the question asked is not whether it is spelled correctly but whether code acts on it — `style: mnemonic`
 is a real style, and what makes it sound is the branch in `CheckId`. Of a key, the question is whether the loader reads
@@ -121,116 +121,26 @@ remainder. Neither vocabulary is written down beside the check, because a copy i
 rather than of what runs. A rule declaring no `severity:` is exempt by design: that is how the schema records an
 intention, and the type page renders those beneath the checks table as *Declared, not yet enforced*.
 
-### Frontmatter (from `_universal.yaml` + `<type>.yaml`)
-
-| Check                                             | Level   | What it enforces                                                                                                                                                                     |
-|---------------------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `frontmatter-parses`                              | error   | The block is valid YAML and a mapping.                                                                                                                                               |
-| `unknown-key`                                     | error   | Every key is a universal field, a type field, or a reserved ADO key.                                                                                                                 |
-| `key-order`                                       | error   | Order is a **topological extension** of the schema's declared field orders — see below.                                                                                              |
-| `required-field`                                  | error   | Every `required` field (and every `required-when` field whose condition holds) is present.                                                                                           |
-| `bare-key`                                        | error   | An absent value is a bare key (`decided-on:`), never `null`, `~`, `""`, `''` or `—`.                                                                                                 |
-| `date-quoted` / `date-format`                     | error   | `type: date` fields are quoted, `YYYY-MM-DD` in shape, and a day the calendar has — `2026-13-40` fails.                                                                              |
-| `enum` / `enum-lowercase`                         | error   | `type: enum` values are in range and lowercase.                                                                                                                                      |
-| `field-pattern`                                   | error   | A field's value matches its declared `pattern:` — per entry for a list, per value for a scalar.                                                                                      |
-| `min-items`                                       | error   | A `type: list` field carries at least the `min-items:` its schema declares. Reported against the field — no entry is at fault.                                                       |
-| `min-records`                                     | warning | Each entry of a `type: list` field declaring `min-records:` is carried by at least that many records of the type. For a field whose values group documents rather than describe one. |
-| `list-order`                                      | warning | A `type: list` field's entries are in alphabetical order, digit runs compared as numbers (`A.8.7` before `A.8.29`). Only the first pair out of order is reported.                    |
-| `tier-matches-type`                               | error   | `tier` equals the tier the type declares.                                                                                                                                            |
-| `id-prefix` / `id-format` / `id-matches-filename` | error   | `id` has the type's prefix, its discriminator has the shape the `id.style` declares, and that discriminator matches the filename's.                                                  |
-
-### Identity & structure (from `<type>.yaml`)
-
-| Check                             | Level | What it enforces                                                                          |
-|-----------------------------------|-------|-------------------------------------------------------------------------------------------|
-| `filename-pattern`                | error | Filename matches the type's `filename.pattern`.                                           |
-| `slug-length`                     | error | The slug — the filename minus any `NNNN-` or mnemonic prefix — is within `slug-max` (30). |
-| `h1`                              | error | The document has an H1. Its text is the title, and nothing constrains it.                 |
-| `identity`                        | error | Two code spans follow the H1 — `` `Type: id` `STATUS` ``.                                 |
-| `identity-type`                   | error | The line's type name is the `label` the folder's schema declares.                         |
-| `identity-id` / `identity-status` | error | The line's id and status are the frontmatter's, the status upper-cased.                   |
-| `required-section`                | error | Every heading in `sections.required` is present.                                          |
-| `empty-section`                   | error | A heading `sections` declares carries something. A template's may stand empty.            |
-| `placeholder-left`                | error | No `{{…}}` the template left to fill in survives into a record, outside code.             |
-
-### Clauses (from `<type>.yaml`'s `clauses:` block)
-
-A type that declares no `clauses:` block is checked for none of these.
-
-| Check              | Level   | What it enforces                                                                                                                                                |
-|--------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `clause-table`     | error   | The declared section holds a table headed with the block's `columns`, with at least one row.                                                                    |
-| `clause-id-format` | error   | Each id is a single code span matching the block's `id-pattern`.                                                                                                |
-| `clause-id-unique` | error   | Ids are unique within the document — a citation names one obligation.                                                                                           |
-| `clause-modal`     | error   | Each clause opens with a declared modal; `binding` ones are bold, `advisory` ones plain.                                                                        |
-| `clause-order`     | warning | Rows are grouped `binding` then `advisory`, in declared order. Reported once, on the row that breaks it.                                                        |
-| `clause-compound`  | warning | A clause carries one modal, not two — a second is two obligations sharing an id.                                                                                |
-| `clause-ref`       | error   | A `pol-VURM.TIMEBOX` code span resolves: the document exists and carries that clause. Applies to every type, since anything may cite a clause. A colon where the dot belongs is reported here too, naming the form to write. |
-
-### Links & the graph
-
-| Check                     | Level   | What it enforces                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|---------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `link-resolves`           | error   | Every internal link resolves. All forms are handled: repo-relative, wiki-root-absolute (a leading `/` = repo root), inline, reference and **shortcut reference** links; `.md` may be omitted (ADO resolves both). External `http(s)/mailto/tel` links are skipped.                                                                                                                                                                                       |
-| `fragment-resolves`       | error   | A link's `#fragment` names a heading in the Markdown file it points at — a fragment into this document included. The anchor is the heading lower-cased, spaces hyphenated and punctuation dropped, which is the one form every renderer agrees on: Azure DevOps percent-encodes what GitHub discards, so a heading carrying `/`, `:` or `.` has two anchors and fails here rather than only in the wiki.                                                 |
-| `undefined-label`         | error   | A shortcut label shaped like any type's id (`[adr-0013]`, `[pol-DEVI]`) with no link definition.                                                                                                                                                                                                                                                                                                                                                         |
-| `label-canonical`         | error   | An id-shaped shortcut label is written as the canonical id — prefix lower-case, mnemonic upper-case, slug lower-case. Reference and definition match case-insensitively, so a mis-cased label resolves and nothing else would catch it.                                                                                                                                                                                                                  |
-| `related-matches-section` | error   | A `mirrors-section` field reconciles case-insensitively with the ids the section it names links to, in a bullet or in prose alike — `related` against `## Related`, and any other field against any other section the type declares.                                                                                                                                                                                                                     |
-| `id-unique`               | error   | `id` is unique across the whole wiki.                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `ref-resolves`            | error   | An id in a field declaring a `ref:` names a document that exists, of a type the `ref:` names — for a `type: id` and a `type: list, of: id` alike, and whether or not the field also reciprocates. The wrong type is the quieter fault: it lands on a real page, so it reads as intentional and whatever walks the edge afterwards takes it at its word. A literal the field admits (`applies-to: [all]`) is not an id and is skipped.                    |
-| `reciprocal`              | error   | A `reciprocal` field agrees in both directions (`supersedes` ⇄ `superseded-by`). Whether the target exists, and whether it is of a type the field may point at, are `ref-resolves`, so a dangling or wrong-type reference is reported once rather than twice.                                                                                                                                                                                            |
-| `type-setup`              | error   | A type the schema declares is stood up as both a `<type>.md` and a `<type>/` holding `_template.md`, or as neither. A declared type nobody has built yet is silent; half of one is not. Skipped when the run is narrowed to paths.                                                                                                                                                                                                                       |
-| `framework-names-types`   | error   | The framework's own documentation — `knowledge-as-code.md`, `knowledge-as-code/` and the framework's own glossary — names a type rather than linking to one, and never links a record inside a type's folder. Those files are byte-identical in every corpus, so a link resolving here says nothing about where it is read. Generated blocks are exempt: they are written from the types the corpus stood up. Skipped when the run is narrowed to paths. |
-| `generated-block`         | error   | Every file `kac index` writes a block into still carries both of that block's markers. `SpliceBlock` leaves the file alone when a marker is missing, and `index --check` then calls it fresh, so nothing else can notice. `README.md` is the exception: it belongs to the corpus, so deleting its markers is how the corpus declines the block.                                                                                                          |
-| `page-frontmatter`        | error   | A type page carries no frontmatter of its own. It describes the records beneath it and is not one, so a block on it is left over from a type that used to be a single document — the folder arrives in a sync and the page survives beside it. A page is forked, so nothing compares it against upstream.                                                                                                                                                |
-| `template-fields`         | error   | A type's `_template.md` carries no key the type does not declare, carries every field it requires, and holds each in a form YAML reads as a value — a placeholder opening one has to be quoted. A defect here is every future document's, found by the next author rather than the last.                                                                                                                                                                 |
-| `unused-definition`       | warning | A link definition that nothing references.                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `bracket-literal`         | warning | A `[...]` left in prose that looks like a reference but has no definition (use an inline link if it is deliberate). Position decides a checkbox: `- [ ]` opening a list item is a marker, and the same brackets mid-sentence still warn.                                                                                                                                                                                                                 |
-
-### Content quality (a type's own `rules`)
+### A type's own rules
 
 A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
 by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
-editing this tool; [`../.schema/README.md`](../.schema/README.md) is the reference for what one may say. Only the last
-four need more than the grammar can say, and each is a class in `kac.core/Rules/` with its own unit tests.
+editing this tool; [`../.schema/README.md`](../.schema/README.md) is the reference for what one may say. The rest are a
+class each in `kac.core/Rules/`, with unit tests beside them, for the questions the grammar cannot ask.
 
-The last of those four asks about the records together rather than about each one. `dependency-cycle` is reported once
-per loop against the lowest id on it, and is skipped when a run is narrowed to given paths: a graph read from a handful
-of its records has no loops in it, whatever the corpus holds.
+`dependency-cycle` is the one that asks about the records together rather than about each one. It is reported once per
+loop against the lowest id on it, and skipped when a run is narrowed to given paths: a graph read from a handful of its
+records has no loops in it, whatever the corpus holds.
 
-The table below is every rule that runs. The schema declares roughly as many again that do not — intentions, carrying a
-`description:` and no `severity:`, rendered on their type page under *Declared, not yet enforced*. Naming a severity
-without running is the one arrangement this forbids, and `schema-dispatch` is what forbids it.
+The schema declares roughly as many rules again that do not run — intentions, carrying a `description:` and no
+`severity:`, rendered on their type page under *Declared, not yet enforced*. Naming a severity without running is the
+one arrangement this forbids, and `schema-dispatch` is what forbids it.
 
-| Check                           | Type         | Level   | What it enforces                                                                                                                      |
-|---------------------------------|--------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `detected-not-before-occurred`  | postmortems  | error   | `detected-on` is on or after `occurred-on` — an incident cannot be found before it began.                                             |
-| `symptoms-first`                | runbooks     | error   | Symptoms is the first section, because that is what someone reaching for a runbook matches on.                                        |
-| `provenance-required`           | standards    | error   | The standard cites an ADR in `derived-from` or a policy in `implements`. With neither it is guidance.                                 |
-| `hub-not-specification`         | capabilities | warning | Prose has not outgrown the links. A capability points at detail; it does not carry it.                                                |
-| `links-rather-than-restates`    | explanations | warning | As above — a fact restated rather than linked is a second copy to keep true.                                                          |
-| `low-ceremony`                  | discoveries  | warning | A capture stays short. Length here means the tier boundary is being ignored.                                                          |
-| `no-credentials`                | integrations | error   | Nothing reads as a credential rather than as a reference to one — code fences included.                                               |
-| `no-actual-data`                | data         | error   | No address outside `example.com`, which RFC 2606 reserves so that it can never be anybody's.                                          |
-| `fallback-required`             | integrations | warning | The *Failure modes* section names a fallback, or says plainly that there is none.                                                     |
-| `not-normative`                 | explanations | warning | No bold RFC 2119 keyword — a bold modal binds, and an explanation does not.                                                           |
-| `no-hedged-ordering`            | processes    | warning | No "typically", "usually" or "normally" inside *Steps*.                                                                               |
-| `posture-belongs-to-frameworks` | policies     | warning | No claim of standing beside a framework's name — that belongs in `frameworks.md`.                                                     |
-| `target-is-measurable`          | nfrs         | warning | `measured-by` names an instrument rather than hedging — "monitored", "where practical" answer nothing.                                |
-| `mechanism-has-evidence`        | controls     | warning | A control whose `mechanism` is not `not-enforced` names where the proof of it lives.                                                  |
-| `one-problem-per-document`      | faqs         | warning | One *Symptom* section, because an FAQ is found by its symptom.                                                                        |
-| `trial-has-criteria`            | tools        | warning | A tool in `trial` carries a *Trial criteria* section; without one the trial has no way to end.                                        |
-| `deprecated-has-successor`      | tools        | warning | A deprecated tool names its `successor`, so the reader is sent somewhere rather than told a dead end.                                 |
-| `y-statement`                   | adrs         | warning | A block-quote follows the H1, states all six moves, and is within `max-words` (60).                                                   |
-| `alternatives-verdict`          | adrs         | warning | Each *Alternatives Considered* bullet states an outcome. Heuristic: an explicit verdict word or a contrastive / negative-outcome cue. |
-| `terms-alphabetical`            | glossary     | warning | A glossary's entries read in alphabetical order, compared without regard to casing, and the message names the entry that moved.       |
-| `dependency-cycle`              | services     | warning | A loop in `depends-on`, named as the route it runs. Two services that call each other are a fact about the estate.                    |
+A rule that counts words or links is a ratio or a ceiling whose number is a judgement rather than a measurement — no
+corpus has yet held enough of those types to calibrate one. Each is pinned by a fixture, so changing it is visible.
 
-The three length rules are ratios or ceilings whose numbers are judgements rather than measurements — no corpus has yet
-held enough of these types to calibrate them. Each is pinned by a fixture, so changing one is visible.
-
-The seven that match text are heuristics, and their patterns live in `.schema/` for that reason: a heuristic gets tuned,
-and tuning a regex there is a schema edit rather than a release every corpus has to take. Six read the document **as
+A rule that matches text is a heuristic, and its pattern lives in `.schema/` for that reason: a heuristic gets tuned,
+and tuning a regex there is a schema edit rather than a release every corpus has to take. Most read the document **as
 written** — a credential pasted into a fenced block is the case they exist for, and the flattened text a word count
 walks would never see it. `target-is-measurable` is the exception: it reads a frontmatter value, which the body patterns
 deliberately cannot see, because a field is judged against what its own declaration says.
@@ -250,14 +160,14 @@ pipeline, leaving all the markdown and frontmatter extraction untouched, while a
 dependency and breaking the single-file, no-build-step design. A small hand-rolled evaluator buys the one property worth
 having — new rules as data — at a fraction of that. `RuleExpr.cs` says when that judgement expires.
 
-| File                           | Holds                                                                                 |
-|--------------------------------|-----------------------------------------------------------------------------------------|
-| `kac.core/Facts.cs`            | the fact functions, and nothing else an expression can reach                          |
-| `kac.core/RuleExpr.cs`         | lexer, recursive-descent parser, type checker, evaluator — no dependencies            |
-| `RuleSpec` in `Schema.cs`      | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load               |
-| `kac.core/Rules/`              | one class per rule that needs C#, and the registry each dispatcher looks them up in   |
-| `Validator.CheckRules`         | evaluates every compiled rule, and looks up by id the ones that are not               |
-| `Validator.CheckCorpusRules`   | runs the rules that read every record at once, over the index the corpus checks build |
+| File                         | Holds                                                                                 |
+|------------------------------|---------------------------------------------------------------------------------------|
+| `kac.core/Facts.cs`          | the fact functions, and nothing else an expression can reach                          |
+| `kac.core/RuleExpr.cs`       | lexer, recursive-descent parser, type checker, evaluator — no dependencies            |
+| `RuleSpec` in `Schema.cs`    | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load               |
+| `kac.core/Rules/`            | one class per rule that needs C#, and the registry each dispatcher looks them up in   |
+| `Validator.CheckRules`       | evaluates every compiled rule, and looks up by id the ones that are not               |
+| `Validator.CheckCorpusRules` | runs the rules that read every record at once, over the index the corpus checks build |
 
 `CheckRules` emits at the rule's own severity, which is why it is not `CheckWarnings`. `Facts` is built per document and
 discarded once its rules have run, which is what makes `words()` safe to memoise there rather than on the immutable
