@@ -248,10 +248,11 @@ bare `mechanism --check`. It reports:
   match the reference again, so you can delete the stale entry.
 - **what the descriptor declines** — skipped, and counted where the corpus holds it anyway.
 
-It opens by reporting the three versions the descriptor states — `content-version`, `descriptor-version` and
-`upstream.mechanism-version` — naming any the corpus has left silent rather than filling it in. A descriptor still
-carrying the older `version:` key stops the command outright, in either half: the message names the old key, the new one
-and the file, and the rename is the corpus's to make. Nothing rewrites this file on a corpus's behalf.
+It opens by reporting the three versions the descriptor states: `content-version`, `descriptor-version` and
+`upstream.mechanism-version`. A version the corpus has not stated is reported as not declared, because only the corpus
+can say what it knows. A descriptor still carrying the older `version:` key stops the command outright, in either half.
+The message names the old key, the new one and the file, and the rename is the corpus's to make — nothing rewrites this
+file on a corpus's behalf.
 
 A corpus declines in two ways, and both work alike. Leaving a type out of `types:` leaves out its `.schema/<type>.yaml`,
 so that file is neither missing nor drifted. Setting `role:` to `consumer` does the same for the `verification` layer,

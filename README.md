@@ -178,8 +178,8 @@ which of the framework's types it has adopted, and whether it is answerable for 
 
 Three versions live in that file, so each is named for what it versions. `descriptor-version` is the format of the file
 itself and `upstream.mechanism-version` is the shared layer the corpus took, both of them the mechanism's to state.
-`content-version` is the corpus's own — what its records mean, bumped by hand, and stamped into whatever the corpus
-publishes so that a reader of the published copy knows which corpus they are reading.
+`content-version` is the corpus's own: what its records mean, bumped by hand. It is the number to quote when one
+corpus tells another which version of the content it has.
 
 A corpus that declares its types states a decision it made, rather than the shape it happens to have. `validate` then
 holds it to standing up everything it declared. Every generated list of types is written from that declaration. A schema
