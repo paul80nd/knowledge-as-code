@@ -1,4 +1,4 @@
-version: 1
+descriptor-version: 1
 corpus: test-source
 role: source
 upstream:

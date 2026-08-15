@@ -95,6 +95,70 @@ public class ManifestTests
         Assert.False(MechanismCheck.Declined(".tooling/kac.cs", "synced", descriptor));
     }
 
+    // -- the three versions --
+
+    // Each key answers a different question, and the descriptor is read for all three at once.
+    [Fact]
+    public void The_three_versions_are_read_from_the_descriptor()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"),
+            "descriptor-version: 1\ncorpus: sample\ncontent-version: \"2.1.0\"\n"
+            + "upstream:\n  mechanism-version: 3\n");
+
+        var descriptor = CorpusDescriptor.Load(dir);
+
+        Assert.Equal(1, descriptor.DescriptorVersion);
+        Assert.Equal("2.1.0", descriptor.ContentVersion);
+        Assert.Equal(3, descriptor.MechanismVersion);
+    }
+
+    // A descriptor saying nothing about a version is not one saying zero. The check names the silence.
+    [Fact]
+    public void A_descriptor_stating_no_versions_reads_as_silent()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "corpus: sample\n");
+
+        var descriptor = CorpusDescriptor.Load(dir);
+
+        Assert.Null(descriptor.DescriptorVersion);
+        Assert.Null(descriptor.ContentVersion);
+        Assert.Null(descriptor.MechanismVersion);
+    }
+
+    // The migration is the author's to make, so the message has to carry everything the edit needs.
+    [Fact]
+    public void A_descriptor_on_the_old_version_key_is_told_what_to_rename_it_to()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "version: 1\ncorpus: sample\n");
+
+        var message = CorpusDescriptor.RenamedKeyInUse(dir);
+
+        Assert.NotNull(message);
+        Assert.Contains("`version:`", message);
+        Assert.Contains("`descriptor-version:`", message);
+        Assert.Contains(Path.Combine(dir, ".corpus.yaml"), message);
+    }
+
+    [Theory]
+    [InlineData("descriptor-version: 1\ncorpus: sample\n")] // renamed already
+    [InlineData("corpus: sample\n")]                        // never held the key
+    public void A_descriptor_using_no_renamed_key_passes(string content)
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), content);
+
+        Assert.Null(CorpusDescriptor.RenamedKeyInUse(dir));
+    }
+
+    // A corpus with no descriptor at all has no key to rename, and the mechanism command has its own
+    // answer for what is missing.
+    [Fact]
+    public void A_corpus_with_no_descriptor_has_nothing_to_rename()
+        => Assert.Null(CorpusDescriptor.RenamedKeyInUse(Directory.CreateTempSubdirectory().FullName));
+
     // -- what a sync records --
 
     [Fact]
@@ -103,18 +167,36 @@ public class ManifestTests
         var dir = Directory.CreateTempSubdirectory().FullName;
         var path = Path.Combine(dir, ".corpus.yaml");
         File.WriteAllText(path,
-            "role: consumer\n\nupstream:\n  url:               ../src\n"
+            "descriptor-version: 0\ncontent-version: \"2.1.0\"\nrole: consumer\n\nupstream:\n  url:               ../src\n"
             + "  mechanism-version: 1\n  synced-from:       # n/a\n  synced-on:         \"2026-01-01\"\n\n"
             + "# Why a divergence is worth accepting.\naccepted-divergences: []\n");
 
         CorpusDescriptor.Stamp(dir, 3, "../src", "2026-08-11");
 
         var after = File.ReadAllText(path);
+        Assert.Contains($"descriptor-version: {CorpusDescriptor.Format}\n", after);
         Assert.Contains("  mechanism-version: 3\n", after);
         Assert.Contains("  synced-from:       ../src\n", after);
         Assert.Contains("  synced-on:         \"2026-08-11\"\n", after);
         Assert.Contains("  url:               ../src\n", after); // untouched: the sync does not own it
+        Assert.Contains("content-version: \"2.1.0\"\n", after);  // untouched: only the corpus knows this one
         Assert.Contains("# Why a divergence is worth accepting.", after);
+    }
+
+    // The tool owns the file's format, so a descriptor that never stated one is given it, below whatever
+    // header comment opens the file and above the first key.
+    [Fact]
+    public void Stamping_a_descriptor_stating_no_format_writes_one_above_its_first_key()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path, "# What this corpus is.\ncorpus: sample\nrole: consumer\n");
+
+        CorpusDescriptor.Stamp(dir, 3, "../src", "2026-08-11");
+
+        Assert.Equal(CorpusDescriptor.Format, CorpusDescriptor.Load(dir).DescriptorVersion);
+        Assert.Contains($"# What this corpus is.\ndescriptor-version: {CorpusDescriptor.Format}\ncorpus: sample\n",
+            File.ReadAllText(path));
     }
 
     // A descriptor that has never been synced has no block to rewrite, so the first sync opens one.
