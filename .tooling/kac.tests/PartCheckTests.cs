@@ -1,16 +1,20 @@
 using kac.core;
 
-// In-process unit tests for the clause table. Every branch here is driven by a type's `clauses:`
-// declaration rather than by anything specific to policies, so these build a small declaration of their
-// own — which is also the only way to show that the modals, the levels and the id pattern are read from
-// the schema rather than assumed.
+// In-process unit tests for a record's addressable parts. Every branch here is driven by a type's
+// `parts:` declaration rather than by anything specific to policies or glossaries, so these build small
+// declarations of their own — which is also the only way to show that the source, the modals, the levels
+// and the id pattern are read from the schema rather than assumed.
 
 namespace kac.tests;
 
-public class ClauseCheckTests
+public class PartCheckTests
 {
-    private static ClauseSpec Spec() =>
-        new("^[A-Z]{3,8}$", ["MUST", "MUST NOT"], ["SHOULD"]) { Section = "Clauses", Columns = ["Id", "Clause"] };
+    private static PartSpec Table() =>
+        new(PartSpec.Table, "^[A-Z]{3,8}$", ["MUST", "MUST NOT"], ["SHOULD"])
+            { Section = "Clauses", Noun = "clause", Columns = ["Id", "Clause"] };
+
+    private static PartSpec Headings() =>
+        new(PartSpec.Headings, "", [], []) { Section = "Terms", Noun = "term", Level = 3 };
 
     private const string Header = "## Clauses\n\n| Id | Clause |\n|----|--------|\n";
 
@@ -46,8 +50,8 @@ public class ClauseCheckTests
         => Assert.Empty(Run("## Context\n\nNothing to do with clauses.\n"));
 
     [Fact]
-    public void A_type_declaring_no_clauses_is_not_asked_about_them()
-        => Assert.Empty(Run(Header + "| `LOGS` | **MUST** be retained. |\n", declareClauses: false));
+    public void A_type_declaring_no_parts_is_not_asked_about_them()
+        => Assert.Empty(Run(Header + "| `LOGS` | **MUST** be retained. |\n", null, "policies"));
 
     // -- the modal, which is the binding level --
 
@@ -115,7 +119,9 @@ public class ClauseCheckTests
         var found = Run(Header
                         + "| `LOGS` | **MUST** be retained. |\n"
                         + "| `LOGS` | **MUST** be indexed. |\n");
-        Assert.Equal("clause-id-unique", Assert.Single(found).Check.Value);
+        var one = Assert.Single(found);
+        Assert.Equal("part-id-unique", one.Check.Value);
+        Assert.Contains("two clauses here address as 'LOGS'", one.Message);
     }
 
     // -- the ordering, reported once --
@@ -148,7 +154,7 @@ public class ClauseCheckTests
     {
         var found = Notation("Answering `pol-VURM:TIMEBOX` in full.\n");
         var one = Assert.Single(found);
-        Assert.Equal("clause-ref", one.Check.Value);
+        Assert.Equal("part-ref", one.Check.Value);
         Assert.Contains("'pol-VURM.TIMEBOX'", one.Message);
     }
 
@@ -170,42 +176,106 @@ public class ClauseCheckTests
         Assert.Empty(Notation($"Written as `{span}` here.\n"));
     }
 
-    // The check reads no clause table, so it runs on a type that declares none — which is every type a
+    // The check reads no table, so it runs on a type that offers no parts — which is every type a
     // citation is actually written in.
     [Fact]
-    public void The_notation_is_checked_where_no_clauses_are_declared()
+    public void The_notation_is_checked_where_no_parts_are_declared()
     {
-        Assert.Single(Notation("Answering `pol-VURM:TIMEBOX` in full.\n", declareClauses: false));
+        Assert.Single(Notation("Answering `pol-VURM:TIMEBOX` in full.\n", null));
+    }
+
+    // -- parts written as headings --
+
+    private const string Terms = "## Terms\n\n";
+
+    // The heading is the address, so the checks a table needs have nothing to ask here. A glossary's
+    // entries are its parts and none of the table's shape applies to them.
+    [Fact]
+    public void Headings_under_the_section_are_parts_and_nothing_else_is_asked()
+        => Assert.Empty(Run(Terms + "### Corpus\n\nA body of records.\n\n### Drift\n\nCopies parting.\n",
+            Headings(), "glossary"));
+
+    // The id a heading offers is the anchor a link to it would use, which is what makes a citation and a
+    // link name the same thing.
+    [Fact]
+    public void A_headings_address_is_the_anchor_it_slugs_to()
+    {
+        var doc = Parse(Terms + "### Identity line\n\nThe line beneath the H1.\n",
+            Headings(), "glossary").Item1;
+
+        var part = Assert.Single(doc.Parts);
+        Assert.Equal("identity-line", part.Id);
+        Assert.Equal("Identity line", part.Text);
+    }
+
+    // Two entries slugging to one address is the glossary's version of a repeated clause id, and the
+    // message uses the word the type's own readers do.
+    [Fact]
+    public void Two_headings_slugging_alike_collide()
+    {
+        var found = Run(Terms + "### Identity line\n\nOne.\n\n### Identity-line\n\nAnother.\n",
+            Headings(), "glossary");
+
+        var one = Assert.Single(found);
+        Assert.Equal("part-id-unique", one.Check.Value);
+        Assert.Contains("two terms here address as 'identity-line'", one.Message);
+    }
+
+    // A heading below the declared level is prose inside an entry rather than an entry of its own.
+    [Fact]
+    public void A_heading_at_another_level_is_not_a_part()
+    {
+        var doc = Parse(Terms + "### Corpus\n\nA body of records.\n\n#### An aside\n\nMore.\n",
+            Headings(), "glossary").Item1;
+
+        Assert.Equal(["corpus"], doc.Parts.Select(p => p.Id));
+    }
+
+    // The section bounds the parts: an entry filed outside it offers no address, because a citation
+    // resolves against what the type said it would find and nothing else.
+    [Fact]
+    public void A_heading_outside_the_section_is_not_a_part()
+    {
+        var doc = Parse(Terms + "### Corpus\n\nA body.\n\n## Notes\n\n### Stray\n\nFiled wrongly.\n",
+            Headings(), "glossary").Item1;
+
+        Assert.Equal(["corpus"], doc.Parts.Select(p => p.Id));
     }
 
     // -- driving the checks --
 
-    private static List<Finding> Run(string body, bool declareClauses = true)
+    private static List<Finding> Run(string body) => Run(body, Table(), "policies");
+
+    private static List<Finding> Run(string body, PartSpec? spec, string folder)
     {
-        var (doc, type) = Parse(body, declareClauses);
+        var (doc, type) = Parse(body, spec, folder);
 
         var found = new List<Finding>();
-        ClauseChecks.Check(doc, type,
+        PartChecks.Check(doc, type,
             (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, new CheckId(check), msg)),
             (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Warning, new CheckId(check), msg)));
         return found;
     }
 
-    private static List<Finding> Notation(string body, bool declareClauses = true)
+    private static List<Finding> Notation(string body) => Notation(body, Table());
+
+    private static List<Finding> Notation(string body, PartSpec? spec)
     {
-        var (doc, _) = Parse(body, declareClauses);
+        var (doc, _) = Parse(body, spec, "policies");
 
         var found = new List<Finding>();
-        ClauseChecks.CheckNotation(doc,
+        PartChecks.CheckNotation(doc,
             (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, new CheckId(check), msg)));
         return found;
     }
 
-    private static (Doc, TypeSchema) Parse(string body, bool declareClauses)
+    // The schema carries the type's prefix as well as its parts, because the parser tells a citation
+    // from a filename of the same shape by asking whether the half before the dot opens with one.
+    private static (Doc, TypeSchema) Parse(string body, PartSpec? spec, string folder)
     {
-        var type = new TypeSchema { Folder = "policies", Clauses = declareClauses ? Spec() : null };
-        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["policies"] = type } };
-        var doc = Doc.Parse("policies/scrt-security.md", $"---\nid: pol-SCRT\n---\n\n# A policy\n\n{body}", schema);
+        var type = new TypeSchema { Folder = folder, IdPrefix = folder == "glossary" ? "gls" : "pol", Parts = spec };
+        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { [folder] = type } };
+        var doc = Doc.Parse($"{folder}/scrt-security.md", $"---\nid: pol-SCRT\n---\n\n# A record\n\n{body}", schema);
         Assert.NotNull(doc);
         return (doc, type);
     }

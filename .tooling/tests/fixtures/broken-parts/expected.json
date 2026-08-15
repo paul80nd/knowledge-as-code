@@ -1,12 +1,26 @@
 {
   "summary": {
-    "validated": 14,
-    "templates": 1,
+    "validated": 16,
+    "templates": 2,
     "skipped": 0,
-    "errors": 12,
+    "errors": 14,
     "warnings": 2
   },
   "findings": [
+    {
+      "file": "glossary/dupe-two-terms-alike.md",
+      "line": 26,
+      "severity": "error",
+      "check": "part-id-unique",
+      "message": "two terms here address as 'identity-line' — a citation of it names both and reaches neither."
+    },
+    {
+      "file": "glossary/tref-unknown-term.md",
+      "line": 24,
+      "severity": "error",
+      "check": "part-ref",
+      "message": "'gls-dupe-two-terms-alike.no-such-term' cites a term 'no-such-term' that glossary/dupe-two-terms-alike.md does not carry."
+    },
     {
       "file": "policies/blnk-empty-clause-section.md",
       "line": 24,
@@ -39,29 +53,29 @@
       "file": "policies/coln-colon-separator.md",
       "line": 16,
       "severity": "error",
-      "check": "clause-ref",
-      "message": "'pol-COLN:CLEAN' separates its clause with a colon — write 'pol-COLN.CLEAN'."
+      "check": "part-ref",
+      "message": "'pol-COLN:CLEAN' separates the two halves with a colon — write 'pol-COLN.CLEAN'."
     },
     {
       "file": "policies/cref-unknown-clause.md",
       "line": 16,
       "severity": "error",
-      "check": "clause-ref",
+      "check": "part-ref",
       "message": "'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry."
     },
     {
       "file": "policies/dupe-repeated-id.md",
       "line": 28,
       "severity": "error",
-      "check": "clause-id-unique",
-      "message": "clause id 'SAME' is used twice — a citation of it names two obligations."
+      "check": "part-id-unique",
+      "message": "two clauses here address as 'SAME' — a citation of it names both and reaches neither."
     },
     {
       "file": "policies/empt-no-rows.md",
       "line": 25,
       "severity": "error",
       "check": "clause-table",
-      "message": "the clause table has no rows — a policy that binds nothing binds nobody."
+      "message": "the clause table has no rows — a record that binds nothing binds nobody."
     },
     {
       "file": "policies/head-wrong-headers.md",
@@ -95,7 +109,7 @@
       "file": "policies/refs-unknown-document.md",
       "line": 16,
       "severity": "error",
-      "check": "clause-ref",
+      "check": "part-ref",
       "message": "'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist."
     },
     {

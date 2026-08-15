@@ -1,10 +1,14 @@
-Feature: Clause table checks
-  A policy binds in its clause table and nowhere else, so kac checks the table's shape, each row's id and
-  each row's modal, and holds every citation of a clause to the separator the corpus writes and to a clause
-  that exists. Driven in-process against the broken-clauses fixture — the same corpus its JSON golden pins.
+Feature: The parts of a record
+  A record's parts are the children something else may cite, and each type says where it keeps them. A
+  policy keeps its in a clause table, so kac checks the table's shape, each row's id and each row's modal;
+  a glossary keeps its as the headings its terms are written as, where the address is derived and only the
+  address can be wrong. Both are held to the same two things: no two parts of a record share an address,
+  and every citation reaches the part it names, written with the separator the corpus uses.
+
+  Driven in-process against the broken-parts fixture — the same corpus its JSON golden pins.
 
   Background:
-    Given the broken-clauses fixture corpus
+    Given the broken-parts fixture corpus
 
   Scenario: The section must hold a table, headed as the columns are read, with rows in it
     When I validate the corpus
@@ -16,7 +20,7 @@ Feature: Clause table checks
       | 26   | clause-table | the clause table is headed 'Ref \| Obligation' — it must be headed 'Id \| Clause \| Alignment'. |
     And the findings for "policies/empt-no-rows.md" are exactly:
       | line | check       | message                                                            |
-      | 25   | clause-table | the clause table has no rows — a policy that binds nothing binds nobody. |
+      | 25   | clause-table | the clause table has no rows — a record that binds nothing binds nobody. |
 
   Scenario: An empty clause section is reported by the check that can say what belongs there
     When I validate the corpus
@@ -34,7 +38,7 @@ Feature: Clause table checks
       | 27   | clause-id-format | clause id 'clean' does not match ^[A-Z][A-Z0-9]{1,6}$. |
     And the findings for "policies/dupe-repeated-id.md" are exactly:
       | line | check            | message                                                          |
-      | 28   | clause-id-unique | clause id 'SAME' is used twice — a citation of it names two obligations. |
+      | 28   | part-id-unique | two clauses here address as 'SAME' — a citation of it names both and reaches neither. |
 
   Scenario: A clause opens with a modal, and the binding levels are the bold ones
     When I validate the corpus
@@ -61,33 +65,44 @@ Feature: Clause table checks
     When I validate the corpus
     Then the findings for "policies/cref-unknown-clause.md" are exactly:
       | line | check      | message                                                                                                |
-      | 16   | clause-ref | 'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry.        |
+      | 16   | part-ref | 'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry.        |
     And the findings for "policies/refs-unknown-document.md" are exactly:
       | line | check      | message                                        |
-      | 16   | clause-ref | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist. |
+      | 16   | part-ref | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist. |
 
   Scenario: A citation separated by a colon is told the form to write
     When I validate the corpus
     Then the findings for "policies/coln-colon-separator.md" are exactly:
       | line | check      | message                                                              |
-      | 16   | clause-ref | 'pol-COLN:CLEAN' separates its clause with a colon — write 'pol-COLN.CLEAN'. |
+      | 16   | part-ref | 'pol-COLN:CLEAN' separates the two halves with a colon — write 'pol-COLN.CLEAN'. |
+
+  Scenario: Terms are addressed by the anchor their heading slugs to
+    When I validate the corpus
+    Then the findings for "glossary/dupe-two-terms-alike.md" are exactly:
+      | line | check          | message                                                                               |
+      | 26   | part-id-unique | two terms here address as 'identity-line' — a citation of it names both and reaches neither. |
+    And the findings for "glossary/tref-unknown-term.md" are exactly:
+      | line | check    | message                                                                                     |
+      | 24   | part-ref | 'gls-dupe-two-terms-alike.no-such-term' cites a term 'no-such-term' that glossary/dupe-two-terms-alike.md does not carry. |
 
   Scenario: The whole corpus produces exactly these findings and nothing else
     When I validate the corpus
-    Then validation reports 14 documents and 0 skipped
+    Then validation reports 16 documents and 0 skipped
     And the findings are exactly:
       | file                                       | severity | line | check            | message                                                                                            |
+      | glossary/dupe-two-terms-alike.md           | error    | 26   | part-id-unique   | two terms here address as 'identity-line' — a citation of it names both and reaches neither.       |
+      | glossary/tref-unknown-term.md              | error    | 24   | part-ref         | 'gls-dupe-two-terms-alike.no-such-term' cites a term 'no-such-term' that glossary/dupe-two-terms-alike.md does not carry. |
       | policies/blnk-empty-clause-section.md      | error    | 24   | clause-table     | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause \| Alignment'. |
       | policies/bold-binding-not-bold.md          | error    | 27   | clause-modal     | 'MUST' binds — write it bold, `**MUST**`.                                                          |
       | policies/case-lower-clause-id.md           | error    | 27   | clause-id-format | clause id 'clean' does not match ^[A-Z][A-Z0-9]{1,6}$.                                             |
       | policies/cmpd-two-obligations.md           | warning  | 28   | clause-compound  | clause 'CLEAN' carries a second 'MUST' — one obligation per clause, or the citation is ambiguous.  |
-      | policies/coln-colon-separator.md           | error    | 16   | clause-ref       | 'pol-COLN:CLEAN' separates its clause with a colon — write 'pol-COLN.CLEAN'.                       |
-      | policies/cref-unknown-clause.md            | error    | 16   | clause-ref       | 'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry.   |
-      | policies/dupe-repeated-id.md               | error    | 28   | clause-id-unique | clause id 'SAME' is used twice — a citation of it names two obligations.                           |
-      | policies/empt-no-rows.md                   | error    | 25   | clause-table     | the clause table has no rows — a policy that binds nothing binds nobody.                           |
+      | policies/coln-colon-separator.md           | error    | 16   | part-ref       | 'pol-COLN:CLEAN' separates the two halves with a colon — write 'pol-COLN.CLEAN'.                       |
+      | policies/cref-unknown-clause.md            | error    | 16   | part-ref       | 'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry.   |
+      | policies/dupe-repeated-id.md               | error    | 28   | part-id-unique | two clauses here address as 'SAME' — a citation of it names both and reaches neither.                           |
+      | policies/empt-no-rows.md                   | error    | 25   | clause-table     | the clause table has no rows — a record that binds nothing binds nobody.                           |
       | policies/head-wrong-headers.md             | error    | 26   | clause-table     | the clause table is headed 'Ref \| Obligation' — it must be headed 'Id \| Clause \| Alignment'.                 |
       | policies/moda-no-modal.md                  | error    | 28   | clause-modal     | clause 'We will trigger clause-modal and nothing else' does not open with a modal — write one of MUST, MUST NOT, SHOULD, COULD. |
       | policies/nota-clauses-as-bullets.md        | error    | 24   | clause-table     | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause \| Alignment'.     |
       | policies/ordr-out-of-order.md              | warning  | 28   | clause-order     | clause 'SECND' is a 'MUST' but follows a 'MUST NOT' — group the table MUST, MUST NOT, SHOULD, COULD. |
-      | policies/refs-unknown-document.md          | error    | 16   | clause-ref       | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist.                                             |
+      | policies/refs-unknown-document.md          | error    | 16   | part-ref       | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist.                                             |
       | policies/span-id-not-code.md               | error    | 28   | clause-id-format | clause id 'CLEAN' is not a code span — write it as `CLEAN`.                                        |

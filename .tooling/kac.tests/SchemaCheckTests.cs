@@ -18,7 +18,7 @@ public class SchemaCheckTests
         (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
         string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
         string goesHere = "A widget", string labelPlural = "Widgets", string detail = "It is a widget.",
-        (string Other, string Text)[]? versus = null, bool lineage = true) => new()
+        (string Other, string Text)[]? versus = null, bool lineage = true, PartSpec? parts = null) => new()
     {
         TypeName = "widget",
         Key = folder,
@@ -34,7 +34,8 @@ public class SchemaCheckTests
         FieldOrder = [.. (fields ?? []).Select(x => x.Name)],
         Fields = (fields ?? []).ToDictionary(x => x.Name, x => x.Spec),
         Rules = rules ?? [],
-        OptionalSections = sections ?? []
+        OptionalSections = sections ?? [],
+        Parts = parts
     };
 
     // The tiers a type may claim, and the field that admits them, as a sound schema carries them — so a
@@ -405,6 +406,55 @@ public class SchemaCheckTests
         => Assert.Empty(Check(Widgets()));
 
     // -- the disambiguations, which are the one thing a type says about another --
+
+    // -- where a type keeps its parts --
+
+    // A type declaring `parts:` is the only reason a citation into its records resolves, so every way of
+    // getting the block wrong ends with the type silently offering none.
+    [Fact]
+    public void A_part_source_nothing_extracts_names_the_ones_that_are_read()
+    {
+        var parts = new PartSpec("footnotes", "", [], []) { Section = "Terms" };
+        var found = Assert.Single(Check(Widgets(sections: ["Terms"], parts: parts)));
+
+        Assert.Equal("schema-dispatch", found.Check.Value);
+        Assert.Contains("'parts.source: footnotes', which nothing extracts", found.Message);
+        Assert.Contains("'headings', 'table'", found.Message);
+    }
+
+    // The same fault as a `mirrors-section:` at a section the type has not got: the walk runs to a
+    // heading no record may carry, and every citation into the type fails against what it did not find.
+    [Fact]
+    public void A_part_section_the_type_does_not_declare_is_reported()
+    {
+        var parts = new PartSpec(PartSpec.Headings, "", [], []) { Section = "Glossary" };
+        var found = Assert.Single(Check(Widgets(sections: ["Terms"], parts: parts)));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("'parts.section: Glossary'", found.Message);
+    }
+
+    // A table with no binding modals reports every row as opening with none of them, and lists the
+    // modals to write as nothing at all.
+    [Fact]
+    public void A_table_source_declaring_no_binding_modals_is_reported()
+    {
+        var parts = new PartSpec(PartSpec.Table, "^[A-Z]+$", [], ["SHOULD"]) { Section = "Clauses" };
+        var found = Assert.Single(Check(Widgets(sections: ["Clauses"], parts: parts)));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("declares no 'binding:'", found.Message);
+    }
+
+    // The modals belong to the table source, so a type sourcing headings is not asked for them.
+    [Fact]
+    public void A_heading_source_is_not_asked_for_modals()
+        => Assert.Empty(Check(Widgets(sections: ["Terms"],
+            parts: new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" })));
+
+    [Fact]
+    public void A_type_declaring_no_parts_is_asked_nothing_about_them()
+        => Assert.Empty(Check(Widgets()));
 
     private static Schema TwoTypes(params (string Key, (string Other, string Text)[] Versus)[] types)
     {

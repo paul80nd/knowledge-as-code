@@ -19,10 +19,10 @@ failure clause ids exist to prevent, and the only one that needs the whole corpu
 
 ## Scope
 
-This fixture only. It exists so `clause-ref` is exercised where the document resolves and the clause does not.
+This fixture only. It exists so `part-ref` is exercised where the document resolves and the clause does not.
 
 ## Clauses
 
 | Id      | Clause                                         | Alignment |
 |---------|------------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `clause-ref` and nothing else |           |
+| `CLEAN` | **MUST** trigger `part-ref` and nothing else |           |

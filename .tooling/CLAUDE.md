@@ -51,7 +51,7 @@ fits neither interface. Design that one against the first real case.
 **A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
 early so a later check does not report nonsense about a document already known to be broken. That order is the design,
 so core checks are called in sequence and never looked up in a registry. Where a group of them is self-contained —
-`Checks/IdChecks.cs`, `Checks/LinkChecks.cs`, `Checks/ClauseChecks.cs` — it is a static class of its own with unit
+`Checks/IdChecks.cs`, `Checks/LinkChecks.cs`, `Checks/PartChecks.cs` — it is a static class of its own with unit
 tests; the rest stay in `Validator.cs`, and extracting one buys nothing unless it has logic worth testing directly.
 `IdChecks` is the case for extracting: three passes read the shape of an id and of the filename carrying it, in three
 directions, and a second copy of that shape would be a place for the styles to disagree silently.

@@ -188,14 +188,20 @@ Only the types a corpus has adopted are rendered, so a decision table never offe
 there to open. A disambiguation needs both of its types by the same rule: a corpus with no controls is not helped by
 being told how a standard differs from one.
 
-**`clauses`** declares a table every record of the type carries in its body: the section holding it, its columns, the
-pattern a row id takes, and the modals that open a binding row and an advisory one. `kac` reads the rows out of the
-document and holds them to that declaration, and a `pol-VURM.TIMEBOX` citation resolves against them from anywhere in
-the corpus. A type with no `clauses:` block is not checked for clauses at all, so declaring one is how a type says its
-records have addressable parts. Which of a record's content belongs in a table like this, and which belongs in
-frontmatter, is settled in [Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
+**`parts`** declares where a record of the type keeps the children something else may cite, and `source:` says which
+shape they take. `table` reads the rows of the first table under the named section, each carrying an id written beside
+it; `headings` reads the headings at `level:` beneath it, each addressed by the anchor its heading slugs to. `kac` reads
+them out of the document and holds them to the declaration, and a `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`
+citation resolves against them from anywhere in the corpus.
 
-The parser reads those rows for the checks, and nothing renders them: no generated block carries a body table or a view
+A type with no `parts:` block offers no parts, so declaring one is how a type says its records can be addressed inside
+— and a citation into a type that declares none is reported rather than passed over. `noun:` is the word the type's own
+readers use for one part, and it is what a failing citation is worded with. The rest of the block belongs to the table
+source alone: `columns:`, `id-pattern:` and the modals that open a binding row and an advisory one. Which of a record's
+content belongs in a part, and which belongs in frontmatter, is settled in
+[Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
+
+The parser reads those parts for the checks, and nothing renders them: no generated block carries a body table or a view
 derived from one, so a corpus wanting one needs a tool change.
 
 **`index.order`** applies to the sort as a whole rather than to one column of it; a type wanting one column each way is

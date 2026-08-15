@@ -210,37 +210,58 @@
       }
     },
 
-    "clauses": {
-      "description": "The clause table a type's normative section carries — one addressable obligation per row, cited from elsewhere as `pol-VURM.TIMEBOX`. A type declaring no block is never checked for one.",
+    "parts": {
+      "description": "Where a record of this type keeps the parts something else may cite — the children a `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus` citation addresses. A type declaring no block offers no parts, and a citation into one of its records is reported as reaching nothing.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["id-pattern", "binding"],
+      "required": ["source", "section"],
       "properties": {
         "notes": { "$ref": "#/$defs/notes" },
+        "source": {
+          "description": "Where the parts are written. `table` reads the rows of the first table under the named section, each carrying its own id. `headings` reads the headings at `level` under it, each addressed by the anchor its heading slugs to.",
+          "enum": ["table", "headings"]
+        },
         "section": {
-          "description": "The heading the table sits under. Defaults to \"Clauses\".",
+          "description": "The heading the parts sit under. Must be a section the type declares.",
           "type": "string",
           "minLength": 1
         },
+        "noun": {
+          "description": "What one part is called, used in the messages a citation failure reports — \"clause\", \"term\". Defaults to \"part\".",
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "description": "The heading level a part is written at, for `source: headings`. Defaults to 3.",
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 6
+        },
         "columns": {
-          "description": "The table's headers, in order. The first two are read positionally as the id and the clause; any further column is the type's own. Defaults to [Id, Clause].",
+          "description": "The table's headers, in order, for `source: table`. The first two are read positionally as the id and the part; any further column is the type's own. Defaults to [Id, Clause].",
           "type": "array",
           "minItems": 2,
           "items": { "type": "string", "minLength": 1 }
         },
         "id-pattern": {
-          "description": "What a clause's own id must match — the part after the record's id, as `pol-VURM.TIMEBOX` carries it.",
+          "description": "What an authored part id must match — the half after the dot, as `pol-VURM.TIMEBOX` carries it. Read for `source: table` only: a heading's id is derived from the heading rather than written.",
           "$ref": "#/$defs/regex"
         },
         "binding": {
-          "description": "The modals written bold — these oblige. Ordered: rows appear in the order declared.",
+          "description": "The modals written bold — these oblige. Ordered: rows appear in the order declared. `source: table` only.",
           "$ref": "#/$defs/modals"
         },
         "advisory": {
-          "description": "The modals written plain — these recommend. They follow the binding ones.",
+          "description": "The modals written plain — these recommend. They follow the binding ones. `source: table` only.",
           "$ref": "#/$defs/modals"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "source": { "const": "table" } }, "required": ["source"] },
+          "then": { "required": ["id-pattern", "binding"] }
+        }
+      ]
     },
 
     "rules": {

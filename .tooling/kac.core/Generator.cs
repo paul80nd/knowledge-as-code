@@ -480,18 +480,19 @@ public static class Generator
             "No `{{…}}` from the template is left unfilled, outside code.", null),
         // The pipe is escaped because this text lands in a table cell: GFM splits a cell on a bare `|`
         // even inside a code span, so an unescaped one would break the row it is describing.
-        ("clauses", [new("clause-table"), new("clause-id-format"), new("clause-id-unique"), new("clause-modal")],
-            "The clause section is a table of `Id \\| Clause` rows, each id a unique code span and each "
-            + "clause opening with its modal.", t => t.Clauses is not null),
+        ("clauses", [new("clause-table"), new("clause-id-format"), new("clause-modal")],
+            "The clause section is a table of `Id \\| Clause` rows, each id a code span and each "
+            + "clause opening with its modal.", t => t.Parts?.Source == PartSpec.Table),
         ("clause-order / clause-compound", [new("clause-order"), new("clause-compound")],
             "Clause rows are grouped by binding level, and each carries a single obligation.",
-            t => t.Clauses is not null),
-        // Shown on the pages inside the clause machinery — the types that declare clauses — rather than
-        // on every page. The check itself runs corpus-wide, since a citation is checked where it is
-        // written and any document may carry one; what this predicate scopes is the documentation, and
-        // a type with no clauses in sight has no reason to describe how they are cited.
-        ("clause-ref", [new("clause-ref")],
-            "A `pol-XXXX.CLAUSE` citation names a clause that exists.", t => t.Clauses is not null),
+            t => t.Parts?.Source == PartSpec.Table),
+        // Shown on the pages of the types that keep addressable parts, rather than on every page. Both
+        // checks run corpus-wide, since a citation is checked where it is written and any document may
+        // carry one; what this predicate scopes is the documentation, and a type whose records have no
+        // parts has no reason to describe how one is cited.
+        ("part-id-unique / part-ref", [new("part-id-unique"), new("part-ref")],
+            "No two parts of a record share an address, and a `record-id.part` citation reaches the part "
+            + "it names.", t => t.Parts is not null),
         ("link-resolves", [new("link-resolves"), new("fragment-resolves")],
             "Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.",
             null),

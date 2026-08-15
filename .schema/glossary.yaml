@@ -81,6 +81,16 @@ sections:
     whether the word belongs here. The terms themselves are H3s under `Terms`, and a cross-reference names
     their anchors.
 
+# Where a glossary keeps the parts something else can cite. A term is an H3 under `Terms`, and its
+# address is the anchor the heading slugs to — `gls-knowledge-as-code.corpus` names the entry a link to
+# `#corpus` would land on. Derived rather than authored, because a term is its own name: an id written
+# beside it could disagree with the heading, and a reader would have no way to tell which was meant.
+parts:
+  source: headings
+  section: Terms
+  noun: term
+  level: 3
+
 index:
   columns: [id, title, narrows, status, owner, review-by]
   sort: id
