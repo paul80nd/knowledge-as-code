@@ -29,14 +29,14 @@ corpus: knowledge-as-code
 # Not the format of this file, which `descriptor-version` above states. Not the
 # framework this corpus runs, which `upstream.mechanism-version` below states.
 #
-# A published export stamps this into its manifest, and a corpus consuming that
-# export reads it to know what it holds. Semantically versioned:
+# It is the number to quote when one corpus tells another which version of the
+# content it has. Semantically versioned:
 # - major, where a meaning changed or a published URL broke
 # - minor, for additions
 # - patch, for wording
 #
-# Consumers adopt from here onwards. The number notifies rather than gates:
-# nothing refuses to load because it moved. Bumped by hand.
+# The number is a notification and nothing refuses to load because it moved.
+# Bumped by hand, and `kac mechanism --check` reports what it finds here.
 content-version: "1.0.0"
 
 # The role of this corpus. One of: source | consumer.

@@ -79,7 +79,8 @@ public class CorpusDescriptor
     // mean, semantically versioned, bumped by hand and read by whatever publishes an export. It stays a
     // string because it is a version and not a count, and nothing but a person writes it.
     //
-    // Each is null where the descriptor is silent, which the check reports rather than fills in.
+    // Each is null where the descriptor has not stated one, and `mechanism --check` reports that as not
+    // declared. Only the corpus can say what it knows, so the tool never supplies a number here.
     public int? DescriptorVersion;
     public string? ContentVersion;
     public int? MechanismVersion;

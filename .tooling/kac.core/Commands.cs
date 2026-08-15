@@ -205,8 +205,8 @@ public static class Commands
     private static int ReportMechanism(MechanismReport report, CorpusDescriptor descriptor, string refRoot)
     {
         // Where the corpus says it stands, before what the comparison found. Three versions answering
-        // three questions, so a reader can tell which one moved. A silent key is named as silent rather
-        // than filled in: only the corpus can say what it knows.
+        // three questions, so a reader can tell which one moved. See CorpusDescriptor for why an unstated
+        // one is reported and not filled in.
         Console.WriteLine(
             $"mechanism: content version {Stated(descriptor.ContentVersion)}, "
             + $"descriptor format {Stated(descriptor.DescriptorVersion)}, "
