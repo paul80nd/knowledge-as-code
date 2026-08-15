@@ -18,11 +18,11 @@ Both rows are well-formed on their own, and the document reads correctly. What b
 
 ## Scope
 
-This fixture only. It exists so `clause-id-unique` is exercised.
+This fixture only. It exists so `part-id-unique` is exercised.
 
 ## Clauses
 
-| Id     | Clause                                               | Alignment |
-|--------|------------------------------------------------------|-----------|
-| `SAME` | **MUST** trigger `clause-id-unique` and nothing else |           |
-| `SAME` | **MUST NOT** carry a second id of its own            |           |
+| Id     | Clause                                             | Alignment |
+|--------|----------------------------------------------------|-----------|
+| `SAME` | **MUST** trigger `part-id-unique` and nothing else |           |
+| `SAME` | **MUST NOT** carry a second id of its own          |           |

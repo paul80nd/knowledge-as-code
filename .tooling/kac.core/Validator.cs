@@ -244,13 +244,13 @@ public static class Validator
         // remedy differs enough to be worth two wordings.
         //
         // A section the schema never declared is the author's own. A template's stand empty for the copy
-        // to fill. The clause section is left to `clause-table`, which is looking at the same blank and
-        // can say what belongs there.
+        // to fill. The section a type keeps its parts in is left to the checks that read them, which are
+        // looking at the same blank and can say what belongs there.
         if (kind == DocKind.Record)
             foreach (var s in d.Sections.Where(s => !Md.HasContent(d.Text.AsSpan()[s.BodyStart..s.BodyEnd])))
             {
-                if (t.Clauses is { } clauses
-                    && string.Equals(s.Title, clauses.Section, StringComparison.OrdinalIgnoreCase)) continue;
+                if (t.Parts is { } parts
+                    && string.Equals(s.Title, parts.Section, StringComparison.OrdinalIgnoreCase)) continue;
 
                 if (t.RequiredSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
                     Err("empty-section", $"required section '## {s.Title}' has nothing under it.", s.Line);
@@ -270,11 +270,11 @@ public static class Validator
         // -- clause table shape, ids and modals --
         // A template's clause rows are a demonstration of the shape, with `{{ID}}` where the id goes, so
         // they are neither unique nor citable and are not asked to be.
-        if (kind == DocKind.Record) ClauseChecks.Check(d, t, Err, Warn);
+        if (kind == DocKind.Record) PartChecks.Check(d, t, Err, Warn);
 
         // The notation a citation is written in, which any document may get wrong and a template may
         // demonstrate wrongly for every record copied from it.
-        ClauseChecks.CheckNotation(d, Err);
+        PartChecks.CheckNotation(d, Err);
 
         LinkChecks.Check(d, schema, tree, Err, Warn, kind);
 
@@ -513,22 +513,35 @@ public static class Validator
                 byId[id] = d;
         }
 
-        // Clause citations — `pol-VURM.TIMEBOX`. The whole point of giving a clause an id is that
-        // something else can name it, and a citation nothing answers to is the failure that machinery
-        // exists to prevent: it resolves to a document that plainly exists, so a reader has no reason to
-        // doubt the half after the dot.
+        // Part citations — `pol-VURM.TIMEBOX`, `gls-knowledge-as-code.corpus`. The whole point of giving
+        // a part an address is that something else can name it, and a citation nothing answers to is the
+        // failure that machinery exists to prevent: it resolves to a document that plainly exists, so a
+        // reader has no reason to doubt the half after the dot.
+        //
+        // The half before the dot decides the words. A citation into a type that keeps no parts at all
+        // is a different mistake from one naming a part that type does not have, and saying so saves the
+        // author looking for a heading the document was never going to carry.
         foreach (var d in docs)
-        foreach (var (citation, line) in d.ClauseRefs)
+        foreach (var (citation, line) in d.PartRefs)
         {
             var dot = citation.IndexOf('.');
-            var (docId, clauseId) = (citation[..dot], citation[(dot + 1)..]);
+            var (docId, partId) = (citation[..dot], citation[(dot + 1)..]);
 
             if (!byId.TryGetValue(docId, out var target))
-                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("clause-ref"),
+            {
+                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
                     $"'{citation}' cites '{docId}', which does not exist."));
-            else if (!target.Clauses.Any(c => string.Equals(c.IdSpan, clauseId, StringComparison.Ordinal)))
-                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("clause-ref"),
-                    $"'{citation}' cites a clause '{clauseId}' that {target.Rel} does not carry."));
+                continue;
+            }
+
+            var noun = target.Type?.Parts?.Noun;
+            if (noun is null)
+                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
+                    $"'{citation}' addresses a part of {target.Rel}, and its type offers none — cite the "
+                    + $"document as '{docId}'."));
+            else if (!target.Parts.Any(p => string.Equals(p.Id, partId, StringComparison.Ordinal)))
+                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
+                    $"'{citation}' cites a {noun} '{partId}' that {target.Rel} does not carry."));
         }
 
         // Referenced ids — every field the schema gives a `ref:`. The declaration names the type an id

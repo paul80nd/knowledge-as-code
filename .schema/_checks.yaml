@@ -247,8 +247,9 @@ checks:
     notes: >
       An author with nothing to say cannot delete a required heading, so what they leave is a blank
       beneath it, which reads as a finished document to everyone but the person who needed the section.
-      A template's sections stand empty for the copy to fill. The clause section is left to
-      `clause-table`, which is looking at the same blank and can say what belongs there.
+      A template's sections stand empty for the copy to fill. The section a type keeps its parts in is
+      left to the checks that read them, which are looking at the same blank and can say what belongs
+      there.
 
   placeholder-left:
     severity: error
@@ -258,7 +259,15 @@ checks:
       passes and it reads as complete until someone follows a link to `{{a}}.md`. Reported once, naming
       the first — an unfinished copy holds a dozen.
 
-  # ── clauses ──────────────────────────────────────────────────────────────────
+  # ── the parts of a record ────────────────────────────────────────────────────
+
+  part-id-unique:
+    severity: error
+    description: No two parts of a record share an address, so a citation names one of them.
+    notes: >
+      Asked of every source, so two glossary headings differing only in punctuation collide here and
+      never reach the published anchors. Compared ordinally: two ids differing only in case are not two
+      parts a reader could tell apart either.
 
   clause-table:
     severity: error
@@ -272,11 +281,6 @@ checks:
     severity: error
     description: Each clause id is a single code span matching the block's `id-pattern`.
     notes: A code span because an id is a handle rather than a word, and flattened text cannot tell the two apart.
-
-  clause-id-unique:
-    severity: error
-    description: Clause ids are unique within the document, so a citation names one obligation.
-    notes: Compared ordinally — two ids differing only in case are not two clauses a reader could tell apart either.
 
   clause-modal:
     severity: error
@@ -328,15 +332,17 @@ checks:
       case-insensitively, so a mis-cased label resolves and nothing else would catch it — while the
       label is its own display text, and shows the reader an id that does not exist.
 
-  clause-ref:
+  part-ref:
     severity: error
-    description: A clause reference resolves — the document exists and carries that clause.
+    description: A part reference resolves — the document exists and carries that part.
     notes: >
-      Written `pol-VURM.TIMEBOX`, and checked wherever it appears, since any type may cite a clause. A
-      colon where the dot belongs is reported here too, naming the form to write: the parser reads a
-      citation by its separator, so one spelled with a colon would otherwise reach no clause and be seen
-      by nothing. The separator is legible in the single file and the resolution needs the whole corpus,
-      so the two halves run in different passes.
+      Written `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`, and checked wherever it appears,
+      since any type may cite a part. Three ways it fails, and each is reported in the words that fit:
+      the document does not exist, the document's type keeps no parts at all, or the part is not one
+      that document carries. A colon where the dot belongs is reported here too, naming the form to
+      write: the parser reads a citation by its separator, so one spelled with a colon would otherwise
+      reach nothing and be seen by nothing. The separator is legible in the single file and the
+      resolution needs the whole corpus, so the two halves run in different passes.
 
   ref-resolves:
     severity: error

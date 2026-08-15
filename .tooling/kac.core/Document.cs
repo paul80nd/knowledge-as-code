@@ -19,15 +19,20 @@ public class LinkRef
     public string? Label;
 }
 
-// One row of a clause table, held as the parser found it rather than as it should be: an id cell that
-// is not a single code span keeps its text and reports no span, a clause cell that opens with no bold
-// run reports none. Every judgement about what is wrong belongs to the validator, which has the schema
-// to judge against and the words to say what was expected.
-public class ClauseRow
+// One part of a record, held as the parser found it rather than as it should be: a table row whose id
+// cell is not a single code span keeps its text and reports no id, a cell that opens with no bold run
+// reports none. Every judgement about what is wrong belongs to the validator, which has the schema to
+// judge against and the words to say what was expected.
+//
+// Where the id comes from is the difference between the two sources, and the only one this record shows.
+// A table row carries the id its author wrote, so `Id` is null wherever the parser could read none. A
+// heading is slugged into its own id, so it always has one. The fields below `Id` belong to the table
+// source and stand empty for a heading, which carries no cells to fill them.
+public class PartRow
 {
-    public string? IdSpan;     // the Id cell's content when it is exactly one code span
-    public string IdText = ""; // the Id cell flattened, for quoting back when it is not
-    public string Text = "";   // the Clause cell flattened
+    public string? Id;         // the part's own id: the Id cell's code span, or a heading's slug
+    public string IdText = ""; // the Id cell flattened, for quoting back when it is not a span
+    public string Text = "";   // the Clause cell flattened, or the heading as written
     public string? BoldLead;   // the leading bold run's text, when the cell opens with one
     public int Line;
 }
@@ -78,19 +83,20 @@ public partial class Doc
     public List<string>? IdentitySpans;
     public int IdentityLine;
 
-    // The clause table beneath the section the type's schema names. `ClauseHeaders` is null where that
-    // section holds no table at all — the section being absent and the section holding prose are
-    // different faults, and only the parser can tell them apart. `ClauseRefs` collects every code span
-    // shaped like a citation of one, from anywhere in the document.
-    public List<string>? ClauseHeaders;
-    public readonly List<ClauseRow> Clauses = [];
-    public int ClauseSectionLine;
-    public int ClauseTableLine;
-    public readonly List<(string Ref, int Line)> ClauseRefs = [];
+    // The record's addressable parts, read from wherever the type's `parts:` block says they live — the
+    // rows of a table, or the headings a section is written as. `PartTableHeaders` belongs to the table
+    // source alone and is null where the named section holds no table: the section being absent and the
+    // section holding prose are different faults, and only the parser can tell them apart. `PartRefs`
+    // collects every code span shaped like a citation of a part, from anywhere in the document.
+    public List<string>? PartTableHeaders;
+    public readonly List<PartRow> Parts = [];
+    public int PartSectionLine;
+    public int PartTableLine;
+    public readonly List<(string Ref, int Line)> PartRefs = [];
 
     // Citations of a part written with a colon, which is not the separator the corpus uses. Collected
-    // apart from `ClauseRefs` so the validator can name the separator and quote the form to write. A
-    // citation reaching no clause and one spelled wrongly need different words back.
+    // apart from `PartRefs` so the validator can name the separator and quote the form to write. A
+    // citation reaching no part and one spelled wrongly need different words back.
     public readonly List<(string Ref, int Line)> ColonCitations = [];
 
     public readonly List<Section> Sections = [];
@@ -183,12 +189,15 @@ public partial class Doc
         // Y-statement or its prose first has no identity line, however its later paragraphs read.
         ReadIdentity(ast, doc);
 
-        // Clause table, and the citations of one anywhere in the document.
-        if (type?.Clauses is { } clauseSpec) ReadClauses(ast, doc, clauseSpec.Section);
+        // The record's own parts, from wherever its type keeps them, and the citations of a part anywhere
+        // in the document. A citation is collected whatever this document's type — a part is cited from
+        // the record that answers it, which is rarely one of the same type.
+        if (type?.Parts is { } parts) ReadParts(ast, doc, parts);
         foreach (var code in ast.Descendants<CodeInline>())
         {
             if (code.Content is not { } content) continue;
-            if (ClauseCitationRegex().IsMatch(content)) doc.ClauseRefs.Add((content, code.Line + 1));
+            if (!NamesARecord(content, schema)) continue;
+            if (PartCitationRegex().IsMatch(content)) doc.PartRefs.Add((content, code.Line + 1));
             else if (ColonCitationRegex().IsMatch(content)) doc.ColonCitations.Add((content, code.Line + 1));
         }
 
@@ -273,11 +282,24 @@ public partial class Doc
         doc.IdentityLine = p.Line + 1;
     }
 
-    // A code span shaped like a citation of a clause — an id, a dot, and a clause id, as `pol-VURM.TIMEBOX`.
+    // A code span shaped like a citation of a part — an id, a dot, and the part's id, as
+    // `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`. Both halves admit a hyphen, because a record
+    // named by a slug carries one and so does the term a heading is slugged from.
+    //
     // Deliberately loose on case and width: a mis-cased or over-long citation is one the validator should
     // report as unresolved rather than one the parser should quietly decline to see.
-    [System.Text.RegularExpressions.GeneratedRegex(@"^[a-z]{2,4}-[A-Za-z0-9]+\.[A-Za-z0-9]+$")]
-    private static partial System.Text.RegularExpressions.Regex ClauseCitationRegex();
+    [System.Text.RegularExpressions.GeneratedRegex(@"^[a-z]{2,4}-[A-Za-z0-9][A-Za-z0-9-]*\.[A-Za-z0-9][A-Za-z0-9_-]*$")]
+    private static partial System.Text.RegularExpressions.Regex PartCitationRegex();
+
+    // Whether the half before the dot opens with a prefix some type declares. The shape alone cannot
+    // tell a citation from a filename written as a code span: `vurm-vulnerability-remediation.md` has
+    // every feature of one, and reading it as a citation would report a policy nobody wrote and a part
+    // called `md`. Asking after the prefix settles it, because a record's id opens with its type's.
+    //
+    // The prefixes come from the schema, so adopting a type admits citations into it and declining one
+    // shuts them off, with no list here to keep in step.
+    private static bool NamesARecord(string content, Schema schema)
+        => content.IndexOf('-') is var dash and > 0 && schema.IdPrefixes.Contains(content[..dash]);
 
     // The same citation with a colon where the dot belongs, as `std-A11Y:WCAG`. An id has to sit on the
     // left for this to match, which is what keeps a scoped reference — `eng:pol-VURM`, a shortcode and
@@ -285,55 +307,89 @@ public partial class Doc
     [System.Text.RegularExpressions.GeneratedRegex("^[a-z]{2,4}-[A-Za-z0-9]+:[A-Za-z0-9]+$")]
     private static partial System.Text.RegularExpressions.Regex ColonCitationRegex();
 
-    // The clause table: the first table under the H2 the schema names, read down to the next H2. Rows are
-    // taken whole and unjudged — the header row supplies `ClauseHeaders`, every other row a `ClauseRow`,
-    // however malformed — so that "no table here" is the only thing the parser decides.
-    private static void ReadClauses(MarkdownDocument ast, Doc doc, string section)
+    // The record's parts, from the source its type declares. One walk either way, over the blocks
+    // standing under the H2 the schema names, and nothing here judges what it finds: the validator has
+    // the schema to judge against and the words to say what was expected.
+    private static void ReadParts(MarkdownDocument ast, Doc doc, PartSpec spec)
     {
         var inSection = false;
         foreach (var block in ast)
         {
             if (block is HeadingBlock h)
             {
-                if (h.Level > 2) continue; // a sub-heading inside the section does not end it
-                inSection = string.Equals(Md.PlainText(h.Inline), section, StringComparison.OrdinalIgnoreCase);
-                if (inSection) doc.ClauseSectionLine = h.Line + 1;
-                continue;
-            }
-
-            if (!inSection || block is not Markdig.Extensions.Tables.Table table) continue;
-
-            doc.ClauseTableLine = table.Line + 1;
-            foreach (var row in table.OfType<Markdig.Extensions.Tables.TableRow>())
-            {
-                var cells = row.OfType<Markdig.Extensions.Tables.TableCell>()
-                    .Select(c => (c.FirstOrDefault() as LeafBlock)?.Inline)
-                    .ToList();
-
-                if (row.IsHeader)
+                // A heading below the section level does not end the section, and where parts are
+                // written as headings it is one of them.
+                if (h.Level > 2)
                 {
-                    doc.ClauseHeaders = [.. cells.Select(Md.PlainText)];
+                    if (inSection && spec.Source == PartSpec.Headings && h.Level == spec.Level)
+                        AddHeading(doc, h);
                     continue;
                 }
 
-                var clause = cells.Count > 1 ? cells[1] : null;
-                doc.Clauses.Add(new ClauseRow
-                {
-                    IdSpan = cells.Count > 0 && cells[0]?.FirstChild is CodeInline { NextSibling: null } code
-                        ? code.Content
-                        : null,
-                    IdText = Md.PlainText(cells.Count > 0 ? cells[0] : null),
-                    Text = Md.PlainText(clause),
-                    BoldLead = clause?.FirstChild is EmphasisInline { DelimiterCount: 2 } bold
-                        ? Md.PlainText(bold)
-                        : null,
-                    Line = row.Line + 1
-                });
+                inSection = string.Equals(Md.PlainText(h.Inline), spec.Section, StringComparison.OrdinalIgnoreCase);
+                if (inSection) doc.PartSectionLine = h.Line + 1;
+                continue;
             }
 
-            doc.ClauseHeaders ??= [];
+            if (!inSection || spec.Source != PartSpec.Table) continue;
+            if (block is not Markdig.Extensions.Tables.Table table) continue;
+
+            ReadTable(doc, table);
             return;
         }
+    }
+
+    // A heading is a part nobody wrote an id for, so the id comes from the heading: the same anchor a
+    // link to it would use, which lets a citation and a link name one entry. An empty slug — a heading
+    // of punctuation alone — leaves the id null, and that reads downstream as a part offering no
+    // address, exactly as an unreadable id cell does.
+    private static void AddHeading(Doc doc, HeadingBlock h)
+    {
+        var text = Md.PlainText(h.Inline);
+        var slug = Md.Slug(text);
+        doc.Parts.Add(new PartRow
+        {
+            Id = slug.Length > 0 ? slug : null,
+            IdText = text,
+            Text = text,
+            Line = h.Line + 1
+        });
+    }
+
+    // The first table under the named section, read whole. The header row supplies `PartTableHeaders`
+    // and every other row a `PartRow`, however malformed, so that "no table here" is the only thing the
+    // parser decides.
+    private static void ReadTable(Doc doc, Markdig.Extensions.Tables.Table table)
+    {
+        doc.PartTableLine = table.Line + 1;
+        foreach (var row in table.OfType<Markdig.Extensions.Tables.TableRow>())
+        {
+            var cells = row.OfType<Markdig.Extensions.Tables.TableCell>()
+                .Select(c => (c.FirstOrDefault() as LeafBlock)?.Inline)
+                .ToList();
+
+            if (row.IsHeader)
+            {
+                doc.PartTableHeaders = [.. cells.Select(Md.PlainText)];
+                continue;
+            }
+
+            var clause = cells.Count > 1 ? cells[1] : null;
+            doc.Parts.Add(new PartRow
+            {
+                Id = cells.Count > 0 && cells[0]?.FirstChild is CodeInline { NextSibling: null } code
+                    ? code.Content
+                    : null,
+                IdText = Md.PlainText(cells.Count > 0 ? cells[0] : null),
+                Text = Md.PlainText(clause),
+                BoldLead = clause?.FirstChild is EmphasisInline { DelimiterCount: 2 } bold
+                    ? Md.PlainText(bold)
+                    : null,
+                Line = row.Line + 1
+            });
+        }
+
+        doc.PartTableHeaders ??= [];
     }
 
     private static string StripFences(string text, YamlFrontMatterBlock block)

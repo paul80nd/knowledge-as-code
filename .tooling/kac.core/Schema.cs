@@ -65,17 +65,36 @@ public sealed class FieldSpec
         value is not null && AllowLiteral.Contains(value, StringComparer.Ordinal);
 }
 
-// The clause table a type's normative section carries — one addressable obligation per row, cited from
-// elsewhere as `pol-VURM.TIMEBOX`. Held as its own spec so a type gains clauses by declaring them and a
-// type that declares none is simply never checked for any.
+// Where a type keeps the parts of a record that something else may cite, and what holds them to shape.
 //
-// The modal orderings are derived here, once per type, because every clause row of every document reads
-// them and they never differ between two rows of the same type.
-public sealed class ClauseSpec(string idPattern, List<string> binding, List<string> advisory)
+// A part is an identifiable child of a record: `pol-VURM.TIMEBOX` names the policy and then the
+// obligation inside it, `gls-knowledge-as-code.corpus` the glossary and then the term. Which children
+// count is the type's own business, so the type names the source and one extractor reads it. A policy
+// keeps its parts as the rows of a table, where each row's id is written beside it; a glossary keeps
+// them as the headings its terms are written as, where the id comes from the heading and is the anchor a
+// link would use. Held as its own spec, so a type gains parts by declaring them. A type that declares
+// none offers none, and a citation into it is reported as reaching nothing.
+//
+// Everything from `Columns` down is the table source's. A heading has no columns, no authored id to hold
+// to a pattern and no modal, so a type sourcing headings declares none of them.
+//
+// The modal orderings are derived here, once per type, because every row of every document reads them
+// and they never differ between two rows of the same type.
+public sealed class PartSpec(string source, string idPattern, List<string> binding, List<string> advisory)
 {
-    public string Section { get; init; } = "Clauses";
+    // What one part is called, so a message about a missing one uses the word the type's own readers do:
+    // a clause on a policy, a term in a glossary. "part" is the general word, and a type that names none
+    // falls back to it.
+    public string Noun { get; init; } = "part";
 
-    // The table's headers, in order. The first two are read positionally as the id and the clause; any
+    public string Source { get; } = source;
+    public string Section { get; init; } = "";
+
+    // The heading level a part is written at, for the heading source. H3 throughout the corpus: an H1 is
+    // the document and an H2 is a section, so the first level below them is the first that can be a part.
+    public int Level { get; init; } = 3;
+
+    // The table's headers, in order. The first two are read positionally as the id and the part; any
     // further column is the type's own — `Alignment` on a policy — and is checked for being there and
     // named right, its contents being prose the schema has no view on.
     public IReadOnlyList<string> Columns { get; init; } = ["Id", "Clause"];
@@ -96,6 +115,12 @@ public sealed class ClauseSpec(string idPattern, List<string> binding, List<stri
     // Longest first, so "MUST NOT" is recognised before the "MUST" that prefixes it.
     public IReadOnlyList<string> ModalsLongestFirst { get; } =
         [.. binding.Concat(advisory).OrderByDescending(m => m.Length)];
+
+    // The sources an extractor exists for. Read by `schema-dispatch` from here, so a type naming a source
+    // nothing reads is reported instead of quietly offering no parts.
+    public const string Table = "table";
+    public const string Headings = "headings";
+    public static readonly IReadOnlyList<string> Sources = [Table, Headings];
 }
 
 // A field's `required-when:` — the condition under which an otherwise optional field must be filled
@@ -216,7 +241,7 @@ public sealed class TypeSchema
     // `ascending` (the default) or `descending`, applied to the sort as a whole. A postmortem index is
     // the case for it: the incident someone is looking for is almost always the most recent.
     public string IndexOrder { get; init; } = "";
-    public ClauseSpec? Clauses { get; init; }
+    public PartSpec? Parts { get; init; }
     public IReadOnlyList<RuleSpec> Rules { get; init; } = [];
 
     // -- derived at load from the declarations above; see the Derive* helpers --
@@ -307,7 +332,7 @@ internal sealed class Level(YamlNode? node, string where)
     public string Where { get; } = where;
 
     // Whether the block is there at all, for the one caller that treats an absent block and an empty one
-    // differently: a type declares clauses by carrying the block, and every key in it has a default.
+    // differently: a type declares its parts by carrying the block, and a type carrying none has none.
     public bool Present => node is YamlMappingNode;
 
     public YamlNode? Get(string key)
@@ -377,6 +402,15 @@ public sealed partial class Schema
         new Dictionary<string, IReadOnlyList<string>>();
 
     public IReadOnlyDictionary<string, TypeSchema> ByFolder { get; init; } = new Dictionary<string, TypeSchema>();
+
+    // The prefix every type's ids open with, which separates a citation from a filename of the same
+    // shape. Derived from the types themselves, so a corpus adopting one gains its prefix here and a
+    // corpus declining one stops reading citations into it. Empty prefixes are dropped: a type declaring
+    // none would otherwise admit every code span carrying a dot.
+    public IReadOnlySet<string> IdPrefixes => idPrefixes ??=
+        ByFolder.Values.Select(t => t.IdPrefix).Where(p => p.Length > 0).ToHashSet(StringComparer.Ordinal);
+
+    private IReadOnlySet<string>? idPrefixes;
 
     // Every key these files carry that the loader never asked for, in the order it would be met reading
     // them. A key nothing reads is a declaration in a file documented as the contract the tool enforces,
@@ -493,7 +527,7 @@ public sealed partial class Schema
             : [];
 
         var filenamePattern = Yaml.Str(fn.Get("pattern"));
-        var clauses = keys.At(root.Get("clauses"), "the 'clauses' block");
+        var parts = keys.At(root.Get("parts"), "the 'parts' block");
 
         // All three read whether or not the block is there, so that a lineage missing only its `prior-art:`
         // is reported as the shape problem it is rather than as two keys the loader never asked for.
@@ -533,14 +567,17 @@ public sealed partial class Schema
             RequiredSections = Yaml.StrList(sections.Get("required")),
             OptionalSections = Yaml.StrList(sections.Get("optional")),
 
-            Clauses = clauses.Present
-                ? new ClauseSpec(
-                    Yaml.Str(clauses.Get("id-pattern")) ?? "",
-                    Yaml.StrList(clauses.Get("binding")),
-                    Yaml.StrList(clauses.Get("advisory")))
+            Parts = parts.Present
+                ? new PartSpec(
+                    Yaml.Str(parts.Get("source")) ?? "",
+                    Yaml.Str(parts.Get("id-pattern")) ?? "",
+                    Yaml.StrList(parts.Get("binding")),
+                    Yaml.StrList(parts.Get("advisory")))
                 {
-                    Section = Yaml.Str(clauses.Get("section")) ?? "Clauses",
-                    Columns = Yaml.StrList(clauses.Get("columns")) is { Count: > 0 } cols
+                    Noun = Yaml.Str(parts.Get("noun")) ?? "part",
+                    Section = Yaml.Str(parts.Get("section")) ?? "",
+                    Level = Yaml.Int(parts.Get("level"), 3),
+                    Columns = Yaml.StrList(parts.Get("columns")) is { Count: > 0 } cols
                         ? cols
                         : ["Id", "Clause"]
                 }

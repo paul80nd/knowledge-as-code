@@ -58,6 +58,7 @@ public static class SchemaChecks
                     + "how a document behaves and is written into the frontmatter of every record of the type; the "
                     + $"tiers are {Ordered(schema.Tiers.Select(tier => tier.Name))}."));
 
+            CheckParts(at, key, t, f);
             CheckProse(at, key, t, f);
 
             foreach (var name in t.FieldOrder)
@@ -158,6 +159,35 @@ public static class SchemaChecks
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unknown-key"),
                 $"{key.Where} declares '{key.Key}', which the loader does not read — implement it, drop it, "
                 + "or write what it was saying as 'notes:', the one key every level admits."));
+    }
+
+    // Where a type says its parts live, held against what an extractor can actually read.
+    //
+    // Only a `parts:` block makes a `pol-VURM.TIMEBOX` citation resolvable, so every way of getting it
+    // wrong ends the same way: the type offers no parts, every citation into it fails, and the schema
+    // reads as though addressing were set up. A source nothing extracts is the first way. A section the
+    // type never declares is the second, and it is the `mirrors-section:` fault in another place — the
+    // walk would run to a heading no record may carry and find nothing under it.
+    //
+    // The modals are the table source's alone. Without them every row is reported as opening with no
+    // modal, and the message lists the modals to write as an empty list.
+    private static void CheckParts(string at, string key, TypeSchema t, List<Finding> f)
+    {
+        if (t.Parts is not { } parts) return;
+
+        if (!PartSpec.Sources.Contains(parts.Source))
+            Dispatch(at, $"type '{key}' declares 'parts.source: {parts.Source}', which nothing extracts. The "
+                         + $"sources the tool reads are {List(PartSpec.Sources)}.", f);
+
+        if (!t.RequiredSections.Concat(t.OptionalSections).Contains(parts.Section, StringComparer.OrdinalIgnoreCase))
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"type '{key}' declares 'parts.section: {parts.Section}', and its 'sections:' block declares no "
+                + "such section — name a section the type has, or add it. No record can carry a part otherwise."));
+
+        if (parts.Source == PartSpec.Table && parts.Binding.Count == 0)
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"type '{key}' sources its parts from a table and declares no 'binding:' — say which modals "
+                + "oblige, or every row is reported as opening with none of them."));
     }
 
     // A type is a folder of records, and `folder:` names it. The check asks after the value rather than

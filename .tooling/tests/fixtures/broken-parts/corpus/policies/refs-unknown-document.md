@@ -19,10 +19,10 @@ link check reaches it — which is why the citation form is validated in its own
 
 ## Scope
 
-This fixture only. It exists so `clause-ref` is exercised on its unknown-document branch.
+This fixture only. It exists so `part-ref` is exercised on its unknown-document branch.
 
 ## Clauses
 
-| Id      | Clause                                         | Alignment |
-|---------|------------------------------------------------|-----------|
-| `CLEAN` | **MUST** trigger `clause-ref` and nothing else |           |
+| Id      | Clause                                       | Alignment |
+|---------|----------------------------------------------|-----------|
+| `CLEAN` | **MUST** trigger `part-ref` and nothing else |           |

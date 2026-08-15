@@ -139,15 +139,20 @@ public class DocumentTests
         Assert.Equal(["ADR-0099", "a placeholder", "x"], doc.BareBracketTokens.Select(t => t.inner));
     }
 
-    // A schema declaring clauses, for the parse tests below: the folder must map to a type carrying a
-    // ClauseSpec, since a type that declares none is never read for a clause table at all.
+    // A schema sourcing a type's parts from a table, for the parse tests below. The folder must map to a
+    // type carrying a PartSpec, since a type that declares none is never read for parts at all, and the
+    // prefix must be there, since that is what tells a citation from a filename of the same shape.
     private static Schema WithClauses()
     {
         return new Schema
         {
             ByFolder = new Dictionary<string, TypeSchema>
             {
-                ["policies"] = new() { Clauses = new ClauseSpec("", ["MUST"], ["SHOULD"]) { Section = "Clauses" } }
+                ["policies"] = new()
+                {
+                    IdPrefix = "pol",
+                    Parts = new PartSpec(PartSpec.Table, "", ["MUST"], ["SHOULD"]) { Section = "Clauses" }
+                }
             }
         };
     }
@@ -173,17 +178,17 @@ public class DocumentTests
                                    """);
 
         Assert.NotNull(doc);
-        Assert.Equal(["Id", "Clause"], doc.ClauseHeaders);
-        Assert.Collection(doc.Clauses,
+        Assert.Equal(["Id", "Clause"], doc.PartTableHeaders);
+        Assert.Collection(doc.Parts,
             first =>
             {
-                Assert.Equal("STORE", first.IdSpan);
+                Assert.Equal("STORE", first.Id);
                 Assert.Equal("MUST hold secrets", first.Text);
                 Assert.Equal("MUST", first.BoldLead);
             },
             second =>
             {
-                Assert.Null(second.IdSpan); // written as prose, so no span to report
+                Assert.Null(second.Id); // written as prose, so no span to read an id from
                 Assert.Equal("PLAIN", second.IdText);
                 Assert.Null(second.BoldLead); // …and no bold run opening the clause
             });
@@ -197,8 +202,8 @@ public class DocumentTests
         var doc = ParseWithClauses("## Clauses\n\n* We will hold secrets in a store.\n");
 
         Assert.NotNull(doc);
-        Assert.Null(doc.ClauseHeaders);
-        Assert.Empty(doc.Clauses);
+        Assert.Null(doc.PartTableHeaders);
+        Assert.Empty(doc.Parts);
     }
 
     // A table under some other heading is not the clause table, however much it looks like one — the
@@ -215,19 +220,32 @@ public class DocumentTests
                                    """);
 
         Assert.NotNull(doc);
-        Assert.Null(doc.ClauseHeaders);
+        Assert.Null(doc.PartTableHeaders);
     }
 
     // Citations are collected from code spans anywhere in the document, and left unjudged: case and
     // width are the validator's to rule on, so a mis-cased citation is one it can report as unresolved
     // rather than one the parser silently never saw.
     [Fact]
-    public void Clause_citations_are_collected_from_code_spans()
+    public void Part_citations_are_collected_from_code_spans()
     {
         var doc = ParseWithClauses("Cites `pol-VURM.TIMEBOX`, `pol-vurm.lower`, `pol-VURM` and `DRAFT`.\n");
 
         Assert.NotNull(doc);
-        Assert.Equal(["pol-VURM.TIMEBOX", "pol-vurm.lower"], doc.ClauseRefs.Select(r => r.Ref));
+        Assert.Equal(["pol-VURM.TIMEBOX", "pol-vurm.lower"], doc.PartRefs.Select(r => r.Ref));
+    }
+
+    // A record named by a slug carries hyphens on both sides of the dot, and a filename written as a
+    // code span has every feature of that shape. The prefix is what tells them apart: `pol` is a type's
+    // and `vurm` is not, so the filename is passed over and never reported as a citation of nothing.
+    [Fact]
+    public void A_filename_shaped_like_a_citation_is_not_one()
+    {
+        var doc = ParseWithClauses(
+            "See `pol-secrets-at-rest.holding-store` in `vurm-vulnerability-remediation.md`.\n");
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-secrets-at-rest.holding-store"], doc.PartRefs.Select(r => r.Ref));
     }
 
     // A schema whose service type mirrors two fields against two sections, for the parse tests below.

@@ -81,6 +81,16 @@ sections:
     whether the word belongs here. The terms themselves are H3s under `Terms`, and a cross-reference names
     their anchors.
 
+# Where a glossary keeps the parts something else can cite. A term is an H3 under `Terms`, and its
+# address is the anchor the heading slugs to, so `gls-knowledge-as-code.corpus` names the entry a link
+# to `#corpus` would land on. Why the address is derived here and written out on a policy is settled in
+# `/knowledge-as-code/metadata.md`.
+parts:
+  source: headings
+  section: Terms
+  noun: term
+  level: 3
+
 index:
   columns: [id, title, narrows, status, owner, review-by]
   sort: id

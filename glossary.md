@@ -125,6 +125,7 @@ a digest, so nothing runs the rule and the limit is yours to keep.
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
+| `part-id-unique / part-ref` | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.           |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |

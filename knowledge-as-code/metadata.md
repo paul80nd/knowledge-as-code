@@ -15,16 +15,26 @@ A record holds three kinds of thing, and each has one home.
 whole. A field carries one value, or a set of them. An index sorts on it, a citation resolves against it, and an agent
 greps it.
 
-**A table in the body carries the record's parts**, where a part needs a rule or an address of its own. A policy's
-obligations are the case in this corpus: `## Clauses` holds one row per obligation, each with an id that a standard or
-a control cites as `pol-VURM.TIMEBOX`. The type declares that table in its schema — the section holding it, its columns,
-the pattern a row id takes. CI reads the rows out of the body and holds them to that declaration.
+**The body carries the record's parts**, where a part needs a rule or an address of its own. What counts as a part is
+the type's business. The type says so under `parts:` in its schema: which section holds them, and whether they are
+written as the rows of a table or as headings beneath it. CI reads them out of the body and holds them to that
+declaration.
+
+Two shapes are in use, and they differ in where the address comes from. A policy's obligations are rows. `## Clauses`
+holds one per obligation with an id written beside it, which a standard or a control cites as `pol-VURM.TIMEBOX`. A
+glossary's terms are headings. `## Terms` holds an H3 each, addressed by the anchor the heading slugs to, so
+`gls-knowledge-as-code.corpus` and a link to `#corpus` name the same entry.
+
+A policy writes its ids down because a clause gets reworded and its address must not move with it. A term is its own
+name, so a glossary derives the address from the heading. Writing one beside the heading as well would give the two a
+way to disagree.
 
 **Everything else is prose**, in the section where it belongs.
 
-The question to ask of a table is whether anything has to address a row: a citation that must resolve, a check that must
-fire. Where nothing does, it is prose set in columns, and the schema says nothing about it. A part moved into
-frontmatter reaches the reader as a metadata table written for a machine, and leaves the page they are already reading.
+The question to ask is whether anything has to address the piece: a citation that must resolve, a check that must fire.
+Where nothing does, a table is prose set in columns and a heading is a heading, and the schema says nothing about
+either. A part moved into frontmatter reaches the reader as a metadata table written for a machine, and leaves the page
+they are already reading.
 
 ## Principles
 
@@ -141,10 +151,11 @@ stale. A document whose meaning has moved that far is replaced and the old one r
 Two separators reach past an id, each with one job. [Contributing](contributing.md) holds the link form a reference is
 written in.
 
-**`.` addresses a part of a document.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it. The parts a
-document offers are the rows of the table its type declares, described under
-[What a record carries](#what-a-record-carries). CI resolves each citation against the document it names, so a reference
-to a part that does not exist fails the build.
+**`.` addresses a part of a document.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it;
+`gls-knowledge-as-code.corpus` names the glossary, then the term. A part is an identifiable child of a record, and which
+children a document offers is decided by its type, under [What a record carries](#what-a-record-carries). CI resolves
+each citation against the document it names, so a reference to a part that does not exist fails the build — as does one
+into a type that keeps no parts at all.
 
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, document, part. A
 record this corpus holds is cited bare, and qualifying one is an error: two spellings of a single obligation defeat
