@@ -194,12 +194,11 @@ it; `headings` reads the headings at `level:` beneath it, each addressed by the 
 them out of the document and holds them to the declaration, and a `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`
 citation resolves against them from anywhere in the corpus.
 
-A type with no `parts:` block offers no parts, so declaring one is how a type says its records can be addressed inside
-— and a citation into a type that declares none is reported rather than passed over. `noun:` is the word the type's own
-readers use for one part, and it is what a failing citation is worded with. The rest of the block belongs to the table
-source alone: `columns:`, `id-pattern:` and the modals that open a binding row and an advisory one. Which of a record's
-content belongs in a part, and which belongs in frontmatter, is settled in
-[Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
+A type with no `parts:` block offers no parts. Declaring one is how a type says its records can be addressed inside, and
+a citation into a type that declares none is reported. `noun:` is the word the type's own readers use for one part, and
+a failing citation is worded with it. The rest of the block belongs to the table source alone: `columns:`, `id-pattern:`
+and the modals that open a binding row and an advisory one. Which of a record's content belongs in a part, and which
+belongs in frontmatter, is settled in [Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
 
 The parser reads those parts for the checks, and nothing renders them: no generated block carries a body table or a view
 derived from one, so a corpus wanting one needs a tool change.

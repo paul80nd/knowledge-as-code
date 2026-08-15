@@ -22,7 +22,7 @@ This fixture only. It exists so `part-id-unique` is exercised.
 
 ## Clauses
 
-| Id     | Clause                                               | Alignment |
-|--------|------------------------------------------------------|-----------|
+| Id     | Clause                                             | Alignment |
+|--------|----------------------------------------------------|-----------|
 | `SAME` | **MUST** trigger `part-id-unique` and nothing else |           |
-| `SAME` | **MUST NOT** carry a second id of its own            |           |
+| `SAME` | **MUST NOT** carry a second id of its own          |           |

@@ -23,6 +23,6 @@ This fixture only. It exercises `part-ref` on a separator, where the clause name
 
 ## Clauses
 
-| Id      | Clause                                         | Alignment |
-|---------|------------------------------------------------|-----------|
+| Id      | Clause                                       | Alignment |
+|---------|----------------------------------------------|-----------|
 | `CLEAN` | **MUST** trigger `part-ref` and nothing else |           |

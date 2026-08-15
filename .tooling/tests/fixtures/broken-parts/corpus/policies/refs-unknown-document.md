@@ -23,6 +23,6 @@ This fixture only. It exists so `part-ref` is exercised on its unknown-document 
 
 ## Clauses
 
-| Id      | Clause                                         | Alignment |
-|---------|------------------------------------------------|-----------|
+| Id      | Clause                                       | Alignment |
+|---------|----------------------------------------------|-----------|
 | `CLEAN` | **MUST** trigger `part-ref` and nothing else |           |

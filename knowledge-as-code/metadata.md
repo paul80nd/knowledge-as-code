@@ -16,16 +16,18 @@ whole. A field carries one value, or a set of them. An index sorts on it, a cita
 greps it.
 
 **The body carries the record's parts**, where a part needs a rule or an address of its own. What counts as a part is
-the type's business, and the type says so in its schema under `parts:` — which section holds them, and whether they are
+the type's business. The type says so under `parts:` in its schema: which section holds them, and whether they are
 written as the rows of a table or as headings beneath it. CI reads them out of the body and holds them to that
 declaration.
 
-Two shapes are in use, and the difference is where the address comes from. A policy's obligations are rows: `## Clauses`
+Two shapes are in use, and they differ in where the address comes from. A policy's obligations are rows. `## Clauses`
 holds one per obligation with an id written beside it, which a standard or a control cites as `pol-VURM.TIMEBOX`. A
-glossary's terms are headings: `## Terms` holds an H3 each, addressed by the anchor the heading slugs to, so
-`gls-knowledge-as-code.corpus` and a link to `#corpus` name the same entry. An id is written beside a row because the
-wording of a clause is edited and its address is not; a term is its own name, so writing one beside it would only give
-the two a way to disagree.
+glossary's terms are headings. `## Terms` holds an H3 each, addressed by the anchor the heading slugs to, so
+`gls-knowledge-as-code.corpus` and a link to `#corpus` name the same entry.
+
+A policy writes its ids down because a clause gets reworded and its address must not move with it. A term is its own
+name, so a glossary derives the address from the heading. Writing one beside the heading as well would give the two a
+way to disagree.
 
 **Everything else is prose**, in the section where it belongs.
 

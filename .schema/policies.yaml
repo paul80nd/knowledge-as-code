@@ -98,13 +98,13 @@ sections:
   optional: [Exceptions, Notes]
 
 # Where a policy keeps the parts something else can cite, and the shape of the table it keeps them in.
-# Declared here rather than built into the validator, so a type carries clauses by describing them and
-# one with no `parts:` block simply offers none.
+# The declaration sits here so that a type carries clauses by describing them, and one with no `parts:`
+# block simply offers none.
 #
 # Ids are short and upper-case because they are read inside a citation — `pol-VURM.TIMEBOX` — where a
 # long one buries the policy it belongs to. Seven characters is enough for a word worth guessing at
-# and short enough that compressing to it is rare. Authored rather than derived: the wording of a clause
-# is edited and its address is not, so the two are written apart.
+# and short enough that compressing to it is rare. Each is written beside its row; why a policy authors
+# an id and a glossary derives one is settled in `/knowledge-as-code/metadata.md`.
 #
 # Binding levels are written bold and non-binding ones plain, and rows are grouped in the order below,
 # so a reader sees the weight drop off down the table without needing a divider it cannot carry.

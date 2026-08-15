@@ -65,9 +65,9 @@ public static class PartChecks
 
     // The address itself, asked of both sources.
     //
-    // A table row's id is authored, so it can be written as something other than a code span or fail the
-    // type's pattern. Both are `clause-id-format`, and neither can be asked of a heading: a heading is
-    // its own id, derived rather than written, and the derivation admits whatever the heading says. A
+    // A table row's id is written by the author, so it can be written as something other than a code
+    // span or fail the type's pattern. Both are `clause-id-format`, and neither can be asked of a
+    // heading: a heading is its own id, and the slug admits whatever the heading says. A
     // heading that slugs to nothing — punctuation alone — offers no address and is passed over, which is
     // the same answer a link to it would get from `fragment-resolves`.
     //

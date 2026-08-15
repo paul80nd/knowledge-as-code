@@ -25,9 +25,9 @@ public class LinkRef
 // judge against and the words to say what was expected.
 //
 // Where the id comes from is the difference between the two sources, and the only one this record shows.
-// A table row carries an authored id, so `Id` is null wherever the author did not write one the parser
-// could read. A heading's id is derived from the heading, so it is always there — the fields below it
-// belong to the table source and stand empty for a heading, which carries no cells to fill them.
+// A table row carries the id its author wrote, so `Id` is null wherever the parser could read none. A
+// heading is slugged into its own id, so it always has one. The fields below `Id` belong to the table
+// source and stand empty for a heading, which carries no cells to fill them.
 public class PartRow
 {
     public string? Id;         // the part's own id: the Id cell's code span, or a heading's slug
@@ -95,8 +95,8 @@ public partial class Doc
     public readonly List<(string Ref, int Line)> PartRefs = [];
 
     // Citations of a part written with a colon, which is not the separator the corpus uses. Collected
-    // apart from `ClauseRefs` so the validator can name the separator and quote the form to write. A
-    // citation reaching no clause and one spelled wrongly need different words back.
+    // apart from `PartRefs` so the validator can name the separator and quote the form to write. A
+    // citation reaching no part and one spelled wrongly need different words back.
     public readonly List<(string Ref, int Line)> ColonCitations = [];
 
     public readonly List<Section> Sections = [];
@@ -296,8 +296,8 @@ public partial class Doc
     // every feature of one, and reading it as a citation would report a policy nobody wrote and a part
     // called `md`. Asking after the prefix settles it, because a record's id opens with its type's.
     //
-    // Read from the schema rather than listed, so a corpus adopting a type gains its prefix here without
-    // an edit, and one declining a type stops citing into it.
+    // The prefixes come from the schema, so adopting a type admits citations into it and declining one
+    // shuts them off, with no list here to keep in step.
     private static bool NamesARecord(string content, Schema schema)
         => content.IndexOf('-') is var dash and > 0 && schema.IdPrefixes.Contains(content[..dash]);
 
@@ -339,9 +339,9 @@ public partial class Doc
         }
     }
 
-    // A heading is a part whose id nobody authored, so it is derived: the anchor a link to the heading
-    // would use, which is what makes the citation and the link name the same thing. An empty slug — a
-    // heading of punctuation alone — leaves the id null, which reads downstream as a part offering no
+    // A heading is a part nobody wrote an id for, so the id comes from the heading: the same anchor a
+    // link to it would use, which lets a citation and a link name one entry. An empty slug — a heading
+    // of punctuation alone — leaves the id null, and that reads downstream as a part offering no
     // address, exactly as an unreadable id cell does.
     private static void AddHeading(Doc doc, HeadingBlock h)
     {

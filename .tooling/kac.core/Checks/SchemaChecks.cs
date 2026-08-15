@@ -163,7 +163,7 @@ public static class SchemaChecks
 
     // Where a type says its parts live, held against what an extractor can actually read.
     //
-    // A `parts:` block is what makes a `pol-VURM.TIMEBOX` citation resolvable, so every way of getting it
+    // Only a `parts:` block makes a `pol-VURM.TIMEBOX` citation resolvable, so every way of getting it
     // wrong ends the same way: the type offers no parts, every citation into it fails, and the schema
     // reads as though addressing were set up. A source nothing extracts is the first way. A section the
     // type never declares is the second, and it is the `mirrors-section:` fault in another place — the

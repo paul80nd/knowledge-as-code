@@ -82,9 +82,9 @@ sections:
     their anchors.
 
 # Where a glossary keeps the parts something else can cite. A term is an H3 under `Terms`, and its
-# address is the anchor the heading slugs to — `gls-knowledge-as-code.corpus` names the entry a link to
-# `#corpus` would land on. Derived rather than authored, because a term is its own name: an id written
-# beside it could disagree with the heading, and a reader would have no way to tell which was meant.
+# address is the anchor the heading slugs to, so `gls-knowledge-as-code.corpus` names the entry a link
+# to `#corpus` would land on. Why the address is derived here and written out on a policy is settled in
+# `/knowledge-as-code/metadata.md`.
 parts:
   source: headings
   section: Terms

@@ -265,10 +265,9 @@ checks:
     severity: error
     description: No two parts of a record share an address, so a citation names one of them.
     notes: >
-      Asked of every source. A policy's clause ids are authored beside the rows; a glossary's term
-      addresses are derived from the headings, so two headings differing only in punctuation collide
-      here rather than in the published anchors. Compared ordinally — two ids differing only in case are
-      not two parts a reader could tell apart either.
+      Asked of every source, so two glossary headings differing only in punctuation collide here and
+      never reach the published anchors. Compared ordinally: two ids differing only in case are not two
+      parts a reader could tell apart either.
 
   clause-table:
     severity: error

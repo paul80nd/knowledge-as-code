@@ -70,10 +70,10 @@ public sealed class FieldSpec
 // A part is an identifiable child of a record: `pol-VURM.TIMEBOX` names the policy and then the
 // obligation inside it, `gls-knowledge-as-code.corpus` the glossary and then the term. Which children
 // count is the type's own business, so the type names the source and one extractor reads it. A policy
-// keeps its parts as the rows of a table, where each row's id is authored beside it; a glossary keeps
-// them as the headings its terms are written as, where the id is derived from the heading and is the
-// anchor a link would use. Held as its own spec so a type gains parts by declaring them, and a type that
-// declares none offers none — a citation into it is reported as reaching nothing.
+// keeps its parts as the rows of a table, where each row's id is written beside it; a glossary keeps
+// them as the headings its terms are written as, where the id comes from the heading and is the anchor a
+// link would use. Held as its own spec, so a type gains parts by declaring them. A type that declares
+// none offers none, and a citation into it is reported as reaching nothing.
 //
 // Everything from `Columns` down is the table source's. A heading has no columns, no authored id to hold
 // to a pattern and no modal, so a type sourcing headings declares none of them.
@@ -82,9 +82,9 @@ public sealed class FieldSpec
 // and they never differ between two rows of the same type.
 public sealed class PartSpec(string source, string idPattern, List<string> binding, List<string> advisory)
 {
-    // What one part is called, so a message about a missing one uses the word the type's own readers do
-    // — a clause on a policy, a term in a glossary. "part" is the general word and reads as a fallback,
-    // which is what it is.
+    // What one part is called, so a message about a missing one uses the word the type's own readers do:
+    // a clause on a policy, a term in a glossary. "part" is the general word, and a type that names none
+    // falls back to it.
     public string Noun { get; init; } = "part";
 
     public string Source { get; } = source;
@@ -117,7 +117,7 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
         [.. binding.Concat(advisory).OrderByDescending(m => m.Length)];
 
     // The sources an extractor exists for. Read by `schema-dispatch` from here, so a type naming a source
-    // nothing reads is reported rather than silently offering no parts.
+    // nothing reads is reported instead of quietly offering no parts.
     public const string Table = "table";
     public const string Headings = "headings";
     public static readonly IReadOnlyList<string> Sources = [Table, Headings];
@@ -403,9 +403,9 @@ public sealed partial class Schema
 
     public IReadOnlyDictionary<string, TypeSchema> ByFolder { get; init; } = new Dictionary<string, TypeSchema>();
 
-    // The prefix every type's ids open with, which is what tells a citation from a filename of the same
-    // shape. Derived rather than declared, so a corpus adopting a type gains its prefix here and one
-    // declining a type stops reading citations into it. Empty prefixes are dropped: a type that declares
+    // The prefix every type's ids open with, which separates a citation from a filename of the same
+    // shape. Derived from the types themselves, so a corpus adopting one gains its prefix here and a
+    // corpus declining one stops reading citations into it. Empty prefixes are dropped: a type declaring
     // none would otherwise admit every code span carrying a dot.
     public IReadOnlySet<string> IdPrefixes => idPrefixes ??=
         ByFolder.Values.Select(t => t.IdPrefix).Where(p => p.Length > 0).ToHashSet(StringComparer.Ordinal);
