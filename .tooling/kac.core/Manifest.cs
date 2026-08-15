@@ -55,9 +55,34 @@ public record AcceptedDivergence(string Path, string? Reason);
 
 public class CorpusDescriptor
 {
+    // The format `.corpus.yaml` is written in. The tool's own number: a corpus cannot know the shape a
+    // newer mechanism writes, so a sync stamps this alongside what it took.
+    public const int Format = 1;
+
+    // Keys the descriptor once used, beside what each is called now. `version:` alone said the file's own
+    // format, which is one of three versions the file states, so a reader met a number without knowing
+    // which question it answered.
+    //
+    // A rename is the author's to make. No part of this file comes down from an upstream, and a corpus
+    // that has taken a copy is a repository someone owns, so the tool names the old key, the new one and
+    // the file, and stops. Rewriting it would save a single edit and break the file's own promise.
+    private static readonly (string Old, string New)[] Renamed = [("version", "descriptor-version")];
+
     public string Role = "";
     public string? UpstreamUrl;
     public readonly List<AcceptedDivergence> Accepted = [];
+
+    // The three versions the descriptor states, each named for what it versions.
+    //
+    // `DescriptorVersion` is this file's format and `MechanismVersion` is the framework the corpus last
+    // took, both counts the tool understands. `ContentVersion` is the corpus's own — what its records
+    // mean, semantically versioned, bumped by hand and read by whatever publishes an export. It stays a
+    // string because it is a version and not a count, and nothing but a person writes it.
+    //
+    // Each is null where the descriptor is silent, which the check reports rather than fills in.
+    public int? DescriptorVersion;
+    public string? ContentVersion;
+    public int? MechanismVersion;
 
     // The types this corpus has adopted, named as the schema names them. This is a statement of intent
     // rather than a description: the corpus says which of the framework's types it wants, and everything
@@ -90,6 +115,10 @@ public class CorpusDescriptor
         var url = Yaml.Str(Yaml.Get(Yaml.Get(root, "upstream"), "url"));
         descriptor.UpstreamUrl = string.IsNullOrWhiteSpace(url) ? null : url;
 
+        descriptor.DescriptorVersion = Yaml.NullableInt(Yaml.Get(root, "descriptor-version"));
+        descriptor.ContentVersion = Yaml.Str(Yaml.Get(root, "content-version"));
+        descriptor.MechanismVersion = Yaml.NullableInt(Yaml.Get(Yaml.Get(root, "upstream"), "mechanism-version"));
+
         if (Yaml.Get(root, "types") is YamlSequenceNode types)
             descriptor.Types = [.. types.Children.Select(Yaml.Str).OfType<string>()];
 
@@ -101,9 +130,32 @@ public class CorpusDescriptor
         return descriptor;
     }
 
-    // Record what a sync took: the upstream's mechanism version, where it came from, and when.
+    // What to tell an author whose descriptor still uses a renamed key, or null where none is in use.
     //
-    // This rewrites three lines rather than re-serialising the file, because the descriptor is mostly
+    // Both halves of `mechanism` stop on this. A check would otherwise report on a file it has misread,
+    // and a sync would write a stamp beside a key it does not read. The message carries the old key, the
+    // new one and the path, so the fix is mechanical.
+    public static string? RenamedKeyInUse(string repoRoot)
+    {
+        var path = Path.Combine(repoRoot, ".corpus.yaml");
+        if (!File.Exists(path)) return null;
+
+        var root = Yaml.LoadFile(path);
+        foreach (var (old, replacement) in Renamed)
+            if (Yaml.Get(root, old) is not null)
+                return $"mechanism: {path} still says `{old}:`. Rename it to `{replacement}:`, which says "
+                       + "which of the file's versions it is. This corpus states three: `descriptor-version` "
+                       + "for the file's own format, `content-version` for what the corpus knows, and "
+                       + "`upstream.mechanism-version` for the framework it runs.";
+
+        return null;
+    }
+
+    // Record what a sync took: the format this tool writes, the upstream's mechanism version, where it
+    // came from, and when. The corpus's own `content-version` is untouched, because what the corpus knows
+    // is not something an upstream can tell it.
+    //
+    // This rewrites four lines rather than re-serialising the file, because the descriptor is mostly
     // commentary. Someone opens it to read what each role means and when a divergence is worth
     // accepting, and a YAML round-trip would throw all of that away. Rewriting a line does drop any
     // trailing comment on it, which is right: that comment described the value the sync just replaced.
@@ -113,6 +165,17 @@ public class CorpusDescriptor
         var lines = File.Exists(path)
             ? new List<string>(Files.ReadLf(path).Split('\n'))
             : [];
+
+        // The file's own format, which the tool owns and the corpus does not. A descriptor without the key
+        // takes it above its first key, below whatever header comment stands there.
+        const string formatKey = "descriptor-version:";
+        var format = lines.FindIndex(l => l.StartsWith(formatKey, StringComparison.Ordinal));
+        if (format >= 0) lines[format] = $"{formatKey} {Format}";
+        else
+        {
+            var first = lines.FindIndex(IsTopLevelKey);
+            lines.Insert(first < 0 ? lines.Count : first, $"{formatKey} {Format}");
+        }
 
         // A descriptor with no `upstream:` block has never been synced. Open one rather than fail — the
         // corpus is recording where it takes from for the first time, which is what the block is for.

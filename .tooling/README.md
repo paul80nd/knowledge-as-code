@@ -248,6 +248,11 @@ bare `mechanism --check`. It reports:
   match the reference again, so you can delete the stale entry.
 - **what the descriptor declines** — skipped, and counted where the corpus holds it anyway.
 
+It opens by reporting the three versions the descriptor states — `content-version`, `descriptor-version` and
+`upstream.mechanism-version` — naming any the corpus has left silent rather than filling it in. A descriptor still
+carrying the older `version:` key stops the command outright, in either half: the message names the old key, the new one
+and the file, and the rename is the corpus's to make. Nothing rewrites this file on a corpus's behalf.
+
 A corpus declines in two ways, and both work alike. Leaving a type out of `types:` leaves out its `.schema/<type>.yaml`,
 so that file is neither missing nor drifted. Setting `role:` to `consumer` does the same for the `verification` layer,
 because a consumer runs a tool proven upstream instead of proving it. These are the only ways a corpus may hold less of
@@ -288,8 +293,10 @@ In one pass over both trees:
 - Files this corpus holds and the reference does not are **named, not deleted**. Sync copies. Emptying a corpus because
   an upstream tree was smaller is not a decision a tool makes.
 
-Sync then stamps `upstream.mechanism-version`, `synced-from` and `synced-on` into `.corpus.yaml`. It rewrites those
-three lines rather than re-serialising the file, so the descriptor's commentary survives. Finally it runs `index`.
+Sync then stamps `descriptor-version`, `upstream.mechanism-version`, `synced-from` and `synced-on` into `.corpus.yaml`.
+It rewrites those four lines rather than re-serialising the file, so the descriptor's commentary survives. The file's
+own format is the mechanism's to state, because a corpus cannot know the shape a newer one writes. `content-version` is
+left alone: what a corpus knows is not something an upstream can tell it. Finally it runs `index`.
 Copying a page whole is only safe because of that last step: the page arrives carrying the reference's generated block,
 and is right only once rebuilt against the types the receiving corpus holds. A passing `index --check` is sync's
 postcondition.

@@ -5,3 +5,5 @@ knowledge-as-code/taxonomy.md :: !Runbooks
 # An accepted divergence keeps its own words, and the stamp keeps the descriptor's.
 knowledge-as-code/contributing.md :: This corpus's own process
 .corpus.yaml :: This corpus takes contributions through its own process.
+# The file's own format is the tool's to state, so a sync stamps it.
+.corpus.yaml :: descriptor-version: 1

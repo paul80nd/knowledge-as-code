@@ -149,6 +149,10 @@ public static class Commands
 
         var descriptor = CorpusDescriptor.Load(repoRoot);
 
+        // A descriptor still on a renamed key stops both halves. A check would report on a file it has
+        // misread, and a sync would stamp beside a key it does not read.
+        if (CorpusDescriptor.RenamedKeyInUse(repoRoot) is { } renamed) return Fail(renamed);
+
         // A sync needs a declared upstream, and not just a directory it can read. `--against` says which
         // copy of the upstream to take from — a local checkout rather than the URL. `upstream.url` says
         // the corpus takes from an upstream at all. The corpus at the head of the chain names none:
@@ -177,7 +181,7 @@ public static class Commands
         if (check)
             return ReportMechanism(
                 MechanismCheck.Classify(localFiles, refFiles, Manifest.Load(repoRoot), descriptor, Same),
-                refRoot);
+                descriptor, refRoot);
 
         var manifest = Manifest.Load(refRoot);
         var plan = MechanismSync.Plan(localFiles, refFiles, manifest, descriptor,
@@ -198,8 +202,15 @@ public static class Commands
         }
     }
 
-    private static int ReportMechanism(MechanismReport report, string refRoot)
+    private static int ReportMechanism(MechanismReport report, CorpusDescriptor descriptor, string refRoot)
     {
+        // Where the corpus says it stands, before what the comparison found. Three versions answering
+        // three questions, so a reader can tell which one moved. A silent key is named as silent rather
+        // than filled in: only the corpus can say what it knows.
+        Console.WriteLine(
+            $"mechanism: content version {Stated(descriptor.ContentVersion)}, "
+            + $"descriptor format {Stated(descriptor.DescriptorVersion)}, "
+            + $"mechanism version {Stated(descriptor.MechanismVersion)}.");
         Console.WriteLine($"mechanism: comparing the synced layer against {refRoot}");
         Section("DRIFT — synced files differ from the reference", report.Drift);
         Section("MISSING LOCALLY — synced files in the reference but not here", report.MissingLocally);
@@ -242,6 +253,8 @@ public static class Commands
             Console.Error.WriteLine($"{heading}:");
             foreach (var p in paths) Console.Error.WriteLine($"  {p}");
         }
+
+        static string Stated(object? version) => version?.ToString() is { Length: > 0 } v ? v : "not declared";
     }
 
     private static int ReportSync(SyncPlan plan, string repoRoot, int mechanismVersion, string reference,

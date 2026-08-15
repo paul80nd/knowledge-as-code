@@ -5,20 +5,39 @@
 # The portability manifest (`.tooling/manifest.yaml`) defines what is shared
 # between corpora. This file records:
 # - the part this corpus plays in the framework, and where it publishes
+# - which version of its own content this corpus is on
 # - which framework version it runs, and where it takes that from
 # - which record types it has adopted
 # - any accepted differences from the shared baseline
+#
+# Three versions live here, so none of them is called `version` alone.
 #
 # The file is this corpus's own: never synced, never reconciled. It sits at the
 # repository root rather than with the shared mechanism.
 #
 # Written by `kac mechanism --sync`. Read by `kac mechanism --check`.
 
-# The version of this file's own format.
-version: 1
+# The version of this file's own format. Stamped by `kac mechanism --sync`,
+# because the shape of the file arrives with the mechanism, not with the corpus.
+descriptor-version: 1
 
 # The name of this corpus.
 corpus: knowledge-as-code
+
+# The version of what this corpus knows: its records, and the meanings they carry.
+#
+# Not the format of this file, which `descriptor-version` above states. Not the
+# framework this corpus runs, which `upstream.mechanism-version` below states.
+#
+# A published export stamps this into its manifest, and a corpus consuming that
+# export reads it to know what it holds. Semantically versioned:
+# - major, where a meaning changed or a published URL broke
+# - minor, for additions
+# - patch, for wording
+#
+# Consumers adopt from here onwards. The number notifies rather than gates:
+# nothing refuses to load because it moved. Bumped by hand.
+content-version: "1.0.0"
 
 # The role of this corpus. One of: source | consumer.
 role: source
