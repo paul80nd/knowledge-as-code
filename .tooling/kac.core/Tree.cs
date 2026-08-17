@@ -20,14 +20,15 @@ public sealed class Tree(IReadOnlySet<string> paths, Func<string, string> read, 
     // Whether the corpus holds this file.
     public bool Exists(string rel) => paths.Contains(Normalise(rel));
 
-    // Whether the file is present, tracked or not — the question to ask about a file whose absence and
-    // whose untracked state are separate faults. A type's `_template.md` is the case: `type-setup` says
-    // the type is half set up where there is no template, and a template sitting untracked in the folder
-    // is a document its author has yet to add rather than one they have yet to write.
+    // Whether the file is present, tracked or not. Ask this where a file's absence and its untracked
+    // state are separate faults, and ask `Exists` everywhere else: what git does not track is in no
+    // clone.
     //
-    // Everywhere else the listing is the right question, because what git does not track is in no clone.
+    // A type's `_template.md` is the one file that qualifies. `type-setup` says the type is half set up
+    // where no template sits beside the folder, and a contributor who has written one and not yet added
+    // it is looking at the file that finding tells them to write.
     //
-    // A corpus assembled from values supplies no answer and takes the listing's: everything it holds is
+    // A corpus assembled from values supplies no answer, so the listing answers: everything it holds is
     // present, and nothing else is.
     public bool OnDisk(string rel) => onDisk is null ? Exists(rel) : onDisk(Normalise(rel));
 

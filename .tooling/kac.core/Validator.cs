@@ -155,7 +155,8 @@ public static class Validator
                 if (req && absent)
                 {
                     var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
-                    report.Err(new CheckId("required-field"), $"missing required field '{spec.Name}'{why}.", d.FrontStartLine);
+                    report.Err(new CheckId("required-field"),
+                        $"missing required field '{spec.Name}'{why}.", d.FrontStartLine);
                 }
             }
 
@@ -212,7 +213,8 @@ public static class Validator
         }
 
         if (present.TryGetValue("tier", out var tierNode) && Scalar(tierNode) is { } tier && tier != t.Tier)
-            report.Err(new CheckId("tier-matches-type"), $"tier '{tier}' does not match the '{t.TypeName}' type tier '{t.Tier}'.",
+            report.Err(new CheckId("tier-matches-type"),
+                $"tier '{tier}' does not match the '{t.TypeName}' type tier '{t.Tier}'.",
                 Line(tierNode, d));
 
         // -- the id, the filename, and the agreement between them --
@@ -251,7 +253,8 @@ public static class Validator
                     && string.Equals(s.Title, parts.Section, StringComparison.OrdinalIgnoreCase)) continue;
 
                 if (t.RequiredSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
-                    report.Err(new CheckId("empty-section"), $"required section '## {s.Title}' has nothing under it.", s.Line);
+                    report.Err(new CheckId("empty-section"),
+                        $"required section '## {s.Title}' has nothing under it.", s.Line);
                 else if (t.OptionalSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
                     report.Err(new CheckId("empty-section"),
                         $"section '## {s.Title}' has nothing under it — write it or delete the heading.", s.Line);
@@ -354,9 +357,8 @@ public static class Validator
             var missing = new List<string>();
             if (!pageExists) missing.Add(string.IsNullOrEmpty(t.Page) ? $"{key}.md" : t.Page);
 
-            // The template is asked for with `OnDisk`, as it is discovered: a file a contributor can copy
-            // is there whether or not it has been added, and reporting the type as half set up while it
-            // sits in the folder would send them to write one that exists.
+            // The template is asked for with `OnDisk`, as `Corpus.DiscoverTemplates` asks for it. `Tree`
+            // says why that is the right question for this one file.
             var template = $"{folder}/{Artefact.Template}";
             if (!tree.OnDisk(template)) missing.Add(template);
             if (missing.Count > 0)
@@ -748,7 +750,8 @@ public static class Validator
         if (!IsIsoShape(v))
             report.Err(new CheckId("date-format"), $"'{name}' must be a YYYY-MM-DD date, got '{v}'.", Line(node, d));
         else if (!DateOnly.TryParseExact(v, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-            report.Err(new CheckId("date-format"), $"'{name}' is not a date on the calendar, got '{v}'.", Line(node, d));
+            report.Err(new CheckId("date-format"),
+                $"'{name}' is not a date on the calendar, got '{v}'.", Line(node, d));
     }
 
     private static void CheckEnum(string name, YamlNode node, FieldSpec spec, Doc d, Report report)
@@ -761,7 +764,8 @@ public static class Validator
         }
 
         if (spec.Values is not null && !spec.Values.Contains(v))
-            report.Err(new CheckId("enum"), $"'{name}' value '{v}' is not one of: {string.Join(", ", spec.Values)}.", Line(node, d));
+            report.Err(new CheckId("enum"),
+                $"'{name}' value '{v}' is not one of: {string.Join(", ", spec.Values)}.", Line(node, d));
         if (v != v.ToLowerInvariant())
             report.Err(new CheckId("enum-lowercase"), $"'{name}' enum value '{v}' must be lowercase.", Line(node, d));
     }
@@ -799,7 +803,8 @@ public static class Validator
         {
             if (Scalar(seq.Children[i - 1]) is not { } prev || Scalar(seq.Children[i]) is not { } cur) continue;
             if (Natural.Compare(prev, cur) <= 0) continue;
-            report.Warn(new CheckId("list-order"), $"'{name}' is not in alphabetical order — '{cur}' should come before '{prev}'.",
+            report.Warn(new CheckId("list-order"),
+                $"'{name}' is not in alphabetical order — '{cur}' should come before '{prev}'.",
                 Line(seq.Children[i], d));
             break;
         }
@@ -814,7 +819,8 @@ public static class Validator
         var v = Scalar(node);
         if (v is null) return;
         if (!spec.PatternRegex.IsMatch(v))
-            report.Err(new CheckId("field-pattern"), $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Line(node, d));
+            report.Err(new CheckId("field-pattern"),
+                $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Line(node, d));
     }
 
     private static void CheckKeyOrder(Doc d, TypeSchema t, Report report)
@@ -826,7 +832,8 @@ public static class Validator
 
         foreach (var (a, b) in t.KeyOrderEdges)
             if (pos.TryGetValue(a, out var pa) && pos.TryGetValue(b, out var pb) && pa > pb)
-                report.Err(new CheckId("key-order"), $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
+                report.Err(new CheckId("key-order"),
+                    $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
     }
 
     // The H1 is plain descriptive text — no id, no prefix, no shape the schema constrains — so the only
@@ -863,7 +870,8 @@ public static class Validator
         var colon = d.IdentitySpans[0].IndexOf(':');
         if (d.IdentitySpans.Count != 2 || colon <= 0)
         {
-            report.Err(new CheckId("identity"), $"identity line is malformed — write it as {expected}.", d.IdentityLine);
+            report.Err(new CheckId("identity"),
+                $"identity line is malformed — write it as {expected}.", d.IdentityLine);
             return;
         }
 
@@ -872,13 +880,15 @@ public static class Validator
         var gotStatus = d.IdentitySpans[1].Trim();
 
         if (!string.Equals(gotType, t.DisplayName, StringComparison.Ordinal))
-            report.Err(new CheckId("identity-type"), $"identity line says '{gotType}', but this is {WithArticle(t)}.", d.IdentityLine);
+            report.Err(new CheckId("identity-type"),
+                $"identity line says '{gotType}', but this is {WithArticle(t)}.", d.IdentityLine);
 
         // Compared against the frontmatter rather than the filename: the id is what every citation uses,
         // and id-matches-filename already ties the frontmatter back to the file. Where the frontmatter
         // is itself absent or malformed its own check has said so, and there is nothing to compare to.
         if (id is not null && !string.Equals(gotId, id, StringComparison.Ordinal))
-            report.Err(new CheckId("identity-id"), $"identity line id '{gotId}' does not match the document's id '{id}'.",
+            report.Err(new CheckId("identity-id"),
+                $"identity line id '{gotId}' does not match the document's id '{id}'.",
                 d.IdentityLine);
 
         // Status is lower-case in frontmatter and upper-case on the line — one value, written for a

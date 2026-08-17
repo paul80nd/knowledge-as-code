@@ -90,7 +90,8 @@ public static class LinkChecks
         if (kind == DocKind.Record)
             foreach (var label in d.DefinedLabels.Distinct(StringComparer.OrdinalIgnoreCase))
                 if (!d.UsedLabels.Contains(label))
-                    report.Warn(new CheckId("unused-definition"), $"link definition '[{label}]' is never referenced.", null);
+                    report.Warn(new CheckId("unused-definition"),
+                        $"link definition '[{label}]' is never referenced.");
     }
 
     public static bool IsExternal(string t)

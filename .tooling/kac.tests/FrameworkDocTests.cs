@@ -3,11 +3,9 @@ using kac.core;
 // In-process unit tests for `framework-names-types`, the one rule the framework's own documentation is
 // held to.
 //
-// Those documents are shared byte-for-byte by every corpus running the framework, so they have to read
-// correctly in a corpus that adopted three types and in one that adopted seventeen. A link to a type page
-// cannot: it either resolves or is a dead end, depending on a decision the page cannot see. The defect is
-// therefore invisible in the corpus that writes it, where every type page exists — which is also why no
-// fixture can show that the right files are being read. This is where that is asserted.
+// `Validator.CheckFrameworkDocs` says why the rule exists. What no fixture can show is which files it
+// reads: every type page exists in the corpus that writes these documents, so a fixture proves the rule
+// fires and never that the glob found the file. These cases are that half.
 
 namespace kac.tests;
 

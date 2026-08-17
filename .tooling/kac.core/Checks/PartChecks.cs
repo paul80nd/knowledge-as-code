@@ -40,22 +40,24 @@ public static class PartChecks
 
         if (d.PartTableHeaders is null)
         {
-            report.Err(new CheckId("clause-table"), $"the '## {spec.Section}' section holds no table — write one row per "
-                                + $"obligation, headed '{headers}'.", d.PartSectionLine);
+            report.Err(new CheckId("clause-table"),
+                $"the '## {spec.Section}' section holds no table — write one row per obligation, headed '{headers}'.",
+                d.PartSectionLine);
             return false;
         }
 
         if (!d.PartTableHeaders.SequenceEqual(spec.Columns, StringComparer.Ordinal))
         {
-            report.Err(new CheckId("clause-table"), $"the clause table is headed '{string.Join(" | ", d.PartTableHeaders)}' — "
-                                + $"it must be headed '{headers}'.", d.PartTableLine);
+            report.Err(new CheckId("clause-table"),
+                $"the clause table is headed '{string.Join(" | ", d.PartTableHeaders)}' — it must be headed "
+                + $"'{headers}'.", d.PartTableLine);
             return false;
         }
 
         if (d.Parts.Count == 0)
         {
-            report.Err(new CheckId("clause-table"), "the clause table has no rows — a record that binds nothing binds nobody.",
-                d.PartTableLine);
+            report.Err(new CheckId("clause-table"),
+                "the clause table has no rows — a record that binds nothing binds nobody.", d.PartTableLine);
             return false;
         }
 
@@ -81,18 +83,21 @@ public static class PartChecks
             if (row.Id is null)
             {
                 if (spec.Source == PartSpec.Table)
-                    report.Err(new CheckId("clause-id-format"), $"clause id '{Md.Snippet(row.IdText)}' is not a code span — write it "
-                                            + $"as `{Md.Snippet(row.IdText)}`.", row.Line);
+                    report.Err(new CheckId("clause-id-format"),
+                        $"clause id '{Md.Snippet(row.IdText)}' is not a code span — write it as "
+                        + $"`{Md.Snippet(row.IdText)}`.", row.Line);
                 continue;
             }
 
             if (spec.Source == PartSpec.Table
                 && spec.IdPatternRegex is { } idPattern && !idPattern.IsMatch(row.Id))
-                report.Err(new CheckId("clause-id-format"), $"clause id '{row.Id}' does not match {spec.IdPattern}.", row.Line);
+                report.Err(new CheckId("clause-id-format"),
+                    $"clause id '{row.Id}' does not match {spec.IdPattern}.", row.Line);
 
             if (!seen.Add(row.Id))
-                report.Err(new CheckId("part-id-unique"), $"two {spec.Noun}s here address as '{row.Id}' — a citation of it names "
-                                      + "both and reaches neither.", row.Line);
+                report.Err(new CheckId("part-id-unique"),
+                    $"two {spec.Noun}s here address as '{row.Id}' — a citation of it names both and reaches neither.",
+                    row.Line);
         }
     }
 
@@ -110,8 +115,9 @@ public static class PartChecks
             var modal = spec.ModalsLongestFirst.FirstOrDefault(m => row.Text.StartsWith(m, StringComparison.Ordinal));
             if (modal is null)
             {
-                report.Err(new CheckId("clause-modal"), $"clause '{Md.Snippet(row.Text)}' does not open with a modal — write one of "
-                                    + $"{string.Join(", ", spec.Levels)}.", row.Line);
+                report.Err(new CheckId("clause-modal"),
+                    $"clause '{Md.Snippet(row.Text)}' does not open with a modal — write one of "
+                    + $"{string.Join(", ", spec.Levels)}.", row.Line);
                 continue;
             }
 
@@ -122,23 +128,25 @@ public static class PartChecks
             if (binds && !string.Equals(row.BoldLead, modal, StringComparison.Ordinal))
                 report.Err(new CheckId("clause-modal"), $"'{modal}' binds — write it bold, `**{modal}**`.", row.Line);
             else if (!binds && row.BoldLead is not null)
-                report.Err(new CheckId("clause-modal"), $"'{modal}' does not bind — write it plain, not bold.", row.Line);
+                report.Err(new CheckId("clause-modal"),
+                    $"'{modal}' does not bind — write it plain, not bold.", row.Line);
 
             // A second modal in the same row is two obligations sharing one id, so a citation of it can
             // only ever name half of what it means.
             var rest = row.Text[modal.Length..];
             if (spec.ModalsLongestFirst.FirstOrDefault(m => rest.Contains(m, StringComparison.Ordinal)) is { } second)
-                report.Warn(new CheckId("clause-compound"), $"clause '{row.Id ?? row.IdText}' carries a second '{second}' — "
-                                        + "one obligation per clause, or the citation is ambiguous.", row.Line);
+                report.Warn(new CheckId("clause-compound"),
+                    $"clause '{row.Id ?? row.IdText}' carries a second '{second}' — one obligation per clause, or the "
+                    + "citation is ambiguous.", row.Line);
 
             // Reported once, against the first row that breaks the grouping: a table sorted wholly the
             // wrong way would otherwise report every row after the first.
             var rank = spec.Rank(modal);
             if (rank < highest && !disordered)
             {
-                report.Warn(new CheckId("clause-order"), $"clause '{row.Id ?? row.IdText}' is a '{modal}' but follows a "
-                                     + $"'{spec.Levels[highest]}' — group the table "
-                                     + $"{string.Join(", ", spec.Levels)}.", row.Line);
+                report.Warn(new CheckId("clause-order"),
+                    $"clause '{row.Id ?? row.IdText}' is a '{modal}' but follows a '{spec.Levels[highest]}' — group "
+                    + $"the table {string.Join(", ", spec.Levels)}.", row.Line);
                 disordered = true;
             }
 
@@ -160,7 +168,7 @@ public static class PartChecks
     public static void CheckNotation(Doc d, Report report)
     {
         foreach (var (citation, line) in d.ColonCitations)
-            report.Err(new CheckId("part-ref"), $"'{citation}' separates the two halves with a colon — write "
-                            + $"'{citation.Replace(':', '.')}'.", line);
+            report.Err(new CheckId("part-ref"),
+                $"'{citation}' separates the two halves with a colon — write '{citation.Replace(':', '.')}'.", line);
     }
 }

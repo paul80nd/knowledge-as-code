@@ -47,7 +47,8 @@ public static class IdChecks
         {
             case "numbered":
                 if (rest.Length != t.IdWidth || !rest.All(char.IsDigit))
-                    report.Err(new CheckId("id-format"), $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} digits.", line);
+                    report.Err(new CheckId("id-format"),
+                        $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} digits.", line);
                 else if (carried is not null && rest != carried)
                     report.Err(new CheckId("id-matches-filename"),
                         $"id '{id}' number does not match filename number '{carried}'.", line);
@@ -75,7 +76,8 @@ public static class IdChecks
                         $"id '{id}' must be '{expectPrefix}' followed by lower-case letters, digits and hyphens.",
                         line);
                 else if (carried is not null && rest != carried)
-                    report.Err(new CheckId("id-matches-filename"), $"id '{id}' slug does not match filename slug '{carried}'.", line);
+                    report.Err(new CheckId("id-matches-filename"),
+                        $"id '{id}' slug does not match filename slug '{carried}'.", line);
                 break;
         }
     }
@@ -94,7 +96,8 @@ public static class IdChecks
             slug = slug[(head.Length + 1)..];
 
         if (slug.Length > t.SlugMax)
-            report.Err(new CheckId("slug-length"), $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.", null);
+            report.Err(new CheckId("slug-length"),
+                $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.");
     }
 
     // What a filename carries of the id, and nothing of the slug beside it. Null where the name does not
