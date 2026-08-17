@@ -262,7 +262,10 @@ one absence to a consumer, and nobody should have to know which file they are re
 
 **Prose arrives unwrapped.** The corpus wraps at 120 columns, which is a fact about the file rather than about the
 words, and a grep for a phrase straddling the wrap would find nothing. Blank lines are the author's and stay; a list,
-heading, quote, table or fence is left exactly as written.
+heading, quote, table or fence is left exactly as written. That last part is a decision rather than an unfinished case,
+because the two mistakes do not cost the same: a list joined onto one line is destroyed and cannot be recovered by the
+reader, where a paragraph left wrapped merely arrives as it was written. Every doubtful line therefore goes the safe
+way, and a corpus whose sections happen to hold only paragraphs today is not a reason to narrow it.
 
 **Two link forms, both naming a ref.** A person follows the rendered one and an agent fetches the raw one. The rules
 joining a base to a path, and the anchor rule for a part, belong to `publishing-target` and live in `Publishing`;
