@@ -1,0 +1,24 @@
+{
+  "formatVersion": 1,
+  "corpus": null,
+  "contentVersion": null,
+  "mechanismVersion": null,
+  "commit": "<commit>",
+  "dirty": null,
+  "generatedAt": "<generatedAt>",
+  "publishing": {
+    "target": "none",
+    "humanBase": null,
+    "rawBase": null,
+    "ref": null
+  },
+  "types": [
+    {
+      "type": "glossary",
+      "records": 3,
+      "parts": 5,
+      "dir": "glossary",
+      "partsFile": "glossary/terms.jsonl"
+    }
+  ]
+}

@@ -3,10 +3,10 @@ using kac.core;
 
 // In-process unit tests for the export.
 //
-// The golden fixture proves the pass reaches the CLI and lands the files where they are documented to
-// land. It cannot show the ordering rule, because a fixture holds whichever glossaries it happens to
-// carry, and the rule is about what happens when a corpus holds several roots and a chain beneath one
-// of them. That is what these build.
+// The golden fixture holds one corpus and pins what the CLI writes for it, file for file. It cannot
+// hold a second, and several rules need one: ordering is about several roots with a chain beneath one
+// of them, exclusion is about a corpus that declares it, and reproducibility is about running twice
+// over one tree. That is what these build.
 
 namespace kac.tests;
 

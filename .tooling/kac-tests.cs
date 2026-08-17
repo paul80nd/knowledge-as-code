@@ -83,8 +83,9 @@ foreach (var scenario in scenarios)
     //                afterwards (or absent, where the line is prefixed `!`), and every
     //                `<path> :: <text>` in expected-content.txt holds (or does not, prefixed `!`)
     //   export       run `export` (with `--type <t>` where export-type is present), then assert the
-    //                tree it wrote, in the same three files sync uses. A second run over an output
-    //                seeded with a stray file asserts the overwrite is delete-then-write
+    //                tree it wrote: whole-file against the committed export under expected-dist/, plus
+    //                the same three files sync uses. A second run over an output seeded with a stray
+    //                file asserts the overwrite is delete-then-write
     var modePath = Path.Combine(scenario, "mode");
     var mode = File.Exists(modePath) ? File.ReadAllText(modePath).Trim() : "validate";
 
@@ -362,9 +363,14 @@ void RunSyncScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// export: run `kac export` over the fixture corpus and assert the tree it wrote, in the three
-// expectation files `sync` already uses — the output is a tree rather than a findings list, so the same
-// shape fits and there is no second convention to learn.
+// export: run `kac export` over the fixture corpus and assert the tree it wrote.
+//
+// **The golden is the whole export, file for file**, committed under `expected-dist/` and diffed against
+// what the run emitted. `.dist/` is untracked and rebuilt whole every run. This tracked copy is where a
+// change to what a consumer reads becomes visible.
+//
+// The three expectation files `sync` uses stay beside it and carry what a whole-file diff cannot: what
+// the run printed, and the two manifest fields the diff normalises away.
 //
 // The temp root is not a git repository, so no ref resolves and no link is written. That is the corpus
 // -publishes-nowhere path, and asserting it here is what keeps the fixture honest about what a fixture
@@ -374,29 +380,40 @@ void RunSyncScenario(string name, string scenario, string corpusDir)
 // one failure mode an untracked export has and nothing else would flag.
 void RunExportScenario(string name, string scenario, string corpusDir)
 {
-    if (update)
-    {
-        Console.WriteLine($"UPDATE {name}  (export scenario — nothing to regenerate)");
-        return;
-    }
-
     var typePath = Path.Combine(scenario, "export-type");
     var type = File.Exists(typePath) ? File.ReadAllText(typePath).Trim() : null;
+    var golden = Path.Combine(scenario, "expected-dist");
     var temp = AssembleTemp(schemaDir, corpusDir);
     try
     {
         string[] argv = type is null ? [kac, "export"] : [kac, "export", "--type", type];
         var (stdout, stderr, exit) = Run(temp, "dotnet", argv);
         var output = stderr + stdout;
+        var dist = Path.Combine(temp, ".dist");
+
+        if (update)
+        {
+            if (exit != 0)
+            {
+                Console.WriteLine($"UPDATE {name}  — WARNING: export failed (exit {exit}), golden left alone");
+                return;
+            }
+
+            var written = WriteGoldenExport(dist, golden);
+            Console.WriteLine($"UPDATE {name}  ({written} export file(s) — read the diff, it is the published shape)");
+            return;
+        }
 
         var problems = new List<string>();
         if (exit != 0) problems.Add($"expected a clean export (exit 0), got exit {exit}");
         problems.AddRange(ReadLines(Path.Combine(scenario, "expected-export.txt"))
             .Where(l => !output.Contains(l)).Select(l => $"not reported: {l}"));
 
+        problems.AddRange(CheckGoldenExport(dist, golden));
+
         // A file no record backs, left in the output before the second run. An export nobody reviews
         // would otherwise carry a deleted record's entry indefinitely.
-        var orphan = Path.Combine(temp, ".dist", "orphan.json");
+        var orphan = Path.Combine(dist, "orphan.json");
         Directory.CreateDirectory(Path.GetDirectoryName(orphan)!);
         File.WriteAllText(orphan, "{}\n");
 
@@ -456,6 +473,120 @@ static List<string> CheckTree(string root, string scenario)
     }
 
     return problems;
+}
+
+// The export as written, held against the copy committed beside the fixture. Every file in either tree
+// is named, so a file the export stopped writing fails as loudly as one it started writing. Content is
+// compared whole, so a key that moved fails too.
+//
+// A difference here is a change to a published contract, and each message says so. The reflex on a red
+// golden is to regenerate it, and this is the one golden where that reflex is expensive.
+static List<string> CheckGoldenExport(string dist, string golden)
+{
+    if (!Directory.Exists(golden))
+        return [$"no committed export at {Path.GetFileName(golden)}/ — "
+                + "run: dotnet run .tooling/kac-tests.cs -- --update export"];
+
+    var actual = ExportTree(dist);
+    var expected = ExportTree(golden);
+    var paths = expected.Keys.Union(actual.Keys, StringComparer.Ordinal).OrderBy(p => p, StringComparer.Ordinal);
+
+    var problems = new List<string>();
+    foreach (var rel in paths)
+    {
+        if (!actual.TryGetValue(rel, out var got))
+            problems.Add($"the export no longer writes {rel} — what a consumer reads has changed");
+        else if (!expected.TryGetValue(rel, out var want))
+            problems.Add(
+                $"the export writes {rel}, which the committed copy does not hold — a new file for a consumer");
+        else if (!string.Equals(want, got, StringComparison.Ordinal))
+            problems.Add($"{rel} differs from the committed export — {FirstDifference(want, got)}");
+    }
+
+    return problems;
+}
+
+// Replace the committed export whole, as the exporter replaces `.dist/` whole. Anything the export
+// stopped writing has to leave the golden with it, or the next run reads it as a file the export lost.
+static int WriteGoldenExport(string dist, string golden)
+{
+    if (Directory.Exists(golden)) Directory.Delete(golden, recursive: true);
+
+    var files = ExportTree(dist);
+    foreach (var (rel, content) in files)
+    {
+        var full = Path.Combine(golden, rel.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+        File.WriteAllText(full, content);
+    }
+
+    return files.Count;
+}
+
+// One export tree read into memory, keyed by the path a consumer would address, with the manifest
+// normalised. Both sides go through it, so the golden on disk is already normalised. The comparison is
+// then a string equality, and no rule is applied to one side and remembered for the other.
+static SortedDictionary<string, string> ExportTree(string root)
+{
+    var files = new SortedDictionary<string, string>(StringComparer.Ordinal);
+    if (!Directory.Exists(root)) return files;
+
+    foreach (var file in Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories))
+    {
+        var rel = Path.GetRelativePath(root, file).Replace('\\', '/');
+        files[rel] = Normalise(rel, File.ReadAllText(file));
+    }
+
+    return files;
+}
+
+// The two fields of the manifest that differ between two runs over one tree, replaced by their own
+// names. `generatedAt` moves every run and `commit` moves with the branch, so a golden carrying either
+// would fail for a reason that says nothing about the export's shape.
+//
+// The value goes whatever it is, a string and a null alike, so the rule fires in every corpus rather
+// than only in one that has a commit to name. `expected-content.txt` pins what a corpus with no
+// repository writes there, against the file the run emitted.
+static string Normalise(string rel, string content)
+{
+    if (rel != "manifest.json") return content;
+
+    string[] volatileFields = ["generatedAt", "commit"];
+
+    return string.Join('\n', content.Split('\n').Select(line =>
+    {
+        foreach (var key in volatileFields)
+        {
+            var marker = $"\"{key}\": ";
+            var at = line.IndexOf(marker, StringComparison.Ordinal);
+            if (at < 0) continue;
+            return line[..(at + marker.Length)] + $"\"<{key}>\"" + (line.EndsWith(',') ? "," : "");
+        }
+
+        return line;
+    }));
+}
+
+// Where two versions of one file part company, as the first line that differs. A whole-file diff of an
+// indented JSON document is unreadable in a test log. One line is what a person needs in order to
+// decide whether they meant it.
+static string FirstDifference(string expected, string actual)
+{
+    var want = expected.Split('\n');
+    var got = actual.Split('\n');
+
+    for (var i = 0; i < Math.Max(want.Length, got.Length); i++)
+    {
+        var a = i < want.Length ? want[i] : "(end of file)";
+        var b = i < got.Length ? got[i] : "(end of file)";
+        if (a == b) continue;
+        return $"line {i + 1}: committed '{Clip(a)}' and exported '{Clip(b)}'";
+    }
+
+    return "the files differ in their line endings alone";
+
+    static string Clip(string line) =>
+        line.Trim() is { Length: > 120 } long_ ? long_[..120] + "…" : line.Trim();
 }
 
 static List<string> ReadLines(string path) =>

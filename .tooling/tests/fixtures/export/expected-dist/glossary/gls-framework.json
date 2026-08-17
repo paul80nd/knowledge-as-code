@@ -1,0 +1,15 @@
+{
+  "type": "glossary",
+  "path": "glossary/framework.md",
+  "fields": {
+    "id": "gls-framework",
+    "title": "Framework",
+    "narrows": null,
+    "status": "draft",
+    "review-by": "2030-01-01"
+  },
+  "sections": {
+    "Scope": "The mechanism rather than what it holds. A second root beside the estate's glossary, so that neither orders the other and both are reached by id."
+  },
+  "links": null
+}

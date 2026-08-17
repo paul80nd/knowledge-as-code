@@ -139,9 +139,13 @@ from the framework carrying them, and one that has gone is a block that stopped 
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`
   beside it. Types it does not use are simply absent, which is silent. Adding a folder to a fixture without standing the
   type up adds a finding to every scenario that reads it.
-* Only fixtures in **`validate` mode** run the validator. `index`, `index-stale`, `mechanism` and `sync` modes do not,
-  so a new check cannot affect them. `sync` is the only mode that writes. It asserts the tree the command left rather
-  than only what the command printed, so its expectations name files and their content instead of a findings golden.
+* Only fixtures in **`validate` mode** run the validator. `index`, `index-stale`, `mechanism`, `sync` and `export`
+  modes do not, so a new check cannot affect them. `sync` and `export` are the modes that write. Each asserts the tree
+  the command left rather than only what the command printed, so its expectations name files and their content instead
+  of a findings golden.
+* **The `export` fixture commits the export itself**, under `expected-dist/`, and a diff there is a change to what a
+  consumer reads. Its [README](tests/fixtures/export/README.md) says what that asks of you. Nothing else in the suite
+  holds a tracked copy of an untracked artefact.
 * Regenerate with `dotnet run .tooling/kac-tests.cs -- --update [name]`, then **read the diff**. The command rewrites
   expectations to whatever the tool now produces, so it will happily bless a regression.
 
@@ -154,3 +158,7 @@ not tell you: the golden layer and the feature layer assert different things abo
 `Harness` runs `Corpus.Load` then `Validator.CheckAll` — the two calls `Commands.Validate` makes. Keep it that way: a
 harness assembling its own subset of the sequence leaves whole checks unreachable from a spec, and every spec goes on
 passing.
+
+That also decides which commands get a spec. A spec asserts findings, so `Schema.feature` covers what a type declares in
+its `export:` block. What the exporter then writes is not a finding: the golden holds those bytes, the unit tests beside
+`Exporter` hold the rules behind them, and a feature file would only say it a third time.

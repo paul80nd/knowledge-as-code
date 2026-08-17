@@ -1,3 +1,7 @@
+# The manifest holds the two fields that differ between two runs over one tree, and the committed export
+# replaces both. This line pins what a corpus with no repository behind it writes in one of them.
+.dist/manifest.json :: "commit": null
+
 # The manifest says what this export is, and what it could not resolve.
 .dist/manifest.json :: "formatVersion": 1
 .dist/manifest.json :: "target": "none"
