@@ -16,11 +16,11 @@ public sealed class YStatementPresent : IDocumentRule
 
     public void Check(RuleContext ctx)
     {
-        var (d, warn) = (ctx.Doc, ctx.Warn);
+        var (d, report) = (ctx.Doc, ctx.Report);
 
         if (d.YStatement is null)
         {
-            warn(Reports, "no Y-statement block-quote follows the H1.", d.H1Line);
+            report.Warn(Reports, "no Y-statement block-quote follows the H1.", d.H1Line);
             return;
         }
 
@@ -29,7 +29,7 @@ public sealed class YStatementPresent : IDocumentRule
 
         var missing = MissingMoves(text);
         if (missing.Count > 0)
-            warn(Reports,
+            report.Warn(Reports,
                 $"Y-statement is missing {QuotedList(missing)}. The six moves are what make it a "
                 + "Y-statement rather than a summary of one.", line);
 
@@ -38,7 +38,7 @@ public sealed class YStatementPresent : IDocumentRule
         var max = ctx.Spec.MaxWords ?? 60;
         var words = text.Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
         if (words > max)
-            warn(Reports, $"Y-statement is {words} words; keep it under {max}.", line);
+            report.Warn(Reports, $"Y-statement is {words} words; keep it under {max}.", line);
     }
 
     // The six moves, in the order they are written.

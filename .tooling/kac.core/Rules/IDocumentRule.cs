@@ -27,9 +27,7 @@ public interface IDocumentRule
 
 // Everything a rule is given, and the whole of it. `Spec` is the rule as the schema declared it, so a
 // rule reading a threshold reads it from there rather than from a constant of its own.
-public sealed record RuleContext(
-    Doc Doc,
-    TypeSchema Type,
-    RuleSpec Spec,
-    Action<CheckId, string, int?> Err,
-    Action<CheckId, string, int?> Warn);
+//
+// `Report` is the one the document is being read through, so a rule writes what it found where every
+// other check on that document writes it, and under an id of the same type.
+public sealed record RuleContext(Doc Doc, TypeSchema Type, RuleSpec Spec, Report Report);

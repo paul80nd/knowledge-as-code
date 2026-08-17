@@ -159,12 +159,8 @@ public class DocumentRuleTests
         var found = new List<Finding>();
 
         rule.Check(new RuleContext(doc, doc.Type!, spec ?? new RuleSpec { Id = rule.RuleId },
-            (c, m, l) => Report(Sev.Error, c, m, l),
-            (c, m, l) => Report(Sev.Warning, c, m, l)));
+            new Report(doc.Rel, found)));
         return found;
-
-        void Report(Sev severity, CheckId check, string message, int? line) =>
-            found.Add(new Finding(doc.Rel, line, severity, check, message));
     }
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);
