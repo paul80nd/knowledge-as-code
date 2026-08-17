@@ -56,11 +56,10 @@ tests; the rest stay in `Validator.cs`, and extracting one buys nothing unless i
 `IdChecks` is the case for extracting: three passes read the shape of an id and of the filename carrying it, in three
 directions, and a second copy of that shape would be a place for the styles to disagree silently.
 
-**Whatever it is, a check writes what it found to a `Report`** — the file being read and the list its findings land in,
-handed to every pass that walks one file, and to a rule class as `RuleContext.Report`. The id it reports under is a
-`CheckId` written out at the call, because both halves are strings and the swap is silent. A pass choosing the file per
-finding — `id-unique` across the corpus, `min-records` across a type — names the file per finding and builds its
-`Finding`s directly.
+**Whatever it is, a check writes what it found to a `Report`**, which every pass that walks one file builds and hands
+down, and which a rule class receives as `RuleContext.Report`. Write the id out as a `CheckId` at the call: both halves
+are strings, so the compiler is what stops a message landing in the id's place. `Findings.cs` says which passes build
+one and which do not.
 
 **`Checks/SchemaChecks.cs` reads no document at all.** It runs once, before the corpus, and asks whether the schema
 declares anything the tool cannot act on. Read every vocabulary it tests from the code that dispatches the value —
@@ -107,13 +106,12 @@ mechanism engines take the file listings and a `Func<string, bool>` answering wh
 thing, so the whole classification is decidable without a filesystem — a new arm is a unit test, not a fixture corpus.
 `Tree` strikes the same bargain for the corpus itself: a listing, a `Func` that reads one of its paths, and a `Func`
 answering whether a path is on the disk at all. **Every pass reads the corpus through it, `Validator.CheckAll`
-included** — `Corpus.Load` takes the listing, the schema and the descriptor, and the overload taking a path is the one
-place a path becomes a corpus. So a test can ask the whole of `validate` about a corpus nobody ever wrote to disk, and a
-new check is a unit test beside a fixture rather than a fixture alone.
+included.** `Corpus.Load` takes the listing, the schema and the descriptor, and its other overload is the one place a
+path becomes a corpus. A test can therefore ask the whole of `validate` about a corpus nobody ever wrote to disk, and a
+new check gets unit tests as well as a fixture.
 
-The listing is the right question about presence almost everywhere, because what git does not track is in no clone. A
-type's `_template.md` is the exception and `Tree.OnDisk` is written for it: a template a contributor has yet to add is
-still the file they are about to copy, and `type-setup` reporting it missing would send them to write it twice.
+Ask the listing about presence and `Tree.OnDisk` only where `Tree` says to. A check that asks the disk directly passes
+for whoever wrote the file and fails in CI, by which time they have stopped looking.
 
 Deciding and doing stay apart on both sides. `MechanismSync.Plan` names what a sync comes to and `Apply` carries it out;
 `GeneratedFiles.Plan` names what a regeneration comes to and `Write` carries it out. In each case the files acted on are

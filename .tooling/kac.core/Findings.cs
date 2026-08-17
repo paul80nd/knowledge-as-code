@@ -14,14 +14,13 @@ public record Finding(string File, int? Line, Sev Severity, CheckId Check, strin
 
 // Where a check writes what it found: the file being read, and the list the findings land in.
 //
-// It carries the two things every finding needs and no check should have to restate — which file the
-// finding is against, and how loud it is — so what is left at a call site is the id, the words and the
-// line. One of these is handed to every pass that walks a single file, and each pass that reads a
-// document builds one for it.
+// It carries the two things every finding needs and no check should have to restate, which file the
+// finding is against and how loud it is. That leaves the id, the words and the line at the call site.
+// Every pass that walks a single file builds one and hands it down.
 //
-// A pass choosing the file per finding — `id-unique` across the corpus, `min-records` across a type —
-// names the file per finding instead, and builds its `Finding`s directly. This is for the other shape:
-// one file, many checks.
+// Some passes have no one file to build it from. `id-unique` reads the whole corpus and `min-records`
+// the whole of a type, and each names the document a finding belongs to as it goes, so those build
+// their `Finding`s directly.
 public readonly record struct Report(string File, List<Finding> Findings)
 {
     public void Err(CheckId check, string message, int? line = null) =>

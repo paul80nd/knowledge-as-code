@@ -3,10 +3,10 @@ using kac.core;
 // In-process unit tests for `type-setup`: whether each type the schema declares is stood up, and stood up
 // whole.
 //
-// The `type-setup` and `type-adoption` fixtures cover a corpus that gets it wrong through the CLI. What
-// they cannot reach is the pair of questions the pass asks about presence. A page is looked for in the
-// listing and a template on the disk, and in a fixture every file is both — so only a corpus assembled
-// from values can hold a template git does not track.
+// The `type-setup` and `type-adoption` fixtures cover a corpus that gets it wrong through the CLI. They
+// cannot reach the two questions the pass asks about presence — `Tree` sets out which is which — because
+// every file in a fixture corpus is both tracked and on the disk. Only a corpus assembled from values
+// holds a template git does not track.
 
 namespace kac.tests;
 
