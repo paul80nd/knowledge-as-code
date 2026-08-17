@@ -100,15 +100,18 @@ export:
     Scope: full
   parts: full
   notes: >
-    A term travels whole: the definition and the `**Not:**` line beneath it together. A definition on
-    its own is mostly guessable from the word, so an export that dropped the `**Not:**` line would
-    carry the guessable half.
+    A term travels whole: the definition and the `**Not:**` line beneath it, carried as two pieces
+    because they answer two questions. A definition on its own is mostly guessable from the word, so
+    an export that dropped the `**Not:**` line would carry the guessable half.
 
-    The fields travel on the glossary and not on the term, and together they are what a consumer
-    judges an entry by: `Scope` says which context admits the term, and `status` and `review-by` say
-    how far the file has settled and when it was last meant to be read. `review-by` is the signal a
-    vendored export otherwise lacks — a copy taken a year ago reads exactly as it did on the day it
-    was taken, and `status: draft` says the terms were settling rather than that the date has passed.
+    The fields are the glossary's, and together they are what a consumer judges an entry by. `Scope`
+    says which context admits the term. `status` and `review-by` say how far the file has settled and
+    when it was last meant to be read, and the export repeats those two onto every term it writes:
+    the flat file is what gets grepped, and whoever grepped it has not opened the record.
+
+    `review-by` is the signal a vendored export otherwise lacks. A copy taken a year ago reads exactly
+    as it did on the day it was taken, and `status: draft` says the terms were settling rather than
+    that the date has passed.
 
     `owner` stays behind, and the split between the two is not about which is more useful. A date is a
     fact about the content, and a consumer holds it against today's date knowing nothing about this

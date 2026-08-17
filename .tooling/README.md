@@ -228,8 +228,8 @@ A consumer of a corpus should not clone it. `export` writes what the corpus know
 agent to read: a manifest saying what the export is, one file per record, and a flat file cheap to grep.
 
 `.dist/` is gitignored and rebuilt whole, so it is never something to review. **The overwrite is delete-then-write.** A
-record deleted from the corpus must not leave an entry behind in the output, and an untracked artefact is the one place
-nothing would flag it.
+record deleted from the corpus must not leave an entry behind in the output. Nothing else would catch it: the export is
+untracked, so no diff shows the orphan and no check goes looking for one.
 
 ```
 .dist/
@@ -239,26 +239,28 @@ nothing would flag it.
     terms.jsonl          every term, one to a line
 ```
 
-**What travels is the type's decision.** Each type's `export:` block in `.schema/<type>.yaml` names the fields, the
-sections and the fidelity each travels at; the exporter reads that declaration and holds no list of its own. A type
-declaring no block contributes nothing, and a corpus that adopted no exporting type still writes a manifest with an
-empty type list — "nothing" is a valid statement of what a corpus has.
+**What travels is the type's decision**, declared in its `export:` block and described in
+[`../.schema/README.md`](../.schema/README.md). The exporter reads that declaration and nothing else, so a corpus that
+adopted no exporting type still writes a manifest, with an empty type list — "nothing" is a valid statement of what a
+corpus has.
 
-**The flat file is JSONL because it exists to be grepped.** A hit has to hand back something parseable on its own, so
-each line repeats the record it came from, the state of that record, its cross-references as ids, and the links back to
-it. That costs bytes and is the point: a matching line of an indented document is a fragment, and the reader is left
-seeking outward for its braces, and a hit that made the reader open a second file to learn the entry is a draft has
-sent them to the file the flat one exists to avoid.
+**The flat file is JSONL because it exists to be grepped.** A hit has to hand back something parseable on its own. A
+matching line of an indented document is a fragment, and the reader is left seeking outward for its braces.
+
+So each line repeats what a reader would otherwise look up: the record it came from, the state of that record, its
+cross-references as ids, and the links back to it. That costs bytes. It is worth them, because the alternative is a hit
+that sends the reader to the very file this one exists to save them opening.
 
 **Records are ordered roots-by-id, each root's chain depth-first beneath it.** Terms sort alphabetically within a
 record. Generality holds **within a chain** and nowhere else: `gls-search` narrows `gls-example-libraries`, so a grep
 for `title` meets the general entry before the one refining it. Across unrelated roots the order is stable and says
 nothing — `record` is defined by `gls-example-libraries` and `gls-knowledge-as-code`, neither narrowing the other, and
-reading the first hit as the more general one would give a reader the wrong domain. `narrows` is what answers that, and
-every line carries its record.
+reading the first hit as the more general one would give a reader the wrong domain. `narrows` on the owning records is
+what tells the two cases apart, and every line names the record it came from.
 
 **Absent is `null`,** in every file and for every key. A field a record leaves blank and a field it does not carry are
-one absence to a consumer, and nobody should have to know which file they are reading to know what nothing looks like.
+one absence to a consumer. Writing `""` in one file beside `null` in another would leave that consumer checking which
+file it had opened before it could test for nothing.
 
 **Prose arrives unwrapped.** The corpus wraps at 120 columns, which is a fact about the file rather than about the
 words, and a grep for a phrase straddling the wrap would find nothing. Blank lines are the author's and stay; a list,
@@ -270,9 +272,12 @@ way, and a corpus whose sections happen to hold only paragraphs today is not a r
 **Two link forms, both naming a ref.** A person follows the rendered one and an agent fetches the raw one. The rules
 joining a base to a path, and the anchor rule for a part, belong to `publishing-target` and live in `Publishing`;
 `.corpus.yaml` supplies only the bases. Every link resolves against the commit the export was built from, so a citation
-names the version the agent read rather than whatever the branch holds later. A corpus the tool cannot address — one
-publishing nowhere, one naming a target nothing builds links for, one with no bases, or one git cannot answer for —
-exports without links and says so in the manifest.
+names the version the agent read rather than whatever the branch holds later.
+
+Four kinds of corpus have no address the tool can build on: one publishing nowhere, one naming a target nothing builds
+links for, one stating a target but no bases, and one git cannot answer for. Each exports without links. The manifest
+carries the target it was given and null bases beside it, so a consumer sees the absence stated; the run itself says
+which of the four caused it.
 
 **Two versions, and they are independent.** `formatVersion` in the manifest is the shape of the output, and a consumer
 reads it to know whether it can parse what it was handed. `contentVersion` is `content-version` from `.corpus.yaml` —
@@ -286,11 +291,11 @@ that varies between two runs is confined to the manifest. Two runs from one comm
 
 **An unsettled record travels by default.** A draft glossary, and one whose `review-by` has passed, are both exported
 carrying their own state, because filtering them would make the corpus's own condition invisible downstream. A corpus
-may exclude either with `export.exclude:` in `.corpus.yaml`; the run then names every record it withheld, since the
-output by definition cannot.
+may exclude either with `export.exclude:` in `.corpus.yaml`. Where it does, the run names every record it withheld,
+because a record left out of the output cannot be seen there.
 
-**The manifest records whether the export can be reproduced.** It carries the commit and a dirty flag, and a commit
-alone would read as reproducible over a tree that was not.
+**The manifest records whether the export can be reproduced.** It carries the commit and a dirty flag. The flag is
+there because a commit on its own would describe a dirty tree as reproducible.
 
 ## `mechanism` — portability
 

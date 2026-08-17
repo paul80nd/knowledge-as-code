@@ -35,7 +35,7 @@ public class ExporterTests
         }
     };
 
-    // -- ordering: most general first, which is not the total order it sounds like --
+    // -- ordering: roots by id, each root's chain beneath it, and what that does and does not mean --
 
     // `narrows` orders a chain and nothing orders one chain against another, so the roots sort by id and
     // each root's chain follows it. A grep meeting a redefined term therefore meets the general one

@@ -67,8 +67,8 @@ public record ExportedType(string Type, int Records, int Parts, string Dir, stri
 // `Sections` are keyed by what the schema named, so a consumer reading a corpus with a type it does not
 // know still gets a document it can walk.
 //
-// Absent is `null` throughout, here and on every line of the flat file: a consumer should not have to
-// know which file it is reading to know what nothing looks like.
+// Absent is `null` throughout, here and on every line of the flat file. `Exporter.Absent` is where that
+// is decided.
 public record ExportRecord(
     string Type,
     string Path,
@@ -78,16 +78,15 @@ public record ExportRecord(
 
 public record ExportLinks(string Human, string Raw);
 
-// One part on one line of the flat file. Self-contained by design: it repeats the record it belongs to
-// and the links back to it, because a grep hands back a line and nothing around it.
+// One part on one line of the flat file, self-contained by design. `.tooling/README.md` sets out what
+// that costs and buys; the fields it explains least obviously are these two.
 //
-// `Status` and `ReviewBy` are that principle applied to trust. They live on the record too, and a
-// consumer that grepped this file has not opened it — so a hit that did not carry them would be a
-// definition with nothing saying its glossary is still settling, or was last read three years ago.
-// Two short fields, because everything here is paid for once per part.
+// `Status` and `ReviewBy` live on the record as well. They are repeated because a consumer that grepped
+// this file has not opened the record, and a hit without them is a definition with nothing saying its
+// glossary is still settling.
 //
-// `SeeAlso` carries the cross-references as ids the consumer can look up, since a link's target is
-// stripped out of `Definition` and `Not` and the bracket left behind leads nowhere.
+// `SeeAlso` carries the cross-references as ids. A link's target is stripped out of `Definition` and
+// `Not`, so the bracket left behind in the prose leads nowhere on its own.
 public record ExportPartLine(
     string Id,
     string Title,

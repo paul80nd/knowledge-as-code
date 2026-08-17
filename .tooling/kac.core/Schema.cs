@@ -90,13 +90,10 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     public string Source { get; } = source;
     public string Section { get; init; } = "";
 
-    // The label a part's optional second block opens with, written bold — `Not` on a glossary term,
-    // which names what the term is most often confused with. Empty where a type's parts carry no such
-    // block, and the whole of what makes the block legible to anything but a reader.
-    //
-    // It is here rather than in the exporter because it is a fact about how a type writes its parts. An
-    // export carries the lead and the aside as two pieces, because they answer two questions and a
-    // consumer may want either without the other.
+    // The label a part's optional second block opens with, written bold — `Not` on a glossary term.
+    // Empty where a type's parts carry no such block, and the whole of what makes one legible to
+    // anything but a reader. `.schema/README.md` says why it is declared here rather than in the code
+    // that reads it.
     public string Aside { get; init; } = "";
 
     // The heading level a part is written at, for the heading source. H3 throughout the corpus: an H1 is

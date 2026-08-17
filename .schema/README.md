@@ -196,13 +196,13 @@ citation resolves against them from anywhere in the corpus.
 
 A type with no `parts:` block offers no parts. Declaring one is how a type says its records can be addressed inside, and
 a citation into a type that declares none is reported. `noun:` is the word the type's own readers use for one part, and
-a failing citation is worded with it. `aside:` names the label a part's optional second block opens with, written bold —
-`Not` on a glossary term, naming what the term is most often confused with. It sits in the schema because it is a fact
-about how a type writes its parts, and an export carries the lead and the aside as two pieces, since they answer two
-questions and a consumer may want either without the other. The rest of the block belongs to the table source alone:
-`columns:`, `id-pattern:` and the modals that open a binding row and an advisory one. Which of a record's content
-belongs in a part, and which belongs in frontmatter, is settled in
-[Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
+a failing citation is worded with it. The rest of the block belongs to the table source alone: `columns:`,
+`id-pattern:` and the modals that open a binding row and an advisory one. Which of a record's content belongs in a part,
+and which belongs in frontmatter, is settled in [Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
+
+`aside:` names the label a part's optional second block opens with, written bold — `Not` on a glossary term, naming what
+the term is most often confused with. It is here because it is a fact about how a type writes its parts, and an export
+reads it to carry a part's lead and its aside as two pieces.
 
 The parser reads those parts for the checks, and nothing renders them: no generated block carries a body table or a view
 derived from one, so a corpus wanting one needs a tool change.

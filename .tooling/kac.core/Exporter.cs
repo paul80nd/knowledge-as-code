@@ -235,23 +235,14 @@ public static class Exporter
         return new ExportRecord(t.Key, doc.Rel, fields, sections, Links(links));
     }
 
-    // One spelling of absent, across every file an export writes: `null`. A field a record leaves blank
-    // and a field it does not carry are the same absence to a consumer, and a corpus writing `narrows:`
-    // with nothing after it has not narrowed anything.
-    //
-    // A consumer should not have to know which file it is reading, or which key it is looking at, to
-    // know what nothing looks like.
+    // Every absent value an export writes, spelled one way. A corpus writing `narrows:` with nothing
+    // after it has not narrowed anything, so blank and missing arrive as the same `null`. What that buys
+    // a consumer is in `.tooling/README.md`.
     private static string? Absent(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
-    // The source's wrap column, taken back out.
-    //
-    // Prose here is wrapped at 120 columns, and those line breaks are a fact about the file rather than
-    // about the words. Carried into an export they break phrase matching, which is the one thing the
-    // flat terms file exists for: a grep for a phrase straddling the wrap finds nothing.
-    //
-    // Blank lines are the author's and stay. A block a joiner would mangle — a list, a heading, a quote,
-    // a table, a fence — is left exactly as written, because the wrap is only meaningless inside a
-    // paragraph and that is the only place this touches.
+    // The source's wrap column, taken back out. Blank lines are the author's and stay; a block a joiner
+    // would mangle is left as written. `.tooling/README.md` says why the export does this at all, and
+    // why the doubtful cases go the way they do.
     private static string Unwrap(string text)
     {
         var paragraphs = text.Replace("\r\n", "\n").Trim().Split("\n\n");
@@ -264,15 +255,14 @@ public static class Exporter
 
         // Whether a line opens a block rather than continuing a sentence.
         //
-        // A bullet and a heading are the marker *and a space*, which is what separates `- item` from an
-        // em-dash clause and `**Not:**` from a list. Getting that wrong is not symmetrical: a paragraph
-        // left wrapped merely reads as it was written, where a list joined into one line is destroyed —
-        // so `>`, `|` and a fence need no space, being unambiguous without one.
+        // A bullet and a heading are the marker *and a space*. That space is what tells `- item` from an
+        // em-dash clause, and `**Not:**` from a list. A quote, a table and a fence need no such test,
+        // because none of their markers opens an ordinary sentence.
         static bool Structural(string line) =>
             Bullet(line) || Heading(line) || line[0] is '>' or '|' or '`' || Ordered(line);
 
         static bool Bullet(string line) =>
-            line[0] is '-' or '*' or '+' && line.Length > 1 && line[1] == ' ';
+            (line[0] is '-' or '*' or '+') && line.Length > 1 && line[1] == ' ';
 
         // A run of hashes and then a space, so `## Scope` is a heading and `#tag` is a word.
         static bool Heading(string line)
@@ -292,12 +282,9 @@ public static class Exporter
         }
     }
 
-    // The flat file of every part of a type, one part to a line.
-    //
-    // JSONL rather than pretty JSON because the file exists to be grepped, and a hit has to hand back
-    // something parseable on its own: a matching line of an indented document is a fragment, and the
-    // reader is left seeking outward for its braces. Each line therefore repeats the record it came
-    // from and the links back to it, which costs bytes and is the whole point.
+    // The flat file of every part of a type, one part to a line. JSONL rather than pretty JSON, and each
+    // line repeating what a reader would otherwise have to look up — `.tooling/README.md` says what that
+    // costs and what it buys.
     private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, Publishing? publishing)
     {
         var spec = t.Parts!;

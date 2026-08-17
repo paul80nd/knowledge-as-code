@@ -19,7 +19,8 @@ The words the whole estate shares, whichever system a reader arrived from.
 What every system here has in common. A word only one system uses belongs in that system's glossary, and a word two
 of them disagree about belongs here with the disagreement named.
 
-A second paragraph, so that a blank line the author wrote is told apart from the wrap column the file is written at.
+A word two systems use for different things stays here as well, with both senses written out, because the reader who
+meets one of them will not know there is another.
 
 ## Terms
 
@@ -27,8 +28,8 @@ A second paragraph, so that a blank line the author wrote is told apart from the
 
 One physical building, with its own opening hours and its own staff.
 
-**Not:** a branch in source control. Both appear in the same sentence often enough to be worth separating, and this
-line is wrapped so the export is made to join it.
+**Not:** a branch in source control. Both appear in the same sentence often enough to be worth separating, and a reader
+arriving from either one will read the other as a mistake.
 
 ### Record
 
