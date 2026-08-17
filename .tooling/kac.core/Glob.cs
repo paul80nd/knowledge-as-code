@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -7,10 +8,14 @@ namespace kac.core;
 
 public static class Glob
 {
-    private static readonly Dictionary<string, Regex> Cache = [];
+    // One cache for the process, so it is written to by whoever asks first and read by everyone after.
+    // Concurrent because the callers are: a spec suite runs its scenarios side by side, and each loads a
+    // corpus of its own. A `Dictionary` corrupts itself under that, and it does so in whichever scenario
+    // happened to be running rather than in the one that would explain why.
+    private static readonly ConcurrentDictionary<string, Regex> Cache = new(StringComparer.Ordinal);
 
     public static bool IsMatch(string path, string pattern) =>
-        (Cache.TryGetValue(pattern, out var re) ? re : Cache[pattern] = Compile(pattern)).IsMatch(path);
+        Cache.GetOrAdd(pattern, Compile).IsMatch(path);
 
     private static Regex Compile(string glob)
     {

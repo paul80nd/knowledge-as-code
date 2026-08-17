@@ -16,4 +16,17 @@ public class GlobTests
     [InlineData("axmd", "a.md", false)]                              // the '.' is a literal, not any-char
     public void IsMatch_matches_expected(string path, string pattern, bool expected)
         => Assert.Equal(expected, Glob.IsMatch(path, pattern));
+
+    // The compiled patterns are cached for the process, and the process asks from several threads at once:
+    // a spec suite runs its scenarios side by side and each loads a corpus of its own. This is the state
+    // that corrupted the cache, and it failed in whichever scenario was running rather than here.
+    [Fact]
+    public void The_cache_survives_being_asked_from_several_threads()
+    {
+        var patterns = Enumerable.Range(0, 200).Select(i => $"folder{i}/**/*.md").ToList();
+
+        Parallel.ForEach(patterns, pattern => Assert.True(Glob.IsMatch(pattern.Replace("**/*", "a/b"), pattern)));
+
+        Assert.All(patterns, pattern => Assert.True(Glob.IsMatch(pattern.Replace("**/*", "a/b"), pattern)));
+    }
 }
