@@ -496,7 +496,6 @@ public class ExporterTests
 
         return new LoadedCorpus
         {
-            RepoRoot = "",
             Schema = schema,
             Descriptor = new CorpusDescriptor { Name = "test-corpus", ContentVersion = "2.1.0" },
             Tree = tree,

@@ -9,7 +9,6 @@ namespace kac.core;
 // corpus" is rather than one per command that can drift out of step.
 public sealed class LoadedCorpus
 {
-    public required string RepoRoot;
     public required Schema Schema;
 
     // What this corpus records about itself: where it stands against the framework it took, and which
@@ -48,23 +47,30 @@ public static class Corpus
     private static List<string> AllFiles(string repoRoot) =>
         GitFiles.Tracked(repoRoot) ?? GitFiles.Walk(repoRoot, "*.md", SkipDirs);
 
-    // Load the schema, list the files, and parse every record — everything an entry point needs before it
-    // can ask a question. The listing is taken once and carried on the result as a `Tree`: everything
+    // A corpus at a path. The listing is taken once and carried on the result as a `Tree`: everything
     // downstream asks it what the corpus holds, and a second `git ls-files` costs more than every check in
     // the tool put together.
-    public static LoadedCorpus Load(string repoRoot)
-    {
-        var schema = Schema.Load(repoRoot);
-        var files = AllFiles(repoRoot);
-        var tree = new Tree(
-            new HashSet<string>(files.Select(f => f.Replace('\\', '/')), StringComparer.Ordinal),
-            rel => Files.ReadLf(Path.Combine(repoRoot, rel)));
+    //
+    // This is the one place a path becomes a corpus. Everything below it is decided from values.
+    public static LoadedCorpus Load(string repoRoot) =>
+        Load(
+            new Tree(
+                new HashSet<string>(AllFiles(repoRoot).Select(f => f.Replace('\\', '/')), StringComparer.Ordinal),
+                rel => Files.ReadLf(Path.Combine(repoRoot, rel)),
+                rel => File.Exists(Path.Combine(repoRoot, rel))),
+            Schema.Load(repoRoot),
+            CorpusDescriptor.Load(repoRoot));
 
+    // The listing, the schema it is judged against, and what the corpus records about itself — everything
+    // an entry point needs before it can ask a question, and the whole of what this reads. A caller with a
+    // corpus nobody wrote to disk hands over the same three things, so a check can be written against one.
+    public static LoadedCorpus Load(Tree tree, Schema schema, CorpusDescriptor descriptor)
+    {
         var docs = new List<Doc>();
         var skipped = 0;
-        foreach (var rel in Discover(files, schema))
+        foreach (var rel in Discover(tree, schema))
         {
-            var doc = Doc.Parse(rel, File.ReadAllText(Path.Combine(repoRoot, rel)), schema);
+            var doc = Doc.Parse(rel, tree.Read(rel), schema);
             if (doc is null)
             {
                 skipped++;
@@ -74,17 +80,14 @@ public static class Corpus
             docs.Add(doc);
         }
 
-        var descriptor = CorpusDescriptor.Load(repoRoot);
-
         return new LoadedCorpus
         {
-            RepoRoot = repoRoot,
             Schema = schema,
             Descriptor = descriptor,
             Tree = tree,
             Adopted = Adopted(schema, tree, descriptor),
             Docs = docs,
-            Templates = DiscoverTemplates(repoRoot, schema),
+            Templates = DiscoverTemplates(tree, schema),
             SkippedNoFrontmatter = skipped
         };
     }
@@ -120,27 +123,31 @@ public static class Corpus
         && tree.Exists(t.Page)
         && tree.HasFolder(t.Folder);
 
-    // The template of every collection type that has one. Asked of the filesystem rather than of the
-    // file listing, as type-setup asks it: the question is whether the file a contributor would copy is
-    // there, and a type whose template is untracked has a different problem from one with none.
+    // The template of every collection type that has one. Asked with `OnDisk` rather than of the listing,
+    // as type-setup asks it: the question is whether the file a contributor would copy is there, and a
+    // type whose template is untracked has a different problem from one with none.
     //
     // A type with no template is skipped in silence — its absence is type-setup's to report, and a type
     // nobody has stood up yet is a valid, quiet state.
-    private static List<string> DiscoverTemplates(string repoRoot, Schema schema)
+    private static List<string> DiscoverTemplates(Tree tree, Schema schema)
     {
         var result = new List<string>();
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             var rel = $"{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/{Artefact.Template}";
-            if (File.Exists(Path.Combine(repoRoot, rel))) result.Add(rel);
+            if (tree.OnDisk(rel)) result.Add(rel);
         }
 
         return result;
     }
 
-    // Which of the listed files are records to validate: markdown, inside a folder the schema maps to
-    // a type.
-    private static List<string> Discover(List<string> files, Schema schema)
+    // Which of the files the corpus holds are records to validate: markdown, inside a folder the schema
+    // maps to a type.
+    //
+    // The glob names every path and the test below decides which are markdown, because the extension is
+    // matched however it is cased and a pattern is not. Corpus order is the listing's own, which `Match`
+    // gives in ordinal order.
+    private static List<string> Discover(Tree tree, Schema schema)
     {
         // Type pages at the repo root — adrs.md, services.md, data.md, … Each is prose about its
         // records and is checked separately, as a page.
@@ -151,15 +158,14 @@ public static class Corpus
         var typeFolders = new HashSet<string>(schema.ByFolder.Keys, StringComparer.OrdinalIgnoreCase);
 
         var result = new List<string>();
-        foreach (var raw in files)
+        foreach (var rel in tree.Match("**/*"))
         {
-            var rel = raw.Replace('\\', '/');
             if (!rel.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) continue;
             if (IsExcluded(rel, typePages, typeFolders)) continue;
             result.Add(rel);
         }
 
-        return [.. result.OrderBy(r => r, StringComparer.Ordinal)];
+        return result;
     }
 
     private static bool IsExcluded(string rel, HashSet<string> typePages, HashSet<string> typeFolders)
