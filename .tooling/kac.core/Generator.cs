@@ -44,6 +44,11 @@ public static class Generator
     public static readonly IReadOnlySet<string> IndexOrders =
         new HashSet<string>(["ascending", Descending], StringComparer.Ordinal);
 
+    // The one name a type may write where a field is asked for and no field answers: a record's title is
+    // its H1 rather than frontmatter. An index column resolves it here and an export carries it, and
+    // SchemaChecks reads the name from this constant so the three cannot come apart.
+    public const string Title = "title";
+
     // How a type is linked to from a generated block: the page without its extension, root-relative. The
     // form Azure DevOps renders as a wiki page and the link check resolves back to the file.
     private static string Link(TypeSchema t) =>
@@ -332,7 +337,7 @@ public static class Generator
 
     private static string Cell(Doc d, string col)
     {
-        if (col == "title")
+        if (col == Title)
         {
             var file = Path.GetFileName(d.Rel);
             return $"[{Escape(d.H1 ?? "")}]({file})";

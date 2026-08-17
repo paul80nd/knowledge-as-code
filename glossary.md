@@ -135,13 +135,13 @@ a digest, so nothing runs the rule and the limit is yours to keep.
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                        |
-|--------------------------------|---------------------------------------------------------------------------------------------|
-| `redefinitions-are-reciprocal` | Where a narrower glossary redefines a term, each of the two entries names the other.        |
-| `carried-in-full-by-digest`    | No entry runs beyond one paragraph, and a digest carries the glossaries most general first. |
-| `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.         |
-| `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.      |
-| `terms-are-singular`           | Entry headings are singular and in canonical casing.                                        |
+| Rule                           | What it would verify                                                                                  |
+|--------------------------------|-------------------------------------------------------------------------------------------------------|
+| `redefinitions-are-reciprocal` | Where a narrower glossary redefines a term, each of the two entries names the other.                  |
+| `carried-in-full-by-digest`    | No entry runs beyond one paragraph, and this corpus's digest takes the glossaries most general first. |
+| `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.                   |
+| `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.                |
+| `terms-are-singular`           | Entry headings are singular and in canonical casing.                                                  |
 
 <!-- END GENERATED: checks-glossary -->
 

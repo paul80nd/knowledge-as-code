@@ -203,6 +203,36 @@ belongs in frontmatter, is settled in [Metadata](/knowledge-as-code/metadata.md#
 The parser reads those parts for the checks, and nothing renders them: no generated block carries a body table or a view
 derived from one, so a corpus wanting one needs a tool change.
 
+**`export`** declares what a record of the type contributes to a published export. An export is a dependency surface —
+once a consumer corpus reads one, its shape is a contract — so what travels belongs to the type, beside the sections and
+fields it selects from, rather than to an exporter deciding type by type in code. A type with no `export:` block
+contributes nothing.
+
+```yaml
+export:
+  fields: [id, title, status, narrows]
+  sections:
+    Scope: full
+  parts: full
+```
+
+Selection is **by key**, and that is the point of the block. `fields:` names fields the type declares or inherits,
+`sections:` is keyed by headings the `sections:` block declares, and `parts:` takes whatever the `parts:` block already
+locates. A name that resolves to nothing is reported: two structural declarations free to disagree would let an export
+promise a section no record carries and go on saying so. `title` is admitted in `fields:` and is not one — a record's
+title is its H1, which an index column already names the same way.
+
+Every entry carries a **fidelity**, and none is defaulted. `full` carries the piece whole, `summary` reduces it to a
+line, and `reference` carries a breadcrumb back to the record and nothing else. Which of the three a consumer gets is
+the whole of what the block says, so leaving it to a default would put the load-bearing half of the declaration
+somewhere a reader of the schema cannot see it. `kac` writes `full`; the other two are named in the model so that a type
+whose sections are too long to carry has the word for what it wants, and `kac` reports either as a fidelity nothing
+carries until an exporter writes one.
+
+The block is a declaration and nothing reads it out yet: `kac export` and the bundle it produces are
+[knowledge-as-code#181](https://github.com/paul80nd/knowledge-as-code/issues/181). What runs today is the reconciliation
+above, which is what stops a projection being declared against a type that cannot supply it.
+
 **`index.order`** applies to the sort as a whole rather than to one column of it; a type wanting one column each way is
 asking two questions with one key. A postmortem index is the case for `descending`: the incident someone is looking for
 is almost always the most recent.
@@ -368,6 +398,11 @@ schema is held against what the tool can act on, and each finding names the file
 | An `id.style` with no code behind the value                                              | `schema-dispatch`    |
 | A type declaring no `folder:`                                                            | `schema-shape`       |
 | A `mirrors-section:` at a section the type's `sections:` block does not declare          | `schema-shape`       |
+| An `export.sections:` key at a section the type's `sections:` block does not declare     | `schema-shape`       |
+| An `export.fields:` entry naming a field neither the type nor `_universal.yaml` declares | `schema-shape`       |
+| An `export.parts:` on a type carrying no `parts:` block                                  | `schema-shape`       |
+| An export entry declaring no fidelity at all                                             | `schema-shape`       |
+| A fidelity no export carries                                                             | `schema-dispatch`    |
 | A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:`   | `schema-shape`       |
 | A `label-plural:`, `summary:` or `goes-here:` past 120 characters — they render as cells | `schema-shape`       |
 | A rule `description:` past 120 characters, for the same reason                           | `schema-shape`       |

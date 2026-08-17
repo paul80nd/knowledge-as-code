@@ -18,7 +18,8 @@ public class SchemaCheckTests
         (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
         string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
         string goesHere = "A widget", string labelPlural = "Widgets", string detail = "It is a widget.",
-        (string Other, string Text)[]? versus = null, bool lineage = true, PartSpec? parts = null) => new()
+        (string Other, string Text)[]? versus = null, bool lineage = true, PartSpec? parts = null,
+        ExportSpec? export = null) => new()
     {
         TypeName = "widget",
         Key = folder,
@@ -35,7 +36,8 @@ public class SchemaCheckTests
         Fields = (fields ?? []).ToDictionary(x => x.Name, x => x.Spec),
         Rules = rules ?? [],
         OptionalSections = sections ?? [],
-        Parts = parts
+        Parts = parts,
+        Export = export
     };
 
     // The tiers a type may claim, and the field that admits them, as a sound schema carries them — so a
@@ -454,6 +456,89 @@ public class SchemaCheckTests
 
     [Fact]
     public void A_type_declaring_no_parts_is_asked_nothing_about_them()
+        => Assert.Empty(Check(Widgets()));
+
+    // -- what a type contributes to an export --
+
+    // Selection is by key, and this is where the key is resolved. A section named here and absent from
+    // the type's own `sections:` block is a projection promising words no record carries.
+    [Fact]
+    public void An_exported_section_the_type_does_not_declare_is_reported()
+    {
+        var export = new ExportSpec { Sections = [("Provenance", ExportSpec.Full)] };
+        var found = Assert.Single(Check(Widgets(sections: ["Scope"], export: export)));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("'export.sections: Provenance'", found.Message);
+    }
+
+    // `summary` and `reference` are named in the model so that a type with sections too long to carry
+    // has the word for what it wants. Neither is written, and a type reaching for one is told so rather
+    // than exporting silence under it.
+    [Fact]
+    public void An_exported_fidelity_nothing_carries_names_the_ones_that_are_written()
+    {
+        var export = new ExportSpec { Sections = [("Scope", ExportSpec.Summary)] };
+        var found = Assert.Single(Check(Widgets(sections: ["Scope"], export: export)));
+
+        Assert.Equal("schema-dispatch", found.Check.Value);
+        Assert.Contains("at fidelity 'summary', which nothing carries", found.Message);
+        Assert.Contains("'full'", found.Message);
+    }
+
+    // Fidelity is what a consumer reads the export for, so an entry naming none is a declaration with
+    // its meaning missing rather than one to fall back on a default.
+    [Fact]
+    public void An_export_entry_declaring_no_fidelity_is_reported()
+    {
+        var export = new ExportSpec { Sections = [("Scope", "")] };
+        var found = Assert.Single(Check(Widgets(sections: ["Scope"], export: export)));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("at no fidelity", found.Message);
+    }
+
+    [Fact]
+    public void An_exported_field_no_record_carries_is_reported()
+    {
+        var export = new ExportSpec { Fields = ["colour"] };
+        var found = Assert.Single(Check(Widgets(export: export)));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("'export.fields: colour'", found.Message);
+    }
+
+    // A field the type inherits is a field its records carry, so the universal layer answers as well as
+    // the type's own declarations.
+    [Fact]
+    public void An_exported_field_the_type_inherits_passes()
+        => Assert.Empty(Check(Widgets(export: new ExportSpec { Fields = ["tier"] })));
+
+    // Parts are taken from wherever the `parts:` block locates them, so a type exporting them without
+    // one has named a source that does not exist.
+    [Fact]
+    public void Exported_parts_on_a_type_that_locates_none_are_reported()
+    {
+        var found = Assert.Single(Check(Widgets(export: new ExportSpec { Parts = ExportSpec.Full })));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("carries no 'parts:' block", found.Message);
+    }
+
+    [Fact]
+    public void A_projection_every_key_of_which_resolves_passes()
+        => Assert.Empty(Check(Widgets(
+            sections: ["Scope", "Terms"],
+            parts: new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" },
+            export: new ExportSpec
+            {
+                Fields = ["tier"],
+                Sections = [("Scope", ExportSpec.Full)],
+                Parts = ExportSpec.Full
+            })));
+
+    [Fact]
+    public void A_type_declaring_no_export_is_asked_nothing_about_one()
         => Assert.Empty(Check(Widgets()));
 
     private static Schema TwoTypes(params (string Key, (string Other, string Text)[] Versus)[] types)

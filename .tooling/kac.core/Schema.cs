@@ -123,6 +123,45 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     public static readonly IReadOnlyList<string> Sources = [Table, Headings];
 }
 
+// What a record of this type contributes to a published export, and how much of each piece travels.
+//
+// An export is a dependency surface: once a consumer corpus reads one, its shape is a contract. So what
+// travels is declared by the type, beside the sections and fields it selects from, rather than decided
+// by an exporter reading each type in turn. A type declaring no block contributes nothing.
+//
+// Selection is by key, so the two structural declarations cannot disagree: a section named here is one
+// the type's `sections:` block declares, and parts are the ones its `parts:` block already locates.
+//
+// Fidelity is written against every entry and defaulted nowhere. A section carried whole and a section
+// reduced to a line are different promises to whoever reads the export, and the difference between them
+// is the whole of what this block says.
+public sealed class ExportSpec
+{
+    // The frontmatter a record contributes, in the order an export writes it. Each names a field the
+    // type declares or inherits, so an export carries what a record actually holds.
+    public IReadOnlyList<string> Fields { get; init; } = [];
+
+    // The sections that travel, each with the fidelity it travels at, in declared order.
+    public IReadOnlyList<(string Section, string Fidelity)> Sections { get; init; } = [];
+
+    // The fidelity a record's parts travel at, and empty where none do — a glossary's terms carry the
+    // definition and the line naming what the term is confused with, which is the content that changes
+    // what a reader does.
+    public string Parts { get; init; } = "";
+
+    // Carried whole: the record's own words reach the consumer unchanged.
+    public const string Full = "full";
+
+    // Reduced to a line, and reduced to a breadcrumb back to the record it came from. Both are named so
+    // that a type whose sections are too long to carry has the word for what it wants.
+    public const string Summary = "summary";
+    public const string Reference = "reference";
+
+    // The fidelities an export writes. Read by `schema-dispatch` from here, so a type declaring one of
+    // the others is told so rather than exporting silence under it.
+    public static readonly IReadOnlyList<string> Carried = [Full];
+}
+
 // A field's `required-when:` — the condition under which an otherwise optional field must be filled
 // in, as a test against one other field of the same document. A deliberately closed vocabulary:
 // `status == accepted`, `mechanism != not-enforced`, `classification in [personal, special-category]`.
@@ -242,6 +281,7 @@ public sealed class TypeSchema
     // the case for it: the incident someone is looking for is almost always the most recent.
     public string IndexOrder { get; init; } = "";
     public PartSpec? Parts { get; init; }
+    public ExportSpec? Export { get; init; }
     public IReadOnlyList<RuleSpec> Rules { get; init; } = [];
 
     // -- derived at load from the declarations above; see the Derive* helpers --
@@ -529,6 +569,12 @@ public sealed partial class Schema
         var filenamePattern = Yaml.Str(fn.Get("pattern"));
         var parts = keys.At(root.Get("parts"), "the 'parts' block");
 
+        // The section names under `export.sections:` are headings rather than schema keys, so the mapping
+        // holding them is read directly and never opened as a level: a heading is not a key the loader
+        // could have been expected to ask for, and reporting one as unread would make selecting by key
+        // impossible.
+        var export = keys.At(root.Get("export"), "the 'export' block");
+
         // All three read whether or not the block is there, so that a lineage missing only its `prior-art:`
         // is reported as the shape problem it is rather than as two keys the loader never asked for.
         var lineage = keys.At(root.Get("lineage"), "the 'lineage' block");
@@ -580,6 +626,19 @@ public sealed partial class Schema
                     Columns = Yaml.StrList(parts.Get("columns")) is { Count: > 0 } cols
                         ? cols
                         : ["Id", "Clause"]
+                }
+                : null,
+
+            Export = export.Present
+                ? new ExportSpec
+                {
+                    Fields = Yaml.StrList(export.Get("fields")),
+                    Sections =
+                    [
+                        .. Yaml.Map(export.Get("sections"))
+                            .Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))
+                    ],
+                    Parts = Yaml.Str(export.Get("parts")) ?? ""
                 }
                 : null,
 
