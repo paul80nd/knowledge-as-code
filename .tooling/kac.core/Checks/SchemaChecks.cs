@@ -59,6 +59,7 @@ public static class SchemaChecks
                     + $"tiers are {Ordered(schema.Tiers.Select(tier => tier.Name))}."));
 
             CheckParts(at, key, t, f);
+            CheckExport(at, key, t, schema, f);
             CheckProse(at, key, t, f);
 
             foreach (var name in t.FieldOrder)
@@ -188,6 +189,66 @@ public static class SchemaChecks
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' sources its parts from a table and declares no 'binding:' — say which modals "
                 + "oblige, or every row is reported as opening with none of them."));
+    }
+
+    // What a type says it contributes to a published export, held against what the type itself declares
+    // and against what an export can carry.
+    //
+    // The corpus that reads an export took a copy of these files and cannot ask what was meant. So every
+    // way of getting this wrong ends in silence: a section, a field or a set of parts named here and not
+    // there contributes nothing, while the schema goes on saying it does. Selection is by key for that
+    // reason, and this is where each key is resolved.
+    //
+    // Fidelity is asked of every entry, because it is what a consumer reads the export for — words
+    // arriving whole, cut to a line, or replaced by a breadcrumb. A section becomes an entry as soon as
+    // its heading is written, so a heading with nothing beside it is asked. `parts:` is the entry itself,
+    // so writing it with nothing beside it declares no parts at all.
+    private static void CheckExport(string at, string key, TypeSchema t, Schema schema, List<Finding> f)
+    {
+        if (t.Export is not { } export) return;
+
+        var declared = t.RequiredSections.Concat(t.OptionalSections).ToList();
+
+        foreach (var (section, fidelity) in export.Sections)
+        {
+            if (!declared.Contains(section, StringComparer.OrdinalIgnoreCase))
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"type '{key}' declares 'export.sections: {section}', and its 'sections:' block declares no "
+                    + "such section — name a section the type has, or add it. Selecting by key is what keeps the "
+                    + "two declarations in step."));
+
+            Fidelity($"export.sections: {section}", fidelity);
+        }
+
+        // `title` answers as a field without being one: a record's title is its H1, which every record
+        // has and an index column already names the same way.
+        foreach (var name in export.Fields.Where(n =>
+                     n != Generator.Title && schema.EffectiveField(t, n) is null))
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"type '{key}' declares 'export.fields: {name}', and neither the type nor '_universal.yaml' "
+                + $"declares such a field — name a field a record carries, or '{Generator.Title}', which is a "
+                + "record's heading rather than its frontmatter."));
+
+        if (export.Parts.Length == 0) return;
+
+        if (t.Parts is null)
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"type '{key}' declares 'export.parts:' and carries no 'parts:' block — say where a record "
+                + "keeps the parts an export is to carry, or drop the entry."));
+
+        Fidelity("export.parts:", export.Parts);
+        return;
+
+        void Fidelity(string entry, string value)
+        {
+            if (value.Length == 0)
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"type '{key}' declares '{entry}' at no fidelity — say how much of it travels. Fidelity is "
+                    + "what a consumer reads the export for, and is defaulted nowhere."));
+            else if (!ExportSpec.Carried.Contains(value, StringComparer.Ordinal))
+                Dispatch(at, $"type '{key}' declares '{entry}' at fidelity '{value}', which nothing carries. "
+                             + $"An export carries {List(ExportSpec.Carried)}.", f);
+        }
     }
 
     // A type is a folder of records, and `folder:` names it. The check asks after the value rather than

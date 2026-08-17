@@ -64,6 +64,13 @@ sections:
     - Summary
   optional: []
 
+export:
+  fields: [colour]
+  sections:
+    Summary: summary
+    Provenance: full
+  parts: full
+
 index:
   columns: [id, title]
   sort: id

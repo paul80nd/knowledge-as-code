@@ -91,6 +91,21 @@ parts:
   noun: term
   level: 3
 
+# What a glossary contributes to a published export, and how much of each piece travels. `Terms` is
+# absent from the sections because the terms under it are parts, and `parts:` above carries them.
+export:
+  fields: [id, title, status, narrows]
+  sections:
+    Scope: full
+  parts: full
+  notes: >
+    A term travels whole: the definition and the `**Not:**` line beneath it together. A definition on
+    its own is mostly guessable from the word, so an export that dropped the `**Not:**` line would
+    carry the guessable half.
+
+    `owner` and `review-by` stay behind. They say who keeps this file current, which is a question
+    about this corpus rather than about the term.
+
 index:
   columns: [id, title, narrows, status, owner, review-by]
   sort: id
@@ -101,10 +116,12 @@ rules:
     # The reference runs upward only where the general glossary is synced: a file every corpus shares
     # cannot name a record only this one holds.
   - id: carried-in-full-by-digest
-    description: No entry runs beyond one paragraph, and a digest carries the glossaries most general first.
-    # A glossary is read end to end, so every entry's length is paid by every reader. With several of them,
-    # "carry the glossary in full" names no single file: the digest takes them most general first and cuts
-    # off when its budget is spent, which three glossaries are enough to do.
+    description: No entry runs beyond one paragraph, and this corpus's digest takes the glossaries most general first.
+    # A glossary is read end to end, so every entry's length is paid by every reader. The rule governs
+    # the digest this corpus writes for itself, which has a budget. With several glossaries, "carry the
+    # glossary in full" names no single file: the digest takes them most general first and cuts off when
+    # the budget is spent, which three glossaries are enough to do. A consumer corpus receives the
+    # `export:` block above instead, and that is bounded per term.
   - id: undefined-terms
     description: >
       Reports terms appearing more than N times across the corpus with no glossary entry.
