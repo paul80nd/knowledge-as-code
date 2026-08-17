@@ -57,6 +57,12 @@ The modes:
   `expected-files.txt` paths that must be there afterwards, and `expected-content.txt` `<path> :: <text>` pairs each
   file must say. A `!` prefix on a line in either file inverts it. `corpus-schema.txt` names the type schema files the
   local side holds *before* the sync — the half-adopted state the real `.schema/` cannot express.
+- **`export`** — `kac export` over the fixture corpus, asserting the tree it wrote in the same three files `sync` uses,
+  with `expected-export.txt` in place of `expected-sync.txt`. `export-type`, where present, names the type to pass to
+  `--type`. The run happens twice: the second is over an output seeded with a file no record backs, which asserts the
+  overwrite is delete-then-write. The temp root is not a git repository, so no ref resolves and no link is written —
+  the fixture therefore pins the corpus-publishes-nowhere path, and the link forms belong to the unit layer, which can
+  supply a ref.
 
 Only `validate` runs the validator, so a new check cannot affect the rest.
 
@@ -125,6 +131,7 @@ scenario holds is best read from the fixture; what it is *for* is here.
 | `mechanism`           | A consumer corpus against a reference: a shared file whose copies differ, one the reference has and it does not, a shared page whose prose has been edited locally, an accepted divergence still active beside one that is identical again, and the verification layer a consumer declines and still holds. Asserts exit 1 and every line of `expected-drift.txt`.                                                                                                                                                                                                  |
 | `mechanism-clean`     | Every shared layer in step, including a page whose generated block differs on each side — the authored half is what is compared, so that is not drift. A source corpus, so the verification layer is compared like any other shared file. Asserts exit 0.                                                                                                                                                                                                                                                                                                           |
 | `mechanism-sync`      | `--sync` from a reference into a corpus that has adopted `adrs` alone: a shared page comes down and is regenerated against local types, a forked template is seeded, an accepted divergence is left as it is, and nothing of the declined `runbooks` type arrives.                                                                                                                                                                                                                                                                                                  |
+| `export`              | Three glossaries — two roots and a chain under one of them — through `kac export --type glossary`. Asserts the documented layout, a record carrying its type's declared fields and no others, a term split into its definition and its labelled line, and the corpus-publishes-nowhere path, which is the only one a fixture can reach. A second run over an output seeded with a file no record backs asserts the overwrite is delete-then-write.                                                                                                                    |
 
 ### Known validator gaps surfaced by the suite
 

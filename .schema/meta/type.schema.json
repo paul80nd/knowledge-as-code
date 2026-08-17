@@ -231,6 +231,11 @@
           "type": "string",
           "minLength": 1
         },
+        "aside": {
+          "description": "The label a part's optional second block opens with, written bold — \"Not\" on a glossary term. An export carries the lead and the aside as two pieces. Omit where a type's parts carry no such block.",
+          "type": "string",
+          "minLength": 1
+        },
         "level": {
           "description": "The heading level a part is written at, for `source: headings`. Defaults to 3.",
           "type": "integer",

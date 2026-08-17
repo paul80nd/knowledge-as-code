@@ -125,8 +125,13 @@ rules:
   # the tests that read them.
 
   - { path: "**/_index.md", layer: generated, note: "Generated corpus indexes, bar the fixture copies above." }
-  - { path: ".index.json",  layer: generated, note: "Generated corpus map." }
   - { path: "_reports/**",  layer: generated, note: "Generated validation and coverage reports." }
+
+  - path: ".dist/**"
+    layer: generated
+    note: >
+      The export `kac export` writes: the corpus as data a consumer reads instead of cloning. Untracked
+      and rebuilt whole each run, so it is named here to be resolved rather than to be compared.
 
   # ── synced ─────────────────────────────────────────────────────────────────
 

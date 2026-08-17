@@ -1,0 +1,30 @@
+# The manifest says what this export is, and what it could not resolve.
+.dist/manifest.json :: "formatVersion": 1
+.dist/manifest.json :: "target": "none"
+.dist/manifest.json :: "humanBase": null
+.dist/manifest.json :: "type": "glossary"
+.dist/manifest.json :: "count": 3
+.dist/manifest.json :: "parts": "glossary/terms.jsonl"
+
+# A record carries what `export:` in the schema declares, and not what it does not. `owner` stays
+# behind: it is a fact about this corpus's stewardship rather than about the words.
+.dist/glossary/gls-search.json :: "narrows": "gls-estate"
+.dist/glossary/gls-search.json :: "status": "draft"
+.dist/glossary/gls-search.json :: "review-by": "2030-01-01"
+.dist/glossary/gls-search.json :: !"owner"
+.dist/glossary/gls-search.json :: "Scope": "How a reader's words reach a record.
+
+# A corpus with no resolvable address writes its records without links rather than with empty ones.
+.dist/glossary/gls-search.json :: "links": null
+
+# One term, one line, one whole object — carrying the definition and the labelled line apart, and the
+# record it came from, because a grep hands back a line and nothing around it.
+.dist/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","not":"the request the service received. One request carries a query and its paging.","type":"glossary","record":"gls-search","part":"query","links":null}
+
+# A term with no labelled line carries a null rather than an empty string standing in for one.
+.dist/glossary/terms.jsonl :: "title":"Relevance","definition":"The score that orders results.","not":null
+
+# Most general first. `narrows` orders a chain and glossary id orders the roots, so a grep meeting a
+# term two glossaries define meets the estate's before the framework's.
+.dist/glossary/terms.jsonl :: "record":"gls-estate","part":"record"
+.dist/glossary/terms.jsonl :: "record":"gls-framework","part":"record"

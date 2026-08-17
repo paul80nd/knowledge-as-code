@@ -35,6 +35,19 @@ public class PartRow
     public string Text = "";   // the Clause cell flattened, or the heading as written
     public string? BoldLead;   // the leading bold run's text, when the cell opens with one
     public int Line;
+
+    // Where the part's body begins and ends in the document's text, for a part written as a heading:
+    // everything beneath it, up to the next part, the end of the section holding it, or the end of the
+    // document. Both zero for a part written as a table row, whose body is the row.
+    //
+    // Held as a span rather than as flattened prose because a body is several blocks and what a reader
+    // wants of it differs: an export carries the words as written, and a rule counting paragraphs would
+    // count them here.
+    public int BodyStart;
+    public int BodyEnd;
+
+    public ReadOnlySpan<char> Body(string text) =>
+        BodyEnd > BodyStart ? text.AsSpan()[BodyStart..Math.Min(BodyEnd, text.Length)] : default;
 }
 
 // One H2 and what stands under it: the heading as written, the line it sits on, and where its body
@@ -313,19 +326,29 @@ public partial class Doc
     private static void ReadParts(MarkdownDocument ast, Doc doc, PartSpec spec)
     {
         var inSection = false;
+
+        // The heading part whose body is still running. A body ends where the next thing that can hold
+        // one begins, so the row is filled in on meeting that rather than on being added.
+        PartRow? open = null;
+
         foreach (var block in ast)
         {
             if (block is HeadingBlock h)
             {
                 // A heading below the section level does not end the section, and where parts are
-                // written as headings it is one of them.
+                // written as headings it is one of them. Anything deeper than a part stands inside the
+                // part above it, so it closes nothing.
                 if (h.Level > 2)
                 {
-                    if (inSection && spec.Source == PartSpec.Headings && h.Level == spec.Level)
-                        AddHeading(doc, h);
+                    if (h.Level != spec.Level) continue;
+                    if (!inSection || spec.Source != PartSpec.Headings) continue;
+
+                    Close(h.Span.Start);
+                    open = AddHeading(doc, h);
                     continue;
                 }
 
+                Close(h.Span.Start);
                 inSection = string.Equals(Md.PlainText(h.Inline), spec.Section, StringComparison.OrdinalIgnoreCase);
                 if (inSection) doc.PartSectionLine = h.Line + 1;
                 continue;
@@ -337,23 +360,37 @@ public partial class Doc
             ReadTable(doc, table);
             return;
         }
+
+        Close(doc.Text.Length);
+        return;
+
+        void Close(int at)
+        {
+            if (open is null) return;
+            open.BodyEnd = Math.Max(open.BodyStart, at);
+            open = null;
+        }
     }
 
     // A heading is a part nobody wrote an id for, so the id comes from the heading: the same anchor a
     // link to it would use, which lets a citation and a link name one entry. An empty slug — a heading
     // of punctuation alone — leaves the id null, and that reads downstream as a part offering no
     // address, exactly as an unreadable id cell does.
-    private static void AddHeading(Doc doc, HeadingBlock h)
+    private static PartRow AddHeading(Doc doc, HeadingBlock h)
     {
         var text = Md.PlainText(h.Inline);
         var slug = Md.Slug(text);
-        doc.Parts.Add(new PartRow
+        var row = new PartRow
         {
             Id = slug.Length > 0 ? slug : null,
             IdText = text,
             Text = text,
-            Line = h.Line + 1
-        });
+            Line = h.Line + 1,
+            BodyStart = Math.Min(h.Span.End + 1, doc.Text.Length)
+        };
+
+        doc.Parts.Add(row);
+        return row;
     }
 
     // The first table under the named section, read whole. The header row supplies `PartTableHeaders`

@@ -196,9 +196,13 @@ citation resolves against them from anywhere in the corpus.
 
 A type with no `parts:` block offers no parts. Declaring one is how a type says its records can be addressed inside, and
 a citation into a type that declares none is reported. `noun:` is the word the type's own readers use for one part, and
-a failing citation is worded with it. The rest of the block belongs to the table source alone: `columns:`, `id-pattern:`
-and the modals that open a binding row and an advisory one. Which of a record's content belongs in a part, and which
-belongs in frontmatter, is settled in [Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
+a failing citation is worded with it. `aside:` names the label a part's optional second block opens with, written bold —
+`Not` on a glossary term, naming what the term is most often confused with. It sits in the schema because it is a fact
+about how a type writes its parts, and an export carries the lead and the aside as two pieces, since they answer two
+questions and a consumer may want either without the other. The rest of the block belongs to the table source alone:
+`columns:`, `id-pattern:` and the modals that open a binding row and an advisory one. Which of a record's content
+belongs in a part, and which belongs in frontmatter, is settled in
+[Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
 
 The parser reads those parts for the checks, and nothing renders them: no generated block carries a body table or a view
 derived from one, so a corpus wanting one needs a tool change.
@@ -210,7 +214,7 @@ contributes nothing.
 
 ```yaml
 export:
-  fields: [id, title, status, narrows]
+  fields: [id, title, narrows, status, review-by]
   sections:
     Scope: full
   parts: full
@@ -228,9 +232,10 @@ the block says. A default would decide that where nobody reading the schema woul
 The other two are named now so that a type arriving with sections too long to carry has the word for what it wants, and
 `kac` reports either as a fidelity nothing carries.
 
-Nothing reads the block out yet: `kac export` and the bundle it produces are
-[knowledge-as-code#181](https://github.com/paul80nd/knowledge-as-code/issues/181). What runs today is the check that
-every key resolves, which is what stops a type declaring an export it cannot supply.
+`kac export` reads the block out, and holds no list of its own: a field, a section or a part travels because the type
+said so. Two things run beside it — the check that every key resolves, which stops a type declaring an export it cannot
+supply, and the check that every fidelity is one something carries. What the exporter writes, and how a consumer reads
+it, is in [`.tooling/README.md`](/.tooling/README.md).
 
 **`index.order`** applies to the sort as a whole rather than to one column of it; a type wanting one column each way is
 asking two questions with one key. A postmortem index is the case for `descending`: the incident someone is looking for

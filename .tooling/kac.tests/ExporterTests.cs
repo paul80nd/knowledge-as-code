@@ -1,0 +1,306 @@
+using System.Text.Json;
+using kac.core;
+
+// In-process unit tests for the export.
+//
+// The golden fixture proves the pass reaches the CLI and lands the files where they are documented to
+// land. It cannot show the ordering rule, because a fixture holds whichever glossaries it happens to
+// carry, and the rule is about what happens when a corpus holds several roots and a chain beneath one
+// of them. That is what these build.
+
+namespace kac.tests;
+
+public class ExporterTests
+{
+    private static readonly ExportRun Run =
+        new("2026-08-17T00:00:00Z", new DateOnly(2026, 8, 17), "abc123", false);
+
+    // A glossary as this corpus writes one: `narrows:` orders it, `Scope` travels whole, and the terms
+    // under `Terms` are its parts.
+    private static TypeSchema GlossaryType() => new()
+    {
+        Key = "glossary",
+        TypeName = "glossary",
+        Folder = "glossary",
+        Page = "glossary.md",
+        IdPrefix = "gls",
+        RequiredSections = ["Scope", "Terms"],
+        Parts = new PartSpec(PartSpec.Headings, "", [], [])
+            { Section = "Terms", Noun = "term", Level = 3, Aside = "Not" },
+        Export = new ExportSpec
+        {
+            Fields = ["id", "title", "narrows", "status", "review-by"],
+            Sections = [("Scope", ExportSpec.Full)],
+            Parts = ExportSpec.Full
+        }
+    };
+
+    // -- ordering: most general first, which is not the total order it sounds like --
+
+    // `narrows` orders a chain and nothing orders one chain against another, so the roots sort by id and
+    // each root's chain follows it. A grep meeting a redefined term therefore meets the general one
+    // first, whichever root it belongs under.
+    [Fact]
+    public void Roots_sort_by_id_and_each_root_s_chain_follows_it()
+    {
+        var lines = TermLines(Corpus(
+            Glossary("gls-zulu", narrows: null, terms: "### Alpha\n\nFrom zulu.\n"),
+            Glossary("gls-alpha", narrows: null, terms: "### Alpha\n\nFrom alpha.\n"),
+            Glossary("gls-alpha-narrow", narrows: "gls-alpha", terms: "### Alpha\n\nNarrowed.\n")));
+
+        Assert.Equal(
+            ["gls-alpha.alpha", "gls-alpha-narrow.alpha", "gls-zulu.alpha"],
+            lines.Select(l => l.GetProperty("id").GetString()));
+    }
+
+    [Fact]
+    public void Terms_sort_alphabetically_inside_a_glossary()
+    {
+        var lines = TermLines(Corpus(
+            Glossary("gls-one", narrows: null, terms: "### Zebra\n\nLast.\n\n### Apple\n\nFirst.\n")));
+
+        Assert.Equal(["Apple", "Zebra"], lines.Select(l => l.GetProperty("title").GetString()));
+    }
+
+    // A record naming a glossary the corpus does not hold has nothing here to sit beneath, so it is a
+    // root. Dropping it, or leaving it unordered at the end, would hide a record the corpus contains.
+    [Fact]
+    public void A_record_narrowing_something_outside_the_set_is_a_root()
+    {
+        var lines = TermLines(Corpus(
+            Glossary("gls-beta", narrows: "gls-absent", terms: "### Beta\n\nB.\n"),
+            Glossary("gls-alpha", narrows: null, terms: "### Alpha\n\nA.\n")));
+
+        Assert.Equal(["gls-alpha.alpha", "gls-beta.beta"], lines.Select(l => l.GetProperty("id").GetString()));
+    }
+
+    // A cycle leaves its members unreachable from any root. Reporting it is the validator's; an export
+    // that quietly held the records back would be a second, smaller account of what the corpus holds.
+    [Fact]
+    public void A_cycle_still_exports_every_record_it_traps()
+    {
+        var lines = TermLines(Corpus(
+            Glossary("gls-one", narrows: "gls-two", terms: "### One\n\nA.\n"),
+            Glossary("gls-two", narrows: "gls-one", terms: "### Two\n\nB.\n")));
+
+        Assert.Equal(["gls-one.one", "gls-two.two"], lines.Select(l => l.GetProperty("id").GetString()));
+    }
+
+    // -- a term, split as the type writes one --
+
+    [Fact]
+    public void A_term_carries_its_definition_and_the_labelled_line_beneath_it_apart()
+    {
+        var line = Assert.Single(TermLines(Corpus(Glossary("gls-one", null,
+            "### Query\n\nWhat a reader typed.\n\n**Not:** the request the service received.\n"))));
+
+        Assert.Equal("What a reader typed.", line.GetProperty("definition").GetString());
+        Assert.Equal("the request the service received.", line.GetProperty("not").GetString());
+    }
+
+    // Most terms carry no such line — the label marks a confusion worth heading off, and most words have
+    // none — so its absence is a null rather than an empty string standing in for one.
+    [Fact]
+    public void A_term_with_no_labelled_line_carries_a_null_rather_than_an_empty_one()
+    {
+        var line = Assert.Single(TermLines(Corpus(Glossary("gls-one", null,
+            "### Facet\n\nA field a reader narrows results by.\n"))));
+
+        Assert.Equal(JsonValueKind.Null, line.GetProperty("not").ValueKind);
+    }
+
+    // A line has to be parseable on its own, because a grep hands back a line and nothing around it.
+    [Fact]
+    public void Every_term_is_one_line_and_that_line_is_a_whole_object()
+    {
+        var file = Single(Plan(Corpus(Glossary("gls-one", null,
+            "### Alpha\n\nA.\n\n### Beta\n\nB.\n"))), "glossary/terms.jsonl");
+
+        var lines = file.Content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        Assert.Equal(2, lines.Length);
+        foreach (var line in lines)
+            Assert.Equal("gls-one", JsonDocument.Parse(line).RootElement.GetProperty("record").GetString());
+    }
+
+    // -- the record --
+
+    [Fact]
+    public void A_record_carries_the_fields_and_sections_its_type_declares_and_no_others()
+    {
+        var record = JsonDocument.Parse(
+                Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"))), "glossary/gls-one.json").Content)
+            .RootElement;
+
+        Assert.Equal(
+            ["id", "title", "narrows", "status", "review-by"],
+            record.GetProperty("fields").EnumerateObject().Select(p => p.Name));
+        Assert.Equal(["Scope"], record.GetProperty("sections").EnumerateObject().Select(p => p.Name));
+        Assert.Equal("What this admits.", record.GetProperty("sections").GetProperty("Scope").GetString());
+    }
+
+    // A corpus the tool cannot address writes its records without links rather than with links built on
+    // an empty base. The absence is the honest answer and the manifest says the same thing.
+    [Fact]
+    public void A_corpus_that_publishes_nowhere_writes_records_without_links()
+    {
+        var plan = Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")));
+
+        var record = JsonDocument.Parse(Single(plan, "glossary/gls-one.json").Content).RootElement;
+        Assert.Equal(JsonValueKind.Null, record.GetProperty("links").ValueKind);
+
+        var manifest = JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement;
+        Assert.Equal("none", manifest.GetProperty("publishing").GetProperty("target").GetString());
+        Assert.Equal(JsonValueKind.Null, manifest.GetProperty("publishing").GetProperty("humanBase").ValueKind);
+    }
+
+    // -- the manifest --
+
+    // "Nothing" is a valid statement of what a corpus has. A corpus that adopted no exporting type still
+    // produces a manifest, so a consumer reads an answer rather than meeting an empty directory.
+    [Fact]
+    public void A_corpus_with_no_exporting_type_still_writes_a_manifest()
+    {
+        var plan = Exporter.Plan(Corpus(), null, null, Run);
+
+        Assert.Equal([Exporter.ManifestFile], plan.Files.Select(f => f.Path));
+        Assert.Empty(plan.Types);
+
+        var manifest = JsonDocument.Parse(plan.Files[0].Content).RootElement;
+        Assert.Empty(manifest.GetProperty("types").EnumerateArray());
+    }
+
+    [Fact]
+    public void The_manifest_says_what_this_export_is_and_where_it_came_from()
+    {
+        var manifest = JsonDocument.Parse(
+                Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"))), Exporter.ManifestFile).Content)
+            .RootElement;
+
+        Assert.Equal(Exporter.FormatVersion, manifest.GetProperty("formatVersion").GetInt32());
+        Assert.Equal("test-corpus", manifest.GetProperty("corpus").GetString());
+        Assert.Equal("2.1.0", manifest.GetProperty("contentVersion").GetString());
+        Assert.Equal("abc123", manifest.GetProperty("commit").GetString());
+        Assert.False(manifest.GetProperty("dirty").GetBoolean());
+        Assert.Equal(Run.GeneratedAt, manifest.GetProperty("generatedAt").GetString());
+    }
+
+    // Two runs over one commit differ in the timestamp and nowhere else, which is what makes an export
+    // something a consumer can diff to see whether the corpus moved.
+    [Fact]
+    public void Two_runs_over_one_corpus_differ_only_in_the_generated_timestamp()
+    {
+        var corpus = Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"));
+        var later = Exporter.Plan(corpus, null, null, Run with { GeneratedAt = "2027-01-01T00:00:00Z" });
+        var first = Exporter.Plan(corpus, null, null, Run);
+
+        foreach (var (a, b) in first.Files.Zip(later.Files))
+        {
+            Assert.Equal(a.Path, b.Path);
+            if (a.Path != Exporter.ManifestFile) Assert.Equal(a.Content, b.Content);
+        }
+
+        Assert.NotEqual(
+            Single(first, Exporter.ManifestFile).Content,
+            Single(later, Exporter.ManifestFile).Content);
+    }
+
+    // -- what a corpus may leave behind --
+
+    // The default, and the one that matters: a draft glossary and one long past its review date both
+    // travel, carrying the state that lets a consumer decide.
+    [Fact]
+    public void An_unsettled_record_travels_by_default_with_its_state_attached()
+    {
+        var record = JsonDocument.Parse(
+                Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n", reviewBy: "2020-01-01"))),
+                    "glossary/gls-one.json").Content)
+            .RootElement;
+
+        Assert.Equal("draft", record.GetProperty("fields").GetProperty("status").GetString());
+        Assert.Equal("2020-01-01", record.GetProperty("fields").GetProperty("review-by").GetString());
+    }
+
+    [Theory]
+    [InlineData(CorpusDescriptor.ExcludeDraft)]
+    [InlineData(CorpusDescriptor.ExcludeOverdue)]
+    public void A_corpus_may_withhold_what_has_not_settled_and_the_plan_names_what_it_withheld(string exclude)
+    {
+        var corpus = Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n", reviewBy: "2020-01-01"));
+        corpus.Descriptor.ExportExclude.Add(exclude);
+
+        var plan = Exporter.Plan(corpus, null, null, Run);
+
+        Assert.Equal(["gls-one"], plan.Withheld);
+        Assert.Empty(plan.Types);
+    }
+
+    // An absent or unreadable date is never overdue. It is the field's own fault and the validator's to
+    // report, and withholding a record over it would answer one problem with a quieter one.
+    [Fact]
+    public void An_unreadable_review_date_is_not_overdue()
+    {
+        var corpus = Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n", reviewBy: "whenever", status: "active"));
+        corpus.Descriptor.ExportExclude.Add(CorpusDescriptor.ExcludeOverdue);
+
+        Assert.Empty(Exporter.Plan(corpus, null, null, Run).Withheld);
+    }
+
+    // -- narrowing what is written --
+
+    [Fact]
+    public void Naming_a_type_narrows_what_is_written_and_leaves_the_rest_out()
+    {
+        var plan = Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), null, "adrs", Run);
+
+        Assert.Equal([Exporter.ManifestFile], plan.Files.Select(f => f.Path));
+    }
+
+    // -- helpers --
+
+    private static ExportPlan Plan(LoadedCorpus corpus) => Exporter.Plan(corpus, null, null, Run);
+
+    private static ExportFile Single(ExportPlan plan, string path) =>
+        Assert.Single(plan.Files, f => f.Path == path);
+
+    private static List<JsonElement> TermLines(LoadedCorpus corpus) =>
+    [
+        .. Single(Plan(corpus), "glossary/terms.jsonl").Content
+            .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+            .Select(l => JsonDocument.Parse(l).RootElement)
+    ];
+
+    private static string Glossary(string id, string? narrows, string terms,
+        string reviewBy = "2030-01-01", string status = "draft") =>
+        $"---\nid: {id}\ntier: descriptive\nstatus: {status}\nowner: someone\n"
+        + $"narrows: {narrows}\nreview-by: \"{reviewBy}\"\n---\n\n"
+        + $"# {id}\n\n## Scope\n\nWhat this admits.\n\n## Terms\n\n{terms}";
+
+    // A loaded corpus holding the glossaries given, in the order given — which is deliberately not the
+    // order the export writes them in, so a passing ordering test is not reading its input back.
+    private static LoadedCorpus Corpus(params string[] glossaries)
+    {
+        var type = GlossaryType();
+        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["glossary"] = type } };
+
+        var docs = new List<Doc>();
+        foreach (var text in glossaries)
+        {
+            var id = text.Split('\n')[1]["id: ".Length..];
+            var doc = Doc.Parse($"glossary/{id}.md", text, schema);
+            Assert.NotNull(doc);
+            docs.Add(doc);
+        }
+
+        return new LoadedCorpus
+        {
+            RepoRoot = "",
+            Schema = schema,
+            Descriptor = new CorpusDescriptor { Name = "test-corpus", ContentVersion = "2.1.0" },
+            Tree = new Tree(new HashSet<string>(StringComparer.Ordinal), _ => ""),
+            Adopted = [type],
+            Docs = docs,
+            Templates = [],
+            SkippedNoFrontmatter = 0
+        };
+    }
+}

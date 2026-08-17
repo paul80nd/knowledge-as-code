@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 // ---------------------------------------------------------------------------
 // File listing — shared by corpus discovery and the mechanism check
 // ---------------------------------------------------------------------------
@@ -17,34 +15,13 @@ public static class GitFiles
     // is handed, and a deleted file has nothing to read.
     public static List<string>? Tracked(string root)
     {
-        try
-        {
-            var psi = new ProcessStartInfo("git", "ls-files --cached --others --exclude-standard")
-            {
-                WorkingDirectory = root,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false
-            };
-            using var p = Process.Start(psi);
-            if (p is null) return null;
-            // Drain both streams concurrently before waiting: reading one to end while the other's
-            // pipe buffer fills would deadlock.
-            var stdout = p.StandardOutput.ReadToEndAsync();
-            _ = p.StandardError.ReadToEndAsync();
-            p.WaitForExit();
-            if (p.ExitCode != 0) return null;
-            return
-            [
-                .. stdout.Result
-                    .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    .Where(rel => File.Exists(Path.Combine(root, rel)))
-            ];
-        }
-        catch
-        {
-            return null;
-        }
+        if (Git.Run(root, "ls-files --cached --others --exclude-standard") is not { } listing) return null;
+        return
+        [
+            .. listing
+                .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(rel => File.Exists(Path.Combine(root, rel)))
+        ];
     }
 
     // Fallback for a non-git tree (the test harness assembles one): every file matching `pattern`,

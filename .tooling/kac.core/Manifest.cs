@@ -72,6 +72,31 @@ public class CorpusDescriptor
     public string? UpstreamUrl;
     public readonly List<AcceptedDivergence> Accepted = [];
 
+    // What this corpus calls itself. An export states it so that a consumer holding several exports can
+    // tell whose vocabulary it is reading, which the folder it vendored the files into may not say.
+    public string? Name;
+
+    // How this corpus is published, and where the published form is served from. The target names the
+    // rules for building a link and `PublishingTarget` holds them; the two bases are the only part a
+    // corpus supplies, because they are the only part that differs between two corpora on one target.
+    //
+    // Each is null where the descriptor states none, and a corpus publishing nowhere states none of the
+    // three. An export from one carries no links rather than links built on an empty base.
+    public string? PublishingTarget;
+    public string? HumanBase;
+    public string? RawBase;
+
+    // What an export leaves behind: `draft`, `overdue`, or neither. Empty by default, because a record
+    // carrying its own state lets a consumer decide, and one filtered out downstream is invisible — the
+    // corpus reads smaller and tidier than it is, with nothing saying anything was withheld.
+    public readonly List<string> ExportExclude = [];
+
+    // The two things an export can be told to leave behind. Read by the exporter from here, so a corpus
+    // naming a third is told rather than having it ignored.
+    public const string ExcludeDraft = "draft";
+    public const string ExcludeOverdue = "overdue";
+    public static readonly IReadOnlyList<string> Excludable = [ExcludeDraft, ExcludeOverdue];
+
     // The three versions the descriptor states, each named for what it versions.
     //
     // `DescriptorVersion` is this file's format and `MechanismVersion` is the framework the corpus last
@@ -119,6 +144,13 @@ public class CorpusDescriptor
         descriptor.DescriptorVersion = Yaml.NullableInt(Yaml.Get(root, "descriptor-version"));
         descriptor.ContentVersion = Yaml.Str(Yaml.Get(root, "content-version"));
         descriptor.MechanismVersion = Yaml.NullableInt(Yaml.Get(Yaml.Get(root, "upstream"), "mechanism-version"));
+
+        descriptor.Name = Yaml.Str(Yaml.Get(root, "corpus"));
+        descriptor.PublishingTarget = Yaml.Str(Yaml.Get(root, "publishing-target"));
+        var publishing = Yaml.Get(root, "publishing");
+        descriptor.HumanBase = Yaml.Str(Yaml.Get(publishing, "human-base"));
+        descriptor.RawBase = Yaml.Str(Yaml.Get(publishing, "raw-base"));
+        descriptor.ExportExclude.AddRange(Yaml.StrList(Yaml.Get(Yaml.Get(root, "export"), "exclude")));
 
         if (Yaml.Get(root, "types") is YamlSequenceNode types)
             descriptor.Types = [.. types.Children.Select(Yaml.Str).OfType<string>()];

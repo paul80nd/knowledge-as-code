@@ -82,6 +82,9 @@ foreach (var scenario in scenarios)
     //                expected-sync.txt appear in the output, every path in expected-files.txt is present
     //                afterwards (or absent, where the line is prefixed `!`), and every
     //                `<path> :: <text>` in expected-content.txt holds (or does not, prefixed `!`)
+    //   export       run `export` (with `--type <t>` where export-type is present), then assert the
+    //                tree it wrote, in the same three files sync uses. A second run over an output
+    //                seeded with a stray file asserts the overwrite is delete-then-write
     var modePath = Path.Combine(scenario, "mode");
     var mode = File.Exists(modePath) ? File.ReadAllText(modePath).Trim() : "validate";
 
@@ -103,6 +106,9 @@ foreach (var scenario in scenarios)
                 break;
             case "sync":
                 RunSyncScenario(name, scenario, corpusDir);
+                break;
+            case "export":
+                RunExportScenario(name, scenario, corpusDir);
                 break;
             default:
                 failures.Add(name);
@@ -321,7 +327,6 @@ void RunSyncScenario(string name, string scenario, string corpusDir)
     }
 
     var expected = ReadLines(Path.Combine(scenario, "expected-sync.txt"));
-    var expectedFiles = ReadLines(Path.Combine(scenario, "expected-files.txt"));
     var localTemp = AssembleMechanismTemp(schemaDir, manifestFile, corpusDir, ReadKeptTypes(scenario));
     var refTemp = AssembleMechanismTemp(schemaDir, manifestFile, referenceDir);
     try
@@ -333,32 +338,10 @@ void RunSyncScenario(string name, string scenario, string corpusDir)
         if (exit != 0) problems.Add($"expected a clean sync (exit 0), got exit {exit}");
         problems.AddRange(expected.Where(l => !output.Contains(l)).Select(l => $"not reported: {l}"));
 
-        foreach (var line in expectedFiles)
-        {
-            var absent = line.StartsWith('!');
-            var rel = absent ? line[1..].Trim() : line;
-            var exists = File.Exists(Path.Combine(localTemp, rel.Replace('/', Path.DirectorySeparatorChar)));
-            if (exists == absent) problems.Add(absent ? $"should not exist: {rel}" : $"missing afterwards: {rel}");
-        }
-
-        // `<path> :: <text>`, or `!<text>` for text that must be gone. These lines pin copy-then-
-        // regenerate: a shared page comes down whole, generated block and all, and is only right once
-        // rebuilt against the types the receiving corpus holds.
-        foreach (var line in ReadLines(Path.Combine(scenario, "expected-content.txt")))
-        {
-            var parts = line.Split("::", 2);
-            if (parts.Length != 2) { problems.Add($"malformed expected-content line: {line}"); continue; }
-
-            var rel = parts[0].Trim();
-            var wanted = parts[1].Trim();
-            var absent = wanted.StartsWith('!');
-            if (absent) wanted = wanted[1..].Trim();
-
-            var full = Path.Combine(localTemp, rel.Replace('/', Path.DirectorySeparatorChar));
-            if (!File.Exists(full)) { problems.Add($"missing afterwards: {rel}"); continue; }
-            if (File.ReadAllText(full).Contains(wanted) == absent)
-                problems.Add(absent ? $"{rel} still says '{wanted}'" : $"{rel} does not say '{wanted}'");
-        }
+        // The tree the sync left. `expected-content.txt` pins copy-then-regenerate here: a shared page
+        // comes down whole, generated block and all, and is only right once rebuilt against the types
+        // the receiving corpus holds.
+        problems.AddRange(CheckTree(localTemp, scenario));
 
         if (problems.Count == 0)
         {
@@ -377,6 +360,102 @@ void RunSyncScenario(string name, string scenario, string corpusDir)
         TryDelete(localTemp);
         TryDelete(refTemp);
     }
+}
+
+// export: run `kac export` over the fixture corpus and assert the tree it wrote, in the three
+// expectation files `sync` already uses — the output is a tree rather than a findings list, so the same
+// shape fits and there is no second convention to learn.
+//
+// The temp root is not a git repository, so no ref resolves and no link is written. That is the corpus
+// -publishes-nowhere path, and asserting it here is what keeps the fixture honest about what a fixture
+// can show: the link forms belong to `PublishingTests`, which can supply a ref.
+//
+// The run happens twice. The second is over an output seeded with a file no record backs, which is the
+// one failure mode an untracked export has and nothing else would flag.
+void RunExportScenario(string name, string scenario, string corpusDir)
+{
+    if (update)
+    {
+        Console.WriteLine($"UPDATE {name}  (export scenario — nothing to regenerate)");
+        return;
+    }
+
+    var typePath = Path.Combine(scenario, "export-type");
+    var type = File.Exists(typePath) ? File.ReadAllText(typePath).Trim() : null;
+    var temp = AssembleTemp(schemaDir, corpusDir);
+    try
+    {
+        string[] argv = type is null ? [kac, "export"] : [kac, "export", "--type", type];
+        var (stdout, stderr, exit) = Run(temp, "dotnet", argv);
+        var output = stderr + stdout;
+
+        var problems = new List<string>();
+        if (exit != 0) problems.Add($"expected a clean export (exit 0), got exit {exit}");
+        problems.AddRange(ReadLines(Path.Combine(scenario, "expected-export.txt"))
+            .Where(l => !output.Contains(l)).Select(l => $"not reported: {l}"));
+
+        // A file no record backs, left in the output before the second run. An export nobody reviews
+        // would otherwise carry a deleted record's entry indefinitely.
+        var orphan = Path.Combine(temp, ".dist", "orphan.json");
+        Directory.CreateDirectory(Path.GetDirectoryName(orphan)!);
+        File.WriteAllText(orphan, "{}\n");
+
+        var (_, _, second) = Run(temp, "dotnet", argv);
+        if (second != 0) problems.Add($"expected a clean second export (exit 0), got exit {second}");
+        if (File.Exists(orphan)) problems.Add("a file no record backs survived a second export");
+
+        problems.AddRange(CheckTree(temp, scenario));
+
+        if (problems.Count == 0)
+        {
+            Console.WriteLine($"ok     {name}  (exported)");
+        }
+        else
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}");
+            foreach (var p in problems) Console.WriteLine($"         {p}");
+            foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"       | {l}");
+        }
+    }
+    finally
+    {
+        TryDelete(temp);
+    }
+}
+
+// The tree a scenario expects: every path in expected-files.txt present (or absent, prefixed `!`), and
+// every `<path> :: <text>` in expected-content.txt holding (or not, prefixed `!`). Shared by `sync` and
+// `export`, which assert the same kind of thing about two different trees.
+static List<string> CheckTree(string root, string scenario)
+{
+    var problems = new List<string>();
+
+    foreach (var line in ReadLines(Path.Combine(scenario, "expected-files.txt")))
+    {
+        var absent = line.StartsWith('!');
+        var rel = absent ? line[1..].Trim() : line;
+        var exists = File.Exists(Path.Combine(root, rel.Replace('/', Path.DirectorySeparatorChar)));
+        if (exists == absent) problems.Add(absent ? $"should not exist: {rel}" : $"missing afterwards: {rel}");
+    }
+
+    foreach (var line in ReadLines(Path.Combine(scenario, "expected-content.txt")))
+    {
+        var parts = line.Split("::", 2);
+        if (parts.Length != 2) { problems.Add($"malformed expected-content line: {line}"); continue; }
+
+        var rel = parts[0].Trim();
+        var wanted = parts[1].Trim();
+        var absent = wanted.StartsWith('!');
+        if (absent) wanted = wanted[1..].Trim();
+
+        var full = Path.Combine(root, rel.Replace('/', Path.DirectorySeparatorChar));
+        if (!File.Exists(full)) { problems.Add($"missing afterwards: {rel}"); continue; }
+        if (File.ReadAllText(full).Contains(wanted) == absent)
+            problems.Add(absent ? $"{rel} still says '{wanted}'" : $"{rel} does not say '{wanted}'");
+    }
+
+    return problems;
 }
 
 static List<string> ReadLines(string path) =>

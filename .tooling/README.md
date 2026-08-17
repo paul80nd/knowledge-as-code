@@ -15,6 +15,8 @@ with the framework, and each corpus's own `.corpus.yaml` at the repository root.
 ./kac validate --json     # machine-readable summary + findings
 ./kac index               # regenerate indexes and blocks
 ./kac index --check       # verify generated output is fresh
+./kac export              # write the corpus to .dist/ as data a consumer reads
+./kac export --type glossary                        # …one type rather than every one that contributes
 ./kac checks              # list every check the validator implements
 ./kac checks --json       # …as JSON (the test suite reads this)
 ./kac mechanism --check --against ../other-corpus   # shared-layer drift vs a reference
@@ -219,6 +221,61 @@ Two rules hold this together:
 - **Output is byte-stable.** Generation is a pure function of frontmatter + schema, so running
   `index` twice produces no diff. Tables use fixed column widths, `|` is escaped, and files are LF with a trailing
   newline — so if a Markdown formatter is added later, the freshness check keeps working instead of failing forever.
+
+## `export` — the corpus as data
+
+A consumer of a corpus should not clone it. `export` writes what the corpus knows into `.dist/` as data built for an
+agent to read: a manifest saying what the export is, one file per record, and a flat file cheap to grep.
+
+`.dist/` is gitignored and rebuilt whole, so it is never something to review. **The overwrite is delete-then-write.** A
+record deleted from the corpus must not leave an entry behind in the output, and an untracked artefact is the one place
+nothing would flag it.
+
+```
+.dist/
+  manifest.json          what this export is, and where it came from
+  glossary/
+    gls-<name>.json      one record: its declared fields, its declared sections, and its links
+    terms.jsonl          every term, one to a line
+```
+
+**What travels is the type's decision.** Each type's `export:` block in `.schema/<type>.yaml` names the fields, the
+sections and the fidelity each travels at; the exporter reads that declaration and holds no list of its own. A type
+declaring no block contributes nothing, and a corpus that adopted no exporting type still writes a manifest with an
+empty type list — "nothing" is a valid statement of what a corpus has.
+
+**The flat file is JSONL because it exists to be grepped.** A hit has to hand back something parseable on its own, so
+each line repeats the record it came from and the links back to it. That costs bytes and is the point: a matching line
+of an indented document is a fragment, and the reader is left seeking outward for its braces.
+
+**Terms are ordered most general first,** so a grep hitting a term two glossaries define meets the general entry first.
+`narrows` orders a chain and nothing orders one chain against another, so roots sort by id, each root's chain follows
+it, and terms sort alphabetically within a glossary.
+
+**Two link forms, both naming a ref.** A person follows the rendered one and an agent fetches the raw one. The rules
+joining a base to a path, and the anchor rule for a part, belong to `publishing-target` and live in `Publishing`;
+`.corpus.yaml` supplies only the bases. Every link resolves against the commit the export was built from, so a citation
+names the version the agent read rather than whatever the branch holds later. A corpus the tool cannot address — one
+publishing nowhere, one naming a target nothing builds links for, one with no bases, or one git cannot answer for —
+exports without links and says so in the manifest.
+
+**Two versions, and they are independent.** `formatVersion` in the manifest is the shape of the output, and a consumer
+reads it to know whether it can parse what it was handed. `contentVersion` is `content-version` from `.corpus.yaml` —
+what the corpus knows, semantically versioned and bumped by hand — and a consumer reads it to know whether to re-read
+the words. Neither implies the other: a corpus can rewrite every definition without `formatVersion` moving, and
+`formatVersion` can move over a corpus nobody has edited.
+
+**Output is deterministic.** Ordering is `StringComparer.Ordinal` throughout, as the generator's is, and every value
+that varies between two runs is confined to the manifest. Two runs from one commit produce identical bytes but for
+`generatedAt`.
+
+**An unsettled record travels by default.** A draft glossary, and one whose `review-by` has passed, are both exported
+carrying their own state, because filtering them would make the corpus's own condition invisible downstream. A corpus
+may exclude either with `export.exclude:` in `.corpus.yaml`; the run then names every record it withheld, since the
+output by definition cannot.
+
+**The manifest records whether the export can be reproduced.** It carries the commit and a dirty flag, and a commit
+alone would read as reproducible over a tree that was not.
 
 ## `mechanism` — portability
 
