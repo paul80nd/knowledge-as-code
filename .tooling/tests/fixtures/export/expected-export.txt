@@ -7,3 +7,9 @@ export: wrote 5 file(s) for glossary.
 # The temp root is not a git repository, so no ref resolves and no link can be built. Saying so is the
 # point: a corpus that publishes nowhere exports successfully and reports what it could not write.
 export: no published links
+
+# The same for a cross-reference naming a record and no term inside it. The export carries nothing for
+# it, and an omission in an artefact nobody reviews is invisible unless the run says so.
+export: 1 cross-reference(s) name a record and no part inside it
+gls-framework.record -> gls-estate
+export: point each link at the part it means

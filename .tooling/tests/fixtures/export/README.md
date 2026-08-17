@@ -16,10 +16,14 @@ fixture nobody can read as an example.
   general. Nothing here asserts that it does. Reading the first hit as the more general one is the mistake this pair
   exists to keep visible.
 
-**A cross-reference.** `gls-estate.record` points at `gls-framework`, and the link names the file rather than the
-anchor, as this corpus's own glossaries do. The export resolves it to `gls-framework.record` — the counterpart, not the
-record — so the fixture pins the inference as well as the output. See
-[knowledge-as-code#194](https://github.com/paul80nd/knowledge-as-code/issues/194) for why that inference is temporary.
+**A reciprocal pair, written one way each.** Both roots define `record`, and each `**Not:**` line points at the other.
+`gls-estate` names the anchor and `gls-framework` names only the file, which is the pair half-finished — a state a real
+corpus passes through.
+
+The export reads the first into `seeAlso` as `gls-framework.record`, and carries nothing for the second. It does not
+guess: the guess that suggests itself is the same word in the other glossary, which is right here only because both
+happen to say `record`, and silently wrong for a `Borrower` that redefines a `Patron`. Instead the run names the link it
+could not read, which is what the second half of the pair pins.
 
 **Wrapped prose and a paragraph break.** `gls-estate` carries a `**Not:**` line wrapped across two source lines, and a
 `Scope` of two paragraphs. The export joins the first and keeps the second, which is the whole of the unwrap rule.

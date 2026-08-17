@@ -35,11 +35,16 @@
 # nothing around it.
 .dist/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","not":"the request the service received. One request carries a query and its paging.","seeAlso":null,"type":"glossary","record":"gls-search","part":"query","status":"draft","reviewBy":"2030-01-01","links":null}
 
-# A cross-reference travels as a part id the consumer can look up. The source names the file and not
-# the anchor, so the counterpart is this term's own id inside the record pointed at — and the prose
-# keeps the reference its author wrote.
+# A cross-reference travels as a part id the consumer can look up, read from the anchor the link names.
+# The prose keeps the reference its author wrote.
 .dist/glossary/terms.jsonl :: "seeAlso":["gls-framework.record"]
 .dist/glossary/terms.jsonl :: "not":"a knowledge document filed under a type — see [gls-framework]."
+
+# The other half of the pair names the file and no term inside it, so there is nothing to read and
+# nothing is carried. Guessing the counterpart from the term's own spelling would be right here and
+# silently wrong for a pair that does not share a word.
+.dist/glossary/terms.jsonl :: "record":"gls-framework","part":"record","status":"draft"
+.dist/glossary/terms.jsonl :: see [gls-estate]. A template and a generated index are neither.","seeAlso":null
 
 # Generality holds inside a chain: `gls-search` narrows `gls-estate`, so a grep for a term both define
 # would meet the general one first. Across `gls-estate` and `gls-framework` — unrelated roots, both

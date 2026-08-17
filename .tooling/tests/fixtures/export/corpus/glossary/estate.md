@@ -37,4 +37,4 @@ The description of a thing, held once and read by every system.
 
 **Not:** a knowledge document filed under a type — see [gls-framework].
 
-[gls-framework]: framework.md
+[gls-framework]: framework.md#record

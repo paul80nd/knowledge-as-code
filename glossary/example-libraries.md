@@ -55,6 +55,6 @@ A work the consortium holds, as catalogued, distinct from the copies of it on th
 
 Owned by [svc-catalogue-api].
 
-[gls-knowledge-as-code]: knowledge-as-code.md
-[gls-search]: search.md
+[gls-knowledge-as-code]: knowledge-as-code.md#record
+[gls-search]: search.md#title
 [svc-catalogue-api]: /services/catalogue-api.md

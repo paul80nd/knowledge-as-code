@@ -15,12 +15,15 @@ public sealed record ExportFile(string Path, string Content);
 // so that deciding and doing stay apart and a test can ask what an export would contain without a
 // filesystem.
 //
-// `Withheld` is carried out rather than swallowed. A corpus that excludes drafts publishes a smaller
-// vocabulary than it holds, and the run that built it is the last place anyone will notice.
+// `Withheld` and `Unread` are the two things the output cannot say about itself, carried out rather than
+// swallowed. A corpus that excludes drafts publishes a smaller vocabulary than it holds; a link naming a
+// record and no term inside it leaves a cross-reference the export could not carry. Neither leaves a mark
+// in `.dist/`, so the run that built it is the last place anyone will see them.
 public sealed record ExportPlan(
     IReadOnlyList<ExportFile> Files,
     IReadOnlyList<ExportedType> Types,
-    IReadOnlyList<string> Withheld);
+    IReadOnlyList<string> Withheld,
+    IReadOnlyList<string> Unread);
 
 // The facts that differ between two runs over one commit, gathered so the exporter takes them rather
 // than reads them. A caller wanting byte-identical output holds them still, and a test supplies its own
@@ -62,6 +65,7 @@ public static class Exporter
         var files = new List<ExportFile>();
         var types = new List<ExportedType>();
         var withheld = new List<string>();
+        var unread = new List<string>();
 
         foreach (var t in corpus.Adopted)
         {
@@ -80,7 +84,7 @@ public static class Exporter
                 files.Add(new ExportFile($"{t.Key}/{Id(doc)}.json", Serialize(Record(doc, t, publishing))));
 
             var parts = t.Export.Parts.Length > 0 && t.Parts is not null
-                ? PartsFile(records, t, corpus.Tree, publishing)
+                ? PartsFile(records, t, corpus.Tree, publishing, unread)
                 : null;
             if (parts is not null) files.Add(parts);
 
@@ -108,7 +112,8 @@ public static class Exporter
 
         // The manifest is built last, because it reports what the rest of the run produced, and sorted
         // into place so the listing a caller prints reads in the order the files sit on disk.
-        return new ExportPlan([.. files.OrderBy(f => f.Path, StringComparer.Ordinal)], types, withheld);
+        return new ExportPlan([.. files.OrderBy(f => f.Path, StringComparer.Ordinal)], types, withheld,
+            [.. unread.Distinct(StringComparer.Ordinal).OrderBy(u => u, StringComparer.Ordinal)]);
     }
 
     // Replace the export whole: delete what is there, then write. An export is not reviewed and nothing
@@ -285,7 +290,8 @@ public static class Exporter
     // The flat file of every part of a type, one part to a line. JSONL rather than pretty JSON, and each
     // line repeating what a reader would otherwise have to look up — `.tooling/README.md` says what that
     // costs and what it buys.
-    private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, Publishing? publishing)
+    private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, Publishing? publishing,
+        List<string> unread)
     {
         var spec = t.Parts!;
         var byPath = records.ToDictionary(d => d.Rel, StringComparer.Ordinal);
@@ -302,11 +308,12 @@ public static class Exporter
                 var (lead, aside) = Split(doc, part, spec.Aside);
                 lines.Append(Serialize(new ExportPartLine(
                     $"{id}.{partId}", part.Text, lead, aside,
-                    SeeAlso(doc, part, partId, byPath, tree),
+                    SeeAlso(doc, part, byPath, tree),
                     t.Key, id, partId,
                     Absent(doc.FrontScalar("status")), Absent(doc.FrontScalar("review-by")),
                     Links(publishing?.Links(doc.Rel, partId)))));
                 lines.Append('\n');
+                unread.AddRange(Unread(doc, part, partId, byPath, tree));
             }
         }
 
@@ -322,18 +329,47 @@ public static class Exporter
     // reading `see [gls-search]` in the text alone is handed a bracket it cannot follow. So the ids are
     // carried beside the words rather than left inside them.
     //
-    // **It resolves to the part, not to the record.** These references are the `redefinitions-are-
-    // reciprocal` rule showing through, and that rule is about a term and its counterpart, so naming the
-    // whole glossary would answer a narrower question with a broader one. Where the link carries an
-    // anchor, the anchor names the part. Where it names the file alone — which is how this corpus writes
-    // them today — the counterpart is this part's own id inside the record pointed at, and it is emitted
-    // only where that record really holds such a part. A link naming a record with no counterpart in it
-    // resolves to nothing here, and stays in the prose where its author put it.
-    private static IReadOnlyList<string>? SeeAlso(Doc doc, PartRow part, string partId,
-        Dictionary<string, Doc> byPath, Tree tree)
+    // **Every id here is read, and none is inferred.** These references are the `redefinitions-are-
+    // reciprocal` rule showing through, and that rule is about a term and its counterpart — so the link
+    // has to name the counterpart, and the anchor is where it names it. A link naming a record and no
+    // term inside it resolves to nothing, and is reported by `Unread` below rather than guessed at: the
+    // guess that suggests itself is the same word in the other glossary, which is right only for a pair
+    // that happens to share a spelling and silently wrong for `Borrower` against `Patron`.
+    private static IReadOnlyList<string>? SeeAlso(Doc doc, PartRow part, Dictionary<string, Doc> byPath, Tree tree)
     {
         var found = new List<string>();
 
+        foreach (var (target, anchor) in CrossReferences(doc, part, byPath, tree))
+        {
+            if (anchor is null) continue;
+            if (!target.Parts.Any(p => string.Equals(p.Id, anchor, StringComparison.Ordinal))) continue;
+
+            var full = $"{Id(target)}.{anchor}";
+            if (!found.Contains(full, StringComparer.Ordinal)) found.Add(full);
+        }
+
+        found.Sort(StringComparer.Ordinal);
+        return found.Count > 0 ? found : null;
+    }
+
+    // The cross-references this part could not carry: a link naming another exported record without
+    // naming a term inside it, as `<record>.<part> -> <record>`.
+    //
+    // Reported because the alternative is silence. The export simply omits what it cannot read, and an
+    // omission in an artefact nobody reviews is invisible — so the run says which links under-specify,
+    // and the author can add the anchor.
+    private static IEnumerable<string> Unread(Doc doc, PartRow part, string partId,
+        Dictionary<string, Doc> byPath, Tree tree) =>
+        CrossReferences(doc, part, byPath, tree)
+            .Where(r => r.Anchor is null)
+            .Select(r => $"{Id(doc)}.{partId} -> {Id(r.Target)}");
+
+    // Every link inside this part's body that reaches another record of the same export, with the anchor
+    // it named or null where it named none. One walk, because reading a reference and reporting an
+    // unreadable one are the same question answered two ways.
+    private static IEnumerable<(Doc Target, string? Anchor)> CrossReferences(Doc doc, PartRow part,
+        Dictionary<string, Doc> byPath, Tree tree)
+    {
         foreach (var link in doc.Links)
         {
             if (link.Position < part.BodyStart || link.Position >= part.BodyEnd) continue;
@@ -343,15 +379,8 @@ public static class Exporter
             if (!byPath.TryGetValue(rel, out var target) || target == doc) continue;
 
             var hash = link.Target.IndexOf('#');
-            var anchor = hash >= 0 ? link.Target[(hash + 1)..] : partId;
-            if (!target.Parts.Any(p => string.Equals(p.Id, anchor, StringComparison.Ordinal))) continue;
-
-            var full = $"{Id(target)}.{anchor}";
-            if (!found.Contains(full, StringComparer.Ordinal)) found.Add(full);
+            yield return (target, hash >= 0 ? link.Target[(hash + 1)..] : null);
         }
-
-        found.Sort(StringComparer.Ordinal);
-        return found.Count > 0 ? found : null;
     }
 
     // A part's body split into the two pieces a type writes it in: the lead, and the labelled block

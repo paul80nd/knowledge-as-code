@@ -125,7 +125,14 @@ index:
 
 rules:
   - id: redefinitions-are-reciprocal
-    description: Where a narrower glossary redefines a term, each of the two entries names the other.
+    description: >
+      Where one glossary redefines a term another holds, each entry links to the other entry's anchor.
+    # "The other entry", and not the other file. A link to `other.md` lands a reader at the top of a
+    # glossary holding twenty terms, leaving them to find the one that was meant; and an export carries
+    # the cross-reference a link names, so a link naming no term leaves it nothing to carry. `kac export`
+    # reports each one it met rather than guessing the counterpart from the term's own spelling — right
+    # for a pair sharing a word, and silently wrong for `Borrower` against `Patron`.
+    #
     # The reference runs upward only where the general glossary is synced: a file every corpus shares
     # cannot name a record only this one holds.
   - id: carried-in-full-by-digest

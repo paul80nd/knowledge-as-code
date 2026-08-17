@@ -214,19 +214,23 @@ public class ExporterTests
     // A link's target is stripped out of the prose, so an agent reading `see [gls-two]` in the text
     // alone is handed a bracket it cannot follow. The ids are carried beside the words.
     //
-    // They resolve to the **part**: these references are `redefinitions-are-reciprocal` showing through,
-    // and that rule is about a term and its counterpart. This corpus links to the file rather than the
-    // anchor, so the counterpart is this term's own id inside the record pointed at.
+    // They resolve to the **part**, and only where the link names one: these references are
+    // `redefinitions-are-reciprocal` showing through, and that rule is about a term and its counterpart.
     [Fact]
-    public void A_reference_naming_the_file_resolves_to_the_counterpart_term()
+    public void A_reference_naming_the_file_and_no_term_carries_nothing_and_is_reported()
     {
-        var lines = TermLines(Corpus(
+        var corpus = Corpus(
             Glossary("gls-one", null, "### Record\n\nOne sense.\n\n**Not:** the other — see [gls-two].\n\n"
                                       + "[gls-two]: gls-two.md\n"),
-            Glossary("gls-two", null, "### Record\n\nThe other sense.\n")));
+            Glossary("gls-two", null, "### Record\n\nThe other sense.\n"));
 
-        var referring = lines.Single(l => l.GetProperty("id").GetString() == "gls-one.record");
-        Assert.Equal(["gls-two.record"], referring.GetProperty("seeAlso").EnumerateArray().Select(e => e.GetString()));
+        var referring = TermLines(corpus).Single(l => l.GetProperty("id").GetString() == "gls-one.record");
+        Assert.Equal(JsonValueKind.Null, referring.GetProperty("seeAlso").ValueKind);
+
+        // Both glossaries happen to call the term `record`, so the counterpart is guessable here — and
+        // guessing it is what this asserts the export does not do. The same guess is silently wrong for
+        // a pair that does not share a word, and the run reports the link instead.
+        Assert.Equal(["gls-one.record -> gls-two"], Plan(corpus).Unread);
     }
 
     [Fact]
@@ -241,20 +245,32 @@ public class ExporterTests
         Assert.Equal(["gls-two.beta"], referring.GetProperty("seeAlso").EnumerateArray().Select(e => e.GetString()));
     }
 
-    // A link naming a record that holds no counterpart resolves to nothing rather than to the record: a
-    // reference to the whole glossary answers a narrower question with a broader one, and inventing a
-    // part id that is not there would be worse still. The prose keeps the reference either way.
+    // An anchor naming a heading the target does not hold carries nothing. The link is broken, which is
+    // `fragment-resolves`'s to report; the export's part is to carry no id rather than a plausible one.
     [Fact]
-    public void A_reference_with_no_counterpart_to_land_on_carries_nothing()
+    public void An_anchor_naming_no_part_of_the_target_carries_nothing()
     {
         var lines = TermLines(Corpus(
             Glossary("gls-one", null, "### Alpha\n\nOne sense.\n\n**Not:** see [gls-two].\n\n"
-                                      + "[gls-two]: gls-two.md\n"),
+                                      + "[gls-two]: gls-two.md#gamma\n"),
             Glossary("gls-two", null, "### Beta\n\nUnrelated.\n")));
 
         var referring = lines.Single(l => l.GetProperty("id").GetString() == "gls-one.alpha");
         Assert.Equal(JsonValueKind.Null, referring.GetProperty("seeAlso").ValueKind);
         Assert.Contains("see [gls-two]", referring.GetProperty("not").GetString());
+    }
+
+    // A link to something outside the export — a service, an ADR — is not a cross-reference and is not
+    // reported as one. Only a link reaching another record of the same export can name a part of it.
+    [Fact]
+    public void A_link_leaving_the_export_is_neither_carried_nor_reported()
+    {
+        var corpus = Corpus(Glossary("gls-one", null,
+            "### Alpha\n\nOwned by [svc-one].\n\n[svc-one]: /services/one.md\n"));
+
+        var line = Assert.Single(TermLines(corpus));
+        Assert.Equal(JsonValueKind.Null, line.GetProperty("seeAlso").ValueKind);
+        Assert.Empty(Plan(corpus).Unread);
     }
 
     // -- the trust marker --
