@@ -9,14 +9,9 @@ namespace kac.core;
 // frontmatter to ask about.
 public static class LinkChecks
 {
-    // A page that is not a record gets these and nothing else.
-    public static void CheckPage(Doc d, Schema schema, Tree tree, List<Finding> f) =>
-        Check(d, schema, tree,
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId(check), msg)),
-            (check, msg, line) => f.Add(new Finding(d.Rel, line, Sev.Warning, new CheckId(check), msg)));
-
-    public static void Check(Doc d, Schema schema, Tree tree, Action<string, string, int?> err,
-        Action<string, string, int?> warn, DocKind kind = DocKind.Record)
+    // A page that is not a record gets these and nothing else, which is this method with `kind` left at
+    // its default — a page is read as a record would be, and only its prose is asked about.
+    public static void Check(Doc d, Schema schema, Tree tree, Report report, DocKind kind = DocKind.Record)
     {
         foreach (var link in d.Links)
         {
@@ -37,21 +32,21 @@ public static class LinkChecks
             // A fragment with nothing before it names a heading in this document.
             if (path.Length == 0)
             {
-                CheckFragment(d.Text, fragment, d.Rel, link.Line, err);
+                CheckFragment(d.Text, fragment, d.Rel, link.Line, report);
                 continue;
             }
 
             var file = Resolve(tree, d.Rel, target);
             if (file is null)
             {
-                err("link-resolves", $"link target '{target}' does not resolve.", link.Line);
+                report.Err(new CheckId("link-resolves"), $"link target '{target}' does not resolve.", link.Line);
                 continue;
             }
 
             // Only a Markdown file offers headings to land on. A link into anything else carries a
             // fragment the corpus cannot judge, and silence is the honest answer.
             if (file.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
-                CheckFragment(tree.Read(file), fragment, path, link.Line, err);
+                CheckFragment(tree.Read(file), fragment, path, link.Line, report);
         }
 
         // undefined shortcut/reference labels left as literal '[label]'. Id-shaped is an error — the
@@ -67,9 +62,9 @@ public static class LinkChecks
             {
                 if (defined.Contains(inner)) continue; // a genuine reference that resolved
                 if (IdChecks.TryCanonicalId(inner, schema, out _))
-                    err("undefined-label", $"reference '[{inner}]' has no link definition.", line);
+                    report.Err(new CheckId("undefined-label"), $"reference '[{inner}]' has no link definition.", line);
                 else
-                    warn("bracket-literal",
+                    report.Warn(new CheckId("bracket-literal"),
                         $"'[{inner}]' looks like a reference but has no definition (or use an inline link).", line);
             }
 
@@ -80,13 +75,13 @@ public static class LinkChecks
         {
             if (!link.IsReference || string.IsNullOrEmpty(link.Label)) continue;
             if (IdChecks.TryCanonicalId(link.Label, schema, out var canonical) && link.Label != canonical)
-                err("label-canonical",
+                report.Err(new CheckId("label-canonical"),
                     $"reference '[{link.Label}]' should be written as the id '{canonical}'.", link.Line);
         }
 
         foreach (var label in d.DefinedLabels.Distinct(StringComparer.Ordinal))
             if (IdChecks.TryCanonicalId(label, schema, out var canonical) && label != canonical)
-                err("label-canonical",
+                report.Err(new CheckId("label-canonical"),
                     $"link definition '[{label}]' should be written as the id '{canonical}'.", null);
 
         // unused definitions. A template's definitions are exemplars — the block exists to show where
@@ -95,7 +90,7 @@ public static class LinkChecks
         if (kind == DocKind.Record)
             foreach (var label in d.DefinedLabels.Distinct(StringComparer.OrdinalIgnoreCase))
                 if (!d.UsedLabels.Contains(label))
-                    warn("unused-definition", $"link definition '[{label}]' is never referenced.", null);
+                    report.Warn(new CheckId("unused-definition"), $"link definition '[{label}]' is never referenced.", null);
     }
 
     public static bool IsExternal(string t)
@@ -108,11 +103,11 @@ public static class LinkChecks
     // Judged on the anchor every renderer agrees on — see `Md.Slug`. A heading whose punctuation makes
     // renderers disagree therefore fails here rather than only in the wiki, which is the point.
     private static void CheckFragment(string markdown, string fragment, string page, int? line,
-        Action<string, string, int?> err)
+        Report report)
     {
         if (fragment.Length == 0) return;
         if (Md.Anchors(markdown).Contains(fragment)) return;
-        err("fragment-resolves", $"'#{fragment}' names no heading in '{page}'.", line);
+        report.Err(new CheckId("fragment-resolves"), $"'#{fragment}' names no heading in '{page}'.", line);
     }
 
     // The corpus path a link target names, or null where the corpus holds nothing there. Returns the path

@@ -242,16 +242,18 @@ public class IdCheckTests
     private static string? Cite(string target, string fromRel, TypeSchema refType) =>
         IdChecks.IdFromLink(new LinkRef { Target = target }, fromRel, refType);
 
-    private static List<Finding> Run(string id, string rel, TypeSchema t) => Collect(err =>
-        IdChecks.Check(id, 1, rel, t, err));
+    private static List<Finding> Run(string id, string rel, TypeSchema t) => Collect(report =>
+        IdChecks.Check(id, 1, rel, t, report));
 
-    private static List<Finding> Filename(string rel, TypeSchema t) => Collect(err =>
-        IdChecks.CheckFilename(rel, t, err));
+    private static List<Finding> Filename(string rel, TypeSchema t) => Collect(report =>
+        IdChecks.CheckFilename(rel, t, report));
 
-    private static List<Finding> Collect(Action<Action<string, string, int?>> check)
+    // These read an id and a filename rather than a document, so the file a finding is against is not
+    // theirs to know and is left empty.
+    private static List<Finding> Collect(Action<Report> check)
     {
         var found = new List<Finding>();
-        check((c, msg, line) => found.Add(new Finding("", line, Sev.Error, new CheckId(c), msg)));
+        check(new Report("", found));
         return found;
     }
 }

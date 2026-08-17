@@ -28,12 +28,12 @@ public static class IdChecks
     public static readonly IReadOnlySet<string> IdStyles =
         new HashSet<string>(["numbered", "mnemonic", "slug"], StringComparer.Ordinal);
 
-    public static void Check(string id, int? line, string rel, TypeSchema t, Action<string, string, int?> err)
+    public static void Check(string id, int? line, string rel, TypeSchema t, Report report)
     {
         var expectPrefix = t.IdPrefix + "-";
         if (!id.StartsWith(expectPrefix, StringComparison.Ordinal))
         {
-            err("id-prefix", $"id '{id}' must start with '{expectPrefix}'.", line);
+            report.Err(new CheckId("id-prefix"), $"id '{id}' must start with '{expectPrefix}'.", line);
             return;
         }
 
@@ -47,9 +47,9 @@ public static class IdChecks
         {
             case "numbered":
                 if (rest.Length != t.IdWidth || !rest.All(char.IsDigit))
-                    err("id-format", $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} digits.", line);
+                    report.Err(new CheckId("id-format"), $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} digits.", line);
                 else if (carried is not null && rest != carried)
-                    err("id-matches-filename",
+                    report.Err(new CheckId("id-matches-filename"),
                         $"id '{id}' number does not match filename number '{carried}'.", line);
                 break;
 
@@ -58,11 +58,11 @@ public static class IdChecks
             case "mnemonic":
                 if (rest.Length != t.IdWidth || !rest.All(char.IsLetterOrDigit)
                                              || !char.IsLetter(rest[0]) || rest != rest.ToUpperInvariant())
-                    err("id-format",
+                    report.Err(new CheckId("id-format"),
                         $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} upper-case alphanumeric "
                         + "characters beginning with a letter.", line);
                 else if (carried is not null && !rest.Equals(carried, StringComparison.OrdinalIgnoreCase))
-                    err("id-matches-filename",
+                    report.Err(new CheckId("id-matches-filename"),
                         $"id '{id}' mnemonic does not match filename mnemonic '{carried}'.", line);
                 break;
 
@@ -71,20 +71,20 @@ public static class IdChecks
             // both places, and this is where that is said.
             case "slug":
                 if (!IsSlug(rest))
-                    err("id-format",
+                    report.Err(new CheckId("id-format"),
                         $"id '{id}' must be '{expectPrefix}' followed by lower-case letters, digits and hyphens.",
                         line);
                 else if (carried is not null && rest != carried)
-                    err("id-matches-filename", $"id '{id}' slug does not match filename slug '{carried}'.", line);
+                    report.Err(new CheckId("id-matches-filename"), $"id '{id}' slug does not match filename slug '{carried}'.", line);
                 break;
         }
     }
 
-    public static void CheckFilename(string rel, TypeSchema t, Action<string, string, int?> err)
+    public static void CheckFilename(string rel, TypeSchema t, Report report)
     {
         var name = Path.GetFileName(rel);
         if (t.FilenameRegex is not null && !t.FilenameRegex.IsMatch(name))
-            err("filename-pattern", $"filename '{name}' does not match {t.FilenamePattern}.", null);
+            report.Err(new CheckId("filename-pattern"), $"filename '{name}' does not match {t.FilenamePattern}.", null);
 
         // The limit is on the slug the author chose, not on the discriminator they did not. Where the
         // style puts one at the head of a longer name it is skipped; a slug id *is* the whole stem, so
@@ -94,7 +94,7 @@ public static class IdChecks
             slug = slug[(head.Length + 1)..];
 
         if (slug.Length > t.SlugMax)
-            err("slug-length", $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.", null);
+            report.Err(new CheckId("slug-length"), $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.", null);
     }
 
     // What a filename carries of the id, and nothing of the slug beside it. Null where the name does not

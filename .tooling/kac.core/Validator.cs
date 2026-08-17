@@ -63,7 +63,7 @@ public static class Validator
                     + $"no id, tier or status of its own. Move what it holds into '{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/' "
                     + "as a record, and delete the block."));
 
-            LinkChecks.CheckPage(page, schema, tree, findings);
+            LinkChecks.Check(page, schema, tree, new Report(page.Rel, findings));
         }
 
         // The template each collection type carries. It is the one file in a type that every future
@@ -108,9 +108,11 @@ public static class Validator
     public static void CheckDocument(Doc d, Schema schema, Tree tree, List<Finding> f,
         DocKind kind = DocKind.Record)
     {
+        var report = new Report(d.Rel, f);
+
         if (d.Type is null)
         {
-            Err("type", $"folder '{d.Folder}' has no schema.");
+            report.Err(new CheckId("type"), $"folder '{d.Folder}' has no schema.");
             return;
         }
 
@@ -118,7 +120,7 @@ public static class Validator
 
         if (d.Front is null)
         {
-            Err("frontmatter-parses", "frontmatter is not a valid YAML mapping.");
+            report.Err(new CheckId("frontmatter-parses"), "frontmatter is not a valid YAML mapping.");
             return;
         }
 
@@ -130,16 +132,16 @@ public static class Validator
         // A record is asked whether every key it carries is known; whether the required ones are filled
         // in is a separate question below. A template is asked both at once and answers for the
         // documents copied from it rather than for itself, so the two live together in one check.
-        if (kind == DocKind.Template) CheckTemplateFields(d, t, Err);
+        if (kind == DocKind.Template) CheckTemplateFields(d, t, report);
         else
             foreach (var k in d.FrontKeys)
                 if (!t.KnownKeys.Contains(k))
-                    Err("unknown-key", $"unknown frontmatter key '{k}'.", d.FrontStartLine);
+                    report.Err(new CheckId("unknown-key"), $"unknown frontmatter key '{k}'.", d.FrontStartLine);
 
         // The key order must be a topological extension of the chains the schema declares: every
         // pair it orders must hold, and genuinely unconstrained pairs are free. See
         // TypeSchema.DeriveKeyOrderEdges for why the constraint is a pair set rather than a total order.
-        CheckKeyOrder(d, t, Err);
+        CheckKeyOrder(d, t, report);
 
         // -- required fields (universal + type), incl. required-when --
         // Not asked of a template. Every value in one is either bare or a placeholder, both of which
@@ -153,7 +155,7 @@ public static class Validator
                 if (req && absent)
                 {
                     var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
-                    Err("required-field", $"missing required field '{spec.Name}'{why}.", d.FrontStartLine);
+                    report.Err(new CheckId("required-field"), $"missing required field '{spec.Name}'{why}.", d.FrontStartLine);
                 }
             }
 
@@ -169,7 +171,7 @@ public static class Validator
             // would say the date is malformed and quote an empty string back at whoever wrote it.
             if (kind == DocKind.Template && node is YamlMappingNode)
             {
-                Err("template-fields",
+                report.Err(new CheckId("template-fields"),
                     $"'{name}' is read as a YAML mapping rather than a value — a placeholder that opens "
                     + "one has to be quoted: " + name + ": \"{{…}}\".", Line(node, d));
                 continue;
@@ -184,7 +186,7 @@ public static class Validator
             if (IsAbsentValue(node))
             {
                 if (!IsBareKey(node))
-                    Err("bare-key",
+                    report.Err(new CheckId("bare-key"),
                         $"'{name}' is absent but not a bare key — use '{name}:' with no value (not null, ~, \"\", or —).",
                         Line(node, d));
                 continue;
@@ -198,19 +200,19 @@ public static class Validator
 
             switch (spec.Type)
             {
-                case "date": CheckDate(name, node, d, Err); break;
-                case "enum": CheckEnum(name, node, spec, d, Err); break;
-                case "list": CheckList(name, node, spec, d, Err, Warn); break;
+                case "date": CheckDate(name, node, d, report); break;
+                case "enum": CheckEnum(name, node, spec, d, report); break;
+                case "list": CheckList(name, node, spec, d, report); break;
             }
 
             // A declared `pattern:` applies to a scalar field's value; for a list it applies to each
             // entry, so CheckList handles that half where it already walks the sequence.
             if (spec.Type != "list" && node is YamlScalarNode)
-                CheckPattern(name, "value", node, spec, d, Err);
+                CheckPattern(name, "value", node, spec, d, report);
         }
 
         if (present.TryGetValue("tier", out var tierNode) && Scalar(tierNode) is { } tier && tier != t.Tier)
-            Err("tier-matches-type", $"tier '{tier}' does not match the '{t.TypeName}' type tier '{t.Tier}'.",
+            report.Err(new CheckId("tier-matches-type"), $"tier '{tier}' does not match the '{t.TypeName}' type tier '{t.Tier}'.",
                 Line(tierNode, d));
 
         // -- the id, the filename, and the agreement between them --
@@ -220,17 +222,17 @@ public static class Validator
         if (kind == DocKind.Record)
         {
             if (present.TryGetValue("id", out var idNode) && Scalar(idNode) is { } id)
-                IdChecks.Check(id, Line(idNode, d), d.Rel, t, Err);
+                IdChecks.Check(id, Line(idNode, d), d.Rel, t, report);
 
-            IdChecks.CheckFilename(d.Rel, t, Err);
+            IdChecks.CheckFilename(d.Rel, t, report);
         }
 
-        CheckH1(d, Err);
-        CheckIdentity(d, t, present, Err);
+        CheckH1(d, report);
+        CheckIdentity(d, t, present, report);
 
         foreach (var sec in t.RequiredSections)
             if (!d.Sections.Any(s => string.Equals(s.Title, sec, StringComparison.OrdinalIgnoreCase)))
-                Err("required-section", $"missing required section '## {sec}'.");
+                report.Err(new CheckId("required-section"), $"missing required section '## {sec}'.");
 
         // -- a section that is nothing but its heading --
         // `required-section` is answered by a heading existing, and an author with nothing to say cannot
@@ -249,9 +251,9 @@ public static class Validator
                     && string.Equals(s.Title, parts.Section, StringComparison.OrdinalIgnoreCase)) continue;
 
                 if (t.RequiredSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
-                    Err("empty-section", $"required section '## {s.Title}' has nothing under it.", s.Line);
+                    report.Err(new CheckId("empty-section"), $"required section '## {s.Title}' has nothing under it.", s.Line);
                 else if (t.OptionalSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
-                    Err("empty-section",
+                    report.Err(new CheckId("empty-section"),
                         $"section '## {s.Title}' has nothing under it — write it or delete the heading.", s.Line);
             }
 
@@ -261,23 +263,23 @@ public static class Validator
         // section, so every other check passes and the document reads as complete until someone follows
         // a link to `{{a}}.md`. Reported once, naming the first: an unfinished copy holds a dozen, and
         // eleven more findings say nothing the first did not.
-        if (kind == DocKind.Record) CheckPlaceholders(d, Err);
+        if (kind == DocKind.Record) CheckPlaceholders(d, report);
 
         // -- clause table shape, ids and modals --
         // A template's clause rows are a demonstration of the shape, with `{{ID}}` where the id goes, so
         // they are neither unique nor citable and are not asked to be.
-        if (kind == DocKind.Record) PartChecks.Check(d, t, Err, Warn);
+        if (kind == DocKind.Record) PartChecks.Check(d, t, report);
 
         // The notation a citation is written in, which any document may get wrong and a template may
         // demonstrate wrongly for every record copied from it.
-        PartChecks.CheckNotation(d, Err);
+        PartChecks.CheckNotation(d, report);
 
-        LinkChecks.Check(d, schema, tree, Err, Warn, kind);
+        LinkChecks.Check(d, schema, tree, report, kind);
 
         // -- related mirrors ## Related --
         // A reconciliation between two halves of the same document, both of which are examples in a
         // template — it would hold the file to agreeing with itself about documents that do not exist.
-        if (kind == DocKind.Record) CheckMirrorsSection(d, t, schema, Err);
+        if (kind == DocKind.Record) CheckMirrorsSection(d, t, schema, report);
 
         // -- the type's own rules --
         // Every one of them judges a filled-in document: whether the prose has outgrown the links,
@@ -285,14 +287,7 @@ public static class Validator
         // questions, and its guidance prose would answer several of them wrongly. This is also the one
         // open-ended set — a type may declare a rule tomorrow — so a template is exempt from the
         // category rather than from the rules that happen to exist today.
-        if (kind == DocKind.Record) CheckRules(d, t, Err, Warn);
-        return;
-
-        void Warn(string check, string msg, int? line = null) =>
-            f.Add(new Finding(d.Rel, line, Sev.Warning, new CheckId(check), msg));
-
-        void Err(string check, string msg, int? line = null) =>
-            f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId(check), msg));
+        if (kind == DocKind.Record) CheckRules(d, t, report);
     }
 
     // The markers a generated block lives between. `Generator.SpliceBlock` looks for the pair and
@@ -447,7 +442,7 @@ public static class Validator
             // The ordinary link pass, which the documents excluded from discovery have never had: the
             // page pass only visits type pages, so a dead link in one reached the wiki silently and was
             // found by a reader. A framework document that is also a record has had it already.
-            if (!checkedAsRecords.Contains(rel)) LinkChecks.CheckPage(doc, schema, tree, f);
+            if (!checkedAsRecords.Contains(rel)) LinkChecks.Check(doc, schema, tree, new Report(doc.Rel, f));
 
             foreach (var link in doc.Links)
             {
@@ -703,28 +698,28 @@ public static class Validator
     //
     // A reserved key is admitted but never expected: `title` belongs to the publishing platform, and a
     // template has no reason to teach it.
-    private static void CheckTemplateFields(Doc d, TypeSchema t, Action<string, string, int?> err)
+    private static void CheckTemplateFields(Doc d, TypeSchema t, Report report)
     {
         foreach (var k in d.FrontKeys.Where(k => !t.KnownKeys.Contains(k)))
-            err("template-fields",
+            report.Err(new CheckId("template-fields"),
                 $"'{k}' is not a field of the '{t.TypeName}' type — every document copied from this "
                 + "template would fail unknown-key.", d.FrontStartLine);
 
         var carried = new HashSet<string>(d.FrontKeys, StringComparer.Ordinal);
         foreach (var spec in t.DeclaredFields.Where(spec => spec.Required && !carried.Contains(spec.Name)))
-            err("template-fields",
+            report.Err(new CheckId("template-fields"),
                 $"the template does not carry '{spec.Name}', which is required — every document copied "
                 + "from it would fail required-field.", d.FrontStartLine);
     }
 
-    private static void CheckPlaceholders(Doc d, Action<string, string, int?> err)
+    private static void CheckPlaceholders(Doc d, Report report)
     {
         var left = Placeholder.Occurrences(d).ToList();
         if (left.Count == 0) return;
 
         var (token, line) = left[0];
         var rest = left.Count > 1 ? $" There are {left.Count - 1} more in this document." : "";
-        err("placeholder-left",
+        report.Err(new CheckId("placeholder-left"),
             $"'{token}' is a placeholder the template left for you to fill in.{rest}", line);
     }
 
@@ -742,41 +737,40 @@ public static class Validator
     // Shape then calendar, under one id: both answers leave the author with the same thing to do, and the
     // message is what tells them which they wrote — `2026/06/12` is not written as a date at all, where
     // `2026-13-40` is written as one and names a day that has never existed.
-    private static void CheckDate(string name, YamlNode node, Doc d, Action<string, string, int?> err)
+    private static void CheckDate(string name, YamlNode node, Doc d, Report report)
     {
         var sc = node as YamlScalarNode;
         var v = sc?.Value ?? "";
         var quoted = sc?.Style is ScalarStyle.DoubleQuoted or ScalarStyle.SingleQuoted;
         if (!quoted)
-            err("date-quoted", $"'{name}' date must be quoted, e.g. \"{v}\".", Line(node, d));
+            report.Err(new CheckId("date-quoted"), $"'{name}' date must be quoted, e.g. \"{v}\".", Line(node, d));
 
         if (!IsIsoShape(v))
-            err("date-format", $"'{name}' must be a YYYY-MM-DD date, got '{v}'.", Line(node, d));
+            report.Err(new CheckId("date-format"), $"'{name}' must be a YYYY-MM-DD date, got '{v}'.", Line(node, d));
         else if (!DateOnly.TryParseExact(v, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-            err("date-format", $"'{name}' is not a date on the calendar, got '{v}'.", Line(node, d));
+            report.Err(new CheckId("date-format"), $"'{name}' is not a date on the calendar, got '{v}'.", Line(node, d));
     }
 
-    private static void CheckEnum(string name, YamlNode node, FieldSpec spec, Doc d, Action<string, string, int?> err)
+    private static void CheckEnum(string name, YamlNode node, FieldSpec spec, Doc d, Report report)
     {
         var v = Scalar(node);
         if (v is null)
         {
-            err("enum", $"'{name}' must be a scalar.", Line(node, d));
+            report.Err(new CheckId("enum"), $"'{name}' must be a scalar.", Line(node, d));
             return;
         }
 
         if (spec.Values is not null && !spec.Values.Contains(v))
-            err("enum", $"'{name}' value '{v}' is not one of: {string.Join(", ", spec.Values)}.", Line(node, d));
+            report.Err(new CheckId("enum"), $"'{name}' value '{v}' is not one of: {string.Join(", ", spec.Values)}.", Line(node, d));
         if (v != v.ToLowerInvariant())
-            err("enum-lowercase", $"'{name}' enum value '{v}' must be lowercase.", Line(node, d));
+            report.Err(new CheckId("enum-lowercase"), $"'{name}' enum value '{v}' must be lowercase.", Line(node, d));
     }
 
-    private static void CheckList(string name, YamlNode node, FieldSpec spec, Doc d, Action<string, string, int?> err,
-        Action<string, string, int?> warn)
+    private static void CheckList(string name, YamlNode node, FieldSpec spec, Doc d, Report report)
     {
         if (node is not YamlSequenceNode seq)
         {
-            err("list", $"'{name}' must be a YAML sequence.", Line(node, d));
+            report.Err(new CheckId("list"), $"'{name}' must be a YAML sequence.", Line(node, d));
             return;
         }
 
@@ -784,7 +778,7 @@ public static class Validator
         // read, because an author told both that the list is short and that one of its entries is
         // malformed will fix the second and re-run to find the first.
         if (spec.MinItems is { } min && seq.Children.Count < min)
-            err("min-items",
+            report.Err(new CheckId("min-items"),
                 $"'{name}' has {Count(seq.Children.Count, "entry", "entries")} — the schema asks for at least {min}.",
                 Line(node, d));
 
@@ -793,8 +787,8 @@ public static class Validator
             var v = Scalar(item);
             if (spec.IsLiteral(v)) continue; // a word the field admits beside its ids — `applies-to: [all]`
             if (spec.Of == "id" && v is not null && !LooksLikeId(v))
-                err("id-format", $"'{name}' entry '{v}' is not a valid id.", Line(item, d));
-            CheckPattern(name, "entry", item, spec, d, err);
+                report.Err(new CheckId("id-format"), $"'{name}' entry '{v}' is not a valid id.", Line(item, d));
+            CheckPattern(name, "entry", item, spec, d, report);
         }
 
         // Every list field in the taxonomy is a set — no field's sequence carries meaning — so
@@ -805,7 +799,7 @@ public static class Validator
         {
             if (Scalar(seq.Children[i - 1]) is not { } prev || Scalar(seq.Children[i]) is not { } cur) continue;
             if (Natural.Compare(prev, cur) <= 0) continue;
-            warn("list-order", $"'{name}' is not in alphabetical order — '{cur}' should come before '{prev}'.",
+            report.Warn(new CheckId("list-order"), $"'{name}' is not in alphabetical order — '{cur}' should come before '{prev}'.",
                 Line(seq.Children[i], d));
             break;
         }
@@ -814,16 +808,16 @@ public static class Validator
     // A field's declared `pattern:` — the schema's own regex, applied to whatever scalar carries the
     // value. `noun` distinguishes a scalar field's "value" from a list's "entry" in the message.
     private static void CheckPattern(string name, string noun, YamlNode node, FieldSpec spec, Doc d,
-        Action<string, string, int?> err)
+        Report report)
     {
         if (spec.PatternRegex is null) return;
         var v = Scalar(node);
         if (v is null) return;
         if (!spec.PatternRegex.IsMatch(v))
-            err("field-pattern", $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Line(node, d));
+            report.Err(new CheckId("field-pattern"), $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Line(node, d));
     }
 
-    private static void CheckKeyOrder(Doc d, TypeSchema t, Action<string, string, int?> err)
+    private static void CheckKeyOrder(Doc d, TypeSchema t, Report report)
     {
         var pos = new Dictionary<string, int>();
         for (var i = 0; i < d.FrontKeys.Count; i++)
@@ -832,16 +826,16 @@ public static class Validator
 
         foreach (var (a, b) in t.KeyOrderEdges)
             if (pos.TryGetValue(a, out var pa) && pos.TryGetValue(b, out var pb) && pa > pb)
-                err("key-order", $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
+                report.Err(new CheckId("key-order"), $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
     }
 
     // The H1 is plain descriptive text — no id, no prefix, no shape the schema constrains — so the only
     // thing left to check is that there is one. The type, the id and the status are the identity line's
     // to carry, and CheckIdentity depends on this having run: with no H1 there is no line beneath it,
     // and reporting both would be one fault counted twice.
-    private static void CheckH1(Doc d, Action<string, string, int?> err)
+    private static void CheckH1(Doc d, Report report)
     {
-        if (d.H1 is null) err("h1", "document has no H1.", 1);
+        if (d.H1 is null) report.Err(new CheckId("h1"), "document has no H1.", 1);
     }
 
     // The identity line — "`Policy: pol-A11Y` `DRAFT`" directly beneath the H1. It states, on the page,
@@ -850,7 +844,7 @@ public static class Validator
     // against the frontmatter separately, because "this says Standard" and "this says the wrong id" are
     // different mistakes with different fixes and a reader deserves to be told which they made.
     private static void CheckIdentity(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
-        Action<string, string, int?> err)
+        Report report)
     {
         if (d.H1 is null) return;
 
@@ -860,7 +854,7 @@ public static class Validator
 
         if (d.IdentitySpans is null)
         {
-            err("identity", $"no identity line follows the H1 — add {expected}.", d.H1Line);
+            report.Err(new CheckId("identity"), $"no identity line follows the H1 — add {expected}.", d.H1Line);
             return;
         }
 
@@ -869,7 +863,7 @@ public static class Validator
         var colon = d.IdentitySpans[0].IndexOf(':');
         if (d.IdentitySpans.Count != 2 || colon <= 0)
         {
-            err("identity", $"identity line is malformed — write it as {expected}.", d.IdentityLine);
+            report.Err(new CheckId("identity"), $"identity line is malformed — write it as {expected}.", d.IdentityLine);
             return;
         }
 
@@ -878,24 +872,24 @@ public static class Validator
         var gotStatus = d.IdentitySpans[1].Trim();
 
         if (!string.Equals(gotType, t.DisplayName, StringComparison.Ordinal))
-            err("identity-type", $"identity line says '{gotType}', but this is {WithArticle(t)}.", d.IdentityLine);
+            report.Err(new CheckId("identity-type"), $"identity line says '{gotType}', but this is {WithArticle(t)}.", d.IdentityLine);
 
         // Compared against the frontmatter rather than the filename: the id is what every citation uses,
         // and id-matches-filename already ties the frontmatter back to the file. Where the frontmatter
         // is itself absent or malformed its own check has said so, and there is nothing to compare to.
         if (id is not null && !string.Equals(gotId, id, StringComparison.Ordinal))
-            err("identity-id", $"identity line id '{gotId}' does not match the document's id '{id}'.",
+            report.Err(new CheckId("identity-id"), $"identity line id '{gotId}' does not match the document's id '{id}'.",
                 d.IdentityLine);
 
         // Status is lower-case in frontmatter and upper-case on the line — one value, written for a
         // machine in one place and for a reader in the other, so the comparison is case-insensitive
         // and the casing itself is what the message names when it is wrong.
         if (status is not null && !string.Equals(gotStatus, status, StringComparison.OrdinalIgnoreCase))
-            err("identity-status",
+            report.Err(new CheckId("identity-status"),
                 $"identity line status '{gotStatus}' does not match the document's status '{status}'.",
                 d.IdentityLine);
         else if (status is not null && !string.Equals(gotStatus, status.ToUpperInvariant(), StringComparison.Ordinal))
-            err("identity-status", $"identity line status '{gotStatus}' must be upper-case — "
+            report.Err(new CheckId("identity-status"), $"identity line status '{gotStatus}' must be upper-case — "
                                    + $"`{status.ToUpperInvariant()}`.", d.IdentityLine);
     }
 
@@ -904,7 +898,7 @@ public static class Validator
     private static string Expected(TypeSchema t, string? id, string? status) =>
         $"`{t.DisplayName}: {id ?? $"{t.IdPrefix}-…"}` `{status?.ToUpperInvariant() ?? "STATUS"}`";
 
-    private static void CheckMirrorsSection(Doc d, TypeSchema t, Schema schema, Action<string, string, int?> err)
+    private static void CheckMirrorsSection(Doc d, TypeSchema t, Schema schema, Report report)
     {
         foreach (var spec in t.DeclaredFields)
         {
@@ -924,11 +918,11 @@ public static class Validator
             }
 
             foreach (var id in inFront.Except(inSection))
-                err("related-matches-section",
+                report.Err(new CheckId("related-matches-section"),
                     $"'{spec.Name}' lists '{id}' but it is not referenced in the '## {section}' section.",
                     d.FrontStartLine);
             foreach (var id in inSection.Except(inFront))
-                err("related-matches-section",
+                report.Err(new CheckId("related-matches-section"),
                     $"the '## {section}' section references '{id}' but '{spec.Name}' does not list it.",
                     d.FrontStartLine);
         }
@@ -938,8 +932,7 @@ public static class Validator
     // carrying an `expr:` is answered by evaluating it, and needs no C# at all; a rule whose question
     // needs a real algorithm is one of `DocumentRules`, looked up by id. `CLAUDE.md` beside this project
     // draws the line between them, and this loop is the whole of the dispatch either way.
-    private static void CheckRules(Doc d, TypeSchema t, Action<string, string, int?> err,
-        Action<string, string, int?> warn)
+    private static void CheckRules(Doc d, TypeSchema t, Report report)
     {
         // Built once for the document and only where a rule actually asks something of it, so a type
         // with no expression rules measures nothing.
@@ -951,21 +944,19 @@ public static class Validator
             {
                 facts ??= new Facts(d);
                 if (RuleExpr.Eval(compiled, facts)) continue;
-                var report = rule.Severity == Sev.Error ? err : warn;
                 // An expression rule reports under its own rule id, which is the one place the two ids are
                 // deliberately the same string. Written out so that sameness is a decision rather than a
                 // type the compiler let through.
-                report(rule.Id.Value, rule.Message!, d.FrontStartLine);
+                var reported = new CheckId(rule.Id.Value);
+                if (rule.Severity == Sev.Error) report.Err(reported, rule.Message!, d.FrontStartLine);
+                else report.Warn(reported, rule.Message!, d.FrontStartLine);
                 continue;
             }
 
             // A rule with neither an `expr:` nor an implementation is a statement of intent, and is
             // skipped in silence: the schema records what someone wanted, and nothing answers to it yet.
             if (DocumentRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
-                // The rule surface speaks in CheckId, where a core check reports through a literal
-                // written beside it. Adapted here, at the one boundary between the two.
-                implementation.Check(new RuleContext(d, t, rule,
-                    (c, m, l) => err(c.Value, m, l), (c, m, l) => warn(c.Value, m, l)));
+                implementation.Check(new RuleContext(d, t, rule, report.Err, report.Warn));
         }
     }
 

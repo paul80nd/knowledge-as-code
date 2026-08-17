@@ -5,7 +5,7 @@ using kac.core;
 // corpus. Whether a bracketed label is an id is asked here too, but answered in IdChecks and tested
 // beside it.
 //
-// Driven through `LinkChecks.CheckPage`, which is what the validator calls, against a `Tree` built from a
+// Driven through `LinkChecks.Check`, which is what the validator calls, against a `Tree` built from a
 // listing. The resolver reads the corpus rather than the disk, so the corpus a test needs is a set of
 // paths and the text behind them.
 
@@ -81,7 +81,7 @@ public class LinkCheckTests
         var schema = new Schema();
         var doc = Doc.Parse(fromRel, markdown, schema, requireFrontmatter: false)!;
         var findings = new List<Finding>();
-        LinkChecks.CheckPage(doc, schema, Corpus(), findings);
+        LinkChecks.Check(doc, schema, Corpus(), new Report(doc.Rel, findings));
         return findings;
     }
 

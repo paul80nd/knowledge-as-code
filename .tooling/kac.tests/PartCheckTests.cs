@@ -251,9 +251,7 @@ public class PartCheckTests
         var (doc, type) = Parse(body, spec, folder);
 
         var found = new List<Finding>();
-        PartChecks.Check(doc, type,
-            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, new CheckId(check), msg)),
-            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Warning, new CheckId(check), msg)));
+        PartChecks.Check(doc, type, new Report(doc.Rel, found));
         return found;
     }
 
@@ -264,8 +262,7 @@ public class PartCheckTests
         var (doc, _) = Parse(body, spec, "policies");
 
         var found = new List<Finding>();
-        PartChecks.CheckNotation(doc,
-            (check, msg, line) => found.Add(new Finding(doc.Rel, line, Sev.Error, new CheckId(check), msg)));
+        PartChecks.CheckNotation(doc, new Report(doc.Rel, found));
         return found;
     }
 

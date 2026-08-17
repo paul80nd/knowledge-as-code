@@ -12,6 +12,25 @@ public enum Sev
 
 public record Finding(string File, int? Line, Sev Severity, CheckId Check, string Message);
 
+// Where a check writes what it found: the file being read, and the list the findings land in.
+//
+// It carries the two things every finding needs and no check should have to restate — which file the
+// finding is against, and how loud it is — so what is left at a call site is the id, the words and the
+// line. One of these is handed to every pass that walks a single file, and each pass that reads a
+// document builds one for it.
+//
+// A pass choosing the file per finding — `id-unique` across the corpus, `min-records` across a type —
+// names the file per finding instead, and builds its `Finding`s directly. This is for the other shape:
+// one file, many checks.
+public readonly record struct Report(string File, List<Finding> Findings)
+{
+    public void Err(CheckId check, string message, int? line = null) =>
+        Findings.Add(new Finding(File, line, Sev.Error, check, message));
+
+    public void Warn(CheckId check, string message, int? line = null) =>
+        Findings.Add(new Finding(File, line, Sev.Warning, check, message));
+}
+
 // One check as the schema declares it. `Summary` is what a reader meets, which `kac checks` prints,
 // and `Notes` is the reasoning and the boundary, which only someone reading the schema wants.
 //
