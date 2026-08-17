@@ -332,9 +332,8 @@ public static class Exporter
     // **Every id here is read, and none is inferred.** These references are the `redefinitions-are-
     // reciprocal` rule showing through, and that rule is about a term and its counterpart — so the link
     // has to name the counterpart, and the anchor is where it names it. A link naming a record and no
-    // term inside it resolves to nothing, and is reported by `Unread` below rather than guessed at: the
-    // guess that suggests itself is the same word in the other glossary, which is right only for a pair
-    // that happens to share a spelling and silently wrong for `Borrower` against `Patron`.
+    // term inside it resolves to nothing and is reported by `Unread` below. `/.tooling/README.md` sets
+    // out why the guess that suggests itself is refused.
     private static IReadOnlyList<string>? SeeAlso(Doc doc, PartRow part, Dictionary<string, Doc> byPath, Tree tree)
     {
         var found = new List<string>();

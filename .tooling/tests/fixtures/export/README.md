@@ -20,10 +20,10 @@ fixture nobody can read as an example.
 `gls-estate` names the anchor and `gls-framework` names only the file, which is the pair half-finished — a state a real
 corpus passes through.
 
-The export reads the first into `seeAlso` as `gls-framework.record`, and carries nothing for the second. It does not
-guess: the guess that suggests itself is the same word in the other glossary, which is right here only because both
-happen to say `record`, and silently wrong for a `Borrower` that redefines a `Patron`. Instead the run names the link it
-could not read, which is what the second half of the pair pins.
+The export reads the first into `seeAlso` as `gls-framework.record` and carries nothing for the second, naming it in
+the run instead. Both roots happening to say `record` is what makes this pair worth having: it is the case where a guess
+would have been right, so a fixture that passed on it would prove nothing. `/.tooling/README.md` says why the guess is
+refused.
 
 **Wrapped prose and a paragraph break.** `gls-estate` carries a `**Not:**` line wrapped across two source lines, and a
 `Scope` of two paragraphs. The export joins the first and keeps the second, which is the whole of the unwrap rule.

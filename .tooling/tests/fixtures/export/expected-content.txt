@@ -24,7 +24,7 @@
 
 # Prose arrives unwrapped: the corpus's 120-column wrap is a fact about the file, and a grep for a
 # phrase straddling it would match nothing. The blank line the author wrote is kept.
-.dist/glossary/gls-estate.json :: "Scope": "What every system here has in common. A word only one system uses belongs in that system's glossary, and a word two of them disagree about belongs here with the disagreement named.\n\nA word two systems use
+.dist/glossary/gls-estate.json :: "Scope": "What every system here has in common: the words a reader meets whichever system they arrived from, and the ones a newcomer has to be told.\n\nA word one system uses its own way
 .dist/glossary/terms.jsonl :: "not":"a branch in source control. Both appear in the same sentence often enough to be worth separating, and a reader arriving from either one will read the other as a mistake."
 
 # A corpus with no resolvable address writes its records without links rather than with empty ones.
@@ -44,7 +44,7 @@
 # nothing is carried. Guessing the counterpart from the term's own spelling would be right here and
 # silently wrong for a pair that does not share a word.
 .dist/glossary/terms.jsonl :: "record":"gls-framework","part":"record","status":"draft"
-.dist/glossary/terms.jsonl :: see [gls-estate]. A template and a generated index are neither.","seeAlso":null
+.dist/glossary/terms.jsonl :: The catalogue uses the word for something else again — see [gls-estate].","seeAlso":null
 
 # Generality holds inside a chain: `gls-search` narrows `gls-estate`, so a grep for a term both define
 # would meet the general one first. Across `gls-estate` and `gls-framework` — unrelated roots, both

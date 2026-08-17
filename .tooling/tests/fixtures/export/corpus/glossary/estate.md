@@ -16,11 +16,11 @@ The words the whole estate shares, whichever system a reader arrived from.
 
 ## Scope
 
-What every system here has in common. A word only one system uses belongs in that system's glossary, and a word two
-of them disagree about belongs here with the disagreement named.
+What every system here has in common: the words a reader meets whichever system they arrived from, and the ones a
+newcomer has to be told.
 
-A word two systems use for different things stays here as well, with both senses written out, because the reader who
-meets one of them will not know there is another.
+A word one system uses its own way belongs in that system's glossary, which redefines it and names the entry here that
+it narrows.
 
 ## Terms
 

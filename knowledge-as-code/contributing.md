@@ -80,8 +80,8 @@ display text:
 
     [gls-search.title]: search.md#title
 
-Linking to the file instead sends a reader to the top of a document holding twenty entries and leaves them to find the
-one that was meant, and anything reading the corpus can only carry the reference the link states.
+Linking to the file instead lands a reader at the top of the document, to find the part for themselves. It also loses
+the reference: a tool reading the corpus carries what the link states, and a link naming no part states none.
 
 **References with prose link text use inline links**, since the display text differs from the target:
 
