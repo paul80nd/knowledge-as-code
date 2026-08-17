@@ -16,6 +16,62 @@ public static class Commands
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
+    // Build the export. The whole corpus is loaded whatever `type` names, because a narrowed load
+    // answers questions about the set from some of its members and answers them wrongly; `type` narrows
+    // what is written.
+    public static int Export(string repoRoot, string? type)
+    {
+        var corpus = Corpus.Load(repoRoot);
+
+        if (type is not null && corpus.Adopted.All(t => t.Key != type))
+            return Fail($"export: this corpus has not adopted a type called '{type}'. "
+                        + $"It holds {string.Join(", ", corpus.Adopted.Select(t => t.Key))}.");
+
+        var unknown = corpus.Descriptor.ExportExclude
+            .Where(e => !CorpusDescriptor.Excludable.Contains(e, StringComparer.Ordinal)).ToList();
+        if (unknown.Count > 0)
+            return Fail($"export: .corpus.yaml excludes {string.Join(", ", unknown)}, which an export cannot "
+                        + $"act on. It excludes {string.Join(" or ", CorpusDescriptor.Excludable)}.");
+
+        var commit = Git.Head(repoRoot);
+        var dirty = Git.Dirty(repoRoot);
+        var publishing = Publishing.For(corpus.Descriptor, commit);
+        var now = DateTime.UtcNow;
+
+        var plan = Exporter.Plan(corpus, publishing, type,
+            new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, dirty));
+
+        var written = Exporter.Write(repoRoot, plan);
+        foreach (var path in written) Console.WriteLine($"wrote {path}");
+
+        // What the export cannot say is worth saying here, where someone is watching. Neither state is
+        // an error: a corpus may publish nowhere, and an export built from a dirty tree is still an
+        // export — it is only one that cannot be rebuilt from the commit it names.
+        if (publishing is null)
+            Console.WriteLine(
+                "export: no published links — this corpus states no publishing target the tool can address, "
+                + "or no bases for one. Records carry their paths and no URLs.");
+        if (dirty is true)
+            Console.WriteLine(
+                "export: built from a dirty working tree, and the manifest says so. The commit it names "
+                + "does not reproduce it.");
+
+        // Named rather than counted. A record left behind is invisible in the output by definition, so
+        // this run is the last place anyone sees which ones they were.
+        if (plan.Withheld.Count > 0)
+            Console.WriteLine(
+                $"export: withheld {string.Join(", ", plan.Withheld)} — .corpus.yaml excludes "
+                + $"{string.Join(" and ", corpus.Descriptor.ExportExclude)}.");
+
+        // An empty type list is a statement of what this corpus has, and not a failure: a corpus may
+        // have adopted no type that declares an export, or have withheld everything the types it did
+        // adopt would have carried. The line above says which, where it was the second.
+        Console.WriteLine(plan.Types.Count == 0
+            ? $"export: wrote {written.Count} file(s); no type contributed a record."
+            : $"export: wrote {written.Count} file(s) for {string.Join(", ", plan.Types.Select(t => t.Type))}.");
+        return 0;
+    }
+
     public static int Index(string repoRoot, bool check)
     {
         var corpus = Corpus.Load(repoRoot);
@@ -194,12 +250,14 @@ public static class Commands
         // Whether two copies of a file say the same thing, which is the one question either engine asks of
         // the disk. Passed in, so each engine decides from listings and a predicate rather than from a tree.
         bool Same(string rel) => MechanismCheck.Same(repoRoot, refRoot, rel);
+    }
 
-        static int Fail(string message)
-        {
-            Console.Error.WriteLine(message);
-            return 1;
-        }
+    // A command stopping on something the caller asked for and cannot have. The message goes to stderr
+    // and the exit code says so, which is the same bargain every verb strikes.
+    private static int Fail(string message)
+    {
+        Console.Error.WriteLine(message);
+        return 1;
     }
 
     private static int ReportMechanism(MechanismReport report, CorpusDescriptor descriptor, string refRoot)

@@ -9,6 +9,7 @@
 //
 //   validate   check the corpus against .schema/*.yaml
 //   index      regenerate _index.md and the generated blocks in <type>.md
+//   export     write the corpus to .dist/ as data a consumer reads instead of cloning
 //   checks     list every check the validator implements
 //   mechanism  enforce the portability manifest: check the shared layers against a
 //              reference corpus, or sync them from one
@@ -49,6 +50,16 @@ var index = new Command("index", "Regenerate _index.md and the generated blocks 
 };
 index.SetAction(pr => Commands.Index(repoRoot, pr.GetValue(checkOpt)));
 
+// `export` writes the corpus to `.dist/` as data a consumer reads instead of cloning. `--type` narrows
+// what is written and never what is read: the whole corpus is loaded either way, so ids resolve against
+// every record rather than against the ones a narrowed run happened to reach.
+var typeOpt = new Option<string?>("--type") { Description = "Export one type rather than every type that contributes." };
+var export = new Command("export", "Write the corpus to .dist/ as a versioned export.")
+{
+    typeOpt
+};
+export.SetAction(pr => Commands.Export(repoRoot, pr.GetValue(typeOpt)));
+
 // `checks` is machinery before it is documentation: the test suite reads `checks --json` to assert
 // every rule is exercised by a fixture, so a new rule cannot ship without a golden covering it.
 var checksJsonOpt = new Option<bool>("--json") { Description = "Emit the check catalogue as JSON." };
@@ -74,7 +85,8 @@ var mechanism = new Command("mechanism", "Enforce the portability manifest: comp
 mechanism.SetAction(pr =>
     Commands.Mechanism(repoRoot, pr.GetValue(mechCheckOpt), pr.GetValue(mechSyncOpt), pr.GetValue(againstOpt)));
 
-var root = new RootCommand("kac — the knowledge-as-code validator and generator.") { validate, index, checks, mechanism };
+var root = new RootCommand("kac — the knowledge-as-code validator and generator.")
+    { validate, index, export, checks, mechanism };
 
 // Bad arguments exit 1 (System.CommandLine's default) — the printed error makes it
 // obvious it was a usage problem rather than corpus errors. Exit 2 is reserved for the

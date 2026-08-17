@@ -90,21 +90,34 @@ parts:
   section: Terms
   noun: term
   level: 3
+  aside: Not
 
 # What a glossary contributes to a published export, and how much of each piece travels. `Terms` is
 # absent from the sections because the terms under it are parts, and `parts:` above carries them.
 export:
-  fields: [id, title, status, narrows]
+  fields: [id, title, narrows, status, review-by]
   sections:
     Scope: full
   parts: full
   notes: >
-    A term travels whole: the definition and the `**Not:**` line beneath it together. A definition on
-    its own is mostly guessable from the word, so an export that dropped the `**Not:**` line would
-    carry the guessable half.
+    A term travels whole: the definition and the `**Not:**` line beneath it, carried as two pieces
+    because they answer two questions. A definition on its own is mostly guessable from the word, so
+    an export that dropped the `**Not:**` line would carry the guessable half.
 
-    `owner` and `review-by` stay behind. They say who keeps this file current, which is a question
-    about this corpus rather than about the term.
+    The fields are the glossary's, and together they are what a consumer judges an entry by. `Scope`
+    says which context admits the term. `status` and `review-by` say how far the file has settled and
+    when it was last meant to be read, and the export repeats those two onto every term it writes:
+    the flat file is what gets grepped, and whoever grepped it has not opened the record.
+
+    `review-by` is the signal a vendored export otherwise lacks. A copy taken a year ago reads exactly
+    as it did on the day it was taken, and `status: draft` says the terms were settling rather than
+    that the date has passed.
+
+    `owner` stays behind, and the split between the two is not about which is more useful. A date is a
+    fact about the content, and a consumer holds it against today's date knowing nothing about this
+    corpus. An owner is a fact about this corpus's stewardship, and it stops being actionable the
+    moment the export leaves: whoever holds a vendored copy has no standing to ask, and the name goes
+    stale with nothing in the export to say so.
 
 index:
   columns: [id, title, narrows, status, owner, review-by]

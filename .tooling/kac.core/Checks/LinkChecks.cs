@@ -121,7 +121,11 @@ public static class LinkChecks
     //
     // Asked of the corpus rather than of the disk, so a link resolves in a fresh clone exactly where it
     // resolves here. A file the repository ignores is not something a reader can follow.
-    private static string? Resolve(Tree tree, string fromRel, string target)
+    //
+    // Public because the export follows links too, and the corpus should have one account of what a
+    // target names: a second copy here would be where the check and the export began to disagree about
+    // what a reader can follow.
+    public static string? Resolve(Tree tree, string fromRel, string target)
     {
         var hash = target.IndexOf('#');
         if (hash >= 0) target = target[..hash];

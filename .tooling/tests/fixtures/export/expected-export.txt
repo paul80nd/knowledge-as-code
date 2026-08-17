@@ -1,0 +1,9 @@
+# The CLI's own account of the run. `--type glossary` is a narrowed run and reads the whole corpus
+# anyway, so the count below is every glossary the fixture holds.
+wrote .dist/manifest.json
+wrote .dist/glossary/terms.jsonl
+export: wrote 5 file(s) for glossary.
+
+# The temp root is not a git repository, so no ref resolves and no link can be built. Saying so is the
+# point: a corpus that publishes nowhere exports successfully and reports what it could not write.
+export: no published links

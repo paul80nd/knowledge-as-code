@@ -90,6 +90,12 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     public string Source { get; } = source;
     public string Section { get; init; } = "";
 
+    // The label a part's optional second block opens with, written bold — `Not` on a glossary term.
+    // Empty where a type's parts carry no such block, and the whole of what makes one legible to
+    // anything but a reader. `.schema/README.md` says why it is declared here rather than in the code
+    // that reads it.
+    public string Aside { get; init; } = "";
+
     // The heading level a part is written at, for the heading source. H3 throughout the corpus: an H1 is
     // the document and an H2 is a section, so the first level below them is the first that can be a part.
     public int Level { get; init; } = 3;
@@ -622,6 +628,7 @@ public sealed partial class Schema
                 {
                     Noun = Yaml.Str(parts.Get("noun")) ?? "part",
                     Section = Yaml.Str(parts.Get("section")) ?? "",
+                    Aside = Yaml.Str(parts.Get("aside")) ?? "",
                     Level = Yaml.Int(parts.Get("level"), 3),
                     Columns = Yaml.StrList(parts.Get("columns")) is { Count: > 0 } cols
                         ? cols
