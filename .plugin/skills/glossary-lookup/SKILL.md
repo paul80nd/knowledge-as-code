@@ -14,23 +14,32 @@ and nothing to run.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json           # what this export is: corpus, versions, commit, date
-${CLAUDE_PLUGIN_ROOT}/corpus/glossary/terms.jsonl    # one line of JSON per term — grep this
+${CLAUDE_PLUGIN_ROOT}/corpus/glossary/terms.jsonl    # one line of JSON per term — search this
 ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json  # one file per glossary, holding its Scope and what it narrows
 ```
 
-Address every path through `${CLAUDE_PLUGIN_ROOT}`. An installed plugin is copied into a cache, so a relative path that
-climbs out of the plugin root resolves nowhere.
+Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
+rather than in the repository you are working in, so a path you build relative to the working directory resolves
+nowhere.
 
 ## Find the term
 
-Grep the flat file, case-insensitively, on the title:
+**Use your Grep tool, not a shell command.** It runs on every platform and needs no shell, which is what makes the
+promise above true for a reader on Windows. Point it at `${CLAUDE_PLUGIN_ROOT}/corpus/glossary/terms.jsonl`, ask for
+matching content rather than a list of files, and search case-insensitively.
 
-```bash
-grep -i '"title":"<term>"' "${CLAUDE_PLUGIN_ROOT}/corpus/glossary/terms.jsonl"
-```
+Two patterns, in this order:
 
-Nothing back? Try the singular, try the other spelling, then grep the whole line for the word — a term is often defined
-under one name and mentioned in another entry's definition.
+1. **`"title":\s*"<term>"`** finds the lines that define the term. Write the `\s*`. Nothing promises the export puts no
+   space after a colon, and a pattern assuming one returns nothing the day that changes.
+2. **`<term>`** on its own finds every line mentioning it. This is how a term defined under one spelling turns up under
+   another, in someone else's definition, `not` line or `seeAlso`.
+
+Where the first pattern comes back empty, widen the second: try the singular, and try the other spelling.
+
+**Read the `title` of every hit before you use it.** The field names in this file are ordinary English words — `title`,
+`record`, `definition`, `status`, `type` — so a search for one of those matches every line in the file. A line defines a
+term when its `title` says so, never because it matched.
 
 Each line carries the entry whole:
 
@@ -39,7 +48,7 @@ Each line carries the entry whole:
 | `id`                  | `<glossary-id>.<term>` — the address to quote and to search on             |
 | `title`, `definition` | the term and its meaning                                                   |
 | `not`                 | what the term excludes, where the corpus drew that boundary                |
-| `seeAlso`             | related terms as full ids, so you can grep straight to them                |
+| `seeAlso`             | related terms as full ids, so you can search straight to them              |
 | `record`              | the glossary this entry belongs to                                         |
 | `status`, `reviewBy`  | how far the entry has settled, and the date it was meant to be read again  |
 | `links`               | `human` to read the record rendered, `raw` to fetch its source             |
@@ -64,10 +73,12 @@ Where the question does not settle which context it sits in, give both meanings 
 
 * **Give the definition, then the `not` line.** A reader who gets only the definition will go on to apply the term to
   things it excludes.
-* **Name the glossary you took the answer from**, every time. A reader working in the other context needs to see the
-  mismatch.
+* **Quote the `id`.** `gls-search.title` is one string a reader can search the corpus for, and it settles in seconds
+  whether you read the entry correctly.
+* **Name the glossary in words as well**, every time. A reader working in the other context needs to see the mismatch
+  without decoding an id to find it.
 * **Link `links.human`** so the reader can go to the record.
-* **Follow `seeAlso`** where the question needs a neighbouring term. The values are full ids: grep for one directly.
+* **Follow `seeAlso`** where the question needs a neighbouring term. The values are full ids: search for one directly.
 
 ## Say when an entry is unsettled
 
