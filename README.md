@@ -156,7 +156,8 @@ knowledge-as-code/     # the system's own documentation
   └── automation.md    # what is generated, validated and scheduled
 kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
 .corpus.yaml           # what this corpus is, and where it takes the framework from
-.claude/skills/        # agent skills, shared with every corpus
+.claude/skills/        # agent skills for working on this corpus, shared with every corpus
+.plugin/               # source for the plugin that carries this corpus's export to another repository
 .schema/               # the machine-readable schema — the source of truth
 .tooling/              # the kac tool: entrypoint + kac.core library, the manifest, its tests and fixtures
 ```

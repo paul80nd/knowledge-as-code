@@ -95,7 +95,7 @@ upstream:
   url: # unset — this corpus is the source
 
   # Framework version currently adopted from the upstream corpus.
-  mechanism-version: 3
+  mechanism-version: 4
 
   # Where the most recent sync took the framework from.
   synced-from: # n/a for a source

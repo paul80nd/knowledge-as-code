@@ -12,7 +12,7 @@
 # takes the framework from.
 
 # The version of the shared framework's shape.
-version: 3
+version: 4
 
 # Increment when the structure of the shared framework changes in a way that
 # corpora must respond to, such as:
@@ -138,8 +138,34 @@ rules:
   - path: ".claude/skills/**"
     layer: synced
     note: >
-      Agent skills. `kb-review` reads a record against the authoring and style rules
-      and proposes rewrites.
+      Agent skills for working on this corpus. `kb-review` reads a record against the
+      authoring and style rules and proposes rewrites. The rules below cover skills for
+      an agent working outside this corpus.
+
+  # ── the plugin ─────────────────────────────────────────────────────────────
+
+  # Both `.plugin/` rules sit here, out of layer order, because the order is what
+  # decides. A `.plugin/**` rule left among the synced rules above would claim the
+  # manifest before the forked rule reached it, and the corpus would lose the one
+  # file in the tree it names for itself.
+
+  - path: ".plugin/.claude-plugin/plugin.json"
+    layer: forked
+    note: >
+      The plugin manifest. Each corpus names, versions and licenses its own plugin, and
+      declares under `metadata.components` which record types each component needs — a
+      skill reading the glossary is dead weight in a corpus that declined the type.
+
+  - path: ".plugin/**"
+    layer: synced
+    note: >
+      The tree a plugin is built from. Its skills serve an agent working in a repository
+      that consumes this corpus rather than one working in the corpus itself, and they
+      read the export through `${CLAUDE_PLUGIN_ROOT}` rather than opening this tree, so
+      every corpus ships the same words. Written to reach the whole tree: a hook or a
+      `bin/` command added later is shared from the day it lands.
+
+  # ── synced ─────────────────────────────────────────────────────────────────
 
   - path: "knowledge-as-code/taxonomy.md"
     layer: synced

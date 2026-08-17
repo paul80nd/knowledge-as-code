@@ -287,7 +287,8 @@ frameworks.md          # external frameworks, and what each obliges us to
 knowledge-as-code.md   # the approach
 knowledge-as-code/     # the system's own documentation — outside the taxonomy
 .corpus.yaml           # what this corpus is, and where it takes the framework from
-.claude/skills/        # agent machinery — SYNCED
+.claude/skills/        # agent machinery for this corpus — SYNCED
+.plugin/               # source for the plugin that carries this corpus's export — SYNCED, bar its manifest
 .schema/               # the machine-readable schema — SYNCED
 .tooling/              # validators, generators and the manifest — SYNCED
 _plan/                 # migration scaffolding — temporary
