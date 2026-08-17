@@ -623,9 +623,9 @@ public static class Validator
     // type whether or not the corpus has stood that type up — a rule reporting on an empty set is the
     // rule's answer to give, not the dispatcher's to withhold.
     //
-    // A finding names the document the rule chose, so the reporting pair takes one where `CheckRules`
-    // closes over it. Everything else is the same dispatch: found by the id the schema declares, and
-    // silent where nothing implements it.
+    // A finding names the document the rule chose, so a corpus rule is handed the document to report
+    // against where a document rule is handed the `Report` for the one it is reading. Everything else is
+    // the same dispatch: found by the id the schema declares, and silent where nothing implements it.
     private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
         List<Finding> f)
     {
@@ -956,7 +956,7 @@ public static class Validator
             // A rule with neither an `expr:` nor an implementation is a statement of intent, and is
             // skipped in silence: the schema records what someone wanted, and nothing answers to it yet.
             if (DocumentRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
-                implementation.Check(new RuleContext(d, t, rule, report.Err, report.Warn));
+                implementation.Check(new RuleContext(d, t, rule, report));
         }
     }
 

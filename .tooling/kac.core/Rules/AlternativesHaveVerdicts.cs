@@ -21,7 +21,7 @@ public sealed class AlternativesHaveVerdicts : IDocumentRule
     {
         foreach (var (text, line) in Bullets(ctx.Doc))
             if (!HasVerdict(text))
-                ctx.Warn(Reports,
+                ctx.Report.Warn(Reports,
                     $"Alternatives Considered bullet has no verdict: \"{Md.Snippet(text)}\".", line);
     }
 

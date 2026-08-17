@@ -28,7 +28,7 @@ public sealed class TermsAreAlphabetical : IDocumentRule
         foreach (var (term, line) in Entries(ctx.Doc))
         {
             if (previous is not null && string.Compare(term, previous, StringComparison.OrdinalIgnoreCase) < 0)
-                ctx.Warn(Reports,
+                ctx.Report.Warn(Reports,
                     $"'{Md.Snippet(term)}' is out of order — it belongs before '{Md.Snippet(previous)}'.", line);
 
             previous = term;

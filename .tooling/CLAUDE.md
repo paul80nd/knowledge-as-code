@@ -56,6 +56,12 @@ tests; the rest stay in `Validator.cs`, and extracting one buys nothing unless i
 `IdChecks` is the case for extracting: three passes read the shape of an id and of the filename carrying it, in three
 directions, and a second copy of that shape would be a place for the styles to disagree silently.
 
+**Whatever it is, a check writes what it found to a `Report`** — the file being read and the list its findings land in,
+handed to every pass that walks one file, and to a rule class as `RuleContext.Report`. The id it reports under is a
+`CheckId` written out at the call, because both halves are strings and the swap is silent. A pass choosing the file per
+finding — `id-unique` across the corpus, `min-records` across a type — names the file per finding and builds its
+`Finding`s directly.
+
 **`Checks/SchemaChecks.cs` reads no document at all.** It runs once, before the corpus, and asks whether the schema
 declares anything the tool cannot act on. Read every vocabulary it tests from the code that dispatches the value —
 `IdChecks.IdStyles`, `Generator.IndexOrders`, the two `ByRuleId` maps — because a copy is a list of what is spelled
