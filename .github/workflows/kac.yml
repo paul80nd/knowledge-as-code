@@ -1,10 +1,12 @@
 # CI for the knowledge-as-code corpus (GitHub Actions).
 #
-# The GitHub equivalent of azure-pipelines.yml: runs the kac validator and the
-# generated-content freshness check on pull requests into main. It NEVER writes
-# or commits generated files — `index --check` only verifies they are fresh and
-# fails, naming the command a human runs locally (`dotnet run .tooling/kac.cs -- index`).
-# A workflow must never push; the job is granted read-only contents permission.
+# The GitHub equivalent of azure-pipelines.yml: runs the kac validator, the
+# generated-content freshness check and the export on pull requests into main.
+# It NEVER commits anything it produces. `index --check` only verifies the
+# tracked generated files are fresh and fails, naming the command a human runs
+# locally (`dotnet run .tooling/kac.cs -- index`). The export lands in an
+# untracked .dist/ that the runner throws away. A workflow must never push;
+# the job is granted read-only contents permission.
 
 name: kac
 
@@ -36,12 +38,17 @@ jobs:
           dotnet-version: 10.0.x
 
       # One invocation per subcommand, run sequentially. File-based apps share
-      # build output, so the two kac runs must not execute concurrently.
+      # build output, so the kac runs must not execute concurrently.
       - name: Validate frontmatter, links and structure
         run: dotnet run .tooling/kac.cs -- validate
 
       - name: Check generated indexes are fresh
         run: dotnet run .tooling/kac.cs -- index --check
+
+      # Proves the corpus still exports. The shape it exports in is held by a committed
+      # golden in the suite below.
+      - name: Build the export
+        run: dotnet run .tooling/kac.cs -- export
 
       # kac's own coverage, in three layers: focused xUnit unit tests over kac.core's shared
       # helpers; Reqnroll feature tests that drive the validator in-process as behaviour specs;

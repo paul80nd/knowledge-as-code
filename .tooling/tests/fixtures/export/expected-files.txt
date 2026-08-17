@@ -1,10 +1,4 @@
-# The documented layout: a manifest at the root, one file per record under the type, and the flat file
-# a lookup addresses by name.
-.dist/manifest.json
-.dist/glossary/gls-estate.json
-.dist/glossary/gls-search.json
-.dist/glossary/gls-framework.json
-.dist/glossary/terms.jsonl
-
-# The corpus itself is untouched — an export reads and never writes back.
+# `expected-dist/` holds what the export wrote, file for file, so nothing here lists it a second time.
+# This is the one thing that tree cannot say: the corpus itself is untouched, because an export reads
+# and never writes back.
 glossary/estate.md
