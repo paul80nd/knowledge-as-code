@@ -34,9 +34,9 @@ reader arriving from a citation sees first, and CI checks all three against the 
 corpus's, and a corpus that took the file has neither. Leave both out of an entry meant to travel upstream.
 
 **Point a redefinition at the term, not at the file.** Where another glossary defines the same word differently, the
-`**Not:**` line links to that entry's anchor — `[gls-other]: other.md#term`, not `[gls-other]: other.md`. A reader
-following the second lands at the top of a glossary and has to search it, and the export can only carry the
-cross-reference it can read.
+`**Not:**` line names that entry and lands on it — `[gls-other.term]: other.md#term`. A link to `other.md` alone puts a
+reader at the top of a glossary and leaves them to find what was meant, and anything reading the corpus can only carry
+the reference the link states.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
@@ -53,10 +53,11 @@ glossary that admits it, so say what makes this context its own rather than list
 
 A one-sentence definition of what the word means in this context.
 
-**Not:** the neighbouring term it is most often confused with, and the difference in a few words — see [gls-{{b}}].
+**Not:** the neighbouring term it is most often confused with, and the difference in a few words — see
+[gls-{{b}}.{{term}}].
 
 Owned by [svc-{{a}}]. See [adr-{{a}}].
 
 [adr-{{a}}]: /adrs/{{a}}.md
-[gls-{{b}}]: {{b}}.md#{{term}}
+[gls-{{b}}.{{term}}]: {{b}}.md#{{term}}
 [svc-{{a}}]: /services/{{a}}.md

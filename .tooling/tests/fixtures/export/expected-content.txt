@@ -38,7 +38,7 @@
 # A cross-reference travels as a part id the consumer can look up, read from the anchor the link names.
 # The prose keeps the reference its author wrote.
 .dist/glossary/terms.jsonl :: "seeAlso":["gls-framework.record"]
-.dist/glossary/terms.jsonl :: "not":"a knowledge document filed under a type — see [gls-framework]."
+.dist/glossary/terms.jsonl :: "not":"a knowledge document filed under a type — see [gls-framework.record]."
 
 # The other half of the pair names the file and no term inside it, so there is nothing to read and
 # nothing is carried. Guessing the counterpart from the term's own spelling would be right here and

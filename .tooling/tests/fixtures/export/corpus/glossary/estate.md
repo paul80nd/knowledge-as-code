@@ -35,6 +35,6 @@ arriving from either one will read the other as a mistake.
 
 The description of a thing, held once and read by every system.
 
-**Not:** a knowledge document filed under a type — see [gls-framework].
+**Not:** a knowledge document filed under a type — see [gls-framework.record].
 
-[gls-framework]: framework.md#record
+[gls-framework.record]: framework.md#record
