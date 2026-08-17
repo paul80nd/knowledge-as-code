@@ -245,12 +245,24 @@ declaring no block contributes nothing, and a corpus that adopted no exporting t
 empty type list — "nothing" is a valid statement of what a corpus has.
 
 **The flat file is JSONL because it exists to be grepped.** A hit has to hand back something parseable on its own, so
-each line repeats the record it came from and the links back to it. That costs bytes and is the point: a matching line
-of an indented document is a fragment, and the reader is left seeking outward for its braces.
+each line repeats the record it came from, the state of that record, its cross-references as ids, and the links back to
+it. That costs bytes and is the point: a matching line of an indented document is a fragment, and the reader is left
+seeking outward for its braces, and a hit that made the reader open a second file to learn the entry is a draft has
+sent them to the file the flat one exists to avoid.
 
-**Terms are ordered most general first,** so a grep hitting a term two glossaries define meets the general entry first.
-`narrows` orders a chain and nothing orders one chain against another, so roots sort by id, each root's chain follows
-it, and terms sort alphabetically within a glossary.
+**Records are ordered roots-by-id, each root's chain depth-first beneath it.** Terms sort alphabetically within a
+record. Generality holds **within a chain** and nowhere else: `gls-search` narrows `gls-example-libraries`, so a grep
+for `title` meets the general entry before the one refining it. Across unrelated roots the order is stable and says
+nothing — `record` is defined by `gls-example-libraries` and `gls-knowledge-as-code`, neither narrowing the other, and
+reading the first hit as the more general one would give a reader the wrong domain. `narrows` is what answers that, and
+every line carries its record.
+
+**Absent is `null`,** in every file and for every key. A field a record leaves blank and a field it does not carry are
+one absence to a consumer, and nobody should have to know which file they are reading to know what nothing looks like.
+
+**Prose arrives unwrapped.** The corpus wraps at 120 columns, which is a fact about the file rather than about the
+words, and a grep for a phrase straddling the wrap would find nothing. Blank lines are the author's and stay; a list,
+heading, quote, table or fence is left exactly as written.
 
 **Two link forms, both naming a ref.** A person follows the rendered one and an agent fetches the raw one. The rules
 joining a base to a path, and the anchor rule for a part, belong to `publishing-target` and live in `Publishing`;

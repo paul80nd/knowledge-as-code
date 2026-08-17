@@ -3,8 +3,12 @@
 .dist/manifest.json :: "target": "none"
 .dist/manifest.json :: "humanBase": null
 .dist/manifest.json :: "type": "glossary"
-.dist/manifest.json :: "count": 3
-.dist/manifest.json :: "parts": "glossary/terms.jsonl"
+
+# Two counts, named apart: three records, five terms between them. One number would be read as either,
+# and the term count is not derivable without opening the flat file.
+.dist/manifest.json :: "records": 3
+.dist/manifest.json :: "parts": 5
+.dist/manifest.json :: "partsFile": "glossary/terms.jsonl"
 
 # A record carries what `export:` in the schema declares, and not what it does not. `owner` stays
 # behind: it is a fact about this corpus's stewardship rather than about the words.
@@ -12,19 +16,33 @@
 .dist/glossary/gls-search.json :: "status": "draft"
 .dist/glossary/gls-search.json :: "review-by": "2030-01-01"
 .dist/glossary/gls-search.json :: !"owner"
-.dist/glossary/gls-search.json :: "Scope": "How a reader's words reach a record.
+
+# One spelling of absent, in every file and for every key. A root narrows nothing, and says so the way
+# a term with no labelled line says it.
+.dist/glossary/gls-estate.json :: "narrows": null
+.dist/glossary/terms.jsonl :: "not":null
+
+# Prose arrives unwrapped: the corpus's 120-column wrap is a fact about the file, and a grep for a
+# phrase straddling it would match nothing. The blank line the author wrote is kept.
+.dist/glossary/gls-estate.json :: "Scope": "What every system here has in common. A word only one system uses belongs in that system's glossary, and a word two of them disagree about belongs here with the disagreement named.\n\nA second paragraph,
+.dist/glossary/terms.jsonl :: "not":"a branch in source control. Both appear in the same sentence often enough to be worth separating, and this line is wrapped so the export is made to join it."
 
 # A corpus with no resolvable address writes its records without links rather than with empty ones.
 .dist/glossary/gls-search.json :: "links": null
 
-# One term, one line, one whole object — carrying the definition and the labelled line apart, and the
-# record it came from, because a grep hands back a line and nothing around it.
-.dist/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","not":"the request the service received. One request carries a query and its paging.","type":"glossary","record":"gls-search","part":"query","links":null}
+# One term, one line, one whole object — carrying the definition and the labelled line apart, the state
+# of the glossary it came from, and the record it belongs to, because a grep hands back a line and
+# nothing around it.
+.dist/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","not":"the request the service received. One request carries a query and its paging.","seeAlso":null,"type":"glossary","record":"gls-search","part":"query","status":"draft","reviewBy":"2030-01-01","links":null}
 
-# A term with no labelled line carries a null rather than an empty string standing in for one.
-.dist/glossary/terms.jsonl :: "title":"Relevance","definition":"The score that orders results.","not":null
+# A cross-reference travels as a part id the consumer can look up. The source names the file and not
+# the anchor, so the counterpart is this term's own id inside the record pointed at — and the prose
+# keeps the reference its author wrote.
+.dist/glossary/terms.jsonl :: "seeAlso":["gls-framework.record"]
+.dist/glossary/terms.jsonl :: "not":"a knowledge document filed under a type — see [gls-framework]."
 
-# Most general first. `narrows` orders a chain and glossary id orders the roots, so a grep meeting a
-# term two glossaries define meets the estate's before the framework's.
+# Generality holds inside a chain: `gls-search` narrows `gls-estate`, so a grep for a term both define
+# would meet the general one first. Across `gls-estate` and `gls-framework` — unrelated roots, both
+# defining `record` — the order is stable and claims nothing, so nothing here asserts it does.
 .dist/glossary/terms.jsonl :: "record":"gls-estate","part":"record"
 .dist/glossary/terms.jsonl :: "record":"gls-framework","part":"record"

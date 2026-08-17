@@ -80,11 +80,14 @@ public static class Exporter
                 files.Add(new ExportFile($"{t.Key}/{Id(doc)}.json", Serialize(Record(doc, t, publishing))));
 
             var parts = t.Export.Parts.Length > 0 && t.Parts is not null
-                ? PartsFile(records, t, publishing)
+                ? PartsFile(records, t, corpus.Tree, publishing)
                 : null;
             if (parts is not null) files.Add(parts);
 
-            types.Add(new ExportedType(t.Key, records.Count, t.Key, parts?.Path));
+            // Two counts, because they answer two questions and one number cannot. A consumer sizing the
+            // vocabulary wants the parts; one asking how many files it was handed wants the records.
+            types.Add(new ExportedType(
+                t.Key, records.Count, parts is null ? 0 : Lines(parts.Content), t.Key, parts?.Path));
         }
 
         files.Add(new ExportFile(ManifestFile,
@@ -151,16 +154,20 @@ public static class Exporter
                || due >= today;
     }
 
-    // The records of one type, most general first.
+    // The records of one type: roots by id, and each root's chain depth-first beneath it.
     //
-    // `narrows` orders a chain and nothing orders one chain against another, so "most general first" is
-    // not the total order it sounds like. A record narrowing nothing is a root; roots sort by id, each
-    // root's chain follows it, and a record narrowing something outside the set is a root too — it has
+    // A record narrowing nothing is a root, as is one narrowing something outside the set — it has
     // nothing here to sit beneath. A type whose records narrow nothing at all sorts by id throughout,
     // which is the same rule with every record a root.
     //
-    // The order is what a grep of the flat file meets, so a term redefined by a narrower record is met
-    // in its general form first.
+    // **What the order means, and what it does not.** Generality holds *within a chain*: `gls-search`
+    // narrows `gls-example-libraries`, so a grep for `title` meets the general entry before the one
+    // that refines it, which is the whole reason the order is built this way. It says nothing at all
+    // *across roots*. `record` is defined by `gls-example-libraries` and `gls-knowledge-as-code`,
+    // neither of which narrows the other — one is a bibliographic record and the other a knowledge
+    // document — so which comes first is stable and arbitrary, and reading the first hit as the more
+    // general one would hand a reader the wrong domain entirely. `narrows` is what answers that, and
+    // every line carries it by carrying its record.
     //
     // Two records sharing an id would share an output filename, and the second would replace the first.
     // Nothing here guards it: `id-unique` reports a duplicate as an error, so the corpus is one `validate`
@@ -217,15 +224,72 @@ public static class Exporter
 
         var fields = new Dictionary<string, string?>(StringComparer.Ordinal);
         foreach (var name in export.Fields)
-            fields[name] = name == Generator.Title ? doc.H1 : doc.FrontScalar(name);
+            fields[name] = Absent(name == Generator.Title ? doc.H1 : doc.FrontScalar(name));
 
         var sections = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var (name, _) in export.Sections)
             if (doc.Sections.FirstOrDefault(s =>
                     string.Equals(s.Title, name, StringComparison.OrdinalIgnoreCase)) is { } section)
-                sections[name] = doc.Text[section.BodyStart..section.BodyEnd].Trim();
+                sections[name] = Unwrap(doc.Text[section.BodyStart..section.BodyEnd]);
 
         return new ExportRecord(t.Key, doc.Rel, fields, sections, Links(links));
+    }
+
+    // One spelling of absent, across every file an export writes: `null`. A field a record leaves blank
+    // and a field it does not carry are the same absence to a consumer, and a corpus writing `narrows:`
+    // with nothing after it has not narrowed anything.
+    //
+    // A consumer should not have to know which file it is reading, or which key it is looking at, to
+    // know what nothing looks like.
+    private static string? Absent(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
+
+    // The source's wrap column, taken back out.
+    //
+    // Prose here is wrapped at 120 columns, and those line breaks are a fact about the file rather than
+    // about the words. Carried into an export they break phrase matching, which is the one thing the
+    // flat terms file exists for: a grep for a phrase straddling the wrap finds nothing.
+    //
+    // Blank lines are the author's and stay. A block a joiner would mangle — a list, a heading, a quote,
+    // a table, a fence — is left exactly as written, because the wrap is only meaningless inside a
+    // paragraph and that is the only place this touches.
+    private static string Unwrap(string text)
+    {
+        var paragraphs = text.Replace("\r\n", "\n").Trim().Split("\n\n");
+
+        return string.Join("\n\n", paragraphs.Select(p =>
+        {
+            var lines = p.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0).ToList();
+            return lines.Any(Structural) ? p.Trim() : string.Join(" ", lines);
+        }));
+
+        // Whether a line opens a block rather than continuing a sentence.
+        //
+        // A bullet and a heading are the marker *and a space*, which is what separates `- item` from an
+        // em-dash clause and `**Not:**` from a list. Getting that wrong is not symmetrical: a paragraph
+        // left wrapped merely reads as it was written, where a list joined into one line is destroyed —
+        // so `>`, `|` and a fence need no space, being unambiguous without one.
+        static bool Structural(string line) =>
+            Bullet(line) || Heading(line) || line[0] is '>' or '|' or '`' || Ordered(line);
+
+        static bool Bullet(string line) =>
+            line[0] is '-' or '*' or '+' && line.Length > 1 && line[1] == ' ';
+
+        // A run of hashes and then a space, so `## Scope` is a heading and `#tag` is a word.
+        static bool Heading(string line)
+        {
+            var i = 0;
+            while (i < line.Length && line[i] == '#') i++;
+            return i > 0 && i < line.Length && line[i] == ' ';
+        }
+
+        // `1.` or `1)` and then a space — an ordered list marker, rather than a sentence that happens
+        // to begin with a number.
+        static bool Ordered(string line)
+        {
+            var i = 0;
+            while (i < line.Length && char.IsDigit(line[i])) i++;
+            return i > 0 && i + 1 < line.Length && line[i] is '.' or ')' && line[i + 1] == ' ';
+        }
     }
 
     // The flat file of every part of a type, one part to a line.
@@ -234,9 +298,10 @@ public static class Exporter
     // something parseable on its own: a matching line of an indented document is a fragment, and the
     // reader is left seeking outward for its braces. Each line therefore repeats the record it came
     // from and the links back to it, which costs bytes and is the whole point.
-    private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Publishing? publishing)
+    private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, Publishing? publishing)
     {
         var spec = t.Parts!;
+        var byPath = records.ToDictionary(d => d.Rel, StringComparer.Ordinal);
         var lines = new StringBuilder();
 
         foreach (var doc in records)
@@ -249,7 +314,10 @@ public static class Exporter
 
                 var (lead, aside) = Split(doc, part, spec.Aside);
                 lines.Append(Serialize(new ExportPartLine(
-                    $"{id}.{partId}", part.Text, lead, aside, t.Key, id, partId,
+                    $"{id}.{partId}", part.Text, lead, aside,
+                    SeeAlso(doc, part, partId, byPath, tree),
+                    t.Key, id, partId,
+                    Absent(doc.FrontScalar("status")), Absent(doc.FrontScalar("review-by")),
                     Links(publishing?.Links(doc.Rel, partId)))));
                 lines.Append('\n');
             }
@@ -261,29 +329,71 @@ public static class Exporter
         return lines.Length > 0 ? new ExportFile($"{t.Key}/{spec.Noun}s.jsonl", lines.ToString()) : null;
     }
 
+    // The parts this part points at, as full part ids, or null where it points at none.
+    //
+    // A cross-reference is written as a link, and a link's target is stripped out of the prose: an agent
+    // reading `see [gls-search]` in the text alone is handed a bracket it cannot follow. So the ids are
+    // carried beside the words rather than left inside them.
+    //
+    // **It resolves to the part, not to the record.** These references are the `redefinitions-are-
+    // reciprocal` rule showing through, and that rule is about a term and its counterpart, so naming the
+    // whole glossary would answer a narrower question with a broader one. Where the link carries an
+    // anchor, the anchor names the part. Where it names the file alone — which is how this corpus writes
+    // them today — the counterpart is this part's own id inside the record pointed at, and it is emitted
+    // only where that record really holds such a part. A link naming a record with no counterpart in it
+    // resolves to nothing here, and stays in the prose where its author put it.
+    private static IReadOnlyList<string>? SeeAlso(Doc doc, PartRow part, string partId,
+        Dictionary<string, Doc> byPath, Tree tree)
+    {
+        var found = new List<string>();
+
+        foreach (var link in doc.Links)
+        {
+            if (link.Position < part.BodyStart || link.Position >= part.BodyEnd) continue;
+            if (LinkChecks.IsExternal(link.Target)) continue;
+
+            if (LinkChecks.Resolve(tree, doc.Rel, link.Target) is not { } rel) continue;
+            if (!byPath.TryGetValue(rel, out var target) || target == doc) continue;
+
+            var hash = link.Target.IndexOf('#');
+            var anchor = hash >= 0 ? link.Target[(hash + 1)..] : partId;
+            if (!target.Parts.Any(p => string.Equals(p.Id, anchor, StringComparison.Ordinal))) continue;
+
+            var full = $"{Id(target)}.{anchor}";
+            if (!found.Contains(full, StringComparer.Ordinal)) found.Add(full);
+        }
+
+        found.Sort(StringComparer.Ordinal);
+        return found.Count > 0 ? found : null;
+    }
+
     // A part's body split into the two pieces a type writes it in: the lead, and the labelled block
     // beneath it that the type's `parts.aside:` names. Both are the source as written, trimmed, because
     // `full` fidelity promises the record's own words and markdown is the words it was written in.
     //
     // A body with no labelled block returns a null aside, which is the common case — the label marks
     // the confusion worth heading off, and most parts have none.
-    private static (string Lead, string? Aside) Split(Doc doc, PartRow part, string label)
+    private static (string? Lead, string? Aside) Split(Doc doc, PartRow part, string label)
     {
-        var body = part.Body(doc.Text).ToString();
-        var blocks = body
+        var blocks = part.Body(doc.Text).ToString()
             .Split("\n\n", StringSplitOptions.RemoveEmptyEntries)
-            .Select(b => b.Trim())
+            .Select(Unwrap)
             .Where(b => b.Length > 0)
             .ToList();
 
         var marker = label.Length > 0 ? $"**{label}:**" : null;
-        var lead = blocks.FirstOrDefault(b => marker is null || !b.StartsWith(marker, StringComparison.Ordinal)) ?? "";
+        var lead = blocks.FirstOrDefault(b => marker is null || !b.StartsWith(marker, StringComparison.Ordinal));
         var aside = marker is null
             ? null
             : blocks.FirstOrDefault(b => b.StartsWith(marker, StringComparison.Ordinal))?[marker.Length..].Trim();
 
-        return (lead, aside);
+        return (Absent(lead), Absent(aside));
     }
+
+    // How many parts a flat file holds, counted off the file itself. One part is one line, so the count
+    // the manifest states and the file a consumer greps cannot come apart.
+    private static int Lines(string content) =>
+        content.Count(c => c == '\n');
 
     private static ExportLinks? Links(PublishedLinks? links) =>
         links is null ? null : new ExportLinks(links.Human, links.Raw);

@@ -17,6 +17,11 @@ public class LinkRef
     public int Line;
     public bool IsReference; // reference or shortcut link (has a label/definition)
     public string? Label;
+
+    // Where the link sits in the document's text. A line is what a finding quotes, and this is what
+    // answers which part of the record a link stands inside: a part's body is held as a span, and a
+    // line number would have to be converted back into one to compare them.
+    public int Position;
 }
 
 // One part of a record, held as the parser found it rather than as it should be: a table row whose id
@@ -224,7 +229,8 @@ public partial class Doc
                 Target = link.Url ?? "",
                 Line = link.Line + 1,
                 IsReference = link.Reference is not null,
-                Label = link.Reference?.Label ?? link.Label
+                Label = link.Reference?.Label ?? link.Label,
+                Position = link.Span.Start
             });
             if (link.Reference is not null) doc.UsedLabels.Add(link.Reference.Label ?? "");
         }

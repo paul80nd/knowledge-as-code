@@ -53,6 +53,42 @@ public class ExporterTests
             lines.Select(l => l.GetProperty("id").GetString()));
     }
 
+    // Generality holds inside a chain, and this is the case the ordering was built for: `gls-narrow`
+    // narrows `gls-general`, both define `Title`, and a grep meets the general one first.
+    [Fact]
+    public void Inside_a_chain_the_general_entry_comes_before_the_one_refining_it()
+    {
+        var lines = TermLines(Corpus(
+            Glossary("gls-narrow", narrows: "gls-general", terms: "### Title\n\nThe indexed field.\n"),
+            Glossary("gls-general", narrows: null, terms: "### Title\n\nThe work itself.\n")));
+
+        Assert.Equal(["gls-general.title", "gls-narrow.title"], lines.Select(l => l.GetProperty("id").GetString()));
+    }
+
+    // Across unrelated roots the order is stable and means nothing else. `Record` is a bibliographic
+    // record in one glossary and a knowledge document in the other, neither narrows the other, and
+    // reading the first hit as the more general one would hand a reader the wrong domain. This asserts
+    // only that the order does not move — deliberately not that either entry is the general one.
+    [Fact]
+    public void Across_unrelated_roots_the_order_is_stable_and_claims_no_generality()
+    {
+        string[] Ids(params string[] glossaries) =>
+            [.. TermLines(Corpus(glossaries)).Select(l => l.GetProperty("id").GetString()!)];
+
+        var estate = Glossary("gls-estate", narrows: null, terms: "### Record\n\nA bibliographic description.\n");
+        var framework = Glossary("gls-framework", narrows: null, terms: "### Record\n\nA knowledge document.\n");
+
+        // Neither declares `narrows`, so nothing in the corpus ranks them. The same two ids come back
+        // whichever order they are loaded in, and that is the whole of the claim.
+        Assert.Equal(Ids(estate, framework), Ids(framework, estate));
+        Assert.Equal(2, Ids(estate, framework).Length);
+
+        // What a reader needs in order to tell "refines" from "unrelated" is on the record, and every
+        // line reaches it by naming the record it came from.
+        foreach (var line in TermLines(Corpus(estate, framework)))
+            Assert.NotEmpty(line.GetProperty("record").GetString()!);
+    }
+
     [Fact]
     public void Terms_sort_alphabetically_inside_a_glossary()
     {
@@ -122,6 +158,133 @@ public class ExporterTests
             Assert.Equal("gls-one", JsonDocument.Parse(line).RootElement.GetProperty("record").GetString());
     }
 
+    // -- the wrap column, taken back out --
+
+    // The corpus wraps at 120 columns. Those breaks are a fact about the file, and carried into the
+    // export they defeat the one thing the flat file is for: a grep for a phrase straddling the wrap
+    // matches nothing.
+    [Fact]
+    public void A_definition_wrapped_in_the_source_arrives_as_one_line()
+    {
+        var line = Assert.Single(TermLines(Corpus(Glossary("gls-one", null,
+            "### Query\n\nWhat a reader typed, after parsing\nand before matching.\n"))));
+
+        Assert.Equal("What a reader typed, after parsing and before matching.",
+            line.GetProperty("definition").GetString());
+    }
+
+    [Fact]
+    public void A_labelled_line_is_unwrapped_too()
+    {
+        var line = Assert.Single(TermLines(Corpus(Glossary("gls-one", null,
+            "### Query\n\nWhat a reader typed.\n\n**Not:** the request the service\nreceived.\n"))));
+
+        Assert.Equal("the request the service received.", line.GetProperty("not").GetString());
+    }
+
+    // A blank line is the author's, and says something a wrap does not.
+    [Fact]
+    public void A_paragraph_break_in_a_section_survives_the_unwrapping()
+    {
+        var record = JsonDocument.Parse(
+                Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n",
+                    scope: "One paragraph that\nwraps.\n\nA second\nparagraph."))), "glossary/gls-one.json").Content)
+            .RootElement;
+
+        Assert.Equal("One paragraph that wraps.\n\nA second paragraph.",
+            record.GetProperty("sections").GetProperty("Scope").GetString());
+    }
+
+    // Joining a list into one line destroys it, where leaving a paragraph wrapped merely reads as it was
+    // written. The doubt is resolved towards leaving the block alone.
+    [Fact]
+    public void A_list_is_left_exactly_as_written()
+    {
+        var record = JsonDocument.Parse(
+                Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n",
+                    scope: "What this admits:\n\n- one thing\n- another thing"))), "glossary/gls-one.json").Content)
+            .RootElement;
+
+        Assert.Equal("What this admits:\n\n- one thing\n- another thing",
+            record.GetProperty("sections").GetProperty("Scope").GetString());
+    }
+
+    // -- cross-references --
+
+    // A link's target is stripped out of the prose, so an agent reading `see [gls-two]` in the text
+    // alone is handed a bracket it cannot follow. The ids are carried beside the words.
+    //
+    // They resolve to the **part**: these references are `redefinitions-are-reciprocal` showing through,
+    // and that rule is about a term and its counterpart. This corpus links to the file rather than the
+    // anchor, so the counterpart is this term's own id inside the record pointed at.
+    [Fact]
+    public void A_reference_naming_the_file_resolves_to_the_counterpart_term()
+    {
+        var lines = TermLines(Corpus(
+            Glossary("gls-one", null, "### Record\n\nOne sense.\n\n**Not:** the other — see [gls-two].\n\n"
+                                      + "[gls-two]: gls-two.md\n"),
+            Glossary("gls-two", null, "### Record\n\nThe other sense.\n")));
+
+        var referring = lines.Single(l => l.GetProperty("id").GetString() == "gls-one.record");
+        Assert.Equal(["gls-two.record"], referring.GetProperty("seeAlso").EnumerateArray().Select(e => e.GetString()));
+    }
+
+    [Fact]
+    public void A_reference_carrying_an_anchor_resolves_to_the_part_it_names()
+    {
+        var lines = TermLines(Corpus(
+            Glossary("gls-one", null, "### Alpha\n\nOne sense.\n\n**Not:** see [gls-two].\n\n"
+                                      + "[gls-two]: gls-two.md#beta\n"),
+            Glossary("gls-two", null, "### Beta\n\nAnother.\n")));
+
+        var referring = lines.Single(l => l.GetProperty("id").GetString() == "gls-one.alpha");
+        Assert.Equal(["gls-two.beta"], referring.GetProperty("seeAlso").EnumerateArray().Select(e => e.GetString()));
+    }
+
+    // A link naming a record that holds no counterpart resolves to nothing rather than to the record: a
+    // reference to the whole glossary answers a narrower question with a broader one, and inventing a
+    // part id that is not there would be worse still. The prose keeps the reference either way.
+    [Fact]
+    public void A_reference_with_no_counterpart_to_land_on_carries_nothing()
+    {
+        var lines = TermLines(Corpus(
+            Glossary("gls-one", null, "### Alpha\n\nOne sense.\n\n**Not:** see [gls-two].\n\n"
+                                      + "[gls-two]: gls-two.md\n"),
+            Glossary("gls-two", null, "### Beta\n\nUnrelated.\n")));
+
+        var referring = lines.Single(l => l.GetProperty("id").GetString() == "gls-one.alpha");
+        Assert.Equal(JsonValueKind.Null, referring.GetProperty("seeAlso").ValueKind);
+        Assert.Contains("see [gls-two]", referring.GetProperty("not").GetString());
+    }
+
+    // -- the trust marker --
+
+    // `terms.jsonl` is what gets grepped, and a consumer that grepped it has not opened the record. A
+    // hit carrying no state is a definition with nothing saying its glossary is still settling.
+    [Fact]
+    public void Every_term_line_carries_the_state_of_the_glossary_it_came_from()
+    {
+        var line = Assert.Single(TermLines(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n",
+            reviewBy: "2020-01-01", status: "draft"))));
+
+        Assert.Equal("draft", line.GetProperty("status").GetString());
+        Assert.Equal("2020-01-01", line.GetProperty("reviewBy").GetString());
+    }
+
+    // -- one spelling of absent --
+
+    // A field a record leaves blank and a field it does not carry are one absence to a consumer, and
+    // `""` here beside `null` there would make the spelling a property of which file was opened.
+    [Fact]
+    public void A_field_left_blank_is_null_and_never_an_empty_string()
+    {
+        var record = JsonDocument.Parse(
+                Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"))), "glossary/gls-one.json").Content)
+            .RootElement;
+
+        Assert.Equal(JsonValueKind.Null, record.GetProperty("fields").GetProperty("narrows").ValueKind);
+    }
+
     // -- the record --
 
     [Fact]
@@ -167,6 +330,24 @@ public class ExporterTests
 
         var manifest = JsonDocument.Parse(plan.Files[0].Content).RootElement;
         Assert.Empty(manifest.GetProperty("types").EnumerateArray());
+    }
+
+    // Two counts, named apart. One number would be read as either, and for a glossary they differ by an
+    // order of magnitude: three files, thirty terms. The parts count is what sizes the vocabulary, and
+    // it is not derivable without reading the flat file.
+    [Fact]
+    public void The_manifest_counts_records_and_parts_separately()
+    {
+        var manifest = JsonDocument.Parse(
+                Single(Plan(Corpus(
+                    Glossary("gls-one", null, "### Alpha\n\nA.\n\n### Beta\n\nB.\n"),
+                    Glossary("gls-two", null, "### Gamma\n\nC.\n"))), Exporter.ManifestFile).Content)
+            .RootElement;
+
+        var type = Assert.Single(manifest.GetProperty("types").EnumerateArray());
+        Assert.Equal(2, type.GetProperty("records").GetInt32());
+        Assert.Equal(3, type.GetProperty("parts").GetInt32());
+        Assert.Equal("glossary/terms.jsonl", type.GetProperty("partsFile").GetString());
     }
 
     [Fact]
@@ -270,10 +451,10 @@ public class ExporterTests
     ];
 
     private static string Glossary(string id, string? narrows, string terms,
-        string reviewBy = "2030-01-01", string status = "draft") =>
+        string reviewBy = "2030-01-01", string status = "draft", string scope = "What this admits.") =>
         $"---\nid: {id}\ntier: descriptive\nstatus: {status}\nowner: someone\n"
         + $"narrows: {narrows}\nreview-by: \"{reviewBy}\"\n---\n\n"
-        + $"# {id}\n\n## Scope\n\nWhat this admits.\n\n## Terms\n\n{terms}";
+        + $"# {id}\n\n## Scope\n\n{scope}\n\n## Terms\n\n{terms}";
 
     // A loaded corpus holding the glossaries given, in the order given — which is deliberately not the
     // order the export writes them in, so a passing ordering test is not reading its input back.
@@ -291,12 +472,18 @@ public class ExporterTests
             docs.Add(doc);
         }
 
+        // The tree holds the records, because a cross-reference is a link and a link resolves against
+        // what the corpus holds rather than against the disk.
+        var tree = new Tree(
+            new HashSet<string>(docs.Select(d => d.Rel), StringComparer.Ordinal),
+            rel => docs.FirstOrDefault(d => d.Rel == rel)?.Text ?? "");
+
         return new LoadedCorpus
         {
             RepoRoot = "",
             Schema = schema,
             Descriptor = new CorpusDescriptor { Name = "test-corpus", ContentVersion = "2.1.0" },
-            Tree = new Tree(new HashSet<string>(StringComparer.Ordinal), _ => ""),
+            Tree = tree,
             Adopted = [type],
             Docs = docs,
             Templates = [],

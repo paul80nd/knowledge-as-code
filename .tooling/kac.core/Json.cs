@@ -53,14 +53,22 @@ public record ExportManifest(
 // is the same state the records report by carrying no links.
 public record ExportPublishing(string Target, string? HumanBase, string? RawBase, string? Ref);
 
-// One type this export carries, and where to find it. `Parts` is null for a type whose records have no
-// parts to flatten, so a consumer reads the per-record files alone rather than seeking a file that was
-// never written.
-public record ExportedType(string Type, int Count, string Dir, string? Parts);
+// One type this export carries, how much of it there is, and where to find it.
+//
+// Two counts, named apart. `Records` is how many files sit under `Dir`; `Parts` is how many lines sit in
+// `PartsFile`, which for a glossary is the size of the vocabulary rather than the number of glossaries.
+// One number could be read as either, and the two differ by an order of magnitude.
+//
+// `PartsFile` is null for a type whose records hold no addressable parts, so a consumer reads the
+// per-record files alone rather than seeking a file that was never written; `Parts` is then zero.
+public record ExportedType(string Type, int Records, int Parts, string Dir, string? PartsFile);
 
 // One record, carrying what its type's `export:` block declares and nothing else. `Fields` and
 // `Sections` are keyed by what the schema named, so a consumer reading a corpus with a type it does not
 // know still gets a document it can walk.
+//
+// Absent is `null` throughout, here and on every line of the flat file: a consumer should not have to
+// know which file it is reading to know what nothing looks like.
 public record ExportRecord(
     string Type,
     string Path,
@@ -72,14 +80,25 @@ public record ExportLinks(string Human, string Raw);
 
 // One part on one line of the flat file. Self-contained by design: it repeats the record it belongs to
 // and the links back to it, because a grep hands back a line and nothing around it.
+//
+// `Status` and `ReviewBy` are that principle applied to trust. They live on the record too, and a
+// consumer that grepped this file has not opened it — so a hit that did not carry them would be a
+// definition with nothing saying its glossary is still settling, or was last read three years ago.
+// Two short fields, because everything here is paid for once per part.
+//
+// `SeeAlso` carries the cross-references as ids the consumer can look up, since a link's target is
+// stripped out of `Definition` and `Not` and the bracket left behind leads nowhere.
 public record ExportPartLine(
     string Id,
     string Title,
-    string Definition,
+    string? Definition,
     string? Not,
+    IReadOnlyList<string>? SeeAlso,
     string Type,
     string Record,
     string Part,
+    string? Status,
+    string? ReviewBy,
     ExportLinks? Links);
 
 [JsonSourceGenerationOptions(
