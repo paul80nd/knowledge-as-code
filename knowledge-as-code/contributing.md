@@ -73,6 +73,16 @@ display text:
 
     [adr-0013]: 0013-http-custom-header-naming.md
 
+**A reference to a part of a document names the part** — a clause of a policy, a term of a glossary — as
+`<id>.<part>`, which is the form a citation already uses. The label carries it and the target lands on it:
+
+    A title in the catalogue is not the indexed field — see [gls-search.title].
+
+    [gls-search.title]: search.md#title
+
+Linking to the file instead lands a reader at the top of the document, to find the part for themselves. It also loses
+the reference: a tool reading the corpus carries what the link states, and a link naming no part states none.
+
 **References with prose link text use inline links**, since the display text differs from the target:
 
     The rule lives in the [value-formats standard](/standards/public-api/value-formats.md).
@@ -83,6 +93,7 @@ is a one-line change.
 
 **The label is the id exactly as that document carries it** — `adr-0013`, `pol-DEVI`, `svc-billing-api`. The prefix is
 always lower-case; what follows takes the type's own form, so a mnemonic stays upper-case and a slug stays lower-case.
+A part id is the record's own id, a dot, and the part as its type writes one: `pol-DEVI.TIMEBOX`, `gls-search.title`.
 The label is its own display text, so a label that is not the id shows the reader an id that does not exist.
 
 CI enforces this with `label-canonical`. It matters because reference and definition are matched case-insensitively:

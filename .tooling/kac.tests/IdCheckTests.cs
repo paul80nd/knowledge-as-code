@@ -18,6 +18,20 @@ public class IdCheckTests
     private static TypeSchema Slug() => new()
         { Folder = "tools", IdPrefix = "tol", IdStyle = "slug" };
 
+    // The two part sources, each with the id shape its own declaration gives a part: a policy's clauses
+    // are written to a pattern, and a glossary's terms are the anchors their headings slug to.
+    private static TypeSchema Clauses() => new()
+    {
+        Folder = "policies", IdPrefix = "pol", IdStyle = "mnemonic", IdWidth = 4,
+        Parts = new PartSpec(PartSpec.Table, "^[A-Z]{3,8}$", ["MUST"], [])
+    };
+
+    private static TypeSchema Terms() => new()
+    {
+        Folder = "glossary", IdPrefix = "gls", IdStyle = "slug",
+        Parts = new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms", Level = 3 }
+    };
+
     // -- the prefix, which is the type --
 
     [Fact]
@@ -142,6 +156,33 @@ public class IdCheckTests
     [InlineData("adr-")]  // nothing after it
     public void Anything_else_is_prose_in_brackets(string label)
         => Assert.False(IdChecks.TryCanonicalId(label, SchemaWith(Numbered(), Mnemonic(), Slug()), out _));
+
+    // -- and is it a part of one? --
+
+    // A part is addressed as `<record>.<part>`, which is the form a citation uses and now the form a link
+    // to a part uses. The record half canonicalises as any id does; the part half is judged against the
+    // type's own `parts:` block, because only that says what a part id looks like.
+    [Theory]
+    [InlineData("pol-scrt.TIMEBOX", "pol-SCRT.TIMEBOX")] // the record half is written back upper
+    [InlineData("POL-SCRT.TIMEBOX", "pol-SCRT.TIMEBOX")]
+    [InlineData("gls-Search.title", "gls-search.title")] // a heading part is the anchor it slugs to
+    public void A_part_shaped_label_is_recognised_and_given_its_canonical_form(string label, string expected)
+    {
+        Assert.True(IdChecks.TryCanonicalId(label, SchemaWith(Clauses(), Terms()), out var canonical));
+        Assert.Equal(expected, canonical);
+    }
+
+    // The part half has to fit the declaration, and a type declaring no parts has none to be named. That
+    // is what keeps `pol-DEVI.md` and a filename in brackets out of this.
+    [Theory]
+    [InlineData("pol-SCRT.timebox")]  // the declared pattern is upper-case
+    [InlineData("pol-SCRT.md")]       // a file extension is not a clause
+    [InlineData("gls-search.Title")]  // a heading part is its slug, and a slug is lower-case
+    [InlineData("adr-0001.context")]  // the type declares no parts at all
+    [InlineData("pol-SCRT.")]         // nothing after the dot
+    [InlineData(".TIMEBOX")]          // nothing before it
+    public void A_part_that_does_not_fit_its_type_s_declaration_is_prose(string label)
+        => Assert.False(IdChecks.TryCanonicalId(label, SchemaWith(Clauses(), Terms(), Numbered()), out _));
 
     // -- which id does a link cite? --
 

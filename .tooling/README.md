@@ -258,6 +258,16 @@ nothing — `record` is defined by `gls-example-libraries` and `gls-knowledge-as
 reading the first hit as the more general one would give a reader the wrong domain. `narrows` on the owning records is
 what tells the two cases apart, and every line names the record it came from.
 
+**A cross-reference is read, never inferred.** A `**Not:**` line pointing at another glossary is a link, and a link's
+target is stripped out of the prose — so the export carries the part it names in `seeAlso`, as `gls-search.title`. It
+resolves to the term rather than the record, because `redefinitions-are-reciprocal` is about a term and its
+counterpart.
+
+A link naming a record and no term inside it leaves nothing to read, so nothing is carried. The obvious guess is the
+same word in the other glossary; it is right only for a pair that happens to share a spelling, and silently wrong for a
+`Borrower` that redefines a `Patron`. The run therefore names each link it could not read, since an omission in an
+artefact nobody reviews is invisible.
+
 **Absent is `null`,** in every file and for every key. A field a record leaves blank and a field it does not carry are
 one absence to a consumer. Writing `""` in one file beside `null` in another would leave that consumer checking which
 file it had opened before it could test for nothing.

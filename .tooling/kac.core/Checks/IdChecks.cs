@@ -137,8 +137,25 @@ public static class IdChecks
     // Deliberately laxer about case than the id checks above, and for the opposite reason: this reads a
     // label written in prose in order to say what it should have been, so it has to recognise the
     // mis-cased form to be able to report it.
+    //
+    // A part is addressed the same way, as `<record>.<part>` — `pol-VURM.TIMEBOX`, `gls-search.title` —
+    // which is the form a citation already uses and now the form a link to a part uses too. The record
+    // half canonicalises as above; the part half is judged against the type's own `parts:` declaration
+    // and carried through as written, because only that declaration knows what a part id looks like.
     public static bool TryCanonicalId(string label, Schema schema, out string canonical)
     {
+        var dot = label.IndexOf('.');
+        if (dot > 0 && dot < label.Length - 1)
+        {
+            canonical = "";
+            var part = label[(dot + 1)..];
+            if (!TryCanonicalId(label[..dot], schema, out var record)) return false;
+            if (!NamesAPart(record, part, schema)) return false;
+
+            canonical = $"{record}.{part}";
+            return true;
+        }
+
         canonical = "";
         var dash = label.IndexOf('-');
         if (dash <= 0 || dash == label.Length - 1) return false;
@@ -167,6 +184,24 @@ public static class IdChecks
             default:
                 return false;
         }
+    }
+
+    // Whether `part` is shaped like a part of the type that owns `record`.
+    //
+    // Asked of the type's `parts:` block, because that is the only thing that knows: a policy declares
+    // `id-pattern:` and its clauses are upper-case mnemonics, and a glossary sources its parts from
+    // headings, whose id is the anchor a heading slugs to. A type declaring no parts has none to name,
+    // so `pol-DEVI.md` and `adr-0007.something` fall out here rather than being read as citations.
+    private static bool NamesAPart(string record, string part, Schema schema)
+    {
+        var prefix = record[..record.IndexOf('-')];
+        var t = schema.ByFolder.Values.FirstOrDefault(x => string.Equals(x.IdPrefix, prefix, StringComparison.Ordinal));
+
+        if (t?.Parts is not { } spec) return false;
+        if (spec.IdPatternRegex is { } pattern) return pattern.IsMatch(part);
+
+        // No declared pattern: the parts come from headings, so a part id is what `Md.Slug` writes.
+        return part.Length > 0 && part == Md.Slug(part);
     }
 
     // The id a link cites, read from the file it points at — `0007-…md` under a numbered type is

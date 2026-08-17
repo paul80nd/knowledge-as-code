@@ -68,14 +68,15 @@ the shared one still reads correctly in a corpus that never had the other half.
 
 **Conventions**
 
-* **Cross-references name the owning glossary and the term's anchor** — `[title](/glossary/search.md#title)`. The anchor
-  is the term's identifier; there are no numeric ids.
+* **Cross-references name the term** — `[gls-search.title]`, defined as `search.md#title`. The anchor is the term's
+  identifier; there are no numeric ids.
 * **Terms are singular and in canonical casing.** `Term`, not `terms`.
 
-**Declared.** `carried-in-full-by-digest` holds an entry to one paragraph, and orders the glossaries most general first
-in the digest [adr-0001] describes. That digest cuts off when its budget is spent rather than overrunning it, and three
-glossaries are enough to spend it. So the ordering decides which vocabulary a session arrives holding. Nothing generates
-a digest, so nothing runs the rule and the limit is yours to keep.
+**Declared.** `carried-in-full-by-digest` holds an entry to one paragraph, and orders the glossaries in the digest
+[adr-0001] describes. That digest cuts off when its budget is spent rather than overrunning it, and three glossaries are
+enough to spend it. So the ordering decides which vocabulary a session arrives holding. It orders a `narrows` chain and
+nothing else, so which of two unrelated glossaries loses its tail is a question the ordering does not answer. Nothing
+generates a digest, so nothing runs the rule and the limit is yours to keep.
 
 ## Metadata
 
@@ -135,13 +136,13 @@ a digest, so nothing runs the rule and the limit is yours to keep.
 
 **Declared, not yet enforced** — carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                                  |
-|--------------------------------|-------------------------------------------------------------------------------------------------------|
-| `redefinitions-are-reciprocal` | Where a narrower glossary redefines a term, each of the two entries names the other.                  |
-| `carried-in-full-by-digest`    | No entry runs beyond one paragraph, and this corpus's digest takes the glossaries most general first. |
-| `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.                   |
-| `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.                |
-| `terms-are-singular`           | Entry headings are singular and in canonical casing.                                                  |
+| Rule                           | What it would verify                                                                                                   |
+|--------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `redefinitions-are-reciprocal` | Where one glossary redefines a term another holds, each entry links to the other entry's anchor.                       |
+| `carried-in-full-by-digest`    | No entry runs beyond one paragraph, and this corpus's digest takes the glossaries in the order the export writes them. |
+| `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.                                    |
+| `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.                                 |
+| `terms-are-singular`           | Entry headings are singular and in canonical casing.                                                                   |
 
 <!-- END GENERATED: checks-glossary -->
 

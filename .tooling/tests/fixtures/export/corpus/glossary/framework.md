@@ -25,4 +25,7 @@ and both are reached by id.
 
 A knowledge document filed under a type, carrying frontmatter and an id.
 
-**Not:** every file in a type's folder. A template and a generated index are neither.
+**Not:** every file in a type's folder. A template and a generated index are neither. The catalogue uses the word for
+something else again — see [gls-estate].
+
+[gls-estate]: estate.md

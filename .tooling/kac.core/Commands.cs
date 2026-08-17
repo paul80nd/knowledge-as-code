@@ -63,6 +63,18 @@ public static class Commands
                 $"export: withheld {string.Join(", ", plan.Withheld)} — .corpus.yaml excludes "
                 + $"{string.Join(" and ", corpus.Descriptor.ExportExclude)}.");
 
+        // The same reasoning for a cross-reference the export could not read. It carries what a link
+        // names, and a link naming a record rather than a term inside it leaves nothing to carry — so
+        // the omission is stated here, where an author can act on it, instead of being guessed at.
+        if (plan.Unread.Count > 0)
+        {
+            Console.WriteLine(
+                $"export: {plan.Unread.Count} cross-reference(s) name a record and no part inside it, so "
+                + "nothing was carried for them:");
+            foreach (var u in plan.Unread) Console.WriteLine($"  {u}");
+            Console.WriteLine("export: point each link at the part it means, as '<file>.md#<anchor>'.");
+        }
+
         // An empty type list is a statement of what this corpus has, and not a failure: a corpus may
         // have adopted no type that declares an export, or have withheld everything the types it did
         // adopt would have carried. The line above says which, where it was the second.

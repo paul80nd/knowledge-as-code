@@ -39,9 +39,9 @@ The score that orders results, drawn from how often and where a query's words ap
 
 The indexed field carrying a work's name, and one of several a query matches against.
 
-**Not:** a title in the catalogue, which is the work itself — see [gls-example-libraries].
+**Not:** a title in the catalogue, which is the work itself — see [gls-example-libraries.title].
 
 Owned by [svc-search].
 
-[gls-example-libraries]: example-libraries.md
+[gls-example-libraries.title]: example-libraries.md#title
 [svc-search]: /services/search.md

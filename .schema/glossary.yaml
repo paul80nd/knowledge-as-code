@@ -125,16 +125,30 @@ index:
 
 rules:
   - id: redefinitions-are-reciprocal
-    description: Where a narrower glossary redefines a term, each of the two entries names the other.
+    description: >
+      Where one glossary redefines a term another holds, each entry links to the other entry's anchor.
+    # "The other entry", and not the other file. A link to `other.md` lands a reader at the top of the
+    # glossary rather than on the term, and an export carries the cross-reference a link states, so a
+    # link naming no term leaves it nothing to carry. Why the export refuses to guess the counterpart,
+    # rather than reading it from the term's own spelling, is in `/.tooling/README.md`.
+    #
     # The reference runs upward only where the general glossary is synced: a file every corpus shares
     # cannot name a record only this one holds.
   - id: carried-in-full-by-digest
-    description: No entry runs beyond one paragraph, and this corpus's digest takes the glossaries most general first.
+    description: >
+      No entry runs beyond one paragraph, and this corpus's digest takes the glossaries in the order the
+      export writes them.
     # A glossary is read end to end, so every entry's length is paid by every reader. The rule governs
     # the digest this corpus writes for itself, which has a budget. With several glossaries, "carry the
-    # glossary in full" names no single file: the digest takes them most general first and cuts off when
-    # the budget is spent, which three glossaries are enough to do. A consumer corpus receives the
-    # `export:` block above instead, and that is bounded per term.
+    # glossary in full" names no single file: the digest takes them in some order and cuts off when the
+    # budget is spent, which three glossaries are enough to do.
+    #
+    # That order is the export's — roots by id, each root's chain beneath it — and it carries generality
+    # only inside a chain. Across unrelated roots it is stable and arbitrary, so which of two roots loses
+    # its tail to the budget is arbitrary too. Whoever builds the digest has to answer that, and naming
+    # an order here is not the same as having answered it.
+    #
+    # A consumer corpus receives the `export:` block above instead, and that is bounded per term.
   - id: undefined-terms
     description: >
       Reports terms appearing more than N times across the corpus with no glossary entry.
