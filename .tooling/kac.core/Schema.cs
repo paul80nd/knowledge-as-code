@@ -133,8 +133,8 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
 // the type's `sections:` block declares, and parts are the ones its `parts:` block already locates.
 //
 // Fidelity is written against every entry and defaulted nowhere. A section carried whole and a section
-// reduced to a line are different promises to whoever reads the export, and the difference between them
-// is the whole of what this block says.
+// reduced to a line are different promises to whoever reads the export. That difference is the whole of
+// what this block says.
 public sealed class ExportSpec
 {
     // The frontmatter a record contributes, in the order an export writes it. Each names a field the
@@ -152,8 +152,8 @@ public sealed class ExportSpec
     // Carried whole: the record's own words reach the consumer unchanged.
     public const string Full = "full";
 
-    // Reduced to a line, and reduced to a breadcrumb back to the record it came from. Both are named so
-    // that a type whose sections are too long to carry has the word for what it wants.
+    // Reduced to a line, and reduced to a breadcrumb back to the record it came from. Both are named
+    // ahead of the exporter that writes them, so the model holds still when a type reaches for one.
     public const string Summary = "summary";
     public const string Reference = "reference";
 

@@ -54,28 +54,28 @@
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "type 'widgets' declares 'export.sections: Summary' at fidelity 'summary', which nothing carries. An export writes 'full'."
+      "message": "type 'widgets' declares 'export.sections: Summary' at fidelity 'summary', which nothing carries. An export carries 'full'."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares 'export.sections: Provenance', and its 'sections:' block declares no such section — export a section the type has, or add it. Selecting by key is what keeps the two declarations from drifting apart."
+      "message": "type 'widgets' declares 'export.sections: Provenance', and its 'sections:' block declares no such section — name a section the type has, or add it. Selecting by key is what keeps the two declarations in step."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares 'export.fields: colour', and neither the type nor '_universal.yaml' declares such a field — export a field a record carries, or 'title', which is its heading."
+      "message": "type 'widgets' declares 'export.fields: colour', and neither the type nor '_universal.yaml' declares such a field — name a field a record carries, or 'title', which is a record's heading rather than its frontmatter."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares 'export.parts:' and carries no 'parts:' block — say where a record keeps the parts an export is to take, or drop the entry."
+      "message": "type 'widgets' declares 'export.parts:' and carries no 'parts:' block — say where a record keeps the parts an export is to carry, or drop the entry."
     },
     {
       "file": ".schema/widgets.yaml",

@@ -203,9 +203,9 @@ belongs in frontmatter, is settled in [Metadata](/knowledge-as-code/metadata.md#
 The parser reads those parts for the checks, and nothing renders them: no generated block carries a body table or a view
 derived from one, so a corpus wanting one needs a tool change.
 
-**`export`** declares what a record of the type contributes to a published export. An export is a dependency surface —
-once a consumer corpus reads one, its shape is a contract — so what travels belongs to the type, beside the sections and
-fields it selects from, rather than to an exporter deciding type by type in code. A type with no `export:` block
+**`export`** declares what a record of the type contributes to a published export. An export is a dependency surface:
+once a consumer corpus reads one, its shape is a contract. So the declaration belongs to the type, beside the sections
+and fields it selects from, rather than to an exporter deciding type by type in code. A type with no `export:` block
 contributes nothing.
 
 ```yaml
@@ -219,19 +219,18 @@ export:
 Selection is **by key**, and that is the point of the block. `fields:` names fields the type declares or inherits,
 `sections:` is keyed by headings the `sections:` block declares, and `parts:` takes whatever the `parts:` block already
 locates. A name that resolves to nothing is reported: two structural declarations free to disagree would let an export
-promise a section no record carries and go on saying so. `title` is admitted in `fields:` and is not one — a record's
-title is its H1, which an index column already names the same way.
+promise a section no record carries and go on saying so. `fields:` also admits `title`. A record's title is its H1
+rather than frontmatter, and an index column already names it the same way.
 
 Every entry carries a **fidelity**, and none is defaulted. `full` carries the piece whole, `summary` reduces it to a
-line, and `reference` carries a breadcrumb back to the record and nothing else. Which of the three a consumer gets is
-the whole of what the block says, so leaving it to a default would put the load-bearing half of the declaration
-somewhere a reader of the schema cannot see it. `kac` writes `full`; the other two are named in the model so that a type
-whose sections are too long to carry has the word for what it wants, and `kac` reports either as a fidelity nothing
-carries until an exporter writes one.
+line, and `reference` leaves a breadcrumb back to the record. Which of the three a consumer gets is the whole of what
+the block says. A default would decide that where nobody reading the schema would see it. `kac` carries `full` today.
+The other two are named now so that a type arriving with sections too long to carry has the word for what it wants, and
+`kac` reports either as a fidelity nothing carries.
 
-The block is a declaration and nothing reads it out yet: `kac export` and the bundle it produces are
-[knowledge-as-code#181](https://github.com/paul80nd/knowledge-as-code/issues/181). What runs today is the reconciliation
-above, which is what stops a projection being declared against a type that cannot supply it.
+Nothing reads the block out yet: `kac export` and the bundle it produces are
+[knowledge-as-code#181](https://github.com/paul80nd/knowledge-as-code/issues/181). What runs today is the check that
+every key resolves, which is what stops a type declaring an export it cannot supply.
 
 **`index.order`** applies to the sort as a whole rather than to one column of it; a type wanting one column each way is
 asking two questions with one key. A postmortem index is the case for `descending`: the incident someone is looking for

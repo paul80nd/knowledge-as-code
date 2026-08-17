@@ -472,9 +472,8 @@ public class SchemaCheckTests
         Assert.Contains("'export.sections: Provenance'", found.Message);
     }
 
-    // `summary` and `reference` are named in the model so that a type with sections too long to carry
-    // has the word for what it wants. Neither is written, and a type reaching for one is told so rather
-    // than exporting silence under it.
+    // Neither `summary` nor `reference` is carried yet. A type reaching for one is told so, rather than
+    // exporting silence under it.
     [Fact]
     public void An_exported_fidelity_nothing_carries_names_the_ones_that_are_written()
     {

@@ -44,9 +44,9 @@ public static class Generator
     public static readonly IReadOnlySet<string> IndexOrders =
         new HashSet<string>(["ascending", Descending], StringComparer.Ordinal);
 
-    // The one name a type may write where a field is asked for and no field answers: a record's title is
-    // its H1 rather than frontmatter. An index column resolves it here and an export carries it, and
-    // SchemaChecks reads the name from this constant so the three cannot come apart.
+    // A record's title is its H1 rather than frontmatter, so it answers where a field is asked for and no
+    // field is declared. An index column resolves it here, an export carries it, and SchemaChecks admits
+    // it by this constant rather than by a string of its own.
     public const string Title = "title";
 
     // How a type is linked to from a generated block: the page without its extension, root-relative. The

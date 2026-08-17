@@ -265,7 +265,7 @@
     },
 
     "export": {
-      "description": "What a record of this type contributes to a published export, and how much of each piece travels. An export is a dependency surface: once a consumer corpus reads one, its shape is a contract, so what travels is declared here beside the sections and fields it selects from rather than decided by an exporter. A type declaring no block contributes nothing.",
+      "description": "What a record of this type contributes to a published export, and how much of each piece travels. An export is a dependency surface: once a consumer corpus reads one, its shape is a contract. So the declaration belongs here, beside the sections and fields it selects from, rather than to an exporter deciding type by type in code. A type declaring no block contributes nothing.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -320,7 +320,7 @@
     },
 
     "fidelity": {
-      "description": "How much of one piece travels into an export. `full` carries it whole, `summary` reduces it to a line, and `reference` carries a breadcrumb back to the record and nothing else. Written against every entry and defaulted nowhere: the difference between the three is the whole of what an export declares, so a default would leave the load-bearing half of it where a reader of the schema cannot see it. `kac` carries `full`, and reports either of the others as a fidelity nothing writes.",
+      "description": "How much of one piece travels into an export. `full` carries it whole, `summary` reduces it to a line, and `reference` leaves a breadcrumb back to the record. Written against every entry and defaulted nowhere: which of the three a consumer gets is the whole of what an export declares. `kac` carries `full`, and reports either of the others as a fidelity nothing carries.",
       "enum": ["full", "summary", "reference"]
     },
 

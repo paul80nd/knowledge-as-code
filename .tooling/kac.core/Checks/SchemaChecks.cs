@@ -192,18 +192,17 @@ public static class SchemaChecks
     }
 
     // What a type says it contributes to a published export, held against what the type itself declares
-    // and against what an export can actually write.
+    // and against what an export can carry.
     //
-    // An export is read by a corpus that took a copy and cannot ask what was meant, so every way of
-    // getting this wrong ends in silence: a section, a field or a set of parts that is named here and is
-    // not there contributes nothing, and the schema goes on saying it does. Selection is by key for that
-    // reason, and this is where the key is resolved.
+    // The corpus that reads an export took a copy of these files and cannot ask what was meant. So every
+    // way of getting this wrong ends in silence: a section, a field or a set of parts named here and not
+    // there contributes nothing, while the schema goes on saying it does. Selection is by key for that
+    // reason, and this is where each key is resolved.
     //
-    // Fidelity is asked of every entry. It is the half of the declaration a consumer reads — whether the
-    // words arrive whole, cut to a line, or replaced by a breadcrumb — so an entry that names none is a
-    // declaration with its meaning missing rather than one to be defaulted. A section is an entry as soon
-    // as its heading is written, so a heading with nothing beside it is asked. `parts:` is the entry
-    // itself, so one written with nothing beside it says what no entry says: the type exports none.
+    // Fidelity is asked of every entry, because it is what a consumer reads the export for — words
+    // arriving whole, cut to a line, or replaced by a breadcrumb. A section becomes an entry as soon as
+    // its heading is written, so a heading with nothing beside it is asked. `parts:` is the entry itself,
+    // so writing it with nothing beside it declares no parts at all.
     private static void CheckExport(string at, string key, TypeSchema t, Schema schema, List<Finding> f)
     {
         if (t.Export is not { } export) return;
@@ -215,8 +214,8 @@ public static class SchemaChecks
             if (!declared.Contains(section, StringComparer.OrdinalIgnoreCase))
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares 'export.sections: {section}', and its 'sections:' block declares no "
-                    + "such section — export a section the type has, or add it. Selecting by key is what keeps "
-                    + "the two declarations from drifting apart."));
+                    + "such section — name a section the type has, or add it. Selecting by key is what keeps the "
+                    + "two declarations in step."));
 
             Fidelity($"export.sections: {section}", fidelity);
         }
@@ -227,15 +226,15 @@ public static class SchemaChecks
                      n != Generator.Title && schema.EffectiveField(t, n) is null))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares 'export.fields: {name}', and neither the type nor '_universal.yaml' "
-                + $"declares such a field — export a field a record carries, or '{Generator.Title}', which is "
-                + "its heading."));
+                + $"declares such a field — name a field a record carries, or '{Generator.Title}', which is a "
+                + "record's heading rather than its frontmatter."));
 
         if (export.Parts.Length == 0) return;
 
         if (t.Parts is null)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares 'export.parts:' and carries no 'parts:' block — say where a record "
-                + "keeps the parts an export is to take, or drop the entry."));
+                + "keeps the parts an export is to carry, or drop the entry."));
 
         Fidelity("export.parts:", export.Parts);
         return;
@@ -248,7 +247,7 @@ public static class SchemaChecks
                     + "what a consumer reads the export for, and is defaulted nowhere."));
             else if (!ExportSpec.Carried.Contains(value, StringComparer.Ordinal))
                 Dispatch(at, $"type '{key}' declares '{entry}' at fidelity '{value}', which nothing carries. "
-                             + $"An export writes {List(ExportSpec.Carried)}.", f);
+                             + $"An export carries {List(ExportSpec.Carried)}.", f);
         }
     }
 
