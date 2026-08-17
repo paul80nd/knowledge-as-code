@@ -19,29 +19,27 @@ public static class Validator
     // running a subset and believing it ran the lot.
     public static List<Finding> CheckAll(LoadedCorpus corpus)
     {
-        var (schema, repoRoot) = (corpus.Schema, corpus.RepoRoot);
+        var (schema, tree) = (corpus.Schema, corpus.Tree);
         var findings = new List<Finding>();
 
         // The schema first, because it decides how every document below is read.
         SchemaChecks.Check(schema, findings);
 
         foreach (var doc in corpus.Docs)
-            CheckDocument(doc, schema, corpus.Tree, findings);
+            CheckDocument(doc, schema, tree, findings);
 
         // Every file `kac index` writes a block into, held to still carrying the markers to write between.
         // Driven from the list the generator writes from, so every file it writes is a file this visits: a
         // type's page and the framework's own pages are one question and get one answer.
         //
-        // A file that is not on disk is skipped: its absence is type-setup's to report for a page, and no
-        // fault at all for a framework document a corpus has not taken.
+        // A file the corpus does not hold is skipped: its absence is type-setup's to report for a page, and
+        // no fault at all for a framework document a corpus has not taken.
         foreach (var file in GeneratedFiles.Blocks(corpus.Adopted))
         {
             if (!file.MarkersRequired) continue;
+            if (!tree.Exists(file.Path)) continue;
 
-            var full = Path.Combine(repoRoot, file.Path);
-            if (!File.Exists(full)) continue;
-
-            CheckGeneratedBlocks(file.Path, File.ReadAllText(full), file.Blocks, findings);
+            CheckGeneratedBlocks(file.Path, tree.Read(file.Path), file.Blocks, findings);
         }
 
         // A type's page is not a record — it carries no frontmatter and describes the documents
@@ -50,11 +48,9 @@ public static class Validator
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             if (string.IsNullOrEmpty(t.Page)) continue;
-            var full = Path.Combine(repoRoot, t.Page);
-            if (!File.Exists(full)) continue; // absence is type-setup's to report, not this pass's
+            if (!tree.Exists(t.Page)) continue; // absence is type-setup's to report, not this pass's
 
-            var text = File.ReadAllText(full);
-            var page = Doc.Parse(t.Page, text, schema, requireFrontmatter: false);
+            var page = Doc.Parse(t.Page, tree.Read(t.Page), schema, requireFrontmatter: false);
             if (page is null) continue;
 
             // A page is not a record, so frontmatter on one is a leftover. It comes from a type that
@@ -67,7 +63,7 @@ public static class Validator
                     + $"no id, tier or status of its own. Move what it holds into '{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/' "
                     + "as a record, and delete the block."));
 
-            LinkChecks.CheckPage(page, schema, corpus.Tree, findings);
+            LinkChecks.CheckPage(page, schema, tree, findings);
         }
 
         // The template each collection type carries. It is the one file in a type that every future
@@ -79,17 +75,17 @@ public static class Validator
         // it is held to is everything a copy of it inherits.
         foreach (var rel in corpus.Templates)
         {
-            var template = Doc.Parse(rel, File.ReadAllText(Path.Combine(repoRoot, rel)), schema);
+            var template = Doc.Parse(rel, tree.Read(rel), schema);
             if (template is null)
                 findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
                     "the template carries no frontmatter — a document copied from it starts with none."));
             else
-                CheckDocument(template, schema, corpus.Tree, findings, DocKind.Template);
+                CheckDocument(template, schema, tree, findings, DocKind.Template);
         }
 
         // The framework's own documentation, held to the one rule that is about where it will be read
         // rather than about what it says.
-        CheckFrameworkDocs(schema, repoRoot, corpus.Tree, corpus.Docs, findings);
+        CheckFrameworkDocs(schema, tree, corpus.Docs, findings);
 
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand. The index they build is
         // handed on rather than built again: it is the corpus's one account of which id names which
@@ -104,7 +100,7 @@ public static class Validator
         CheckMinRecords(corpus.Docs, findings);
 
         // Whether each declared type is stood up.
-        CheckTypeSetup(schema, repoRoot, corpus.Tree, corpus.Descriptor, findings);
+        CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
 
         return findings;
     }
@@ -342,8 +338,7 @@ public static class Validator
     // A folder counts as present when it holds tracked files. An empty directory git has never seen
     // is not part of the corpus, so the answer is the same in a fresh clone as on the machine that
     // happened to create it.
-    private static void CheckTypeSetup(Schema schema, string repoRoot, Tree tree,
-        CorpusDescriptor descriptor, List<Finding> f)
+    private static void CheckTypeSetup(Schema schema, Tree tree, CorpusDescriptor descriptor, List<Finding> f)
     {
         CheckAdoption(schema, tree, descriptor, f);
 
@@ -363,8 +358,12 @@ public static class Validator
 
             var missing = new List<string>();
             if (!pageExists) missing.Add(string.IsNullOrEmpty(t.Page) ? $"{key}.md" : t.Page);
-            if (!File.Exists(Path.Combine(repoRoot, folder, Artefact.Template)))
-                missing.Add($"{folder}/{Artefact.Template}");
+
+            // The template is asked for with `OnDisk`, as it is discovered: a file a contributor can copy
+            // is there whether or not it has been added, and reporting the type as half set up while it
+            // sits in the folder would send them to write one that exists.
+            var template = $"{folder}/{Artefact.Template}";
+            if (!tree.OnDisk(template)) missing.Add(template);
             if (missing.Count > 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
                     $"type '{key}' has a '{folder}/' folder but is not fully set up — add {string.Join(", ", missing)}."));
@@ -408,11 +407,12 @@ public static class Validator
         }
     }
 
-    // The documents describing the framework itself, wherever a corpus keeps them. The framework's own
-    // glossary is one of them, and the only one that is also a record: it is filed under a type and
-    // validated like any other. Being shared byte-for-byte is what brings it here as well.
+    // The documents describing the framework itself, wherever a corpus keeps them, as globs the listing
+    // answers — see `Tree.Match`. The framework's own glossary is one of them, and the only one that is
+    // also a record: it is filed under a type and validated like any other. Being shared byte-for-byte is
+    // what brings it here as well.
     private static readonly string[] FrameworkDocs =
-        ["knowledge-as-code.md", "knowledge-as-code/", "glossary/knowledge-as-code.md"];
+        ["knowledge-as-code.md", "knowledge-as-code/*.md", "glossary/knowledge-as-code.md"];
 
     // The framework's own documentation is shared byte-for-byte by every corpus running it, so it has to
     // read correctly in a corpus that adopted three types and in one that adopted seventeen. A link to a
@@ -425,8 +425,7 @@ public static class Validator
     // Checked here rather than left to `link-resolves`, which would report it only downstream: every type
     // page exists in the corpus that writes these documents, so the defect is invisible precisely where it
     // can be fixed.
-    private static void CheckFrameworkDocs(Schema schema, string repoRoot, Tree tree, IEnumerable<Doc> docs,
-        List<Finding> f)
+    private static void CheckFrameworkDocs(Schema schema, Tree tree, IEnumerable<Doc> docs, List<Finding> f)
     {
         // The ones already validated as records. They have had the link pass, so giving them a second
         // would report every dead link twice.
@@ -436,7 +435,7 @@ public static class Validator
             .Where(t => !string.IsNullOrEmpty(t.Page))
             .ToDictionary(t => "/" + t.Page[..^".md".Length], t => t.Key, StringComparer.OrdinalIgnoreCase);
 
-        foreach (var rel in FrameworkFiles(repoRoot))
+        foreach (var rel in FrameworkDocs.SelectMany(tree.Match))
         {
             // Read with the generated blocks emptied. Everything below is a question about what a person
             // wrote, and a generated block answers to `index --check` instead — it is regenerated from this
@@ -474,24 +473,6 @@ public static class Validator
                       + "instead: a corpus that has not adopted it reads a dead link, and one that has is no worse "
                       + "off."));
             }
-        }
-    }
-
-    private static IEnumerable<string> FrameworkFiles(string repoRoot)
-    {
-        foreach (var entry in FrameworkDocs)
-        {
-            var full = Path.Combine(repoRoot, entry);
-
-            if (!entry.EndsWith('/'))
-            {
-                if (File.Exists(full)) yield return entry;
-                continue;
-            }
-
-            if (!Directory.Exists(full)) continue;
-            foreach (var path in Directory.EnumerateFiles(full, "*.md").Order(StringComparer.Ordinal))
-                yield return entry + Path.GetFileName(path);
         }
     }
 

@@ -99,8 +99,15 @@ is `Commands`'s too, derived from the value it was handed.
 That is what makes each of them testable from a set of strings rather than from a tree and a subprocess. The two
 mechanism engines take the file listings and a `Func<string, bool>` answering whether two copies of a path say the same
 thing, so the whole classification is decidable without a filesystem — a new arm is a unit test, not a fixture corpus.
-`Tree` strikes the same bargain for the corpus itself: a listing, and a `Func` that reads one of its paths. A test can
-then ask `GeneratedFiles.Plan` or the link pass about a corpus nobody ever wrote to disk.
+`Tree` strikes the same bargain for the corpus itself: a listing, a `Func` that reads one of its paths, and a `Func`
+answering whether a path is on the disk at all. **Every pass reads the corpus through it, `Validator.CheckAll`
+included** — `Corpus.Load` takes the listing, the schema and the descriptor, and the overload taking a path is the one
+place a path becomes a corpus. So a test can ask the whole of `validate` about a corpus nobody ever wrote to disk, and a
+new check is a unit test beside a fixture rather than a fixture alone.
+
+The listing is the right question about presence almost everywhere, because what git does not track is in no clone. A
+type's `_template.md` is the exception and `Tree.OnDisk` is written for it: a template a contributor has yet to add is
+still the file they are about to copy, and `type-setup` reporting it missing would send them to write it twice.
 
 Deciding and doing stay apart on both sides. `MechanismSync.Plan` names what a sync comes to and `Apply` carries it out;
 `GeneratedFiles.Plan` names what a regeneration comes to and `Write` carries it out. In each case the files acted on are
