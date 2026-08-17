@@ -3,7 +3,7 @@
   "name": "knowledge-as-code",
   "displayName": "Knowledge as Code",
   "version": "0.1.0",
-  "description": "Answers questions about the knowledge-as-code corpus from the export bundled beside it, starting with the glossary.",
+  "description": "Answers questions about the knowledge-as-code corpus from the glossary exported beside it.",
   "author": {
     "name": "Paul Law",
     "url": "https://github.com/paul80nd"

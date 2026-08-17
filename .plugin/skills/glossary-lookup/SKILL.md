@@ -9,8 +9,8 @@ description: Look a term up in the knowledge corpus glossary that travels with t
 
 # Looking a term up in the glossary
 
-The corpus travels with this plugin as data. You read it with the tools you already have. There is nothing to install,
-nothing to run, and no network call.
+The corpus travels with this plugin as data. You read it with the tools you already have. There is nothing to install
+and nothing to run.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json           # what this export is: corpus, versions, commit, date
@@ -47,9 +47,8 @@ Each line carries the entry whole:
 ## Read every hit, not the first
 
 **Where two entries share a title, read both before you answer.** The file's order is stable and carries no ranking you
-can use across glossaries. One estate will define *record* as a thing on a shelf with a barcode, and another as a
-markdown file under version control. An answer taken from the wrong one is fluent, confident and about the wrong
-subject.
+can use. One estate defines *record* as a thing on a shelf with a barcode; another defines it as a markdown file under
+version control. An answer taken from the wrong one is fluent, confident and about the wrong subject.
 
 Open the owning record for each hit — `${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json` — and read two things from
 it:
@@ -63,8 +62,8 @@ Where the question does not settle which context it sits in, give both meanings 
 
 ## Answer
 
-* **Lead with the definition, then the `not` line.** The boundary is half the meaning, and it is the half a reader
-  cannot guess.
+* **Give the definition, then the `not` line.** A reader who gets only the definition will go on to apply the term to
+  things it excludes.
 * **Name the glossary you took the answer from**, every time. A reader working in the other context needs to see the
   mismatch.
 * **Link `links.human`** so the reader can go to the record.
@@ -72,13 +71,13 @@ Where the question does not settle which context it sits in, give both meanings 
 
 ## Say when an entry is unsettled
 
-Two fields on the line say how much weight it will bear. Use the entry either way, and tell the user what you saw:
+Two fields on the line say how far the entry has settled. Use it either way, and tell the user what you saw:
 
 * **`status: draft`** — the terms were still settling when the export was taken.
 * **`reviewBy` earlier than today** — the entry passed the date it was meant to be read again.
 
 An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when, and are worth quoting when either field above has fired.
+`manifest.json` say when it was taken, and are worth quoting alongside either warning above.
 
 ## Say when there is nothing
 
