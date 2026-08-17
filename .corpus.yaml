@@ -61,13 +61,33 @@ role: source
 # a source may itself sync from another source further upstream.
 
 # How this corpus is published. One of: azure-devops-wiki | github | mkdocs | none.
-publishing-target: none
+publishing-target: github
 
 # Recorded rather than inferred, so `kac mechanism --check` can name the publishing
-# file this corpus is missing.
+# file this corpus is missing, and so `kac export` can build links that a reader and
+# an agent can each follow.
 #
-# `none` says this corpus is not published. This repository is the framework itself,
-# and carries `azure-pipelines.yml` and `.order` as seeds for corpora that are.
+# `github` says the repository is itself the published form: a record is read rendered
+# on github.com and fetched unrendered from raw.githubusercontent.com. This repository
+# also carries `azure-pipelines.yml` and `.order`, which are seeds for a corpus
+# published to an Azure DevOps wiki rather than files this target uses.
+#
+# `none` says a corpus is not published. An export from one carries no links, and says
+# so in its manifest rather than emitting a link that resolves nowhere.
+
+# Where the published form of this corpus is served from.
+#
+# Only the bases live here. How a record's path and a term's anchor join a base is a
+# property of `publishing-target` and lives in the mechanism, so every corpus on one
+# target builds the same link and none of them writes the rule down a second time.
+#
+# Absent where `publishing-target: none`, which is the one value that needs no base.
+publishing:
+  # Where a person reads a record, rendered.
+  human-base: https://github.com/paul80nd/knowledge-as-code/blob
+
+  # Where an agent fetches a record's source, unrendered.
+  raw-base: https://raw.githubusercontent.com/paul80nd/knowledge-as-code
 
 # Where this corpus takes the framework from, if anywhere.
 upstream:
@@ -93,6 +113,21 @@ upstream:
 #types:
 #  - adrs
 #  - policies
+
+# What `kac export` leaves behind.
+#
+# Empty by default, and that is the important part: a record still in draft, and one
+# whose review date has passed, both travel. Each carries its own state, so a consumer
+# reads what the corpus actually holds and decides for itself how far to trust it.
+#
+# Filtering here would make the corpus's own state invisible downstream: a consumer
+# would see a smaller, tidier vocabulary and no sign that anything had been withheld.
+# The option exists for a corpus that publishes to an audience it cannot warn.
+#
+# Two values: `draft` drops a record whose status says so, and `overdue` drops one
+# whose `review-by` is in the past.
+export:
+  exclude: []
 
 # Files in the `synced` layer that this corpus deliberately holds differently.
 #
