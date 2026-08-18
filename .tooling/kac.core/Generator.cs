@@ -356,7 +356,7 @@ public static class Generator
     // what someone filling in frontmatter wants.
     public static string SchemaTable(TypeSchema t, Schema s)
     {
-        List<string> headers = ["Field", "Req", "Type", "Notes"];
+        List<string> headers = ["Field", "Type", "Notes"];
         var universal = s.UniversalOrder.Where(n => s.EffectiveField(t, n) is not null).ToList();
         var own = t.FieldOrder.Where(n => !universal.Contains(n)).ToList();
 
@@ -367,13 +367,10 @@ public static class Generator
         var order = universal.Concat(own).ToList();
         var specs = order.Select(n => s.EffectiveField(t, n)!).ToList();
         var table = RenderTable(headers, rows) + EnumValues(specs) + ConditionalFields(specs);
-        return universal.Count == 0
-            ? table
-            : $"{table}\n\n† Carried by every document in the taxonomy — see "
-              + "[Metadata](/knowledge-as-code/metadata.md).";
+        return table + Legend(specs.Any(f => f.Required), universal.Count > 0);
 
         static List<string> FieldRow(string name, FieldSpec f, bool universal) =>
-            [$"`{name}`{(universal ? " †" : "")}", f.Required ? "●" : "", f.Type, NotesFor(f)];
+            [$"`{name}`{Marks(f.Required, universal)}", f.Type, NotesFor(f)];
     }
 
     // Enum values are data, not prose, and they belong in a table of their own rather than in a Notes
@@ -412,12 +409,36 @@ public static class Generator
     // type" here, because there is no type in hand to narrow it.
     public static string UniversalSchemaTable(Schema s)
     {
-        List<string> headers = ["Field", "Req", "Type", "Notes"];
+        List<string> headers = ["Field", "Type", "Notes"];
         var fields = s.UniversalOrder.Where(s.Universal.ContainsKey).Select(n => s.Universal[n]).ToList();
         var rows = fields
-            .Select(f => new List<string> { $"`{f.Name}`", f.Required ? "●" : "", f.Type, NotesFor(f) })
+            .Select(f => new List<string> { $"`{f.Name}`{Marks(f.Required, false)}", f.Type, NotesFor(f) })
             .ToList();
-        return RenderTable(headers, rows) + EnumValues(fields) + ConditionalFields(fields);
+        return RenderTable(headers, rows) + EnumValues(fields) + ConditionalFields(fields)
+               + Legend(fields.Any(f => f.Required), false);
+    }
+
+    // Required and universal are marked on the field name rather than given a column of their own: a
+    // column that is empty in most rows costs a full column's width to say one bit. The markers read in
+    // the order the legend below the table explains them.
+    private static string Marks(bool required, bool universal)
+    {
+        var marks = (required ? "*" : "") + (universal ? "†" : "");
+        return marks.Length == 0 ? "" : $" {marks}";
+    }
+
+    // One paragraph beneath the table, a line to each marker. The two are joined by a hard break —
+    // two trailing spaces — rather than a blank line, because they are one legend rather than two
+    // paragraphs, and rather than spaces on one line, because HTML collapses a run of those to a
+    // single gap. The asterisk is escaped: a line opening with a bare one is a bullet.
+    private static string Legend(bool anyRequired, bool anyUniversal)
+    {
+        List<string> parts = [];
+        if (anyRequired) parts.Add("\\* Field is required");
+        if (anyUniversal)
+            parts.Add("† Carried by every document in the taxonomy — see "
+                      + "[Metadata](/knowledge-as-code/metadata.md).");
+        return parts.Count == 0 ? "" : "\n\n" + string.Join("  \n", parts);
     }
 
     private static string NotesFor(FieldSpec f)

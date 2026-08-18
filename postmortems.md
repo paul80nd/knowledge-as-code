@@ -41,19 +41,19 @@ postmortem means something.
 
 <!-- BEGIN GENERATED: schema-postmortems -->
 
-| Field         | Req | Type   | Notes                                                                                 |
-|---------------|-----|--------|---------------------------------------------------------------------------------------|
-| `id` †        | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.               |
-| `tier` †      | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.  |
-| `status` †    | ●   | enum   | `published` freezes the document; a new understanding is a new postmortem.            |
-| `owner` †     | ●   | string | A named person, never a team alias.                                                   |
-| `tags` †      |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                      |
-| `occurred-on` | ●   | date   | Quoted. When the incident began, not when it was noticed.                             |
-| `detected-on` | ●   | date   | Separate from `occurred-on` for a reason — the gap between them is often the finding. |
-| `duration`    | ●   | string | How long it lasted, in whatever unit reads honestly.                                  |
-| `severity`    | ●   | enum   | The severity it was handled at.                                                       |
-| `affected`    | ●   | list   | Service and capability ids that suffered.                                             |
-| `prompted`    |     | list   | What this incident caused to be written.                                              |
+| Field           | Type   | Notes                                                                                 |
+|-----------------|--------|---------------------------------------------------------------------------------------|
+| `id` *†         | string | Stable, unique across the corpus, never reused. Format set by the type.               |
+| `tier` *†       | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.  |
+| `status` *†     | enum   | `published` freezes the document; a new understanding is a new postmortem.            |
+| `owner` *†      | string | A named person, never a team alias.                                                   |
+| `tags` †        | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                      |
+| `occurred-on` * | date   | Quoted. When the incident began, not when it was noticed.                             |
+| `detected-on` * | date   | Separate from `occurred-on` for a reason — the gap between them is often the finding. |
+| `duration` *    | string | How long it lasted, in whatever unit reads honestly.                                  |
+| `severity` *    | enum   | The severity it was handled at.                                                       |
+| `affected` *    | list   | Service and capability ids that suffered.                                             |
+| `prompted`      | list   | What this incident caused to be written.                                              |
 
 **Enum values**
 
@@ -63,6 +63,7 @@ postmortem means something.
 | `status`   | `draft` · `published`                                               |
 | `severity` | `sev1` · `sev2` · `sev3`                                            |
 
+\* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-postmortems -->

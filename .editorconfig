@@ -27,7 +27,8 @@ max_line_length = 120
 # keep_line_breaks = false lets the short lines below them be pulled back up. Setting
 # only the first gives ragged output rather than a reflow.
 #
-# The corpus uses no trailing-space hard breaks, so rewrapping does not eat any.
+# The one trailing-space hard break in the corpus is the legend under a generated schema
+# table, which a reflow must leave alone. `kac index --check` fails if one eats it.
 ij_markdown_wrap_text_if_long = true
 ij_markdown_keep_line_breaks_inside_text_blocks = false
 

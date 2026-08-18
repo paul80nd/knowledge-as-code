@@ -82,15 +82,15 @@ generates a digest, so nothing runs the rule and the limit is yours to keep.
 
 <!-- BEGIN GENERATED: schema-glossary -->
 
-| Field       | Req | Type   | Notes                                                                                |
-|-------------|-----|--------|--------------------------------------------------------------------------------------|
-| `id` †      | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` †    | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` †  | ●   | enum   | `draft` while the terms are still settling.                                          |
-| `owner` †   | ●   | string | A named person, never a team alias.                                                  |
-| `tags` †    |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `narrows`   |     | id     | The more general glossary this one narrows, where one sits above it.                 |
-| `review-by` | ●   | date   | Quoted. A glossary is reviewed whole, rather than a term at a time.                  |
+| Field         | Type   | Notes                                                                                |
+|---------------|--------|--------------------------------------------------------------------------------------|
+| `id` *†       | string | Stable, unique across the corpus, never reused. Format set by the type.              |
+| `tier` *†     | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
+| `status` *†   | enum   | `draft` while the terms are still settling.                                          |
+| `owner` *†    | string | A named person, never a team alias.                                                  |
+| `tags` †      | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| `narrows`     | id     | The more general glossary this one narrows, where one sits above it.                 |
+| `review-by` * | date   | Quoted. A glossary is reviewed whole, rather than a term at a time.                  |
 
 **Enum values**
 
@@ -99,6 +99,7 @@ generates a digest, so nothing runs the rule and the limit is yours to keep.
 | `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
 | `status` | `draft` · `active`                                                  |
 
+\* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-glossary -->

@@ -38,17 +38,17 @@ A process is also not:
 
 <!-- BEGIN GENERATED: schema-processes -->
 
-| Field                 | Req | Type   | Notes                                                                                          |
-|-----------------------|-----|--------|------------------------------------------------------------------------------------------------|
-| `id` †                | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.                        |
-| `tier` †              | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.           |
-| `status` †            | ●   | enum   | Whether the process is current, drafted, or stood down.                                        |
-| `owner` †             | ●   | string | A named person, never a team alias.                                                            |
-| `tags` †              |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                               |
-| `applies-to`          |     | list   | Service ids this process concerns.                                                             |
-| `last-rehearsed`      | ●   | date   | Quoted date or `"never"`. Set when someone follows it end to end, not when the page is edited. |
-| `rehearsal-frequency` |     | enum   | How often it should be exercised.                                                              |
-| `requires-access`     |     | list   | Systems or roles needed before step 1.                                                         |
+| Field                 | Type   | Notes                                                                                          |
+|-----------------------|--------|------------------------------------------------------------------------------------------------|
+| `id` *†               | string | Stable, unique across the corpus, never reused. Format set by the type.                        |
+| `tier` *†             | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.           |
+| `status` *†           | enum   | Whether the process is current, drafted, or stood down.                                        |
+| `owner` *†            | string | A named person, never a team alias.                                                            |
+| `tags` †              | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                               |
+| `applies-to`          | list   | Service ids this process concerns.                                                             |
+| `last-rehearsed` *    | date   | Quoted date or `"never"`. Set when someone follows it end to end, not when the page is edited. |
+| `rehearsal-frequency` | enum   | How often it should be exercised.                                                              |
+| `requires-access`     | list   | Systems or roles needed before step 1.                                                         |
 
 **Enum values**
 
@@ -58,6 +58,7 @@ A process is also not:
 | `status`              | `active` · `draft` · `retired`                                      |
 | `rehearsal-frequency` | `per-release` · `quarterly` · `annual`                              |
 
+\* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-processes -->

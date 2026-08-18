@@ -169,10 +169,11 @@ public class GeneratorTests
 
         var table = Generator.SchemaTable(t, s);
 
-        Assert.Contains("`id` †", table);     // universal fields are marked…
+        Assert.Contains("`id` *†", table);    // universal fields are marked, required ones twice…
         Assert.Contains("`status` †", table); // …including one the type redeclares
         Assert.Contains("`own-field`", table);
         Assert.DoesNotContain("`own-field` †", table);
+        Assert.Contains("\\* Field is required", table);
         Assert.Contains("REFINED", table); // EffectiveField wins over the universal declaration
         Assert.DoesNotContain("VARIES BY TYPE", table);
         Assert.True(table.IndexOf("`id`", StringComparison.Ordinal)

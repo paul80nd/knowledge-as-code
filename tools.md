@@ -39,19 +39,19 @@ the evaluation we already did.
 
 <!-- BEGIN GENERATED: schema-tools -->
 
-| Field        | Req | Type   | Notes                                                                                                |
-|--------------|-----|--------|------------------------------------------------------------------------------------------------------|
-| `id` †       | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.                              |
-| `tier` †     | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                 |
-| `status` †   | ●   | enum   | `approved` means approved for new work; existing use that is not approved is drift.                  |
-| `owner` †    | ●   | string | A named person, never a team alias.                                                                  |
-| `tags` †     |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                     |
-| `category`   | ●   | string | e.g. `testing`, `build`, `observability`, `runtime`.                                                 |
-| `versions`   |     | string | A range, not a pin. The register states what we stand behind; the manifests state what is installed. |
-| `licence`    |     | string | SPDX identifier. The field nobody wants until they urgently do.                                      |
-| `decided-in` |     | id     | Where a decision was worth recording. Small, uncontroversial adoptions need only a register entry.   |
-| `replaces`   |     | id     | The tool id this supersedes.                                                                         |
-| `successor`  |     | id     | The tool id that replaces this one.                                                                  |
+| Field        | Type   | Notes                                                                                                |
+|--------------|--------|------------------------------------------------------------------------------------------------------|
+| `id` *†      | string | Stable, unique across the corpus, never reused. Format set by the type.                              |
+| `tier` *†    | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                 |
+| `status` *†  | enum   | `approved` means approved for new work; existing use that is not approved is drift.                  |
+| `owner` *†   | string | A named person, never a team alias.                                                                  |
+| `tags` †     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                     |
+| `category` * | string | e.g. `testing`, `build`, `observability`, `runtime`.                                                 |
+| `versions`   | string | A range, not a pin. The register states what we stand behind; the manifests state what is installed. |
+| `licence`    | string | SPDX identifier. The field nobody wants until they urgently do.                                      |
+| `decided-in` | id     | Where a decision was worth recording. Small, uncontroversial adoptions need only a register entry.   |
+| `replaces`   | id     | The tool id this supersedes.                                                                         |
+| `successor`  | id     | The tool id that replaces this one.                                                                  |
 
 **Enum values**
 
@@ -60,6 +60,7 @@ the evaluation we already did.
 | `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
 | `status` | `approved` · `trial` · `deprecated` · `rejected`                    |
 
+\* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-tools -->
