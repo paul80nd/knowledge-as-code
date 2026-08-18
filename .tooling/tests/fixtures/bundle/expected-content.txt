@@ -28,3 +28,15 @@
 # The marketplace names the plugin as a path beneath itself.
 .dist/.claude-plugin/marketplace.json :: "source": "./plugin"
 .dist/.claude-plugin/marketplace.json :: "name": "example-libraries-local"
+
+# The breadcrumb states what a session is told before it has a question: which corpus is installed,
+# how much of it there is, which contexts it covers, and what to ask. The count is the load-bearing
+# part — it is what tells a reader the export is present and non-empty, which is the failure a
+# silently absent bundle otherwise looks exactly like.
+.dist/plugin/hooks/breadcrumb.txt :: example-libraries 2.3.4
+.dist/plugin/hooks/breadcrumb.txt :: across 3 records: Estate, Framework and Search
+.dist/plugin/hooks/breadcrumb.txt :: Ask the glossary-lookup skill
+
+# It names the skill that survived the trim and not the one that did not, so a plugin cannot point a
+# session at a component it never shipped.
+.dist/plugin/hooks/breadcrumb.txt :: !decision-lookup

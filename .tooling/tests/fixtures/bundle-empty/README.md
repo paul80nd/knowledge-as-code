@@ -24,3 +24,8 @@ The same three files the `bundle` fixture uses, and they carry the whole of it. 
 warnings, which are what a person needs and what nothing else will tell them. `expected-files.txt` names the manifest,
 the record and the export as present and the trimmed skill as absent. `expected-content.txt` pins the kept version,
 the emptied `components` array in the manifest, and what `bundle.json` says about a run that shipped nothing.
+
+**The hook is declared here too, and trimmed with everything else.** A corpus with no glossary ships neither the hook
+nor a breadcrumb for it to print. That is the arm worth pinning: a hook that survived a trim would print an empty file
+at every session, and an empty breadcrumb reads as a corpus that knows nothing rather than as a component that was
+never shipped.

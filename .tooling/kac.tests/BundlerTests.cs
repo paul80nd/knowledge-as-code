@@ -65,6 +65,70 @@ public class BundlerTests
     public void A_refused_plan_names_no_files()
         => Assert.Empty(Plan(plugin: [("README.md", "# nothing")], export: [Manifest()]).Files);
 
+    // The number the export declares against the number this build reads. Both are named, because the
+    // reader's next move differs: an export behind this tool is rebuilt, and an export ahead of it says
+    // the tool is the stale half.
+    [Fact]
+    public void An_export_whose_format_version_this_tool_does_not_read_is_refused()
+    {
+        var problem = Assert.Single(Plan(
+            plugin: [(Bundler.ManifestFile, Source())],
+            export: [(Exporter.ManifestFile, """{"formatVersion":99,"corpus":"c","types":[]}""")]).Problems);
+
+        Assert.Contains("99", problem);
+        Assert.Contains(Exporter.FormatVersion.ToString(), problem);
+    }
+
+    // An export stating no format version at all is refused with the same sentence rather than assumed
+    // current. A document that does not say which contract it is written to is not one to guess about.
+    [Fact]
+    public void An_export_declaring_no_format_version_is_refused()
+        => Assert.Contains("format version none",
+            Assert.Single(Plan(
+                plugin: [(Bundler.ManifestFile, Source())],
+                export: [(Exporter.ManifestFile, """{"corpus":"c","types":[]}""")]).Problems));
+
+    // -- the breadcrumb --
+
+    // It is rendered beside the hook that prints it, so the hook is one `cat` and the consumer's shell
+    // is asked for nothing else.
+    [Fact]
+    public void The_breadcrumb_travels_beside_the_hook_that_prints_it()
+        => Assert.Contains("example-libraries", Text(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("hooks", "glossary"))),
+                ("hooks/hooks.json", "{}")
+            ],
+            export: [Manifest("glossary")]), Breadcrumb.RenderedFile));
+
+    // A corpus shipping no hook has nothing to read a breadcrumb, and gets none. The file exists to be
+    // printed, and one nothing prints is weight in an artefact nobody reviews.
+    [Fact]
+    public void A_plugin_with_no_hook_carries_no_breadcrumb()
+        => Assert.DoesNotContain(
+            $"{Dist.PluginDir}/{Breadcrumb.RenderedFile}",
+            Plan(plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary")))],
+                export: [Manifest("glossary")]).Files.Select(f => f.Path));
+
+    // The criterion the trim exists for: a corpus whose export cannot support the hook ships neither the
+    // hook nor a breadcrumb, rather than a hook printing a file that says the corpus knows nothing.
+    [Fact]
+    public void A_trimmed_hook_takes_the_breadcrumb_with_it()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("hooks", "glossary"))),
+                ("hooks/hooks.json", "{}")
+            ],
+            export: [Manifest("adrs")]);
+
+        Assert.Equal("hooks", Assert.Single(plan.Trimmed).Path);
+        Assert.DoesNotContain($"{Dist.PluginDir}/{Breadcrumb.RenderedFile}", plan.Files.Select(f => f.Path));
+        Assert.DoesNotContain($"{Dist.PluginDir}/hooks/hooks.json", plan.Files.Select(f => f.Path));
+    }
+
     // -- trimming --
 
     [Fact]
@@ -314,12 +378,24 @@ public class BundlerTests
         (Exporter.ManifestFile,
             $$"""
               {
-                "formatVersion": 2,
+                "formatVersion": {{Exporter.FormatVersion}},
                 "corpus": "example-libraries",
                 "contentVersion": {{(contentVersion is null ? "null" : $"\"{contentVersion}\"")}},
                 "types": [{{string.Join(",", types.Select(t => $$"""{"type":"{{t}}","records":1}"""))}}]
               }
               """);
+
+    // One file the plan would write, as text. The breadcrumb is prose rather than a document, so it is
+    // read whole rather than picked apart.
+    private static string Text(BundlePlan plan, string path)
+    {
+        var full = $"{Dist.PluginDir}/{path}";
+        var file = plan.Files.SingleOrDefault(f => f.Path == full)
+                   ?? throw new InvalidOperationException(
+                       $"the plan writes no {full}; it writes {string.Join(", ", plan.Files.Select(f => f.Path))}");
+
+        return Encoding.UTF8.GetString(file.Content);
+    }
 
     // One file the plan would write, parsed. Paths are relative to `.dist/`, so a file inside the
     // plugin is addressed through the plugin directory and the marketplace is not.

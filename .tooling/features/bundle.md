@@ -52,6 +52,33 @@ corpus adopted, so a README or a licence in the plugin tree needs no declaration
 trim matches the declared path itself as well as anything beneath it — and matches on a whole segment, so
 `skills/a` does not take `skills/ab` with it.
 
+**The breadcrumb is rendered here rather than computed at runtime.** A `SessionStart` hook injects a few lines into
+every session saying which corpus is installed, how many entries it holds, which records cover them, and which skill to
+ask. That is the whole of its job: an agent never asks for a glossary because it does not know a word is ambiguous, so
+the breadcrumb exists to create the question rather than to answer it, and a longer one would be paid for by every
+session that had none to ask.
+
+Everything it states is a fact about the export sitting inside the plugin, and an installed plugin's export does not
+change between builds. So `bundle` writes the text once and the hook is one `cat`. Nothing on the consumer's machine is
+asked for a JSON parser, an interpreter or a runtime — which is the same position the corpus takes about every other
+generated projection: compute it once into an artefact rather than have each reader recompute it.
+
+The rendered file travels with the directory that prints it and nowhere else. A corpus shipping no hook has nothing to
+read it; a corpus whose hook was trimmed would otherwise keep a file describing a component that left. Asking the
+surviving files rather than the components settles both without a corpus having to declare that a generated file
+belongs to one.
+
+**Nothing in the render names a record type.** The counts, the record names and the skill to ask are read off the export
+and off the surviving components, so a corpus adopting a type this tool has never heard of gets a breadcrumb about it
+with no line changing. The record names are the point of the line a count alone cannot make: a corpus keeps one glossary
+per bounded context, and three names say which contexts are covered where the number three says only that there are
+some.
+
+**A hook is copied with its permission bit.** One file in the plugin tree is run rather than read, and a command copied
+without that bit is a plugin that installs and then fails at the first session with a message about permissions rather
+than about the corpus. The bit does not exist on Windows and is not asked for there: a hook ships as a POSIX script and
+a `.cmd` twin, the same pair and the same reasoning as `kac` and `kac.cmd` at the repo root.
+
 **The plugin's version is the corpus content version.** It is read off the export's manifest rather than out of
 `.corpus.yaml`, so the number on the plugin is the number of the data inside it. The export **format** version stays
 where it is, inside the export's own manifest: one says what the corpus knows and the other says which parser will
@@ -84,11 +111,19 @@ installs what was just built.
 unpack between building and asking the plugin a question.
 
 **A run that cannot answer a question stops before writing.** A plugin tree with no manifest; a manifest that is not
-JSON, or that states no name, or no `corpusRoot`, or a `corpusRoot` the plugin tree already uses; and an export with
-no manifest — each ends the run with the reason and nothing written. The alternative is a plugin assembled around a
-missing answer, which installs and fails later somewhere less obvious. The last of those is the one worth naming: the
-export lands under `corpusRoot` inside the plugin, so a collision there would have one side silently overwrite the
-other, and whichever won the loser would be missing from an artefact nobody reviews.
+JSON, or that states no name, or no `corpusRoot`, or a `corpusRoot` the plugin tree already uses; an export with no
+manifest; and an export whose `formatVersion` is not the one this build reads — each ends the run with the reason and
+nothing written.
+
+That last one is where the export format version is finally held to account. Both numbers are named, because the
+reader's next move differs: an export behind the tool is rebuilt, and an export ahead of it says the tool is the stale
+half. `.dist/export/` is untracked and outlives the run that wrote it, so a bundle built after a pull is the ordinary
+way to meet an export this tool did not ship beside — the case the field exists for.
+
+Stopping is the point in every one of them. The alternative is a plugin assembled around a missing answer, which
+installs and fails later somewhere less obvious. The `corpusRoot` collision is the one worth naming twice: the export
+lands under that directory inside the plugin, so a clash would have one side silently overwrite the other, and
+whichever won the loser would be missing from an artefact nobody reviews.
 
 **`corpusRoot` is read rather than defaulted.** The plugin's skills address the export as
 `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that name. A default here would be the tool quietly disagreeing with words
@@ -100,6 +135,12 @@ question.
 **Nothing validates the assembled plugin.** `claude plugin validate` is not run, and a component misplaced inside
 `.claude-plugin/` would load wrong without this command noticing. That, the round-trip lookup and the two-platform CI
 matrix are tracked as [issue #186](https://github.com/paul80nd/knowledge-as-code/issues/186).
+
+**The hook has been proved on macOS only.** The assembled plugin installs from the local marketplace, and its
+`SessionStart` command reaches the breadcrumb through `${CLAUDE_PLUGIN_ROOT}` and lands it in a session opened in an
+unrelated directory. What that run cannot say is which shell Claude Code reaches a hook command with on Windows, and
+therefore whether the `.cmd` half of the pair is ever the one that runs. It sits under the same issue as the platform
+matrix above.
 
 **A component's `requires` is not held against the schema.** A component naming a type no schema declares is trimmed
 with the same message as one naming a type this corpus declined, and the two mean different things: one is a typo and

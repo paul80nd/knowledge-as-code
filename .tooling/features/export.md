@@ -154,11 +154,12 @@ major, minor and patch defined in that file beside the key. Neither
 implies the other: a corpus can rewrite every definition without `formatVersion` moving, and `formatVersion` can move
 over a corpus nobody has edited.
 
-**Nothing reads `formatVersion` yet.** The only reader written against this format sits in the same repository as the
-exporter and moves with it, so the two cannot disagree and a check between them would prove nothing. The field earns
-its keep the first time something reads an export it did not ship beside, where a shape it cannot parse has to fail
-loudly and name both numbers — a lookup that silently returns nothing is indistinguishable from a term the corpus does
-not define.
+**`bundle` is what reads `formatVersion`.** It refuses an export whose number is not the one this build of the tool
+writes, and names both — the number the export declares and the number the tool reads. `.dist/export/` is untracked and
+outlives the run that wrote it, so a bundle built after a pull is the ordinary way to meet an export this tool did not
+ship beside. What the refusal prevents is a plugin assembled around a manifest whose keys have moved: its breadcrumb
+would state nothing and its skill would find nothing, and a lookup that silently returns nothing is indistinguishable
+from a term the corpus does not define.
 
 **What moves `formatVersion`.** It moves when a reader written against the shape before it would now be wrong. Adding a
 key to a file, or a file to a type's directory, leaves that reader correct and moves nothing. Renaming a key, dropping

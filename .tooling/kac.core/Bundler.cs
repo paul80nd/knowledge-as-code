@@ -12,7 +12,12 @@ namespace kac.core;
 // One file, and the bytes it holds. Bytes rather than text because most of what a bundle writes it did
 // not author: the plugin tree and the export are copied through untouched, and a copy that decoded and
 // re-encoded would be a copy with an opinion.
-public sealed record BundleFile(string Path, byte[] Content);
+//
+// `Executable` travels with the bytes because one file in the plugin tree is run rather than read. A
+// hook is a command, and a command copied without its permission bit is a plugin that installs and
+// fails at the first session with a message about permissions rather than about the corpus. Windows
+// has no such bit, so a hook ships as a POSIX script and a `.cmd` twin and the shell there picks one.
+public sealed record BundleFile(string Path, byte[] Content, bool Executable = false);
 
 // One component the plugin manifest declares, as the manifest states it. `Requires` names the record
 // types the component reads; a component naming none is unconditional and always travels.
@@ -77,21 +82,21 @@ public static class Bundler
         if (manifestText is null)
             return Stop(problems, $"the plugin tree holds no {ManifestFile}, so there is nothing to assemble.");
 
-        var manifest = Parse(manifestText);
+        var manifest = JsonRead.Parse(manifestText);
         if (manifest is null)
             return Stop(problems, $"{ManifestFile} is not a JSON object.");
 
         // A manifest with no name is refused rather than given one. The name is what a marketplace
         // installs by and what a user types, so inventing it here would produce something that installs
         // under a name nobody chose.
-        var pluginName = Str(manifest["name"]);
+        var pluginName = JsonRead.Str(manifest["name"]);
         if (pluginName is null)
             return Stop(problems, $"{ManifestFile} states no name, which is what a plugin is installed by.");
 
         // Where the export is put inside the plugin. Read rather than assumed, because the skills address
         // it through `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that same name — a default here would be
         // this tool quietly disagreeing with the words a corpus wrote in its own skill.
-        var corpusRoot = Str(Object(manifest["metadata"])?["corpusRoot"]);
+        var corpusRoot = JsonRead.Str(JsonRead.Object(manifest["metadata"])?["corpusRoot"]);
         if (corpusRoot is null)
             return Stop(problems,
                 $"{ManifestFile} states no metadata.corpusRoot, so there is nowhere to put the export. "
@@ -105,16 +110,31 @@ public static class Bundler
                 $"{ManifestFile} names metadata.corpusRoot '{corpusRoot}', and the plugin tree already holds "
                 + $"{clash.Path}. The export is copied there, so one would overwrite the other.");
 
-        var exportManifest = Parse(Text(source.Export, Exporter.ManifestFile));
+        var exportManifest = JsonRead.Parse(Text(source.Export, Exporter.ManifestFile));
         if (exportManifest is null)
             return Stop(problems,
                 $"the export holds no readable {Exporter.ManifestFile}. Run the export first: ./kac export");
+
+        // The shape the export declares, held against the shape this build knows how to read. Refused
+        // rather than warned about, and both numbers named: a bundle assembled around a manifest whose
+        // keys have moved would produce a breadcrumb stating nothing and a plugin whose skill finds
+        // nothing, and a lookup that silently returns nothing is indistinguishable from a term the
+        // corpus does not define.
+        //
+        // Two builds of this tool are what put the two numbers apart. `.dist/export/` is untracked and
+        // outlives the run that wrote it, so a bundle built after a `git pull` is the ordinary way to
+        // read an export this tool did not ship beside — the case the format version exists for.
+        var declaredFormat = JsonRead.Int(exportManifest["formatVersion"]);
+        if (declaredFormat != Exporter.FormatVersion)
+            return Stop(problems,
+                $"the export declares format version {declaredFormat?.ToString() ?? "none"} and this tool reads "
+                + $"version {Exporter.FormatVersion}. Rebuild it: ./kac export");
 
         // What the export actually carried, which is what decides the trimming below. A type the corpus
         // adopted and exported nothing for is absent here, and a component reading it would find nothing.
         var carried = Types(exportManifest);
 
-        var declared = Components(Object(manifest["metadata"])?["components"]);
+        var declared = Components(JsonRead.Object(manifest["metadata"])?["components"]);
         var included = new List<PluginComponent>();
         var trimmed = new List<TrimmedComponent>();
 
@@ -141,7 +161,7 @@ public static class Bundler
         // The plugin's version is the corpus content version, taken from the export rather than from
         // `.corpus.yaml`, so the number on the plugin is the number of the data inside it. The export
         // format version stays where it is, in the export's own manifest.
-        var version = Str(exportManifest["contentVersion"]);
+        var version = JsonRead.Str(exportManifest["contentVersion"]);
         if (version is null)
             warnings.Add("the export states no contentVersion, so the plugin keeps the version its own "
                          + "manifest states. Set content-version in .corpus.yaml.");
@@ -162,12 +182,22 @@ public static class Bundler
         files.Add(Utf8($"{Dist.PluginDir}/{ManifestFile}",
             Rewrite(manifest, version, included)));
 
+        // The breadcrumb, rendered here because everything it states is settled here. It travels with
+        // the directory that prints it and nowhere else: a corpus shipping no hook has nothing to read
+        // it, and a corpus whose hook was trimmed would otherwise keep a file describing a component
+        // that left. Asking the surviving files rather than the components covers both in one question,
+        // and needs no corpus to declare that this generated file is the hook's.
+        var breadcrumbDir = $"{Dist.PluginDir}/{Breadcrumb.RenderedFile[..Breadcrumb.RenderedFile.LastIndexOf('/')]}";
+        if (files.Any(f => Owns(breadcrumbDir, f.Path)))
+            files.Add(Utf8($"{Dist.PluginDir}/{Breadcrumb.RenderedFile}",
+                Breadcrumb.Render(exportManifest, source.Export, included)));
+
         files.Add(Utf8($"{Dist.PluginDir}/{RecordFile}",
             Serialize(new BundleRecord(
-                RecordVersion, pluginName, version ?? Str(manifest["version"]), corpusRoot,
+                RecordVersion, pluginName, version ?? JsonRead.Str(manifest["version"]), corpusRoot,
                 new BundleExport(
-                    Int(exportManifest["formatVersion"]), Str(exportManifest["corpus"]),
-                    Str(exportManifest["contentVersion"]), [.. carried]),
+                    JsonRead.Int(exportManifest["formatVersion"]), JsonRead.Str(exportManifest["corpus"]),
+                    JsonRead.Str(exportManifest["contentVersion"]), [.. carried]),
                 [.. included.Select(c => new BundleIncluded(c.Path, c.Requires, c.Note))],
                 [.. trimmed.Select(t => new BundleTrimmed(t.Path, t.Requires, t.Reason))]))));
 
@@ -175,7 +205,7 @@ public static class Bundler
 
         return new BundlePlan(
             [.. files.OrderBy(f => f.Path, StringComparer.Ordinal)],
-            pluginName, version ?? Str(manifest["version"]), included, trimmed, warnings, problems);
+            pluginName, version ?? JsonRead.Str(manifest["version"]), included, trimmed, warnings, problems);
     }
 
     // Replace the bundle whole: delete the two directories it owns, then write. The same reasoning as
@@ -197,6 +227,7 @@ public static class Bundler
             var full = Path.Combine(root, file.Path.Replace('/', Path.DirectorySeparatorChar));
             Directory.CreateDirectory(Path.GetDirectoryName(full)!);
             File.WriteAllBytes(full, file.Content);
+            if (file.Executable) MakeExecutable(full);
             written.Add($"{Dist.Root}/{file.Path}");
         }
 
@@ -213,9 +244,29 @@ public static class Bundler
         [
             .. Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
                 .Select(f => new BundleFile(
-                    Path.GetRelativePath(root, f).Replace('\\', '/'), File.ReadAllBytes(f)))
+                    Path.GetRelativePath(root, f).Replace('\\', '/'), File.ReadAllBytes(f), IsExecutable(f)))
                 .OrderBy(f => f.Path, StringComparer.Ordinal)
         ];
+    }
+
+    // Whether the file is run rather than read. Windows has no such bit and .NET refuses to be asked
+    // for one there, so the question is not put. Nothing is lost by that: a file checked out on Windows
+    // never carried the bit either, and the `.cmd` twin beside each script needs no permission to be a
+    // command.
+    private static bool IsExecutable(string path) =>
+        !OperatingSystem.IsWindows()
+        && (File.GetUnixFileMode(path) & UnixFileMode.UserExecute) != 0;
+
+    // Give the copy the bit its source had, for everyone the source gave it to. A hook is a command the
+    // plugin's own manifest names, so a copy the owner alone could run would still fail for a plugin
+    // installed into a shared cache.
+    private static void MakeExecutable(string path)
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        File.SetUnixFileMode(path,
+            File.GetUnixFileMode(path)
+            | UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute);
     }
 
     // The plugin manifest as it will travel: the version replaced, the trimmed components gone, and
@@ -229,11 +280,11 @@ public static class Bundler
         var copy = (JsonObject)manifest.DeepClone();
         if (version is not null) copy["version"] = version;
 
-        if (Object(copy["metadata"]) is { } metadata && metadata["components"] is JsonArray components)
+        if (JsonRead.Object(copy["metadata"]) is { } metadata && metadata["components"] is JsonArray components)
         {
             var kept = new JsonArray();
             foreach (var node in components)
-                if (node is JsonObject c && included.Any(i => i.Path == Str(c["path"])))
+                if (node is JsonObject c && included.Any(i => i.Path == JsonRead.Str(c["path"])))
                     kept.Add(c.DeepClone());
 
             metadata["components"] = kept;
@@ -257,7 +308,7 @@ public static class Bundler
             [
                 new MarketplacePlugin(
                     pluginName,
-                    Str(manifest["description"]) ?? $"The {pluginName} plugin, built from this corpus.",
+                    JsonRead.Str(manifest["description"]) ?? $"The {pluginName} plugin, built from this corpus.",
                     $"./{Dist.PluginDir}")
             ]));
 
@@ -265,7 +316,7 @@ public static class Bundler
     // in some manifests and an object with a `name` in others, and both are read rather than one being
     // declared correct.
     private static string? Owner(JsonObject manifest) =>
-        Str(manifest["author"]) ?? Str(Object(manifest["author"])?["name"]);
+        JsonRead.Str(manifest["author"]) ?? JsonRead.Str(JsonRead.Object(manifest["author"])?["name"]);
 
     // The types the export carried, read off its manifest. A type that contributed no record is absent
     // from that list, which is exactly the state a component reading it would find nothing in.
@@ -275,7 +326,7 @@ public static class Bundler
         if (exportManifest["types"] is not JsonArray declared) return types;
 
         foreach (var node in declared)
-            if (Str(Object(node)?["type"]) is { } key)
+            if (JsonRead.Str(JsonRead.Object(node)?["type"]) is { } key)
                 types.Add(key);
 
         return types;
@@ -290,14 +341,14 @@ public static class Bundler
 
         foreach (var entry in declared)
         {
-            if (Object(entry) is not { } component) continue;
-            if (Str(component["path"]) is not { } path) continue;
+            if (JsonRead.Object(entry) is not { } component) continue;
+            if (JsonRead.Str(component["path"]) is not { } path) continue;
 
             var requires = component["requires"] is JsonArray r
-                ? r.Select(Str).OfType<string>().ToList()
+                ? r.Select(JsonRead.Str).OfType<string>().ToList()
                 : [];
 
-            components.Add(new PluginComponent(path, requires, Str(component["note"])));
+            components.Add(new PluginComponent(path, requires, JsonRead.Str(component["note"])));
         }
 
         return components;
@@ -322,31 +373,6 @@ public static class Bundler
         files.FirstOrDefault(f => f.Path == path) is { } file
             ? new UTF8Encoding(false).GetString(file.Content).TrimStart('\uFEFF')
             : null;
-
-    private static JsonObject? Parse(string? text)
-    {
-        if (text is null) return null;
-
-        try
-        {
-            return JsonNode.Parse(text) as JsonObject;
-        }
-        catch (JsonException)
-        {
-            return null;
-        }
-    }
-
-    private static JsonObject? Object(JsonNode? node) => node as JsonObject;
-
-    // A JSON value read as a string, or null where it is absent, blank or some other type. The manifest
-    // is the corpus's own file and nothing validates it before this reads it, so every read of it
-    // survives a value of the wrong shape rather than throwing over one.
-    private static string? Str(JsonNode? node) =>
-        node is JsonValue value && value.TryGetValue<string>(out var s) && s.Length > 0 ? s : null;
-
-    private static int? Int(JsonNode? node) =>
-        node is JsonValue value && value.TryGetValue<int>(out var i) ? i : null;
 
     // How the plugin manifest is written back out. Stated here rather than borrowed from `KacJson`,
     // because this is a DOM write rather than a serialized record: the two rules that matter are that a

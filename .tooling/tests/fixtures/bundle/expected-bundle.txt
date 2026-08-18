@@ -5,6 +5,8 @@ wrote .dist/plugin/.claude-plugin/plugin.json
 wrote .dist/plugin/bundle.json
 wrote .dist/plugin/corpus/glossary/terms.jsonl
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
+wrote .dist/plugin/hooks/hooks.json
+wrote .dist/plugin/hooks/breadcrumb.txt
 
 # A file under no component's path travels whatever the corpus adopted.
 wrote .dist/plugin/README.md
@@ -14,8 +16,8 @@ wrote .dist/plugin/README.md
 bundle: trimmed skills/decision-lookup — the export carries no adrs.
 
 # The version on the plugin is the corpus content version, not the one the source manifest carried.
-bundle: wrote 10 file(s) to .dist/plugin/ as example-libraries 2.3.4
-1 component(s) included, 1 trimmed.
+bundle: wrote 14 file(s) to .dist/plugin/ as example-libraries 2.3.4
+2 component(s) included, 1 trimmed.
 
 # How the plugin is installed from a path while it is being proved.
 claude plugin marketplace add ./.dist
