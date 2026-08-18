@@ -1,0 +1,21 @@
+# The CLI's own account of the run. Every path is under `.dist/`, because the marketplace sits at the
+# root and the plugin sits beneath it as the directory the marketplace names.
+wrote .dist/.claude-plugin/marketplace.json
+wrote .dist/plugin/.claude-plugin/plugin.json
+wrote .dist/plugin/bundle.json
+wrote .dist/plugin/corpus/glossary/terms.jsonl
+wrote .dist/plugin/skills/glossary-lookup/SKILL.md
+
+# A file under no component's path travels whatever the corpus adopted.
+wrote .dist/plugin/README.md
+
+# The component that was dropped, named where someone is watching. Two corpora building one plugin name
+# may drop different ones, so a run that only counted them would leave the difference unexplainable.
+bundle: trimmed skills/decision-lookup — the export carries no adrs.
+
+# The version on the plugin is the corpus content version, not the one the source manifest carried.
+bundle: wrote 10 file(s) to .dist/plugin/ as example-libraries 2.3.4
+1 component(s) included, 1 trimmed.
+
+# How the plugin is installed from a path while it is being proved.
+claude plugin marketplace add ./.dist

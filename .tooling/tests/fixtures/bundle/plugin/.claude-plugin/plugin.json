@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "example-libraries",
+  "displayName": "Example Libraries",
+  "version": "0.0.1",
+  "description": "Answers questions about the Example Libraries corpus from the export beside it.",
+  "author": {
+    "name": "Example Libraries"
+  },
+  "license": "MIT",
+  "metadata": {
+    "corpusRoot": "corpus",
+    "components": [
+      {
+        "path": "skills/glossary-lookup",
+        "requires": [
+          "glossary"
+        ],
+        "note": "Reads a term from corpus/glossary/terms.jsonl."
+      },
+      {
+        "path": "skills/decision-lookup",
+        "requires": [
+          "adrs"
+        ],
+        "note": "Reads a decision from corpus/adrs/."
+      }
+    ]
+  }
+}

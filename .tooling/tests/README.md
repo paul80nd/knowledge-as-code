@@ -67,6 +67,15 @@ The modes:
   file no record backs, which asserts the overwrite is delete-then-write. The temp root is not a git repository, so no
   ref resolves and no link is written — the fixture therefore pins the corpus-publishes-nowhere path, and the link
   forms belong to the unit layer, which can supply a ref.
+- **`bundle`** — the fixture's `plugin/` tree laid down as `.plugin/`, then `kac export` and `kac bundle` over it.
+  There is no committed copy of the plugin: most of one is the export, which the `export` fixture already pins file
+  for file. What is asserted instead is what a bundle adds — `expected-bundle.txt` names lines the run must print,
+  and `expected-files.txt` and `expected-content.txt` read the tree afterwards, the same two files `sync` and
+  `export` use and with the same `!` prefix inverting a line. Beside them the runner compares the copy of the export
+  inside the plugin with the export it came from, byte for byte, which is what makes a difference between the two a
+  defect rather than something to interpret; `corpus-root` names where that copy landed. `export-type`, where
+  present, names the type to pass to `--type`. The run happens twice, the second over a plugin seeded with a skill no
+  component backs.
 
 Only `validate` runs the validator, so a new check cannot affect the rest.
 
@@ -136,6 +145,8 @@ scenario holds is best read from the fixture; what it is *for* is here.
 | `mechanism-clean`     | Every shared layer in step, including a page whose generated block differs on each side — the authored half is what is compared, so that is not drift. A source corpus, so the verification layer is compared like any other shared file. Asserts exit 0.                                                                                                                                                                                                                                                                                                           |
 | `mechanism-sync`      | `--sync` from a reference into a corpus that has adopted `adrs` alone: a shared page comes down and is regenerated against local types, a forked template is seeded, an accepted divergence is left as it is, and nothing of the declined `runbooks` type arrives.                                                                                                                                                                                                                                                                                                  |
 | `export`              | Three glossaries — two roots and a chain under one of them — through `kac export --type glossary`. The export it writes is committed under `expected-dist/` and diffed whole, which is where a change to what a consumer reads shows up. Asserts the documented layout, a record carrying its type's declared fields and no others, a term split into its definition and its labelled line, a cross-reference resolved to its counterpart, prose unwrapped with its paragraph breaks kept, and the corpus-publishes-nowhere path, which is the only publishing state a fixture can reach. A second run over an output seeded with a file no record backs asserts the overwrite is delete-then-write. See [`fixtures/export/README.md`](fixtures/export/README.md). |
+| `bundle`              | The `export` fixture's corpus, and a plugin declaring two components: one requiring `glossary`, which the corpus holds, and one requiring `adrs`, which it does not. Asserts the trim in both directions, that a file under no component's path travels regardless, that the plugin's version is the corpus content version rather than the one the source manifest carried, that a key this tool does not know survives the rewrite, and that the copy of the export inside the plugin is byte-identical to the export beside it. See [`fixtures/bundle/README.md`](fixtures/bundle/README.md). |
+| `bundle-empty`        | A corpus that adopted no type, and a plugin whose only component requires one. Asserts that trimming everything warns clearly and still produces a plugin, and that a corpus stating no content version leaves the plugin on the version its own manifest carried. See [`fixtures/bundle-empty/README.md`](fixtures/bundle-empty/README.md). |
 
 ### Known validator gaps surfaced by the suite
 

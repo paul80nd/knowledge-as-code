@@ -86,6 +86,10 @@ foreach (var scenario in scenarios)
     //                tree it wrote: whole-file against the committed export under expected-dist/, plus
     //                the same three files sync uses. A second run over an output seeded with a stray
     //                file asserts the overwrite is delete-then-write
+    //   bundle       lay the fixture's plugin/ down as .plugin/, run `export` then `bundle`, and assert
+    //                the plugin it assembled: the lines in expected-bundle.txt, the tree files sync and
+    //                export use, that the copied export is byte-identical to the one it was copied
+    //                from, and that a stray file does not survive a second run
     var modePath = Path.Combine(scenario, "mode");
     var mode = File.Exists(modePath) ? File.ReadAllText(modePath).Trim() : "validate";
 
@@ -110,6 +114,9 @@ foreach (var scenario in scenarios)
                 break;
             case "export":
                 RunExportScenario(name, scenario, corpusDir);
+                break;
+            case "bundle":
+                RunBundleScenario(name, scenario, corpusDir);
                 break;
             default:
                 failures.Add(name);
@@ -366,8 +373,8 @@ void RunSyncScenario(string name, string scenario, string corpusDir)
 // export: run `kac export` over the fixture corpus and assert the tree it wrote.
 //
 // **The golden is the whole export, file for file**, committed under `expected-dist/` and diffed against
-// what the run emitted. `.dist/` is untracked and rebuilt whole every run. This tracked copy is where a
-// change to what a consumer reads becomes visible.
+// what the run emitted. `.dist/export/` is untracked and rebuilt whole every run. This tracked copy is
+// where a change to what a consumer reads becomes visible.
 //
 // The three expectation files `sync` uses stay beside it and carry what a whole-file diff cannot: what
 // the run printed, and the two manifest fields the diff normalises away.
@@ -389,7 +396,7 @@ void RunExportScenario(string name, string scenario, string corpusDir)
         string[] argv = type is null ? [kac, "export"] : [kac, "export", "--type", type];
         var (stdout, stderr, exit) = Run(temp, "dotnet", argv);
         var output = stderr + stdout;
-        var dist = Path.Combine(temp, ".dist");
+        var dist = Path.Combine(temp, ".dist", "export");
 
         if (update)
         {
@@ -441,9 +448,127 @@ void RunExportScenario(string name, string scenario, string corpusDir)
     }
 }
 
+// bundle: lay the fixture's plugin tree down as `.plugin/`, run `export`, then run `bundle` over what it
+// wrote, and assert the plugin that came out.
+//
+// **There is no whole-tree golden here, and that is deliberate.** Most of a bundle is the export, which
+// `expected-dist/` under the export fixture already pins file for file; a second committed copy of it
+// would be one more thing to regenerate and one more place for the two to disagree. What this asserts
+// instead is the part a bundle adds: which components survived, what the run said about the ones that
+// did not, and — the assertion this mode exists for — that the copy of the export inside the plugin is
+// byte-identical to the export it was copied from.
+//
+// The fixture's plugin declares a component for a type the corpus does not hold, so trimming runs on
+// every scenario in this mode rather than only on the one written for it.
+void RunBundleScenario(string name, string scenario, string corpusDir)
+{
+    var pluginDir = Path.Combine(scenario, "plugin");
+    if (!Directory.Exists(pluginDir))
+    {
+        failures.Add(name);
+        Console.WriteLine($"ERROR  {name}  — no plugin/ tree in the fixture");
+        return;
+    }
+
+    if (update)
+    {
+        Console.WriteLine($"UPDATE {name}  (bundle scenario — nothing to regenerate)");
+        return;
+    }
+
+    var typePath = Path.Combine(scenario, "export-type");
+    var type = File.Exists(typePath) ? File.ReadAllText(typePath).Trim() : null;
+    var temp = AssembleTemp(schemaDir, corpusDir);
+    try
+    {
+        CopyTree(pluginDir, Path.Combine(temp, ".plugin"));
+
+        string[] exportArgv = type is null ? [kac, "export"] : [kac, "export", "--type", type];
+        var (_, exportErr, exportExit) = Run(temp, "dotnet", exportArgv);
+
+        var problems = new List<string>();
+        if (exportExit != 0) problems.Add($"the export the bundle needs failed (exit {exportExit}): {exportErr}");
+
+        var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "bundle");
+        var output = stderr + stdout;
+
+        if (exit != 0) problems.Add($"expected a clean bundle (exit 0), got exit {exit}");
+        problems.AddRange(ReadLines(Path.Combine(scenario, "expected-bundle.txt"))
+            .Where(l => !output.Contains(l)).Select(l => $"not reported: {l}"));
+
+        // The copy is the seam between the two commands, so a difference between the two copies is a
+        // defect rather than something to interpret. `corpus-root` names where the copy landed, which is
+        // the fixture plugin's `metadata.corpusRoot` and is the one thing this cannot read for itself.
+        var corpusRoot = File.ReadAllText(Path.Combine(scenario, "corpus-root")).Trim();
+        problems.AddRange(SameTree(
+            Path.Combine(temp, ".dist", "export"),
+            Path.Combine(temp, ".dist", "plugin", corpusRoot)));
+
+        problems.AddRange(CheckTree(temp, scenario));
+
+        // A file no component backs, left in the plugin before the second run. The same failure mode the
+        // export has, and the same answer: the directory is replaced whole rather than written over.
+        var orphan = Path.Combine(temp, ".dist", "plugin", "skills", "orphan", "SKILL.md");
+        Directory.CreateDirectory(Path.GetDirectoryName(orphan)!);
+        File.WriteAllText(orphan, "orphan\n");
+
+        var (_, _, second) = Run(temp, "dotnet", kac, "bundle");
+        if (second != 0) problems.Add($"expected a clean second bundle (exit 0), got exit {second}");
+        if (File.Exists(orphan)) problems.Add("a file no component backs survived a second bundle");
+
+        if (problems.Count == 0)
+        {
+            Console.WriteLine($"ok     {name}  (bundled)");
+        }
+        else
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}");
+            foreach (var p in problems) Console.WriteLine($"         {p}");
+            foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"       | {l}");
+        }
+    }
+    finally
+    {
+        TryDelete(temp);
+    }
+}
+
+// Whether two trees hold the same files with the same bytes. Bytes rather than text, because what is
+// being asserted is that a copy was a copy: a comparison that normalised line endings would pass over
+// exactly the edit it exists to catch.
+static List<string> SameTree(string expected, string actual)
+{
+    if (!Directory.Exists(actual)) return [$"the bundle wrote no copy of the export at {actual}"];
+
+    var problems = new List<string>();
+    var want = TreeBytes(expected);
+    var got = TreeBytes(actual);
+
+    foreach (var rel in want.Keys.Union(got.Keys, StringComparer.Ordinal).OrderBy(p => p, StringComparer.Ordinal))
+    {
+        if (!got.TryGetValue(rel, out var b)) problems.Add($"the copied export is missing {rel}");
+        else if (!want.TryGetValue(rel, out var a)) problems.Add($"the copied export holds {rel}, which the export does not");
+        else if (!a.SequenceEqual(b)) problems.Add($"the copied export differs from the export at {rel} — bundle edited it");
+    }
+
+    return problems;
+}
+
+static SortedDictionary<string, byte[]> TreeBytes(string root)
+{
+    var files = new SortedDictionary<string, byte[]>(StringComparer.Ordinal);
+    if (!Directory.Exists(root)) return files;
+
+    foreach (var file in Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories))
+        files[Path.GetRelativePath(root, file).Replace('\\', '/')] = File.ReadAllBytes(file);
+
+    return files;
+}
+
 // The tree a scenario expects: every path in expected-files.txt present (or absent, prefixed `!`), and
-// every `<path> :: <text>` in expected-content.txt holding (or not, prefixed `!`). Shared by `sync` and
-// `export`, which assert the same kind of thing about two different trees.
+// every `<path> :: <text>` in expected-content.txt holding (or not, prefixed `!`). Shared by `sync`,
+// `export` and `bundle`, which assert the same kind of thing about three different trees.
 static List<string> CheckTree(string root, string scenario)
 {
     var problems = new List<string>();
@@ -506,8 +631,9 @@ static List<string> CheckGoldenExport(string dist, string golden)
     return problems;
 }
 
-// Replace the committed export whole, as the exporter replaces `.dist/` whole. Anything the export
-// stopped writing has to leave the golden with it, or the next run reads it as a file the export lost.
+// Replace the committed export whole, as the exporter replaces `.dist/export/` whole. Anything the
+// export stopped writing has to leave the golden with it, or the next run reads it as a file the export
+// lost.
 static int WriteGoldenExport(string dist, string golden)
 {
     if (Directory.Exists(golden)) Directory.Delete(golden, recursive: true);

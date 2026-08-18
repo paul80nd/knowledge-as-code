@@ -1,0 +1,21 @@
+# The plugin the bundle assembled. The export inside it is asserted whole, byte for byte, against the
+# export it was copied from, so nothing here lists its files a second time.
+.dist/plugin/.claude-plugin/plugin.json
+.dist/plugin/bundle.json
+.dist/plugin/skills/glossary-lookup/SKILL.md
+
+# A file under no component's path travels regardless.
+.dist/plugin/README.md
+
+# The trimmed component's words never reach the plugin. A skill that finds nothing is worse than an
+# absent one: it answers, and answers with nothing.
+!.dist/plugin/skills/decision-lookup/SKILL.md
+
+# The marketplace sits at the root, because a marketplace resolves a plugin source against the
+# directory holding `.claude-plugin/` and refuses one containing `..`.
+.dist/.claude-plugin/marketplace.json
+
+# The export the bundle copied from is left where it was. `bundle` reads it and never writes back, and
+# the two commands own separate directories under one root for exactly that reason.
+.dist/export/manifest.json
+.dist/export/glossary/terms.jsonl

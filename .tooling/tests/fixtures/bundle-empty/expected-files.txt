@@ -1,0 +1,9 @@
+# What an emptied plugin still holds: its manifest, its account of itself, and the export.
+.dist/plugin/.claude-plugin/plugin.json
+.dist/plugin/bundle.json
+.dist/plugin/corpus/manifest.json
+.dist/.claude-plugin/marketplace.json
+
+# And what it does not. The skill would have found nothing, which reads to a user exactly like a term
+# the corpus does not define.
+!.dist/plugin/skills/glossary-lookup/SKILL.md

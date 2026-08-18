@@ -1,0 +1,30 @@
+# The plugin's version is the corpus content version, replacing whatever the source manifest stated —
+# so the number on the plugin is the number of the data inside it.
+.dist/plugin/.claude-plugin/plugin.json :: "version": "2.3.4"
+.dist/plugin/.claude-plugin/plugin.json :: !"0.0.1"
+
+# Every other key of the source manifest survives, including ones this tool has never heard of. The
+# manifest is the corpus's own file and is edited rather than rebuilt.
+.dist/plugin/.claude-plugin/plugin.json :: "displayName": "Example Libraries"
+.dist/plugin/.claude-plugin/plugin.json :: "corpusRoot": "corpus"
+
+# The trimmed component leaves the manifest with its files, so the plugin does not advertise a
+# component that is not there.
+.dist/plugin/.claude-plugin/plugin.json :: "path": "skills/glossary-lookup"
+.dist/plugin/.claude-plugin/plugin.json :: !"skills/decision-lookup"
+
+# `bundle.json` is where the plugin says what it holds and why anything is missing. Two corpora running
+# one plugin name may ship different component sets, and this is what makes that answerable from
+# outside.
+.dist/plugin/bundle.json :: "bundleVersion": 1
+.dist/plugin/bundle.json :: "corpusRoot": "corpus"
+.dist/plugin/bundle.json :: "reason": "the export carries no adrs"
+
+# It carries no timestamp and no commit. The export inside the plugin states both, and a second clock
+# would be a second answer to one question.
+.dist/plugin/bundle.json :: !"generatedAt"
+.dist/plugin/bundle.json :: !"commit"
+
+# The marketplace names the plugin as a path beneath itself.
+.dist/.claude-plugin/marketplace.json :: "source": "./plugin"
+.dist/.claude-plugin/marketplace.json :: "name": "example-libraries-local"

@@ -130,8 +130,10 @@ rules:
   - path: ".dist/**"
     layer: generated
     note: >
-      The export `kac export` writes: the corpus as data a consumer reads instead of cloning. Untracked
-      and rebuilt whole each run, so it is named here to be resolved rather than to be compared.
+      What the two commands that package a corpus write: `kac export` builds `.dist/export/`, the corpus
+      as data a consumer reads instead of cloning, and `kac bundle` builds `.dist/plugin/` and the
+      marketplace naming it. Untracked and rebuilt whole each run, so this is named here to be resolved
+      rather than to be compared.
 
   # ── synced ─────────────────────────────────────────────────────────────────
 

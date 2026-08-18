@@ -1,0 +1,16 @@
+# A corpus that adopted no type still exports, and the bundle it produces still installs. It carries
+# the plugin manifest and the export, and nothing that reads either.
+wrote .dist/.claude-plugin/marketplace.json
+wrote .dist/plugin/.claude-plugin/plugin.json
+wrote .dist/plugin/bundle.json
+wrote .dist/plugin/corpus/manifest.json
+
+bundle: trimmed skills/glossary-lookup — the export carries no glossary.
+
+# The warning that has to be clear, because the plugin it describes installs and then does nothing.
+bundle: every component was trimmed
+bundle.json names each one and the type it needed.
+
+# The corpus states no content version, so the plugin keeps the one its own manifest states rather than
+# being stamped with nothing.
+bundle: the export states no contentVersion

@@ -114,6 +114,58 @@ public record ExportPartLine(
     string Path,
     string Anchor);
 
+// ---------------------------------------------------------------------------
+// Bundle documents
+//
+// What `kac bundle` writes for itself. `plugin.json` is not here: it is the corpus's own file, edited
+// as a DOM so that keys this tool has never heard of survive the round trip.
+// ---------------------------------------------------------------------------
+
+// What the assembled plugin holds, and why anything is missing from it.
+//
+// Two corpora running one plugin name may ship different component sets, which is correct and makes
+// "does this plugin do X" unanswerable from outside unless the plugin says. This is where it says.
+//
+// It carries no timestamp and no commit. The export it was built from is inside the plugin already,
+// and its manifest states both — a second clock here would be a second answer to one question.
+public record BundleRecord(
+    int BundleVersion,
+    string Plugin,
+    string? Version,
+    string CorpusRoot,
+    BundleExport Export,
+    IReadOnlyList<BundleIncluded> Included,
+    IReadOnlyList<BundleTrimmed> Trimmed);
+
+// The export this plugin was assembled around, named so that a reader holding the plugin alone can
+// tell which corpus and which shape it has, without walking into the copy to find out.
+public record BundleExport(int? FormatVersion, string? Corpus, string? ContentVersion, IReadOnlyList<string> Types);
+
+public record BundleIncluded(string Path, IReadOnlyList<string> Requires, string? Note);
+
+// A component and the reason it was left out. The reason is prose because it is read by a person
+// asking why the plugin they installed does less than the one their colleague has.
+public record BundleTrimmed(string Path, IReadOnlyList<string> Requires, string Reason);
+
+// ---------------------------------------------------------------------------
+// The local marketplace
+//
+// A marketplace is a directory holding `.claude-plugin/marketplace.json`, and it resolves a plugin's
+// source against that directory. This is the minimum that installs and validates: what the plugin is,
+// who owns it, and where under the marketplace root it sits.
+// ---------------------------------------------------------------------------
+
+public record MarketplaceManifest(
+    [property: JsonPropertyName("$schema")] string Schema,
+    string Name,
+    string Description,
+    MarketplaceOwner Owner,
+    IReadOnlyList<MarketplacePlugin> Plugins);
+
+public record MarketplaceOwner(string Name);
+
+public record MarketplacePlugin(string Name, string Description, string Source);
+
 [JsonSourceGenerationOptions(
     WriteIndented = true,
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
@@ -123,6 +175,8 @@ public record ExportPartLine(
 [JsonSerializable(typeof(ExportManifest))]
 [JsonSerializable(typeof(ExportRecord))]
 [JsonSerializable(typeof(ExportPartLine))]
+[JsonSerializable(typeof(BundleRecord))]
+[JsonSerializable(typeof(MarketplaceManifest))]
 public partial class KacJson : JsonSerializerContext
 {
     private static KacJson? _relaxed;

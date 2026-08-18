@@ -2,27 +2,29 @@
 
 ## Intent
 
-A consumer of a corpus should not clone it. `export` writes what the corpus knows into `.dist/` as data built for an
-agent to read: a manifest saying what the export is, one file per record for a reader that wants a whole record, and a
-flat file cheap to grep for a reader holding only a word. What travels is each type's own decision, declared beside the
-type, so the command carries no list of its own and a corpus adopting a new type exports it without the tool changing.
+A consumer of a corpus should not clone it. `export` writes what the corpus knows into `.dist/export/` as data built
+for an agent to read: a manifest saying what the export is, one file per record for a reader that wants a whole
+record, and a flat file cheap to grep for a reader holding only a word. What travels is each type's own decision,
+declared beside the type, so the command carries no list of its own and a corpus adopting a new type exports it
+without the tool changing.
 
 ## What it is not
 
-**It is not `bundle`.** `export` produces data. Assembling that data and the `.plugin/` tree into something a consumer
-can install is a second command, and it does not exist. Nothing here trims components, packages a plugin or publishes
-anything.
+**It is not `bundle`.** `export` produces data; [`bundle`](bundle.md) assembles that data and the `.plugin/` tree into
+something a consumer can install. Nothing here trims components, packages a plugin or publishes anything, and nothing
+here knows a bundle exists — `bundle` reads what this wrote and never the other way round.
 
 **It is not `index`.** `index` writes into the corpus, for a person reading the corpus. `export` writes outside it, for
 something that will never open the Markdown. Both are built from the same frontmatter, and neither is derivable from
 the other, because they answer to different readers.
 
 **It is not a backup.** A record travels as the fields and sections its type declared, so a corpus cannot be rebuilt
-from an export of it. The direction is one way: `.dist/` is rebuilt whole from the corpus.
+from an export of it. The direction is one way: `.dist/export/` is rebuilt whole from the corpus.
 
 ## Approach
 
-**The export is untracked.** `.dist/` is gitignored and rebuilt whole, so it is never something to review: a tracked
+**The export is untracked.** `.dist/` is gitignored and the export inside it is rebuilt whole, so it is never
+something to review: a tracked
 export would put a diff nobody reads on every change to the words, restating what the corpus already holds. Two things
 follow from that. The overwrite is delete-then-write, because a record deleted from the corpus must not leave an entry
 behind and no diff would show the orphan. And the manifest has to describe itself, since git can say nothing about an
@@ -32,7 +34,7 @@ the framework's own test suite, which exports a corpus and compares the whole tr
 the tool without the tests receives a format already proved.
 
 ```
-.dist/
+.dist/export/
   manifest.json          what this export is, and where it came from
   glossary/
     gls-<name>.json      one record: its declared fields, its declared sections, and its links

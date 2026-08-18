@@ -18,7 +18,7 @@ public sealed record ExportFile(string Path, string Content);
 // `Withheld` and `Unread` are the two things the output cannot say about itself, carried out rather than
 // swallowed. A corpus that excludes drafts publishes a smaller vocabulary than it holds; a link naming a
 // record and no term inside it leaves a cross-reference the export could not carry. Neither leaves a mark
-// in `.dist/`, so the run that built it is the last place anyone will see them.
+// in the export, so the run that built it is the last place anyone will see them.
 public sealed record ExportPlan(
     IReadOnlyList<ExportFile> Files,
     IReadOnlyList<ExportedType> Types,
@@ -42,10 +42,6 @@ public static class Exporter
     // read by nothing yet. `.tooling/features/export.md` says what moves it, and why the field is here
     // before a reader for it is.
     public const int FormatVersion = 2;
-
-    // Where an export lands. Untracked and rebuilt whole, so it is never a thing to review — which is
-    // also why the write below deletes before it writes.
-    public const string Dir = ".dist";
 
     public const string ManifestFile = "manifest.json";
 
@@ -112,9 +108,12 @@ public static class Exporter
     // Replace the export whole: delete what is there, then write. Overwriting in place would leave a
     // deleted record readable in the output indefinitely, which nothing downstream would catch —
     // `.tooling/features/export.md` says why an untracked artefact makes that the only safe order.
+    //
+    // What is deleted is `Dist.Export` and never `.dist/` itself, because the bundle sits beside it
+    // under the same root and an export is not entitled to take it.
     public static List<string> Write(string repoRoot, ExportPlan plan)
     {
-        var root = Path.Combine(repoRoot, Dir);
+        var root = Path.Combine(repoRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar));
         if (Directory.Exists(root)) Directory.Delete(root, recursive: true);
 
         var written = new List<string>();
@@ -123,7 +122,7 @@ public static class Exporter
             var full = Path.Combine(root, file.Path.Replace('/', Path.DirectorySeparatorChar));
             Directory.CreateDirectory(Path.GetDirectoryName(full)!);
             File.WriteAllText(full, file.Content);
-            written.Add($"{Dir}/{file.Path}");
+            written.Add($"{Dist.Export}/{file.Path}");
         }
 
         return written;
