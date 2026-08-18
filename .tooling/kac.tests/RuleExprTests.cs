@@ -34,6 +34,17 @@ public class RuleExprTests
         Assert.True(Eval("present('owner')", "id: adr-0001\nowner: alex.doe"));
     }
 
+    // A rule guards on the field rather than on the shape its type declared, so a list answers the same
+    // question a scalar does. `provenance-required` is the rule this exists for: both fields it names are
+    // lists, and a reading that saw only scalars would make every standard fail it however it was written.
+    [Fact]
+    public void Present_reads_a_list_as_well_as_a_scalar()
+    {
+        Assert.True(Eval("present('derived-from')", "id: std-0001\nderived-from: [ adr-0001 ]"));
+        Assert.False(Eval("present('derived-from')", "id: std-0001\nderived-from: []"));
+        Assert.False(Eval("present('derived-from')", "id: std-0001\nderived-from:"));
+    }
+
     [Fact]
     public void Section_matches_a_heading_whatever_its_case()
         => Assert.True(Eval("section('context')", body: "## Context\n\nProse."));

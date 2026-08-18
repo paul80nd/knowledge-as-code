@@ -21,7 +21,13 @@ public sealed class Facts(Doc doc)
     // comparing against an absent field is answered by RuleExpr's comparison rules, not here.
     public string? Field(string name) => doc.FrontScalar(name);
 
-    public bool Present(string name) => doc.FrontScalar(name) is { Length: > 0 };
+    // Whether the field carries anything, asked of either shape a field may be written in. A rule guards
+    // on the field, not on how the schema declared it: `present('derived-from')` is the same question
+    // whether the type declares a scalar id or a list of them, and a reading that saw only the scalar
+    // would answer no to every list field and make a rule that guards on one impossible to satisfy.
+    //
+    // A bare key and an empty sequence are both absent, which is the same state `bare-key` reports on.
+    public bool Present(string name) => doc.FrontList(name).Count > 0;
 
     // Case-insensitive, matching required-section: a heading is prose a person wrote, and '## context'
     // is the section the schema means however it was capitalised.
