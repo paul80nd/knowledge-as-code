@@ -93,19 +93,15 @@ Carried by every document in the taxonomy.
 
 <!-- BEGIN GENERATED: schema-universal -->
 
-| Field    | Req | Type   | Notes                                                                                |
-|----------|-----|--------|--------------------------------------------------------------------------------------|
-| `id`     | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier`   | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` | ●   | enum   | Values vary by type.                                                                 |
-| `owner`  | ●   | string | A named person, never a team alias.                                                  |
-| `tags`   |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| Field      | Value                                                       | Notes                                                                                |
+|------------|-------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| `id` *     | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.              |
+| `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
+| `status` * | enum                                                        | Values vary by type.                                                                 |
+| `owner` *  | string                                                      | A named person, never a team alias.                                                  |
+| `tags`     | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
 
-**Enum values**
-
-| Field  | Values                                                              |
-|--------|---------------------------------------------------------------------|
-| `tier` | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
+\* Field is required
 
 <!-- END GENERATED: schema-universal -->
 

@@ -169,10 +169,11 @@ public class GeneratorTests
 
         var table = Generator.SchemaTable(t, s);
 
-        Assert.Contains("`id` †", table);     // universal fields are marked…
+        Assert.Contains("`id` *†", table);    // universal fields are marked, required ones twice…
         Assert.Contains("`status` †", table); // …including one the type redeclares
         Assert.Contains("`own-field`", table);
         Assert.DoesNotContain("`own-field` †", table);
+        Assert.Contains("\\* Field is required", table);
         Assert.Contains("REFINED", table); // EffectiveField wins over the universal declaration
         Assert.DoesNotContain("VARIES BY TYPE", table);
         Assert.True(table.IndexOf("`id`", StringComparison.Ordinal)
@@ -181,34 +182,67 @@ public class GeneratorTests
     }
 
     [Fact]
-    public void SchemaTable_lists_enum_values_beneath_the_table_not_inside_the_cell()
+    public void SchemaTable_carries_enum_values_in_the_value_column()
     {
         var t = new TypeSchema
         {
-            FieldOrder = ["status"],
+            FieldOrder = ["status", "owner"],
             Fields = new Dictionary<string, FieldSpec>
             {
                 ["status"] = new()
                 {
                     Name = "status", Type = "enum", Values = ["draft", "active"], Description = "SHORT PROSE"
-                }
+                },
+                ["owner"] = new() { Name = "owner", Type = "string", Description = "PLAIN PROSE" }
             }
         };
 
         var table = Generator.SchemaTable(t, new Schema());
-        var main = table.Split("**Enum values**")[0];
-        var row = main.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
+        var row = table.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
 
-        // Values are what blows a column's width out, so they belong below in a table of their own,
-        // where the page still reads as formatted code.
-        Assert.DoesNotContain("`draft`", row);
+        // The set is what an author came to the page for, so it is what the column carries — the word
+        // `enum` is not something anyone can write into frontmatter.
+        var header = table.Split('\n')[0];
+        Assert.Contains("Value", header);
+        Assert.DoesNotContain("Type", header);
+        Assert.Contains("`draft` `active`", row);
+        Assert.DoesNotContain("enum", row);
         Assert.Contains("SHORT PROSE", row);
-        Assert.Contains("**Enum values**", table);
-        Assert.Contains("| `status` | `draft` · `active` |", table);
+        Assert.DoesNotContain("**Enum values**", table);
+
+        // A field that is not an enum still names its type.
+        Assert.Contains("string", table.Split('\n').Single(l => l.StartsWith("| `owner`", StringComparison.Ordinal)));
     }
 
     [Fact]
-    public void SchemaTable_lists_required_when_conditions_beneath_the_table()
+    public void SchemaTable_narrows_tier_to_the_one_value_the_type_carries()
+    {
+        var s = new Schema
+        {
+            UniversalOrder = ["tier"],
+            Universal = new Dictionary<string, FieldSpec>
+            {
+                ["tier"] = new()
+                {
+                    Name = "tier", Type = "enum", Required = true,
+                    Values = ["decided", "normative", "descriptive"]
+                }
+            }
+        };
+        var t = new TypeSchema { Tier = "normative" };
+
+        var row = Generator.SchemaTable(t, s).Split('\n')
+            .Single(l => l.StartsWith("| `tier`", StringComparison.Ordinal));
+
+        // Every document in the folder carries this one, and CI fails any that does not — the other
+        // values are not choices the author has.
+        Assert.Contains("`normative`", row);
+        Assert.DoesNotContain("`decided`", row);
+        Assert.DoesNotContain("`descriptive`", row);
+    }
+
+    [Fact]
+    public void SchemaTable_closes_a_note_with_the_required_when_condition()
     {
         var t = new TypeSchema
         {
@@ -224,12 +258,12 @@ public class GeneratorTests
         };
 
         var table = Generator.SchemaTable(t, new Schema());
-        var main = table.Split("**Conditionally required**")[0];
+        var row = table.Split('\n').Single(l => l.StartsWith("| `retention`", StringComparison.Ordinal));
 
-        // The condition has to be quoted exactly, so it is the half that cannot be trimmed to fit.
-        Assert.DoesNotContain("classification in", main);
-        Assert.Contains("SHORT PROSE", main);
-        Assert.Contains("| `retention` | `classification in [personal, special-category]` |", table);
+        // The condition is quoted exactly, and closes the note it qualifies rather than sitting in a
+        // second table the reader has to look away to.
+        Assert.Contains("SHORT PROSE Required when `classification in [personal, special-category]`.", row);
+        Assert.DoesNotContain("**Conditionally required**", table);
     }
 
     [Fact]

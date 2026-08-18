@@ -356,7 +356,7 @@ public static class Generator
     // what someone filling in frontmatter wants.
     public static string SchemaTable(TypeSchema t, Schema s)
     {
-        List<string> headers = ["Field", "Req", "Type", "Notes"];
+        List<string> headers = ["Field", "Value", "Notes"];
         var universal = s.UniversalOrder.Where(n => s.EffectiveField(t, n) is not null).ToList();
         var own = t.FieldOrder.Where(n => !universal.Contains(n)).ToList();
 
@@ -366,65 +366,75 @@ public static class Generator
 
         var order = universal.Concat(own).ToList();
         var specs = order.Select(n => s.EffectiveField(t, n)!).ToList();
-        var table = RenderTable(headers, rows) + EnumValues(specs) + ConditionalFields(specs);
-        return universal.Count == 0
-            ? table
-            : $"{table}\n\n† Carried by every document in the taxonomy — see "
-              + "[Metadata](/knowledge-as-code/metadata.md).";
+        var table = RenderTable(headers, rows);
+        return table + Legend(specs.Any(f => f.Required), universal.Count > 0);
 
-        static List<string> FieldRow(string name, FieldSpec f, bool universal) =>
-            [$"`{name}`{(universal ? " †" : "")}", f.Required ? "●" : "", f.Type, NotesFor(f)];
+        // `tier` is the one field whose value a type settles rather than chooses from: every document in
+        // the folder carries the same one, and CI fails any that does not. Offering the reader the other
+        // four would be offering four ways to fail a check.
+        List<string> FieldRow(string name, FieldSpec f, bool universal) =>
+        [
+            $"`{name}`{Marks(f.Required, universal)}",
+            name == "tier" && t.Tier.Length > 0 ? $"`{t.Tier}`" : ValueFor(f),
+            NotesFor(f)
+        ];
     }
 
-    // Enum values are data, not prose, and they belong in a table of their own rather than in a Notes
-    // cell. The renderer pads every column to its widest cell, so one multi-value enum in Notes widens
-    // every row of the table — and these pages are read as source as much as rendered, which makes
-    // width the constraint that matters.
-    private static string EnumValues(IEnumerable<FieldSpec> fields)
-    {
-        var enums = fields.Where(f => f is { Type: "enum", Values.Count: > 0 }).ToList();
-        if (enums.Count == 0) return "";
-
-        List<string> headers = ["Field", "Values"];
-        var rows = enums
-            .Select(f => new List<string>
-                { $"`{f.Name}`", string.Join(" · ", f.Values!.Select(v => $"`{v}`")) })
-            .ToList();
-        return "\n\n**Enum values**\n\n" + RenderTable(headers, rows);
-    }
-
-    // Same reasoning as EnumValues, and a required-when condition has to be quoted exactly, so it is the
-    // last thing that should be competing for room in a Notes cell.
-    private static string ConditionalFields(IEnumerable<FieldSpec> fields)
-    {
-        var conditional = fields.Where(f => !string.IsNullOrEmpty(f.RequiredWhen)).ToList();
-        if (conditional.Count == 0) return "";
-
-        List<string> headers = ["Field", "Required when"];
-        var rows = conditional
-            .Select(f => new List<string> { $"`{f.Name}`", $"`{f.RequiredWhen}`" })
-            .ToList();
-        return "\n\n**Conditionally required**\n\n" + RenderTable(headers, rows);
-    }
+    // What a field may hold: its type, or — where the type is an enum with a resolved set — the values
+    // themselves. The word `enum` tells an author nothing they can write into frontmatter, and the set
+    // is what they came to the page for, so the set is what the column carries.
+    private static string ValueFor(FieldSpec f) =>
+        f is { Type: "enum", Values.Count: > 0 }
+            ? string.Join(" ", f.Values!.Select(v => $"`{v}`"))
+            : f.Type;
 
     // The same reference for metadata.md, which documents the universal fields once for the whole
     // taxonomy. Values are the unrefined universal declarations — `status` is genuinely "varies by
     // type" here, because there is no type in hand to narrow it.
     public static string UniversalSchemaTable(Schema s)
     {
-        List<string> headers = ["Field", "Req", "Type", "Notes"];
+        List<string> headers = ["Field", "Value", "Notes"];
         var fields = s.UniversalOrder.Where(s.Universal.ContainsKey).Select(n => s.Universal[n]).ToList();
         var rows = fields
-            .Select(f => new List<string> { $"`{f.Name}`", f.Required ? "●" : "", f.Type, NotesFor(f) })
+            .Select(f => new List<string>
+                { $"`{f.Name}`{Marks(f.Required, false)}", ValueFor(f), NotesFor(f) })
             .ToList();
-        return RenderTable(headers, rows) + EnumValues(fields) + ConditionalFields(fields);
+        return RenderTable(headers, rows) + Legend(fields.Any(f => f.Required), false);
     }
 
+    // Required and universal are marked on the field name rather than given a column of their own: a
+    // column that is empty in most rows costs a full column's width to say one bit. The markers read in
+    // the order the legend below the table explains them.
+    private static string Marks(bool required, bool universal)
+    {
+        var marks = (required ? "*" : "") + (universal ? "†" : "");
+        return marks.Length == 0 ? "" : $" {marks}";
+    }
+
+    // One paragraph beneath the table, a line to each marker. The two are joined by a hard break —
+    // two trailing spaces — rather than a blank line, because they are one legend rather than two
+    // paragraphs, and rather than spaces on one line, because HTML collapses a run of those to a
+    // single gap. The asterisk is escaped: a line opening with a bare one is a bullet.
+    private static string Legend(bool anyRequired, bool anyUniversal)
+    {
+        List<string> parts = [];
+        if (anyRequired) parts.Add("\\* Field is required");
+        if (anyUniversal)
+            parts.Add("† Carried by every document in the taxonomy — see "
+                      + "[Metadata](/knowledge-as-code/metadata.md).");
+        return parts.Count == 0 ? "" : "\n\n" + string.Join("  \n", parts);
+    }
+
+    // Enum values are not repeated here — they are the Value column, see ValueFor. A required-when
+    // condition closes the cell as its own sentence, quoted exactly as the schema writes it, because
+    // it is the difference between a field an author may skip and one they may not.
     private static string NotesFor(FieldSpec f)
     {
-        // Enum values and required-when conditions are not repeated here — both render in their own
-        // tables beneath, see EnumValues and ConditionalFields.
-        return Escape(f.TableText ?? "");
+        var notes = Escape(f.TableText ?? "");
+        if (string.IsNullOrEmpty(f.RequiredWhen)) return notes;
+
+        var when = $"Required when `{Escape(f.RequiredWhen)}`.";
+        return notes.Length == 0 ? when : $"{notes} {when}";
     }
 
     // What a description may run to. The checks table is read by scanning — a reader wants to know which

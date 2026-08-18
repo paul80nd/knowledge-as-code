@@ -37,26 +37,20 @@ deliver.
 
 <!-- BEGIN GENERATED: schema-nfrs -->
 
-| Field            | Req | Type   | Notes                                                                                             |
-|------------------|-----|--------|---------------------------------------------------------------------------------------------------|
-| `id` †           | ●   | string | Stable, unique across the corpus, never reused. Format set by the type.                           |
-| `tier` †         | ●   | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.              |
-| `status` †       | ●   | enum   | `agreed` is a commitment someone accepted, not an aspiration.                                     |
-| `owner` †        | ●   | string | A named person, never a team alias.                                                               |
-| `tags` †         |     | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                  |
-| `applies-to`     | ●   | list   | Estate-wide targets are almost always wrong — scope them.                                         |
-| `target`         | ●   | string | Concrete and arguable — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`. Include the measurement window. |
-| `measured-by`    | ●   | string | An NFR you cannot measure is a wish. "We'd notice" is not a measurement method.                   |
-| `constrained-by` |     | list   | Integrations whose own SLA caps this target.                                                      |
-| `review-by`      | ●   | date   | Quoted. The date by which someone confirms this is still true.                                    |
+| Field            | Value                      | Notes                                                                                             |
+|------------------|----------------------------|---------------------------------------------------------------------------------------------------|
+| `id` *†          | string                     | Stable, unique across the corpus, never reused. Format set by the type.                           |
+| `tier` *†        | `normative`                | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.              |
+| `status` *†      | `draft` `agreed` `retired` | `agreed` is a commitment someone accepted, not an aspiration.                                     |
+| `owner` *†       | string                     | A named person, never a team alias.                                                               |
+| `tags` †         | list                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                  |
+| `applies-to` *   | list                       | Estate-wide targets are almost always wrong — scope them.                                         |
+| `target` *       | string                     | Concrete and arguable — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`. Include the measurement window. |
+| `measured-by` *  | string                     | An NFR you cannot measure is a wish. "We'd notice" is not a measurement method.                   |
+| `constrained-by` | list                       | Integrations whose own SLA caps this target.                                                      |
+| `review-by` *    | date                       | Quoted. The date by which someone confirms this is still true.                                    |
 
-**Enum values**
-
-| Field    | Values                                                              |
-|----------|---------------------------------------------------------------------|
-| `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
-| `status` | `draft` · `agreed` · `retired`                                      |
-
+\* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-nfrs -->
