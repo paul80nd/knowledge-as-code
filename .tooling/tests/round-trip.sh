@@ -48,6 +48,13 @@ fail() {
   exit 1
 }
 
+# Every read of a manifest goes through here. jq writes CRLF on Windows and Git Bash keeps the
+# carriage return, which then reaches a path, a comparison and a URL — and is invisible in the
+# message reporting the failure, because printing it returns the cursor to the start of the line.
+jqr() {
+  jq -r "$@" | tr -d '\r'
+}
+
 [ -d "$REPO/.dist/plugin" ] || fail "no .dist/plugin — run kac export and kac bundle first."
 
 # ── install ───────────────────────────────────────────────────────────────────────────────────────
@@ -56,8 +63,8 @@ fail() {
 # marketplace, so a script that hard-coded either would pass here and fail in the next corpus to
 # run it.
 
-MARKETPLACE=$(jq -r '.name' "$REPO/.dist/.claude-plugin/marketplace.json")
-PLUGIN=$(jq -r '.plugins[0].name' "$REPO/.dist/.claude-plugin/marketplace.json")
+MARKETPLACE=$(jqr '.name' "$REPO/.dist/.claude-plugin/marketplace.json")
+PLUGIN=$(jqr '.plugins[0].name' "$REPO/.dist/.claude-plugin/marketplace.json")
 
 echo "round-trip: installing $PLUGIN from $MARKETPLACE"
 claude plugin marketplace add "$REPO/.dist"
@@ -81,7 +88,7 @@ case "$ROOT" in
   "$REPO"/*) fail "the install referenced the source tree rather than taking a copy of it." ;;
 esac
 
-CORPUS_ROOT=$(jq -r '.metadata.corpusRoot' "$MANIFEST")
+CORPUS_ROOT=$(jqr '.metadata.corpusRoot' "$MANIFEST")
 [ -d "$ROOT/$CORPUS_ROOT" ] || fail "the installed plugin holds no $CORPUS_ROOT directory."
 
 EXPORT_MANIFEST="$ROOT/$CORPUS_ROOT/manifest.json"
@@ -101,29 +108,29 @@ EXPORT_MANIFEST="$ROOT/$CORPUS_ROOT/manifest.json"
 # whole content, and a broken raw link costs the reader nothing, where an ADR's raw link is the only
 # route an agent has to the text.
 
-RAW_TEMPLATE=$(jq -r '.publishing.rawTemplate // empty' "$EXPORT_MANIFEST")
+RAW_TEMPLATE=$(jqr '.publishing.rawTemplate // empty' "$EXPORT_MANIFEST")
 
 if [ -z "$RAW_TEMPLATE" ]; then
   echo "round-trip: the export names no raw template — this corpus publishes nowhere, so no link is checked."
 else
-  jq -r '.types[].dir' "$EXPORT_MANIFEST" > "$WORK/dirs.txt"
+  jqr '.types[].dir' "$EXPORT_MANIFEST" > "$WORK/dirs.txt"
 
   while read -r dir; do
     # A type contributing no record has no path to substitute. Saying so beats failing over an
     # emptiness the corpus is entitled to.
-    RECORDS=$(jq -r --arg d "$dir" '.types[] | select(.dir == $d) | .records' "$EXPORT_MANIFEST")
+    RECORDS=$(jqr --arg d "$dir" '.types[] | select(.dir == $d) | .records' "$EXPORT_MANIFEST")
     if [ "$RECORDS" = "0" ]; then
       echo "round-trip: $dir carries no record — no link to build."
       continue
     fi
 
-    PARTS_FILE=$(jq -r --arg d "$dir" '.types[] | select(.dir == $d) | .partsFile // empty' "$EXPORT_MANIFEST")
+    PARTS_FILE=$(jqr --arg d "$dir" '.types[] | select(.dir == $d) | .partsFile // empty' "$EXPORT_MANIFEST")
     PARTS_NAME=$(basename "$PARTS_FILE")
 
     RECORD=$(find "$ROOT/$CORPUS_ROOT/$dir" -type f -name '*.json' ! -name "$PARTS_NAME" | sort | head -1)
     [ -n "$RECORD" ] || fail "$dir declares $RECORDS record(s) and the installed plugin holds none."
 
-    RECORD_PATH=$(jq -r '.path' "$RECORD")
+    RECORD_PATH=$(jqr '.path' "$RECORD")
     URL=$(echo "$RAW_TEMPLATE" | sed "s|{path}|$RECORD_PATH|")
 
     echo "round-trip: fetching $URL"
@@ -160,15 +167,15 @@ grep -iE '"title": *"Borrower"' "$TERMS" > "$WORK/hits.txt" || fail "no line def
 HITS=$(wc -l < "$WORK/hits.txt" | tr -d ' ')
 [ "$HITS" = "1" ] || fail "expected one line defining Borrower, found $HITS."
 
-ID=$(jq -r '.id' "$WORK/hits.txt")
+ID=$(jqr '.id' "$WORK/hits.txt")
 [ "$ID" = "gls-example-libraries.borrower" ] || fail "Borrower came back as $ID."
 
-DEFINITION=$(jq -r '.definition // empty' "$WORK/hits.txt")
+DEFINITION=$(jqr '.definition // empty' "$WORK/hits.txt")
 [ -n "$DEFINITION" ] || fail "$ID came back with no definition."
 
 # The `**Not:**` line, which the skill tells a reader to give alongside the definition. A reader
 # handed only the definition goes on to apply the term to the things it excludes.
-NOT=$(jq -r '.not // empty' "$WORK/hits.txt")
+NOT=$(jqr '.not // empty' "$WORK/hits.txt")
 [ -n "$NOT" ] || fail "$ID came back with no Not line."
 
 echo "round-trip: $ID — definition and Not line both present."
