@@ -41,7 +41,7 @@ exceptions to the plural-folder rule.
 | Field              | Value                                                            | Notes                                                                                          |
 |--------------------|------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
 | `id` *†            | string                                                           | Stable, unique across the corpus, never reused. Format set by the type.                        |
-| `tier` *†          | `decided` `normative` `descriptive` `procedural` `observed`      | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.           |
+| `tier` *†          | `descriptive`                                                    | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.           |
 | `status` *†        | `active` `deprecated`                                            | Whether the store is current or on its way out.                                                |
 | `owner` *†         | string                                                           | A named person, never a team alias.                                                            |
 | `tags` †           | list                                                             | Free-form, lowercase, hyphenated. Used for cross-cutting search.                               |

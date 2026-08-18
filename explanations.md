@@ -40,15 +40,15 @@ plausibly be an explanation *or* something else, it is the something else.
 
 <!-- BEGIN GENERATED: schema-explanations -->
 
-| Field         | Value                                                       | Notes                                                                                         |
-|---------------|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| `id` *†       | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.                       |
-| `tier` *†     | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.          |
-| `status` *†   | `draft` `active` `stale`                                    | `stale` is an honest state — say so rather than let the page quietly rot.                     |
-| `owner` *†    | string                                                      | A named person, never a team alias.                                                           |
-| `tags` †      | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                              |
-| `explains` *  | list                                                        | Service or capability ids this explains.                                                      |
-| `review-by` * | date                                                        | The field that stops this type rotting — explanations need the tightest staleness discipline. |
+| Field         | Value                    | Notes                                                                                         |
+|---------------|--------------------------|-----------------------------------------------------------------------------------------------|
+| `id` *†       | string                   | Stable, unique across the corpus, never reused. Format set by the type.                       |
+| `tier` *†     | `descriptive`            | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.          |
+| `status` *†   | `draft` `active` `stale` | `stale` is an honest state — say so rather than let the page quietly rot.                     |
+| `owner` *†    | string                   | A named person, never a team alias.                                                           |
+| `tags` †      | list                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                              |
+| `explains` *  | list                     | Service or capability ids this explains.                                                      |
+| `review-by` * | date                     | The field that stops this type rotting — explanations need the tightest staleness discipline. |
 
 \* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).

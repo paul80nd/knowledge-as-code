@@ -44,7 +44,7 @@ may verify several rules, and one rule may need several controls.
 | Field         | Value                                                                    | Notes                                                                                    |
 |---------------|--------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
 | `id` *†       | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.                  |
-| `tier` *†     | `decided` `normative` `descriptive` `procedural` `observed`              | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.     |
+| `tier` *†     | `normative`                                                              | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.     |
 | `status` *†   | `active` `planned` `retired`                                             | Whether the control is running, intended, or stood down.                                 |
 | `owner` *†    | string                                                                   | A named person, never a team alias.                                                      |
 | `tags` †      | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                         |

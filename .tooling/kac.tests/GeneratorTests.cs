@@ -215,6 +215,33 @@ public class GeneratorTests
     }
 
     [Fact]
+    public void SchemaTable_narrows_tier_to_the_one_value_the_type_carries()
+    {
+        var s = new Schema
+        {
+            UniversalOrder = ["tier"],
+            Universal = new Dictionary<string, FieldSpec>
+            {
+                ["tier"] = new()
+                {
+                    Name = "tier", Type = "enum", Required = true,
+                    Values = ["decided", "normative", "descriptive"]
+                }
+            }
+        };
+        var t = new TypeSchema { Tier = "normative" };
+
+        var row = Generator.SchemaTable(t, s).Split('\n')
+            .Single(l => l.StartsWith("| `tier`", StringComparison.Ordinal));
+
+        // Every document in the folder carries this one, and CI fails any that does not — the other
+        // values are not choices the author has.
+        Assert.Contains("`normative`", row);
+        Assert.DoesNotContain("`decided`", row);
+        Assert.DoesNotContain("`descriptive`", row);
+    }
+
+    [Fact]
     public void SchemaTable_lists_required_when_conditions_beneath_the_table()
     {
         var t = new TypeSchema

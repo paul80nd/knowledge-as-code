@@ -61,16 +61,16 @@ accessibility under governance is the clearest of them.
 
 <!-- BEGIN GENERATED: schema-policies -->
 
-| Field         | Value                                                       | Notes                                                                                |
-|---------------|-------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| `id` *†       | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *†     | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` *†   | `draft` `active` `retired`                                  | `draft` until agreed; `retired` rather than deleted.                                 |
-| `owner` *†    | string                                                      | A named person, never a team alias.                                                  |
-| `tags` †      | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `category` *  | `security` `delivery` `operations` `governance`             | The broad area the commitment belongs to. Controlled, and deliberately few.          |
-| `aligns-with` | list                                                        | e.g. `ISO27001:2022 A.8.25`. The document-level roll-up of what its clauses map to.  |
-| `review-by` * | date                                                        | Quoted. Annual is usually right for a policy.                                        |
+| Field         | Value                                           | Notes                                                                                |
+|---------------|-------------------------------------------------|--------------------------------------------------------------------------------------|
+| `id` *†       | string                                          | Stable, unique across the corpus, never reused. Format set by the type.              |
+| `tier` *†     | `normative`                                     | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
+| `status` *†   | `draft` `active` `retired`                      | `draft` until agreed; `retired` rather than deleted.                                 |
+| `owner` *†    | string                                          | A named person, never a team alias.                                                  |
+| `tags` †      | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| `category` *  | `security` `delivery` `operations` `governance` | The broad area the commitment belongs to. Controlled, and deliberately few.          |
+| `aligns-with` | list                                            | e.g. `ISO27001:2022 A.8.25`. The document-level roll-up of what its clauses map to.  |
+| `review-by` * | date                                            | Quoted. Annual is usually right for a policy.                                        |
 
 \* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).

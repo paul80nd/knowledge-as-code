@@ -369,8 +369,15 @@ public static class Generator
         var table = RenderTable(headers, rows) + ConditionalFields(specs);
         return table + Legend(specs.Any(f => f.Required), universal.Count > 0);
 
-        static List<string> FieldRow(string name, FieldSpec f, bool universal) =>
-            [$"`{name}`{Marks(f.Required, universal)}", ValueFor(f), NotesFor(f)];
+        // `tier` is the one field whose value a type settles rather than chooses from: every document in
+        // the folder carries the same one, and CI fails any that does not. Offering the reader the other
+        // four would be offering four ways to fail a check.
+        List<string> FieldRow(string name, FieldSpec f, bool universal) =>
+        [
+            $"`{name}`{Marks(f.Required, universal)}",
+            name == "tier" && t.Tier.Length > 0 ? $"`{t.Tier}`" : ValueFor(f),
+            NotesFor(f)
+        ];
     }
 
     // What a field may hold: its type, or — where the type is an enum with a resolved set — the values
