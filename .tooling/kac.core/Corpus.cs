@@ -187,8 +187,9 @@ public static class Corpus
             if (typePages.Contains(name)) return true;
         }
 
-        // Only look inside folders that map to a type; everything else (legacy root
-        // docs being reconciled elsewhere) is left alone.
+        // A record lives in the folder of the type it belongs to, so those folders are the whole of what
+        // is read. A root document that is not a type page, and a folder no type claims, are outside what
+        // the schema describes and nothing here judges them.
         return !typeFolders.Contains(top);
     }
 }
