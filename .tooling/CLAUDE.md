@@ -1,6 +1,7 @@
 # Working on `kac`
 
-[`README.md`](README.md) is the reference for what the tool does. This is what will bite you while changing it.
+[`features/`](features/) is the reference for what each command does, one document apiece, and
+[`README.md`](README.md) maps them. This is what will bite you while changing it.
 
 ## Adding or changing a check
 
@@ -84,16 +85,16 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
 3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises, and that is also
    what catches a check declared in the schema and reported by nothing.
 
-No prose states a check count: `kac checks` reports it. [`README.md`](README.md) beside this file carries no table of
+No prose states a check count: `kac checks` reports it. [`features/checks.md`](features/checks.md) carries no table of
 checks either — it points at the schema, so there is nothing there to go quietly out of date.
 
 `DocRows` is deliberately *not* generated from the catalogue: rows are grouped and hand-worded, so several catalogue ids
 fold into one reader-facing row. An expression rule is the opposite — one id, reporting under its own name — so its row
 comes from its `description:`, and writing one into `DocRows` would duplicate it.
 
-**The coverage gate reads ids, not branches.** A check with two ways to fail is green once a fixture trips either one. A
-rule reporting three faults under one id needs a fixture for each, and unit tests beside the rule class for the branches
-a fixture would only duplicate.
+**The coverage gate reads ids, not branches**, so a rule reporting three faults under one id needs a fixture for each,
+and unit tests beside the rule class for the branches a fixture would only duplicate.
+[`tests/README.md`](tests/README.md) is where that gate and its consequences are set out.
 
 ## Where the console is
 

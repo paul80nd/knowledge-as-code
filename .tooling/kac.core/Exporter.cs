@@ -33,17 +33,14 @@ public sealed record ExportRun(string GeneratedAt, DateOnly Today, string? Commi
 // The corpus projected as data, for a consumer that reads it rather than cloning it.
 //
 // What travels is the type's decision, declared in its `export:` block, and this reads that declaration
-// rather than holding a list of its own. A type declaring no block contributes nothing, and a corpus
-// that adopted no exporting type produces a manifest and an empty type list — which is a statement of
-// what that corpus has, and not a failure.
+// rather than holding a list of its own — so a type declaring no block contributes nothing and nothing
+// here needs changing when one does. `.tooling/features/export.md` is the account of what it all comes
+// to and why.
 public static class Exporter
 {
-    // The shape of the output, versioned independently of anything the corpus says about itself.
-    //
-    // This number moves when the files below change shape, and a consumer reads it to know whether it
-    // can parse what it was handed. `content-version` in `.corpus.yaml` moves when the words change, and
-    // a consumer reads that to know whether to re-read them. Neither implies the other: a corpus can
-    // rewrite every definition without this moving, and this can move over a corpus nobody has edited.
+    // The shape of the output, versioned independently of anything the corpus says about itself, and
+    // read by nothing yet. `.tooling/features/export.md` says what moves it, and why the field is here
+    // before a reader for it is.
     public const int FormatVersion = 2;
 
     // Where an export lands. Untracked and rebuilt whole, so it is never a thing to review — which is
@@ -112,10 +109,9 @@ public static class Exporter
             [.. unread.Distinct(StringComparer.Ordinal).OrderBy(u => u, StringComparer.Ordinal)]);
     }
 
-    // Replace the export whole: delete what is there, then write. An export is not reviewed and nothing
-    // flags a file in it that no longer has a record behind it, so overwriting in place would leave a
-    // deleted record readable in the output indefinitely — the one failure mode where an untracked
-    // artefact is worse than a tracked one.
+    // Replace the export whole: delete what is there, then write. Overwriting in place would leave a
+    // deleted record readable in the output indefinitely, which nothing downstream would catch —
+    // `.tooling/features/export.md` says why an untracked artefact makes that the only safe order.
     public static List<string> Write(string repoRoot, ExportPlan plan)
     {
         var root = Path.Combine(repoRoot, Dir);
@@ -133,12 +129,9 @@ public static class Exporter
         return written;
     }
 
-    // Whether a record travels, which by default every record does.
-    //
-    // A corpus may exclude what has not settled — a draft, or a record whose review date has passed —
-    // and the default is to carry both with their state attached. A consumer reading `status: draft`
-    // beside a `review-by` two years gone can decide what to do about it; a consumer handed a filtered
-    // export sees a corpus smaller than it is and nothing saying so.
+    // Whether a record travels, which by default every record does. A corpus may exclude what has not
+    // settled — a draft, or a record whose review date has passed — and `.tooling/features/export.md`
+    // says why carrying both, with their state attached, is the default.
     private static bool Travels(Doc doc, CorpusDescriptor descriptor, DateOnly today)
     {
         if (descriptor.ExportExclude.Count == 0) return true;
@@ -161,14 +154,8 @@ public static class Exporter
     // nothing here to sit beneath. A type whose records narrow nothing at all sorts by id throughout,
     // which is the same rule with every record a root.
     //
-    // **What the order means, and what it does not.** Generality holds *within a chain*: `gls-search`
-    // narrows `gls-example-libraries`, so a grep for `title` meets the general entry before the one
-    // that refines it, which is the whole reason the order is built this way. It says nothing at all
-    // *across roots*. `record` is defined by `gls-example-libraries` and `gls-knowledge-as-code`,
-    // neither of which narrows the other — one is a bibliographic record and the other a knowledge
-    // document — so which comes first is stable and arbitrary, and reading the first hit as the more
-    // general one would hand a reader the wrong domain entirely. `narrows` is what answers that, and
-    // every line carries it by carrying its record.
+    // What a reader may take from that order, and what they may not, is in `.tooling/features/export.md`.
+    // The short of it: generality holds within a chain and says nothing across roots.
     //
     // Two records sharing an id would share an output filename, and the second would replace the first.
     // Nothing here guards it: `id-unique` reports a duplicate as an error, so the corpus is one `validate`
@@ -238,11 +225,11 @@ public static class Exporter
 
     // Every absent value an export writes, spelled one way. A corpus writing `narrows:` with nothing
     // after it has not narrowed anything, so blank and missing arrive as the same `null`. What that buys
-    // a consumer is in `.tooling/README.md`.
+    // a consumer is in `.tooling/features/export.md`.
     private static string? Absent(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
     // The source's wrap column, taken back out. Blank lines are the author's and stay; a block a joiner
-    // would mangle is left as written. `.tooling/README.md` says why the export does this at all, and
+    // would mangle is left as written. `.tooling/features/export.md` says why the export does this at all, and
     // why the doubtful cases go the way they do.
     private static string Unwrap(string text)
     {
@@ -284,7 +271,7 @@ public static class Exporter
     }
 
     // The flat file of every part of a type, one part to a line. JSONL rather than pretty JSON, and each
-    // line repeating what a reader would otherwise have to look up — `.tooling/README.md` says what that
+    // line repeating what a reader would otherwise have to look up — `.tooling/features/export.md` says what that
     // costs and what it buys.
     private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
@@ -327,7 +314,7 @@ public static class Exporter
     // **Every id here is read, and none is inferred.** These references are the `redefinitions-are-
     // reciprocal` rule showing through, and that rule is about a term and its counterpart — so the link
     // has to name the counterpart, and the anchor is where it names it. A link naming a record and no
-    // term inside it resolves to nothing and is reported by `Unread` below. `/.tooling/README.md` sets
+    // term inside it resolves to nothing and is reported by `Unread` below. `/.tooling/features/export.md` sets
     // out why the guess that suggests itself is refused.
     private static IReadOnlyList<string>? SeeAlso(Doc doc, PartRow part, Dictionary<string, Doc> byPath, Tree tree)
     {
