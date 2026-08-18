@@ -1,5 +1,5 @@
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
   "corpus": null,
   "contentVersion": null,
   "mechanismVersion": null,
@@ -8,8 +8,8 @@
   "generatedAt": "<generatedAt>",
   "publishing": {
     "target": "none",
-    "humanBase": null,
-    "rawBase": null,
+    "humanTemplate": null,
+    "rawTemplate": null,
     "ref": null
   },
   "types": [

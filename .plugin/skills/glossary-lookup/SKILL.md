@@ -13,7 +13,7 @@ The corpus travels with this plugin as data. You read it with the tools you alre
 and nothing to run.
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json           # what this export is: corpus, versions, commit, date
+${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json           # what this export is: versions, commit, date, link templates
 ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/terms.jsonl    # one line of JSON per term — search this
 ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json  # one file per glossary, holding its Scope and what it narrows
 ```
@@ -51,7 +51,27 @@ Each line carries the entry whole:
 | `seeAlso`             | related terms as full ids, so you can search straight to them              |
 | `record`              | the glossary this entry belongs to                                         |
 | `status`, `reviewBy`  | how far the entry has settled, and the date it was meant to be read again  |
-| `links`               | `human` to read the record rendered, `raw` to fetch its source             |
+| `path`, `anchor`      | the two values a link template takes — see below                           |
+
+## Build a link from a template
+
+**No line holds a URL.** `manifest.json` holds two templates under `publishing`, and each line holds the two values
+they take. Read the manifest once in a session and keep both strings; they are the same for every term in the export.
+
+**Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
+else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
+right: a template with one character altered gives a 404 that reads as plausible, or a page from a version of the
+corpus nobody asked about.
+
+**To send a reader to a record, use `humanTemplate`.** Substitute `path` and `anchor`. That is the rendered page, and
+the anchor lands the reader on the term rather than at the top of the glossary.
+
+**To read a record's source yourself, use `rawTemplate`.** Substitute `path` alone. There is no anchor to give it: raw
+source is text and has nowhere to land. Fetching the human URL instead hands you the markdown wrapped in someone
+else's HTML, and you will read the page furniture as though it were the record.
+
+**Where either template is `null`**, the corpus publishes nowhere the export could address. Say so, and quote the
+`path` as the record's place in the repository. Do not assemble a URL of your own.
 
 ## Read every hit, not the first
 
@@ -77,7 +97,7 @@ Where the question does not settle which context it sits in, give both meanings 
   whether you read the entry correctly.
 * **Name the glossary in words as well**, every time. A reader working in the other context needs to see the mismatch
   without decoding an id to find it.
-* **Link `links.human`** so the reader can go to the record.
+* **Link the reader to the record**, built from `humanTemplate` as above.
 * **Follow `seeAlso`** where the question needs a neighbouring term. The values are full ids: search for one directly.
 
 ## Say when an entry is unsettled

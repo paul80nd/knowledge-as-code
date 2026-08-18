@@ -48,10 +48,18 @@ public record ExportManifest(
     ExportPublishing Publishing,
     IReadOnlyList<ExportedType> Types);
 
-// Where the published form is served from, and the ref every link in this export resolves against. The
-// bases are null where the corpus publishes nowhere or names a target nothing builds links for, which
-// is the same state the records report by carrying no links.
-public record ExportPublishing(string Target, string? HumanBase, string? RawBase, string? Ref);
+// How a link into the published form is built, and the ref every one of them resolves against.
+//
+// The two templates are the whole rule: a consumer substitutes the `path` and `anchor` a line carries
+// and edits nothing else. The commit is already inside each string, so a citation names the version the
+// agent read without a ref ever passing through the agent's hands.
+//
+// The bases the templates were built from are not carried. They are inside the templates, and a manifest
+// stating one address twice is a manifest that can state it two ways.
+//
+// Both templates are null where the corpus publishes nowhere or names a target nothing builds links for,
+// which is the same state the per-record files report by carrying no links.
+public record ExportPublishing(string Target, string? HumanTemplate, string? RawTemplate, string? Ref);
 
 // One type this export carries, how much of it there is, and where to find it.
 //
@@ -87,6 +95,11 @@ public record ExportLinks(string Human, string Raw);
 //
 // `SeeAlso` carries the cross-references as ids. A link's target is stripped out of `Definition` and
 // `Not`, so the bracket left behind in the prose leads nowhere on its own.
+//
+// `Path` and `Anchor` are what the manifest's link templates are substituted with, and they are all a
+// line carries of an address. Resolving both links on every line would repeat one host, one path prefix
+// and one commit for every part in the corpus — most of the file, and a rewrite of every line whenever
+// the commit moves, which buries a changed definition in noise.
 public record ExportPartLine(
     string Id,
     string Title,
@@ -98,7 +111,8 @@ public record ExportPartLine(
     string Part,
     string? Status,
     string? ReviewBy,
-    ExportLinks? Links);
+    string Path,
+    string Anchor);
 
 [JsonSourceGenerationOptions(
     WriteIndented = true,

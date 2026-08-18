@@ -44,7 +44,7 @@ public static class Exporter
     // can parse what it was handed. `content-version` in `.corpus.yaml` moves when the words change, and
     // a consumer reads that to know whether to re-read them. Neither implies the other: a corpus can
     // rewrite every definition without this moving, and this can move over a corpus nobody has edited.
-    public const int FormatVersion = 1;
+    public const int FormatVersion = 2;
 
     // Where an export lands. Untracked and rebuilt whole, so it is never a thing to review — which is
     // also why the write below deletes before it writes.
@@ -84,7 +84,7 @@ public static class Exporter
                 files.Add(new ExportFile($"{t.Key}/{Id(doc)}.json", Serialize(Record(doc, t, publishing))));
 
             var parts = t.Export.Parts.Length > 0 && t.Parts is not null
-                ? PartsFile(records, t, corpus.Tree, publishing, unread)
+                ? PartsFile(records, t, corpus.Tree, unread)
                 : null;
             if (parts is not null) files.Add(parts);
 
@@ -103,11 +103,7 @@ public static class Exporter
                 run.Commit,
                 run.Dirty,
                 run.GeneratedAt,
-                new ExportPublishing(
-                    corpus.Descriptor.PublishingTarget ?? Publishing.None,
-                    publishing is null ? null : corpus.Descriptor.HumanBase,
-                    publishing is null ? null : corpus.Descriptor.RawBase,
-                    publishing?.Ref),
+                Addresses(corpus.Descriptor, publishing),
                 types))));
 
         // The manifest is built last, because it reports what the rest of the run produced, and sorted
@@ -290,8 +286,7 @@ public static class Exporter
     // The flat file of every part of a type, one part to a line. JSONL rather than pretty JSON, and each
     // line repeating what a reader would otherwise have to look up — `.tooling/README.md` says what that
     // costs and what it buys.
-    private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, Publishing? publishing,
-        List<string> unread)
+    private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
         var spec = t.Parts!;
         var byPath = records.ToDictionary(d => d.Rel, StringComparer.Ordinal);
@@ -311,7 +306,7 @@ public static class Exporter
                     SeeAlso(doc, part, byPath, tree),
                     t.Key, id, partId,
                     Absent(doc.FrontScalar("status")), Absent(doc.FrontScalar("review-by")),
-                    Links(publishing?.Links(doc.Rel, partId)))));
+                    doc.Rel, partId)));
                 lines.Append('\n');
                 unread.AddRange(Unread(doc, part, partId, byPath, tree));
             }
@@ -409,6 +404,17 @@ public static class Exporter
     // the manifest states and the file a consumer greps cannot come apart.
     private static int Lines(string content) =>
         content.Count(c => c == '\n');
+
+    // How this export's links are built, for the manifest: the two templates, or nulls where the corpus
+    // has no address the tool can build on. Stated once here and substituted by whoever reads a line,
+    // rather than resolved onto every line of the flat file.
+    private static ExportPublishing Addresses(CorpusDescriptor descriptor, Publishing? publishing)
+    {
+        var target = descriptor.PublishingTarget ?? Publishing.None;
+        var templates = publishing?.Templates();
+
+        return new ExportPublishing(target, templates?.Human, templates?.Raw, publishing?.Ref);
+    }
 
     private static ExportLinks? Links(PublishedLinks? links) =>
         links is null ? null : new ExportLinks(links.Human, links.Raw);

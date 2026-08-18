@@ -104,4 +104,50 @@ public class PublishingTests
         Assert.Equal("identity-line", publishing.Anchor("Identity line"));
         Assert.Equal(Md.Slug("Identity line"), publishing.Anchor("Identity line"));
     }
+
+    // -- the templates --
+
+    // A template leaves the path and the anchor to its reader, and settles everything else. What is
+    // settled includes the commit: a ref a reader has to copy is forty characters that can be mistyped
+    // into a plausible 404, and the wrong one answers as confidently as the right one.
+    [Fact]
+    public void A_template_leaves_the_path_and_the_anchor_and_settles_the_rest()
+    {
+        var templates = Publishing.For(Descriptor(), Sha)!.Templates();
+
+        Assert.Equal($"{Human}/{Sha}/{{path}}#{{anchor}}", templates.Human);
+        Assert.Equal($"{Raw}/{Sha}/{{path}}", templates.Raw);
+    }
+
+    // The asymmetry lives in the templates rather than in the reader. Raw source has no fragment to
+    // honour, so the raw template offers nowhere to put one and nobody has to remember why.
+    [Fact]
+    public void Only_the_template_a_person_follows_takes_an_anchor()
+    {
+        var templates = Publishing.For(Descriptor(), Sha)!.Templates();
+
+        Assert.Contains(Publishing.AnchorToken, templates.Human, StringComparison.Ordinal);
+        Assert.DoesNotContain(Publishing.AnchorToken, templates.Raw, StringComparison.Ordinal);
+    }
+
+    // A link resolved here and a link a consumer substitutes for itself are the same string. They are
+    // built from one rule, so a corpus reading the export cannot be handed two addresses for one part.
+    [Theory]
+    [InlineData("query")]
+    [InlineData(null)]
+    public void A_substituted_template_is_the_link_this_class_resolves(string? anchor)
+    {
+        var publishing = Publishing.For(Descriptor(), Sha)!;
+        var templates = publishing.Templates();
+        var links = publishing.Links("glossary/search.md", anchor);
+
+        var human = templates.Human.Replace(Publishing.PathToken, "glossary/search.md", StringComparison.Ordinal);
+        human = anchor is null
+            ? human.Replace($"#{Publishing.AnchorToken}", "", StringComparison.Ordinal)
+            : human.Replace(Publishing.AnchorToken, anchor, StringComparison.Ordinal);
+
+        Assert.Equal(links.Human, human);
+        Assert.Equal(links.Raw,
+            templates.Raw.Replace(Publishing.PathToken, "glossary/search.md", StringComparison.Ordinal));
+    }
 }
