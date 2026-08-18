@@ -4,6 +4,14 @@
 .dist/plugin/bundle.json
 .dist/plugin/skills/glossary-lookup/SKILL.md
 
+# The hook, and the breadcrumb `bundle` rendered for it to print. The rendered file is not in the
+# plugin tree: it is written here because everything it states was settled here, which is what keeps
+# the hook itself down to one `cat` and asks the consumer's shell for nothing else.
+.dist/plugin/hooks/hooks.json
+.dist/plugin/hooks/breadcrumb
+.dist/plugin/hooks/breadcrumb.cmd
+.dist/plugin/hooks/breadcrumb.txt
+
 # A file under no component's path travels regardless.
 .dist/plugin/README.md
 

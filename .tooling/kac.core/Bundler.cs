@@ -12,7 +12,12 @@ namespace kac.core;
 // One file, and the bytes it holds. Bytes rather than text because most of what a bundle writes it did
 // not author: the plugin tree and the export are copied through untouched, and a copy that decoded and
 // re-encoded would be a copy with an opinion.
-public sealed record BundleFile(string Path, byte[] Content);
+//
+// `Executable` travels with the bytes because one file in the plugin tree is run rather than read. A
+// hook is a command, and a command copied without its permission bit is a plugin that installs and
+// fails at the first session with a message about permissions rather than about the corpus. Windows
+// has no such bit, so a hook ships as a POSIX script and a `.cmd` twin and the shell there picks one.
+public sealed record BundleFile(string Path, byte[] Content, bool Executable = false);
 
 // One component the plugin manifest declares, as the manifest states it. `Requires` names the record
 // types the component reads; a component naming none is unconditional and always travels.
@@ -110,6 +115,21 @@ public static class Bundler
             return Stop(problems,
                 $"the export holds no readable {Exporter.ManifestFile}. Run the export first: ./kac export");
 
+        // The shape the export declares, held against the shape this build knows how to read. Refused
+        // rather than warned about, and both numbers named: a bundle assembled around a manifest whose
+        // keys have moved would produce a breadcrumb stating nothing and a plugin whose skill finds
+        // nothing, and a lookup that silently returns nothing is indistinguishable from a term the
+        // corpus does not define.
+        //
+        // Two builds of this tool are what put the two numbers apart. `.dist/export/` is untracked and
+        // outlives the run that wrote it, so a bundle built after a `git pull` is the ordinary way to
+        // read an export this tool did not ship beside — the case the format version exists for.
+        var declaredFormat = JsonRead.Int(exportManifest["formatVersion"]);
+        if (declaredFormat != Exporter.FormatVersion)
+            return Stop(problems,
+                $"the export declares format version {declaredFormat?.ToString() ?? "none"} and this tool reads "
+                + $"version {Exporter.FormatVersion}. Rebuild it: ./kac export");
+
         // What the export actually carried, which is what decides the trimming below. A type the corpus
         // adopted and exported nothing for is absent here, and a component reading it would find nothing.
         var carried = Types(exportManifest);
@@ -162,6 +182,16 @@ public static class Bundler
         files.Add(Utf8($"{Dist.PluginDir}/{ManifestFile}",
             Rewrite(manifest, version, included)));
 
+        // The breadcrumb, rendered here because everything it states is settled here. It travels with
+        // the directory that prints it and nowhere else: a corpus shipping no hook has nothing to read
+        // it, and a corpus whose hook was trimmed would otherwise keep a file describing a component
+        // that left. Asking the surviving files rather than the components covers both in one question,
+        // and needs no corpus to declare that this generated file is the hook's.
+        var breadcrumbDir = $"{Dist.PluginDir}/{Breadcrumb.RenderedFile[..Breadcrumb.RenderedFile.LastIndexOf('/')]}";
+        if (files.Any(f => Owns(breadcrumbDir, f.Path)))
+            files.Add(Utf8($"{Dist.PluginDir}/{Breadcrumb.RenderedFile}",
+                Breadcrumb.Render(exportManifest, source.Export, included)));
+
         files.Add(Utf8($"{Dist.PluginDir}/{RecordFile}",
             Serialize(new BundleRecord(
                 RecordVersion, pluginName, version ?? JsonRead.Str(manifest["version"]), corpusRoot,
@@ -197,6 +227,7 @@ public static class Bundler
             var full = Path.Combine(root, file.Path.Replace('/', Path.DirectorySeparatorChar));
             Directory.CreateDirectory(Path.GetDirectoryName(full)!);
             File.WriteAllBytes(full, file.Content);
+            if (file.Executable) MakeExecutable(full);
             written.Add($"{Dist.Root}/{file.Path}");
         }
 
@@ -213,9 +244,29 @@ public static class Bundler
         [
             .. Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
                 .Select(f => new BundleFile(
-                    Path.GetRelativePath(root, f).Replace('\\', '/'), File.ReadAllBytes(f)))
+                    Path.GetRelativePath(root, f).Replace('\\', '/'), File.ReadAllBytes(f), IsExecutable(f)))
                 .OrderBy(f => f.Path, StringComparer.Ordinal)
         ];
+    }
+
+    // Whether the file is run rather than read. Windows has no such bit and .NET refuses to be asked
+    // for one there, so the question is not put. Nothing is lost by that: a file checked out on Windows
+    // never carried the bit either, and the `.cmd` twin beside each script needs no permission to be a
+    // command.
+    private static bool IsExecutable(string path) =>
+        !OperatingSystem.IsWindows()
+        && (File.GetUnixFileMode(path) & UnixFileMode.UserExecute) != 0;
+
+    // Give the copy the bit its source had, for everyone the source gave it to. A hook is a command the
+    // plugin's own manifest names, so a copy the owner alone could run would still fail for a plugin
+    // installed into a shared cache.
+    private static void MakeExecutable(string path)
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        File.SetUnixFileMode(path,
+            File.GetUnixFileMode(path)
+            | UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute);
     }
 
     // The plugin manifest as it will travel: the version replaced, the trimmed components gone, and

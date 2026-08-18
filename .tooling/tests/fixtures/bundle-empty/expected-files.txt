@@ -7,3 +7,10 @@
 # And what it does not. The skill would have found nothing, which reads to a user exactly like a term
 # the corpus does not define.
 !.dist/plugin/skills/glossary-lookup/SKILL.md
+
+# The hook goes the same way, and takes the breadcrumb with it. A breadcrumb is rendered beside the
+# hook that prints it, so a corpus with nothing to say says nothing rather than announcing at every
+# session that it holds no terms.
+!.dist/plugin/hooks/hooks.json
+!.dist/plugin/hooks/breadcrumb
+!.dist/plugin/hooks/breadcrumb.txt

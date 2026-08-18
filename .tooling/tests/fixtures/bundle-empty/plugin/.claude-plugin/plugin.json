@@ -14,6 +14,13 @@
         "requires": [
           "glossary"
         ]
+      },
+      {
+        "path": "hooks",
+        "requires": [
+          "glossary"
+        ],
+        "note": "A SessionStart hook printing the breadcrumb rendered beside it."
       }
     ]
   }

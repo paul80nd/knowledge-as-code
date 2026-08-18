@@ -6,6 +6,7 @@ wrote .dist/plugin/bundle.json
 wrote .dist/plugin/corpus/manifest.json
 
 bundle: trimmed skills/glossary-lookup — the export carries no glossary.
+bundle: trimmed hooks — the export carries no glossary.
 
 # The warning that has to be clear, because the plugin it describes installs and then does nothing.
 bundle: every component was trimmed

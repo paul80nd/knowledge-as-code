@@ -161,10 +161,10 @@ rules:
   - path: ".plugin/**"
     layer: synced
     note: >
-      The tree a plugin is built from. Its skills serve an agent working in a repository
-      that consumes this corpus rather than one working in the corpus itself, and they
-      read the export through `${CLAUDE_PLUGIN_ROOT}` rather than opening this tree, so
-      every corpus ships the same words. Written to reach the whole tree: a hook or a
+      The tree a plugin is built from. Its skills and hooks serve an agent working in a
+      repository that consumes this corpus rather than one working in the corpus itself,
+      and they read the export through `${CLAUDE_PLUGIN_ROOT}` rather than opening this
+      tree, so every corpus ships the same words. Written to reach the whole tree, so a
       `bin/` command added later is shared from the day it lands.
 
   # ── synced ─────────────────────────────────────────────────────────────────

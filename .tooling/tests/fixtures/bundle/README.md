@@ -14,6 +14,12 @@ second proving anything ever leaves it.
 travels and it always does. Trimming is a statement about components, and a tree where every file happened to sit
 under one would not show that.
 
+**A hook, so the breadcrumb is rendered rather than only planned.** `plugin/hooks/` carries the two scripts and the
+hook definition; `hooks/breadcrumb.txt` is in neither the fixture nor the plugin tree, because `bundle` writes it. The
+corpus behind this fixture holds three glossaries with distinct titles, which is what lets `expected-content.txt`
+assert that the line names the contexts rather than only counting them. The trimmed arm is `bundle-empty`'s, where the
+hook goes and the breadcrumb goes with it.
+
 **A corpus stating a content version.** `.corpus.yaml` here carries `content-version: "2.3.4"` and the plugin manifest
 carries `version: "0.0.1"`. The two differ so that the stamp is visible: a fixture where they agreed would pass
 whether the version was replaced or left alone. `bundle-empty` is the corpus that states none, and pins the fallback.
