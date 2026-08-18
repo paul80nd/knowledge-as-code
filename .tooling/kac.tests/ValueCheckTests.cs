@@ -153,6 +153,29 @@ public class ValueCheckTests
         Assert.Contains("entry 'NotAnId'", found.Message);
     }
 
+    // Every id style a type may declare reaches a list field, and a mnemonic carries its discriminator
+    // upper-case. `implements: [ pol-KNOW ]` is the edge the taxonomy declares between a standard and a
+    // policy, so a shape test that read the whole entry as lower-case made that edge unwritable.
+    [Theory]
+    [InlineData("pol-KNOW")]
+    [InlineData("adr-0007")]
+    [InlineData("svc-search")]
+    [InlineData("pol-VURM.TIMEBOX")]
+    public void Every_id_style_is_id_shaped_in_a_list(string id)
+        => Assert.Empty(Run($"field: [ {id} ]\n", new FieldSpec { Name = "field", Type = "list", Of = "id" }));
+
+    // The prefix names a type and is lower-case wherever it appears, and a discriminator is cased one way
+    // or the other rather than both. Loosening the case test to reach the mnemonic stops here.
+    [Theory]
+    [InlineData("Pol-KNOW")]
+    [InlineData("pol-Know")]
+    [InlineData("noprefix")]
+    public void A_miscased_or_prefixless_entry_is_still_not_an_id(string id)
+    {
+        var spec = new FieldSpec { Name = "field", Type = "list", Of = "id" };
+        Assert.Equal("id-format", Assert.Single(Run($"field: [ {id} ]\n", spec)).Check.Value);
+    }
+
     // -- patterns: the same declaration reads differently for a scalar and for a list --
 
     [Fact]

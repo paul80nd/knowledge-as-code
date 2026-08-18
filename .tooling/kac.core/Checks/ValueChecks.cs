@@ -190,7 +190,24 @@ public static class ValueChecks
         }
     }
 
-    private static bool LooksLikeId(string v) => v.Contains('-') && v == v.ToLowerInvariant();
+    // Whether an entry is shaped like an id at all: a lower-case type prefix, a hyphen, then a
+    // discriminator. The prefix names a type and is lower-case in every style; the discriminator is
+    // upper-case where the type numbers its documents by mnemonic — `pol-VURM` — and lower-case where it
+    // numbers or slugs them — `adr-0007`, `svc-search`. So the case of the two halves is asked
+    // separately, and a mixed-case discriminator is what falls out.
+    //
+    // A shape and not an identity. Whether the entry names a document the corpus holds is the reference
+    // pass's question, and that pass reads the corpus; everything here is decidable from a declaration
+    // and a string, which is what lets these checks be tested without one.
+    private static bool LooksLikeId(string v)
+    {
+        var dash = v.IndexOf('-');
+        if (dash <= 0 || dash == v.Length - 1) return false;
+
+        var rest = v[(dash + 1)..];
+        return v[..dash].All(char.IsLower)
+               && (rest == rest.ToLowerInvariant() || rest == rest.ToUpperInvariant());
+    }
 
     // A field's declared `pattern:` — the schema's own regex, applied to whatever scalar carries the
     // value. `noun` distinguishes a scalar field's "value" from a list's "entry" in the message.
