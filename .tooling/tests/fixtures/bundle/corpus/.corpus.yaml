@@ -1,0 +1,7 @@
+# The fixture corpus's descriptor. Present for one key: `content-version` is the number the bundle
+# stamps onto the plugin, and a corpus without it would prove only the fallback.
+descriptor-version: 1
+corpus: example-libraries
+content-version: "2.3.4"
+role: source
+publishing-target: none

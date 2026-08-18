@@ -110,7 +110,8 @@ cd my-corpus
 
 ./kac validate                     # validate the corpus
 ./kac index                        # regenerate indexes and generated blocks
-./kac export                       # write the corpus to .dist/ as data a consumer reads
+./kac export                       # write the corpus to .dist/export/ as data a consumer reads
+./kac bundle                       # assemble that export and .plugin/ into a plugin under .dist/plugin/
 ./kac checks                       # list the checks
 dotnet run .tooling/kac-tests.cs   # run the golden test suite
 ```

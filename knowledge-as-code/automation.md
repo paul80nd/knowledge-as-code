@@ -104,7 +104,7 @@ shows as literal text.
 
 ## The export
 
-Built on every PR. `kac export` writes the corpus into `.dist/` as data a consumer reads instead of cloning the
+Built on every PR. `kac export` writes the corpus into `.dist/export/` as data a consumer reads instead of cloning the
 repository: a manifest saying what the export is, one file per record, and a flat file cheap to grep.
 [`.tooling/features/export.md`](../.tooling/features/export.md) is the reference for what it holds.
 

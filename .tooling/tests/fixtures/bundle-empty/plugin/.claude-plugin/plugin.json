@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "example-libraries",
+  "version": "0.0.1",
+  "description": "Answers questions about the Example Libraries corpus from the export beside it.",
+  "metadata": {
+    "corpusRoot": "corpus",
+    "components": [
+      {
+        "path": "skills/glossary-lookup",
+        "requires": [
+          "glossary"
+        ]
+      }
+    ]
+  }
+}

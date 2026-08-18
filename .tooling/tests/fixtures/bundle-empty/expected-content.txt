@@ -1,0 +1,10 @@
+# The version the source manifest stated, kept because the corpus offered none to replace it with.
+.dist/plugin/.claude-plugin/plugin.json :: "version": "0.0.1"
+
+# The manifest ends up declaring no components, which is the truth about what was assembled.
+.dist/plugin/.claude-plugin/plugin.json :: "components": []
+
+# `bundle.json` still says what happened, and is the only place that will once the run has scrolled by.
+.dist/plugin/bundle.json :: "reason": "the export carries no glossary"
+.dist/plugin/bundle.json :: "types": []
+.dist/plugin/bundle.json :: "included": []

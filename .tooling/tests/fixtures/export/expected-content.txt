@@ -1,60 +1,60 @@
 # The manifest holds the two fields that differ between two runs over one tree, and the committed export
 # replaces both. This line pins what a corpus with no repository behind it writes in one of them.
-.dist/manifest.json :: "commit": null
+.dist/export/manifest.json :: "commit": null
 
 # The manifest says what this export is, and what it could not resolve.
-.dist/manifest.json :: "formatVersion": 2
-.dist/manifest.json :: "target": "none"
-.dist/manifest.json :: "humanTemplate": null
-.dist/manifest.json :: "rawTemplate": null
-.dist/manifest.json :: "type": "glossary"
+.dist/export/manifest.json :: "formatVersion": 2
+.dist/export/manifest.json :: "target": "none"
+.dist/export/manifest.json :: "humanTemplate": null
+.dist/export/manifest.json :: "rawTemplate": null
+.dist/export/manifest.json :: "type": "glossary"
 
 # Two counts, named apart: three records, five terms between them. One number would be read as either,
 # and the term count is not derivable without opening the flat file.
-.dist/manifest.json :: "records": 3
-.dist/manifest.json :: "parts": 5
-.dist/manifest.json :: "partsFile": "glossary/terms.jsonl"
+.dist/export/manifest.json :: "records": 3
+.dist/export/manifest.json :: "parts": 5
+.dist/export/manifest.json :: "partsFile": "glossary/terms.jsonl"
 
 # A record carries what `export:` in the schema declares, and not what it does not. `owner` stays
 # behind: it is a fact about this corpus's stewardship rather than about the words.
-.dist/glossary/gls-search.json :: "narrows": "gls-estate"
-.dist/glossary/gls-search.json :: "status": "draft"
-.dist/glossary/gls-search.json :: "review-by": "2030-01-01"
-.dist/glossary/gls-search.json :: !"owner"
+.dist/export/glossary/gls-search.json :: "narrows": "gls-estate"
+.dist/export/glossary/gls-search.json :: "status": "draft"
+.dist/export/glossary/gls-search.json :: "review-by": "2030-01-01"
+.dist/export/glossary/gls-search.json :: !"owner"
 
 # One spelling of absent, in every file and for every key. A root narrows nothing, and says so the way
 # a term with no labelled line says it.
-.dist/glossary/gls-estate.json :: "narrows": null
-.dist/glossary/terms.jsonl :: "not":null
+.dist/export/glossary/gls-estate.json :: "narrows": null
+.dist/export/glossary/terms.jsonl :: "not":null
 
 # Prose arrives unwrapped: the corpus's 120-column wrap is a fact about the file, and a grep for a
 # phrase straddling it would match nothing. The blank line the author wrote is kept.
-.dist/glossary/gls-estate.json :: "Scope": "What every system here has in common: the words a reader meets whichever system they arrived from, and the ones a newcomer has to be told.\n\nA word one system uses its own way
-.dist/glossary/terms.jsonl :: "not":"a branch in source control. Both appear in the same sentence often enough to be worth separating, and a reader arriving from either one will read the other as a mistake."
+.dist/export/glossary/gls-estate.json :: "Scope": "What every system here has in common: the words a reader meets whichever system they arrived from, and the ones a newcomer has to be told.\n\nA word one system uses its own way
+.dist/export/glossary/terms.jsonl :: "not":"a branch in source control. Both appear in the same sentence often enough to be worth separating, and a reader arriving from either one will read the other as a mistake."
 
 # A corpus with no resolvable address writes its records without links rather than with empty ones.
-.dist/glossary/gls-search.json :: "links": null
+.dist/export/glossary/gls-search.json :: "links": null
 
 # One term, one line, one whole object — carrying the definition and the labelled line apart, the state
 # of the glossary it came from, and the record it belongs to, because a grep hands back a line and
 # nothing around it. The address is the exception: a line carries the `path` and `anchor` that go into
 # the manifest's templates, and no URL, so one host and one commit are stated once for the whole export.
-.dist/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","not":"the request the service received. One request carries a query and its paging.","seeAlso":null,"type":"glossary","record":"gls-search","part":"query","status":"draft","reviewBy":"2030-01-01","path":"glossary/search.md","anchor":"query"}
-.dist/glossary/terms.jsonl :: !"links"
+.dist/export/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","not":"the request the service received. One request carries a query and its paging.","seeAlso":null,"type":"glossary","record":"gls-search","part":"query","status":"draft","reviewBy":"2030-01-01","path":"glossary/search.md","anchor":"query"}
+.dist/export/glossary/terms.jsonl :: !"links"
 
 # A cross-reference travels as a part id the consumer can look up, read from the anchor the link names.
 # The prose keeps the reference its author wrote.
-.dist/glossary/terms.jsonl :: "seeAlso":["gls-framework.record"]
-.dist/glossary/terms.jsonl :: "not":"a knowledge document filed under a type — see [gls-framework.record]."
+.dist/export/glossary/terms.jsonl :: "seeAlso":["gls-framework.record"]
+.dist/export/glossary/terms.jsonl :: "not":"a knowledge document filed under a type — see [gls-framework.record]."
 
 # The other half of the pair names the file and no term inside it, so there is nothing to read and
 # nothing is carried. Guessing the counterpart from the term's own spelling would be right here and
 # silently wrong for a pair that does not share a word.
-.dist/glossary/terms.jsonl :: "record":"gls-framework","part":"record","status":"draft"
-.dist/glossary/terms.jsonl :: The catalogue uses the word for something else again — see [gls-estate].","seeAlso":null
+.dist/export/glossary/terms.jsonl :: "record":"gls-framework","part":"record","status":"draft"
+.dist/export/glossary/terms.jsonl :: The catalogue uses the word for something else again — see [gls-estate].","seeAlso":null
 
 # Generality holds inside a chain: `gls-search` narrows `gls-estate`, so a grep for a term both define
 # would meet the general one first. Across `gls-estate` and `gls-framework` — unrelated roots, both
 # defining `record` — the order is stable and claims nothing, so nothing here asserts it does.
-.dist/glossary/terms.jsonl :: "record":"gls-estate","part":"record"
-.dist/glossary/terms.jsonl :: "record":"gls-framework","part":"record"
+.dist/export/glossary/terms.jsonl :: "record":"gls-estate","part":"record"
+.dist/export/glossary/terms.jsonl :: "record":"gls-framework","part":"record"

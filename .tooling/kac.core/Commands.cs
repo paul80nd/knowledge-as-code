@@ -84,6 +84,48 @@ public static class Commands
         return 0;
     }
 
+    // Assemble the plugin from the export and the `.plugin/` tree. Two trees in, one directory out, and
+    // the corpus is never loaded: what a bundle has to decide is a fact about the export it was handed.
+    public static int Bundle(string repoRoot)
+    {
+        var pluginTree = Bundler.Read(Path.Combine(repoRoot, Bundler.SourceDir));
+        if (pluginTree is null)
+            return Fail($"bundle: no plugin tree at {Bundler.SourceDir}/. It is the source a plugin is built from, "
+                        + "and it arrives with the mechanism.");
+
+        var export = Bundler.Read(Path.Combine(repoRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar)));
+        if (export is null)
+            return Fail($"bundle: no export at {Dist.Export}/. Run it first: ./kac export");
+
+        var plan = Bundler.Plan(new BundleSource(pluginTree, export));
+
+        if (plan.Problems.Count > 0)
+        {
+            foreach (var problem in plan.Problems) Console.Error.WriteLine($"bundle: {problem}");
+            return 1;
+        }
+
+        var written = Bundler.Write(repoRoot, plan);
+        foreach (var path in written) Console.WriteLine($"wrote {path}");
+
+        // Named rather than counted, as the export names what it withheld. A component that was dropped
+        // is invisible in the output by definition, and two corpora building one plugin name may drop
+        // different ones — so the run says which, beside the `bundle.json` that will outlive it.
+        foreach (var t in plan.Trimmed)
+            Console.WriteLine($"bundle: trimmed {t.Path} — {t.Reason}.");
+
+        foreach (var warning in plan.Warnings) Console.WriteLine($"bundle: {warning}");
+
+        Console.WriteLine(
+            $"bundle: wrote {written.Count} file(s) to {Dist.Plugin}/ as {plan.PluginName} "
+            + $"{plan.Version ?? "(no version)"} — {plan.Included.Count} component(s) included, "
+            + $"{plan.Trimmed.Count} trimmed.");
+        Console.WriteLine(
+            $"bundle: {Dist.Root}/ is a marketplace holding it. Install it from a path with:  "
+            + $"claude plugin marketplace add ./{Dist.Root}");
+        return 0;
+    }
+
     public static int Index(string repoRoot, bool check)
     {
         var corpus = Corpus.Load(repoRoot);

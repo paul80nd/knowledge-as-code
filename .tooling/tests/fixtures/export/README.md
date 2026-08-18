@@ -35,8 +35,8 @@ fixture can reach. The link forms belong to `PublishingTests`, which supplies a 
 ## What is asserted where
 
 `expected-dist/` is the export itself, committed file for file. It is the tracked copy of an untracked artefact:
-`.dist/` is rebuilt whole on every run and reviewed by nobody, so this is where a change to it becomes something a
-person can see. [The suite README](../../README.md) describes the diff and what it normalises away.
+`.dist/export/` is rebuilt whole on every run and reviewed by nobody, so this is where a change to it becomes
+something a person can see. [The suite README](../../README.md) describes the diff and what it normalises away.
 
 **A diff under `expected-dist/` is a change to a published contract.** Regenerate it deliberately with
 `dotnet run .tooling/kac-tests.cs -- --update export`, read what moved, and say in the commit message why it moved. A
@@ -45,7 +45,8 @@ still parse what it was handed.
 
 The other three files carry what a whole-file diff cannot, and none of them lists the export again.
 `expected-export.txt` holds lines the run must print — an export says what it could not carry, and none of that reaches
-`.dist/`. `expected-files.txt` names what must be there afterwards outside the export, which is the corpus, unchanged.
+`.dist/export/`. `expected-files.txt` names what must be there afterwards outside the export, which is the corpus,
+unchanged.
 `expected-content.txt` holds `<path> :: <text>` pairs, read against the emitted file, which is where the timestamp and
 the commit are pinned. A `!` prefix inverts a line in either of the last two.
 
