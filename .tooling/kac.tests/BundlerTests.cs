@@ -25,9 +25,8 @@ public class BundlerTests
         => Assert.Contains("not a JSON object",
             Assert.Single(Plan(plugin: [(Bundler.ManifestFile, "not json at all")], export: [Manifest()]).Problems));
 
-    // The skills address the export as `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by name. A default here
-    // would be the tool quietly disagreeing with the words the corpus wrote in its own skill, and the
-    // disagreement would only show up when someone asked the installed plugin a question.
+    // The name is what a marketplace installs by and what a user types for it afterwards. Inventing one
+    // here would produce a plugin that installs under a name nobody chose.
     [Fact]
     public void A_manifest_with_no_name_is_refused()
         => Assert.Contains("states no name",
@@ -45,6 +44,9 @@ public class BundlerTests
                 plugin: [(Bundler.ManifestFile, Source()), ("corpus/notes.md", "mine")],
                 export: [Manifest()]).Problems));
 
+    // The skills address the export as `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by name. A default here
+    // would be the tool quietly disagreeing with the words the corpus wrote in its own skill, and the
+    // disagreement would only show up when someone asked the installed plugin a question.
     [Fact]
     public void A_manifest_with_no_corpus_root_is_refused()
         => Assert.Contains("metadata.corpusRoot",

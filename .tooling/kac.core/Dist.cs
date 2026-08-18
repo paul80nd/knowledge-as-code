@@ -23,10 +23,14 @@ public static class Dist
     // below is what it lists.
     public const string Root = ".dist";
 
-    // The names inside the root, which is what a caller assembling a path within one of them needs.
+    // The names inside the root. A command writing several files under one of them assembles its paths
+    // from these, so the directory is named once whether it is being written to or being deleted.
     public const string ExportDir = "export";
     public const string PluginDir = "plugin";
     public const string MarketplaceDir = ".claude-plugin";
+
+    // The local marketplace `bundle` writes beside the plugin, so the plugin can be installed from a
+    // path while it is being proved. Relative to the root, because that is where a bundle addresses it.
     public const string MarketplaceRel = MarketplaceDir + "/marketplace.json";
 
     // What `kac export` writes: the corpus as data, rebuilt whole each run.
@@ -34,8 +38,4 @@ public static class Dist
 
     // What `kac bundle` writes: the plugin directory, rebuilt whole each run.
     public const string Plugin = Root + "/" + PluginDir;
-
-    // The local marketplace `bundle` writes beside the plugin, so the plugin can be installed from a
-    // path while it is being proved.
-    public const string MarketplaceFile = Root + "/" + MarketplaceRel;
 }

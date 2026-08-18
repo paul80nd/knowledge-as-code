@@ -113,7 +113,7 @@ public static class Exporter
     // under the same root and an export is not entitled to take it.
     public static List<string> Write(string repoRoot, ExportPlan plan)
     {
-        var root = Path.Combine(repoRoot, Dist.Export);
+        var root = Path.Combine(repoRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar));
         if (Directory.Exists(root)) Directory.Delete(root, recursive: true);
 
         var written = new List<string>();

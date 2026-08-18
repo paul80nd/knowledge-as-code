@@ -3,6 +3,9 @@
   "name": "example-libraries",
   "version": "0.0.1",
   "description": "Answers questions about the Example Libraries corpus from the export beside it.",
+  "author": {
+    "name": "Example Libraries"
+  },
   "metadata": {
     "corpusRoot": "corpus",
     "components": [
