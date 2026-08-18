@@ -1,12 +1,12 @@
 # CI for the knowledge-as-code corpus (GitHub Actions).
 #
 # The GitHub equivalent of azure-pipelines.yml: runs the kac validator, the
-# generated-content freshness check and the export on pull requests into main.
-# It NEVER commits anything it produces. `index --check` only verifies the
-# tracked generated files are fresh and fails, naming the command a human runs
-# locally (`dotnet run .tooling/kac.cs -- index`). The export lands in an
-# untracked .dist/ that the runner throws away. A workflow must never push;
-# the job is granted read-only contents permission.
+# generated-content freshness check, the export and the plugin bundle on pull
+# requests into main. It NEVER commits anything it produces. `index --check`
+# only verifies the tracked generated files are fresh and fails, naming the
+# command a human runs locally (`dotnet run .tooling/kac.cs -- index`). The
+# export and the bundle land in an untracked .dist/ that the runner throws away.
+# A workflow must never push; the job is granted read-only contents permission.
 
 name: kac
 
@@ -49,6 +49,64 @@ jobs:
       # golden in the suite below.
       - name: Build the export
         run: dotnet run .tooling/kac.cs -- export
+
+      # Assembles what `export` wrote, together with the .plugin/ tree, into an installable
+      # plugin under .dist/plugin/, with .dist/ itself as the marketplace naming it. The
+      # fourth and last kac invocation, so the one-at-a-time rule above still holds.
+      - name: Assemble the plugin bundle
+        run: dotnet run .tooling/kac.cs -- bundle
+
+      # Taken at `latest` rather than pinned. The bundle has to be valid against the CLI a
+      # reader actually runs, and no ecosystem in dependabot.yml moves an npm pin, so a pinned
+      # version would settle into proving the bundle against a CLI nobody has.
+      - name: Install the Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code@latest
+
+      # Two manifests are checked: the plugin a reader installs, and the marketplace offering
+      # it. `--strict` fails on the warnings the runtime tolerates, which is what its own help
+      # text asks CI to do.
+      #
+      # The CLI finds components by convention — a directory under skills/, a hooks/hooks.json —
+      # and names one only when it has a fault to report. A clean run prints the manifest line
+      # alone, so its silence says nothing about how much it looked at, and a plugin carrying no
+      # component at all passes. The two guards after it are what close that. bundle.json lists
+      # what this build put in, so the first asserts each of those components is really in the
+      # tree; the second asserts .claude-plugin/ holds the manifest and nothing else, because a
+      # component filed in there is loaded by nothing and reported by nothing.
+      #
+      # Held to the POSIX subset Git Bash and older macOS bash agree on: no arrays, no `[[`, no
+      # process substitution, and no command substitution, whose `$(...)` an Azure pipeline reads
+      # as its own macro before the shell ever sees it. The loop reads from a file rather than a
+      # pipe, so the variable it sets survives into the test below it. TEMPDIR arrives from the
+      # runner rather than being named inline, which is what leaves this script word for word the
+      # one in azure-pipelines.yml.
+      - name: Validate the assembled plugin and its marketplace
+        shell: sh
+        env:
+          TEMPDIR: ${{ runner.temp }}
+        run: |
+          claude plugin validate ./.dist/plugin --strict
+          claude plugin validate ./.dist --strict
+
+          jq -r '.included[].path' .dist/plugin/bundle.json > "$TEMPDIR/included.txt"
+
+          missing=''
+          while read -r component; do
+            [ -d ".dist/plugin/$component" ] || missing="$missing $component"
+          done < "$TEMPDIR/included.txt"
+
+          if [ -n "$missing" ]; then
+            echo "bundle.json includes components the assembled plugin does not hold:$missing"
+            exit 1
+          fi
+
+          find .dist/plugin/.claude-plugin -mindepth 1 -maxdepth 1 ! -name plugin.json > "$TEMPDIR/stray.txt"
+
+          if [ -s "$TEMPDIR/stray.txt" ]; then
+            echo "filed inside .claude-plugin/, where nothing loads it:"
+            cat "$TEMPDIR/stray.txt"
+            exit 1
+          fi
 
       # kac's own coverage, in three layers: focused xUnit unit tests over kac.core's shared
       # helpers; Reqnroll feature tests that drive the validator in-process as behaviour specs;
