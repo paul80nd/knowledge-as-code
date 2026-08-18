@@ -50,3 +50,64 @@ steps:
   - script: dotnet run .tooling/kac.cs -- export
     displayName: Build the export
     workingDirectory: $(Build.SourcesDirectory)
+
+  # Assembles what `export` wrote, together with the .plugin/ tree, into an
+  # installable plugin under .dist/plugin/, with .dist/ itself as the marketplace
+  # naming it. The fourth and last kac invocation, so the one-at-a-time rule
+  # above still holds.
+  - script: dotnet run .tooling/kac.cs -- bundle
+    displayName: Assemble the plugin bundle
+    workingDirectory: $(Build.SourcesDirectory)
+
+  # Taken at `latest` rather than pinned, because the bundle has to be valid
+  # against the CLI a reader actually runs.
+  - script: npm install -g @anthropic-ai/claude-code@latest
+    displayName: Install the Claude Code CLI
+
+  # Two manifests are checked: the plugin a reader installs, and the marketplace
+  # offering it. `--strict` fails on the warnings the runtime tolerates, which is
+  # what its own help text asks CI to do.
+  #
+  # The CLI finds components by convention — a directory under skills/, a
+  # hooks/hooks.json — and names one only when it has a fault to report. A clean
+  # run prints the manifest line alone, so its silence says nothing about how much
+  # it looked at, and a plugin carrying no component at all passes. The two guards
+  # after it are what close that. bundle.json lists what this build put in, so the
+  # first asserts each of those components is really in the tree; the second
+  # asserts .claude-plugin/ holds the manifest and nothing else, because a
+  # component filed in there is loaded by nothing and reported by nothing.
+  #
+  # Held to the POSIX subset Git Bash and older macOS bash agree on: no arrays, no
+  # `[[`, no process substitution, and no command substitution, whose `$(...)` an
+  # Azure pipeline reads as its own macro before the shell ever sees it. The loop
+  # reads from a file rather than a pipe, so the variable it sets survives into the
+  # test below it. TEMPDIR arrives from the agent rather than being named inline,
+  # which is what leaves this script word for word the one in
+  # .github/workflows/kac.yml.
+  - script: |
+      claude plugin validate ./.dist/plugin --strict
+      claude plugin validate ./.dist --strict
+
+      jq -r '.included[].path' .dist/plugin/bundle.json > "$TEMPDIR/included.txt"
+
+      missing=''
+      while read -r component; do
+        [ -d ".dist/plugin/$component" ] || missing="$missing $component"
+      done < "$TEMPDIR/included.txt"
+
+      if [ -n "$missing" ]; then
+        echo "bundle.json includes components the assembled plugin does not hold:$missing"
+        exit 1
+      fi
+
+      find .dist/plugin/.claude-plugin -mindepth 1 -maxdepth 1 ! -name plugin.json > "$TEMPDIR/stray.txt"
+
+      if [ -s "$TEMPDIR/stray.txt" ]; then
+        echo "filed inside .claude-plugin/, where nothing loads it:"
+        cat "$TEMPDIR/stray.txt"
+        exit 1
+      fi
+    displayName: Validate the assembled plugin and its marketplace
+    workingDirectory: $(Build.SourcesDirectory)
+    env:
+      TEMPDIR: $(Agent.TempDirectory)
