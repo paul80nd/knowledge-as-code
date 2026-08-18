@@ -77,21 +77,21 @@ public static class Bundler
         if (manifestText is null)
             return Stop(problems, $"the plugin tree holds no {ManifestFile}, so there is nothing to assemble.");
 
-        var manifest = Parse(manifestText);
+        var manifest = JsonRead.Parse(manifestText);
         if (manifest is null)
             return Stop(problems, $"{ManifestFile} is not a JSON object.");
 
         // A manifest with no name is refused rather than given one. The name is what a marketplace
         // installs by and what a user types, so inventing it here would produce something that installs
         // under a name nobody chose.
-        var pluginName = Str(manifest["name"]);
+        var pluginName = JsonRead.Str(manifest["name"]);
         if (pluginName is null)
             return Stop(problems, $"{ManifestFile} states no name, which is what a plugin is installed by.");
 
         // Where the export is put inside the plugin. Read rather than assumed, because the skills address
         // it through `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that same name — a default here would be
         // this tool quietly disagreeing with the words a corpus wrote in its own skill.
-        var corpusRoot = Str(Object(manifest["metadata"])?["corpusRoot"]);
+        var corpusRoot = JsonRead.Str(JsonRead.Object(manifest["metadata"])?["corpusRoot"]);
         if (corpusRoot is null)
             return Stop(problems,
                 $"{ManifestFile} states no metadata.corpusRoot, so there is nowhere to put the export. "
@@ -105,7 +105,7 @@ public static class Bundler
                 $"{ManifestFile} names metadata.corpusRoot '{corpusRoot}', and the plugin tree already holds "
                 + $"{clash.Path}. The export is copied there, so one would overwrite the other.");
 
-        var exportManifest = Parse(Text(source.Export, Exporter.ManifestFile));
+        var exportManifest = JsonRead.Parse(Text(source.Export, Exporter.ManifestFile));
         if (exportManifest is null)
             return Stop(problems,
                 $"the export holds no readable {Exporter.ManifestFile}. Run the export first: ./kac export");
@@ -114,7 +114,7 @@ public static class Bundler
         // adopted and exported nothing for is absent here, and a component reading it would find nothing.
         var carried = Types(exportManifest);
 
-        var declared = Components(Object(manifest["metadata"])?["components"]);
+        var declared = Components(JsonRead.Object(manifest["metadata"])?["components"]);
         var included = new List<PluginComponent>();
         var trimmed = new List<TrimmedComponent>();
 
@@ -141,7 +141,7 @@ public static class Bundler
         // The plugin's version is the corpus content version, taken from the export rather than from
         // `.corpus.yaml`, so the number on the plugin is the number of the data inside it. The export
         // format version stays where it is, in the export's own manifest.
-        var version = Str(exportManifest["contentVersion"]);
+        var version = JsonRead.Str(exportManifest["contentVersion"]);
         if (version is null)
             warnings.Add("the export states no contentVersion, so the plugin keeps the version its own "
                          + "manifest states. Set content-version in .corpus.yaml.");
@@ -164,10 +164,10 @@ public static class Bundler
 
         files.Add(Utf8($"{Dist.PluginDir}/{RecordFile}",
             Serialize(new BundleRecord(
-                RecordVersion, pluginName, version ?? Str(manifest["version"]), corpusRoot,
+                RecordVersion, pluginName, version ?? JsonRead.Str(manifest["version"]), corpusRoot,
                 new BundleExport(
-                    Int(exportManifest["formatVersion"]), Str(exportManifest["corpus"]),
-                    Str(exportManifest["contentVersion"]), [.. carried]),
+                    JsonRead.Int(exportManifest["formatVersion"]), JsonRead.Str(exportManifest["corpus"]),
+                    JsonRead.Str(exportManifest["contentVersion"]), [.. carried]),
                 [.. included.Select(c => new BundleIncluded(c.Path, c.Requires, c.Note))],
                 [.. trimmed.Select(t => new BundleTrimmed(t.Path, t.Requires, t.Reason))]))));
 
@@ -175,7 +175,7 @@ public static class Bundler
 
         return new BundlePlan(
             [.. files.OrderBy(f => f.Path, StringComparer.Ordinal)],
-            pluginName, version ?? Str(manifest["version"]), included, trimmed, warnings, problems);
+            pluginName, version ?? JsonRead.Str(manifest["version"]), included, trimmed, warnings, problems);
     }
 
     // Replace the bundle whole: delete the two directories it owns, then write. The same reasoning as
@@ -229,11 +229,11 @@ public static class Bundler
         var copy = (JsonObject)manifest.DeepClone();
         if (version is not null) copy["version"] = version;
 
-        if (Object(copy["metadata"]) is { } metadata && metadata["components"] is JsonArray components)
+        if (JsonRead.Object(copy["metadata"]) is { } metadata && metadata["components"] is JsonArray components)
         {
             var kept = new JsonArray();
             foreach (var node in components)
-                if (node is JsonObject c && included.Any(i => i.Path == Str(c["path"])))
+                if (node is JsonObject c && included.Any(i => i.Path == JsonRead.Str(c["path"])))
                     kept.Add(c.DeepClone());
 
             metadata["components"] = kept;
@@ -257,7 +257,7 @@ public static class Bundler
             [
                 new MarketplacePlugin(
                     pluginName,
-                    Str(manifest["description"]) ?? $"The {pluginName} plugin, built from this corpus.",
+                    JsonRead.Str(manifest["description"]) ?? $"The {pluginName} plugin, built from this corpus.",
                     $"./{Dist.PluginDir}")
             ]));
 
@@ -265,7 +265,7 @@ public static class Bundler
     // in some manifests and an object with a `name` in others, and both are read rather than one being
     // declared correct.
     private static string? Owner(JsonObject manifest) =>
-        Str(manifest["author"]) ?? Str(Object(manifest["author"])?["name"]);
+        JsonRead.Str(manifest["author"]) ?? JsonRead.Str(JsonRead.Object(manifest["author"])?["name"]);
 
     // The types the export carried, read off its manifest. A type that contributed no record is absent
     // from that list, which is exactly the state a component reading it would find nothing in.
@@ -275,7 +275,7 @@ public static class Bundler
         if (exportManifest["types"] is not JsonArray declared) return types;
 
         foreach (var node in declared)
-            if (Str(Object(node)?["type"]) is { } key)
+            if (JsonRead.Str(JsonRead.Object(node)?["type"]) is { } key)
                 types.Add(key);
 
         return types;
@@ -290,14 +290,14 @@ public static class Bundler
 
         foreach (var entry in declared)
         {
-            if (Object(entry) is not { } component) continue;
-            if (Str(component["path"]) is not { } path) continue;
+            if (JsonRead.Object(entry) is not { } component) continue;
+            if (JsonRead.Str(component["path"]) is not { } path) continue;
 
             var requires = component["requires"] is JsonArray r
-                ? r.Select(Str).OfType<string>().ToList()
+                ? r.Select(JsonRead.Str).OfType<string>().ToList()
                 : [];
 
-            components.Add(new PluginComponent(path, requires, Str(component["note"])));
+            components.Add(new PluginComponent(path, requires, JsonRead.Str(component["note"])));
         }
 
         return components;
@@ -322,31 +322,6 @@ public static class Bundler
         files.FirstOrDefault(f => f.Path == path) is { } file
             ? new UTF8Encoding(false).GetString(file.Content).TrimStart('\uFEFF')
             : null;
-
-    private static JsonObject? Parse(string? text)
-    {
-        if (text is null) return null;
-
-        try
-        {
-            return JsonNode.Parse(text) as JsonObject;
-        }
-        catch (JsonException)
-        {
-            return null;
-        }
-    }
-
-    private static JsonObject? Object(JsonNode? node) => node as JsonObject;
-
-    // A JSON value read as a string, or null where it is absent, blank or some other type. The manifest
-    // is the corpus's own file and nothing validates it before this reads it, so every read of it
-    // survives a value of the wrong shape rather than throwing over one.
-    private static string? Str(JsonNode? node) =>
-        node is JsonValue value && value.TryGetValue<string>(out var s) && s.Length > 0 ? s : null;
-
-    private static int? Int(JsonNode? node) =>
-        node is JsonValue value && value.TryGetValue<int>(out var i) ? i : null;
 
     // How the plugin manifest is written back out. Stated here rather than borrowed from `KacJson`,
     // because this is a DOM write rather than a serialized record: the two rules that matter are that a
