@@ -63,4 +63,19 @@ public static class Yaml
                     result.Add(s.Value ?? "");
         return result;
     }
+
+    // A scalar's value exactly as written, with none of the readings `Str` applies. The schema is read
+    // through `Str`, where a plain `null` is the absence of a declaration; a document's frontmatter is
+    // read through this, where the characters an author typed are the thing being judged and a check
+    // reporting `'status' value '' is not one of…` has to be able to quote back what is there.
+    public static string? Raw(YamlNode node) => (node as YamlScalarNode)?.Value;
+
+    // Where a node sits in the file that carries it. A parser reads a frontmatter block on its own, so
+    // the lines it reports start at 1 within the block; `frontStart` is the line the block opens on in
+    // the document, which turns one into the other.
+    //
+    // A node the parser gave no position falls back to the block's own line, which is the nearest true
+    // answer: the finding lands on the frontmatter rather than on a line picked at random.
+    public static int? LineOf(YamlNode node, int frontStart)
+        => node.Start.Line > 0 ? (int)node.Start.Line + frontStart - 1 : frontStart;
 }

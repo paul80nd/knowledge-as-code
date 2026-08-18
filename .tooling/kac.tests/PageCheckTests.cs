@@ -71,7 +71,7 @@ public class PageCheckTests
         return
         [
             .. Validator.CheckAll(Corpus.Load(tree, schema, new CorpusDescriptor()))
-                .Where(f => f.File == rel && f.Check.Value is "page-frontmatter" or "link-resolves")
+                .Where(f => f is { File: rel, Check.Value: "page-frontmatter" or "link-resolves" })
         ];
     }
 }

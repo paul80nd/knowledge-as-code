@@ -101,8 +101,8 @@ public class PublishingTests
     {
         var publishing = Publishing.For(Descriptor(), Sha)!;
 
-        Assert.Equal("identity-line", publishing.Anchor("Identity line"));
-        Assert.Equal(Md.Slug("Identity line"), publishing.Anchor("Identity line"));
+        Assert.Equal("identity-line", Publishing.Anchor("Identity line"));
+        Assert.Equal(Md.Slug("Identity line"), Publishing.Anchor("Identity line"));
     }
 
     // -- the templates --
