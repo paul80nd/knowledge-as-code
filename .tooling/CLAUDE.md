@@ -1,6 +1,7 @@
 # Working on `kac`
 
-[`README.md`](README.md) is the reference for what the tool does. This is what will bite you while changing it.
+[`features/`](features/) is the reference for what each command does, one document apiece, and
+[`README.md`](README.md) maps them. This is what will bite you while changing it.
 
 ## Adding or changing a check
 
@@ -84,7 +85,7 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
 3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises, and that is also
    what catches a check declared in the schema and reported by nothing.
 
-No prose states a check count: `kac checks` reports it. [`README.md`](README.md) beside this file carries no table of
+No prose states a check count: `kac checks` reports it. [`features/checks.md`](features/checks.md) carries no table of
 checks either — it points at the schema, so there is nothing there to go quietly out of date.
 
 `DocRows` is deliberately *not* generated from the catalogue: rows are grouped and hand-worded, so several catalogue ids

@@ -86,7 +86,7 @@ public record ExportRecord(
 
 public record ExportLinks(string Human, string Raw);
 
-// One part on one line of the flat file, self-contained by design. `.tooling/README.md` sets out what
+// One part on one line of the flat file, self-contained by design. `.tooling/features/export.md` sets out what
 // that costs and buys; the fields it explains least obviously are these two.
 //
 // `Status` and `ReviewBy` live on the record as well. They are repeated because a consumer that grepped

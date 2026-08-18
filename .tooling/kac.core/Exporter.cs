@@ -238,11 +238,11 @@ public static class Exporter
 
     // Every absent value an export writes, spelled one way. A corpus writing `narrows:` with nothing
     // after it has not narrowed anything, so blank and missing arrive as the same `null`. What that buys
-    // a consumer is in `.tooling/README.md`.
+    // a consumer is in `.tooling/features/export.md`.
     private static string? Absent(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
     // The source's wrap column, taken back out. Blank lines are the author's and stay; a block a joiner
-    // would mangle is left as written. `.tooling/README.md` says why the export does this at all, and
+    // would mangle is left as written. `.tooling/features/export.md` says why the export does this at all, and
     // why the doubtful cases go the way they do.
     private static string Unwrap(string text)
     {
@@ -284,7 +284,7 @@ public static class Exporter
     }
 
     // The flat file of every part of a type, one part to a line. JSONL rather than pretty JSON, and each
-    // line repeating what a reader would otherwise have to look up — `.tooling/README.md` says what that
+    // line repeating what a reader would otherwise have to look up — `.tooling/features/export.md` says what that
     // costs and what it buys.
     private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
@@ -327,7 +327,7 @@ public static class Exporter
     // **Every id here is read, and none is inferred.** These references are the `redefinitions-are-
     // reciprocal` rule showing through, and that rule is about a term and its counterpart — so the link
     // has to name the counterpart, and the anchor is where it names it. A link naming a record and no
-    // term inside it resolves to nothing and is reported by `Unread` below. `/.tooling/README.md` sets
+    // term inside it resolves to nothing and is reported by `Unread` below. `/.tooling/features/export.md` sets
     // out why the guess that suggests itself is refused.
     private static IReadOnlyList<string>? SeeAlso(Doc doc, PartRow part, Dictionary<string, Doc> byPath, Tree tree)
     {

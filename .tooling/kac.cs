@@ -22,7 +22,7 @@
 //
 // The tool is deliberately free of type-specific rules: everything it enforces is
 // read from the YAML schema, so adding a type is adding a YAML file, not editing C#.
-// See .tooling/README.md for what fails versus warns and how each check maps to the schema.
+// See .tooling/features/checks.md for what fails versus warns and how each check maps to the schema.
 
 using System.CommandLine;
 using kac.core;
