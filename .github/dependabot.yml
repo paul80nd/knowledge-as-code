@@ -1,6 +1,10 @@
-# Keep the GitHub Actions used by .github/workflows/kac.yml current.
-# No package-ecosystem entries are declared beyond github-actions: kac is a
-# .NET file-based app with no restored dependency manifest to track.
+# What Dependabot keeps current in this repository.
+#
+# Two ecosystems, because `kac` is built two ways. The three projects under `.tooling/`
+# carry ordinary `PackageReference`s and are tracked below. `kac.cs` and `kac-tests.cs`
+# are file-based apps: the `#:package` directive that pins `System.CommandLine` is not a
+# manifest Dependabot reads — dependabot-core#15184 is the request that it should — so
+# that one is moved by hand.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -9,3 +13,22 @@ updates:
       interval: weekly
     commit-message:
       prefix: ci
+
+  - package-ecosystem: nuget
+    directories:
+      - /.tooling/kac.core
+      - /.tooling/kac.features
+      - /.tooling/kac.tests
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+    groups:
+      # The test packages move as a set. `Reqnroll.xunit.v3` is built against a particular
+      # `xunit.v3`, and both test projects carry the same three, so raised one at a time
+      # they would arrive as pull requests that cannot be merged alone.
+      test-packages:
+        patterns:
+          - xunit*
+          - Reqnroll*
+          - Microsoft.NET.Test.Sdk
