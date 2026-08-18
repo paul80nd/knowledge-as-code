@@ -52,10 +52,19 @@ fits neither interface. Design that one against the first real case.
 **A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
 early so a later check does not report nonsense about a document already known to be broken. That order is the design,
 so core checks are called in sequence and never looked up in a registry. Where a group of them is self-contained —
-`Checks/IdChecks.cs`, `Checks/LinkChecks.cs`, `Checks/PartChecks.cs` — it is a static class of its own with unit
-tests; the rest stay in `Validator.cs`, and extracting one buys nothing unless it has logic worth testing directly.
-`IdChecks` is the case for extracting: three passes read the shape of an id and of the filename carrying it, in three
-directions, and a second copy of that shape would be a place for the styles to disagree silently.
+`Checks/IdChecks.cs`, `Checks/LinkChecks.cs`, `Checks/PartChecks.cs`, `Checks/ValueChecks.cs` — it is a static class of
+its own with unit tests; the rest stay in `Validator.cs`, and extracting one buys nothing unless it has logic worth
+testing directly. `IdChecks` is the case for extracting: three passes read the shape of an id and of the filename
+carrying it, in three directions, and a second copy of that shape would be a place for the styles to disagree silently.
+
+`ValueChecks` is the other case, and it is drawn by what a check reads rather than by how much of it there is. What one
+frontmatter value is held to is its `FieldSpec` and nothing about the document around it, so `Check` takes the field's
+declaration, the node, the kind of document and the line the frontmatter opens on — and a date's calendar arithmetic, an
+enum's casing, a list's floor and a per-entry pattern are all decidable from a declaration a test writes itself. The
+order inside it carries the design as much as the outer sequence does: a template's unfilled marks are read as absent
+before any field's own check sees them, so a placeholder is never reported as a malformed date. `IsAbsent` is public
+because the required-field pass asks the same question before the class is reached, and a second reading of "absent"
+would be free to disagree with this one.
 
 **Whatever it is, a check writes what it found to a `Report`**, which every pass that walks one file builds and hands
 down, and which a rule class receives as `RuleContext.Report`. Write the id out as a `CheckId` at the call: both halves

@@ -1,5 +1,3 @@
-using System.Globalization;
-using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
 // ---------------------------------------------------------------------------
@@ -151,7 +149,7 @@ public static class Validator
             foreach (var spec in t.DeclaredFields)
             {
                 var req = spec.Required || RequiredWhenHolds(spec.RequiredWhenCondition, present);
-                var absent = !present.ContainsKey(spec.Name) || IsAbsentValue(present[spec.Name]);
+                var absent = !present.ContainsKey(spec.Name) || ValueChecks.IsAbsent(present[spec.Name]);
                 if (req && absent)
                 {
                     var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
@@ -161,61 +159,20 @@ public static class Validator
             }
 
         // -- per-field value checks --
+        // What a value is held to is the field's declaration and nothing about the document around it,
+        // so the whole of it lives in `ValueChecks` and is testable from a `FieldSpec` and a string.
         foreach (var (name, node) in present)
         {
             var spec = schema.EffectiveField(t, name);
             if (spec is null) continue; // unknown key already reported
 
-            // A placeholder opening a value is a flow mapping to YAML, not text — `{` is an indicator
-            // in that one position, so `review-by: {{date}}` parses as a mapping and arrives here with
-            // nothing readable in it. Reported with the fix rather than left to the value checks, which
-            // would say the date is malformed and quote an empty string back at whoever wrote it.
-            if (kind == DocKind.Template && node is YamlMappingNode)
-            {
-                report.Err(new CheckId("template-fields"),
-                    $"'{name}' is read as a YAML mapping rather than a value — a placeholder that opens "
-                    + "one has to be quoted: " + name + ": \"{{…}}\".", Line(node, d));
-                continue;
-            }
-
-            // A placeholder is not a value: `{{slug}}` is the instruction to supply one. Read as absent
-            // in a template — the field's own checks would otherwise report the mark as a malformed
-            // date, an unknown enum value or an id of the wrong shape, which is three ways of saying
-            // the file has not been filled in.
-            if (kind == DocKind.Template && HasPlaceholder(node)) continue;
-
-            if (IsAbsentValue(node))
-            {
-                if (!IsBareKey(node))
-                    report.Err(new CheckId("bare-key"),
-                        $"'{name}' is absent but not a bare key — use '{name}:' with no value (not null, ~, \"\", or —).",
-                        Line(node, d));
-                continue;
-            }
-
-            // A word the field admits beside its declared type — `last-rehearsed: "never"`. It is taken
-            // as written and nothing further is asked of it, which is the whole of what `allow-literal`
-            // means. A list is not short-circuited here: there the literal is one entry among ids, and
-            // CheckList exempts that entry rather than the field.
-            if (spec.Type != "list" && spec.IsLiteral(Scalar(node))) continue;
-
-            switch (spec.Type)
-            {
-                case "date": CheckDate(name, node, d, report); break;
-                case "enum": CheckEnum(name, node, spec, d, report); break;
-                case "list": CheckList(name, node, spec, d, report); break;
-            }
-
-            // A declared `pattern:` applies to a scalar field's value; for a list it applies to each
-            // entry, so CheckList handles that half where it already walks the sequence.
-            if (spec.Type != "list" && node is YamlScalarNode)
-                CheckPattern(name, "value", node, spec, d, report);
+            ValueChecks.Check(name, node, spec, kind, d.FrontStartLine, report);
         }
 
-        if (present.TryGetValue("tier", out var tierNode) && Scalar(tierNode) is { } tier && tier != t.Tier)
+        if (present.TryGetValue("tier", out var tierNode) && Yaml.Raw(tierNode) is { } tier && tier != t.Tier)
             report.Err(new CheckId("tier-matches-type"),
                 $"tier '{tier}' does not match the '{t.TypeName}' type tier '{t.Tier}'.",
-                Line(tierNode, d));
+                Yaml.LineOf(tierNode, d.FrontStartLine));
 
         // -- the id, the filename, and the agreement between them --
         // None of it is asked of a template. It has no id — `svc-{{slug}}` is the instruction to allocate
@@ -223,8 +180,8 @@ public static class Validator
         // What the identity line below still asks is that the template agrees with itself.
         if (kind == DocKind.Record)
         {
-            if (present.TryGetValue("id", out var idNode) && Scalar(idNode) is { } id)
-                IdChecks.Check(id, Line(idNode, d), d.Rel, t, report);
+            if (present.TryGetValue("id", out var idNode) && Yaml.Raw(idNode) is { } id)
+                IdChecks.Check(id, Yaml.LineOf(idNode, d.FrontStartLine), d.Rel, t, report);
 
             IdChecks.CheckFilename(d.Rel, t, report);
         }
@@ -725,104 +682,6 @@ public static class Validator
             $"'{token}' is a placeholder the template left for you to fill in.{rest}", line);
     }
 
-    // Whether a value carries the placeholder mark anywhere — the scalar itself, or any entry of a
-    // sequence. Asked of the whole field rather than of each entry, because a list in a template is a
-    // demonstration of the field's shape and `[ svc-{{a}}, svc-real ]` is not a state worth modelling.
-    private static bool HasPlaceholder(YamlNode node) =>
-        node switch
-        {
-            YamlScalarNode sc => Placeholder.In(sc.Value),
-            YamlSequenceNode seq => seq.Children.Any(HasPlaceholder),
-            _ => false
-        };
-
-    // Shape then calendar, under one id: both answers leave the author with the same thing to do, and the
-    // message is what tells them which they wrote — `2026/06/12` is not written as a date at all, where
-    // `2026-13-40` is written as one and names a day that has never existed.
-    private static void CheckDate(string name, YamlNode node, Doc d, Report report)
-    {
-        var sc = node as YamlScalarNode;
-        var v = sc?.Value ?? "";
-        var quoted = sc?.Style is ScalarStyle.DoubleQuoted or ScalarStyle.SingleQuoted;
-        if (!quoted)
-            report.Err(new CheckId("date-quoted"), $"'{name}' date must be quoted, e.g. \"{v}\".", Line(node, d));
-
-        if (!IsIsoShape(v))
-            report.Err(new CheckId("date-format"), $"'{name}' must be a YYYY-MM-DD date, got '{v}'.", Line(node, d));
-        else if (!DateOnly.TryParseExact(v, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-            report.Err(new CheckId("date-format"),
-                $"'{name}' is not a date on the calendar, got '{v}'.", Line(node, d));
-    }
-
-    private static void CheckEnum(string name, YamlNode node, FieldSpec spec, Doc d, Report report)
-    {
-        var v = Scalar(node);
-        if (v is null)
-        {
-            report.Err(new CheckId("enum"), $"'{name}' must be a scalar.", Line(node, d));
-            return;
-        }
-
-        if (spec.Values is not null && !spec.Values.Contains(v))
-            report.Err(new CheckId("enum"),
-                $"'{name}' value '{v}' is not one of: {string.Join(", ", spec.Values)}.", Line(node, d));
-        if (v != v.ToLowerInvariant())
-            report.Err(new CheckId("enum-lowercase"), $"'{name}' enum value '{v}' must be lowercase.", Line(node, d));
-    }
-
-    private static void CheckList(string name, YamlNode node, FieldSpec spec, Doc d, Report report)
-    {
-        if (node is not YamlSequenceNode seq)
-        {
-            report.Err(new CheckId("list"), $"'{name}' must be a YAML sequence.", Line(node, d));
-            return;
-        }
-
-        // A floor the schema sets on a field whose value is its breadth. Reported before the entries are
-        // read, because an author told both that the list is short and that one of its entries is
-        // malformed will fix the second and re-run to find the first.
-        if (spec.MinItems is { } min && seq.Children.Count < min)
-            report.Err(new CheckId("min-items"),
-                $"'{name}' has {Count(seq.Children.Count, "entry", "entries")} — the schema asks for at least {min}.",
-                Line(node, d));
-
-        foreach (var item in seq.Children)
-        {
-            var v = Scalar(item);
-            if (spec.IsLiteral(v)) continue; // a word the field admits beside its ids — `applies-to: [all]`
-            if (spec.Of == "id" && v is not null && !LooksLikeId(v))
-                report.Err(new CheckId("id-format"), $"'{name}' entry '{v}' is not a valid id.", Line(item, d));
-            CheckPattern(name, "entry", item, spec, d, report);
-        }
-
-        // Every list field in the taxonomy is a set — no field's sequence carries meaning — so
-        // alphabetical is simply the order that scan-reads and the one order two authors will agree
-        // on. Only the first pair out of order is reported; the rest are noise once the author
-        // re-sorts the field.
-        for (var i = 1; i < seq.Children.Count; i++)
-        {
-            if (Scalar(seq.Children[i - 1]) is not { } prev || Scalar(seq.Children[i]) is not { } cur) continue;
-            if (Natural.Compare(prev, cur) <= 0) continue;
-            report.Warn(new CheckId("list-order"),
-                $"'{name}' is not in alphabetical order — '{cur}' should come before '{prev}'.",
-                Line(seq.Children[i], d));
-            break;
-        }
-    }
-
-    // A field's declared `pattern:` — the schema's own regex, applied to whatever scalar carries the
-    // value. `noun` distinguishes a scalar field's "value" from a list's "entry" in the message.
-    private static void CheckPattern(string name, string noun, YamlNode node, FieldSpec spec, Doc d,
-        Report report)
-    {
-        if (spec.PatternRegex is null) return;
-        var v = Scalar(node);
-        if (v is null) return;
-        if (!spec.PatternRegex.IsMatch(v))
-            report.Err(new CheckId("field-pattern"),
-                $"'{name}' {noun} '{v}' does not match {spec.Pattern}.", Line(node, d));
-    }
-
     private static void CheckKeyOrder(Doc d, TypeSchema t, Report report)
     {
         var pos = new Dictionary<string, int>();
@@ -855,8 +714,8 @@ public static class Validator
     {
         if (d.H1 is null) return;
 
-        var id = present.TryGetValue("id", out var idNode) ? Scalar(idNode) : null;
-        var status = present.TryGetValue("status", out var statusNode) ? Scalar(statusNode) : null;
+        var id = present.TryGetValue("id", out var idNode) ? Yaml.Raw(idNode) : null;
+        var status = present.TryGetValue("status", out var statusNode) ? Yaml.Raw(statusNode) : null;
         var expected = Expected(t, id, status);
 
         if (d.IdentitySpans is null)
@@ -975,27 +834,7 @@ public static class Validator
     private static bool RequiredWhenHolds(RequiredWhen? condition, Dictionary<string, YamlNode> present)
         => condition is not null
            && present.TryGetValue(condition.Field, out var node)
-           && condition.Holds(Scalar(node));
-
-    private static bool IsAbsentValue(YamlNode node) =>
-        node switch
-        {
-            YamlScalarNode sc => string.IsNullOrEmpty(sc.Value) || sc.Value is "~" or "null" or "Null" or "NULL",
-            YamlSequenceNode seq => seq.Children.Count == 0,
-            _ => false
-        };
-
-    private static bool IsBareKey(YamlNode node)
-        => node is YamlScalarNode { Style: ScalarStyle.Plain } sc && string.IsNullOrEmpty(sc.Value);
-
-    // Written as a date, which is a question about the characters. Whether those characters name a day is
-    // `DateOnly`'s to answer, and asking it here as well would be two tests of the same string with one
-    // able to disagree with the other.
-    private static bool IsIsoShape(string v)
-        => v.Length == 10 && v[4] == '-' && v[7] == '-'
-           && v[..4].All(char.IsDigit) && v[5..7].All(char.IsDigit) && v[8..].All(char.IsDigit);
-
-    private static bool LooksLikeId(string v) => v.Contains('-') && v == v.ToLowerInvariant();
+           && condition.Holds(Yaml.Raw(node));
 
     private static string Count(int n, string one, string many) => $"{n} {(n == 1 ? one : many)}";
 
@@ -1021,8 +860,4 @@ public static class Validator
         return vowel ? $"an {name}" : $"a {name}";
     }
 
-    private static string? Scalar(YamlNode node) => (node as YamlScalarNode)?.Value;
-
-    private static int? Line(YamlNode node, Doc d)
-        => node.Start.Line > 0 ? (int)node.Start.Line + d.FrontStartLine - 1 : d.FrontStartLine;
 }
