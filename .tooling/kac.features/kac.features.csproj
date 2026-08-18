@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Reqnroll BDD pilot: Gherkin feature files driving kac.core in-process, as a side-by-side
-       comparison with the JSON golden suite. Uses the Reqnroll xUnit v3 provider on the
+  <!-- The behaviour layer: Gherkin feature files driving kac.core in-process, asserting what a
+       corpus is told rather than what the tool prints. Uses the Reqnroll xUnit v3 provider on the
        Microsoft.Testing.Platform, matching kac.tests. -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>

@@ -121,7 +121,7 @@ for it. A field declaring only `notes` still renders them, so the two can be ado
 note has grown past a line, that is the signal it wants a `description` beside it rather than a trim.
 
 **Keep a `description` under ~100 characters.** The generated table pads every column to its widest cell, so one long
-description widens every row on the page — a 153-character cell once made all ten ADR rows 190 wide. Enum `values` are
+description widens every row on the page — a 153-character cell takes all ten ADR rows to 190. Enum `values` are
 not part of that budget: they render in a small table of their own beneath it rather than inside the cell, so declaring
 a sixth value costs nothing in the width of the main table.
 
@@ -248,9 +248,9 @@ below for what one may say.
 
 **A rule's `description` is capped at 120 characters, and the cap is enforced.** It says what is checked, in a table a
 reader scans to find the row they tripped; the reasoning belongs in the rule's `message:`, which is what the author who
-trips it actually reads, or in a `#` comment for an intention that has no message. A description doing both jobs is how
-every one of these grew to two or three sentences, and `schema-shape` now says so when the schema loads. An intention's
-description is bound too — it renders in *Declared, not yet enforced* on the same page.
+trips it actually reads, or in a `#` comment for an intention that has no message. A description doing both jobs runs
+to two or three sentences, which `schema-shape` reports when the schema loads. An intention's description is bound
+too — it renders in *Declared, not yet enforced* on the same page.
 
 Four ids keep a hand-written class instead, because what they ask needs more than the grammar can say:
 `y-statement-present` and `alternatives-have-verdicts` on the decision-record type, `terms-are-alphabetical` on the
@@ -373,9 +373,9 @@ other; a unit test pins the difference.
 
 Adding a fact is adding one method to `Facts`, one row to `RuleExpr.Functions`, which is what the type checker reads,
 and one row to the table above — which is held against the registry, so the three cannot come apart quietly. The grammar
-never changes. `section_count()` and `field_matches()` were each written for a single rule and each turned out to answer
-a question the next corpus will ask again, which is the usual shape of a new fact — and the reason reaching for the
-grammar instead is almost always the wrong move.
+never changes. `section_count()` and `field_matches()` each serve a single rule and each answers a question the next
+corpus will ask again, which is the usual shape of a new fact — and the reason reaching for the grammar instead is
+almost always the wrong move.
 
 ## What the schema is held to
 

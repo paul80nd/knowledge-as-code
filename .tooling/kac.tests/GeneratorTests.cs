@@ -7,9 +7,9 @@ namespace kac.tests;
 
 public class GeneratorTests
 {
-    // The reader-facing table must stay a faithful, complete view of the catalogue, and the catalogue
-    // now comes from `_checks.yaml`. `kac checks` reconciles the two against the real schema and exits
-    // non-zero on any drift, which the golden suite asserts — the one place the shipped file is read.
+    // The reader-facing table must stay a faithful, complete view of the catalogue, and the catalogue is
+    // `_checks.yaml`. `kac checks` reconciles the two against the real schema and exits non-zero on any
+    // drift, which the golden suite asserts — the one place the shipped file is read.
     [Fact]
     public void ChecksTableProblems_names_a_row_the_catalogue_does_not_carry()
     {
