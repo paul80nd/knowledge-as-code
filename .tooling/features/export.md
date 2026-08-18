@@ -1,7 +1,26 @@
 # `export` — the corpus as data
 
+## Intent
+
 A consumer of a corpus should not clone it. `export` writes what the corpus knows into `.dist/` as data built for an
-agent to read: a manifest saying what the export is, one file per record, and a flat file cheap to grep.
+agent to read: a manifest saying what the export is, one file per record for a reader that wants a whole record, and a
+flat file cheap to grep for a reader holding only a word. What travels is each type's own decision, declared beside the
+type, so the command carries no list of its own and a corpus adopting a new type exports it without the tool changing.
+
+## What it is not
+
+**It is not `bundle`.** `export` produces data. Assembling that data and the `.plugin/` tree into something a consumer
+can install is a second command, and it does not exist. Nothing here trims components, packages a plugin or publishes
+anything.
+
+**It is not `index`.** `index` writes into the corpus, for a person reading the corpus. `export` writes outside it, for
+something that will never open the Markdown. Both are built from the same frontmatter, and neither is derivable from
+the other, because they answer to different readers.
+
+**It is not a backup.** A record travels as the fields and sections its type declared, so a corpus cannot be rebuilt
+from an export of it. The direction is one way: `.dist/` is rebuilt whole from the corpus.
+
+## Approach
 
 **The export is untracked.** `.dist/` is gitignored and rebuilt whole, so it is never something to review: a tracked
 export would put a diff nobody reads on every change to the words, restating what the corpus already holds. Two things
@@ -139,3 +158,10 @@ carrying their own state, because filtering them would make the corpus's own con
 may exclude either with `export.exclude:` in `.corpus.yaml`. Where it does, the run names every record it withheld,
 because a record left out of the output cannot be seen there.
 
+## Known limits
+
+**A term line's `anchor` is the part id, whatever the type sourced its parts from.** The exporter writes both keys from
+one value. That is correct for a heading-sourced type, where a heading's slug is its id and its anchor alike, and it is
+wrong for a table-sourced one, whose part id is authored — a policy clause id is `TIMEBOX`, and no fragment resolves to
+it. Deriving the anchor from the part source is what would fix it. No table-sourced type declares an `export:` block
+today, so the path is unexercised and no fixture covers it.

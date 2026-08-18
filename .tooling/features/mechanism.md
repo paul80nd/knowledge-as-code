@@ -1,11 +1,32 @@
 # `mechanism` — portability
 
-[`manifest.yaml`](../manifest.yaml) declares each file's layer — `synced`, `verification`, `forked`,
-`generated`, `local`, `ignored`. Copies drift away from a declaration nobody enforces, so `mechanism` enforces this one
-from both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the shared layers from
-one.
+## Intent
 
-## `--check`
+A corpus takes the framework as a copy — the validator, the schema, and the documents describing how the system works —
+and a copy drifts. `mechanism` is what makes a copy answerable to a declaration.
+[`manifest.yaml`](../manifest.yaml) declares each file's layer — `synced`, `verification`, `forked`, `generated`,
+`local`, `ignored` — and `mechanism` enforces that declaration from both ends. `--check` reports how far a corpus has
+moved from a reference. `--sync` takes the shared layers from one. Its reader is whoever maintains a corpus downstream
+of this one.
+
+## What it is not
+
+**It is not `git pull`.** The two trees are separate repositories with separate histories. `--sync` copies the shared
+layers file by file and records what it took; it merges nothing, and neither half reads either side's commits.
+
+**It is not `index --check`.** Both recompute and compare, and they compare different halves of a file. `mechanism`
+empties every generated block before it compares, so what it judges is the authored prose. What sits between the
+markers is `index --check`'s alone, and a shared page can be byte-identical everywhere and stale everywhere.
+
+**It is not `validate`.** Drift is not invalidity. A corpus that has edited its copy of the schema has drifted and may
+be entirely valid; a corpus in step with upstream may be full of broken records.
+
+## Approach
+
+The two halves read one manifest and share one vocabulary of layers. `--check` decides and reports; `--sync` decides
+and then writes. Neither touches a layer the manifest says a corpus owns.
+
+### `--check`
 
 `mechanism --check` resolves every tracked file against the manifest and compares the shared layers against a reference
 corpus. It follows the same discipline as `index --check`: recompute, compare, name what differs, exit non-zero, never
@@ -45,7 +66,7 @@ that corpus adopted — while the prose around the block stays byte-identical ev
 compared, so deleting a block rather than regenerating it is still drift. `index --check` stays the one voice on whether
 the generated half is right.
 
-## `--sync`
+### `--sync`
 
 `mechanism --sync` takes the shared layers from the reference, records what it took, and regenerates.
 

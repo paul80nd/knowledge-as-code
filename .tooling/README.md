@@ -8,6 +8,18 @@ enforces it, so **adding a knowledge type is adding a YAML file, not editing thi
 Two declarations the tool reads sit here too: [`manifest.yaml`](manifest.yaml), which says which files a corpus shares
 with the framework, and each corpus's own `.corpus.yaml` at the repository root.
 
+## Who this is for
+
+Three readers exist and two of them are served.
+
+* **A corpus author** writes records. [`../knowledge-as-code.md`](../knowledge-as-code.md) is theirs: the taxonomy, the
+  style rules, and what each tier asks of a document.
+* **A framework developer** changes the tool. `.tooling/` is theirs, and the feature documents below are written for
+  them.
+* **A corpus consumer** installs the plugin, reads the export and greps the terms file. Nothing here is addressed to
+  them. That document is owed and tracked upstream, as
+  [issue #203](https://github.com/paul80nd/knowledge-as-code/issues/203).
+
 ## Running
 
 ```bash
@@ -34,8 +46,13 @@ invocation per subcommand** — file-based apps share build output and contend i
 
 ## The features
 
-One document per command, in [`features/`](features/). Each says what the command does, why it works that way, and
-what was decided against.
+One document per command, in [`features/`](features/). These are developer context rather than corpus records: they
+carry no frontmatter, `validate` does not read them, and they are not becoming a knowledge type.
+
+Each follows the same five sections in this order — **Intent**, **What it is not**, **Approach**, **Decisions**,
+**Known limits**. It is prose throughout and not a form. A heading with nothing true to say is left out rather than
+filled, because filler reads as an answer where an absence reads as work not yet done. Reasons stay inline in
+**Approach**, beside whatever they explain; **Decisions** takes only the ones belonging to a feature as a whole.
 
 | Document                                         | Covers                                                                                                |
 |--------------------------------------------------|-------------------------------------------------------------------------------------------------------|

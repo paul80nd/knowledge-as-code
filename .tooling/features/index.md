@@ -1,6 +1,27 @@
 # `index` — generation
 
-`index` regenerates content that is derived from frontmatter and the schema, so it never has to be maintained by hand:
+## Intent
+
+`index` regenerates the content of a corpus that is derived from frontmatter and the schema, so that nobody maintains
+it by hand. Its readers are the people who read the corpus: a type's index page, the frontmatter reference and checks
+table on a type page, and the taxonomy's own tables are all written from what the corpus holds now. Only the region
+between each pair of markers is rewritten, so the words around a generated block stay the author's.
+
+## What it is not
+
+**It is not `export`.** `index` writes Markdown into the corpus for a person to read. `export` writes JSON outside it
+for an agent. Both are built from the same frontmatter, and a change to one implies nothing about the other.
+
+**`index --check` is not `mechanism --check`.** This one recomputes a corpus's generated content from that corpus's own
+records and compares. The other compares a corpus's authored files against an upstream copy. A file can be fresh and
+drifted, or in step and stale.
+
+**It will not stand a type up.** Generation covers what the corpus adopted, so a folder appearing without its type
+declared is not something `index` fills in. `validate` reports it.
+
+## Approach
+
+`index` writes the content derived from frontmatter and the schema:
 
 | Artefact                                             | Built from                              | Rule                                                                                                                                                                                                                               |
 |------------------------------------------------------|-----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

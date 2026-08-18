@@ -1,7 +1,27 @@
 # `validate` — the corpus read and reported on
 
-`kac validate` is the command CI runs over a corpus. This page says which files it reads, which it passes over, and
-which get a pass of their own. Where each check comes from, and what it proves, is [`checks.md`](checks.md).
+## Intent
+
+`validate` is the command CI runs over a corpus, and the one an author runs before pushing. It decides which files are
+records, applies the checks the schema declares, and reports each fault against the file that caused it, with a line
+where it has one. Its reader is whoever writes a record: a finding has to name the fault precisely enough to be fixed
+without opening this tool. Where each check comes from, and what it proves, is [`checks.md`](checks.md).
+
+## What it is not
+
+**It is not `checks`.** `kac checks` prints what could fire, read from the schema. `validate` fires it against
+documents. A check absent from a validate run is either undeclared or simply untripped, and only `checks` tells those
+apart.
+
+**It is not `index --check`.** What sits between a generated block's markers is not `validate`'s to judge. `validate`
+holds a file to still carrying the markers of every block the generator writes into it, and freshness is
+`index --check`'s one question.
+
+**It is not `mechanism --check`.** That asks whether this corpus's copy of the framework has drifted from upstream.
+`validate` asks whether this corpus's own records are correct, and a corpus that has drifted badly can still be
+entirely valid.
+
+## Approach
 
 `kac` discovers Markdown via `git ls-files` (so **`.gitignore`, `.git/info/exclude` and global excludes are respected**,
 and `.git/` is never walked), then applies the taxonomy exclusions from `knowledge-as-code/automation.md`:
@@ -37,3 +57,10 @@ whose markers have gone is written by nothing and, without this, reported by not
 against what the generator would produce, and what it would produce for a file it cannot find a marker in is the file as
 it stands.
 
+## Known limits
+
+**Discovery falls back to a directory walk where git cannot answer.** `git ls-files` is what makes `.gitignore`,
+`.git/info/exclude` and global excludes count. A tree that is not a repository, or one where git cannot be run, is
+walked for `*.md` instead, skipping `.git`, `.idea` and `.claude` by name and honouring nothing else. The taxonomy
+exclusions still apply, so what changes is narrow: a Markdown file the corpus had ignored is discovered and validated.
+The test harness assembles such a tree deliberately; a corpus outside version control would meet it without asking.
