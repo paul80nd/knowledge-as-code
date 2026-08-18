@@ -461,7 +461,7 @@ public sealed partial class Schema
     // Every key these files carry that the loader never asked for, in the order it would be met reading
     // them. A key nothing reads is a declaration in a file documented as the contract the tool enforces,
     // which is the same promise a rule id nothing dispatches makes.
-    public IReadOnlyList<UnreadKey> UnreadKeys { get; init; } = [];
+    public IReadOnlyList<UnreadKey> UnreadKeys { get; private init; } = [];
 
     // The parts of the schema every type is read against: the shared field declarations, the reserved
     // keys, and the enum vocabularies a field can draw on. Carried as one argument into type parsing

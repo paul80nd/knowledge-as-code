@@ -759,7 +759,7 @@ public static class Validator
                 d.IdentityLine);
         else if (status is not null && !string.Equals(gotStatus, status.ToUpperInvariant(), StringComparison.Ordinal))
             report.Err(new CheckId("identity-status"), $"identity line status '{gotStatus}' must be upper-case — "
-                                   + $"`{status.ToUpperInvariant()}`.", d.IdentityLine);
+                                                       + $"`{status.ToUpperInvariant()}`.", d.IdentityLine);
     }
 
     // The line the document should have carried, for a message that shows rather than describes.
@@ -859,5 +859,4 @@ public static class Validator
             : "AEIOU".Contains(char.ToUpperInvariant(name[0]));
         return vowel ? $"an {name}" : $"a {name}";
     }
-
 }

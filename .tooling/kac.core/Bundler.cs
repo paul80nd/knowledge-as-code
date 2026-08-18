@@ -146,24 +146,18 @@ public static class Bundler
             warnings.Add("the export states no contentVersion, so the plugin keeps the version its own "
                          + "manifest states. Set content-version in .corpus.yaml.");
 
-        var files = new List<BundleFile>();
-
         // The plugin tree, less every subtree a trimmed component owns, and less the manifest — which is
         // rewritten below rather than copied. A path under no component's is unconditional and travels
         // whatever the corpus adopted.
-        foreach (var file in source.PluginTree)
-        {
-            if (file.Path == ManifestFile) continue;
-            if (trimmed.Any(t => Owns(t.Path, file.Path))) continue;
-            files.Add(new BundleFile($"{Dist.PluginDir}/{file.Path}", file.Content));
-        }
+        var files = (from file in source.PluginTree
+            where file.Path != ManifestFile
+            where !trimmed.Any(t => Owns(t.Path, file.Path))
+            select file with { Path = $"{Dist.PluginDir}/{file.Path}" }).ToList();
 
         // The export, copied byte for byte and edited by nothing. `bundle` writes its own account of the
         // run beside it rather than into it, so the two copies of the export stay comparable and a
         // difference between them is a defect rather than a thing to interpret.
-        foreach (var file in source.Export)
-            files.Add(new BundleFile(
-                $"{Dist.PluginDir}/{corpusRoot}/{file.Path}", file.Content));
+        files.AddRange(source.Export.Select(file => file with { Path = $"{Dist.PluginDir}/{corpusRoot}/{file.Path}" }));
 
         files.Add(Utf8($"{Dist.PluginDir}/{ManifestFile}",
             Rewrite(manifest, version, included)));

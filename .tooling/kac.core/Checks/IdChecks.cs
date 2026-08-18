@@ -86,7 +86,7 @@ public static class IdChecks
     {
         var name = Path.GetFileName(rel);
         if (t.FilenameRegex is not null && !t.FilenameRegex.IsMatch(name))
-            report.Err(new CheckId("filename-pattern"), $"filename '{name}' does not match {t.FilenamePattern}.", null);
+            report.Err(new CheckId("filename-pattern"), $"filename '{name}' does not match {t.FilenamePattern}.");
 
         // The limit is on the slug the author chose, not on the discriminator they did not. Where the
         // style puts one at the head of a longer name it is skipped; a slug id *is* the whole stem, so

@@ -82,7 +82,7 @@ public static class LinkChecks
         foreach (var label in d.DefinedLabels.Distinct(StringComparer.Ordinal))
             if (IdChecks.TryCanonicalId(label, schema, out var canonical) && label != canonical)
                 report.Err(new CheckId("label-canonical"),
-                    $"link definition '[{label}]' should be written as the id '{canonical}'.", null);
+                    $"link definition '[{label}]' should be written as the id '{canonical}'.");
 
         // unused definitions. A template's definitions are exemplars — the block exists to show where
         // definitions go and how they sort — so one that nothing references is not the oversight it is

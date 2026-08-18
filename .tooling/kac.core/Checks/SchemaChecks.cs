@@ -185,7 +185,7 @@ public static class SchemaChecks
                 $"type '{key}' declares 'parts.section: {parts.Section}', and its 'sections:' block declares no "
                 + "such section — name a section the type has, or add it. No record can carry a part otherwise."));
 
-        if (parts.Source == PartSpec.Table && parts.Binding.Count == 0)
+        if (parts is { Source: PartSpec.Table, Binding.Count: 0 })
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' sources its parts from a table and declares no 'binding:' — say which modals "
                 + "oblige, or every row is reported as opening with none of them."));

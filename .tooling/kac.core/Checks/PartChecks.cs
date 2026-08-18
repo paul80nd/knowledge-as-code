@@ -89,8 +89,7 @@ public static class PartChecks
                 continue;
             }
 
-            if (spec.Source == PartSpec.Table
-                && spec.IdPatternRegex is { } idPattern && !idPattern.IsMatch(row.Id))
+            if (spec is { Source: PartSpec.Table, IdPatternRegex: { } idPattern } && !idPattern.IsMatch(row.Id))
                 report.Err(new CheckId("clause-id-format"),
                     $"clause id '{row.Id}' does not match {spec.IdPattern}.", row.Line);
 
