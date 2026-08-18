@@ -182,30 +182,36 @@ public class GeneratorTests
     }
 
     [Fact]
-    public void SchemaTable_lists_enum_values_beneath_the_table_not_inside_the_cell()
+    public void SchemaTable_carries_enum_values_in_the_value_column()
     {
         var t = new TypeSchema
         {
-            FieldOrder = ["status"],
+            FieldOrder = ["status", "owner"],
             Fields = new Dictionary<string, FieldSpec>
             {
                 ["status"] = new()
                 {
                     Name = "status", Type = "enum", Values = ["draft", "active"], Description = "SHORT PROSE"
-                }
+                },
+                ["owner"] = new() { Name = "owner", Type = "string", Description = "PLAIN PROSE" }
             }
         };
 
         var table = Generator.SchemaTable(t, new Schema());
-        var main = table.Split("**Enum values**")[0];
-        var row = main.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
+        var row = table.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
 
-        // Values are what blows a column's width out, so they belong below in a table of their own,
-        // where the page still reads as formatted code.
-        Assert.DoesNotContain("`draft`", row);
+        // The set is what an author came to the page for, so it is what the column carries — the word
+        // `enum` is not something anyone can write into frontmatter.
+        var header = table.Split('\n')[0];
+        Assert.Contains("Value", header);
+        Assert.DoesNotContain("Type", header);
+        Assert.Contains("`draft` `active`", row);
+        Assert.DoesNotContain("enum", row);
         Assert.Contains("SHORT PROSE", row);
-        Assert.Contains("**Enum values**", table);
-        Assert.Contains("| `status` | `draft` · `active` |", table);
+        Assert.DoesNotContain("**Enum values**", table);
+
+        // A field that is not an enum still names its type.
+        Assert.Contains("string", table.Split('\n').Single(l => l.StartsWith("| `owner`", StringComparison.Ordinal)));
     }
 
     [Fact]

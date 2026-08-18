@@ -8,25 +8,18 @@ byte-preserved.
 
 <!-- BEGIN GENERATED: schema-adrs -->
 
-| Field           | Type   | Notes                                                                                            |
-|-----------------|--------|--------------------------------------------------------------------------------------------------|
-| `id` *†         | string | Stable, unique across the corpus, never reused. Format set by the type.                          |
-| `tier` *†       | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.             |
-| `status` *†     | enum   | Immutable once `accepted` — supersede rather than rewrite.                                       |
-| `owner` *†      | string | A named person, never a team alias.                                                              |
-| `tags` †        | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                 |
-| `decided-on`    | date   | The acceptance date. Bare key until accepted.                                                    |
-| `supersedes`    | id     | The ADR this replaces.                                                                           |
-| `superseded-by` | id     | CI enforces both directions; a one-sided supersession fails the build.                           |
-| `deciders`      | list   | The people who agreed it.                                                                        |
-| `related`       | list   | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively. |
-
-**Enum values**
-
-| Field    | Values                                                              |
-|----------|---------------------------------------------------------------------|
-| `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
-| `status` | `proposed` · `accepted` · `deprecated` · `superseded`               |
+| Field           | Value                                                       | Notes                                                                                            |
+|-----------------|-------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| `id` *†         | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.                          |
+| `tier` *†       | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.             |
+| `status` *†     | `proposed` `accepted` `deprecated` `superseded`             | Immutable once `accepted` — supersede rather than rewrite.                                       |
+| `owner` *†      | string                                                      | A named person, never a team alias.                                                              |
+| `tags` †        | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                 |
+| `decided-on`    | date                                                        | The acceptance date. Bare key until accepted.                                                    |
+| `supersedes`    | id                                                          | The ADR this replaces.                                                                           |
+| `superseded-by` | id                                                          | CI enforces both directions; a one-sided supersession fails the build.                           |
+| `deciders`      | list                                                        | The people who agreed it.                                                                        |
+| `related`       | list                                                        | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively. |
 
 **Conditionally required**
 

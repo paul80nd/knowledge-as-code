@@ -356,7 +356,7 @@ public static class Generator
     // what someone filling in frontmatter wants.
     public static string SchemaTable(TypeSchema t, Schema s)
     {
-        List<string> headers = ["Field", "Type", "Notes"];
+        List<string> headers = ["Field", "Value", "Notes"];
         var universal = s.UniversalOrder.Where(n => s.EffectiveField(t, n) is not null).ToList();
         var own = t.FieldOrder.Where(n => !universal.Contains(n)).ToList();
 
@@ -366,32 +366,23 @@ public static class Generator
 
         var order = universal.Concat(own).ToList();
         var specs = order.Select(n => s.EffectiveField(t, n)!).ToList();
-        var table = RenderTable(headers, rows) + EnumValues(specs) + ConditionalFields(specs);
+        var table = RenderTable(headers, rows) + ConditionalFields(specs);
         return table + Legend(specs.Any(f => f.Required), universal.Count > 0);
 
         static List<string> FieldRow(string name, FieldSpec f, bool universal) =>
-            [$"`{name}`{Marks(f.Required, universal)}", f.Type, NotesFor(f)];
+            [$"`{name}`{Marks(f.Required, universal)}", ValueFor(f), NotesFor(f)];
     }
 
-    // Enum values are data, not prose, and they belong in a table of their own rather than in a Notes
-    // cell. The renderer pads every column to its widest cell, so one multi-value enum in Notes widens
-    // every row of the table — and these pages are read as source as much as rendered, which makes
-    // width the constraint that matters.
-    private static string EnumValues(IEnumerable<FieldSpec> fields)
-    {
-        var enums = fields.Where(f => f is { Type: "enum", Values.Count: > 0 }).ToList();
-        if (enums.Count == 0) return "";
+    // What a field may hold: its type, or — where the type is an enum with a resolved set — the values
+    // themselves. The word `enum` tells an author nothing they can write into frontmatter, and the set
+    // is what they came to the page for, so the set is what the column carries.
+    private static string ValueFor(FieldSpec f) =>
+        f is { Type: "enum", Values.Count: > 0 }
+            ? string.Join(" ", f.Values!.Select(v => $"`{v}`"))
+            : f.Type;
 
-        List<string> headers = ["Field", "Values"];
-        var rows = enums
-            .Select(f => new List<string>
-                { $"`{f.Name}`", string.Join(" · ", f.Values!.Select(v => $"`{v}`")) })
-            .ToList();
-        return "\n\n**Enum values**\n\n" + RenderTable(headers, rows);
-    }
-
-    // Same reasoning as EnumValues, and a required-when condition has to be quoted exactly, so it is the
-    // last thing that should be competing for room in a Notes cell.
+    // A required-when condition has to be quoted exactly, so it is the last thing that should be
+    // competing for room in a Notes cell. It goes in a table of its own beneath the main one.
     private static string ConditionalFields(IEnumerable<FieldSpec> fields)
     {
         var conditional = fields.Where(f => !string.IsNullOrEmpty(f.RequiredWhen)).ToList();
@@ -409,12 +400,13 @@ public static class Generator
     // type" here, because there is no type in hand to narrow it.
     public static string UniversalSchemaTable(Schema s)
     {
-        List<string> headers = ["Field", "Type", "Notes"];
+        List<string> headers = ["Field", "Value", "Notes"];
         var fields = s.UniversalOrder.Where(s.Universal.ContainsKey).Select(n => s.Universal[n]).ToList();
         var rows = fields
-            .Select(f => new List<string> { $"`{f.Name}`{Marks(f.Required, false)}", f.Type, NotesFor(f) })
+            .Select(f => new List<string>
+                { $"`{f.Name}`{Marks(f.Required, false)}", ValueFor(f), NotesFor(f) })
             .ToList();
-        return RenderTable(headers, rows) + EnumValues(fields) + ConditionalFields(fields)
+        return RenderTable(headers, rows) + ConditionalFields(fields)
                + Legend(fields.Any(f => f.Required), false);
     }
 
@@ -443,8 +435,8 @@ public static class Generator
 
     private static string NotesFor(FieldSpec f)
     {
-        // Enum values and required-when conditions are not repeated here — both render in their own
-        // tables beneath, see EnumValues and ConditionalFields.
+        // Enum values are not repeated here — they are the Value column, see ValueFor — and a
+        // required-when condition renders in its own table beneath, see ConditionalFields.
         return Escape(f.TableText ?? "");
     }
 

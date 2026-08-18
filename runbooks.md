@@ -37,27 +37,18 @@ look like processes. You open the document on a day when the estate is already d
 
 <!-- BEGIN GENERATED: schema-runbooks -->
 
-| Field                 | Type   | Notes                                                                                   |
-|-----------------------|--------|-----------------------------------------------------------------------------------------|
-| `id` *†               | string | Stable, unique across the corpus, never reused. Format set by the type.                 |
-| `tier` *†             | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.    |
-| `status` *†           | enum   | Whether the runbook is current, drafted, or stood down.                                 |
-| `owner` *†            | string | A named person, never a team alias.                                                     |
-| `tags` †              | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                        |
-| `applies-to`          | list   | Service ids this runbook covers.                                                        |
-| `severity`            | enum   | The severity this runbook is written for.                                               |
-| `last-rehearsed` *    | date   | `"never"` is permitted, and is worth knowing before the incident rather than during it. |
-| `rehearsal-frequency` | enum   | How often it should be exercised.                                                       |
-| `requires-access`     | list   | Must be complete. Discovering you lack a permission mid-incident is its own outage.     |
-
-**Enum values**
-
-| Field                 | Values                                                              |
-|-----------------------|---------------------------------------------------------------------|
-| `tier`                | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
-| `status`              | `active` · `draft` · `retired`                                      |
-| `severity`            | `sev1` · `sev2` · `sev3`                                            |
-| `rehearsal-frequency` | `per-release` · `quarterly` · `annual`                              |
+| Field                 | Value                                                       | Notes                                                                                   |
+|-----------------------|-------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| `id` *†               | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.                 |
+| `tier` *†             | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.    |
+| `status` *†           | `active` `draft` `retired`                                  | Whether the runbook is current, drafted, or stood down.                                 |
+| `owner` *†            | string                                                      | A named person, never a team alias.                                                     |
+| `tags` †              | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                        |
+| `applies-to`          | list                                                        | Service ids this runbook covers.                                                        |
+| `severity`            | `sev1` `sev2` `sev3`                                        | The severity this runbook is written for.                                               |
+| `last-rehearsed` *    | date                                                        | `"never"` is permitted, and is worth knowing before the incident rather than during it. |
+| `rehearsal-frequency` | `per-release` `quarterly` `annual`                          | How often it should be exercised.                                                       |
+| `requires-access`     | list                                                        | Must be complete. Discovering you lack a permission mid-incident is its own outage.     |
 
 \* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).

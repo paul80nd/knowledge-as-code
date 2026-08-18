@@ -41,26 +41,19 @@ Other boundaries:
 
 <!-- BEGIN GENERATED: schema-faqs -->
 
-| Field                | Type   | Notes                                                                                               |
-|----------------------|--------|-----------------------------------------------------------------------------------------------------|
-| `id` *†              | string | Stable, unique across the corpus, never reused. Format set by the type.                             |
-| `tier` *†            | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                |
-| `status` *†          | enum   | `fixed-upstream` means the cause is gone; the entry stays for whoever searches for it.              |
-| `owner` *†           | string | A named person, never a team alias.                                                                 |
-| `tags` †             | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                    |
-| `symptom-keywords` * | list   | Over-fill it: error text, service names, and what someone types before they know the cause.         |
-| `applies-to`         | list   | Service ids this answer concerns.                                                                   |
-| `promoted-from`      | id     | The discovery this was promoted from.                                                               |
-| `confirmed-by` *     | string | A named human. An FAQ nobody confirmed is a discovery — this field is what separates the two tiers. |
-| `confirmed-on` *     | date   | Quoted. When a human last confirmed the answer still holds.                                         |
-| `review-by` *        | date   | Quoted. The date by which someone confirms this is still true.                                      |
-
-**Enum values**
-
-| Field    | Values                                                              |
-|----------|---------------------------------------------------------------------|
-| `tier`   | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
-| `status` | `active` · `superseded` · `fixed-upstream`                          |
+| Field                | Value                                                       | Notes                                                                                               |
+|----------------------|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| `id` *†              | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.                             |
+| `tier` *†            | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                |
+| `status` *†          | `active` `superseded` `fixed-upstream`                      | `fixed-upstream` means the cause is gone; the entry stays for whoever searches for it.              |
+| `owner` *†           | string                                                      | A named person, never a team alias.                                                                 |
+| `tags` †             | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                    |
+| `symptom-keywords` * | list                                                        | Over-fill it: error text, service names, and what someone types before they know the cause.         |
+| `applies-to`         | list                                                        | Service ids this answer concerns.                                                                   |
+| `promoted-from`      | id                                                          | The discovery this was promoted from.                                                               |
+| `confirmed-by` *     | string                                                      | A named human. An FAQ nobody confirmed is a discovery — this field is what separates the two tiers. |
+| `confirmed-on` *     | date                                                        | Quoted. When a human last confirmed the answer still holds.                                         |
+| `review-by` *        | date                                                        | Quoted. The date by which someone confirms this is still true.                                      |
 
 \* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).

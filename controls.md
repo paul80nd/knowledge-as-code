@@ -41,27 +41,18 @@ may verify several rules, and one rule may need several controls.
 
 <!-- BEGIN GENERATED: schema-controls -->
 
-| Field         | Type   | Notes                                                                                    |
-|---------------|--------|------------------------------------------------------------------------------------------|
-| `id` *†       | string | Stable, unique across the corpus, never reused. Format set by the type.                  |
-| `tier` *†     | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.     |
-| `status` *†   | enum   | Whether the control is running, intended, or stood down.                                 |
-| `owner` *†    | string | A named person, never a team alias.                                                      |
-| `tags` †      | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                         |
-| `verifies` *  | list   | Standard ids, ideally rule-level anchors. A control that names no rule is not a control. |
-| `mechanism` * | enum   | How the check happens. `not-enforced` is first-class — an honest gap beats a fiction.    |
-| `frequency`   | enum   | How often it runs.                                                                       |
-| `evidence`    | string | Where the proof lives — the build log, the audit note, the dashboard.                    |
-| `applies-to`  | list   | Service ids, or `all`.                                                                   |
-
-**Enum values**
-
-| Field       | Values                                                                           |
-|-------------|----------------------------------------------------------------------------------|
-| `tier`      | `decided` · `normative` · `descriptive` · `procedural` · `observed`              |
-| `status`    | `active` · `planned` · `retired`                                                 |
-| `mechanism` | `ci` · `review-checklist` · `manual-periodic` · `runtime-alert` · `not-enforced` |
-| `frequency` | `per-pr` · `per-deploy` · `daily` · `monthly` · `quarterly` · `annual`           |
+| Field         | Value                                                                    | Notes                                                                                    |
+|---------------|--------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| `id` *†       | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.                  |
+| `tier` *†     | `decided` `normative` `descriptive` `procedural` `observed`              | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.     |
+| `status` *†   | `active` `planned` `retired`                                             | Whether the control is running, intended, or stood down.                                 |
+| `owner` *†    | string                                                                   | A named person, never a team alias.                                                      |
+| `tags` †      | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                         |
+| `verifies` *  | list                                                                     | Standard ids, ideally rule-level anchors. A control that names no rule is not a control. |
+| `mechanism` * | `ci` `review-checklist` `manual-periodic` `runtime-alert` `not-enforced` | How the check happens. `not-enforced` is first-class — an honest gap beats a fiction.    |
+| `frequency`   | `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual`             | How often it runs.                                                                       |
+| `evidence`    | string                                                                   | Where the proof lives — the build log, the audit note, the dashboard.                    |
+| `applies-to`  | list                                                                     | Service ids, or `all`.                                                                   |
 
 **Conditionally required**
 

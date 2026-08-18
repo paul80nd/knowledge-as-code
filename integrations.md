@@ -38,25 +38,17 @@ Not the place for:
 
 <!-- BEGIN GENERATED: schema-integrations -->
 
-| Field           | Type   | Notes                                                                                |
-|-----------------|--------|--------------------------------------------------------------------------------------|
-| `id` *†         | string | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *†       | enum   | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` *†     | enum   | Whether the integration is live, on trial, or retired.                               |
-| `owner` *†      | string | A named person, never a team alias.                                                  |
-| `tags` †        | list   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `vendor` *      | string | Who supplies it.                                                                     |
-| `used-by` *     | list   | An integration nothing uses is a candidate for retirement.                           |
-| `criticality` * | enum   | Judged by what a customer experiences when it is unavailable.                        |
-| `their-sla`     | string | What the contract actually says, not what the marketing page implies.                |
-
-**Enum values**
-
-| Field         | Values                                                              |
-|---------------|---------------------------------------------------------------------|
-| `tier`        | `decided` · `normative` · `descriptive` · `procedural` · `observed` |
-| `status`      | `active` · `trial` · `retired`                                      |
-| `criticality` | `critical` · `important` · `supporting`                             |
+| Field           | Value                                                       | Notes                                                                                |
+|-----------------|-------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| `id` *†         | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.              |
+| `tier` *†       | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
+| `status` *†     | `active` `trial` `retired`                                  | Whether the integration is live, on trial, or retired.                               |
+| `owner` *†      | string                                                      | A named person, never a team alias.                                                  |
+| `tags` †        | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| `vendor` *      | string                                                      | Who supplies it.                                                                     |
+| `used-by` *     | list                                                        | An integration nothing uses is a candidate for retirement.                           |
+| `criticality` * | `critical` `important` `supporting`                         | Judged by what a customer experiences when it is unavailable.                        |
+| `their-sla`     | string                                                      | What the contract actually says, not what the marketing page implies.                |
 
 \* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
