@@ -102,7 +102,7 @@ public static class Corpus
     // a type to. That reading cannot tell a type nobody wanted from one somebody has not finished adding,
     // which is what `types:` exists to say. It stands until the corpus declares, so taking a newer
     // framework never means editing the descriptor in the same breath.
-    public static List<TypeSchema> Adopted(Schema schema, Tree tree, CorpusDescriptor descriptor)
+    private static List<TypeSchema> Adopted(Schema schema, Tree tree, CorpusDescriptor descriptor)
     {
         var declared = descriptor.Types;
 
@@ -157,15 +157,12 @@ public static class Corpus
 
         var typeFolders = new HashSet<string>(schema.ByFolder.Keys, StringComparer.OrdinalIgnoreCase);
 
-        var result = new List<string>();
-        foreach (var rel in tree.Match("**/*"))
-        {
-            if (!rel.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) continue;
-            if (IsExcluded(rel, typePages, typeFolders)) continue;
-            result.Add(rel);
-        }
-
-        return result;
+        return
+        [
+            .. tree.Match("**/*")
+                .Where(rel => rel.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+                .Where(rel => !IsExcluded(rel, typePages, typeFolders))
+        ];
     }
 
     private static bool IsExcluded(string rel, HashSet<string> typePages, HashSet<string> typeFolders)

@@ -121,21 +121,17 @@ public static class GeneratedFiles
     // to is by construction the block it is written.
     private static List<FileSpec> Declare(IReadOnlyList<TypeSchema> adopted)
     {
-        var specs = new List<FileSpec>();
-
         // The schema and checks blocks derive from the schema alone, so every adopted type gets them
         // whether or not it holds records yet. Restricting this to populated types would leave the markers
         // on an empty page holding hand-written text nothing checks, to be overwritten by whoever adds the
         // type's first record — surfacing the drift at the least convenient moment.
-        foreach (var t in adopted)
-        {
-            if (string.IsNullOrEmpty(t.Page)) continue;
-            specs.Add(new FileSpec(t.Page, true,
+        var specs = (from t in adopted
+            where !string.IsNullOrEmpty(t.Page)
+            select new FileSpec(t.Page, true,
             [
                 new Block($"schema-{t.Key}", schema => Generator.SchemaTable(t, schema)),
                 new Block($"checks-{t.Key}", s => Generator.ChecksTable(s, t))
-            ]));
-        }
+            ])).ToList();
 
         // The pages that describe the taxonomy to a reader rather than to the tool. Each lists types, and
         // the list is the half that was wrong in every corpus that adopted some of them — so none can name

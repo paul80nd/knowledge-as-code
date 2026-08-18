@@ -167,7 +167,7 @@ public class RuleExprTests
 
     [Fact]
     public void Matches_sees_inside_a_fenced_code_block()
-        => Assert.True(Eval(@"matches('AKIA[0-9A-Z]{6}')",
+        => Assert.True(Eval("matches('AKIA[0-9A-Z]{6}')",
             body: "Configure it:\n\n```\nAWS_KEY=AKIA123456\n```\n"));
 
     // The flattened text a word count walks carries no fenced code at all, so the two facts genuinely

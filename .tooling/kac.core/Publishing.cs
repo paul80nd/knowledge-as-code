@@ -35,7 +35,7 @@ public sealed class Publishing
     // The targets that build a link today. `azure-devops-wiki` and `mkdocs` are named by the descriptor
     // and addressed by nothing, so a corpus on either exports without links rather than with links built
     // on a convention no one has settled.
-    public static readonly IReadOnlyList<string> Addressable = [GitHub];
+    private static readonly IReadOnlyList<string> Addressable = [GitHub];
 
     private readonly string humanBase;
     private readonly string rawBase;
@@ -73,7 +73,7 @@ public sealed class Publishing
     // The anchor a link uses to land on a part. GitHub derives it from the heading by discarding the
     // punctuation it meets, which is the form `Md.Slug` writes and the form the corpus's own links
     // already use.
-    public string Anchor(string heading) => Md.Slug(heading);
+    public static string Anchor(string heading) => Md.Slug(heading);
 
     // The link rules as two strings a reader substitutes into, so an export states each address once and
     // a line carries only what varies: the record's path, and the anchor of the part inside it.
@@ -98,8 +98,8 @@ public sealed class Publishing
     {
         var templates = Templates();
 
-        var human = anchor is { Length: > 0 } a
-            ? templates.Human.Replace(AnchorToken, a, StringComparison.Ordinal)
+        var human = anchor is { Length: > 0 }
+            ? templates.Human.Replace(AnchorToken, anchor, StringComparison.Ordinal)
             : templates.Human.Replace($"#{AnchorToken}", "", StringComparison.Ordinal);
 
         return new PublishedLinks(
