@@ -356,7 +356,7 @@ markdown.
 | Function                         | Returns | Reads                                                                                                                   |
 |----------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------|
 | `field('name')`                  | string? | a frontmatter scalar                                                                                                    |
-| `present('name')`                | bool    | that scalar, non-empty — false for a bare key as well as a missing one                                                  |
+| `present('name')`                | bool    | whether that field carries anything, scalar or list — false for a bare key and an empty list as for a missing one       |
 | `field_matches('name', 're')`    | bool    | that scalar against a pattern — false where absent; the one pattern fact that sees frontmatter                          |
 | `section('Title')`               | bool    | whether an H2 of that name exists (case-insensitive)                                                                    |
 | `section_count('Title')`         | int     | how many times it appears — `section()` asks whether, this asks how many                                                |
