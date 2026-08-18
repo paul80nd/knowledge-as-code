@@ -74,6 +74,12 @@ with no line changing. The record names are the point of the line a count alone 
 per bounded context, and three names say which contexts are covered where the number three says only that there are
 some.
 
+**A line names at most six things.** The names do a job that stops at a handful, and the length of the breadcrumb is
+what every session pays at start, resume, clear and compact — so the bound is a number the renderer holds rather than
+however many records a corpus turns out to keep. A type over the bound has its first names carried and the rest given
+as a count, which is the last of the six: a list cut short in silence would read as the whole of what the type covers,
+and the count is what the line was for.
+
 **A hook is copied with its permission bit.** One file in the plugin tree is run rather than read, and a command copied
 without that bit is a plugin that installs and then fails at the first session with a message about permissions rather
 than about the corpus. The bit does not exist on Windows and is not asked for there: a hook ships as a POSIX script and

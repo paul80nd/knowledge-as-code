@@ -67,6 +67,16 @@ public static class Breadcrumb
         return string.Join("\n", lines) + "\n";
     }
 
+    // The most things one line will name, the remainder counted among them. What a session pays for this
+    // text is fixed here rather than by however many records a corpus happens to hold: a type is named in
+    // one line whether it carries three records or three hundred, and the line is read at every start,
+    // resume, clear and compact.
+    //
+    // Six because the names are doing a job that stops at a handful. A reader scanning three or six
+    // titles learns which contexts a type covers; one scanning two hundred has been handed the corpus
+    // where a breadcrumb was meant.
+    private const int MostNamed = 6;
+
     // One type's line: how much of it there is, and which records it is held in. The record names are
     // the point of the line — a corpus's glossaries are one per bounded context, and three names say
     // which contexts are covered where the number 3 says only that there are some.
@@ -77,9 +87,25 @@ public static class Breadcrumb
             ? $"{type.Parts} entr{(type.Parts == 1 ? "y" : "ies")} across {held}"
             : held;
 
-        return names.Count > 0
-            ? $"{type.Type} — {body}: {Join(names)}."
+        var named = Named(names);
+        return named.Count > 0
+            ? $"{type.Type} — {body}: {Join(named)}."
             : $"{type.Type} — {body}.";
+    }
+
+    // The names as the line will carry them: all of them where a type holds few, and the first of them
+    // followed by a count of what is left where it holds many.
+    //
+    // The remainder is named rather than dropped. A list cut short silently reads as the whole of what
+    // the type covers, which is the one thing a reader would carry away wrongly — and it is the count,
+    // not the titles, that the line exists to make.
+    private static IReadOnlyList<string> Named(IReadOnlyList<string> names)
+    {
+        if (names.Count <= MostNamed) return names;
+
+        var named = names.Take(MostNamed - 1).ToList();
+        named.Add($"{names.Count - named.Count} more");
+        return named;
     }
 
     // The records of one type, named as the export names them. Read from the per-record files rather

@@ -82,6 +82,37 @@ public class BreadcrumbTests
             Render(Manifest("c", "1.0.0", Type("glossary", 1, 4)),
                 ("glossary/gls-estate.json", """{"fields":{"id":"gls-estate"}}""")));
 
+    // What a session pays for the line is fixed by the renderer, not by the corpus. Six names is the
+    // threshold; six are all named, because a handful of titles is what says which contexts a type
+    // covers.
+    [Fact]
+    public void A_type_at_the_threshold_names_every_record()
+    {
+        var text = Render(Manifest("c", "1.0.0", Type("glossary", records: 6, parts: 30)), Contexts(6));
+
+        Assert.Contains("Context1, Context2, Context3, Context4, Context5 and Context6.", text);
+        Assert.DoesNotContain("more", text);
+    }
+
+    // Past it the line names what it can and counts the rest, so it is one line for a corpus of any size.
+    // The remainder is stated rather than dropped: a list cut short silently reads as the whole of what
+    // the type covers.
+    [Fact]
+    public void A_type_past_the_threshold_names_the_first_few_and_counts_the_rest()
+    {
+        var text = Render(Manifest("c", "1.0.0", Type("glossary", records: 200, parts: 4000)), Contexts(200));
+
+        Assert.Contains("Context1, Context2, Context3, Context4, Context5 and 195 more.", text);
+        Assert.DoesNotContain("Context6", text);
+    }
+
+    // One record over the threshold is still bounded by it: the line names five and counts the two it did
+    // not, rather than growing to seven.
+    [Fact]
+    public void One_record_over_the_threshold_is_still_bounded_by_it()
+        => Assert.Contains("Context1, Context2, Context3, Context4, Context5 and 2 more.",
+            Render(Manifest("c", "1.0.0", Type("glossary", records: 7, parts: 35)), Contexts(7)));
+
     // -- helpers --
 
     private static string Render(
@@ -114,6 +145,11 @@ public class BreadcrumbTests
           {"type":"{{type}}","records":{{records}},"parts":{{parts}},
            "dir":"{{type}}","partsFile":"{{type}}/terms.jsonl"}
           """;
+
+    // `count` records of one type, named `Context1` upward and ordered as the export orders them, which
+    // is what decides which of them a bounded line names.
+    private static (string Path, string Content)[] Contexts(int count) =>
+        [.. Enumerable.Range(1, count).Select(i => Record($"glossary/gls-{i:D3}.json", $"Context{i}"))];
 
     private static (string, string) Record(string path, string title) =>
         (path, $$$"""{"fields":{"id":"{{{Path.GetFileNameWithoutExtension(path)}}}","title":"{{{title}}}"}}""");
