@@ -366,7 +366,7 @@ public static class Generator
 
         var order = universal.Concat(own).ToList();
         var specs = order.Select(n => s.EffectiveField(t, n)!).ToList();
-        var table = RenderTable(headers, rows) + ConditionalFields(specs);
+        var table = RenderTable(headers, rows);
         return table + Legend(specs.Any(f => f.Required), universal.Count > 0);
 
         // `tier` is the one field whose value a type settles rather than chooses from: every document in
@@ -388,20 +388,6 @@ public static class Generator
             ? string.Join(" ", f.Values!.Select(v => $"`{v}`"))
             : f.Type;
 
-    // A required-when condition has to be quoted exactly, so it is the last thing that should be
-    // competing for room in a Notes cell. It goes in a table of its own beneath the main one.
-    private static string ConditionalFields(IEnumerable<FieldSpec> fields)
-    {
-        var conditional = fields.Where(f => !string.IsNullOrEmpty(f.RequiredWhen)).ToList();
-        if (conditional.Count == 0) return "";
-
-        List<string> headers = ["Field", "Required when"];
-        var rows = conditional
-            .Select(f => new List<string> { $"`{f.Name}`", $"`{f.RequiredWhen}`" })
-            .ToList();
-        return "\n\n**Conditionally required**\n\n" + RenderTable(headers, rows);
-    }
-
     // The same reference for metadata.md, which documents the universal fields once for the whole
     // taxonomy. Values are the unrefined universal declarations — `status` is genuinely "varies by
     // type" here, because there is no type in hand to narrow it.
@@ -413,8 +399,7 @@ public static class Generator
             .Select(f => new List<string>
                 { $"`{f.Name}`{Marks(f.Required, false)}", ValueFor(f), NotesFor(f) })
             .ToList();
-        return RenderTable(headers, rows) + ConditionalFields(fields)
-               + Legend(fields.Any(f => f.Required), false);
+        return RenderTable(headers, rows) + Legend(fields.Any(f => f.Required), false);
     }
 
     // Required and universal are marked on the field name rather than given a column of their own: a
@@ -440,11 +425,16 @@ public static class Generator
         return parts.Count == 0 ? "" : "\n\n" + string.Join("  \n", parts);
     }
 
+    // Enum values are not repeated here — they are the Value column, see ValueFor. A required-when
+    // condition closes the cell as its own sentence, quoted exactly as the schema writes it, because
+    // it is the difference between a field an author may skip and one they may not.
     private static string NotesFor(FieldSpec f)
     {
-        // Enum values are not repeated here — they are the Value column, see ValueFor — and a
-        // required-when condition renders in its own table beneath, see ConditionalFields.
-        return Escape(f.TableText ?? "");
+        var notes = Escape(f.TableText ?? "");
+        if (string.IsNullOrEmpty(f.RequiredWhen)) return notes;
+
+        var when = $"Required when `{Escape(f.RequiredWhen)}`.";
+        return notes.Length == 0 ? when : $"{notes} {when}";
     }
 
     // What a description may run to. The checks table is read by scanning — a reader wants to know which

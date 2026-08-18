@@ -50,15 +50,9 @@ may verify several rules, and one rule may need several controls.
 | `tags` †      | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                         |
 | `verifies` *  | list                                                                     | Standard ids, ideally rule-level anchors. A control that names no rule is not a control. |
 | `mechanism` * | `ci` `review-checklist` `manual-periodic` `runtime-alert` `not-enforced` | How the check happens. `not-enforced` is first-class — an honest gap beats a fiction.    |
-| `frequency`   | `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual`             | How often it runs.                                                                       |
+| `frequency`   | `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual`             | How often it runs. Required when `mechanism != not-enforced`.                            |
 | `evidence`    | string                                                                   | Where the proof lives — the build log, the audit note, the dashboard.                    |
 | `applies-to`  | list                                                                     | Service ids, or `all`.                                                                   |
-
-**Conditionally required**
-
-| Field       | Required when               |
-|-------------|-----------------------------|
-| `frequency` | `mechanism != not-enforced` |
 
 \* Field is required  
 † Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).

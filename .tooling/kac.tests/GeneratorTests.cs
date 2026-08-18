@@ -242,7 +242,7 @@ public class GeneratorTests
     }
 
     [Fact]
-    public void SchemaTable_lists_required_when_conditions_beneath_the_table()
+    public void SchemaTable_closes_a_note_with_the_required_when_condition()
     {
         var t = new TypeSchema
         {
@@ -258,12 +258,12 @@ public class GeneratorTests
         };
 
         var table = Generator.SchemaTable(t, new Schema());
-        var main = table.Split("**Conditionally required**")[0];
+        var row = table.Split('\n').Single(l => l.StartsWith("| `retention`", StringComparison.Ordinal));
 
-        // The condition has to be quoted exactly, so it is the half that cannot be trimmed to fit.
-        Assert.DoesNotContain("classification in", main);
-        Assert.Contains("SHORT PROSE", main);
-        Assert.Contains("| `retention` | `classification in [personal, special-category]` |", table);
+        // The condition is quoted exactly, and closes the note it qualifies rather than sitting in a
+        // second table the reader has to look away to.
+        Assert.Contains("SHORT PROSE Required when `classification in [personal, special-category]`.", row);
+        Assert.DoesNotContain("**Conditionally required**", table);
     }
 
     [Fact]
