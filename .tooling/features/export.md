@@ -3,9 +3,12 @@
 A consumer of a corpus should not clone it. `export` writes what the corpus knows into `.dist/` as data built for an
 agent to read: a manifest saying what the export is, one file per record, and a flat file cheap to grep.
 
-`.dist/` is gitignored and rebuilt whole, so it is never something to review. **The overwrite is delete-then-write.** A
-record deleted from the corpus must not leave an entry behind in the output. Nothing else would catch it: the export is
-untracked, so no diff shows the orphan and no check goes looking for one.
+**The export is untracked.** `.dist/` is gitignored and rebuilt whole, so it is never something to review: a tracked
+export would put a diff nobody reads on every change to the words, restating what the corpus already holds. Two things
+follow from that. The overwrite is delete-then-write, because a record deleted from the
+corpus must not leave an entry behind and no diff would show the orphan. And the manifest has to describe itself, since
+git can say nothing about an export once it has left: it carries the commit it was built from and a dirty flag beside
+it, because a commit on its own would describe a dirty tree as reproducible.
 
 ```
 .dist/
@@ -14,6 +17,12 @@ untracked, so no diff shows the orphan and no check goes looking for one.
     gls-<name>.json      one record: its declared fields, its declared sections, and its links
     terms.jsonl          every term, one to a line, addressed by path and anchor
 ```
+
+**The manifest is what makes the tree usable two ways.** A flat file is read whole and grepped, because a lookup does
+not know which record holds the term it wants. A record file is read one at a time, because a reader that has a hit
+wants the single file behind it. One large file would charge the second reader the first one's cost, and a bare tree of
+files would leave a reader nothing to orient on — which types are here, how many records and parts each holds, and
+where the flat file for one of them sits. The manifest answers that first, so a reader can choose.
 
 **What travels is the type's decision**, declared in its `export:` block and described in
 [`../../.schema/README.md`](../../.schema/README.md). The exporter reads that declaration and nothing else, so a corpus
@@ -30,12 +39,25 @@ the very file this one exists to save them opening.
 An address is the one thing a line does not repeat. It carries the record's `path` and the part's `anchor`, and the
 manifest carries the two templates they go into.
 
+**`part` and `anchor` hold the same string, and that is an invariant rather than duplication.** The two answer
+different questions: a part's id is what a citation from elsewhere in the corpus resolves against, and an anchor is
+what a link's fragment has to be. A type that takes its parts from headings makes one string do both jobs, because a
+heading's slug is its id and its anchor alike — so every line of a glossary's flat file carries the pair equal. A line
+where they differ is a defect.
+
 **Records are ordered roots-by-id, each root's chain depth-first beneath it.** Terms sort alphabetically within a
 record. Generality holds **within a chain** and nowhere else: `gls-search` narrows `gls-example-libraries`, so a grep
 for `title` meets the general entry before the one refining it. Across unrelated roots the order is stable and says
 nothing — `record` is defined by `gls-example-libraries` and `gls-knowledge-as-code`, neither narrowing the other, and
 reading the first hit as the more general one would give a reader the wrong domain. `narrows` on the owning records is
 what tells the two cases apart, and every line names the record it came from.
+
+**A key name is a word the corpus may also define.** `record` and `title` are keys on every line and terms in this
+corpus's own glossary. Every line carries both keys, so a search for either hands back the whole file and identifies
+nothing in it. That is a property of the format rather than of the content, and it holds for any key named with an
+ordinary English noun — which is a constraint on what a type's `export:` block may call a field. The skill compensates
+by reading each hit's `title` before it uses the hit: a line defines a term when its `title` says so, never because it
+matched.
 
 **A cross-reference is read, never inferred.** A `**Not:**` line pointing at another glossary is a link, and a link's
 target is stripped out of the prose — so the export carries the part it names in `seeAlso`, as `gls-search.title`. It
@@ -78,17 +100,35 @@ names the version the agent read rather than whatever the branch holds later.
 `Publishing.Links` substitutes into those same templates, so a link the export resolves and a link a consumer builds
 for one part are the same string.
 
+**A per-record file pays the churn a term line no longer does.** Its links are resolved, so the commit sits inside them
+and the file rewrites on every export from a new commit whatever its content did. It is bought deliberately:
+a reader that has already dereferenced one record wants a URL in its hand, not a template and a substitution rule. At a
+handful of records the cost is a few untracked files. It is worth reopening where a type exports records by the hundred,
+because the churn scales with the record count and what it buys does not.
+
 Four kinds of corpus have no address the tool can build on: one publishing nowhere, one naming a target nothing builds
 links for, one stating a target but no bases, and one git cannot answer for. Each exports without links. The manifest
 carries the target it was given and null templates beside it, so a consumer sees the absence stated; the run itself
 says which of the four caused it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than
 about where it is published, and they travel either way.
 
-**Two versions, and they are independent.** `formatVersion` in the manifest is the shape of the output, and a consumer
-reads it to know whether it can parse what it was handed. `contentVersion` is `content-version` from `.corpus.yaml` —
-what the corpus knows, semantically versioned and bumped by hand — and a consumer reads it to know whether to re-read
-the words. Neither implies the other: a corpus can rewrite every definition without `formatVersion` moving, and
-`formatVersion` can move over a corpus nobody has edited.
+**Two versions, and they are independent.** `formatVersion` in the manifest is the shape of the output. `contentVersion`
+is `content-version` from `.corpus.yaml` — what the corpus knows, semantically versioned and bumped by hand. Neither
+implies the other: a corpus can rewrite every definition without `formatVersion` moving, and `formatVersion` can move
+over a corpus nobody has edited.
+
+**Nothing reads `formatVersion` yet.** The only reader written against this format sits in the same repository as the
+exporter and moves with it, so the two cannot disagree and a check between them would prove nothing. The field earns
+its keep the first time something reads an export it did not ship beside, where a shape it cannot parse has to fail
+loudly and name both numbers — a lookup that silently returns nothing is indistinguishable from a term the corpus does
+not define.
+
+**What moves `formatVersion`.** It moves when a reader written against the shape before it would now be wrong. Adding a
+key to a file, or a file to a type's directory, leaves that reader correct and moves nothing. Renaming a key, dropping
+one, changing the type of a value, or changing what a key means each turn a correct read into a wrong one, and each
+moves the number. Reordering the keys within a line does not, because every key is addressed by name; reordering the
+records in a flat file does, because that order carries meaning within a chain. It went from 1 to 2 when a term line's
+two resolved URLs became a `path` and an `anchor` — keys dropped, which is the breaking side of that boundary.
 
 **Output is deterministic.** Ordering is `StringComparer.Ordinal` throughout, as the generator's is, and every value
 that varies between two runs is confined to the manifest. Two runs from one commit produce identical bytes but for
@@ -98,7 +138,4 @@ that varies between two runs is confined to the manifest. Two runs from one comm
 carrying their own state, because filtering them would make the corpus's own condition invisible downstream. A corpus
 may exclude either with `export.exclude:` in `.corpus.yaml`. Where it does, the run names every record it withheld,
 because a record left out of the output cannot be seen there.
-
-**The manifest records whether the export can be reproduced.** It carries the commit and a dirty flag. The flag is
-there because a commit on its own would describe a dirty tree as reproducible.
 
