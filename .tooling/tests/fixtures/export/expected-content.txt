@@ -3,9 +3,10 @@
 .dist/manifest.json :: "commit": null
 
 # The manifest says what this export is, and what it could not resolve.
-.dist/manifest.json :: "formatVersion": 1
+.dist/manifest.json :: "formatVersion": 2
 .dist/manifest.json :: "target": "none"
-.dist/manifest.json :: "humanBase": null
+.dist/manifest.json :: "humanTemplate": null
+.dist/manifest.json :: "rawTemplate": null
 .dist/manifest.json :: "type": "glossary"
 
 # Two counts, named apart: three records, five terms between them. One number would be read as either,
@@ -36,8 +37,10 @@
 
 # One term, one line, one whole object — carrying the definition and the labelled line apart, the state
 # of the glossary it came from, and the record it belongs to, because a grep hands back a line and
-# nothing around it.
-.dist/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","not":"the request the service received. One request carries a query and its paging.","seeAlso":null,"type":"glossary","record":"gls-search","part":"query","status":"draft","reviewBy":"2030-01-01","links":null}
+# nothing around it. The address is the exception: a line carries the `path` and `anchor` that go into
+# the manifest's templates, and no URL, so one host and one commit are stated once for the whole export.
+.dist/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","not":"the request the service received. One request carries a query and its paging.","seeAlso":null,"type":"glossary","record":"gls-search","part":"query","status":"draft","reviewBy":"2030-01-01","path":"glossary/search.md","anchor":"query"}
+.dist/glossary/terms.jsonl :: !"links"
 
 # A cross-reference travels as a part id the consumer can look up, read from the anchor the link names.
 # The prose keeps the reference its author wrote.

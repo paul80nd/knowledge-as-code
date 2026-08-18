@@ -11,6 +11,10 @@ namespace kac.core;
 // someone else's HTML, and raw markdown is not what a person opening a citation expects to meet.
 public sealed record PublishedLinks(string Human, string Raw);
 
+// The two addresses stated once, as strings a reader substitutes into: `{path}` for a record's path and
+// `{anchor}` for a part inside it. `Publishing.Templates` builds them.
+public sealed record LinkTemplates(string Human, string Raw);
+
 // How a publishing target addresses what it publishes: the rule joining a base to a record's path, and
 // the anchor rule for a part inside it.
 //
@@ -23,6 +27,10 @@ public sealed class Publishing
     public const string GitHub = "github";
     public const string MkDocs = "mkdocs";
     public const string None = "none";
+
+    // The two placeholders a template leaves for its reader to fill.
+    public const string PathToken = "{path}";
+    public const string AnchorToken = "{anchor}";
 
     // The targets that build a link today. `azure-devops-wiki` and `mkdocs` are named by the descriptor
     // and addressed by nothing, so a corpus on either exports without links rather than with links built
@@ -67,13 +75,35 @@ public sealed class Publishing
     // already use.
     public string Anchor(string heading) => Md.Slug(heading);
 
-    // Where a record is read and where it is fetched. `anchor` names a part inside it, and is left off
-    // the raw link: raw source is text and offers nowhere to land, so a fragment there would look like
-    // an address and be none. A grep of the flat terms file already carries the term's own words, so
-    // what the raw link is for is fetching the record whole.
+    // The link rules as two strings a reader substitutes into, so an export states each address once and
+    // a line carries only what varies: the record's path, and the anchor of the part inside it.
+    //
+    // **The ref is baked in rather than left as a placeholder.** Forty hex characters passing through an
+    // agent's hands is forty chances at a one-digit slip, and the result of one is a plausible 404 that
+    // neither the agent nor its reader is likely to check. With the commit already in the string, the
+    // worst a substitution can produce is a wrong path, which is visible and correctable.
+    //
+    // **Only the human template takes an anchor.** Raw source is text and offers nowhere to land, so the
+    // asymmetry is written into the templates rather than left as a rule each reader has to remember.
+    public LinkTemplates Templates() =>
+        new($"{humanBase}/{Ref}/{PathToken}#{AnchorToken}", $"{rawBase}/{Ref}/{PathToken}");
+
+    // Where a record is read and where it is fetched, resolved. `anchor` names a part inside it, and a
+    // link with no anchor drops the fragment along with it.
+    //
+    // Built by substituting into the templates above, so a link this method resolves and a link a
+    // consumer assembles for the same record are the same string. Two constructions of one address would
+    // be two places for the rule to live.
     public PublishedLinks Links(string relPath, string? anchor = null)
     {
-        var fragment = anchor is { Length: > 0 } a ? $"#{a}" : "";
-        return new PublishedLinks($"{humanBase}/{Ref}/{relPath}{fragment}", $"{rawBase}/{Ref}/{relPath}");
+        var templates = Templates();
+
+        var human = anchor is { Length: > 0 } a
+            ? templates.Human.Replace(AnchorToken, a, StringComparison.Ordinal)
+            : templates.Human.Replace($"#{AnchorToken}", "", StringComparison.Ordinal);
+
+        return new PublishedLinks(
+            human.Replace(PathToken, relPath, StringComparison.Ordinal),
+            templates.Raw.Replace(PathToken, relPath, StringComparison.Ordinal));
     }
 }

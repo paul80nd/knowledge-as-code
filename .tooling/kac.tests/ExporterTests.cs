@@ -327,9 +327,52 @@ public class ExporterTests
         var record = JsonDocument.Parse(Single(plan, "glossary/gls-one.json").Content).RootElement;
         Assert.Equal(JsonValueKind.Null, record.GetProperty("links").ValueKind);
 
-        var manifest = JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement;
-        Assert.Equal("none", manifest.GetProperty("publishing").GetProperty("target").GetString());
-        Assert.Equal(JsonValueKind.Null, manifest.GetProperty("publishing").GetProperty("humanBase").ValueKind);
+        var publishing = JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+            .GetProperty("publishing");
+        Assert.Equal("none", publishing.GetProperty("target").GetString());
+        Assert.Equal(JsonValueKind.Null, publishing.GetProperty("humanTemplate").ValueKind);
+        Assert.Equal(JsonValueKind.Null, publishing.GetProperty("rawTemplate").ValueKind);
+    }
+
+    // -- the address a line carries --
+
+    // A line names what varies and nothing else. The host, the path prefix and the commit are in the
+    // manifest's templates, said once for the whole export rather than sixty times over thirty terms.
+    [Fact]
+    public void A_term_line_carries_the_two_substitutions_and_no_resolved_link()
+    {
+        var line = Assert.Single(TermLines(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"))));
+
+        Assert.Equal("glossary/gls-one.md", line.GetProperty("path").GetString());
+        Assert.Equal("alpha", line.GetProperty("anchor").GetString());
+        Assert.False(line.TryGetProperty("links", out _));
+    }
+
+    // The two carriers agree. Substituting a line's `path` and `anchor` into the manifest's templates
+    // produces the addresses the record file resolves for itself, so a consumer that builds a link and
+    // one that reads a record's own are never handed two different strings.
+    [Fact]
+    public void Substituting_a_line_into_the_templates_gives_the_links_the_record_carries()
+    {
+        var plan = Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Published, null, Run);
+
+        var publishing = JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+            .GetProperty("publishing");
+        var links = JsonDocument.Parse(Single(plan, "glossary/gls-one.json").Content).RootElement
+            .GetProperty("links");
+        var line = Assert.Single(Lines(plan));
+
+        var path = line.GetProperty("path").GetString()!;
+        var anchor = line.GetProperty("anchor").GetString()!;
+
+        Assert.Equal(
+            links.GetProperty("raw").GetString(),
+            publishing.GetProperty("rawTemplate").GetString()!.Replace(Publishing.PathToken, path));
+        Assert.Equal(
+            $"{links.GetProperty("human").GetString()}#{anchor}",
+            publishing.GetProperty("humanTemplate").GetString()!
+                .Replace(Publishing.PathToken, path)
+                .Replace(Publishing.AnchorToken, anchor));
     }
 
     // -- the manifest --
@@ -456,12 +499,25 @@ public class ExporterTests
 
     private static ExportPlan Plan(LoadedCorpus corpus) => Exporter.Plan(corpus, null, null, Run);
 
+    // A corpus with an address, for the tests that read one. The bases and the ref are `PublishingTests`'
+    // business; what matters here is that an export handed one writes templates rather than links.
+    private static readonly Publishing? Published = Publishing.For(
+        new CorpusDescriptor
+        {
+            PublishingTarget = Publishing.GitHub,
+            HumanBase = "https://github.com/example/corpus/blob",
+            RawBase = "https://raw.githubusercontent.com/example/corpus"
+        },
+        "0123456789abcdef0123456789abcdef01234567");
+
     private static ExportFile Single(ExportPlan plan, string path) =>
         Assert.Single(plan.Files, f => f.Path == path);
 
-    private static List<JsonElement> TermLines(LoadedCorpus corpus) =>
+    private static List<JsonElement> TermLines(LoadedCorpus corpus) => Lines(Plan(corpus));
+
+    private static List<JsonElement> Lines(ExportPlan plan) =>
     [
-        .. Single(Plan(corpus), "glossary/terms.jsonl").Content
+        .. Single(plan, "glossary/terms.jsonl").Content
             .Split('\n', StringSplitOptions.RemoveEmptyEntries)
             .Select(l => JsonDocument.Parse(l).RootElement)
     ];
