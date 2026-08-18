@@ -77,6 +77,10 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Where a name collides            | `.schema/` + the types adopted | `lineage.md` `types-collisions` block       |
 | What this corpus holds           | `.schema/` + the types adopted | Root `README.md` `types-index` block        |
 
+That table says what each block is and where it lands.
+[`.tooling/features/index.md`](../.tooling/features/index.md) carries the same list from the generator's side, with the
+rule governing each block in place of its address.
+
 Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table, the
 types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table, the strip on
 `metadata.md` and the index at the repository root, covers the types **this** corpus holds. A corpus that adopted five
@@ -124,15 +128,10 @@ Stated explicitly rather than left implicit in a glob, so that a validation fail
 widening an exclusion. The `_` rows are the one deliberate glob: the prefix is reserved for the framework's own
 artefacts, and the tool tests the prefix rather than the names — see [taxonomy](taxonomy.md#layout).
 
-**Excluded as a record is not excluded from every check.** The framework's own documents — `knowledge-as-code.md` and
-those beneath it — carry no frontmatter and are validated against no schema, but they still link to things: their links
-and fragments are resolved like any page's, and `framework-names-types` holds them to naming a type rather than linking
-to one. Their generated blocks are emptied before either question is asked, since `index --check` already answers for
-those and their links are written from this corpus.
-
-The markers are a question of their own, and are asked of the file as it stands. A block that has lost one stops being
-written, and `index --check` reads the file as fresh, so a document holding a generated block is held to still having
-the markers to write between however it is otherwise excluded.
+**Excluded as a record is not excluded from every check.** The framework's own documents carry no frontmatter and are
+validated against no schema, and they still link to things, so their links and fragments are resolved like any page's. A
+file holding a generated block is held to still carrying the markers to write between, however it is otherwise excluded.
+Each of those extra passes, and what it asks, is in [`.tooling/features/validate.md`](../.tooling/features/validate.md).
 
 **A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
 answers to nothing that needs a filename, so discovering it as a record would report a dozen faults that are the file

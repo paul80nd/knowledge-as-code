@@ -20,9 +20,8 @@ public static class GeneratedFiles
     // markers have to be there.
     //
     // `MarkersRequired` is false where deleting the markers is how a corpus declines the block rather than
-    // how it breaks it. That is true of `README.md` alone: the file belongs to the corpus, which decides
-    // where the block sits and whether it wants one. Everywhere else the file arrives from the framework
-    // with its markers, and a marker that has gone is a block that silently stopped being written.
+    // how it breaks it, which is true of `README.md` alone. `.tooling/CLAUDE.md` says why that file is the
+    // exception and every other one is not.
     public readonly record struct BlockFile(string Path, IReadOnlyList<string> Blocks, bool MarkersRequired);
 
     // Which blocks each file carries. Reads no disk and renders nothing, so a caller can ask what a corpus

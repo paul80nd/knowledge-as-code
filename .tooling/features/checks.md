@@ -32,17 +32,13 @@ reader-facing table on a type page has drifted from it.
 
 ### The schema itself
 
-Before any document is read, the schema is held against what the tool can act on. A declaration nothing dispatches is
-not harmlessly inert: `rules:` is documented as behaviour the validator applies, so a rule id no code answers to reads
-as a commitment — and these files are copied into corpora whose authors cannot ask what a key was meant to do. Findings
-name the schema file and the key rather than a record.
+Before any document is read, the schema is held against what the tool can act on: a rule nothing dispatches, a key the
+loader never reads, a value no code branches on. It goes first in the run, because the schema decides how every
+document below it is read, and a finding there names the schema file and the key rather than a record.
 
-Of a value, the question asked is not whether it is spelled correctly but whether code acts on it — `style: mnemonic`
-is a real style, and what makes it sound is the branch in `CheckId`. Of a key, the question is whether the loader reads
-it at all, answered by the loader itself: it records what it asks each mapping for, and `schema-unknown-key` reports the
-remainder. Neither vocabulary is written down beside the check, because a copy is a list of what is spelled correctly
-rather than of what runs. A rule declaring no `severity:` is exempt by design: that is how the schema records an
-intention, and the type page renders those beneath the checks table as *Declared, not yet enforced*.
+[`../../.schema/README.md`](../../.schema/README.md) is the account of what that pass reports and why an inert
+declaration is treated as a defect. It is written for whoever authors a type file, which in a corpus that took this
+framework is somebody who cannot ask what a key was meant to do — and that is the reason the pass exists at all.
 
 ### A type's own rules
 

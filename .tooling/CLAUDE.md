@@ -92,9 +92,9 @@ checks either — it points at the schema, so there is nothing there to go quiet
 fold into one reader-facing row. An expression rule is the opposite — one id, reporting under its own name — so its row
 comes from its `description:`, and writing one into `DocRows` would duplicate it.
 
-**The coverage gate reads ids, not branches.** A check with two ways to fail is green once a fixture trips either one. A
-rule reporting three faults under one id needs a fixture for each, and unit tests beside the rule class for the branches
-a fixture would only duplicate.
+**The coverage gate reads ids, not branches**, so a rule reporting three faults under one id needs a fixture for each,
+and unit tests beside the rule class for the branches a fixture would only duplicate.
+[`tests/README.md`](tests/README.md) is where that gate and its consequences are set out.
 
 ## Where the console is
 
