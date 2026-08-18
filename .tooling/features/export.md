@@ -24,10 +24,12 @@ from an export of it. The direction is one way: `.dist/` is rebuilt whole from t
 
 **The export is untracked.** `.dist/` is gitignored and rebuilt whole, so it is never something to review: a tracked
 export would put a diff nobody reads on every change to the words, restating what the corpus already holds. Two things
-follow from that. The overwrite is delete-then-write, because a record deleted from the
-corpus must not leave an entry behind and no diff would show the orphan. And the manifest has to describe itself, since
-git can say nothing about an export once it has left: it carries the commit it was built from and a dirty flag beside
-it, because a commit on its own would describe a dirty tree as reproducible.
+follow from that. The overwrite is delete-then-write, because a record deleted from the corpus must not leave an entry
+behind and no diff would show the orphan. And the manifest has to describe itself, since git can say nothing about an
+export once it has left: it carries the commit it was built from and a dirty flag beside it, because a commit on its own
+would describe a dirty tree as reproducible. What holds the shape steady in place of a diff is a committed fixture in
+the framework's own test suite, which exports a corpus and compares the whole tree file by file — so a corpus that runs
+the tool without the tests receives a format already proved.
 
 ```
 .dist/
@@ -37,16 +39,29 @@ it, because a commit on its own would describe a dirty tree as reproducible.
     terms.jsonl          every term, one to a line, addressed by path and anchor
 ```
 
+That tree is one corpus's, and the names in it are read from the schema. A type's directory is its own key, and its
+flat file is named for what the type calls one of its parts — `terms.jsonl` because a glossary's `parts:` block says
+`noun: term`. Both are fixed once the type has declared them, because a skill addresses them by name.
+
 **The manifest is what makes the tree usable two ways.** A flat file is read whole and grepped, because a lookup does
 not know which record holds the term it wants. A record file is read one at a time, because a reader that has a hit
 wants the single file behind it. One large file would charge the second reader the first one's cost, and a bare tree of
 files would leave a reader nothing to orient on — which types are here, how many records and parts each holds, and
 where the flat file for one of them sits. The manifest answers that first, so a reader can choose.
 
+**Each type in the manifest carries two counts, named apart.** One is how many records it holds and the other how many
+parts, and for a glossary the two differ by an order of magnitude. A reader sizing the vocabulary wants the parts; a
+reader asking how many files it was handed wants the records. One number would be read as either.
+
 **What travels is the type's decision**, declared in its `export:` block and described in
 [`../../.schema/README.md`](../../.schema/README.md). The exporter reads that declaration and nothing else, so a corpus
 that adopted no exporting type still writes a manifest, with an empty type list — "nothing" is a valid statement of what
-a corpus has.
+a corpus has. Every entry in the block names a **fidelity** beside the piece it selects, saying how much of that piece
+travels, and no entry falls back to one.
+
+**`--type` narrows what is written and never what is read.** The corpus is loaded whole whatever the flag says, so ids
+resolve against every record rather than against the handful a narrowed run happened to want: a question about the set,
+answered from some of its members, is answered wrongly. A type the corpus has not adopted is refused by name.
 
 **The flat file is JSONL because it exists to be grepped.** A hit has to hand back something parseable on its own. A
 matching line of an indented document is a fragment, and the reader is left seeking outward for its braces.
@@ -132,7 +147,8 @@ says which of the four caused it. A term line is unaffected: `path` and `anchor`
 about where it is published, and they travel either way.
 
 **Two versions, and they are independent.** `formatVersion` in the manifest is the shape of the output. `contentVersion`
-is `content-version` from `.corpus.yaml` — what the corpus knows, semantically versioned and bumped by hand. Neither
+is `content-version` from `.corpus.yaml` — what the corpus knows, semantically versioned and bumped by hand, with
+major, minor and patch defined in that file beside the key. Neither
 implies the other: a corpus can rewrite every definition without `formatVersion` moving, and `formatVersion` can move
 over a corpus nobody has edited.
 
@@ -165,3 +181,9 @@ one value. That is correct for a heading-sourced type, where a heading's slug is
 wrong for a table-sourced one, whose part id is authored — a policy clause id is `TIMEBOX`, and no fragment resolves to
 it. Deriving the anchor from the part source is what would fix it. No table-sourced type declares an `export:` block
 today, so the path is unexercised and no fixture covers it.
+
+**One fidelity of three is carried.** A type may declare `full`, `summary` or `reference` against each piece its
+`export:` block selects, and the exporter carries `full`. A type declaring either of the others is reported as
+declaring a fidelity nothing carries, and the schema pass fails — which is the safe way round, since the alternative is
+an export quietly thinner than the type asked for. Glossary needs only `full`. The model is three-valued so that the
+first type wanting a section reduced to a line does not force it to be rebuilt.
