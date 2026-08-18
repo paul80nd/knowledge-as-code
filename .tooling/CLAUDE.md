@@ -173,3 +173,34 @@ passing.
 That also decides which commands get a spec. A spec asserts findings, so `Schema.feature` covers what a type declares in
 its `export:` block. What the exporter then writes is not a finding: the golden holds those bytes, the unit tests beside
 `Exporter` hold the rules behind them, and a feature file would only say it a third time.
+
+## The round-trip is the layer above all three
+
+[`tests/round-trip.sh`](tests/round-trip.sh) is the only test that leaves the repository. The three layers above prove
+the export and the bundle over data: the goldens diff the tree file for file, the unit tests hold the rules that built
+it, and the specs hold what the validator says about it. None of them can show that the thing assembled installs, that
+the paths its skill names resolve inside the installed copy, or that a link built from its template fetches the record
+it points at.
+
+So it installs the plugin into a Claude config directory of its own and asks it those questions. Run it from the
+repository root after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
+
+```sh
+sh .tooling/tests/round-trip.sh
+```
+
+**It runs on two platforms in CI**, which is the reason it is a shell script rather than another scenario in the golden
+suite. Development happens on macOS and the first audience is on Windows, so the script is held to the subset Git Bash
+and older macOS bash agree on: no arrays, no `[[`, no process substitution.
+
+**The fetch is the assertion that cannot be faked from the working tree.** A template built from the wrong host, the
+wrong ref, or a path prefix that no longer exists assembles into a string that matches any pattern you would write for
+it. Only fetching it and comparing the response against the file in the tree tells a good template from one that
+resolves to a 404 or to a version of the corpus nobody asked about. It is written against the export's declared types
+rather than against glossary, so a corpus adopting a second type brings its records under the same check without a line
+changing.
+
+Everything after the fetch is glossary-specific and skipped where the export carries none. Two of those assertions
+restate over the real corpus what `ExporterTests` pins over corpora it builds for the purpose — the chain ordering, and
+the stability that carries no ranking — because a rule and the artefact a reader receives are the two things that could
+have come apart.

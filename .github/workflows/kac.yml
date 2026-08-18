@@ -108,6 +108,36 @@ jobs:
             exit 1
           fi
 
+      # A corpus that adopted no type still has to produce a plugin that installs. The bundle it
+      # gets carries its manifest and the export, and nothing that reads either — both components
+      # are trimmed, because a skill that would find nothing reads to a user exactly like a term the
+      # corpus does not define. `bundle-empty` in the golden suite pins what that tree holds; what
+      # it cannot say is whether the emptied plugin is still valid, which is what this asks.
+      #
+      # The throwaway root is a .schema/ and a .plugin/ and nothing else. kac takes the first
+      # ancestor holding .schema as the repository root, so running from inside it is what makes
+      # this a corpus with no records rather than a second run over the real one.
+      - name: Bundle a corpus that adopted no type, and validate what it produced
+        shell: sh
+        env:
+          TEMPDIR: ${{ runner.temp }}
+        run: |
+          mkdir -p "$TEMPDIR/no-types"
+          cp -R .schema "$TEMPDIR/no-types/.schema"
+          cp -R .plugin "$TEMPDIR/no-types/.plugin"
+
+          cd "$TEMPDIR/no-types"
+          dotnet run "$GITHUB_WORKSPACE/.tooling/kac.cs" -- export
+          dotnet run "$GITHUB_WORKSPACE/.tooling/kac.cs" -- bundle
+
+          claude plugin validate ./.dist/plugin --strict
+          claude plugin validate ./.dist --strict
+
+          if ! jq -e '.included == [] and (.trimmed | length) > 0' .dist/plugin/bundle.json > /dev/null; then
+            echo "a corpus with no type bundled something that reads a type it does not hold"
+            exit 1
+          fi
+
       # kac's own coverage, in three layers: focused xUnit unit tests over kac.core's shared
       # helpers; Reqnroll feature tests that drive the validator in-process as behaviour specs;
       # and the golden/subprocess suite (fixtures diffed against committed goldens, plus the
@@ -120,3 +150,48 @@ jobs:
 
       - name: Run the golden test suite
         run: dotnet run .tooling/kac-tests.cs
+
+  # The chain end to end, on the two platforms that matter. Everything in the job above is proved
+  # over data; this installs what was assembled and asks it the questions its skill describes.
+  #
+  # Development happens on macOS and the first audience is on Windows, so a matrix here is where
+  # that gap closes. The script is one file rather than two inline blocks, held to the subset Git
+  # Bash and older macOS bash agree on; `bash` is the shell on both, which on a Windows runner is
+  # Git Bash.
+  #
+  # It is a job of its own rather than more steps on the one above, because it needs a different
+  # checkout. A pull_request run checks out the merge commit by default, and the export stamps
+  # whatever commit HEAD stands on into every link it writes. A merge commit is not a commit the
+  # raw host serves, so the fetch below would fail over the checkout rather than over the template.
+  # Taking the head commit gives the export a ref that resolves.
+  round-trip:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out the commit the export will name
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build the export
+        run: dotnet run .tooling/kac.cs -- export
+
+      - name: Assemble the plugin bundle
+        run: dotnet run .tooling/kac.cs -- bundle
+
+      - name: Install the Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code@latest
+
+      - name: Install the plugin and ask it what its skill describes
+        shell: bash
+        run: sh .tooling/tests/round-trip.sh
