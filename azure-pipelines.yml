@@ -4,7 +4,14 @@
 # pull requests into main. It NEVER commits anything it produces. `index --check`
 # only verifies the tracked generated files are fresh and fails, naming the command
 # a human runs locally (`dotnet run .tooling/kac.cs -- index`). The export lands in
-# an untracked .dist/ that the agent throws away. A pipeline must never push.
+# an untracked .dist/ that the agent throws away. This pipeline is read-only and
+# pushes nothing.
+#
+# What CI produces is never written back over a file a human edits, which is the
+# rule the line above keeps. Publishing the built bundle is a different act: on
+# GitHub, .github/workflows/publish.yml writes it to an orphaned marketplace
+# branch that shares no commit with main. There is no Azure DevOps equivalent
+# yet, so nothing is published from here.
 #
 # Wiring PR validation (important): this is an Azure Repos repository, where the
 # YAML `pr:` trigger below is IGNORED. Add this pipeline as a required

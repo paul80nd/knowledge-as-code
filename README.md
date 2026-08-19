@@ -100,6 +100,9 @@ style, a category field, the identity line, the clause table and the checks that
 elsewhere: a consumer repository built a full catalogue against this type and returned a run of findings, tracked as
 issues here. Treat the rest as drafts.
 
+**The plugin is a slice rather than a product.** It carries the glossary to another repository and nothing else;
+[what the plugin does not do yet](#what-the-plugin-does-not-do-yet) is the list of what is missing.
+
 ## Getting started
 
 Requires the **.NET 10 SDK**. `kac` runs via `dotnet run` — no build step to manage.
@@ -135,6 +138,70 @@ generated page is written from it.
 The example records are every `<type>/*.md` that is not `_index.md` or `_template.md`. `./kac validate` covers them, so
 they are held to the same standard as real content and a schema change that breaks them fails CI here rather than in
 your repository.
+
+## The plugin
+
+The corpus travels to another repository as a Claude Code plugin, so a session there can ask this one what a term means
+without cloning it. `kac export` writes the corpus as data; `kac bundle` assembles that data and the `.plugin/` tree
+into an installable plugin; CI publishes the result to the
+[`marketplace`](https://github.com/paul80nd/knowledge-as-code/tree/marketplace) branch on every push to `main`. That
+branch is orphaned and never merged back, so nothing CI builds can reach the source.
+
+Install it into a session with:
+
+```
+/plugin marketplace add paul80nd/knowledge-as-code@marketplace
+/plugin install knowledge-as-code@knowledge-as-code
+```
+
+Then ask about a term this corpus defines — *what does Borrower mean here?* — and the answer comes from the glossary
+rather than from the model. A session is told the glossary is there when it starts, so it does not have to know to ask
+first.
+
+What is published carries the corpus's `content-version`, and Claude Code treats that string as the whole answer to
+whether an update exists. A change merged without moving `content-version` in `.corpus.yaml` would therefore reach
+nobody, so the publish stops before pushing rather than leaving a commit claiming otherwise. Bump it with the change.
+
+### Proving a change before it ships
+
+Build the plugin, and install the build rather than the branch:
+
+```bash
+./kac export                       # write the corpus to .dist/export/
+./kac bundle                       # assemble .dist/plugin/, with .dist/ as the marketplace holding it
+```
+
+Then, in a session:
+
+```
+/plugin marketplace add ./.dist
+/plugin install knowledge-as-code@knowledge-as-code
+```
+
+and ask it the question your change was about. **Uninstall before you rebuild.** The version is what pins the copy
+Claude Code holds, so a second build at the same `content-version` leaves the first one installed and your change
+invisible.
+
+`sh .tooling/tests/round-trip.sh` walks the same path without a session and without touching your own configuration: it
+installs into a config directory of its own, looks a term up, fetches a record through the raw link the export wrote,
+and says which step failed. CI runs it on Linux and Windows.
+
+### What the plugin does not do yet
+
+**It carries one type.** The glossary is a vertical slice — a term is the smallest useful thing one corpus can hand
+another — and the rest is agreed and unbuilt:
+
+* **Every other type.** Only the glossary is exported and only the glossary is read. An ADR or a policy travels nowhere.
+* **Publishing from Azure DevOps.** `azure-pipelines.yml` validates and publishes nothing, so a corpus hosted there
+  builds its bundle by hand. That is where this has to work for the first adopters, and it is a pipeline of its own
+  rather than a translation of the GitHub one.
+* **Anything that writes back.** The plugin answers questions. Nothing yet lets a session contribute a record
+  ([#21](https://github.com/paul80nd/knowledge-as-code/issues/21)) or report what it looked for and could not find
+  ([#13](https://github.com/paul80nd/knowledge-as-code/issues/13)).
+* **The distillation pass** that would fold what sessions learned back into the corpus
+  ([#24](https://github.com/paul80nd/knowledge-as-code/issues/24)).
+* **A hook that matches a prompt against the glossary**, so a term is defined where it is used rather than when someone
+  thinks to ask. The `SessionStart` breadcrumb says the glossary is there; nothing yet reads what was typed.
 
 ## Layout
 

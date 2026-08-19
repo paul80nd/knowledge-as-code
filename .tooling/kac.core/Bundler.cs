@@ -293,7 +293,12 @@ public static class Bundler
         return copy.ToJsonString(Indented) + "\n";
     }
 
-    // The local marketplace, so the plugin can be installed from a path while it is being proved.
+    // The marketplace offering the plugin, so there is something to install it from. One definition
+    // serves both ways of reaching it — a path while the plugin is being proved, and a published
+    // branch afterwards — because a marketplace addresses its plugins relative to itself and so names
+    // no host. It takes the plugin's own name: the marketplace is what a reader types to install
+    // from, and a name qualified by where this particular copy sits would be wrong as soon as the
+    // copy moved.
     //
     // `.dist/` is the marketplace root and the plugin sits beneath it as `./plugin`. That is not a
     // preference: a marketplace resolves a plugin source against the directory holding
@@ -302,8 +307,8 @@ public static class Bundler
     private static string Marketplace(JsonObject manifest, string pluginName) =>
         Serialize(new MarketplaceManifest(
             "https://anthropic.com/claude-code/marketplace.schema.json",
-            $"{pluginName}-local",
-            $"A local marketplace holding the {pluginName} plugin, for installing it from a path.",
+            pluginName,
+            $"A marketplace holding the {pluginName} plugin.",
             new MarketplaceOwner(Owner(manifest) ?? pluginName),
             [
                 new MarketplacePlugin(

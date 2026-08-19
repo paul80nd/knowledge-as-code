@@ -3,9 +3,9 @@
 ## Intent
 
 An export is data, and data has to be handed to something. `bundle` assembles what `export` wrote, plus the `.plugin/`
-tree, into a Claude Code plugin directory under `.dist/plugin/`, and writes a local marketplace beside it so the result
-can be installed from a path. What ends up in the plugin is a function of what the export carried: a corpus that ships
-no glossary ships no glossary skill either.
+tree, into a Claude Code plugin directory under `.dist/plugin/`, and writes the marketplace that offers it beside it,
+so the result can be installed. What ends up in the plugin is a function of what the export carried: a corpus that
+ships no glossary ships no glossary skill either.
 
 ## What it is not
 
@@ -15,7 +15,9 @@ shipped — and because they are proved differently: the export has a committed 
 an assertion that it did not touch that output.
 
 **It does not publish.** It writes a directory and a marketplace that names it, both untracked. Pushing either
-anywhere is not this command's, and neither is running `claude plugin validate` over the result.
+anywhere is CI's — on GitHub, the `publish` workflow — and so is running `claude plugin validate` over the result. What
+that division buys is a command a reader runs on a laptop without credentials and without a branch to write to, which
+produces there exactly what CI publishes.
 
 **It does not read the corpus.** `Corpus.Load` is never called. Everything a bundle decides is a fact about the export
 it was handed, and the export is the only thing that will actually travel.
@@ -138,15 +140,15 @@ question.
 
 ## Known limits
 
-**Nothing validates the assembled plugin.** `claude plugin validate` is not run, and a component misplaced inside
-`.claude-plugin/` would load wrong without this command noticing. That, the round-trip lookup and the two-platform CI
-matrix are tracked as [issue #186](https://github.com/paul80nd/knowledge-as-code/issues/186).
+**This command validates nothing it assembles.** `claude plugin validate` is a CI step rather than part of the
+build, so a component misplaced inside `.claude-plugin/` leaves here unreported and is caught one layer out. That is
+the same division as publishing: the build stays runnable without the CLI installed.
 
-**The hook has been proved on macOS only.** The assembled plugin installs from the local marketplace, and its
+**The hook has been proved on macOS only.** The assembled plugin installs from the marketplace beside it, and its
 `SessionStart` command reaches the breadcrumb through `${CLAUDE_PLUGIN_ROOT}` and lands it in a session opened in an
-unrelated directory. What that run cannot say is which shell Claude Code reaches a hook command with on Windows, and
-therefore whether the `.cmd` half of the pair is ever the one that runs. It sits under the same issue as the platform
-matrix above.
+unrelated directory. What no run yet says is which shell Claude Code reaches a hook command with on Windows, and
+therefore whether the `.cmd` half of the pair is ever the one that runs. The round-trip installs the plugin on a
+Windows runner but opens no session, so it cannot answer this.
 
 **A component's `requires` is not held against the schema.** A component naming a type no schema declares is trimmed
 with the same message as one naming a type this corpus declined, and the two mean different things: one is a typo and
