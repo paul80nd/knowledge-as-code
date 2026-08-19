@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 17,
+    "validated": 18,
     "templates": 2,
     "skipped": 0,
-    "errors": 16,
+    "errors": 17,
     "warnings": 2
   },
   "findings": [
@@ -27,6 +27,13 @@
       "severity": "error",
       "check": "part-empty",
       "message": "term 'Placeholder' has nothing under it — write it or delete the heading."
+    },
+    {
+      "file": "glossary/none-terms-section-empty.md",
+      "line": 20,
+      "severity": "error",
+      "check": "part-none",
+      "message": "the '## Terms' section holds no terms — write each one as an H3 heading."
     },
     {
       "file": "glossary/tref-unknown-term.md",
