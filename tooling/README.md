@@ -28,8 +28,9 @@ dotnet build kac.slnx                      # kac, kac.core, kac.tests and kac.fe
 dotnet pack tooling/kac/kac.csproj -o …    # the tool as a package, which is how a corpus receives it
 ```
 
-[`../kac.slnx`](../kac.slnx) sits at the repository root rather than here, because it names projects in this folder
-and an IDE opening it should see `template/` and `example/` too.
+The solution sits at the repository root rather than here, because it names projects in this folder and an IDE
+opening it should see `template/` and `example/` too. It is named rather than linked: the solution is in the
+verification layer, so a corpus running a tool proven upstream holds no such file for a link to reach.
 
 The package's version is `<Version>` in [`kac/kac.csproj`](kac/kac.csproj), moved by hand, and
 [`kac/PACKAGE.md`](kac/PACKAGE.md) is what nuget.org shows — written for whoever installs the tool rather than for
