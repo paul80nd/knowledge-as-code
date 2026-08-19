@@ -158,9 +158,10 @@ Then ask about a term this corpus defines — *what does Borrower mean here?* �
 rather than from the model. A session is told the glossary is there when it starts, so it does not have to know to ask
 first.
 
-What is published carries the corpus's `content-version`, and Claude Code treats that string as the whole answer to
-whether an update exists. A change merged without moving `content-version` in `.corpus.yaml` would therefore reach
-nobody, so the publish stops before pushing rather than leaving a commit claiming otherwise. Bump it with the change.
+What is published carries the corpus's `content-version`, which is below `1.0.0` and means it: the records are
+illustrative and the schema still moves. Claude Code treats that string as the whole answer to whether an update
+exists, so a change merged without moving `content-version` in `.corpus.yaml` would reach nobody — the publish stops
+before pushing rather than leaving a commit claiming otherwise. Bump it with the change.
 
 ### Proving a change before it ships
 
