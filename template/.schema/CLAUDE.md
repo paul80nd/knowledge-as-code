@@ -43,15 +43,15 @@ golden expectations in `tooling/tests/fixtures/`: run `dotnet run tooling/kac-te
   obligation is `required-when`, and a should-have-done-this is a rule.
 
 * **Thresholds are judgements**, and each is pinned by a fixture so moving one is visible.
-  [`../tooling/features/checks.md`](../tooling/features/checks.md) says where the numbers came from. A ratio like
+  `tooling/features/checks.md`, in the repository the tool is built from, says where the numbers came from. A ratio like
   `words() <= links() * 40` fails a document linking to nothing at any length, which for a capability or an explanation
   is the intended reading.
 
 * **The text rules are heuristics** and will be tuned wrong first. Their patterns belong here rather than in C# for
-  that reason, argued in [`../tooling/features/checks.md`](../tooling/features/checks.md).
+  that reason, argued in `tooling/features/checks.md`.
 
 * **A rule reporting several faults under one id needs a fixture for each**, because one fixture turns the whole id
   green.
 
-* **A rule whose question needs C# is a class, not an `expr:`.** [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) holds
-  the test for which, and the two interfaces to write it against.
+* **A rule whose question needs C# is a class, not an `expr:`.** `tooling/CLAUDE.md` holds the test for which, and
+  the two interfaces to write it against.
