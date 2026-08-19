@@ -501,15 +501,14 @@ public static class Generator
         ("clause-order / clause-compound", [new("clause-order"), new("clause-compound")],
             "Clause rows are grouped by binding level, and each carries a single obligation.",
             t => t.Parts?.Source == PartSpec.Table),
+        // What the `clauses` rows ask of a table, asked of the source that writes its parts as headings.
+        ("part-none / part-empty", [new("part-none"), new("part-empty")],
+            "The parts section holds at least one heading, and each has something under it.",
+            t => t.Parts?.Source == PartSpec.Headings),
         // Shown on the pages of the types that keep addressable parts, rather than on every page. Both
         // checks run corpus-wide, since a citation is checked where it is written and any document may
         // carry one; what this predicate scopes is the documentation, and a type whose records have no
         // parts has no reason to describe how one is cited.
-        // What the `clauses` row asks of a table, asked of the source that writes its parts as headings,
-        // which is why it stands on those types' pages rather than beside the row above.
-        ("part-none / part-empty", [new("part-none"), new("part-empty")],
-            "The parts section holds at least one heading, and each has something under it.",
-            t => t.Parts?.Source == PartSpec.Headings),
         ("part-id-unique / part-ref", [new("part-id-unique"), new("part-ref")],
             "No two parts of a record share an address, and a `record-id.part` citation reaches the part "
             + "it names.", t => t.Parts is not null),

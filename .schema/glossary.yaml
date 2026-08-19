@@ -34,10 +34,10 @@ notes: >
   confused with, and optional links to the owning service or an explanation. Those `**Not:**` lines are the most
   useful content in the file. One paragraph per term, because a glossary is read end to end and every paragraph
   is paid for by every reader. The list is alphabetical and flat — no A–Z sub-headings — so that it scans and
-  greps cleanly. What is checked is that order, and that the entries are there at all — `part-none` reports a `Terms`
-  section holding none, and `part-empty` a heading with nothing beneath it. Whether what one carries is a single
-  sentence in a single paragraph is held by whoever reviews the file, since the rules below that would read a term's
-  shape are declared and not built.
+  greps cleanly. The tool checks that order, and it checks that the entries are there: `part-none` reports a `Terms`
+  section holding no headings, and `part-empty` a heading with nothing beneath it. Nothing reads the words themselves,
+  so whoever reviews the file holds an entry to its single sentence and its single paragraph. The rules below that
+  would read a term's shape are declared and not built.
 
 id:
   prefix: gls
