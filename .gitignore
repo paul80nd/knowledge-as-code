@@ -9,6 +9,11 @@
 *.DotSettings.user
 *.iml
 
+# What `dotnet pack` and `dotnet tool install --tool-path` leave behind when the tool is packed
+# and installed from here, as README.md describes. The corpus has its own .dist/, for what kac
+# writes, and declares it in example/.gitignore.
+.dist/
+
 # macOS
 .DS_Store
 
