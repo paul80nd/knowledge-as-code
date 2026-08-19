@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
+type: service
+label: Service
+label-plural: Services
+folder: services
+page: services.md
+tier: descriptive
+lifecycle: living
+summary: "One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner."
+goes-here: A description of what a deployable component is and does
+detail: >
+  The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
+
+lineage:
+  prior-art: "[Backstage software catalog](https://backstage.io/docs/features/software-catalog/system-model/) — `Component`"
+  alignment: >
+    A deployable unit carrying owner, dependencies and consumed APIs, acting as the hub of the entity graph
+  divergence: >
+    Backstage models APIs, resources, systems and domains as separate kinds. We fold dependencies, data stores and
+    environments into the service document
+
+id:
+  prefix: svc
+  style: slug
+  notes: >
+    Names the deployable, not the repository it lives in — a repository shipping three app services yields three ids
+    and none of them is the repository's name. The repository is carried by `repo`.
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [live, building, deprecated, retired]
+    description: Where the service is in its life.
+
+  repo:
+    required: true
+    type: string
+    description: Where the code lives.
+
+  platform:
+    required: true
+    type: enum
+    values: [dotnet-web, dotnet-api, azure-function, static, typescript, mixed]
+    description: What it is built on. Drives which standards apply.
+
+  criticality:
+    required: true
+    type: enum
+    values: $enums.criticality
+    description: Judged by what a customer experiences when it is unavailable.
+
+  depends-on:
+    required: false
+    type: list
+    of: id
+    ref: services
+    description: Downward only — what this service calls.
+    notes: >
+      Downward only — what this service calls. An edge means this service is configured to reach that one; messages
+      over a bus are not an edge, because the publisher does not know its consumers. Deliberately one-directional:
+      the reverse view is a reader's question, not a second field to keep in step. Nothing generates that view today,
+      so it remains the author's to write.
+
+  data-stores:
+    required: false
+    type: list
+    of: id
+    ref: data
+    description: Data ids this service owns or reads.
+
+  facets:
+    required: false
+    type: list
+    of: string
+    pattern: '^[a-z0-9-]+$'
+    min-records: 2
+    description: Slices the catalogue — one exposure, then any traits. Each value groups services.
+    notes: >
+      A facet divides the catalogue into groups worth browsing, so a value only means something once several
+      services share it: `internal` answers "which of these is reachable from outside", where a word describing
+      one service answers nothing and belongs in `tags`. That is the whole reason the two are separate fields.
+      The floor holds the shape of a vocabulary and never its membership, which the type page records for this
+      estate.
+
+sections:
+  required: [What it does, Where it lives, Environments]
+  optional: [Dependencies, Data, Operational notes]
+
+index:
+  columns: [id, title, platform, criticality, status, owner]
+  sort: id
+
+rules:
+  # A loop lives in the set of edges and no one document holds it, so this is a corpus rule and not an
+  # expression. It warns and never fails: two services that call each other are a fact about the estate, and
+  # the message names the services on the loop so a reader can judge which kind they have.
+  - id: no-dependency-cycles
+    description: A cycle in the dependency graph, naming the services the loop runs through.
+    severity: warning
+  # The state this compares against lives outside the repository, so it can never run in the per-PR pass that
+  # every other rule here runs in. Issue #15 carries it, alongside the same question for the other types.
+  - id: drift-against-repos
+    description: The catalogue against the real repository list, in both directions.
+    # Scheduled, not per-PR. Reports services documented but deleted, and repositories with no service document.

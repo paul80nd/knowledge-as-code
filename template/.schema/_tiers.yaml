@@ -1,0 +1,46 @@
+# The tiers, in the order a reader meets them, and what each is called on a page.
+#
+# Tier is what a document's behaviour keys off — how it is reviewed, whether it may be edited in place,
+# what language it is written in — so the vocabulary itself belongs to `tier` in `_universal.yaml`, which
+# is the field every record carries. This file says what each of those values is *called* and what it
+# means. A generated page needs both, and a frontmatter enum has room for neither.
+#
+# The two are held against each other when the schema loads: a tier here that the field does not admit,
+# or a value the field admits with no entry here, is a defect in whichever file is behind.
+
+notes: >
+  Order is load-bearing. Every generated list of types is grouped by tier in the order declared here,
+  running from what has been decided through to what has only been noticed.
+
+tiers:
+
+  decided:
+    label: Decided
+    behaviour: immutable once accepted
+    note: >
+      Superseded rather than rewritten, so what was thought at the time survives being wrong.
+
+  normative:
+    label: Normative
+    behaviour: living, owned, reviewed
+
+  descriptive:
+    label: Descriptive
+    behaviour: living, must mirror reality
+    note: >
+      These are the types CI can check against the estate rather than merely against themselves, which
+      matters because they rot faster than anything else.
+
+  procedural:
+    label: Procedural
+    behaviour: living, must be rehearsed
+    note: >
+      Each records when it was last rehearsed. An unrehearsed process is annoying; an unrehearsed runbook
+      is dangerous.
+
+  observed:
+    label: Observed
+    behaviour: perishable, unreviewed until promoted
+    note: >
+      The tier carrying the least authority is the one a corpus most depends on, because capture that is
+      not free does not happen.

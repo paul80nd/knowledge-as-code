@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
+type: discovery
+label: Discovery
+label-plural: Discoveries
+folder: discoveries
+page: discoveries.md
+tier: observed
+lifecycle: perishable
+summary: Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.
+goes-here: Something surprising you noticed and haven't verified
+detail: >
+  Deliberately low-ceremony — a title, an observation, why it might matter — and carrying a confidence level, so
+  that "the build fails silently if X" has somewhere to go the moment it is noticed.
+
+versus:
+  faqs: >
+    A discovery is unverified and might be wrong or already fixed. An FAQ has been confirmed by a human and
+    carries authority. Never write straight to an FAQ from a session — capture the discovery and let promotion
+    do the work.
+
+lineage:
+  prior-art: "None — see [First principles](#first-principles)"
+
+id:
+  prefix: dsc
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [open, promoted, expired, rejected]
+    description: Open until promoted, expired or rejected.
+
+  source:
+    required: true
+    type: enum
+    values: [human, session, dreamed]
+    description: Who or what observed it. `dreamed` means proposed by an agent.
+
+  confidence:
+    required: true
+    type: enum
+    values: [unverified, corroborated, confirmed]
+    description: Starts at `unverified`, and stays there unless genuinely proven.
+    notes: >
+      Starts at `unverified` and stays there unless genuinely proven. An agent cannot confirm its own observation.
+
+  expires:
+    required: true
+    type: date
+    description: Quoted. Ninety days from capture by convention — the template says so.
+    notes: >
+      Perishable by default: ninety days from the day it was written, which the template carries rather than the
+      schema, since nothing here writes a document's frontmatter. An observation nobody has needed in three months
+      was probably situational.
+
+  provenance:
+    required: false
+    required-when: 'source == dreamed'
+    type: string
+    description: A reference back to the session and passage, so review is a check rather than an act of faith.
+    notes: >
+      A reference back to the session and passage this came from, so review is a thirty-second check rather
+      than an act of faith. An unverifiable proposal is a rejected proposal.
+
+  applies-to:
+    required: false
+    type: list
+    of: id
+    ref: services
+    description: Service ids this observation concerns.
+
+  promoted-to:
+    required: false
+    required-when: 'status == promoted'
+    type: id
+    ref: [faqs, standards]
+    reciprocal: promoted-from
+    description: The FAQ or standard this became.
+
+sections:
+  required: [What I saw, Context, Why it might matter]
+  optional: []
+
+index:
+  columns: [id, title, source, confidence, status, expires]
+  sort: expires
+
+rules:
+  - id: low-ceremony
+    description: A discovery stays within the length its tier is for.
+    severity: warning
+    expr: "words() <= 200"
+    message: >
+      This is longer than a capture should be. If it needs this much explaining it has outgrown the tier —
+      promote it rather than expanding it here.
+  - id: expiry-sweep
+    description: >
+      Scheduled. Discoveries past `expires` with no promotion are set to `expired` with a note, not deleted.

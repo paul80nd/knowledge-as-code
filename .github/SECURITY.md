@@ -14,12 +14,12 @@ usually within a week. There is no service level and no bounty.
 
 ## In scope
 
-* **`.tooling/`** — the `kac` tool. It reads a repository and writes generated files back into it. The failures that
+* **`tooling/`** — the `kac` tool. It reads a repository and writes generated files back into it. The failures that
   matter are ones where it writes outside the corpus, or where a crafted `.schema/` file or record frontmatter makes it
   act outside what its caller asked for.
 * **`.github/workflows/`** — CI, which runs the tool over the branch under test.
-* **`.schema/`** — the contract the tool enforces. A schema that makes the tool skip a check it declares is a real
-  finding.
+* **`example/.schema/`** — the contract the tool enforces. A schema that makes the tool skip a check it declares is a
+  real finding.
 
 ## Out of scope
 
@@ -30,7 +30,7 @@ usually within a week. There is no service level and no bounty.
 * **Rendering in the published wiki.** That belongs to the publishing target, not to this repository.
 * **Scanner output with no demonstrated path to impact.**
 
-CI executes untrusted code by design: `dotnet run .tooling/kac.cs` runs a pull request's own source. Three things
+CI executes untrusted code by design: `dotnet run ../tooling/kac.cs` runs a pull request's own source. Three things
 contain it — the `pull_request` trigger rather than `pull_request_target`, a read-only `contents` permission, and no
 secrets reachable from the job. A report that this is dangerous needs to show an escape from that containment.
 

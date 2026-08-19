@@ -1,0 +1,159 @@
+# knowledge-as-code — corpus descriptor
+#
+# Says what this corpus is and where it stands against the shared framework.
+#
+# The portability manifest (`tooling/manifest.yaml`) defines what is shared
+# between corpora. This file records:
+# - the part this corpus plays in the framework, and where it publishes
+# - which version of its own content this corpus is on
+# - which framework version it runs, and where it takes that from
+# - which record types it has adopted
+# - any accepted differences from the shared baseline
+#
+# Three versions live here, so none of them is called `version` alone.
+#
+# The file is this corpus's own: never synced, never reconciled. It sits at the
+# repository root rather than with the shared mechanism.
+#
+# Written by `kac mechanism --sync`. Read by `kac mechanism --check`.
+
+# The version of this file's own format. Stamped by `kac mechanism --sync`,
+# because the shape of the file arrives with the mechanism, not with the corpus.
+descriptor-version: 1
+
+# The name of this corpus.
+corpus: knowledge-as-code
+
+# The version of what this corpus knows: its records, and the meanings they carry.
+#
+# Not the format of this file, which `descriptor-version` above states. Not the
+# framework this corpus runs, which `upstream.mechanism-version` below states.
+#
+# It is the number to quote when one corpus tells another which version of the
+# content it has. Semantically versioned:
+# - major, where a meaning changed or a published URL broke
+# - minor, for additions
+# - patch, for wording
+#
+# The number is a notification and nothing refuses to load because it moved.
+# Bumped by hand, and `kac mechanism --check` reports what it finds here.
+content-version: "0.1.0"
+
+# The role of this corpus. One of: source | consumer.
+role: source
+
+# source
+#   A corpus that answers for the framework. We introduce, verify or reconcile
+#   framework changes here, then share them with the corpora that took a copy.
+#
+#   A source carries the verification layer: the tests, the fixtures they read
+#   and the guidance for changing the tool.
+#
+# consumer
+#   A corpus that takes framework content from a source. It carries the tool and
+#   uses it, and holds none of the machinery that proves the tool, because the
+#   tool reaches it already proven.
+#
+# Any corpus may author a change, and real content is the only thing that reveals
+# a schema is wrong. A change is not settled until a source accepts it.
+#
+# The role says what part a corpus plays. It does not set the direction of travel:
+# a source may itself sync from another source further upstream.
+
+# How this corpus is published. One of: azure-devops-wiki | github | mkdocs | none.
+publishing-target: github
+
+# Recorded rather than inferred, so `kac mechanism --check` can name the publishing
+# file this corpus is missing, and so `kac export` can build links that a reader and
+# an agent can each follow.
+#
+# `github` says the repository is itself the published form: a record is read rendered
+# on github.com and fetched unrendered from raw.githubusercontent.com. This repository
+# also carries `azure-pipelines.yml` and `.order`, which are seeds for a corpus
+# published to an Azure DevOps wiki rather than files this target uses.
+#
+# `none` says a corpus is not published. An export from one carries no links, and says
+# so in its manifest rather than emitting a link that resolves nowhere.
+
+# Where the published form of this corpus is served from.
+#
+# Only where it is served from lives here. How a record's path and a term's anchor join a
+# base is a property of `publishing-target` and lives in the mechanism, so every corpus on
+# one target builds the same link and none of them writes the rule down a second time.
+#
+# Absent where `publishing-target: none`, which is the one value that needs no base.
+publishing:
+  # Where a person reads a record, rendered.
+  human-base: https://github.com/paul80nd/knowledge-as-code/blob
+
+  # Where an agent fetches a record's source, unrendered.
+  raw-base: https://raw.githubusercontent.com/paul80nd/knowledge-as-code
+
+  # The folder the corpus sits in, where the repository holds more than the corpus.
+  #
+  # The commit a link resolves against sits between a base and the record's path, so a
+  # corpus in a subdirectory cannot say this by writing the folder into its bases.
+  #
+  # Absent where the corpus is the repository, which is the ordinary case.
+  path-prefix: example
+
+# Where this corpus takes the framework from, if anywhere.
+upstream:
+  # URL or path of the upstream corpus.
+  url: # unset — this corpus is the source
+
+  # Framework version currently adopted from the upstream corpus.
+  mechanism-version: 5
+
+  # Where the most recent sync took the framework from.
+  synced-from: # n/a for a source
+
+  # Date of the most recent successful sync.
+  synced-on: "2026-08-08"
+
+# The record types this corpus has adopted.
+# Validation and index generation cover the types listed here.
+#
+# A corpus that omits the key has not declared yet, and the tool reads adoption
+# off the folders it finds instead. Declaring turns "these folders happen to be
+# here" into "these are the types we chose", which validation can then hold the
+# corpus to.
+#types:
+#  - adrs
+#  - policies
+
+# What `kac export` leaves behind.
+#
+# Empty by default, and that is the important part: a record still in draft, and one
+# whose review date has passed, both travel. Each carries its own state, so a consumer
+# reads what the corpus actually holds and decides for itself how far to trust it.
+#
+# Filtering here would make the corpus's own state invisible downstream: a consumer
+# would see a smaller, tidier vocabulary and no sign that anything had been withheld.
+# The option exists for a corpus that publishes to an audience it cannot warn.
+#
+# Two values: `draft` drops a record whose status says so, and `overdue` drops one
+# whose `review-by` is in the past.
+export:
+  exclude: []
+
+# Files in the `synced` layer that this corpus deliberately holds differently.
+#
+# Each entry records:
+# - the file
+# - why it differs
+# - when the divergence started
+# - when to look at it again
+#
+# `kac mechanism --check` reports these as accepted rather than as errors, and
+# `--sync` steps over them. Delete an entry once the file matches upstream again.
+#
+# Example:
+#
+# accepted-divergences:
+#   - path: tooling/kac.cs
+#     reason: Pinned to .NET 8 because the local build agent does not provide .NET 10.
+#     since: 2026-08-03
+#     revisit: When the build agent image is upgraded.
+
+accepted-divergences: []

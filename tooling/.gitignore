@@ -1,0 +1,14 @@
+# What building and testing the tool leaves behind. The editor and operating-system noise
+# common to every folder is in the repository's own .gitignore, which this one adds to.
+
+# Per-solution JetBrains state — absolute paths, test-session ids, and the module file
+# Rider writes beside a solution it has opened
+*.DotSettings.user
+*.sln.iml
+
+# .NET build output (kac.core / kac.tests / kac.features)
+bin/
+obj/
+
+# Reqnroll-generated code-behind (regenerated from .feature files on build)
+*.feature.cs
