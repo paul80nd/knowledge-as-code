@@ -26,7 +26,7 @@ using System.Text.Json;
 var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
 if (repoRoot is null)
 {
-    Console.Error.WriteLine("kac-tests: could not locate the repo root (no tooling/kac.slnx above the cwd).");
+    Console.Error.WriteLine("kac-tests: could not locate the repo root (no kac.slnx above the cwd).");
     return 2;
 }
 
@@ -800,16 +800,16 @@ return 0;
 
 // ---------------------------------------------------------------------------
 
-// The repository, found by the solution it holds rather than by the corpus beside it. `kac` itself walks
+// The repository, found by the solution at its root rather than by the corpus beside it. `kac` itself walks
 // up for a `.schema/` because what it wants is a corpus; this suite wants the tree that holds the engine,
-// the fixtures and the corpus at once, and only one folder answers to that. A solution file is the right
-// marker for it: a corpus that installed the tool holds no such thing.
+// the fixtures and the corpus at once, and only one folder answers to that. The solution file is the right
+// marker for it: it names every project in the tree, and a corpus that installed the tool holds no such thing.
 static string? FindRepoRoot(string start)
 {
     var dir = new DirectoryInfo(start);
     while (dir is not null)
     {
-        if (File.Exists(Path.Combine(dir.FullName, "tooling", "kac.slnx")))
+        if (File.Exists(Path.Combine(dir.FullName, "kac.slnx")))
             return dir.FullName;
         dir = dir.Parent;
     }

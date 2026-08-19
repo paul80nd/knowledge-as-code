@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="kac/kac.csproj" />
-  <Project Path="kac.core/kac.core.csproj" />
-  <Project Path="kac.features/kac.features.csproj" />
-  <Project Path="kac.tests/kac.tests.csproj" />
-</Solution>

@@ -94,12 +94,14 @@ rules:
       - "tooling/kac.tests/**"
       - "tooling/kac.features/**"
       - "tooling/tests/**"
-      - "tooling/kac.slnx"
       - "tooling/CLAUDE.md"
+      - "kac.slnx"
     layer: verification
     note: >
-      Framework tests, test fixtures, development guidance and related
-      solution files.
+      Framework tests, test fixtures, development guidance and the solution that
+      opens them. The solution sits at the repository root rather than under
+      `tooling/`, because it names projects across the tree and an IDE opening it
+      should see the whole tree.
 
   # ── synced ─────────────────────────────────────────────────────────────────
 

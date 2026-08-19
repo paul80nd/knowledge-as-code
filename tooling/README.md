@@ -21,10 +21,15 @@ Requires the **.NET 10 SDK**. `dotnet run --project` builds and runs the entrypo
 manage. The first run restores the packages — `System.CommandLine` on the entrypoint, `YamlDotNet` and `Markdig`
 through `kac.core` — and is slow; later runs are cached.
 
+Both run from the repository root, as the test commands further down do:
+
 ```bash
-dotnet build kac.slnx              # kac, kac.core, kac.tests and kac.features together
-dotnet pack kac/kac.csproj -o …    # the tool as a package, which is how a corpus receives it
+dotnet build kac.slnx                      # kac, kac.core, kac.tests and kac.features together
+dotnet pack tooling/kac/kac.csproj -o …    # the tool as a package, which is how a corpus receives it
 ```
+
+[`../kac.slnx`](../kac.slnx) sits at the repository root rather than here, because it names projects in this folder
+and an IDE opening it should see `template/` and `example/` too.
 
 Run **one `kac` invocation at a time**: concurrent runs build the same project and contend over its output.
 

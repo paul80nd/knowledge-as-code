@@ -28,6 +28,9 @@ fictional library consortium. [`example/README.md`](example/README.md) is the wa
 No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is
 run from, and the one in this repository is what proves the tool over real content rather than over fixtures alone.
 
+**[`kac.slnx`](kac.slnx)** sits above all three. It names the four projects under `tooling/`, and lives here rather
+than beside them so that an IDE opening it opens the repository.
+
 ## Getting started
 
 Requires the **.NET 10 SDK**. `kac` runs through `dotnet run`, so there is no build step to manage.

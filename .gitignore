@@ -2,8 +2,12 @@
 # output is in tooling/.gitignore, beside the only projects that write it, and what kac
 # generates is in example/.gitignore, beside the corpus it generates from.
 
-# JetBrains Rider — a project directory beside the repository root and beside each project
+# JetBrains Rider — a project directory beside the repository root and beside each project,
+# and the state it writes beside kac.slnx after opening it: absolute paths, test-session ids
+# and a module file.
 .idea/
+*.DotSettings.user
+*.iml
 
 # macOS
 .DS_Store

@@ -36,14 +36,14 @@ public static class Harness
         }
     }
 
-    // The repository, found by the solution it holds rather than by the corpus beside it. The specs need
+    // The repository, found by the solution at its root rather than by the corpus beside it. The specs need
     // the tree that carries the engine, the fixtures and the schema at once, and only one folder answers.
     private static string FindRepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir is not null)
         {
-            if (File.Exists(Path.Combine(dir.FullName, "tooling", "kac.slnx")))
+            if (File.Exists(Path.Combine(dir.FullName, "kac.slnx")))
                 return dir.FullName;
             dir = dir.Parent;
         }
