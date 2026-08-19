@@ -269,14 +269,29 @@ checks:
       never reach the published anchors. Compared ordinally: two ids differing only in case are not two
       parts a reader could tell apart either.
 
+  part-none:
+    severity: error
+    description: A section declared to hold parts written as headings holds at least one.
+    notes: >
+      What `clause-table`'s empty-table arm asks of the other source: a record whose parts section holds
+      none says nothing where it promised to say something. Nothing else reports it —
+      `required-section` is answered by the heading existing, and `empty-section` passes the parts
+      section over deliberately, on the grounds that whatever reads the parts is looking at the same
+      blank and can name what belongs there. So this names it: the section, the word the type calls its
+      parts, and the heading level to write them at.
+
+      Reported and stopped, for the reason a broken table is. The checks after it read parts, and a
+      section holding none gives them nothing to say.
+
   part-empty:
     severity: error
     description: A part declared by a heading carries something under it.
     notes: >
-      The question `clause-table`'s empty-table arm asks of the other source. A heading is an address and
-      a container both, and an empty entry passes everything checkable from outside: it has a title, a
-      working anchor and a citation that resolves. What it does not have is the thing a reader came for,
-      and an export carries it as a part with no words in it and counts it among the rest.
+      A heading is an address and a container both, and an empty entry passes everything checkable from
+      outside: it has a title, a working anchor and a citation that resolves. What it does not have is
+      the thing a reader came for, and an export carries it as a part with no words in it and counts it
+      among the rest. The table source needs no equivalent, since a row with nothing in its clause cell
+      is stopped by `clause-modal` before anyone asks.
 
       Asked of the source rather than of the type, so anything declaring `source: headings` inherits it.
       The heading is named, because a glossary holds twenty entries and "one of these is empty" is not

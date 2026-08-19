@@ -505,10 +505,11 @@ public static class Generator
         // checks run corpus-wide, since a citation is checked where it is written and any document may
         // carry one; what this predicate scopes is the documentation, and a type whose records have no
         // parts has no reason to describe how one is cited.
-        // The heading source's answer to the empty-table arm of `clauses`, which is why it stands on the
-        // pages of the types that write their parts as headings rather than beside the row above.
-        ("part-empty", [new("part-empty")],
-            "A part written as a heading has something under it.", t => t.Parts?.Source == PartSpec.Headings),
+        // What the `clauses` row asks of a table, asked of the source that writes its parts as headings,
+        // which is why it stands on those types' pages rather than beside the row above.
+        ("part-none / part-empty", [new("part-none"), new("part-empty")],
+            "The parts section holds at least one heading, and each has something under it.",
+            t => t.Parts?.Source == PartSpec.Headings),
         ("part-id-unique / part-ref", [new("part-id-unique"), new("part-ref")],
             "No two parts of a record share an address, and a `record-id.part` citation reaches the part "
             + "it names.", t => t.Parts is not null),

@@ -242,6 +242,39 @@ public class PartCheckTests
         Assert.Equal(["corpus"], doc.Parts.Select(p => p.Id));
     }
 
+    // Nothing else reports this: `required-section` is answered by the heading existing and
+    // `empty-section` passes the parts section over, so without this a glossary with no terms in it is
+    // silent.
+    [Fact]
+    public void A_section_holding_no_headings_says_what_belongs_there()
+    {
+        var found = Run(Terms, Headings(), "glossary");
+
+        var one = Assert.Single(found);
+        Assert.Equal("part-none", one.Check.Value);
+        Assert.Contains("the '## Terms' section holds no terms — write each one as an H3 heading.", one.Message);
+    }
+
+    // A heading at the wrong level is prose rather than a part, so a section holding only those holds no
+    // parts and is told so.
+    [Fact]
+    public void A_section_holding_only_headings_at_another_level_holds_no_parts()
+    {
+        var found = Run(Terms + "#### Corpus\n\nA body of records.\n", Headings(), "glossary");
+        Assert.Equal("part-none", Assert.Single(found).Check.Value);
+    }
+
+    // Reported and stopped, so the checks that read parts do not report on a record already known to
+    // carry none.
+    [Fact]
+    public void An_empty_section_is_not_also_reported_as_an_empty_entry()
+        => Assert.DoesNotContain(Run(Terms, Headings(), "glossary"), f => f.Check.Value == "part-empty");
+
+    // The table source answers this under `clause-table`, and one fault must not be reported twice.
+    [Fact]
+    public void An_empty_table_is_not_also_reported_as_a_section_holding_nothing()
+        => Assert.DoesNotContain(Run(Header), f => f.Check.Value == "part-none");
+
     // A heading is a container as well as an address, and the address half is sound on its own: the entry
     // has a title, an anchor and a citation that resolves. The words are what is missing.
     [Fact]
