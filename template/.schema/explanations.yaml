@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
+type: explanation
+label: Explanation
+label-plural: Explanations
+folder: explanations
+page: explanations.md
+tier: descriptive
+lifecycle: living
+summary: Narrative that helps you understand how something works, or why it is shaped the way it is.
+goes-here: A narrative of how something works or why it's shaped that way
+detail: >
+  Architecture overviews, conceptual walkthroughs, how the pieces fit together. It links rather than restates:
+  an overview points at the documents holding the detail instead of repeating them. One that starts accumulating
+  facts of its own has become a maintenance liability.
+
+versus:
+  standards: >
+    An explanation helps you understand; a standard tells you what to do. If it says you **MUST** do something,
+    it is a standard however much context surrounds it.
+  processes: >
+    An explanation says how something works; a process says how to perform a task. If a reader is meant to
+    follow it step by step, it is a process.
+  services: >
+    An explanation covers how the pieces fit together; a service document describes one deployable component. If
+    it is about a single component, it is a service.
+  adrs: >
+    An explanation describes the shape something has; an ADR records the choice that gave it that shape, and is
+    frozen at the moment of choosing.
+
+lineage:
+  prior-art: "[Diátaxis](https://diataxis.fr/explanation/) — Explanation"
+  alignment: >
+    Name for name. Understanding-oriented, discursive, gives background and considers alternatives
+  divergence: >
+    Diátaxis constrains explanation only against its three siblings. We also forbid it being normative or a
+    catalogue entry, because we have types for those
+
+id:
+  prefix: exp
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, active, stale]
+    description: '`stale` is an honest state — say so rather than let the page quietly rot.'
+
+  explains:
+    required: true
+    type: list
+    of: id
+    ref: [services, capabilities]
+    description: Service or capability ids this explains.
+
+  review-by:
+    required: true
+    type: date
+    description: The field that stops this type rotting — explanations need the tightest staleness discipline.
+    notes: >
+      The field that stops this type rotting. Explanations are the residual category, so they need the
+      tightest staleness discipline, not the loosest.
+
+sections:
+  required: [Where the detail lives]
+  optional: []
+  notes: >
+    Body sections are free-form — an explanation is narrative and its shape follows its subject. Only the
+    outbound links section is required, because linking rather than restating is what defines the type.
+
+index:
+  columns: [id, title, explains, status, review-by]
+  sort: id
+
+rules:
+  - id: links-rather-than-restates
+    description: An explanation's prose stays proportionate to its links, rather than restating their facts.
+    severity: warning
+    expr: "words() <= links() * 40"
+    message: >
+      Prose has outgrown the links. Each fact restated here is a second copy to keep true — link to the
+      document that owns it instead.
+  - id: not-normative
+    description: No bold RFC 2119 keyword — MUST, MUST NOT, SHOULD, SHOULD NOT, MAY — binds from an explanation.
+    severity: warning
+    # Bold is how a clause table states an obligation, so it is the bold that separates an explanation
+    # quoting the word from one binding with it.
+    expr: >-
+      not matches('\*\*(MUST NOT|MUST|SHOULD NOT|SHOULD|MAY)\*\*')
+    message: >
+      A bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard and
+      link to it from here.
+  - id: not-load-bearing
+    description: No decided-tier document cites an explanation as the authority for a constraint.
+    # The decided tier is an ADR or a postmortem. Immutable records should not derive from mutable ones.

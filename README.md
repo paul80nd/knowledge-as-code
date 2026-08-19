@@ -16,13 +16,17 @@ documents beneath it.
 file-based entrypoint over a `kac.core` library, plus the fixtures, feature specs and unit tests it is held to.
 [`tooling/README.md`](tooling/README.md) is how to build and test it.
 
-**[`example/`](example/)** — a complete corpus, run through the tool built beside it on every commit. It carries the
-machine-readable schema, seventeen type pages and their templates, the framework's own documentation, and a set of
-illustrative records about a fictional library consortium. [`example/README.md`](example/README.md) is the way in.
+**[`template/`](template/)** — what a corpus is made of, authored once: the machine-readable schema, the framework's
+own documentation, the plugin tree, and the pages and templates a corpus starts from.
+[`template/manifest.yaml`](template/manifest.yaml) says which of those a corpus receives once and owns afterwards, and
+which it receives again whenever it takes a newer framework.
 
-Neither folder contains the other. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus
-it is run from, and the one in this repository is what proves the tool over real content rather than over fixtures
-alone.
+**[`example/`](example/)** — a complete corpus that took that template, run through the tool built beside it on every
+commit. It holds its own copy of everything the template overlays, plus a set of illustrative records about a
+fictional library consortium. [`example/README.md`](example/README.md) is the way in.
+
+No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is
+run from, and the one in this repository is what proves the tool over real content rather than over fixtures alone.
 
 ## Getting started
 

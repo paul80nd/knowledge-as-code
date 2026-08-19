@@ -103,8 +103,9 @@ The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac va
 the command can emit is reachable from a spec. The golden layer builds `kac.cs` once per run and invokes the built
 assembly, so each scenario is a real process without paying `dotnet run`'s up-to-date check for each one.
 
-All three read the schema from `../example/.schema/` where it lives, so a schema edit ripples into every fixture in the
-same run rather than into a copy someone has to keep in step.
+All three read the schema from [`../template/.schema/`](../template/.schema/), where it is authored, so a schema edit
+ripples into every fixture in the same run rather than into a copy someone has to keep in step. `TemplateTests` holds
+`example/`'s copy of it to matching, in both directions.
 
 ### The round-trip
 

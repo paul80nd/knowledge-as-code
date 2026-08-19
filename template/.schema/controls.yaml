@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
+type: control
+label: Control
+label-plural: Controls
+folder: controls
+page: controls.md
+tier: normative
+lifecycle: living
+summary: "How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves."
+goes-here: A check that proves a rule is being followed
+detail: >
+  Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
+  honest state and the number worth watching.
+
+lineage:
+  prior-art: "[NIST SP 800-53A Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/a/r5/final), the assessment-procedure construct"
+  alignment: >
+    Objective, method and expected evidence, bound to the requirement it tests
+  divergence: >
+    800-53A procedures assess a federal catalogue inside an authorisation boundary. Ours verify internal
+    standards, with no catalogue and no accreditation
+
+collision: >
+  **The most dangerous word in the taxonomy.** In [NIST SP
+  800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC 27002 and
+  ComplianceForge, a *control* **is the safeguard itself** — the technical, administrative or physical measure
+  that reduces risk. Here, a control is the **verification that a rule is being followed**, which those
+  frameworks call an assessment procedure, a test, or a metric.
+
+  A reader with a governance background will misread this type on sight, and will read a coverage report as
+  claiming safeguards exist when it claims only that checks exist. Say which sense is meant whenever the word
+  crosses into a compliance conversation.
+
+id:
+  prefix: ctl
+  style: numbered
+  width: 4
+
+filename:
+  pattern: '^\d{4}-[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [active, planned, retired]
+    description: Whether the control is running, intended, or stood down.
+
+  verifies:
+    required: true
+    type: list
+    of: id
+    ref: standards
+    reciprocal: verified-by
+    notes: >
+      Standard ids, ideally rule-level anchors. A control that names no rule is not a control.
+
+  mechanism:
+    required: true
+    type: enum
+    values: [ci, review-checklist, manual-periodic, runtime-alert, not-enforced]
+    description: How the check happens. `not-enforced` is first-class — an honest gap beats a fiction.
+    notes: >
+      `not-enforced` is a first-class value and the point of the coverage report — it converts an aspiration
+      into a visible number rather than letting the rulebook quietly become fiction. Do not invent a
+      mechanism to avoid using it.
+
+  frequency:
+    required: false
+    required-when: 'mechanism != not-enforced'
+    type: enum
+    values: [per-pr, per-deploy, daily, monthly, quarterly, annual]
+    description: How often it runs.
+
+  evidence:
+    required: false
+    type: string
+    notes: Where the proof lives — the build log, the audit note, the dashboard.
+
+  applies-to:
+    required: false
+    type: list
+    of: id
+    ref: services
+    allow-literal: [all]
+    description: Service ids, or `all`.
+
+sections:
+  required: [What it checks, How it works, Coverage and gaps]
+  optional: [Evidence, Owner]
+
+index:
+  columns: [id, title, mechanism, frequency, verifies, status]
+  sort: id
+
+rules:
+  - id: mechanism-has-evidence
+    description: >
+      A control whose mechanism is not `not-enforced` names where its evidence can be found.
+    severity: warning
+    expr: "field('mechanism') != 'not-enforced' implies present('evidence')"
+    message: >
+      This control claims to run and does not say where the proof of it lives. Set `evidence` to the build
+      log, the audit note or the dashboard — an unevidenced control is an assertion, and `not-enforced` is
+      the honest value for one.
+  - id: coverage-report
+    description: The share of MUST / MUST NOT rules in active standards claimed by an enforced control.
+    # Enforced meaning a mechanism other than `not-enforced`. Generated, rather than checked per document.

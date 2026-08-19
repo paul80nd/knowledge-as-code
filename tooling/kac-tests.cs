@@ -32,12 +32,14 @@ if (repoRoot is null)
 
 var kacSource = Path.Combine(repoRoot, "tooling", "kac.cs");
 
-// The schema every fixture is assembled from. It is the example corpus's, and the suite reads it where
-// it lives rather than from a copy, so a schema edit surfaces as a broken golden in the same run.
-// The corpus in this repository, and the one the suite runs `kac` against where a scenario needs a real
-// one rather than an assembled fixture. The command has to start inside a corpus to find anything.
+// The corpus in this repository, and what the suite runs `kac` against where a scenario needs a real one
+// rather than an assembled fixture. The command has to start inside a corpus to find anything.
 var exampleRoot = Path.Combine(repoRoot, "example");
-var schemaDir = Path.Combine(exampleRoot, ".schema");
+
+// The schema every fixture is assembled from: the template's, which is the copy every corpus receives.
+// Read where it is authored rather than from a corpus's copy of it, so a schema edit surfaces as a
+// broken golden in the same run that made it.
+var schemaDir = Path.Combine(repoRoot, "template", ".schema");
 var manifestFile = Path.Combine(repoRoot, "tooling", "manifest.yaml");
 var fixturesDir = Path.Combine(repoRoot, "tooling", "tests", "fixtures");
 

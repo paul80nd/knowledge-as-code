@@ -5,7 +5,7 @@ namespace kac.core;
 // Portability manifest & mechanism sync state
 // ---------------------------------------------------------------------------
 
-// One rule from tooling/manifest.yaml: a set of path globs that all resolve to one layer.
+// One rule from a manifest: a set of path globs that all resolve to one layer.
 public record ManifestRule(IReadOnlyList<string> Patterns, string Layer);
 
 public class Manifest
@@ -16,10 +16,17 @@ public class Manifest
     // reference rather than assumed, so a corpus taking from an older upstream records what it took.
     public int Version;
 
-    public static Manifest Load(string corpusRoot)
+    public static Manifest Load(string corpusRoot) =>
+        LoadFrom(Path.Combine(corpusRoot, "tooling", "manifest.yaml"));
+
+    // Two manifests are written in this shape and neither is the other's business: the portability
+    // manifest says which of a corpus's files are shared with the framework, and `template/`'s says
+    // which of its own files a corpus receives once. What they share is the grammar — ordered rules
+    // of globs, first match winning — so the reader takes a path rather than assuming one.
+    public static Manifest LoadFrom(string manifestFile)
     {
         var m = new Manifest();
-        var root = Yaml.LoadFile(Path.Combine(corpusRoot, "tooling", "manifest.yaml"));
+        var root = Yaml.LoadFile(manifestFile);
         if (int.TryParse(Yaml.Str(Yaml.Get(root, "version")), out var version)) m.Version = version;
         if (Yaml.Get(root, "rules") is YamlSequenceNode rules)
             foreach (var rule in rules.Children)

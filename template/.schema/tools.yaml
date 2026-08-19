@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
+type: tool
+label: Tool
+label-plural: Tools
+folder: tools
+page: tools.md
+tier: descriptive
+lifecycle: living
+summary: The approved-software register — what is chosen, rejected or deprecated, and the version ranges we stand behind.
+goes-here: A tool or package we've approved, rejected, or are trialling
+detail: >
+  Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
+  evaluation.
+
+versus:
+  adrs: >
+    Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR carries the
+    reasoning; the register carries the current state and the version range. Small, uncontroversial adoptions
+    need only the register.
+
+lineage:
+  prior-art: "[Thoughtworks Technology Radar](https://www.thoughtworks.com/radar)"
+  alignment: >
+    Named technologies sorted by stance, with rejections recorded as first-class content
+  divergence: >
+    The Radar is industry opinion, published periodically and explicitly non-binding. Ours is an internal register
+    with binding version ranges
+
+id:
+  prefix: tol
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [approved, trial, deprecated, rejected]
+    description: '`approved` means approved for new work; existing use that is not approved is drift.'
+    notes: >
+      `approved` means approved **for new work**. Something already in use but not approved is drift, and
+      finding it is a manual job — `drift-against-manifests` is declared and does not run.
+
+  category:
+    required: true
+    type: string
+    notes: e.g. `testing`, `build`, `observability`, `runtime`.
+
+  versions:
+    required: false
+    type: string
+    notes: >
+      A range, not a pin. The register states what we stand behind; the manifests state what is installed.
+
+  licence:
+    required: false
+    type: string
+    pattern: '^[A-Za-z0-9.\-+ ()]+$'
+    notes: SPDX identifier. The field nobody wants until they urgently do.
+
+  decided-in:
+    required: false
+    type: id
+    ref: adrs
+    notes: >
+      Where a decision was worth recording. Small, uncontroversial adoptions need only a register entry.
+
+  replaces:
+    required: false
+    type: id
+    ref: tools
+    reciprocal: successor
+    description: The tool id this supersedes.
+
+  successor:
+    required: false
+    type: id
+    ref: tools
+    reciprocal: replaces
+    description: The tool id that replaces this one.
+    notes: >
+      The counterpart of `replaces`, and what a deprecated entry owes its reader. CI enforces both
+      directions, so a supersession claimed at one end is claimed at both.
+
+sections:
+  required: [What we use it for, Status]
+  optional: [Trial criteria, Where it is used, Alternatives considered, Licence and obligations, Related]
+
+index:
+  columns: [id, title, category, status, versions, licence]
+  sort: [category, id]
+
+rules:
+  - id: deprecated-has-successor
+    description: >
+      A deprecated tool names what replaces it, or the entry is just a complaint.
+    severity: warning
+    expr: "field('status') == 'deprecated' implies present('successor')"
+    message: >
+      This is deprecated and names no successor. Set `successor` to whatever took its place, so that
+      someone arriving here from a manifest has somewhere to go next.
+  - id: trial-has-criteria
+    description: >
+      A tool in `trial` states what would decide it. A trial with no decision criteria stays a trial forever.
+    severity: warning
+    expr: "field('status') == 'trial' implies section('Trial criteria')"
+    message: >
+      This is in trial and nothing says what would end the trial. Add a `## Trial criteria` section naming
+      what is being evaluated, where, and what would settle it either way.
+  - id: drift-against-manifests
+    description: The register against package manifests across the estate, in both directions.
+    # Scheduled. Reports packages in use that were never approved, and approved tools nothing uses any more.

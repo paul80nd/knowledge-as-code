@@ -14,7 +14,7 @@ public static class Harness
 
     public static ValidationResult Validate(string fixtureName)
     {
-        var schemaDir = Path.Combine(RepoRoot, "example", ".schema");
+        var schemaDir = Path.Combine(RepoRoot, "template", ".schema");
         var corpusDir = Path.Combine(RepoRoot, "tooling", "tests", "fixtures", fixtureName, "corpus");
         var temp = Path.Combine(Path.GetTempPath(), "kac-features-" + Guid.NewGuid().ToString("N"));
         try

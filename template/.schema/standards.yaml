@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
+type: standard
+label: Standard
+label-plural: Standards
+folder: standards
+page: standards.md
+tier: normative
+lifecycle: living
+summary: The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.
+goes-here: A rule people must follow when building
+detail: >
+  Imperative throughout — **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
+  of work are the union of the layers that apply to it.
+
+versus:
+  controls: >
+    The standard says what to do; the control says how we know it happened. "Secrets **MUST** come from the
+    vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
+    control.
+
+lineage:
+  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Standard layer; [BCP 14](https://www.rfc-editor.org/rfc/rfc8174) for the grammar"
+  alignment: >
+    Granular, prescriptive requirements; the RFC 2119 keyword set and the all-capitals rule
+  divergence: >
+    We compose standards by union across the axes the type declares. HCGF has no composition model
+
+collision: >
+  In ordinary engineering conversation a *standard* is something an external body publishes — an ISO, an IEEE,
+  an RFC. Here it is an internal rulebook. The collision is unavoidable, since the governance frameworks we take
+  the layering from have the same problem, but it is worth saying aloud.
+
+  The grammar is worth being precise about too. The keyword set comes from **BCP 14**, which is [RFC
+  2119](https://www.rfc-editor.org/rfc/rfc2119) *and* [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
+  together. RFC 8174 establishes that the keywords carry their normative meaning **only when written in
+  capitals**, and that is the rule this type depends on. Citing RFC 2119 alone leaves it unsupported.
+
+id:
+  prefix: std
+  style: numbered
+  width: 4
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+  notes: >
+    Standards are filed under a category folder (common/, platform/, public-api/, …) and named for the rule
+    area, not numbered in the filename. The numeric id lives in frontmatter.
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, active, deprecated, superseded]
+    description: Plain values only — enforcement notes belong in `verified-by`.
+    notes: >
+      Plain values only. Enforcement notes belong in `verified-by`; "until ADR-NNNN is accepted" is derivable
+      from `derived-from` plus that ADR's own status.
+
+  axis:
+    required: true
+    type: enum
+    values: [common, platform, interface, domain]
+    description: The layer where the rule is actually true.
+    notes: >
+      Four axes, and this enum is the authority on them. A folder under `standards/` sits on one axis rather
+      than being one: `public-api`, `widgets` and `webhooks` are all `interface`. The rule-set that binds a
+      piece of work is the union of the axes that apply to it.
+
+  derived-from:
+    required: false
+    type: list
+    of: id
+    ref: adrs
+    description: The ADRs this standard distils. Provenance may come from `implements` instead.
+    notes: >
+      The ADRs this standard distils. Provenance is required — see `provenance-required` below — but may be
+      satisfied by `implements` instead where the standard descends from a policy rather than a decision.
+
+  implements:
+    required: false
+    type: list
+    of: id
+    ref: policies
+    description: Policy ids this standard puts into practice.
+    notes: >
+      One-way, and pointed upward. A standard names the policy it puts into practice; the policy does not
+      name its standards. Policies are the layer a downstream corpus inherits and a standard is the layer it
+      writes for itself, so the set of implementers is unknowable from where the policy sits — and a policy
+      with no implementer named is the normal state, not a gap.
+
+  verified-by:
+    required: false
+    type: list
+    of: id
+    ref: controls
+    reciprocal: verifies
+    description: Control ids that check it.
+
+  applies-to:
+    required: true
+    type: list
+    of: id
+    ref: services
+    allow-literal: [all]
+    description: Service ids, or `all`.
+
+  review-by:
+    required: true
+    type: date
+    description: Quoted. The date by which someone confirms this is still true.
+
+sections:
+  required: [Summary, Rules, Examples, Conformance checklist, Rationale and provenance]
+  optional: [Changelog]
+
+index:
+  columns: [id, title, axis, status, derived-from, review-by]
+  sort: [axis, id]
+
+rules:
+  - id: provenance-required
+    description: A standard cites an ADR in `derived-from`, a policy in `implements`, or both.
+    severity: error
+    expr: "present('derived-from') or present('implements')"
+    message: >
+      A standard cites where its authority comes from — an ADR in `derived-from`, a policy in `implements`,
+      or both. With neither this is guidance, and guidance is an explanation.
+  - id: rules-have-controls
+    description: >
+      Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.
+  - id: changelog-begins-at-active
+    description: Changelog entries are material changes only, and begin when status becomes `active`.
+    # Material means a rule added, removed or changed in effect. Wording, examples, link fixes and typos are not; git
+    # has those.
+  - id: changelog-on-material-change
+    description: >
+      If the Rules section changed and status is `active`, a new changelog entry is required in the same commit.

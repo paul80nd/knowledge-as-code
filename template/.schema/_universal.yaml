@@ -1,0 +1,55 @@
+# Fields carried by every document in the taxonomy.
+# Type files may override `values` (status differs per type) and add their own fields.
+
+notes: >
+  Five things are deliberately not fields here, and each was proposed at least once. `type` is inferred from the
+  folder. `title` is the H1 — the reserved key below is an Azure DevOps navigation label, not document metadata.
+  `created` and `updated` are what git knows, and git will not forget to update them. `lifecycle` follows from
+  `tier`, and a second field could disagree with the first.
+
+fields:
+
+  id:
+    required: true
+    type: string
+    description: Stable, unique across the corpus, never reused. Format set by the type.
+    notes: >
+      Stable, unique across the whole corpus, never reused. Format and width are set by the type's `id` block.
+      The id is the anchor for every cross-reference; filenames may be corrected, ids may not.
+
+  tier:
+    required: true
+    type: enum
+    values: [decided, normative, descriptive, procedural, observed]
+    description: Fixed for the type — a trust signal for the reader. CI checks it matches the folder.
+    notes: >
+      Fixed for the type and therefore derivable from the folder, but stated in frontmatter because it is a
+      trust signal for the reader — seeing "observed" at the top of a page tells you how much weight to give it.
+      CI checks it matches the type.
+
+  status:
+    required: true
+    type: enum
+    values: []          # supplied by each type
+    description: Values vary by type.
+
+  owner:
+    required: true
+    type: string
+    description: A named person, never a team alias.
+    notes: >
+      A named person, never a team alias. Someone must be answerable.
+
+  tags:
+    required: false
+    type: list
+    of: string
+    pattern: '^[a-z0-9-]+$'
+    description: Free-form, lowercase, hyphenated. Used for cross-cutting search.
+
+# Keys permitted but not part of the knowledge schema. Azure DevOps uses these to control how a page is
+# labelled in wiki navigation; they are a rendering concern, so the validator allows them without
+# requiring them and ignores them everywhere else.
+reserved:
+  - title
+  - allowTitleToDifferFromFilename

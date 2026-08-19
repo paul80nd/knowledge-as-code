@@ -472,9 +472,11 @@ public sealed partial class Schema
         IReadOnlyList<string> Reserved,
         IReadOnlyDictionary<string, IReadOnlyList<string>> Enums);
 
-    public static Schema Load(string corpusRoot)
+    // Takes whatever holds a `.schema/`: a corpus, or the template a corpus is made from. The schema is
+    // the same document in both, and the callers that read it from the template are the ones proving it.
+    public static Schema Load(string root)
     {
-        var dir = Path.Combine(corpusRoot, ".schema");
+        var dir = Path.Combine(root, ".schema");
         var unread = new List<UnreadKey>();
 
         var enumKeys = new KeyReader(".schema/_enums.yaml");
