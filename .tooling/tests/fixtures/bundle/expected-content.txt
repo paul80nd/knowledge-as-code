@@ -25,9 +25,11 @@
 .dist/plugin/bundle.json :: !"generatedAt"
 .dist/plugin/bundle.json :: !"commit"
 
-# The marketplace names the plugin as a path beneath itself.
+# The marketplace names the plugin as a path beneath itself, and takes the plugin's own name. Both
+# are what a reader types to install, and neither says where this copy of the marketplace sits — the
+# same file is what gets published, so a name qualified by "local" would be wrong the moment it moved.
 .dist/.claude-plugin/marketplace.json :: "source": "./plugin"
-.dist/.claude-plugin/marketplace.json :: "name": "example-libraries-local"
+.dist/.claude-plugin/marketplace.json :: "name": "example-libraries"
 
 # The breadcrumb states what a session is told before it has a question: which corpus is installed,
 # how much of it there is, which contexts it covers, and what to ask. The count is the load-bearing

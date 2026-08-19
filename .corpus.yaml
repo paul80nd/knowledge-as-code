@@ -37,7 +37,7 @@ corpus: knowledge-as-code
 #
 # The number is a notification and nothing refuses to load because it moved.
 # Bumped by hand, and `kac mechanism --check` reports what it finds here.
-content-version: "1.0.0"
+content-version: "0.1.0"
 
 # The role of this corpus. One of: source | consumer.
 role: source

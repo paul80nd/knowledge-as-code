@@ -316,6 +316,20 @@ public class BundlerTests
         Assert.DoesNotContain("..", source);
     }
 
+    // The marketplace and the plugin it offers are the two words a reader types to install, and the
+    // marketplace takes the plugin's own name for both of them. Nothing in the name says where this
+    // copy sits: the same file is what gets published, so a name qualified by the path it was built
+    // at would be wrong the moment it moved.
+    [Fact]
+    public void The_marketplace_takes_the_name_of_the_plugin_it_offers()
+    {
+        var marketplace = Written(Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest()]),
+            Dist.MarketplaceRel, underPlugin: false);
+
+        Assert.Equal("example-libraries", marketplace.GetProperty("name").GetString());
+        Assert.Equal("example-libraries", marketplace.GetProperty("plugins")[0].GetProperty("name").GetString());
+    }
+
     // -- what the bundle records about itself --
 
     [Fact]
