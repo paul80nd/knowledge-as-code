@@ -111,9 +111,9 @@ public static class Exporter
     //
     // What is deleted is `Dist.Export` and never `.dist/` itself, because the bundle sits beside it
     // under the same root and an export is not entitled to take it.
-    public static List<string> Write(string repoRoot, ExportPlan plan)
+    public static List<string> Write(string corpusRoot, ExportPlan plan)
     {
-        var root = Path.Combine(repoRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar));
+        var root = Path.Combine(corpusRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar));
         if (Directory.Exists(root)) Directory.Delete(root, recursive: true);
 
         var written = new List<string>();

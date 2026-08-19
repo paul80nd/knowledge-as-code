@@ -44,22 +44,22 @@ public static class Corpus
     //
     // git ls-files respects .gitignore, .git/info/exclude and global excludes, and never lists .git/
     // itself — exactly the "respect .gitignore" requirement; the walk is the non-git fallback.
-    private static List<string> AllFiles(string repoRoot) =>
-        GitFiles.Tracked(repoRoot) ?? GitFiles.Walk(repoRoot, "*.md", SkipDirs);
+    private static List<string> AllFiles(string corpusRoot) =>
+        GitFiles.Tracked(corpusRoot) ?? GitFiles.Walk(corpusRoot, "*.md", SkipDirs);
 
     // A corpus at a path. The listing is taken once and carried on the result as a `Tree`: everything
     // downstream asks it what the corpus holds, and a second `git ls-files` costs more than every check in
     // the tool put together.
     //
     // This is the one place a path becomes a corpus. Everything below it is decided from values.
-    public static LoadedCorpus Load(string repoRoot) =>
+    public static LoadedCorpus Load(string corpusRoot) =>
         Load(
             new Tree(
-                new HashSet<string>(AllFiles(repoRoot).Select(f => f.Replace('\\', '/')), StringComparer.Ordinal),
-                rel => Files.ReadLf(Path.Combine(repoRoot, rel)),
-                rel => File.Exists(Path.Combine(repoRoot, rel))),
-            Schema.Load(repoRoot),
-            CorpusDescriptor.Load(repoRoot));
+                new HashSet<string>(AllFiles(corpusRoot).Select(f => f.Replace('\\', '/')), StringComparer.Ordinal),
+                rel => Files.ReadLf(Path.Combine(corpusRoot, rel)),
+                rel => File.Exists(Path.Combine(corpusRoot, rel))),
+            Schema.Load(corpusRoot),
+            CorpusDescriptor.Load(corpusRoot));
 
     // The listing, the schema it is judged against, and what the corpus records about itself — everything
     // an entry point needs before it can ask a question, and the whole of what this reads. A caller with a
@@ -149,7 +149,7 @@ public static class Corpus
     // gives in ordinal order.
     private static List<string> Discover(Tree tree, Schema schema)
     {
-        // Type pages at the repo root — adrs.md, services.md, data.md, … Each is prose about its
+        // Type pages at the corpus root — adrs.md, services.md, data.md, … Each is prose about its
         // records and is checked separately, as a page.
         var typePages = new HashSet<string>(
             schema.ByFolder.Values.Select(t => t.Page).Where(p => !string.IsNullOrEmpty(p)),

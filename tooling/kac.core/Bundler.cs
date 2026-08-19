@@ -212,15 +212,15 @@ public static class Bundler
     // the export's — a component dropped from the manifest must not stay readable in an artefact nobody
     // reviews — and the same reason it names its directories rather than `.dist/`: the export is under
     // the same root and a bundle is not entitled to take it.
-    public static List<string> Write(string repoRoot, BundlePlan plan)
+    public static List<string> Write(string corpusRoot, BundlePlan plan)
     {
         foreach (var owned in new[] { Dist.Plugin, $"{Dist.Root}/{Dist.MarketplaceDir}" })
         {
-            var dir = Path.Combine(repoRoot, owned.Replace('/', Path.DirectorySeparatorChar));
+            var dir = Path.Combine(corpusRoot, owned.Replace('/', Path.DirectorySeparatorChar));
             if (Directory.Exists(dir)) Directory.Delete(dir, recursive: true);
         }
 
-        var root = Path.Combine(repoRoot, Dist.Root);
+        var root = Path.Combine(corpusRoot, Dist.Root);
         var written = new List<string>();
         foreach (var file in plan.Files)
         {

@@ -300,7 +300,7 @@ public static class Generator
         if (link.Length > 0) yield return link.ToString();
     }
 
-    // The corpus's own index of types, for whoever arrives at the repository root: what each holds, and
+    // The corpus's own index of types, for whoever arrives at the corpus root: what each holds, and
     // one way on to the taxonomy, which is where the question "so where does mine go" is answered. The
     // pointer sits inside the block so that it cannot drift above the table or be edited away.
     //

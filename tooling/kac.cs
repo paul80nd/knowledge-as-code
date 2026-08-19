@@ -28,10 +28,10 @@
 using System.CommandLine;
 using kac.core;
 
-var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
-if (repoRoot is null)
+var corpusRoot = FindCorpusRoot(Directory.GetCurrentDirectory());
+if (corpusRoot is null)
 {
-    Console.Error.WriteLine("kac: could not locate the repo root (no .schema above the cwd).");
+    Console.Error.WriteLine("kac: could not locate a corpus (no .schema above the cwd).");
     return 2;
 }
 
@@ -42,14 +42,14 @@ var validate = new Command("validate", "Check the corpus against .schema/*.yaml.
 {
     jsonOpt
 };
-validate.SetAction(pr => Commands.Validate(repoRoot, pr.GetValue(jsonOpt)));
+validate.SetAction(pr => Commands.Validate(corpusRoot, pr.GetValue(jsonOpt)));
 
 var checkOpt = new Option<bool>("--check") { Description = "Fail if a generated file is stale instead of writing it." };
 var index = new Command("index", "Regenerate _index.md and the generated blocks in <type>.md.")
 {
     checkOpt
 };
-index.SetAction(pr => Commands.Index(repoRoot, pr.GetValue(checkOpt)));
+index.SetAction(pr => Commands.Index(corpusRoot, pr.GetValue(checkOpt)));
 
 // `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`
 // narrows what is written and never what is read: the whole corpus is loaded either way, so ids resolve
@@ -59,13 +59,13 @@ var export = new Command("export", "Write the corpus to .dist/export/ as a versi
 {
     typeOpt
 };
-export.SetAction(pr => Commands.Export(repoRoot, pr.GetValue(typeOpt)));
+export.SetAction(pr => Commands.Export(corpusRoot, pr.GetValue(typeOpt)));
 
 // `bundle` assembles what `export` wrote, plus the `.plugin/` tree, into a plugin directory under
 // `.dist/plugin/`. Two commands rather than one because they fail differently and are proved
 // differently: an export is wrong about the corpus, and a bundle is wrong about what it shipped.
 var bundle = new Command("bundle", "Assemble the export and .plugin/ into a plugin under .dist/plugin/.");
-bundle.SetAction(_ => Commands.Bundle(repoRoot));
+bundle.SetAction(_ => Commands.Bundle(corpusRoot));
 
 // `checks` is machinery before it is documentation: the test suite reads `checks --json` to assert
 // every rule is exercised by a fixture, so a new rule cannot ship without a golden covering it.
@@ -74,7 +74,7 @@ var checks = new Command("checks", "List every check the validator implements.")
 {
     checksJsonOpt
 };
-checks.SetAction(pr => Commands.Checks(repoRoot, pr.GetValue(checksJsonOpt)));
+checks.SetAction(pr => Commands.Checks(corpusRoot, pr.GetValue(checksJsonOpt)));
 
 // mechanism — enforce the portability manifest. `--check` compares this corpus's shared layers
 // against a reference copy and reports drift, following the same discipline as `index --check`:
@@ -90,17 +90,20 @@ var mechanism = new Command("mechanism", "Enforce the portability manifest: comp
     againstOpt
 };
 mechanism.SetAction(pr =>
-    Commands.Mechanism(repoRoot, pr.GetValue(mechCheckOpt), pr.GetValue(mechSyncOpt), pr.GetValue(againstOpt)));
+    Commands.Mechanism(corpusRoot, pr.GetValue(mechCheckOpt), pr.GetValue(mechSyncOpt), pr.GetValue(againstOpt)));
 
 var root = new RootCommand("kac — the knowledge-as-code validator and generator.")
     { validate, index, export, bundle, checks, mechanism };
 
 // Bad arguments exit 1 (System.CommandLine's default) — the printed error makes it
 // obvious it was a usage problem rather than corpus errors. Exit 2 is reserved for the
-// pre-flight failure above (no repo root), where the tool never got as far as parsing.
+// pre-flight failure above (no corpus), where the tool never got as far as parsing.
 return root.Parse(args).Invoke();
 
-static string? FindRepoRoot(string start)
+// The corpus this command runs against: the nearest folder above the working directory carrying a
+// `.schema/`. Every subcommand is answered from there, so where the tool's own files sit says nothing
+// about which corpus it reads.
+static string? FindCorpusRoot(string start)
 {
     var dir = new DirectoryInfo(start);
     while (dir is not null)

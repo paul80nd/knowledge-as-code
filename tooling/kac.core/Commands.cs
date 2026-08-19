@@ -9,9 +9,9 @@ namespace kac.core;
 
 public static class Commands
 {
-    public static int Validate(string repoRoot, bool json)
+    public static int Validate(string corpusRoot, bool json)
     {
-        var corpus = Corpus.Load(repoRoot);
+        var corpus = Corpus.Load(corpusRoot);
         var findings = Validator.CheckAll(corpus);
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
@@ -19,9 +19,9 @@ public static class Commands
     // Build the export. The whole corpus is loaded whatever `type` names, because a narrowed load
     // answers questions about the set from some of its members and answers them wrongly; `type` narrows
     // what is written.
-    public static int Export(string repoRoot, string? type)
+    public static int Export(string corpusRoot, string? type)
     {
-        var corpus = Corpus.Load(repoRoot);
+        var corpus = Corpus.Load(corpusRoot);
 
         if (type is not null && corpus.Adopted.All(t => t.Key != type))
             return Fail($"export: this corpus has not adopted a type called '{type}'. "
@@ -33,15 +33,15 @@ public static class Commands
             return Fail($"export: .corpus.yaml excludes {string.Join(", ", unknown)}, which an export cannot "
                         + $"act on. It excludes {string.Join(" or ", CorpusDescriptor.Excludable)}.");
 
-        var commit = Git.Head(repoRoot);
-        var dirty = Git.Dirty(repoRoot);
+        var commit = Git.Head(corpusRoot);
+        var dirty = Git.Dirty(corpusRoot);
         var publishing = Publishing.For(corpus.Descriptor, commit);
         var now = DateTime.UtcNow;
 
         var plan = Exporter.Plan(corpus, publishing, type,
             new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, dirty));
 
-        var written = Exporter.Write(repoRoot, plan);
+        var written = Exporter.Write(corpusRoot, plan);
         foreach (var path in written) Console.WriteLine($"wrote {path}");
 
         // What the export cannot say is worth saying here, where someone is watching. Neither state is
@@ -86,14 +86,14 @@ public static class Commands
 
     // Assemble the plugin from the export and the `.plugin/` tree. Two trees in, one directory out, and
     // the corpus is never loaded: what a bundle has to decide is a fact about the export it was handed.
-    public static int Bundle(string repoRoot)
+    public static int Bundle(string corpusRoot)
     {
-        var pluginTree = Bundler.Read(Path.Combine(repoRoot, Bundler.SourceDir));
+        var pluginTree = Bundler.Read(Path.Combine(corpusRoot, Bundler.SourceDir));
         if (pluginTree is null)
             return Fail($"bundle: no plugin tree at {Bundler.SourceDir}/. It is the source a plugin is built from, "
                         + "and it arrives with the mechanism.");
 
-        var export = Bundler.Read(Path.Combine(repoRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar)));
+        var export = Bundler.Read(Path.Combine(corpusRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar)));
         if (export is null)
             return Fail($"bundle: no export at {Dist.Export}/. Run it first: ./kac export");
 
@@ -105,7 +105,7 @@ public static class Commands
             return 1;
         }
 
-        var written = Bundler.Write(repoRoot, plan);
+        var written = Bundler.Write(corpusRoot, plan);
         foreach (var path in written) Console.WriteLine($"wrote {path}");
 
         // Named rather than counted, as the export names what it withheld. A component that was dropped
@@ -126,9 +126,9 @@ public static class Commands
         return 0;
     }
 
-    public static int Index(string repoRoot, bool check)
+    public static int Index(string corpusRoot, bool check)
     {
-        var corpus = Corpus.Load(repoRoot);
+        var corpus = Corpus.Load(corpusRoot);
 
         // What every generated file should hold, beside what it holds now. `GeneratedFiles` owns which
         // files those are and which blocks each carries, so that `validate` holds a corpus to the same
@@ -151,7 +151,7 @@ public static class Commands
             return 1;
         }
 
-        ReportWritten(GeneratedFiles.Write(repoRoot, plan));
+        ReportWritten(GeneratedFiles.Write(corpusRoot, plan));
         return 0;
     }
 
@@ -209,9 +209,9 @@ public static class Commands
         return errors > 0 ? 1 : 0;
     }
 
-    public static int Checks(string repoRoot, bool json)
+    public static int Checks(string corpusRoot, bool json)
     {
-        var schema = Schema.Load(repoRoot);
+        var schema = Schema.Load(corpusRoot);
         var catalogue = CheckCatalogue.For(schema);
 
         // The catalogue is always valid data, so emit it either way; the reader-facing table's
@@ -250,18 +250,18 @@ public static class Commands
         return 1;
     }
 
-    public static int Mechanism(string repoRoot, bool check, bool sync, string? against)
+    public static int Mechanism(string corpusRoot, bool check, bool sync, string? against)
     {
         if (check == sync)
             return Fail(check
                 ? "mechanism: --check and --sync are the two halves of this command; ask for one."
                 : "mechanism: specify --check to compare against a reference, or --sync to take from one.");
 
-        var descriptor = CorpusDescriptor.Load(repoRoot);
+        var descriptor = CorpusDescriptor.Load(corpusRoot);
 
         // A descriptor still on a renamed key stops both halves. A check would report on a file it has
         // misread, and a sync would stamp beside a key it does not read.
-        if (CorpusDescriptor.RenamedKeyInUse(repoRoot) is { } renamed) return Fail(renamed);
+        if (CorpusDescriptor.RenamedKeyInUse(corpusRoot) is { } renamed) return Fail(renamed);
 
         // A sync needs a declared upstream, and not just a directory it can read. `--against` says which
         // copy of the upstream to take from — a local checkout rather than the URL. `upstream.url` says
@@ -276,13 +276,13 @@ public static class Commands
             return Fail("mechanism: no reference to compare against. Pass --against <path>, "
                         + "or set upstream.url in .corpus.yaml.");
 
-        var refRoot = Path.GetFullPath(reference, repoRoot);
+        var refRoot = Path.GetFullPath(reference, corpusRoot);
         if (!Directory.Exists(refRoot))
             return Fail($"mechanism: reference corpus not found: {refRoot}");
-        if (Path.GetFullPath(refRoot) == Path.GetFullPath(repoRoot))
+        if (Path.GetFullPath(refRoot) == Path.GetFullPath(corpusRoot))
             return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
 
-        var localFiles = MechanismCheck.ListFiles(repoRoot);
+        var localFiles = MechanismCheck.ListFiles(corpusRoot);
         var refFiles = MechanismCheck.ListFiles(refRoot);
 
         // Check reads this corpus's manifest, because it reports whether this corpus is in step with the
@@ -290,7 +290,7 @@ public static class Commands
         // with the files the boundary describes.
         if (check)
             return ReportMechanism(
-                MechanismCheck.Classify(localFiles, refFiles, Manifest.Load(repoRoot), descriptor, Same),
+                MechanismCheck.Classify(localFiles, refFiles, Manifest.Load(corpusRoot), descriptor, Same),
                 descriptor, refRoot);
 
         var manifest = Manifest.Load(refRoot);
@@ -298,12 +298,12 @@ public static class Commands
             MechanismSync.DeclinedTypePaths(refRoot, descriptor), Same);
 
         var today = DateTime.Today.ToString("yyyy-MM-dd");
-        MechanismSync.Apply(plan, repoRoot, refRoot, manifest, reference, today);
-        return ReportSync(plan, repoRoot, manifest.Version, reference, today);
+        MechanismSync.Apply(plan, corpusRoot, refRoot, manifest, reference, today);
+        return ReportSync(plan, corpusRoot, manifest.Version, reference, today);
 
         // Whether two copies of a file say the same thing, which is the one question either engine asks of
         // the disk. Passed in, so each engine decides from listings and a predicate rather than from a tree.
-        bool Same(string rel) => MechanismCheck.Same(repoRoot, refRoot, rel);
+        bool Same(string rel) => MechanismCheck.Same(corpusRoot, refRoot, rel);
     }
 
     // A command stopping on something the caller asked for and cannot have. The message goes to stderr
@@ -369,7 +369,7 @@ public static class Commands
         static string Stated(object? version) => version?.ToString() is { Length: > 0 } v ? v : "not declared";
     }
 
-    private static int ReportSync(SyncPlan plan, string repoRoot, int mechanismVersion, string reference,
+    private static int ReportSync(SyncPlan plan, string corpusRoot, int mechanismVersion, string reference,
         string today)
     {
         Console.WriteLine($"mechanism: syncing the shared layers from {reference}");
@@ -396,7 +396,7 @@ public static class Commands
         // Every synced page may carry a generated block built from this corpus's own types, so the copies
         // above are only right once rebuilt against what this corpus holds. Regenerating here makes a
         // passing `index --check` sync's postcondition instead of the reader's next surprise.
-        return Regenerate(repoRoot);
+        return Regenerate(corpusRoot);
 
         static void Section(string heading, IReadOnlyList<string> paths)
         {
@@ -409,12 +409,12 @@ public static class Commands
     // The corpus is loaded here rather than by the caller because a sync has just replaced the schema, and
     // a schema this corpus cannot yet read is the one failure worth surviving: the files are already in
     // place, and saying so is more use than a stack trace over a half-finished tree.
-    private static int Regenerate(string repoRoot)
+    private static int Regenerate(string corpusRoot)
     {
         try
         {
-            var corpus = Corpus.Load(repoRoot);
-            ReportWritten(GeneratedFiles.Write(repoRoot,
+            var corpus = Corpus.Load(corpusRoot);
+            ReportWritten(GeneratedFiles.Write(corpusRoot,
                 GeneratedFiles.Plan(corpus.Schema, corpus.Adopted, corpus.Docs, corpus.Tree)));
             return 0;
         }

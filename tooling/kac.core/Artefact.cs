@@ -5,7 +5,7 @@
 namespace kac.core;
 
 // `_` means framework artefact rather than knowledge record. Inside a type folder that is the
-// generated index and the template a contributor copies; at the repo root it is the scaffolding
+// generated index and the template a contributor copies; at the corpus root it is the scaffolding
 // directories. The prefix is what the tool tests rather than the names below, so the rule holds for
 // anything a corpus adds under it, and a reader scanning a folder finds the framework's files
 // grouped above the records in any listing — `_` sorts ahead of letters whether or not the listing

@@ -16,10 +16,10 @@ public class Manifest
     // reference rather than assumed, so a corpus taking from an older upstream records what it took.
     public int Version;
 
-    public static Manifest Load(string repoRoot)
+    public static Manifest Load(string corpusRoot)
     {
         var m = new Manifest();
-        var root = Yaml.LoadFile(Path.Combine(repoRoot, "tooling", "manifest.yaml"));
+        var root = Yaml.LoadFile(Path.Combine(corpusRoot, "tooling", "manifest.yaml"));
         if (int.TryParse(Yaml.Str(Yaml.Get(root, "version")), out var version)) m.Version = version;
         if (Yaml.Get(root, "rules") is YamlSequenceNode rules)
             foreach (var rule in rules.Children)
@@ -137,9 +137,9 @@ public class CorpusDescriptor
     // naming no role answers yes, as `Adopted` does: a corpus that has said nothing is held to everything.
     public bool Verifies => !Role.Equals("consumer", StringComparison.Ordinal);
 
-    public static CorpusDescriptor Load(string repoRoot)
+    public static CorpusDescriptor Load(string corpusRoot)
     {
-        var path = Path.Combine(repoRoot, ".corpus.yaml");
+        var path = Path.Combine(corpusRoot, ".corpus.yaml");
         var descriptor = new CorpusDescriptor();
         if (!File.Exists(path)) return descriptor;
 
@@ -176,9 +176,9 @@ public class CorpusDescriptor
     // Both halves of `mechanism` stop on this. A check would otherwise report on a file it has misread,
     // and a sync would write a stamp beside a key it does not read. The message carries the old key, the
     // new one and the path, so the fix is mechanical.
-    public static string? RenamedKeyInUse(string repoRoot)
+    public static string? RenamedKeyInUse(string corpusRoot)
     {
-        var path = Path.Combine(repoRoot, ".corpus.yaml");
+        var path = Path.Combine(corpusRoot, ".corpus.yaml");
         if (!File.Exists(path)) return null;
 
         var root = Yaml.LoadFile(path);
@@ -200,9 +200,9 @@ public class CorpusDescriptor
     // commentary. Someone opens it to read what each role means and when a divergence is worth
     // accepting, and a YAML round-trip would throw all of that away. Rewriting a line does drop any
     // trailing comment on it, which is right: that comment described the value the sync just replaced.
-    public static void Stamp(string repoRoot, int mechanismVersion, string syncedFrom, string syncedOn)
+    public static void Stamp(string corpusRoot, int mechanismVersion, string syncedFrom, string syncedOn)
     {
-        var path = Path.Combine(repoRoot, ".corpus.yaml");
+        var path = Path.Combine(corpusRoot, ".corpus.yaml");
         var lines = File.Exists(path)
             ? new List<string>(Files.ReadLf(path).Split('\n'))
             : [];

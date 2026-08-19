@@ -472,9 +472,9 @@ public sealed partial class Schema
         IReadOnlyList<string> Reserved,
         IReadOnlyDictionary<string, IReadOnlyList<string>> Enums);
 
-    public static Schema Load(string repoRoot)
+    public static Schema Load(string corpusRoot)
     {
-        var dir = Path.Combine(repoRoot, ".schema");
+        var dir = Path.Combine(corpusRoot, ".schema");
         var unread = new List<UnreadKey>();
 
         var enumKeys = new KeyReader(".schema/_enums.yaml");

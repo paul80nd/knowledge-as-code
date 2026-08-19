@@ -100,13 +100,13 @@ public static class GeneratedFiles
     //
     // `index` and `mechanism --sync` both end here, so a sync writes what an index would write and the
     // two cannot come to different files.
-    public static List<string> Write(string repoRoot, IEnumerable<GeneratedFile> plan)
+    public static List<string> Write(string corpusRoot, IEnumerable<GeneratedFile> plan)
     {
         var written = new List<string>();
         foreach (var file in plan)
         {
             if (!file.Stale) continue;
-            File.WriteAllText(Path.Combine(repoRoot, file.Path), file.Wanted);
+            File.WriteAllText(Path.Combine(corpusRoot, file.Path), file.Wanted);
             written.Add(file.Path);
         }
 
