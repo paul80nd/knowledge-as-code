@@ -50,7 +50,7 @@ any organisation, shared byte-for-byte between every corpus running this framewo
 to use it, and a template to copy. Opinionated, and meant to be forked — you take them once, localise the examples to
 your own domain, and never reconcile them again.
 
-Which files fall on which side is declared in [`.tooling/manifest.yaml`](.tooling/manifest.yaml), not asserted in prose.
+Which files fall on which side is declared in [`tooling/manifest.yaml`](tooling/manifest.yaml), not asserted in prose.
 
 **What does not live here** is anybody's actual knowledge. Every record in this repository is illustrative and is meant
 to be deleted. A corpus derived from this one holds its organisation's policies, services and decisions; this one holds
@@ -116,14 +116,14 @@ cd my-corpus
 ./kac export                       # write the corpus to .dist/export/ as data a consumer reads
 ./kac bundle                       # assemble that export and .plugin/ into a plugin under .dist/plugin/
 ./kac checks                       # list the checks
-dotnet run .tooling/kac-tests.cs   # run the golden test suite
+dotnet run tooling/kac-tests.cs    # run the golden test suite
 ```
 
-`./kac` (Windows: `kac.cmd`) is a launcher at the repo root wrapping `dotnet run .tooling/kac.cs`; add the repo root to
+`./kac` (Windows: `kac.cmd`) is a launcher at the repo root wrapping `dotnet run tooling/kac.cs`; add the repo root to
 your `PATH` to run it as `kac`.
 
 **To start your own corpus:** clone, drop the types you do not want, **delete the example records in the ones you
-keep**, rewrite the root pages' examples in your own domain, and start adding records. Keep `.tooling/` and `.schema/`
+keep**, rewrite the root pages' examples in your own domain, and start adding records. Keep `tooling/` and `.schema/`
 as they are — that is the half you want to receive updates to.
 
 **Dropping a type means deleting both `<type>.md` and `<type>/`**, because a type is stood up as both or as neither and
@@ -183,7 +183,7 @@ and ask it the question your change was about. **Uninstall before you rebuild.**
 Claude Code holds, so a second build at the same `content-version` leaves the first one installed and your change
 invisible.
 
-`sh .tooling/tests/round-trip.sh` walks the same path without a session and without touching your own configuration: it
+`sh tooling/tests/round-trip.sh` walks the same path without a session and without touching your own configuration: it
 installs into a config directory of its own, looks a term up, fetches a record through the raw link the export wrote,
 and says which step failed. CI runs it on Linux and Windows.
 
@@ -223,16 +223,16 @@ knowledge-as-code/     # the system's own documentation
   ├── principles.md    # why the framework is shaped this way
   ├── lineage.md       # where the taxonomy's names came from
   └── automation.md    # what is generated, validated and scheduled
-kac, kac.cmd           # launchers that wrap `dotnet run .tooling/kac.cs`
+kac, kac.cmd           # launchers that wrap `dotnet run tooling/kac.cs`
 .corpus.yaml           # what this corpus is, and where it takes the framework from
 .claude/skills/        # agent skills for working on this corpus, shared with every corpus
 .plugin/               # source for the plugin that carries this corpus's export to another repository
 .schema/               # the machine-readable schema — the source of truth
-.tooling/              # the kac tool: entrypoint + kac.core library, the manifest, its tests and fixtures
+tooling/               # the kac tool: entrypoint + kac.core library, the manifest, its tests and fixtures
 ```
 
-The mechanism is dot-prefixed — `.schema/`, `.tooling/`, `.corpus.yaml` — so the markdown stays the visible half of the
-repository, and an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
+The mechanism is kept apart from the knowledge — `.schema/`, `.corpus.yaml` and `tooling/` — so the markdown stays the
+visible half of the repository, and an Azure DevOps wiki published from this tree shows knowledge rather than machinery.
 `knowledge-as-code/` holds documentation and nothing else: what the tool reads lives beside the tool.
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.

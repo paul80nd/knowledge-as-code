@@ -4,7 +4,7 @@
 # generated-content freshness check, the export and the plugin bundle on pull
 # requests into main. It NEVER commits anything it produces. `index --check`
 # only verifies the tracked generated files are fresh and fails, naming the
-# command a human runs locally (`dotnet run .tooling/kac.cs -- index`). The
+# command a human runs locally (`dotnet run tooling/kac.cs -- index`). The
 # export and the bundle land in an untracked .dist/ that the runner throws away.
 # This workflow is granted read-only contents permission and pushes nothing.
 #
@@ -46,21 +46,21 @@ jobs:
       # One invocation per subcommand, run sequentially. File-based apps share
       # build output, so the kac runs must not execute concurrently.
       - name: Validate frontmatter, links and structure
-        run: dotnet run .tooling/kac.cs -- validate
+        run: dotnet run tooling/kac.cs -- validate
 
       - name: Check generated indexes are fresh
-        run: dotnet run .tooling/kac.cs -- index --check
+        run: dotnet run tooling/kac.cs -- index --check
 
       # Proves the corpus still exports. The shape it exports in is held by a committed
       # golden in the suite below.
       - name: Build the export
-        run: dotnet run .tooling/kac.cs -- export
+        run: dotnet run tooling/kac.cs -- export
 
       # Assembles what `export` wrote, together with the .plugin/ tree, into an installable
       # plugin under .dist/plugin/, with .dist/ itself as the marketplace naming it. The
       # fourth and last kac invocation, so the one-at-a-time rule above still holds.
       - name: Assemble the plugin bundle
-        run: dotnet run .tooling/kac.cs -- bundle
+        run: dotnet run tooling/kac.cs -- bundle
 
       # Taken at `latest` rather than pinned. The bundle has to be valid against the CLI a
       # reader actually runs, and no ecosystem in dependabot.yml moves an npm pin, so a pinned
@@ -133,8 +133,8 @@ jobs:
           cp -R .plugin "$TEMPDIR/no-types/.plugin"
 
           cd "$TEMPDIR/no-types"
-          dotnet run "$GITHUB_WORKSPACE/.tooling/kac.cs" -- export
-          dotnet run "$GITHUB_WORKSPACE/.tooling/kac.cs" -- bundle
+          dotnet run "$GITHUB_WORKSPACE/tooling/kac.cs" -- export
+          dotnet run "$GITHUB_WORKSPACE/tooling/kac.cs" -- bundle
 
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
@@ -149,13 +149,13 @@ jobs:
       # and the golden/subprocess suite (fixtures diffed against committed goldens, plus the
       # coverage + checks-table gates and the end-to-end CLI contract).
       - name: Run kac.core unit tests
-        run: dotnet test .tooling/kac.tests
+        run: dotnet test tooling/kac.tests
 
       - name: Run kac feature tests
-        run: dotnet test .tooling/kac.features
+        run: dotnet test tooling/kac.features
 
       - name: Run the golden test suite
-        run: dotnet run .tooling/kac-tests.cs
+        run: dotnet run tooling/kac-tests.cs
 
   # The chain end to end, on the two platforms that matter. Everything in the job above is proved
   # over data; this installs what was assembled and asks it the questions its skill describes.
@@ -190,14 +190,14 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build the export
-        run: dotnet run .tooling/kac.cs -- export
+        run: dotnet run tooling/kac.cs -- export
 
       - name: Assemble the plugin bundle
-        run: dotnet run .tooling/kac.cs -- bundle
+        run: dotnet run tooling/kac.cs -- bundle
 
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest
 
       - name: Install the plugin and ask it what its skill describes
         shell: bash
-        run: sh .tooling/tests/round-trip.sh
+        run: sh tooling/tests/round-trip.sh

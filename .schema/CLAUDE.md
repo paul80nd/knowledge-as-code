@@ -7,11 +7,11 @@ upstream: author the change here and take it down with `kac mechanism --sync`, b
 **After any change, run `./kac index` and then the golden suite.** Every type page carries generated `schema-<type>`
 and `checks-<type>` blocks derived from these files, so a schema edit alone leaves the corpus stale and fails
 `index --check` in CI. The fixtures validate against these files rather than against copies, so the same edit can move
-golden expectations in `.tooling/tests/fixtures/`: run `dotnet run .tooling/kac-tests.cs` as well as `./kac validate`.
+golden expectations in `tooling/tests/fixtures/`: run `dotnet run tooling/kac-tests.cs` as well as `./kac validate`.
 
 * **A key you invent is rejected, and `notes:` is how you say the thing anyway.** The key space is closed at every
   level: the loader records what it asks each mapping for, and anything left over fails as `schema-unknown-key`. A new
-  key means an edit to `.tooling/kac.core/Schema.cs` **and** to the code that reads what it parsed into — finding it
+  key means an edit to `tooling/kac.core/Schema.cs` **and** to the code that reads what it parsed into — finding it
   parsed is not enough, since a value nothing dispatches fails the same pass one step later. Declare it in
   [`meta/type.schema.json`](meta/type.schema.json) in the same edit: nothing in CI reads that file, so a key missing
   from it is one an editor marks red while the build stays green, and the mistake surfaces as distrust of the tooling
@@ -43,15 +43,15 @@ golden expectations in `.tooling/tests/fixtures/`: run `dotnet run .tooling/kac-
   obligation is `required-when`, and a should-have-done-this is a rule.
 
 * **Thresholds are judgements**, and each is pinned by a fixture so moving one is visible.
-  [`../.tooling/features/checks.md`](../.tooling/features/checks.md) says where the numbers came from. A ratio like
+  [`../tooling/features/checks.md`](../tooling/features/checks.md) says where the numbers came from. A ratio like
   `words() <= links() * 40` fails a document linking to nothing at any length, which for a capability or an explanation
   is the intended reading.
 
 * **The text rules are heuristics** and will be tuned wrong first. Their patterns belong here rather than in C# for
-  that reason, argued in [`../.tooling/features/checks.md`](../.tooling/features/checks.md).
+  that reason, argued in [`../tooling/features/checks.md`](../tooling/features/checks.md).
 
 * **A rule reporting several faults under one id needs a fixture for each**, because one fixture turns the whole id
   green.
 
-* **A rule whose question needs C# is a class, not an `expr:`.** [`../.tooling/CLAUDE.md`](../.tooling/CLAUDE.md) holds
+* **A rule whose question needs C# is a class, not an `expr:`.** [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) holds
   the test for which, and the two interfaces to write it against.

@@ -1,0 +1,274 @@
+# knowledge-as-code — portability manifest
+#
+# Declares which files are shared across every corpus running this framework, and
+# which belong to the corpus that holds them. Every file resolves to exactly one of
+# the six layers defined under `layers:` below.
+#
+# `kac mechanism --check` reads this file to decide which files must match upstream,
+# which may differ, and which to ignore. `--sync` is the one command that acts on
+# what it finds.
+#
+# `.corpus.yaml` at each repository root says what that corpus is and where it
+# takes the framework from.
+
+# The version of the shared framework's shape.
+version: 5
+
+# Increment when the structure of the shared framework changes in a way that
+# corpora must respond to, such as:
+# - adding or removing a shared file
+# - renaming a shared file
+# - introducing a new required framework component
+#
+# Do not increment for normal content changes to synced files.
+#
+# `upstream.mechanism-version` in each corpus's `.corpus.yaml` records the
+# version that corpus took.
+
+layers:
+
+  synced:
+    rule: Identical across all corpora using this framework.
+    on-drift: error
+    notes: >
+      The framework itself: the validator, the schema, and the documents that
+      describe how the system works. Change these upstream and sync them down.
+      `kac mechanism --check` reports a local edit as a defect.
+
+  verification:
+    rule: Present only in corpora that develop or validate the framework.
+    on-drift: error where the corpus holds the layer, ignored where its role declines it
+    notes: >
+      The tests, the fixtures they read, and the guidance for changing the tool.
+      A consumer takes a tool already proven upstream and holds none of this.
+      `role:` in `.corpus.yaml` says which kind of corpus this is.
+
+  forked:
+    rule: Created from upstream and then owned locally.
+    on-drift: informational
+    notes: >
+      Framework-provided starting points that a corpus fills with its own content.
+      `kac mechanism --check` lists how far they have drifted and never fails on
+      them.
+
+  generated:
+    rule: Generated automatically from corpus content.
+    on-drift: ignore
+    notes: >
+      Output of `kac index`: type pages, corpus indexes and reports. Each corpus
+      builds its own from its own records, and `index --check` covers freshness.
+
+  local:
+    rule: Corpus-owned content.
+    on-drift: ignore
+    notes: >
+      Knowledge, documentation and configuration specific to this corpus. A file
+      matching no earlier rule lands here, so a new mechanism file has to be
+      declared before it is shared.
+
+  ignored:
+    rule: Excluded from portability checks.
+    on-drift: ignore
+    notes: Tooling, editor and operating-system artefacts.
+
+# `kac` reads the rules in order and takes the first match. The catch-all at the
+# foot means every file in the repository lands in exactly one layer.
+
+rules:
+
+  # ── ignored ────────────────────────────────────────────────────────────────
+
+  - { path: ".git/**",                     layer: ignored }
+  - { path: ".idea/**",                    layer: ignored }
+  - { path: "**/.DS_Store",                layer: ignored }
+  - { path: ".claude/settings.local.json", layer: ignored }
+
+  # ── verification ───────────────────────────────────────────────────────────
+
+  # These rules appear before `tooling/**`, which would otherwise claim them as
+  # synced, and before the generated rules below, because the fixtures hold golden
+  # `_index.md` files that are shared test data rather than generated output.
+
+  - path:
+      - "tooling/kac-tests.cs"
+      - "tooling/kac.tests/**"
+      - "tooling/kac.features/**"
+      - "tooling/tests/**"
+      - "tooling/kac.slnx"
+      - "tooling/CLAUDE.md"
+    layer: verification
+    note: >
+      Framework tests, test fixtures, development guidance and related
+      solution files.
+
+  # ── synced ─────────────────────────────────────────────────────────────────
+
+  - path: "tooling/**"
+    layer: synced
+    note: >
+      The validator, the generator, the sync command, this manifest, and the reference
+      for what the tool does. The rule above carves out the part a corpus running the
+      tool has no use for.
+
+  - path: ".schema/**"
+    layer: synced
+    note: >
+      Machine-readable schema definitions enforced by the framework. Kept as its own
+      rule rather than folded under `tooling/` because the tool is replaceable and
+      the schema is the thing being agreed.
+
+  # ── generated ──────────────────────────────────────────────────────────────
+
+  # `kac` reaches these before the synced and forked rules below, so a generated file
+  # inside an otherwise-shared folder still resolves as generated. The verification
+  # and `tooling/**` rules above come first, so fixture `_index.md` files stay with
+  # the tests that read them.
+
+  - { path: "**/_index.md", layer: generated, note: "Generated corpus indexes, bar the fixture copies above." }
+  - { path: "_reports/**",  layer: generated, note: "Generated validation and coverage reports." }
+
+  - path: ".dist/**"
+    layer: generated
+    note: >
+      What the two commands that package a corpus write: `kac export` builds `.dist/export/`, the corpus
+      as data a consumer reads instead of cloning, and `kac bundle` builds `.dist/plugin/` and the
+      marketplace naming it. Untracked and rebuilt whole each run, so this is named here to be resolved
+      rather than to be compared.
+
+  # ── synced ─────────────────────────────────────────────────────────────────
+
+  - path: ".claude/skills/**"
+    layer: synced
+    note: >
+      Agent skills for working on this corpus. `kb-review` reads a record against the
+      authoring and style rules and proposes rewrites. The rules below cover skills for
+      an agent working outside this corpus.
+
+  # ── the plugin ─────────────────────────────────────────────────────────────
+
+  # Both `.plugin/` rules sit here, out of layer order, because the order is what
+  # decides. A `.plugin/**` rule left among the synced rules above would claim the
+  # manifest before the forked rule reached it, and the corpus would lose the one
+  # file in the tree it names for itself.
+
+  - path: ".plugin/.claude-plugin/plugin.json"
+    layer: forked
+    note: >
+      The plugin manifest. Each corpus names, versions and licenses its own plugin, and
+      declares under `metadata.components` which record types each component needs — a
+      skill reading the glossary is dead weight in a corpus that declined the type.
+
+  - path: ".plugin/**"
+    layer: synced
+    note: >
+      The tree a plugin is built from. Its skills and hooks serve an agent working in a
+      repository that consumes this corpus rather than one working in the corpus itself,
+      and they read the export through `${CLAUDE_PLUGIN_ROOT}` rather than opening this
+      tree, so every corpus ships the same words. Written to reach the whole tree, so a
+      `bin/` command added later is shared from the day it lands.
+
+  # ── synced ─────────────────────────────────────────────────────────────────
+
+  - path: "knowledge-as-code/taxonomy.md"
+    layer: synced
+    note: >
+      Shared prose around generated blocks. The tables are built from the types this
+      corpus adopted, so the file differs between corpora by design: `mechanism
+      --check` compares the authored half of the page, and `index --check` covers
+      what lies between the markers.
+
+  - { path: "knowledge-as-code/metadata.md",     layer: synced }
+  - { path: "knowledge-as-code/contributing.md", layer: synced }
+  - { path: "knowledge-as-code/style.md",        layer: synced }
+  - { path: "knowledge-as-code/authoring.md",    layer: synced }
+  - { path: "knowledge-as-code/principles.md",   layer: synced }
+  - { path: "knowledge-as-code/lineage.md",      layer: synced }
+  - { path: "knowledge-as-code/automation.md",   layer: synced }
+
+  - path: "knowledge-as-code.md"
+    layer: synced
+    note: High-level framework overview shared by all corpora.
+
+  - path: "glossary/knowledge-as-code.md"
+    layer: synced
+    note: >
+      The framework's own vocabulary, inherited word for word. A corpus writes its
+      own glossaries beside it and leaves this one alone. Matched by name because it
+      is a record: the rules above reach pages and templates, and everything else in
+      a type folder belongs to the corpus.
+
+  # ── forked ─────────────────────────────────────────────────────────────────
+
+  - path: "azure-pipelines.yml"
+    layer: forked
+    note: >
+      Azure DevOps build, publishing and deployment configuration. A corpus published
+      elsewhere replaces this file.
+
+  - { path: ".github/workflows/**", layer: forked, note: "GitHub automation workflows." }
+  - { path: "**/.order",            layer: forked, note: "Wiki navigation ordering." }
+  - { path: ".gitignore",           layer: forked }
+
+  - path: "**/_template.md"
+    layer: forked
+    note: Templates a corpus fills with example values from its own domain.
+
+  - path: "CLAUDE.md"
+    layer: forked
+    note: >
+      Corpus-specific agent guidance built on a common framework structure. Hand-written
+      throughout, and forked rather than synced because a corpus fills that structure with
+      its own conventions.
+
+  - path: "frameworks.md"
+    layer: forked
+    note: >
+      Register of external frameworks, obligations and compliance posture for
+      this corpus.
+
+  - path:
+      - "adrs.md"
+      - "capabilities.md"
+      - "controls.md"
+      - "data.md"
+      - "discoveries.md"
+      - "explanations.md"
+      - "faqs.md"
+      - "glossary.md"
+      - "integrations.md"
+      - "nfrs.md"
+      - "policies.md"
+      - "postmortems.md"
+      - "processes.md"
+      - "runbooks.md"
+      - "services.md"
+      - "standards.md"
+      - "tools.md"
+    layer: forked
+    note: >
+      Type root pages. The framework provides the structure, but each corpus
+      owns and customises the content.
+
+  # ── local ──────────────────────────────────────────────────────────────────
+
+  - path: "README.md"
+    layer: local
+    note: >
+      Orientation for this corpus, and wholly its own. The index of types it carries
+      arrives as a generated block, so a corpus decides where the block sits and
+      declines it by deleting the markers.
+
+  - path:
+      - ".github/CONTRIBUTING.md"
+      - ".github/SECURITY.md"
+      - ".github/ISSUE_TEMPLATE/**"
+    layer: local
+    note: Contribution, security and issue-management guidance specific to this corpus.
+
+  - { path: "LICENSE",         layer: local, note: "MIT; a derived corpus may relicense its own copy." }
+  - { path: ".corpus.yaml", layer: local, note: "What this corpus is, and where it takes the framework from." }
+  - { path: "_plan/**",        layer: local, note: "Temporary planning and migration content." }
+
+  # Anything the rules above do not name belongs to the corpus that holds it.
+
+  - { path: "**", layer: local }

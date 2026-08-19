@@ -3,7 +3,7 @@
 # Runs the kac validator, the generated-content freshness check and the export on
 # pull requests into main. It NEVER commits anything it produces. `index --check`
 # only verifies the tracked generated files are fresh and fails, naming the command
-# a human runs locally (`dotnet run .tooling/kac.cs -- index`). The export lands in
+# a human runs locally (`dotnet run tooling/kac.cs -- index`). The export lands in
 # an untracked .dist/ that the agent throws away. This pipeline is read-only and
 # pushes nothing.
 #
@@ -44,17 +44,17 @@ steps:
 
   # One invocation per subcommand, run sequentially. File-based apps share build
   # output, so the kac runs must not execute concurrently.
-  - script: dotnet run .tooling/kac.cs -- validate
+  - script: dotnet run tooling/kac.cs -- validate
     displayName: Validate frontmatter, links and structure
     workingDirectory: $(Build.SourcesDirectory)
 
-  - script: dotnet run .tooling/kac.cs -- index --check
+  - script: dotnet run tooling/kac.cs -- index --check
     displayName: Check generated indexes are fresh
     workingDirectory: $(Build.SourcesDirectory)
 
   # Proves the corpus still exports. The shape it exports in is held by a golden
   # in the test suite, which a corpus running this pipeline does not carry.
-  - script: dotnet run .tooling/kac.cs -- export
+  - script: dotnet run tooling/kac.cs -- export
     displayName: Build the export
     workingDirectory: $(Build.SourcesDirectory)
 
@@ -62,7 +62,7 @@ steps:
   # installable plugin under .dist/plugin/, with .dist/ itself as the marketplace
   # naming it. The fourth and last kac invocation, so the one-at-a-time rule
   # above still holds.
-  - script: dotnet run .tooling/kac.cs -- bundle
+  - script: dotnet run tooling/kac.cs -- bundle
     displayName: Assemble the plugin bundle
     workingDirectory: $(Build.SourcesDirectory)
 

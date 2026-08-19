@@ -2,7 +2,7 @@
 #
 # Says what this corpus is and where it stands against the shared framework.
 #
-# The portability manifest (`.tooling/manifest.yaml`) defines what is shared
+# The portability manifest (`tooling/manifest.yaml`) defines what is shared
 # between corpora. This file records:
 # - the part this corpus plays in the framework, and where it publishes
 # - which version of its own content this corpus is on
@@ -95,7 +95,7 @@ upstream:
   url: # unset — this corpus is the source
 
   # Framework version currently adopted from the upstream corpus.
-  mechanism-version: 4
+  mechanism-version: 5
 
   # Where the most recent sync took the framework from.
   synced-from: # n/a for a source
@@ -143,7 +143,7 @@ export:
 # Example:
 #
 # accepted-divergences:
-#   - path: .tooling/kac.cs
+#   - path: tooling/kac.cs
 #     reason: Pinned to .NET 8 because the local build agent does not provide .NET 10.
 #     since: 2026-08-03
 #     revisit: When the build agent image is upgraded.

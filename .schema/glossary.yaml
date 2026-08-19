@@ -132,7 +132,7 @@ rules:
     # "The other entry", and not the other file. A link to `other.md` lands a reader at the top of the
     # glossary rather than on the term, and an export carries the cross-reference a link states, so a
     # link naming no term leaves it nothing to carry. Why the export refuses to guess the counterpart,
-    # rather than reading it from the term's own spelling, is in `/.tooling/features/export.md`.
+    # rather than reading it from the term's own spelling, is in `/tooling/features/export.md`.
     #
     # The reference runs upward only where the general glossary is synced: a file every corpus shares
     # cannot name a record only this one holds.

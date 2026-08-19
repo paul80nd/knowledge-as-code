@@ -1,6 +1,6 @@
 # What Dependabot keeps current in this repository.
 #
-# Two ecosystems, because `kac` is built two ways. The three projects under `.tooling/`
+# Two ecosystems, because `kac` is built two ways. The three projects under `tooling/`
 # carry ordinary `PackageReference`s and are tracked below. `kac.cs` and `kac-tests.cs`
 # are file-based apps: the `#:package` directive that pins `System.CommandLine` is not a
 # manifest Dependabot reads — dependabot-core#15184 is the request that it should — so
@@ -16,9 +16,9 @@ updates:
 
   - package-ecosystem: nuget
     directories:
-      - /.tooling/kac.core
-      - /.tooling/kac.features
-      - /.tooling/kac.tests
+      - /tooling/kac.core
+      - /tooling/kac.features
+      - /tooling/kac.tests
     schedule:
       interval: weekly
     commit-message:

@@ -1,6 +1,6 @@
 # Working in this repository
 
-## Read the role before you touch `.schema/` or `.tooling/`
+## Read the role before you touch `.schema/` or `tooling/`
 
 [`.corpus.yaml`](.corpus.yaml) declares `role:`. This repository is a **source**: those two directories are yours to
 change, what you write propagates to every corpus that took a copy, and the tests that prove the tool live here. Write
@@ -19,9 +19,9 @@ To decline a type, leave it out of `types:` rather than deleting files afterward
 ```bash
 ./kac validate                      # the corpus
 ./kac index --check                 # generated output is fresh
-dotnet test .tooling/kac.tests      # unit
-dotnet test .tooling/kac.features   # Reqnroll behaviour specs
-dotnet run .tooling/kac-tests.cs    # golden fixtures, plus the coverage and checks-table gates
+dotnet test tooling/kac.tests       # unit
+dotnet test tooling/kac.features    # Reqnroll behaviour specs
+dotnet run tooling/kac-tests.cs     # golden fixtures, plus the coverage and checks-table gates
 ```
 
 All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
@@ -73,6 +73,6 @@ produce materially different work. Where the request looks mistaken, say so in a
 
 ## Going deeper
 
-* [`.tooling/CLAUDE.md`](.tooling/CLAUDE.md) — changing the validator, the generator, or the fixtures they are tested
+* [`tooling/CLAUDE.md`](tooling/CLAUDE.md) — changing the validator, the generator, or the fixtures they are tested
   against.
 * [`.schema/CLAUDE.md`](.schema/CLAUDE.md) — changing the schema, or writing a rule.

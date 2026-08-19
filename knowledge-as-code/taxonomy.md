@@ -290,7 +290,7 @@ knowledge-as-code/     # the system's own documentation — outside the taxonomy
 .claude/skills/        # agent machinery for this corpus — SYNCED
 .plugin/               # source for the plugin that carries this corpus's export — SYNCED, bar its manifest
 .schema/               # the machine-readable schema — SYNCED
-.tooling/              # validators, generators and the manifest — SYNCED
+tooling/               # validators, generators and the manifest — SYNCED
 _plan/                 # migration scaffolding — temporary
 _reports/              # GENERATED
 ```

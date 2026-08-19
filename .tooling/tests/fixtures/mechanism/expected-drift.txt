@@ -1,5 +1,0 @@
-.tooling/tool.txt
-.tooling/new-tool.txt
-knowledge-as-code/metadata.md
-declined: 1 file(s) held here
-content version 2.1.0, descriptor format 1, mechanism version 3

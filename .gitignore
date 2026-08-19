@@ -11,7 +11,7 @@
 # Claude Code local settings
 .claude/settings.local.json
 
-# Generated — rebuilt by `dotnet run .tooling/kac.cs -- index`
+# Generated — rebuilt by `dotnet run tooling/kac.cs -- index`
 _reports/
 
 # Generated — `export` rebuilds .dist/export/ whole, `bundle` rebuilds .dist/plugin/ and the
@@ -21,7 +21,7 @@ _reports/
 # Working material — drafts and source notes that are not themselves knowledge documents
 _plan/
 
-# .NET build output (kac.core / kac.tests / kac.features projects under .tooling/)
+# .NET build output (kac.core / kac.tests / kac.features projects under tooling/)
 bin/
 obj/
 

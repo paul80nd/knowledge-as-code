@@ -20,9 +20,9 @@
 # purpose, and `latest` is a moving target, so it belongs where a moved tag cannot reach a push.
 # Do not merge the two jobs back to save a build — that is what the split costs and what it buys.
 #
-# Unlike `.tooling/tests/round-trip.sh`, the script below is not shared with azure-pipelines.yml —
+# Unlike `tooling/tests/round-trip.sh`, the script below is not shared with azure-pipelines.yml —
 # publishing to Azure DevOps is a pipeline of its own rather than a translation of this one, for
-# the same reason both CI files are forked in .tooling/manifest.yaml. So it uses `$(...)` freely,
+# the same reason both CI files are forked in tooling/manifest.yaml. So it uses `$(...)` freely,
 # where a script the two platforms share cannot.
 
 name: publish
@@ -75,13 +75,13 @@ jobs:
       # The gate ran against the pull request's head. What merged is a different commit, because
       # main moved beneath it, so the corpus is validated once more before anything is published.
       - name: Validate frontmatter, links and structure
-        run: dotnet run .tooling/kac.cs -- validate
+        run: dotnet run tooling/kac.cs -- validate
 
       - name: Build the export
-        run: dotnet run .tooling/kac.cs -- export
+        run: dotnet run tooling/kac.cs -- export
 
       - name: Assemble the plugin bundle
-        run: dotnet run .tooling/kac.cs -- bundle
+        run: dotnet run tooling/kac.cs -- bundle
 
       # Taken at `latest` rather than pinned, for the reason kac.yml gives: the bundle has to be
       # valid against the CLI a reader actually runs, so pinning it would settle into proving the
@@ -128,10 +128,10 @@ jobs:
       # Every link the export writes names the commit HEAD stands on, which here is the commit that
       # merged — a commit the raw host serves. One invocation per subcommand, run sequentially.
       - name: Build the export
-        run: dotnet run .tooling/kac.cs -- export
+        run: dotnet run tooling/kac.cs -- export
 
       - name: Assemble the plugin bundle
-        run: dotnet run .tooling/kac.cs -- bundle
+        run: dotnet run tooling/kac.cs -- bundle
 
       # A version that has not moved publishes nothing. Claude Code pins an installed plugin to the
       # `version` in its manifest and offers an update only when that string changes, so a push
