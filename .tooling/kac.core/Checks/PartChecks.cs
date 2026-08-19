@@ -9,10 +9,13 @@ namespace kac.core;
 // except by way of that declaration.
 //
 // Two questions are asked of every source. Each part offers an id, and no two parts of a record share
-// one, because a citation reaching two children names neither. Everything else below belongs to the
-// table source: a table can be missing, mis-headed or empty, and its rows carry the modal that says
-// whether the row obliges. A heading has none of that — it is its own id and carries no cells to be
-// wrong — so a type sourcing headings is asked the two questions and no more.
+// one, because a citation reaching two children names neither. Both sources are then asked whether the
+// part holds anything: a table row that binds nothing and a heading with nothing beneath it are the
+// same empty part wearing the two spellings.
+//
+// Everything else below belongs to the table source, whose rows carry cells a heading has none of: the
+// table can be missing or mis-headed, and each row carries the modal that says whether it obliges. A
+// heading is its own id and offers no cells to be wrong, so a type sourcing headings stops there.
 //
 // Runs only for a type whose schema declares a `parts:` block, and only once the section itself is
 // present: a missing section is `required-section`'s to report, and saying it twice would make one fault
@@ -28,7 +31,28 @@ public static class PartChecks
 
         CheckAddresses(d, spec, report);
 
+        if (spec.Source == PartSpec.Headings) CheckBodies(d, spec, report);
         if (spec.Source == PartSpec.Table) CheckObligations(d, spec, report);
+    }
+
+    // Whether a part written as a heading holds anything, which is what `clause-table`'s empty-table arm
+    // asks of the other source. A heading is an address and a container both, and the address half is
+    // sound on its own: the entry has a title, a working anchor and a citation that resolves, so
+    // everything a reader can check from outside says it is there. An export carries it as a part with
+    // no words in it and counts it among the rest.
+    //
+    // Asked of the source rather than of the type, so any type declaring `source: headings` inherits it.
+    // The heading is named, because a glossary holds twenty entries and "one of these is empty" is not
+    // something anyone can act on.
+    //
+    // Read on the source as written rather than on the rendered blocks, so a horizontal rule or an em
+    // dash standing in for the definition counts as nothing written — see `Md.HasContent`.
+    private static void CheckBodies(Doc d, PartSpec spec, Report report)
+    {
+        foreach (var row in d.Parts.Where(row => !Md.HasContent(row.Body(d.Text))))
+            report.Err(new CheckId("part-empty"),
+                $"{spec.Noun} '{Md.Snippet(row.Text)}' has nothing under it — write it or delete the heading.",
+                row.Line);
     }
 
     // A missing table, a mis-headed one and an empty one are three different faults the parser has

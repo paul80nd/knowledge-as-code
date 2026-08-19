@@ -34,8 +34,9 @@ notes: >
   confused with, and optional links to the owning service or an explanation. Those `**Not:**` lines are the most
   useful content in the file. One paragraph per term, because a glossary is read end to end and every paragraph
   is paid for by every reader. The list is alphabetical and flat — no A–Z sub-headings — so that it scans and
-  greps cleanly. Only that order is checked. The rules below that would read a term's shape are declared and not
-  built, so the rest is held by whoever reviews the file.
+  greps cleanly. What is checked is that order, and that an entry carries something at all — `part-empty` reports a
+  heading with nothing beneath it. Whether what it carries is one sentence and one paragraph is held by whoever
+  reviews the file, since the rules below that would read a term's shape are declared and not built.
 
 id:
   prefix: gls
