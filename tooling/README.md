@@ -66,7 +66,7 @@ cd ../example
 |------|---------------------------------------------------------------------------------|
 | `0`  | No errors. Warnings may still have been printed.                                |
 | `1`  | A corpus **error**, or a bad invocation (missing/unknown subcommand or option). |
-| `2`  | Could not locate a corpus — the tool never started.                             |
+| `2`  | A verb found no corpus. `--version` and `--help` need none and answer anyway.   |
 
 Warnings never change the exit code.
 

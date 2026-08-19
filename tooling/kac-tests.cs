@@ -781,6 +781,34 @@ if (filters.Count == 0)
         failures.Add("(checks table vs catalogue)");
     }
 
+    // -- what answers without a corpus --
+    // `--version` and `--help` are answered by the parser, so an installed `kac` says what it is from
+    // wherever it was typed; every verb needs a corpus and exits 2 without one. Asserted from a temp
+    // directory with no `.schema` above it, because the fault this catches — a corpus lookup running
+    // before the parse — passes every other test here, all of which run inside a corpus.
+    var nowhere = Directory.CreateTempSubdirectory("kac-tests-nowhere-").FullName;
+    try
+    {
+        foreach (var flag in new[] { "--version", "--help" })
+        {
+            var (flagOut, _, flagExit) = Run(nowhere, "dotnet", kac, flag);
+            if (flagExit == 0 && flagOut.Trim().Length > 0) continue;
+            Console.WriteLine($"  {flag} outside a corpus: exit {flagExit}, printed {flagOut.Trim().Length} char(s)");
+            failures.Add($"({flag} outside a corpus)");
+        }
+
+        var (_, verbErr, verbExit) = Run(nowhere, "dotnet", kac, "validate");
+        if (verbExit != 2)
+        {
+            Console.WriteLine($"  validate outside a corpus: exit {verbExit}, expected 2\n{Indent(verbErr)}");
+            failures.Add("(a verb outside a corpus)");
+        }
+    }
+    finally
+    {
+        TryDelete(nowhere);
+    }
+
     Console.WriteLine();
 }
 if (update)
