@@ -1,28 +1,42 @@
-# `tooling` — the knowledge-as-code tooling
+# `tooling` — the `kac` tool
 
-`kac` validates and generates a knowledge corpus against the machine-readable schema in `.schema/`. The command you run
-is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **`kac.core`** library that holds the mechanics;
-`dotnet run` builds and runs it with no build step to manage. The schema is the source of truth: `kac` reads it and
-enforces it, so **adding a knowledge type is adding a YAML file, not editing this tool**.
+`kac` validates and generates a knowledge corpus against the machine-readable schema that corpus carries in
+`.schema/`. The command is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **`kac.core`** library
+holding the mechanics. The schema is the source of truth: `kac` reads it and enforces it, so **adding a knowledge type
+is adding a YAML file, not editing this tool**.
 
-Two declarations the tool reads sit here too: [`manifest.yaml`](manifest.yaml), which says which files a corpus shares
-with the framework, and each corpus's own `.corpus.yaml` at the repository root.
+[`manifest.yaml`](manifest.yaml) sits here too, and says which files a corpus shares with the framework. Each corpus's
+own `.corpus.yaml`, at the corpus root, says what that corpus is.
 
-## Who this is for
+Writing records rather than changing the tool?
+[`../example/knowledge-as-code.md`](../example/knowledge-as-code.md) is the document for that — the taxonomy, the style
+rules, and what each tier asks of a document. A corpus consumer, who installs the plugin and reads the export, is owed
+a document nothing here provides, tracked as
+[issue #203](https://github.com/paul80nd/knowledge-as-code/issues/203).
 
-Three readers exist and two of them are served.
+## Building
 
-* **A corpus author** writes records. [`../example/knowledge-as-code.md`](../example/knowledge-as-code.md) is theirs:
-  the taxonomy, the style rules, and what each tier asks of a document.
-* **A framework developer** changes the tool. `tooling/` is theirs, and the feature documents below are written for
-  them.
-* **A corpus consumer** installs the plugin, reads the export and greps the terms file. Nothing here is addressed to
-  them. That document is owed and tracked upstream, as
-  [issue #203](https://github.com/paul80nd/knowledge-as-code/issues/203).
-
-## Running
+Requires the **.NET 10 SDK**. `dotnet run` builds and runs the entrypoint, so there is no build step to manage. The
+first run restores the packages — `System.CommandLine` on the entrypoint, `YamlDotNet` and `Markdig` through
+`kac.core` — and is slow; later runs are cached.
 
 ```bash
+dotnet build kac.slnx      # kac.core, kac.tests and kac.features together
+```
+
+Run **one `kac` invocation at a time**: file-based apps share build output and contend when run concurrently.
+
+Argument parsing is [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine), so every command and
+option carries generated `--help`.
+
+## Running it against a corpus
+
+`kac` finds a corpus by walking up from the working directory for a `.schema/`, so it is run from inside one. Where
+the tool's own files sit says nothing about which corpus it reads, and running it from here reaches no corpus at all.
+
+```bash
+cd ../example
+
 ./kac validate            # validate the corpus
 ./kac validate --json     # machine-readable summary + findings
 ./kac index               # regenerate indexes and blocks
@@ -36,14 +50,18 @@ Three readers exist and two of them are served.
 ./kac mechanism --sync                              # take the shared layers from upstream
 ```
 
-`./kac` (Windows: `kac.cmd`) is a launcher at a corpus's root that wraps a `dotnet run` of this tool — `example/kac`
-is the one in this repository. Run it from the corpus, or add that folder to your `PATH` to drop the `./`. The explicit
+`./kac` (Windows: `kac.cmd`) is a launcher at a corpus's root wrapping a `dotnet run` of this tool. The explicit
 `dotnet run ../tooling/kac.cs -- …` form works identically and is what CI uses.
 
-Argument parsing is handled by [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine), so every
-command and option carries generated `--help`. The first run restores the packages (`System.CommandLine` on the
-entrypoint; `YamlDotNet` and `Markdig` via `kac.core`) and is slow; subsequent runs are cached. Run **one `kac`
-invocation per subcommand** — file-based apps share build output and contend if run concurrently.
+### Exit codes
+
+| Code | Meaning                                                                         |
+|------|---------------------------------------------------------------------------------|
+| `0`  | No errors. Warnings may still have been printed.                                |
+| `1`  | A corpus **error**, or a bad invocation (missing/unknown subcommand or option). |
+| `2`  | Could not locate a corpus — the tool never started.                             |
+
+Warnings never change the exit code.
 
 ## The features
 
@@ -64,9 +82,12 @@ filled, because filler reads as an answer where an absence reads as work not yet
 | [`features/bundle.md`](features/bundle.md)       | That export and the `.plugin/` tree assembled into an installable plugin, trimmed to what it can do.  |
 | [`features/mechanism.md`](features/mechanism.md) | Drift against a reference corpus, and taking the shared layers down from it.                          |
 
+[`CLAUDE.md`](CLAUDE.md) is what will bite you while changing any of it.
+
 ## Tests
 
-Three layers, all run in CI (see [`.github/workflows/kac.yml`](../.github/workflows/kac.yml)):
+Three layers, all run from the repository root and all run in CI (see
+[`.github/workflows/kac.yml`](../.github/workflows/kac.yml)):
 
 | Layer       | Project / file            | Run                                 | Covers                                                                                                                                                         |
 |-------------|---------------------------|-------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -78,17 +99,23 @@ The unit layer catches breakage in the pieces early; the feature layer is the re
 validator does; the golden/subprocess layer owns the end-to-end CLI contract that the in-process layers bypass.
 Regenerate golden expectations after an intended rule change with `dotnet run tooling/kac-tests.cs -- --update`.
 
-The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check the
-command can emit is reachable from a spec. The golden layer builds `kac.cs` once per run and invokes the built assembly,
-so each scenario is a real process without paying `dotnet run`'s up-to-date check for each one.
+The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check
+the command can emit is reachable from a spec. The golden layer builds `kac.cs` once per run and invokes the built
+assembly, so each scenario is a real process without paying `dotnet run`'s up-to-date check for each one.
 
-### Exit codes
+All three read the schema from `../example/.schema/` where it lives, so a schema edit ripples into every fixture in the
+same run rather than into a copy someone has to keep in step.
 
-| Code | Meaning                                                                         |
-|------|---------------------------------------------------------------------------------|
-| `0`  | No errors. Warnings may still have been printed.                                |
-| `1`  | A corpus **error**, or a bad invocation (missing/unknown subcommand or option). |
-| `2`  | Could not locate the corpus root — the tool never started.                      |
+### The round-trip
 
-Warnings never change the exit code.
+[`tests/round-trip.sh`](tests/round-trip.sh) is the layer above all three and the only test that leaves the
+repository. It installs the built plugin into a Claude config directory of its own, looks a term up, and fetches a
+record through the raw link the export wrote — the one assertion that cannot be faked from the working tree. Run it
+from a corpus, after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
 
+```bash
+cd ../example && sh ../tooling/tests/round-trip.sh
+```
+
+CI runs it on Linux and Windows, which is why it is a shell script held to the subset Git Bash and older macOS bash
+agree on.
