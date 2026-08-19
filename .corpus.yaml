@@ -77,9 +77,9 @@ publishing-target: github
 
 # Where the published form of this corpus is served from.
 #
-# Only the bases live here. How a record's path and a term's anchor join a base is a
-# property of `publishing-target` and lives in the mechanism, so every corpus on one
-# target builds the same link and none of them writes the rule down a second time.
+# Only where it is served from lives here. How a record's path and a term's anchor join a
+# base is a property of `publishing-target` and lives in the mechanism, so every corpus on
+# one target builds the same link and none of them writes the rule down a second time.
 #
 # Absent where `publishing-target: none`, which is the one value that needs no base.
 publishing:
@@ -88,6 +88,14 @@ publishing:
 
   # Where an agent fetches a record's source, unrendered.
   raw-base: https://raw.githubusercontent.com/paul80nd/knowledge-as-code
+
+  # The folder the corpus sits in, where the repository holds more than the corpus.
+  #
+  # The commit a link resolves against sits between a base and the record's path, so a
+  # corpus in a subdirectory cannot say this by writing the folder into its bases.
+  #
+  # Absent where the corpus is the repository, which is the ordinary case.
+  path-prefix:
 
 # Where this corpus takes the framework from, if anywhere.
 upstream:

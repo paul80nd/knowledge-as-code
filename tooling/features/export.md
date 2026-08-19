@@ -118,8 +118,8 @@ way, and a corpus whose sections happen to hold only paragraphs today is not a r
 
 **Two link forms, both naming a ref.** A person follows the rendered one and an agent fetches the raw one. The rules
 joining a base to a path, and the anchor rule for a part, belong to `publishing-target` and live in `Publishing`;
-`.corpus.yaml` supplies only the bases. Every link resolves against the commit the export was built from, so a citation
-names the version the agent read rather than whatever the branch holds later.
+`.corpus.yaml` supplies where the corpus is served from and nothing else. Every link resolves against the commit the
+export was built from, so a citation names the version the agent read rather than whatever the branch holds later.
 
 **The manifest states both forms as templates, and a per-record file resolves them.** The templates are
 `https://…/blob/<sha>/{path}#{anchor}` and `https://raw…/<sha>/{path}`, and a consumer substitutes the `path` and
@@ -132,6 +132,9 @@ names the version the agent read rather than whatever the branch holds later.
   the templates rather than a rule each reader has to remember.
 * **The bases are not carried beside them.** They are in the templates already, and a manifest stating one address
   twice is a manifest that can state it two ways.
+* **A corpus that is not its repository names the folder it sits in.** `publishing.path-prefix` lands between the
+  commit and the record's path, which is the only place it can go, and it is settled in the template for the reason
+  the ref is: what a reader supplies is the path alone, so the two cannot be joined in the wrong order.
 
 `Publishing.Links` substitutes into those same templates, so a link the export resolves and a link a consumer builds
 for one part are the same string.

@@ -40,16 +40,22 @@ public sealed class Publishing
     private readonly string humanBase;
     private readonly string rawBase;
 
+    // The corpus root's place inside the published repository, carrying its own leading slash, or empty
+    // where the corpus is the repository. Normalised on the way in so the rest of the class joins it the
+    // same way whether the descriptor wrote it with slashes or without.
+    private readonly string prefix;
+
     public required string Target { get; init; }
 
     // The commit every link resolves against. A link naming a branch answers a later question than the
     // one the export was built to answer: what the corpus said when it was read.
     public required string Ref { get; init; }
 
-    private Publishing(string humanBase, string rawBase)
+    private Publishing(string humanBase, string rawBase, string? pathPrefix)
     {
         this.humanBase = humanBase.TrimEnd('/');
         this.rawBase = rawBase.TrimEnd('/');
+        prefix = pathPrefix?.Trim('/') is { Length: > 0 } p ? "/" + p : "";
     }
 
     // How this corpus addresses its published form, or null where it has no addressable one — it
@@ -67,7 +73,7 @@ public sealed class Publishing
         if (descriptor.RawBase is not { Length: > 0 } raw) return null;
         if (gitRef is not { Length: > 0 } commit) return null;
 
-        return new Publishing(human, raw) { Target = target, Ref = commit };
+        return new Publishing(human, raw, descriptor.PathPrefix) { Target = target, Ref = commit };
     }
 
     // The anchor a link uses to land on a part. GitHub derives it from the heading by discarding the
@@ -85,8 +91,12 @@ public sealed class Publishing
     //
     // **Only the human template takes an anchor.** Raw source is text and offers nowhere to land, so the
     // asymmetry is written into the templates rather than left as a rule each reader has to remember.
+    //
+    // **The path prefix is baked in for the same reason the ref is.** It is a property of where the
+    // corpus sits and never varies between two records, so a reader substituting into the template has
+    // one thing to supply and cannot put it on the wrong side of the commit.
     public LinkTemplates Templates() =>
-        new($"{humanBase}/{Ref}/{PathToken}#{AnchorToken}", $"{rawBase}/{Ref}/{PathToken}");
+        new($"{humanBase}/{Ref}{prefix}/{PathToken}#{AnchorToken}", $"{rawBase}/{Ref}{prefix}/{PathToken}");
 
     // Where a record is read and where it is fetched, resolved. `anchor` names a part inside it, and a
     // link with no anchor drops the fragment along with it.

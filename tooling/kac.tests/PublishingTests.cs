@@ -15,8 +15,8 @@ public class PublishingTests
     private const string Sha = "0123456789abcdef0123456789abcdef01234567";
 
     private static CorpusDescriptor Descriptor(
-        string? target = Publishing.GitHub, string? human = Human, string? raw = Raw) =>
-        new() { PublishingTarget = target, HumanBase = human, RawBase = raw };
+        string? target = Publishing.GitHub, string? human = Human, string? raw = Raw, string? prefix = null) =>
+        new() { PublishingTarget = target, HumanBase = human, RawBase = raw, PathPrefix = prefix };
 
     // -- when a corpus can be addressed at all --
 
@@ -94,6 +94,44 @@ public class PublishingTests
         Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
     }
 
+    // -- a corpus that is not the repository --
+
+    // The prefix lands between the commit and the record, which is the one place it can go: a corpus in
+    // a subdirectory is addressed at that commit, under that folder.
+    [Fact]
+    public void A_corpus_in_a_subdirectory_is_addressed_under_it()
+    {
+        var links = Publishing.For(Descriptor(prefix: "example"), Sha)!.Links("glossary/search.md", "query");
+
+        Assert.Equal($"{Human}/{Sha}/example/glossary/search.md#query", links.Human);
+        Assert.Equal($"{Raw}/{Sha}/example/glossary/search.md", links.Raw);
+    }
+
+    // Whether the descriptor wrote the prefix with slashes says nothing about where the corpus sits, so
+    // three spellings of one folder build one link.
+    [Theory]
+    [InlineData("example")]
+    [InlineData("/example")]
+    [InlineData("example/")]
+    public void A_prefix_written_with_slashes_addresses_the_same_folder(string prefix)
+    {
+        var links = Publishing.For(Descriptor(prefix: prefix), Sha)!.Links("glossary/search.md");
+
+        Assert.Equal($"{Raw}/{Sha}/example/glossary/search.md", links.Raw);
+    }
+
+    // A corpus that is the repository states no prefix, and its links carry no empty segment.
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("/")]
+    public void A_corpus_that_is_the_repository_is_addressed_at_its_root(string? prefix)
+    {
+        var links = Publishing.For(Descriptor(prefix: prefix), Sha)!.Links("glossary/search.md");
+
+        Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
+    }
+
     // The anchor rule is the target's, and GitHub's is the discarding form the corpus's own links
     // already use — which is what lets one citation name a term and a link land on it.
     [Fact]
@@ -117,6 +155,17 @@ public class PublishingTests
 
         Assert.Equal($"{Human}/{Sha}/{{path}}#{{anchor}}", templates.Human);
         Assert.Equal($"{Raw}/{Sha}/{{path}}", templates.Raw);
+    }
+
+    // The prefix is settled in the template alongside the commit. A reader holding a record's path
+    // supplies that alone, and cannot join the two in the wrong order.
+    [Fact]
+    public void A_template_settles_the_subdirectory_too()
+    {
+        var templates = Publishing.For(Descriptor(prefix: "example"), Sha)!.Templates();
+
+        Assert.Equal($"{Human}/{Sha}/example/{{path}}#{{anchor}}", templates.Human);
+        Assert.Equal($"{Raw}/{Sha}/example/{{path}}", templates.Raw);
     }
 
     // The asymmetry lives in the templates rather than in the reader. Raw source has no fragment to

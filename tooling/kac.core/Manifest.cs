@@ -86,6 +86,13 @@ public class CorpusDescriptor
     public string? HumanBase;
     public string? RawBase;
 
+    // Where the corpus root sits inside the published repository, where it is not the root itself.
+    //
+    // A corpus kept in a subdirectory cannot say this through its bases. The commit the links resolve
+    // against goes between the base and the record's path, so a prefix folded into the base would land
+    // on the wrong side of it. Null where the corpus is the repository, which is the ordinary case.
+    public string? PathPrefix;
+
     // What an export leaves behind: `draft`, `overdue`, or neither. Empty by default, because a record
     // carrying its own state lets a consumer decide, and one filtered out downstream is invisible — the
     // corpus reads smaller and tidier than it is, with nothing saying anything was withheld.
@@ -150,6 +157,7 @@ public class CorpusDescriptor
         var publishing = Yaml.Get(root, "publishing");
         descriptor.HumanBase = Yaml.Str(Yaml.Get(publishing, "human-base"));
         descriptor.RawBase = Yaml.Str(Yaml.Get(publishing, "raw-base"));
+        descriptor.PathPrefix = Yaml.Str(Yaml.Get(publishing, "path-prefix"));
         descriptor.ExportExclude.AddRange(Yaml.StrList(Yaml.Get(Yaml.Get(root, "export"), "exclude")));
 
         if (Yaml.Get(root, "types") is YamlSequenceNode types)
