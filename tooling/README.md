@@ -1,9 +1,10 @@
 # `tooling` — the `kac` tool
 
 `kac` validates and generates a knowledge corpus against the machine-readable schema that corpus carries in
-`.schema/`. The command is a **thin .NET 10 file-based entrypoint** (`kac.cs`) over a small **`kac.core`** library
-holding the mechanics. The schema is the source of truth: `kac` reads it and enforces it, so **adding a knowledge type
-is adding a YAML file, not editing this tool**.
+`.schema/`. The command is a **thin .NET 10 entrypoint** ([`kac/`](kac/)) over a small **`kac.core`** library holding
+the mechanics. It packs as a dotnet tool — `KnowledgeAsCode.Tool`, installing the command `kac` — so a corpus can
+install and pin a version of it instead of carrying a copy. The schema is the source of truth: `kac` reads it and
+enforces it, so **adding a knowledge type is adding a YAML file, not editing this tool**.
 
 [`manifest.yaml`](manifest.yaml) sits here too, and says which files a corpus shares with the framework. Each corpus's
 own `.corpus.yaml`, at the corpus root, says what that corpus is.
@@ -16,15 +17,26 @@ a document nothing here provides, tracked as
 
 ## Building
 
-Requires the **.NET 10 SDK**. `dotnet run` builds and runs the entrypoint, so there is no build step to manage. The
-first run restores the packages — `System.CommandLine` on the entrypoint, `YamlDotNet` and `Markdig` through
-`kac.core` — and is slow; later runs are cached.
+Requires the **.NET 10 SDK**. `dotnet run --project` builds and runs the entrypoint, so there is no build step to
+manage. The first run restores the packages — `System.CommandLine` on the entrypoint, `YamlDotNet` and `Markdig`
+through `kac.core` — and is slow; later runs are cached.
+
+Both run from the repository root, as the test commands further down do:
 
 ```bash
-dotnet build kac.slnx      # kac.core, kac.tests and kac.features together
+dotnet build kac.slnx                      # kac, kac.core, kac.tests and kac.features together
+dotnet pack tooling/kac/kac.csproj -o …    # the tool as a package, which is how a corpus receives it
 ```
 
-Run **one `kac` invocation at a time**: file-based apps share build output and contend when run concurrently.
+[`../kac.slnx`](../kac.slnx) sits at the repository root rather than here, because it names projects in this folder
+and an IDE opening it should see `template/` and `example/` too.
+
+The package's version is `<Version>` in [`kac/kac.csproj`](kac/kac.csproj), moved by hand, and
+[`kac/PACKAGE.md`](kac/PACKAGE.md) is what nuget.org shows — written for whoever installs the tool rather than for
+whoever changes it, which is this page. CI packs on every run and installs what it packed, so metadata that has gone
+missing fails a pull request rather than a publish.
+
+Run **one `kac` invocation at a time**: concurrent runs build the same project and contend over its output.
 
 Argument parsing is [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine), so every command and
 option carries generated `--help`.
@@ -51,7 +63,7 @@ cd ../example
 ```
 
 `./kac` (Windows: `kac.cmd`) is a launcher at a corpus's root wrapping a `dotnet run` of this tool. The explicit
-`dotnet run ../tooling/kac.cs -- …` form works identically and is what CI uses.
+`dotnet run --project ../tooling/kac -- …` form works identically and is what CI uses.
 
 ### Exit codes
 
@@ -59,7 +71,7 @@ cd ../example
 |------|---------------------------------------------------------------------------------|
 | `0`  | No errors. Warnings may still have been printed.                                |
 | `1`  | A corpus **error**, or a bad invocation (missing/unknown subcommand or option). |
-| `2`  | Could not locate a corpus — the tool never started.                             |
+| `2`  | A verb found no corpus. `--version` and `--help` need none and answer anyway.   |
 
 Warnings never change the exit code.
 
@@ -100,7 +112,7 @@ validator does; the golden/subprocess layer owns the end-to-end CLI contract tha
 Regenerate golden expectations after an intended rule change with `dotnet run tooling/kac-tests.cs -- --update`.
 
 The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check
-the command can emit is reachable from a spec. The golden layer builds `kac.cs` once per run and invokes the built
+the command can emit is reachable from a spec. The golden layer builds `kac/` once per run and invokes the built
 assembly, so each scenario is a real process without paying `dotnet run`'s up-to-date check for each one.
 
 All three read the schema from [`../template/.schema/`](../template/.schema/), where it is authored, so a schema edit

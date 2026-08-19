@@ -69,8 +69,8 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # One invocation per subcommand, run sequentially. File-based apps share build output, so the
-      # kac runs must not execute concurrently.
+      # One invocation per subcommand, run sequentially. Concurrent runs build the same project and
+      # contend over its output, so the kac runs must not overlap.
       #
       # The gate ran against the pull request's head. What merged is a different commit, because
       # main moved beneath it, so the corpus is validated once more before anything is published.
@@ -79,15 +79,15 @@ jobs:
       # corpus and the repository root is not one.
       - name: Validate frontmatter, links and structure
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- validate
+        run: dotnet run --project ../tooling/kac -- validate
 
       - name: Build the export
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- export
+        run: dotnet run --project ../tooling/kac -- export
 
       - name: Assemble the plugin bundle
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- bundle
+        run: dotnet run --project ../tooling/kac -- bundle
 
       # Taken at `latest` rather than pinned, for the reason kac.yml gives: the bundle has to be
       # valid against the CLI a reader actually runs, so pinning it would settle into proving the
@@ -136,11 +136,11 @@ jobs:
       # merged — a commit the raw host serves. One invocation per subcommand, run sequentially.
       - name: Build the export
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- export
+        run: dotnet run --project ../tooling/kac -- export
 
       - name: Assemble the plugin bundle
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- bundle
+        run: dotnet run --project ../tooling/kac -- bundle
 
       # A version that has not moved publishes nothing. Claude Code pins an installed plugin to the
       # `version` in its manifest and offers an update only when that string changes, so a push

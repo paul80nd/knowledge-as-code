@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 # kac — Linux/macOS launcher, at the corpus root so `./kac validate` works from where you usually run.
 # Put the corpus root on your PATH (or symlink this) to drop the `./`. `exec` makes the wrapper
-# transparent to exit codes. The Windows twin is kac.cmd; the tool itself is ../tooling/kac.cs.
-exec dotnet run "$(dirname "$0")/../tooling/kac.cs" -- "$@"
+# transparent to exit codes. The Windows twin is kac.cmd; the tool itself is ../tooling/kac.
+exec dotnet run --project "$(dirname "$0")/../tooling/kac" -- "$@"

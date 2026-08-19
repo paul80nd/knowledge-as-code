@@ -26,11 +26,11 @@ using System.Text.Json;
 var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
 if (repoRoot is null)
 {
-    Console.Error.WriteLine("kac-tests: could not locate the repo root (no tooling/kac.cs above the cwd).");
+    Console.Error.WriteLine("kac-tests: could not locate the repo root (no kac.slnx above the cwd).");
     return 2;
 }
 
-var kacSource = Path.Combine(repoRoot, "tooling", "kac.cs");
+var kacProject = Path.Combine(repoRoot, "tooling", "kac", "kac.csproj");
 
 // The corpus in this repository, and what the suite runs `kac` against where a scenario needs a real one
 // rather than an assembled fixture. The command has to start inside a corpus to find anything.
@@ -70,7 +70,7 @@ if (scenarios.Count == 0)
 // up-to-date check on each of those invocations, which costs an order of magnitude more than the
 // suite's real work; building once and calling the built assembly keeps the process boundary
 // without paying for it a dozen times over.
-var kac = BuildKac(kacSource);
+var kac = BuildKac(kacProject);
 if (kac is null) return 2;
 
 var coveredChecks = new HashSet<string>(StringComparer.Ordinal);
@@ -781,6 +781,34 @@ if (filters.Count == 0)
         failures.Add("(checks table vs catalogue)");
     }
 
+    // -- what answers without a corpus --
+    // `--version` and `--help` are answered by the parser, so an installed `kac` says what it is from
+    // wherever it was typed; every verb needs a corpus and exits 2 without one. Asserted from a temp
+    // directory with no `.schema` above it, because the fault this catches — a corpus lookup running
+    // before the parse — passes every other test here, all of which run inside a corpus.
+    var nowhere = Directory.CreateTempSubdirectory("kac-tests-nowhere-").FullName;
+    try
+    {
+        foreach (var flag in new[] { "--version", "--help" })
+        {
+            var (flagOut, _, flagExit) = Run(nowhere, "dotnet", kac, flag);
+            if (flagExit == 0 && flagOut.Trim().Length > 0) continue;
+            Console.WriteLine($"  {flag} outside a corpus: exit {flagExit}, printed {flagOut.Trim().Length} char(s)");
+            failures.Add($"({flag} outside a corpus)");
+        }
+
+        var (_, verbErr, verbExit) = Run(nowhere, "dotnet", kac, "validate");
+        if (verbExit != 2)
+        {
+            Console.WriteLine($"  validate outside a corpus: exit {verbExit}, expected 2\n{Indent(verbErr)}");
+            failures.Add("(a verb outside a corpus)");
+        }
+    }
+    finally
+    {
+        TryDelete(nowhere);
+    }
+
     Console.WriteLine();
 }
 if (update)
@@ -800,15 +828,16 @@ return 0;
 
 // ---------------------------------------------------------------------------
 
-// The repository, found by the tool it holds rather than by the corpus beside it. `kac` itself walks up
-// for a `.schema/` because what it wants is a corpus; this suite wants the tree that holds the engine,
-// the fixtures and the corpus at once, and only one folder answers to that.
+// The repository, found by the solution at its root rather than by the corpus beside it. `kac` itself walks
+// up for a `.schema/` because what it wants is a corpus; this suite wants the tree that holds the engine,
+// the fixtures and the corpus at once, and only one folder answers to that. The solution file is the right
+// marker for it: it names every project in the tree, and a corpus that installed the tool holds no such thing.
 static string? FindRepoRoot(string start)
 {
     var dir = new DirectoryInfo(start);
     while (dir is not null)
     {
-        if (File.Exists(Path.Combine(dir.FullName, "tooling", "kac.cs")))
+        if (File.Exists(Path.Combine(dir.FullName, "kac.slnx")))
             return dir.FullName;
         dir = dir.Parent;
     }
@@ -914,27 +943,26 @@ static void RegenerateIndex(string kac, string schemaDir, string corpusDir)
     }
 }
 
-// Compile tooling/kac.cs and return the assembly to invoke, or null having said why. Two calls
+// Build the tool project and return the assembly to invoke, or null having said why. Two calls
 // because they do different things: the first builds, and `--getProperty` evaluates the project
-// without building. The path cannot simply be constructed — MSBuild puts a file-based app's output
-// in a content-addressed directory outside the repo, which is why it is read back rather than
-// assumed.
-static string? BuildKac(string kacSource)
+// without building. The path is read back rather than constructed, so a configuration or a target
+// framework settled in the project cannot silently disagree with a path spelled out here.
+static string? BuildKac(string kacProject)
 {
-    var (buildOut, buildErr, buildExit) = Run(Directory.GetCurrentDirectory(), "dotnet", "build", kacSource);
+    var (buildOut, buildErr, buildExit) = Run(Directory.GetCurrentDirectory(), "dotnet", "build", kacProject);
     if (buildExit != 0)
     {
-        Console.Error.WriteLine($"kac-tests: building {kacSource} failed (exit {buildExit}).");
+        Console.Error.WriteLine($"kac-tests: building {kacProject} failed (exit {buildExit}).");
         Console.Error.WriteLine(Indent(buildErr + buildOut));
         return null;
     }
 
     var (pathOut, pathErr, pathExit) =
-        Run(Directory.GetCurrentDirectory(), "dotnet", "build", kacSource, "--getProperty:TargetPath");
+        Run(Directory.GetCurrentDirectory(), "dotnet", "build", kacProject, "--getProperty:TargetPath");
     var assembly = pathOut.Trim();
     if (pathExit == 0 && assembly.Length > 0 && File.Exists(assembly)) return assembly;
 
-    Console.Error.WriteLine($"kac-tests: could not locate the built assembly for {kacSource} (exit {pathExit}).");
+    Console.Error.WriteLine($"kac-tests: could not locate the built assembly for {kacProject} (exit {pathExit}).");
     Console.Error.WriteLine(Indent(pathErr + pathOut));
     return null;
 }

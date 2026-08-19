@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- The mechanics of kac, split out of the single-file entrypoint (tooling/kac.cs) so the code can
-       span multiple files and be unit-tested in-process. The entrypoint references this via a
-       `#:project` directive, so `dotnet run tooling/kac.cs` still builds and runs it with no extra step. -->
+  <!-- The mechanics of kac, held apart from the entrypoint (tooling/kac/) so they can be unit-tested
+       in-process rather than through a subprocess. Nothing here writes to the console or decides an
+       exit code: each pass answers in values, and `Commands` turns those into output. -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>

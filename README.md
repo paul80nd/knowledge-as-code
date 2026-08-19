@@ -13,8 +13,8 @@ documents beneath it.
 ## What is here
 
 **[`tooling/`](tooling/)** — `kac`, the validator and generator, and the three test layers that prove it. A .NET 10
-file-based entrypoint over a `kac.core` library, plus the fixtures, feature specs and unit tests it is held to.
-[`tooling/README.md`](tooling/README.md) is how to build and test it.
+entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures, feature
+specs and unit tests it is held to. [`tooling/README.md`](tooling/README.md) is how to build and test it.
 
 **[`template/`](template/)** — what a corpus is made of, authored once: the machine-readable schema, the framework's
 own documentation, the plugin tree, and the pages and templates a corpus starts from.
@@ -28,9 +28,17 @@ fictional library consortium. [`example/README.md`](example/README.md) is the wa
 No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is
 run from, and the one in this repository is what proves the tool over real content rather than over fixtures alone.
 
-## Getting started
+**[`kac.slnx`](kac.slnx)** sits above all three. It names the four projects under `tooling/`, and lives here rather
+than beside them so that an IDE opening it opens the repository.
 
-Requires the **.NET 10 SDK**. `kac` runs through `dotnet run`, so there is no build step to manage.
+## Running the tool
+
+Requires the **.NET 10 SDK**. Of the three ways below, only the last does not work yet.
+
+### From this repository
+
+The development loop, and the way to try the corpus here. `dotnet run` builds as it goes, so there is no build step
+to manage.
 
 ```bash
 git clone https://github.com/paul80nd/knowledge-as-code.git
@@ -41,8 +49,31 @@ cd knowledge-as-code/example
 ./kac checks       # list every check the validator implements
 ```
 
-`./kac` (Windows: `kac.cmd`) sits at the corpus root and wraps `dotnet run ../tooling/kac.cs`. Add that folder to your
-`PATH` to drop the `./`, or use the explicit form, which is what CI runs.
+`./kac` (Windows: `kac.cmd`) sits at the corpus root and wraps `dotnet run --project ../tooling/kac`. Add that folder
+to your `PATH` to drop the `./`, or use the explicit form, which is what CI runs.
+
+### As an installed tool, packed here
+
+`kac` packs as the dotnet tool `KnowledgeAsCode.Tool`. Packing it yourself is how to try the thing a corpus will
+eventually receive, without waiting for a published one.
+
+```bash
+dotnet pack tooling/kac/kac.csproj -o .dist/pack
+dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
+
+cd example
+../.dist/tools/kac validate
+```
+
+`--tool-path` keeps the install inside this repository, where `.dist/` is untracked. `--global` puts `kac` on your
+`PATH` instead. Either way it finds a corpus the way the local one does, by walking up for a `.schema/`, so it reads
+whichever corpus it is run from — this one, or a corpus of your own anywhere on the machine.
+
+### From nuget.org
+
+**Not yet.** Nothing is published, so a corpus outside this repository takes the tool from a folder somebody packed.
+The version it starts at, the workflow that publishes it, and the install line that will replace this paragraph are
+in the [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues).
 
 Every command, one document apiece, is in [`tooling/features/`](tooling/features/).
 [`tooling/README.md`](tooling/README.md) maps them and carries the test commands.
@@ -52,10 +83,13 @@ Every command, one document apiece, is in [`tooling/features/`](tooling/features
 Copy `example/`, delete the records in the types you keep, rewrite the type pages' examples in your own domain, and
 start writing. `.schema/` comes with it and is the half you want to keep receiving changes to.
 
-**A copy carries no tool today.** `kac` lives in `tooling/`, which is not part of the corpus, so a copy is run against
-a checkout of this repository beside it. `kac mechanism` cannot answer for a copy either: it reads a manifest the
-corpus no longer holds. Packaging the tool so a corpus installs and pins a version of it is the work that closes
-both, and it is tracked in the
+**A copy carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which is not part of the corpus.
+Install the packed tool as above and run it from the copy: it needs nothing but the `.schema/` the copy already
+carries, and a corpus outside this repository validates and generates exactly as `example/` does.
+
+**What a copy cannot yet do is take a newer framework.** `kac mechanism` wants a reference corpus, through `--against`
+or an `upstream.url`, and past that it reads a manifest at `tooling/manifest.yaml` that no corpus holds. Pinning a
+version of the tool, and a command that updates the schema beneath a corpus, are both in the
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) rather than described here.
 
 ## Maturity

@@ -63,7 +63,7 @@ public class ManifestTests
     [InlineData(".schema/_universal.yaml")]
     [InlineData(".schema/_tiers.yaml")]
     [InlineData(".schema/README.md")]
-    [InlineData("tooling/kac.cs")]
+    [InlineData("tooling/kac/Program.cs")]
     [InlineData("runbooks.md")]
     public void Nothing_but_a_type_file_is_ever_declined(string path)
         => Assert.False(MechanismCheck.Declined(path, "synced", new CorpusDescriptor { Types = ["adrs"] }));
@@ -92,7 +92,7 @@ public class ManifestTests
 
         Assert.Equal(!declined, descriptor.Verifies);
         Assert.Equal(declined, MechanismCheck.Declined("tooling/kac.tests/GlobTests.cs", "verification", descriptor));
-        Assert.False(MechanismCheck.Declined("tooling/kac.cs", "synced", descriptor));
+        Assert.False(MechanismCheck.Declined("tooling/kac/Program.cs", "synced", descriptor));
     }
 
     // -- the three versions --

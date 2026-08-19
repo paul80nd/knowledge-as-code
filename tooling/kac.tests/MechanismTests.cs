@@ -44,10 +44,10 @@ public class MechanismTests
     [Fact]
     public void A_shared_file_whose_copies_differ_is_drift()
     {
-        var report = MechanismCheck.Classify(Files("tooling/kac.cs"), Files("tooling/kac.cs"),
+        var report = MechanismCheck.Classify(Files("tooling/kac/Program.cs"), Files("tooling/kac/Program.cs"),
             Rules(), Descriptor(), Differ);
 
-        Assert.Equal(["tooling/kac.cs"], report.Drift);
+        Assert.Equal(["tooling/kac/Program.cs"], report.Drift);
         Assert.Equal(0, report.SyncedInStep);
         Assert.Equal(1, report.Problems);
     }
@@ -55,7 +55,7 @@ public class MechanismTests
     [Fact]
     public void A_shared_file_whose_copies_match_is_counted_and_not_named()
     {
-        var report = MechanismCheck.Classify(Files("tooling/kac.cs"), Files("tooling/kac.cs"),
+        var report = MechanismCheck.Classify(Files("tooling/kac/Program.cs"), Files("tooling/kac/Program.cs"),
             Rules(), Descriptor(), Identical);
 
         Assert.Empty(report.Drift);
@@ -66,18 +66,18 @@ public class MechanismTests
     [Fact]
     public void A_shared_file_only_upstream_is_missing_locally()
     {
-        var report = MechanismCheck.Classify(Files(), Files("tooling/kac.cs"), Rules(), Descriptor(), Differ);
+        var report = MechanismCheck.Classify(Files(), Files("tooling/kac/Program.cs"), Rules(), Descriptor(), Differ);
 
-        Assert.Equal(["tooling/kac.cs"], report.MissingLocally);
+        Assert.Equal(["tooling/kac/Program.cs"], report.MissingLocally);
         Assert.Empty(report.MissingUpstream);
     }
 
     [Fact]
     public void A_shared_file_only_here_is_missing_upstream()
     {
-        var report = MechanismCheck.Classify(Files("tooling/kac.cs"), Files(), Rules(), Descriptor(), Differ);
+        var report = MechanismCheck.Classify(Files("tooling/kac/Program.cs"), Files(), Rules(), Descriptor(), Differ);
 
-        Assert.Equal(["tooling/kac.cs"], report.MissingUpstream);
+        Assert.Equal(["tooling/kac/Program.cs"], report.MissingUpstream);
         Assert.Empty(report.MissingLocally);
     }
 
@@ -96,8 +96,8 @@ public class MechanismTests
     [Fact]
     public void An_accepted_divergence_that_still_differs_is_counted_rather_than_reported()
     {
-        var report = MechanismCheck.Classify(Files("tooling/kac.cs"), Files("tooling/kac.cs"),
-            Rules(), Descriptor(accepted: ("tooling/kac.cs", "pinned to .NET 8")), Differ);
+        var report = MechanismCheck.Classify(Files("tooling/kac/Program.cs"), Files("tooling/kac/Program.cs"),
+            Rules(), Descriptor(accepted: ("tooling/kac/Program.cs", "pinned to .NET 8")), Differ);
 
         Assert.Empty(report.Drift);
         Assert.Empty(report.ResolvedDivergence);
@@ -108,10 +108,10 @@ public class MechanismTests
     [Fact]
     public void An_accepted_divergence_that_matches_again_is_reported_as_resolved()
     {
-        var report = MechanismCheck.Classify(Files("tooling/kac.cs"), Files("tooling/kac.cs"),
-            Rules(), Descriptor(accepted: ("tooling/kac.cs", null)), Identical);
+        var report = MechanismCheck.Classify(Files("tooling/kac/Program.cs"), Files("tooling/kac/Program.cs"),
+            Rules(), Descriptor(accepted: ("tooling/kac/Program.cs", null)), Identical);
 
-        Assert.Equal(["tooling/kac.cs"], report.ResolvedDivergence);
+        Assert.Equal(["tooling/kac/Program.cs"], report.ResolvedDivergence);
         Assert.Equal(0, report.AcceptedActive);
 
         // Reported, and not a fault: deleting the entry is the corpus's to do when it likes.
@@ -164,16 +164,16 @@ public class MechanismTests
     [Fact]
     public void A_shared_file_whose_copies_differ_is_updated()
     {
-        var plan = Plan(Files("tooling/kac.cs"), Files("tooling/kac.cs"));
+        var plan = Plan(Files("tooling/kac/Program.cs"), Files("tooling/kac/Program.cs"));
 
-        Assert.Equal(["tooling/kac.cs"], plan.Updated);
+        Assert.Equal(["tooling/kac/Program.cs"], plan.Updated);
         Assert.Equal(0, plan.InStep);
     }
 
     [Fact]
     public void A_shared_file_whose_copies_match_is_already_in_step()
     {
-        var plan = Plan(Files("tooling/kac.cs"), Files("tooling/kac.cs"), same: Identical);
+        var plan = Plan(Files("tooling/kac/Program.cs"), Files("tooling/kac/Program.cs"), same: Identical);
 
         Assert.Empty(plan.Updated);
         Assert.Equal(1, plan.InStep);
@@ -182,9 +182,9 @@ public class MechanismTests
     [Fact]
     public void A_shared_file_the_corpus_lacks_is_brought_down()
     {
-        var plan = Plan(Files(), Files("tooling/kac.cs"));
+        var plan = Plan(Files(), Files("tooling/kac/Program.cs"));
 
-        Assert.Equal(["tooling/kac.cs"], plan.Updated);
+        Assert.Equal(["tooling/kac/Program.cs"], plan.Updated);
     }
 
     // A forked file is seeded once and never reconciled afterwards, so the two cases are opposite: absent
@@ -211,10 +211,10 @@ public class MechanismTests
     [Fact]
     public void An_accepted_divergence_is_skipped_and_names_its_reason()
     {
-        var plan = Plan(Files("tooling/kac.cs"), Files("tooling/kac.cs"),
-            Descriptor(accepted: ("tooling/kac.cs", "pinned to .NET 8")));
+        var plan = Plan(Files("tooling/kac/Program.cs"), Files("tooling/kac/Program.cs"),
+            Descriptor(accepted: ("tooling/kac/Program.cs", "pinned to .NET 8")));
 
-        Assert.Equal(["tooling/kac.cs  (pinned to .NET 8)"], plan.Skipped);
+        Assert.Equal(["tooling/kac/Program.cs  (pinned to .NET 8)"], plan.Skipped);
         Assert.Empty(plan.Updated);
     }
 
@@ -222,9 +222,9 @@ public class MechanismTests
     [Fact]
     public void A_shared_file_the_reference_does_not_have_is_held_here()
     {
-        var plan = Plan(Files("tooling/kac.cs"), Files());
+        var plan = Plan(Files("tooling/kac/Program.cs"), Files());
 
-        Assert.Equal(["tooling/kac.cs"], plan.HeldHere);
+        Assert.Equal(["tooling/kac/Program.cs"], plan.HeldHere);
         Assert.Empty(plan.Copies);
     }
 
@@ -262,11 +262,11 @@ public class MechanismTests
     [Fact]
     public void The_files_to_copy_are_exactly_the_updated_and_the_seeded()
     {
-        var plan = Plan(Files("tooling/old.cs"), Files("tooling/kac.cs", "adrs.md"));
+        var plan = Plan(Files("tooling/old.cs"), Files("tooling/kac/Program.cs", "adrs.md"));
 
-        Assert.Equal(["tooling/kac.cs"], plan.Updated);
+        Assert.Equal(["tooling/kac/Program.cs"], plan.Updated);
         Assert.Equal(["adrs.md"], plan.Seeded);
-        Assert.Equal(["tooling/kac.cs", "adrs.md"], plan.Copies);
+        Assert.Equal(["tooling/kac/Program.cs", "adrs.md"], plan.Copies);
         Assert.Equal(["tooling/old.cs"], plan.HeldHere);
     }
 }

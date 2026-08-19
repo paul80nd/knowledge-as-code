@@ -92,15 +92,15 @@ public class TemplateTests
     private static string Report(string what, List<string> paths) =>
         $"{paths.Count} file(s) {what}:\n  " + string.Join("\n  ", paths);
 
-    // The repository, found by the tool it holds — the tree carrying the template and the corpus at
+    // The repository, found by the solution at its root — the tree carrying the template and the corpus at
     // once, which is the only place both questions above can be asked.
     private static string RepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "tooling", "kac.cs")))
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "kac.slnx")))
             dir = dir.Parent;
 
         return dir?.FullName ?? throw new InvalidOperationException(
-            "no 'tooling/kac.cs' above the test assembly — these tests read the repository they ship in.");
+            "no 'kac.slnx' above the test assembly — these tests read the repository they ship in.");
     }
 }
