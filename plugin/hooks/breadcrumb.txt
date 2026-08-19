@@ -1,0 +1,3 @@
+knowledge-as-code 0.1.0 travels with this session as data, exported 2026-08-19.
+glossary — 30 entries across 3 records: Example Libraries, Knowledge as code and Search.
+Ask the glossary-lookup skill before you infer what a word here means.

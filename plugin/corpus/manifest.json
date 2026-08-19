@@ -1,0 +1,24 @@
+{
+  "formatVersion": 2,
+  "corpus": "knowledge-as-code",
+  "contentVersion": "0.1.0",
+  "mechanismVersion": 4,
+  "commit": "5a234c57247c1b8034f04a5890616345e2b1115f",
+  "dirty": false,
+  "generatedAt": "2026-08-19T07:44:09Z",
+  "publishing": {
+    "target": "github",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/5a234c57247c1b8034f04a5890616345e2b1115f/{path}#{anchor}",
+    "rawTemplate": "https://raw.githubusercontent.com/paul80nd/knowledge-as-code/5a234c57247c1b8034f04a5890616345e2b1115f/{path}",
+    "ref": "5a234c57247c1b8034f04a5890616345e2b1115f"
+  },
+  "types": [
+    {
+      "type": "glossary",
+      "records": 3,
+      "parts": 30,
+      "dir": "glossary",
+      "partsFile": "glossary/terms.jsonl"
+    }
+  ]
+}

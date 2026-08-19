@@ -1,0 +1,15 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "knowledge-as-code",
+  "description": "A marketplace holding the knowledge-as-code plugin.",
+  "owner": {
+    "name": "Paul Law"
+  },
+  "plugins": [
+    {
+      "name": "knowledge-as-code",
+      "description": "Answers questions about the knowledge-as-code corpus from the glossary exported beside it.",
+      "source": "./plugin"
+    }
+  ]
+}

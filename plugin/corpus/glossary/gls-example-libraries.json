@@ -1,0 +1,18 @@
+{
+  "type": "glossary",
+  "path": "glossary/example-libraries.md",
+  "fields": {
+    "id": "gls-example-libraries",
+    "title": "Example Libraries",
+    "narrows": null,
+    "status": "draft",
+    "review-by": "2027-08-12"
+  },
+  "sections": {
+    "Scope": "Vocabulary every team here shares: readers, the things they borrow, and the places they borrow them from. A word one system uses differently belongs in that system's glossary, and the entry for that word points there."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5a234c57247c1b8034f04a5890616345e2b1115f/glossary/example-libraries.md",
+    "raw": "https://raw.githubusercontent.com/paul80nd/knowledge-as-code/5a234c57247c1b8034f04a5890616345e2b1115f/glossary/example-libraries.md"
+  }
+}

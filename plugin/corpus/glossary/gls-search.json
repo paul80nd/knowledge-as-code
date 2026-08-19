@@ -1,0 +1,18 @@
+{
+  "type": "glossary",
+  "path": "glossary/search.md",
+  "fields": {
+    "id": "gls-search",
+    "title": "Search",
+    "narrows": "gls-example-libraries",
+    "status": "draft",
+    "review-by": "2027-08-12"
+  },
+  "sections": {
+    "Scope": "How a reader's words reach a catalogue record: what is typed, what is matched, and what orders the results. The things being searched for belong to the whole estate, so they sit in its glossary rather than here."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5a234c57247c1b8034f04a5890616345e2b1115f/glossary/search.md",
+    "raw": "https://raw.githubusercontent.com/paul80nd/knowledge-as-code/5a234c57247c1b8034f04a5890616345e2b1115f/glossary/search.md"
+  }
+}
