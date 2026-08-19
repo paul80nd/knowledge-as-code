@@ -15,15 +15,32 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <!-- What nuget.org shows, and what the tool reports for its own version. `Version` is hand-moved, as
+       the plugin manifest's is: a published version is a promise about the command surface, and nothing
+       can derive that from a diff. It sits below 1.0.0 because the commands may still change shape —
+       README.md says as much under Maturity, and example/.corpus.yaml and the plugin manifest are both
+       on 0.1.0 as well.
+
+       PACKAGE.md is written for whoever finds this on nuget.org. It is deliberately not ../README.md,
+       which says how to build and test the tool — the wrong page for someone installing it. -->
   <PropertyGroup>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>kac</ToolCommandName>
     <PackageId>KnowledgeAsCode.Tool</PackageId>
-    <Description>
-      Validator and generator for a knowledge-as-code corpus: checks records against the corpus schema,
-      regenerates its indexes and type pages, and exports it as an installable plugin.
-    </Description>
+    <Version>0.1.0</Version>
+    <Authors>Paul Law</Authors>
+    <Description>Validator and generator for a knowledge-as-code corpus, driven by its own schema.</Description>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/paul80nd/knowledge-as-code</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/paul80nd/knowledge-as-code</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>knowledge-as-code;documentation;markdown;validator;wiki;adr</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="PACKAGE.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.CommandLine" Version="2.0.*" />

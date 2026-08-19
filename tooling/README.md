@@ -31,6 +31,11 @@ dotnet pack tooling/kac/kac.csproj -o …    # the tool as a package, which is h
 [`../kac.slnx`](../kac.slnx) sits at the repository root rather than here, because it names projects in this folder
 and an IDE opening it should see `template/` and `example/` too.
 
+The package's version is `<Version>` in [`kac/kac.csproj`](kac/kac.csproj), moved by hand, and
+[`kac/PACKAGE.md`](kac/PACKAGE.md) is what nuget.org shows — written for whoever installs the tool rather than for
+whoever changes it, which is this page. CI packs on every run and installs what it packed, so metadata that has gone
+missing fails a pull request rather than a publish.
+
 Run **one `kac` invocation at a time**: concurrent runs build the same project and contend over its output.
 
 Argument parsing is [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine), so every command and
