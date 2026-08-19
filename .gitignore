@@ -1,9 +1,9 @@
-# JetBrains Rider
-.idea/
-*.sln.iml
+# What any folder here produces, and the repository's own working material. The .NET build
+# output is in tooling/.gitignore, beside the only projects that write it, and what kac
+# generates is in example/.gitignore, beside the corpus it generates from.
 
-# Per-machine Rider/ReSharper state — absolute paths and test-session ids
-*.DotSettings.user
+# JetBrains Rider — a project directory beside the repository root and beside each project
+.idea/
 
 # macOS
 .DS_Store
@@ -11,19 +11,5 @@
 # Claude Code local settings
 .claude/settings.local.json
 
-# Generated — rebuilt by `kac index`
-_reports/
-
-# Generated — `export` rebuilds .dist/export/ whole, `bundle` rebuilds .dist/plugin/ and the
-# marketplace beside it. One rule covers both.
-.dist/
-
 # Working material — drafts and source notes that are not themselves knowledge documents
 _plan/
-
-# .NET build output (kac.core / kac.tests / kac.features projects under tooling/)
-bin/
-obj/
-
-# Reqnroll-generated code-behind (regenerated from .feature files on build)
-*.feature.cs

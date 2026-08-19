@@ -265,9 +265,8 @@ rules:
     layer: local
     note: Contribution, security and issue-management guidance specific to this corpus.
 
-  - { path: "LICENSE",         layer: local, note: "MIT; a derived corpus may relicense its own copy." }
   - { path: ".corpus.yaml", layer: local, note: "What this corpus is, and where it takes the framework from." }
-  - { path: "_plan/**",        layer: local, note: "Temporary planning and migration content." }
+  - { path: "_plan/**",     layer: local, note: "Temporary planning and migration content." }
 
   # Anything the rules above do not name belongs to the corpus that holds it.
 

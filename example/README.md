@@ -291,4 +291,5 @@ starts fresh here by design — the original commits are interleaved with a clie
 
 ## Licence
 
-Released under the [MIT licence](LICENSE), so that any organisation adopting this keeps an unencumbered copy.
+Released under the repository's [MIT licence](../LICENSE), so that any organisation adopting this keeps an
+unencumbered copy.

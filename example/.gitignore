@@ -1,15 +1,6 @@
-# JetBrains Rider
-.idea/
-*.sln.iml
-
-# Per-machine Rider/ReSharper state — absolute paths and test-session ids
-*.DotSettings.user
-
-# macOS
-.DS_Store
-
-# Claude Code local settings
-.claude/settings.local.json
+# What kac writes into this corpus and rebuilds whole each run. The editor and
+# operating-system noise common to every folder is in the repository's own .gitignore,
+# which this one adds to.
 
 # Generated — rebuilt by `./kac index`
 _reports/
@@ -17,13 +8,3 @@ _reports/
 # Generated — `export` rebuilds .dist/export/ whole, `bundle` rebuilds .dist/plugin/ and the
 # marketplace beside it. One rule covers both.
 .dist/
-
-# Working material — drafts and source notes that are not themselves knowledge documents
-_plan/
-
-# .NET build output (kac.core / kac.tests / kac.features projects under tooling/)
-bin/
-obj/
-
-# Reqnroll-generated code-behind (regenerated from .feature files on build)
-*.feature.cs
