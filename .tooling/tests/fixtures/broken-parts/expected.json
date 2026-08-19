@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 16,
+    "validated": 17,
     "templates": 2,
     "skipped": 0,
-    "errors": 14,
+    "errors": 16,
     "warnings": 2
   },
   "findings": [
@@ -13,6 +13,20 @@
       "severity": "error",
       "check": "part-id-unique",
       "message": "two terms here address as 'identity-line' — a citation of it names both and reaches neither."
+    },
+    {
+      "file": "glossary/holl-empty-term.md",
+      "line": 26,
+      "severity": "error",
+      "check": "part-empty",
+      "message": "term 'Hollow' has nothing under it — write it or delete the heading."
+    },
+    {
+      "file": "glossary/holl-empty-term.md",
+      "line": 30,
+      "severity": "error",
+      "check": "part-empty",
+      "message": "term 'Placeholder' has nothing under it — write it or delete the heading."
     },
     {
       "file": "glossary/tref-unknown-term.md",

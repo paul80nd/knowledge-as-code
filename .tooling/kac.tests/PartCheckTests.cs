@@ -242,6 +242,47 @@ public class PartCheckTests
         Assert.Equal(["corpus"], doc.Parts.Select(p => p.Id));
     }
 
+    // A heading is a container as well as an address, and the address half is sound on its own: the entry
+    // has a title, an anchor and a citation that resolves. The words are what is missing.
+    [Fact]
+    public void A_heading_with_nothing_under_it_names_the_entry()
+    {
+        var found = Run(Terms + "### Corpus\n\nA body of records.\n\n### Hollow\n\n### Drift\n\nCopies parting.\n",
+            Headings(), "glossary");
+
+        var one = Assert.Single(found);
+        Assert.Equal("part-empty", one.Check.Value);
+        Assert.Contains("term 'Hollow' has nothing under it", one.Message);
+    }
+
+    // The last entry's body runs to the end of the document rather than to a following heading, so it is
+    // the one an off-by-one would let through.
+    [Fact]
+    public void The_last_heading_is_asked_the_same_question()
+    {
+        var found = Run(Terms + "### Corpus\n\nA body of records.\n\n### Hollow\n", Headings(), "glossary");
+        Assert.Equal("part-empty", Assert.Single(found).Check.Value);
+    }
+
+    // Read on the source as written, so what a renderer would offer as a block still counts as nothing
+    // written.
+    [Theory]
+    [InlineData("---")]
+    [InlineData("—")]
+    [InlineData("*")]
+    public void A_mark_standing_in_for_the_words_is_still_an_empty_entry(string body)
+    {
+        var found = Run(Terms + $"### Hollow\n\n{body}\n", Headings(), "glossary");
+        Assert.Equal("part-empty", Assert.Single(found).Check.Value);
+    }
+
+    // The table source answers this under `clause-table`, so a row with an empty cell must not be
+    // reported twice under two names.
+    [Fact]
+    public void A_table_row_is_not_asked_whether_a_heading_holds_anything()
+        => Assert.DoesNotContain(Run(Header + "| `LOGS` | **MUST** be retained. |\n"),
+            f => f.Check.Value == "part-empty");
+
     // -- driving the checks --
 
     private static List<Finding> Run(string body) => Run(body, Table(), "policies");

@@ -269,6 +269,23 @@ checks:
       never reach the published anchors. Compared ordinally: two ids differing only in case are not two
       parts a reader could tell apart either.
 
+  part-empty:
+    severity: error
+    description: A part declared by a heading carries something under it.
+    notes: >
+      The question `clause-table`'s empty-table arm asks of the other source. A heading is an address and
+      a container both, and an empty entry passes everything checkable from outside: it has a title, a
+      working anchor and a citation that resolves. What it does not have is the thing a reader came for,
+      and an export carries it as a part with no words in it and counts it among the rest.
+
+      Asked of the source rather than of the type, so anything declaring `source: headings` inherits it.
+      The heading is named, because a glossary holds twenty entries and "one of these is empty" is not
+      something anyone can act on. Read on the source as written, so a horizontal rule or an em dash
+      standing in for the words counts as nothing written.
+
+      An error rather than a warning, and `status: draft` is no exemption: draft says the terms are still
+      settling, not that a heading with nothing under it is a state to publish from.
+
   clause-table:
     severity: error
     description: The declared section holds a table headed with the block's `columns`, and at least one row.
