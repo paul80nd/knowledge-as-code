@@ -85,7 +85,7 @@ and the count is what the line was for.
 **A hook is copied with its permission bit.** One file in the plugin tree is run rather than read, and a command copied
 without that bit is a plugin that installs and then fails at the first session with a message about permissions rather
 than about the corpus. The bit does not exist on Windows and is not asked for there: a hook ships as a POSIX script and
-a `.cmd` twin, the same pair and the same reasoning as `kac` and `kac.cmd` at the repo root.
+a `.cmd` twin, the same pair and the same reasoning as `kac` and `kac.cmd` at a corpus's root.
 
 **The plugin's version is the corpus content version.** It is read off the export's manifest rather than out of
 `.corpus.yaml`, so the number on the plugin is the number of the data inside it. The export **format** version stays

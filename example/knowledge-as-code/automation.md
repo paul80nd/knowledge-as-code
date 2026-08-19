@@ -77,9 +77,9 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Where a name collides            | `.schema/` + the types adopted | `lineage.md` `types-collisions` block       |
 | What this corpus holds           | `.schema/` + the types adopted | Root `README.md` `types-index` block        |
 
-That table says what each block is and where it lands.
-[`tooling/features/index.md`](../tooling/features/index.md) carries the same list from the generator's side, with the
-rule governing each block in place of its address.
+That table says what each block is and where it lands. `tooling/features/index.md`, in the repository the tool is
+built from, carries the same list from the generator's side, with the rule governing each block in place of its
+address.
 
 Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table, the
 types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table, the strip on
@@ -106,7 +106,7 @@ shows as literal text.
 
 Built on every PR. `kac export` writes the corpus into `.dist/export/` as data a consumer reads instead of cloning the
 repository: a manifest saying what the export is, one file per record, and a flat file cheap to grep.
-[`tooling/features/export.md`](../tooling/features/export.md) is the reference for what it holds.
+`tooling/features/export.md` is the reference for what it holds.
 
 A change that breaks the export therefore fails its own build. Nothing is kept: `.dist/` is gitignored and rebuilt
 whole each run, and the pipeline discards it with the job.
@@ -131,7 +131,7 @@ artefacts, and the tool tests the prefix rather than the names — see [taxonomy
 **Excluded as a record is not excluded from every check.** The framework's own documents carry no frontmatter and are
 validated against no schema, and they still link to things, so their links and fragments are resolved like any page's. A
 file holding a generated block is held to still carrying the markers to write between, however it is otherwise excluded.
-Each of those extra passes, and what it asks, is in [`tooling/features/validate.md`](../tooling/features/validate.md).
+Each of those extra passes, and what it asks, is in `tooling/features/validate.md`.
 
 **A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
 answers to nothing that needs a filename, so discovering it as a record would report a dozen faults that are the file
@@ -157,7 +157,7 @@ reviewing a record needs.
 Everything in this document describes **mechanism**, not corpus content. The validators, generators, schema and skills
 are deliberately free of organisation specifics so they can be lifted to another organisation as a unit.
 
-Which files that covers is not a matter of judgement. [`manifest.yaml`](../tooling/manifest.yaml) declares it and
+Which files that covers is not a matter of judgement. `tooling/manifest.yaml` declares it and
 `kac mechanism --check` enforces it: a file in the `synced` layer carrying corpus-specific content is a defect, not a
 customisation. Anything organisation-specific belongs in the corpus, or in the `forked` layer — the type root pages,
 templates and publishing config — which exist to be filled with local content.

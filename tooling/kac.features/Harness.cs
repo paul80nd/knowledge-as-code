@@ -14,7 +14,7 @@ public static class Harness
 
     public static ValidationResult Validate(string fixtureName)
     {
-        var schemaDir = Path.Combine(RepoRoot, ".schema");
+        var schemaDir = Path.Combine(RepoRoot, "example", ".schema");
         var corpusDir = Path.Combine(RepoRoot, "tooling", "tests", "fixtures", fixtureName, "corpus");
         var temp = Path.Combine(Path.GetTempPath(), "kac-features-" + Guid.NewGuid().ToString("N"));
         try
@@ -36,12 +36,14 @@ public static class Harness
         }
     }
 
+    // The repository, found by the tool it holds rather than by the corpus beside it. The specs need the
+    // tree that carries the engine, the fixtures and the schema at once, and only one folder answers.
     private static string FindRepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir is not null)
         {
-            if (Directory.Exists(Path.Combine(dir.FullName, ".schema")))
+            if (File.Exists(Path.Combine(dir.FullName, "tooling", "kac.cs")))
                 return dir.FullName;
             dir = dir.Parent;
         }

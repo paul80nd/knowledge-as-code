@@ -6,9 +6,9 @@
 # the chain end to end — that a bundle installs, that the paths its skill names resolve inside the
 # installed copy, and that a link built from its template fetches the record it points at.
 #
-# Run it from the repository root, after `kac export` and `kac bundle`:
+# Run it from the corpus root, after `kac export` and `kac bundle`:
 #
-#   sh tooling/tests/round-trip.sh
+#   cd example && sh ../tooling/tests/round-trip.sh
 #
 # It reads `.dist/`, writes only inside a work directory of its own, and installs into a Claude
 # config directory of its own, so it leaves the machine it ran on as it found it.

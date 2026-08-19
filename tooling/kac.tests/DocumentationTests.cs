@@ -19,8 +19,9 @@ namespace kac.tests;
 
 public partial class DocumentationTests
 {
-    private static readonly string Root = RepoRoot();
-    private static readonly string Readme = File.ReadAllText(Path.Combine(Root, ".schema", "README.md"));
+    // The corpus this repository carries, which is where the schema and the page describing it both live.
+    private static readonly string CorpusRoot = Path.Combine(RepoRoot(), "example");
+    private static readonly string Readme = File.ReadAllText(Path.Combine(CorpusRoot, ".schema", "README.md"));
 
     // A row of the fact table opens with the call it documents: `| \`section_count('Title')\` | int |`.
     [GeneratedRegex(@"^\| `([a-z_]+)\(", RegexOptions.Multiline)]
@@ -46,7 +47,7 @@ public partial class DocumentationTests
     [Fact]
     public void The_held_to_table_names_every_check_the_schema_pass_reports()
     {
-        var declared = Schema.Load(Root).Checks
+        var declared = Schema.Load(CorpusRoot).Checks
             .Select(c => c.Id.Value)
             .Where(id => id.StartsWith("schema-", StringComparison.Ordinal))
             .ToHashSet(StringComparer.Ordinal);
@@ -56,13 +57,15 @@ public partial class DocumentationTests
         Assert.Equal(declared.Order(StringComparer.Ordinal), cited.Order(StringComparer.Ordinal));
     }
 
+    // The repository, found by the tool it holds. A corpus is what `kac` walks up for; what these tests
+    // want is the tree carrying the engine and the schema page together, and one folder answers to that.
     private static string RepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !Directory.Exists(Path.Combine(dir.FullName, ".schema")))
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "tooling", "kac.cs")))
             dir = dir.Parent;
 
         return dir?.FullName ?? throw new InvalidOperationException(
-            "no '.schema' directory above the test assembly — these tests read the repository they ship in.");
+            "no 'tooling/kac.cs' above the test assembly — these tests read the repository they ship in.");
     }
 }

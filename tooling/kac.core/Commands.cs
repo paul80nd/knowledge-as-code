@@ -147,7 +147,7 @@ public static class Commands
             Console.Error.WriteLine(
                 "index is stale — the following generated files differ from the schema/frontmatter:");
             foreach (var s in stale) Console.Error.WriteLine($"  {s}");
-            Console.Error.WriteLine("run:  dotnet run tooling/kac.cs -- index");
+            Console.Error.WriteLine("run:  kac index");
             return 1;
         }
 

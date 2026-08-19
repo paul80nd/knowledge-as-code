@@ -51,8 +51,8 @@ and `index --check` would then hold the corpus to keeping it fresh. Standing a t
 Two rules hold this together:
 
 - **CI never commits.** `index` writes locally. In CI, run `index --check`: it recomputes the generated content, and if
-  any file differs it prints the stale files, names the command to run (`dotnet run tooling/kac.cs -- index`, or just
-  `./kac index`), and exits `1`. A pipeline never pushes.
+  any file differs it prints the stale files, names the command to run (`kac index`), and exits `1`. A pipeline never
+  pushes.
 - **Output is byte-stable.** Generation is a pure function of frontmatter + schema, so running
   `index` twice produces no diff. Tables use fixed column widths, `|` is escaped, and files are LF with a trailing
   newline — so if a Markdown formatter is added later, the freshness check keeps working instead of failing forever.

@@ -26,12 +26,18 @@ using System.Text.Json;
 var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
 if (repoRoot is null)
 {
-    Console.Error.WriteLine("kac-tests: could not locate the repo root (no .schema above the cwd).");
+    Console.Error.WriteLine("kac-tests: could not locate the repo root (no tooling/kac.cs above the cwd).");
     return 2;
 }
 
 var kacSource = Path.Combine(repoRoot, "tooling", "kac.cs");
-var schemaDir = Path.Combine(repoRoot, ".schema");
+
+// The schema every fixture is assembled from. It is the example corpus's, and the suite reads it where
+// it lives rather than from a copy, so a schema edit surfaces as a broken golden in the same run.
+// The corpus in this repository, and the one the suite runs `kac` against where a scenario needs a real
+// one rather than an assembled fixture. The command has to start inside a corpus to find anything.
+var exampleRoot = Path.Combine(repoRoot, "example");
+var schemaDir = Path.Combine(exampleRoot, ".schema");
 var manifestFile = Path.Combine(repoRoot, "tooling", "manifest.yaml");
 var fixturesDir = Path.Combine(repoRoot, "tooling", "tests", "fixtures");
 
@@ -743,7 +749,7 @@ if (filters.Count == 0)
     // demand every *reachable* check has a fixture.
     var unreachable = new HashSet<string>(["type"], StringComparer.Ordinal);
 
-    var catalogue = CheckCatalogue(kac);
+    var catalogue = CheckCatalogue(kac, exampleRoot);
     var stale = coveredChecks.Where(c => !catalogue.Contains(c)).OrderBy(c => c).ToList();
     var uncovered = catalogue.Where(c => !coveredChecks.Contains(c) && !unreachable.Contains(c)).OrderBy(c => c).ToList();
     var unreachableSeen = catalogue.Where(unreachable.Contains).OrderBy(c => c).ToList();
@@ -766,7 +772,7 @@ if (filters.Count == 0)
     // The reader-facing "What CI checks" table must stay a faithful view of the catalogue. `kac
     // checks` self-verifies its curated rows against the catalogue and exits non-zero on any drift
     // (a new check with no row, a row naming a check that no longer exists, a stale waiver).
-    var (_, checksErr, checksExit) = Run(Directory.GetCurrentDirectory(), "dotnet", kac, "checks");
+    var (_, checksErr, checksExit) = Run(exampleRoot, "dotnet", kac, "checks");
     if (checksExit != 0)
     {
         Console.WriteLine($"  CHECKS TABLE out of step with the catalogue:\n{Indent(checksErr)}");
@@ -792,12 +798,15 @@ return 0;
 
 // ---------------------------------------------------------------------------
 
+// The repository, found by the tool it holds rather than by the corpus beside it. `kac` itself walks up
+// for a `.schema/` because what it wants is a corpus; this suite wants the tree that holds the engine,
+// the fixtures and the corpus at once, and only one folder answers to that.
 static string? FindRepoRoot(string start)
 {
     var dir = new DirectoryInfo(start);
     while (dir is not null)
     {
-        if (Directory.Exists(Path.Combine(dir.FullName, ".schema")))
+        if (File.Exists(Path.Combine(dir.FullName, "tooling", "kac.cs")))
             return dir.FullName;
         dir = dir.Parent;
     }
@@ -928,9 +937,9 @@ static string? BuildKac(string kacSource)
     return null;
 }
 
-static IReadOnlySet<string> CheckCatalogue(string kac)
+static IReadOnlySet<string> CheckCatalogue(string kac, string corpusRoot)
 {
-    var (stdout, stderr, exit) = Run(Directory.GetCurrentDirectory(), "dotnet", kac, "checks", "--json");
+    var (stdout, stderr, exit) = Run(corpusRoot, "dotnet", kac, "checks", "--json");
     var json = FromFirstBrace(stdout) ?? throw new Exception($"kac checks produced no JSON (exit {exit}).\n{stderr}");
     using var doc = JsonDocument.Parse(json);
     var set = new HashSet<string>(StringComparer.Ordinal);

@@ -6,9 +6,9 @@
 ## Adding or changing a check
 
 **Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
-`expr:` on a rule in `.schema/<type>.yaml` — see [`../.schema/README.md`](../.schema/README.md) for what one may say.
-That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks table and
-`kac checks` all pick it up from the schema.
+`expr:` on a rule in `.schema/<type>.yaml` — see [`../example/.schema/README.md`](../example/.schema/README.md) for
+what one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks
+table and `kac checks` all pick it up from the schema.
 
 **What decides it is what the author is told.** Write the expression where one fixed message says everything the code
 would have said. Write the code where it can name *which* part of the document is at fault and a single string cannot. A
@@ -84,9 +84,9 @@ file, which is `schema-shape` rather than `schema-dispatch`.
 
 Wherever it lives, three places have to agree, and each fails a meta-test rather than a test you were looking at:
 
-1. **An entry in [`../.schema/_checks.yaml`](../.schema/_checks.yaml)** — the declaration. Its `description:` is what
-   `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the boundary. A check a rule class
-   reports under with no entry here fails `schema-dispatch` when the schema loads.
+1. **An entry in [`../example/.schema/_checks.yaml`](../example/.schema/_checks.yaml)** — the declaration. Its
+   `description:` is what `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the
+   boundary. A check a rule class reports under with no entry here fails `schema-dispatch` when the schema loads.
 2. **A row in `Generator.DocRows`**, unless the check declares `on-type-page: false` — one or the other, or
    `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one of its
    records; the flag is for a check that reads the schema, the template or the page itself, which is real and is not
@@ -183,10 +183,10 @@ the paths its skill names resolve inside the installed copy, or that a link buil
 it points at.
 
 So it installs the plugin into a Claude config directory of its own and asks it those questions. Run it from the
-repository root after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
+corpus root after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
 
 ```sh
-sh tooling/tests/round-trip.sh
+cd example && sh ../tooling/tests/round-trip.sh
 ```
 
 **It runs on two platforms in CI**, which is the reason it is a shell script rather than another scenario in the golden

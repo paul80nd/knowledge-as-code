@@ -11,7 +11,7 @@
 # Claude Code local settings
 .claude/settings.local.json
 
-# Generated — rebuilt by `kac index`
+# Generated — rebuilt by `./kac index`
 _reports/
 
 # Generated — `export` rebuilds .dist/export/ whole, `bundle` rebuilds .dist/plugin/ and the

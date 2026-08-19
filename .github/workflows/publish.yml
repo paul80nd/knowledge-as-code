@@ -74,14 +74,20 @@ jobs:
       #
       # The gate ran against the pull request's head. What merged is a different commit, because
       # main moved beneath it, so the corpus is validated once more before anything is published.
+      #
+      # Each runs from `example/`, because kac takes the first ancestor holding a `.schema/` as the
+      # corpus and the repository root is not one.
       - name: Validate frontmatter, links and structure
-        run: dotnet run tooling/kac.cs -- validate
+        working-directory: example
+        run: dotnet run ../tooling/kac.cs -- validate
 
       - name: Build the export
-        run: dotnet run tooling/kac.cs -- export
+        working-directory: example
+        run: dotnet run ../tooling/kac.cs -- export
 
       - name: Assemble the plugin bundle
-        run: dotnet run tooling/kac.cs -- bundle
+        working-directory: example
+        run: dotnet run ../tooling/kac.cs -- bundle
 
       # Taken at `latest` rather than pinned, for the reason kac.yml gives: the bundle has to be
       # valid against the CLI a reader actually runs, so pinning it would settle into proving the
@@ -93,6 +99,7 @@ jobs:
       # The last thing standing between a broken bundle and the people who have it installed. The
       # gate ran this too; running it again is what covers the merge commit it never saw.
       - name: Validate the assembled plugin and its marketplace
+        working-directory: example
         run: |
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
@@ -128,10 +135,12 @@ jobs:
       # Every link the export writes names the commit HEAD stands on, which here is the commit that
       # merged — a commit the raw host serves. One invocation per subcommand, run sequentially.
       - name: Build the export
-        run: dotnet run tooling/kac.cs -- export
+        working-directory: example
+        run: dotnet run ../tooling/kac.cs -- export
 
       - name: Assemble the plugin bundle
-        run: dotnet run tooling/kac.cs -- bundle
+        working-directory: example
+        run: dotnet run ../tooling/kac.cs -- bundle
 
       # A version that has not moved publishes nothing. Claude Code pins an installed plugin to the
       # `version` in its manifest and offers an update only when that string changes, so a push
@@ -142,6 +151,7 @@ jobs:
       # corpora rather than two build numbers. The consequence is the one the corpus asks for: a
       # change to a record that does not move content-version in .corpus.yaml is not published.
       - name: Publish the bundle to the marketplace branch
+        working-directory: example
         env:
           BRANCH: marketplace
           WORKTREE: ${{ runner.temp }}/marketplace

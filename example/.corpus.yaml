@@ -95,7 +95,7 @@ publishing:
   # corpus in a subdirectory cannot say this by writing the folder into its bases.
   #
   # Absent where the corpus is the repository, which is the ordinary case.
-  path-prefix:
+  path-prefix: example
 
 # Where this corpus takes the framework from, if anywhere.
 upstream:

@@ -12,8 +12,8 @@ with the framework, and each corpus's own `.corpus.yaml` at the repository root.
 
 Three readers exist and two of them are served.
 
-* **A corpus author** writes records. [`../knowledge-as-code.md`](../knowledge-as-code.md) is theirs: the taxonomy, the
-  style rules, and what each tier asks of a document.
+* **A corpus author** writes records. [`../example/knowledge-as-code.md`](../example/knowledge-as-code.md) is theirs:
+  the taxonomy, the style rules, and what each tier asks of a document.
 * **A framework developer** changes the tool. `tooling/` is theirs, and the feature documents below are written for
   them.
 * **A corpus consumer** installs the plugin, reads the export and greps the terms file. Nothing here is addressed to
@@ -36,9 +36,9 @@ Three readers exist and two of them are served.
 ./kac mechanism --sync                              # take the shared layers from upstream
 ```
 
-`./kac` (Windows: `kac.cmd`) is a launcher at the repo root that wraps `dotnet run tooling/kac.cs` — run it from the
-solution root, or add the root to your `PATH` to drop the `./`. The explicit `dotnet run tooling/kac.cs -- …` form
-works identically and is what CI uses.
+`./kac` (Windows: `kac.cmd`) is a launcher at a corpus's root that wraps a `dotnet run` of this tool — `example/kac`
+is the one in this repository. Run it from the corpus, or add that folder to your `PATH` to drop the `./`. The explicit
+`dotnet run ../tooling/kac.cs -- …` form works identically and is what CI uses.
 
 Argument parsing is handled by [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine), so every
 command and option carries generated `--help`. The first run restores the packages (`System.CommandLine` on the
@@ -88,7 +88,7 @@ so each scenario is a real process without paying `dotnet run`'s up-to-date chec
 |------|---------------------------------------------------------------------------------|
 | `0`  | No errors. Warnings may still have been printed.                                |
 | `1`  | A corpus **error**, or a bad invocation (missing/unknown subcommand or option). |
-| `2`  | Could not locate the repo root — the tool never started.                        |
+| `2`  | Could not locate the corpus root — the tool never started.                      |
 
 Warnings never change the exit code.
 
