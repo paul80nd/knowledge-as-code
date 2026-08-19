@@ -44,31 +44,31 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # One invocation per subcommand, run sequentially. File-based apps share
-      # build output, so the kac runs must not execute concurrently.
+      # One invocation per subcommand, run sequentially. Concurrent runs build the
+      # same project and contend over its output, so the kac runs must not overlap.
       #
       # Each runs from `example/`, because kac takes the first ancestor holding a
       # `.schema/` as the corpus and the repository root is not one.
       - name: Validate frontmatter, links and structure
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- validate
+        run: dotnet run --project ../tooling/kac -- validate
 
       - name: Check generated indexes are fresh
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- index --check
+        run: dotnet run --project ../tooling/kac -- index --check
 
       # Proves the corpus still exports. The shape it exports in is held by a committed
       # golden in the suite below.
       - name: Build the export
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- export
+        run: dotnet run --project ../tooling/kac -- export
 
       # Assembles what `export` wrote, together with the .plugin/ tree, into an installable
       # plugin under .dist/plugin/, with .dist/ itself as the marketplace naming it. The
       # fourth and last kac invocation, so the one-at-a-time rule above still holds.
       - name: Assemble the plugin bundle
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- bundle
+        run: dotnet run --project ../tooling/kac -- bundle
 
       # Taken at `latest` rather than pinned. The bundle has to be valid against the CLI a
       # reader actually runs, and no ecosystem in dependabot.yml moves an npm pin, so a pinned
@@ -143,8 +143,8 @@ jobs:
           cp -R .plugin "$TEMPDIR/no-types/.plugin"
 
           cd "$TEMPDIR/no-types"
-          dotnet run "$GITHUB_WORKSPACE/tooling/kac.cs" -- export
-          dotnet run "$GITHUB_WORKSPACE/tooling/kac.cs" -- bundle
+          dotnet run --project "$GITHUB_WORKSPACE/tooling/kac" -- export
+          dotnet run --project "$GITHUB_WORKSPACE/tooling/kac" -- bundle
 
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
@@ -201,11 +201,11 @@ jobs:
 
       - name: Build the export
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- export
+        run: dotnet run --project ../tooling/kac -- export
 
       - name: Assemble the plugin bundle
         working-directory: example
-        run: dotnet run ../tooling/kac.cs -- bundle
+        run: dotnet run --project ../tooling/kac -- bundle
 
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest

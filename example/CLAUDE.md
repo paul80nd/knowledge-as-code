@@ -28,8 +28,8 @@ dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and chec
 ```
 
 All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
-leave you green locally and red in CI. Run **one `kac` invocation at a time**: file-based apps share build output and
-contend.
+leave you green locally and red in CI. Run **one `kac` invocation at a time**: concurrent runs build the same project
+and contend over its output.
 
 ## Conventions
 

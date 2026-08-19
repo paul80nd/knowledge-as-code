@@ -13,8 +13,8 @@ documents beneath it.
 ## What is here
 
 **[`tooling/`](tooling/)** — `kac`, the validator and generator, and the three test layers that prove it. A .NET 10
-file-based entrypoint over a `kac.core` library, plus the fixtures, feature specs and unit tests it is held to.
-[`tooling/README.md`](tooling/README.md) is how to build and test it.
+entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures, feature
+specs and unit tests it is held to. [`tooling/README.md`](tooling/README.md) is how to build and test it.
 
 **[`template/`](template/)** — what a corpus is made of, authored once: the machine-readable schema, the framework's
 own documentation, the plugin tree, and the pages and templates a corpus starts from.
@@ -41,8 +41,8 @@ cd knowledge-as-code/example
 ./kac checks       # list every check the validator implements
 ```
 
-`./kac` (Windows: `kac.cmd`) sits at the corpus root and wraps `dotnet run ../tooling/kac.cs`. Add that folder to your
-`PATH` to drop the `./`, or use the explicit form, which is what CI runs.
+`./kac` (Windows: `kac.cmd`) sits at the corpus root and wraps `dotnet run --project ../tooling/kac`. Add that folder
+to your `PATH` to drop the `./`, or use the explicit form, which is what CI runs.
 
 Every command, one document apiece, is in [`tooling/features/`](tooling/features/).
 [`tooling/README.md`](tooling/README.md) maps them and carries the test commands.

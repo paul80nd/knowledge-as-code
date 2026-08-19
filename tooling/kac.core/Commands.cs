@@ -1,7 +1,7 @@
 using System.Text.Json;
 
 // ---------------------------------------------------------------------------
-// Subcommands — the orchestration behind each CLI verb. The entrypoint (tooling/kac.cs) only wires
+// Subcommands — the orchestration behind each CLI verb. The entrypoint (tooling/kac/Program.cs) only wires
 // System.CommandLine to these; all the work lives here and in the rest of kac.core.
 // ---------------------------------------------------------------------------
 

@@ -1,10 +1,9 @@
 # What Dependabot keeps current in this repository.
 #
-# Two ecosystems, because `kac` is built two ways. The three projects under `tooling/`
-# carry ordinary `PackageReference`s and are tracked below. `kac.cs` and `kac-tests.cs`
-# are file-based apps: the `#:package` directive that pins `System.CommandLine` is not a
-# manifest Dependabot reads — dependabot-core#15184 is the request that it should — so
-# that one is moved by hand.
+# Every project under `tooling/` carries ordinary `PackageReference`s and is tracked below.
+# `kac-tests.cs` is the exception: it is a file-based app, and a `#:package` directive is not
+# a manifest Dependabot reads — dependabot-core#15184 is the request that it should. It pins
+# nothing today, so there is nothing there to move by hand.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -16,6 +15,7 @@ updates:
 
   - package-ecosystem: nuget
     directories:
+      - /tooling/kac
       - /tooling/kac.core
       - /tooling/kac.features
       - /tooling/kac.tests

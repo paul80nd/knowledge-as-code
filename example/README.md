@@ -54,7 +54,8 @@ Requires the **.NET 10 SDK**. `kac` runs through `dotnet run`, so there is no bu
 ./kac checks       # list every check the validator implements
 ```
 
-`./kac` (Windows: `kac.cmd`) wraps `dotnet run ../tooling/kac.cs`. Add this folder to your `PATH` to drop the `./`.
+`./kac` (Windows: `kac.cmd`) wraps `dotnet run --project ../tooling/kac`. Add this folder to your `PATH` to drop
+the `./`.
 
 The example records are every `<type>/*.md` that is not `_index.md` or `_template.md`. `./kac validate` covers them, so
 they are held to the same standard as real content and a schema change that breaks them fails CI here rather than in
@@ -192,7 +193,7 @@ knowledge-as-code/     # the system's own documentation
   ├── principles.md    # why the framework is shaped this way
   ├── lineage.md       # where the taxonomy's names came from
   └── automation.md    # what is generated, validated and scheduled
-kac, kac.cmd           # launchers that wrap `dotnet run ../tooling/kac.cs`
+kac, kac.cmd           # launchers that wrap `dotnet run --project ../tooling/kac`
 .corpus.yaml           # what this corpus is, and where it publishes
 .claude/skills/        # agent skills for working on this corpus
 .plugin/               # source for the plugin that carries this corpus's export to another repository

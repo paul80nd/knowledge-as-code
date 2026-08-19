@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The command line surface of kac: Program.cs wires System.CommandLine to the verbs and does the
+       corpus pre-flight, and every verb's logic lives in kac.core, referenced below. Nothing here
+       knows about a record, a schema or a check.
+
+       It packs as a dotnet tool, which is how a corpus receives it: `dotnet tool install` places a
+       versioned copy and the corpus pins it, instead of carrying the engine, the schema catalogue and
+       the framework's documentation as a copy of this repository. The package names the product and
+       the command names the shorthand, so `KnowledgeAsCode.Tool` installs `kac`. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>kac</ToolCommandName>
+    <PackageId>KnowledgeAsCode.Tool</PackageId>
+    <Description>
+      Validator and generator for a knowledge-as-code corpus: checks records against the corpus schema,
+      regenerates its indexes and type pages, and exports it as an installable plugin.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.*" />
+    <ProjectReference Include="../kac.core/kac.core.csproj" />
+  </ItemGroup>
+
+</Project>

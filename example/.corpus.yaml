@@ -151,7 +151,7 @@ export:
 # Example:
 #
 # accepted-divergences:
-#   - path: tooling/kac.cs
+#   - path: tooling/kac/Program.cs
 #     reason: Pinned to .NET 8 because the local build agent does not provide .NET 10.
 #     since: 2026-08-03
 #     revisit: When the build agent image is upgraded.

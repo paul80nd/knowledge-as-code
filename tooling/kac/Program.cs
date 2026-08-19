@@ -1,8 +1,3 @@
-#:package System.CommandLine@2.0.*
-#:project ./kac.core/kac.core.csproj
-#:property TargetFramework=net10.0
-#:property Nullable=enable
-
 // kac — the knowledge-as-code validator and generator.
 //
 // One tool, several subcommands, sharing a schema-loading and markdown-parsing core:
@@ -15,11 +10,10 @@
 //   mechanism  enforce the portability manifest: check the shared layers against a
 //              reference corpus, or sync them from one
 //
-// This file is only the CLI surface: it wires System.CommandLine to Commands and does the repo-root
-// pre-flight. Every subcommand's logic lives in the kac.core project, referenced by the #:project
-// directive above — one class per file, named for what it holds. Four carry the substance: Schema.cs
-// loads .schema/*.yaml, Document.cs parses a record, Validator.cs holds the checks, Generator.cs
-// builds the generated blocks.
+// This file is only the CLI surface: it wires System.CommandLine to Commands and does the corpus
+// pre-flight. Every subcommand's logic lives in the kac.core project this one references — one class per
+// file, named for what it holds. Four carry the substance: Schema.cs loads .schema/*.yaml, Document.cs
+// parses a record, Validator.cs holds the checks, Generator.cs builds the generated blocks.
 //
 // The tool is deliberately free of type-specific rules: everything it enforces is
 // read from the YAML schema, so adding a type is adding a YAML file, not editing C#.

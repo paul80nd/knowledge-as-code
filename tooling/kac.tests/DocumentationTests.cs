@@ -58,15 +58,15 @@ public partial class DocumentationTests
         Assert.Equal(declared.Order(StringComparer.Ordinal), cited.Order(StringComparer.Ordinal));
     }
 
-    // The repository, found by the tool it holds. A corpus is what `kac` walks up for; what these tests
+    // The repository, found by the solution it holds. A corpus is what `kac` walks up for; what these tests
     // want is the tree carrying the engine and the schema page together, and one folder answers to that.
     private static string RepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "tooling", "kac.cs")))
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "tooling", "kac.slnx")))
             dir = dir.Parent;
 
         return dir?.FullName ?? throw new InvalidOperationException(
-            "no 'tooling/kac.cs' above the test assembly — these tests read the repository they ship in.");
+            "no 'tooling/kac.slnx' above the test assembly — these tests read the repository they ship in.");
     }
 }

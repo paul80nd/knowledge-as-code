@@ -30,9 +30,9 @@ usually within a week. There is no service level and no bounty.
 * **Rendering in the published wiki.** That belongs to the publishing target, not to this repository.
 * **Scanner output with no demonstrated path to impact.**
 
-CI executes untrusted code by design: `dotnet run ../tooling/kac.cs` runs a pull request's own source. Three things
-contain it — the `pull_request` trigger rather than `pull_request_target`, a read-only `contents` permission, and no
-secrets reachable from the job. A report that this is dangerous needs to show an escape from that containment.
+CI executes untrusted code by design: `dotnet run --project ../tooling/kac` runs a pull request's own source. Three
+things contain it — the `pull_request` trigger rather than `pull_request_target`, a read-only `contents` permission,
+and no secrets reachable from the job. A report that this is dangerous needs to show an escape from that containment.
 
 ## Versions
 

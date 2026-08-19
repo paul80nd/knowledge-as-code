@@ -6,7 +6,7 @@
 *.DotSettings.user
 *.sln.iml
 
-# .NET build output (kac.core / kac.tests / kac.features)
+# .NET build output (kac, kac.core, kac.tests and kac.features)
 bin/
 obj/
 
