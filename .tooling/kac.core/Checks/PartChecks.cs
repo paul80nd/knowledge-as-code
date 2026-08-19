@@ -8,14 +8,14 @@ namespace kac.core;
 // they live and what holds them to shape, so nothing here is specific to policies or to glossaries
 // except by way of that declaration.
 //
-// Three questions run across both sources, each answered off whatever that source writes its parts in.
-// The section holds at least one part, because a section declared to hold them and holding none leaves
-// a record that says nothing where it promised to say something — read off an empty table by
-// `clause-table` and off a section with no headings by `part-none`. Each part offers an id, and no two
-// parts of a record share one, because a citation reaching two children names neither. And a part
-// written as a heading holds something beneath it, which is `part-empty`, because a heading is an
-// address and a container both. The table source needs no equivalent there: a row with nothing in its
-// clause cell is stopped by `clause-modal` before anyone asks.
+// Three questions run across both sources, each read off whatever that source writes its parts in.
+// First, the section holds at least one part. A record promising parts and carrying none says nothing
+// where it undertook to say something, which `clause-table` reads off an empty table and `part-none`
+// off a section with no headings. Second, each part offers an id, and no two parts of a record share
+// one, because a citation reaching two children names neither. Third, a part written as a heading
+// carries something beneath it, since a heading is an address and a container both. That third one is
+// `part-empty`, and the table source needs no equivalent: a row with an empty clause cell is stopped by
+// `clause-modal` before anyone asks.
 //
 // Everything else below belongs to the table source, whose rows carry cells a heading has none of: the
 // table can be missing or mis-headed, and each row carries the modal that says whether it obliges. A
@@ -41,12 +41,11 @@ public static class PartChecks
         if (spec.Source == PartSpec.Table) CheckObligations(d, spec, report);
     }
 
-    // Whether the section holds any parts at all, which is what `clause-table`'s empty-table arm asks of
-    // the other source. Reported and stopped, for the reason a broken table is: the checks below read
-    // parts, and a section holding none gives them nothing to say.
+    // Reported and stopped, for the reason a broken table is: the checks below read parts, and a section
+    // holding none gives them nothing to say.
     //
-    // The message is built from the declaration rather than written out, so it names the section, the
-    // word the type calls its parts and the level to write them at, whatever type is asking.
+    // The message is built from the declaration, so it names the section, the word the type calls its
+    // parts and the level to write them at, whatever type is asking.
     private static bool SectionIsPopulated(Doc d, PartSpec spec, Report report)
     {
         if (d.Parts.Count > 0) return true;
@@ -57,17 +56,12 @@ public static class PartChecks
         return false;
     }
 
-    // Whether each part written as a heading holds anything. A heading is an address and a container
-    // both, and the address half is sound on its own: the entry has a title, a working anchor and a
-    // citation that resolves, so everything a reader can check from outside says it is there. An export
-    // carries it as a part with no words in it and counts it among the rest.
+    // Every part is asked, including the last, whose body runs to the end of the document rather than to
+    // a heading that closes it.
     //
-    // Asked of the source rather than of the type, so any type declaring `source: headings` inherits it.
-    // The heading is named, because a glossary holds twenty entries and "one of these is empty" is not
-    // something anyone can act on.
-    //
-    // Read on the source as written rather than on the rendered blocks, so a horizontal rule or an em
-    // dash standing in for the definition counts as nothing written — see `Md.HasContent`.
+    // `Md.HasContent` reads the source as written rather than the rendered blocks, which is what makes a
+    // horizontal rule or an em dash standing in for the definition count as nothing written. The
+    // heading is quoted into the message, since a glossary holds twenty entries.
     private static void CheckBodies(Doc d, PartSpec spec, Report report)
     {
         foreach (var row in d.Parts.Where(row => !Md.HasContent(row.Body(d.Text))))

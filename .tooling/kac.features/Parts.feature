@@ -89,8 +89,8 @@ Feature: The parts of a record
     When I validate the corpus
     Then the findings for "glossary/holl-empty-term.md" are exactly:
       | line | check      | message                                                                    |
-      | 26   | part-empty | term 'Hollow' has nothing under it — write it or delete the heading.       |
-      | 30   | part-empty | term 'Placeholder' has nothing under it — write it or delete the heading.  |
+      | 27   | part-empty | term 'Hollow' has nothing under it — write it or delete the heading.       |
+      | 31   | part-empty | term 'Placeholder' has nothing under it — write it or delete the heading.  |
 
   Scenario: A parts section holding no headings is told what belongs there
     When I validate the corpus
@@ -104,8 +104,8 @@ Feature: The parts of a record
     And the findings are exactly:
       | file                                       | severity | line | check            | message                                                                                            |
       | glossary/dupe-two-terms-alike.md           | error    | 26   | part-id-unique   | two terms here address as 'identity-line' — a citation of it names both and reaches neither.       |
-      | glossary/holl-empty-term.md                | error    | 26   | part-empty       | term 'Hollow' has nothing under it — write it or delete the heading.                               |
-      | glossary/holl-empty-term.md                | error    | 30   | part-empty       | term 'Placeholder' has nothing under it — write it or delete the heading.                          |
+      | glossary/holl-empty-term.md                | error    | 27   | part-empty       | term 'Hollow' has nothing under it — write it or delete the heading.                               |
+      | glossary/holl-empty-term.md                | error    | 31   | part-empty       | term 'Placeholder' has nothing under it — write it or delete the heading.                          |
       | glossary/none-terms-section-empty.md       | error    | 20   | part-none        | the '## Terms' section holds no terms — write each one as an H3 heading.                           |
       | glossary/tref-unknown-term.md              | error    | 24   | part-ref         | 'gls-dupe-two-terms-alike.no-such-term' cites a term 'no-such-term' that glossary/dupe-two-terms-alike.md does not carry. |
       | policies/blnk-empty-clause-section.md      | error    | 24   | clause-table     | the '## Clauses' section holds no table — write one row per obligation, headed 'Id \| Clause \| Alignment'. |

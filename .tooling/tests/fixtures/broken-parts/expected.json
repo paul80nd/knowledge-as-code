@@ -16,14 +16,14 @@
     },
     {
       "file": "glossary/holl-empty-term.md",
-      "line": 26,
+      "line": 27,
       "severity": "error",
       "check": "part-empty",
       "message": "term 'Hollow' has nothing under it — write it or delete the heading."
     },
     {
       "file": "glossary/holl-empty-term.md",
-      "line": 30,
+      "line": 31,
       "severity": "error",
       "check": "part-empty",
       "message": "term 'Placeholder' has nothing under it — write it or delete the heading."

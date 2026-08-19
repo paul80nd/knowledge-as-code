@@ -242,9 +242,7 @@ public class PartCheckTests
         Assert.Equal(["corpus"], doc.Parts.Select(p => p.Id));
     }
 
-    // Nothing else reports this: `required-section` is answered by the heading existing and
-    // `empty-section` passes the parts section over, so without this a glossary with no terms in it is
-    // silent.
+    // Nothing else reports this, so without the check a glossary holding no terms validates in silence.
     [Fact]
     public void A_section_holding_no_headings_says_what_belongs_there()
     {
@@ -270,13 +268,13 @@ public class PartCheckTests
     public void An_empty_section_is_not_also_reported_as_an_empty_entry()
         => Assert.DoesNotContain(Run(Terms, Headings(), "glossary"), f => f.Check.Value == "part-empty");
 
-    // The table source answers this under `clause-table`, and one fault must not be reported twice.
+    // `clause-table` already tells a table source that its section holds nothing, and one fault arriving
+    // under two ids reads as two faults.
     [Fact]
     public void An_empty_table_is_not_also_reported_as_a_section_holding_nothing()
         => Assert.DoesNotContain(Run(Header), f => f.Check.Value == "part-none");
 
-    // A heading is a container as well as an address, and the address half is sound on its own: the entry
-    // has a title, an anchor and a citation that resolves. The words are what is missing.
+    // Two sound entries stand either side of the empty one, so the message has to say which failed.
     [Fact]
     public void A_heading_with_nothing_under_it_names_the_entry()
     {
@@ -309,8 +307,7 @@ public class PartCheckTests
         Assert.Equal("part-empty", Assert.Single(found).Check.Value);
     }
 
-    // The table source answers this under `clause-table`, so a row with an empty cell must not be
-    // reported twice under two names.
+    // The other half of the guard above: the heading question is never put to a row.
     [Fact]
     public void A_table_row_is_not_asked_whether_a_heading_holds_anything()
         => Assert.DoesNotContain(Run(Header + "| `LOGS` | **MUST** be retained. |\n"),
