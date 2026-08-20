@@ -1,5 +1,6 @@
-# Publishes kac when kac.csproj names a version nuget.org does not already hold. The version is
-# hand-moved before the merge, so a change to the tool ships in the pull request that makes it.
+# Publishes kac when kac.csproj names a version nuget.org does not already hold, then tags the commit
+# and opens the release for it. The version is hand-moved before the merge, so a change to the tool
+# ships in the pull request that makes it.
 # Authentication is a trusted publishing policy on nuget.org naming this repository, this file and the
 # environment below, so there is no stored key and a fork cannot publish under this name.
 
@@ -27,12 +28,13 @@ jobs:
     runs-on: ubuntu-latest
     # Short enough that a hang fails rather than holding the concurrency group for six hours.
     timeout-minutes: 20
-    # `id-token: write` is what lets GitHub issue the token nuget.org exchanges for a key.
+    # `id-token: write` is what lets GitHub issue the token nuget.org exchanges for a key, and
+    # `contents: write` is what lets the last step tag the commit and open the release.
     permissions:
-      contents: read
+      contents: write
       id-token: write
-    # Named in the policy too, so a token from anywhere else is refused. Also where a required
-    # reviewer would go.
+    # Named in the policy too, so a token from anywhere else is refused, and where the required
+    # reviewer sits: every publish waits for a person before any of the steps below run.
     environment:
       name: nuget.org
       url: https://www.nuget.org/packages/KnowledgeAsCode.Tool
@@ -126,3 +128,30 @@ jobs:
             --skip-duplicate
 
           echo "published version $VERSION to nuget.org."
+
+      # The tag arrives as a consequence of publishing rather than as a second thing to remember, and
+      # `ChangelogTests` is what makes sure a section exists to become the release body.
+      - name: Tag the commit and open the release
+        if: steps.decide.outputs.new == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.decide.outputs.version }}
+        run: |
+          set -e
+
+          if gh release view "v$VERSION" > /dev/null 2>&1; then
+            echo "release v$VERSION already exists — nothing to create."
+            exit 0
+          fi
+
+          awk -v version="$VERSION" '
+            /^## / { inside = ($2 == version); next }
+            inside { print }
+          ' tooling/kac/CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+
+          gh release create "v$VERSION" \
+            --target "$GITHUB_SHA" \
+            --title "v$VERSION" \
+            --notes-file "$RUNNER_TEMP/notes.md"
+
+          echo "tagged v$VERSION and opened its release."

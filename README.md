@@ -90,8 +90,9 @@ dotnet tool run kac validate
 ```
 
 A push to `main` publishes the tool whenever it carries a `<Version>`
-[nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) does not already hold.
-[`tooling/README.md`](tooling/README.md#building) says how that version moves.
+[nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) does not already hold, then tags the commit and opens
+the release for it. [`tooling/README.md`](tooling/README.md#building) says how that version moves, and
+[`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) says what each version carried.
 
 Every command, one document apiece, is in [`tooling/features/`](tooling/features/).
 [`tooling/README.md`](tooling/README.md) maps them and carries the test commands.
