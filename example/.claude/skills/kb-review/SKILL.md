@@ -12,7 +12,7 @@ knowledge, not correcting facts, and not moving documents between types.
 
 Three sources of rules, in this order:
 
-1. **The schema and the validator.** `.schema/*.yaml`, and what `./kac validate` and `./kac checks` report. These are
+1. **The schema and the validator.** `.schema/*.yaml`, and what `kac validate` and `kac checks` report. These are
    the authority on anything mechanical: required sections, clause modals, id and filename formats, link forms, and
    which text rules a type declares. The type's `rules:` block is the wider of the two — it carries rules the tool does
    not implement, which bind an author even though nothing fails.
@@ -59,11 +59,11 @@ appearing to improve it.
 
 ## What the validator gives you, and what it does not
 
-**Run `./kac validate` first and expect it to come back clean.** CI gates the branch and pushes to `main` are rejected,
+**Run `kac validate` first and expect it to come back clean.** CI gates the branch and pushes to `main` are rejected,
 so a clean corpus is the normal state rather than the lucky one. It is your regression baseline: run it again at the end
 and compare. It is not a source of findings, and it will not hand you a starting list.
 
-**Then establish which text rules apply to the type in front of you.** `./kac checks` lists what the validator
+**Then establish which text rules apply to the type in front of you.** `kac checks` lists what the validator
 implements, across every type at once; `.schema/<type>.yaml`'s `rules:` block lists what your type declares. Read the
 second and use the first to tell which of those rules actually run. Each text rule is declared on a single type —
 `low-ceremony` on discoveries, `not-normative` on explanations, `symptoms-first` on runbooks — and most types declare
@@ -136,7 +136,7 @@ decide. That list is worth more than a larger diff.
 
 1. **Establish scope.** One record, a type folder, or a named set. If asked to review "the corpus", propose an order —
    by tier, worst offenders first — and confirm before starting. Do not silently review a hundred documents.
-2. **Run `./kac validate` and `./kac checks`, and read the type's `rules:` block.** Baseline, what the tool enforces,
+2. **Run `kac validate` and `kac checks`, and read the type's `rules:` block.** Baseline, what the tool enforces,
    and what the type declares.
 3. **Read `style.md` and `authoring.md`.** In full. Then the type's `<type>.md` for what the type is meant to contain,
    and its `_template.md` for the sections it must have.
@@ -155,7 +155,7 @@ decide. That list is worth more than a larger diff.
    record rewarded and finishes feeling finished. Naming the ten in turn is what makes two runs over the same folder
    agree, and agreement is worth more than any single run's perceptiveness.
 7. **Check what you produced** against the checklist below.
-8. **Run `./kac validate`** again and, if any frontmatter changed, `./kac index`. A rewrite that fails validation is not
+8. **Run `kac validate`** again and, if any frontmatter changed, `kac index`. A rewrite that fails validation is not
    a rewrite.
 9. **Report** in the shape given below. Propose; do not commit. Open a PR if asked — pushes to `main` are rejected.
 

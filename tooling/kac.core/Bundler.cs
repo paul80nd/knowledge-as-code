@@ -113,7 +113,7 @@ public static class Bundler
         var exportManifest = JsonRead.Parse(Text(source.Export, Exporter.ManifestFile));
         if (exportManifest is null)
             return Stop(problems,
-                $"the export holds no readable {Exporter.ManifestFile}. Run the export first: ./kac export");
+                $"the export holds no readable {Exporter.ManifestFile}. Run the export first: kac export");
 
         // The shape the export declares, held against the shape this build knows how to read. Refused
         // rather than warned about, and both numbers named: a bundle assembled around a manifest whose
@@ -128,7 +128,7 @@ public static class Bundler
         if (declaredFormat != Exporter.FormatVersion)
             return Stop(problems,
                 $"the export declares format version {declaredFormat?.ToString() ?? "none"} and this tool reads "
-                + $"version {Exporter.FormatVersion}. Rebuild it: ./kac export");
+                + $"version {Exporter.FormatVersion}. Rebuild it: kac export");
 
         // What the export actually carried, which is what decides the trimming below. A type the corpus
         // adopted and exported nothing for is absent here, and a component reading it would find nothing.

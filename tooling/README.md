@@ -10,7 +10,7 @@ so **adding a knowledge type is adding a YAML file, not editing this tool**.
 own `.corpus.yaml`, at the corpus root, says what that corpus is.
 
 Writing records rather than changing the tool?
-[`../example/knowledge-as-code.md`](../example/knowledge-as-code.md) is the document for that: the taxonomy, the style
+[`../template/knowledge-as-code.md`](../template/knowledge-as-code.md) is the document for that: the taxonomy, the style
 rules, and what each tier asks of a document. A corpus consumer, who installs the plugin and reads the export, is owed a
 document nothing here provides, tracked as
 [issue #203](https://github.com/paul80nd/knowledge-as-code/issues/203).
@@ -56,21 +56,22 @@ tool's own files sit says nothing about which corpus it reads. Running it from h
 ```bash
 cd ../example
 
-./kac validate            # validate the corpus
-./kac validate --json     # machine-readable summary + findings
-./kac index               # regenerate indexes and blocks
-./kac index --check       # verify generated output is fresh
-./kac export              # write the corpus to .dist/export/ as data a consumer reads
-./kac export --type glossary                        # …one type rather than every one that contributes
-./kac bundle              # assemble that export and .plugin/ into a plugin under .dist/plugin/
-./kac checks              # list every check the validator implements
-./kac checks --json       # …as JSON (the test suite reads this)
-./kac mechanism --check --against ../other-corpus   # shared-layer drift vs a reference
-./kac mechanism --sync                              # take the shared layers from upstream
+kac validate            # validate the corpus
+kac validate --json     # machine-readable summary + findings
+kac index               # regenerate indexes and blocks
+kac index --check       # verify generated output is fresh
+kac export              # write the corpus to .dist/export/ as data a consumer reads
+kac export --type glossary                        # …one type rather than every one that contributes
+kac bundle              # assemble that export and .plugin/ into a plugin under .dist/plugin/
+kac checks              # list every check the validator implements
+kac checks --json       # …as JSON (the test suite reads this)
+kac mechanism --check --against ../other-corpus   # shared-layer drift vs a reference
+kac mechanism --sync                              # take the shared layers from upstream
 ```
 
-`./kac` (Windows: `kac.cmd`) is a launcher at a corpus's root wrapping a `dotnet run` of this tool. The explicit
-`dotnet run --project ../tooling/kac -- …` form works identically and is what CI uses.
+Those read as a corpus runs them, against an installed `kac`. While changing the tool you want the working tree
+instead: `dotnet run --project ../tooling/kac -- validate`, which is what CI uses, or the `./kac` launcher at
+`example/`'s root that wraps it.
 
 ### Exit codes
 

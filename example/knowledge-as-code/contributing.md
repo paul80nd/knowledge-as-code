@@ -13,7 +13,7 @@ conventions CI enforces, the review model, and what outranks what when two rules
 
 Four sources of rules, in this order.
 
-1. **The schema and the validator.** `.schema/*.yaml`, and what `./kac validate` and `./kac checks` report. These are
+1. **The schema and the validator.** `.schema/*.yaml`, and what `kac validate` and `kac checks` report. These are
    executable, so they are the authority on anything mechanical: required sections, clause modals, id and filename
    formats, link forms, and which text rules a type actually declares.
 2. **The type's own pages.** `<type>.md` for what the type holds, `<type>/_template.md` for the sections it must have.

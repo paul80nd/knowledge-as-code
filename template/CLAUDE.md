@@ -18,8 +18,8 @@ To decline a type, leave it out of `types:` rather than deleting files afterward
 
 ```bash
 # here, in the corpus
-./kac validate                     # the corpus
-./kac index --check                # generated output is fresh
+kac validate                       # the corpus
+kac index --check                  # generated output is fresh
 
 # from the repository above it, which holds the tool and the tests that prove it
 dotnet test tooling/kac.tests      # unit
@@ -28,13 +28,12 @@ dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and chec
 ```
 
 All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
-leave you green locally and red in CI. Run **one `kac` invocation at a time**: file-based apps share build output and
-contend.
+leave you green locally and red in CI.
 
 ## Conventions
 
 * **Regenerate rather than edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter,
-  then run `./kac index`. A schema edit without a regeneration fails CI.
+  then run `kac index`. A schema edit without a regeneration fails CI.
 * **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt — a URL cannot be broken.
   `.editorconfig` says so and no check enforces it.
 * **Write what exists today.** Agreed and unbuilt work goes to the issue tracker. One exception: a schema rule the tool

@@ -134,8 +134,8 @@ Stated openly, because they are load-bearing:
   standing willingness to merge types that are not earning their place.
 * **Trust matters more than coverage.** The failure mode of a wiki is not too little content, it is content nobody
   believes. Generated indexes, validated links and immutable decisions all serve that.
-* **This framework is copied, not depended on.** An organisation adopting it gets its own cut, free to diverge, with
-  nothing to remove if they later want to go their own way.
+* **You own the content, and install the tool.** An organisation adopting this gets its own cut of the schema and the
+  documentation, free to diverge. `kac` arrives from nuget.org as a version they pin.
 
 ## Licence
 

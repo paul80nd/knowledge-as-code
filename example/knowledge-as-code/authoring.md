@@ -15,8 +15,8 @@ sentence meant. Length is not thoroughness. A document that says less, and says 
 
 Some of this is enforced, though less than you would hope and never uniformly. Each text rule is declared on a single
 type — `low-ceremony` on discoveries, `not-normative` on explanations, `no-hedged-ordering` on processes — and many
-types carry none at all. Run `./kac checks` to see what applies to the type in front of you rather than assuming, and
-expect `./kac validate` to come back clean: CI gates the branch, so a clean run is the baseline rather than a source of
+types carry none at all. Run `kac checks` to see what applies to the type in front of you rather than assuming, and
+expect `kac validate` to come back clean: CI gates the branch, so a clean run is the baseline rather than a source of
 findings. The rest is judgement, and the absence of a check is not permission.
 
 Where a rule here contradicts the schema, **the schema is right and this page is wrong**. It is executable and this is

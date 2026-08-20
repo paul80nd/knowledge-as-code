@@ -95,7 +95,7 @@ public static class Commands
 
         var export = Bundler.Read(Path.Combine(corpusRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar)));
         if (export is null)
-            return Fail($"bundle: no export at {Dist.Export}/. Run it first: ./kac export");
+            return Fail($"bundle: no export at {Dist.Export}/. Run it first: kac export");
 
         var plan = Bundler.Plan(new BundleSource(pluginTree, export));
 
@@ -423,7 +423,7 @@ public static class Commands
             Console.Error.WriteLine($"mechanism sync: regeneration failed — {ex.Message}");
             Console.Error.WriteLine(
                 "mechanism sync: the files are in place but the generated blocks were not rebuilt. "
-                + "Run ./kac validate to see what the corpus is missing, then ./kac index.");
+                + "Run kac validate to see what the corpus is missing, then kac index.");
             return 1;
         }
     }

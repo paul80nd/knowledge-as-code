@@ -143,7 +143,7 @@ from the framework carrying them, and one that has gone is a block that stopped 
 ## The fixtures
 
 * They share the **real** `.schema/`. `AssembleTemp` copies it beside each fixture corpus, so a schema change ripples
-  into every fixture at once — run the golden suite after touching `.schema/`, not just `./kac validate`. A `sync`
+  into every fixture at once — run the golden suite after touching `.schema/`, not just `kac validate`. A `sync`
   scenario may narrow one side with `corpus-schema.txt`, which names the type files that side holds *before* the sync.
   The real schema cannot express a corpus holding fewer files than upstream, and that is the state a sync resolves.
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`

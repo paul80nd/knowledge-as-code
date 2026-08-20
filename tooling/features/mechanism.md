@@ -33,7 +33,7 @@ corpus. It follows the same discipline as `index --check`: recompute, compare, n
 write.
 
 ```bash
-./kac mechanism --check --against ../other-corpus
+kac mechanism --check --against ../other-corpus
 ```
 
 The reference defaults to `upstream.url` in `.corpus.yaml`, so a corpus that recorded where it synced from can run a
@@ -71,8 +71,8 @@ the generated half is right.
 `mechanism --sync` takes the shared layers from the reference, records what it took, and regenerates.
 
 ```bash
-./kac mechanism --sync                      # from upstream.url
-./kac mechanism --sync --against ../source  # …or from a local checkout of it
+kac mechanism --sync                      # from upstream.url
+kac mechanism --sync --against ../source  # …or from a local checkout of it
 ```
 
 `--against` says which copy of the upstream to read. `upstream.url` says the corpus takes from an upstream at all. A

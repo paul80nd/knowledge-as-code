@@ -44,20 +44,21 @@ and is not, and the calls that are genuinely close.
 
 ## Working in this corpus
 
-Requires the **.NET 10 SDK**. `kac` runs through `dotnet run`, so there is no build step to manage.
+Needs `kac` on your path. [`../README.md`](../README.md#running-the-tool) covers the ways to get one.
 
 ```bash
-./kac validate     # frontmatter, links, structure, clauses and the graph
-./kac index        # regenerate the indexes and generated blocks
-./kac export       # write the corpus to .dist/export/ as data a consumer reads
-./kac bundle       # assemble that export and .plugin/ into a plugin under .dist/plugin/
-./kac checks       # list every check the validator implements
+kac validate     # frontmatter, links, structure, clauses and the graph
+kac index        # regenerate the indexes and generated blocks
+kac export       # write the corpus to .dist/export/ as data a consumer reads
+kac bundle       # assemble that export and .plugin/ into a plugin under .dist/plugin/
+kac checks       # list every check the validator implements
 ```
 
-`./kac` (Windows: `kac.cmd`) wraps `dotnet run --project ../tooling/kac`. Add this folder to your `PATH` to drop
-the `./`.
+A `kac` and a `kac.cmd` sit beside this file, wrapping `dotnet run --project ../tooling/kac`. Run them as
+`./kac validate` while you are changing the tool, because they reach the working tree and an installed `kac` does
+not.
 
-The example records are every `<type>/*.md` that is not `_index.md` or `_template.md`. `./kac validate` covers them, so
+The example records are every `<type>/*.md` that is not `_index.md` or `_template.md`. `kac validate` covers them, so
 they are held to the same standard as real content. A schema change that breaks them fails CI here rather than in
 somebody's repository.
 
@@ -138,8 +139,8 @@ before pushing. Bump it with the change.
 Build the plugin, and install the build rather than the branch:
 
 ```bash
-./kac export       # write the corpus to .dist/export/
-./kac bundle       # assemble .dist/plugin/, with .dist/ as the marketplace holding it
+kac export       # write the corpus to .dist/export/
+kac bundle       # assemble .dist/plugin/, with .dist/ as the marketplace holding it
 ```
 
 Then, in a session:
