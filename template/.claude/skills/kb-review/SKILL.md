@@ -12,10 +12,10 @@ knowledge, not correcting facts, and not moving documents between types.
 
 Three sources of rules, in this order:
 
-1. **The schema and the validator.** `.schema/*.yaml`, and what `./kac validate` and `./kac checks` report. These are
-   the authority on anything mechanical: required sections, clause modals, id and filename formats, link forms, and
-   which text rules a type declares. The type's `rules:` block is the wider of the two — it carries rules the tool does
-   not implement, which bind an author even though nothing fails.
+1. **The schema and the validator.** `.schema/*.yaml`, and what `kac validate` and `kac checks` report. These are the
+   authority on anything mechanical: required sections, clause modals, id and filename formats, link forms, and which
+   text rules a type declares. The type's `rules:` block is the wider of the two — it carries rules the tool does not
+   implement, which bind an author even though nothing fails.
 2. **The type's own pages.** `<type>.md` for what the type is meant to hold, `<type>/_template.md` for the sections it
    must have.
 3. **[`knowledge-as-code/contributing.md`](../../../knowledge-as-code/contributing.md).** The link and template
@@ -27,7 +27,7 @@ Three sources of rules, in this order:
 
 **Where a prose rule contradicts the schema, that is a finding to report — never an instruction to act on.**
 `authoring.md` says the same of itself. Report which of the two is wrong and leave both alone. A reviewer who resolves
-the contradiction instead breaks the build while claiming the rulebook's authority: read literally, one wrong bullet
+the contradiction instead breaks the build while claiming the rulebook's authority. Read literally, one wrong bullet
 would have stripped **MUST** from twenty-two normative documents that `clauses` requires it in.
 
 ## The one rule that stops this going wrong
@@ -59,26 +59,26 @@ appearing to improve it.
 
 ## What the validator gives you, and what it does not
 
-**Run `./kac validate` first and expect it to come back clean.** CI gates the branch and pushes to `main` are rejected,
-so a clean corpus is the normal state rather than the lucky one. It is your regression baseline: run it again at the end
+**Run `kac validate` first and expect it to come back clean.** CI gates the branch and pushes to `main` are rejected, so
+a clean corpus is the normal state rather than the lucky one. It is your regression baseline: run it again at the end
 and compare. It is not a source of findings, and it will not hand you a starting list.
 
-**Then establish which text rules apply to the type in front of you.** `./kac checks` lists what the validator
-implements, across every type at once; `.schema/<type>.yaml`'s `rules:` block lists what your type declares. Read the
-second and use the first to tell which of those rules actually run. Each text rule is declared on a single type —
-`low-ceremony` on discoveries, `not-normative` on explanations, `symptoms-first` on runbooks — and most types declare
-none at all. For `services/`, not one text rule fires. Do not report a check's findings as your own, and do not read the
-absence of a check as permission: a declared rule with no code behind it binds you exactly as much as one that fails the
-build.
+**Then establish which text rules apply to the type in front of you.** `kac checks` lists what the validator implements,
+across every type at once. `.schema/<type>.yaml`'s `rules:` block lists what your type declares. Read the second and use
+the first to tell which of those rules actually run. Each text rule is declared on a single type: `low-ceremony` on
+discoveries, `not-normative` on explanations, `symptoms-first` on runbooks. Most types declare none at all. For
+`services/`, not one text rule fires. Do not report a check's findings as your own, and do not read the absence of a
+check as permission: a declared rule with no code behind it binds you exactly as much as one that fails the build.
 
 ## What to look for
 
 Ten categories, ordered by what they cost the reader. Use these names in the report; they are the category list.
 
 1. **Not record content.** The highest-yield finding. A paragraph that would appear in more than one record of the type
-   is corpus guidance in the wrong place. So is commentary about the record's own editorial choices, prose restating
-   `owner`, `review-by`, `status` or `tags`, a review section duplicating frontmatter, placeholder text describing the
-   absence of a relationship, and any explanation of what a metadata field means. Say where the content belongs instead.
+   is corpus guidance in the wrong place. So is commentary about the record's own editorial choices, and any explanation
+   of what a metadata field means. So is prose restating `owner`, `review-by`, `status` or `tags`, a review section
+   duplicating frontmatter, and placeholder text describing the absence of a relationship. Say where the content belongs
+   instead.
 2. **Restated rather than cited.** Prose reproducing what an ADR, standard, type page or glossary entry already says.
    Replace it with a link.
 3. **Duplicated across records.** Two records in the same folder carrying near-identical paragraphs. Flag both: one
@@ -103,8 +103,8 @@ Most of this repository's records are examples, and a type page will often say s
 there for "the awkward cases the schema was shaped by". That pulls against *not record content*, because the awkward
 case and the lecture about it arrive in the same paragraph. Separate them:
 
-* **Keep the awkward case, in full.** A `repo` field that under-answers, a bare `depends-on` on a service that depends
-  on a great deal, a `critical` service depending on an `important` one. The fact is what makes the example worth
+* **Keep the awkward case, in full.** A `repo` field that under-answers. A bare `depends-on` on a service that depends
+  on a great deal. A `critical` service depending on an `important` one. The fact is what makes the example worth
   shipping, and the demonstration is the **shape of the record**.
 * **Cut the convention it restates.** Where the record goes on to explain the rule that makes the fact awkward, that
   text is already on the type page — often word for word. Nine copies is nine things to keep in step.
@@ -112,15 +112,16 @@ case and the lecture about it arrive in the same paragraph. Separate them:
 
 ## Template defects
 
-**A defect the template or the type page caused belongs to that file, not to the records.** The test is causation, not
-tally: name the line responsible and the defect is the template's however few records carry it, and where you cannot,
+**A defect the template or the type page caused belongs to that file, not to the records.** The test is causation rather
+than tally. Name the line responsible and the defect is the template's, however few records carry it. Where you cannot,
 it is a record defect however many do. `services/_template.md` tells authors that a consumers list "is maintained by
 hand and will go stale. Say so", and the caveat duly appears in three records where *not record content* says it should
 appear in none. An example in a template's frontmatter is the most contagious line of all, because every author copies
 it.
 
-Leave the records alone, and **fixing the template is out of scope for a review** — in a `role: source` repository as
-much as anywhere, because it changes every record of the type and every corpus downstream. Propose it as separate work.
+Leave the records alone, and **fixing the template is out of scope for a review**. That holds in a `role: source`
+repository as much as anywhere, because it changes every record of the type and every corpus downstream. Propose it as
+separate work.
 
 ## When there is nothing to find
 
@@ -136,8 +137,8 @@ decide. That list is worth more than a larger diff.
 
 1. **Establish scope.** One record, a type folder, or a named set. If asked to review "the corpus", propose an order —
    by tier, worst offenders first — and confirm before starting. Do not silently review a hundred documents.
-2. **Run `./kac validate` and `./kac checks`, and read the type's `rules:` block.** Baseline, what the tool enforces,
-   and what the type declares.
+2. **Run `kac validate` and `kac checks`, and read the type's `rules:` block.** Baseline, what the tool enforces, and
+   what the type declares.
 3. **Read `style.md` and `authoring.md`.** In full. Then the type's `<type>.md` for what the type is meant to contain,
    and its `_template.md` for the sections it must have.
 4. **For each record**, in this order:
@@ -155,8 +156,8 @@ decide. That list is worth more than a larger diff.
    record rewarded and finishes feeling finished. Naming the ten in turn is what makes two runs over the same folder
    agree, and agreement is worth more than any single run's perceptiveness.
 7. **Check what you produced** against the checklist below.
-8. **Run `./kac validate`** again and, if any frontmatter changed, `./kac index`. A rewrite that fails validation is not
-   a rewrite.
+8. **Run `kac validate`** again and, if any frontmatter changed, `kac index`. A rewrite that fails validation is not a
+   rewrite.
 9. **Report** in the shape given below. Propose; do not commit. Open a PR if asked — pushes to `main` are rejected.
 
 ## Before you hand it back
@@ -190,8 +191,8 @@ Nothing checks these. They are yours:
 
 Where the rewrite is applied to the working tree, `git diff` is the artefact — say so, and let the reader read it.
 Reproducing nine records at four hundred words each duplicates the corpus into a report that is stale the moment anyone
-edits a file, in a repository whose first rule is *say less, once*. Reproduce a whole document only where nothing has
-been written to disk.
+edits a file. The first rule here is *say less, once*. Reproduce a whole document only where nothing has been written to
+disk.
 
 For each record, keep it short:
 

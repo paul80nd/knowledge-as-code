@@ -1,22 +1,7 @@
-# Publishing the kac tool to nuget.org (GitHub Actions).
-#
-# publish-plugin.yml publishes what the corpus knows; this publishes the tool that reads it. Both run on
-# a push to main, and both take the version from the source rather than from the run — the plugin's from
-# `content-version` in .corpus.yaml, the tool's from `<Version>` in tooling/kac/kac.csproj. A push whose
-# version is already published does nothing but say so, which is what most merges do here.
-#
-# The version is hand-moved before the merge rather than read from a tag. A published version is a
-# promise about the command surface, and nothing can derive that from a diff, so it is written down
-# beside the thing it describes. It also leaves one habit covering both artefacts instead of two.
-#
-# A published version is permanent: nuget.org will unlist one but never free the number, so a broken
-# 0.1.0 cannot be replaced, only followed by 0.1.1. That is why all three test layers run again here,
-# and why the package pushed is the package that was proved rather than a second build of it.
-#
-# Nothing here holds a publishing key. nuget.org is told once, in a trusted publishing policy, that it
-# trusts this repository's `publish-tool.yml` running in the `nuget.org` environment; the run then proves
-# it is that by exchanging a token GitHub signs for a key good for an hour. So there is no long-lived
-# credential to leak, rotate or store, and a fork of this repository cannot publish under this name.
+# Publishes kac when kac.csproj names a version nuget.org does not already hold. The version is
+# hand-moved before the merge, so a change to the tool ships in the pull request that makes it.
+# Authentication is a trusted publishing policy on nuget.org naming this repository, this file and the
+# environment below, so there is no stored key and a fork cannot publish under this name.
 
 name: publish-tool
 
@@ -28,8 +13,6 @@ on:
 permissions:
   contents: read
 
-# Two merges in quick succession would otherwise race. nuget.org lists an accepted version minutes after
-# it takes it, so the second run would read a version list that does not yet name what the first sent.
 # Queued rather than cancelled: the loser may carry a version the winner does not.
 concurrency:
   group: publish-tool
@@ -42,25 +25,19 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    # A hung step would otherwise hold the concurrency group for the runner's six-hour default and queue
-    # every merge behind it. Twenty minutes is several times the longest run this does.
+    # Short enough that a hang fails rather than holding the concurrency group for six hours.
     timeout-minutes: 20
-    # `id-token: write` lets GitHub issue this job the signed token nuget.org exchanges for a key. It is
-    # the whole of what the job is trusted with, and it is granted here rather than at the top of the file
-    # so that it belongs to the one job that publishes.
+    # `id-token: write` is what lets GitHub issue the token nuget.org exchanges for a key.
     permissions:
       contents: read
       id-token: write
-    # Named in the trusted publishing policy as well as here, so nuget.org accepts a token only from a run
-    # that reached this environment. It is also where a required reviewer would be added, which would put
-    # a human between a merge and a publish.
+    # Named in the policy too, so a token from anywhere else is refused. Also where a required
+    # reviewer would go.
     environment:
       name: nuget.org
       url: https://www.nuget.org/packages/KnowledgeAsCode.Tool
     steps:
-      # Actions are pinned to a commit rather than a tag: a tag is mutable, so a moved tag would
-      # change what runs here without changing this file. Dependabot moves the pins, and the trailing
-      # comment is what makes the diff legible when it does.
+      # Pinned to a commit because a tag is mutable. Dependabot moves the pins.
       - name: Check out the commit that merged
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -69,15 +46,8 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Asked first, so a merge that moved no version costs a checkout and a web request rather than the
-      # whole suite. Every step below is held to what this decides.
-      #
-      # The version is read from the project rather than from a packed file, because nothing is packed
-      # yet. `dotnet pack` reads the same property, and the push at the foot names the file by this
-      # version, so a package that came out under a different one fails there rather than being sent.
-      #
-      # The flat container lists every version of a package under its lowercased id, and answers 404 for
-      # a package that has never been published — the first run here, and not a failure.
+      # Asked first, so a merge that moved no version costs one web request rather than the whole suite.
+      # The flat container answers 404 for a package never published, which is not a failure.
       - name: Decide whether this version is new
         id: decide
         run: |
@@ -102,8 +72,8 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "new=$NEW" >> "$GITHUB_OUTPUT"
 
-      # The gate ran these against the pull request's head. What merged is a different commit, because
-      # main moved beneath it, so the three layers are asked again before anything permanent happens.
+      # The gate ran these against the pull request's head, and main moved beneath it. A published
+      # version cannot be replaced, only followed, so they are asked again about the merge commit.
       - name: Run kac.core unit tests
         if: steps.decide.outputs.new == 'true'
         run: dotnet test tooling/kac.tests
@@ -116,17 +86,14 @@ jobs:
         if: steps.decide.outputs.new == 'true'
         run: dotnet run tooling/kac-tests.cs
 
-      # Packed once. Both steps below read this same file and it is this file that is pushed, so what
-      # nuget.org receives is what was proved rather than a rebuild that agreed with it at the time.
-      #
-      # `dotnet pack` also fails on package metadata that has gone missing — a readme the project names
-      # and nobody wrote, a licence expression that is not one — which none of the three layers notice.
+      # Packed once, so what is pushed is what the two steps below proved. Pack also fails on package
+      # metadata no test layer reads, such as a readme the project names and nobody wrote.
       - name: Pack the tool
         if: steps.decide.outputs.new == 'true'
         run: dotnet pack tooling/kac/kac.csproj -o .dist/pack
 
-      # A tool package can be well-formed and still not resolve to a runnable command. `--version` is the
-      # one question that needs no corpus, so it is asked from a directory that is not one.
+      # A well-formed package can still fail to resolve to a runnable command. `--version` needs no
+      # corpus, so it is asked from a directory that is not one.
       - name: Install what was packed and ask it its version
         if: steps.decide.outputs.new == 'true'
         run: |
@@ -134,20 +101,17 @@ jobs:
           cd "$RUNNER_TEMP"
           "$GITHUB_WORKSPACE/.dist/tools/kac" --version
 
-      # The key this returns is good for an hour and can be issued only once per token, so it is asked for
-      # last — with the package already packed and proved, and the push as the very next thing that runs.
+      # The key lasts an hour and one token buys one key, so it is asked for immediately before use.
       - name: Exchange this job's identity for a short-lived nuget.org key
         id: nuget-login
         if: steps.decide.outputs.new == 'true'
         uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
         with:
-          # The nuget.org profile name, not the email address. Held as a secret because nuget.org's own
-          # guidance asks for that, and it is the only thing this workflow still takes from outside itself.
+          # The profile name, not the email address. A secret because nuget.org asks for that.
           user: ${{ secrets.NUGET_USER }}
 
       # `--skip-duplicate` covers the window the decision above cannot see into: nuget.org accepts a
-      # version minutes before it lists one, so a run inside that window reads a list that does not name
-      # it yet. Without this, that run fails on a conflict rather than passing with nothing to do.
+      # version minutes before it lists one.
       - name: Publish to nuget.org
         if: steps.decide.outputs.new == 'true'
         env:

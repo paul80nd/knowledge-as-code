@@ -19,8 +19,7 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json  # one file per glossary, ho
 ```
 
 Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
-rather than in the repository you are working in, so a path you build relative to the working directory resolves
-nowhere.
+rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
 
 ## Find the term
 
@@ -37,8 +36,8 @@ Two patterns, in this order:
 
 Where the first pattern comes back empty, widen the second: try the singular, and try the other spelling.
 
-**Read the `title` of every hit before you use it.** The field names in this file are ordinary English words — `title`,
-`record`, `definition`, `status`, `type` — so a search for one of those matches every line in the file. A line defines a
+**Read the `title` of every hit before you use it.** The field names in this file are ordinary English words: `title`,
+`record`, `definition`, `status`, `type`. A search for one of those matches every line in the file. A line defines a
 term when its `title` says so, never because it matched.
 
 Each line carries the entry whole:
@@ -60,7 +59,7 @@ they take. Read the manifest once in a session and keep both strings; they are t
 
 **Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
 else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
-right: a template with one character altered gives a 404 that reads as plausible, or a page from a version of the
+right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the
 corpus nobody asked about.
 
 **To send a reader to a record, use `humanTemplate`.** Substitute `path` and `anchor`. That is the rendered page, and

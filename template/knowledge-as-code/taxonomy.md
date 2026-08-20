@@ -290,7 +290,6 @@ knowledge-as-code/     # the system's own documentation — outside the taxonomy
 .claude/skills/        # agent machinery for this corpus — SYNCED
 .plugin/               # source for the plugin that carries this corpus's export — SYNCED, bar its manifest
 .schema/               # the machine-readable schema — SYNCED
-tooling/               # validators, generators and the manifest — SYNCED
 _plan/                 # migration scaffolding — temporary
 _reports/              # GENERATED
 ```
@@ -350,8 +349,7 @@ feature-level detail lives with the code.
 
 ## Status of this taxonomy
 
-Not all types are proven. Which are and which are drafts is recorded once, in the root
-[README](../README.md#maturity).
+Not all types are proven. Where that matters to a corpus, its own README is where the state is recorded.
 
 Changing the taxonomy — adding a type, merging two, moving a type between tiers — is a larger act than editing any
 document within it. Where a corpus holds ADRs, it belongs in one, amending whichever recorded the taxonomy in the first

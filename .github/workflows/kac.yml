@@ -1,20 +1,8 @@
-# CI for this repository: the kac tool at `tooling/`, and the corpus at
-# `example/` that proves it over real content.
+# The gate on a pull request: kac run over the corpus at example/, the plugin that corpus builds, and
+# the tool's own three test layers. The corpus half mirrors example/azure-pipelines.yml.
 #
-# The corpus half is the GitHub equivalent of example/azure-pipelines.yml: it
-# runs the kac validator, the generated-content freshness check, the export and
-# the plugin bundle on pull requests into main. It NEVER commits anything it
-# produces. `index --check` only verifies the tracked generated files are fresh
-# and fails, naming the command a human runs locally (`./kac index`). The export
-# and the bundle land in an untracked .dist/ that the runner throws away.
-# This workflow is granted read-only contents permission and pushes nothing.
-#
-# What CI produces is never written back over a file a human edits. That is the
-# rule, and read-only permission is how this workflow keeps it.
-# publish-plugin.yml is granted write and keeps the same rule a different way: it
-# writes only to an orphaned marketplace branch, which shares no commit with main
-# and holds no file anyone authors, so there is no path from what CI builds to
-# the source.
+# Nothing CI produces is written back over a file a human edits, and read-only permission is what
+# keeps it that way. `index --check` only reports staleness, naming the command to run locally.
 
 name: kac
 
@@ -34,9 +22,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      # Actions are pinned to a commit rather than a tag: a tag is mutable, so a moved tag would
-      # change what runs here without changing this file. Dependabot moves the pins, and the trailing
-      # comment is what makes the diff legible when it does.
+      # Pinned to a commit because a tag is mutable. Dependabot moves the pins.
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -45,11 +31,8 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # One invocation per subcommand, run sequentially. Concurrent runs build the
-      # same project and contend over its output, so the kac runs must not overlap.
-      #
-      # Each runs from `example/`, because kac takes the first ancestor holding a
-      # `.schema/` as the corpus and the repository root is not one.
+      # Sequential, because concurrent runs build the same project and contend over its output. Each
+      # runs from example/, because kac takes the first ancestor holding a .schema/ as the corpus.
       - name: Validate frontmatter, links and structure
         working-directory: example
         run: dotnet run --project ../tooling/kac -- validate
@@ -58,43 +41,26 @@ jobs:
         working-directory: example
         run: dotnet run --project ../tooling/kac -- index --check
 
-      # Proves the corpus still exports. The shape it exports in is held by a committed
-      # golden in the suite below.
       - name: Build the export
         working-directory: example
         run: dotnet run --project ../tooling/kac -- export
 
-      # Assembles what `export` wrote, together with the .plugin/ tree, into an installable
-      # plugin under .dist/plugin/, with .dist/ itself as the marketplace naming it. The
-      # fourth and last kac invocation, so the one-at-a-time rule above still holds.
       - name: Assemble the plugin bundle
         working-directory: example
         run: dotnet run --project ../tooling/kac -- bundle
 
-      # Taken at `latest` rather than pinned. The bundle has to be valid against the CLI a
-      # reader actually runs, and no ecosystem in dependabot.yml moves an npm pin, so a pinned
-      # version would settle into proving the bundle against a CLI nobody has.
+      # Unpinned on purpose: the bundle has to be valid against the CLI a reader actually runs, and
+      # nothing in dependabot.yml would move an npm pin.
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest
 
-      # Two manifests are checked: the plugin a reader installs, and the marketplace offering
-      # it. `--strict` fails on the warnings the runtime tolerates, which is what its own help
-      # text asks CI to do.
+      # A clean `claude plugin validate` prints one line whatever it looked at, and a plugin holding
+      # no component at all passes it. The two guards below close that: bundle.json's components must
+      # really be in the tree, and .claude-plugin/ must hold the manifest and nothing else, because a
+      # component filed in there is loaded by nothing.
       #
-      # The CLI finds components by convention — a directory under skills/, a hooks/hooks.json —
-      # and names one only when it has a fault to report. A clean run prints the manifest line
-      # alone, so its silence says nothing about how much it looked at, and a plugin carrying no
-      # component at all passes. The two guards after it are what close that. bundle.json lists
-      # what this build put in, so the first asserts each of those components is really in the
-      # tree; the second asserts .claude-plugin/ holds the manifest and nothing else, because a
-      # component filed in there is loaded by nothing and reported by nothing.
-      #
-      # Held to the POSIX subset Git Bash and older macOS bash agree on: no arrays, no `[[`, no
-      # process substitution, and no command substitution, whose `$(...)` an Azure pipeline reads
-      # as its own macro before the shell ever sees it. The loop reads from a file rather than a
-      # pipe, so the variable it sets survives into the test below it. TEMPDIR arrives from the
-      # runner rather than being named inline, which is what leaves this script word for word the
-      # one in azure-pipelines.yml.
+      # Word for word the script in azure-pipelines.yml, so it is held to the POSIX subset Git Bash
+      # and older macOS bash agree on, with no `$(...)` for an Azure pipeline to read as its macro.
       - name: Validate the assembled plugin and its marketplace
         shell: sh
         working-directory: example
@@ -124,15 +90,8 @@ jobs:
             exit 1
           fi
 
-      # A corpus that adopted no type still has to produce a plugin that installs. The bundle it
-      # gets carries its manifest and the export, and nothing that reads either — both components
-      # are trimmed, because a skill that would find nothing reads to a user exactly like a term the
-      # corpus does not define. `bundle-empty` in the golden suite pins what that tree holds; what
-      # it cannot say is whether the emptied plugin is still valid, which is what this asks.
-      #
-      # The throwaway root is a .schema/ and a .plugin/ and nothing else. kac takes the first
-      # ancestor holding .schema as the repository root, so running from inside it is what makes
-      # this a corpus with no records rather than a second run over the real one.
+      # `bundle-empty` in the golden suite pins what an emptied plugin holds. What it cannot say is
+      # whether that plugin is still valid to install, which is what this asks.
       - name: Bundle a corpus that adopted no type, and validate what it produced
         shell: sh
         working-directory: example
@@ -155,10 +114,7 @@ jobs:
             exit 1
           fi
 
-      # kac's own coverage, in three layers: focused xUnit unit tests over kac.core's shared
-      # helpers; Reqnroll feature tests that drive the validator in-process as behaviour specs;
-      # and the golden/subprocess suite (fixtures diffed against committed goldens, plus the
-      # coverage + checks-table gates and the end-to-end CLI contract).
+      # tooling/README.md#tests says what each layer covers and why all three are here.
       - name: Run kac.core unit tests
         run: dotnet test tooling/kac.tests
 
@@ -168,15 +124,9 @@ jobs:
       - name: Run the golden test suite
         run: dotnet run tooling/kac-tests.cs
 
-      # A corpus is meant to install the tool rather than carry it, so packing has to keep working
-      # whether or not anything is being published today. `dotnet pack` fails on package metadata
-      # that has gone missing — a readme the project names and nobody wrote, a licence expression
-      # that is not one — and none of the three layers above would notice.
-      #
-      # Installing what was packed and asking it its version is the part the pack alone does not
-      # prove: a tool package can be well-formed and still not resolve to a runnable command.
-      # `--version` is the one question that needs no corpus, so it is asked from a directory that
-      # is not one.
+      # Pack fails on package metadata no test layer above reads, such as a readme the project names
+      # and nobody wrote. Installing what was packed catches a package that is well-formed and still
+      # does not resolve to a runnable command.
       - name: Pack the tool and run the installed copy
         run: |
           dotnet pack tooling/kac/kac.csproj -o .dist/pack
@@ -184,19 +134,12 @@ jobs:
           cd "$RUNNER_TEMP"
           "$GITHUB_WORKSPACE/.dist/tools/kac" --version
 
-  # The chain end to end, on the two platforms that matter. Everything in the job above is proved
-  # over data; this installs what was assembled and asks it the questions its skill describes.
+  # Installs what was assembled and asks it the questions its skill describes. On both platforms
+  # because development happens on macOS and the first audience is on Windows.
   #
-  # Development happens on macOS and the first audience is on Windows, so a matrix here is where
-  # that gap closes. The script is one file rather than two inline blocks, held to the subset Git
-  # Bash and older macOS bash agree on; `bash` is the shell on both, which on a Windows runner is
-  # Git Bash.
-  #
-  # It is a job of its own rather than more steps on the one above, because it needs a different
-  # checkout. A pull_request run checks out the merge commit by default, and the export stamps
-  # whatever commit HEAD stands on into every link it writes. A merge commit is not a commit the
-  # raw host serves, so the fetch below would fail over the checkout rather than over the template.
-  # Taking the head commit gives the export a ref that resolves.
+  # A job of its own because it needs a different checkout. The export stamps whatever commit HEAD
+  # stands on into every link, and a pull_request run checks out a merge commit the raw host does
+  # not serve, so the fetch would fail over the checkout rather than over the template.
   round-trip:
     strategy:
       fail-fast: false

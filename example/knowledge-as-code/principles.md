@@ -78,14 +78,18 @@ Every mechanism here serves that: generated indexes cannot be stale, validated l
 decisions cannot be quietly rewritten, and a rule with no control is recorded as unenforced rather than assumed. Each of
 those makes a record harder to add, and that is the trade this framework takes.
 
-## Copied, not depended on
+## What you own, and what you install
 
-An organisation adopting this framework gets its own cut. No runtime dependency, no upstream to ask permission from,
-nothing to remove if they later go their own way.
+An organisation adopting this framework owns what it writes and what says how to write it: the records, the schema, and
+the framework's own documentation. Nobody upstream approves a change to any of that, and there is nothing to hand back
+if they later go their own way.
 
-The cost is drift. A manifest and a descriptor answer it: a corpus records which version of the shared layer it is on
-and which divergences it has deliberately accepted, so that a necessary deviation does not have to masquerade as an
-accident.
+What comes from upstream is `kac` itself, installed as a versioned tool and pinned the way any other dependency is. A
+newer one is a version they choose to take.
+
+The cost is drift in the half they own. A manifest and a descriptor answer it: a corpus records which version of the
+shared layer it is on and which divergences it has deliberately accepted, so that a necessary deviation does not have
+to masquerade as an accident.
 
 ## Readable and writable by agents
 

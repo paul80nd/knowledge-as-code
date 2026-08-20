@@ -1,44 +1,42 @@
 # knowledge-as-code
 
-A structured, validated knowledge corpus that people and AI sessions both read from and contribute to, and the tool
-that holds it to its shape.
+[![kac][ci-badge]][ci] [![NuGet][nuget-badge]][nuget] [![Licence: MIT][licence-badge]][licence]
+
+A structured, validated knowledge corpus that people and AI sessions both read from and contribute to, and the tool that
+holds it to its shape.
 
 Plain markdown in git, reviewed by PR, published as a wiki. What makes it more than a folder of documents is that
-**every document has a type, and every type has a schema** — so an index is generated rather than maintained, a broken
-cross-reference fails CI rather than rotting quietly, and an agent can be told where a thing goes instead of guessing.
+**every document has a type, and every type has a schema**. The tool builds each index from the records. A broken
+cross-reference fails CI rather than rotting quietly. Skills help an agent use and contribute to the corpus.
 
-The argument for building it this way is in [`example/knowledge-as-code.md`](example/knowledge-as-code.md) and the
-documents beneath it.
+The argument for building it this way is in [`template/knowledge-as-code.md`](template/knowledge-as-code.md).
 
 ## What is here
 
-**[`tooling/`](tooling/)** — `kac`, the validator and generator, and the three test layers that prove it. A .NET 10
-entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures, feature
-specs and unit tests it is held to. [`tooling/README.md`](tooling/README.md) is how to build and test it.
+**[`tooling/`](tooling/README.md)** ... `kac`, the validator and generator, and the three test layers that prove it. A
+.NET 10 entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures,
+feature specs and unit tests it is held to.
 
-**[`template/`](template/)** — what a corpus is made of, authored once: the machine-readable schema, the framework's
-own documentation, the plugin tree, and the pages and templates a corpus starts from.
-[`template/manifest.yaml`](template/manifest.yaml) says which of those a corpus receives once and owns afterwards, and
-which it receives again whenever it takes a newer framework.
+**[`template/`](template/README.md)** ... what a corpus is made of, authored once: the machine-readable schema, the
+framework's own documentation, the plugin tree, and the pages and templates a corpus starts from.
+[`template/manifest.yaml`](template/manifest.yaml) sorts them: some a corpus receives once and owns afterwards, and some
+it receives again whenever it takes a newer framework.
 
-**[`example/`](example/)** — a complete corpus that took that template, run through the tool built beside it on every
-commit. It holds its own copy of everything the template overlays, plus a set of illustrative records about a
-fictional library consortium. [`example/README.md`](example/README.md) is the way in.
+**[`example/`](example/README.md)** ... a complete corpus that took that template, run through the tool built beside it
+on every commit. It holds its own copy of everything the template overlays, plus a set of illustrative records about a
+fictional library consortium.
 
-No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is
-run from, and the one in this repository is what proves the tool over real content rather than over fixtures alone.
-
-**[`kac.slnx`](kac.slnx)** sits above all three. It names the four projects under `tooling/`, and lives here rather
-than beside them so that an IDE opening it opens the repository.
+No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is run
+from. The one in this repository proves the tool over real content rather than over fixtures alone.
 
 ## Running the tool
 
-Requires the **.NET 10 SDK**. Three ways in, taking less of this repository each time.
+Requires the **.NET 10 SDK**. Each way below needs less of this repository than the one above it.
 
 ### From this repository
 
-The development loop, and the way to try the corpus here. `dotnet run` builds as it goes, so there is no build step
-to manage.
+The development loop, and the way to try the corpus here. `dotnet run` builds as it goes, so there is no build step to
+manage.
 
 ```bash
 git clone https://github.com/paul80nd/knowledge-as-code.git
@@ -49,13 +47,13 @@ cd knowledge-as-code/example
 ./kac checks       # list every check the validator implements
 ```
 
-`./kac` (Windows: `kac.cmd`) sits at the corpus root and wraps `dotnet run --project ../tooling/kac`. Add that folder
-to your `PATH` to drop the `./`, or use the explicit form, which is what CI runs.
+`./kac` (Windows: `kac.cmd`) sits at the corpus root and wraps `dotnet run --project ../tooling/kac`. Add that folder to
+your `PATH` to drop the `./`. The explicit form works the same way, and is what CI runs.
 
 ### As an installed tool, packed here
 
-`kac` packs as the dotnet tool `KnowledgeAsCode.Tool`. Packing it yourself is how to try a change to the tool exactly
-as a corpus will receive it, before the version carrying it is published.
+`kac` packs as the dotnet tool `KnowledgeAsCode.Tool`. Packing it yourself is how to try a change to the tool exactly as
+a corpus will receive it, before the version carrying it is published.
 
 ```bash
 dotnet pack tooling/kac/kac.csproj -o .dist/pack
@@ -66,12 +64,12 @@ cd example
 ```
 
 `--tool-path` keeps the install inside this repository, where `.dist/` is untracked. `--global` puts `kac` on your
-`PATH` instead. Either way it finds a corpus the way the local one does, by walking up for a `.schema/`, so it reads
-whichever corpus it is run from — this one, or a corpus of your own anywhere on the machine.
+`PATH` instead. Either way it finds a corpus by walking up for a `.schema/`, the way the local one does. It reads
+whichever corpus it is run from: this one, or a corpus of your own anywhere on the machine.
 
 ### From nuget.org
 
-How a corpus outside this repository takes it, and the only one of the three needing nothing from here.
+How a corpus outside this repository takes it with no dependency on this repo.
 
 ```bash
 dotnet tool install --global KnowledgeAsCode.Tool
@@ -82,7 +80,7 @@ kac validate
 
 Install it into a [tool manifest](https://learn.microsoft.com/dotnet/core/tools/local-tools-how-to-use) instead to pin
 it, which is what a corpus with CI of its own wants. The version lands in `.config/dotnet-tools.json` and travels with
-the repository, so every machine and every build runs the one the corpus was written against.
+the repository. Every machine and every build then runs the version the corpus was written against.
 
 ```bash
 dotnet new tool-manifest
@@ -100,51 +98,71 @@ Every command, one document apiece, is in [`tooling/features/`](tooling/features
 
 ## Starting a corpus of your own
 
-Copy `example/`, delete the records in the types you keep, rewrite the type pages' examples in your own domain, and
-start writing. `.schema/` comes with it and is the half you want to keep receiving changes to.
+**Copy [`template/`](template/), not `example/`.** The template is the corpus with the content taken out: the schema,
+the framework's own documentation, a root page and a template for every type, and nothing about anybody's estate.
+`example/` is a worked corpus to read for ideas, and copying it hands you a fictional library consortium to delete.
 
-**A copy carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which is not part of the corpus.
+```bash
+cp -R template/ ../my-corpus && cd ../my-corpus
+rm manifest.yaml README.md          # the template's own machinery, not a corpus's
+
+# write .corpus.yaml — the one file no template can supply
+git init && git add -A              # kac reads the git listing, so a corpus is a repository
+
+dotnet tool install --global KnowledgeAsCode.Tool
+kac index                           # write the indexes and generated blocks
+kac validate                        # comes back clean on an empty corpus
+```
+
+[`.corpus.yaml`](example/.corpus.yaml) names the corpus, says where it publishes and lists the types it adopted, so no
+copied file can answer it. `example/`'s is commented throughout and is the one to read while writing yours.
+
+You also arrive with no `README.md`, no ignore rules, no editor conventions and no CI. Each is a question about your
+repository rather than about the framework.
+
+**A copy carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which is not part of any corpus.
 Install it from nuget.org as above and run it from the copy: it needs nothing but the `.schema/` the copy already
-carries, and a corpus outside this repository validates and generates exactly as `example/` does.
+carries.
 
 **What a copy cannot yet do is take a newer framework.** `kac mechanism` wants a reference corpus, through `--against`
-or an `upstream.url`, and past that it reads a manifest at `tooling/manifest.yaml` that no corpus holds. A command that
-updates the schema beneath a corpus is in the
-[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) rather than described here.
+or an `upstream.url`. Past that it reads a manifest at `tooling/manifest.yaml` that no corpus holds. A command that
+updates the schema beneath a corpus sits in the
+[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues), and is not described here.
 
 ## Maturity
 
-**Early.** The tool is real and tested: it validates the schema, frontmatter, identity, structure, clauses, links, the
+**Early.** The tool is real and tested. It validates the schema, frontmatter, identity, structure, clauses, links, the
 graph and the type setup, and generates the indexes and reference tables from the same pass. Three test layers stand
 behind it, and a round-trip that installs what was built and asks it questions.
 
 The taxonomy is the half that is only partly proven.
-[`example/README.md`](example/README.md#maturity) records which types have met real content and which are still
-drafts.
+[`example/README.md`](example/README.md#maturity) records which types have met real content and which are still drafts.
 
 Every document here describes what exists today, and the
-[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds everything agreed and unbuilt.
-[Write what exists](example/knowledge-as-code/authoring.md#write-what-exists) is the rule, and says why.
+[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds everything considered but, as yet, unbuilt.
+[Write what exists](template/knowledge-as-code/authoring.md#write-what-exists) is the rule, and says why.
 
 ## Opinions
 
 Stated openly, because they are load-bearing:
 
 * **Azure DevOps wiki is the primary publishing target.** Frontmatter renders as a metadata table there, `.order`
-  drives navigation, and `/`-rooted links resolve from the corpus root. Everything degrades to plain markdown
-  elsewhere, but the sharp edges were filed against ADO.
-* **Seventeen types is a lot.** It is the most likely thing to be wrong here, and the mitigation is a decision table
-  plus a standing willingness to merge types that are not earning their place.
+  drives navigation, and `/`-rooted links resolve from the corpus root. Everything degrades to plain markdown elsewhere,
+  but the sharp edges were filed against ADO.
+* **Seventeen types is a lot.** It is the most likely thing to be wrong here. The mitigation is a decision table, and a
+  standing willingness to merge types that are not earning their place.
 * **Trust matters more than coverage.** The failure mode of a wiki is not too little content, it is content nobody
   believes. Generated indexes, validated links and immutable decisions all serve that.
-* **This framework is copied, not depended on.** An organisation adopting it gets its own cut, free to diverge, with
-  nothing to remove if they later want to go their own way.
-
-## Provenance
-
-Developed against a real engineering wiki and extracted once the mechanism was separable from the content. History
-starts fresh here by design — the original commits are interleaved with a client's decisions and belong with them.
+* **You own the content, and install the tool.** An organisation adopting this gets its own cut of the schema and the
+  documentation, free to diverge. `kac` arrives from nuget.org as a version they pin.
 
 ## Licence
 
 Released under the [MIT licence](LICENSE), so that any organisation adopting this keeps an unencumbered copy.
+
+[ci]: https://github.com/paul80nd/knowledge-as-code/actions/workflows/kac.yml
+[ci-badge]: https://github.com/paul80nd/knowledge-as-code/actions/workflows/kac.yml/badge.svg
+[nuget]: https://www.nuget.org/packages/KnowledgeAsCode.Tool
+[nuget-badge]: https://img.shields.io/nuget/v/KnowledgeAsCode.Tool
+[licence]: LICENSE
+[licence-badge]: https://img.shields.io/badge/licence-MIT-blue

@@ -113,7 +113,7 @@ only one carrying a tag, and often is — a searcher who types `payments` wanted
 tag must never do is restate another field, since the two can only ever disagree.
 
 **Grouping is a different job, and a tag does it badly.** A value like `public` or `internal` is worth carrying because
-several documents share it and it divides a type into groups worth browsing; that same value, used once, has failed at
+several documents share it, and it divides a type into groups worth browsing. That same value, used once, has failed at
 the only thing it was for. The two tests are opposite, which is why they belong in two fields. A type wanting the
 grouping job declares a list field of its own with `min-records:`, the floor on how many records must carry each value,
 and CI warns below it. The service type declares one, named `facets`, and its page records how it reached its
@@ -135,7 +135,7 @@ Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing
 
 Numeric IDs are zero-padded to four digits, allocated sequentially, and **never reused** — if a document is withdrawn
 before acceptance, its number is retired. Mnemonic IDs are allocated by meaning rather than in sequence, so there is no
-next one to take: pick a four-character mnemonic for the concept that no document of that type already holds. A slug is
+next one to take. Pick a four-character mnemonic for the concept that no document of that type already holds. A slug is
 the thing's own name.
 
 The ID is the anchor for every cross-reference in the corpus, and it is what a shortcut link label must say. Filenames
@@ -172,22 +172,22 @@ Every record carries one line directly beneath its H1 — the type, the ID, then
 ```
 
 You arrive at these documents from a citation, so the top of the page has to answer three questions before the prose
-starts: what kind of document is this, which one is it, and is it in force. Frontmatter answers all three, but it
-renders as a metadata table an Azure DevOps reader may never look at, and it is written for a machine. The identity line
-is the same three facts written for a person, at the one place their eye already is.
+starts: what kind of document is this, which one is it, and is it in force. Frontmatter answers all three. It renders
+as a metadata table an Azure DevOps reader may never look at, and it is written for a machine. The identity line is the
+same three facts written for a person, at the one place their eye already is.
 
 The ID appears exactly as the frontmatter carries it, so there is one casing of an ID across the corpus rather than a
 second invented for headings. The status is the exception: lower-case in frontmatter because a machine reads it,
 upper-case on the line because it is read as a stamp. CI holds all three to the frontmatter — a document cannot go
 `active` and leave the line saying `DRAFT`.
 
-**The H1 is the title and nothing else** — no ID, no prefix, no type name. It carried the ID as a code span until the
-identity line took that job, and the split is worth it: a title that competes with a handle is a worse title, and
-generated indexes had to strip the ID back off to fill a column that already held it.
+**The H1 is the title and nothing else**: no ID, no prefix, no type name. The identity line carries the handle
+instead. A title that competes with a handle is a worse title, and generated indexes had to strip the ID back off to
+fill a column that already held it.
 
 ## Per-type fields
 
-Each type's fields are documented on its own page, generated into it from `.schema/` — so a reader working in one folder
+Each type's fields are documented on its own page, generated into it from `.schema/`. A reader working in one folder
 has what they need without leaving it, and there is still one definition.
 
 <!-- BEGIN GENERATED: types-metadata -->
@@ -225,5 +225,5 @@ tags: [ public-api, http ]
 The first question is whether the content belongs in frontmatter at all, and
 [What a record carries](#what-a-record-carries) answers it. Then check that git, the folder, the H1 or an existing link
 does not already hold the fact, since a field costs every document of the type a column. If it is new,
-declare it in the type's `.schema/<folder>.yaml`, add it to that type's `_template.md`, and run `./kac index` so the
+declare it in the type's `.schema/<folder>.yaml`, add it to that type's `_template.md`, and run `kac index` so the
 generated tables carry it. The validator reads the schema, so it needs no change of its own.

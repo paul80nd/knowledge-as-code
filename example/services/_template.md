@@ -56,9 +56,9 @@ The responsibilities this service owns. Keep it to what is true today — this i
 that disagrees with the estate is worse than none.
 
 **Say where a claim came from.** "Taken from the application settings the infrastructure declares" and "its own README
-says" are worth the words: they tell the next reader how much weight to give the line, and where to look when it goes
+says" are worth the words. They tell the next reader how much weight to give the line, and where to look when it goes
 stale. Where something is genuinely not established, write that down as an open question rather than filling the gap
-with a plausible guess — a guess here is repeated by everything that reads this page.
+with a plausible guess. A guess here is repeated by everything that reads this page.
 
 ## Where it lives
 
@@ -97,7 +97,7 @@ looked.
 
 _(Only what is true of **this** service. A health-check endpoint every service exposes, or a runbook nobody has written
 yet, is estate-wide background: recording it on every record adds length and no information. What earns a bullet is the
-exception — the service hosted differently from its neighbours, the one with no test environment, the setting that
+exception: the service hosted differently from its neighbours, the one with no test environment, the setting that
 disagrees with the others, the criticality that wants defending. A service with no exceptions needs no section, so
 delete this one.)_
 

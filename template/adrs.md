@@ -75,7 +75,7 @@ its id.
   [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. An ADR that records a decision uses plain
   declarative prose.
 * **Format** — a lean Nygard-style format with an explicit Alternatives Considered section.
-  [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example.
+  [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example, and arrives with the corpus.
 
 See [Contributing](/knowledge-as-code/contributing.md) for the review model that applies to all Decided-tier documents.
 

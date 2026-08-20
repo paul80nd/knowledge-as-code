@@ -25,10 +25,11 @@ body:
     attributes:
       label: Where
       description: A file path, a check name, or the command you ran.
-      placeholder: .schema/adrs.yaml, or ./kac validate
+      placeholder: .schema/adrs.yaml, or kac validate
 
   - type: input
-    id: commit
+    id: version
     attributes:
-      label: Commit
-      description: There are no releases, so the commit you are on if you have it.
+      label: Version
+      description: What `kac --version` reports, or the commit you are on.
+      placeholder: 0.1.0

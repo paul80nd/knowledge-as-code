@@ -1,40 +1,31 @@
 # Working in this repository
 
-## Read the role before you touch `.schema/` or `../tooling/`
+## Read the role before you touch `.schema/`
 
-[`.corpus.yaml`](.corpus.yaml) declares `role:`. This repository is a **source**: those two directories are yours to
-change, what you write propagates to every corpus that took a copy, and the tests that prove the tool live here. Write
-for someone who cannot see this conversation.
+[`.corpus.yaml`](.corpus.yaml) declares `role:`. This corpus is a **consumer**. `.schema/` and the framework's own
+documentation arrive from upstream, and a local edit to either is drift rather than customisation.
+`kac mechanism --check` reports it. Fix it upstream and take it down again.
 
-Where a corpus declares `role: consumer`, both directories arrive from upstream and a local edit is drift rather than
-customisation. `kac mechanism --check` reports it. Fix it upstream and run `kac mechanism --sync`. A consumer holds the
-tool and none of the tests, because the tool reaches it already proven.
+A consumer holds the tool and none of the tests that prove it, because the tool reaches it already proven. Only a
+corpus declaring `role: source` develops the framework, and that one holds both.
 
 **Adding a knowledge type is adding a YAML file to `.schema/`.** A corpus adopts a type by adding its name to `types:`
-in `.corpus.yaml` and running `kac mechanism --sync`, which brings down the schema and seeds the root page and template.
+in `.corpus.yaml` and running `kac mechanism --sync`. That brings down the schema and seeds the root page and template.
 To decline a type, leave it out of `types:` rather than deleting files afterwards.
 
 ## Before you commit
 
 ```bash
-# here, in the corpus
-./kac validate                     # the corpus
-./kac index --check                # generated output is fresh
-
-# from the repository above it, which holds the tool and the tests that prove it
-dotnet test tooling/kac.tests      # unit
-dotnet test tooling/kac.features   # Reqnroll behaviour specs
-dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and checks-table gates
+kac validate       # the corpus
+kac index --check  # generated output is fresh
 ```
 
-All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
-leave you green locally and red in CI. Run **one `kac` invocation at a time**: file-based apps share build output and
-contend.
+Both gate the branch, so a clean local run is what a pull request expects rather than something to aim for.
 
 ## Conventions
 
 * **Regenerate rather than edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter,
-  then run `./kac index`. A schema edit without a regeneration fails CI.
+  then run `kac index`. A schema edit without a regeneration fails CI.
 * **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt — a URL cannot be broken.
   `.editorconfig` says so and no check enforces it.
 * **Write what exists today.** Agreed and unbuilt work goes to the issue tracker. One exception: a schema rule the tool
@@ -45,14 +36,12 @@ contend.
   file reads in one voice and someone arriving cold cannot tell which paragraph is newest.
 * **Say it once.** Cite rather than duplicate. A paragraph that belongs in two documents belongs in
   `knowledge-as-code/`, written a single time.
-* **Extend one fictional estate** — Example Libraries, a public-library consortium, on `example.com`, which RFC 2606
-  reserves. [`README.md`](README.md) explains why.
 * **Branch and open a PR.** Pushes to `main` are rejected.
 
 ## Writing a record
 
 **How a document is written follows its tier, not its type.** Read all three pages below before writing or rewriting
-one: a runbook step and an ADR paragraph obey different constraints, and nothing in CI will tell you that you used the
+one. A runbook step and an ADR paragraph obey different constraints, and nothing in CI will tell you that you used the
 wrong ones.
 
 * [`knowledge-as-code/style.md`](knowledge-as-code/style.md) — the rules for the words, which are the same in every
@@ -76,6 +65,5 @@ produce materially different work. Where the request looks mistaken, say so in a
 
 ## Going deeper
 
-* [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) — changing the validator, the generator, or the fixtures they are
-  tested against.
 * [`.schema/CLAUDE.md`](.schema/CLAUDE.md) — changing the schema, or writing a rule.
+* `kac --help`, and the repository the tool is built in — changing the validator or the generator themselves.
