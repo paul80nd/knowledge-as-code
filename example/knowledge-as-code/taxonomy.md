@@ -1,15 +1,16 @@
 # Taxonomy
 
-The kinds of knowledge this corpus holds, what each is for, and — more usefully — what each is *not*.
+> The kinds of knowledge this corpus holds, what each is for, and what each is not.
 
 Most mistakes here are placement mistakes, not writing mistakes. Someone writes a good document and puts it in the wrong
 folder, where it either duplicates something or is never found. The [decision table](#where-does-this-go) below is the
-quickest route to the right answer; the [disambiguations](#disambiguations) explain the calls that are genuinely close.
+quickest route to the right answer, and the [disambiguations](#disambiguations) explain the calls that are genuinely
+close.
 
 ## Where does this go?
 
-The types **this corpus holds**, generated from the schema and ordered by what you are holding rather than by where it
-ends up — so a corpus that has adopted five of them is offered five, and every row opens.
+The types this corpus holds, generated from the schema. The table is ordered by what you are holding rather than by
+where it ends up, so a corpus that has adopted five types is offered five, and every row opens.
 
 <!-- BEGIN GENERATED: types-placement -->
 
@@ -35,12 +36,12 @@ ends up — so a corpus that has adopted five of them is offered five, and every
 
 <!-- END GENERATED: types-placement -->
 
-Where you got to mid-piece-of-work is the one thing on nobody's list: session logs stay local and never reach the
-corpus.
+One thing appears on nobody's list: where you got to part-way through a piece of work. Session logs stay local and never
+reach the corpus.
 
-If nothing fits, raise it rather than improvising. A missing type is a taxonomy conversation; a `misc/` folder is a
-slow-motion failure. The framework declares more types than any one corpus stands up, so the answer may be to adopt one
-rather than to invent one.
+If nothing fits, raise it rather than improvising. A missing type is a taxonomy conversation. A `misc/` folder is a
+failure nobody notices until it is large. The framework declares more types than any one corpus stands up, so the answer
+may be to adopt one rather than to invent one.
 
 ## The types
 
@@ -135,15 +136,15 @@ level, so that "the build fails silently if X" has somewhere to go the moment it
 
 <!-- END GENERATED: types-detail -->
 
-**Session state** is the one thing with no type: where a piece of work got to, for handover between sessions, and **not
-stored in this repo**. Session logs routinely contain stack traces, connection strings and customer identifiers, so they
-stay local. Only distilled, reviewed discoveries reach the corpus.
+**Session state** is the one thing with no type: where a piece of work got to, for handover between sessions. This
+repository does not store it. Session logs routinely contain stack traces, connection strings and customer identifiers,
+so they stay local. Only distilled, reviewed discoveries reach the corpus.
 
 ## How the types relate
 
 The edges carry as much value as the nodes, and they are the part that breaks silently. Every one below is a
-cross-reference field the schema declares, so CI can check that it resolves to a document that exists. That is why they
-are declared rather than written as a link in prose.
+cross-reference field the schema declares, so CI can check that it resolves to a document that exists. That is why the
+schema declares them, rather than an author writing a link in prose.
 
 <!-- BEGIN GENERATED: types-graph -->
 
@@ -248,17 +249,17 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 <!-- END GENERATED: types-edges -->
 
 Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, `verifies` / `verified-by`,
-`promoted-from` / `promoted-to`. A one-sided link fails the build. The last column above is where you read that off: an
-empty cell means nobody answers that edge, and nobody has to keep it in step.
+`promoted-from` / `promoted-to`. A one-sided link fails the build. Read that off the last column above. An empty cell
+means nobody answers that edge, and nobody has to keep it in step.
 
-Not every edge is a pair. A standard's `implements` points up at a policy and is never answered from the policy side:
-policies are the layer a downstream corpus inherits, standards the layer it writes for itself, so what implements a
-policy is not knowable from where the policy sits.
+Not every edge is a pair. A standard's `implements` points up at a policy, and the policy never points back. Policies
+are the layer a downstream corpus inherits, and standards are the layer it writes for itself, so nobody sitting at the
+policy can know what implements it.
 
 Nor does every edge leave from a whole document. A policy aligns with a framework through a single **clause** rather
 than in its entirety, so the edge leaves the clause table and lands on a control — `pol-SCRT.KEYS` to Annex A A.8.24.
-[Frameworks](/frameworks.md) is the far end of every one of those edges, and the only place our standing against a
-framework is recorded. It carries no `ref:` and so appears in no row above.
+[Frameworks](/frameworks.md) is the far end of every one of those edges, and the only page that records our standing
+against a framework. It carries no `ref:` and so appears in no row above.
 
 ## Layout
 
@@ -272,11 +273,11 @@ Each type follows the same shape:
   └── <records>.md
 ```
 
-`_` is reserved. A leading underscore means the framework's own artefact rather than a knowledge record — the generated
-index and the template inside a type folder, the scaffolding directories alongside them. The tool reads the prefix, not
-the names, so anything under it is excluded from discovery and never validated as a record. A record must therefore not
-take it. The prefix also sorts ahead of letters whether or not a listing folds case, which is what keeps the framework's
-files together at the top of a folder someone is scanning for content.
+`_` is reserved. A leading underscore means the framework's own artefact rather than a knowledge record: the generated
+index and the template inside a type folder, and the scaffolding directories alongside them. The tool reads the prefix
+rather than the names, so it excludes anything under that prefix from discovery and never validates it as a record. A
+record must therefore not take it. The prefix also sorts ahead of letters whether or not a listing folds case, which is
+what keeps the framework's files together at the top of a folder someone is scanning for content.
 
 Alongside the types:
 
@@ -344,13 +345,13 @@ register.
 One more call has only one side here. A **capability** is the product surface — Billing, Search, Notifications —
 described once, above the epic layer, as a hub of links. A **spec** is the per-feature application of standards to a
 concrete contract, and it belongs in the repo that owns the feature, next to the API description and the feature files
-it describes. That follows the same central-versus-local rule as a decision record: cross-repo synthesis lives here,
+it describes. That follows the same central-versus-local rule as a decision record: cross-repo synthesis lives here, and
 feature-level detail lives with the code.
 
 ## Status of this taxonomy
 
-Not all types are proven. Where that matters to a corpus, its own README is where the state is recorded.
+Not all types are proven. Where that matters to a corpus, its own README records the state.
 
 Changing the taxonomy — adding a type, merging two, moving a type between tiers — is a larger act than editing any
-document within it. Where a corpus holds ADRs, it belongs in one, amending whichever recorded the taxonomy in the first
-place.
+document within it. Where a corpus holds ADRs, that change belongs in one, amending whichever recorded the taxonomy in
+the first place.
