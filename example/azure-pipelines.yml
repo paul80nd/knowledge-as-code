@@ -49,7 +49,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)
 
   - script: dotnet run --project tooling/kac -- generate --check
-    displayName: Check generated indexes are fresh
+    displayName: Check generated output is fresh
     workingDirectory: $(Build.SourcesDirectory)
 
   # Proves the corpus still exports. The shape it exports in is held by a golden

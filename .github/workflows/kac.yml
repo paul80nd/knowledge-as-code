@@ -37,7 +37,7 @@ jobs:
         working-directory: example
         run: dotnet run --project ../tooling/kac -- validate
 
-      - name: Check generated parts are fresh
+      - name: Check generated output is fresh
         working-directory: example
         run: dotnet run --project ../tooling/kac -- generate --check
 
