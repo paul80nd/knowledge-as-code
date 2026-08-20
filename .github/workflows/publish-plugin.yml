@@ -1,29 +1,12 @@
-# Publishing the plugin bundle (GitHub Actions).
+# Publishes what landed. On every push to main it rebuilds the export and the bundle from the merge
+# commit and writes the result to the `marketplace` branch, which is what a reader adds to Claude Code.
 #
-# kac.yml proves a change before it lands; this publishes what landed. On every push to main it
-# rebuilds the export and the bundle from the commit that merged, and writes the result to the
-# `marketplace` branch — the branch a reader adds to Claude Code.
+# One job here holds write, and the branch is what makes that safe: orphaned, never merged back, and
+# holding no file anyone authors, so nothing CI builds can reach the source a human edits. The one
+# place that could go wrong is the emptied worktree below, which is asserted rather than assumed.
 #
-# One job here is granted write, and the rule the other two files state is what makes that safe
-# rather than an exception to it. "A workflow must never push" is about generated files landing back
-# over the source a human edits, which is the failure `index --check` is shaped around: CI and an
-# author write the same file and the author loses. The `marketplace` branch shares no commit with
-# main, nothing merges it back, and it holds no file anyone authors. So no branch carrying
-# human-authored source is ever written to here, and there is no path by which published output
-# reaches the source tree. The rule holds by construction rather than by discipline, and that is why
-# the branch is orphaned rather than merely separate, and why the one place the orphan could carry
-# the source out is asserted rather than assumed.
-#
-# The work is split across two jobs so that the write is scoped as narrowly as the checkout is.
-# `verify` proves the bundle and holds read; `publish` writes the branch and holds write. Nothing
-# unpinned runs in the job holding the token: the Claude Code CLI is installed at `latest` on
-# purpose, and `latest` is a moving target, so it belongs where a moved tag cannot reach a push.
-# Do not merge the two jobs back to save a build — that is what the split costs and what it buys.
-#
-# Unlike `tooling/tests/round-trip.sh`, the script below is not shared with azure-pipelines.yml —
-# publishing to Azure DevOps is a pipeline of its own rather than a translation of this one, for
-# the same reason both CI files are forked in tooling/manifest.yaml. So it uses `$(...)` freely,
-# where a script the two platforms share cannot.
+# The two jobs exist so nothing unpinned runs beside the token. The Claude Code CLI is installed at
+# `latest` on purpose, so it belongs where a moved tag cannot reach a push. Do not merge them back.
 
 name: publish-plugin
 
@@ -35,8 +18,7 @@ on:
 permissions:
   contents: read
 
-# Two merges in quick succession would otherwise race for the same branch tip. Queued rather than
-# cancelled: the loser still carries a version the winner does not.
+# Queued rather than cancelled: the loser still carries a version the winner does not.
 concurrency:
   group: publish-marketplace
   cancel-in-progress: false
@@ -49,18 +31,13 @@ jobs:
   # Everything that has to be true before anything is published, in a job that cannot publish.
   verify:
     runs-on: ubuntu-latest
-    # Stated rather than inherited from the file default. It is the reason an unpinned CLI is
-    # allowed to run here at all, so it should be readable without scrolling up.
+    # Stated rather than inherited: it is why an unpinned CLI may run in this job.
     permissions:
       contents: read
-    # A hung `npm install` would otherwise hold the concurrency group for the runner's six-hour
-    # default and queue every merge behind it. Twenty minutes is several times the longest run this
-    # does, so it fires on a hang rather than on a slow morning.
+    # Short enough that a hung `npm install` fails rather than holding the group for six hours.
     timeout-minutes: 20
     steps:
-      # Actions are pinned to a commit rather than a tag: a tag is mutable, so a moved tag would
-      # change what runs here without changing this file. Dependabot moves the pins, and the trailing
-      # comment is what makes the diff legible when it does.
+      # Pinned to a commit because a tag is mutable. Dependabot moves the pins.
       - name: Check out the commit that merged
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -69,14 +46,8 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # One invocation per subcommand, run sequentially. Concurrent runs build the same project and
-      # contend over its output, so the kac runs must not overlap.
-      #
-      # The gate ran against the pull request's head. What merged is a different commit, because
-      # main moved beneath it, so the corpus is validated once more before anything is published.
-      #
-      # Each runs from `example/`, because kac takes the first ancestor holding a `.schema/` as the
-      # corpus and the repository root is not one.
+      # Sequential, because concurrent runs build the same project and contend over its output. The
+      # gate ran against the pull request's head, and main moved beneath it, so this asks again.
       - name: Validate frontmatter, links and structure
         working-directory: example
         run: dotnet run --project ../tooling/kac -- validate
@@ -89,27 +60,20 @@ jobs:
         working-directory: example
         run: dotnet run --project ../tooling/kac -- bundle
 
-      # Taken at `latest` rather than pinned, for the reason kac.yml gives: the bundle has to be
-      # valid against the CLI a reader actually runs, so pinning it would settle into proving the
-      # bundle against a CLI nobody has. That reason holds only where the CLI cannot reach a push,
-      # which is what confines this step and the one after it to the read-only job.
+      # Unpinned for the reason kac.yml gives, which holds only where the CLI cannot reach a push.
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest
 
-      # The last thing standing between a broken bundle and the people who have it installed. The
-      # gate ran this too; running it again is what covers the merge commit it never saw.
+      # The last thing between a broken bundle and the people who have it installed.
       - name: Validate the assembled plugin and its marketplace
         working-directory: example
         run: |
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
 
-  # The only job granted write, and the only one that writes a ref on the remote.
-  #
-  # It rebuilds rather than taking an artifact from `verify`. The two builds differ only in the
-  # export manifest's `generatedAt` — `export.md` states that two runs from one commit produce
-  # identical bytes but for that field — so there is nothing an artifact hand-off would preserve,
-  # and it would add a second way for the published tree to disagree with the validated one.
+  # The only job granted write. It rebuilds rather than taking an artifact from `verify`: two runs
+  # from one commit produce identical bytes but for the manifest's `generatedAt`, so a hand-off would
+  # preserve nothing and add a second way for the two trees to disagree.
   publish:
     needs: verify
     runs-on: ubuntu-latest
@@ -119,9 +83,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      # The whole history rather than the last commit. The publish below commits on top of the
-      # branch tip it fetched, and a commit whose parent arrived in a shallow fetch is the one shape
-      # of push worth not discovering in production.
+      # Whole history: the publish commits on top of a fetched branch tip, and a shallow parent is
+      # the one shape of push worth not discovering in production.
       - name: Check out the commit that merged
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -132,8 +95,8 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Every link the export writes names the commit HEAD stands on, which here is the commit that
-      # merged — a commit the raw host serves. One invocation per subcommand, run sequentially.
+      # Every link the export writes names the commit HEAD stands on, which here is one the raw host
+      # serves.
       - name: Build the export
         working-directory: example
         run: dotnet run --project ../tooling/kac -- export
@@ -142,14 +105,9 @@ jobs:
         working-directory: example
         run: dotnet run --project ../tooling/kac -- bundle
 
-      # A version that has not moved publishes nothing. Claude Code pins an installed plugin to the
-      # `version` in its manifest and offers an update only when that string changes, so a push
-      # carrying the same content-version reaches nobody and leaves a commit saying otherwise. The
-      # version already on the branch is read first, and a match ends the job here.
-      #
-      # `kac bundle` stamps the corpus content-version into the manifest, so this compares the two
-      # corpora rather than two build numbers. The consequence is the one the corpus asks for: a
-      # change to a record that does not move content-version in .corpus.yaml is not published.
+      # Claude Code offers an update only when the manifest `version` string changes, so a push
+      # carrying the same content-version reaches nobody. A match ends the job here rather than
+      # leaving a commit that says otherwise.
       - name: Publish the bundle to the marketplace branch
         working-directory: example
         env:
@@ -160,9 +118,7 @@ jobs:
 
           BUILT=$(jq -r '.version' .dist/plugin/.claude-plugin/plugin.json)
 
-          # Both names are read rather than written down, the way round-trip.sh reads them: a corpus
-          # names its own plugin and its own marketplace, and the two words a reader types to install
-          # are those names rather than anything this file knows.
+          # Read rather than written down: a corpus names its own plugin and marketplace.
           PLUGIN=$(jq -r '.plugins[0].name' .dist/.claude-plugin/marketplace.json)
           MARKETPLACE=$(jq -r '.name' .dist/.claude-plugin/marketplace.json)
 
@@ -181,10 +137,8 @@ jobs:
           fi
 
           # A worktree rather than a second clone, so the branch is built with the credentials the
-          # checkout already holds. The two arms leave HEAD in different shapes — detached at the
-          # published tip, or on the unborn branch `--orphan` creates — and neither needs a local
-          # branch of its own, because the push at the foot names the ref it writes rather than
-          # relying on whatever HEAD is called.
+          # checkout already holds. The push at the foot names the ref it writes, so neither arm
+          # needs a local branch whatever shape it leaves HEAD in.
           if [ -n "$EXISTS" ]; then
             git worktree add --detach "$WORKTREE" "origin/$BRANCH"
           else
@@ -192,12 +146,9 @@ jobs:
             git -C "$WORKTREE" checkout --orphan "$BRANCH"
           fi
 
-          # Emptied in both arms, so the branch holds what this build put there and nothing a
-          # previous one left. It is also the whole of the orphan case's safety: `checkout --orphan`
-          # keeps the index and the working tree by design, so until this has run the worktree still
-          # holds every file in main, and the `git add -A` below would stage them. Asserted rather
-          # than assumed, because that assertion is what makes "no path from what CI builds to the
-          # source" a property of this script instead of a claim about it.
+          # `checkout --orphan` keeps the index and working tree by design, so until this runs the
+          # worktree still holds every file in main and the `git add -A` below would stage them.
+          # Asserted rather than assumed: this is what keeps the source out of the published branch.
           git -C "$WORKTREE" rm -rf --quiet .
 
           if [ -n "$(git -C "$WORKTREE" ls-files)" ]; then
@@ -205,15 +156,12 @@ jobs:
             exit 1
           fi
 
-          # `.dist/` is the marketplace root, so its contents become the branch root: the plugin
-          # source in marketplace.json is `./plugin` and resolves against whatever directory holds
-          # `.claude-plugin/`. The export is left behind — the plugin carries its own copy under
-          # `corpus/`, and the one at `.dist/export/` is the same bytes a second time.
+          # `.dist/` is the marketplace root, so its contents become the branch root. The export is
+          # left behind: the plugin already carries the same bytes under `corpus/`.
           cp -R .dist/.claude-plugin "$WORKTREE/.claude-plugin"
           cp -R .dist/plugin "$WORKTREE/plugin"
 
-          # Someone arriving at this branch in a browser sees generated files and no source. This is
-          # what tells them where the source is and that editing here is pointless.
+          # Tells someone arriving in a browser where the source is, and that editing here is pointless.
           cat > "$WORKTREE/README.md" <<EOF
           # knowledge-as-code — the plugin marketplace
 
