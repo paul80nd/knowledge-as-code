@@ -1,7 +1,8 @@
 # Architecture Decision Records
 
-The type this corpus adopted. `index` regenerates the two blocks below from the schema, and rebuilds
-`adrs/_index.md` from the frontmatter of the ADRs beside it.
+This is a fixture type page. `generate` regenerates the two blocks below from the schema, and rebuilds
+`adrs/_index.md` from the frontmatter of the ADRs in this corpus. Everything outside the markers is
+byte-preserved.
 
 ## Metadata
 

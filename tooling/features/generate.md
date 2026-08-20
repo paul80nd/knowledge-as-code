@@ -1,27 +1,27 @@
-# `index` — generation
+# `generate` — the derived half of a corpus
 
 ## Intent
 
-`index` regenerates the content of a corpus that is derived from frontmatter and the schema, so that nobody maintains it
-by hand. Its readers are the people who read the corpus: a type's index page, the frontmatter reference and checks table
-on a type page, and the taxonomy's own tables are all written from what the corpus holds now. Only the region between
-each pair of markers is rewritten, so the words around a generated block stay the author's.
+`generate` regenerates the content of a corpus that is derived from frontmatter and the schema, so that nobody
+maintains it by hand. Its readers are the people who read the corpus: a type's index page, the frontmatter reference
+and checks table on a type page, and the taxonomy's own tables are all written from what the corpus holds now. Only
+the region between each pair of markers is rewritten, so the words around a generated block stay the author's.
 
 ## What it is not
 
-**It is not `export`.** `index` writes Markdown into the corpus for a person to read. `export` writes JSON outside it
+**It is not `export`.** `generate` writes Markdown into the corpus for a person to read. `export` writes JSON outside it
 for an agent. Both are built from the same frontmatter, and a change to one implies nothing about the other.
 
-**`index --check` is not `mechanism --check`.** This one recomputes a corpus's generated content from that corpus's own
-records and compares. The other compares a corpus's authored files against an upstream copy. A file can be fresh and
-drifted, or in step and stale.
+**`generate --check` is not `mechanism --check`.** This one recomputes a corpus's generated content from that
+corpus's own records and compares. The other compares a corpus's authored files against an upstream copy. A file can
+be fresh and drifted, or in step and stale.
 
 **It will not stand a type up.** Generation covers what the corpus adopted, so a folder appearing without its type
-declared is not something `index` fills in. `validate` reports it.
+declared is not something `generate` fills in. `validate` reports it.
 
 ## Approach
 
-`index` writes the content derived from frontmatter and the schema:
+`generate` writes the content derived from frontmatter and the schema:
 
 | Artefact                                             | Built from                              | Rule                                                                                                                                                                                                                               |
 |------------------------------------------------------|-----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -45,15 +45,15 @@ not declared is read off its folders — a type counts where both halves are the
 
 A type the corpus declined is left alone whatever `.schema/` says about it, down to the hand-written text between the
 markers on a page left behind. Writing there would create an artefact no generated list of this corpus's types names,
-and `index --check` would then hold the corpus to keeping it fresh. Standing a type up without adopting it is a defect
-`validate` reports.
+and `generate --check` would then hold the corpus to keeping it fresh. Standing a type up without adopting it is a
+defect `validate` reports.
 
 Two rules hold this together:
 
-- **CI never commits.** `index` writes locally. In CI, run `index --check`: it recomputes the generated content, and if
-  any file differs it prints the stale files, names the command to run (`kac index`), and exits `1`. A pipeline never
-  pushes.
-- **Output is byte-stable.** Generation is a pure function of frontmatter + schema, so running
-  `index` twice produces no diff. Tables use fixed column widths, `|` is escaped, and files are LF with a trailing
-  newline — so if a Markdown formatter is added later, the freshness check keeps working instead of failing forever.
+- **CI never commits.** `generate` writes locally. In CI, run `generate --check`: it recomputes the generated content,
+  and if any file differs it prints the stale files, names the command to run (`kac generate`), and exits `1`. A
+  pipeline never pushes.
+- **Output is byte-stable.** Generation is a pure function of frontmatter + schema, so running `generate` twice
+  produces no diff. Tables use fixed column widths, `|` is escaped, and files are LF with a trailing newline — so if a
+  Markdown formatter is added later, the freshness check keeps working instead of failing forever.
 

@@ -1,12 +1,12 @@
 // ---------------------------------------------------------------------------
-// What `kac index` writes, and where
+// What `kac generate` writes, and where
 // ---------------------------------------------------------------------------
 
 namespace kac.core;
 
 // The one account of which files carry generated blocks and which blocks each one carries.
 //
-// Two commands read it and both need the same answer: `index` writes the blocks, and `validate` holds
+// Two commands read it and both need the same answer: `generate` writes the blocks, and `validate` holds
 // each file to still carrying the markers to write between. A block named in one of those places and not
 // the other is written and never checked, or checked for and never written, and neither state announces
 // itself.
@@ -44,9 +44,9 @@ public static class GeneratedFiles
         public bool Stale => Current != Wanted;
     }
 
-    // Every generated file and what it should hold, in the order `index` writes them.
+    // Every generated file and what it should hold, in the order `generate` writes them.
     //
-    // Reads nothing and writes nothing: everything it needs arrives in its arguments, so what `index`
+    // Reads nothing and writes nothing: everything it needs arrives in its arguments, so what `generate`
     // comes to is decidable from a listing and a set of records. `Write` is the half that acts.
     //
     // A file the corpus does not hold is skipped rather than created — the generator populates structure
@@ -98,8 +98,8 @@ public static class GeneratedFiles
     // what it should is left alone rather than rewritten, so a regeneration that changes nothing touches
     // nothing and says so — which the plan has already decided, so this asks the disk nothing.
     //
-    // `index` and `mechanism --sync` both end here, so a sync writes what an index would write and the
-    // two cannot come to different files.
+    // `generate` and `mechanism --sync` both end here, so a sync writes what a generation would write and
+    // the two cannot come to different files.
     public static List<string> Write(string corpusRoot, IEnumerable<GeneratedFile> plan)
     {
         var written = new List<string>();

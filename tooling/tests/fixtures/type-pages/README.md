@@ -1,10 +1,10 @@
 Type pages and framework documents, and the passes they get.
 
 `adrs.md` is a type page, checked for its links, its generated blocks and its frontmatter. It fails all three. Its link
-resolves to nothing. Its `schema-adrs` block has lost its BEGIN marker, which leaves `kac index` writing nothing there
-while `index --check` still calls the page fresh. And it carries a record's frontmatter, the residue of a type that used
-to be a single document. Nothing else would report that last one: a page is forked, so it is never compared against
-upstream.
+resolves to nothing. Its `schema-adrs` block has lost its BEGIN marker, which leaves `kac generate` writing nothing
+there while `generate --check` still calls the page fresh. And it carries a record's frontmatter, the residue of a type
+that used to be a single document. Nothing else would report that last one: a page is forked, so it is never compared
+against upstream.
 
 `glossary/knowledge-as-code.md` is the framework's own vocabulary: a record, and a document every corpus shares. It is
 the one file that gets both passes, so it is where the two are held apart. Its link to a type page is reported once, for
@@ -18,7 +18,7 @@ breaks a template deliberately is `broken-template`.
 `knowledge-as-code/taxonomy.md` is a framework document, and gets three passes: its markers, its links, and the naming
 rule.
 
-It carries the five blocks `kac index` writes into it, and the `types-graph` pair has lost its BEGIN marker. One pass
+It carries the five blocks `kac generate` writes into it, and the `types-graph` pair has lost its BEGIN marker. One pass
 reads one list and holds a type's page and a framework document to it alike, so the fault reads here exactly as it does
 on `adrs.md` above. A document excluded from discovery is reached at all only because the generator's list names it.
 

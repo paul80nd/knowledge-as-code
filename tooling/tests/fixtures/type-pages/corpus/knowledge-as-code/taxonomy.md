@@ -25,7 +25,7 @@ up rather than from the framework's full range, and naming a type in prose: an A
 <!-- BEGIN GENERATED: types-versus -->
 <!-- END GENERATED: types-versus -->
 
-The block below has lost its BEGIN marker, so `kac index` stops writing the relation diagram and says nothing.
+The block below has lost its BEGIN marker, so `kac generate` stops writing the relation diagram and says nothing.
 
 <!-- END GENERATED: types-graph -->
 

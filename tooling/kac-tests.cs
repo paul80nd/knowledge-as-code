@@ -81,23 +81,24 @@ foreach (var scenario in scenarios)
     var name = Path.GetFileName(scenario);
     var corpusDir = Path.Combine(scenario, "corpus");
     // A scenario's `mode` file selects what is asserted; absent means the default, a validate diff.
-    //   validate     run `validate --json`, diff findings against expected.json (contributes coverage)
-    //   index        run `index --check`, assert the committed generated files are fresh (exit 0)
-    //   index-stale  run `index --check` against a hand-broken corpus, assert staleness is caught (exit 1)
-    //   mechanism    run `mechanism --check` (corpus/ as local, reference/ as the source); assert
-    //                the synced paths in expected-drift.txt are flagged (exit 1), or in step (exit 0)
-    //   sync         run `mechanism --sync` the same way, then assert the tree it left: the lines in
-    //                expected-sync.txt appear in the output, every path in expected-files.txt is present
-    //                afterwards (or absent, where the line is prefixed `!`), and every
-    //                `<path> :: <text>` in expected-content.txt holds (or does not, prefixed `!`)
-    //   export       run `export` (with `--type <t>` where export-type is present), then assert the
-    //                tree it wrote: whole-file against the committed export under expected-dist/, plus
-    //                the same three files sync uses. A second run over an output seeded with a stray
-    //                file asserts the overwrite is delete-then-write
-    //   bundle       lay the fixture's plugin/ down as .plugin/, run `export` then `bundle`, and assert
-    //                the plugin it assembled: the lines in expected-bundle.txt, the tree files sync and
-    //                export use, that the copied export is byte-identical to the one it was copied
-    //                from, and that a stray file does not survive a second run
+    //   validate        run `validate --json`, diff findings against expected.json (contributes coverage)
+    //   generate        run `generate --check`, assert the committed generated files are fresh (exit 0)
+    //   generate-stale  run `generate --check` against a hand-broken corpus, assert staleness is caught
+    //                   (exit 1)
+    //   mechanism       run `mechanism --check` (corpus/ as local, reference/ as the source); assert
+    //                   the synced paths in expected-drift.txt are flagged (exit 1), or in step (exit 0)
+    //   sync            run `mechanism --sync` the same way, then assert the tree it left: the lines in
+    //                   expected-sync.txt appear in the output, every path in expected-files.txt is
+    //                   present afterwards (or absent, where the line is prefixed `!`), and every
+    //                   `<path> :: <text>` in expected-content.txt holds (or does not, prefixed `!`)
+    //   export          run `export` (with `--type <t>` where export-type is present), then assert the
+    //                   tree it wrote: whole-file against the committed export under expected-dist/, plus
+    //                   the same three files sync uses. A second run over an output seeded with a stray
+    //                   file asserts the overwrite is delete-then-write
+    //   bundle          lay the fixture's plugin/ down as .plugin/, run `export` then `bundle`, and
+    //                   assert the plugin it assembled: the lines in expected-bundle.txt, the tree files
+    //                   sync and export use, that the copied export is byte-identical to the one it was
+    //                   copied from, and that a stray file does not survive a second run
     var modePath = Path.Combine(scenario, "mode");
     var mode = File.Exists(modePath) ? File.ReadAllText(modePath).Trim() : "validate";
 
@@ -108,11 +109,11 @@ foreach (var scenario in scenarios)
             case "validate":
                 RunValidateScenario(name, scenario, corpusDir);
                 break;
-            case "index":
-                RunIndexScenario(name, scenario, mustBeStale: false);
+            case "generate":
+                RunGenerateScenario(name, scenario, mustBeStale: false);
                 break;
-            case "index-stale":
-                RunIndexScenario(name, scenario, mustBeStale: true);
+            case "generate-stale":
+                RunGenerateScenario(name, scenario, mustBeStale: true);
                 break;
             case "mechanism":
                 RunMechanismScenario(name, scenario, corpusDir);
@@ -181,21 +182,21 @@ void RunValidateScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// index (mustBeStale=false): the committed corpus already holds fresh generated files; `--update`
-// regenerates them, a normal run asserts `index --check` finds them fresh (exit 0). The golden is
+// generate (mustBeStale=false): the committed corpus already holds fresh generated files; `--update`
+// regenerates them, a normal run asserts `generate --check` finds them fresh (exit 0). The golden is
 // the committed _index.md / <type>.md itself — reviewable in git, kept fresh by `--update`.
-// index-stale (mustBeStale=true): the corpus is deliberately stale; the run asserts `--check` flags
+// generate-stale (mustBeStale=true): the corpus is deliberately stale; the run asserts `--check` flags
 // it (exit 1) and, if expected-stale.txt is present, names those files. `--update` leaves it alone.
-void RunIndexScenario(string name, string scenario, bool mustBeStale)
+void RunGenerateScenario(string name, string scenario, bool mustBeStale)
 {
     var corpusDir = Path.Combine(scenario, "corpus");
 
     if (update && !mustBeStale)
     {
-        RegenerateIndex(kac, schemaDir, corpusDir);
-        var (rexit, _) = RunIndex(kac, schemaDir, corpusDir, check: true);
+        Regenerate(kac, schemaDir, corpusDir);
+        var (rexit, _) = RunGenerate(kac, schemaDir, corpusDir, check: true);
         Console.WriteLine(rexit == 0
-            ? $"UPDATE {name}  (index regenerated, fresh)"
+            ? $"UPDATE {name}  (regenerated, fresh)"
             : $"UPDATE {name}  — WARNING: still stale after regen");
         return;
     }
@@ -206,14 +207,14 @@ void RunIndexScenario(string name, string scenario, bool mustBeStale)
         return;
     }
 
-    var (exit, output) = RunIndex(kac, schemaDir, corpusDir, check: true);
+    var (exit, output) = RunGenerate(kac, schemaDir, corpusDir, check: true);
 
     if (mustBeStale)
     {
         if (exit == 0)
         {
             failures.Add(name);
-            Console.WriteLine($"FAIL   {name}  — expected index --check to detect staleness, but it exited 0");
+            Console.WriteLine($"FAIL   {name}  — expected generate --check to detect staleness, but it exited 0");
             return;
         }
 
@@ -896,17 +897,17 @@ static (string json, int exit) RunValidate(string kac, string schemaDir, string 
     }
 }
 
-// Run `kac index` (optionally --check) against an assembled corpus; return exit code and combined
+// Run `kac generate` (optionally --check) against an assembled corpus; return exit code and combined
 // output. With check:true, exit 0 means the generated files match the generator, non-zero means
 // stale (the stale files are named in the output).
-static (int exit, string output) RunIndex(string kac, string schemaDir, string corpusDir, bool check)
+static (int exit, string output) RunGenerate(string kac, string schemaDir, string corpusDir, bool check)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);
     try
     {
         string[] argv = check
-            ? [kac, "index", "--check"]
-            : [kac, "index"];
+            ? [kac, "generate", "--check"]
+            : [kac, "generate"];
         var (stdout, stderr, exit) = Run(temp, "dotnet", argv);
         return (exit, stderr + stdout);
     }
@@ -916,16 +917,16 @@ static (int exit, string output) RunIndex(string kac, string schemaDir, string c
     }
 }
 
-// Regenerate a scenario's committed generated files: run `kac index` (writing) in a temp assembled
+// Regenerate a scenario's committed generated files: run `kac generate` (writing) in a temp assembled
 // from the corpus, then copy everything the corpus owns (all but knowledge-as-code/) back over it.
-// index leaves source docs untouched, so only _index.md and the spliced <type>.md change.
-static void RegenerateIndex(string kac, string schemaDir, string corpusDir)
+// `generate` leaves source docs untouched, so only _index.md and the spliced <type>.md change.
+static void Regenerate(string kac, string schemaDir, string corpusDir)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);
     try
     {
-        var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "index");
-        if (exit != 0) throw new Exception($"kac index failed (exit {exit}).\n{Indent(stderr)}");
+        var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "generate");
+        if (exit != 0) throw new Exception($"kac generate failed (exit {exit}).\n{Indent(stderr)}");
 
         // Only what the corpus itself owns comes back. `.schema/` is the real one, copied in to assemble
         // the run, and writing it back would commit a stale duplicate of the schema into the fixture.

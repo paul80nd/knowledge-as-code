@@ -191,7 +191,7 @@ public static class Generator
     // Edges are labelled `-- text -->` rather than `-->|text|`. The two are the same diagram, but a
     // markdown formatter reading a file for tables finds pipes in the second and reformats what it takes
     // for cells — `superseded-by` came back as `superseded - by`, inside a fenced block it should never
-    // have entered. `index --check` catches it, which is the guard working; not provoking it is better.
+    // have entered. `generate --check` catches it, which is the guard working; not provoking it is better.
     public static string RelationDiagram(IEnumerable<TypeSchema> types)
     {
         var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
@@ -444,7 +444,7 @@ public static class Generator
     // by SchemaChecks so a schema's own rules are held to the same bound as the rows written below.
     public const int DescriptionMax = 120;
 
-    // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that `kac index`
+    // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that `kac generate`
     // splices into every type page. It is deliberately not the raw catalogue — related checks are folded
     // into one row (the three `id-*` checks read as one `id` row) and worded for a human skim. Generating
     // it from the catalogue instead would change what the table means, so each row names the catalogue
@@ -658,10 +658,10 @@ public static class Generator
     // A page with its generated blocks emptied, leaving the markers and everything a person wrote.
     //
     // `mechanism --check` compares this, so a shared page may carry a block derived from the corpus holding
-    // it. Two corpora running the same framework hold the same prose and a
-    // different table beneath it, and both are correct. The division is exact: `index --check` answers
-    // for the generated half against the local schema, `mechanism --check` for the authored half against
-    // the reference, and neither has an opinion about the other's.
+    // it. Two corpora running the same framework hold the same prose and a different table beneath it, and
+    // both are correct. The division is exact: `generate --check` answers for the generated half against
+    // the local schema, `mechanism --check` for the authored half against the reference, and neither has an
+    // opinion about the other's.
     //
     // The markers stay, so deleting a block — rather than regenerating it — is still drift. An unclosed
     // marker leaves the rest of the page compared as written, which is the honest reading of a file whose

@@ -16,8 +16,8 @@ To decline a type, leave it out of `types:` rather than deleting files afterward
 ## Before you commit
 
 ```bash
-kac validate       # the corpus
-kac index --check  # generated output is fresh
+kac validate          # the corpus
+kac generate --check  # generated output is fresh
 ```
 
 Both gate the branch, so a clean local run is what a pull request expects rather than something to aim for.
@@ -25,7 +25,7 @@ Both gate the branch, so a clean local run is what a pull request expects rather
 ## Conventions
 
 * **Regenerate rather than edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter,
-  then run `kac index`. A schema edit without a regeneration fails CI.
+  then run `kac generate`. A schema edit without a regeneration fails CI.
 * **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt — a URL cannot be broken.
   `.editorconfig` says so and no check enforces it.
 * **Write what exists today.** Agreed and unbuilt work goes to the issue tracker. One exception: a schema rule the tool

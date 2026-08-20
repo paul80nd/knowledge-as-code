@@ -55,8 +55,8 @@ layers:
     rule: Generated automatically from corpus content.
     on-drift: ignore
     notes: >
-      Output of `kac index`: type pages, corpus indexes and reports. Each corpus
-      builds its own from its own records, and `index --check` covers freshness.
+      Output of `kac generate`: type pages, corpus indexes and reports. Each corpus
+      builds its own from its own records, and `generate --check` covers freshness.
 
   local:
     rule: Corpus-owned content.
@@ -176,7 +176,7 @@ rules:
     note: >
       Shared prose around generated blocks. The tables are built from the types this
       corpus adopted, so the file differs between corpora by design: `mechanism
-      --check` compares the authored half of the page, and `index --check` covers
+      --check` compares the authored half of the page, and `generate --check` covers
       what lies between the markers.
 
   - { path: "knowledge-as-code/metadata.md",     layer: synced }

@@ -28,14 +28,14 @@ max_line_length = 120
 # only the first gives ragged output rather than a reflow.
 #
 # The one trailing-space hard break in the corpus is the legend under a generated schema
-# table, which a reflow must leave alone. `kac index --check` fails if one eats it.
+# table, which a reflow must leave alone. `kac generate --check` fails if one eats it.
 ij_markdown_wrap_text_if_long = true
 ij_markdown_keep_line_breaks_inside_text_blocks = false
 
 # kac writes table separators as |------|, dashes filling the padding cells, because that
 # is the form the JetBrains formatter normalises to. There is no vendor-neutral property
 # for this, so a formatter preferring | ---- | (Prettier, for one) will still disagree and
-# this file cannot stop it. CI is the real guard: `kac index --check` fails on any generated
+# this file cannot stop it. CI is the real guard: `kac generate --check` fails on any generated
 # file that differs from what the generator would write.
 ij_markdown_format_tables = true
 

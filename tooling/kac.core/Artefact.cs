@@ -18,7 +18,7 @@ public static class Artefact
 {
     private const char Prefix = '_';
 
-    // The index `kac index` writes into every collection type's folder.
+    // The index `kac generate` writes into every collection type's folder.
     public const string Index = "_index.md";
 
     // The template a contributor copies. Written by hand, and held to the schema it teaches: it is not a

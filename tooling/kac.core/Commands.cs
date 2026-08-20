@@ -126,7 +126,7 @@ public static class Commands
         return 0;
     }
 
-    public static int Index(string corpusRoot, bool check)
+    public static int Generate(string corpusRoot, bool check)
     {
         var corpus = Corpus.Load(corpusRoot);
 
@@ -140,14 +140,14 @@ public static class Commands
             var stale = plan.Where(f => f.Stale).Select(f => f.Path).ToList();
             if (stale.Count == 0)
             {
-                Console.WriteLine($"index is up to date ({plan.Count} generated file(s)).");
+                Console.WriteLine($"generated files are up to date ({plan.Count} file(s)).");
                 return 0;
             }
 
             Console.Error.WriteLine(
-                "index is stale — the following generated files differ from the schema/frontmatter:");
+                "generated files are stale — these differ from the schema/frontmatter:");
             foreach (var s in stale) Console.Error.WriteLine($"  {s}");
-            Console.Error.WriteLine("run:  kac index");
+            Console.Error.WriteLine("run:  kac generate");
             return 1;
         }
 
@@ -156,14 +156,14 @@ public static class Commands
     }
 
     // What a regeneration wrote. Shared with `mechanism --sync`, which ends by regenerating, so that a
-    // sync reports the files it rebuilt in the words `index` uses for the same work.
+    // sync reports the files it rebuilt in the words `generate` uses for the same work.
     private static void ReportWritten(List<string> written)
     {
         foreach (var path in written) Console.WriteLine($"wrote {path}");
 
         Console.WriteLine(written.Count == 0
-            ? "index already up to date; nothing written."
-            : $"index updated {written.Count} file(s).");
+            ? "generated files already up to date; nothing written."
+            : $"updated {written.Count} generated file(s).");
     }
 
     private static int Report(List<Finding> findings, int validated, int templates, int skipped, bool json)
@@ -395,7 +395,7 @@ public static class Commands
 
         // Every synced page may carry a generated block built from this corpus's own types, so the copies
         // above are only right once rebuilt against what this corpus holds. Regenerating here makes a
-        // passing `index --check` sync's postcondition instead of the reader's next surprise.
+        // passing `generate --check` sync's postcondition instead of the reader's next surprise.
         return Regenerate(corpusRoot);
 
         static void Section(string heading, IReadOnlyList<string> paths)
@@ -423,7 +423,7 @@ public static class Commands
             Console.Error.WriteLine($"mechanism sync: regeneration failed — {ex.Message}");
             Console.Error.WriteLine(
                 "mechanism sync: the files are in place but the generated blocks were not rebuilt. "
-                + "Run kac validate to see what the corpus is missing, then kac index.");
+                + "Run kac validate to see what the corpus is missing, then kac generate.");
             return 1;
         }
     }

@@ -156,8 +156,8 @@ decide. That list is worth more than a larger diff.
    record rewarded and finishes feeling finished. Naming the ten in turn is what makes two runs over the same folder
    agree, and agreement is worth more than any single run's perceptiveness.
 7. **Check what you produced** against the checklist below.
-8. **Run `kac validate`** again and, if any frontmatter changed, `kac index`. A rewrite that fails validation is not a
-   rewrite.
+8. **Run `kac validate`** again and, if any frontmatter changed, `kac generate`. A rewrite that fails validation is not
+   a rewrite.
 9. **Report** in the shape given below. Propose; do not commit. Open a PR if asked — pushes to `main` are rejected.
 
 ## Before you hand it back

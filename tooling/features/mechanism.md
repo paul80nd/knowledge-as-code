@@ -14,9 +14,9 @@ of this one.
 **It is not `git pull`.** The two trees are separate repositories with separate histories. `--sync` copies the shared
 layers file by file and records what it took; it merges nothing, and neither half reads either side's commits.
 
-**It is not `index --check`.** Both recompute and compare, and they compare different halves of a file. `mechanism`
+**It is not `generate --check`.** Both recompute and compare, and they compare different halves of a file. `mechanism`
 empties every generated block before it compares, so what it judges is the authored prose. What sits between the markers
-is `index --check`'s alone, and a shared page can be byte-identical everywhere and stale everywhere.
+is `generate --check`'s alone, and a shared page can be byte-identical everywhere and stale everywhere.
 
 **It is not `validate`.** Drift is not invalidity. A corpus that has edited its copy of the schema has drifted and may
 be entirely valid; a corpus in step with upstream may be full of broken records.
@@ -29,8 +29,8 @@ then writes. Neither touches a layer the manifest says a corpus owns.
 ### `--check`
 
 `mechanism --check` resolves every tracked file against the manifest and compares the shared layers against a reference
-corpus. It follows the same discipline as `index --check`: recompute, compare, name what differs, exit non-zero, never
-write.
+corpus. It follows the same discipline as `generate --check`: recompute, compare, name what differs, exit non-zero,
+never write.
 
 ```bash
 kac mechanism --check --against ../other-corpus
@@ -63,8 +63,8 @@ a deletion nobody recorded. A descriptor that declares neither takes the whole s
 then compares the **authored half** of each file, emptying everything between `BEGIN GENERATED` and `END GENERATED`
 first. A shared page may therefore carry a block built from the corpus holding it — the taxonomy's tables list the types
 that corpus adopted — while the prose around the block stays byte-identical everywhere. The markers themselves are
-compared, so deleting a block rather than regenerating it is still drift. `index --check` stays the one voice on whether
-the generated half is right.
+compared, so deleting a block rather than regenerating it is still drift. `generate --check` stays the one voice on
+whether the generated half is right.
 
 ### `--sync`
 
@@ -96,7 +96,7 @@ In one pass over both trees:
 Sync then stamps `descriptor-version`, `upstream.mechanism-version`, `synced-from` and `synced-on` into `.corpus.yaml`.
 It rewrites those four lines rather than re-serialising the file, so the descriptor's commentary survives. The file's
 own format is the mechanism's to state, because a corpus cannot know the shape a newer one writes. `content-version` is
-left alone: what a corpus knows is not something an upstream can tell it. Finally it runs `index`. Copying a page whole
-is only safe because of that last step: the page arrives carrying the reference's generated block, and is right only
-once rebuilt against the types the receiving corpus holds. A passing `index --check` is sync's postcondition.
+left alone: what a corpus knows is not something an upstream can tell it. Finally it runs `generate`. Copying a page
+whole is only safe because of that last step: the page arrives carrying the reference's generated block, and is right
+only once rebuilt against the types the receiving corpus holds. A passing `generate --check` is sync's postcondition.
 
