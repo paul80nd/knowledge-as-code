@@ -19,7 +19,7 @@ the commit and opens a release carrying the section for that version.
 
 ### Changed
 
-- **`kac index` is now `kac generate`.** The command writes each type's `_index.md` *and* rewrites the generated blocks
+- **`kac index` is now `kac generate`.** The command writes each type's `_index.md` and rewrites the generated blocks
   in every type page, and only the first of those is an index. `--check` is unchanged, and so is everything either half
   writes. There is no alias: a pipeline or script still naming `index` fails until it names `generate`.
 

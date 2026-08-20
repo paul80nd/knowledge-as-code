@@ -919,7 +919,7 @@ static (int exit, string output) RunGenerate(string kac, string schemaDir, strin
 
 // Regenerate a scenario's committed generated files: run `kac generate` (writing) in a temp assembled
 // from the corpus, then copy everything the corpus owns (all but knowledge-as-code/) back over it.
-// generate leaves source docs untouched, so only _index.md and the spliced <type>.md change.
+// `generate` leaves source docs untouched, so only _index.md and the spliced <type>.md change.
 static void Regenerate(string kac, string schemaDir, string corpusDir)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);

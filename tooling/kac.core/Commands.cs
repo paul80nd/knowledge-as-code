@@ -145,7 +145,7 @@ public static class Commands
             }
 
             Console.Error.WriteLine(
-                "generated files are stale — the following differ from the schema/frontmatter:");
+                "generated files are stale — these differ from the schema/frontmatter:");
             foreach (var s in stale) Console.Error.WriteLine($"  {s}");
             Console.Error.WriteLine("run:  kac generate");
             return 1;
