@@ -71,8 +71,8 @@ the shared one still reads correctly in a corpus that never had the other half.
   identifier; there are no numeric ids.
 * **Terms are singular and in canonical casing.** `Term`, not `terms`.
 
-**Declared.** `carried-in-full-by-digest` holds an entry to one paragraph, and orders the glossaries in the digest a
-session is given. That digest cuts off when its budget is spent rather than overrunning it, and three glossaries are
+**Declared.** `carried-in-full-by-digest` holds an entry to one paragraph, and orders the glossaries in the digest
+[adr-0001] describes. That digest cuts off when its budget is spent rather than overrunning it, and three glossaries are
 enough to spend it. So the ordering decides which vocabulary a session arrives holding. It orders a `narrows` chain and
 nothing else, so which of two unrelated glossaries loses its tail is a question the ordering does not answer. Nothing
 generates a digest, so nothing runs the rule and the limit is yours to keep.
@@ -140,4 +140,5 @@ generates a digest, so nothing runs the rule and the limit is yours to keep.
 
 <!-- END GENERATED: checks-glossary -->
 
+[adr-0001]: /adrs/0001-knowledge-as-code.md
 [gls-knowledge-as-code]: glossary/knowledge-as-code.md
