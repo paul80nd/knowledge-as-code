@@ -6,7 +6,7 @@ What CI checks, what it builds, and what it deliberately leaves alone.
 authority on what runs. This page groups the same checks so a reader can see what the pipeline is for, and covers the
 generation and the exclusions that sit beside them.
 
-Every one of those checks reads the corpus. None reads the estate the corpus describes, so a service deleted last month
+Every one of those checks reads the corpus. None reads the estate the corpus describes. A service deleted last month
 still validates cleanly, and a descriptive record is only as true as the person who last read it.
 
 ## Validation
@@ -45,7 +45,7 @@ Run on every PR. Failures block merge.
 
 ### Rules the schema declares and nothing runs
 
-A type may declare a rule with a description and no severity. `kac validate` skips it and the type page renders it
+A type may declare a rule with a description and no severity. `kac validate` skips it. The type page renders it
 beneath the checks table under *Declared, not yet enforced*, so the gap is reported on the page a reader is already on.
 Prose about such a rule states what the schema declares, never what CI does.
 
@@ -81,9 +81,9 @@ That table says what each block is and where it lands. `tooling/features/index.m
 built from, carries the same list from the generator's side, with the rule governing each block in place of its
 address.
 
-Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds — the decision table, the
-types at length, the disambiguations, the graph and the edges beneath it — along with the lineage table, the strip on
-`metadata.md` and the index at the repository root, covers the types **this** corpus holds. A corpus that adopted five
+Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds covers the types **this**
+corpus holds: the decision table, the types at length, the disambiguations, and the graph with the edges beneath it. So
+do the lineage table, the strip on `metadata.md` and the index at the repository root. A corpus that adopted five
 of the framework's types gets five rows, and each one links to a page it holds.
 
 The corpus decides which five, and records that in `types:` in `.corpus.yaml`. A corpus that has not declared is read
@@ -98,14 +98,14 @@ Blocks that differ between corpora are still safe to share. The mechanism check 
 ignores what lies between the markers, so the prose stays byte-identical everywhere while what sits beneath it does not.
 
 The graph is written to the subset of Mermaid an Azure DevOps wiki renders. That subset is narrower than Mermaid's own,
-and a diagram exceeding it renders nothing at all, with no error to say why: `graph` rather than `flowchart`, no
+and a diagram exceeding it renders nothing at all, with no error to say why. Write `graph` rather than `flowchart`, no
 subgraphs, and no arrow longer than `-->`. A fenced block carries it rather than ADO's `:::` container, which GitHub
 shows as literal text.
 
 ## The export
 
 Built on every PR. `kac export` writes the corpus into `.dist/export/` as data a consumer reads instead of cloning the
-repository: a manifest saying what the export is, one file per record, and a flat file cheap to grep.
+repository. It holds a manifest saying what the export is, one file per record, and a flat file cheap to grep.
 `tooling/features/export.md` is the reference for what it holds.
 
 A change that breaks the export therefore fails its own build. Nothing is kept: `.dist/` is gitignored and rebuilt
@@ -125,19 +125,20 @@ Not part of the taxonomy, carry no taxonomy frontmatter, and are excluded from s
 | Root `CLAUDE.md`     | Agent guidance, not a knowledge record             |
 
 Stated explicitly rather than left implicit in a glob, so that a validation failure is never resolved by quietly
-widening an exclusion. The `_` rows are the one deliberate glob: the prefix is reserved for the framework's own
-artefacts, and the tool tests the prefix rather than the names — see [taxonomy](taxonomy.md#layout).
+widening an exclusion. The `_` rows are the one deliberate glob. The prefix is reserved for the framework's own
+artefacts, and the tool tests the prefix rather than the names. See [taxonomy](taxonomy.md#layout).
 
 **Excluded as a record is not excluded from every check.** The framework's own documents carry no frontmatter and are
-validated against no schema, and they still link to things, so their links and fragments are resolved like any page's. A
-file holding a generated block is held to still carrying the markers to write between, however it is otherwise excluded.
+validated against no schema. They still link to things, so their links and fragments are resolved like any page's. A
+file holding a generated block is held to still carrying the markers to write between, however it is otherwise
+excluded.
 Each of those extra passes, and what it asks, is in `tooling/features/validate.md`.
 
 **A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
-answers to nothing that needs a filename, so discovering it as a record would report a dozen faults that are the file
-doing its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that are
-not placeholders, the identity line, the required sections, and the links that point at real documents. A defect there
-becomes every document's problem, and the next author is the one who finds it.
+answers to nothing that needs a filename. Discovering it as a record would report a dozen faults that are the file
+doing its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that
+are not placeholders, the identity line, the required sections, and the links that point at real documents. A defect
+there becomes every document's problem, and the next author is the one who finds it.
 
 ## Skills
 

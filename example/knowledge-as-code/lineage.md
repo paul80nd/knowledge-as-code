@@ -120,8 +120,8 @@ confidence level is the most novel thing in this taxonomy.
 and deliberate against incident-time and under pressure. Both HCGF and Diátaxis have one procedural type. The split
 exists because the two are written differently, rehearsed differently, and fail differently.
 
-**The tiers.** Classifying by obligation and decay rather than by subject matter is not unprecedented in shape —
-[Diátaxis][diataxis] also classifies behaviourally, by user need — but the axes are ours.
+**The tiers.** Classifying by obligation and decay rather than by subject matter is not unprecedented in shape.
+[Diátaxis][diataxis] also classifies behaviourally, by user need. The axes are ours.
 
 ## Language
 
@@ -130,10 +130,10 @@ bodies of work.
 
 **[ASD-STE100 Simplified Technical English][ste]**, Issue 9 (2025), published by the Aerospace, Security and Defence
 Industries Association of Europe and maintained by its Simplified Technical English Maintenance Group. A controlled
-language for aerospace maintenance documentation: a closed dictionary of approved words each carrying one meaning and
-one part of speech, plus writing rules covering sentence length, one instruction per sentence, permitted verb forms and
-noun-cluster length. Its influence here is direct, and heaviest on the procedural tier — which is the material it was
-built for.
+language for aerospace maintenance documentation. It is a closed dictionary of approved words, each carrying one meaning
+and one part of speech, plus writing rules covering sentence length, one instruction per sentence, permitted verb forms
+and noun-cluster length. Its influence here is direct, and heaviest on the procedural tier — which is the material it
+was built for.
 
 **[ISO 24495-1:2023][iso24495]**, plain language governing principles: that readers get what they need, can find it, can
 understand it, and can use it. Principles rather than mechanics, and not machine-checkable, but the right statement of
@@ -144,7 +144,7 @@ publication in whole or in part requires written authority from ASD, unauthorise
 does not endorse third-party compliance claims. ISO 24495-1 is sold and is likewise all rights reserved.
 
 So this corpus **cites** both, **learns** from both, and **reproduces** neither. The authoring rules are written in our
-own words and set at our own limits; they are not an implementation of either document, and no output of this corpus is
+own words and set at our own limits. They are not an implementation of either document, and no output of this corpus is
 described as STE-compliant or as conforming to ISO 24495-1. A corpus wanting genuine conformance should obtain the
 specifications directly. This is the same alignment-not-compliance stance the rest of this page takes, applied to the
 one framework that also constrains how it may be quoted.

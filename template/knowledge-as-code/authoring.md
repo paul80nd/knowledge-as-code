@@ -15,8 +15,8 @@ sentence meant. Length is not thoroughness. A document that says less, and says 
 
 Some of this is enforced, though less than you would hope and never uniformly. Each text rule is declared on a single
 type — `low-ceremony` on discoveries, `not-normative` on explanations, `no-hedged-ordering` on processes — and many
-types carry none at all. Run `kac checks` to see what applies to the type in front of you rather than assuming, and
-expect `kac validate` to come back clean: CI gates the branch, so a clean run is the baseline rather than a source of
+types carry none at all. Run `kac checks` to see what applies to the type in front of you rather than assuming. Expect
+`kac validate` to come back clean: CI gates the branch, so a clean run is the baseline rather than a source of
 findings. The rest is judgement, and the absence of a check is not permission.
 
 Where a rule here contradicts the schema, **the schema is right and this page is wrong**. It is executable and this is
@@ -71,7 +71,7 @@ reader in that state skims, and a skimmed instruction must still be right.
 The rule must be checkable, and a reader must be able to tell obligation from commentary at a glance.
 
 **The clause rules below bind the types that carry clauses**, which are policies and standards. A control, an NFR and an
-FAQ are normative because a reader may act on them without checking, and they hold no clause table, no Purpose and no
+FAQ are normative because a reader may act on them without checking. They hold no clause table, no Purpose and no
 RFC 2119 keywords. What binds every normative type is the first sentence above: state the thing a reader will act on,
 make it checkable, and keep the argument out of the part that gets quoted.
 
@@ -124,8 +124,9 @@ The constraint here is structural rather than lexical:
 
 Capture must stay nearly free or it does not happen.
 
-* **Symptom, cause if known, why it might matter.** Nothing else is required, and `low-ceremony` warns past two hundred
-  words — a discovery long enough to need structure has become something else and should be promoted, not padded.
+* **Symptom, cause if known, why it might matter.** Nothing else is required, and `low-ceremony` warns past two
+  hundred words. A discovery long enough to need structure has become something else, and should be promoted rather
+  than padded.
 * **Say what you do not know.** *Unconfirmed*, *seen once*, *may be specific to this branch* — hedging is honest here
   and is what the confidence level exists to carry.
 * **Do not tidy it into authority.** A discovery that reads like an FAQ will be trusted like one. Promotion is where
@@ -136,8 +137,8 @@ Capture must stay nearly free or it does not happen.
 A record holds the knowledge. Information *about* the knowledge belongs in frontmatter, in generated blocks, or in git.
 
 The test is repetition: **if a paragraph would appear in more than one record, it is not record content.** An
-explanation of what `aligns-with` means, or of the difference between alignment and certification, is a corpus concern —
-it belongs [here](metadata.md) and is written once. Repeated in every policy, it is twenty copies to keep in step and
+explanation of what `aligns-with` means, or of the difference between alignment and certification, is a corpus concern.
+It belongs [here](metadata.md) and is written once. Repeated in every policy, it is twenty copies to keep in step and
 twenty chances to be wrong.
 
 Three consequences worth stating outright:
@@ -160,7 +161,7 @@ framework's roadmap, and leaving the roadmap out is what keeps every copy of the
 
 **One unbuilt thing gets written down, because the tooling already reports it.** A type may declare a rule that nothing
 implements, and the generated checks table renders it under *Declared, not yet enforced*. Prose about such a rule states
-the declaration, in the present tense — *`feature-file-orphans` is declared and does not run*, never *CI checks the
+the declaration, in the present tense: *`feature-file-orphans` is declared and does not run*, never *CI checks the
 paths*. Claiming an unbuilt check as working is a correctness defect, and it is the most common one in this corpus.
 
 Where that needs a marker, `**Declared.**` leads the sentence it governs, and governs everything up to the next heading
