@@ -101,6 +101,10 @@ explain. **Decisions** takes only the ones belonging to a feature as a whole.
 | [`features/export.md`](features/export.md)       | The corpus written to `.dist/export/` as data an agent reads without cloning it.                      |
 | [`features/bundle.md`](features/bundle.md)       | That export and the `.plugin/` tree assembled into an installable plugin, trimmed to what it can do.  |
 | [`features/mechanism.md`](features/mechanism.md) | Drift against a reference corpus, and taking the shared layers down from it.                          |
+| [`features/new.md`](features/new.md)             | Standing a corpus up in the folder you are in, from a template fetched at a ref.                      |
+| [`features/update.md`](features/update.md)       | Taking a newer framework into a corpus, and adopting or giving up a type.                             |
+
+`new.md` and `update.md` are specifications written before their commands exist, and say so at their head.
 
 [`CLAUDE.md`](CLAUDE.md) is what will bite you while changing any of it.
 
