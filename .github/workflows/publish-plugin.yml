@@ -25,7 +25,7 @@
 # the same reason both CI files are forked in tooling/manifest.yaml. So it uses `$(...)` freely,
 # where a script the two platforms share cannot.
 
-name: publish
+name: publish-plugin
 
 on:
   push:
@@ -217,10 +217,11 @@ jobs:
           cat > "$WORKTREE/README.md" <<EOF
           # knowledge-as-code — the plugin marketplace
 
-          Generated. Every file here is built by
-          [\`.github/workflows/publish.yml\`](https://github.com/$GITHUB_REPOSITORY/blob/main/.github/workflows/publish.yml)
-          on each push to \`main\` and replaced whole on the next one. Nothing here is edited by hand,
-          and this branch is never merged into \`main\`.
+          Generated. Every file here is built by [\`publish-plugin.yml\`][workflow] on each push to
+          \`main\` and replaced whole on the next one. Nothing here is edited by hand, and this branch
+          is never merged into \`main\`.
+
+          [workflow]: https://github.com/$GITHUB_REPOSITORY/blob/main/.github/workflows/publish-plugin.yml
 
           The source is on [\`main\`](https://github.com/$GITHUB_REPOSITORY).
 

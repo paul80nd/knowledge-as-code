@@ -33,7 +33,7 @@ than beside them so that an IDE opening it opens the repository.
 
 ## Running the tool
 
-Requires the **.NET 10 SDK**. Of the three ways below, only the last does not work yet.
+Requires the **.NET 10 SDK**. Three ways in, taking less of this repository each time.
 
 ### From this repository
 
@@ -54,8 +54,8 @@ to your `PATH` to drop the `./`, or use the explicit form, which is what CI runs
 
 ### As an installed tool, packed here
 
-`kac` packs as the dotnet tool `KnowledgeAsCode.Tool`. Packing it yourself is how to try the thing a corpus will
-eventually receive, without waiting for a published one.
+`kac` packs as the dotnet tool `KnowledgeAsCode.Tool`. Packing it yourself is how to try a change to the tool exactly
+as a corpus will receive it, before the version carrying it is published.
 
 ```bash
 dotnet pack tooling/kac/kac.csproj -o .dist/pack
@@ -71,9 +71,29 @@ whichever corpus it is run from — this one, or a corpus of your own anywhere o
 
 ### From nuget.org
 
-**Not yet.** Nothing is published, so a corpus outside this repository takes the tool from a folder somebody packed.
-The version it starts at, the workflow that publishes it, and the install line that will replace this paragraph are
-in the [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues).
+How a corpus outside this repository takes it, and the only one of the three needing nothing from here.
+
+```bash
+dotnet tool install --global KnowledgeAsCode.Tool
+
+cd path/to/your/corpus
+kac validate
+```
+
+Install it into a [tool manifest](https://learn.microsoft.com/dotnet/core/tools/local-tools-how-to-use) instead to pin
+it, which is what a corpus with CI of its own wants. The version lands in `.config/dotnet-tools.json` and travels with
+the repository, so every machine and every build runs the one the corpus was written against.
+
+```bash
+dotnet new tool-manifest
+dotnet tool install KnowledgeAsCode.Tool
+
+dotnet tool run kac validate
+```
+
+A push to `main` publishes the tool whenever it carries a `<Version>`
+[nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) does not already hold.
+[`tooling/README.md`](tooling/README.md#building) says how that version moves.
 
 Every command, one document apiece, is in [`tooling/features/`](tooling/features/).
 [`tooling/README.md`](tooling/README.md) maps them and carries the test commands.
@@ -84,12 +104,12 @@ Copy `example/`, delete the records in the types you keep, rewrite the type page
 start writing. `.schema/` comes with it and is the half you want to keep receiving changes to.
 
 **A copy carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which is not part of the corpus.
-Install the packed tool as above and run it from the copy: it needs nothing but the `.schema/` the copy already
+Install it from nuget.org as above and run it from the copy: it needs nothing but the `.schema/` the copy already
 carries, and a corpus outside this repository validates and generates exactly as `example/` does.
 
 **What a copy cannot yet do is take a newer framework.** `kac mechanism` wants a reference corpus, through `--against`
-or an `upstream.url`, and past that it reads a manifest at `tooling/manifest.yaml` that no corpus holds. Pinning a
-version of the tool, and a command that updates the schema beneath a corpus, are both in the
+or an `upstream.url`, and past that it reads a manifest at `tooling/manifest.yaml` that no corpus holds. A command that
+updates the schema beneath a corpus is in the
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) rather than described here.
 
 ## Maturity

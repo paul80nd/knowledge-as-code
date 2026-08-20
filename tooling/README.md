@@ -37,6 +37,13 @@ The package's version is `<Version>` in [`kac/kac.csproj`](kac/kac.csproj), move
 whoever changes it, which is this page. CI packs on every run and installs what it packed, so metadata that has gone
 missing fails a pull request rather than a publish.
 
+**Releasing is moving that version.** A push to `main` carrying a version nuget.org does not already hold publishes
+it, and a push carrying one it holds publishes nothing, so a change to the tool ships by editing that line in the same
+pull request that changes it. What is published is permanent — nuget.org will unlist a version but never free the
+number, so a mistake is followed by the next patch rather than replaced. That is why
+[`.github/workflows/publish-tool.yml`](../.github/workflows/publish-tool.yml) runs all three test layers again against
+the commit that merged, and pushes the same package it proved.
+
 Run **one `kac` invocation at a time**: concurrent runs build the same project and contend over its output.
 
 Argument parsing is [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine), so every command and

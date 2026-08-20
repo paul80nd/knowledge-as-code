@@ -10,10 +10,11 @@
 # This workflow is granted read-only contents permission and pushes nothing.
 #
 # What CI produces is never written back over a file a human edits. That is the
-# rule, and read-only permission is how this workflow keeps it. publish.yml is
-# granted write and keeps the same rule a different way: it writes only to an
-# orphaned marketplace branch, which shares no commit with main and holds no
-# file anyone authors, so there is no path from what CI builds to the source.
+# rule, and read-only permission is how this workflow keeps it.
+# publish-plugin.yml is granted write and keeps the same rule a different way: it
+# writes only to an orphaned marketplace branch, which shares no commit with main
+# and holds no file anyone authors, so there is no path from what CI builds to
+# the source.
 
 name: kac
 

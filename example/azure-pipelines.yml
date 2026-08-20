@@ -9,7 +9,7 @@
 #
 # What CI produces is never written back over a file a human edits, which is the
 # rule the line above keeps. Publishing the built bundle is a different act: on
-# GitHub, .github/workflows/publish.yml writes it to an orphaned marketplace
+# GitHub, .github/workflows/publish-plugin.yml writes it to an orphaned marketplace
 # branch that shares no commit with main. There is no Azure DevOps equivalent
 # yet, so nothing is published from here.
 #
