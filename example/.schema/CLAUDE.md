@@ -1,8 +1,11 @@
 # Changing the schema
 
 [`meta/type.schema.json`](meta/type.schema.json) is the reference for the keys and [`README.md`](README.md) is the
-reasoning behind them. This is what will bite you. In a corpus that declares `role: consumer`, these files arrive from
-upstream. Author the change here and take it down with `kac mechanism --sync`, because a local edit is drift.
+reasoning behind them. This is what will bite you.
+
+In a corpus that declares `role: consumer`, these files arrive from upstream, so a local edit is drift rather than
+customisation. Make the change upstream and take it down with `kac mechanism --sync`. Where a line below names a C#
+file it is naming that same repository, because a corpus holds `.schema/` and an installed `kac` and nothing else.
 
 **After any change, run `kac index` and then the golden suite.** Every type page carries generated `schema-<type>`
 and `checks-<type>` blocks derived from these files. A schema edit alone leaves the corpus stale and fails

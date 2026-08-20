@@ -98,8 +98,8 @@ section links to, in a bullet or in prose alike, and case-insensitively.
 Both directions is the part to weigh before declaring one. A section that mentions an id the field does not carry is a
 finding as much as the reverse, so the field has to be the whole truth about what the section names. A prose aside
 about something deliberately *not* in the field will fail. `services` is the case in point, and is why `depends-on`
-does not mirror `## Dependencies`. `svc-search` names the two services whose events it consumes, and the whole point
-of that paragraph is that neither is an edge.
+does not mirror `## Dependencies`. A service's prose may name the systems whose events it consumes, where the whole
+point of the paragraph is that none of them is an edge.
 
 `allow-literal` exists so that a field with one honest answer outside its type does not have to widen into a string
 and give up every check on the values it usually carries. `applies-to: [all]` on a list of service ids, and

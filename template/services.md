@@ -4,11 +4,9 @@ The catalogue of deployable components that make up the platform.
 
 **[→ Index](services/_index.md)**
 
-> **The records in `services/` are an example estate, not your estate.** They describe a fictional public-library
-> consortium, and they give this type something to demonstrate: a dependency graph, a criticality gradient, and the
-> awkward cases that shaped the schema. **Delete them before you add your first real service.** The two sections below
-> that derive a convention from that estate — the `platform` enum and the facet vocabulary — show a method for reaching
-> your own values.
+> **This type arrives with no records and two vocabularies to set.** `.schema/services.yaml` ships a `platform` enum
+> and a facet list reached from somebody else's estate, and neither will fit yours. The two sections below say how to
+> derive your own. Set them before you write your first service.
 
 ## What is a service?
 
