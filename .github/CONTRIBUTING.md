@@ -31,21 +31,22 @@ nobody spends an evening on work that was never going to land.
 
 ## Take a copy instead
 
-This framework is **copied, not depended on**. The intended way to use it is to take your own cut: clone it, delete the
-types you do not want, and change whatever you like in your copy. There is no runtime dependency on this repository and
-nothing to remove if you later go your own way. The [README](../README.md) explains the model, and `.corpus.yaml`
-records which version of the shared layer a copy is running and where it has deliberately stepped away.
+This framework is **copied, not depended on**. The intended way to use it is to take your own cut: copy `example/`,
+delete the types you do not want, and change whatever you like in your copy. Your corpus installs `kac` from nuget.org
+and holds nothing else of this repository, so there is nothing to remove if you later go your own way. The
+[README](../README.md) explains the model, and `.corpus.yaml` records which version of the shared layer a copy is
+running and where it has deliberately stepped away.
 
 A copy that diverges is the design working, not a failure to contribute upstream.
 
 ## The other contributing guide
 
-[`knowledge-as-code/contributing.md`](../knowledge-as-code/contributing.md) is part of the framework, not part of this
-policy. It covers how a record is contributed to a corpus *built with* this framework — which template to copy, how
-review works, what a reviewer checks. It says nothing about contributing to this repository.
+[`template/knowledge-as-code/contributing.md`](../template/knowledge-as-code/contributing.md) is part of the framework,
+not part of this policy. It covers how a record is contributed to a corpus *built with* this framework: which template
+to copy, how review works, what a reviewer checks. It says nothing about contributing to this repository.
 
 ## What would change this
 
-Two things: the pattern settling enough that the schema stops moving under a reviewer's feet, and a second corpus
-running the framework in earnest, which is the only thing that shows which parts are general. Until both hold, the
-answer is no, and the churn here is the whole reason.
+The pattern settling enough that the schema stops moving under a reviewer's feet, and a second corpus running the
+framework in earnest, which is the only thing that shows which parts are general. Until both hold, the answer is no,
+and the churn here is the whole reason.
