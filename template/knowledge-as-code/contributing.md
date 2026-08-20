@@ -92,9 +92,9 @@ Definitions go at the very foot of the document, after all prose sections, sorte
 is a one-line change.
 
 **The label is the id exactly as that document carries it** — `adr-0013`, `pol-DEVI`, `svc-billing-api`. The prefix is
-always lower-case; what follows takes the type's own form, so a mnemonic stays upper-case and a slug stays lower-case.
-A part id is the record's own id, a dot, and the part as its type writes one: `pol-DEVI.TIMEBOX`, `gls-search.title`.
-The label is its own display text, so a label that is not the id shows the reader an id that does not exist.
+always lower-case; what follows takes the type's own form, so a mnemonic stays upper-case and a slug stays lower-case. A
+part id is the record's own id, a dot, and the part as its type writes one: `pol-DEVI.TIMEBOX`, `gls-search.title`. The
+label is its own display text, so a label that is not the id shows the reader an id that does not exist.
 
 CI enforces this with `label-canonical`. It matters because reference and definition are matched case-insensitively:
 `[ADR-0013]` resolves perfectly happily, so nothing else would ever catch it. Reconciliation against the `related:`

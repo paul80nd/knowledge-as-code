@@ -6,10 +6,10 @@ types:
   - adrs
 
 upstream:
-  url:               ../reference
+  url: ../reference
   mechanism-version: 1
-  synced-from:       ../reference
-  synced-on:         "2026-01-01"
+  synced-from: ../reference
+  synced-on: "2026-01-01"
 
 accepted-divergences:
   - path: knowledge-as-code/contributing.md

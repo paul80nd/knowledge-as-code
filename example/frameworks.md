@@ -153,9 +153,9 @@ Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-
 (risk treatment). Cited at function level, for the same reason the Well-Architected pillars are.
 
 [pol-AGNT] is the policy this exists for, and 27001 answers it with `A.8.30`, *outsourced development* — a control
-written for contracting out a system build, pressed into service for an agent proposing a change. It reads plausibly
-and is wrong in the way that matters: an outsourced supplier is accountable for its work, and the premise of pol-AGNT
-is that an agent is not, so accountability sits with the person who accepts the output. GOVERN says that directly.
+written for contracting out a system build, pressed into service for an agent proposing a change. It reads plausibly and
+is wrong in the way that matters: an outsourced supplier is accountable for its work, and the premise of pol-AGNT is
+that an agent is not, so accountability sits with the person who accepts the output. GOVERN says that directly.
 
 **ISO/IEC 42001** is the certifiable sibling, an AI management system standard and the natural companion to our 27001
 registration if the use of AI ever needs auditing rather than governing. It moves to Obliged the day we register and not

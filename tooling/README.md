@@ -69,8 +69,8 @@ kac mechanism --check --against ../other-corpus   # shared-layer drift vs a refe
 kac mechanism --sync                              # take the shared layers from upstream
 ```
 
-Those read as a corpus runs them, against an installed `kac`. While changing the tool you want the working tree
-instead: `dotnet run --project ../tooling/kac -- validate`, which is what CI uses, or the `./kac` launcher at
+Those read as a corpus runs them, against an installed `kac`. While changing the tool you want the working tree instead:
+`dotnet run --project ../tooling/kac -- validate`, which is what CI uses, or the `./kac` launcher at
 `example/`'s root that wraps it.
 
 ### Exit codes

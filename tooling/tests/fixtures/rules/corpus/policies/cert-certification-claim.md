@@ -23,6 +23,6 @@ Every service in the estate.
 
 ## Clauses
 
-| Id      | Clause                                                          | Alignment    |
-|---------|-----------------------------------------------------------------|--------------|
+| Id      | Clause                                                          | Alignment     |
+|---------|-----------------------------------------------------------------|---------------|
 | `CLAIM` | **MUST** state framework standing in `frameworks.md`, not here. | ISO 27001 A.5 |

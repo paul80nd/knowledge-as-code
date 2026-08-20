@@ -28,8 +28,8 @@ That split lets the mechanism improve without touching anyone's content, and let
 inheriting someone else's opinions about accessibility. It also turns *which of these files are mine?* into a question
 `kac mechanism --check` answers.
 
-Which files fall on which side is declared in `tooling/manifest.yaml`, not asserted in prose. Every
-file resolves to exactly one layer, and each layer has a rule about what divergence means.
+Which files fall on which side is declared in `tooling/manifest.yaml`, not asserted in prose. Every file resolves to
+exactly one layer, and each layer has a rule about what divergence means.
 
 ## Schema before prose
 
@@ -88,8 +88,8 @@ What comes from upstream is `kac` itself, installed as a versioned tool and pinn
 newer one is a version they choose to take.
 
 The cost is drift in the half they own. A manifest and a descriptor answer it: a corpus records which version of the
-shared layer it is on and which divergences it has deliberately accepted, so that a necessary deviation does not have
-to masquerade as an accident.
+shared layer it is on and which divergences it has deliberately accepted, so that a necessary deviation does not have to
+masquerade as an accident.
 
 ## Readable and writable by agents
 

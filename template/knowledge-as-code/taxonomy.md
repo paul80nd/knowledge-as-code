@@ -35,8 +35,8 @@ ends up — so a corpus that has adopted five of them is offered five, and every
 
 <!-- END GENERATED: types-placement -->
 
-Where you got to mid-piece-of-work is the one thing on nobody's list: session logs stay local and never reach
-the corpus.
+Where you got to mid-piece-of-work is the one thing on nobody's list: session logs stay local and never reach the
+corpus.
 
 If nothing fits, raise it rather than improvising. A missing type is a taxonomy conversation; a `misc/` folder is a
 slow-motion failure. The framework declares more types than any one corpus stands up, so the answer may be to adopt one

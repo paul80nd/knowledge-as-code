@@ -26,6 +26,6 @@ The `catalogue` repository.
 
 ## Environments
 
-| Environment | URL                             |
-|-------------|---------------------------------|
-| Production  | https://catalogue.example.com   |
+| Environment | URL                           |
+|-------------|-------------------------------|
+| Production  | https://catalogue.example.com |

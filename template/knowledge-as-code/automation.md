@@ -45,9 +45,9 @@ Run on every PR. Failures block merge.
 
 ### Rules the schema declares and nothing runs
 
-A type may declare a rule with a description and no severity. `kac validate` skips it. The type page renders it
-beneath the checks table under *Declared, not yet enforced*, so the gap is reported on the page a reader is already on.
-Prose about such a rule states what the schema declares, never what CI does.
+A type may declare a rule with a description and no severity. `kac validate` skips it. The type page renders it beneath
+the checks table under *Declared, not yet enforced*, so the gap is reported on the page a reader is already on. Prose
+about such a rule states what the schema declares, never what CI does.
 
 ## Generation
 
@@ -77,14 +77,13 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Where a name collides            | `.schema/` + the types adopted | `lineage.md` `types-collisions` block       |
 | What this corpus holds           | `.schema/` + the types adopted | Root `README.md` `types-index` block        |
 
-That table says what each block is and where it lands. `tooling/features/index.md`, in the repository the tool is
-built from, carries the same list from the generator's side, with the rule governing each block in place of its
-address.
+That table says what each block is and where it lands. `tooling/features/index.md`, in the repository the tool is built
+from, carries the same list from the generator's side, with the rule governing each block in place of its address.
 
 Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds covers the types **this**
 corpus holds: the decision table, the types at length, the disambiguations, and the graph with the edges beneath it. So
-do the lineage table, the strip on `metadata.md` and the index at the repository root. A corpus that adopted five
-of the framework's types gets five rows, and each one links to a page it holds.
+do the lineage table, the strip on `metadata.md` and the index at the repository root. A corpus that adopted five of the
+framework's types gets five rows, and each one links to a page it holds.
 
 The corpus decides which five, and records that in `types:` in `.corpus.yaml`. A corpus that has not declared is read
 off its folders instead: a type counts where both halves are there, the page and the folder. That answer is the weaker
@@ -108,8 +107,8 @@ Built on every PR. `kac export` writes the corpus into `.dist/export/` as data a
 repository. It holds a manifest saying what the export is, one file per record, and a flat file cheap to grep.
 `tooling/features/export.md` is the reference for what it holds.
 
-A change that breaks the export therefore fails its own build. Nothing is kept: `.dist/` is gitignored and rebuilt
-whole each run, and the pipeline discards it with the job.
+A change that breaks the export therefore fails its own build. Nothing is kept: `.dist/` is gitignored and rebuilt whole
+each run, and the pipeline discards it with the job.
 
 ## Exclusions
 
@@ -130,15 +129,14 @@ artefacts, and the tool tests the prefix rather than the names. See [taxonomy](t
 
 **Excluded as a record is not excluded from every check.** The framework's own documents carry no frontmatter and are
 validated against no schema. They still link to things, so their links and fragments are resolved like any page's. A
-file holding a generated block is held to still carrying the markers to write between, however it is otherwise
-excluded.
+file holding a generated block is held to still carrying the markers to write between, however it is otherwise excluded.
 Each of those extra passes, and what it asks, is in `tooling/features/validate.md`.
 
 **A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
-answers to nothing that needs a filename. Discovering it as a record would report a dozen faults that are the file
-doing its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that
-are not placeholders, the identity line, the required sections, and the links that point at real documents. A defect
-there becomes every document's problem, and the next author is the one who finds it.
+answers to nothing that needs a filename. Discovering it as a record would report a dozen faults that are the file doing
+its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that are not
+placeholders, the identity line, the required sections, and the links that point at real documents. A defect there
+becomes every document's problem, and the next author is the one who finds it.
 
 ## Skills
 

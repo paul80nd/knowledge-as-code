@@ -6,8 +6,8 @@
 documentation arrive from upstream, and a local edit to either is drift rather than customisation.
 `kac mechanism --check` reports it. Fix it upstream and take it down again.
 
-A consumer holds the tool and none of the tests that prove it, because the tool reaches it already proven. Only a
-corpus declaring `role: source` develops the framework, and that one holds both.
+A consumer holds the tool and none of the tests that prove it, because the tool reaches it already proven. Only a corpus
+declaring `role: source` develops the framework, and that one holds both.
 
 **Adding a knowledge type is adding a YAML file to `.schema/`.** A corpus adopts a type by adding its name to `types:`
 in `.corpus.yaml` and running `kac mechanism --sync`. That brings down the schema and seeds the root page and template.

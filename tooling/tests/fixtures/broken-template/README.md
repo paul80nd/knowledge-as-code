@@ -15,14 +15,14 @@ part of the corpus that has since been deleted is caught.
 **What the golden pins by leaving out is the point of the scenario.** Every one of these would be an error in a
 record and is silent here, so removing an exemption fails this fixture rather than passing quietly:
 
-| Left out            | Why                                                                              |
-|---------------------|----------------------------------------------------------------------------------|
-| `id-format`         | `adr-{{nnnn}}` is the instruction to allocate an id, not an id                    |
-| `filename-pattern`  | `_template.md` is a reserved name and matches no type's pattern                   |
-| `slug-length`       | same — there is no slug to measure                                                |
-| `required-field`    | a template's values are all bare or placeholders, which is what a template is     |
-| `ref-resolves`      | `related` names an ADR the author will choose                                     |
-| `related-matches-section` | both halves of the reconciliation are examples                            |
-| `link-resolves`     | for `{{a}}.md` only — the placeholder target, not the real one above it           |
-| `unused-definition` | a template's definitions are exemplars of where definitions go                    |
-| `alternatives-have-verdicts` | the type's own rules judge a filled-in document                          |
+| Left out                     | Why                                                                           |
+|------------------------------|-------------------------------------------------------------------------------|
+| `id-format`                  | `adr-{{nnnn}}` is the instruction to allocate an id, not an id                |
+| `filename-pattern`           | `_template.md` is a reserved name and matches no type's pattern               |
+| `slug-length`                | same — there is no slug to measure                                            |
+| `required-field`             | a template's values are all bare or placeholders, which is what a template is |
+| `ref-resolves`               | `related` names an ADR the author will choose                                 |
+| `related-matches-section`    | both halves of the reconciliation are examples                                |
+| `link-resolves`              | for `{{a}}.md` only — the placeholder target, not the real one above it       |
+| `unused-definition`          | a template's definitions are exemplars of where definitions go                |
+| `alternatives-have-verdicts` | the type's own rules judge a filled-in document                               |

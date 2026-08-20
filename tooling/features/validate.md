@@ -18,8 +18,8 @@ holds a file to still carrying the markers of every block the generator writes i
 `index --check`'s one question.
 
 **It is not `mechanism --check`.** That asks whether this corpus's copy of the framework has drifted from upstream.
-`validate` asks whether this corpus's own records are correct, and a corpus that has drifted badly can still be
-entirely valid.
+`validate` asks whether this corpus's own records are correct, and a corpus that has drifted badly can still be entirely
+valid.
 
 ## Approach
 
@@ -28,8 +28,8 @@ and `.git/` is never walked), then applies the taxonomy exclusions from `knowled
 
 - anything on a path with a `_`-prefixed segment — the reserved prefix for a framework artefact, which covers
   `**/_index.md` and `**/_template.md` as well as `_plan/` and `_reports/`. A type's `_template.md` is not a record and
-  is discovered as none, but it is checked — `template-fields` is the check, and [`checks.md`](checks.md) says where
-  it comes from
+  is discovered as none, but it is checked — `template-fields` is the check, and [`checks.md`](checks.md) says where it
+  comes from
 - `knowledge-as-code/`, and `.git/` `.idea/` `.claude/` — excluded as *records*; the framework's own documents are still
   read for their links, see below
 - root `README.md` and root `CLAUDE.md`

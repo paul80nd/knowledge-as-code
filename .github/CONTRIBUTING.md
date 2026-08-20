@@ -49,5 +49,5 @@ to copy, how review works, what a reviewer checks. It says nothing about contrib
 ## What would change this
 
 The pattern settling enough that the schema stops moving under a reviewer's feet, and a second corpus running the
-framework in earnest, which is the only thing that shows which parts are general. Until both hold, the answer is no,
-and the churn here is the whole reason.
+framework in earnest, which is the only thing that shows which parts are general. Until both hold, the answer is no, and
+the churn here is the whole reason.
