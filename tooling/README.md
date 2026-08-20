@@ -41,7 +41,11 @@ missing fails a pull request long before it could fail a publish.
 that one. So a change to the tool ships by editing that line in the pull request that changes it. What is published is
 permanent: nuget.org will unlist a version but never free the number, so a mistake is followed by the next patch. That
 is why [`.github/workflows/publish-tool.yml`](../.github/workflows/publish-tool.yml) runs all three test layers again
-against the commit that merged, and pushes the same package it proved.
+against the commit that merged, and pushes the same package it proved. A required reviewer on the `nuget.org`
+environment holds the job before any of that runs, so a merge asks a person before it reaches anybody else.
+
+The publish then tags the commit `v<version>` and opens a release carrying that version's section of
+[`kac/CHANGELOG.md`](kac/CHANGELOG.md), which `ChangelogTests` holds the version to having.
 
 Run **one `kac` invocation at a time**: concurrent runs build the same project and contend over its output.
 

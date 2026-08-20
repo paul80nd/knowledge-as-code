@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="knowledge as code">
+  <rect x="0" y="0" width="128" height="128" rx="26" fill="#16324f"/>
+  <path d="M43.32 16.24L34.2 23.08L33.06 36.76L31.92 47.02L22.8 55L31.92 62.98L33.06 73.24L34.2 86.92L43.32 93.76" fill="none" stroke="#7fa9ce" stroke-width="9.12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M70.68 16.24L79.8 23.08L80.94 36.76L82.08 47.02L91.2 55L82.08 62.98L80.94 73.24L79.8 86.92L70.68 93.76" fill="none" stroke="#7fa9ce" stroke-width="9.12" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="43.32" y="40.18" width="27.36" height="9.12" rx="4.56" fill="#f5f7fa"/>
+  <rect x="43.32" y="53.86" width="20.52" height="9.12" rx="4.56" fill="#f2a93b"/>
+  <rect x="43.32" y="67.54" width="25.08" height="9.12" rx="4.56" fill="#f5f7fa"/>
+  <circle cx="95" cy="95" r="24" fill="#16324f"/>
+  <circle cx="95" cy="95" r="19" fill="#f2a93b"/>
+  <path d="M87 95L93 102.5L104 87" fill="none" stroke="#16324f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

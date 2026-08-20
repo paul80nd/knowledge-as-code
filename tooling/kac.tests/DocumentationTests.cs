@@ -21,7 +21,7 @@ public partial class DocumentationTests
 {
     // The template, where the schema and the page describing it are authored. Every corpus receives a
     // copy of both, and `TemplateTests` holds those copies to matching.
-    private static readonly string Template = Path.Combine(RepoRoot(), "template");
+    private static readonly string Template = Path.Combine(Repo.Root, "template");
     private static readonly string Readme = File.ReadAllText(Path.Combine(Template, ".schema", "README.md"));
 
     // A row of the fact table opens with the call it documents: `| \`section_count('Title')\` | int |`.
@@ -56,17 +56,5 @@ public partial class DocumentationTests
         var cited = HeldToRow().Matches(Readme).Select(m => m.Groups[1].Value).ToHashSet(StringComparer.Ordinal);
 
         Assert.Equal(declared.Order(StringComparer.Ordinal), cited.Order(StringComparer.Ordinal));
-    }
-
-    // The repository, found by the solution at its root. A corpus is what `kac` walks up for; what these tests
-    // want is the tree carrying the engine and the schema page together, and one folder answers to that.
-    private static string RepoRoot()
-    {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "kac.slnx")))
-            dir = dir.Parent;
-
-        return dir?.FullName ?? throw new InvalidOperationException(
-            "no 'kac.slnx' above the test assembly — these tests read the repository they ship in.");
     }
 }
