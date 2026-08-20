@@ -18,8 +18,8 @@ usually within a week. There is no service level and no bounty.
   matter are ones where it writes outside the corpus, or where a crafted `.schema/` file or record frontmatter makes it
   act outside what its caller asked for.
 * **`.github/workflows/`** — CI, which runs the tool over the branch under test.
-* **`template/.schema/`** — the contract the tool enforces, and the copy of it every corpus carries. A schema that
-  makes the tool skip a check it declares is a real finding.
+* **`template/.schema/`** — the contract the tool enforces, and the copy of it every corpus carries. A schema that makes
+  the tool skip a check it declares is a real finding.
 
 ## Out of scope
 
@@ -40,6 +40,5 @@ Fixes land on `main`. There is no supported-version matrix, and only the newest 
 
 The two halves reach you differently. `kac` is published as
 [`KnowledgeAsCode.Tool`](https://www.nuget.org/packages/KnowledgeAsCode.Tool), so a fix to the tool arrives as a new
-version you install. The schema and the framework's documentation are copied rather than depended on, so a fix to
-those reaches a corpus only when someone resyncs its copy. Watch this repository. There is no other notification
-channel.
+version you install. The schema and the framework's documentation are copied rather than depended on, so a fix to those
+reaches a corpus only when someone resyncs its copy. Watch this repository. There is no other notification channel.

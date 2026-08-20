@@ -7,8 +7,8 @@
 > registered. **Delete these records before you write your first real one.**
 
 A corpus is plain markdown in git where every document has a type and every type has a schema. This one is what
-[`kac`](../tooling/) is run against on every commit. It proves the tool works over real content, and not only over
-its fixtures.
+[`kac`](../tooling/) is run against on every commit. It proves the tool works over real content, and not only over its
+fixtures.
 
 **Read this one, copy [`../template/`](../template/).** The template is the same corpus with the content taken out, and
 it is what a new corpus starts from. Everything here is a worked example to borrow ideas from.
@@ -58,8 +58,7 @@ kac checks       # list every check the validator implements
 ```
 
 A `kac` and a `kac.cmd` sit beside this file, wrapping `dotnet run --project ../tooling/kac`. Run them as
-`./kac validate` while you are changing the tool, because they reach the working tree and an installed `kac` does
-not.
+`./kac validate` while you are changing the tool, because they reach the working tree and an installed `kac` does not.
 
 The example records are every `<type>/*.md` that is not `_index.md` or `_template.md`. `kac validate` covers them, so
 they are held to the same standard as real content. A schema change that breaks them fails CI here rather than in
@@ -82,8 +81,8 @@ schema's awkward corners rather than to resemble your estate: a monorepo shippin
 
 ## Maturity
 
-**Proven types: ADRs, policies and services.** The remaining schemas are written and have never met real content.
-That is the honest limit: a schema is wrong in ways only real content reveals.
+**Proven types: ADRs, policies and services.** The remaining schemas are written and have never met real content. That
+is the honest limit: a schema is wrong in ways only real content reveals.
 
 Policies alone forced the mnemonic id style, a category field, the identity line, the clause table and the checks that
 hold it. Services were proven elsewhere: a consumer repository built a full catalogue against this type and returned a
@@ -95,8 +94,8 @@ Showing how framework alignment works requires something to align with, so this 
 registered, obliged by the UK GDPR, running on Azure, part of a management system whose other halves belong to
 facilities, HR and IT. That posture and the estate fit each other. A public library is a public-sector body, so the
 accessibility obligations the policies cite genuinely bind it. None of it describes anyone. It is there so that
-[`frameworks.md`](frameworks.md) and the policies' `Alignment` columns have something to point at. Rewrite it on the
-way through.
+[`frameworks.md`](frameworks.md) and the policies' `Alignment` columns have something to point at. Rewrite it on the way
+through.
 
 The Azure assumption is the demonstration content's alone: the Azure Well-Architected entry in
 [`frameworks.md`](frameworks.md) and the pillars the policies cite from it. AWS and Google publish near-identical
@@ -110,8 +109,8 @@ published form is served from, and any deviation from the shared baseline it has
 live in it, each named for what it versions, and the file's own comments say what each one is for.
 
 Declaring `types:` states a decision rather than the shape the folders happen to have. `validate` then holds the corpus
-to standing up everything it declared, and every generated list of types is written from that declaration. A corpus
-that declares nothing still works: the tool reads adoption off the folders instead.
+to standing up everything it declared, and every generated list of types is written from that declaration. A corpus that
+declares nothing still works: the tool reads adoption off the folders instead.
 
 ## The plugin
 
@@ -133,9 +132,9 @@ rather than from the model. A session is told the glossary is there when it star
 first.
 
 What is published carries this corpus's `content-version`, which is below `1.0.0` and means it: the records are
-illustrative and the schema still moves. Claude Code treats that string as the whole answer to whether an update
-exists. A change merged without moving `content-version` in `.corpus.yaml` would reach nobody, so the publish stops
-before pushing. Bump it with the change.
+illustrative and the schema still moves. Claude Code treats that string as the whole answer to whether an update exists.
+A change merged without moving `content-version` in `.corpus.yaml` would reach nobody, so the publish stops before
+pushing. Bump it with the change.
 
 ### Proving a change before it ships
 
@@ -157,14 +156,14 @@ and ask it the question your change was about. **Uninstall before you rebuild.**
 Claude Code holds, so a second build at the same `content-version` leaves the first one installed and your change
 invisible.
 
-`sh ../tooling/tests/round-trip.sh` walks the same path without a session, and without touching your own
-configuration. It installs into a config directory of its own, looks a term up, fetches a record through the raw link
-the export wrote, and says which step failed. CI runs it on Linux and Windows.
+`sh ../tooling/tests/round-trip.sh` walks the same path without a session, and without touching your own configuration.
+It installs into a config directory of its own, looks a term up, fetches a record through the raw link the export wrote,
+and says which step failed. CI runs it on Linux and Windows.
 
 ### What the plugin does not do yet
 
-**It carries one type.** A term is the smallest useful thing one corpus can hand another, so the glossary went
-first. The rest is agreed and unbuilt:
+**It carries one type.** A term is the smallest useful thing one corpus can hand another, so the glossary went first.
+The rest is agreed and unbuilt:
 
 * **Every other type.** Only the glossary is exported and only the glossary is read. An ADR or a policy travels nowhere.
 * **Publishing from Azure DevOps.** [`azure-pipelines.yml`](azure-pipelines.yml) validates and publishes nothing, so a
@@ -204,8 +203,8 @@ kac, kac.cmd           # launchers that wrap `dotnet run --project ../tooling/ka
 .schema/               # the machine-readable schema — the source of truth
 ```
 
-The machinery is dot-prefixed: `.schema/`, `.corpus.yaml`, `.plugin/`. The markdown stays the visible half, so an
-Azure DevOps wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds
-documentation and nothing else: what the tool reads lives beside the tool.
+The machinery is dot-prefixed: `.schema/`, `.corpus.yaml`, `.plugin/`. The markdown stays the visible half, so an Azure
+DevOps wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
+nothing else: what the tool reads lives beside the tool.
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.

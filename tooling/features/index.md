@@ -2,10 +2,10 @@
 
 ## Intent
 
-`index` regenerates the content of a corpus that is derived from frontmatter and the schema, so that nobody maintains
-it by hand. Its readers are the people who read the corpus: a type's index page, the frontmatter reference and checks
-table on a type page, and the taxonomy's own tables are all written from what the corpus holds now. Only the region
-between each pair of markers is rewritten, so the words around a generated block stay the author's.
+`index` regenerates the content of a corpus that is derived from frontmatter and the schema, so that nobody maintains it
+by hand. Its readers are the people who read the corpus: a type's index page, the frontmatter reference and checks table
+on a type page, and the taxonomy's own tables are all written from what the corpus holds now. Only the region between
+each pair of markers is rewritten, so the words around a generated block stay the author's.
 
 ## What it is not
 

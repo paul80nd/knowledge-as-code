@@ -2,6 +2,6 @@
 
 # ADR Index
 
-| ID       | Title                                      | Status   | Decided on |
-| -------- | ------------------------------------------ | -------- | ---------- |
-| adr-0001 | [First decision](0001-first-decision.md)   | accepted | 2026-06-12 |
+| ID       | Title                                    | Status   | Decided on |
+|----------|------------------------------------------|----------|------------|
+| adr-0001 | [First decision](0001-first-decision.md) | accepted | 2026-06-12 |

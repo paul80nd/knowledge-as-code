@@ -11,8 +11,8 @@ is deciding whether the check they want already exists. Which files a check runs
 ## What it is not
 
 **It is not `validate`.** `kac checks` reads the schema and prints what could fire. It opens no record and reports no
-fault in one. A check absent from a validate run has either not been declared or not been tripped, and this is where
-the two are told apart.
+fault in one. A check absent from a validate run has either not been declared or not been tripped, and this is where the
+two are told apart.
 
 **It is not the table on a type page.** That table is grouped and hand-worded for whoever writes a record of the type,
 and several catalogue ids fold into one row of it. The catalogue is flat and by id. `kac checks` exits non-zero where
@@ -33,11 +33,11 @@ reader-facing table on a type page has drifted from it.
 ### The schema itself
 
 Before any document is read, the schema is held against what the tool can act on: a rule nothing dispatches, a key the
-loader never reads, a value no code branches on. It goes first in the run, because the schema decides how every
-document below it is read, and a finding there names the schema file and the key rather than a record.
+loader never reads, a value no code branches on. It goes first in the run, because the schema decides how every document
+below it is read, and a finding there names the schema file and the key rather than a record.
 
-[`../../example/.schema/README.md`](../../example/.schema/README.md) is the account of what that pass reports and why
-an inert declaration is treated as a defect. It is written for whoever authors a type file, which in a corpus that took
+[`../../example/.schema/README.md`](../../example/.schema/README.md) is the account of what that pass reports and why an
+inert declaration is treated as a defect. It is written for whoever authors a type file, which in a corpus that took
 this framework is somebody who cannot ask what a key was meant to do — and that is the reason the pass exists at all.
 
 ### A type's own rules

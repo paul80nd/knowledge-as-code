@@ -172,8 +172,8 @@ Every record carries one line directly beneath its H1 — the type, the ID, then
 ```
 
 You arrive at these documents from a citation, so the top of the page has to answer three questions before the prose
-starts: what kind of document is this, which one is it, and is it in force. Frontmatter answers all three. It renders
-as a metadata table an Azure DevOps reader may never look at, and it is written for a machine. The identity line is the
+starts: what kind of document is this, which one is it, and is it in force. Frontmatter answers all three. It renders as
+a metadata table an Azure DevOps reader may never look at, and it is written for a machine. The identity line is the
 same three facts written for a person, at the one place their eye already is.
 
 The ID appears exactly as the frontmatter carries it, so there is one casing of an ID across the corpus rather than a
@@ -181,14 +181,14 @@ second invented for headings. The status is the exception: lower-case in frontma
 upper-case on the line because it is read as a stamp. CI holds all three to the frontmatter — a document cannot go
 `active` and leave the line saying `DRAFT`.
 
-**The H1 is the title and nothing else**: no ID, no prefix, no type name. The identity line carries the handle
-instead. A title that competes with a handle is a worse title, and generated indexes had to strip the ID back off to
-fill a column that already held it.
+**The H1 is the title and nothing else**: no ID, no prefix, no type name. The identity line carries the handle instead.
+A title that competes with a handle is a worse title, and generated indexes had to strip the ID back off to fill a
+column that already held it.
 
 ## Per-type fields
 
-Each type's fields are documented on its own page, generated into it from `.schema/`. A reader working in one folder
-has what they need without leaving it, and there is still one definition.
+Each type's fields are documented on its own page, generated into it from `.schema/`. A reader working in one folder has
+what they need without leaving it, and there is still one definition.
 
 <!-- BEGIN GENERATED: types-metadata -->
 
@@ -224,6 +224,6 @@ tags: [ public-api, http ]
 
 The first question is whether the content belongs in frontmatter at all, and
 [What a record carries](#what-a-record-carries) answers it. Then check that git, the folder, the H1 or an existing link
-does not already hold the fact, since a field costs every document of the type a column. If it is new,
-declare it in the type's `.schema/<folder>.yaml`, add it to that type's `_template.md`, and run `kac index` so the
-generated tables carry it. The validator reads the schema, so it needs no change of its own.
+does not already hold the fact, since a field costs every document of the type a column. If it is new, declare it in the
+type's `.schema/<folder>.yaml`, add it to that type's `_template.md`, and run `kac index` so the generated tables carry
+it. The validator reads the schema, so it needs no change of its own.

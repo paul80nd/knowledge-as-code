@@ -3,8 +3,8 @@
 Everything a corpus receives is authored here: the machine-readable schema `kac` enforces, the framework's own
 documentation, the tree a corpus's plugin is built from, and the pages and templates a corpus starts writing against.
 
-**This folder is what a new corpus copies.** Take everything but `manifest.yaml` and this file, which are the
-template's own machinery and belong to no corpus.
+**This folder is what a new corpus copies.** Take everything but `manifest.yaml` and this file, which are the template's
+own machinery and belong to no corpus.
 [`../README.md`](../README.md#starting-a-corpus-of-your-own) has the steps, and a copy validates clean before a word is
 written.
 

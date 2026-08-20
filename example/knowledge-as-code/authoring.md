@@ -16,8 +16,8 @@ sentence meant. Length is not thoroughness. A document that says less, and says 
 Some of this is enforced, though less than you would hope and never uniformly. Each text rule is declared on a single
 type — `low-ceremony` on discoveries, `not-normative` on explanations, `no-hedged-ordering` on processes — and many
 types carry none at all. Run `kac checks` to see what applies to the type in front of you rather than assuming. Expect
-`kac validate` to come back clean: CI gates the branch, so a clean run is the baseline rather than a source of
-findings. The rest is judgement, and the absence of a check is not permission.
+`kac validate` to come back clean: CI gates the branch, so a clean run is the baseline rather than a source of findings.
+The rest is judgement, and the absence of a check is not permission.
 
 Where a rule here contradicts the schema, **the schema is right and this page is wrong**. It is executable and this is
 not. Report the contradiction; do not resolve it by editing records.
@@ -71,9 +71,9 @@ reader in that state skims, and a skimmed instruction must still be right.
 The rule must be checkable, and a reader must be able to tell obligation from commentary at a glance.
 
 **The clause rules below bind the types that carry clauses**, which are policies and standards. A control, an NFR and an
-FAQ are normative because a reader may act on them without checking. They hold no clause table, no Purpose and no
-RFC 2119 keywords. What binds every normative type is the first sentence above: state the thing a reader will act on,
-make it checkable, and keep the argument out of the part that gets quoted.
+FAQ are normative because a reader may act on them without checking. They hold no clause table, no Purpose and no RFC
+2119 keywords. What binds every normative type is the first sentence above: state the thing a reader will act on, make
+it checkable, and keep the argument out of the part that gets quoted.
 
 * **Standards use RFC 2119 keywords, in capitals, leading the clause.** The capitals are what make them normative;
   lower-case *must* is prose. See [lineage](lineage.md#standard).
@@ -124,9 +124,8 @@ The constraint here is structural rather than lexical:
 
 Capture must stay nearly free or it does not happen.
 
-* **Symptom, cause if known, why it might matter.** Nothing else is required, and `low-ceremony` warns past two
-  hundred words. A discovery long enough to need structure has become something else, and should be promoted rather
-  than padded.
+* **Symptom, cause if known, why it might matter.** Nothing else is required, and `low-ceremony` warns past two hundred
+  words. A discovery long enough to need structure has become something else, and should be promoted rather than padded.
 * **Say what you do not know.** *Unconfirmed*, *seen once*, *may be specific to this branch* — hedging is honest here
   and is what the confidence level exists to carry.
 * **Do not tidy it into authority.** A discovery that reads like an FAQ will be trusted like one. Promotion is where

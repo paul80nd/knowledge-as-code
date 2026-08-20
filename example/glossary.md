@@ -24,8 +24,8 @@ in full before starting work.
 
 The terms particular to the domain are often not interchangeable, and neighbouring terms are easily confused. A
 contributor — human or agent — who doesn't know the distinctions will produce work that is plausible, confident and
-subtly wrong, in code and in documentation alike. Every other document here assumes these terms mean something
-precise; this is where that precision lives.
+subtly wrong, in code and in documentation alike. Every other document here assumes these terms mean something precise;
+this is where that precision lives.
 
 ## Scope
 

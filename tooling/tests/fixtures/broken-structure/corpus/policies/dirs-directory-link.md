@@ -24,6 +24,6 @@ is also a folder no schema declares, which is allowed and checked by nothing.
 
 ## Clauses
 
-| Id     | Clause                                                  | Alignment |
-|--------|----------------------------------------------------------|-----------|
-| `DIRS` | **MUST** trigger `link-resolves` once and nothing else  |           |
+| Id     | Clause                                                 | Alignment |
+|--------|--------------------------------------------------------|-----------|
+| `DIRS` | **MUST** trigger `link-resolves` once and nothing else |           |

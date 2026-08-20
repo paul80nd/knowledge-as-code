@@ -60,8 +60,8 @@ where ownership belongs if it needs stating: who is bound is a scope question, n
 
 **The boundary line.** Where a sibling policy covers ground a reader might think is yours, close the section with a line
 in italics opening `_Boundary:_`. Name each policy they would otherwise reach for and say what it owns instead. Write it
-whenever two policies touch the same subject from different sides. The reader who needs it is the one who has arrived
-at the wrong document and does not yet know it. Optional, and worth the two lines wherever the question is real.
+whenever two policies touch the same subject from different sides. The reader who needs it is the one who has arrived at
+the wrong document and does not yet know it. Optional, and worth the two lines wherever the question is real.
 
 ## Clauses
 
@@ -75,24 +75,23 @@ weight drops off at the boundary without needing a divider the table format can'
 | `{{ID}}` | SHOULD {{recommendation}}    |                         |
 | `{{ID}}` | COULD {{aspiration}}         |                         |
 
-**Ids.** `[A-Z][A-Z0-9]{1,6}`, unique within the document, and immutable once the policy is active. Anything else
-cites them as `pol-{{MNEM}}.{{ID}}`, CI holds every citation to a clause that exists, and removing one is a breaking
-change. Prefer the shortest natural word; compress only when there isn't one. They are reconciliation keys rather than
-prose, and every report that shows an id shows its clause text alongside. A CI failure or a diff shows the id alone, so
-it should still be guessable.
+**Ids.** `[A-Z][A-Z0-9]{1,6}`, unique within the document, and immutable once the policy is active. Anything else cites
+them as `pol-{{MNEM}}.{{ID}}`, CI holds every citation to a clause that exists, and removing one is a breaking change.
+Prefer the shortest natural word; compress only when there isn't one. They are reconciliation keys rather than prose,
+and every report that shows an id shows its clause text alongside. A CI failure or a diff shows the id alone, so it
+should still be guessable.
 
 **Shared ids.** Where two policies bind the same obligation from their own side, they take the same clause id and each
 signposts the other — `— see [pol-OTHR]` closing the clause, and a boundary line above saying which side owns what. The
-shared id is what makes the binding visible from either document instead of looking like an accident. The rule cuts
-both ways. Where two clauses mean different things, they take different ids however natural the same word felt, because
-one id carrying two meanings is what turns a diff into a false reading.
+shared id is what makes the binding visible from either document instead of looking like an accident. The rule cuts both
+ways. Where two clauses mean different things, they take different ids however natural the same word felt, because one
+id carrying two meanings is what turns a diff into a false reading.
 
 **Writing a clause.** Start with the modal verb; the subject is always us, so don't restate it. One obligation per
 clause — if it needs an "and" joining two different actions, it is two clauses. Keep them implementation-agnostic. A
-clause says what must be true and a standard says how, and if an engineer could action it without a standard beneath
-it, it
-has escaped downward and belongs in the standard instead. A clause no standard implements is an ordinary state and takes
-no annotation: the graph reports the gap, and Notes carries the explanation where one is owed.
+clause says what must be true and a standard says how, and if an engineer could action it without a standard beneath it,
+it has escaped downward and belongs in the standard instead. A clause no standard implements is an ordinary state and
+takes no annotation: the graph reports the gap, and Notes carries the explanation where one is owed.
 
 **The evidenceability test.** Before writing a clause, ask what an auditor would ask to *see*. If you can't answer, the
 clause is unevidenceable and needs rewriting — "consider accessibility" fails, "establish accessibility requirements

@@ -15,16 +15,16 @@ of this one.
 layers file by file and records what it took; it merges nothing, and neither half reads either side's commits.
 
 **It is not `index --check`.** Both recompute and compare, and they compare different halves of a file. `mechanism`
-empties every generated block before it compares, so what it judges is the authored prose. What sits between the
-markers is `index --check`'s alone, and a shared page can be byte-identical everywhere and stale everywhere.
+empties every generated block before it compares, so what it judges is the authored prose. What sits between the markers
+is `index --check`'s alone, and a shared page can be byte-identical everywhere and stale everywhere.
 
 **It is not `validate`.** Drift is not invalidity. A corpus that has edited its copy of the schema has drifted and may
 be entirely valid; a corpus in step with upstream may be full of broken records.
 
 ## Approach
 
-The two halves read one manifest and share one vocabulary of layers. `--check` decides and reports; `--sync` decides
-and then writes. Neither touches a layer the manifest says a corpus owns.
+The two halves read one manifest and share one vocabulary of layers. `--check` decides and reports; `--sync` decides and
+then writes. Neither touches a layer the manifest says a corpus owns.
 
 ### `--check`
 
@@ -96,8 +96,7 @@ In one pass over both trees:
 Sync then stamps `descriptor-version`, `upstream.mechanism-version`, `synced-from` and `synced-on` into `.corpus.yaml`.
 It rewrites those four lines rather than re-serialising the file, so the descriptor's commentary survives. The file's
 own format is the mechanism's to state, because a corpus cannot know the shape a newer one writes. `content-version` is
-left alone: what a corpus knows is not something an upstream can tell it. Finally it runs `index`.
-Copying a page whole is only safe because of that last step: the page arrives carrying the reference's generated block,
-and is right only once rebuilt against the types the receiving corpus holds. A passing `index --check` is sync's
-postcondition.
+left alone: what a corpus knows is not something an upstream can tell it. Finally it runs `index`. Copying a page whole
+is only safe because of that last step: the page arrives carrying the reference's generated block, and is right only
+once rebuilt against the types the receiving corpus holds. A passing `index --check` is sync's postcondition.
 

@@ -6,9 +6,9 @@
 ## Adding or changing a check
 
 **Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
-`expr:` on a rule in `.schema/<type>.yaml` — see [`../example/.schema/README.md`](../example/.schema/README.md) for
-what one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks
-table and `kac checks` all pick it up from the schema.
+`expr:` on a rule in `.schema/<type>.yaml` — see [`../example/.schema/README.md`](../example/.schema/README.md) for what
+one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks table
+and `kac checks` all pick it up from the schema.
 
 **What decides it is what the author is told.** Write the expression where one fixed message says everything the code
 would have said. Write the code where it can name *which* part of the document is at fault and a single string cannot. A
@@ -85,8 +85,8 @@ file, which is `schema-shape` rather than `schema-dispatch`.
 Wherever it lives, three places have to agree, and each fails a meta-test rather than a test you were looking at:
 
 1. **An entry in [`../example/.schema/_checks.yaml`](../example/.schema/_checks.yaml)** — the declaration. Its
-   `description:` is what `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the
-   boundary. A check a rule class reports under with no entry here fails `schema-dispatch` when the schema loads.
+   `description:` is what `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the boundary.
+   A check a rule class reports under with no entry here fails `schema-dispatch` when the schema loads.
 2. **A row in `Generator.DocRows`**, unless the check declares `on-type-page: false` — one or the other, or
    `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one of its
    records; the flag is for a check that reads the schema, the template or the page itself, which is real and is not
@@ -150,13 +150,13 @@ from the framework carrying them, and one that has gone is a block that stopped 
   beside it. Types it does not use are simply absent, which is silent. Adding a folder to a fixture without standing the
   type up adds a finding to every scenario that reads it.
 * Only fixtures in **`validate` mode** run the validator. `index`, `index-stale`, `mechanism`, `sync`, `export` and
-  `bundle` modes do not, so a new check cannot affect them. `sync`, `export` and `bundle` are the modes that write.
-  Each asserts the tree the command left rather than only what the command printed, so its expectations name files and
-  their content instead of a findings golden.
+  `bundle` modes do not, so a new check cannot affect them. `sync`, `export` and `bundle` are the modes that write. Each
+  asserts the tree the command left rather than only what the command printed, so its expectations name files and their
+  content instead of a findings golden.
 * **The `export` fixture commits the export itself**, under `expected-dist/`, and a diff there is a change to what a
   consumer reads. Its [README](tests/fixtures/export/README.md) says what that asks of you. Nothing else in the suite
-  holds a tracked copy of an untracked artefact — the `bundle` fixtures deliberately do not, because most of a bundle
-  is that same export and a second copy would be a second thing to keep in step.
+  holds a tracked copy of an untracked artefact — the `bundle` fixtures deliberately do not, because most of a bundle is
+  that same export and a second copy would be a second thing to keep in step.
 * Regenerate with `dotnet run tooling/kac-tests.cs -- --update [name]`, then **read the diff**. The command rewrites
   expectations to whatever the tool now produces, so it will happily bless a regression.
 
@@ -182,8 +182,8 @@ it, and the specs hold what the validator says about it. None of them can show t
 the paths its skill names resolve inside the installed copy, or that a link built from its template fetches the record
 it points at.
 
-So it installs the plugin into a Claude config directory of its own and asks it those questions. Run it from the
-corpus root after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
+So it installs the plugin into a Claude config directory of its own and asks it those questions. Run it from the corpus
+root after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
 
 ```sh
 cd example && sh ../tooling/tests/round-trip.sh

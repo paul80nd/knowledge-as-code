@@ -26,6 +26,6 @@ The `notifications` repository.
 
 ## Environments
 
-| Environment | URL                                 |
-|-------------|-------------------------------------|
-| Production  | https://notifications.example.com   |
+| Environment | URL                               |
+|-------------|-----------------------------------|
+| Production  | https://notifications.example.com |

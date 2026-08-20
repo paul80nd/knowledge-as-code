@@ -44,30 +44,30 @@ Each line carries the entry whole:
 
 | Field                 | What it holds                                                             |
 |-----------------------|---------------------------------------------------------------------------|
-| `id`                  | `<glossary-id>.<term>` — the address to quote and to search on             |
-| `title`, `definition` | the term and its meaning                                                   |
-| `not`                 | what the term excludes, where the corpus drew that boundary                |
-| `seeAlso`             | related terms as full ids, so you can search straight to them              |
-| `record`              | the glossary this entry belongs to                                         |
-| `status`, `reviewBy`  | how far the entry has settled, and the date it was meant to be read again  |
-| `path`, `anchor`      | the two values a link template takes — see below                           |
+| `id`                  | `<glossary-id>.<term>` — the address to quote and to search on            |
+| `title`, `definition` | the term and its meaning                                                  |
+| `not`                 | what the term excludes, where the corpus drew that boundary               |
+| `seeAlso`             | related terms as full ids, so you can search straight to them             |
+| `record`              | the glossary this entry belongs to                                        |
+| `status`, `reviewBy`  | how far the entry has settled, and the date it was meant to be read again |
+| `path`, `anchor`      | the two values a link template takes — see below                          |
 
 ## Build a link from a template
 
-**No line holds a URL.** `manifest.json` holds two templates under `publishing`, and each line holds the two values
-they take. Read the manifest once in a session and keep both strings; they are the same for every term in the export.
+**No line holds a URL.** `manifest.json` holds two templates under `publishing`, and each line holds the two values they
+take. Read the manifest once in a session and keep both strings; they are the same for every term in the export.
 
 **Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
 else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
-right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the
-corpus nobody asked about.
+right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the corpus
+nobody asked about.
 
 **To send a reader to a record, use `humanTemplate`.** Substitute `path` and `anchor`. That is the rendered page, and
 the anchor lands the reader on the term rather than at the top of the glossary.
 
 **To read a record's source yourself, use `rawTemplate`.** Substitute `path` alone. There is no anchor to give it: raw
-source is text and has nowhere to land. Fetching the human URL instead hands you the markdown wrapped in someone
-else's HTML, and you will read the page furniture as though it were the record.
+source is text and has nowhere to land. Fetching the human URL instead hands you the markdown wrapped in someone else's
+HTML, and you will read the page furniture as though it were the record.
 
 **Where either template is `null`**, the corpus publishes nowhere the export could address. Say so, and quote the
 `path` as the record's place in the repository. Do not assemble a URL of your own.

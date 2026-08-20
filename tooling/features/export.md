@@ -2,11 +2,11 @@
 
 ## Intent
 
-A consumer of a corpus should not clone it. `export` writes what the corpus knows into `.dist/export/` as data built
-for an agent to read: a manifest saying what the export is, one file per record for a reader that wants a whole
-record, and a flat file cheap to grep for a reader holding only a word. What travels is each type's own decision,
-declared beside the type, so the command carries no list of its own and a corpus adopting a new type exports it
-without the tool changing.
+A consumer of a corpus should not clone it. `export` writes what the corpus knows into `.dist/export/` as data built for
+an agent to read: a manifest saying what the export is, one file per record for a reader that wants a whole record, and
+a flat file cheap to grep for a reader holding only a word. What travels is each type's own decision, declared beside
+the type, so the command carries no list of its own and a corpus adopting a new type exports it without the tool
+changing.
 
 ## What it is not
 
@@ -15,23 +15,22 @@ something a consumer can install. Nothing here trims components, packages a plug
 here knows a bundle exists — `bundle` reads what this wrote and never the other way round.
 
 **It is not `index`.** `index` writes into the corpus, for a person reading the corpus. `export` writes outside it, for
-something that will never open the Markdown. Both are built from the same frontmatter, and neither is derivable from
-the other, because they answer to different readers.
+something that will never open the Markdown. Both are built from the same frontmatter, and neither is derivable from the
+other, because they answer to different readers.
 
 **It is not a backup.** A record travels as the fields and sections its type declared, so a corpus cannot be rebuilt
 from an export of it. The direction is one way: `.dist/export/` is rebuilt whole from the corpus.
 
 ## Approach
 
-**The export is untracked.** `.dist/` is gitignored and the export inside it is rebuilt whole, so it is never
-something to review: a tracked
-export would put a diff nobody reads on every change to the words, restating what the corpus already holds. Two things
-follow from that. The overwrite is delete-then-write, because a record deleted from the corpus must not leave an entry
-behind and no diff would show the orphan. And the manifest has to describe itself, since git can say nothing about an
-export once it has left: it carries the commit it was built from and a dirty flag beside it, because a commit on its own
-would describe a dirty tree as reproducible. What holds the shape steady in place of a diff is a committed fixture in
-the framework's own test suite, which exports a corpus and compares the whole tree file by file — so a corpus that runs
-the tool without the tests receives a format already proved.
+**The export is untracked.** `.dist/` is gitignored and the export inside it is rebuilt whole, so it is never something
+to review: a tracked export would put a diff nobody reads on every change to the words, restating what the corpus
+already holds. Two things follow from that. The overwrite is delete-then-write, because a record deleted from the corpus
+must not leave an entry behind and no diff would show the orphan. And the manifest has to describe itself, since git can
+say nothing about an export once it has left: it carries the commit it was built from and a dirty flag beside it,
+because a commit on its own would describe a dirty tree as reproducible. What holds the shape steady in place of a diff
+is a committed fixture in the framework's own test suite, which exports a corpus and compares the whole tree file by
+file — so a corpus that runs the tool without the tests receives a format already proved.
 
 ```
 .dist/export/
@@ -41,15 +40,15 @@ the tool without the tests receives a format already proved.
     terms.jsonl          every term, one to a line, addressed by path and anchor
 ```
 
-That tree is one corpus's, and the names in it are read from the schema. A type's directory is its own key, and its
-flat file is named for what the type calls one of its parts — `terms.jsonl` because a glossary's `parts:` block says
+That tree is one corpus's, and the names in it are read from the schema. A type's directory is its own key, and its flat
+file is named for what the type calls one of its parts — `terms.jsonl` because a glossary's `parts:` block says
 `noun: term`. Both are fixed once the type has declared them, because a skill addresses them by name.
 
 **The manifest is what makes the tree usable two ways.** A flat file is read whole and grepped, because a lookup does
 not know which record holds the term it wants. A record file is read one at a time, because a reader that has a hit
 wants the single file behind it. One large file would charge the second reader the first one's cost, and a bare tree of
-files would leave a reader nothing to orient on — which types are here, how many records and parts each holds, and
-where the flat file for one of them sits. The manifest answers that first, so a reader can choose.
+files would leave a reader nothing to orient on — which types are here, how many records and parts each holds, and where
+the flat file for one of them sits. The manifest answers that first, so a reader can choose.
 
 **Each type in the manifest carries two counts, named apart.** One is how many records it holds and the other how many
 parts, and for a glossary the two differ by an order of magnitude. A reader sizing the vocabulary wants the parts; a
@@ -57,9 +56,9 @@ reader asking how many files it was handed wants the records. One number would b
 
 **What travels is the type's decision**, declared in its `export:` block and described in
 [`../../example/.schema/README.md`](../../example/.schema/README.md). The exporter reads that declaration and nothing
-else, so a corpus that adopted no exporting type still writes a manifest, with an empty type list — "nothing" is a
-valid statement of what a corpus has. Every entry in the block names a **fidelity** beside the piece it selects, saying
-how much of that piece travels, and no entry falls back to one.
+else, so a corpus that adopted no exporting type still writes a manifest, with an empty type list — "nothing" is a valid
+statement of what a corpus has. Every entry in the block names a **fidelity** beside the piece it selects, saying how
+much of that piece travels, and no entry falls back to one.
 
 **`--type` narrows what is written and never what is read.** The corpus is loaded whole whatever the flag says, so ids
 resolve against every record rather than against the handful a narrowed run happened to want: a question about the set,
@@ -75,11 +74,11 @@ the very file this one exists to save them opening.
 An address is the one thing a line does not repeat. It carries the record's `path` and the part's `anchor`, and the
 manifest carries the two templates they go into.
 
-**`part` and `anchor` hold the same string, and that is an invariant rather than duplication.** The two answer
-different questions: a part's id is what a citation from elsewhere in the corpus resolves against, and an anchor is
-what a link's fragment has to be. A type that takes its parts from headings makes one string do both jobs, because a
-heading's slug is its id and its anchor alike — so every line of a glossary's flat file carries the pair equal. A line
-where they differ is a defect.
+**`part` and `anchor` hold the same string, and that is an invariant rather than duplication.** The two answer different
+questions: a part's id is what a citation from elsewhere in the corpus resolves against, and an anchor is what a link's
+fragment has to be. A type that takes its parts from headings makes one string do both jobs, because a heading's slug is
+its id and its anchor alike — so every line of a glossary's flat file carries the pair equal. A line where they differ
+is a defect.
 
 **Records are ordered roots-by-id, each root's chain depth-first beneath it.** Terms sort alphabetically within a
 record. Generality holds **within a chain** and nowhere else: `gls-search` narrows `gls-example-libraries`, so a grep
@@ -97,8 +96,7 @@ matched.
 
 **A cross-reference is read, never inferred.** A `**Not:**` line pointing at another glossary is a link, and a link's
 target is stripped out of the prose — so the export carries the part it names in `seeAlso`, as `gls-search.title`. It
-resolves to the term rather than the record, because `redefinitions-are-reciprocal` is about a term and its
-counterpart.
+resolves to the term rather than the record, because `redefinitions-are-reciprocal` is about a term and its counterpart.
 
 A link naming a record and no term inside it leaves nothing to read, so nothing is carried. The obvious guess is the
 same word in the other glossary; it is right only for a pair that happens to share a spelling, and silently wrong for a
@@ -126,18 +124,18 @@ export was built from, so a citation names the version the agent read rather tha
 `anchor` a term line carries. Three things follow from writing them this way:
 
 * **The ref is inside the template.** A ref left as a placeholder is forty hex characters copied by an agent, and a
-  one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a
-  substitution can produce is a wrong path — visible, and correctable.
+  one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a substitution
+  can produce is a wrong path — visible, and correctable.
 * **Only the human template takes an anchor.** Raw source has no fragment to honour, so the asymmetry is a property of
   the templates rather than a rule each reader has to remember.
-* **The bases are not carried beside them.** They are in the templates already, and a manifest stating one address
-  twice is a manifest that can state it two ways.
-* **A corpus that is not its repository names the folder it sits in.** `publishing.path-prefix` lands between the
-  commit and the record's path, which is the only place it can go, and it is settled in the template for the reason
-  the ref is: what a reader supplies is the path alone, so the two cannot be joined in the wrong order.
+* **The bases are not carried beside them.** They are in the templates already, and a manifest stating one address twice
+  is a manifest that can state it two ways.
+* **A corpus that is not its repository names the folder it sits in.** `publishing.path-prefix` lands between the commit
+  and the record's path, which is the only place it can go, and it is settled in the template for the reason the ref is:
+  what a reader supplies is the path alone, so the two cannot be joined in the wrong order.
 
-`Publishing.Links` substitutes into those same templates, so a link the export resolves and a link a consumer builds
-for one part are the same string.
+`Publishing.Links` substitutes into those same templates, so a link the export resolves and a link a consumer builds for
+one part are the same string.
 
 **A per-record file pays the churn a term line no longer does.** Its links are resolved, so the commit sits inside them
 and the file rewrites on every export from a new commit whatever its content did. It is bought deliberately:
@@ -147,15 +145,14 @@ because the churn scales with the record count and what it buys does not.
 
 Four kinds of corpus have no address the tool can build on: one publishing nowhere, one naming a target nothing builds
 links for, one stating a target but no bases, and one git cannot answer for. Each exports without links. The manifest
-carries the target it was given and null templates beside it, so a consumer sees the absence stated; the run itself
-says which of the four caused it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than
-about where it is published, and they travel either way.
+carries the target it was given and null templates beside it, so a consumer sees the absence stated; the run itself says
+which of the four caused it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than about
+where it is published, and they travel either way.
 
 **Two versions, and they are independent.** `formatVersion` in the manifest is the shape of the output. `contentVersion`
-is `content-version` from `.corpus.yaml` — what the corpus knows, semantically versioned and bumped by hand, with
-major, minor and patch defined in that file beside the key. Neither
-implies the other: a corpus can rewrite every definition without `formatVersion` moving, and `formatVersion` can move
-over a corpus nobody has edited.
+is `content-version` from `.corpus.yaml` — what the corpus knows, semantically versioned and bumped by hand, with major,
+minor and patch defined in that file beside the key. Neither implies the other: a corpus can rewrite every definition
+without `formatVersion` moving, and `formatVersion` can move over a corpus nobody has edited.
 
 **`bundle` is what reads `formatVersion`.** It refuses an export whose number is not the one this build of the tool
 writes, and names both — the number the export declares and the number the tool reads. `.dist/export/` is untracked and
@@ -189,7 +186,7 @@ it. Deriving the anchor from the part source is what would fix it. No table-sour
 today, so the path is unexercised and no fixture covers it.
 
 **One fidelity of three is carried.** A type may declare `full`, `summary` or `reference` against each piece its
-`export:` block selects, and the exporter carries `full`. A type declaring either of the others is reported as
-declaring a fidelity nothing carries, and the schema pass fails — which is the safe way round, since the alternative is
-an export quietly thinner than the type asked for. Glossary needs only `full`. The model is three-valued so that the
-first type wanting a section reduced to a line does not force it to be rebuilt.
+`export:` block selects, and the exporter carries `full`. A type declaring either of the others is reported as declaring
+a fidelity nothing carries, and the schema pass fails — which is the safe way round, since the alternative is an export
+quietly thinner than the type asked for. Glossary needs only `full`. The model is three-valued so that the first type
+wanting a section reduced to a line does not force it to be rebuilt.
