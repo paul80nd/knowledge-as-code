@@ -31,9 +31,10 @@ nobody spends an evening on work that was never going to land.
 
 ## Take a copy instead
 
-**You own the content, and install the tool.** The intended way to use this is to take your own cut: copy `example/`,
-delete the types you do not want, and change whatever you like in your copy. Your corpus installs `kac` from nuget.org
-and holds nothing else of this repository, so there is nothing to remove if you later go your own way. The
+**You own the content, and install the tool.** The intended way to use this is to take your own cut: copy
+`template/`, decline the types you do not want, and change whatever you like in your copy. Your corpus installs `kac`
+from nuget.org and holds nothing else of this repository, so there is nothing to remove if you later go your own way.
+The
 [README](../README.md) explains the model, and `.corpus.yaml` records which version of the shared layer a copy is
 running and where it has deliberately stepped away.
 

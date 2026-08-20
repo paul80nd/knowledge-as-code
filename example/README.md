@@ -10,6 +10,9 @@ A corpus is plain markdown in git where every document has a type and every type
 [`kac`](../tooling/) is run against on every commit. It proves the tool works over real content, and not only over
 its fixtures.
 
+**Read this one, copy [`../template/`](../template/).** The template is the same corpus with the content taken out, and
+it is what a new corpus starts from. Everything here is a worked example to borrow ideas from.
+
 Why it is built this way is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath it.
 [`../README.md`](../README.md) is the repository this corpus sits in.
 

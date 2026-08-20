@@ -109,8 +109,8 @@ Where the clauses above do not hold, and who can grant a departure. Name the cla
 it to inference. Stays below the clauses — an exception cannot be read before the thing it excepts.
 
 Exceptions stated up front are honest; exceptions discovered later are erosion. If there are none, say so in a sentence.
-Recording a gap is acceptable; concealing it is not — and a one-off departure is a recorded deviation ([pol-DEVI]), not
-an exception.
+Recording a gap is acceptable; concealing it is not. A one-off departure is a recorded deviation rather than an
+exception, and the policy that governs deviations is the one to cite.
 
 ## Notes
 
@@ -119,5 +119,4 @@ reader would otherwise raise. If a note is doing the job of a section, it belong
 
 Delete this heading if there is nothing to say. An empty section is worse than a missing one.
 
-[pol-DEVI]: devi-deviations-are-recorded.md
 [{{FRAMEWORK}}]: /frameworks.md#{{framework}}

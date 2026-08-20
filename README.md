@@ -98,12 +98,31 @@ Every command, one document apiece, is in [`tooling/features/`](tooling/features
 
 ## Starting a corpus of your own
 
-Copy `example/`, delete the records in the types you keep, rewrite the type pages' examples in your own domain, and
-start writing. `.schema/` comes with it and is the half you want to keep receiving changes to.
+**Copy [`template/`](template/), not `example/`.** The template is the corpus with the content taken out: the schema,
+the framework's own documentation, a root page and a template for every type, and nothing about anybody's estate.
+`example/` is a worked corpus to read for ideas, and copying it hands you a fictional library consortium to delete.
 
-**A copy carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which is not part of the corpus.
-Install it from nuget.org as above and run it from the copy. It needs nothing but the `.schema/` the copy already
-carries, and a corpus outside this repository validates and generates exactly as `example/` does.
+```bash
+cp -R template/ ../my-corpus && cd ../my-corpus
+rm manifest.yaml README.md          # the template's own machinery, not a corpus's
+
+# write .corpus.yaml — the one file no template can supply
+git init && git add -A              # kac reads the git listing, so a corpus is a repository
+
+dotnet tool install --global KnowledgeAsCode.Tool
+kac index                           # write the indexes and generated blocks
+kac validate                        # comes back clean on an empty corpus
+```
+
+[`.corpus.yaml`](example/.corpus.yaml) names the corpus, says where it publishes and lists the types it adopted, so no
+copied file can answer it. `example/`'s is commented throughout and is the one to read while writing yours.
+
+You also arrive with no `README.md`, no ignore rules, no editor conventions and no CI. Each is a question about your
+repository rather than about the framework.
+
+**A copy carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which is not part of any corpus.
+Install it from nuget.org as above and run it from the copy: it needs nothing but the `.schema/` the copy already
+carries.
 
 **What a copy cannot yet do is take a newer framework.** `kac mechanism` wants a reference corpus, through `--against`
 or an `upstream.url`. Past that it reads a manifest at `tooling/manifest.yaml` that no corpus holds. A command that
