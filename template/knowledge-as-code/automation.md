@@ -78,8 +78,8 @@ you keep your prose, and the generator keeps the tables current.
 | What this corpus holds           | `.schema/` + the types adopted | Root `README.md` `types-index` block        |
 
 The table above says what each block is and where it lands. The repository the tool is built from carries the same list
-from the generator's side, in `tooling/features/index.md`, giving the rule that governs each block in place of its
-address.
+from the generator's side, in `tooling/features/generate.md`, giving the rule that governs each block in place of
+its address.
 
 Most of those blocks describe the corpus rather than the schema. Everything on the taxonomy page covers the types *this*
 corpus holds: the decision table, the types at length, the disambiguations, and the graph with the edges beneath it. So

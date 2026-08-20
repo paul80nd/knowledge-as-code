@@ -43,7 +43,7 @@ git clone https://github.com/paul80nd/knowledge-as-code.git
 cd knowledge-as-code/example
 
 ./kac validate     # frontmatter, links, structure, clauses and the graph
-./kac index        # regenerate the indexes and generated blocks
+./kac generate     # regenerate the indexes and generated blocks
 ./kac checks       # list every check the validator implements
 ```
 
@@ -111,7 +111,7 @@ rm manifest.yaml README.md          # the template's own machinery, not a corpus
 git init && git add -A              # kac reads the git listing, so a corpus is a repository
 
 dotnet tool install --global KnowledgeAsCode.Tool
-kac index                           # write the indexes and generated blocks
+kac generate                        # write the indexes and generated blocks
 kac validate                        # comes back clean on an empty corpus
 ```
 

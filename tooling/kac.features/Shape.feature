@@ -1,6 +1,6 @@
 Feature: Corpus shape checks
   Beyond the records themselves, kac asks whether the corpus has the shape its schema declares: every type
-  stood up as both a page and a folder, and every file kac index writes a block into still holding the
+  stood up as both a page and a folder, and every file kac generate writes a block into still holding the
   markers to write between — a type's page and a framework document alike. Driven in-process against the
   type-setup and type-pages fixtures — the same corpora their JSON goldens pin.
 
@@ -19,12 +19,12 @@ Feature: Corpus shape checks
     Then validation reports 1 documents and 0 skipped
     And the findings are exactly:
       | file                          | line | check                 | message                                                                                                                                                                                               |
-      | adrs.md                       |      | generated-block       | the 'schema-adrs' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both.                                                                         |
+      | adrs.md                       |      | generated-block       | the 'schema-adrs' block is missing its BEGIN marker — `kac generate` writes between them and leaves the page alone without both.                                                                         |
       | adrs.md                       | 1    | page-frontmatter      | the page carries frontmatter — it describes the records beneath it and is not one, so it has no id, tier or status of its own. Move what it holds into 'adrs/' as a record, and delete the block.      |
       | adrs.md                       | 14   | link-resolves         | link target '/nope.md' does not resolve.                                                                                                                                                              |
       | glossary/knowledge-as-code.md | 18   | link-resolves         | link target '/nope.md' does not resolve.                                                                                                                                                              |
       | glossary/knowledge-as-code.md | 18   | framework-names-types | '/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off.                 |
-      | knowledge-as-code/taxonomy.md |      | generated-block       | the 'types-graph' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both.                                                                         |
+      | knowledge-as-code/taxonomy.md |      | generated-block       | the 'types-graph' block is missing its BEGIN marker — `kac generate` writes between them and leaves the page alone without both.                                                                         |
       | knowledge-as-code/taxonomy.md | 4    | framework-names-types | '/adrs' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off.                    |
       | knowledge-as-code/taxonomy.md | 5    | link-resolves         | link target '/adrs/0001-knowledge-as-code.md' does not resolve.                                                                                                                                       |
       | knowledge-as-code/taxonomy.md | 5    | framework-names-types | '/adrs/0001-knowledge-as-code.md' links to a record in 'adrs' from a document every corpus shares. Those records are the first thing a corpus deletes, so the link dies even where the type is used.  |

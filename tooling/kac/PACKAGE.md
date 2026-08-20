@@ -19,7 +19,7 @@ dotnet tool install --global KnowledgeAsCode.Tool
 
 ```bash
 kac validate     # frontmatter, links, structure, clauses and the graph
-kac index        # regenerate the indexes and the generated blocks in each type page
+kac generate     # regenerate the indexes and the generated blocks in each type page
 kac export       # write the corpus to .dist/export/ as data a consumer reads instead of cloning
 kac bundle       # assemble that export and .plugin/ into an installable plugin
 kac checks       # list every check the validator implements

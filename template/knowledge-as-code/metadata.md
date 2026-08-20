@@ -227,5 +227,5 @@ tags: [ public-api, http ]
 First ask whether the content belongs in frontmatter at all. [What a record carries](#what-a-record-carries) answers
 that. Then check that git, the folder, the H1 or an existing link does not already hold the fact, since a field costs
 every document of the type a column. If the field is new, declare it in the type's `.schema/<folder>.yaml`, add it to
-that type's `_template.md`, and run `kac index` so the generated tables carry it. The validator reads the schema, so it
-needs no change of its own.
+that type's `_template.md`, and run `kac generate` so the generated tables carry it. The validator reads the schema, so
+it needs no change of its own.

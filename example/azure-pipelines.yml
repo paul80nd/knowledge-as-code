@@ -1,10 +1,10 @@
 # CI for the knowledge-as-code corpus.
 #
 # Runs the kac validator, the generated-content freshness check and the export on
-# pull requests into main. It NEVER commits anything it produces. `index --check`
+# pull requests into main. It NEVER commits anything it produces. `generate --check`
 # only verifies the tracked generated files are fresh and fails, naming the command
-# a human runs locally (`dotnet run --project tooling/kac -- index`). The export
-# lands in an untracked .dist/ that the agent throws away. This pipeline is
+# a human runs locally (`dotnet run --project tooling/kac -- generate`). The
+# export lands in an untracked .dist/ that the agent throws away. This pipeline is
 # read-only and pushes nothing.
 #
 # What CI produces is never written back over a file a human edits, which is the
@@ -48,7 +48,7 @@ steps:
     displayName: Validate frontmatter, links and structure
     workingDirectory: $(Build.SourcesDirectory)
 
-  - script: dotnet run --project tooling/kac -- index --check
+  - script: dotnet run --project tooling/kac -- generate --check
     displayName: Check generated indexes are fresh
     workingDirectory: $(Build.SourcesDirectory)
 

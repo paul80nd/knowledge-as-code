@@ -51,7 +51,7 @@ Needs `kac` on your path. [`../README.md`](../README.md#running-the-tool) covers
 
 ```bash
 kac validate     # frontmatter, links, structure, clauses and the graph
-kac index        # regenerate the indexes and generated blocks
+kac generate     # regenerate the indexes and generated blocks
 kac export       # write the corpus to .dist/export/ as data a consumer reads
 kac bundle       # assemble that export and .plugin/ into a plugin under .dist/plugin/
 kac checks       # list every check the validator implements

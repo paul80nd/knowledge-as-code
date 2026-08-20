@@ -1,5 +1,5 @@
 descriptor-version: 1
-corpus: test-index-adoption
+corpus: test-generate-adoption
 role: consumer
 
 types:

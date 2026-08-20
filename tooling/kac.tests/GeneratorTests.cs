@@ -1,5 +1,5 @@
 // Unit tests for the pure Generator helpers. The full index / <type>.md generation is covered by the
-// golden 'index' scenario; these pin the table/catalogue consistency and the splice in-process.
+// golden 'generate' scenario; these pin the table/catalogue consistency and the splice in-process.
 
 using kac.core;
 
@@ -69,7 +69,7 @@ public class GeneratorTests
     }
 
     // The three sorts a type can declare, over one set of rows: no `sort:` at all, several columns, and
-    // a direction. Each is a value the loader reads and the golden 'index' scenario cannot reach, because
+    // a direction. Each is a value the loader reads and the golden 'generate' scenario cannot reach, because
     // the fixture corpora it runs over hold one type whose index sorts by id.
     private static List<Doc> Rows(params (string Id, string Severity)[] rows) =>
     [

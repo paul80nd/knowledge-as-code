@@ -62,8 +62,8 @@ cd ../example
 
 kac validate            # validate the corpus
 kac validate --json     # machine-readable summary + findings
-kac index               # regenerate indexes and blocks
-kac index --check       # verify generated output is fresh
+kac generate            # regenerate indexes and blocks
+kac generate --check    # verify generated output is fresh
 kac export              # write the corpus to .dist/export/ as data a consumer reads
 kac export --type glossary                        # …one type rather than every one that contributes
 kac bundle              # assemble that export and .plugin/ into a plugin under .dist/plugin/
@@ -101,7 +101,7 @@ explain. **Decisions** takes only the ones belonging to a feature as a whole.
 |--------------------------------------------------|-------------------------------------------------------------------------------------------------------|
 | [`features/validate.md`](features/validate.md)   | Which files are read as records, which are passed over, and which get a pass of their own.            |
 | [`features/checks.md`](features/checks.md)       | Where a check comes from, how the schema is held to what the tool dispatches, and why a rule is data. |
-| [`features/index.md`](features/index.md)         | What is generated, from what, and the two rules that keep the output byte-stable.                     |
+| [`features/generate.md`](features/generate.md)   | What is generated, from what, and the two rules that keep the output byte-stable.                     |
 | [`features/export.md`](features/export.md)       | The corpus written to `.dist/export/` as data an agent reads without cloning it.                      |
 | [`features/bundle.md`](features/bundle.md)       | That export and the `.plugin/` tree assembled into an installable plugin, trimmed to what it can do.  |
 | [`features/mechanism.md`](features/mechanism.md) | Drift against a reference corpus, and taking the shared layers down from it.                          |

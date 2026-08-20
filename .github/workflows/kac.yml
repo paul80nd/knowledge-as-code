@@ -2,7 +2,7 @@
 # the tool's own three test layers. The corpus half mirrors example/azure-pipelines.yml.
 #
 # Nothing CI produces is written back over a file a human edits, and read-only permission is what
-# keeps it that way. `index --check` only reports staleness, naming the command to run locally.
+# keeps it that way. `generate --check` only reports staleness, naming the command to run locally.
 
 name: kac
 
@@ -39,7 +39,7 @@ jobs:
 
       - name: Check generated indexes are fresh
         working-directory: example
-        run: dotnet run --project ../tooling/kac -- index --check
+        run: dotnet run --project ../tooling/kac -- generate --check
 
       - name: Build the export
         working-directory: example

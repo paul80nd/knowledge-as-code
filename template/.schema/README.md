@@ -269,8 +269,8 @@ every angle and not be, so it fails when the schema loads.
 Not every statement of intent is waiting for an expression, and counting them as though they were makes the ruleset look
 less finished than it is. Ten will never be an expression. Eight are not validator work in any form. Seven say
 **Scheduled** in their own descriptions, meaning periodic reports over a whole corpus, several needing external state,
-and `kac` has no execution model for them. `coverage-report` is a generator and belongs with `kac index`. The other two
-are not rules about a document at all: `blameless` needs a list of personal names, since no regular expression tells
+and `kac` has no execution model for them. `coverage-report` is a generator and belongs with `kac generate`. The other
+two are not rules about a document at all: `blameless` needs a list of personal names, since no regular expression tells
 `Alex Doe` from `Root Cause`, and `human-confirmed` is a `pattern:` on a field.
 
 ## Rule expressions

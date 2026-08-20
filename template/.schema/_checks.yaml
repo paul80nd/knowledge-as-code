@@ -457,10 +457,10 @@ checks:
   generated-block:
     severity: error
     on-type-page: false
-    description: Every file `kac index` writes a block into still carries both of that block's markers.
+    description: Every file `kac generate` writes a block into still carries both of that block's markers.
     notes: >
       A block whose markers have gone is written by nothing and, without this, reported by nothing:
-      `index --check` compares a file against what the generator would produce, and for a file it can
+      `generate --check` compares a file against what the generator would produce, and for a file it can
       find no marker in that is the file as it stands. The corpus's own `README.md` is the exception,
       where deleting the markers is how a corpus declines the block.
 

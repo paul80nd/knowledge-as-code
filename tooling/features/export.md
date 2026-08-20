@@ -14,9 +14,9 @@ changing.
 something a consumer can install. Nothing here trims components, packages a plugin or publishes anything, and nothing
 here knows a bundle exists — `bundle` reads what this wrote and never the other way round.
 
-**It is not `index`.** `index` writes into the corpus, for a person reading the corpus. `export` writes outside it, for
-something that will never open the Markdown. Both are built from the same frontmatter, and neither is derivable from the
-other, because they answer to different readers.
+**It is not `generate`.** `generate` writes into the corpus, for a person reading the corpus. `export` writes outside
+it, for something that will never open the Markdown. Both are built from the same frontmatter, and neither is derivable
+from the other, because they answer to different readers.
 
 **It is not a backup.** A record travels as the fields and sections its type declared, so a corpus cannot be rebuilt
 from an export of it. The direction is one way: `.dist/export/` is rebuilt whole from the corpus.

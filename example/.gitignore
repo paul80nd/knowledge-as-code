@@ -2,7 +2,7 @@
 # operating-system noise common to every folder is in the repository's own .gitignore,
 # which this one adds to.
 
-# Generated — rebuilt by `./kac index`
+# Generated — rebuilt by `./kac generate`
 _reports/
 
 # Generated — `export` rebuilds .dist/export/ whole, `bundle` rebuilds .dist/plugin/ and the

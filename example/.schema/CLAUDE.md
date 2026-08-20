@@ -7,10 +7,10 @@ In a corpus that declares `role: consumer`, these files arrive from upstream, so
 customisation. Make the change upstream and take it down with `kac mechanism --sync`. Where a line below names a C# file
 it is naming that same repository, because a corpus holds `.schema/` and an installed `kac` and nothing else.
 
-**After any change, run `kac index` and then the golden suite.** Every type page carries generated `schema-<type>`
+**After any change, run `kac generate` and then the golden suite.** Every type page carries generated `schema-<type>`
 and `checks-<type>` blocks derived from these files. A schema edit alone leaves the corpus stale and fails
-`index --check` in CI. The fixtures validate against these files rather than against copies, so the same edit can move
-golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/kac-tests.cs` as well as `kac validate`.
+`generate --check` in CI. The fixtures validate against these files rather than against copies, so the same edit can
+move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/kac-tests.cs` as well as `kac validate`.
 
 * **A key you invent is rejected, and `notes:` is how you say the thing anyway.** The key space is closed at every
   level: the loader records what it asks each mapping for, and anything left over fails as `schema-unknown-key`. A new

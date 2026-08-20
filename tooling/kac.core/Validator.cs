@@ -26,7 +26,7 @@ public static class Validator
         foreach (var doc in corpus.Docs)
             CheckDocument(doc, schema, tree, findings);
 
-        // Every file `kac index` writes a block into, held to still carrying the markers to write between.
+        // Every file `kac generate` writes a block into, held to still carrying the markers to write between.
         // Driven from the list the generator writes from, so every file it writes is a file this visits: a
         // type's page and the framework's own pages are one question and get one answer.
         //
@@ -252,7 +252,7 @@ public static class Validator
 
     // The markers a generated block lives between. `Generator.SpliceBlock` looks for the pair and
     // returns the text untouched when either is missing, so a file that loses one silently stops
-    // being generated into — and `index --check` agrees it is fresh, because what the generator would
+    // being generated into — and `generate --check` agrees it is fresh, because what the generator would
     // write is exactly what is already there. Nothing else can notice, which is why this is a check
     // on the markers rather than on the content between them.
     //
@@ -270,7 +270,7 @@ public static class Validator
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block is missing its "
                     + (begin < 0 && end < 0 ? "markers" : begin < 0 ? "BEGIN marker" : "END marker")
-                    + " — `kac index` writes between them and leaves the page alone without both."));
+                    + " — `kac generate` writes between them and leaves the page alone without both."));
             else if (end < begin)
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block's END marker comes before its BEGIN marker."));
@@ -287,7 +287,7 @@ public static class Validator
     // What is not valid is half of one. A folder is the signal that the type has been stood up, and
     // from that point everything the type needs must be there: the page a reader arrives on, and the
     // template a contributor copies. A page without a folder is the same fault from the other side.
-    // The generated index is deliberately not checked here — `index --check` already reports it
+    // The generated index is deliberately not checked here — `generate --check` already reports it
     // missing or stale, and one fault should not be reported by two commands.
     //
     // A folder counts as present when it holds tracked files. An empty directory git has never seen
@@ -392,7 +392,7 @@ public static class Validator
         foreach (var rel in FrameworkDocs.SelectMany(tree.Match))
         {
             // Read with the generated blocks emptied. Everything below is a question about what a person
-            // wrote, and a generated block answers to `index --check` instead — it is regenerated from this
+            // wrote, and a generated block answers to `generate --check` instead — it is regenerated from this
             // corpus, so its links are this corpus's and are right by construction.
             var doc = Doc.Parse(rel, Generator.Authored(tree.Read(rel)),
                 schema, requireFrontmatter: false);

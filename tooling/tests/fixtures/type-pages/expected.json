@@ -12,7 +12,7 @@
       "line": null,
       "severity": "error",
       "check": "generated-block",
-      "message": "the 'schema-adrs' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both."
+      "message": "the 'schema-adrs' block is missing its BEGIN marker — `kac generate` writes between them and leaves the page alone without both."
     },
     {
       "file": "adrs.md",
@@ -47,7 +47,7 @@
       "line": null,
       "severity": "error",
       "check": "generated-block",
-      "message": "the 'types-graph' block is missing its BEGIN marker — `kac index` writes between them and leaves the page alone without both."
+      "message": "the 'types-graph' block is missing its BEGIN marker — `kac generate` writes between them and leaves the page alone without both."
     },
     {
       "file": "knowledge-as-code/taxonomy.md",

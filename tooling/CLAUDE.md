@@ -129,12 +129,12 @@ the ones the plan already reports, so nothing is decided twice.
 
 ## Adding a generated block
 
-**`kac.core/GeneratedFiles.cs` is the one list of what `index` writes and where.** Adding a block is one entry there,
-naming it beside the renderer that fills it, and nothing else: `Commands.Index` writes what the list says and
+**`kac.core/GeneratedFiles.cs` is the one list of what `generate` writes and where.** Adding a block is one entry there,
+naming it beside the renderer that fills it, and nothing else: `Commands.Generate` writes what the list says and
 `Validator.CheckAll` holds the corpus to the same list, so a block cannot be written under a name nothing checks or
 checked for under a name nothing writes. `Blocks` projects the names out without calling a renderer, which is what lets
 `validate` ask what a file should carry without building any of it. `Plan` renders them against what the corpus holds
-now, so `index` and `index --check` read one answer between them.
+now, so `generate` and `generate --check` read one answer between them.
 
 The flag on each entry says whether the markers have to be there. It is false for `README.md` alone, because that file
 belongs to the corpus and deleting the markers is how the corpus declines the block. Everywhere else the file arrives
@@ -149,10 +149,10 @@ from the framework carrying them, and one that has gone is a block that stopped 
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`
   beside it. Types it does not use are simply absent, which is silent. Adding a folder to a fixture without standing the
   type up adds a finding to every scenario that reads it.
-* Only fixtures in **`validate` mode** run the validator. `index`, `index-stale`, `mechanism`, `sync`, `export` and
-  `bundle` modes do not, so a new check cannot affect them. `sync`, `export` and `bundle` are the modes that write. Each
-  asserts the tree the command left rather than only what the command printed, so its expectations name files and their
-  content instead of a findings golden.
+* Only fixtures in **`validate` mode** run the validator. `generate`, `generate-stale`, `mechanism`, `sync`, `export`
+  and `bundle` modes do not, so a new check cannot affect them. `sync`, `export` and `bundle` are the modes that write.
+  Each asserts the tree the command left rather than only what the command printed, so its expectations name files and
+  their content instead of a findings golden.
 * **The `export` fixture commits the export itself**, under `expected-dist/`, and a diff there is a change to what a
   consumer reads. Its [README](tests/fixtures/export/README.md) says what that asks of you. Nothing else in the suite
   holds a tracked copy of an untracked artefact — the `bundle` fixtures deliberately do not, because most of a bundle is

@@ -3,7 +3,7 @@
 // One tool, several subcommands, sharing a schema-loading and markdown-parsing core:
 //
 //   validate   check the corpus against .schema/*.yaml
-//   index      regenerate _index.md and the generated blocks in <type>.md
+//   generate   regenerate _index.md and the generated blocks in <type>.md
 //   export     write the corpus to .dist/export/ as data a consumer reads instead of cloning
 //   bundle     assemble that export and the .plugin/ tree into an installable plugin
 //   checks     list every check the validator implements
@@ -32,11 +32,11 @@ var validate = new Command("validate", "Check the corpus against .schema/*.yaml.
 validate.SetAction(pr => InCorpus(corpus => Commands.Validate(corpus, pr.GetValue(jsonOpt))));
 
 var checkOpt = new Option<bool>("--check") { Description = "Fail if a generated file is stale instead of writing it." };
-var index = new Command("index", "Regenerate _index.md and the generated blocks in <type>.md.")
+var generate = new Command("generate", "Regenerate _index.md and the generated blocks in <type>.md.")
 {
     checkOpt
 };
-index.SetAction(pr => InCorpus(corpus => Commands.Index(corpus, pr.GetValue(checkOpt))));
+generate.SetAction(pr => InCorpus(corpus => Commands.Generate(corpus, pr.GetValue(checkOpt))));
 
 // `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`
 // narrows what is written and never what is read: the whole corpus is loaded either way, so ids resolve
@@ -64,7 +64,7 @@ var checks = new Command("checks", "List every check the validator implements.")
 checks.SetAction(pr => InCorpus(corpus => Commands.Checks(corpus, pr.GetValue(checksJsonOpt))));
 
 // mechanism — enforce the portability manifest. `--check` compares this corpus's shared layers
-// against a reference copy and reports drift, following the same discipline as `index --check`:
+// against a reference copy and reports drift, following the same discipline as `generate --check`:
 // recompute, compare, name what is stale, exit non-zero, never write. `--sync` is the write half:
 // it takes those layers from the reference, records what it took, and regenerates.
 var mechCheckOpt = new Option<bool>("--check") { Description = "Compare the shared layers against a reference and report drift; never writes." };
@@ -80,7 +80,7 @@ mechanism.SetAction(pr => InCorpus(corpus =>
     Commands.Mechanism(corpus, pr.GetValue(mechCheckOpt), pr.GetValue(mechSyncOpt), pr.GetValue(againstOpt))));
 
 var root = new RootCommand("kac — the knowledge-as-code validator and generator.")
-    { validate, index, export, bundle, checks, mechanism };
+    { validate, generate, export, bundle, checks, mechanism };
 
 // Bad arguments exit 1 (System.CommandLine's default) — the printed error makes it
 // obvious it was a usage problem rather than corpus errors. Exit 2 is reserved for a verb

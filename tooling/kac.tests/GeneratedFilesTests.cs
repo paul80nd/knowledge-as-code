@@ -2,7 +2,7 @@ using kac.core;
 
 // In-process unit tests for the list of generated files, and for the check that holds a corpus to it.
 //
-// The list is the point of the module: `index` writes from it and `validate` reads from it, so a case
+// The list is the point of the module: `generate` writes from it and `validate` reads from it, so a case
 // here asserts the whole list rather than one entry. A golden fixture proves the pass reaches the CLI;
 // it cannot show that the list is complete, because a fixture only holds the files it happens to carry.
 
@@ -76,7 +76,7 @@ public class GeneratedFilesTests
 // What a regeneration comes to, decided from a listing and a set of records. `Plan` reads nothing, so the
 // corpus each case needs is written out here in a few lines.
 //
-// The `index`, `index-adoption` and `index-stale` fixtures cover the same ground through the CLI. They pin
+// The `generate`, `generate-adoption` and `generate-stale` fixtures cover the same ground through the CLI. They pin
 // the tree a command leaves behind; these pin what it decided to leave.
 public class GeneratedFilePlanTests
 {
