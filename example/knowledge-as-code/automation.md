@@ -1,9 +1,9 @@
 # Automation
 
-What CI checks, what it builds, and what it deliberately leaves alone.
+> What CI checks, what it builds, and what it leaves alone.
 
-`kac checks` lists every check the validator implements, each with its severity and what it asks. That command is the
-authority on what runs. This page groups the same checks so a reader can see what the pipeline is for, and covers the
+`kac checks` lists every check the validator implements, with its severity and what it asks. That command is the
+authority on what runs. This page groups the same checks so you can see what the pipeline is for, and it covers the
 generation and the exclusions that sit beside them.
 
 Every one of those checks reads the corpus. None reads the estate the corpus describes. A service deleted last month
@@ -16,11 +16,11 @@ Run on every PR. Failures block merge.
 ### Schema
 
 - Frontmatter parses as YAML.
-- Required fields present for the document's type (type inferred from folder).
+- Required fields present for the document's type, which the folder gives.
 - Enum values valid.
 - Dates are quoted strings in `YYYY-MM-DD` form.
 - `id` is unique across the corpus, matches the type's prefix, and matches the folder it sits in.
-- `tier` matches the tier defined for the document's type. A document claiming a tier its folder does not have is a
+- `tier` matches the tier the document's type declares. A document claiming a tier its folder does not have is a
   placement error, not a metadata error.
 
 ### Links and the graph
@@ -28,8 +28,8 @@ Run on every PR. Failures block merge.
 - Every `id` referenced in a cross-reference field resolves to a document that exists.
 - Relative markdown links resolve.
 - Bidirectional pairs agree — `supersedes` / `superseded-by`, `promoted-from` / `promoted-to`,
-  `verifies` / `verified-by`. A one-sided link fails. `implements` is deliberately not one of these: it points up from a
-  standard to a policy and is never answered from the policy side.
+  `verifies` / `verified-by`. A one-sided link fails. `implements` is deliberately not one of these. It points up from a
+  standard to a policy, and the policy never points back.
 
 ### Per-tier rules
 
@@ -39,15 +39,15 @@ Run on every PR. Failures block merge.
 
 ### Hygiene
 
-- No credentials, and no data that reads as real. Declared per type, where the risk lives: integrations and data
-  documents today.
-- Generated regions are not stale relative to their source.
+- No credentials, and no data that reads as real. Each type declares this rule where the risk lives, which today means
+  integrations and data documents.
+- A generated region matches the source it was built from.
 
 ### Rules the schema declares and nothing runs
 
 A type may declare a rule with a description and no severity. `kac validate` skips it. The type page renders it beneath
-the checks table under *Declared, not yet enforced*, so the gap is reported on the page a reader is already on. Prose
-about such a rule states what the schema declares, never what CI does.
+the checks table under *Declared, not yet enforced*, so a reader meets the gap on the page they are already on. Prose
+about such a rule says what the schema declares, never what CI does.
 
 ## Generation
 
@@ -59,8 +59,8 @@ Generated content lives inside marker blocks in otherwise hand-written files:
 <!-- END GENERATED: adrs-index -->
 ```
 
-CI rewrites only what's between the markers and fails the build if a block is stale. This keeps one file per purpose —
-humans keep their prose, the machine keeps the tables current, and nobody has to choose.
+CI rewrites only what sits between the markers, and fails the build if a block is stale. So one file serves one purpose:
+you keep your prose, and the generator keeps the tables current.
 
 | Artefact                         | Built from                     | Lives in                                    |
 |----------------------------------|--------------------------------|---------------------------------------------|
@@ -77,42 +77,46 @@ humans keep their prose, the machine keeps the tables current, and nobody has to
 | Where a name collides            | `.schema/` + the types adopted | `lineage.md` `types-collisions` block       |
 | What this corpus holds           | `.schema/` + the types adopted | Root `README.md` `types-index` block        |
 
-That table says what each block is and where it lands. `tooling/features/index.md`, in the repository the tool is built
-from, carries the same list from the generator's side, with the rule governing each block in place of its address.
+The table above says what each block is and where it lands. The repository the tool is built from carries the same list
+from the generator's side, in `tooling/features/index.md`, giving the rule that governs each block in place of its
+address.
 
-Most of those blocks describe the corpus rather than the schema. Everything the taxonomy holds covers the types **this**
+Most of those blocks describe the corpus rather than the schema. Everything on the taxonomy page covers the types *this*
 corpus holds: the decision table, the types at length, the disambiguations, and the graph with the edges beneath it. So
 do the lineage table, the strip on `metadata.md` and the index at the repository root. A corpus that adopted five of the
-framework's types gets five rows, and each one links to a page it holds.
+framework's types gets five rows, and each row links to a page it holds.
 
-The corpus decides which five, and records that in `types:` in `.corpus.yaml`. A corpus that has not declared is read
-off its folders instead: a type counts where both halves are there, the page and the folder. That answer is the weaker
-one, because it cannot tell a type nobody wanted from one somebody has not finished adding.
+The corpus chooses which types it holds, and records them in `types:` in `.corpus.yaml`. Where a corpus has not declared
+them, `kac` reads them off the folders instead: a type counts when both halves are there, the page and the folder. That
+answer is the weaker one, because it cannot tell a type nobody wanted from one somebody has not finished adding.
 
-The same five bound generation itself. A type the corpus declined gets no index and no reference tables, whatever
-`.schema/` still says about it, so nothing is written that the lists above would not name. A page or folder left behind
-from a type the corpus once held is left where it is, and `validate` says it should not be there.
+The same list bounds generation itself. A type the corpus declined gets no index and no reference tables, whatever
+`.schema/` still says about it, so the generator writes nothing the lists above would not name. It leaves a page or
+folder stranded by a type the corpus once held exactly where it is, and `kac validate` reports that it should not be
+there.
 
 Blocks that differ between corpora are still safe to share. The mechanism check compares the authored half of a page and
-ignores what lies between the markers, so the prose stays byte-identical everywhere while what sits beneath it does not.
+ignores what lies between the markers. So the prose stays byte-identical everywhere, and the generated content beneath
+it varies by corpus.
 
-The graph is written to the subset of Mermaid an Azure DevOps wiki renders. That subset is narrower than Mermaid's own,
-and a diagram exceeding it renders nothing at all, with no error to say why. Write `graph` rather than `flowchart`, no
-subgraphs, and no arrow longer than `-->`. A fenced block carries it rather than ADO's `:::` container, which GitHub
-shows as literal text.
+The generator writes the graph to the subset of Mermaid an Azure DevOps wiki renders. That subset is narrower than
+Mermaid's own, and a diagram that exceeds it renders nothing at all, with no error to say why. So write `graph` rather
+than `flowchart`, use no subgraphs, and keep every arrow to `-->`. A fenced block carries the diagram rather than ADO's
+`:::` container, which GitHub shows as literal text.
 
 ## The export
 
 Built on every PR. `kac export` writes the corpus into `.dist/export/` as data a consumer reads instead of cloning the
-repository. It holds a manifest saying what the export is, one file per record, and a flat file cheap to grep.
-`tooling/features/export.md` is the reference for what it holds.
+repository. The export holds a manifest saying what it is, one file per record, and a flat file cheap to grep.
+`tooling/features/export.md` is the reference for its contents.
 
-A change that breaks the export therefore fails its own build. Nothing is kept: `.dist/` is gitignored and rebuilt whole
-each run, and the pipeline discards it with the job.
+A change that breaks the export therefore fails its own build. Nothing is kept. `.dist/` is gitignored, the build
+rewrites it whole each run, and the pipeline discards it with the job.
 
 ## Exclusions
 
-Not part of the taxonomy, carry no taxonomy frontmatter, and are excluded from schema validation:
+These paths are not part of the taxonomy. They carry no taxonomy frontmatter, and `kac validate` checks none of them
+against a schema.
 
 | Path                 | Why                                                |
 |----------------------|----------------------------------------------------|
@@ -123,48 +127,49 @@ Not part of the taxonomy, carry no taxonomy frontmatter, and are excluded from s
 | Root `README.md`     | Orientation page, not a knowledge record           |
 | Root `CLAUDE.md`     | Agent guidance, not a knowledge record             |
 
-Stated explicitly rather than left implicit in a glob, so that a validation failure is never resolved by quietly
-widening an exclusion. The `_` rows are the one deliberate glob. The prefix is reserved for the framework's own
-artefacts, and the tool tests the prefix rather than the names. See [taxonomy](taxonomy.md#layout).
+We name each path rather than hide it in a glob, so nobody answers a validation failure by quietly widening an
+exclusion. The `_` rows are the one deliberate glob. That prefix belongs to the framework's own artefacts, and the tool
+tests the prefix rather than the names. See [taxonomy](taxonomy.md#layout).
 
-**Excluded as a record is not excluded from every check.** The framework's own documents carry no frontmatter and are
-validated against no schema. They still link to things, so their links and fragments are resolved like any page's. A
-file holding a generated block is held to still carrying the markers to write between, however it is otherwise excluded.
-Each of those extra passes, and what it asks, is in `tooling/features/validate.md`.
+Excluding a file as a record does not excuse it from every check. The framework's own documents carry no frontmatter, so
+`kac validate` holds them to no schema. They still link to things, so it resolves their links and fragments like any
+page's. A file holding a generated block must still carry the markers the generator writes between, however it is
+otherwise excluded. `tooling/features/validate.md` lists each of those extra passes and what it asks.
 
-**A template is excluded as a record and checked as a template.** It holds no id, claims no place in an index and
-answers to nothing that needs a filename. Discovering it as a record would report a dozen faults that are the file doing
-its job. What it is held to is everything a copy of it inherits: the fields the type declares, the values that are not
+A template is excluded as a record and checked as a template. It holds no id, claims no place in an index, and answers
+to nothing that needs a filename. Discovering it as a record would report a run of faults that are the file doing its
+job. It is held instead to everything a copy of it inherits: the fields the type declares, the values that are not
 placeholders, the identity line, the required sections, and the links that point at real documents. A defect there
 becomes every document's problem, and the next author is the one who finds it.
 
 ## Skills
 
-The agent-facing machinery. None of it runs in CI, and it belongs to the same system.
+The agent-facing machinery. None of it runs in CI, and the framework ships it alongside the checks above.
 
-[`kb-review`](../.claude/skills/kb-review/SKILL.md) reads a record against the tier rules in
-[authoring](authoring.md) and the sentence rules in [style](style.md), and proposes rewrites. Somebody asks for it, so
-what it returns is a reading. Everything that blocks a merge is above.
+[`kb-review`](../.claude/skills/kb-review/SKILL.md) reads a record against the tier rules in [authoring](authoring.md)
+and the sentence rules in [style](style.md), then proposes rewrites. You ask for it, so what it hands back is a reading
+rather than a gate. Everything that blocks a merge is above.
 
-It is a skill rather than a per-folder `CLAUDE.md` for a specific reason: a subdirectory `CLAUDE.md` loads only when a
-session reads a file in that directory. A session working in a service repository would never trigger one in the
-corpus's `standards/` folder. Skills are selected by description matching and work across repositories, which is what
-reviewing a record needs.
+We made it a skill rather than a per-folder `CLAUDE.md` for one reason. A subdirectory `CLAUDE.md` loads only when a
+session reads a file in that directory, so a session working in a service repository would never trigger one in the
+corpus's `standards/` folder. An agent picks a skill by matching its description, and a skill works across repositories.
+Reviewing a record needs both.
 
 ## Portability
 
-Everything in this document describes **mechanism**, not corpus content. The validators, generators, schema and skills
-are deliberately free of organisation specifics so they can be lifted to another organisation as a unit.
+Everything on this page describes **mechanism**, not corpus content. We keep the validators, generators, schema and
+skills free of organisation specifics, so you can lift them to another organisation as a unit.
 
-Which files that covers is not a matter of judgement. `tooling/manifest.yaml` declares it and
-`kac mechanism --check` enforces it: a file in the `synced` layer carrying corpus-specific content is a defect, not a
-customisation. Anything organisation-specific belongs in the corpus, or in the `forked` layer — the type root pages,
-templates and publishing config — which exist to be filled with local content.
+Which files that covers is not a matter of judgement. `tooling/manifest.yaml` declares it and `kac mechanism --check`
+enforces it. A file in the `synced` layer carrying corpus-specific content is a defect, not a customisation. Anything
+organisation-specific belongs in the corpus, or in the `forked` layer. That layer holds the type root pages, the
+templates and the publishing config, and each of them exists to be filled with local content.
 
-What a corpus takes is its own decision, recorded in `.corpus.yaml` rather than inferred from what it happens to hold.
-`types:` names the knowledge types it has adopted. `role:` says whether it answers for the mechanism or only runs it,
-which settles whether it carries the `verification` layer — the tests and fixtures that prove the tool.
+What a corpus takes is its own decision. It records that decision in `.corpus.yaml`, rather than leaving anyone to infer
+it from what the folders happen to hold. `types:` names the knowledge types the corpus has adopted. `role:` says whether
+the corpus answers for the mechanism or only runs it, which settles whether it carries the `verification` layer, the
+tests and fixtures that prove the tool.
 
-`kac mechanism --sync` reads both keys, brings down what the descriptor asked for, seeds the forked files a new type
-needs, records what it took, and regenerates. So a corpus adopts a type by adding a line to the descriptor and syncing.
-It declines one by leaving the line out, not by deleting files afterwards.
+`kac mechanism --sync` reads both keys. It brings down what the descriptor asked for, seeds the forked files a new type
+needs, records what it took, and regenerates. So a corpus adopts a type by adding a line to the descriptor and syncing,
+and declines one by leaving the line out rather than deleting files afterwards.
