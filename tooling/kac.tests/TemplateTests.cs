@@ -18,7 +18,7 @@ public class TemplateTests
 {
     private const string Overlay = "overlay";
 
-    private static readonly string Root = RepoRoot();
+    private static readonly string Root = Repo.Root;
     private static readonly string Template = Path.Combine(Root, "template");
     private static readonly string Corpus = Path.Combine(Root, "example");
 
@@ -91,16 +91,4 @@ public class TemplateTests
     // count leaves whoever reads it running the comparison again by hand.
     private static string Report(string what, List<string> paths) =>
         $"{paths.Count} file(s) {what}:\n  " + string.Join("\n  ", paths);
-
-    // The repository, found by the solution at its root — the tree carrying the template and the corpus at
-    // once, which is the only place both questions above can be asked.
-    private static string RepoRoot()
-    {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "kac.slnx")))
-            dir = dir.Parent;
-
-        return dir?.FullName ?? throw new InvalidOperationException(
-            "no 'kac.slnx' above the test assembly — these tests read the repository they ship in.");
-    }
 }
