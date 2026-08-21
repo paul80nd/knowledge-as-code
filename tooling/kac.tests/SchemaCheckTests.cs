@@ -401,13 +401,10 @@ public class SchemaCheckTests
         Assert.Contains("no 'lineage.prior-art:'", finding.Message);
     }
 
-    // "None" is one of the answers, and the two columns beside it are questions a type with no ancestor
-    // cannot answer — so an empty pair is a settled state rather than an unfinished one.
+    // An empty pair beside "None" is a settled state rather than an unfinished one.
     [Fact]
     public void A_prior_art_of_none_with_nothing_beside_it_passes()
         => Assert.Empty(Check(Widgets()));
-
-    // -- the disambiguations, which are the one thing a type says about another --
 
     // -- where a type keeps its parts --
 

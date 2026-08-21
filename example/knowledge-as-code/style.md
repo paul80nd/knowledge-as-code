@@ -1,6 +1,6 @@
 # Style
 
-> How we write — every document, every comment, every commit message.
+> How we write — every document and every commit message.
 
 [Authoring](authoring.md) adds what a record's tier asks on top of this page, including how a clause is written.
 
@@ -11,8 +11,10 @@ nearly always the same sentence.
 
 ## Scope
 
-Everything we write down: corpus records, README files, code comments, commit messages, pull request descriptions and
-review comments. Where a rule applies to only one of those, it says so.
+Everything the corpus holds, and everything written about it: records, README files, commit messages, pull request
+descriptions and review comments. Where a rule applies to only one of those, it says so.
+
+Code is out of scope. A comment in a codebase answers to that codebase, which knows what it is for.
 
 The rules bind, and the judgement stays yours. A rule that makes a particular sentence worse is a rule to break, and to
 say why in review.
@@ -173,10 +175,6 @@ None of this softens an obligation. A clause can be unambiguous and unhedged and
 their colleagues.
 
 ## By medium
-
-**Code comments.** The code says what it does; the comment says why it does it that way. A comment restating the line
-beneath it is noise, and it will be wrong within a month. Do not apologise in a comment — *hacky*, *sorry*, *don't
-ask* — say what the constraint was instead.
 
 **Commit messages.** The subject line says what changed. The body says why — the one place where describing what used to
 be true is correct.

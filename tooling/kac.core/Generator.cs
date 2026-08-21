@@ -1,8 +1,6 @@
 using System.Text;
 
-// ---------------------------------------------------------------------------
 // Generation — index pages and the generated blocks in <type>.md
-// ---------------------------------------------------------------------------
 
 namespace kac.core;
 
@@ -437,7 +435,7 @@ public static class Generator
     }
 
     // What a description may run to. The checks table is read by scanning — a reader wants to know which
-    // row is the one they tripped, not to read a paragraph about each of forty-odd — and a cell that runs
+    // row is the one they tripped, not to read a paragraph about every check on the page — and a cell that runs
     // to several sentences is one that has taken on the message's job as well as its own. A description
     // says what is verified; a rule's `message:` says what to do about it, and is where the author who
     // tripped it will read the reasoning. Held here because the table is what makes this a limit, and read

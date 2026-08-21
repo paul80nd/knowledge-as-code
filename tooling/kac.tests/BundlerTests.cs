@@ -34,9 +34,8 @@ public class BundlerTests
                 plugin: [(Bundler.ManifestFile, """{"metadata":{"corpusRoot":"corpus"}}""")],
                 export: [Manifest()]).Problems));
 
-    // The export is copied under `corpusRoot`, so a plugin tree already holding that directory would
-    // lose files to the copy or take files from it. Whichever won, the loser would be missing from an
-    // artefact nobody reviews.
+    // The export is copied under `corpusRoot`, so a plugin tree already holding that directory is
+    // refused rather than merged.
     [Fact]
     public void A_corpus_root_the_plugin_tree_already_uses_is_refused()
         => Assert.Contains("would overwrite the other",
@@ -59,15 +58,13 @@ public class BundlerTests
             Assert.Single(Plan(plugin: [(Bundler.ManifestFile, Source())], export: [("glossary/terms.jsonl", "{}")])
                 .Problems));
 
-    // A refused plan writes nothing. The alternative is a plugin assembled around a missing answer,
-    // which installs and fails later somewhere less obvious.
+    // A refused plan writes nothing.
     [Fact]
     public void A_refused_plan_names_no_files()
         => Assert.Empty(Plan(plugin: [("README.md", "# nothing")], export: [Manifest()]).Files);
 
     // The number the export declares against the number this build reads. Both are named, because the
-    // reader's next move differs: an export behind this tool is rebuilt, and an export ahead of it says
-    // the tool is the stale half.
+    // reader's next move differs.
     [Fact]
     public void An_export_whose_format_version_this_tool_does_not_read_is_refused()
     {
@@ -173,8 +170,7 @@ public class BundlerTests
         Assert.Equal(["hooks/hooks.json"], plan.Included.Select(c => c.Path));
     }
 
-    // A component may be a directory of skills or a single file, such as a hook definition, so the
-    // trim matches the path itself as well as anything beneath it.
+    // A component may be a directory or a single file.
     [Fact]
     public void Trimming_a_component_that_is_one_file_removes_that_file()
     {
@@ -302,9 +298,7 @@ public class BundlerTests
 
     // -- the marketplace --
 
-    // A marketplace resolves a plugin source against the directory holding `.claude-plugin/`, and
-    // refuses one containing `..`. So the plugin has to sit beneath the marketplace, which is what
-    // makes `.dist/` the marketplace rather than a directory beside the plugin.
+    // A marketplace refuses a source path containing `..`. `Dist.Root` says what follows from that.
     [Fact]
     public void The_marketplace_names_the_plugin_as_a_path_beneath_itself()
     {
@@ -385,7 +379,7 @@ public class BundlerTests
     private static string Component(string path, params string[] requires) =>
         $$"""{"path":"{{path}}","requires":[{{string.Join(",", requires.Select(r => $"\"{r}\""))}}]}""";
 
-    // An export manifest as `kac export` writes one, reduced to the two things a bundle reads from it.
+    // An export manifest as `kac export` writes one, carrying the four keys a bundle reads from it.
     private static (string, string) Manifest(params string[] types) => Versioned(null, types);
 
     private static (string, string) Versioned(string? contentVersion, params string[] types) =>

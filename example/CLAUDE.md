@@ -56,7 +56,7 @@ one: a runbook step and an ADR paragraph obey different constraints, and nothing
 wrong ones.
 
 * [`knowledge-as-code/style.md`](knowledge-as-code/style.md) — the rules for the words, which are the same in every
-  document, comment and commit message. Run the checklist at its foot over the finished draft, as its own pass: holding
+  document and every commit message. Run the checklist at its foot over the finished draft, as its own pass: holding
   it in mind while writing produces different prose.
 * [`knowledge-as-code/authoring.md`](knowledge-as-code/authoring.md) — what the record's tier adds on top.
 * [`knowledge-as-code/contributing.md`](knowledge-as-code/contributing.md) — the link and template conventions CI

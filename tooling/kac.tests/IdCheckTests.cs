@@ -18,8 +18,8 @@ public class IdCheckTests
     private static TypeSchema Slug() => new()
         { Folder = "tools", IdPrefix = "tol", IdStyle = "slug" };
 
-    // The two part sources, each with the id shape its own declaration gives a part: a policy's clauses
-    // are written to a pattern, and a glossary's terms are the anchors their headings slug to.
+    // The two part sources, each with the id shape its own declaration gives a part. A policy's clauses
+    // are written to a pattern; a glossary's terms are the anchors their headings slug to.
     private static TypeSchema Clauses() => new()
     {
         Folder = "policies", IdPrefix = "pol", IdStyle = "mnemonic", IdWidth = 4,
@@ -64,8 +64,8 @@ public class IdCheckTests
     public void A_slug_id_is_lower_case_letters_digits_and_hyphens(string id)
         => Assert.Equal("id-format", Assert.Single(Run(id, "tools/site-server.md", Slug())).Check.Value);
 
-    // The shape is asked first, so a malformed id is one finding rather than two — the filename it does
-    // not match is not worth saying while the id itself is unreadable.
+    // The shape is asked first, so a malformed id is one finding. The filename it fails to match is not
+    // worth saying while the id itself is unreadable.
     [Fact]
     public void A_malformed_id_is_not_also_held_to_the_filename()
         => Assert.Equal("id-format", Assert.Single(Run("adr-7", "adrs/0004-a.md", Numbered())).Check.Value);
@@ -86,15 +86,15 @@ public class IdCheckTests
     public void An_id_agreeing_with_its_filename_is_silent(string id, string rel)
         => Assert.Empty(Run(id, rel, TypeFor(rel)));
 
-    // A slug is compared entire rather than as a leading segment, which is the whole difference between
-    // it and the other two: `svc-search` in `search-service.md` names another document.
+    // A slug is compared entire, where the other two styles match a leading segment. That is the whole
+    // difference: `svc-search` in `search-service.md` names another document.
     [Fact]
     public void A_slug_is_compared_whole_and_not_as_a_prefix()
         => Assert.Equal("id-matches-filename",
             Assert.Single(Run("tol-site", "tools/site-server.md", Slug())).Check.Value);
 
     // Where the filename carries no discriminator in the style's shape it has failed filename-pattern,
-    // and one broken name is one finding rather than two.
+    // and one broken name earns one finding.
     [Theory]
     [InlineData("adr-0004", "adrs/no-digits-at-all.md")]
     [InlineData("pol-VURM", "policies/toolong-a.md")]
@@ -130,8 +130,7 @@ public class IdCheckTests
 
     // -- is this label an id? --
 
-    // The canonical form is the id as a document carries it: the prefix always lower-case, a mnemonic
-    // always upper-case, a slug always lower-case. `label-canonical` is the difference between the two.
+    // `label-canonical` is the difference between a label and the id as a document carries it.
     [Theory]
     [InlineData("adr-0001", "adr-0001")]
     [InlineData("ADR-0001", "adr-0001")] // the prefix is matched without case and written back lower
@@ -144,7 +143,7 @@ public class IdCheckTests
         Assert.Equal(expected, canonical);
     }
 
-    // Anything else is prose in brackets, and warns as `bracket-literal` rather than erroring.
+    // Anything else is prose in brackets, and warns as `bracket-literal`.
     [Theory]
     [InlineData("adr-001")]   // too few digits for the declared width
     [InlineData("adr-00011")] // too many
@@ -248,8 +247,8 @@ public class IdCheckTests
     private static List<Finding> Filename(string rel, TypeSchema t) => Collect(report =>
         IdChecks.CheckFilename(rel, t, report));
 
-    // These read an id and a filename rather than a document, so the file a finding is against is not
-    // theirs to know and is left empty.
+    // These read an id and a filename, never a document, so the file a finding is against is left
+    // empty.
     private static List<Finding> Collect(Action<Report> check)
     {
         var found = new List<Finding>();

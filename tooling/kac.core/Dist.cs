@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// Where the tool's untracked output lands
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // The one statement of what `.dist/` holds and which command owns which part of it.

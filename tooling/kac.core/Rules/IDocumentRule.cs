@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// The rules that need C#
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // A rule whose question the expression grammar cannot ask. Most rules are answered by an `expr:` in

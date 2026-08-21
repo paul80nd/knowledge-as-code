@@ -171,10 +171,6 @@ public class RuleExprTests
         => Assert.Throws<RuleExprException>(() => RuleExpr.Compile("1 < words() < 40"));
 
     // -- the text probe --
-    //
-    // `matches` reads the body as written rather than as the AST renders it, which is the whole point:
-    // the rules that ask are looking for something that should not be in the document at all, and a
-    // credential pasted into a fenced block is the case they exist for.
 
     [Fact]
     public void Matches_sees_inside_a_fenced_code_block()
@@ -212,8 +208,7 @@ public class RuleExprTests
         Assert.True(Eval("section_matches('Verification', 'Typically')", body: body));
     }
 
-    // A section the document does not have answers false, so a rule naming one reads as satisfied rather
-    // than throwing. Whether the section ought to be there is required-section's question, not this one.
+    // A section the document does not have answers false rather than throwing.
     [Fact]
     public void Section_matches_is_false_where_the_section_is_absent()
         => Assert.False(Eval("section_matches('Nowhere', 'anything')", body: "## Steps\n\nDo the thing."));

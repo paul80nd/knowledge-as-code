@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// The rules that need every record at once
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // A rule whose question no single document can answer. A cycle in a dependency graph, a term nothing

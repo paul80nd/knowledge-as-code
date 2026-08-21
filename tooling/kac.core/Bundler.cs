@@ -3,39 +3,35 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-// ---------------------------------------------------------------------------
-// Bundle — the export and the plugin tree assembled into something installable
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
-// One file, and the bytes it holds. Bytes rather than text because most of what a bundle writes it did
-// not author: the plugin tree and the export are copied through untouched, and a copy that decoded and
-// re-encoded would be a copy with an opinion.
+// One file, and the bytes it holds. Bytes, because most of what a bundle writes it did not author: the
+// plugin tree and the export are copied through untouched, and a copy that decoded and re-encoded would
+// be a copy with an opinion.
 //
-// `Executable` travels with the bytes because one file in the plugin tree is run rather than read. A
-// hook is a command, and a command copied without its permission bit is a plugin that installs and
-// fails at the first session with a message about permissions rather than about the corpus. Windows
-// has no such bit, so a hook ships as a POSIX script and a `.cmd` twin and the shell there picks one.
+// `Executable` travels with the bytes because one file in the plugin tree is run. A hook is a command,
+// and a command copied without its permission bit is a plugin that installs and then fails at the first
+// session, complaining about permissions and never about the corpus. Windows has no such bit, so a hook
+// ships as a POSIX script and a `.cmd` twin and the shell there picks one.
 public sealed record BundleFile(string Path, byte[] Content, bool Executable = false);
 
 // One component the plugin manifest declares, as the manifest states it. `Requires` names the record
 // types the component reads; a component naming none is unconditional and always travels.
 public sealed record PluginComponent(string Path, IReadOnlyList<string> Requires, string? Note);
 
-// A component left out, and the type whose absence left it out. The reason is carried rather than
-// recomputed, because it is the one thing the assembled plugin cannot say about itself.
+// A component left out, and the type whose absence left it out. The reason is carried, because it is
+// the one thing the assembled plugin cannot say about itself.
 public sealed record TrimmedComponent(string Path, IReadOnlyList<string> Requires, string Reason);
 
 // What a bundle comes to. Named before anything is written, as `ExportPlan` and the generator's plan
 // are, so a test can ask what a bundle would contain without a filesystem.
 //
-// `Files` are named relative to `Dist.Root`, because a bundle writes two things under it — the plugin
-// directory and the marketplace pointing at it — and one list of addresses is what keeps `Write` from
-// deciding where anything goes a second time.
+// `Files` are named relative to `Dist.Root`. A bundle writes two things under it, the plugin directory
+// and the marketplace pointing at it, and one list of addresses keeps `Write` from deciding where
+// anything goes a second time.
 //
-// `Problems` is what stops the run. A plan carrying one is not written: the alternative is a plugin
-// assembled around a missing answer, which installs and fails later somewhere less obvious.
+// `Problems` is what stops the run. A plan carrying one is not written, for the reason
+// `tooling/features/bundle.md` gives.
 public sealed record BundlePlan(
     IReadOnlyList<BundleFile> Files,
     string PluginName,
@@ -48,10 +44,10 @@ public sealed record BundlePlan(
 // The two trees a bundle is assembled from, read once and passed in. `PluginTree` is `.plugin/` and
 // `Export` is what `kac export` left, each named relative to its own root.
 //
-// Nothing else is read. The corpus is not loaded: everything a bundle has to decide — which version to
-// stamp, which components the data can support — is a fact about the export it was handed, and an
-// export is the only thing that will actually travel. A bundle assembled against the corpus rather than
-// against the export would ship a skill for a type the export happened not to carry.
+// Nothing else is read, and the corpus is never loaded. Everything a bundle has to decide is a fact
+// about the export it was handed: which version to stamp, and which components the data can support.
+// The export is also the only thing that will travel. Assemble against the corpus and the plugin ships
+// a skill for a type the export happened not to carry.
 public sealed record BundleSource(IReadOnlyList<BundleFile> PluginTree, IReadOnlyList<BundleFile> Export);
 
 public static class Bundler
@@ -86,15 +82,15 @@ public static class Bundler
         if (manifest is null)
             return Stop(problems, $"{ManifestFile} is not a JSON object.");
 
-        // A manifest with no name is refused rather than given one. The name is what a marketplace
-        // installs by and what a user types, so inventing it here would produce something that installs
-        // under a name nobody chose.
+        // A manifest with no name is refused. The name is what a marketplace installs by and what a
+        // user types, so inventing one here would produce something that installs under a name nobody
+        // chose.
         var pluginName = JsonRead.Str(manifest["name"]);
         if (pluginName is null)
             return Stop(problems, $"{ManifestFile} states no name, which is what a plugin is installed by.");
 
-        // Where the export is put inside the plugin. Read rather than assumed, because the skills address
-        // it through `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that same name — a default here would be
+        // Where the export is put inside the plugin, read from the manifest. The skills address it
+        // through `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that same name, so a default here would be
         // this tool quietly disagreeing with the words a corpus wrote in its own skill.
         var corpusRoot = JsonRead.Str(JsonRead.Object(manifest["metadata"])?["corpusRoot"]);
         if (corpusRoot is null)
@@ -103,8 +99,7 @@ public static class Bundler
                 + "It is the directory the plugin's skills address the export through.");
 
         // The export lands under `corpusRoot` inside the plugin, so a plugin tree already holding that
-        // directory would have its files silently replaced by the copy — or replace it. Refused, because
-        // whichever won, the loser would be missing from an artefact nobody reviews.
+        // directory is refused rather than merged. `tooling/features/bundle.md` says why.
         if (source.PluginTree.FirstOrDefault(f => Owns(corpusRoot, f.Path)) is { } clash)
             return Stop(problems,
                 $"{ManifestFile} names metadata.corpusRoot '{corpusRoot}', and the plugin tree already holds "
@@ -115,15 +110,9 @@ public static class Bundler
             return Stop(problems,
                 $"the export holds no readable {Exporter.ManifestFile}. Run the export first: kac export");
 
-        // The shape the export declares, held against the shape this build knows how to read. Refused
-        // rather than warned about, and both numbers named: a bundle assembled around a manifest whose
-        // keys have moved would produce a breadcrumb stating nothing and a plugin whose skill finds
-        // nothing, and a lookup that silently returns nothing is indistinguishable from a term the
-        // corpus does not define.
-        //
-        // Two builds of this tool are what put the two numbers apart. `.dist/export/` is untracked and
-        // outlives the run that wrote it, so a bundle built after a `git pull` is the ordinary way to
-        // read an export this tool did not ship beside — the case the format version exists for.
+        // The shape the export declares, held against the shape this build knows how to read. A
+        // mismatch is refused, and both numbers are named. `tooling/features/bundle.md` says what a
+        // silent one would produce, and how two builds of this tool come to disagree.
         var declaredFormat = JsonRead.Int(exportManifest["formatVersion"]);
         if (declaredFormat != Exporter.FormatVersion)
             return Stop(problems,
@@ -158,17 +147,16 @@ public static class Bundler
                 : $"every component was trimmed — the plugin carries the export and nothing that reads it. "
                   + $"{RecordFile} names each one and the type it needed.");
 
-        // The plugin's version is the corpus content version, taken from the export rather than from
-        // `.corpus.yaml`, so the number on the plugin is the number of the data inside it. The export
-        // format version stays where it is, in the export's own manifest.
+        // The plugin's version is the corpus content version, taken from the export.
+        // `tooling/features/bundle.md` says why, and why the format version stays put.
         var version = JsonRead.Str(exportManifest["contentVersion"]);
         if (version is null)
             warnings.Add("the export states no contentVersion, so the plugin keeps the version its own "
                          + "manifest states. Set content-version in .corpus.yaml.");
 
-        // The plugin tree, less every subtree a trimmed component owns, and less the manifest — which is
-        // rewritten below rather than copied. A path under no component's is unconditional and travels
-        // whatever the corpus adopted.
+        // The plugin tree, less every subtree a trimmed component owns, and less the manifest, which is
+        // rewritten below. A path under no component's is unconditional and travels whatever the corpus
+        // adopted.
         var files = (from file in source.PluginTree
             where file.Path != ManifestFile
             where !trimmed.Any(t => Owns(t.Path, file.Path))
@@ -182,11 +170,9 @@ public static class Bundler
         files.Add(Utf8($"{Dist.PluginDir}/{ManifestFile}",
             Rewrite(manifest, version, included)));
 
-        // The breadcrumb, rendered here because everything it states is settled here. It travels with
-        // the directory that prints it and nowhere else: a corpus shipping no hook has nothing to read
-        // it, and a corpus whose hook was trimmed would otherwise keep a file describing a component
-        // that left. Asking the surviving files rather than the components covers both in one question,
-        // and needs no corpus to declare that this generated file is the hook's.
+        // The breadcrumb, rendered here because everything it states is settled here. Asking the
+        // surviving files rather than the components is what ties it to the hook directory;
+        // `tooling/features/bundle.md` says what that settles.
         var breadcrumbDir = $"{Dist.PluginDir}/{Breadcrumb.RenderedFile[..Breadcrumb.RenderedFile.LastIndexOf('/')]}";
         if (files.Any(f => Owns(breadcrumbDir, f.Path)))
             files.Add(Utf8($"{Dist.PluginDir}/{Breadcrumb.RenderedFile}",

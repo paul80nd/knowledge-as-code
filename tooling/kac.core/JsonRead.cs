@@ -1,10 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-// ---------------------------------------------------------------------------
-// Reading JSON this tool did not write
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // `Json.cs` holds the documents kac emits, which are records and are serialized. This holds the other

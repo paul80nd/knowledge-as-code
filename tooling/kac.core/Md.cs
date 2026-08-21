@@ -3,9 +3,7 @@ using Markdig;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
-// ---------------------------------------------------------------------------
 // Markdown helpers
-// ---------------------------------------------------------------------------
 
 namespace kac.core;
 

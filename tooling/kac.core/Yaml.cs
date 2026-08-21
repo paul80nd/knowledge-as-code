@@ -1,9 +1,7 @@
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
-// ---------------------------------------------------------------------------
 // YAML helpers over the representation model
-// ---------------------------------------------------------------------------
 
 namespace kac.core;
 
@@ -49,8 +47,8 @@ public static class Yaml
     public static int Int(YamlNode? node, int fallback)
         => int.TryParse((node as YamlScalarNode)?.Value, out var v) ? v : fallback;
 
-    // The same reading, where the schema's silence and a number it declares have to stay distinguishable
-    // — a floor of zero is not the absence of one.
+    // The same reading, where the schema's silence and a number it declares have to stay
+    // distinguishable. A floor of zero is not the absence of one.
     public static int? NullableInt(YamlNode? node)
         => int.TryParse((node as YamlScalarNode)?.Value, out var v) ? v : null;
 
@@ -75,7 +73,7 @@ public static class Yaml
     // the document, which turns one into the other.
     //
     // A node the parser gave no position falls back to the block's own line, which is the nearest true
-    // answer: the finding lands on the frontmatter rather than on a line picked at random.
+    // answer. The finding lands on the frontmatter and never on a line picked at random.
     public static int? LineOf(YamlNode node, int frontStart)
         => node.Start.Line > 0 ? (int)node.Start.Line + frontStart - 1 : frontStart;
 }

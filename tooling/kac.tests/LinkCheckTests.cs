@@ -6,7 +6,7 @@ using kac.core;
 // beside it.
 //
 // Driven through `LinkChecks.Check`, which is what the validator calls, against a `Tree` built from a
-// listing. The resolver reads the corpus rather than the disk, so the corpus a test needs is a set of
+// listing. The resolver reads the corpus and never the disk, so the corpus a test needs is a set of
 // paths and the text behind them.
 
 namespace kac.tests;
@@ -30,8 +30,7 @@ public class LinkCheckTests
     public void The_md_extension_may_be_omitted()
         => Assert.Empty(Unresolved("adrs/0001-a.md", "[b](/adrs/0002-b)"));
 
-    // A directory is deliberately not a target: `/adrs` is a link to the page `adrs.md`, and accepting
-    // the folder as well would resolve a link to a type whose page has gone.
+    // A directory is deliberately not a target: `/adrs` is a link to the page `adrs.md`.
     [Fact]
     public void A_directory_is_not_a_target_but_the_page_beside_it_is()
     {
@@ -45,15 +44,14 @@ public class LinkCheckTests
     public void A_target_the_corpus_does_not_hold_does_not_resolve()
         => Assert.Single(Unresolved("index.md", "[draft](/_plan/notes.md)"));
 
-    // A fragment or a query addresses within a target rather than naming a different one.
+    // A fragment or a query addresses within a target. It never names a different one.
     [Theory]
     [InlineData("[b](/adrs/0002-b.md#context)")]
     [InlineData("[b](/adrs/0002-b.md?raw=1)")]
     public void A_fragment_or_query_is_stripped_before_the_target_is_looked_up(string markdown)
         => Assert.Empty(Unresolved("adrs/0001-a.md", markdown));
 
-    // A fragment with nothing before it names a heading in this document, so it never reaches the
-    // resolver at all.
+    // A bare fragment never reaches the resolver.
     [Fact]
     public void A_bare_fragment_names_a_heading_in_this_document()
     {
@@ -86,7 +84,7 @@ public class LinkCheckTests
     }
 
     // What the corpus holds, as a listing. `_plan/notes.md` is deliberately absent: it is the file on
-    // disk that git ignores, and the point of the test above is that the two are not the same question.
+    // disk that git ignores, and the test above turns on those being two questions.
     private static Tree Corpus() => new(
         new HashSet<string>(StringComparer.Ordinal)
         {

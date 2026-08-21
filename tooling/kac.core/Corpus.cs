@@ -1,12 +1,8 @@
-// ---------------------------------------------------------------------------
-// Corpus discovery and loading
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // The corpus as one loaded thing: the schema it is judged against, what it holds, and every record
 // parsed. Every entry point begins by building one of these, so there is a single account of what "the
-// corpus" is rather than one per command that can drift out of step.
+// corpus" is, and no per-command copy of it to drift.
 public sealed class LoadedCorpus
 {
     public required Schema Schema;
@@ -25,14 +21,14 @@ public sealed class LoadedCorpus
     // The records: every discovered document that carries frontmatter, in corpus order.
     public required List<Doc> Docs;
 
-    // The template each stood-up collection type carries, in corpus order. Held beside the records
-    // rather than among them: a template is checked, and is not one. Discovered here so that the count
-    // the summary reports and the files the validator reads are the same list rather than two walks
-    // that could disagree about what the corpus holds.
+    // The template each stood-up collection type carries, in corpus order. Held beside the records and
+    // never among them, because a template is checked and is not one. Discovered here, so the count the
+    // summary reports and the files the validator reads are one list and not two walks that could
+    // disagree.
     public required List<string> Templates;
 
-    // Discovered but not migrated. Reported rather than dropped, so a corpus part-way through
-    // adoption reads as part-way through rather than as smaller than it is.
+    // Discovered but not migrated. Reported, so a corpus part-way through adoption reads as part-way
+    // through and never as smaller than it is.
     public required int SkippedNoFrontmatter;
 }
 
@@ -123,9 +119,9 @@ public static class Corpus
         && tree.Exists(t.Page)
         && tree.HasFolder(t.Folder);
 
-    // The template of every collection type that has one. Asked with `OnDisk` rather than of the listing,
-    // as type-setup asks it: the question is whether the file a contributor would copy is there, and a
-    // type whose template is untracked has a different problem from one with none.
+    // The template of every collection type that has one. Asked with `OnDisk`, as type-setup asks it:
+    // the question is whether the file a contributor would copy is there, and a type whose template is
+    // untracked has a different problem from one with none.
     //
     // A type with no template is skipped in silence — its absence is type-setup's to report, and a type
     // nobody has stood up yet is a valid, quiet state.
@@ -144,8 +140,8 @@ public static class Corpus
     // Which of the files the corpus holds are records to validate: markdown, inside a folder the schema
     // maps to a type.
     //
-    // The glob names every path and the test below decides which are markdown, because the extension is
-    // matched however it is cased and a pattern is not. Corpus order is the listing's own, which `Match`
+    // The glob names every path and the test below decides which are markdown. The extension is matched
+    // however it is cased, which a pattern cannot do. Corpus order is the listing's own, which `Match`
     // gives in ordinal order.
     private static List<string> Discover(Tree tree, Schema schema)
     {

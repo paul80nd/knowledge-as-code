@@ -3,9 +3,9 @@
 // of hand-written prose that is the reason to read it at all — so what is held here are the *names* in
 // them, and the wording is left alone.
 //
-// These read the repository rather than a value built in the test, which no other test here does. That
-// is what they are for: the fault they exist to catch is a page going quietly out of step with the code
-// beside it, and a page nobody opens is exactly where that happens.
+// These read the repository rather than a value built in the test. That is what they are for: the fault
+// they exist to catch is a page going quietly out of step with the code beside it, and a page nobody
+// opens is exactly where that happens.
 //
 // The reach is the names and no further. A row per *check id* is held, so a check that is renamed,
 // retired or introduced is caught; an id that grows a second way to fail is not, because nothing in the

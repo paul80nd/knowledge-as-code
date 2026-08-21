@@ -1,10 +1,6 @@
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-// ---------------------------------------------------------------------------
-// Out — where a verb's human-readable output goes.
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // The console every verb writes through. There are two. Stdout carries what a command produced and

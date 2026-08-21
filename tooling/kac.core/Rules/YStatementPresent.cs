@@ -8,8 +8,8 @@ public sealed class YStatementPresent : IDocumentRule
 {
     public RuleId RuleId => new("y-statement-present");
 
-    // A field because every report below names it: one place to change, so what the rule declares it
-    // emits and what it actually reports cannot come apart. `_checks.yaml` declares what it means.
+    // A field so that what the rule declares it emits and what it reports cannot come apart.
+    // `_checks.yaml` declares what the id means.
     private static readonly CheckId Reports = new("y-statement");
 
     public IReadOnlyList<CheckId> Emits => [Reports];
@@ -34,7 +34,7 @@ public sealed class YStatementPresent : IDocumentRule
                 + "Y-statement rather than a summary of one.", line);
 
         // The ceiling is the schema's, because a threshold is a judgement a corpus tunes. The moves
-        // below are not: a block-quote missing one is not a Y-statement worded differently.
+        // below are fixed: a block-quote missing one has stopped being a Y-statement.
         var max = ctx.Spec.MaxWords ?? 60;
         var words = text.Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
         if (words > max)

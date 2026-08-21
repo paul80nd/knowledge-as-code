@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// The schema's own declarations
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // What the schema says the tool will do, held against what the tool can actually do.

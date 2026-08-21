@@ -3,22 +3,11 @@
 
 // kac-tests — the golden-file test suite for kac.
 //
-// Each fixture under tooling/tests/fixtures/<scenario>/ is a deliberately-broken (or deliberately-clean)
-// mini-corpus. The runner assembles a throwaway repo root from the real schema plus the fixture's
-// corpus, runs `kac validate --json` against it, and diffs the findings against the scenario's
-// committed golden (expected.json). The golden captures the whole findings set for the corpus, so an
-// accidental extra finding shows up as a diff — which is the point.
+// `tooling/tests/README.md` is the reference: how a scenario runs, what each mode asserts, what the exit
+// codes mean, and what every fixture covers.
 //
-//   dotnet run tooling/kac-tests.cs                 # run every scenario, fail on any mismatch
-//   dotnet run tooling/kac-tests.cs -- clean        # run only scenarios whose name contains "clean"
-//   dotnet run tooling/kac-tests.cs -- --update     # regenerate every golden from current kac output
-//
-// Testing against the real schema (copied in per run, never a stale committed copy) means the
-// suite exercises the production rules: a schema change that alters behaviour surfaces here.
-//
-// Exit codes: 0 all scenarios matched (or goldens updated); 1 a mismatch, a missing golden, a
-// golden referencing a check id kac no longer emits, or a reachable check with no fixture — the
-// coverage gate: a new rule cannot ship without a scenario exercising it.
+// The schema a fixture is assembled over is the real one, copied in per run rather than a committed
+// copy, so a schema change that alters behaviour surfaces in this suite rather than after it.
 
 using System.Diagnostics;
 using System.Text.Json;
@@ -81,24 +70,7 @@ foreach (var scenario in scenarios)
     var name = Path.GetFileName(scenario);
     var corpusDir = Path.Combine(scenario, "corpus");
     // A scenario's `mode` file selects what is asserted; absent means the default, a validate diff.
-    //   validate        run `validate --json`, diff findings against expected.json (contributes coverage)
-    //   generate        run `generate --check`, assert the committed generated files are fresh (exit 0)
-    //   generate-stale  run `generate --check` against a hand-broken corpus, assert staleness is caught
-    //                   (exit 1)
-    //   mechanism       run `mechanism --check` (corpus/ as local, reference/ as the source); assert
-    //                   the synced paths in expected-drift.txt are flagged (exit 1), or in step (exit 0)
-    //   sync            run `mechanism --sync` the same way, then assert the tree it left: the lines in
-    //                   expected-sync.txt appear in the output, every path in expected-files.txt is
-    //                   present afterwards (or absent, where the line is prefixed `!`), and every
-    //                   `<path> :: <text>` in expected-content.txt holds (or does not, prefixed `!`)
-    //   export          run `export` (with `--type <t>` where export-type is present), then assert the
-    //                   tree it wrote: whole-file against the committed export under expected-dist/, plus
-    //                   the same three files sync uses. A second run over an output seeded with a stray
-    //                   file asserts the overwrite is delete-then-write
-    //   bundle          lay the fixture's plugin/ down as .plugin/, run `export` then `bundle`, and
-    //                   assert the plugin it assembled: the lines in expected-bundle.txt, the tree files
-    //                   sync and export use, that the copied export is byte-identical to the one it was
-    //                   copied from, and that a stray file does not survive a second run
+    // `tooling/tests/README.md` says what each mode asserts and which files it reads.
     var modePath = Path.Combine(scenario, "mode");
     var mode = File.Exists(modePath) ? File.ReadAllText(modePath).Trim() : "validate";
 
@@ -182,11 +154,9 @@ void RunValidateScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// generate (mustBeStale=false): the committed corpus already holds fresh generated files; `--update`
-// regenerates them, a normal run asserts `generate --check` finds them fresh (exit 0). The golden is
-// the committed _index.md / <type>.md itself — reviewable in git, kept fresh by `--update`.
-// generate-stale (mustBeStale=true): the corpus is deliberately stale; the run asserts `--check` flags
-// it (exit 1) and, if expected-stale.txt is present, names those files. `--update` leaves it alone.
+// generate and generate-stale, told apart by `mustBeStale`. Fresh: `--update` regenerates the committed
+// files and a normal run asserts they are fresh. Stale: the fixture is broken by hand, `--update` leaves
+// it alone, and the run asserts the staleness is caught. `tooling/tests/README.md` says the rest.
 void RunGenerateScenario(string name, string scenario, bool mustBeStale)
 {
     var corpusDir = Path.Combine(scenario, "corpus");
@@ -248,12 +218,8 @@ void RunGenerateScenario(string name, string scenario, bool mustBeStale)
     }
 }
 
-// mechanism: assemble a local corpus (corpus/) and a reference source (reference/), each over the
-// real schema + manifest, then run `mechanism --check --against <reference>`. expected-drift.txt
-// lists what must appear in the failure output — the shared paths named, and any other line the
-// scenario pins; absent/empty means "expect in step" (exit 0). Accepted divergences, forked
-// differences and files the corpus's descriptor declines are exercised by the fixture but must not fail
-// the run — the golden is the exit code plus the named lines, not free-form output.
+// mechanism, over the fixture's `corpus/` and `reference/`. `tooling/tests/README.md` says what
+// `expected-drift.txt` pins and what an absent one means.
 void RunMechanismScenario(string name, string scenario, string corpusDir)
 {
     var referenceDir = Path.Combine(scenario, "reference");
@@ -323,10 +289,8 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// sync: the same two trees, run through `mechanism --sync`. It asserts the one thing the check cannot —
-// the tree afterwards. expected-files.txt carries most of that weight. Each line names a path that must
-// exist in the local corpus once the sync has run; a line prefixed `!` names one that must not. That is
-// how a fixture pins that a declined type was left upstream rather than quietly stood up.
+// sync, over the same two trees. It asserts the one thing a check cannot: the tree afterwards.
+// `tooling/tests/README.md` says what each expectation file carries.
 void RunSyncScenario(string name, string scenario, string corpusDir)
 {
     var referenceDir = Path.Combine(scenario, "reference");
@@ -379,21 +343,9 @@ void RunSyncScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// export: run `kac export` over the fixture corpus and assert the tree it wrote.
-//
-// **The golden is the whole export, file for file**, committed under `expected-dist/` and diffed against
-// what the run emitted. `.dist/export/` is untracked and rebuilt whole every run. This tracked copy is
-// where a change to what a consumer reads becomes visible.
-//
-// The three expectation files `sync` uses stay beside it and carry what a whole-file diff cannot: what
-// the run printed, and the two manifest fields the diff normalises away.
-//
-// The temp root is not a git repository, so no ref resolves and no link is written. That is the corpus
-// -publishes-nowhere path, and asserting it here is what keeps the fixture honest about what a fixture
-// can show: the link forms belong to `PublishingTests`, which can supply a ref.
-//
-// The run happens twice. The second is over an output seeded with a file no record backs, which is the
-// one failure mode an untracked export has and nothing else would flag.
+// export, over the fixture corpus. The golden is the whole export, committed under `expected-dist/` and
+// diffed file for file, because this is where a change to what a consumer reads becomes visible.
+// `tooling/tests/README.md` says what sits beside it and why two fields are normalised away.
 void RunExportScenario(string name, string scenario, string corpusDir)
 {
     var typePath = Path.Combine(scenario, "export-type");
@@ -457,18 +409,8 @@ void RunExportScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// bundle: lay the fixture's plugin tree down as `.plugin/`, run `export`, then run `bundle` over what it
-// wrote, and assert the plugin that came out.
-//
-// **There is no whole-tree golden here, and that is deliberate.** Most of a bundle is the export, which
-// `expected-dist/` under the export fixture already pins file for file; a second committed copy of it
-// would be one more thing to regenerate and one more place for the two to disagree. What this asserts
-// instead is the part a bundle adds: which components survived, what the run said about the ones that
-// did not, and — the assertion this mode exists for — that the copy of the export inside the plugin is
-// byte-identical to the export it was copied from.
-//
-// The fixture's plugin declares a component for a type the corpus does not hold, so trimming runs on
-// every scenario in this mode rather than only on the one written for it.
+// bundle, over the plugin tree and the export beneath it. `tooling/tests/README.md` says what it asserts
+// and why no committed copy of the plugin sits beside the export's.
 void RunBundleScenario(string name, string scenario, string corpusDir)
 {
     var pluginDir = Path.Combine(scenario, "plugin");
@@ -703,7 +645,7 @@ static string Normalise(string rel, string content)
 }
 
 // Where two versions of one file part company, as the first line that differs. A whole-file diff of an
-// indented JSON document is unreadable in a test log. One line is what a person needs in order to
+// indented JSON document is unreadable in a test log. One line is what a person needs to
 // decide whether they meant it.
 static string FirstDifference(string expected, string actual)
 {
@@ -827,8 +769,6 @@ if (failures.Count > 0)
 Console.WriteLine($"all {scenarios.Count} scenario(s) passed.");
 return 0;
 
-// ---------------------------------------------------------------------------
-
 // The repository, found by the solution at its root rather than by the corpus beside it. `kac` itself walks
 // up for a `.schema/` because what it wants is a corpus; this suite wants the tree that holds the engine,
 // the fixtures and the corpus at once, and only one folder answers to that. The solution file is the right
@@ -918,7 +858,7 @@ static (int exit, string output) RunGenerate(string kac, string schemaDir, strin
 }
 
 // Regenerate a scenario's committed generated files: run `kac generate` (writing) in a temp assembled
-// from the corpus, then copy everything the corpus owns (all but knowledge-as-code/) back over it.
+// from the corpus, then copy everything the corpus owns (all but `.schema/`) back over it.
 // `generate` leaves source docs untouched, so only _index.md and the spliced <type>.md change.
 static void Regenerate(string kac, string schemaDir, string corpusDir)
 {

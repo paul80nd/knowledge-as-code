@@ -52,8 +52,7 @@ public class RefCheckTests
         => Assert.Equal("'supersedes' points at 'adr-0099', which does not exist.",
             Assert.Single(Refs(Field("supersedes", "adrs"), "adr-0099")).Message);
 
-    // A `ref:` at a folder no schema covers is `schema-dispatch`'s to report. There is nothing here to
-    // hold a target to, and inventing a type for it would report the schema's fault against a record.
+    // A `ref:` at a folder no schema covers is `schema-dispatch`'s to report.
     [Fact]
     public void A_ref_at_a_folder_no_schema_covers_still_asks_that_the_target_exists()
     {

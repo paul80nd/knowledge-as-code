@@ -1,10 +1,8 @@
 using System.Text.Json;
 using Spectre.Console;
 
-// ---------------------------------------------------------------------------
 // Subcommands — the orchestration behind each CLI verb. The entrypoint (tooling/kac/Program.cs) only wires
 // Spectre.Console.Cli to these; all the work lives here and in the rest of kac.core.
-// ---------------------------------------------------------------------------
 
 namespace kac.core;
 
@@ -17,9 +15,7 @@ public static class Commands
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
-    // Build the export. The whole corpus is loaded whatever `type` names, because a narrowed load
-    // answers questions about the set from some of its members and answers them wrongly; `type` narrows
-    // what is written.
+    // Build the export. The corpus is loaded whole whatever `type` names.
     public static int Export(string corpusRoot, string? type)
     {
         var corpus = Corpus.Load(corpusRoot);

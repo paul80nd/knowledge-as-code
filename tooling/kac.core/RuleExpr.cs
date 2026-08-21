@@ -1,9 +1,6 @@
-// ---------------------------------------------------------------------------
-// The expression layer for `rules:`
-// ---------------------------------------------------------------------------
 //
 // A hand-rolled lexer, recursive-descent parser, type checker and evaluator, in one file with no
-// dependencies. `../.schema/README.md` is the reference for what an expression may say; this comment is
+// dependencies. `.schema/README.md` is the reference for what an expression may say; this comment is
 // about the boundary, because this is the file someone stands in when they want to cross it.
 //
 // The grammar is frozen. It has no variables, no user-defined functions, no quantifiers and no
@@ -17,7 +14,7 @@
 // quantifiers — a need, not a rule that could be written another way — swap this for CEL (Common
 // Expression Language; a .NET port exists). The `expr:` strings largely carry over and the engine drops
 // in. Not before: the dependency is not worth it at this size, which is the same judgement that
-// rejected OPA/Rego and is recorded with its reasoning in `../README.md`.
+// rejected OPA/Rego and is recorded with its reasoning in `tooling/features/checks.md`.
 //
 // Non-goals, so that a later reader does not mistake an absence for an oversight: a general policy
 // engine, rules-as-data beyond this grammar, a date or collection type system, runtime or

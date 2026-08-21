@@ -1,10 +1,6 @@
 using System.Text;
 using System.Text.Json;
 
-// ---------------------------------------------------------------------------
-// Export — the corpus as something a consumer reads without cloning it
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // One file the export writes, named relative to the export root.
@@ -32,24 +28,21 @@ public sealed record ExportRun(string GeneratedAt, DateOnly Today, string? Commi
 
 // The corpus projected as data, for a consumer that reads it rather than cloning it.
 //
-// What travels is the type's decision, declared in its `export:` block, and this reads that declaration
-// rather than holding a list of its own — so a type declaring no block contributes nothing and nothing
-// here needs changing when one does. `tooling/features/export.md` is the account of what it all comes
+// This reads each type's `export:` block and holds no list of its own, so a new type needs no line here.
+// `tooling/features/export.md` is the account of what it all comes
 // to and why.
 public static class Exporter
 {
-    // The shape of the output, versioned independently of anything the corpus says about itself, and
-    // read by nothing yet. `tooling/features/export.md` says what moves it, and why the field is here
-    // before a reader for it is.
+    // The shape of the output, versioned independently of anything the corpus says about itself.
+    // `Bundler` holds an export to this and refuses one built to another shape, so moving it means every
+    // export on disk has to be rebuilt. `tooling/features/export.md` says what moves it.
     public const int FormatVersion = 2;
 
     public const string ManifestFile = "manifest.json";
 
     // What an export comes to, given a loaded corpus and the addresses its published form has.
     //
-    // `type` narrows what is written and never what is read: the corpus arrives whole, so ids resolve
-    // against every record rather than against the handful a narrowed run happened to load. A question
-    // about the set, answered from some of its members, is answered wrongly.
+    // `type` narrows what is written and never what is read. The corpus arrives whole.
     //
     // `run` carries the facts that differ between two runs over one commit, so nothing here reads a
     // clock and two runs from the same tree produce identical bytes but for the timestamp.
@@ -156,7 +149,7 @@ public static class Exporter
     // What a reader may take from that order, and what they may not, is in `tooling/features/export.md`.
     // The short of it: generality holds within a chain and says nothing across roots.
     //
-    // Two records sharing an id would share an output filename, and the second would replace the first.
+    // Two records sharing an id would share an output filename, and the `TryAdd` below keeps the first.
     // Nothing here guards it: `id-unique` reports a duplicate as an error, so the corpus is one `validate`
     // already refuses, and a second account of that fault here would report it in worse words.
     private static List<Doc> Ordered(List<Doc> docs)
@@ -335,7 +328,7 @@ public static class Exporter
     // The cross-references this part could not carry: a link naming another exported record without
     // naming a term inside it, as `<record>.<part> -> <record>`.
     //
-    // Reported because the alternative is silence. The export simply omits what it cannot read, and an
+    // Reported because the alternative is silence. The export omits what it cannot read, and an
     // omission in an artefact nobody reviews is invisible — so the run says which links under-specify,
     // and the author can add the anchor.
     private static IEnumerable<string> Unread(Doc doc, PartRow part, string partId,
