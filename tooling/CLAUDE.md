@@ -5,33 +5,8 @@
 
 ## Writing here
 
-The code says what it does. A comment says why it is that way. These rules hold for the comments and for the prose
-pages under `tooling/`, this one included.
-
-**Say it once, and cite the rest.** [`features/`](features/) is the reference for what a command does and
-[`tests/README.md`](tests/README.md) for what a scenario asserts. Where the argument is already there, link it and stop.
-A second copy is a second thing to keep in step, and it is the copy that goes stale. Before writing a sentence you have
-written before, grep a phrase from it.
-
-**Check the claim is still true.** A comment that misdescribes the code is worse than no comment, because it is
-believed. Name a symbol and it can be renamed. Say a field is read by nothing and somebody starts reading it. A sweep
-finds these in numbers, and every one of them was true when it was written.
-
-**Count nothing a reader could count.** No check totals, no record totals, no "three of the four questions it answers".
-`kac checks` reports its own number, and a folder answers for its own contents.
-
-**Let a test say what it proves.** Why the code is shaped that way belongs at the source. A test repeating it gives the
-reader two places to keep in step and no reason to trust either.
-
-**Write the ordinary sentence.** The recurring defect here is definition by contrast: `X rather than Y` where a plain
-declarative says the same thing. Keep it where a reader would otherwise land on the wrong reading, and nowhere else. The
-same goes for a crafted line closing a comment, and for more than one em dash in a paragraph.
-
-**No banners.** A title fenced in hyphens is decoration, and the fence usually wraps a shorter version of the comment
-below it. A section heading inside a long file is not a banner and earns its place.
-
-**No apologising and no filler.** Not `hacky`, `sorry`, `for now`, `simply`, `of course`, `in order to`. A constraint is
-worth naming; an apology for it is not.
+**Load `technical-writing`, then `writing-in-the-tool`.** Between them they carry every rule for the comments and for
+the prose pages under `tooling/`, this one included.
 
 ## Adding or changing a check
 

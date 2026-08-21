@@ -51,13 +51,12 @@ and contend over its output.
 
 ## Writing a record
 
-**How a document is written follows its tier, not its type.** Read all three pages below before writing or rewriting
-one: a runbook step and an ADR paragraph obey different constraints, and nothing in CI will tell you that you used the
-wrong ones.
+**How a document is written follows its tier, not its type.** Read everything below before writing or rewriting one: a
+runbook step and an ADR paragraph obey different constraints, and nothing in CI will tell you that you used the wrong
+ones.
 
-* [`knowledge-as-code/style.md`](knowledge-as-code/style.md) — the rules for the words, which are the same in every
-  document and every commit message. Run the checklist at its foot over the finished draft, as its own pass: holding
-  it in mind while writing produces different prose.
+* **Load `technical-writing`.** The rules for the words, which are the same in every document and every commit message.
+* [`knowledge-as-code/style.md`](knowledge-as-code/style.md) — what this corpus adds to them.
 * [`knowledge-as-code/authoring.md`](knowledge-as-code/authoring.md) — what the record's tier adds on top.
 * [`knowledge-as-code/contributing.md`](knowledge-as-code/contributing.md) — the link and template conventions CI
   enforces, and what outranks what when two rules disagree.
