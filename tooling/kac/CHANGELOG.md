@@ -15,6 +15,14 @@ the commit and opens a release carrying the section for that version.
 
 ## Unreleased
 
+## 0.2.1 - 2026-08-21
+
+### Changed
+
+- **The command line is parsed by `Spectre.Console.Cli` rather than `System.CommandLine`.** Every verb, option and exit
+  code answers as it did. `--help` reflows into Spectre's layout, `-v` joins `--version`, and `-?` no longer stands for
+  `--help`. The tool carries one library for reading a command line and asking a question, rather than two.
+
 ## 0.2.0 - 2026-08-20
 
 ### Changed
