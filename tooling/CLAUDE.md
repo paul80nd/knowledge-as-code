@@ -5,9 +5,7 @@
 
 ## Writing a comment
 
-The code says what it does. A comment says why it is that way. These rules are the tool's own;
-[`../example/knowledge-as-code/style.md`](../example/knowledge-as-code/style.md) holds the corpus to its prose and says
-nothing about code.
+The code says what it does. A comment says why it is that way.
 
 **Say it once, and cite the rest.** [`features/`](features/) is the reference for what a command does and
 [`tests/README.md`](tests/README.md) for what a scenario asserts. Where the argument is already there, link it and stop.
@@ -47,8 +45,8 @@ rule reporting "something here is wrong" where it could have named the missing p
 and nothing in the gate will notice. Cost is the second question, and it only ever argues for converting a rule that has
 already passed the first — a schema with no C# behind it was never the aim.
 
-Eighteen rules fail that test and they cluster, which is worth knowing before starting one. Four are written, and the
-argument for a class reads differently beside a class that exists.
+The rules that fail it cluster, which is worth knowing before starting one. The table marks the ones already written,
+because the argument for a class reads differently beside a class that exists.
 
 | Cluster            | Rules                                                                                                                                                       | Why code                                                                                                                                                                                                               |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -62,12 +60,16 @@ argument for a class reads differently beside a class that exists.
 rebuilding OPA. Write a rule class.
 
 **A rule that needs C# is a class, not an arm.** One file in `kac.core/Rules/`, its own unit tests, and a line in the
-registry beside it. It declares the check ids it `Emits`, and each of those needs an entry in `_checks.yaml` saying what
-it means — `schema-dispatch` reports one that has none, so implementing a rule and declaring what it reports cannot come
-apart. A dispatcher finds the rule by the id the schema's `rules:` block declares, which is a `RuleId` and usually not
-the `CheckId` it reports under: `y-statement-present` emits `y-statement`, and the two types are what keep that
-deliberate. A rule id nothing implements is a statement of intent: skipped, and rendered on the type page as
-declared-but-not-enforced, so long as it declares no `severity:` — which `SchemaChecks` holds it to.
+registry beside it.
+
+It declares the check ids it `Emits`, and each of those needs an entry in `_checks.yaml` saying what it means.
+`schema-dispatch` reports one that has none, so implementing a rule and declaring what it reports cannot come apart.
+
+A dispatcher finds the rule by the id the schema's `rules:` block declares. That is a `RuleId`, and usually not the
+`CheckId` it reports under: `y-statement-present` emits `y-statement`, and the two types are what keep that deliberate.
+
+A rule id nothing implements is a statement of intent. It is skipped, and rendered on the type page as
+declared-but-not-enforced, so long as it declares no `severity:`. `SchemaChecks` holds it to that.
 
 **Which interface follows from what the rule has to read.**
 
@@ -76,26 +78,29 @@ declared-but-not-enforced, so long as it declares no `severity:` — which `Sche
 | `IDocumentRule` | one document, through a `RuleContext`                            | `Validator.CheckRules`       | against that document                         |
 | `ICorpusRule`   | every record and the `byId` index, through a `CorpusRuleContext` | `Validator.CheckCorpusRules` | against the document it names, rarely its own |
 
-Choose by what the rule has to read, and take the narrower one wherever it will do: a rule handed every record to judge
-one document reads as though it needs them all, and nothing in its signature says otherwise. A rule needing git history
-fits neither interface. Design that one against the first real case.
+Take the narrower one wherever it will do. A rule handed every record to judge one document reads as though it needs
+them all, and nothing in its signature says otherwise. A rule needing git history fits neither interface; design that
+one against the first real case.
 
 **A core check is not a rule.** It runs on every document, in the order `CheckDocument` reads one, and several return
 early so a later check does not report nonsense about a document already known to be broken. That order is the design,
-so core checks are called in sequence and never looked up in a registry. Where a group of them is self-contained —
-`Checks/IdChecks.cs`, `Checks/LinkChecks.cs`, `Checks/PartChecks.cs`, `Checks/ValueChecks.cs` — it is a static class of
-its own with unit tests; the rest stay in `Validator.cs`, and extracting one buys nothing unless it has logic worth
-testing directly. `IdChecks` is the case for extracting: three passes read the shape of an id and of the filename
-carrying it, in three directions, and a second copy of that shape would be a place for the styles to disagree silently.
+so core checks are called in sequence and never looked up in a registry.
 
-`ValueChecks` is the other case, and it is drawn by what a check reads rather than by how much of it there is. What one
-frontmatter value is held to is its `FieldSpec` and nothing about the document around it, so `Check` takes the field's
-declaration, the node, the kind of document and the line the frontmatter opens on — and a date's calendar arithmetic, an
-enum's casing, a list's floor and a per-entry pattern are all decidable from a declaration a test writes itself. The
-order inside it carries the design as much as the outer sequence does: a template's unfilled marks are read as absent
-before any field's own check sees them, so a placeholder is never reported as a malformed date. `IsAbsent` is public
-because the required-field pass asks the same question before the class is reached, and a second reading of "absent"
-would be free to disagree with this one.
+Where a group of them is self-contained it becomes a static class with unit tests: `Checks/IdChecks.cs`,
+`Checks/LinkChecks.cs`, `Checks/PartChecks.cs`, `Checks/ValueChecks.cs`. The rest stay in `Validator.cs`, and extracting
+one buys nothing unless it has logic worth testing directly. `IdChecks` is the case for extracting. Three passes read
+the shape of an id and of the filename carrying it, in three directions, and a second copy of that shape would be a
+place for the styles to disagree silently.
+
+`ValueChecks` is the other case, drawn by what a check reads and not by how much of it there is. What one frontmatter
+value is held to is its `FieldSpec` and nothing about the document around it. So `Check` takes four things: the field's
+declaration, the node, the kind of document, and the line the frontmatter opens on. A date's calendar arithmetic, an
+enum's casing, a list's floor and a per-entry pattern are then all decidable from a declaration a test writes itself.
+
+The order inside it carries the design as much as the outer sequence does. A template's unfilled marks are read as
+absent before any field's own check sees them, so a placeholder is never reported as a malformed date. `IsAbsent` is
+public because the required-field pass asks the same question before the class is reached, and a second reading of
+"absent" would be free to disagree with this one.
 
 **Whatever it is, a check writes what it found to a `Report`**, which every pass that walks one file builds and hands
 down, and which a rule class receives as `RuleContext.Report`. Write the id out as a `CheckId` at the call: both halves
@@ -103,24 +108,26 @@ are strings, so the compiler is what stops a message landing in the id's place. 
 one and which do not.
 
 **`Checks/SchemaChecks.cs` reads no document at all.** It runs once, before the corpus, and asks whether the schema
-declares anything the tool cannot act on. Read every vocabulary it tests from the code that dispatches the value —
-`IdChecks.IdStyles`, `Generator.IndexOrders`, the two `ByRuleId` maps — because a copy is a list of what is spelled
-correctly rather than of what runs. The key vocabulary needs no list at all: `Schema.Load` reads every mapping through a
-`Level` that records what it was asked for, so adding a `Get` is what admits a key. Adding one without the code that
-reads what it parsed into moves the failure from `schema-unknown-key` to `schema-dispatch` rather than removing it.
+declares anything the tool cannot act on.
 
-Not every question there is about a vocabulary. A `mirrors-section:` names any section and the code acts on whatever it
-names, so what makes it sound is the type's own `sections:` block — one declaration held against another in the same
-file, which is `schema-shape` rather than `schema-dispatch`.
+Read every vocabulary it tests from the code that dispatches the value: `IdChecks.IdStyles`, `Generator.IndexOrders`,
+and the two `ByRuleId` maps. A copy is a list of what is spelled correctly, and never of what runs. The key vocabulary
+needs no list at all, because `Schema.Load` reads every mapping through a `Level` that records what it was asked for, so
+adding a `Get` is what admits a key. Add one without the code that reads what it parsed into and the failure moves from
+`schema-unknown-key` to `schema-dispatch`; it does not go away.
+
+Not every question there is about a vocabulary. A `mirrors-section:` names any section and the code acts on whatever
+it names. What makes it sound is the type's own `sections:` block, one declaration held against another in the same
+file. That is `schema-shape`, not `schema-dispatch`.
 
 Wherever it lives, three places have to agree, and each fails a meta-test rather than a test you were looking at:
 
-1. **An entry in [`../example/.schema/_checks.yaml`](../example/.schema/_checks.yaml)** — the declaration. Its
+1. **An entry in [`../example/.schema/_checks.yaml`](../example/.schema/_checks.yaml)**, the declaration. Its
    `description:` is what `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the boundary.
    A check a rule class reports under with no entry here fails `schema-dispatch` when the schema loads.
 2. **A row in `Generator.DocRows`**, unless the check declares `on-type-page: false` — one or the other, or
    `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one of its
-   records; the flag is for a check that reads the schema, the template or the page itself, which is real and is not
+   records. The flag is for a check that reads the schema, the template or the page itself, which is real and is not
    theirs to act on. The flag sits with the check because it is a fact about the check.
 3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises, and that is also
    what catches a check declared in the schema and reported by nothing.
@@ -128,9 +135,9 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
 No prose states a check count: `kac checks` reports it. [`features/checks.md`](features/checks.md) carries no table of
 checks either — it points at the schema, so there is nothing there to go quietly out of date.
 
-`DocRows` is deliberately *not* generated from the catalogue: rows are grouped and hand-worded, so several catalogue ids
-fold into one reader-facing row. An expression rule is the opposite — one id, reporting under its own name — so its row
-comes from its `description:`, and writing one into `DocRows` would duplicate it.
+`DocRows` is deliberately *not* generated from the catalogue. Rows are grouped and hand-worded, so several catalogue
+ids fold into one reader-facing row. An expression rule is the opposite, one id reporting under its own name, so its
+row comes from its `description:` and writing one into `DocRows` would duplicate it.
 
 **The coverage gate reads ids, not branches**, so a rule reporting three faults under one id needs a fixture for each,
 and unit tests beside the rule class for the branches a fixture would only duplicate.
@@ -142,14 +149,17 @@ and unit tests beside the rule class for the branches a fixture would only dupli
 `MechanismCheck.Classify` returns a report, `MechanismSync.Plan` returns a plan, and none of them prints. The exit code
 is `Commands`'s too, derived from the value it was handed.
 
-That is what makes each of them testable from a set of strings rather than from a tree and a subprocess. The two
-mechanism engines take the file listings and a `Func<string, bool>` answering whether two copies of a path say the same
-thing, so the whole classification is decidable without a filesystem — a new arm is a unit test, not a fixture corpus.
-`Tree` strikes the same bargain for the corpus itself: a listing, a `Func` that reads one of its paths, and a `Func`
-answering whether a path is on the disk at all. **Every pass reads the corpus through it, `Validator.CheckAll`
-included.** `Corpus.Load` takes the listing, the schema and the descriptor, and its other overload is the one place a
-path becomes a corpus. A test can therefore ask the whole of `validate` about a corpus nobody ever wrote to disk, and a
-new check gets unit tests as well as a fixture.
+That is what makes each of them testable from a set of strings, and never from a tree and a subprocess.
+
+The two mechanism engines take the file listings and a `Func<string, bool>` answering whether two copies of a path say
+the same thing. The whole classification is therefore decidable without a filesystem, and a new arm is a unit test
+instead of a fixture corpus. `Tree` strikes the same bargain for the corpus itself: a listing, a `Func` that reads one
+of its paths, and a `Func` answering whether a path is on the disk at all. **Every pass reads the corpus through it,
+`Validator.CheckAll` included.**
+
+`Corpus.Load` takes the listing, the schema and the descriptor, and its other overload is the one place a path becomes a
+corpus. A test can therefore ask the whole of `validate` about a corpus nobody ever wrote to disk, and a new check gets
+unit tests as well as a fixture.
 
 Ask the listing about presence and `Tree.OnDisk` only where `Tree` says to. A check that asks the disk directly passes
 for whoever wrote the file and fails in CI, by which time they have stopped looking.
@@ -160,12 +170,15 @@ the ones the plan already reports, so nothing is decided twice.
 
 ## Adding a generated block
 
-**`kac.core/GeneratedFiles.cs` is the one list of what `generate` writes and where.** Adding a block is one entry there,
-naming it beside the renderer that fills it, and nothing else: `Commands.Generate` writes what the list says and
-`Validator.CheckAll` holds the corpus to the same list, so a block cannot be written under a name nothing checks or
-checked for under a name nothing writes. `Blocks` projects the names out without calling a renderer, which is what lets
-`validate` ask what a file should carry without building any of it. `Plan` renders them against what the corpus holds
-now, so `generate` and `generate --check` read one answer between them.
+**`kac.core/GeneratedFiles.cs` is the one list of what `generate` writes and where.** Adding a block is one entry
+there, naming it beside the renderer that fills it, and nothing else.
+
+`Commands.Generate` writes what the list says and `Validator.CheckAll` holds the corpus to the same list. So a block
+cannot be written under a name nothing checks, or checked for under a name nothing writes.
+
+`Blocks` projects the names out without calling a renderer, which lets `validate` ask what a file should carry without
+building any of it. `Plan` renders them against what the corpus holds now, so `generate` and `generate --check` read one
+answer between them.
 
 The flag on each entry says whether the markers have to be there. It is false for `README.md` alone, because that file
 belongs to the corpus and deleting the markers is how the corpus declines the block. Everywhere else the file arrives
@@ -174,11 +187,11 @@ from the framework carrying them, and one that has gone is a block that stopped 
 ## The fixtures
 
 * They share the **real** `.schema/`. `AssembleTemp` copies it beside each fixture corpus, so a schema change ripples
-  into every fixture at once — run the golden suite after touching `.schema/`, not just `kac validate`. A `sync`
+  into every fixture at once. Run the golden suite after touching `.schema/`, not just `kac validate`. A `sync`
   scenario may narrow one side with `corpus-schema.txt`, which names the type files that side holds *before* the sync.
   The real schema cannot express a corpus holding fewer files than upstream, and that is the state a sync resolves.
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`
-  beside it. Types it does not use are simply absent, which is silent. Adding a folder to a fixture without standing the
+  beside it. Types it does not use are absent, which is silent. Adding a folder to a fixture without standing the
   type up adds a finding to every scenario that reads it.
 * Only fixtures in **`validate` mode** run the validator. `generate`, `generate-stale`, `mechanism`, `sync`, `export`
   and `bundle` modes do not, so a new check cannot affect them. `sync`, `export` and `bundle` are the modes that write.
@@ -186,16 +199,16 @@ from the framework carrying them, and one that has gone is a block that stopped 
   their content instead of a findings golden.
 * **The `export` fixture commits the export itself**, under `expected-dist/`, and a diff there is a change to what a
   consumer reads. Its [README](tests/fixtures/export/README.md) says what that asks of you. Nothing else in the suite
-  holds a tracked copy of an untracked artefact — the `bundle` fixtures deliberately do not, because most of a bundle is
+  holds a tracked copy of an untracked artefact. The `bundle` fixtures deliberately do not, because most of a bundle is
   that same export and a second copy would be a second thing to keep in step.
 * Regenerate with `dotnet run tooling/kac-tests.cs -- --update [name]`, then **read the diff**. The command rewrites
   expectations to whatever the tool now produces, so it will happily bless a regression.
 
 ## The feature specs pin more than findings
 
-A scenario asserting a whole corpus — `Structure.feature`, `Shape.feature` — pins how many documents the fixture holds
-as well as every finding it produces. Adding a file to a fixture changes that count, and regenerating the goldens will
-not tell you: the golden layer and the feature layer assert different things about the same corpus.
+A scenario asserting a whole corpus, such as `Structure.feature` or `Shape.feature`, pins how many documents the
+fixture holds as well as every finding it produces. Adding a file to a fixture changes that count, and regenerating the
+goldens will not tell you: the golden layer and the feature layer assert different things about the same corpus.
 
 `Harness` runs `Corpus.Load` then `Validator.CheckAll` — the two calls `Commands.Validate` makes. Keep it that way: a
 harness assembling its own subset of the sequence leaves whole checks unreachable from a spec, and every spec goes on
@@ -232,6 +245,6 @@ rather than against glossary, so a corpus adopting a second type brings its reco
 changing.
 
 Everything after the fetch is glossary-specific and skipped where the export carries none. Two of those assertions
-restate over the real corpus what `ExporterTests` pins over corpora it builds for the purpose — the chain ordering, and
-the stability that carries no ranking — because a rule and the artefact a reader receives are the two things that could
-have come apart.
+restate over the real corpus what `ExporterTests` pins over corpora it builds for the purpose: the chain ordering, and
+the stability that carries no ranking. A rule and the artefact a reader receives are the two things that could have
+come apart.
