@@ -31,6 +31,9 @@ the commit and opens a release carrying the section for that version.
   rather than what a file inside it says. Its tally now names the whole plan beside the part of it that moved.
 - **`export` and `bundle` dim the directory in each path they write**, so the eye lands on the part that differs, and
   colour a remark by whether it is advice or an account of the run. Neither changes a word it says.
+- **A failure names itself in red.** Every verb's hard stop, and the heading over a list of what stopped it, is
+  coloured on stderr. What the heading names stays plain beneath it, so the heading is the signal and the list is the
+  evidence.
 - **`--json` and every exit code answer exactly as before.** Machine-readable output is a contract a pipeline parses,
   and a redirected stream carries no colour, so nothing downstream sees any of this.
 

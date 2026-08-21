@@ -89,7 +89,7 @@ internal static class Cli
         var corpusRoot = FindCorpusRoot(Directory.GetCurrentDirectory());
         if (corpusRoot is null)
         {
-            Out.ErrLine("kac: could not locate a corpus (no .schema above the cwd).");
+            Out.ErrMarkup("[red]kac: could not locate a corpus (no .schema above the cwd).[/]");
             return 2;
         }
 

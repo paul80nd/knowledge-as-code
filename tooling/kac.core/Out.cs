@@ -36,6 +36,8 @@ public static class Out
     // reason above: the check messages are full of square brackets.
     public static void Markup(string markup) => Std.MarkupLine(markup);
 
+    public static void ErrMarkup(string markup) => Err.MarkupLine(markup);
+
     // A grid, or anything else Spectre lays out. It is rendered into a buffer first, because Spectre
     // pads every row out to the width of its widest column: the check catalogue rendered straight to
     // the stream is 78 lines each padded to the longest summary among them. That is invisible in a

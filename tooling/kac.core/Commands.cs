@@ -102,7 +102,7 @@ public static class Commands
 
         if (plan.Problems.Count > 0)
         {
-            foreach (var problem in plan.Problems) Out.ErrLine($"bundle: {problem}");
+            foreach (var problem in plan.Problems) Stop($"bundle: {problem}");
             return 1;
         }
 
@@ -147,8 +147,7 @@ public static class Commands
                 return 0;
             }
 
-            Out.ErrLine(
-                "generated files are stale — these differ from the schema/frontmatter:");
+            Stop("generated files are stale — these differ from the schema/frontmatter:");
             foreach (var s in stale) Out.ErrLine($"  {s}");
             Out.ErrLine("run:  kac generate");
             return 1;
@@ -268,7 +267,7 @@ public static class Commands
         var problems = Generator.ChecksTableProblems(schema);
         if (problems.Count == 0) return 0;
 
-        Out.ErrLine("checks: the reader-facing checks table is out of step with the catalogue:");
+        Stop("checks: the reader-facing checks table is out of step with the catalogue:");
         foreach (var p in problems) Out.ErrLine($"  {p}");
         Out.ErrLine(
             "fix Generator.DocRows in tooling/kac.core/Generator.cs, or the check's 'on-type-page:' "
@@ -394,9 +393,15 @@ public static class Commands
     // and the exit code says so, which is the same bargain every verb strikes.
     private static int Fail(string message)
     {
-        Out.ErrLine(message);
+        Stop(message);
         return 1;
     }
+
+    // Why a command stopped, or the heading over a list of what stopped it. The whole line is red where
+    // a remark colours only its prefix: a remark sits among other output and needs a marker, and this is
+    // the message. Whatever it names stays plain beneath it — the heading is the signal, the list is the
+    // evidence, and colouring both leaves neither standing out.
+    private static void Stop(string line) => Out.ErrMarkup($"[red]{line.EscapeMarkup()}[/]");
 
     private static int ReportMechanism(MechanismReport report, CorpusDescriptor descriptor, string refRoot)
     {
