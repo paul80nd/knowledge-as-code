@@ -8,11 +8,15 @@ description: The writing floor for every word in this repository. Records, READM
 The floor every writer in this repository stands on. Whatever sent you here adds the rules for your audience on top.
 
 **These rules reach prose, and stop where prose stops.** They do not reach a heading you may not rename, an identifier,
-a clause whose wording is the record of an obligation, a fixed form such as an ADR's decision sentence, or text that
-reproduces what a program prints. Where a rule cannot be obeyed without changing one of those, leave it and say so.
+a clause whose wording is the record of an obligation, a fixed form such as an ADR's decision sentence, or a
+transcript quoting what a program printed. Where a rule cannot be obeyed without changing one of those, leave it
+and say so.
 
 **A comment inside a fenced code block is prose and follows these rules.** The command, its flags and its
 output are not.
+
+**The words a program prints are prose, and these rules reach them.** A message in a string literal, or a
+schema `message:` value, is written for a reader. A transcript quoting that message back is a fact, and is not.
 
 **Never trade clarity for word count.** Where two rules pull against each other, the one that leaves the reader fewer
 readings wins.
@@ -29,6 +33,9 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
   Write: "Released under the MIT licence."
 * **Keep the passive where the actor is known and naming it here would be wrong.** A CDN serves an image that another
   service resized. "The CDN resizes it" is active, and false.
+* **A label may be a verbless phrase where the thing it labels sits beside it.** A comment above a declaration, a
+  field value rendered next to its field name, a cell under its column heading.
+  Write: "// One file, and the bytes it holds."
 * **Use the passive only when the actor is unknown or beside the point.** Never to soften an obligation.
 * **Write in the present tense.** Use "will" only for something that genuinely happens later.
   Not: "The validator will report a missing id." Write: "The validator reports a missing id."
@@ -55,8 +62,8 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 * **Put "only" and "not" against the word they govern.**
   "Only the owner can merge a policy" and "The owner can merge only a policy" say different things.
 * **Give every "it", "they" and "this" one obvious thing to point at.** Repeat the noun when in doubt.
-* **Never point "this", "that" or "which" at a whole clause.** Where the repair needs a manufactured subject, recast the
-  sentence instead of bolting one on.
+* **Do not point a pronoun at a whole clause where the referent is not obvious.** Where it is obvious, leave it. The
+  repair costs a manufactured subject, and a run of them reads as a tic.
   Not: "...drifted from the catalogue, which is what keeps that table honest."
   Write: "...drifted from the catalogue. That exit is what keeps the table honest."
 * **Do not drop a verb across a clause boundary.**
@@ -78,15 +85,18 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
   Write: "**Platform**: CDN custom domain." Write: "**Caching.** The edge ignores every query string but two."
   Where a third part qualifies the value, a comma carries it: "**Repository**: `infrastructure`, at
   `services/covers`."
-* **One em dash survives: the interrupting aside that carries its own commas.** *A definite reference — the same, none,
-  that, it — needs its antecedent in the sentence before.* Parentheses would hold it too, and they tell a reader to
-  skip it, which is wrong where the aside is load-bearing. That is the whole of the exception. **A dash at the end of a
-  sentence interrupts nothing** and takes a colon or a full stop.
+* **One em dash survives: the interrupting aside that carries its own commas.** That is the whole test.
+  *The bibliographic description of a title — author, edition, subject headings — held once and shared by every
+  branch.* A colon cannot hold it, because the sentence continues afterwards. Parentheses could, and they tell a reader
+  to skip what they hold, which is wrong where the aside is load-bearing. **A dash at the end of a sentence interrupts
+  nothing** and takes a colon or a full stop.
 * **An en dash is for a range or a pair.** `A.7.1–A.7.14`, `35–45 words`, `client–server`. A hyphen there is a
   different mark meaning a different thing.
 * **A colon introduces a list, an example, a reason or a definition.** Never as a mid-sentence connector.
   Not: "If you are coming from automation: you describe conditions." Write: "Coming from automation, you describe
   conditions."
+* **Where the container reserves a mark, take a full stop and a new sentence.** A YAML plain scalar cannot hold
+  `": "`, so a definition written there becomes two sentences rather than a quoted value.
 * **Use a full stop, not a semicolon.**
 * **Write the alternative out.** Not: "and/or", "read/write". Write: "a, b, or both".
 * **Make anything in parentheses a whole grammatical unit.** Never form a plural with "(s)".
@@ -115,7 +125,8 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 * **Cut these on sight:** simply, of course, seamless, robust, comprehensive, leverage, delve into, a tapestry of,
   pivotal, cutting-edge, serves as, it is worth mentioning, I hope this helps.
 * **Cut the hedge stack.** Not: "could potentially be argued that it might". Write: "may".
-* **Replace an adverb with a stronger verb or a number.** Not: "runs quickly". Write: "is fast", or the measurement.
+* **Replace an adverb that props up a weak verb.** Not: "runs quickly". Write: "is fast", or the measurement.
+  An adverb carrying its own meaning stays: "an id that quietly means something new".
 * **Say what you found.** Not: "a number of issues". Write: "three broken links".
 * **Cut a sentence that could appear unchanged in another project's documentation.** It says nothing about this one.
   Not: "schema changes can cause issues." Write: "a column rename fails the build."
@@ -131,6 +142,8 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
   a tell. A bold lead-in that ends in a full stop, names the item, and is followed by new detail is right, and where it
   does a heading's job it stays.
   Not: "**Performance:** Performance improved." Write: "**Schema in TypeScript.** Tables live in one file."
+* **A bold lead-in may carry two steps.** Splitting it moves half the instruction outside the emphasis.
+  Write: "**Retire the old policy and write a new one.**"
 * **Bold the term, not the claim,** inside a paragraph. Where the claim is the misreading the paragraph exists to
   prevent, put that sentence first and let position carry it.
 * **No emoji, no title-case headings.**
@@ -143,7 +156,8 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 * **Describe what is, not what changed**, and never as a correction of what was. Change history belongs to the commit
   message and the changelog, which are the two documents whose subject is change.
 * **Do not write a count you cannot regenerate.** Name the command that reports it. A set fixed by decision rather than
-  by accumulation may be counted.
+  by accumulation may be counted. A number making a point rather than a tally is not a count: "correcting it alongside
+  twenty others" is an argument about cost.
 * **Cite rather than restate.** If the reasoning lives elsewhere, link it. Nobody updates a copy.
 
 ## Commit messages and pull requests
@@ -156,7 +170,8 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 
 ## Before you finish
 
-1. Name the subject of every sentence. Where the answer is "nothing", rewrite it, unless naming one would add a claim.
+1. Name the subject of every sentence. Where the answer is "nothing", rewrite it, unless naming one would add a claim
+   or the line is a label.
 2. Read the longest sentence aloud. If you run out of breath, it is two sentences.
 3. Search the draft for the cut list above, and for "only", "this" and "it".
 4. Read the last sentence of each section. If more than one in a row is a crafted line, flatten the weaker.
