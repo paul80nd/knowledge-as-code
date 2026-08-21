@@ -2,7 +2,7 @@
 
   <!-- The mechanics of kac, held apart from the entrypoint (tooling/kac/) so they can be unit-tested
        in-process rather than through a subprocess. Nothing here writes to the console or decides an
-       exit code: each pass answers in values, and `Commands` turns those into output. -->
+       exit code: each pass answers in values, and `Commands` turns those into output through `Out`. -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -15,6 +15,7 @@
   <ItemGroup>
     <PackageReference Include="YamlDotNet" Version="18.*" />
     <PackageReference Include="Markdig" Version="1.*" />
+    <PackageReference Include="Spectre.Console" Version="0.55.0" />
   </ItemGroup>
 
 </Project>

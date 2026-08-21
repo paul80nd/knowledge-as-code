@@ -42,24 +42,24 @@ public static class Commands
             new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, dirty));
 
         var written = Exporter.Write(corpusRoot, plan);
-        foreach (var path in written) Console.WriteLine($"wrote {path}");
+        foreach (var path in written) Out.Line($"wrote {path}");
 
         // What the export cannot say is worth saying here, where someone is watching. Neither state is
         // an error: a corpus may publish nowhere, and an export built from a dirty tree is still an
         // export — it is only one that cannot be rebuilt from the commit it names.
         if (publishing is null)
-            Console.WriteLine(
+            Out.Line(
                 "export: no published links — this corpus states no publishing target the tool can address, "
                 + "or no bases for one. Records carry their paths and no URLs.");
         if (dirty is true)
-            Console.WriteLine(
+            Out.Line(
                 "export: built from a dirty working tree, and the manifest says so. The commit it names "
                 + "does not reproduce it.");
 
         // Named rather than counted. A record left behind is invisible in the output by definition, so
         // this run is the last place anyone sees which ones they were.
         if (plan.Withheld.Count > 0)
-            Console.WriteLine(
+            Out.Line(
                 $"export: withheld {string.Join(", ", plan.Withheld)} — .corpus.yaml excludes "
                 + $"{string.Join(" and ", corpus.Descriptor.ExportExclude)}.");
 
@@ -68,17 +68,17 @@ public static class Commands
         // the omission is stated here, where an author can act on it, instead of being guessed at.
         if (plan.Unread.Count > 0)
         {
-            Console.WriteLine(
+            Out.Line(
                 $"export: {plan.Unread.Count} cross-reference(s) name a record and no part inside it, so "
                 + "nothing was carried for them:");
-            foreach (var u in plan.Unread) Console.WriteLine($"  {u}");
-            Console.WriteLine("export: point each link at the part it means, as '<file>.md#<anchor>'.");
+            foreach (var u in plan.Unread) Out.Line($"  {u}");
+            Out.Line("export: point each link at the part it means, as '<file>.md#<anchor>'.");
         }
 
         // An empty type list is a statement of what this corpus has, and not a failure: a corpus may
         // have adopted no type that declares an export, or have withheld everything the types it did
         // adopt would have carried. The line above says which, where it was the second.
-        Console.WriteLine(plan.Types.Count == 0
+        Out.Line(plan.Types.Count == 0
             ? $"export: wrote {written.Count} file(s); no type contributed a record."
             : $"export: wrote {written.Count} file(s) for {string.Join(", ", plan.Types.Select(t => t.Type))}.");
         return 0;
@@ -101,26 +101,26 @@ public static class Commands
 
         if (plan.Problems.Count > 0)
         {
-            foreach (var problem in plan.Problems) Console.Error.WriteLine($"bundle: {problem}");
+            foreach (var problem in plan.Problems) Out.ErrLine($"bundle: {problem}");
             return 1;
         }
 
         var written = Bundler.Write(corpusRoot, plan);
-        foreach (var path in written) Console.WriteLine($"wrote {path}");
+        foreach (var path in written) Out.Line($"wrote {path}");
 
         // Named rather than counted, as the export names what it withheld. A component that was dropped
         // is invisible in the output by definition, and two corpora building one plugin name may drop
         // different ones — so the run says which, beside the `bundle.json` that will outlive it.
         foreach (var t in plan.Trimmed)
-            Console.WriteLine($"bundle: trimmed {t.Path} — {t.Reason}.");
+            Out.Line($"bundle: trimmed {t.Path} — {t.Reason}.");
 
-        foreach (var warning in plan.Warnings) Console.WriteLine($"bundle: {warning}");
+        foreach (var warning in plan.Warnings) Out.Line($"bundle: {warning}");
 
-        Console.WriteLine(
+        Out.Line(
             $"bundle: wrote {written.Count} file(s) to {Dist.Plugin}/ as {plan.PluginName} "
             + $"{plan.Version ?? "(no version)"} — {plan.Included.Count} component(s) included, "
             + $"{plan.Trimmed.Count} trimmed.");
-        Console.WriteLine(
+        Out.Line(
             $"bundle: {Dist.Root}/ is a marketplace holding it. Install it from a path with:  "
             + $"claude plugin marketplace add ./{Dist.Root}");
         return 0;
@@ -140,14 +140,14 @@ public static class Commands
             var stale = plan.Where(f => f.Stale).Select(f => f.Path).ToList();
             if (stale.Count == 0)
             {
-                Console.WriteLine($"generated files are up to date ({plan.Count} file(s)).");
+                Out.Line($"generated files are up to date ({plan.Count} file(s)).");
                 return 0;
             }
 
-            Console.Error.WriteLine(
+            Out.ErrLine(
                 "generated files are stale — these differ from the schema/frontmatter:");
-            foreach (var s in stale) Console.Error.WriteLine($"  {s}");
-            Console.Error.WriteLine("run:  kac generate");
+            foreach (var s in stale) Out.ErrLine($"  {s}");
+            Out.ErrLine("run:  kac generate");
             return 1;
         }
 
@@ -159,9 +159,9 @@ public static class Commands
     // sync reports the files it rebuilt in the words `generate` uses for the same work.
     private static void ReportWritten(List<string> written)
     {
-        foreach (var path in written) Console.WriteLine($"wrote {path}");
+        foreach (var path in written) Out.Line($"wrote {path}");
 
-        Console.WriteLine(written.Count == 0
+        Out.Line(written.Count == 0
             ? "generated files already up to date; nothing written."
             : $"updated {written.Count} generated file(s).");
     }
@@ -189,21 +189,21 @@ public static class Commands
 
         foreach (var grp in findings.GroupBy(f => f.File).OrderBy(g => g.Key))
         {
-            Console.WriteLine(grp.Key);
+            Out.Line(grp.Key);
             foreach (var f in grp.OrderBy(f => f.Line ?? 0))
             {
                 var tag = f.Severity == Sev.Error ? "error  " : "warning";
                 var at = f.Line is { } ln ? $":{ln}" : "";
-                Console.WriteLine($"  {tag}  [{f.Check}] {f.Message}{(at.Length > 0 ? $"  ({grp.Key}{at})" : "")}");
+                Out.Line($"  {tag}  [{f.Check}] {f.Message}{(at.Length > 0 ? $"  ({grp.Key}{at})" : "")}");
             }
 
-            Console.WriteLine();
+            Out.Line();
         }
 
         // Templates are counted apart from documents because they are checked apart from them: a reader
         // who sees a finding against a `_template.md` should find it accounted for in the tally, and one
         // who sees none should be able to tell that the templates were read rather than skipped.
-        Console.WriteLine(
+        Out.Line(
             $"validated {validated} document(s) and {templates} template(s), skipped {skipped} without "
             + $"frontmatter — {errors} error(s), {warnings} warning(s)");
         return errors > 0 ? 1 : 0;
@@ -232,19 +232,19 @@ public static class Commands
             foreach (var c in catalogue)
             {
                 var tag = c.Severity == Sev.Error ? "error  " : "warning";
-                Console.WriteLine($"  {tag}  {c.Id,-24}  {c.Summary}");
+                Out.Line($"  {tag}  {c.Id,-24}  {c.Summary}");
             }
 
-            Console.WriteLine();
-            Console.WriteLine($"{catalogue.Count} checks.");
+            Out.Line();
+            Out.Line($"{catalogue.Count} checks.");
         }
 
         var problems = Generator.ChecksTableProblems(schema);
         if (problems.Count == 0) return 0;
 
-        Console.Error.WriteLine("checks: the reader-facing checks table is out of step with the catalogue:");
-        foreach (var p in problems) Console.Error.WriteLine($"  {p}");
-        Console.Error.WriteLine(
+        Out.ErrLine("checks: the reader-facing checks table is out of step with the catalogue:");
+        foreach (var p in problems) Out.ErrLine($"  {p}");
+        Out.ErrLine(
             "fix Generator.DocRows in tooling/kac.core/Generator.cs, or the check's 'on-type-page:' "
             + "in .schema/_checks.yaml.");
         return 1;
@@ -310,7 +310,7 @@ public static class Commands
     // and the exit code says so, which is the same bargain every verb strikes.
     private static int Fail(string message)
     {
-        Console.Error.WriteLine(message);
+        Out.ErrLine(message);
         return 1;
     }
 
@@ -319,11 +319,11 @@ public static class Commands
         // Where the corpus says it stands, before what the comparison found. Three versions answering
         // three questions, so a reader can tell which one moved. See CorpusDescriptor for why an unstated
         // one is reported and not filled in.
-        Console.WriteLine(
+        Out.Line(
             $"mechanism: content version {Stated(descriptor.ContentVersion)}, "
             + $"descriptor format {Stated(descriptor.DescriptorVersion)}, "
             + $"mechanism version {Stated(descriptor.MechanismVersion)}.");
-        Console.WriteLine($"mechanism: comparing the synced layer against {refRoot}");
+        Out.Line($"mechanism: comparing the synced layer against {refRoot}");
         Section("DRIFT — synced files differ from the reference", report.Drift);
         Section("MISSING LOCALLY — synced files in the reference but not here", report.MissingLocally);
         Section("MISSING UPSTREAM — synced files here but not in the reference", report.MissingUpstream);
@@ -331,12 +331,12 @@ public static class Commands
 
         if (report.ResolvedDivergence.Count > 0)
         {
-            Console.WriteLine(
+            Out.Line(
                 "RESOLVED — accepted divergences that are now identical again (delete them from .corpus.yaml):");
-            foreach (var p in report.ResolvedDivergence) Console.WriteLine($"  {p}");
+            foreach (var p in report.ResolvedDivergence) Out.Line($"  {p}");
         }
 
-        Console.WriteLine(
+        Out.Line(
             $"synced: {report.SyncedInStep} in step, {report.Drift.Count} drifted; "
             + $"forked: {report.ForkedShared} shared ({report.ForkedDiffer} differ, informational); "
             + $"accepted divergences: {report.AcceptedActive}.");
@@ -346,24 +346,24 @@ public static class Commands
         // compared. Say so anyway — no sync will refresh these files, and the alternative is leaving the
         // reader to find them stale later.
         if (report.DeclinedButHeld > 0)
-            Console.WriteLine(
+            Out.Line(
                 $"declined: {report.DeclinedButHeld} file(s) held here that this corpus's descriptor does not ask for. "
                 + "They are not synced or compared; delete them, or adopt what they belong to.");
 
         if (report.Problems > 0)
         {
-            Console.Error.WriteLine($"mechanism check failed — {report.Problems} synced-layer problem(s) above.");
+            Out.ErrLine($"mechanism check failed — {report.Problems} synced-layer problem(s) above.");
             return 1;
         }
 
-        Console.WriteLine("mechanism: synced layer in step.");
+        Out.Line("mechanism: synced layer in step.");
         return 0;
 
         static void Section(string heading, IReadOnlyList<string> paths)
         {
             if (paths.Count == 0) return;
-            Console.Error.WriteLine($"{heading}:");
-            foreach (var p in paths) Console.Error.WriteLine($"  {p}");
+            Out.ErrLine($"{heading}:");
+            foreach (var p in paths) Out.ErrLine($"  {p}");
         }
 
         static string Stated(object? version) => version?.ToString() is { Length: > 0 } v ? v : "not declared";
@@ -372,23 +372,23 @@ public static class Commands
     private static int ReportSync(SyncPlan plan, string corpusRoot, int mechanismVersion, string reference,
         string today)
     {
-        Console.WriteLine($"mechanism: syncing the shared layers from {reference}");
+        Out.Line($"mechanism: syncing the shared layers from {reference}");
         Section("UPDATED — brought down from the reference", plan.Updated);
         Section("SEEDED — the corpus's own from here on, copied because it had none", plan.Seeded);
         Section("SKIPPED — accepted divergences, left as they are", plan.Skipped);
         Section("HELD HERE, NOT UPSTREAM — shared files the reference does not have (sync never deletes)",
             plan.HeldHere);
 
-        Console.WriteLine(
+        Out.Line(
             $"synced: {plan.Updated.Count} updated, {plan.InStep} already in step; seeded {plan.Seeded.Count}; "
             + $"skipped {plan.Skipped.Count}; declined {plan.Declined}. "
             + $"Recorded in .corpus.yaml as mechanism version {mechanismVersion}, taken {today}.");
 
         if (plan.ReferenceIsUnsound)
         {
-            Console.Error.WriteLine("UNCLASSIFIED — files in the reference matching no manifest rule, so not copied:");
-            foreach (var p in plan.Unclassified) Console.Error.WriteLine($"  {p}");
-            Console.Error.WriteLine(
+            Out.ErrLine("UNCLASSIFIED — files in the reference matching no manifest rule, so not copied:");
+            foreach (var p in plan.Unclassified) Out.ErrLine($"  {p}");
+            Out.ErrLine(
                 "mechanism sync: the reference's manifest does not resolve its own tree — fix it there.");
             return 1;
         }
@@ -401,8 +401,8 @@ public static class Commands
         static void Section(string heading, IReadOnlyList<string> paths)
         {
             if (paths.Count == 0) return;
-            Console.WriteLine($"{heading}:");
-            foreach (var p in paths) Console.WriteLine($"  {p}");
+            Out.Line($"{heading}:");
+            foreach (var p in paths) Out.Line($"  {p}");
         }
     }
 
@@ -420,8 +420,8 @@ public static class Commands
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"mechanism sync: regeneration failed — {ex.Message}");
-            Console.Error.WriteLine(
+            Out.ErrLine($"mechanism sync: regeneration failed — {ex.Message}");
+            Out.ErrLine(
                 "mechanism sync: the files are in place but the generated blocks were not rebuilt. "
                 + "Run kac validate to see what the corpus is missing, then kac generate.");
             return 1;
