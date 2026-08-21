@@ -61,7 +61,8 @@ public static class PartChecks
     //
     // `Md.HasContent` reads the source as written rather than the rendered blocks, which is what makes a
     // horizontal rule or an em dash standing in for the definition count as nothing written. The
-    // heading is quoted into the message, since a glossary holds twenty entries.
+    // heading is quoted into the message, because a record holds many entries and the author needs to
+    // know which one is empty.
     private static void CheckBodies(Doc d, PartSpec spec, Report report)
     {
         foreach (var row in d.Parts.Where(row => !Md.HasContent(row.Body(d.Text))))

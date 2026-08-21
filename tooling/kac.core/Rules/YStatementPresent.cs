@@ -8,8 +8,8 @@ public sealed class YStatementPresent : IDocumentRule
 {
     public RuleId RuleId => new("y-statement-present");
 
-    // A field because every report below names it: one place to change, so what the rule declares it
-    // emits and what it actually reports cannot come apart. `_checks.yaml` declares what it means.
+    // A field so that what the rule declares it emits and what it reports cannot come apart.
+    // `_checks.yaml` declares what the id means.
     private static readonly CheckId Reports = new("y-statement");
 
     public IReadOnlyList<CheckId> Emits => [Reports];

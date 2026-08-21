@@ -83,9 +83,9 @@ public class CorpusDescriptor
     // tell whose vocabulary it is reading, which the folder it vendored the files into may not say.
     public string? Name;
 
-    // How this corpus is published, and where the published form is served from. The target names the
-    // rules for building a link and `PublishingTarget` holds them; the two bases are the only part a
-    // corpus supplies, because they are the only part that differs between two corpora on one target.
+    // How this corpus is published, and where the published form is served from. The target names a set
+    // of link-building rules and `Publishing` holds them; the two bases are the only part a corpus
+    // supplies, because they are the only part that differs between two corpora on one target.
     //
     // Each is null where the descriptor states none, and a corpus publishing nowhere states none of the
     // three. An export from one carries no links rather than links built on an empty base.

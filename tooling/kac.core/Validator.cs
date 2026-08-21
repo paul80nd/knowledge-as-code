@@ -81,8 +81,8 @@ public static class Validator
                 CheckDocument(template, schema, tree, findings, DocKind.Template);
         }
 
-        // The framework's own documentation, held to the one rule that is about where it will be read
-        // rather than about what it says.
+        // The framework's own documentation. It takes the ordinary link pass, which discovery never gave
+        // it, and one rule of its own about where the page will be read rather than about what it says.
         CheckFrameworkDocs(schema, tree, corpus.Docs, findings);
 
         // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand. The index they build is

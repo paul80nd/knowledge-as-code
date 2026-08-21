@@ -38,9 +38,9 @@ public sealed record ExportRun(string GeneratedAt, DateOnly Today, string? Commi
 // to and why.
 public static class Exporter
 {
-    // The shape of the output, versioned independently of anything the corpus says about itself, and
-    // read by nothing yet. `tooling/features/export.md` says what moves it, and why the field is here
-    // before a reader for it is.
+    // The shape of the output, versioned independently of anything the corpus says about itself.
+    // `Bundler` holds an export to this and refuses one built to another shape, so moving it means every
+    // export on disk has to be rebuilt. `tooling/features/export.md` says what moves it.
     public const int FormatVersion = 2;
 
     public const string ManifestFile = "manifest.json";
@@ -156,7 +156,7 @@ public static class Exporter
     // What a reader may take from that order, and what they may not, is in `tooling/features/export.md`.
     // The short of it: generality holds within a chain and says nothing across roots.
     //
-    // Two records sharing an id would share an output filename, and the second would replace the first.
+    // Two records sharing an id would share an output filename, and the `TryAdd` below keeps the first.
     // Nothing here guards it: `id-unique` reports a duplicate as an error, so the corpus is one `validate`
     // already refuses, and a second account of that fault here would report it in worse words.
     private static List<Doc> Ordered(List<Doc> docs)

@@ -486,8 +486,9 @@ public partial class Doc
             if (close < 0) break;
             var inner = s.Substring(i + 1, close - i - 1);
             // A real inline/collapsed/full link would not survive as a literal, so a
-            // literal '[x]' is a candidate undefined reference. Skip if immediately
-            // followed by '(' or '[' (still part of a link the AST handled elsewhere).
+            // literal '[x]' is a candidate undefined reference. Skip one followed by
+            // '(' or '[', which the AST handled elsewhere, or by ':', which opens a
+            // link definition rather than a reference to one.
             var next = close + 1 < s.Length ? s[close + 1] : ' ';
             // Map the line from the closing bracket: Markdig gives a failed link-opener '[' its own
             // literal with no source line (0), while the ']' always sits in a real-text literal that

@@ -16,7 +16,7 @@ public sealed class FieldSpec
     public bool Required { get; init; }
     public string? RequiredWhen { get; init; }                // as written, for the message that quotes it
     public RequiredWhen? RequiredWhenCondition { get; init; } // as parsed, for the check that applies it
-    public string Type { get; init; } = "string";             // string|date|enum|id|list|bool|int
+    public string Type { get; init; } = "string";             // string|date|enum|id|list
     public string? Of { get; init; }                          // element type when Type == list
     public IReadOnlyList<string>? Values { get; init; }       // enum values (resolved)
 
@@ -377,8 +377,9 @@ internal sealed class Level(YamlNode? node, string where)
 
     public string Where { get; } = where;
 
-    // Whether the block is there at all, for the one caller that treats an absent block and an empty one
-    // differently: a type declares its parts by carrying the block, and a type carrying none has none.
+    // Whether the block is there at all, for the two callers that treat an absent block and an empty one
+    // differently: a type declares its parts, and its export, by carrying the block. One carrying neither
+    // has neither.
     public bool Present => node is YamlMappingNode;
 
     public YamlNode? Get(string key)
@@ -531,7 +532,7 @@ public sealed partial class Schema
         foreach (var file in Directory.GetFiles(dir, "*.yaml").OrderBy(f => f))
         {
             var baseName = Path.GetFileNameWithoutExtension(file);
-            if (baseName.StartsWith('_')) continue; // _universal, _enums, _tiers
+            if (baseName.StartsWith('_')) continue; // the shared blocks, which declare no type
 
             var keys = new KeyReader($".schema/{baseName}.yaml");
             byFolder[baseName] = ParseType(keys.At(Yaml.LoadFile(file), TheFile), keys, layer, baseName);

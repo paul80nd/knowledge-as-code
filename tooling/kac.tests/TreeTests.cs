@@ -2,10 +2,10 @@ using kac.core;
 
 // In-process unit tests for the listing every pass reads the corpus through.
 //
-// Three of the four questions it answers are about presence, and the differences between them are what
-// the rest of the tool leans on: the listing is what git tracks, `OnDisk` is what is there, and a glob
-// names a set. No fixture can show them apart, because a fixture corpus is a directory in which every
-// file is both tracked and present.
+// What it answers is mostly about presence, and the differences are what the rest of the tool leans on:
+// the listing is what git tracks, `OnDisk` is what is there, and a glob names a set. No fixture can
+// show them apart, because a fixture corpus is a directory in which every file is both tracked and
+// present.
 
 namespace kac.tests;
 

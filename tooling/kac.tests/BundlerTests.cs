@@ -385,7 +385,7 @@ public class BundlerTests
     private static string Component(string path, params string[] requires) =>
         $$"""{"path":"{{path}}","requires":[{{string.Join(",", requires.Select(r => $"\"{r}\""))}}]}""";
 
-    // An export manifest as `kac export` writes one, reduced to the two things a bundle reads from it.
+    // An export manifest as `kac export` writes one, carrying the four keys a bundle reads from it.
     private static (string, string) Manifest(params string[] types) => Versioned(null, types);
 
     private static (string, string) Versioned(string? contentVersion, params string[] types) =>
