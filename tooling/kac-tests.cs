@@ -1020,6 +1020,11 @@ static (string stdout, string stderr, int exit) Run(string workingDir, string fi
     };
     foreach (var a in argv) psi.ArgumentList.Add(a);
 
+    // Colour off, so what a scenario captures is the same on every machine. Spectre writes escapes to
+    // a redirected stream where the environment declares itself a runner that renders them, and
+    // GITHUB_ACTIONS is one, so a golden matching on text would pass here and fail in CI.
+    psi.Environment["NO_COLOR"] = "1";
+
     using var p = Process.Start(psi) ?? throw new Exception($"could not start {file}.");
     var outTask = p.StandardOutput.ReadToEndAsync();
     var errTask = p.StandardError.ReadToEndAsync();

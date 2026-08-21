@@ -29,8 +29,8 @@ the commit and opens a release carrying the section for that version.
   an account of the run. Neither changes a word it prints.
 - **A failure is red on stderr.** That covers every verb's hard stop, and the heading over a list of what stopped it.
   What the heading names stays plain beneath it.
-- **`--json` and every exit code answer as before.** A redirected stream carries no colour, so nothing downstream sees
-  any of this.
+- **`--json` and every exit code answer as before.** `--json` goes straight to the stream and never carries colour,
+  whatever the terminal.
 
 ## 0.2.1 - 2026-08-21
 
