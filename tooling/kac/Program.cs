@@ -120,10 +120,13 @@ internal static class Cli
 // Spectre reads for itself; the flag is for a caller who cannot set a variable. It reaches only a
 // verb's own output — `--help` and `--version` are rendered by the parser before any verb runs, so
 // the variable is what covers those.
+//
+// Either way it is colour that goes, and bold that stays, which is what the standard asks for and what
+// leaves a file heading legible on a terminal that has no colour to give.
 internal class KacSettings : CommandSettings
 {
     [CommandOption("--no-color")]
-    [Description("Write plain text, with no colour. NO_COLOR in the environment does the same.")]
+    [Description("Turn colour off. NO_COLOR in the environment does the same.")]
     public bool NoColor { get; init; }
 }
 

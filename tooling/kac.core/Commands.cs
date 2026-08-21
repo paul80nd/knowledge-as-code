@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Spectre.Console;
 
 // ---------------------------------------------------------------------------
 // Subcommands — the orchestration behind each CLI verb. The entrypoint (tooling/kac/Program.cs) only wires
@@ -42,24 +43,24 @@ public static class Commands
             new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, dirty));
 
         var written = Exporter.Write(corpusRoot, plan);
-        foreach (var path in written) Out.Line($"wrote {path}");
+        foreach (var path in written) Out.Markup(Wrote(path));
 
         // What the export cannot say is worth saying here, where someone is watching. Neither state is
         // an error: a corpus may publish nowhere, and an export built from a dirty tree is still an
         // export — it is only one that cannot be rebuilt from the commit it names.
         if (publishing is null)
-            Out.Line(
+            Note(
                 "export: no published links — this corpus states no publishing target the tool can address, "
                 + "or no bases for one. Records carry their paths and no URLs.");
         if (dirty is true)
-            Out.Line(
+            Note(
                 "export: built from a dirty working tree, and the manifest says so. The commit it names "
                 + "does not reproduce it.");
 
         // Named rather than counted. A record left behind is invisible in the output by definition, so
         // this run is the last place anyone sees which ones they were.
         if (plan.Withheld.Count > 0)
-            Out.Line(
+            Note(
                 $"export: withheld {string.Join(", ", plan.Withheld)} — .corpus.yaml excludes "
                 + $"{string.Join(" and ", corpus.Descriptor.ExportExclude)}.");
 
@@ -68,17 +69,17 @@ public static class Commands
         // the omission is stated here, where an author can act on it, instead of being guessed at.
         if (plan.Unread.Count > 0)
         {
-            Out.Line(
+            Note(
                 $"export: {plan.Unread.Count} cross-reference(s) name a record and no part inside it, so "
                 + "nothing was carried for them:");
             foreach (var u in plan.Unread) Out.Line($"  {u}");
-            Out.Line("export: point each link at the part it means, as '<file>.md#<anchor>'.");
+            Note("export: point each link at the part it means, as '<file>.md#<anchor>'.");
         }
 
         // An empty type list is a statement of what this corpus has, and not a failure: a corpus may
         // have adopted no type that declares an export, or have withheld everything the types it did
         // adopt would have carried. The line above says which, where it was the second.
-        Out.Line(plan.Types.Count == 0
+        Says(plan.Types.Count == 0
             ? $"export: wrote {written.Count} file(s); no type contributed a record."
             : $"export: wrote {written.Count} file(s) for {string.Join(", ", plan.Types.Select(t => t.Type))}.");
         return 0;
@@ -106,23 +107,25 @@ public static class Commands
         }
 
         var written = Bundler.Write(corpusRoot, plan);
-        foreach (var path in written) Out.Line($"wrote {path}");
+        foreach (var path in written) Out.Markup(Wrote(path));
 
         // Named rather than counted, as the export names what it withheld. A component that was dropped
         // is invisible in the output by definition, and two corpora building one plugin name may drop
         // different ones — so the run says which, beside the `bundle.json` that will outlive it.
         foreach (var t in plan.Trimmed)
-            Out.Line($"bundle: trimmed {t.Path} — {t.Reason}.");
+            Note($"bundle: trimmed {t.Path} — {t.Reason}.");
 
-        foreach (var warning in plan.Warnings) Out.Line($"bundle: {warning}");
+        foreach (var warning in plan.Warnings) Note($"bundle: {warning}");
 
-        Out.Line(
+        Says(
             $"bundle: wrote {written.Count} file(s) to {Dist.Plugin}/ as {plan.PluginName} "
             + $"{plan.Version ?? "(no version)"} — {plan.Included.Count} component(s) included, "
             + $"{plan.Trimmed.Count} trimmed.");
-        Out.Line(
-            $"bundle: {Dist.Root}/ is a marketplace holding it. Install it from a path with:  "
-            + $"claude plugin marketplace add ./{Dist.Root}");
+
+        // The command is the one part of this line anybody retypes, so it is the one part left bright.
+        Out.Markup(
+            $"[grey]bundle:[/] {Dist.Root}/ is a marketplace holding it. Install it from a path with:  "
+            + $"[bold]claude plugin marketplace add ./{Dist.Root}[/]");
         return 0;
     }
 
@@ -151,19 +154,26 @@ public static class Commands
             return 1;
         }
 
-        ReportWritten(GeneratedFiles.Write(corpusRoot, plan));
+        ReportWritten(plan, GeneratedFiles.Write(corpusRoot, plan));
         return 0;
     }
 
     // What a regeneration wrote. Shared with `mechanism --sync`, which ends by regenerating, so that a
     // sync reports the files it rebuilt in the words `generate` uses for the same work.
-    private static void ReportWritten(List<string> written)
+    //
+    // A file the corpus did not hold is marked, because creating one is the run that changes what the
+    // corpus contains rather than what a file inside it says. The tally names the whole plan beside the
+    // part of it that moved: a reader who sees one file written wants to know it was one of forty.
+    private static void ReportWritten(IReadOnlyList<GeneratedFiles.GeneratedFile> plan, List<string> written)
     {
-        foreach (var path in written) Out.Line($"wrote {path}");
+        var created = plan.Where(f => f.Current is null).Select(f => f.Path).ToHashSet(StringComparer.Ordinal);
 
-        Out.Line(written.Count == 0
+        foreach (var path in written)
+            Out.Markup(Wrote(path) + (created.Contains(path) ? "  [grey](new)[/]" : ""));
+
+        Out.Markup(written.Count == 0
             ? "generated files already up to date; nothing written."
-            : $"updated {written.Count} generated file(s).");
+            : $"updated [bold]{written.Count}[/] of {plan.Count} generated file(s).");
     }
 
     private static int Report(List<Finding> findings, int validated, int templates, int skipped, bool json)
@@ -187,25 +197,34 @@ public static class Commands
             return errors > 0 ? 1 : 0;
         }
 
+        // A file at a time, its findings beneath it.
         foreach (var grp in findings.GroupBy(f => f.File).OrderBy(g => g.Key))
         {
-            Out.Line(grp.Key);
+            var file = grp.Key.EscapeMarkup();
+            Out.Markup($"[bold]{file}[/]");
+
+            var grid = Rows();
             foreach (var f in grp.OrderBy(f => f.Line ?? 0))
             {
-                var tag = f.Severity == Sev.Error ? "error  " : "warning";
-                var at = f.Line is { } ln ? $":{ln}" : "";
-                Out.Line($"  {tag}  [{f.Check}] {f.Message}{(at.Length > 0 ? $"  ({grp.Key}{at})" : "")}");
+                // The location is repeated after the message, where the file heading has already given
+                // it, because `path:line` in one token is what a terminal offers to open.
+                var at = f.Line is { } ln ? $"  [grey]({file}:{ln})[/]" : "";
+                grid.AddRow(
+                    new Markup(Tag(f.Severity)),
+                    new Markup($"[grey][[{f.Check.Value.EscapeMarkup()}]][/]"),
+                    new Markup(f.Message.EscapeMarkup() + at));
             }
 
+            Out.Write(grid);
             Out.Line();
         }
 
         // Templates are counted apart from documents because they are checked apart from them: a reader
         // who sees a finding against a `_template.md` should find it accounted for in the tally, and one
         // who sees none should be able to tell that the templates were read rather than skipped.
-        Out.Line(
+        Out.Markup(
             $"validated {validated} document(s) and {templates} template(s), skipped {skipped} without "
-            + $"frontmatter — {errors} error(s), {warnings} warning(s)");
+            + $"frontmatter — {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}");
         return errors > 0 ? 1 : 0;
     }
 
@@ -229,14 +248,21 @@ public static class Commands
         }
         else
         {
+            var grid = Rows();
             foreach (var c in catalogue)
-            {
-                var tag = c.Severity == Sev.Error ? "error  " : "warning";
-                Out.Line($"  {tag}  {c.Id,-24}  {c.Summary}");
-            }
+                grid.AddRow(
+                    new Markup(Tag(c.Severity)),
+                    new Markup(c.Id.Value.EscapeMarkup()),
+                    new Markup(c.Summary.EscapeMarkup()));
 
+            Out.Write(grid);
             Out.Line();
-            Out.Line($"{catalogue.Count} checks.");
+
+            // Split by severity, because what a reader wants from this list is how much of it fails a
+            // build. The catalogue's own order says nothing about that.
+            var errors = catalogue.Count(c => c.Severity == Sev.Error);
+            Out.Markup($"{catalogue.Count} checks — {Tally(errors, Sev.Error)}, "
+                       + $"{Tally(catalogue.Count - errors, Sev.Warning)}.");
         }
 
         var problems = Generator.ChecksTableProblems(schema);
@@ -304,6 +330,64 @@ public static class Commands
         // Whether two copies of a file say the same thing, which is the one question either engine asks of
         // the disk. Passed in, so each engine decides from listings and a predicate rather than from a tree.
         bool Same(string rel) => MechanismCheck.Same(corpusRoot, refRoot, rel);
+    }
+
+    // The shape both listings take: how loud, what it is called, and what it says. Only the last column
+    // wraps — the other two are short and fixed, and a terminal narrow enough to squeeze them would
+    // rather break a sentence than saw a check id in half. A wrapped message keeps the hanging indent,
+    // so the column still reads down the page.
+    private static Grid Rows()
+    {
+        var grid = new Grid();
+        grid.AddColumn(new GridColumn().NoWrap().PadLeft(2).PadRight(2));
+        grid.AddColumn(new GridColumn().NoWrap().PadRight(2));
+        grid.AddColumn(new GridColumn().PadRight(0));
+        return grid;
+    }
+
+    // The two things a severity carries into the output, decided in one place: what it is called, and
+    // what colour says so. The word is what carries it where colour does not — a pipe, or `--no-color`.
+    private static (string Word, string Colour) Severity(Sev severity) =>
+        severity == Sev.Error ? ("error", "red") : ("warning", "yellow");
+
+    private static string Tag(Sev severity)
+    {
+        var (word, colour) = Severity(severity);
+        return $"[{colour}]{word}[/]";
+    }
+
+    // A count of findings at one severity. Nought is left plain: a run with no errors should not have a
+    // red nought in it, which is the one number a reader glances at to decide the run was clean.
+    private static string Tally(int count, Sev severity)
+    {
+        var (word, colour) = Severity(severity);
+        return count == 0 ? $"{count} {word}(s)" : $"[{colour}]{count} {word}(s)[/]";
+    }
+
+    // `wrote <path>`, with everything but the filename dimmed. A bundle writes a dozen paths that share
+    // a prefix, and the eye should land on the part that differs. Exported and generated paths are
+    // written with forward slashes whatever the platform, which is what the manifest and the corpus
+    // both hold, so one separator is the whole of it.
+    private static string Wrote(string path)
+    {
+        var cut = path.LastIndexOf('/') + 1;
+        return cut == 0
+            ? $"[grey]wrote[/] {path.EscapeMarkup()}"
+            : $"[grey]wrote {path[..cut].EscapeMarkup()}[/]{path[cut..].EscapeMarkup()}";
+    }
+
+    // A verb's own remark about the run, with the verb's name carrying whether it is advice or an
+    // account. Advice is what nothing else will say: a link that carried nothing, a component dropped,
+    // an export that cannot be rebuilt from the commit it names. None of it is an error, and all of it
+    // is invisible in the artefact, so colour is what stops it reading as part of the tally.
+    private static void Note(string line) => Out.Markup(Prefix(line, "yellow"));
+
+    private static void Says(string line) => Out.Markup(Prefix(line, "grey"));
+
+    private static string Prefix(string line, string colour)
+    {
+        var cut = line.IndexOf(':') + 1;
+        return $"[{colour}]{line[..cut].EscapeMarkup()}[/]{line[cut..].EscapeMarkup()}";
     }
 
     // A command stopping on something the caller asked for and cannot have. The message goes to stderr
@@ -414,8 +498,8 @@ public static class Commands
         try
         {
             var corpus = Corpus.Load(corpusRoot);
-            ReportWritten(GeneratedFiles.Write(corpusRoot,
-                GeneratedFiles.Plan(corpus.Schema, corpus.Adopted, corpus.Docs, corpus.Tree)));
+            var plan = GeneratedFiles.Plan(corpus.Schema, corpus.Adopted, corpus.Docs, corpus.Tree);
+            ReportWritten(plan, GeneratedFiles.Write(corpusRoot, plan));
             return 0;
         }
         catch (Exception ex)
