@@ -160,8 +160,8 @@ internal sealed class GenerateCommand : Command<GenerateSettings>
 }
 
 // `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`
-// narrows what is written and never what is read: the whole corpus is loaded either way, so ids resolve
-// against every record rather than against the ones a narrowed run happened to reach.
+// narrows what is written and never what is read; `tooling/features/export.md` says why the corpus is
+// loaded whole either way.
 internal sealed class ExportSettings : KacSettings
 {
     [CommandOption("--type <TYPE>")]

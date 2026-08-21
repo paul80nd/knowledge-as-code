@@ -84,13 +84,9 @@ public sealed class Publishing
     // The link rules as two strings a reader substitutes into, so an export states each address once and
     // a line carries only what varies: the record's path, and the anchor of the part inside it.
     //
-    // **The ref is baked in rather than left as a placeholder.** Forty hex characters passing through an
-    // agent's hands is forty chances at a one-digit slip, and the result of one is a plausible 404 that
-    // neither the agent nor its reader is likely to check. With the commit already in the string, the
-    // worst a substitution can produce is a wrong path, which is visible and correctable.
-    //
-    // **Only the human template takes an anchor.** Raw source is text and offers nowhere to land, so the
-    // asymmetry is written into the templates rather than left as a rule each reader has to remember.
+    // The ref is baked in rather than left as a placeholder, and only the human template takes an
+    // anchor. `tooling/features/export.md` argues both, and the templates carry the asymmetry so no
+    // reader has to remember it.
     //
     // **The path prefix is baked in for the same reason the ref is.** It is a property of where the
     // corpus sits and never varies between two records, so a reader substituting into the template has

@@ -34,8 +34,8 @@ public sealed record TrimmedComponent(string Path, IReadOnlyList<string> Require
 // directory and the marketplace pointing at it — and one list of addresses is what keeps `Write` from
 // deciding where anything goes a second time.
 //
-// `Problems` is what stops the run. A plan carrying one is not written: the alternative is a plugin
-// assembled around a missing answer, which installs and fails later somewhere less obvious.
+// `Problems` is what stops the run. A plan carrying one is not written, for the reason
+// `tooling/features/bundle.md` gives.
 public sealed record BundlePlan(
     IReadOnlyList<BundleFile> Files,
     string PluginName,
@@ -103,8 +103,7 @@ public static class Bundler
                 + "It is the directory the plugin's skills address the export through.");
 
         // The export lands under `corpusRoot` inside the plugin, so a plugin tree already holding that
-        // directory would have its files silently replaced by the copy — or replace it. Refused, because
-        // whichever won, the loser would be missing from an artefact nobody reviews.
+        // directory is refused rather than merged. `tooling/features/bundle.md` says why.
         if (source.PluginTree.FirstOrDefault(f => Owns(corpusRoot, f.Path)) is { } clash)
             return Stop(problems,
                 $"{ManifestFile} names metadata.corpusRoot '{corpusRoot}', and the plugin tree already holds "
@@ -116,14 +115,8 @@ public static class Bundler
                 $"the export holds no readable {Exporter.ManifestFile}. Run the export first: kac export");
 
         // The shape the export declares, held against the shape this build knows how to read. Refused
-        // rather than warned about, and both numbers named: a bundle assembled around a manifest whose
-        // keys have moved would produce a breadcrumb stating nothing and a plugin whose skill finds
-        // nothing, and a lookup that silently returns nothing is indistinguishable from a term the
-        // corpus does not define.
-        //
-        // Two builds of this tool are what put the two numbers apart. `.dist/export/` is untracked and
-        // outlives the run that wrote it, so a bundle built after a `git pull` is the ordinary way to
-        // read an export this tool did not ship beside — the case the format version exists for.
+        // rather than warned about, and both numbers named. `tooling/features/bundle.md` says what a
+        // silent mismatch would produce, and how two builds of this tool come to disagree.
         var declaredFormat = JsonRead.Int(exportManifest["formatVersion"]);
         if (declaredFormat != Exporter.FormatVersion)
             return Stop(problems,
@@ -159,8 +152,7 @@ public static class Bundler
                   + $"{RecordFile} names each one and the type it needed.");
 
         // The plugin's version is the corpus content version, taken from the export rather than from
-        // `.corpus.yaml`, so the number on the plugin is the number of the data inside it. The export
-        // format version stays where it is, in the export's own manifest.
+        // `.corpus.yaml`. `tooling/features/bundle.md` says why, and why the format version stays put.
         var version = JsonRead.Str(exportManifest["contentVersion"]);
         if (version is null)
             warnings.Add("the export states no contentVersion, so the plugin keeps the version its own "
@@ -182,11 +174,9 @@ public static class Bundler
         files.Add(Utf8($"{Dist.PluginDir}/{ManifestFile}",
             Rewrite(manifest, version, included)));
 
-        // The breadcrumb, rendered here because everything it states is settled here. It travels with
-        // the directory that prints it and nowhere else: a corpus shipping no hook has nothing to read
-        // it, and a corpus whose hook was trimmed would otherwise keep a file describing a component
-        // that left. Asking the surviving files rather than the components covers both in one question,
-        // and needs no corpus to declare that this generated file is the hook's.
+        // The breadcrumb, rendered here because everything it states is settled here. Asking the
+        // surviving files rather than the components is what ties it to the hook directory;
+        // `tooling/features/bundle.md` says what that settles.
         var breadcrumbDir = $"{Dist.PluginDir}/{Breadcrumb.RenderedFile[..Breadcrumb.RenderedFile.LastIndexOf('/')]}";
         if (files.Any(f => Owns(breadcrumbDir, f.Path)))
             files.Add(Utf8($"{Dist.PluginDir}/{Breadcrumb.RenderedFile}",

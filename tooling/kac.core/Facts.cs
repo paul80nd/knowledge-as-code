@@ -46,11 +46,10 @@ public sealed class Facts(Doc doc)
 
     public int Links() => doc.Links.Count;
 
-    // Whether the body matches a pattern the schema supplies. Read as written — code fences, link
-    // targets and the markdown syntax itself are all in scope — because the rules that ask this are
-    // looking for something that should not be in the document at all, and a credential pasted into a
-    // fenced block is the case they exist for. It is also what lets `\*\*MUST\*\*` find a bold modal
-    // that the rendered text would have flattened away.
+    // Whether the body matches a pattern the schema supplies. Read as written, so code fences, link
+    // targets and the markdown syntax itself are all in scope; `tooling/features/checks.md` says which
+    // rules need that. It is also what lets `\*\*MUST\*\*` find a bold modal that the rendered text
+    // would have flattened away.
     //
     // Frontmatter is excluded: it is checked field by field, against patterns its fields declare.
     public bool Matches(string pattern) => Pattern(pattern).IsMatch(Body);

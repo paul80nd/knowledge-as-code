@@ -17,9 +17,7 @@ public static class Commands
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
-    // Build the export. The whole corpus is loaded whatever `type` names, because a narrowed load
-    // answers questions about the set from some of its members and answers them wrongly; `type` narrows
-    // what is written.
+    // Build the export. The corpus is loaded whole whatever `type` names.
     public static int Export(string corpusRoot, string? type)
     {
         var corpus = Corpus.Load(corpusRoot);

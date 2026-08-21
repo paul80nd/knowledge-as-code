@@ -32,9 +32,8 @@ public sealed record ExportRun(string GeneratedAt, DateOnly Today, string? Commi
 
 // The corpus projected as data, for a consumer that reads it rather than cloning it.
 //
-// What travels is the type's decision, declared in its `export:` block, and this reads that declaration
-// rather than holding a list of its own — so a type declaring no block contributes nothing and nothing
-// here needs changing when one does. `tooling/features/export.md` is the account of what it all comes
+// This reads each type's `export:` block and holds no list of its own, so a new type needs no line here.
+// `tooling/features/export.md` is the account of what it all comes
 // to and why.
 public static class Exporter
 {
@@ -47,9 +46,7 @@ public static class Exporter
 
     // What an export comes to, given a loaded corpus and the addresses its published form has.
     //
-    // `type` narrows what is written and never what is read: the corpus arrives whole, so ids resolve
-    // against every record rather than against the handful a narrowed run happened to load. A question
-    // about the set, answered from some of its members, is answered wrongly.
+    // `type` narrows what is written and never what is read. The corpus arrives whole.
     //
     // `run` carries the facts that differ between two runs over one commit, so nothing here reads a
     // clock and two runs from the same tree produce identical bytes but for the timestamp.

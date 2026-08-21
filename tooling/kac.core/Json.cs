@@ -54,8 +54,7 @@ public record ExportManifest(
 // and edits nothing else. The commit is already inside each string, so a citation names the version the
 // agent read without a ref ever passing through the agent's hands.
 //
-// The bases the templates were built from are not carried. They are inside the templates, and a manifest
-// stating one address twice is a manifest that can state it two ways.
+// The bases the templates were built from are not carried. They are inside the templates already.
 //
 // Both templates are null where the corpus publishes nowhere or names a target nothing builds links for,
 // which is the same state the per-record files report by carrying no links.
@@ -123,8 +122,8 @@ public record ExportPartLine(
 
 // What the assembled plugin holds, and why anything is missing from it.
 //
-// Two corpora running one plugin name may ship different component sets, which is correct and makes
-// "does this plugin do X" unanswerable from outside unless the plugin says. This is where it says.
+// Two corpora running one plugin name may ship different component sets. This is where a plugin says
+// which it has; `tooling/features/bundle.md` says why that has to be stated rather than inferred.
 //
 // It carries no timestamp and no commit. The export it was built from is inside the plugin already,
 // and its manifest states both — a second clock here would be a second answer to one question.
@@ -150,9 +149,8 @@ public record BundleTrimmed(string Path, IReadOnlyList<string> Requires, string 
 // ---------------------------------------------------------------------------
 // The local marketplace
 //
-// A marketplace is a directory holding `.claude-plugin/marketplace.json`, and it resolves a plugin's
-// source against that directory. This is the minimum that installs and validates: what the plugin is,
-// who owns it, and where under the marketplace root it sits.
+// The minimum that installs and validates: what the plugin is, who owns it, and where under the
+// marketplace root it sits. `Dist.Root` says why the marketplace is the root and not a sibling.
 // ---------------------------------------------------------------------------
 
 public record MarketplaceManifest(

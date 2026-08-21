@@ -7,28 +7,13 @@ using System.Text.Json.Nodes;
 
 namespace kac.core;
 
-// An agent never asks for a glossary, because it does not know a word is ambiguous. The breadcrumb is
-// what creates the question: a few lines injected at the start of a session saying which corpus is
-// installed, how much of it there is, and what to ask. Its job stops there. Answering the question is
-// the skill's, and a breadcrumb long enough to answer it would be paid for by every session that had
-// no question to ask.
-//
-// **It is rendered once, at bundle time, rather than computed at runtime.** Everything it states is a
-// fact about the export sitting inside the plugin, and an installed plugin's export does not change
-// between builds. So the hook that prints it is one `cat`, and the shell it runs in is asked for
-// nothing beyond that — no JSON parsing, no interpreter, no runtime on the consumer's machine. The
-// corpus takes the same position about every other generated projection: compute it once into an
-// artefact rather than have each reader recompute it.
-//
-// **Nothing here names a record type.** The counts, the record names and the skill to ask are all read
-// off the export and off the components that survived the trim, so a corpus adopting a type this tool
-// has never heard of gets a breadcrumb about it without a line changing here.
+// A few lines injected at the start of a session, saying which corpus is installed, how much of it
+// there is and what to ask. `tooling/features/bundle.md` says why it is rendered here rather than
+// computed at runtime, and why nothing in the render names a record type.
 public static class Breadcrumb
 {
     // Where the rendered file lands inside the plugin: in the hook directory, beside the two scripts
-    // that print it. `Bundler` is what decides whether it is written at all, and decides it from that
-    // directory surviving — a breadcrumb with nothing to print it is weight, and a hook printing an
-    // empty file reads as a corpus that knows nothing rather than as a component never shipped.
+    // that print it. `Bundler` decides whether it is written at all, from that directory surviving.
     public const string RenderedFile = "hooks/breadcrumb.txt";
 
     // The breadcrumb as it will be printed. `exportFiles` is the export as it will travel, which is
@@ -77,9 +62,7 @@ public static class Breadcrumb
     // where a breadcrumb was meant.
     private const int MostNamed = 6;
 
-    // One type's line: how much of it there is, and which records it is held in. The record names are
-    // the point of the line — a corpus's glossaries are one per bounded context, and three names say
-    // which contexts are covered where the number 3 says only that there are some.
+    // One type's line: how much of it there is, and which records it is held in.
     private static string Line(ExportedType type, IReadOnlyList<string> names)
     {
         var held = $"{type.Records} record{(type.Records == 1 ? "" : "s")}";
