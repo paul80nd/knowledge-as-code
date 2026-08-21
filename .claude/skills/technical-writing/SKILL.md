@@ -72,18 +72,20 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   Keep: *The bibliographic description of a title — author, edition, subject headings — held once and shared by every
   branch.*
 * **Every other dash takes the mark that states the relation.** A dash separates without saying how the two parts
-  relate, so the reader does that work. Often the sentence reads best with the mark simply gone. Where the sentence
-  already carries a colon, take a full stop rather than a second colon. Parentheses are a last resort, for an aside a
-  comma would garden-path and where the reader must not skip what they hold.
+  relate, so the reader does that work. Often the sentence reads best with the mark simply gone. Parentheses are a last
+  resort, for an aside a comma would garden-path and where the reader must not skip what they hold.
+  Where the dash follows a link label opening a line, a colon deletes the line. Give the label a verb instead, and see
+  the label rule below.
 * **A colon introduces a list, an example, a reason or a definition.** A mid-sentence connector is none of those.
   Write: "Coming from automation, you describe conditions."
   Not: "If you are coming from automation: you describe conditions."
 * **An en dash is for a range or a pair.** `A.7.1–A.7.14`, `35–45 words`, `client–server`. A hyphen there is a
   different mark meaning a different thing.
-* **Where the container reserves a mark, take a full stop and a new sentence.** A YAML plain scalar cannot hold `": "`,
-  so a definition written there becomes two sentences rather than a quoted value.
-* **Use a full stop where a semicolon offers itself.** One survives: the semicolon pairing a statement with its exact
-  negation. Keep: *Its four operational obligations are deviable; those three prohibitions are not.*
+* **The full stop is the default repair.** Take it where a semicolon offers itself, where the sentence already carries
+  a colon, and where the container reserves the mark you wanted. A YAML plain scalar cannot hold `": "`, so a
+  definition written there becomes two sentences rather than a quoted value.
+  One semicolon survives: the pair joining a statement to its exact negation, sharing the verb it negates.
+  Keep: *Its four operational obligations are deviable; those three prohibitions are not.*
 * **Write the alternative out.** Write: "a, b, or both." Not: "and/or", "read/write".
 * **Make anything in parentheses a whole grammatical unit.** A plural written "(s)" is never one.
 * **Use straight quotes.**
@@ -128,15 +130,14 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 * **Use the honest number.** Two examples where two will do, four where four is true.
 * **End a section on a fact.** A crafted line closing every section reads as style rather than substance.
 * **A bold lead-in opens a list item or a paragraph, and new detail follows it.** A bold span closing inside a
-  sentence is decoration, and a lead-in restating the line it opens is a tell.
+  sentence is decoration.
   Write: "**Schema in TypeScript.** Tables live in one file." Not: "**Performance:** Performance improved."
 * **A label names the thing beside it, and may be a verbless phrase.** Bold, a code span, a link label, a comment
   above a declaration, a field value next to its field name, a cell under its column heading.
   It takes a colon before a value and a full stop before sentences, and a comma carries a third part.
   Write: "**Platform**: CDN custom domain." Write: "**Repository**: `infrastructure`, at `services/covers`."
-  Write: "**Caching.** The edge ignores every query string other than the resize parameters."
+  Write: "**Retries.** The client backs off twice and then gives up."
   Write: "// One file, and the bytes it holds."
-  A colon after a normative keyword would corrupt the obligation, so `**MUST**` opening a clause cell takes neither.
   A link label opening a line is the one that bites: `[pol-AGNT]: gate` is a link reference definition, and the line
   disappears from the page. A value of two words or more is safe, and a verb is safer still.
   Write: "[pol-AGNT] sets the acceptance gate."
