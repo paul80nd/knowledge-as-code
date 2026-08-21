@@ -77,14 +77,18 @@ return exit == -1 ? 1 : exit;
 // verb needs one, and nothing else does: `--version` and `--help` are answered by the parser, from
 // wherever the command was typed. Resolving inside a verb's Execute rather than before the parse is
 // what lets an installed `kac` say which version it is without standing in a corpus first.
+//
+// Colour is settled here too, because this is the one step every verb takes before it writes anything.
 internal static class Cli
 {
-    public static int InCorpus(Func<string, int> run)
+    public static int InCorpus(KacSettings settings, Func<string, int> run)
     {
+        if (settings.NoColor) Out.NoColor();
+
         var corpusRoot = FindCorpusRoot(Directory.GetCurrentDirectory());
         if (corpusRoot is null)
         {
-            Console.Error.WriteLine("kac: could not locate a corpus (no .schema above the cwd).");
+            Out.ErrMarkup("[red]kac: could not locate a corpus (no .schema above the cwd).[/]");
             return 2;
         }
 
@@ -108,13 +112,28 @@ internal static class Cli
     }
 }
 
-// A verb taking nothing but the corpus it stands in. Spectre needs a settings type per command, and
-// this is the empty one.
-internal sealed class CorpusSettings : CommandSettings;
+// What every verb takes, whatever else it declares.
+//
+// `--no-color` sits here rather than on each verb because it is a fact about the terminal, not about
+// the command. `NO_COLOR` in the environment asks for the same thing and is the cross-tool standard,
+// which Spectre reads for itself. The flag is for a caller who cannot set a variable.
+//
+// It reaches a verb's own output and no further. The parser renders `--help` and `--version` before
+// any verb runs, so `NO_COLOR` is what covers those. Either way colour goes and bold stays, which is
+// what the standard asks for.
+internal class KacSettings : CommandSettings
+{
+    [CommandOption("--no-color")]
+    [Description("Turn colour off. NO_COLOR in the environment does the same.")]
+    public bool NoColor { get; init; }
+}
+
+// A verb taking nothing but the corpus it stands in.
+internal sealed class CorpusSettings : KacSettings;
 
 // `validate` takes no paths: several of its checks ask about the shape of the corpus rather than
 // about a document, and a subset cannot answer them.
-internal sealed class ValidateSettings : CommandSettings
+internal sealed class ValidateSettings : KacSettings
 {
     [CommandOption("--json")]
     [Description("Emit the summary and findings as JSON.")]
@@ -124,10 +143,10 @@ internal sealed class ValidateSettings : CommandSettings
 internal sealed class ValidateCommand : Command<ValidateSettings>
 {
     protected override int Execute(CommandContext context, ValidateSettings settings, CancellationToken token) =>
-        Cli.InCorpus(corpus => Commands.Validate(corpus, settings.Json));
+        Cli.InCorpus(settings, corpus => Commands.Validate(corpus, settings.Json));
 }
 
-internal sealed class GenerateSettings : CommandSettings
+internal sealed class GenerateSettings : KacSettings
 {
     [CommandOption("--check")]
     [Description("Fail if a generated file is stale instead of writing it.")]
@@ -137,13 +156,13 @@ internal sealed class GenerateSettings : CommandSettings
 internal sealed class GenerateCommand : Command<GenerateSettings>
 {
     protected override int Execute(CommandContext context, GenerateSettings settings, CancellationToken token) =>
-        Cli.InCorpus(corpus => Commands.Generate(corpus, settings.Check));
+        Cli.InCorpus(settings, corpus => Commands.Generate(corpus, settings.Check));
 }
 
 // `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`
 // narrows what is written and never what is read: the whole corpus is loaded either way, so ids resolve
 // against every record rather than against the ones a narrowed run happened to reach.
-internal sealed class ExportSettings : CommandSettings
+internal sealed class ExportSettings : KacSettings
 {
     [CommandOption("--type <TYPE>")]
     [Description("Export one type rather than every type that contributes.")]
@@ -153,7 +172,7 @@ internal sealed class ExportSettings : CommandSettings
 internal sealed class ExportCommand : Command<ExportSettings>
 {
     protected override int Execute(CommandContext context, ExportSettings settings, CancellationToken token) =>
-        Cli.InCorpus(corpus => Commands.Export(corpus, settings.Type));
+        Cli.InCorpus(settings, corpus => Commands.Export(corpus, settings.Type));
 }
 
 // `bundle` assembles what `export` wrote, plus the `.plugin/` tree, into a plugin directory under
@@ -162,12 +181,12 @@ internal sealed class ExportCommand : Command<ExportSettings>
 internal sealed class BundleCommand : Command<CorpusSettings>
 {
     protected override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
-        Cli.InCorpus(Commands.Bundle);
+        Cli.InCorpus(settings, Commands.Bundle);
 }
 
 // `checks` is machinery before it is documentation: the test suite reads `checks --json` to assert
 // every rule is exercised by a fixture, so a new rule cannot ship without a golden covering it.
-internal sealed class ChecksSettings : CommandSettings
+internal sealed class ChecksSettings : KacSettings
 {
     [CommandOption("--json")]
     [Description("Emit the check catalogue as JSON.")]
@@ -177,14 +196,14 @@ internal sealed class ChecksSettings : CommandSettings
 internal sealed class ChecksCommand : Command<ChecksSettings>
 {
     protected override int Execute(CommandContext context, ChecksSettings settings, CancellationToken token) =>
-        Cli.InCorpus(corpus => Commands.Checks(corpus, settings.Json));
+        Cli.InCorpus(settings, corpus => Commands.Checks(corpus, settings.Json));
 }
 
 // mechanism — enforce the portability manifest. `--check` compares this corpus's shared layers
 // against a reference copy and reports drift, following the same discipline as `generate --check`:
 // recompute, compare, name what is stale, exit non-zero, never write. `--sync` is the write half:
 // it takes those layers from the reference, records what it took, and regenerates.
-internal sealed class MechanismSettings : CommandSettings
+internal sealed class MechanismSettings : KacSettings
 {
     [CommandOption("--check")]
     [Description("Compare the shared layers against a reference and report drift; never writes.")]
@@ -202,5 +221,5 @@ internal sealed class MechanismSettings : CommandSettings
 internal sealed class MechanismCommand : Command<MechanismSettings>
 {
     protected override int Execute(CommandContext context, MechanismSettings settings, CancellationToken token) =>
-        Cli.InCorpus(corpus => Commands.Mechanism(corpus, settings.Check, settings.Sync, settings.Against));
+        Cli.InCorpus(settings, corpus => Commands.Mechanism(corpus, settings.Check, settings.Sync, settings.Against));
 }

@@ -77,6 +77,11 @@ Those read as a corpus runs them, against an installed `kac`. While changing the
 `dotnet run --project ../tooling/kac -- validate`, which is what CI uses, or the `./kac` launcher at
 `example/`'s root that wraps it.
 
+Every verb takes `--no-color`, and every verb reads `NO_COLOR` from the environment. `NO_COLOR` is the cross-tool
+standard for the same request. A redirected stream carries no colour on its own, but an environment naming a runner
+that renders escapes in its logs turns it back on, and GitHub Actions is one. Set `NO_COLOR` wherever the bytes have to
+be the same everywhere. The golden suite sets it on every process it starts, for that reason.
+
 ### Exit codes
 
 | Code | Meaning                                                                         |

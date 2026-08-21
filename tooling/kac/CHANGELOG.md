@@ -15,6 +15,23 @@ the commit and opens a release carrying the section for that version.
 
 ## Unreleased
 
+### Added
+
+- **`--no-color` on every verb.** `NO_COLOR` in the environment asks for the same thing, and the tool already read it.
+  Colour goes either way, and bold stays.
+
+### Changed
+
+- **`validate` and `checks` list in aligned columns**, with the severity coloured. Only the message column wraps, so a
+  narrow terminal breaks a sentence and never a check id. `checks` splits its count by severity.
+- **`generate` marks a file it created**, and counts what it wrote against the size of the whole plan.
+- **`export` and `bundle` dim the directory in each path they write**, and colour a remark by whether it is advice or
+  an account of the run. Neither changes a word it prints.
+- **A failure is red on stderr.** That covers every verb's hard stop, and the heading over a list of what stopped it.
+  What the heading names stays plain beneath it.
+- **`--json` and every exit code answer as before.** `--json` goes straight to the stream and never carries colour,
+  whatever the terminal.
+
 ## 0.2.1 - 2026-08-21
 
 ### Changed
