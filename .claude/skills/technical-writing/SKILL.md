@@ -8,51 +8,47 @@ description: The writing floor for every word in this repository. Records, READM
 The floor every writer in this repository stands on. Whatever sent you here adds the rules for your audience on top.
 
 **These rules reach prose, and stop where prose stops.** They do not reach a heading you may not rename, an identifier,
-a clause whose wording is the record of an obligation, a fixed form such as an ADR's decision sentence, or a
-transcript quoting what a program printed. Where a rule cannot be obeyed without changing one of those, leave it
-and say so.
+a clause whose wording is the record of an obligation, a fixed form such as an ADR's decision sentence, or a transcript
+quoting what a program printed. Leave any of those as they are, and say which rule you left behind.
 
-**A comment inside a fenced code block is prose and follows these rules.** The command, its flags and its
-output are not.
+**A comment inside a fenced code block is prose.** The command, its flags and its output are not.
 
-**The words a program prints are prose, and these rules reach them.** A message in a string literal, or a
-schema `message:` value, is written for a reader. A transcript quoting that message back is a fact, and is not.
+**The words a program prints are prose.** A message in a string literal, or a schema `message:` value, is written for a
+reader. A transcript quoting that message back is a fact.
 
-**Never trade clarity for word count.** Where two rules pull against each other, the one that leaves the reader fewer
-readings wins.
+**Clarity outranks brevity.** Where two rules pull against each other, the one leaving the reader fewer readings wins.
 
-Examples read `Not: ... Write: ...`. The second is the one to copy.
+Examples read `Write: ... Not: ...`. The first is the one to copy.
 
 ## Build the sentence
 
 * **Say who does what.** Put a person or a system in the subject. Use the active voice.
-  Not: "Attribution is what makes this enforceable."
   Write: "We cannot hold anyone to a rule if we cannot tell who acted."
-* **Do not invent an actor.** Where the text makes no claim about who acts, adding one adds a claim.
-  Not: "Released under the MIT licence" becoming "We release this under the MIT licence."
+  Not: "Attribution is what makes this enforceable."
+* **Name an actor only where the text already claims one.** Keep the passive where the actor is unknown, beside the
+  point, or named somewhere this sentence should not name it. A CDN serves an image another service resized, so "the
+  CDN resizes it" is active and false. A passive that softens an obligation is always wrong.
   Write: "Released under the MIT licence."
-* **Keep the passive where the actor is known and naming it here would be wrong.** A CDN serves an image that another
-  service resized. "The CDN resizes it" is active, and false.
-* **A label may be a verbless phrase where the thing it labels sits beside it.** A comment above a declaration, a
-  field value rendered next to its field name, a cell under its column heading.
+  Not: "We release this under the MIT licence."
+* **A label may be a verbless phrase where the thing it labels sits beside it.** A comment above a declaration, a field
+  value rendered next to its field name, a cell under its column heading.
   Write: "// One file, and the bytes it holds."
-* **Use the passive only when the actor is unknown or beside the point.** Never to soften an obligation.
-* **Write in the present tense.** Use "will" only for something that genuinely happens later.
-  Not: "The validator will report a missing id." Write: "The validator reports a missing id."
+* **Write in the present tense.** Keep "will" for something that genuinely happens later.
+  Write: "The validator reports a missing id." Not: "The validator will report a missing id."
 * **Write an instruction as a command.**
-  Not: "The packet should be removed from the box." Write: "Remove the packet from the box."
+  Write: "Remove the packet from the box." Not: "The packet should be removed from the box."
 * **Write "we" for us and "you" for the reader.** A commitment says "we". Anything addressed to somebody says "you".
 * **Put the common case first** and the exception after it.
-* **Make a heading carry the point, in sentence case.** Not: "Modes". Write: "Pick the mode first".
+* **Make a heading carry the point, in sentence case.** Write: "Pick the mode first". Not: "Modes".
 
 ## Carry one thing at a time
 
-* **One idea per sentence.** A sentence carrying an obligation and its justification is two sentences.
-* **One instruction per sentence.** Never two steps joined by "and".
+* **One idea per sentence, and one instruction.** A sentence carrying an obligation and its justification is two
+  sentences. Two steps joined by "and" are two sentences.
 * **Keep an instruction under about 20 words and other prose under about 25.** Fix the subject before you shorten.
 * **Put the condition before the step it guards.**
-  Not: "Click Delete to remove the document." Write: "To delete the document, click Delete."
-* **Keep the articles.** Not: "Remove backup file." Write: "Remove the backup file."
+  Write: "To delete the document, click Delete." Not: "Click Delete to remove the document."
+* **Keep the articles.** Write: "Remove the backup file." Not: "Remove backup file."
 * **Keep a paragraph under about six sentences.**
 * **Vary the length on purpose.** A short sentence lands a point. A longer one carries a fact with its condition. One
   thought per sentence does not mean one length per sentence.
@@ -61,56 +57,54 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 
 * **Put "only" and "not" against the word they govern.**
   "Only the owner can merge a policy" and "The owner can merge only a policy" say different things.
-* **Give every "it", "they" and "this" one obvious thing to point at.** Repeat the noun when in doubt.
-* **Do not point a pronoun at a whole clause where the referent is not obvious.** Where it is obvious, leave it. The
-  repair costs a manufactured subject, and a run of them reads as a tic.
-  Not: "...drifted from the catalogue, which is what keeps that table honest."
+* **Point a pronoun at a noun.** Repeat the noun where the referent is not obvious. Where it is obvious, leave the
+  pronoun alone: the repair costs a manufactured subject, and a run of them reads as a tic.
   Write: "...drifted from the catalogue. That exit is what keeps the table honest."
-* **Do not drop a verb across a clause boundary.**
-  Not: "Phase 1 moves the converters and Phase 2 the runtime." Write: "...and Phase 2 moves the runtime."
+  Not: "...drifted from the catalogue, which is what keeps that table honest."
+* **Give every clause its own verb.**
+  Write: "Phase 1 moves the converters and Phase 2 moves the runtime."
+  Not: "Phase 1 moves the converters and Phase 2 the runtime."
 * **Break a noun string longer than three words.**
-  Not: "the proto import budget check script". Write: "the script that checks the proto-import budget".
+  Write: "the script that checks the proto-import budget." Not: "the proto import budget check script."
 * **Say which parts an "and" or an "or" joins** when the sentence can group two ways. "Both...and" and "either...or"
   cost nothing.
 
 ## Punctuation
 
 * **An em dash has to earn its place, and usually cannot.** It separates without saying how the two parts relate, so
-  the reader does that work. Use the mark that states the relation: a full stop for a new point, a colon for a reason,
-  a list or a definition, a comma for a short aside. Often the sentence reads best with the mark simply gone. Where the
-  sentence already carries a colon, take the full stop rather than a second one. Parentheses are a last resort, for an
-  aside a comma would garden-path.
-  Not: "**Repository** — `thumbnailer`." Write: "**Repository**: `thumbnailer`."
-* **A bold label takes a colon before a value and a full stop before sentences.**
-  Write: "**Platform**: CDN custom domain." Write: "**Caching.** The edge ignores every query string but two."
-  Where a third part qualifies the value, a comma carries it: "**Repository**: `infrastructure`, at
-  `services/covers`."
+  the reader does that work. Use the mark that states the relation, and often the sentence reads best with the mark
+  simply gone. Where the sentence already carries a colon, take a full stop rather than a second colon. Parentheses are
+  a last resort, for an aside a comma would garden-path.
+  Write: "**Repository**: `thumbnailer`." Not: "**Repository** — `thumbnailer`."
 * **One em dash survives: the interrupting aside that carries its own commas.** That is the whole test.
   *The bibliographic description of a title — author, edition, subject headings — held once and shared by every
   branch.* A colon cannot hold it, because the sentence continues afterwards. Parentheses could, and they tell a reader
   to skip what they hold, which is wrong where the aside is load-bearing. **A dash at the end of a sentence interrupts
   nothing** and takes a colon or a full stop.
+* **A colon introduces a list, an example, a reason or a definition.** A mid-sentence connector is none of those.
+  Write: "Coming from automation, you describe conditions."
+  Not: "If you are coming from automation: you describe conditions."
 * **An en dash is for a range or a pair.** `A.7.1–A.7.14`, `35–45 words`, `client–server`. A hyphen there is a
   different mark meaning a different thing.
-* **A colon introduces a list, an example, a reason or a definition.** Never as a mid-sentence connector.
-  Not: "If you are coming from automation: you describe conditions." Write: "Coming from automation, you describe
-  conditions."
-* **Where the container reserves a mark, take a full stop and a new sentence.** A YAML plain scalar cannot hold
-  `": "`, so a definition written there becomes two sentences rather than a quoted value.
-* **Use a full stop, not a semicolon.**
-* **Write the alternative out.** Not: "and/or", "read/write". Write: "a, b, or both".
-* **Make anything in parentheses a whole grammatical unit.** Never form a plural with "(s)".
+* **Where the container reserves a mark, take a full stop and a new sentence.** A YAML plain scalar cannot hold `": "`,
+  so a definition written there becomes two sentences rather than a quoted value.
+* **Use a full stop where a semicolon offers itself.**
+* **Write the alternative out.** Write: "a, b, or both." Not: "and/or", "read/write".
+* **Make anything in parentheses a whole grammatical unit.** A plural written "(s)" is never one.
 * **Use straight quotes.**
 
 ## Use the real words
 
-* **Write the real symbol, path, flag or command name.** The codebase is the word list. Never a synonym or a
-  description of it.
+* **Write the real symbol, path, flag or command name.** The codebase is the word list, and a synonym is a second name
+  for something that has one.
+* **Swap a category for the things inside it.** Nothing gets cut or simplified. A class name becomes its members.
+  Write: "An agent can write code, change configuration, draft documentation, or report something it noticed."
+  Not: "Work produced by an AI agent enters our estate as a proposal."
 * **A figure of speech earns its place when it says something the plain word does not.**
-  Keep: "a broken cross-reference fails CI rather than rotting quietly". *Rotting* says silent **and** gradual.
+  Keep: "a broken cross-reference fails CI rather than rotting quietly." *Rotting* says silent **and** gradual.
   *Unnoticed* says only silent.
-  Cut the figure that only dresses a plain word: *substrate* for base, *vector* for way, *wedge in* for add, *north
-  star* for goal, *flywheel* for what builds on itself.
+  Cut the figure that dresses a plain word: *substrate* for base, *vector* for way, *wedge in* for add, *north star*
+  for goal, *flywheel* for what builds on itself.
 * **A word that is the real name of a thing here is not a metaphor.** `Harness.cs` is a filename.
 * **Use the short everyday word.** "use" not "utilize", "help" not "facilitate", "do" not "perform". A long word has to
   buy its length with precision.
@@ -121,44 +115,50 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 ## Cut
 
 * **Cut any word the sentence survives without.** "in order to" is "to". "It is important to note that" is nothing.
-  This is for words that add nothing, never for words that disambiguate.
+  This reaches words that add nothing, and stops at words that disambiguate.
 * **Cut these on sight:** simply, of course, seamless, robust, comprehensive, leverage, delve into, a tapestry of,
   pivotal, cutting-edge, serves as, it is worth mentioning, I hope this helps.
-* **Cut the hedge stack.** Not: "could potentially be argued that it might". Write: "may".
-* **Replace an adverb that props up a weak verb.** Not: "runs quickly". Write: "is fast", or the measurement.
+* **Cut the hedge stack.** Write: "may." Not: "could potentially be argued that it might."
+* **Replace an adverb that props up a weak verb.** Write: "is fast", or the measurement. Not: "runs quickly."
   An adverb carrying its own meaning stays: "an id that quietly means something new".
-* **Say what you found.** Not: "a number of issues". Write: "three broken links".
+* **Say what you found.** Write: "three broken links." Not: "a number of issues."
 * **Cut a sentence that could appear unchanged in another project's documentation.** It says nothing about this one.
-  Not: "schema changes can cause issues." Write: "a column rename fails the build."
+  Write: "A column rename fails the build." Not: "Schema changes can cause issues."
 
 ## Watch the shape
 
 * **Build a sentence on a contrast only where the reader would otherwise take the wrong reading.**
   Keep: "Copy `template/`, not `example/`." A reader would reach for the wrong folder.
   Cut: "The tool validates rather than generates." Say what it does.
-* **Do not force ideas into groups of three** where two would do or four would be honest.
-* **Do not manufacture a punchline for every section.** Most sections end on a sentence that states a fact.
-* **A bold lead-in is structure. A bold claim is decoration.** A bold label ending in a colon that restates the line is
-  a tell. A bold lead-in that ends in a full stop, names the item, and is followed by new detail is right, and where it
-  does a heading's job it stays.
-  Not: "**Performance:** Performance improved." Write: "**Schema in TypeScript.** Tables live in one file."
+* **Use the honest number.** Two examples where two will do, four where four is true.
+* **End a section on a fact.** A crafted line closing every section reads as style rather than substance.
+* **A bold lead-in is structure. A bold claim is decoration.**
+  Write: "**Schema in TypeScript.** Tables live in one file." Not: "**Performance:** Performance improved."
+* **A bold label takes a colon before a value and a full stop before sentences.** Where a third part qualifies the
+  value, a comma carries it.
+  Write: "**Platform**: CDN custom domain." Write: "**Repository**: `infrastructure`, at `services/covers`."
+  Write: "**Caching.** The edge ignores every query string but two."
 * **A bold lead-in may carry two steps.** Splitting it moves half the instruction outside the emphasis.
   Write: "**Retire the old policy and write a new one.**"
 * **Bold the term, not the claim,** inside a paragraph. Where the claim is the misreading the paragraph exists to
   prevent, put that sentence first and let position carry it.
-* **No emoji, no title-case headings.**
+* **Headings and bullets carry words, and no emoji.**
 * **Use a numbered list only when the order carries meaning.** Introduce a list with a sentence saying what the items
-  are, and keep the items parallel. Where the items speak for themselves, no introduction is needed. Never write a stem
-  whose only job is to say a list follows.
+  are, and keep the items parallel. Where the items speak for themselves, open the list without a stem.
 
 ## Write what stays true
 
 * **Describe what is, not what changed**, and never as a correction of what was. Change history belongs to the commit
   message and the changelog, which are the two documents whose subject is change.
-* **Do not write a count you cannot regenerate.** Name the command that reports it. A set fixed by decision rather than
-  by accumulation may be counted. A number making a point rather than a tally is not a count: "correcting it alongside
-  twenty others" is an argument about cost.
+* **Name the command that reports a count.** A set fixed by decision rather than by accumulation may be counted. A
+  number making a point rather than a tally is not a count: "correcting it alongside twenty others" is an argument
+  about cost.
 * **Cite rather than restate.** If the reasoning lives elsewhere, link it. Nobody updates a copy.
+
+## Rules you can ignore
+
+Split an infinitive, open with *and* or *but*, end on a preposition, use the same word twice. Each is a half-remembered
+school rule, and a sentence contorted to obey one is worse for it.
 
 ## Commit messages and pull requests
 
@@ -170,9 +170,9 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 
 ## Before you finish
 
-1. Name the subject of every sentence. Where the answer is "nothing", rewrite it, unless naming one would add a claim
-   or the line is a label.
+1. Name the subject of every sentence. Where the answer is "nothing", rewrite it, unless the line is a label or naming
+   one would add a claim.
 2. Read the longest sentence aloud. If you run out of breath, it is two sentences.
 3. Search the draft for the cut list above, and for "only", "this" and "it".
-4. Read the last sentence of each section. If more than one in a row is a crafted line, flatten the weaker.
-5. Name any rule you could not obey, and what stopped you.
+4. Read the last sentence of each section. Where more than one in a row is a crafted line, flatten the weaker.
+5. Name every rule you could not obey, and what stopped you.
