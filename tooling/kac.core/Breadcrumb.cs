@@ -1,10 +1,6 @@
 using System.Text;
 using System.Text.Json.Nodes;
 
-// ---------------------------------------------------------------------------
-// The breadcrumb — what a session is told the plugin brought with it
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // A few lines injected at the start of a session, saying which corpus is installed, how much of it

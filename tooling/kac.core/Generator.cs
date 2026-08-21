@@ -1,8 +1,6 @@
 using System.Text;
 
-// ---------------------------------------------------------------------------
 // Generation — index pages and the generated blocks in <type>.md
-// ---------------------------------------------------------------------------
 
 namespace kac.core;
 

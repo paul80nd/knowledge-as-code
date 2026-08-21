@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// The reserved `_` prefix
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // `_` means framework artefact rather than knowledge record. Inside a type folder that is the

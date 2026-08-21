@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// Natural (human) string ordering
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // Alphabetical as a reader means it, used by the `list-order` check. Digit runs compare as numbers,

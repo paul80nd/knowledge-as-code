@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// The placeholder mark
-// ---------------------------------------------------------------------------
-
 using System.Text.RegularExpressions;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;

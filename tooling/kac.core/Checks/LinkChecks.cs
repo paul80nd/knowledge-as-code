@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// Links, labels and link definitions
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // The link half of a document's checks. They ask about prose rather than about frontmatter, which is

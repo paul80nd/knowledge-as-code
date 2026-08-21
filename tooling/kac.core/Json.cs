@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace kac.core;
-// ---------------------------------------------------------------------------
+
 // JSON output models
 //
 // Every JSON document kac emits is a record serialized through the source generator
@@ -12,7 +12,6 @@ namespace kac.core;
 // `[JsonSerializable(typeof(...))]` line to KacJson; no other plumbing is needed.
 //
 // Property names are PascalCase and emitted camelCase; `int?` line is written as `null`.
-// ---------------------------------------------------------------------------
 
 public record ValidateReport(ValidateSummary Summary, IReadOnlyList<ValidateFinding> Findings);
 
@@ -24,12 +23,10 @@ public record ChecksReport(IReadOnlyList<CheckInfo> Checks);
 
 public record CheckInfo(string Check, string Severity, string Summary);
 
-// ---------------------------------------------------------------------------
 // Export documents
 //
 // A consumer reads these instead of cloning the corpus, so their shape is a contract from the moment
 // one is published. `ExportManifest.FormatVersion` is what says which contract is in hand.
-// ---------------------------------------------------------------------------
 
 // What this export is, where it came from, and what is in it. Everything that varies between two runs
 // over one commit is confined here, so the rest of the output is byte-identical run to run.
@@ -113,12 +110,10 @@ public record ExportPartLine(
     string Path,
     string Anchor);
 
-// ---------------------------------------------------------------------------
 // Bundle documents
 //
 // What `kac bundle` writes for itself. `plugin.json` is not here: it is the corpus's own file, edited
 // as a DOM so that keys this tool has never heard of survive the round trip.
-// ---------------------------------------------------------------------------
 
 // What the assembled plugin holds, and why anything is missing from it.
 //
@@ -146,12 +141,10 @@ public record BundleIncluded(string Path, IReadOnlyList<string> Requires, string
 // asking why the plugin they installed does less than the one their colleague has.
 public record BundleTrimmed(string Path, IReadOnlyList<string> Requires, string Reason);
 
-// ---------------------------------------------------------------------------
 // The local marketplace
 //
 // The minimum that installs and validates: what the plugin is, who owns it, and where under the
 // marketplace root it sits. `Dist.Root` says why the marketplace is the root and not a sibling.
-// ---------------------------------------------------------------------------
 
 public record MarketplaceManifest(
     [property: JsonPropertyName("$schema")] string Schema,

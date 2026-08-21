@@ -1,10 +1,8 @@
 using System.Text.Json;
 using Spectre.Console;
 
-// ---------------------------------------------------------------------------
 // Subcommands — the orchestration behind each CLI verb. The entrypoint (tooling/kac/Program.cs) only wires
 // Spectre.Console.Cli to these; all the work lives here and in the rest of kac.core.
-// ---------------------------------------------------------------------------
 
 namespace kac.core;
 

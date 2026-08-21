@@ -769,8 +769,6 @@ if (failures.Count > 0)
 Console.WriteLine($"all {scenarios.Count} scenario(s) passed.");
 return 0;
 
-// ---------------------------------------------------------------------------
-
 // The repository, found by the solution at its root rather than by the corpus beside it. `kac` itself walks
 // up for a `.schema/` because what it wants is a corpus; this suite wants the tree that holds the engine,
 // the fixtures and the corpus at once, and only one folder answers to that. The solution file is the right

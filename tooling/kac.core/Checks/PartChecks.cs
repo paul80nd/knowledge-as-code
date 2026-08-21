@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// The parts of a record
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // A record's addressable parts — the children something else may cite by name. The type declares where

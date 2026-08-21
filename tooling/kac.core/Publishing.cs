@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// Publishing targets — how a published corpus is addressed
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // The two addresses one record has once it is published. A person follows `Human` and reads the record

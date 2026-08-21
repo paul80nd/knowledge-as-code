@@ -7,9 +7,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 
-// ---------------------------------------------------------------------------
 // Parsed document
-// ---------------------------------------------------------------------------
 
 public class LinkRef
 {

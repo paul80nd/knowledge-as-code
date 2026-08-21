@@ -3,10 +3,6 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-// ---------------------------------------------------------------------------
-// Bundle — the export and the plugin tree assembled into something installable
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // One file, and the bytes it holds. Bytes rather than text because most of what a bundle writes it did

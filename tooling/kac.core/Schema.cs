@@ -2,13 +2,12 @@ using System.Text.RegularExpressions;
 using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
-// ---------------------------------------------------------------------------
+
 // Schema model — loaded from .schema/*.yaml
 //
 // Everything here is settled at load and read-only afterwards. That is what makes the derived sets on
 // TypeSchema safe to hold: they are computed from the declarations beside them, and nothing can change
 // a declaration out from under a set that was derived from it.
-// ---------------------------------------------------------------------------
 
 public sealed class FieldSpec
 {

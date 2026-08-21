@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// The id, and the filename that carries it
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // An id is a prefix and a discriminator — `adr-0007`, `pol-VURM`, `svc-search`. The prefix names the

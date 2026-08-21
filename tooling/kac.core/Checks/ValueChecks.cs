@@ -2,10 +2,6 @@ using System.Globalization;
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
-// ---------------------------------------------------------------------------
-// The value under a frontmatter key
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // What one frontmatter value is held to, given the field the schema declares for it.

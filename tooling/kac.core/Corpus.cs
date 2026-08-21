@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// Corpus discovery and loading
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // The corpus as one loaded thing: the schema it is judged against, what it holds, and every record

@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// The two ids
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // A check id: what a finding reports under, and what `_checks.yaml` declares an entry for.

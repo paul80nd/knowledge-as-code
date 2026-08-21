@@ -1,9 +1,6 @@
 using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
-// ---------------------------------------------------------------------------
-// Portability manifest & mechanism sync state
-// ---------------------------------------------------------------------------
 
 // One rule from a manifest: a set of path globs that all resolve to one layer.
 public record ManifestRule(IReadOnlyList<string> Patterns, string Layer);

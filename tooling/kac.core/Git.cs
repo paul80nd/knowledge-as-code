@@ -1,9 +1,5 @@
 using System.Diagnostics;
 
-// ---------------------------------------------------------------------------
-// Git — the questions the tool asks of the repository itself
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // What git can tell the tool about the tree it is running over. Everything here answers null where git

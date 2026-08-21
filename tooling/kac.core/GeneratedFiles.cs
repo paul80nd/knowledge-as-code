@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// What `kac generate` writes, and where
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // The one account of which files carry generated blocks and which blocks each one carries.

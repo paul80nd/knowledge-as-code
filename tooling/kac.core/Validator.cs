@@ -1,9 +1,5 @@
 using YamlDotNet.RepresentationModel;
 
-// ---------------------------------------------------------------------------
-// The checks
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 public static class Validator

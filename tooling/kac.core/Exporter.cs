@@ -1,10 +1,6 @@
 using System.Text;
 using System.Text.Json;
 
-// ---------------------------------------------------------------------------
-// Export — the corpus as something a consumer reads without cloning it
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // One file the export writes, named relative to the export root.

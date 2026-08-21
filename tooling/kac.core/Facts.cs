@@ -2,10 +2,6 @@ using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using Markdig.Syntax;
 
-// ---------------------------------------------------------------------------
-// The facts an `expr:` can see
-// ---------------------------------------------------------------------------
-
 namespace kac.core;
 
 // Everything a rule expression is allowed to ask about a document, and the whole of it. Each answer
