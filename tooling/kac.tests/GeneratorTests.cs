@@ -562,8 +562,7 @@ public class GeneratorTests
         Summary = "A thing.", Detail = "A longer thing.", GoesHere = "A thing", Collision = collision
     };
 
-    // Most types collide with nothing, and a heading over a paragraph saying a word means what it says
-    // would be worse than the silence.
+    // Most types collide with nothing.
     [Fact]
     public void Only_a_type_that_collides_with_something_gets_a_heading()
     {

@@ -58,8 +58,7 @@ public class BreadcrumbTests
         Assert.DoesNotContain("entries", text);
     }
 
-    // Nothing here names a record type. A corpus adopting a type this tool has never heard of gets a
-    // breadcrumb about it without a line changing in the renderer.
+    // Nothing in the renderer names a record type.
     [Fact]
     public void A_type_this_tool_has_never_heard_of_is_described_the_same_way()
         => Assert.Contains("shanties — 12 entries across 2 records: Sea and Land",
@@ -95,8 +94,6 @@ public class BreadcrumbTests
     }
 
     // Past it the line names what it can and counts the rest, so it is one line for a corpus of any size.
-    // The remainder is stated rather than dropped: a list cut short silently reads as the whole of what
-    // the type covers.
     [Fact]
     public void A_type_past_the_threshold_names_the_first_few_and_counts_the_rest()
     {

@@ -30,8 +30,7 @@ public class LinkCheckTests
     public void The_md_extension_may_be_omitted()
         => Assert.Empty(Unresolved("adrs/0001-a.md", "[b](/adrs/0002-b)"));
 
-    // A directory is deliberately not a target: `/adrs` is a link to the page `adrs.md`, and accepting
-    // the folder as well would resolve a link to a type whose page has gone.
+    // A directory is deliberately not a target: `/adrs` is a link to the page `adrs.md`.
     [Fact]
     public void A_directory_is_not_a_target_but_the_page_beside_it_is()
     {
@@ -52,8 +51,7 @@ public class LinkCheckTests
     public void A_fragment_or_query_is_stripped_before_the_target_is_looked_up(string markdown)
         => Assert.Empty(Unresolved("adrs/0001-a.md", markdown));
 
-    // A fragment with nothing before it names a heading in this document, so it never reaches the
-    // resolver at all.
+    // A bare fragment never reaches the resolver.
     [Fact]
     public void A_bare_fragment_names_a_heading_in_this_document()
     {

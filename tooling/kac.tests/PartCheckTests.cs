@@ -286,8 +286,7 @@ public class PartCheckTests
         Assert.Contains("term 'Hollow' has nothing under it", one.Message);
     }
 
-    // The last entry's body runs to the end of the document rather than to a following heading, so it is
-    // the one an off-by-one would let through.
+    // The last entry is the one an off-by-one would let through.
     [Fact]
     public void The_last_heading_is_asked_the_same_question()
     {

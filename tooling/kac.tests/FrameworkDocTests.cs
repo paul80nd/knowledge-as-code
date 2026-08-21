@@ -33,8 +33,7 @@ public class FrameworkDocTests
             Assert.Single(Framework(
                 ("knowledge-as-code.md", "# The framework\n\nSee [one](/adrs/0001-a.md).\n"))).Message);
 
-    // A generated block is written against this corpus rather than against the framework, so its links are
-    // this corpus's and are right by construction.
+    // A generated block's links are this corpus's, so they are not this rule's to judge.
     [Fact]
     public void A_link_inside_a_generated_block_is_exempt()
         => Assert.Empty(Framework(("knowledge-as-code.md",
@@ -50,8 +49,8 @@ public class FrameworkDocTests
             Assert.Single(Framework(
                 ("knowledge-as-code/style.md", "# Style\n\nSee the [ADRs](/adrs).\n"))).File);
 
-    // The framework's own glossary is a record, filed under a type and validated like any other. It is read
-    // here as well because it is shared byte-for-byte, and the link pass is not run over it twice.
+    // The framework's glossary is read here as well because it is shared byte-for-byte, and the link
+    // pass is not run over it twice.
     [Fact]
     public void The_shared_glossary_is_read_although_it_is_also_a_record()
         => Assert.Equal("glossary/knowledge-as-code.md",

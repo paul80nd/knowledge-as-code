@@ -126,8 +126,7 @@ public class DocumentRuleTests
         => Assert.Empty(Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### Borrower\n\nOne.\n\n### Item\n\nTwo.\n\n### Title\n\nThree.")));
 
-    // The message names the entry that moved and the one it belongs before. That is the whole reason
-    // this is a class: an author told only that the file is unsorted has to find the word themselves.
+    // The message names the entry that moved and the one it belongs before.
     [Fact]
     public void An_entry_out_of_place_names_itself_and_where_it_belongs()
     {

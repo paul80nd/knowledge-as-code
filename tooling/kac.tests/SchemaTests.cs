@@ -36,8 +36,7 @@ public class SchemaTests
         Assert.Null(schema.EffectiveField(t, "nope"));                       // unknown → null
     }
 
-    // Order carries no meaning in the result — the only question asked of it is whether a key is in it —
-    // so the comparison is on membership, sorted to be stable.
+    // The comparison is on membership, sorted to be stable.
     [Fact]
     public void KnownKeys_spans_universal_type_and_reserved_deduplicated()
     {

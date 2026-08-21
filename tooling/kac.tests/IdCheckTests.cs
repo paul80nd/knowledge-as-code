@@ -130,8 +130,7 @@ public class IdCheckTests
 
     // -- is this label an id? --
 
-    // The canonical form is the id as a document carries it: the prefix always lower-case, a mnemonic
-    // always upper-case, a slug always lower-case. `label-canonical` is the difference between the two.
+    // `label-canonical` is the difference between a label and the id as a document carries it.
     [Theory]
     [InlineData("adr-0001", "adr-0001")]
     [InlineData("ADR-0001", "adr-0001")] // the prefix is matched without case and written back lower

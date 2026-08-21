@@ -65,10 +65,8 @@ public class ExporterTests
         Assert.Equal(["gls-general.title", "gls-narrow.title"], lines.Select(l => l.GetProperty("id").GetString()));
     }
 
-    // Across unrelated roots the order is stable and means nothing else. `Record` is a bibliographic
-    // record in one glossary and a knowledge document in the other, neither narrows the other, and
-    // reading the first hit as the more general one would hand a reader the wrong domain. This asserts
-    // only that the order does not move — deliberately not that either entry is the general one.
+    // Across unrelated roots the order is stable and means nothing else. This asserts only that the
+    // order does not move — deliberately not that either entry is the general one.
     [Fact]
     public void Across_unrelated_roots_the_order_is_stable_and_claims_no_generality()
     {
@@ -214,8 +212,7 @@ public class ExporterTests
     // A link's target is stripped out of the prose, so an agent reading `see [gls-two]` in the text
     // alone is handed a bracket it cannot follow. The ids are carried beside the words.
     //
-    // They resolve to the **part**, and only where the link names one: these references are
-    // `redefinitions-are-reciprocal` showing through, and that rule is about a term and its counterpart.
+    // They resolve to the **part**, and only where the link names one.
     [Fact]
     public void A_reference_naming_the_file_and_no_term_carries_nothing_and_is_reported()
     {
@@ -289,8 +286,8 @@ public class ExporterTests
 
     // -- one spelling of absent --
 
-    // A field a record leaves blank and a field it does not carry are one absence to a consumer, and
-    // `""` here beside `null` there would make the spelling a property of which file was opened.
+    // `""` here beside `null` there would make the spelling of absent a property of which file was
+    // opened.
     [Fact]
     public void A_field_left_blank_is_null_and_never_an_empty_string()
     {

@@ -2,8 +2,8 @@ using kac.core;
 
 // In-process unit tests for the pass that reads a type's page — `adrs.md`, `policies.md`.
 //
-// A page is not a record: it carries no frontmatter and describes the documents beneath it. So the
-// structural checks do not apply and two things are left, both of which the `type-pages` fixture reaches
+// A page is not a record, so the structural checks do not apply. Two things are left, both of which
+// the `type-pages` fixture reaches
 // through the CLI. What it cannot reach is which question the pass asks about presence: the page is looked
 // for in the listing, so a page on one machine and in no clone is not read.
 
@@ -15,8 +15,7 @@ public class PageCheckTests
     public void A_page_of_prose_and_links_is_silent()
         => Assert.Empty(Page("# ADRs\n\nThe [first](/adrs/0001-a.md).\n"));
 
-    // Frontmatter on a page is a leftover from a type that used to be a single document. Nothing else says
-    // so: a page is forked, and a forked file is never compared against upstream.
+    // Frontmatter on a page is a leftover from a type that used to be a single document.
     [Fact]
     public void Frontmatter_on_a_page_is_reported_and_names_where_it_belongs()
     {

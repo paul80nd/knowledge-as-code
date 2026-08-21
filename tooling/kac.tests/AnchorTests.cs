@@ -13,8 +13,7 @@ public class AnchorTests
     [InlineData("DORA metrics", "dora-metrics")]
     [InlineData("EN 301 549", "en-301-549")]
     [InlineData("Azure Well-Architected Framework", "azure-well-architected-framework")]
-    // Punctuation is dropped rather than replaced, which is why a heading meant to be linked to is
-    // written without any: these are the forms that make Azure DevOps and GitHub disagree.
+    // These are the forms that make Azure DevOps and GitHub disagree.
     [InlineData("ISO/IEC 27001:2022", "isoiec-270012022")]
     [InlineData("WCAG 2.2 AA", "wcag-22-aa")]
     [InlineData("Scope: central vs repo-local", "scope-central-vs-repo-local")]
