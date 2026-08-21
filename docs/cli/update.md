@@ -1,4 +1,4 @@
-# `update`: take a newer framework into a corpus
+# `update` take a newer template into a corpus
 
 > **Draft, pending implementation.** This page is the specification `kac update` is built to, written before the command
 > exists. It describes the command as it will be, in the same voice as its siblings, and becomes an ordinary feature
@@ -6,8 +6,8 @@
 
 ## Intent
 
-`update` takes a newer framework into a corpus that already has one, and is where a corpus adopts a type or gives one
-up. It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file what
+`update` takes a newer template into a corpus that already has one, and is where a corpus adopts a type or gives one
+up. It reads where the corpus took its template from, fetches that template again at its ref, decides file by file what
 the corpus receives, writes it, and records what it took.
 
 Its reader is whoever maintains a corpus. The command's promise is narrow and worth stating plainly: **it leaves every
@@ -15,6 +15,15 @@ change in the working tree and commits nothing.** Git is the review step, so `up
 without that safety net would have to be timid.
 
 ## What it is not
+
+**It is not how the tool is updated.** Two things reach a corpus from outside, and they arrive by different routes.
+`kac` itself comes from nuget.org, and `dotnet tool update KnowledgeAsCode.Tool` is what moves it. The template comes
+from wherever `.corpus.yaml` says, and `update` is what moves that: the schema, the framework's own documentation, the
+plugin tree, and the pages and templates a corpus starts from.
+
+The two move independently. A corpus can run a new tool over an old template, or the reverse, and neither is a fault on
+its own. A template names the oldest tool that can read it in `minimum-tool`, which is the one place the two are held
+together.
 
 **It is not a merge tool.** It writes files and stops. Where the result is wrong, the answer is `git checkout` on the
 file, or a `skip:` entry saying the corpus owns it. Nothing here resolves a conflict, because a clean tree means there
@@ -24,7 +33,7 @@ are none.
 corpus can be perfectly in step with its template and full of bad records.
 
 **It is not `generate`.** That recomputes what a corpus derives from its own frontmatter. This one brings in what the
-corpus derives from somebody else's framework. A corpus can be fresh and behind, or in step and stale.
+corpus derives from somebody else's template. A corpus can be fresh and behind, or in step and stale.
 
 ## Approach
 
@@ -88,9 +97,9 @@ template says a corpus receives.
 ### What it records
 
 The `upstream:` block in `.corpus.yaml` is rewritten: the commit resolved this run, the template's version, and the
-date. The ref is followed, not pinned: the commit is written down as what was taken, and nothing reads it back. The
-file is rewritten line by line rather than re-serialised, because most of its value is the commentary explaining what
-each key means.
+date. The ref is followed, not pinned: the commit is written down as what was taken, and nothing reads it back. The file
+is rewritten line by line rather than re-serialised, because most of its value is the commentary explaining what each
+key means.
 
 ## Known limits
 

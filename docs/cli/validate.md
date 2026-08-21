@@ -1,4 +1,4 @@
-# `validate`: check the corpus against its schema
+# `validate` check the corpus against its schema
 
 <!-- BEGIN GENERATED: usage-validate -->
 

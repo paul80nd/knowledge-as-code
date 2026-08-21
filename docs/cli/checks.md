@@ -1,4 +1,4 @@
-# `checks`: list every check the validator can report
+# `checks` list every check the validator can report
 
 <!-- BEGIN GENERATED: usage-checks -->
 

@@ -1,4 +1,4 @@
-# `.corpus.yaml`: what a corpus says about itself
+# `.corpus.yaml` what a corpus says about itself
 
 ## What it is for
 

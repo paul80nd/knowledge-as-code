@@ -1,4 +1,4 @@
-# `new`: stand a corpus up in the folder you are in
+# `new` stand a corpus up in the folder you are in
 
 > **Draft, pending implementation.** This page is the specification `kac new` is built to, written before the command
 > exists. It describes the command as it will be, in the same voice as its siblings, and becomes an ordinary feature

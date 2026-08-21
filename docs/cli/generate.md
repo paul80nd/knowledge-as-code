@@ -1,4 +1,4 @@
-# `generate`: rewrite the parts of a corpus derived from its records
+# `generate` rewrite the parts of a corpus derived from its records
 
 <!-- BEGIN GENERATED: usage-generate -->
 
