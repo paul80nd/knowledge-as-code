@@ -5,7 +5,7 @@ description: The writing floor for every word in this repository. Records, READM
 
 # Technical writing
 
-The floor every writer in this repository stands on. Whatever sent you here adds the rules for your audience on top.
+Whatever sent you here adds the rules for your audience on top of these.
 
 **These rules reach prose, and stop where prose stops.** They do not reach a heading you may not rename, an identifier,
 a clause whose wording is the record of an obligation, a fixed form such as an ADR's decision sentence, or a transcript
@@ -71,16 +71,15 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 
 ## Punctuation
 
-* **An em dash has to earn its place, and usually cannot.** It separates without saying how the two parts relate, so
-  the reader does that work. Use the mark that states the relation, and often the sentence reads best with the mark
-  simply gone. Where the sentence already carries a colon, take a full stop rather than a second colon. Parentheses are
-  a last resort, for an aside a comma would garden-path.
+* **One em dash survives: the interrupting aside that carries its own commas.** That is the whole test, and a dash at
+  the end of a sentence fails it, because it interrupts nothing.
+  Keep: *The bibliographic description of a title — author, edition, subject headings — held once and shared by every
+  branch.*
   Write: "**Repository**: `thumbnailer`." Not: "**Repository** — `thumbnailer`."
-* **One em dash survives: the interrupting aside that carries its own commas.** That is the whole test.
-  *The bibliographic description of a title — author, edition, subject headings — held once and shared by every
-  branch.* A colon cannot hold it, because the sentence continues afterwards. Parentheses could, and they tell a reader
-  to skip what they hold, which is wrong where the aside is load-bearing. **A dash at the end of a sentence interrupts
-  nothing** and takes a colon or a full stop.
+* **Every other dash takes the mark that states the relation.** A dash separates without saying how the two parts
+  relate, so the reader does that work. Often the sentence reads best with the mark simply gone. Where the sentence
+  already carries a colon, take a full stop rather than a second colon. Parentheses are a last resort, for an aside a
+  comma would garden-path and where the reader must not skip what they hold.
 * **A colon introduces a list, an example, a reason or a definition.** A mid-sentence connector is none of those.
   Write: "Coming from automation, you describe conditions."
   Not: "If you are coming from automation: you describe conditions."
@@ -88,7 +87,8 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   different mark meaning a different thing.
 * **Where the container reserves a mark, take a full stop and a new sentence.** A YAML plain scalar cannot hold `": "`,
   so a definition written there becomes two sentences rather than a quoted value.
-* **Use a full stop where a semicolon offers itself.**
+* **Use a full stop where a semicolon offers itself.** One survives: the semicolon pairing a statement with its exact
+  negation. Keep: *Its four operational obligations are deviable; those three prohibitions are not.*
 * **Write the alternative out.** Write: "a, b, or both." Not: "and/or", "read/write".
 * **Make anything in parentheses a whole grammatical unit.** A plural written "(s)" is never one.
 * **Use straight quotes.**
@@ -105,7 +105,7 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   *Unnoticed* says only silent.
   Cut the figure that dresses a plain word: *substrate* for base, *vector* for way, *wedge in* for add, *north star*
   for goal, *flywheel* for what builds on itself.
-* **A word that is the real name of a thing here is not a metaphor.** `Harness.cs` is a filename.
+* **A word naming something real is not a figure of speech.** A harness in a filename is that file's name.
 * **Use the short everyday word.** "use" not "utilize", "help" not "facilitate", "do" not "perform". A long word has to
   buy its length with precision.
 * **Call one thing by one name, everywhere.** Two names read as two things. Elegant variation is a defect here.
@@ -134,10 +134,13 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 * **End a section on a fact.** A crafted line closing every section reads as style rather than substance.
 * **A bold lead-in is structure. A bold claim is decoration.**
   Write: "**Schema in TypeScript.** Tables live in one file." Not: "**Performance:** Performance improved."
-* **A bold label takes a colon before a value and a full stop before sentences.** Where a third part qualifies the
-  value, a comma carries it.
+* **A label takes a colon before a value and a full stop before sentences.** Bold, a code span and a link label are
+  all labels. Where a third part qualifies the value, a comma carries it.
   Write: "**Platform**: CDN custom domain." Write: "**Repository**: `infrastructure`, at `services/covers`."
   Write: "**Caching.** The edge ignores every query string but two."
+  A link label opening a line is the one that bites: `[pol-AGNT]: gate` is a link reference definition, and the line
+  disappears from the page. A value of two words or more is safe, and a verb is safer still.
+  Write: "[pol-AGNT] sets the acceptance gate."
 * **A bold lead-in may carry two steps.** Splitting it moves half the instruction outside the emphasis.
   Write: "**Retire the old policy and write a new one.**"
 * **Bold the term, not the claim,** inside a paragraph. Where the claim is the misreading the paragraph exists to
@@ -149,7 +152,8 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 ## Write what stays true
 
 * **Describe what is, not what changed**, and never as a correction of what was. Change history belongs to the commit
-  message and the changelog, which are the two documents whose subject is change.
+  message and the changelog, which are the two documents whose subject is change. Both take the tense their subject
+  needs, so a released change reads in the past and a standing behaviour reads in the present.
 * **Name the command that reports a count.** A set fixed by decision rather than by accumulation may be counted. A
   number making a point rather than a tally is not a count: "correcting it alongside twenty others" is an argument
   about cost.
@@ -173,6 +177,6 @@ school rule, and a sentence contorted to obey one is worse for it.
 1. Name the subject of every sentence. Where the answer is "nothing", rewrite it, unless the line is a label or naming
    one would add a claim.
 2. Read the longest sentence aloud. If you run out of breath, it is two sentences.
-3. Search the draft for the cut list above, and for "only", "this" and "it".
+3. Search the draft for the cut list above.
 4. Read the last sentence of each section. Where more than one in a row is a crafted line, flatten the weaker.
 5. Name every rule you could not obey, and what stopped you.
