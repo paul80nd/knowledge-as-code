@@ -1,6 +1,6 @@
 using System.Text;
 
-// Generation — index pages and the generated blocks in <type>.md
+// Generation: index pages and the generated blocks in <type>.md
 
 namespace kac.core;
 
@@ -10,18 +10,18 @@ public static class Generator
 
     public static string IndexPage(TypeSchema t, List<Doc> docs)
     {
-        // "Policy Index (POL)" — the type as a reader names it, then the id prefix they will meet in
-        // every cross-reference. The prefix is dropped where it only repeats the name, so an ADR index
-        // is headed "ADR Index" rather than "ADR Index (ADR)".
+        // "Policy Index (POL)": the type as a reader names it, then the id prefix they meet in every
+        // cross-reference. Where the prefix only repeats the name it is dropped, so an ADR index is headed
+        // "ADR Index" rather than "ADR Index (ADR)".
         var prefix = t.IdPrefix.ToUpperInvariant();
         var title = $"{t.DisplayName} Index"
                     + (prefix.Length > 0 && !string.Equals(prefix, t.DisplayName, StringComparison.OrdinalIgnoreCase)
                         ? $" ({prefix})"
                         : "");
 
-        // An empty type still gets its index: every type page links to one, and link-resolves does not
-        // check type root pages, so a withheld file would be an unchecked dead link. A headed table with
-        // no rows says less than nothing, so an empty index says it is empty and points at the template.
+        // An empty type still gets its index, because every type page links to one and a withheld file
+        // fails link-resolves. A headed table with no rows says less than nothing, so an empty index says
+        // it is empty and points at the template.
         var body = docs.Count == 0
             ? $"_Nothing here yet — copy [`{Artefact.Template}`]({Artefact.Template}) to add the first._"
             : RenderTable(
@@ -34,30 +34,30 @@ public static class Generator
         return $"{Banner}\n\n# {title}\n\n{body}\n";
     }
 
-    // The two directions an index is written in. Read by SchemaChecks, so a type declaring a third word
-    // is told at load rather than sorted the default way and left looking deliberate.
+    // The two directions an index is written in. SchemaChecks reads this set, so a type declaring a third
+    // word is told at load rather than sorted the default way and left looking deliberate.
     public const string Descending = "descending";
 
     public static readonly IReadOnlySet<string> IndexOrders =
         new HashSet<string>(["ascending", Descending], StringComparer.Ordinal);
 
-    // A record's title is its H1 rather than frontmatter, so it answers where a field is asked for and no
-    // field is declared. An index column resolves it here, an export carries it, and SchemaChecks admits
-    // it by this constant rather than by a string of its own.
+    // A record's title is its H1 and not a frontmatter field, so this constant answers wherever a field
+    // named `title` is asked for. An index column resolves it here, Exporter carries it, and SchemaChecks
+    // admits it by this constant rather than by a string of its own.
     public const string Title = "title";
 
-    // How a type is linked to from a generated block: the page without its extension, root-relative. The
-    // form Azure DevOps renders as a wiki page and the link check resolves back to the file.
+    // How a generated block links to a type: the page without its extension, root-relative. Azure DevOps
+    // renders that form as a wiki page, and link-resolves finds the file behind it.
     private static string Link(TypeSchema t) =>
         "/" + (t.Page.EndsWith(".md", StringComparison.Ordinal) ? t.Page[..^3] : t.Page);
 
-    // The decision table — what a contributor has in hand, and where it goes. The corpus's own types
-    // only: a row pointing at a type this corpus never adopted is a dead link in the wiki and an
+    // The decision table: what a contributor has in hand, and where it goes. The corpus's own types
+    // only, because a row pointing at a type this corpus never adopted is a dead link in the wiki and an
     // invitation to file a document nowhere.
     //
-    // Sorted on the left column, because that is the column being read. A reader arrives holding
-    // something and scans for it, so the table is ordered the way it is searched rather than by the
-    // answer they do not have yet. The link carries the plural: it points at the collection.
+    // Sorted on the left column, because a reader arrives holding something and scans for it. Ordering by
+    // the right column would sort the table by the answer they came for and do not have yet. The link
+    // carries the plural: it points at the collection.
     public static string PlacementTable(IEnumerable<TypeSchema> types) =>
         RenderTable(["You have…", "It goes in"],
         [
@@ -66,9 +66,8 @@ public static class Generator
         ]);
 
     // The types at length, under the tier that decides how each behaves. What the decision table answers
-    // in a line, this answers in a paragraph — and it is grouped by tier rather than sorted flat, because
-    // the reader who has got this far is learning the shape of the taxonomy rather than looking one type
-    // up.
+    // in a line, this answers in a paragraph. Grouped by tier rather than sorted flat: a reader who has
+    // got this far is learning the shape of the taxonomy, not looking one type up.
     //
     // A tier no adopted type sits in is left out entirely. A heading with nothing under it tells a reader
     // the corpus has a gap where it has in fact made a choice.
@@ -93,18 +92,17 @@ public static class Generator
         return string.Join("\n", sections).TrimEnd('\n');
     }
 
-    // One way on to each type's own field reference.
-    //
-    // The anchor is the heading the `schema-*` block sits under. Keeping that heading is the type page's
-    // side of the bargain, and the link check holds it there.
+    // One way on to each type's own field reference. The anchor is the heading the `schema-*` block sits
+    // under: keeping that heading is the type page's side of the bargain, and fragment-resolves holds it
+    // there.
     public static string MetadataStrip(IEnumerable<TypeSchema> types) =>
         Wrap(string.Join(" · ", types
             .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
             .Select(t => $"[{t.DisplayName}]({Link(t)}#metadata)")));
 
     // Where each type's name came from. A type with no useful ancestor carries that as its prior art and
-    // leaves the other two columns empty, which renders as an em dash. Saying a type has no ancestor is the
-    // point of its row rather than a gap in it.
+    // leaves the other two columns empty, and an empty cell renders as an em dash. Saying a type has no
+    // ancestor is the point of its row rather than a gap in it.
     public static string LineageTable(IEnumerable<TypeSchema> types) =>
         RenderTable(["Type", "Nearest prior art", "Alignment", "Divergence"],
         [
@@ -121,20 +119,20 @@ public static class Generator
     // as something nobody got round to.
     private static string Cell(string text) => text.Length > 0 ? Escape(text) : "—";
 
-    // The words a reader arrives already holding, and what they will take them to mean. Only the types
-    // that collide with something appear: most do not, and a heading over a paragraph explaining that a
+    // The words a reader arrives already holding, and what they take those words to mean. Only the types
+    // that collide with something appear. Most do not, and a heading over a paragraph explaining that a
     // word means what it says would be worse than the silence.
     //
-    // Ordered by name, because no declaration says which collision is the most dangerous — and the entry
-    // that claims to be still says so wherever it lands.
+    // Ordered by name, because no declaration says which collision is the most dangerous. The entry that
+    // claims to be still says so wherever it lands.
     public static string Collisions(IEnumerable<TypeSchema> types) =>
         string.Join("\n\n", types
             .Where(t => t.Collision.Length > 0)
             .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
             .Select(t => $"### {t.DisplayName}\n\n{Paragraphs(t.Collision)}"));
 
-    // A folded scalar carrying more than one paragraph: YAML gives back a newline where the schema had a
-    // blank line, and each paragraph is wrapped on its own.
+    // A folded scalar carrying more than one paragraph: YAML gives back a newline where the schema holds
+    // a blank line, and Wrap then runs over each paragraph on its own.
     private static string Paragraphs(string text) =>
         string.Join("\n\n", text.Split('\n')
             .Select(p => p.Trim())
@@ -143,10 +141,10 @@ public static class Generator
 
     // The edges, read off the `ref:` declarations that make them checkable. One row per cross-reference
     // field a type carries, which is one row per thing an author fills in. A reciprocal pair is two rows
-    // rather than one, because it is two fields, and the last column names the counterpart that ties them.
+    // rather than one, because it is two fields. The last column names the counterpart that ties them.
     //
     // A target the corpus has not adopted is dropped from the row, and a row left pointing nowhere goes
-    // with it. The field would resolve against no document in any case; showing it would promise an edge
+    // with it. The field would resolve against no document in any case. Showing it would promise an edge
     // this corpus cannot have.
     public static string RelationTable(IEnumerable<TypeSchema> types)
     {
@@ -163,7 +161,7 @@ public static class Generator
     }
 
     // Every cross-reference a stood-up type declares at another stood-up type, in a fixed order: by the
-    // type a reader would look up, then by the field they would write.
+    // type a reader looks up, then by the field they write.
     private static IEnumerable<(TypeSchema From, string Field, FieldSpec Spec, List<TypeSchema> To)> Edges(
         IEnumerable<TypeSchema> types, Dictionary<string, TypeSchema> adopted)
     {
@@ -179,17 +177,17 @@ public static class Generator
 
     // The same edges as a diagram, which answers a different question from the table: what shape the graph
     // is, rather than which field to write. A reciprocal pair is one edge here and two rows there, and both
-    // are right — the graph has one relationship where an author has two fields to fill in.
+    // are right: the graph has one relationship where an author has two fields to fill in.
     //
     // Written to the subset of Mermaid an Azure DevOps wiki renders, which is narrower than Mermaid's own
-    // and fails silently where it is exceeded: `graph`, never `flowchart`; `-->`, never a longer arrow; and
-    // no subgraphs, because ADO does not support links crossing one. GitHub renders this subset too, so the
-    // fenced form is used rather than ADO's `:::` container, which GitHub shows as literal text.
+    // and fails silently where a diagram exceeds it. Use `graph`, never `flowchart`, and `-->`, never a
+    // longer arrow. No subgraphs, because ADO does not support a link crossing one. GitHub renders this
+    // subset too, so the fence goes in rather than ADO's `:::` container, which it shows as literal text.
     //
-    // Edges are labelled `-- text -->` rather than `-->|text|`. The two are the same diagram, but a
+    // Edges carry their label as `-- text -->` rather than `-->|text|`. The two are the same diagram, but a
     // markdown formatter reading a file for tables finds pipes in the second and reformats what it takes
-    // for cells — `superseded-by` came back as `superseded - by`, inside a fenced block it should never
-    // have entered. `generate --check` catches it, which is the guard working; not provoking it is better.
+    // for cells. `superseded-by` came back as `superseded - by`, inside a fenced block it should never have
+    // entered. `generate --check` catches it, which is the guard working. Not provoking it is better.
     public static string RelationDiagram(IEnumerable<TypeSchema> types)
     {
         var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
@@ -198,7 +196,7 @@ public static class Generator
         foreach (var t in adopted.Values.OrderBy(t => t.DisplayName, StringComparer.Ordinal))
             diagram.Append($"  {Node(t.Key)}[{t.DisplayName}];\n");
 
-        // Reciprocal halves collapse into the one edge they describe; whichever half is met first names it.
+        // Reciprocal halves collapse into the one edge they describe. Whichever half comes first names it.
         var drawn = new HashSet<string>(StringComparer.Ordinal);
         foreach (var (from, name, field, targets) in Edges(types, adopted))
         foreach (var to in targets)
@@ -214,17 +212,17 @@ public static class Generator
         return diagram.Append("```").ToString();
     }
 
-    // A mermaid node id. Prefixed and reduced to word characters so that a type whose folder carries a
+    // A mermaid node id. Prefixed and reduced to word characters, so a type whose folder carries a
     // hyphen, or is spelled `end`, cannot collide with the diagram's own grammar.
     private static string Node(string key) =>
         "t_" + new string([.. key.Select(c => char.IsLetterOrDigit(c) ? c : '_')]);
 
     // The calls that are genuinely close. A pair needs both of its types to say anything at all, so one
-    // adopted and one not leaves the pair out — a corpus with no controls is not helped by being told how
-    // a standard differs from one.
+    // adopted and one not leaves the pair out. A corpus with no controls gains nothing from a paragraph on
+    // how a standard differs from one.
     //
-    // Sorted by heading, because that is the line a reader scans. The pair a type declares is rendered from
-    // that type's side, so the heading names the declaring type first and the reader meets the two in the
+    // Sorted by heading, because that is the line a reader scans. Each pair is rendered from the side of
+    // the type that declares it, so the heading names that type first and the reader meets the two in the
     // order the sentence beneath them uses.
     public static string Disambiguations(IEnumerable<TypeSchema> types)
     {
@@ -241,9 +239,9 @@ public static class Generator
             .Select(e => Wrap($"**{e.Heading}.** {e.Text}")));
     }
 
-    // Prose at the corpus's own margin. Generated tables are exempt from it because a cell cannot be
-    // broken; a paragraph can, and one long line in a file everything else wraps reads as the generator
-    // exempting itself from the rule it is regenerating the file to enforce.
+    // Prose at the corpus's own margin. Generated tables are exempt, because a cell cannot be broken;
+    // a paragraph can. One long line in a file everything else wraps reads as the generator exempting
+    // itself from the rule it is regenerating the file to enforce.
     private const int Margin = 120;
 
     private static string Wrap(string text)
@@ -268,8 +266,8 @@ public static class Generator
 
     // The units a line may be broken between. Words, except that a markdown link is one unit however many
     // spaces its label holds: `[RFC 2119](…)` broken after `RFC` still renders, but it reads badly in the
-    // source and a formatter meeting it will put it back — and the generator would then write it out
-    // again on the next run. A word longer than the margin is left whole, a URL being the usual case.
+    // source and a formatter meeting it puts it back. The generator would then write it out again on the
+    // next run. A word longer than the margin is left whole, a URL being the usual case.
     private static IEnumerable<string> Unbreakable(string text)
     {
         var words = text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
@@ -298,9 +296,9 @@ public static class Generator
         if (link.Length > 0) yield return link.ToString();
     }
 
-    // The corpus's own index of types, for whoever arrives at the corpus root: what each holds, and
-    // one way on to the taxonomy, which is where the question "so where does mine go" is answered. The
-    // pointer sits inside the block so that it cannot drift above the table or be edited away.
+    // The corpus's own index of types, for whoever arrives at the corpus root: what each holds, and one
+    // way on to the taxonomy, which answers "so where does mine go". The pointer sits inside the block so
+    // it cannot drift above the table or be edited away.
     //
     // Sorted by name, because a reader looking a type up already knows its name. Tier is a column rather
     // than a grouping for the same reason: worth seeing beside a type, and not how anyone arrives.
@@ -313,9 +311,9 @@ public static class Generator
         + "\n\n" + Wrap($"**Where does a document go?** The [taxonomy]({taxonomyPath}) has the decision table, "
                         + "what each type is and is not, and the calls that are genuinely close.");
 
-    // The rows of an index, in the order the type's `index` block asks for. Sorting on several columns
-    // is a sort by the first, ties broken by the next; the direction applies to the whole ordering,
-    // because a type that wanted one column each way would be asking for two questions in one key.
+    // The rows of an index, in the order the type's `index` block asks for. Sorting on several columns is
+    // a sort by the first, ties broken by the next. The direction applies to the whole ordering, because a
+    // type that wanted one column each way would be asking two questions in one key.
     //
     // A type declaring no `sort:` is sorted by id, which is the one column every document carries.
     private static IEnumerable<Doc> Sorted(TypeSchema t, List<Doc> docs)
@@ -347,10 +345,10 @@ public static class Generator
     // ones included, so the page an author writes from is complete without sending them to metadata.md
     // for id, tier and owner.
     //
-    // Universal fields come first, in the universal order, and are read through EffectiveField so a type
-    // that refines one (every type narrows `status` to its own values) shows the refinement rather than
-    // the universal placeholder. They are marked rather than separated: one table is one scan, which is
-    // what someone filling in frontmatter wants.
+    // Universal fields come first, in the universal order, and are read through EffectiveField. A type
+    // that refines one shows the refinement rather than the universal placeholder, and every type narrows
+    // `status` to its own values. The universal ones are marked rather than separated: one table is one
+    // scan, which is what someone filling in frontmatter wants.
     public static string SchemaTable(TypeSchema t, Schema s)
     {
         List<string> headers = ["Field", "Value", "Notes"];
@@ -377,17 +375,17 @@ public static class Generator
         ];
     }
 
-    // What a field may hold: its type, or — where the type is an enum with a resolved set — the values
-    // themselves. The word `enum` tells an author nothing they can write into frontmatter, and the set
-    // is what they came to the page for, so the set is what the column carries.
+    // What a field may hold: its type, or the values themselves where the type is an enum with a resolved
+    // set. The word `enum` tells an author nothing they can write into frontmatter. The set is what they
+    // came to the page for, so the set is what the column carries.
     private static string ValueFor(FieldSpec f) =>
         f is { Type: "enum", Values.Count: > 0 }
             ? string.Join(" ", f.Values!.Select(v => $"`{v}`"))
             : f.Type;
 
     // The same reference for metadata.md, which documents the universal fields once for the whole
-    // taxonomy. Values are the unrefined universal declarations — `status` is genuinely "varies by
-    // type" here, because there is no type in hand to narrow it.
+    // taxonomy. Values are the unrefined universal declarations: with no type in hand to narrow it,
+    // `status` genuinely varies by type here.
     public static string UniversalSchemaTable(Schema s)
     {
         List<string> headers = ["Field", "Value", "Notes"];
@@ -408,10 +406,10 @@ public static class Generator
         return marks.Length == 0 ? "" : $" {marks}";
     }
 
-    // One paragraph beneath the table, a line to each marker. The two are joined by a hard break —
-    // two trailing spaces — rather than a blank line, because they are one legend rather than two
-    // paragraphs, and rather than spaces on one line, because HTML collapses a run of those to a
-    // single gap. The asterisk is escaped: a line opening with a bare one is a bullet.
+    // One paragraph beneath the table, a line to each marker. A hard break joins the two, which is two
+    // trailing spaces. A blank line would make them two paragraphs where they are one legend, and spaces
+    // on one line would collapse to a single gap, HTML reducing any run of them to one. The asterisk is
+    // escaped: a line opening with a bare one is a bullet.
     private static string Legend(bool anyRequired, bool anyUniversal)
     {
         List<string> parts = [];
@@ -422,9 +420,9 @@ public static class Generator
         return parts.Count == 0 ? "" : "\n\n" + string.Join("  \n", parts);
     }
 
-    // Enum values are not repeated here — they are the Value column, see ValueFor. A required-when
-    // condition closes the cell as its own sentence, quoted exactly as the schema writes it, because
-    // it is the difference between a field an author may skip and one they may not.
+    // Enum values are not repeated here. They are the Value column, which ValueFor renders. A required-when
+    // condition closes the cell as its own sentence, quoted exactly as the schema writes it, because it is
+    // the difference between a field an author may skip and one they may not.
     private static string NotesFor(FieldSpec f)
     {
         var notes = Escape(f.TableText ?? "");
@@ -434,22 +432,22 @@ public static class Generator
         return notes.Length == 0 ? when : $"{notes} {when}";
     }
 
-    // What a description may run to. The checks table is read by scanning — a reader wants to know which
-    // row is the one they tripped, not to read a paragraph about every check on the page — and a cell that runs
-    // to several sentences is one that has taken on the message's job as well as its own. A description
-    // says what is verified; a rule's `message:` says what to do about it, and is where the author who
-    // tripped it will read the reasoning. Held here because the table is what makes this a limit, and read
-    // by SchemaChecks so a schema's own rules are held to the same bound as the rows written below.
+    // What a description may run to. A reader scans the checks table to find the row they tripped, not to
+    // read a paragraph about every check on the page. A cell running to several sentences has taken on the
+    // message's job as well as its own. A description says what is verified. A rule's `message:` says what
+    // to do about it, and is where the author who tripped it reads the reasoning. Held here because the
+    // table is what makes this a limit, and read by SchemaChecks so a schema's own rules are held to the
+    // same bound as the rows written below.
     public const int DescriptionMax = 120;
 
     // The reader-facing "What CI checks" table: a curated, grouped view of the catalogue that `kac generate`
-    // splices into every type page. It is deliberately not the raw catalogue — related checks are folded
-    // into one row (the three `id-*` checks read as one `id` row) and worded for a human skim. Generating
-    // it from the catalogue instead would change what the table means, so each row names the catalogue
-    // ids it stands for and ChecksTableProblems verifies the coverage, leaving the wording hand-tuned.
+    // splices into every type page. It is deliberately not the raw catalogue: related checks fold into one
+    // row (the three `id-*` checks read as one `id` row) and are worded for a human skim. Generating it
+    // from the catalogue instead would change what the table means, so each row names the catalogue ids it
+    // stands for and ChecksTableProblems verifies the coverage, leaving the wording hand-tuned.
     //
     // `When` is the row's applicability: null fires for every type, otherwise the predicate asks the
-    // type's own schema whether the check can fire at all — so a policy page does not advertise that its
+    // type's own schema whether the check can fire at all, so a policy page does not advertise that its
     // documents are checked for Y-statements. Read from the schema rather than hand-listed per type, so
     // declaring a rule remains the only thing needed to document it.
     private static readonly (string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
@@ -474,8 +472,8 @@ public static class Generator
             "A value in a grouping field is carried by at least as many records as the schema asks for.",
             t => t.AnyField(f => f.MinRecords is not null)),
         ("tier-matches-type", [new("tier-matches-type")], "`tier` matches the tier the type declares.", null),
-        // Which of the three shapes an id takes is the type's to decide, so the row says that a shape is
-        // held to rather than listing the styles a reader could be on any of.
+        // Which of the three shapes an id takes is the type's to decide, so the row says a shape is held
+        // to rather than naming the three a reader might be on.
         ("id", [new("id-prefix"), new("id-format"), new("id-matches-filename")],
             "`id` carries the type's prefix, takes the shape the type declares, and names the same document "
             + "as the filename.", null),
@@ -504,8 +502,8 @@ public static class Generator
             t => t.Parts?.Source == PartSpec.Headings),
         // Shown on the pages of the types that keep addressable parts, rather than on every page. Both
         // checks run corpus-wide, since a citation is checked where it is written and any document may
-        // carry one; what this predicate scopes is the documentation, and a type whose records have no
-        // parts has no reason to describe how one is cited.
+        // carry one. This predicate scopes the documentation, and a type whose records have no parts has
+        // no reason to describe how one is cited.
         ("part-id-unique / part-ref", [new("part-id-unique"), new("part-ref")],
             "No two parts of a record share an address, and a `record-id.part` citation reaches the part "
             + "it names.", t => t.Parts is not null),
@@ -535,23 +533,23 @@ public static class Generator
     ];
 
     // Which rule class reports under which check id, read from the registries rather than written out.
-    // A row whose checks come from a rule class belongs on a type page only where that type declares
-    // the rule — and naming the rule id here instead would let a rename stop a page advertising the
-    // check, silently and correctly-looking.
+    // A row whose checks come from a rule class belongs on a type page only where that type declares the
+    // rule. Naming the rule id here instead would let a rename stop a page advertising the check,
+    // silently and with nothing looking wrong.
     private static readonly IReadOnlyDictionary<CheckId, RuleId> RuleByCheck =
         DocumentRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId)))
             .Concat(CorpusRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId))))
             .ToDictionary(x => x.Check, x => x.RuleId);
 
     // A row applies where its own predicate allows it and where the type declares whatever rule class
-    // reports its checks. A row naming no rule-class check is unconstrained by the second half.
+    // reports its checks. A row naming no rule-class check always passes the second half.
     private static bool Applies((string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When) row,
         TypeSchema t) =>
         (row.When is null || row.When(t))
         && row.Ids.All(id => !RuleByCheck.TryGetValue(id, out var rule) || t.HasRule(rule));
 
     // The curated rows, then a row for each expression rule the type declares. A core check is worded
-    // here because several ids fold into one reader-facing row; an expression rule is one id reporting
+    // here because several ids fold into one reader-facing row. An expression rule is one id reporting
     // under its own name, and its `description:` in the schema is already that row written out. Copying
     // it here would be the same sentence in two files, drifting apart at the first edit.
     //
@@ -577,13 +575,13 @@ public static class Generator
         return RenderTable(headers, rows) + Intentions(t);
     }
 
-    // The rules the type declares that nothing runs — no `expr:`, no implementation. Each is a real
+    // The rules the type declares that nothing runs: no `expr:`, no implementation. Each is a real
     // decision about what this type should be held to, and each is unenforced, so a page that showed
     // only the table above would say the schema promises nothing more than CI delivers. It promises
     // rather a lot more, and that is worth a reader knowing before they rely on it.
     //
     // Kept apart from the table rather than folded in as rows, because the two answer different
-    // questions: one is what a build will say about a document, the other what has been written down
+    // questions: one is what a build will say about a document, the other is what has been written down
     // and not built. A rule leaves this block by gaining an `expr:` or a class, at which point it
     // appears above under its own name.
     private static string Intentions(TypeSchema t)
@@ -603,9 +601,9 @@ public static class Generator
                + RenderTable(headers, rows);
     }
 
-    // Reconcile the curated table with the catalogue. Empty means the reader-facing table is a
-    // faithful, complete view of what the validator enforces; any entry is a drift a human must
-    // resolve. `kac checks` calls this and fails on a non-empty result, which the test suite asserts.
+    // Reconcile the curated table with the catalogue. Empty means the reader-facing table is a faithful,
+    // complete view of what the validator enforces, and any entry is a drift a human must resolve.
+    // `kac checks` calls this and fails on a non-empty result, which the test suite asserts.
     public static IReadOnlyList<string> ChecksTableProblems(Schema schema)
     {
         var catalogue = schema.Checks.Select(c => c.Id).ToHashSet();
@@ -658,10 +656,10 @@ public static class Generator
     // `mechanism --check` compares this, so a shared page may carry a block derived from the corpus holding
     // it. Two corpora running the same framework hold the same prose and a different table beneath it, and
     // both are correct. The division is exact: `generate --check` answers for the generated half against
-    // the local schema, `mechanism --check` for the authored half against the reference, and neither has an
-    // opinion about the other's.
+    // the local schema, and `mechanism --check` answers for the authored half against the reference.
+    // Neither has an opinion about the other's half.
     //
-    // The markers stay, so deleting a block — rather than regenerating it — is still drift. An unclosed
+    // The markers stay, so deleting a block, rather than regenerating it, is still drift. An unclosed
     // marker leaves the rest of the page compared as written, which is the honest reading of a file whose
     // structure the generator can no longer follow.
     public static string Authored(string text)
@@ -686,8 +684,8 @@ public static class Generator
         return sb.Append(text, at, text.Length - at).ToString();
     }
 
-    // Deterministic GFM table: fixed column widths, single-space padding, LF joins,
-    // no trailing newline (callers add their own).
+    // Deterministic GFM table: fixed column widths, single-space padding and LF joins, with no trailing
+    // newline, because callers add their own.
     private static string RenderTable(List<string> headers, List<List<string>> rows)
     {
         var n = headers.Count;
