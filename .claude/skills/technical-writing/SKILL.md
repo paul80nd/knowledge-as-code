@@ -67,8 +67,9 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 
 ## Punctuation
 
-* **One em dash survives: the interrupting aside that carries its own commas.** That is the whole test, and a dash at
-  the end of a sentence fails it, because it interrupts nothing.
+* **One em dash survives: the interrupting aside that carries its own commas.** That is the whole test. The commas are
+  what settles it, because a comma pair cannot mark an aside that already holds commas, and a dash at the end of a
+  sentence fails it because it interrupts nothing.
   Keep: *The bibliographic description of a title — author, edition, subject headings — held once and shared by every
   branch.*
 * **Every other dash takes the mark that states the relation.** A dash separates without saying how the two parts
@@ -115,8 +116,9 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   This reaches words that add nothing, and stops at words that disambiguate.
 * **Cut these on sight:** simply, of course, seamless, robust, comprehensive, leverage, delve into, a tapestry of,
   pivotal, cutting-edge, serves as, it is worth mentioning, I hope this helps.
-* **Cut the hedge stack.** Write: "may." Not: "could potentially be argued that it might."
-* **Replace an adverb that props up a weak verb.** Write: "is fast", or the measurement. Not: "runs quickly."
+  A hedge stack and an adverb propping up a weak verb are the same fault.
+  Write: "may." Not: "could potentially be argued that it might."
+  Write: "is fast", or the measurement. Not: "runs quickly."
   An adverb carrying its own meaning stays: "an id that quietly means something new".
 * **Say what you found.** Write: "three broken links." Not: "a number of issues."
 * **Cut a sentence that could appear unchanged in another project's documentation.** It says nothing about this one.
