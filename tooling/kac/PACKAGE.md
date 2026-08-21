@@ -25,7 +25,8 @@ kac bundle       # assemble that export and .plugin/ into an installable plugin
 kac checks       # list every check the validator implements
 ```
 
-`kac --help` lists them, and every command carries its own `--help`.
+`kac --help` lists them, and every command carries its own `--help`. Every one takes `--no-color`, and reads `NO_COLOR`
+from the environment for the same request; a redirected stream carries no colour either way.
 
 ## Exit codes
 

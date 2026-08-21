@@ -77,6 +77,10 @@ Those read as a corpus runs them, against an installed `kac`. While changing the
 `dotnet run --project ../tooling/kac -- validate`, which is what CI uses, or the `./kac` launcher at
 `example/`'s root that wraps it.
 
+Every verb also takes `--no-color`, and every verb reads `NO_COLOR` from the environment, which is the cross-tool
+standard for the same request. A redirected stream carries no colour either way, so a pipeline receives the same bytes
+without asking. `--json` never carries any: it is what a pipeline parses.
+
 ### Exit codes
 
 | Code | Meaning                                                                         |
