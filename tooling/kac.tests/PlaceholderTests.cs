@@ -1,9 +1,9 @@
 using kac.core;
 
-// The placeholder mark, and the two positions where YAML reads it as something other than text. Tested
-// here because both are properties of the mark rather than of any one template: a corpus writing its
-// own templates meets them the first time it writes a date field, and the answer must not depend on
-// which type it happened to be writing.
+// The placeholder mark, and the two positions where YAML reads it as something other than text. Both
+// are properties of the mark, so they are tested here and not against any one template. A corpus
+// writing its own templates meets them the first time it writes a date field, and the answer has to
+// hold whichever type it was writing.
 
 namespace kac.tests;
 
@@ -25,8 +25,7 @@ public class PlaceholderTests
         => Assert.False(Placeholder.In(value));
 
     // Words that read as stand-ins and are not the mark. Each is ordinary text, so a template writing
-    // one gets the finding it has coming rather than a silent exemption — and `example` stays available
-    // as a slug a real document may want.
+    // one gets the finding it has coming. `example` stays available as a slug a real document may want.
     [Theory]
     [InlineData("adr-NNNN")]
     [InlineData("pol-XXXX")]
@@ -45,9 +44,8 @@ public class PlaceholderTests
         Assert.Equal("svc-{{slug}}", Scalar("id: svc-{{slug}}"));
     }
 
-    // The same indicator, inside a flow sequence rather than at the head of a value: there a plain
-    // scalar may not carry a brace anywhere, so the whole document fails to parse and the list has to
-    // be written as a block sequence.
+    // The same indicator inside a flow sequence. There a plain scalar may carry no brace anywhere, so
+    // the whole document fails to parse and the list has to be written as a block sequence.
     [Fact]
     public void A_mark_in_a_flow_sequence_is_a_parse_error_and_a_block_sequence_is_not()
     {
@@ -76,7 +74,7 @@ public class PlaceholderTests
     }
 
     // A document describing a templating language is not a document that failed to finish. Both forms
-    // of code are excluded, which is why the scan reads the parsed inlines rather than the source.
+    // of code are excluded, which is why the scan reads the parsed inlines.
     [Theory]
     [InlineData("---\nid: svc-a\n---\n\n# A title\n\n```yaml\nrun: echo ${{ vars.id }}\n```\n")]
     [InlineData("---\nid: svc-a\n---\n\n# A title\n\nWrite `${{ vars.id }}` to read it.\n")]

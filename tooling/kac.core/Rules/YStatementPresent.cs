@@ -34,7 +34,7 @@ public sealed class YStatementPresent : IDocumentRule
                 + "Y-statement rather than a summary of one.", line);
 
         // The ceiling is the schema's, because a threshold is a judgement a corpus tunes. The moves
-        // below are not: a block-quote missing one is not a Y-statement worded differently.
+        // below are fixed: a block-quote missing one has stopped being a Y-statement.
         var max = ctx.Spec.MaxWords ?? 60;
         var words = text.Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
         if (words > max)

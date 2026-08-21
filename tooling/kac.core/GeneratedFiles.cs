@@ -15,17 +15,16 @@ public static class GeneratedFiles
     // A file carrying generated blocks, as `validate` needs it: the path, the blocks, and whether the
     // markers have to be there.
     //
-    // `MarkersRequired` is false where deleting the markers is how a corpus declines the block rather than
-    // how it breaks it, which is true of `README.md` alone. `tooling/CLAUDE.md` says why that file is the
-    // exception and every other one is not.
+    // `MarkersRequired` is false where deleting the markers is how a corpus declines the block, which is
+    // true of `README.md` alone. `tooling/CLAUDE.md` says why that file is the exception.
     public readonly record struct BlockFile(string Path, IReadOnlyList<string> Blocks, bool MarkersRequired);
 
     // Which blocks each file carries. Reads no disk and renders nothing, so a caller can ask what a corpus
     // ought to hold without building a single table.
     //
-    // Takes the adopted types rather than the descriptor: adoption is resolved once, when the corpus is
-    // loaded — see `Corpus.Adopted` — so that what is generated and what the corpus is held to having
-    // built cannot be answered differently.
+    // Takes the adopted types and not the descriptor. Adoption is resolved once, when the corpus is
+    // loaded (see `Corpus.Adopted`), so what is generated and what the corpus is held to having built
+    // cannot be answered differently.
     public static List<BlockFile> Blocks(IReadOnlyList<TypeSchema> adopted) =>
     [
         .. Declare(adopted).Select(spec =>
@@ -33,8 +32,8 @@ public static class GeneratedFiles
     ];
 
     // One generated file: where it goes, what the corpus holds there now, and what it should hold.
-    // `Current` is null where the corpus holds nothing at that path yet, which is a file to write rather
-    // than a file that has drifted.
+    // `Current` is null where the corpus holds nothing at that path yet. That is a file to write, and
+    // not one that has drifted.
     public readonly record struct GeneratedFile(string Path, string? Current, string Wanted)
     {
         public bool Stale => Current != Wanted;
@@ -45,11 +44,10 @@ public static class GeneratedFiles
     // Reads nothing and writes nothing: everything it needs arrives in its arguments, so what `generate`
     // comes to is decidable from a listing and a set of records. `Write` is the half that acts.
     //
-    // A file the corpus does not hold is skipped rather than created — the generator populates structure
-    // the corpus has declared and never invents it. `validate` is the one voice that says an adopted type
-    // is not set up, so a missing page is reported there rather than papered over here. An `_index.md` is
-    // the exception: it is written whether or not it is there, because each type page links to one and a
-    // withheld file is a dead link rather than a tidy absence.
+    // A file the corpus does not hold is skipped. The generator populates structure the corpus has
+    // declared and never invents it, and `validate` is the one voice that says an adopted type is not
+    // set up. An `_index.md` is the exception: it is written whether or not it is there, because each
+    // type page links to one and a withheld file leaves a dead link.
     public static List<GeneratedFile> Plan(Schema schema, IReadOnlyList<TypeSchema> adopted,
         IEnumerable<Doc> docs, Tree tree)
     {
@@ -91,8 +89,8 @@ public static class GeneratedFiles
     }
 
     // Write every entry whose content has moved, and answer with what was written. A file already holding
-    // what it should is left alone rather than rewritten, so a regeneration that changes nothing touches
-    // nothing and says so — which the plan has already decided, so this asks the disk nothing.
+    // what it should is left alone, so a regeneration that changes nothing touches nothing and says so.
+    // The plan decided all of it, so this asks the disk nothing.
     //
     // `generate` and `mechanism --sync` both end here, so a sync writes what a generation would write and
     // the two cannot come to different files.

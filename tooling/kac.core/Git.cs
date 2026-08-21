@@ -9,8 +9,8 @@ namespace kac.core;
 public static class Git
 {
     // Run a git command in `root` and return its standard output, or null where it could not be run or
-    // exited non-zero. One place does the process dance so that a new question is one method rather than
-    // a second copy of the deadlock-avoiding read below.
+    // exited non-zero. One place does the process dance, so a new question costs one method and the
+    // deadlock-avoiding read below is written once.
     public static string? Run(string root, string args)
     {
         try
@@ -46,12 +46,12 @@ public static class Git
         : null;
 
     // Whether the working tree carries changes the commit above does not. An export built from a dirty
-    // tree cannot be reproduced from its own commit, and nothing else in the output would record that,
-    // so the manifest carries the answer rather than leaving a consumer to assume the commit is the
-    // whole story.
+    // tree cannot be reproduced from its own commit, and nothing else in the output would record that.
+    // So the manifest carries the answer, and a consumer never has to assume the commit is the whole
+    // story.
     //
-    // Null where git could not answer, which is not the same as clean: a tree nobody can ask about is
-    // reported as unknown rather than as either state.
+    // Null where git could not answer, which is not the same as clean. A tree nobody can ask about is
+    // reported as unknown.
     public static bool? Dirty(string root) =>
         Run(root, "status --porcelain") is { } status ? status.Trim().Length > 0 : null;
 }
