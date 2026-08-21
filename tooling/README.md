@@ -19,7 +19,7 @@ document nothing here provides, tracked as
 
 Requires the **.NET 10 SDK**. `dotnet run --project` builds and runs the entrypoint, so there is no build step to
 manage. The first run restores the packages and is slow; later runs are cached. Those packages are
-`System.CommandLine` on the entrypoint, and `YamlDotNet` and `Markdig` through `kac.core`.
+`Spectre.Console.Cli` on the entrypoint, and `YamlDotNet` and `Markdig` through `kac.core`.
 
 These run from the repository root, as the test commands further down do:
 
@@ -49,8 +49,8 @@ The publish then tags the commit `v<version>` and opens a release carrying that 
 
 Run **one `kac` invocation at a time**: concurrent runs build the same project and contend over its output.
 
-Argument parsing is [`System.CommandLine`](https://www.nuget.org/packages/System.CommandLine), so every command and
-option carries generated `--help`.
+Argument parsing is [`Spectre.Console.Cli`](https://www.nuget.org/packages/Spectre.Console.Cli), so every command and
+option carries generated `--help`. `Program.cs` says why that library and not another.
 
 ## Running it against a corpus
 

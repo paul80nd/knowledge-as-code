@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- The command line surface of kac: Program.cs wires System.CommandLine to the verbs and does the
+  <!-- The command line surface of kac: Program.cs wires Spectre.Console.Cli to the verbs and does the
        corpus pre-flight, and every verb's logic lives in kac.core, referenced below. Nothing here
        knows about a record, a schema or a check.
 
@@ -31,7 +31,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>kac</ToolCommandName>
     <PackageId>KnowledgeAsCode.Tool</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>Paul Law</Authors>
     <Description>Validator and generator for a knowledge-as-code corpus, driven by its own schema.</Description>
     <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.CommandLine" Version="2.0.*" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
     <ProjectReference Include="../kac.core/kac.core.csproj" />
   </ItemGroup>
 

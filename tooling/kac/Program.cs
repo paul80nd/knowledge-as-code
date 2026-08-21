@@ -10,111 +10,197 @@
 //   mechanism  enforce the portability manifest: check the shared layers against a
 //              reference corpus, or sync them from one
 //
-// This file is only the CLI surface: it wires System.CommandLine to Commands and finds the corpus each
+// This file is only the CLI surface: it wires Spectre.Console.Cli to Commands and finds the corpus each
 // verb answers about. Every subcommand's logic lives in the kac.core project this one references — one class per
 // file, named for what it holds. Four carry the substance: Schema.cs loads .schema/*.yaml, Document.cs
 // parses a record, Validator.cs holds the checks, Generator.cs builds the generated blocks.
+//
+// Spectre.Console.Cli is the parser because Spectre.Console is where a .NET tool goes for a prompt, and a
+// tool that asks a question and parses a command line should carry one library rather than two.
 //
 // The tool is deliberately free of type-specific rules: everything it enforces is
 // read from the YAML schema, so adding a type is adding a YAML file, not editing C#.
 // See tooling/features/checks.md for what fails versus warns and how each check maps to the schema.
 
-using System.CommandLine;
+using System.ComponentModel;
+using System.Reflection;
 using kac.core;
+using Spectre.Console.Cli;
+
+var app = new CommandApp();
+app.Configure(config =>
+{
+    // What the help text and every usage error call the tool. It is the packed `ToolCommandName`, which is
+    // what a corpus types, and is stated here rather than left to be inferred from the assembly's name.
+    config.SetApplicationName("kac");
+
+    // `--version` exists only once a version is set, and the informational one is what the build stamps
+    // with the commit — so the answer names the source it was built from as well as the release.
+    config.SetApplicationVersion(
+        typeof(Cli).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+        ?? "unknown");
+
+    // Without this an option the verb does not declare is dropped in silence, and a mistyped flag
+    // reads as a clean run.
+    config.UseStrictParsing();
+
+    config.AddCommand<ValidateCommand>("validate")
+        .WithDescription("Check the corpus against .schema/*.yaml.");
+    config.AddCommand<GenerateCommand>("generate")
+        .WithDescription("Regenerate _index.md and the generated blocks in <type>.md.");
+    config.AddCommand<ExportCommand>("export")
+        .WithDescription("Write the corpus to .dist/export/ as a versioned export.");
+    config.AddCommand<BundleCommand>("bundle")
+        .WithDescription("Assemble the export and .plugin/ into a plugin under .dist/plugin/.");
+    config.AddCommand<ChecksCommand>("checks")
+        .WithDescription("List every check the validator implements.");
+    config.AddCommand<MechanismCommand>("mechanism")
+        .WithDescription(
+            "Enforce the portability manifest: compare the shared layers against a reference, or take them from one.");
+});
+
+// A bare `kac` names no verb, which is a usage error rather than a request for help. Spectre prints
+// the help and exits 0; the exit code is what a script reads, so it stays 1.
+if (args.Length == 0)
+{
+    app.Run(["--help"]);
+    return 1;
+}
+
+// Spectre answers a parse failure with -1, which a shell reads as 255. A usage error has always exited
+// 1 here, beside a corpus error at 1 and no corpus at 2, and that is the table in tooling/README.md.
+// No verb returns -1, so nothing else can be caught by this.
+var exit = app.Run(args);
+return exit == -1 ? 1 : exit;
+
+// Run a verb against the corpus the working directory sits in, or decline having said why. Every
+// verb needs one, and nothing else does: `--version` and `--help` are answered by the parser, from
+// wherever the command was typed. Resolving inside a verb's Execute rather than before the parse is
+// what lets an installed `kac` say which version it is without standing in a corpus first.
+internal static class Cli
+{
+    public static int InCorpus(Func<string, int> run)
+    {
+        var corpusRoot = FindCorpusRoot(Directory.GetCurrentDirectory());
+        if (corpusRoot is null)
+        {
+            Console.Error.WriteLine("kac: could not locate a corpus (no .schema above the cwd).");
+            return 2;
+        }
+
+        return run(corpusRoot);
+    }
+
+    // The corpus this command runs against: the nearest folder above the working directory carrying a
+    // `.schema/`. Every subcommand is answered from there, so where the tool's own files sit says nothing
+    // about which corpus it reads.
+    private static string? FindCorpusRoot(string start)
+    {
+        var dir = new DirectoryInfo(start);
+        while (dir is not null)
+        {
+            if (Directory.Exists(Path.Combine(dir.FullName, ".schema")))
+                return dir.FullName;
+            dir = dir.Parent;
+        }
+
+        return null;
+    }
+}
+
+// A verb taking nothing but the corpus it stands in. Spectre needs a settings type per command, and
+// this is the empty one.
+internal sealed class CorpusSettings : CommandSettings;
 
 // `validate` takes no paths: several of its checks ask about the shape of the corpus rather than
 // about a document, and a subset cannot answer them.
-var jsonOpt = new Option<bool>("--json") { Description = "Emit the summary and findings as JSON." };
-var validate = new Command("validate", "Check the corpus against .schema/*.yaml.")
+internal sealed class ValidateSettings : CommandSettings
 {
-    jsonOpt
-};
-validate.SetAction(pr => InCorpus(corpus => Commands.Validate(corpus, pr.GetValue(jsonOpt))));
+    [CommandOption("--json")]
+    [Description("Emit the summary and findings as JSON.")]
+    public bool Json { get; init; }
+}
 
-var checkOpt = new Option<bool>("--check") { Description = "Fail if a generated file is stale instead of writing it." };
-var generate = new Command("generate", "Regenerate _index.md and the generated blocks in <type>.md.")
+internal sealed class ValidateCommand : Command<ValidateSettings>
 {
-    checkOpt
-};
-generate.SetAction(pr => InCorpus(corpus => Commands.Generate(corpus, pr.GetValue(checkOpt))));
+    protected override int Execute(CommandContext context, ValidateSettings settings, CancellationToken token) =>
+        Cli.InCorpus(corpus => Commands.Validate(corpus, settings.Json));
+}
+
+internal sealed class GenerateSettings : CommandSettings
+{
+    [CommandOption("--check")]
+    [Description("Fail if a generated file is stale instead of writing it.")]
+    public bool Check { get; init; }
+}
+
+internal sealed class GenerateCommand : Command<GenerateSettings>
+{
+    protected override int Execute(CommandContext context, GenerateSettings settings, CancellationToken token) =>
+        Cli.InCorpus(corpus => Commands.Generate(corpus, settings.Check));
+}
 
 // `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`
 // narrows what is written and never what is read: the whole corpus is loaded either way, so ids resolve
 // against every record rather than against the ones a narrowed run happened to reach.
-var typeOpt = new Option<string?>("--type") { Description = "Export one type rather than every type that contributes." };
-var export = new Command("export", "Write the corpus to .dist/export/ as a versioned export.")
+internal sealed class ExportSettings : CommandSettings
 {
-    typeOpt
-};
-export.SetAction(pr => InCorpus(corpus => Commands.Export(corpus, pr.GetValue(typeOpt))));
+    [CommandOption("--type <TYPE>")]
+    [Description("Export one type rather than every type that contributes.")]
+    public string? Type { get; init; }
+}
+
+internal sealed class ExportCommand : Command<ExportSettings>
+{
+    protected override int Execute(CommandContext context, ExportSettings settings, CancellationToken token) =>
+        Cli.InCorpus(corpus => Commands.Export(corpus, settings.Type));
+}
 
 // `bundle` assembles what `export` wrote, plus the `.plugin/` tree, into a plugin directory under
 // `.dist/plugin/`. Two commands rather than one because they fail differently and are proved
 // differently: an export is wrong about the corpus, and a bundle is wrong about what it shipped.
-var bundle = new Command("bundle", "Assemble the export and .plugin/ into a plugin under .dist/plugin/.");
-bundle.SetAction(_ => InCorpus(Commands.Bundle));
+internal sealed class BundleCommand : Command<CorpusSettings>
+{
+    protected override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
+        Cli.InCorpus(Commands.Bundle);
+}
 
 // `checks` is machinery before it is documentation: the test suite reads `checks --json` to assert
 // every rule is exercised by a fixture, so a new rule cannot ship without a golden covering it.
-var checksJsonOpt = new Option<bool>("--json") { Description = "Emit the check catalogue as JSON." };
-var checks = new Command("checks", "List every check the validator implements.")
+internal sealed class ChecksSettings : CommandSettings
 {
-    checksJsonOpt
-};
-checks.SetAction(pr => InCorpus(corpus => Commands.Checks(corpus, pr.GetValue(checksJsonOpt))));
+    [CommandOption("--json")]
+    [Description("Emit the check catalogue as JSON.")]
+    public bool Json { get; init; }
+}
+
+internal sealed class ChecksCommand : Command<ChecksSettings>
+{
+    protected override int Execute(CommandContext context, ChecksSettings settings, CancellationToken token) =>
+        Cli.InCorpus(corpus => Commands.Checks(corpus, settings.Json));
+}
 
 // mechanism — enforce the portability manifest. `--check` compares this corpus's shared layers
 // against a reference copy and reports drift, following the same discipline as `generate --check`:
 // recompute, compare, name what is stale, exit non-zero, never write. `--sync` is the write half:
 // it takes those layers from the reference, records what it took, and regenerates.
-var mechCheckOpt = new Option<bool>("--check") { Description = "Compare the shared layers against a reference and report drift; never writes." };
-var mechSyncOpt = new Option<bool>("--sync") { Description = "Take the shared layers from the reference, then record what it took in .corpus.yaml." };
-var againstOpt = new Option<string?>("--against") { Description = "Reference corpus (a path). Defaults to upstream.url in .corpus.yaml." };
-var mechanism = new Command("mechanism", "Enforce the portability manifest: compare the shared layers against a reference, or take them from one.")
+internal sealed class MechanismSettings : CommandSettings
 {
-    mechCheckOpt,
-    mechSyncOpt,
-    againstOpt
-};
-mechanism.SetAction(pr => InCorpus(corpus =>
-    Commands.Mechanism(corpus, pr.GetValue(mechCheckOpt), pr.GetValue(mechSyncOpt), pr.GetValue(againstOpt))));
+    [CommandOption("--check")]
+    [Description("Compare the shared layers against a reference and report drift; never writes.")]
+    public bool Check { get; init; }
 
-var root = new RootCommand("kac — the knowledge-as-code validator and generator.")
-    { validate, generate, export, bundle, checks, mechanism };
+    [CommandOption("--sync")]
+    [Description("Take the shared layers from the reference, then record what it took in .corpus.yaml.")]
+    public bool Sync { get; init; }
 
-// Bad arguments exit 1 (System.CommandLine's default) — the printed error makes it
-// obvious it was a usage problem rather than corpus errors. Exit 2 is reserved for a verb
-// that found no corpus to answer about.
-return root.Parse(args).Invoke();
-
-// Run a verb against the corpus the working directory sits in, or decline having said why. Every
-// verb needs one, and nothing else does: `--version` and `--help` are answered by the parser above,
-// from wherever the command was typed. Resolving here rather than before parsing is what lets an
-// installed `kac` say which version it is without standing in a corpus first.
-static int InCorpus(Func<string, int> run)
-{
-    var corpusRoot = FindCorpusRoot(Directory.GetCurrentDirectory());
-    if (corpusRoot is null)
-    {
-        Console.Error.WriteLine("kac: could not locate a corpus (no .schema above the cwd).");
-        return 2;
-    }
-
-    return run(corpusRoot);
+    [CommandOption("--against <PATH>")]
+    [Description("Reference corpus (a path). Defaults to upstream.url in .corpus.yaml.")]
+    public string? Against { get; init; }
 }
 
-// The corpus this command runs against: the nearest folder above the working directory carrying a
-// `.schema/`. Every subcommand is answered from there, so where the tool's own files sit says nothing
-// about which corpus it reads.
-static string? FindCorpusRoot(string start)
+internal sealed class MechanismCommand : Command<MechanismSettings>
 {
-    var dir = new DirectoryInfo(start);
-    while (dir is not null)
-    {
-        if (Directory.Exists(Path.Combine(dir.FullName, ".schema")))
-            return dir.FullName;
-        dir = dir.Parent;
-    }
-
-    return null;
+    protected override int Execute(CommandContext context, MechanismSettings settings, CancellationToken token) =>
+        Cli.InCorpus(corpus => Commands.Mechanism(corpus, settings.Check, settings.Sync, settings.Against));
 }
