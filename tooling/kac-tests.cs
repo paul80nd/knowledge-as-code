@@ -645,7 +645,7 @@ static string Normalise(string rel, string content)
 }
 
 // Where two versions of one file part company, as the first line that differs. A whole-file diff of an
-// indented JSON document is unreadable in a test log. One line is what a person needs in order to
+// indented JSON document is unreadable in a test log. One line is what a person needs to
 // decide whether they meant it.
 static string FirstDifference(string expected, string actual)
 {

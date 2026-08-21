@@ -1,12 +1,11 @@
 namespace kac.core;
 
-// The link half of a document's checks. They ask about prose rather than about frontmatter, which is
-// what lets them run unchanged against a type page — a page that is not a record and has no
-// frontmatter to ask about.
+// The link half of a document's checks. They ask about prose, which is what lets them run unchanged
+// against a type page: a page is not a record and carries no frontmatter to ask about.
 public static class LinkChecks
 {
-    // A page that is not a record gets these and nothing else, which is this method with `kind` left at
-    // its default — a page is read as a record would be, and only its prose is asked about.
+    // A page gets these and nothing else, which is this method with `kind` left at its default. It is
+    // read as a record would be, and only its prose is asked about.
     public static void Check(Doc d, Schema schema, Tree tree, Report report, DocKind kind = DocKind.Record)
     {
         foreach (var link in d.Links)
@@ -16,9 +15,9 @@ public static class LinkChecks
             if (IsExternal(target)) continue;
 
             // A template's example targets name a document the author has not written yet, so the
-            // placeholder stands where the filename will go. Every other target in one is a real link
-            // — to the type page, to the framework's own documentation — and is resolved like any
-            // other, which is what catches a template pointing at a document the corpus has deleted.
+            // placeholder stands where the filename will go. Every other target in one is a real link,
+            // to the type page or to the framework's own documentation, and is resolved like any other.
+            // That is what catches a template pointing at a document the corpus has deleted.
             if (kind == DocKind.Template && Placeholder.In(target)) continue;
 
             var hash = target.IndexOf('#');
@@ -49,8 +48,8 @@ public static class LinkChecks
         // author meant to reference a document; anything else is only a warning, since a bracket in
         // prose is legal.
         //
-        // Not asked of a template, where a bracket in prose is as likely to demonstrate the form as to
-        // reference anything. Guidance citing `[pol-DEVI]` shows an author what a clause pointing at
+        // A template is exempt, because a bracket in its prose is as likely to demonstrate the form as
+        // to reference anything. Guidance citing `[pol-DEVI]` shows an author what a clause pointing at
         // another policy looks like, and defines no label because it links to nothing.
         var defined = new HashSet<string>(d.DefinedLabels, StringComparer.OrdinalIgnoreCase);
         if (kind == DocKind.Record)
@@ -80,9 +79,8 @@ public static class LinkChecks
                 report.Err(new CheckId("label-canonical"),
                     $"link definition '[{label}]' should be written as the id '{canonical}'.");
 
-        // unused definitions. A template's definitions are exemplars — the block exists to show where
-        // definitions go and how they sort — so one that nothing references is not the oversight it is
-        // in a record.
+        // unused definitions. A template's definitions are exemplars, the block existing to show where
+        // definitions go and how they sort, so one that nothing references is the point of it.
         if (kind == DocKind.Record)
             foreach (var label in d.DefinedLabels.Distinct(StringComparer.OrdinalIgnoreCase))
                 if (!d.UsedLabels.Contains(label))
@@ -97,8 +95,8 @@ public static class LinkChecks
     // rots: the file goes on resolving after the heading it pointed into has been renamed, so the link
     // lands silently at the top of the page and the reader is left to find what was meant.
     //
-    // Judged on the anchor every renderer agrees on — see `Md.Slug`. A heading whose punctuation makes
-    // renderers disagree therefore fails here rather than only in the wiki, which is the point.
+    // Judged on the anchor every renderer agrees on; see `Md.Slug`. A heading whose punctuation makes
+    // renderers disagree therefore fails here, where somebody is looking, and not later in the wiki.
     private static void CheckFragment(string markdown, string fragment, string page, int? line,
         Report report)
     {
@@ -107,16 +105,15 @@ public static class LinkChecks
         report.Err(new CheckId("fragment-resolves"), $"'#{fragment}' names no heading in '{page}'.", line);
     }
 
-    // The corpus path a link target names, or null where the corpus holds nothing there. Returns the path
-    // that resolved so a caller can go on to read it — which of the two forms below answered is not the
-    // caller's business, but the file it found is.
+    // The corpus path a link target names, or null where the corpus holds nothing there. It returns the
+    // path that resolved, so a caller can go on to read it. Which of the two forms below answered is the
+    // resolver's business; the file it found is the caller's.
     //
-    // Asked of the corpus rather than of the disk, so a link resolves in a fresh clone exactly where it
+    // Asked of the corpus and never of the disk, so a link resolves in a fresh clone exactly where it
     // resolves here. A file the repository ignores is not something a reader can follow.
     //
     // Public because the export follows links too, and the corpus should have one account of what a
-    // target names: a second copy here would be where the check and the export began to disagree about
-    // what a reader can follow.
+    // target names. A second copy here is where the check and the export would begin to disagree.
     public static string? Resolve(Tree tree, string fromRel, string target)
     {
         var hash = target.IndexOf('#');

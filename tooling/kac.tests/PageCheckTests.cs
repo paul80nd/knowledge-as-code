@@ -2,10 +2,10 @@ using kac.core;
 
 // In-process unit tests for the pass that reads a type's page — `adrs.md`, `policies.md`.
 //
-// A page is not a record, so the structural checks do not apply. Two things are left, both of which
-// the `type-pages` fixture reaches
-// through the CLI. What it cannot reach is which question the pass asks about presence: the page is looked
-// for in the listing, so a page on one machine and in no clone is not read.
+// A page is not a record, so the structural checks do not apply. Two things are left, and the
+// `type-pages` fixture reaches both through the CLI. What it cannot reach is which question the pass
+// asks about presence: the page is looked for in the listing, so a page on one machine and in no clone
+// is never read.
 
 namespace kac.tests;
 

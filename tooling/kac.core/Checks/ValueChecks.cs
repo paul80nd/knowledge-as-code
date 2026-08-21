@@ -172,7 +172,7 @@ public static class ValueChecks
         }
 
         // Every list field in the taxonomy is a set — no field's sequence carries meaning — so
-        // alphabetical is simply the order that scan-reads and the one order two authors will agree
+        // alphabetical is the order that scan-reads and the one order two authors will agree
         // on. Only the first pair out of order is reported; the rest are noise once the author
         // re-sorts the field.
         for (var i = 1; i < seq.Children.Count; i++)

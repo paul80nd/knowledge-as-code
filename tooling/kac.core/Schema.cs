@@ -292,7 +292,7 @@ public sealed class TypeSchema
     // -- derived at load from the declarations above; see the Derive* helpers --
     //
     // Each is a per-type constant that every document of the type asks for. Left underived, a hand-built
-    // TypeSchema is simply a type with no fields to know about, which is what the generator's tests want.
+    // TypeSchema is a type with no fields to know about, which is what the generator's tests want.
 
     // Every frontmatter key a document of this type may carry.
     public IReadOnlySet<string> KnownKeys { get; init; } = new HashSet<string>(StringComparer.Ordinal);

@@ -14,7 +14,7 @@ namespace kac.core;
 // filename; backwards, reading a link's filename as the id it cites; and sideways, deciding whether a
 // bracketed label in prose is an id at all. A second copy of it in any of the three would be a place for
 // the styles to disagree, and the disagreement would be silent — a label that stops being read as an id
-// simply stops being checked.
+// stops being checked.
 public static class IdChecks
 {
     // The id styles these checks apply. Held here rather than in the schema loader because this is where
@@ -134,7 +134,7 @@ public static class IdChecks
     // a mnemonic always upper-case, a slug always lower-case.
     //
     // Deliberately laxer about case than the id checks above, and for the opposite reason: this reads a
-    // label written in prose in order to say what it should have been, so it has to recognise the
+    // label written in prose to say what it should have been, so it has to recognise the
     // mis-cased form to be able to report it.
     //
     // A part is addressed the same way, as `<record>.<part>` — `pol-VURM.TIMEBOX`, `gls-search.title` —

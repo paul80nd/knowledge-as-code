@@ -328,7 +328,7 @@ public static class Exporter
     // The cross-references this part could not carry: a link naming another exported record without
     // naming a term inside it, as `<record>.<part> -> <record>`.
     //
-    // Reported because the alternative is silence. The export simply omits what it cannot read, and an
+    // Reported because the alternative is silence. The export omits what it cannot read, and an
     // omission in an artefact nobody reviews is invisible — so the run says which links under-specify,
     // and the author can add the anchor.
     private static IEnumerable<string> Unread(Doc doc, PartRow part, string partId,

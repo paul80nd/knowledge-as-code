@@ -81,7 +81,7 @@ public class ExporterTests
         Assert.Equal(Ids(estate, framework), Ids(framework, estate));
         Assert.Equal(2, Ids(estate, framework).Length);
 
-        // What a reader needs in order to tell "refines" from "unrelated" is on the record, and every
+        // What a reader needs to tell "refines" from "unrelated" is on the record, and every
         // line reaches it by naming the record it came from.
         foreach (var line in TermLines(Corpus(estate, framework)))
             Assert.NotEmpty(line.GetProperty("record").GetString()!);
