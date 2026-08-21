@@ -27,6 +27,8 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 * **Do not invent an actor.** Where the text makes no claim about who acts, adding one adds a claim.
   Not: "Released under the MIT licence" becoming "We release this under the MIT licence."
   Write: "Released under the MIT licence."
+* **Keep the passive where the actor is known and naming it here would be wrong.** A CDN serves an image that another
+  service resized. "The CDN resizes it" is active, and false.
 * **Use the passive only when the actor is unknown or beside the point.** Never to soften an obligation.
 * **Write in the present tense.** Use "will" only for something that genuinely happens later.
   Not: "The validator will report a missing id." Write: "The validator reports a missing id."
@@ -53,7 +55,7 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 * **Put "only" and "not" against the word they govern.**
   "Only the owner can merge a policy" and "The owner can merge only a policy" say different things.
 * **Give every "it", "they" and "this" one obvious thing to point at.** Repeat the noun when in doubt.
-* **Never point "this" or "which" at a whole clause.** Where the repair needs a manufactured subject, recast the
+* **Never point "this", "that" or "which" at a whole clause.** Where the repair needs a manufactured subject, recast the
   sentence instead of bolting one on.
   Not: "...drifted from the catalogue, which is what keeps that table honest."
   Write: "...drifted from the catalogue. That exit is what keeps the table honest."
@@ -72,6 +74,10 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
   sentence already carries a colon, take the full stop rather than a second one. Parentheses are a last resort, for an
   aside a comma would garden-path.
   Not: "**Repository** — `thumbnailer`." Write: "**Repository**: `thumbnailer`."
+* **A bold label takes a colon before a value and a full stop before sentences.**
+  Write: "**Platform**: CDN custom domain." Write: "**Caching.** The edge ignores every query string but two."
+  Where a third part qualifies the value, a comma carries it: "**Repository**: `infrastructure`, at
+  `services/covers`."
 * **One em dash survives: the interrupting aside that carries its own commas.** *A definite reference — the same, none,
   that, it — needs its antecedent in the sentence before.* Parentheses would hold it too, and they tell a reader to
   skip it, which is wrong where the aside is load-bearing. That is the whole of the exception. **A dash at the end of a
@@ -125,7 +131,8 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
   a tell. A bold lead-in that ends in a full stop, names the item, and is followed by new detail is right, and where it
   does a heading's job it stays.
   Not: "**Performance:** Performance improved." Write: "**Schema in TypeScript.** Tables live in one file."
-* **Bold the term, not the claim,** inside a paragraph.
+* **Bold the term, not the claim,** inside a paragraph. Where the claim is the misreading the paragraph exists to
+  prevent, put that sentence first and let position carry it.
 * **No emoji, no title-case headings.**
 * **Use a numbered list only when the order carries meaning.** Introduce a list with a sentence saying what the items
   are, and keep the items parallel. Where the items speak for themselves, no introduction is needed. Never write a stem
@@ -134,7 +141,7 @@ Examples read `Not: ... Write: ...`. The second is the one to copy.
 ## Write what stays true
 
 * **Describe what is, not what changed**, and never as a correction of what was. Change history belongs to the commit
-  message.
+  message and the changelog, which are the two documents whose subject is change.
 * **Do not write a count you cannot regenerate.** Name the command that reports it. A set fixed by decision rather than
   by accumulation may be counted.
 * **Cite rather than restate.** If the reasoning lives elsewhere, link it. Nobody updates a copy.
