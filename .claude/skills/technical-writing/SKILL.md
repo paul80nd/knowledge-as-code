@@ -22,17 +22,13 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 
 ## Build the sentence
 
-* **Say who does what.** Put a person or a system in the subject. Use the active voice.
+* **Say who does what, where the text already claims who.** Put that person or system in the subject, in the active
+  voice. Where the text claims nobody, keep the passive: the actor may be unknown, beside the point, or named somewhere
+  this sentence should not name it. A CDN serves an image another service resized, so "the CDN resizes it" is active
+  and false. A passive that softens an obligation is always wrong.
   Write: "We cannot hold anyone to a rule if we cannot tell who acted."
   Not: "Attribution is what makes this enforceable."
-* **Name an actor only where the text already claims one.** Keep the passive where the actor is unknown, beside the
-  point, or named somewhere this sentence should not name it. A CDN serves an image another service resized, so "the
-  CDN resizes it" is active and false. A passive that softens an obligation is always wrong.
-  Write: "Released under the MIT licence."
-  Not: "We release this under the MIT licence."
-* **A label may be a verbless phrase where the thing it labels sits beside it.** A comment above a declaration, a field
-  value rendered next to its field name, a cell under its column heading.
-  Write: "// One file, and the bytes it holds."
+  Write: "Released under the MIT licence." Not: "We release this under the MIT licence."
 * **Write in the present tense.** Keep "will" for something that genuinely happens later.
   Write: "The validator reports a missing id." Not: "The validator will report a missing id."
 * **Write an instruction as a command.**
@@ -45,7 +41,7 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 
 * **One idea per sentence, and one instruction.** A sentence carrying an obligation and its justification is two
   sentences. Two steps joined by "and" are two sentences.
-* **Keep an instruction under about 20 words and other prose under about 25.** Fix the subject before you shorten.
+* **Keep an instruction under about 20 words and other prose under about 25.**
 * **Put the condition before the step it guards.**
   Write: "To delete the document, click Delete." Not: "Click Delete to remove the document."
 * **Keep the articles.** Write: "Remove the backup file." Not: "Remove backup file."
@@ -75,7 +71,6 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   the end of a sentence fails it, because it interrupts nothing.
   Keep: *The bibliographic description of a title — author, edition, subject headings — held once and shared by every
   branch.*
-  Write: "**Repository**: `thumbnailer`." Not: "**Repository** — `thumbnailer`."
 * **Every other dash takes the mark that states the relation.** A dash separates without saying how the two parts
   relate, so the reader does that work. Often the sentence reads best with the mark simply gone. Where the sentence
   already carries a colon, take a full stop rather than a second colon. Parentheses are a last resort, for an aside a
@@ -104,8 +99,8 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   Keep: "a broken cross-reference fails CI rather than rotting quietly." *Rotting* says silent **and** gradual.
   *Unnoticed* says only silent.
   Cut the figure that dresses a plain word: *substrate* for base, *vector* for way, *wedge in* for add, *north star*
-  for goal, *flywheel* for what builds on itself.
-* **A word naming something real is not a figure of speech.** A harness in a filename is that file's name.
+  for goal, *flywheel* for what builds on itself. A word naming something real is not a figure at all, so a harness in
+  a filename is that file's name.
 * **Use the short everyday word.** "use" not "utilize", "help" not "facilitate", "do" not "perform". A long word has to
   buy its length with precision.
 * **Call one thing by one name, everywhere.** Two names read as two things. Elegant variation is a defect here.
@@ -132,12 +127,16 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   Cut: "The tool validates rather than generates." Say what it does.
 * **Use the honest number.** Two examples where two will do, four where four is true.
 * **End a section on a fact.** A crafted line closing every section reads as style rather than substance.
-* **A bold lead-in is structure. A bold claim is decoration.**
+* **A bold lead-in opens a list item or a paragraph, and new detail follows it.** A bold span closing inside a
+  sentence is decoration, and a lead-in restating the line it opens is a tell.
   Write: "**Schema in TypeScript.** Tables live in one file." Not: "**Performance:** Performance improved."
-* **A label takes a colon before a value and a full stop before sentences.** Bold, a code span and a link label are
-  all labels. Where a third part qualifies the value, a comma carries it.
+* **A label names the thing beside it, and may be a verbless phrase.** Bold, a code span, a link label, a comment
+  above a declaration, a field value next to its field name, a cell under its column heading.
+  It takes a colon before a value and a full stop before sentences, and a comma carries a third part.
   Write: "**Platform**: CDN custom domain." Write: "**Repository**: `infrastructure`, at `services/covers`."
-  Write: "**Caching.** The edge ignores every query string but two."
+  Write: "**Caching.** The edge ignores every query string other than the resize parameters."
+  Write: "// One file, and the bytes it holds."
+  A colon after a normative keyword would corrupt the obligation, so `**MUST**` opening a clause cell takes neither.
   A link label opening a line is the one that bites: `[pol-AGNT]: gate` is a link reference definition, and the line
   disappears from the page. A value of two words or more is safe, and a verb is safer still.
   Write: "[pol-AGNT] sets the acceptance gate."
@@ -145,15 +144,15 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   Write: "**Retire the old policy and write a new one.**"
 * **Bold the term, not the claim,** inside a paragraph. Where the claim is the misreading the paragraph exists to
   prevent, put that sentence first and let position carry it.
-* **Headings and bullets carry words, and no emoji.**
+* **No emoji.**
 * **Use a numbered list only when the order carries meaning.** Introduce a list with a sentence saying what the items
   are, and keep the items parallel. Where the items speak for themselves, open the list without a stem.
 
 ## Write what stays true
 
 * **Describe what is, not what changed**, and never as a correction of what was. Change history belongs to the commit
-  message and the changelog, which are the two documents whose subject is change. Both take the tense their subject
-  needs, so a released change reads in the past and a standing behaviour reads in the present.
+  message and the changelog, which are the two documents whose subject is change. A released changelog entry keeps the
+  tense it shipped with, because the release it sits under fixes when it was true.
 * **Name the command that reports a count.** A set fixed by decision rather than by accumulation may be counted. A
   number making a point rather than a tally is not a count: "correcting it alongside twenty others" is an argument
   about cost.
@@ -161,8 +160,8 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 
 ## Rules you can ignore
 
-Split an infinitive, open with *and* or *but*, end on a preposition, use the same word twice. Each is a half-remembered
-school rule, and a sentence contorted to obey one is worse for it.
+Split an infinitive, open with *and* or *but*, end on a preposition, repeat a word rather than reach for a synonym.
+Each is a half-remembered school rule, and a sentence contorted to obey one is worse for it.
 
 ## Commit messages and pull requests
 
@@ -174,9 +173,6 @@ school rule, and a sentence contorted to obey one is worse for it.
 
 ## Before you finish
 
-1. Name the subject of every sentence. Where the answer is "nothing", rewrite it, unless the line is a label or naming
-   one would add a claim.
-2. Read the longest sentence aloud. If you run out of breath, it is two sentences.
-3. Search the draft for the cut list above.
-4. Read the last sentence of each section. Where more than one in a row is a crafted line, flatten the weaker.
-5. Name every rule you could not obey, and what stopped you.
+1. Read the longest sentence aloud. If you run out of breath, it is two sentences.
+2. Read the last sentence of each section. Where more than one in a row is a crafted line, flatten the weaker.
+3. Read the whole draft cold. Where you cannot tell which paragraph you wrote last, it is finished.
