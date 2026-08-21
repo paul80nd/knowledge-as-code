@@ -46,8 +46,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Sequential, because concurrent runs build the same project and contend over its output. The
-      # gate ran against the pull request's head, and main moved beneath it, so this asks again.
+      # The gate ran against the pull request's head, and main moved beneath it, so this asks again.
       - name: Validate frontmatter, links and structure
         working-directory: example
         run: dotnet run --project ../tooling/kac -- validate

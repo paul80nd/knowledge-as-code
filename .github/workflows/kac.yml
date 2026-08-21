@@ -31,8 +31,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Sequential, because concurrent runs build the same project and contend over its output. Each
-      # runs from example/, because kac takes the first ancestor holding a .schema/ as the corpus.
+      # Each runs from example/, because kac takes the first ancestor holding a .schema/ as the corpus.
       - name: Validate frontmatter, links and structure
         working-directory: example
         run: dotnet run --project ../tooling/kac -- validate
