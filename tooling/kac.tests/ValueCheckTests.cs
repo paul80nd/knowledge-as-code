@@ -125,7 +125,7 @@ public class ValueCheckTests
     public void One_entry_is_an_entry_not_entries()
     {
         var spec = new FieldSpec { Name = "field", Type = "list", MinItems = 2 };
-        Assert.Contains("has 1 entry —", Assert.Single(Run("field: [ a ]\n", spec)).Message);
+        Assert.Contains("has 1 entry:", Assert.Single(Run("field: [ a ]\n", spec)).Message);
     }
 
     [Fact]

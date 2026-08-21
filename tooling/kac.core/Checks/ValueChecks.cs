@@ -31,7 +31,7 @@ public static class ValueChecks
         if (kind == DocKind.Template && node is YamlMappingNode)
         {
             report.Err(new CheckId("template-fields"),
-                $"'{name}' is read as a YAML mapping rather than a value — a placeholder that opens "
+                $"'{name}' is read as a YAML mapping rather than a value. A placeholder that opens "
                 + "one has to be quoted: " + name + ": \"{{…}}\".", Yaml.LineOf(node, frontStart));
             return;
         }
@@ -46,7 +46,7 @@ public static class ValueChecks
         {
             if (!IsBareKey(node))
                 report.Err(new CheckId("bare-key"),
-                    $"'{name}' is absent but not a bare key — use '{name}:' with no value (not null, ~, \"\", or —).",
+                    $"'{name}' is absent but not a bare key. Use '{name}:' with no value (not null, ~, \"\", or —).",
                     Yaml.LineOf(node, frontStart));
             return;
         }
@@ -158,7 +158,7 @@ public static class ValueChecks
         // malformed will fix the second and re-run to find the first.
         if (spec.MinItems is { } min && seq.Children.Count < min)
             report.Err(new CheckId("min-items"),
-                $"'{name}' has {seq.Children.Count} {(seq.Children.Count == 1 ? "entry" : "entries")} — "
+                $"'{name}' has {seq.Children.Count} {(seq.Children.Count == 1 ? "entry" : "entries")}: "
                 + $"the schema asks for at least {min}.", Yaml.LineOf(node, frontStart));
 
         foreach (var item in seq.Children)
@@ -180,7 +180,7 @@ public static class ValueChecks
             if (Yaml.Raw(seq.Children[i - 1]) is not { } prev || Yaml.Raw(seq.Children[i]) is not { } cur) continue;
             if (Natural.Compare(prev, cur) <= 0) continue;
             report.Warn(new CheckId("list-order"),
-                $"'{name}' is not in alphabetical order — '{cur}' should come before '{prev}'.",
+                $"'{name}' is not in alphabetical order: '{cur}' should come before '{prev}'.",
                 Yaml.LineOf(seq.Children[i], frontStart));
             break;
         }

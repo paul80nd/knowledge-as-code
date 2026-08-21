@@ -75,7 +75,7 @@
       "line": 30,
       "severity": "warning",
       "check": "terms-alphabetical",
-      "message": "'Branch' is out of order — it belongs before 'Item'."
+      "message": "'Branch' is out of order: it belongs before 'Item'."
     },
     {
       "file": "integrations/payment-gateway.md",

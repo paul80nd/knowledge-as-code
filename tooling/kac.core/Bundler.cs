@@ -143,7 +143,7 @@ public static class Bundler
             warnings.Add(declared.Count == 0
                 ? $"{ManifestFile} declares no components under metadata.components, so the plugin carries "
                   + "the export and nothing that reads it."
-                : $"every component was trimmed — the plugin carries the export and nothing that reads it. "
+                : $"every component was trimmed. The plugin carries the export and nothing that reads it. "
                   + $"{RecordFile} names each one and the type it needed.");
 
         // The plugin's version is the corpus content version, taken from the export.

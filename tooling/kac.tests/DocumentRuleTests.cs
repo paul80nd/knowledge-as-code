@@ -134,7 +134,7 @@ public class DocumentRuleTests
             Adr("## Terms\n\n### Borrower\n\nOne.\n\n### Item\n\nTwo.\n\n### Branch\n\nThree."));
 
         Assert.Equal("terms-alphabetical", Single(found).Check.Value);
-        Assert.Equal("'Branch' is out of order — it belongs before 'Item'.", Single(found).Message);
+        Assert.Equal("'Branch' is out of order: it belongs before 'Item'.", Single(found).Message);
     }
 
     // Casing is the entry's own — a glossary holds `ADR` beside `Borrower` — so ordering by code point

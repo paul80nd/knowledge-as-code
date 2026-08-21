@@ -89,13 +89,13 @@ public static class SchemaChecks
             if (other == key)
             {
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                    $"type '{key}' declares a 'versus:' against itself — a disambiguation has two sides."));
+                    $"type '{key}' declares a 'versus:' against itself: a disambiguation has two sides."));
                 continue;
             }
 
             if (!schema.ByFolder.ContainsKey(other))
             {
-                Dispatch(at, $"type '{key}' declares 'versus: {other}', and no schema covers that folder — either "
+                Dispatch(at, $"type '{key}' declares 'versus: {other}', and no schema covers that folder. Either "
                              + "the type was never adopted here, or the name is wrong.", f);
                 continue;
             }
@@ -103,7 +103,7 @@ public static class SchemaChecks
             var pair = string.CompareOrdinal(key, other) < 0 ? $"{key}|{other}" : $"{other}|{key}";
             if (declared.TryGetValue(pair, out var first))
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                    $"type '{key}' declares a 'versus: {other}' that '{first}.yaml' already declares — a pair is "
+                    $"type '{key}' declares a 'versus: {other}' that '{first}.yaml' already declares. A pair is "
                     + "written once, by the type its heading is titled from."));
             else
                 declared[pair] = key;
@@ -128,17 +128,17 @@ public static class SchemaChecks
 
         foreach (var value in admitted.Where(v => !declared.Contains(v)))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"the 'tier' field admits '{value}', and no tier here declares it — a record may carry a tier that "
+                $"the 'tier' field admits '{value}', and no tier here declares it: a record may carry a tier that "
                 + "nothing can name on a page."));
 
         foreach (var tier in declared.Where(t => !admitted.Contains(t)))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"tier '{tier}' is declared here and the 'tier' field in '_universal.yaml' does not admit it — no "
+                $"tier '{tier}' is declared here and the 'tier' field in '_universal.yaml' does not admit it: no "
                 + "document can ever carry it."));
 
         foreach (var tier in schema.Tiers.Where(t => t.Label.Length == 0 || t.Behaviour.Length == 0))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"tier '{tier.Name}' declares no {(tier.Label.Length == 0 ? "'label:'" : "'behaviour:'")} — both head "
+                $"tier '{tier.Name}' declares no {(tier.Label.Length == 0 ? "'label:'" : "'behaviour:'")}. Both head "
                 + "the tier's section in the generated taxonomy."));
     }
 
@@ -154,7 +154,7 @@ public static class SchemaChecks
     {
         foreach (var key in schema.UnreadKeys.Where(k => k.File == at))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unknown-key"),
-                $"{key.Where} declares '{key.Key}', which the loader does not read — implement it, drop it, "
+                $"{key.Where} declares '{key.Key}', which the loader does not read. Implement it, drop it, "
                 + "or write what it was saying as 'notes:', the one key every level admits."));
     }
 
@@ -179,11 +179,11 @@ public static class SchemaChecks
         if (!t.RequiredSections.Concat(t.OptionalSections).Contains(parts.Section, StringComparer.OrdinalIgnoreCase))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares 'parts.section: {parts.Section}', and its 'sections:' block declares no "
-                + "such section — name a section the type has, or add it. No record can carry a part otherwise."));
+                + "such section. Name a section the type has, or add it. No record can carry a part otherwise."));
 
         if (parts is { Source: PartSpec.Table, Binding.Count: 0 })
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"type '{key}' sources its parts from a table and declares no 'binding:' — say which modals "
+                $"type '{key}' sources its parts from a table and declares no 'binding:'. Say which modals "
                 + "oblige, or every row is reported as opening with none of them."));
     }
 
@@ -210,7 +210,7 @@ public static class SchemaChecks
             if (!declared.Contains(section, StringComparer.OrdinalIgnoreCase))
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares 'export.sections: {section}', and its 'sections:' block declares no "
-                    + "such section — name a section the type has, or add it. Selecting by key is what keeps the "
+                    + "such section. Name a section the type has, or add it. Selecting by key is what keeps the "
                     + "two declarations in step."));
 
             Fidelity($"export.sections: {section}", fidelity);
@@ -222,14 +222,14 @@ public static class SchemaChecks
                      n != Generator.Title && schema.EffectiveField(t, n) is null))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares 'export.fields: {name}', and neither the type nor '_universal.yaml' "
-                + $"declares such a field — name a field a record carries, or '{Generator.Title}', which is a "
+                + $"declares such a field. Name a field a record carries, or '{Generator.Title}', which is a "
                 + "record's heading rather than its frontmatter."));
 
         if (export.Parts.Length == 0) return;
 
         if (t.Parts is null)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"type '{key}' declares 'export.parts:' and carries no 'parts:' block — say where a record "
+                $"type '{key}' declares 'export.parts:' and carries no 'parts:' block. Say where a record "
                 + "keeps the parts an export is to carry, or drop the entry."));
 
         Fidelity("export.parts:", export.Parts);
@@ -239,7 +239,7 @@ public static class SchemaChecks
         {
             if (value.Length == 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                    $"type '{key}' declares '{entry}' at no fidelity — say how much of it travels. Fidelity is "
+                    $"type '{key}' declares '{entry}' at no fidelity. Say how much of it travels. Fidelity is "
                     + "what a consumer reads the export for, and is defaulted nowhere."));
             else if (!ExportSpec.Carried.Contains(value, StringComparer.Ordinal))
                 Dispatch(at, $"type '{key}' declares '{entry}' at fidelity '{value}', which nothing carries. "
@@ -254,7 +254,7 @@ public static class SchemaChecks
     {
         if (string.IsNullOrEmpty(t.Folder))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"type '{key}' declares no 'folder:' — say which folder holds its records."));
+                $"type '{key}' declares no 'folder:'. Say which folder holds its records."));
     }
 
     // What a type says about itself, which every generated list of types is written from. Each is
@@ -269,7 +269,7 @@ public static class SchemaChecks
     // own page.
     private static void CheckProse(string at, string key, TypeSchema t, List<Finding> f)
     {
-        Line("label-plural", t.LabelPlural, "what a folder of these is called — \"ADRs\", \"Policies\", \"NFRs\"");
+        Line("label-plural", t.LabelPlural, "what a folder of these is called (\"ADRs\", \"Policies\", \"NFRs\")");
         Line("summary", t.Summary, "what the type is");
         Line("goes-here", t.GoesHere, "what a contributor has in hand when this type is the answer");
 
@@ -277,7 +277,7 @@ public static class SchemaChecks
         // it is rendered as prose rather than into a table.
         if (t.Detail.Length == 0)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"type '{key}' declares no 'detail:' — say what the type carries beyond its first sentence, and the "
+                $"type '{key}' declares no 'detail:'. Say what the type carries beyond its first sentence, and the "
                 + "edge a reader is most likely to walk over."));
 
         // Only the prior art is required, and "none" is one of its answers. What the framework took from an
@@ -285,7 +285,7 @@ public static class SchemaChecks
         // empty pair is a real state rather than an unfinished one.
         if (t.Lineage is null)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"type '{key}' declares no 'lineage.prior-art:' — name what the type is nearest to, or say that "
+                $"type '{key}' declares no 'lineage.prior-art:'. Name what the type is nearest to, or say that "
                 + "nothing established fits. Claiming an ancestor a type does not have is worse than admitting none."));
 
         return;
@@ -294,12 +294,12 @@ public static class SchemaChecks
         {
             if (value.Length == 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                    $"type '{key}' declares no '{name}:' — say {says}, in one line the taxonomy and the "
+                    $"type '{key}' declares no '{name}:'. Say {says}, in one line the taxonomy and the "
                     + "corpus index can be generated from."));
             else if (value.Length > Generator.DescriptionMax)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' has a {value.Length}-character '{name}:'; the limit is "
-                    + $"{Generator.DescriptionMax}. It is rendered as a table cell — the fuller account belongs "
+                    + $"{Generator.DescriptionMax}. It is rendered as a table cell. The fuller account belongs "
                     + $"on {(t.Page.Length > 0 ? t.Page : $"{key}.md")}."));
         }
     }
@@ -314,27 +314,27 @@ public static class SchemaChecks
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unreadable"), problem));
 
         foreach (var folder in spec.Refs.Where(folder => !schema.ByFolder.ContainsKey(folder)))
-            Dispatch(at, $"field '{name}' declares 'ref: {folder}', and no schema covers that folder — "
-                         + "either the type was never adopted here, or the name is wrong.", f);
+            Dispatch(at, $"field '{name}' declares 'ref: {folder}', and no schema covers that folder. "
+                         + "Either the type was never adopted here, or the name is wrong.", f);
 
         // Only an enum's range is applied. A `values:` list anywhere else states a vocabulary that
         // nothing holds a document to, which is the shape of promise this pass exists to stop.
         if (spec.Values is { Count: > 0 } && spec.Type != "enum")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'values:', which only an "
-                         + "enum's range is read from — declare it 'type: enum', or drop the values.", f);
+                         + "enum's range is read from. Declare it 'type: enum', or drop the values.", f);
 
         // A floor is a question about a sequence's length, so it has no reading on a scalar. `allow-literal`
         // needs no such guard: it is a word admitted in place of a value, and every field type has one.
         if (spec.MinItems is not null && spec.Type != "list")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-items:', which only a "
-                         + "list's length is read against — declare it 'type: list', or drop the floor.", f);
+                         + "list's length is read against. Declare it 'type: list', or drop the floor.", f);
 
         // `min-records` is read from a list's entries and nowhere else. A scalar could in principle be
         // counted the same way and is not, which makes it exactly the kind of declaration this pass exists
         // to report: one a reader would take as enforced.
         if (spec.MinRecords is not null && spec.Type != "list")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-records:', which is read "
-                         + "against the entries of a list — declare it 'type: list', or drop the floor.", f);
+                         + "against the entries of a list. Declare it 'type: list', or drop the floor.", f);
 
         // Any section reconciles, so this is not a vocabulary the tool holds — which is why nothing
         // else would catch a section the type never offers. The reconciliation would run against a
@@ -344,7 +344,7 @@ public static class SchemaChecks
                               .Contains(section, StringComparer.OrdinalIgnoreCase))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"field '{name}' declares 'mirrors-section: {section}', and the type's 'sections:' block "
-                + "declares no such section — name a section the type has, or add it."));
+                + "declares no such section. Name a section the type has, or add it."));
     }
 
     // A rule says what it is by what it carries. An `expr:` is a rule that is finished; an id one of the
@@ -369,7 +369,7 @@ public static class SchemaChecks
         if (rule.Description is { Length: > Generator.DescriptionMax } description)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"rule '{rule.Id}' on type '{key}' has a {description.Length}-character description; the "
-                + $"limit is {Generator.DescriptionMax}. A description says what is checked — the reasoning "
+                + $"limit is {Generator.DescriptionMax}. A description says what is checked. The reasoning "
                 + "belongs in its 'message:', where the author who trips it reads it."));
 
         if (rule.Compiled is not null
@@ -378,7 +378,7 @@ public static class SchemaChecks
 
         if (rule.Severity is { } severity)
             Dispatch(at, $"rule '{rule.Id}' on type '{key}' declares 'severity: "
-                         + $"{severity.ToString().ToLowerInvariant()}' and nothing dispatches it — give it an "
+                         + $"{severity.ToString().ToLowerInvariant()}' and nothing dispatches it. Give it an "
                          + "'expr:', implement it as a rule class, or drop the severity and leave it "
                          + "declared as an intention.", f);
     }

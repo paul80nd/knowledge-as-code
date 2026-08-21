@@ -12,21 +12,21 @@
       "line": 1,
       "severity": "error",
       "check": "template-fields",
-      "message": "'priority' is not a field of the 'adr' type — every document copied from this template would fail unknown-key."
+      "message": "'priority' is not a field of the 'adr' type: every document copied from this template would fail unknown-key."
     },
     {
       "file": "adrs/_template.md",
       "line": 1,
       "severity": "error",
       "check": "template-fields",
-      "message": "the template does not carry 'owner', which is required — every document copied from it would fail required-field."
+      "message": "the template does not carry 'owner', which is required: every document copied from it would fail required-field."
     },
     {
       "file": "adrs/_template.md",
       "line": 4,
       "severity": "error",
       "check": "template-fields",
-      "message": "'decided-on' is read as a YAML mapping rather than a value — a placeholder that opens one has to be quoted: decided-on: \"{{…}}\"."
+      "message": "'decided-on' is read as a YAML mapping rather than a value. A placeholder that opens one has to be quoted: decided-on: \"{{…}}\"."
     },
     {
       "file": "adrs/_template.md",

@@ -42,7 +42,7 @@ Feature: Cross-document graph checks
       | adrs/0001-first.md    | error    | 1    | related-matches-section | 'related' lists 'adr-0002' but it is not referenced in the '## Related' section.                    |
       | adrs/0001-first.md    | error    | 1    | related-matches-section | 'related' lists 'adr-0099' but it is not referenced in the '## Related' section.                    |
       | adrs/0001-first.md    | error    | 1    | ref-resolves            | 'related' points at 'adr-0099', which does not exist.                                               |
-      | adrs/0001-first.md    | error    | 1    | reciprocal              | 'supersedes: adr-0002' is not reciprocated — adrs/0002-second.md must list 'superseded-by: adr-0001'. |
+      | adrs/0001-first.md    | error    | 1    | reciprocal              | 'supersedes: adr-0002' is not reciprocated: adrs/0002-second.md must list 'superseded-by: adr-0001'. |
       | adrs/0001-first.md    | error    | 30   | link-resolves           | link target 'nonexistent-target.md' does not resolve.                                               |
       | adrs/0001-first.md    | error    | 30   | undefined-label         | reference '[ADR-0099]' has no link definition.                                                      |
       | adrs/0001-first.md    | error    | 32   | fragment-resolves       | '#renamed-away' names no heading in '0002-second.md'.                                               |

@@ -89,7 +89,7 @@
       "line": 12,
       "severity": "error",
       "check": "identity",
-      "message": "identity line is malformed — write it as `Policy: pol-AGNT` `DRAFT`."
+      "message": "identity line is malformed. Write it as `Policy: pol-AGNT` `DRAFT`."
     },
     {
       "file": "policies/dirs-directory-link.md",
@@ -138,7 +138,7 @@
       "line": 12,
       "severity": "error",
       "check": "identity-status",
-      "message": "identity line status 'Draft' must be upper-case — `DRAFT`."
+      "message": "identity line status 'Draft' must be upper-case: `DRAFT`."
     },
     {
       "file": "policies/mexp-slug-that-is-definitely-way-too-long.md",
@@ -152,7 +152,7 @@
       "line": 10,
       "severity": "error",
       "check": "identity",
-      "message": "no identity line follows the H1 — add `Policy: pol-OBSV` `DRAFT`."
+      "message": "no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`."
     },
     {
       "file": "policies/pipe-id-disagrees.md",

@@ -51,10 +51,10 @@ Feature: Document structure checks
     When I validate the corpus
     Then the findings for "policies/obsv-no-identity-line.md" are exactly:
       | line | check    | message                                                                |
-      | 10   | identity | no identity line follows the H1 — add `Policy: pol-OBSV` `DRAFT`.      |
+      | 10   | identity | no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`.      |
     And the findings for "policies/agnt-identity-malformed.md" are exactly:
       | line | check    | message                                                                |
-      | 12   | identity | identity line is malformed — write it as `Policy: pol-AGNT` `DRAFT`.  |
+      | 12   | identity | identity line is malformed. Write it as `Policy: pol-AGNT` `DRAFT`.  |
 
   Scenario: Each half of the identity line is held to the frontmatter separately
     When I validate the corpus
@@ -72,7 +72,7 @@ Feature: Document structure checks
       | 12   | identity-status | identity line status 'ACTIVE' does not match the document's status 'draft'. |
     And the findings for "policies/know-identity-case.md" are exactly:
       | line | check           | message                                                     |
-      | 12   | identity-status | identity line status 'Draft' must be upper-case — `DRAFT`. |
+      | 12   | identity-status | identity line status 'Draft' must be upper-case: `DRAFT`. |
 
   Scenario: The mnemonic prefix is excluded from the slug-length measurement
     When I validate the corpus
@@ -105,16 +105,16 @@ Feature: Document structure checks
       | adrs/0010-half-filled-copy.md                               | error    | 13   | placeholder-left    | '{{the pressure to get something committed}}' is a placeholder the template left for you to fill in.   |
       | adrs/0011-headings-with-no-body.md                          | error    | 32   | empty-section       | required section '## Consequences' has nothing under it.                                               |
       | adrs/0011-headings-with-no-body.md                          | error    | 34   | empty-section       | section '## Related' has nothing under it. Write it or delete the heading.                            |
-      | policies/agnt-identity-malformed.md                         | error    | 12   | identity            | identity line is malformed — write it as `Policy: pol-AGNT` `DRAFT`.                                   |
+      | policies/agnt-identity-malformed.md                         | error    | 12   | identity            | identity line is malformed. Write it as `Policy: pol-AGNT` `DRAFT`.                                   |
       | policies/dirs-directory-link.md                             | error    | 17   | link-resolves       | link target '/media' does not resolve.                                                                 |
       | policies/envs-identity-status.md                            | error    | 12   | identity-status     | identity line status 'ACTIVE' does not match the document's status 'draft'.                            |
       | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[ADR-0004]' should be written as the id 'adr-0004'.                                   |
       | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[pol-vurm]' should be written as the id 'pol-VURM'.                                   |
       | policies/intc-label-case.md                                 | error    | 17   | label-canonical     | reference '[pol-vurm]' should be written as the id 'pol-VURM'.                                         |
       | policies/intc-label-case.md                                 | error    | 18   | label-canonical     | reference '[ADR-0004]' should be written as the id 'adr-0004'.                                         |
-      | policies/know-identity-case.md                              | error    | 12   | identity-status     | identity line status 'Draft' must be upper-case — `DRAFT`.                                             |
+      | policies/know-identity-case.md                              | error    | 12   | identity-status     | identity line status 'Draft' must be upper-case: `DRAFT`.                                             |
       | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30.                         |
-      | policies/obsv-no-identity-line.md                           | error    | 10   | identity            | no identity line follows the H1 — add `Policy: pol-OBSV` `DRAFT`.                                      |
+      | policies/obsv-no-identity-line.md                           | error    | 10   | identity            | no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`.                                      |
       | policies/pipe-id-disagrees.md                               | error    | 1    | id-matches-filename | id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'.                                        |
       | policies/recv-identity-id.md                                | error    | 12   | identity-id         | identity line id 'pol-OBSV' does not match the document's id 'pol-RECV'.                               |
       | policies/scrt-lower-case-id.md                              | error    | 1    | id-format           | id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter. |

@@ -46,7 +46,7 @@ public static class Commands
         // cannot be rebuilt from the commit it names.
         if (publishing is null)
             Note(
-                "export: no published links — this corpus states no publishing target the tool can address, "
+                "export: no published links. This corpus states no publishing target the tool can address, "
                 + "or no bases for one. Records carry their paths and no URLs.");
         if (dirty is true)
             Note(
@@ -57,7 +57,7 @@ public static class Commands
         // anyone sees which ones they were.
         if (plan.Withheld.Count > 0)
             Note(
-                $"export: withheld {string.Join(", ", plan.Withheld)} — .corpus.yaml excludes "
+                $"export: withheld {string.Join(", ", plan.Withheld)}: .corpus.yaml excludes "
                 + $"{string.Join(" and ", corpus.Descriptor.ExportExclude)}.");
 
         // The same reasoning for a cross-reference the export could not read. The export carries what a link names, and
@@ -109,13 +109,13 @@ public static class Commands
         // output, and two corpora building one plugin name may drop different ones. So the run says which, beside the
         // `bundle.json` that will outlive it.
         foreach (var t in plan.Trimmed)
-            Note($"bundle: trimmed {t.Path} — {t.Reason}.");
+            Note($"bundle: trimmed {t.Path}: {t.Reason}.");
 
         foreach (var warning in plan.Warnings) Note($"bundle: {warning}");
 
         Account(
             $"bundle: wrote {written.Count} file(s) to {Dist.Plugin}/ as {plan.PluginName} "
-            + $"{plan.Version ?? "(no version)"} — {plan.Included.Count} component(s) included, "
+            + $"{plan.Version ?? "(no version)"}. {plan.Included.Count} component(s) included, "
             + $"{plan.Trimmed.Count} trimmed.");
 
         // The command is the one part of this line anybody retypes, so it is the one part set in bold.
@@ -142,7 +142,7 @@ public static class Commands
                 return 0;
             }
 
-            Stop("generated files are stale — these differ from the schema/frontmatter:");
+            Stop("generated files are stale. These differ from the schema/frontmatter:");
             foreach (var s in stale) Out.ErrLine($"  {s}");
             Out.ErrLine("run:  kac generate");
             return 1;
@@ -217,7 +217,7 @@ public static class Commands
         // able to tell the templates were read rather than skipped.
         Out.Markup(
             $"validated {validated} document(s) and {templates} template(s), skipped {skipped} without "
-            + $"frontmatter — {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}");
+            + $"frontmatter. {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}");
         return errors > 0 ? 1 : 0;
     }
 
@@ -254,7 +254,7 @@ public static class Commands
             // Split by severity, because a reader comes to this list to learn how much of it fails a
             // build. The catalogue's own order says nothing about that.
             var errors = catalogue.Count(c => c.Severity == Sev.Error);
-            Out.Markup($"{catalogue.Count} checks — {Tally(errors, Sev.Error)}, "
+            Out.Markup($"{catalogue.Count} checks: {Tally(errors, Sev.Error)}, "
                        + $"{Tally(catalogue.Count - errors, Sev.Warning)}.");
         }
 
@@ -299,7 +299,7 @@ public static class Commands
         if (!Directory.Exists(refRoot))
             return Fail($"mechanism: reference corpus not found: {refRoot}");
         if (Path.GetFullPath(refRoot) == Path.GetFullPath(corpusRoot))
-            return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
+            return Fail("mechanism: the reference is this corpus itself. Nothing to compare.");
 
         var localFiles = MechanismCheck.ListFiles(corpusRoot);
         var refFiles = MechanismCheck.ListFiles(refRoot);
@@ -408,15 +408,15 @@ public static class Commands
             + $"descriptor format {Stated(descriptor.DescriptorVersion)}, "
             + $"mechanism version {Stated(descriptor.MechanismVersion)}.");
         Out.Line($"mechanism: comparing the synced layer against {refRoot}");
-        Section("DRIFT — synced files differ from the reference", report.Drift);
-        Section("MISSING LOCALLY — synced files in the reference but not here", report.MissingLocally);
-        Section("MISSING UPSTREAM — synced files here but not in the reference", report.MissingUpstream);
-        Section("UNCLASSIFIED — files matching no manifest rule", report.Unclassified);
+        Section("DRIFT, synced files differ from the reference", report.Drift);
+        Section("MISSING LOCALLY, synced files in the reference but not here", report.MissingLocally);
+        Section("MISSING UPSTREAM, synced files here but not in the reference", report.MissingUpstream);
+        Section("UNCLASSIFIED, files matching no manifest rule", report.Unclassified);
 
         if (report.ResolvedDivergence.Count > 0)
         {
             Out.Line(
-                "RESOLVED — accepted divergences that are now identical again (delete them from .corpus.yaml):");
+                "RESOLVED, accepted divergences that are now identical again (delete them from .corpus.yaml):");
             foreach (var p in report.ResolvedDivergence) Out.Line($"  {p}");
         }
 
@@ -435,7 +435,7 @@ public static class Commands
 
         if (report.Problems > 0)
         {
-            Out.ErrLine($"mechanism check failed — {report.Problems} synced-layer problem(s) above.");
+            Out.ErrLine($"mechanism check failed: {report.Problems} synced-layer problem(s) above.");
             return 1;
         }
 
@@ -456,10 +456,10 @@ public static class Commands
         string today)
     {
         Out.Line($"mechanism: syncing the shared layers from {reference}");
-        Section("UPDATED — brought down from the reference", plan.Updated);
-        Section("SEEDED — the corpus's own from here on, copied because it had none", plan.Seeded);
-        Section("SKIPPED — accepted divergences, left as they are", plan.Skipped);
-        Section("HELD HERE, NOT UPSTREAM — shared files the reference does not have (sync never deletes)",
+        Section("UPDATED, brought down from the reference", plan.Updated);
+        Section("SEEDED, the corpus's own from here on, copied because it had none", plan.Seeded);
+        Section("SKIPPED, accepted divergences, left as they are", plan.Skipped);
+        Section("HELD HERE, NOT UPSTREAM, shared files the reference does not have (sync never deletes)",
             plan.HeldHere);
 
         Out.Line(
@@ -469,10 +469,10 @@ public static class Commands
 
         if (plan.ReferenceIsUnsound)
         {
-            Out.ErrLine("UNCLASSIFIED — files in the reference matching no manifest rule, so not copied:");
+            Out.ErrLine("UNCLASSIFIED, files in the reference matching no manifest rule, so not copied:");
             foreach (var p in plan.Unclassified) Out.ErrLine($"  {p}");
             Out.ErrLine(
-                "mechanism sync: the reference's manifest does not resolve its own tree — fix it there.");
+                "mechanism sync: the reference's manifest does not resolve its own tree. Fix it there.");
             return 1;
         }
 
@@ -503,7 +503,7 @@ public static class Commands
         }
         catch (Exception ex)
         {
-            Out.ErrLine($"mechanism sync: regeneration failed — {ex.Message}");
+            Out.ErrLine($"mechanism sync: regeneration failed: {ex.Message}");
             Out.ErrLine(
                 "mechanism sync: the files are in place but the generated blocks were not rebuilt. "
                 + "Run kac validate to see what the corpus is missing, then kac generate.");

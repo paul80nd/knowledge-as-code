@@ -767,10 +767,10 @@ public sealed partial class Schema
         if (source is not null)
         {
             if (severity is null)
-                problem = $"rule '{id}' has an expr but no severity — say whether it fails "
+                problem = $"rule '{id}' has an expr but no severity. Say whether it fails "
                           + "a build or advises an author.";
             else if (string.IsNullOrEmpty(message))
-                problem = $"rule '{id}' has an expr but no message — an author has to be "
+                problem = $"rule '{id}' has an expr but no message: an author has to be "
                           + "told what to do about it.";
             else
                 try

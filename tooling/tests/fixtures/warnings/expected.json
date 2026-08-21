@@ -26,7 +26,7 @@
       "line": 8,
       "severity": "warning",
       "check": "list-order",
-      "message": "'tags' is not in alphabetical order — 'access-control' should come before 'identity'."
+      "message": "'tags' is not in alphabetical order: 'access-control' should come before 'identity'."
     },
     {
       "file": "adrs/0003-long-y-statement.md",
@@ -47,14 +47,14 @@
       "line": 1,
       "severity": "warning",
       "check": "min-records",
-      "message": "'facets: singular' is carried by 1 gadget record — the schema asks for at least 2, because a value here is meant to group records. One that does not belongs in a field that is free to be unique."
+      "message": "'facets: singular' is carried by 1 gadget record: the schema asks for at least 2, because a value here is meant to group records. One that does not belongs in a field that is free to be unique."
     },
     {
       "file": "policies/ordn-ordinal-not-natural.md",
       "line": 7,
       "severity": "warning",
       "check": "list-order",
-      "message": "'aligns-with' is not in alphabetical order — 'ISO27001:2022 A.8.7' should come before 'ISO27001:2022 A.8.29'."
+      "message": "'aligns-with' is not in alphabetical order: 'ISO27001:2022 A.8.7' should come before 'ISO27001:2022 A.8.29'."
     }
   ]
 }

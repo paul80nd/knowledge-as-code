@@ -61,7 +61,7 @@
       "line": 4,
       "severity": "error",
       "check": "min-items",
-      "message": "'symptom-keywords' has 2 entries — the schema asks for at least 3."
+      "message": "'symptom-keywords' has 2 entries: the schema asks for at least 3."
     },
     {
       "file": "tools/bad-licence-pattern.md",

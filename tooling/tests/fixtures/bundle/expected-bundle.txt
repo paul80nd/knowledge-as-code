@@ -13,7 +13,7 @@ wrote .dist/plugin/README.md
 
 # The component that was dropped, named where someone is watching. Two corpora building one plugin name
 # may drop different ones, so a run that only counted them would leave the difference unexplainable.
-bundle: trimmed skills/decision-lookup — the export carries no adrs.
+bundle: trimmed skills/decision-lookup: the export carries no adrs.
 
 # The version on the plugin is the corpus content version, not the one the source manifest carried.
 bundle: wrote 14 file(s) to .dist/plugin/ as example-libraries 2.3.4

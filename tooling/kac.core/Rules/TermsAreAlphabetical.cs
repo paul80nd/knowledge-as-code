@@ -29,7 +29,7 @@ public sealed class TermsAreAlphabetical : IDocumentRule
         {
             if (previous is not null && string.Compare(term, previous, StringComparison.OrdinalIgnoreCase) < 0)
                 ctx.Report.Warn(Reports,
-                    $"'{Md.Snippet(term)}' is out of order — it belongs before '{Md.Snippet(previous)}'.", line);
+                    $"'{Md.Snippet(term)}' is out of order: it belongs before '{Md.Snippet(previous)}'.", line);
 
             previous = term;
         }

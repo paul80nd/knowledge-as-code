@@ -40,8 +40,8 @@ public class PartRefTests
         var found = Assert.Single(Cite("adr-0002.ANY"));
 
         Assert.Equal("part-ref", found.Check.Value);
-        Assert.Equal("'adr-0002.ANY' addresses a part of adrs/adr-0002.md, and its type offers none — "
-                     + "cite the document as 'adr-0002'.", found.Message);
+        Assert.Equal("'adr-0002.ANY' addresses a part of adrs/adr-0002.md, and its type offers none. "
+                     + "Cite the document as 'adr-0002'.", found.Message);
     }
 
     // The third: the document is real, its type keeps parts, and this is not one of them. The type's own

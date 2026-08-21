@@ -53,7 +53,7 @@ public static class Validator
             // a forked file is never compared against upstream.
             if (page.FrontStartLine > 0)
                 findings.Add(new Finding(t.Page, page.FrontStartLine, Sev.Error, new CheckId("page-frontmatter"),
-                    "the page carries frontmatter — it describes the records beneath it and is not one, so it has "
+                    "the page carries frontmatter: it describes the records beneath it and is not one, so it has "
                     + $"no id, tier or status of its own. Move what it holds into '{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/' "
                     + "as a record, and delete the block."));
 
@@ -72,7 +72,7 @@ public static class Validator
             var template = Doc.Parse(rel, tree.Read(rel), schema);
             if (template is null)
                 findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
-                    "the template carries no frontmatter — a document copied from it starts with none."));
+                    "the template carries no frontmatter: a document copied from it starts with none."));
             else
                 CheckDocument(template, schema, tree, findings, DocKind.Template);
         }
@@ -262,7 +262,7 @@ public static class Validator
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block is missing its "
                     + (begin < 0 && end < 0 ? "markers" : begin < 0 ? "BEGIN marker" : "END marker")
-                    + " — `kac generate` writes between them and leaves the page alone without both."));
+                    + ": `kac generate` writes between them and leaves the page alone without both."));
             else if (end < begin)
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block's END marker comes before its BEGIN marker."));
@@ -299,7 +299,7 @@ public static class Validator
             {
                 if (pageExists)
                     f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                        $"type '{key}' has {t.Page} but no '{folder}/' — a type is set up as both or neither."));
+                        $"type '{key}' has {t.Page} but no '{folder}/': a type is set up as both or neither."));
                 continue;
             }
 
@@ -312,7 +312,7 @@ public static class Validator
             if (!tree.OnDisk(template)) missing.Add(template);
             if (missing.Count > 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                    $"type '{key}' has a '{folder}/' folder but is not fully set up — add {string.Join(", ", missing)}."));
+                    $"type '{key}' has a '{folder}/' folder but is not fully set up. Add {string.Join(", ", missing)}."));
         }
     }
 
@@ -329,7 +329,7 @@ public static class Validator
 
         foreach (var name in declared.Where(n => !schema.ByFolder.ContainsKey(n)))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                $"'{name}' is adopted here and no schema covers it — either '.schema/{name}.yaml' has not been synced "
+                $"'{name}' is adopted here and no schema covers it: either '.schema/{name}.yaml' has not been synced "
                 + "from upstream, or the name is wrong."));
 
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
@@ -341,14 +341,14 @@ public static class Validator
             // outstanding rather than as a contradiction.
             if (adopted && !stoodUp)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                    $"type '{key}' is adopted here and is not stood up — add {t.Page} and its folder, or drop it from "
+                    $"type '{key}' is adopted here and is not stood up. Add {t.Page} and its folder, or drop it from "
                     + "'types:' if it was not wanted."));
 
             // Built and not declared is the other way round, and is how a corpus drifts back to inferring:
             // the pages would leave the type out while the corpus plainly holds it.
             if (!adopted && stoodUp)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                    $"type '{key}' is stood up here and is not in 'types:' — every generated list leaves it out while "
+                    $"type '{key}' is stood up here and is not in 'types:'. Every generated list leaves it out while "
                     + "the corpus holds it. Adopt it, or delete what was built."));
         }
     }
@@ -464,7 +464,7 @@ public static class Validator
             var noun = target.Type?.Parts?.Noun;
             if (noun is null)
                 f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
-                    $"'{citation}' addresses a part of {target.Rel}, and its type offers none — cite the "
+                    $"'{citation}' addresses a part of {target.Rel}, and its type offers none. Cite the "
                     + $"document as '{docId}'."));
             else if (!target.Parts.Any(p => string.Equals(p.Id, partId, StringComparison.Ordinal)))
                 f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
@@ -534,7 +534,7 @@ public static class Validator
                     var selfId = d.FrontScalar("id");
                     if (!back.Any(b => string.Equals(b, selfId, StringComparison.OrdinalIgnoreCase)))
                         f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, new CheckId("reciprocal"),
-                            $"'{name}: {targetId}' is not reciprocated — {target.Rel} must list '{spec.Reciprocal}: {selfId}'."));
+                            $"'{name}: {targetId}' is not reciprocated: {target.Rel} must list '{spec.Reciprocal}: {selfId}'."));
                 }
             }
         }
@@ -624,7 +624,7 @@ public static class Validator
                 {
                     var carriers = Count(count[value], $"{type.TypeName} record", $"{type.TypeName} records");
                     f.Add(new Finding(doc.Rel, doc.FrontStartLine, Sev.Warning, new CheckId("min-records"),
-                        $"'{name}: {value}' is carried by {carriers} — the schema asks for at least {floor}, "
+                        $"'{name}: {value}' is carried by {carriers}: the schema asks for at least {floor}, "
                         + "because a value here is meant to group records. One that does not belongs in a field "
                         + "that is free to be unique."));
                 }
@@ -653,13 +653,13 @@ public static class Validator
     {
         foreach (var k in d.FrontKeys.Where(k => !t.KnownKeys.Contains(k)))
             report.Err(new CheckId("template-fields"),
-                $"'{k}' is not a field of the '{t.TypeName}' type — every document copied from this "
+                $"'{k}' is not a field of the '{t.TypeName}' type: every document copied from this "
                 + "template would fail unknown-key.", d.FrontStartLine);
 
         var carried = new HashSet<string>(d.FrontKeys, StringComparer.Ordinal);
         foreach (var spec in t.DeclaredFields.Where(spec => spec.Required && !carried.Contains(spec.Name)))
             report.Err(new CheckId("template-fields"),
-                $"the template does not carry '{spec.Name}', which is required — every document copied "
+                $"the template does not carry '{spec.Name}', which is required: every document copied "
                 + "from it would fail required-field.", d.FrontStartLine);
     }
 
@@ -712,7 +712,7 @@ public static class Validator
 
         if (d.IdentitySpans is null)
         {
-            report.Err(new CheckId("identity"), $"no identity line follows the H1 — add {expected}.", d.H1Line);
+            report.Err(new CheckId("identity"), $"no identity line follows the H1. Add {expected}.", d.H1Line);
             return;
         }
 
@@ -722,7 +722,7 @@ public static class Validator
         if (d.IdentitySpans.Count != 2 || colon <= 0)
         {
             report.Err(new CheckId("identity"),
-                $"identity line is malformed — write it as {expected}.", d.IdentityLine);
+                $"identity line is malformed. Write it as {expected}.", d.IdentityLine);
             return;
         }
 
@@ -750,7 +750,7 @@ public static class Validator
                 $"identity line status '{gotStatus}' does not match the document's status '{status}'.",
                 d.IdentityLine);
         else if (status is not null && !string.Equals(gotStatus, status.ToUpperInvariant(), StringComparison.Ordinal))
-            report.Err(new CheckId("identity-status"), $"identity line status '{gotStatus}' must be upper-case — "
+            report.Err(new CheckId("identity-status"), $"identity line status '{gotStatus}' must be upper-case: "
                                                        + $"`{status.ToUpperInvariant()}`.", d.IdentityLine);
     }
 

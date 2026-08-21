@@ -68,8 +68,8 @@ public static class Breadcrumb
 
         var named = Named(names);
         return named.Count > 0
-            ? $"{type.Type} — {body}: {Join(named)}."
-            : $"{type.Type} — {body}.";
+            ? $"{type.Type}. {body}: {Join(named)}."
+            : $"{type.Type}. {body}.";
     }
 
     // The names as the line will carry them: all of them where a type holds few, and the first of them

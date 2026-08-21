@@ -31,12 +31,12 @@ public class TypeSetupTests
 
     [Fact]
     public void A_folder_with_no_page_names_the_page_to_add()
-        => Assert.Contains("add adrs.md",
+        => Assert.Contains("Add adrs.md",
             Assert.Single(Setup(Holding("adrs/0001-a.md", "adrs/_template.md"))).Message);
 
     [Fact]
     public void A_folder_with_no_template_names_the_template_to_add()
-        => Assert.Contains("add adrs/_template.md",
+        => Assert.Contains("Add adrs/_template.md",
             Assert.Single(Setup(Holding("adrs.md", "adrs/0001-a.md"))).Message);
 
     // -- held, or merely present --
@@ -51,7 +51,7 @@ public class TypeSetupTests
     // untracked one is in nobody else's.
     [Fact]
     public void An_untracked_page_does_not_stand_the_type_up()
-        => Assert.Contains("add adrs.md",
+        => Assert.Contains("Add adrs.md",
             Assert.Single(Setup(Holding(["adrs/0001-a.md", "adrs/_template.md"], onDisk: "adrs.md"))).Message);
 
     // -- what the corpus says it adopted --
