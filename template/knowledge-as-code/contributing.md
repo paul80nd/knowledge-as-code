@@ -6,7 +6,7 @@ The rules are the same whether a person or an AI session is holding the keyboard
 
 Four pages carry what a contribution needs, and a type's `_template.md` sends you here rather than repeating them.
 [Taxonomy](taxonomy.md) says where a document goes. [Metadata](metadata.md) covers the frontmatter.
-[Style](style.md) holds the rules for the words, which are the same in every document, comment and commit message.
+[Style](style.md) holds the rules for the words, which are the same in every document and every commit message.
 [Authoring](authoring.md) holds what a document's tier adds on top. This page holds the rest: the link and template
 conventions CI enforces, the review model, and what outranks what when two rules disagree.
 
