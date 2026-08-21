@@ -78,8 +78,7 @@ return exit == -1 ? 1 : exit;
 // wherever the command was typed. Resolving inside a verb's Execute rather than before the parse is
 // what lets an installed `kac` say which version it is without standing in a corpus first.
 //
-// The console is settled here too, for the same reason: it is the one step every verb takes before it
-// writes anything.
+// Colour is settled here too, because this is the one step every verb takes before it writes anything.
 internal static class Cli
 {
     public static int InCorpus(KacSettings settings, Func<string, int> run)
@@ -115,14 +114,13 @@ internal static class Cli
 
 // What every verb takes, whatever else it declares.
 //
-// `--no-color` is here rather than on each verb because it is a fact about the terminal and not about
-// the command. `NO_COLOR` in the environment does the same and is the cross-tool standard, which
-// Spectre reads for itself; the flag is for a caller who cannot set a variable. It reaches only a
-// verb's own output — `--help` and `--version` are rendered by the parser before any verb runs, so
-// the variable is what covers those.
+// `--no-color` sits here rather than on each verb because it is a fact about the terminal, not about
+// the command. `NO_COLOR` in the environment asks for the same thing and is the cross-tool standard,
+// which Spectre reads for itself. The flag is for a caller who cannot set a variable.
 //
-// Either way it is colour that goes, and bold that stays, which is what the standard asks for and what
-// leaves a file heading legible on a terminal that has no colour to give.
+// It reaches a verb's own output and no further. The parser renders `--help` and `--version` before
+// any verb runs, so `NO_COLOR` is what covers those. Either way colour goes and bold stays, which is
+// what the standard asks for.
 internal class KacSettings : CommandSettings
 {
     [CommandOption("--no-color")]

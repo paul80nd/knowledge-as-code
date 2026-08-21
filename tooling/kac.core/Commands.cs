@@ -79,7 +79,7 @@ public static class Commands
         // An empty type list is a statement of what this corpus has, and not a failure: a corpus may
         // have adopted no type that declares an export, or have withheld everything the types it did
         // adopt would have carried. The line above says which, where it was the second.
-        Says(plan.Types.Count == 0
+        Account(plan.Types.Count == 0
             ? $"export: wrote {written.Count} file(s); no type contributed a record."
             : $"export: wrote {written.Count} file(s) for {string.Join(", ", plan.Types.Select(t => t.Type))}.");
         return 0;
@@ -117,7 +117,7 @@ public static class Commands
 
         foreach (var warning in plan.Warnings) Note($"bundle: {warning}");
 
-        Says(
+        Account(
             $"bundle: wrote {written.Count} file(s) to {Dist.Plugin}/ as {plan.PluginName} "
             + $"{plan.Version ?? "(no version)"} — {plan.Included.Count} component(s) included, "
             + $"{plan.Trimmed.Count} trimmed.");
@@ -196,7 +196,6 @@ public static class Commands
             return errors > 0 ? 1 : 0;
         }
 
-        // A file at a time, its findings beneath it.
         foreach (var grp in findings.GroupBy(f => f.File).OrderBy(g => g.Key))
         {
             var file = grp.Key.EscapeMarkup();
@@ -205,8 +204,8 @@ public static class Commands
             var grid = Rows();
             foreach (var f in grp.OrderBy(f => f.Line ?? 0))
             {
-                // The location is repeated after the message, where the file heading has already given
-                // it, because `path:line` in one token is what a terminal offers to open.
+                // The location repeats what the heading above already gave. `path:line` in one token
+                // is the form a terminal offers to open.
                 var at = f.Line is { } ln ? $"  [grey]({file}:{ln})[/]" : "";
                 grid.AddRow(
                     new Markup(Tag(f.Severity)),
@@ -257,7 +256,7 @@ public static class Commands
             Out.Write(grid);
             Out.Line();
 
-            // Split by severity, because what a reader wants from this list is how much of it fails a
+            // Split by severity, because a reader comes to this list to learn how much of it fails a
             // build. The catalogue's own order says nothing about that.
             var errors = catalogue.Count(c => c.Severity == Sev.Error);
             Out.Markup($"{catalogue.Count} checks — {Tally(errors, Sev.Error)}, "
@@ -332,9 +331,8 @@ public static class Commands
     }
 
     // The shape both listings take: how loud, what it is called, and what it says. Only the last column
-    // wraps — the other two are short and fixed, and a terminal narrow enough to squeeze them would
-    // rather break a sentence than saw a check id in half. A wrapped message keeps the hanging indent,
-    // so the column still reads down the page.
+    // wraps. The other two are short and fixed, and squeezing them would split a check id across lines.
+    // A wrapped message keeps the hanging indent, so the column still reads down the page.
     private static Grid Rows()
     {
         var grid = new Grid();
@@ -345,7 +343,8 @@ public static class Commands
     }
 
     // The two things a severity carries into the output, decided in one place: what it is called, and
-    // what colour says so. The word is what carries it where colour does not — a pipe, or `--no-color`.
+    // what colour says so. The word carries the severity where colour cannot, into a pipe or under
+    // `--no-color`.
     private static (string Word, string Colour) Severity(Sev severity) =>
         severity == Sev.Error ? ("error", "red") : ("warning", "yellow");
 
@@ -355,18 +354,18 @@ public static class Commands
         return $"[{colour}]{word}[/]";
     }
 
-    // A count of findings at one severity. Nought is left plain: a run with no errors should not have a
-    // red nought in it, which is the one number a reader glances at to decide the run was clean.
+    // A count of findings at one severity. Zero stays plain, because a reader glances at this line to
+    // decide the run was clean and a red zero says the opposite.
     private static string Tally(int count, Sev severity)
     {
         var (word, colour) = Severity(severity);
         return count == 0 ? $"{count} {word}(s)" : $"[{colour}]{count} {word}(s)[/]";
     }
 
-    // `wrote <path>`, with everything but the filename dimmed. A bundle writes a dozen paths that share
-    // a prefix, and the eye should land on the part that differs. Exported and generated paths are
-    // written with forward slashes whatever the platform, which is what the manifest and the corpus
-    // both hold, so one separator is the whole of it.
+    // `wrote <path>`, with everything but the filename dimmed. A bundle writes a dozen paths sharing a
+    // prefix, and the eye should land on the part that differs. One separator covers every platform:
+    // the manifest and the corpus both hold their paths with forward slashes, and so does every path
+    // written here.
     private static string Wrote(string path)
     {
         var cut = path.LastIndexOf('/') + 1;
@@ -375,13 +374,15 @@ public static class Commands
             : $"[grey]wrote {path[..cut].EscapeMarkup()}[/]{path[cut..].EscapeMarkup()}";
     }
 
-    // A verb's own remark about the run, with the verb's name carrying whether it is advice or an
-    // account. Advice is what nothing else will say: a link that carried nothing, a component dropped,
-    // an export that cannot be rebuilt from the commit it names. None of it is an error, and all of it
-    // is invisible in the artefact, so colour is what stops it reading as part of the tally.
+    // A verb's own remark about the run. The verb's name is coloured to say which kind it is.
+    //
+    // Advice is what nothing else will say: a link that carried nothing, a component dropped, an export
+    // that cannot be rebuilt from the commit it names. None of it is an error, and none of it shows in
+    // the artefact. Colour stops it reading as part of the tally.
     private static void Note(string line) => Out.Markup(Prefix(line, "yellow"));
 
-    private static void Says(string line) => Out.Markup(Prefix(line, "grey"));
+    // An account of what the run came to, which closes each of these commands.
+    private static void Account(string line) => Out.Markup(Prefix(line, "grey"));
 
     private static string Prefix(string line, string colour)
     {
@@ -397,10 +398,9 @@ public static class Commands
         return 1;
     }
 
-    // Why a command stopped, or the heading over a list of what stopped it. The whole line is red where
-    // a remark colours only its prefix: a remark sits among other output and needs a marker, and this is
-    // the message. Whatever it names stays plain beneath it — the heading is the signal, the list is the
-    // evidence, and colouring both leaves neither standing out.
+    // Why a command stopped, or the heading over a list of what stopped it. The whole line is coloured,
+    // because it is the message rather than a remark sitting beside other output. Whatever the heading
+    // names stays plain beneath it.
     private static void Stop(string line) => Out.ErrMarkup($"[red]{line.EscapeMarkup()}[/]");
 
     private static int ReportMechanism(MechanismReport report, CorpusDescriptor descriptor, string refRoot)

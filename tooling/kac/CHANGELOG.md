@@ -17,25 +17,20 @@ the commit and opens a release carrying the section for that version.
 
 ### Added
 
-- **`--no-color` on every verb.** `NO_COLOR` in the environment asks for the same thing and is the cross-tool standard,
-  which the tool already honoured; the flag is for a caller who cannot set a variable. Either way it is colour that goes
-  and bold that stays, so a heading survives on a terminal with no colour to give.
+- **`--no-color` on every verb.** `NO_COLOR` in the environment asks for the same thing, and the tool already read it.
+  Colour goes either way, and bold stays.
 
 ### Changed
 
-- **`validate` and `checks` align what they list, and colour how loud it is.** Findings stay grouped by file, with the
-  severity, the check id and the message in fixed columns. Only the message wraps, so a narrow terminal breaks a
-  sentence rather than sawing a check id in half, and a wrapped message keeps its hanging indent. `checks` splits its
-  count by severity.
-- **`generate` marks a generated file the corpus did not hold**, because creating one changes what the corpus contains
-  rather than what a file inside it says. Its tally now names the whole plan beside the part of it that moved.
-- **`export` and `bundle` dim the directory in each path they write**, so the eye lands on the part that differs, and
-  colour a remark by whether it is advice or an account of the run. Neither changes a word it says.
-- **A failure names itself in red.** Every verb's hard stop, and the heading over a list of what stopped it, is
-  coloured on stderr. What the heading names stays plain beneath it, so the heading is the signal and the list is the
-  evidence.
-- **`--json` and every exit code answer exactly as before.** Machine-readable output is a contract a pipeline parses,
-  and a redirected stream carries no colour, so nothing downstream sees any of this.
+- **`validate` and `checks` list in aligned columns**, with the severity coloured. Only the message column wraps, so a
+  narrow terminal breaks a sentence and never a check id. `checks` splits its count by severity.
+- **`generate` marks a file it created**, and counts what it wrote against the size of the whole plan.
+- **`export` and `bundle` dim the directory in each path they write**, and colour a remark by whether it is advice or
+  an account of the run. Neither changes a word it prints.
+- **A failure is red on stderr.** That covers every verb's hard stop, and the heading over a list of what stopped it.
+  What the heading names stays plain beneath it.
+- **`--json` and every exit code answer as before.** A redirected stream carries no colour, so nothing downstream sees
+  any of this.
 
 ## 0.2.1 - 2026-08-21
 
