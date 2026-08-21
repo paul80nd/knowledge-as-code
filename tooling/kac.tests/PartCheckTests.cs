@@ -69,14 +69,14 @@ public class PartCheckTests
     {
         var found = Run(Header + "| `LOGS` | MUST be retained for a year. |\n");
         Assert.Equal("clause-modal", Assert.Single(found).Check.Value);
-        Assert.Contains("write it bold", Assert.Single(found).Message);
+        Assert.Contains("Write it bold", Assert.Single(found).Message);
     }
 
     [Fact]
     public void An_advisory_modal_written_bold_is_reported()
     {
         var found = Run(Header + "| `LOGS` | **SHOULD** be retained for a year. |\n");
-        Assert.Contains("write it plain", Assert.Single(found).Message);
+        Assert.Contains("Write it plain", Assert.Single(found).Message);
     }
 
     // Longest first, or "MUST NOT" would be read as the "MUST" that prefixes it and then reported as a
@@ -100,7 +100,7 @@ public class PartCheckTests
     {
         var found = Run(Header + "| LOGS | **MUST** be retained. |\n");
         Assert.Equal("clause-id-format", Assert.Single(found).Check.Value);
-        Assert.Contains("write it as `LOGS`", Assert.Single(found).Message);
+        Assert.Contains("Write it as `LOGS`", Assert.Single(found).Message);
     }
 
     // The pattern is the type's, so this is what shows it is read rather than assumed.
@@ -250,7 +250,7 @@ public class PartCheckTests
 
         var one = Assert.Single(found);
         Assert.Equal("part-none", one.Check.Value);
-        Assert.Contains("the '## Terms' section holds no terms — write each one as an H3 heading.", one.Message);
+        Assert.Contains("the '## Terms' section holds no terms. Write each one as an H3 heading.", one.Message);
     }
 
     // A heading at the wrong level is prose rather than a part, so a section holding only those holds no

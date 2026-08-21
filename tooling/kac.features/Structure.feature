@@ -24,7 +24,7 @@ Feature: Document structure checks
     Then the findings for "adrs/0011-headings-with-no-body.md" are exactly:
       | line | check         | message                                                                     |
       | 32   | empty-section | required section '## Consequences' has nothing under it.                    |
-      | 34   | empty-section | section '## Related' has nothing under it — write it or delete the heading. |
+      | 34   | empty-section | section '## Related' has nothing under it. Write it or delete the heading. |
 
   Scenario: A mnemonic id is checked for shape, case and agreement with the filename
     When I validate the corpus
@@ -104,7 +104,7 @@ Feature: Document structure checks
       | adrs/0008-Bad_Name.md                                       | error    |      | filename-pattern    | filename '0008-Bad_Name.md' does not match ^\d{4}-[a-z0-9-]+\.md$.                                     |
       | adrs/0010-half-filled-copy.md                               | error    | 13   | placeholder-left    | '{{the pressure to get something committed}}' is a placeholder the template left for you to fill in.   |
       | adrs/0011-headings-with-no-body.md                          | error    | 32   | empty-section       | required section '## Consequences' has nothing under it.                                               |
-      | adrs/0011-headings-with-no-body.md                          | error    | 34   | empty-section       | section '## Related' has nothing under it — write it or delete the heading.                            |
+      | adrs/0011-headings-with-no-body.md                          | error    | 34   | empty-section       | section '## Related' has nothing under it. Write it or delete the heading.                            |
       | policies/agnt-identity-malformed.md                         | error    | 12   | identity            | identity line is malformed — write it as `Policy: pol-AGNT` `DRAFT`.                                   |
       | policies/dirs-directory-link.md                             | error    | 17   | link-resolves       | link target '/media' does not resolve.                                                                 |
       | policies/envs-identity-status.md                            | error    | 12   | identity-status     | identity line status 'ACTIVE' does not match the document's status 'draft'.                            |

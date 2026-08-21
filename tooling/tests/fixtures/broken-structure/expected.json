@@ -82,7 +82,7 @@
       "line": 34,
       "severity": "error",
       "check": "empty-section",
-      "message": "section '## Related' has nothing under it — write it or delete the heading."
+      "message": "section '## Related' has nothing under it. Write it or delete the heading."
     },
     {
       "file": "policies/agnt-identity-malformed.md",

@@ -208,7 +208,7 @@ public static class Validator
                         $"required section '## {s.Title}' has nothing under it.", s.Line);
                 else if (t.OptionalSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
                     report.Err(new CheckId("empty-section"),
-                        $"section '## {s.Title}' has nothing under it — write it or delete the heading.", s.Line);
+                        $"section '## {s.Title}' has nothing under it. Write it or delete the heading.", s.Line);
             }
 
         // The other half of the template convention: `{{…}}` means "supply this", so a record still
