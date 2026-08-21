@@ -3,9 +3,10 @@
 [`features/`](features/) is the reference for what each command does, one document apiece, and
 [`README.md`](README.md) maps them. This is what will bite you while changing it.
 
-## Writing a comment
+## Writing here
 
-The code says what it does. A comment says why it is that way.
+The code says what it does. A comment says why it is that way. These rules hold for the comments and for the prose
+pages under `tooling/`, this one included.
 
 **Say it once, and cite the rest.** [`features/`](features/) is the reference for what a command does and
 [`tests/README.md`](tests/README.md) for what a scenario asserts. Where the argument is already there, link it and stop.
