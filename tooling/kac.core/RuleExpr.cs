@@ -5,16 +5,18 @@
 //
 // The grammar is frozen. It has no variables, no user-defined functions, no quantifiers and no
 // collections, and that is the property being bought rather than a shortfall to be corrected. A rule
-// that will not fit almost always wants a new fact — one method on `Facts`, one row in `Functions`
-// below — and reaching for the grammar instead is the move to distrust. A rule that genuinely needs
+// that will not fit almost always wants a new fact: one method on `Facts`, one row in `Functions`
+// below. Reaching for the grammar instead is the move to distrust. A rule that genuinely needs
 // loops, joins or quantifiers is a rule class in `Rules/`, and wanting them here is the signal that
 // OPA is being rebuilt by increments.
 //
 // When to abandon this: the moment a real need appears for variables, function definitions or
-// quantifiers — a need, not a rule that could be written another way — swap this for CEL (Common
-// Expression Language; a .NET port exists). The `expr:` strings largely carry over and the engine drops
-// in. Not before: the dependency is not worth it at this size, which is the same judgement that
-// rejected OPA/Rego and is recorded with its reasoning in `tooling/features/checks.md`.
+// quantifiers, swap this for CEL (Common Expression Language, and a .NET port exists). That means a
+// real need, and not a rule that could be written another way.
+//
+// The `expr:` strings largely carry over and the engine drops in. Not before: the dependency is not
+// worth it at this size, which is the same judgement that rejected OPA/Rego and is recorded with its
+// reasoning in `tooling/features/checks.md`.
 //
 // Non-goals, so that a later reader does not mistake an absence for an oversight: a general policy
 // engine, rules-as-data beyond this grammar, a date or collection type system, runtime or
@@ -56,7 +58,7 @@ public sealed class RuleExprException(string message) : Exception(message);
 public static class RuleExpr
 {
     // Every function an expression may call, with the types it takes and returns. The grammar knows
-    // nothing about these — adding a fact is adding a row here and a method on Facts.
+    // nothing about these: adding a fact is adding a row here and a method on Facts.
     private static readonly Dictionary<string, (ValueType[] Args, ValueType Returns)> Functions =
         new(StringComparer.Ordinal)
         {
@@ -140,7 +142,7 @@ public static class RuleExpr
 
         // A comparison where either side is absent is false, and `!=` is the negation of `==`, so it is
         // true. One rule, applied to every operator, so a rule that wants to say something about a field
-        // that may be missing guards it — `present('x') implies …` — rather than relying on the
+        // that may be missing guards it with `present('x') implies …`. It does not rely on the
         // comparison to guess which way silence should fall.
         switch (bin.Op)
         {
@@ -209,8 +211,9 @@ public static class RuleExpr
                         Expect(r, ValueType.Bool, bin.Op, source);
                         return ValueType.Bool;
 
-                    // Equality is defined for any two values of the same type; ordering only where the
-                    // values have one — strings by ISO-friendly ordinal order, integers by magnitude.
+                    // Equality is defined for any two values of the same type. Ordering is defined
+                    // only where the values have an order: strings by ISO-friendly ordinal order,
+                    // integers by magnitude.
                     case "==" or "!=":
                         if (l != r) throw Mismatch(bin.Op, l, r, source);
                         return ValueType.Bool;

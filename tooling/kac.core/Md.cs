@@ -32,7 +32,7 @@ public static class Md
 
     // Whether a stretch of a document says anything: a letter or a digit somewhere in it. Read on the
     // source as written, so that a horizontal rule, a bullet marker left behind or an em dash standing
-    // in for the words counts as nothing written — the rendered blocks would offer all three as
+    // in for the words counts as nothing written. The rendered blocks would offer all three as
     // content.
     public static bool HasContent(ReadOnlySpan<char> text)
     {
@@ -46,7 +46,7 @@ public static class Md
     // the rest of the message.
     public static string Snippet(string s, int max = 60) => s.Length > max ? s[..(max - 3)] + "…" : s;
 
-    // The anchors a document offers a link — one per heading, at every level.
+    // The anchors a document offers a link: one per heading, at every level.
     public static HashSet<string> Anchors(string markdown)
     {
         var set = new HashSet<string>(StringComparer.Ordinal);
@@ -65,7 +65,7 @@ public static class Md
     // Renderers agree on that much and on nothing beyond it. Azure DevOps percent-encodes the
     // punctuation it meets into the anchor where GitHub discards it, so a heading carrying `/`, `:` or
     // `.` has two different anchors and one link cannot name both. This is the discarding form, which
-    // is why a heading meant to be linked to is written without punctuation in the first place — see
+    // is why a heading meant to be linked to is written without punctuation in the first place. See
     // `frameworks.md`, where the framework's version lives in the opening line rather than the heading.
     public static string Slug(string heading)
     {

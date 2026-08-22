@@ -51,7 +51,7 @@ public static class Out
         capture.Profile.Capabilities.Unicode = Std.Profile.Capabilities.Unicode;
         capture.Write(renderable);
 
-        // Straight to the writer, because what the buffer holds is already rendered — handing it back
+        // Straight to the writer, because what the buffer holds is already rendered. Handing it back
         // to a console would read its escapes as text to be escaped again.
         var writer = Std.Profile.Out.Writer;
         foreach (var line in buffer.ToString().TrimEnd('\n').Split('\n'))

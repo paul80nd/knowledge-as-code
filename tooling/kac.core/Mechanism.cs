@@ -105,9 +105,9 @@ public static class MechanismCheck
             syncedInStep, forkedShared, forkedDiffer, acceptedActive, declinedButHeld);
     }
 
-    // Whether this corpus's descriptor declines the file, so that it is neither missing nor drifted —
-    // and, to `mechanism --sync`, not something to bring down. Each answer below is the corpus stating
-    // what it took, so check and sync ask this one predicate rather than two that can disagree.
+    // Whether this corpus's descriptor declines the file, so that it is neither missing nor drifted.
+    // To `mechanism --sync` it is also not something to bring down. Each answer below is the corpus
+    // stating what it took, so check and sync ask this one predicate rather than two that can disagree.
     //
     // A type the corpus did not adopt takes its schema file with it. The schema is otherwise
     // byte-identical, so this is the only place a corpus may hold less of it than upstream does. `types:`
@@ -121,8 +121,8 @@ public static class MechanismCheck
         || (TypeFile(rel) is { } type && !descriptor.Adopted(type));
 
     // The type a schema file declares, or null where the path is not one. `.schema/` holds a file per type
-    // beside the underscore-prefixed files that belong to no type, and the type's name is the file's —
-    // which is the same identity `ref:` and `versus:` use, and the same one `types:` names.
+    // beside the underscore-prefixed files that belong to no type, and the type's name is the file's.
+    // That is the same identity `ref:` and `versus:` use, and the same one `types:` names.
     private static string? TypeFile(string rel)
     {
         if (!rel.StartsWith(".schema/", StringComparison.Ordinal)) return null;
@@ -133,8 +133,8 @@ public static class MechanismCheck
     }
 
     // Whether two copies of a file say the same thing. LF-normalised, so a working copy checked out with
-    // CRLF never reads as drift, and compared on the authored half alone — see Generator.Authored for why
-    // a shared page may hold a different table in each corpus and still be in step.
+    // CRLF never reads as drift, and compared on the authored half alone. See Generator.Authored for
+    // why a shared page may hold a different table in each corpus and still be in step.
     internal static bool Same(string localRoot, string refRoot, string rel) =>
         Generator.Authored(Files.ReadLf(Path.Combine(localRoot, rel)))
         == Generator.Authored(Files.ReadLf(Path.Combine(refRoot, rel)));

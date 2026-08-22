@@ -74,9 +74,9 @@ public static class SchemaChecks
     // renders "ADR vs ADR"; and a pair both sides declare renders twice, with two accounts of the same
     // distinction that nothing keeps in step.
     //
-    // Which side declares a pair is a convention rather than a rule the tool could derive — it is the
-    // type the heading is titled from — so the tool holds the two sides against each other and leaves the
-    // choice to whoever writes it.
+    // Which side declares a pair is a convention rather than a rule the tool could derive: it is the
+    // type the heading is titled from. So the tool holds the two sides against each other and leaves
+    // the choice to whoever writes it.
     private static void CheckVersus(Schema schema, List<Finding> f)
     {
         var declared = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -113,8 +113,8 @@ public static class SchemaChecks
     // The two files that between them define a tier, held against each other. `_universal.yaml` gives the
     // `tier` field its range, and every record is validated against it. `_tiers.yaml` says what each of
     // those values is called and means, which a generated page renders. Neither is derivable from the
-    // other, and a tier declared in one and not the other is silent in both directions — a record
-    // admitted with a tier no page can name, or a heading no document will ever sit under.
+    // other. A tier declared in one and not the other is silent in both directions: a record admitted
+    // with a tier no page can name, or a heading no document will ever sit under.
     //
     // Reported against `_tiers.yaml` whichever side is short, because that is the file whose entries are
     // cheap to add: widening the field's range is a change to what every corpus may carry.
@@ -143,9 +143,9 @@ public static class SchemaChecks
     }
 
     // A key the loader never asked for. Every other check here reads a declaration and asks whether code
-    // acts on its value; this one asks whether the declaration is read at all, which is the question a
-    // key nothing dispatches answers with silence. The vocabulary is not listed anywhere — it is the set
-    // of keys the loader requested, recorded as it read the file — so a key gains its meaning and its
+    // acts on its value. This one asks whether the declaration is read at all, which is the question a
+    // key nothing dispatches answers with silence. The vocabulary is not listed anywhere: it is the set
+    // of keys the loader requested, recorded as it read the file. So a key gains its meaning and its
     // admission in the same edit.
     //
     // `notes:` is admitted at every level and is the way to say something these files should say and the
@@ -163,7 +163,7 @@ public static class SchemaChecks
     // Only a `parts:` block makes a `pol-VURM.TIMEBOX` citation resolvable, so every way of getting it
     // wrong ends the same way: the type offers no parts, every citation into it fails, and the schema
     // reads as though addressing were set up. A source nothing extracts is the first way. A section the
-    // type never declares is the second, and it is the `mirrors-section:` fault in another place — the
+    // type never declares is the second, and it is the `mirrors-section:` fault in another place. The
     // walk would run to a heading no record may carry and find nothing under it.
     //
     // The modals are the table source's alone. Without them every row is reported as opening with no
@@ -195,7 +195,7 @@ public static class SchemaChecks
     // there contributes nothing, while the schema goes on saying it does. Selection is by key for that
     // reason, and this is where each key is resolved.
     //
-    // Fidelity is asked of every entry, because it is what a consumer reads the export for — words
+    // Fidelity is asked of every entry, because it is what a consumer reads the export for: words
     // arriving whole, cut to a line, or replaced by a breadcrumb. A section becomes an entry as soon as
     // its heading is written, so a heading with nothing beside it is asked. `parts:` is the entry itself,
     // so writing it with nothing beside it declares no parts at all.
@@ -258,8 +258,8 @@ public static class SchemaChecks
     }
 
     // What a type says about itself, which every generated list of types is written from. Each is
-    // required, because a type that declares none of them still appears in those lists — as a row with an
-    // empty cell, which reads as an oversight in the page rather than in the schema it came from.
+    // required, because a type that declares none of them still appears in those lists: a row with an
+    // empty cell. That reads as an oversight in the page rather than in the schema it came from.
     //
     // `label-plural:` is here and `label:` is not, because only one of them can be derived. A singular
     // falls back to the type name capitalised; nothing turns `nfr` into "NFRs".
@@ -304,9 +304,9 @@ public static class SchemaChecks
         }
     }
 
-    // `t` is the type declaring the field, and is null for a universal one — a field declared for every
-    // type belongs to none of them, so the questions that read the type's own declarations are not asked
-    // of it.
+    // `t` is the type declaring the field, and is null for a universal one. A field declared for every
+    // type belongs to none of them, so the questions that read the type's own declarations are not
+    // asked of it.
     private static void CheckField(string at, string name, FieldSpec spec, Schema schema, TypeSchema? t,
         List<Finding> f)
     {
@@ -336,9 +336,9 @@ public static class SchemaChecks
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-records:', which is read "
                          + "against the entries of a list. Declare it 'type: list', or drop the floor.", f);
 
-        // Any section reconciles, so this is not a vocabulary the tool holds — which is why nothing
-        // else would catch a section the type never offers. The reconciliation would run against a
-        // heading no record may carry and report every id in the field as missing from it.
+        // Any section reconciles, so this is not a vocabulary the tool holds. That is why nothing else
+        // would catch a section the type never offers. The reconciliation would run against a heading
+        // no record may carry and report every id in the field as missing from it.
         if (t is not null && spec.MirrorsSection is { } section
                           && !t.RequiredSections.Concat(t.OptionalSections)
                               .Contains(section, StringComparer.OrdinalIgnoreCase))
@@ -353,7 +353,7 @@ public static class SchemaChecks
     // to run.
     //
     // What no rule may do is claim a `severity:` with nothing behind it. Severity is the statement that
-    // something acts on this — it is what puts a rule in the catalogue and in `kac checks` — so a rule
+    // something acts on this: it is what puts a rule in the catalogue and in `kac checks`. So a rule
     // naming a level nothing fires at is the one arrangement that reads as enforced from every angle
     // and is not.
     private static void CheckRule(string at, string key, RuleSpec rule, List<Finding> f)
@@ -389,9 +389,9 @@ public static class SchemaChecks
     // a finding a reader would meet with no entry behind it: no severity, no description, and a blank
     // cell wherever the tables render it. That is decidable from the registry, so it is decided here.
     //
-    // The other direction — an entry nothing ever reports — is not. A core check reports through a
-    // literal string written where the check is, and no registry holds those; the coverage gate answers
-    // it instead, by failing on a declared check no fixture can reach.
+    // The other direction is an entry nothing ever reports, and the registry cannot decide that. A core
+    // check reports through a literal string written where the check is, and no registry holds those.
+    // The coverage gate answers it instead, by failing on a declared check no fixture can reach.
     //
     private static void CheckDeclaredChecks(Schema schema, List<Finding> f)
     {

@@ -62,8 +62,8 @@ public class PartRow
 public record Section(string Title, int Line, int BodyStart, int BodyEnd);
 
 // What is being read. A record is a document of the corpus. A template is the file every record of its
-// type is copied from. The two are held to different questions — a template has no id of its own, no
-// filename to agree with and no values filled in — and the kind is what the checks branch on, so that
+// type is copied from. The two are held to different questions: a template has no id of its own, no
+// filename to agree with and no values filled in. The kind is what the checks branch on, so that
 // "which of these applies to a template" is answered once per check, where the check is written.
 public enum DocKind
 {
@@ -321,8 +321,8 @@ public partial class Doc
         => content.IndexOf('-') is var dash and > 0 && schema.IdPrefixes.Contains(content[..dash]);
 
     // The same citation with a colon where the dot belongs, as `std-A11Y:WCAG`. An id has to sit on the
-    // left for this to match, which is what keeps a scoped reference — `eng:pol-VURM`, a shortcode and
-    // then an id — out of it: a shortcode carries no type prefix and no hyphen before the colon.
+    // left for this to match. That keeps a scoped reference out of it, since a shortcode carries no
+    // type prefix and no hyphen before the colon. `eng:pol-VURM` is a shortcode and then an id.
     [System.Text.RegularExpressions.GeneratedRegex("^[a-z]{2,4}-[A-Za-z0-9]+:[A-Za-z0-9]+$")]
     private static partial System.Text.RegularExpressions.Regex ColonCitationRegex();
 

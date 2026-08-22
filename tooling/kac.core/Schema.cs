@@ -199,8 +199,9 @@ public sealed record RuleSpec
 
     // The condition a document must satisfy, as the schema writes it, and compiled. A rule carrying one
     // needs no C# at all: the dispatcher evaluates it and reports `Message` where it comes out false.
-    // Absent on the rules that need a real algorithm — git history, graph walks, anything spanning
-    // documents — which stay in C# as a class in `Rules/`, and on the rules nothing answers to yet.
+    // Absent on two kinds of rule. The first needs a real algorithm — git history, graph walks,
+    // anything spanning documents — and stays in C# as a class in `Rules/`. The second is a rule
+    // nothing answers to yet.
     public string? Expr { get; init; }
     public Expr? Compiled { get; init; }
 

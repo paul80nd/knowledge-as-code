@@ -1,6 +1,6 @@
 namespace kac.core;
 
-// A record's addressable parts — the children something else may cite by name. The type declares where
+// A record's addressable parts: the children something else may cite by name. The type declares where
 // they live and what holds them to shape, so nothing here is specific to policies or to glossaries
 // except by way of that declaration.
 //
@@ -105,8 +105,8 @@ public static class PartChecks
     // A table row's id is written by the author, so it can be written as something other than a code
     // span or fail the type's pattern. Both are `clause-id-format`, and neither can be asked of a
     // heading: a heading is its own id, and the slug admits whatever the heading says. A
-    // heading that slugs to nothing — punctuation alone — offers no address and is passed over, which is
-    // the same answer a link to it would get from `fragment-resolves`.
+    // heading that slugs to nothing, such as punctuation alone, offers no address and is passed over.
+    // A link to it gets the same answer from `fragment-resolves`.
     //
     // Uniqueness is asked of both, ordinally, because `pol-SCRT.LOGS` and `pol-SCRT.logs` differing only
     // in case is not two parts a reader could tell apart either.
@@ -190,8 +190,8 @@ public static class PartChecks
     }
 
     // The third way a citation fails, beside naming no document and naming no part: separating the two
-    // with a colon. Reported under `part-ref` because a reader meets one question — does this citation
-    // reach the thing it claims to — and the separator is the first way of answering no.
+    // with a colon. Reported under `part-ref` because a reader meets one question: does this citation
+    // reach the thing it claims to? The separator is the first way of answering no.
     //
     // Every document is asked, including the ones offering no parts of their own: a citation is written
     // where the part is answered, which is rarely a record of the same type. The other two ways need

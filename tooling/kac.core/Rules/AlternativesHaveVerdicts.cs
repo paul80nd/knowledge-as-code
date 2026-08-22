@@ -3,9 +3,9 @@ using Markdig.Syntax.Inlines;
 
 namespace kac.core;
 
-// Every bullet in Alternatives Considered states an outcome; an alternative left open means the
+// Every bullet in Alternatives Considered states an outcome. An alternative left open means the
 // decision has not been made. The rule evaluates per bullet and its message quotes the bullet that
-// failed, which is why it stays in C# — the grammar has no collections by design, and a count would
+// failed, which is why it stays in C#. The grammar has no collections by design, and a count would
 // not tell the author which line to go back to.
 public sealed class AlternativesHaveVerdicts : IDocumentRule
 {

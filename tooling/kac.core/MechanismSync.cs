@@ -9,13 +9,13 @@
 
 namespace kac.core;
 
-// What a sync comes to. Every list is a set of paths the reader should be told about; `Updated` and
-// `Seeded` are also, and only, the files to copy — named once, so no second list can disagree with
-// this one about what a sync touches.
+// What a sync comes to. Every list is a set of paths the reader should be told about. `Updated` and
+// `Seeded` are also, and only, the files to copy. They are named once, so no second list can disagree
+// with this one about what a sync touches.
 public sealed record SyncPlan(
     IReadOnlyList<string> Updated,      // shared, to be copied down because the authored halves differ
     IReadOnlyList<string> Seeded,       // forked, to be copied because this corpus has none
-    IReadOnlyList<string> Skipped,      // accepted divergences, left as they are — path and reason
+    IReadOnlyList<string> Skipped,      // accepted divergences, left as they are: path and reason
     IReadOnlyList<string> HeldHere,     // shared, here but not in the reference
     IReadOnlyList<string> Unclassified, // in the reference, matching no manifest rule
     int InStep,
@@ -38,7 +38,7 @@ public static class MechanismSync
     // silently skip whatever the rules had not yet heard of.
     //
     // `declinedTypes` is the reference's pages and folders for types this corpus did not adopt, which
-    // the caller resolves from the reference's schema — see `DeclinedTypePaths`. `same` answers whether
+    // the caller resolves from the reference's schema. See `DeclinedTypePaths`. `same` answers whether
     // two copies of a path say the same thing.
     public static SyncPlan Plan(IReadOnlySet<string> localFiles, IReadOnlySet<string> refFiles,
         Manifest manifest, CorpusDescriptor descriptor, DeclinedPaths declinedTypes, Func<string, bool> same)

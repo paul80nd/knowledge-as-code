@@ -43,7 +43,7 @@ public class Manifest
     }
 
     // First rule with a matching glob wins, mirroring the manifest's own "evaluated in order"
-    // contract. Returns null when nothing matches — which the check reports as an error, since the
+    // contract. Returns null when nothing matches. The check reports that as an error, since the
     // manifest is meant to resolve every file (its final rule is a catch-all).
     public string? Resolve(string relPath)
     {
@@ -98,7 +98,7 @@ public class CorpusDescriptor
     public string? PathPrefix;
 
     // What an export leaves behind: `draft`, `overdue`, or neither. Empty by default, because a record
-    // carrying its own state lets a consumer decide, and one filtered out downstream is invisible — the
+    // carrying its own state lets a consumer decide, and one filtered out downstream is invisible. The
     // corpus reads smaller and tidier than it is, with nothing saying anything was withheld.
     public readonly List<string> ExportExclude = [];
 
@@ -111,7 +111,7 @@ public class CorpusDescriptor
     // The three versions the descriptor states, each named for what it versions.
     //
     // `DescriptorVersion` is this file's format and `MechanismVersion` is the framework the corpus last
-    // took, both counts the tool understands. `ContentVersion` is the corpus's own — what its records
+    // took, both counts the tool understands. `ContentVersion` is the corpus's own: what its records
     // mean, semantically versioned, bumped by hand and read by whatever publishes an export. It stays a
     // string because it is a version and not a count, and nothing but a person writes it.
     //
@@ -122,8 +122,8 @@ public class CorpusDescriptor
     public int? MechanismVersion;
 
     // The types this corpus has adopted, named as the schema names them. This is a statement of intent
-    // rather than a description: the corpus says which of the framework's types it wants, and everything
-    // else follows from that — what is generated, what a sync brings down, and what `validate` holds the
+    // rather than a description: the corpus says which of the framework's types it wants. Everything
+    // else follows from that: what is generated, what a sync brings down, and what `validate` holds the
     // corpus to having stood up.
     //
     // Null where the descriptor says nothing, which is not the same as an empty list. A corpus that has
@@ -222,7 +222,7 @@ public class CorpusDescriptor
             lines.Insert(first < 0 ? lines.Count : first, $"{formatKey} {Format}");
         }
 
-        // A descriptor with no `upstream:` block has never been synced. Open one rather than fail — the
+        // A descriptor with no `upstream:` block has never been synced. Open one rather than fail: the
         // corpus is recording where it takes from for the first time, which is what the block is for.
         var start = lines.FindIndex(l => l.StartsWith("upstream:", StringComparison.Ordinal));
         if (start < 0)

@@ -15,7 +15,7 @@ public sealed class LoadedCorpus
     public required Tree Tree;
 
     // The types this corpus took. Resolved once, here, because it decides both what is generated and what
-    // the corpus is held to having built — two entry points asking separately could answer differently.
+    // the corpus is held to having built. Two entry points asking separately could answer differently.
     public required List<TypeSchema> Adopted;
 
     // The records: every discovered document that carries frontmatter, in corpus order.
@@ -36,10 +36,10 @@ public static class Corpus
 {
     private static readonly string[] SkipDirs = [".git", ".idea", ".claude"];
 
-    // Every file the corpus contains, before any exclusion — what `Tree` is built over.
+    // Every file the corpus contains, before any exclusion: what `Tree` is built over.
     //
     // git ls-files respects .gitignore, .git/info/exclude and global excludes, and never lists .git/
-    // itself — exactly the "respect .gitignore" requirement; the walk is the non-git fallback.
+    // itself, which is exactly the "respect .gitignore" requirement. The walk is the non-git fallback.
     private static List<string> AllFiles(string corpusRoot) =>
         GitFiles.Tracked(corpusRoot) ?? GitFiles.Walk(corpusRoot, "*.md", SkipDirs);
 
@@ -57,9 +57,10 @@ public static class Corpus
             Schema.Load(corpusRoot),
             CorpusDescriptor.Load(corpusRoot));
 
-    // The listing, the schema it is judged against, and what the corpus records about itself — everything
-    // an entry point needs before it can ask a question, and the whole of what this reads. A caller with a
-    // corpus nobody wrote to disk hands over the same three things, so a check can be written against one.
+    // The listing, the schema it is judged against, and what the corpus records about itself. That is
+    // everything an entry point needs before it can ask a question, and the whole of what this reads.
+    // A caller with a corpus nobody wrote to disk hands over the same three things, so a check can be
+    // written against one.
     public static LoadedCorpus Load(Tree tree, Schema schema, CorpusDescriptor descriptor)
     {
         var docs = new List<Doc>();
@@ -123,7 +124,7 @@ public static class Corpus
     // the question is whether the file a contributor would copy is there, and a type whose template is
     // untracked has a different problem from one with none.
     //
-    // A type with no template is skipped in silence — its absence is type-setup's to report, and a type
+    // A type with no template is skipped in silence. Its absence is type-setup's to report, and a type
     // nobody has stood up yet is a valid, quiet state.
     private static List<string> DiscoverTemplates(Tree tree, Schema schema)
     {
@@ -145,7 +146,7 @@ public static class Corpus
     // gives in ordinal order.
     private static List<string> Discover(Tree tree, Schema schema)
     {
-        // Type pages at the corpus root — adrs.md, services.md, data.md, … Each is prose about its
+        // Type pages at the corpus root: adrs.md, services.md, data.md, … Each is prose about its
         // records and is checked separately, as a page.
         var typePages = new HashSet<string>(
             schema.ByFolder.Values.Select(t => t.Page).Where(p => !string.IsNullOrEmpty(p)),

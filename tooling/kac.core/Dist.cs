@@ -13,7 +13,7 @@ namespace kac.core;
 public static class Dist
 {
     // The root, and the marketplace root with it. A marketplace is a directory holding
-    // `.claude-plugin/marketplace.json`, and the plugins it lists sit beneath that directory —
+    // `.claude-plugin/marketplace.json`, and the plugins it lists sit beneath that directory.
     // `claude plugin validate` refuses a source path containing `..`, so a marketplace cannot sit
     // beside the plugin and point sideways at it. `.dist/` is therefore the marketplace, and the plugin
     // below is what it lists.

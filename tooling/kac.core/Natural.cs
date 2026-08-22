@@ -2,7 +2,7 @@ namespace kac.core;
 
 // Alphabetical as a reader means it, used by the `list-order` check. Digit runs compare as numbers,
 // so `A.8.7` precedes `A.8.29` and `7` precedes `108`, where a byte-wise comparison inverts both.
-// Letters compare case-insensitively, with an ordinal tie-break so the order stays total — two
+// Letters compare case-insensitively, with an ordinal tie-break so the order stays total. Two
 // entries differing only in case still have a defined winner rather than being read as equal.
 public static class Natural
 {

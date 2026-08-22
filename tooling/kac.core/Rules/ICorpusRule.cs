@@ -9,7 +9,7 @@ namespace kac.core;
 // `../../CLAUDE.md` holds the test for which one a new rule wants.
 public interface ICorpusRule
 {
-    // The id in the type schema's `rules:` block, and what the rule reports under — the same pair
+    // The id in the type schema's `rules:` block, and what the rule reports under: the same pair
     // `IDocumentRule` declares, for the same reasons, so the catalogue is assembled from the rules
     // rather than restated beside them.
     RuleId RuleId { get; }
@@ -34,7 +34,7 @@ public sealed record CorpusRuleContext(
     Action<Doc, CheckId, string, int?> Warn)
 {
     // The records of the type whose schema declares the rule. Most of what a corpus rule asks is asked
-    // of these; `Docs` is there for the rules whose question reaches outside the type, as a glossary's
-    // does — the terms it defines are used everywhere but the glossary.
+    // of these. `Docs` is there for the rules whose question reaches outside the type, as a glossary's
+    // does: the terms it defines are used everywhere but the glossary.
     public IEnumerable<Doc> Records => Docs.Where(d => d.Type == Type);
 }

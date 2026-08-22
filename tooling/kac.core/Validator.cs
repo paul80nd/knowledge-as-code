@@ -476,10 +476,10 @@ public static class Validator
         // for. So both halves of it are asked: that the id names a document, and that the document is of a
         // type the declaration admits. Asked of every ref field alike, reciprocal or not: a one-directional
         // edge — `depends-on`, the estate's own dependency graph — has no counterpart obliged to keep it
-        // in step, which makes it the edge with least behind it rather than the one to leave alone.
+        // in step. That makes it the edge with least behind it rather than the one to leave alone.
         //
         // The wrong type is the quieter of the two faults. A dangling id is visibly broken to anyone who
-        // follows it. One of the wrong type lands on a real page, so it reads as intentional, and whatever
+        // follows it. One of the wrong type lands on a real page, so it reads as intentional. Whatever
         // walks the edge afterwards — `no-dependency-cycles`, for one — takes it at its word. A literal
         // the field admits is not an id and is skipped, as it is everywhere else.
         foreach (var d in docs)
@@ -556,7 +556,7 @@ public static class Validator
         admitted.Count == 0 || target.Type is null || admitted.Contains(target.Type);
 
     // The types named as a reader would say them aloud — "a Service", "an FAQ or a Standard" — in the
-    // order the declaration lists them, which is the order whoever wrote it chose.
+    // order the declaration lists them. That is the order whoever wrote it chose.
     private static string OneOf(List<TypeSchema> types)
     {
         var names = types.Select(WithArticle).ToList();
@@ -687,7 +687,7 @@ public static class Validator
                     $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
     }
 
-    // The H1 is plain descriptive text — no id, no prefix, no shape the schema constrains — so the only
+    // The H1 is plain descriptive text: no id, no prefix, no shape the schema constrains. So the only
     // thing left to check is that there is one. The type, the id and the status are the identity line's
     // to carry, and CheckIdentity depends on this having run: with no H1 there is no line beneath it,
     // and reporting both would be one fault counted twice.
@@ -837,8 +837,8 @@ public static class Validator
     // A type whose singular and plural are the same word is a mass noun and takes no article, as in "this
     // is Data". The schema has already said so in declaring `label:` and `label-plural:` alike. Otherwise
     // the article follows how the label is read aloud rather than how it is spelled: a label in capitals
-    // is read letter by letter, so it takes what the name of its first letter wants — "an ADR", "an NFR" —
-    // and the letters read with an opening vowel are the whole of that exception.
+    // is read letter by letter, so it takes what the name of its first letter wants: "an ADR", "an NFR".
+    // The letters read with an opening vowel are the whole of that exception.
     private static string WithArticle(TypeSchema t)
     {
         var name = t.DisplayName;

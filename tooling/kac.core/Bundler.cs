@@ -278,9 +278,9 @@ public static class Bundler
     }
 
     // The marketplace offering the plugin, so there is something to install it from. One definition
-    // serves both ways of reaching it — a path while the plugin is being proved, and a published
-    // branch afterwards — because a marketplace addresses its plugins relative to itself and so names
-    // no host. It takes the plugin's own name, because the marketplace is what a reader types to
+    // serves both ways of reaching it: a path while the plugin is being proved, and a published
+    // branch afterwards. It can, because a marketplace addresses its plugins relative to itself and
+    // so names no host. It takes the plugin's own name, because the marketplace is what a reader types to
     // install from. A name qualified by where this copy sits would be wrong as soon as the copy moved.
     //
     // `.dist/` is the marketplace root and the plugin sits beneath it as `./plugin`, for the reason

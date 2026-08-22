@@ -72,7 +72,7 @@ public static class GeneratedFiles
             plan.Add(new GeneratedFile(rel, tree.Exists(rel) ? tree.Read(rel) : null, Generator.IndexPage(t, records)));
         }
 
-        // Every block a file carries, spliced into one text and offered as one entry — a file is written
+        // Every block a file carries, spliced into one text and offered as one entry. A file is written
         // once, so two blocks in the same file cannot each overwrite the other's work. A file carrying no
         // marker resolves to itself, which is what lets a corpus decline the one block it may.
         foreach (var spec in Declare(adopted))
@@ -118,7 +118,7 @@ public static class GeneratedFiles
         // The schema and checks blocks derive from the schema alone, so every adopted type gets them
         // whether or not it holds records yet. Restricting this to populated types would leave the markers
         // on an empty page holding hand-written text nothing checks, to be overwritten by whoever adds the
-        // type's first record — surfacing the drift at the least convenient moment.
+        // type's first record, which surfaces the drift at the least convenient moment.
         var specs = (from t in adopted
             where !string.IsNullOrEmpty(t.Page)
             select new FileSpec(t.Page, true,
@@ -128,8 +128,8 @@ public static class GeneratedFiles
             ])).ToList();
 
         // The pages that describe the taxonomy to a reader rather than to the tool. Each lists types, and
-        // the list is the half that was wrong in every corpus that adopted some of them — so none can name
-        // a type whose page is not there to open. `metadata.md` also carries the universal field table,
+        // the list is the half that was wrong in every corpus that adopted some of them. So none can
+        // name a type whose page is not there to open. `metadata.md` also carries the universal field table,
         // which is the schema's alone.
         specs.Add(new FileSpec("knowledge-as-code/metadata.md", true,
         [
