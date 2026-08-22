@@ -1,6 +1,6 @@
 # NFRs
 
-Non-functional requirements — what the platform promises about availability, speed and recovery.
+Non-functional requirements: what the platform promises about availability, speed and recovery.
 
 **[→ Index](nfrs/_index.md)**
 
@@ -22,12 +22,12 @@ settling that up front costs a fraction of rebuilding later.
 
 An NFR states a **target**, not a rule and not a mechanism.
 
-* "Availability is 99.5% monthly, measured by the uptime probe" — an NFR.
-* "Services **MUST** expose a `/health` endpoint" — a [standard](/standards).
-* "The uptime probe alerts at 99.5%" — a [control](/controls).
+* "Availability is 99.5% monthly, measured by the uptime probe" is an NFR.
+* "Services **MUST** expose a `/health` endpoint" is a [standard](/standards).
+* "The uptime probe alerts at 99.5%" is a [control](/controls).
 
 **An NFR you cannot measure is a wish.** `measured-by` is required. Where nothing observes the target today, either
-build the instrument or state the target you *can* observe — "we'd notice" is not a measurement method.
+build the instrument or state the target you *can* observe. "We'd notice" is not a measurement method.
 
 We cannot promise more than the dependencies we do not run. A third-party [integration](/integrations) with a 99% SLA
 caps everything built on it at 99%. Name that integration in `constrained-by`, and set the target at what the estate can
@@ -60,14 +60,14 @@ deliver.
 1. Copy [`_template.md`](nfrs/_template.md) to `NNNN-kebab-slug.md`.
 2. State the target concretely. "Fast" is not a target; "p95 under 400ms" is.
 3. Name the instrument that measures it, and say where a reader can find its reading.
-4. Record what breaching it costs — degraded service, contractual exposure, or nothing much. An NFR with no consequence
+4. Record what breaching it costs: degraded service, contractual exposure, or nothing much. An NFR with no consequence
    is documentation theatre.
 5. Leave `status: draft` until someone has accepted the target, then set it to `agreed`.
 
 **Conventions**
 
-* **Scope each target to a capability or a service**, never to the estate by default — a marketing page and the checkout
-  flow do not deserve the same availability budget.
+* **Scope each target to a capability or a service.** A default covering the whole estate holds a marketing page to the
+  checkout flow's availability budget.
 * **Record the current actual beside the target** where it is known. The gap between the two is the useful part.
 
 ## What CI checks

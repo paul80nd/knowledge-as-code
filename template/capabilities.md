@@ -24,7 +24,7 @@ piece of work rebuilds the same context.
 ## Scope
 
 One document per **customer-visible surface**, not per epic and not per service. One capability typically spans several
-services; one service often contributes to several capabilities.
+services. One service often contributes to several capabilities.
 
 **Capabilities link rather than restate.** A capability that specifies behaviour has begun to drift from the ADO items
 it should point at. The next session to read it will trust it anyway, which makes a drifted capability worse than none.
@@ -32,11 +32,11 @@ Acceptance criteria go in ADO.
 
 Related but different:
 
-* **Spec** — how standards apply to one concrete contract. It lives in the repository that owns the feature, beside its
+* **Spec**: how standards apply to one concrete contract. It lives in the repository that owns the feature, beside its
   OpenAPI document and feature files. [ADRs](/adrs) split the same way: cross-repo synthesis here, feature-level detail
   with the code.
-* **[Service](/services)** — a thing we deploy. A capability is a thing a customer gets.
-* **[Explanation](/explanations)** — how something works internally. A capability is what it does externally.
+* **[Service](/services)**: a thing we deploy. A capability is a thing a customer gets.
+* **[Explanation](/explanations)**: how something works internally. A capability is what it does externally.
 
 ## Metadata
 

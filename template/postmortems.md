@@ -24,15 +24,15 @@ to know what keeps breaking.
 ## Scope
 
 **Blameless.** We write these to make the estate fail less often, and blame does not do that. Write the causal
-statements about decisions, conditions, systems and roles — "the deploy ran before the migration completed", not
+statements about decisions, conditions, systems and roles: "the deploy ran before the migration completed", not
 "X deployed too early".
 
 Boundaries:
 
-* **[Runbook](/runbooks)** — instructions for an incident that might happen. A postmortem is an account of one that did.
-* **[FAQ](/faqs)** — a reusable fix, which an incident often produces as a by-product. A postmortem is the account of
+* **[Runbook](/runbooks)**: instructions for an incident that might happen. A postmortem is an account of one that did.
+* **[FAQ](/faqs)**: a reusable fix, which an incident often produces as a by-product. A postmortem is the account of
   the incident itself.
-* **A work item** — actions belong in ADO. The postmortem links to them and tracks nothing itself.
+* **A work item.** Actions belong in ADO. The postmortem links to them and tracks nothing itself.
 
 Not every incident needs one. Use severity as the trigger and apply it the same way each time, so that the absence of a
 postmortem means something.

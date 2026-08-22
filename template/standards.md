@@ -19,9 +19,9 @@ new endpoint, header or contract, and the standard for that area tells you the s
   practice matures.
 
 A standard distils accepted ADRs into something you can follow without reading the reasoning again, and cites what it
-came from: the ADR owns the *why* and the standard owns the *what*. A standard descending from a policy rather than a
-decision cites the policy instead. Below both sits a feature **spec**, which applies the standards to a concrete API and
-documents only what is unique to that feature.
+came from: the ADR owns the *why* and the standard owns the *what*. Where a standard descends from a policy, it cites
+the policy. Below both sits a feature **spec**, which applies the standards to a concrete API and documents only what is
+unique to that feature.
 
 | Layer         | Answers                      | Lifecycle                    |
 |---------------|------------------------------|------------------------------|
@@ -32,34 +32,34 @@ documents only what is unique to that feature.
 ## Why we use them
 
 The ADR log preserves the reasoning, and reasoning is the wrong thing to read when you are mid-build and want the rule.
-A standard states the pattern itself, in one place a reader can scan. Someone designing new functionality — a
-contributor or an AI session — finds the rule and checks the design against a conformance checklist. They open the ADR
+A standard states the pattern itself, in one place a reader can scan. Someone designing new functionality (a
+contributor or an AI session) finds the rule and checks the design against a conformance checklist. They open the ADR
 only when they want the deeper *why*.
 
 ## Categories
 
-We state each standard at its true **altitude** on one of four axes — `common`, `platform`, `interface`, `domain` — and
+We state each standard at its true **altitude** on one of four axes (`common`, `platform`, `interface`, `domain`), and
 we **compose** them. The rule-set enforced for a piece of work is the union of the axes that apply to it.
 
-The folders below group the standards a reader goes looking for together. A folder sits on an axis rather than being
-one: `public-api`, `widgets` and `webhooks` all carry `axis: interface`.
+The folders below group the standards a reader goes looking for together. A folder sits on an axis: `public-api`,
+`widgets` and `webhooks` all carry `axis: interface`.
 
-* **common** — platform-agnostic principles (testing philosophy, code-quality-as-a-gate). _Active._
-* **platform** — language, runtime and framework specifics: `node/`, `lit/` (future `dotnet/`). _Active._
-* **public-api** — public HTTP APIs called directly from customer-embedded widgets and integrations. _Drafted._
-* **widgets** — embedded widgets and web components, the clients of the public API: how we build, deliver and embed
+* **common**: platform-agnostic principles (testing philosophy, code-quality-as-a-gate). _Active._
+* **platform**: language, runtime and framework specifics (`node/`, `lit/`, future `dotnet/`). _Active._
+* **public-api**: public HTTP APIs called directly from customer-embedded widgets and integrations. _Drafted._
+* **widgets**: embedded widgets and web components, the clients of the public API, and how we build, deliver and embed
   them. _Drafted._
-* **global-styles** — embed theming: the `--<prefix>-*` CSS custom-property contract, stable class hooks, and the
-  authoring rules that keep every embedded widget restylable to match the host brand at render time. _Drafted._
-* **messaging** — the message bus contract: topic naming, payload shape, delivery guarantees. _Drafted._
+* **global-styles**: embed theming, which covers the `--<prefix>-*` CSS custom-property contract, stable class hooks,
+  and the authoring rules that keep every embedded widget restylable to match the host brand at render time. _Drafted._
+* **messaging**: the message bus contract, covering topic naming, payload shape and delivery guarantees. _Drafted._
 
 Auth, caching and versioning change with the consumer and the trust model, so the interface and domain categories stay
 distinct. The common and platform axes let a rule live once, at the layer where it is actually true.
 
 ## Where to find them
 
-* **[→ Standards index](standards/_index.md)** — the generated catalogue of every standard, grouped by axis.
-* **[`_template.md`](standards/_template.md)** — copy it to start a new standard. The categories above and the steps
+* **[→ Standards index](standards/_index.md)**: the generated catalogue of every standard, grouped by axis.
+* **[`_template.md`](standards/_template.md).** Copy it to start a new standard. The categories above and the steps
   below cover the rest.
 
 ## Metadata
@@ -88,7 +88,7 @@ distinct. The common and platform axes let a rule live once, at the layer where 
 ## Adding or changing a Standard
 
 Name where the standard comes from: an ADR in `derived-from`, a policy in `implements`, or both. `provenance-required`
-fails a standard carrying neither. Where you can name neither, either the decision has not been made — make it — or what
+fails a standard carrying neither. Where you can name neither, either the decision has not been made (make it), or what
 you are writing is guidance rather than a standard.
 
 Write the rules with RFC 2119 keywords, and make each one **testable**. Where a rule cannot be checked against a
