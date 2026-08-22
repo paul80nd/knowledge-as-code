@@ -208,6 +208,7 @@ rules:
       elsewhere replaces this file.
 
   - { path: ".github/workflows/**", layer: forked, note: "GitHub automation workflows." }
+  - { path: ".azuredevops/**",      layer: forked, note: "Azure DevOps pipelines and repository configuration." }
   - { path: "**/.order",            layer: forked, note: "Wiki navigation ordering." }
   - { path: ".gitignore",           layer: forked }
 

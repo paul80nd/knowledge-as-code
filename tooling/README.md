@@ -119,8 +119,9 @@ explain. **Decisions** takes only the ones belonging to a feature as a whole.
 
 ## Tests
 
-Three layers, all run from the repository root and all run in CI (see
-[`.github/workflows/kac.yml`](../.github/workflows/kac.yml)):
+Three layers, all run from the repository root and all run in CI, on GitHub through
+[`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and on Azure DevOps through
+[`.azuredevops/kac.yml`](../.azuredevops/kac.yml):
 
 | Layer       | Project / file            | Run                                | Covers                                                                                                                                                           |
 |-------------|---------------------------|------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|

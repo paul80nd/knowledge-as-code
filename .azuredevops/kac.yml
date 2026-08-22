@@ -1,0 +1,171 @@
+# The gate on a pull request for a copy of this whole repository, on Azure DevOps.
+#
+# It is for somebody building or customising the framework itself, so it runs both corpora, the
+# plugin example/ builds, and the tool's own three test layers. It mirrors
+# ../.github/workflows/kac.yml step for step.
+#
+# example/azure-pipelines.yml is a different file for a different reader: a corpus's own pipeline,
+# forked by each corpus, running kac over that corpus and nothing else. A corpus holds no template/
+# and no tests, so it has no use for this one.
+#
+# Azure Pipelines finds no YAML by itself. Point the pipeline at this path when you create it:
+#   Pipelines -> New pipeline -> Azure Repos Git -> your repo -> Existing Azure Pipelines YAML file
+#   -> /.azuredevops/kac.yml
+#
+# Wiring PR validation (important): this is an Azure Repos repository, where the YAML `pr:` trigger
+# below is IGNORED. Add this pipeline as a required Branch Policy -> Build Validation on `main`:
+#   Project settings -> Repositories -> <your-repo> -> Policies -> Branch Policies -> main ->
+#   Build Validation -> + -> select this pipeline -> Required.
+# The `pr:` block is kept for intent, and works as-is if the repo is ever mirrored to GitHub.
+#
+# Nothing this pipeline produces is written back over a file a human edits. `generate --check` only
+# reports staleness, naming the command to run locally.
+#
+# tooling/tests/round-trip.sh is deliberately absent. It fetches each record from the host
+# `publishing:` in .corpus.yaml names, which is raw.githubusercontent.com, and a commit that lives
+# only in Azure Repos was never pushed there. ../.github/workflows/kac.yml runs it.
+
+trigger: none                 # no CI on branch pushes; PR validation is via branch policy
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
+steps:
+  - task: UseDotNet@2
+    displayName: Install .NET 10 SDK
+    inputs:
+      packageType: sdk
+      version: 10.0.x
+
+  # One invocation per subcommand, run sequentially. Concurrent runs build the same project and
+  # contend over its output, so the kac runs must not overlap.
+  #
+  # Each runs from a corpus directory, because kac takes the first ancestor holding a .schema/ as
+  # one. The tool is the one this repository builds rather than one installed on the agent.
+  - script: dotnet run --project ../tooling/kac -- validate
+    displayName: Validate frontmatter, links and structure
+    workingDirectory: $(Build.SourcesDirectory)/example
+
+  - script: dotnet run --project ../tooling/kac -- generate --check
+    displayName: Check generated output is fresh
+    workingDirectory: $(Build.SourcesDirectory)/example
+
+  # template/ is what a new corpus receives, so a copy of it has to validate before its owner has
+  # run anything. It carries no .corpus.yaml, which only stops `mechanism`: both verbs below ask for
+  # the .schema/ beside them and nothing else.
+  - script: dotnet run --project ../tooling/kac -- validate
+    displayName: Validate what a new corpus receives
+    workingDirectory: $(Build.SourcesDirectory)/template
+
+  - script: dotnet run --project ../tooling/kac -- generate --check
+    displayName: Check the template's generated output is fresh
+    workingDirectory: $(Build.SourcesDirectory)/template
+
+  - script: dotnet run --project ../tooling/kac -- export
+    displayName: Build the export
+    workingDirectory: $(Build.SourcesDirectory)/example
+
+  - script: dotnet run --project ../tooling/kac -- bundle
+    displayName: Assemble the plugin bundle
+    workingDirectory: $(Build.SourcesDirectory)/example
+
+  # Taken at `latest` rather than pinned, because the bundle has to be valid against the CLI a
+  # reader actually runs.
+  - script: npm install -g @anthropic-ai/claude-code@latest
+    displayName: Install the Claude Code CLI
+
+  # A clean `claude plugin validate` prints one line whatever it looked at, and a plugin holding no
+  # component at all passes it. The two guards below close that: bundle.json's components must
+  # really be in the tree, and .claude-plugin/ must hold the manifest and nothing else, because a
+  # component filed in there is loaded by nothing.
+  #
+  # Word for word the script in ../.github/workflows/kac.yml, so it is held to the POSIX subset Git
+  # Bash and older macOS bash agree on, with no command substitution, whose `$(...)` an Azure
+  # pipeline reads as its own macro before the shell sees it.
+  - script: |
+      claude plugin validate ./.dist/plugin --strict
+      claude plugin validate ./.dist --strict
+
+      jq -r '.included[].path' .dist/plugin/bundle.json > "$TEMPDIR/included.txt"
+
+      missing=''
+      while read -r component; do
+        [ -d ".dist/plugin/$component" ] || missing="$missing $component"
+      done < "$TEMPDIR/included.txt"
+
+      if [ -n "$missing" ]; then
+        echo "bundle.json includes components the assembled plugin does not hold:$missing"
+        exit 1
+      fi
+
+      find .dist/plugin/.claude-plugin -mindepth 1 -maxdepth 1 ! -name plugin.json > "$TEMPDIR/stray.txt"
+
+      if [ -s "$TEMPDIR/stray.txt" ]; then
+        echo "filed inside .claude-plugin/, where nothing loads it:"
+        cat "$TEMPDIR/stray.txt"
+        exit 1
+      fi
+    displayName: Validate the assembled plugin and its marketplace
+    workingDirectory: $(Build.SourcesDirectory)/example
+    env:
+      TEMPDIR: $(Agent.TempDirectory)
+
+  # `bundle-empty` in the golden suite pins what an emptied plugin holds. What it cannot say is
+  # whether that plugin is still valid to install, which is what this asks.
+  - script: |
+      mkdir -p "$TEMPDIR/no-types"
+      cp -R .schema "$TEMPDIR/no-types/.schema"
+      cp -R .plugin "$TEMPDIR/no-types/.plugin"
+
+      cd "$TEMPDIR/no-types"
+      dotnet run --project "$SOURCES/tooling/kac" -- export
+      dotnet run --project "$SOURCES/tooling/kac" -- bundle
+
+      claude plugin validate ./.dist/plugin --strict
+      claude plugin validate ./.dist --strict
+
+      if ! jq -e '.included == [] and (.trimmed | length) > 0' .dist/plugin/bundle.json > /dev/null; then
+        echo "a corpus with no type bundled something that reads a type it does not hold"
+        exit 1
+      fi
+    displayName: Bundle a corpus that adopted no type, and validate what it produced
+    workingDirectory: $(Build.SourcesDirectory)/example
+    env:
+      TEMPDIR: $(Agent.TempDirectory)
+      SOURCES: $(Build.SourcesDirectory)
+
+  # tooling/README.md#tests says what each layer covers and why all three are here.
+  - script: dotnet test tooling/kac.tests
+    displayName: Run kac.core unit tests
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - script: dotnet test tooling/kac.features
+    displayName: Run kac feature tests
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - script: dotnet run tooling/kac-tests.cs
+    displayName: Run the golden test suite
+    workingDirectory: $(Build.SourcesDirectory)
+
+  # Pack fails on package metadata no test layer above reads, such as a readme the project names and
+  # nobody wrote. Installing what was packed catches a package that is well-formed and still does
+  # not resolve to a runnable command.
+  - script: |
+      dotnet pack tooling/kac/kac.csproj -o .dist/pack
+      dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
+      cd "$TEMPDIR"
+      "$SOURCES/.dist/tools/kac" --version
+    displayName: Pack the tool and run the installed copy
+    workingDirectory: $(Build.SourcesDirectory)
+    env:
+      TEMPDIR: $(Agent.TempDirectory)
+      SOURCES: $(Build.SourcesDirectory)

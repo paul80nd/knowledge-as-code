@@ -34,6 +34,11 @@ dotnet run --project ../tooling/kac -- generate --check
 
 **Run one invocation at a time.** Concurrent runs build the same project and contend over its output.
 
+**Three pipelines, and each has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
+[`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.
+[`example/azure-pipelines.yml`](../example/azure-pipelines.yml) is a corpus's own, forked by each corpus that takes
+one, so it runs `kac` over that corpus and reads no `template/`.
+
 ## Adding or changing a check
 
 **Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
