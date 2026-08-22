@@ -56,7 +56,7 @@ Other boundaries:
 | `review-by` *        | date                                   | Quoted. The date by which someone confirms this is still true.                                      |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-faqs -->
 
@@ -87,7 +87,7 @@ Other boundaries:
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `min-items`                 | error   | A list field carries at least as many entries as its schema asks for.                                           |
@@ -108,7 +108,7 @@ Other boundaries:
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `one-problem-per-document`  | warning | One Symptom section, because an FAQ is found by its symptom.                                                    |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule              | What it would verify                                                                   |
 |-------------------|----------------------------------------------------------------------------------------|
