@@ -17,12 +17,18 @@ alignment are frontmatter. Prose restating any of them goes wrong before the fro
 ## What this overrides
 
 * **"Write in the present tense."** A postmortem records what happened, so its timeline and its account of the
-  incident are past tense. A Decided record's consequences have not happened yet, so they are future tense. Whatever
-  either says about the estate today stays present.
+  incident are past tense. A Decided record's consequences have not happened yet, so a consequence takes the future
+  and the mechanism producing it stays present.
+  Write: "**CI will become a gate on documentation.** A malformed document fails the build."
+  Whatever either record says about the estate today stays present.
 * **"They do not reach a clause whose wording is the record of an obligation."** That exemption covers the words and
   not the marks. Repair a clause's punctuation, and keep every word carrying obligation: a citation quotes the row, so
   dropping a qualifier changes what `pol-DEVI.OWNER` says to whoever cites it. The author accepts that diff in review,
   which is where a meaning that moved is caught.
+  **Inside a clause row this beats every other rule, on this page and on the floor.** A passive, an elided verb, a
+  compound obligation, and a rationale the tier row would send to Purpose all stay, because each is wording a citation
+  quotes. Report them and leave them. The tier row governs a clause you are writing, and this governs one you are
+  editing.
 * **"Gloss a precise term on first use."** The corpus has a glossary, and a term it defines is defined once. Link the
   entry rather than restating it.
 * **Nothing else.** Where the floor and this page appear to disagree anywhere below, the floor wins.
@@ -37,7 +43,10 @@ none at all. The absence of a check is not permission.
 
 **Run `kac generate` before you finish.** A record's own words are copied into generated output: the H1 lands in the
 type's index, and frontmatter values land in the tables beside it. Change either and a generated file goes stale, so
-regenerating is the last thing a turn does. `generate --check` fails a build where it was not run.
+regenerating is the last thing a turn does.
+
+**Where you cannot run it, leave the H1 and the frontmatter exactly as they are.** A stale generated file fails
+`generate --check` for whoever arrives next, and no repunctuated title is worth that. Say which rule you left behind.
 
 ## Use the corpus's own words
 
