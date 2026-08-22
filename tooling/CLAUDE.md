@@ -11,15 +11,15 @@ the prose pages under `tooling/`, this one included.
 ## Adding or changing a check
 
 **Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
-`expr:` on a rule in `.schema/<type>.yaml` — see [`../example/.schema/README.md`](../example/.schema/README.md) for what
-one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks table
-and `kac checks` all pick it up from the schema.
+`expr:` on a rule in `.schema/<type>.yaml`. See [`../example/.schema/README.md`](../example/.schema/README.md) for
+what one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the
+checks table and `kac checks` all pick it up from the schema.
 
 **What decides it is what the author is told.** Write the expression where one fixed message says everything the code
 would have said. Write the code where it can name *which* part of the document is at fault and a single string cannot. A
 rule reporting "something here is wrong" where it could have named the missing piece has been made cheaper and worse,
 and nothing in the gate will notice. Cost is the second question, and it only ever argues for converting a rule that has
-already passed the first — a schema with no C# behind it was never the aim.
+already passed the first. A schema with no C# behind it was never the aim.
 
 The rules that fail it cluster, which is worth knowing before starting one. The table marks the ones already written,
 because the argument for a class reads differently beside a class that exists.
@@ -28,11 +28,11 @@ because the argument for a class reads differently beside a class that exists.
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Git history**    | `immutable-after-accepted`, `immutable-after-published`, `changelog-begins-at-active`, `changelog-on-material-change`                                       | All four ask what changed in this commit against the committed content, and whether it was substantive. One mechanism answers them, and it is the largest piece of work left.                                          |
 | **Cross-document** | `store-has-service`, `not-load-bearing`, `constraint-consistency`, `rules-have-controls`, `redefinitions-are-reciprocal`, `undefined-terms`, `unused-terms` | Each fits `ICorpusRule`. `redefinitions-are-reciprocal` is the hardest: it holds an entry inside one document against an entry inside another.                                                                         |
-| **Graph**          | `no-dependency-cycles` — **written**                                                                                                                        | A loop lives in the set of edges and no document holds it, so the walk needs every record and the message has to name the ones it runs through.                                                                        |
-| **Per-part**       | `alternatives-have-verdicts` and `terms-are-alphabetical` — **written** — beside `terms-are-singular`, `carried-in-full-by-digest`, `escalation-required`   | Each judges the parts of one document — bullets under a heading, entries in a glossary, branches of a diagnosis tree — and its message has to name the part that failed.                                               |
-| **A fixed form**   | `y-statement-present` — **written**                                                                                                                         | A Y-statement is six moves in one block-quote, and the message worth reading names the move that is absent. An expression could only report that the block-quote is not a Y-statement, which the author already knows. |
+| **Graph**          | `no-dependency-cycles` (**written**)                                                                                                                        | A loop lives in the set of edges and no document holds it, so the walk needs every record and the message has to name the ones it runs through.                                                                        |
+| **Per-part**       | `alternatives-have-verdicts` and `terms-are-alphabetical` (**written**) beside `terms-are-singular`, `carried-in-full-by-digest`, `escalation-required`     | Each judges the parts of one document: bullets under a heading, entries in a glossary, branches of a diagnosis tree. Its message has to name the part that failed.                                                     |
+| **A fixed form**   | `y-statement-present` (**written**)                                                                                                                         | A Y-statement is six moves in one block-quote, and the message worth reading names the move that is absent. An expression could only report that the block-quote is not a Y-statement, which the author already knows. |
 
-**Wanting loops, joins or quantifiers in the grammar to reach one of these is the signal to stop** — that way lies
+**Wanting loops, joins or quantifiers in the grammar to reach one of these is the signal to stop.** That way lies
 rebuilding OPA. Write a rule class.
 
 **A rule that needs C# is a class, not an arm.** One file in `kac.core/Rules/`, its own unit tests, and a line in the
@@ -101,15 +101,15 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
 1. **An entry in [`../example/.schema/_checks.yaml`](../example/.schema/_checks.yaml)**, the declaration. Its
    `description:` is what `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the boundary.
    A check a rule class reports under with no entry here fails `schema-dispatch` when the schema loads.
-2. **A row in `Generator.DocRows`**, unless the check declares `on-type-page: false` — one or the other, or
+2. **A row in `Generator.DocRows`**, unless the check declares `on-type-page: false`. One or the other, or
    `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one of its
    records. The flag is for a check that reads the schema, the template or the page itself, which is real and is not
    theirs to act on. The flag sits with the check because it is a fact about the check.
-3. **A fixture that trips it** — the coverage gate fails on any reachable check no fixture exercises, and that is also
-   what catches a check declared in the schema and reported by nothing.
+3. **A fixture that trips it.** The coverage gate fails on any reachable check no fixture exercises, and that is
+   also what catches a check declared in the schema and reported by nothing.
 
 No prose states a check count: `kac checks` reports it. [`features/checks.md`](features/checks.md) carries no table of
-checks either — it points at the schema, so there is nothing there to go quietly out of date.
+checks either: it points at the schema, so there is nothing there to go quietly out of date.
 
 `DocRows` is deliberately *not* generated from the catalogue. Rows are grouped and hand-worded, so several catalogue
 ids fold into one reader-facing row. An expression rule is the opposite, one id reporting under its own name, so its
@@ -186,7 +186,7 @@ A scenario asserting a whole corpus, such as `Structure.feature` or `Shape.featu
 fixture holds as well as every finding it produces. Adding a file to a fixture changes that count, and regenerating the
 goldens will not tell you: the golden layer and the feature layer assert different things about the same corpus.
 
-`Harness` runs `Corpus.Load` then `Validator.CheckAll` — the two calls `Commands.Validate` makes. Keep it that way: a
+`Harness` runs `Corpus.Load` then `Validator.CheckAll`: the two calls `Commands.Validate` makes. Keep it that way: a
 harness assembling its own subset of the sequence leaves whole checks unreachable from a spec, and every spec goes on
 passing.
 
