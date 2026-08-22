@@ -16,7 +16,7 @@ rule. Taken together, the controls make the gap between *rule* and *enforcement*
 does something check?
 
 That share is worth knowing at three engineers and at three hundred. When someone asks whether we follow our own
-standards, the controls answer honestly; without them we can only point at the standards and hope.
+standards, the controls answer honestly. Without them we can only point at the standards and hope.
 
 **`not-enforced` matters more than any other `mechanism` value.** Using it turns an aspiration into a number someone can
 see, and the number is worth reading only while it is honest. Do not invent a mechanism to avoid it.
@@ -28,7 +28,7 @@ checked.
 
 | Standard                                                   | Control                                                                  |
 |------------------------------------------------------------|--------------------------------------------------------------------------|
-| "Secrets **MUST** come from Key Vault."                    | "CI runs secret scanning on every PR; failures block merge."             |
+| "Secrets **MUST** come from Key Vault."                    | "CI runs secret scanning on every PR, and failures block merge."         |
 | "Every public endpoint **MUST** carry a conformance test." | "Quarterly manual audit of the OpenAPI document against the test suite." |
 
 Anything that can fail a build, block a merge, raise an alert or produce an audit artefact is a control. Anything that
@@ -62,7 +62,7 @@ may verify several rules, and one rule may need several controls.
 ## Adding a control
 
 1. Copy [`_template.md`](controls/_template.md) to `NNNN-kebab-slug.md`.
-2. Name the rules it verifies in `verifies` — rule-level anchors where the standard has them, the standard id otherwise.
+2. Name the rules it verifies in `verifies`: rule-level anchors where the standard has them, the standard id otherwise.
 3. Pick the mechanism that runs today. Where nothing checks the rule, that is `not-enforced`, and the control still gets
    written: an unenforced rule you know about is worth more than one you do not.
 4. Record where the evidence lives: the pipeline step, the checklist, the alert rule, the audit note.

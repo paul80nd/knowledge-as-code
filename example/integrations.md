@@ -18,7 +18,7 @@ contract says, what SLA they signed and who answers the phone when we call. None
 
 An integration also caps what we can promise. Where an [NFR](/nfrs) targets more availability than the vendor's SLA
 supports, the vendor's bad day breaks our target. Whoever sets that target can read the vendor's number in `their-sla`
-first, rather than meeting the gap during an incident.
+first. Otherwise the gap turns up during an incident.
 
 ## Scope
 
@@ -30,9 +30,9 @@ system somebody else runs.
 
 Not the place for:
 
-* **How to configure it** — that is a [process](/processes).
-* **What to do when it's down** — that is a [runbook](/runbooks), which this document links to.
-* **Why we chose it** — that is an [ADR](/adrs).
+* **How to configure it.** That is a [process](/processes).
+* **What to do when it's down.** That is a [runbook](/runbooks), which this document links to.
+* **Why we chose it.** That is an [ADR](/adrs).
 
 ## Metadata
 
@@ -57,8 +57,8 @@ Not the place for:
 
 ## Adding an integration
 
-1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids — `int-sendgrid`.
-2. Record the contract and how the system authenticates us. Name where the credential is held; nothing secret goes in
+1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids: `int-sendgrid`.
+2. Record the contract and how the system authenticates us. Name where the credential is held. Nothing secret goes in
    this corpus.
 3. Write down each way the system fails and what we do instead. "It goes down sometimes" is not a failure mode; "returns
    503 during their maintenance window, we queue and retry" is.
@@ -69,7 +69,7 @@ Not the place for:
 
 * **Every integration names a fallback**, or states plainly that it has none. Where the document says neither, whoever
   is on call works it out during the incident.
-* **Record the commercial facts** — cost model, renewal date, account owner. Nobody else writes them down, and you want
+* **Record the commercial facts**: cost model, renewal date, account owner. Nobody else writes them down, and you want
   them on the day the vendor raises the price or stops answering.
 * **`used-by` names the services that call this system**, by id. CI fails an id that names no service.
 

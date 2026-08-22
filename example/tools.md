@@ -10,7 +10,7 @@ A record of something we build with: a package, a framework, a linter, a hosted 
 for, whether it is approved, which versions we stand behind, its licence, and what we chose it over.
 
 Together the entries are a lightweight software approval register. A larger organisation would run one as an approval
-board; three engineers run it as a folder of records.
+board. Three engineers run it as a folder of records.
 
 ## Why we use them
 
@@ -26,9 +26,9 @@ nothing uses any more.
 ## Scope
 
 A tool is something we **build with**, not something we run. A running system we call is an
-[integration](/integrations); something we deploy is a [service](/services).
+[integration](/integrations). Something we deploy is a [service](/services).
 
-The register records **current state**; an [ADR](/adrs) records the **decision**, where there was one worth recording. A
+The register records **current state**. An [ADR](/adrs) records the **decision**, where there was one worth recording. A
 small, uncontroversial adoption needs only a register entry. A contested or expensive choice earns both, and the entry
 cites the ADR in `decided-in`.
 
@@ -60,9 +60,8 @@ the evaluation we already did.
 
 ## Adding a tool
 
-1. Copy [`_template.md`](tools/_template.md) to `<slug>.md`. Tools use slug ids — `tol-vitest`.
-2. Set `status`. `trial` covers something being evaluated in one place; promote or reject it rather than leaving it
-   there.
+1. Copy [`_template.md`](tools/_template.md) to `<slug>.md`. Tools use slug ids: `tol-vitest`.
+2. Set `status`. `trial` covers something being evaluated in one place. Promote or reject it once the evaluation ends.
 3. Record the `licence` as an SPDX identifier.
 4. Where this tool takes over from an older one, name the older tool in `replaces`, so the deprecation path is visible.
 5. Cite `decided-in` where an ADR exists. Where the choice was contested and no ADR exists, write one.

@@ -27,8 +27,8 @@ contracts, the service bus, auth, deployment ordering, infrastructure patterns. 
 
 ## Scope: central vs repo-local
 
-An ADR here covers a decision spanning **more than one** repository. A decision entirely local to a single repository —
-a library choice, an internal naming convention, a refactor approach — belongs in that repository, under `/docs/adrs/`.
+An ADR here covers a decision spanning **more than one** repository. A decision entirely local to a single repository
+(a library choice, an internal naming convention, a refactor approach) belongs in that repository, under `/docs/adrs/`.
 
 Where a central ADR later supersedes a repo-local one, set the local ADR to superseded and reference the central ADR by
 its id.
@@ -59,22 +59,22 @@ its id.
 
 1. Copy [`_template.md`](adrs/_template.md) to `NNNN-kebab-case-title.md`, where `NNNN` is the next unused four-digit
    number. The [index](adrs/_index.md) shows the highest one in use.
-2. Fill in the frontmatter and the sections. Keep it short — narrative paragraphs, not form-filling.
+2. Fill in the frontmatter and the sections. Keep it short: a few narrative paragraphs.
 3. Open a PR. The status starts at `proposed`.
 4. On acceptance, set `status: accepted` and `decided-on`. The index rebuilds itself.
 
 **Conventions**
 
-* **Filename** — `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused. A withdrawn proposal retires its
+* **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused. A withdrawn proposal retires its
   number.
-* **Immutability** — once an ADR is accepted, change nothing in it beyond its status and its typos. To change a
+* **Immutability.** Once an ADR is accepted, change nothing in it beyond its status and its typos. To change a
   decision, write a new ADR that supersedes the old one.
-* **Superseding** — set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
+* **Superseding.** Set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
   supersession recorded on one side only fails the build.
-* **Prescriptive language** — an ADR that establishes a default or a policy may use
+* **Prescriptive language.** An ADR that establishes a default or a policy may use
   [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. An ADR that records a decision uses plain
   declarative prose.
-* **Format** — a lean Nygard-style format with an explicit Alternatives Considered section.
+* **Format**: lean Nygard style, with an explicit Alternatives Considered section.
   [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example.
 
 See [Contributing](/knowledge-as-code/contributing.md) for the review model that applies to all Decided-tier documents.

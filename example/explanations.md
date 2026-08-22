@@ -10,7 +10,7 @@ An explanation is prose whose job is comprehension. An architecture overview, a 
 through the estate, an account of why the testing approach is shaped as it is. You read one to build a mental model, not
 to consult it mid-task.
 
-Every other type answers a narrow question — what was decided, what you must do, how you do it, what a component is. An
+Every other type answers a narrow question: what was decided, what you must do, how you do it, what a component is. An
 explanation answers how those pieces fit together. A service page or an ADR that took that question on would turn into
 one.
 
@@ -24,10 +24,10 @@ record.
 
 An explanation is **not**:
 
-* **Normative** — if it says what you must do, it is a [standard](/standards).
-* **Procedural** — if it says how to perform a task, it is a [process](/processes) or a [runbook](/runbooks).
-* **A catalogue entry** — if it describes one component, it is a [service](/services).
-* **A decision** — if it records what was chosen and why, it is an [ADR](/adrs).
+* **Normative.** If it says what you must do, it is a [standard](/standards).
+* **Procedural.** If it says how to perform a task, it is a [process](/processes) or a [runbook](/runbooks).
+* **A catalogue entry.** If it describes one component, it is a [service](/services).
+* **A decision.** If it records what was chosen and why, it is an [ADR](/adrs).
 
 **Explanations link rather than restate.** An architecture overview points at the services, capabilities and ADRs that
 hold the detail. An explanation that states a fact those documents already own holds the second copy of it. That copy is
@@ -58,7 +58,7 @@ plausibly be an explanation *or* something else, it is the something else.
 ## Adding an explanation
 
 1. Check it is none of the exclusions above.
-2. Copy [`_template.md`](explanations/_template.md) to a kebab-case filename, with no number prefix — explanations are
+2. Copy [`_template.md`](explanations/_template.md) to a kebab-case filename, with no number prefix. Explanations are
    named, not sequenced.
 3. Set `explains` to the services or capabilities it covers, and `review-by`.
 4. Write it as prose. Link out for every concrete fact you are tempted to state.

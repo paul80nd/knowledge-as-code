@@ -30,9 +30,9 @@ and let a human confirm it at promotion.
 
 Other boundaries:
 
-* **[Runbook](/runbooks)** — if it needs a diagnosis tree and an escalation path, it is a runbook. An FAQ has a known
-  fix, not a decision procedure.
-* **[Standard](/standards)** — if the real answer is "people should stop doing the thing that causes this", the fix is a
+* **[Runbook](/runbooks).** If it needs a diagnosis tree and an escalation path, it is a runbook. An FAQ has one known
+  fix.
+* **[Standard](/standards).** If the real answer is "people should stop doing the thing that causes this", the fix is a
   rule, and that needs an [ADR](/adrs) first.
 * **One problem per document.** Someone arriving with a symptom matches the first one on the page and never reads the
   second.
@@ -62,7 +62,7 @@ Other boundaries:
 
 ## Adding an FAQ
 
-1. Copy [`_template.md`](faqs/_template.md) to `<slug>.md`, named for the symptom rather than the cause — that is what
+1. Copy [`_template.md`](faqs/_template.md) to `<slug>.md`, named for the symptom rather than the cause. That is what
    people search for.
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
 3. Over-fill `symptom-keywords` with the search terms that failed you the day you hit the problem.

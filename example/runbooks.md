@@ -25,9 +25,9 @@ the recovery has never been run, while there is still time to run it.
 
 Two other types sit close enough to confuse:
 
-* **[FAQ](/faqs)** — a known problem with a known fix, usually one or two steps, no urgency. If it needs a diagnosis
+* **[FAQ](/faqs)**: a known problem with a known fix, usually one or two steps, no urgency. If it needs a diagnosis
   tree and an escalation path, it is a runbook.
-* **[Postmortem](/postmortems)** — an account of an incident that happened. A runbook gives instructions for an incident
+* **[Postmortem](/postmortems)**: an account of an incident that happened. A runbook gives instructions for an incident
   that has not happened yet. A good postmortem frequently produces a runbook.
 
 Disaster recovery and rebuilding the estate from nothing belong here. You rehearse them deliberately, which makes them
@@ -57,8 +57,8 @@ look like processes. You open the document on a day when the estate is already d
 
 ## Adding a runbook
 
-1. Copy [`_template.md`](runbooks/_template.md) to `<slug>.md`. Runbooks use slug ids — `rbk-estate-rebuild`.
-2. Lead with **symptoms** — what the reader is seeing. That is how they find this document.
+1. Copy [`_template.md`](runbooks/_template.md) to `<slug>.md`. Runbooks use slug ids: `rbk-estate-rebuild`.
+2. Lead with **symptoms**: what the reader is seeing. That is how they find this document.
 3. Give the immediate actions before the diagnosis. Stop the bleeding, then work out why.
 4. Structure the diagnosis as a tree, not prose. Each branch ends in a resolution or an escalation.
 5. Put the escalation path where the reader finds it without scrolling.

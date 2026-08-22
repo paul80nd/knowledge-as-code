@@ -29,9 +29,9 @@ deliberate: an observation nobody has needed in three months was probably situat
 
 Boundaries:
 
-* **[FAQ](/faqs)** — confirmed, general, current, and carries authority. That is what a discovery is promoted *to*.
-* **Session state** — where a piece of work got to. That is personal handover and is **not stored in this repository**.
-* **A bug** — if it is broken and should be fixed, raise a work item. A discovery records something surprising, not
+* **[FAQ](/faqs)**: confirmed, general, current, and carries authority. That is what a discovery is promoted *to*.
+* **Session state**: where a piece of work got to. That is personal handover and is **not stored in this repository**.
+* **A bug.** If it is broken and should be fixed, raise a work item. A discovery records something surprising, not
   something owed.
 
 ## Metadata
@@ -72,7 +72,7 @@ The one flow that crosses tiers. Where the observation turns out to be a rule pe
 2. Create the FAQ with `promoted-from`, `confirmed-by` and `confirmed-on`.
 3. Set the discovery's `status: promoted` and `promoted-to`.
 
-Nothing proposes a promotion automatically yet; [Automation](/knowledge-as-code/automation.md) describes the
+Nothing proposes a promotion automatically yet. [Automation](/knowledge-as-code/automation.md) describes the
 distillation pass that would. Such a proposal arrives as a pull request carrying `provenance` back to the passage that
 produced it. Read that provenance before you accept anything: an unverifiable proposal is a rejected proposal. Checking
 it is the whole reason the field exists.

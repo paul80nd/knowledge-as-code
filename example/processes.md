@@ -21,18 +21,18 @@ Processes carry `last-rehearsed` for that reason. A procedure nobody has walked 
 
 **Are you doing this because you planned to, or because something is broken?**
 
-* Planned — a process.
-* Broken — a [runbook](/runbooks).
+* Planned: a process.
+* Broken: a [runbook](/runbooks).
 
 A process and a runbook have different readers, a different tone, and different consequences when they go stale. A
-process that is slightly out of date is annoying; a runbook that is slightly out of date is dangerous.
+process that is slightly out of date is annoying. A runbook that is slightly out of date is dangerous.
 
 A process is also not:
 
-* **A rule** — "deployments happen in dependency order" is a [standard](/standards); the release process cites it.
-* **A reference list** — system requirements and port tables belong in the [service](/services) catalogue. A document
+* **A rule**: "deployments happen in dependency order" is a [standard](/standards). The release process cites it.
+* **A reference list.** System requirements and port tables belong in the [service](/services) catalogue. A document
   with no steps is not a process.
-* **An explanation** — how the pipeline works is an [explanation](/explanations); how to use it is a process.
+* **An explanation.** How the pipeline works is an [explanation](/explanations). How to use it is a process.
 
 ## Metadata
 
@@ -57,7 +57,7 @@ A process is also not:
 
 ## Adding a process
 
-1. Copy [`_template.md`](processes/_template.md) to `<slug>.md`. Processes use slug ids — `prc-releasing`.
+1. Copy [`_template.md`](processes/_template.md) to `<slug>.md`. Processes use slug ids: `prc-releasing`.
 2. Write the steps in order and in the imperative, for a reader who has not done this before.
 3. Include prerequisites, a verification step ("you know it worked when…") and a rollback.
 4. Set `last-rehearsed`, and write `"never"` rather than guess a date.

@@ -26,12 +26,12 @@ than by store, because a domain often spans stores and that spread is the part w
 
 Not the place for:
 
-* **Schema definitions** — those live with the code that owns them.
-* **How to query the data** — that is a [process](/processes) or the service's own document.
-* **Retention rules as commitments** — a [policy](/policies) holds the commitment, and a data document records what the
+* **Schema definitions.** Those live with the code that owns them.
+* **How to query the data.** That is a [process](/processes) or the service's own document.
+* **Retention rules as commitments.** A [policy](/policies) holds the commitment, and a data document records what the
   store actually does.
 
-The folder is singular — `data/` — because English gives no plural. It and [`glossary/`](/glossary) are the two
+The folder is singular, `data/`, because English gives no plural. It and [`glossary/`](/glossary) are the two
 exceptions to the plural-folder rule.
 
 ## Metadata
@@ -69,7 +69,7 @@ exceptions to the plural-folder rule.
 
 * **A `personal` or `special-category` classification requires a `retention`.** Leave it out and `required-field` fails
   the build.
-* **Never put actual data here** — no sample records, no identifiers, no connection strings.
+* **Never put actual data here**: no sample records, no identifiers, no connection strings.
 
 ## What CI checks
 

@@ -1,6 +1,6 @@
 # Policies
 
-The engineering commitments we hold ourselves to — the *what* and the *why*.
+The engineering commitments we hold ourselves to: the *what* and the *why*.
 
 **[→ Index](policies/_index.md)**
 
@@ -46,16 +46,16 @@ decisions.
 ## Categories
 
 Every policy carries a `category`: **security**, **delivery**, **operations** or **governance**. It answers *why this
-policy exists* — the broad area of the commitment — where `tags` answer *what topics it touches*. Two questions need two
+policy exists* (the broad area of the commitment), where `tags` answer *what topics it touches*. Two questions need two
 fields: a secrets policy is `category: security` and `tags: [credentials, key-management, secrets]`.
 
 The set is closed and deliberately small. Four categories cut the policies into groups worth navigating. A fifth would
 have to earn its place by making one of these too crowded to scan. That pressure is easier to judge once there are
 enough policies to feel it.
 
-Category is metadata and `policies/` stays flat. Recategorising a policy is then a one-line edit rather than a file move
-that rewrites every document linking to it. The awkward calls are the ones most likely to be revisited, and
-accessibility under governance is the clearest of them.
+Category is metadata and `policies/` stays flat. Recategorising a policy is then a one-line edit. A file move would
+rewrite every document linking to it. The awkward calls are the ones most likely to be revisited, and accessibility
+under governance is the clearest of them.
 
 ## Metadata
 
@@ -80,14 +80,14 @@ accessibility under governance is the clearest of them.
 ## Adding a policy
 
 1. Apply the test above. Most things that feel like policies are standards.
-2. Choose a four-character mnemonic for the policy's *concept* — `VURM` for vulnerability remediation, `PIPE` for
+2. Choose a four-character mnemonic for the policy's *concept*: `VURM` for vulnerability remediation, `PIPE` for
    pipeline-to-production. Start it with the same letter as the slug, so the folder still reads alphabetically.
 3. Copy [`_template.md`](policies/_template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
-   upper-case. The H1 states the commitment in plain words. The identity line beneath it carries the id —
-   ``` `Policy: pol-MNEM` `DRAFT` ``` — and CI checks it against the frontmatter.
+   upper-case. The H1 states the commitment in plain words. The identity line beneath it carries the id, written
+   ``` `Policy: pol-MNEM` `DRAFT` ```, and CI checks it against the frontmatter.
 4. Set `category` to whichever of the four the commitment belongs to. If two fit, pick the one a reader looking for this
    policy would try first. If none does, that is a taxonomy question, and not a fifth category invented in passing.
-5. State the scope it binds, then the commitment itself as clauses — one obligation per row, each with a short
+5. State the scope it binds, then the commitment itself as clauses: one obligation per row, each with a short
    upper-case id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Write any explicit exceptions beneath the clauses,
    where a reader meets them before relying on the rule.
 6. Map clauses to framework controls in the `Alignment` column where a genuine mapping exists, and roll the references
@@ -97,8 +97,8 @@ accessibility under governance is the clearest of them.
 
 **Conventions**
 
-* **A policy does not state our standing against a framework.** Not "compliant", not "certified", not "registered" — a
-  policy maps its clauses to controls and says nothing about what that mapping is worth. [Frameworks](/frameworks.md)
+* **A policy does not state our standing against a framework.** A policy maps its clauses to controls and says nothing
+  about what that mapping is worth. Leave out "compliant", "certified" and "registered". [Frameworks](/frameworks.md)
   holds the standing, and holds it once.
 * **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice, and
   a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
@@ -108,7 +108,7 @@ accessibility under governance is the clearest of them.
   answers, in the form [Metadata](/knowledge-as-code/metadata.md#referring-to-an-id) sets out. Clause ids are immutable
   for the same reason policy ids are: removing or renaming one breaks every citation of it.
 * **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
-  scope — the id does not move. Standards, controls and processes cite policies by id. Reassign a mnemonic and every one
+  scope. The id does not move. Standards, controls and processes cite policies by id. Reassign a mnemonic and every one
   of those citations tells the reader something untrue: the reference still resolves, so nothing fails and no check
   fires.
 
