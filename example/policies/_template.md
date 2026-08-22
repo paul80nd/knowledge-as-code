@@ -44,8 +44,7 @@ What we commit to and why in one or two short paragraphs. This is the section a 
 so write it as prose with a point of view: plain, declarative, unhedged. A policy that hedges is not a policy.
 
 Say the thing and the reason for it. The first paragraph states the position. The second earns it, ideally with the
-argument someone sceptical would need rather than the one that sounds best. Avoid previewing the clauses. A sentence
-here that could be re-read as an obligation belongs in the table instead.
+argument someone sceptical would need rather than the one that sounds best.
 
 _(Test before writing: would this still be true after replacing the entire technology estate? If it names a tool, a
 framework or a protocol, it is a [standard](../standards.md), not a policy.)_

@@ -59,6 +59,9 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   pronoun alone: the repair costs a manufactured subject, and a run of them reads as a tic.
   Write: "...drifted from the catalogue. That exit is what keeps the table honest."
   Not: "...drifted from the catalogue, which is what keeps that table honest."
+  **"one", "this", "that" and "it" are pronouns here.** A word standing in for a noun answers to the same rule, and a
+  definition is where it slips: the reader meets the claim before the thing it is about.
+  Write: "A policy that hedges is not a policy." Not: "A policy that hedges is not one."
 * **Give every clause its own verb.**
   Write: "Phase 1 moves the converters and Phase 2 moves the runtime."
   Not: "Phase 1 moves the converters and Phase 2 the runtime."
@@ -127,6 +130,10 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   Write: "may." Not: "could potentially be argued that it might."
   Write: "is fast", or the measurement. Not: "runs quickly."
   An adverb carrying its own meaning stays: "an id that quietly means something new".
+* **Give a claim one reason, and stop.** A second clause explaining the first explains nothing the first did not.
+  Write: "Building it in costs a fraction of fixing it later."
+  Not: "Building it in costs a fraction of fixing it later, because the expensive failures are structural, and a late
+  fix does not reach them."
 * **Say what you found.** Write: "three broken links." Not: "a number of issues."
 * **Cut a sentence that could appear unchanged in another project's documentation.** It says nothing about this one.
   Write: "A column rename fails the build." Not: "Schema changes can cause issues."
@@ -137,10 +144,13 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   Keep: "Copy `template/`, not `example/`." A reader would reach for the wrong folder.
   Cut: "The tool validates rather than generates." Say what it does.
   **Count the contrasts before you finish.** Every one passes on its own. The fortieth in one shape fails.
-  Count `rather than`, `, not ` and `, never ` over what you wrote, and aim under 2 per 1000 words. A bulleted
+  Count `rather than`, `, not ` and `, never ` over what you wrote, and aim under 5 per 1000 words. A bulleted
   rulebook scores higher by construction, since each bullet is its own reading unit.
 * **Use the honest number.** Two examples where two will do, four where four is true.
-* **End a section on a fact.** A crafted line closing every section reads as style rather than substance.
+* **End a section on a fact, and a paragraph too.** A crafted line closing either one reads as style rather than
+  substance, and the paragraph is where the habit starts. Where the last sentence restates the paragraph in a
+  better-sounding shape, cut it and let the paragraph end on the point it made.
+  Cut: "Without it, each of them becomes something we assert rather than something we can show."
 * **A bold lead-in opens a list item or a paragraph, and new detail follows it.** A bold span closing inside a
   sentence is decoration.
   Write: "**Schema in TypeScript.** Tables live in one file." Not: "**Performance:** Performance improved."
@@ -157,6 +167,10 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   Write: "**Retire the old policy and write a new one.**"
 * **Bold the term, not the claim,** inside a paragraph. Where the claim is the misreading the paragraph exists to
   prevent, put that sentence first and let position carry it.
+* **Italicise the word a speaker would stress.** One mark can carry what a clause of explanation was carrying, and the
+  reader hears the sentence the way it was meant. Reach for it where the stress is the point, and leave it alone
+  everywhere else: a page of emphasis emphasises nothing. Write it with asterisks, as the rest of the corpus does.
+  Write: "software that serves *most* of them."
 * **No emoji.**
 * **Use a numbered list only when the order carries meaning.** Introduce a list with a sentence saying what the items
   are, and keep the items parallel. Where the items speak for themselves, open the list without a stem.

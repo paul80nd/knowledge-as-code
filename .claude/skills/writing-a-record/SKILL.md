@@ -143,14 +143,21 @@ make it checkable, and keep the argument out of the part that gets quoted.
   `clause-modal` is an error, and it asks for the modal bold where it binds and plain where it does not. What separates
   a policy clause from a standard's is altitude: a policy clause stays true when the whole technology estate is
   replaced.
+* **Purpose does not preview the clauses.** A sentence there a reader could re-read as an obligation belongs in the
+  table, where a citation can reach it. Purpose states the position and earns it, and the table is what binds.
+  Cut from a Purpose: "We do not change it under its consumers without a version and reasonable notice."
 * **One obligation per clause.** A clause that cannot be failed in exactly one way splits. `clause-order` and
   `clause-compound` warn where a row carries more than one.
 * **A clause is testable, or it is a wish.** *Services are secure* is untestable. *Services read secrets from a managed
   vault* can be checked.
 * **A clause states its obligation without help.** A cross-reference points at the other side of a shared obligation,
   or at the policy that owns it. It does not finish the sentence.
-* **Write out every contraction.** A clause is quoted and acted on, and the formal register is what marks it as
-  binding.
+* **Write out every contraction in a clause.** A clause is quoted and acted on, and the formal register is what
+  marks it as binding. Purpose and Scope are prose and take the contraction speech would use.
+* **Do not hedge the commitment, and do state a risk as a risk.** A policy that hedges what it binds you to is not
+  a policy. Naming what may follow from a departure is not hedging, and flattening it into a certainty makes the
+  policy claim something untrue.
+  Write: "a mistake in development risks becoming an incident in production."
 * **Read the clause again, deliberately, looking for the second reading.**
 * **A policy never claims a compliance posture.** Alignment with an external framework is a clause-level reference.
   Whether the organisation is certified, registered or audited belongs in `frameworks.md` alone, and
