@@ -90,7 +90,8 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   a colon, and where the container reserves the mark you wanted. A YAML plain scalar cannot hold `": "`, so a
   definition written there becomes two sentences rather than a quoted value. A colon inside quoted data, a path or an
   identifier belongs to that value rather than to the sentence, so it does not count.
-  One semicolon survives: the pair joining a statement to its exact negation, sharing the verb it negates.
+  One semicolon survives: the pair joining a statement to its exact negation, sharing the verb it negates. That test
+  decides a semicolon you are writing as well as one you found.
   Keep: *Its four operational obligations are deviable; those three prohibitions are not.*
 * **Write the alternative out.** Write: "a, b, or both." Not: "and/or", "read/write".
 * **Make anything in parentheses a whole grammatical unit.** A plural written "(s)" is never one.

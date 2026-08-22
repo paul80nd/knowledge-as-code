@@ -16,8 +16,13 @@ alignment are frontmatter. Prose restating any of them goes wrong before the fro
 
 ## What this overrides
 
-* **"Write in the present tense."** A postmortem records what happened, so its timeline and its account of the incident
-  are past tense. Everything a postmortem says about the estate today stays present.
+* **"Write in the present tense."** A postmortem records what happened, so its timeline and its account of the
+  incident are past tense. A Decided record's consequences have not happened yet, so they are future tense. Whatever
+  either says about the estate today stays present.
+* **"They do not reach a clause whose wording is the record of an obligation."** That exemption covers the words and
+  not the marks. Repair a clause's punctuation, and keep every word carrying obligation: a citation quotes the row, so
+  dropping a qualifier changes what `pol-DEVI.OWNER` says to whoever cites it. The author accepts that diff in review,
+  which is where a meaning that moved is caught.
 * **"Gloss a precise term on first use."** The corpus has a glossary, and a term it defines is defined once. Link the
   entry rather than restating it.
 * **Nothing else.** Where the floor and this page appear to disagree anywhere below, the floor wins.
@@ -29,6 +34,10 @@ contradiction rather than editing records to match this.
 
 **Run `kac checks` for the type in front of you.** Each text rule is declared on a single type, and many types carry
 none at all. The absence of a check is not permission.
+
+**Run `kac generate` before you finish.** A record's own words are copied into generated output: the H1 lands in the
+type's index, and frontmatter values land in the tables beside it. Change either and a generated file goes stale, so
+regenerating is the last thing a turn does. `generate --check` fails a build where it was not run.
 
 ## Use the corpus's own words
 
@@ -79,6 +88,9 @@ paths*. Claiming an unbuilt check as working is a correctness defect, and it is 
 
 Where that needs a marker, `**Declared.**` leads the sentence it governs and reaches to the next heading at the same
 level or higher.
+
+**The rule is about the estate rather than about a decision.** A record at `status: proposed` holds a decision that
+exists as a decision. Its Decision section is written in the present, and none of it claims the estate already changed.
 
 ## Write to the tier
 
@@ -182,3 +194,16 @@ reason, which a procedural record may not. Conventions sit close to normative wi
 
 **The generated block owns what a field means, and the prose owns what an author does about it.** Where the two say the
 same thing, cut the prose. Nobody updates it, and the generator rewrites its own.
+
+## A `_template.md`
+
+**A `{{placeholder}}`'s braces are the mark, and what sits inside them is prose.** `{{Stop the bleeding.}}` is a figure
+dressing a plain instruction, and the tier's rules reach it.
+
+**The guidance between `DELETE FROM HERE` and `DELETE TO HERE` is prose as well**, written for whoever fills the
+template in. It answers to the floor, and to the tier the template's records carry.
+
+---
+
+**Markdown formatting.** Wrap prose at 120 columns. A table and a link definition are exempt, because a URL cannot be
+broken. `.editorconfig` says so and no check enforces it.
