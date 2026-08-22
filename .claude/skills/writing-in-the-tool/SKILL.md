@@ -49,6 +49,15 @@ below it. A section heading inside a long file is not a banner and earns its pla
 
 **No apologising.** Not `hacky`, `sorry`, `for now`. A constraint is worth naming and an apology for it is not.
 
+## The words the tool prints
+
+**A message opens lower case and closes with a full stop.** A reader meets it as the tail of the command they ran.
+Write: `id 'adr-7' must start with 'adr-'.`
+
+**The second sentence of a split message opens lower case too.** An interpolated path or id opening it keeps the case
+of the value itself.
+Write: `the index is stale. {path} changed after it was built.`
+
 ## Say it once
 
 **Before writing a sentence you have written before, grep a phrase from it.** An explanation here tends to land in
@@ -58,6 +67,9 @@ three places at once: the comment, the feature document and the README.
 * [`tests/README.md`](../../../tooling/tests/README.md) is the reference for what a scenario asserts.
 
 Where the argument already sits in one of those, link it and stop.
+
+**A sibling source file is a citation target too.** Name the file, or the method that holds the reasoning.
+Write: `// Through the source generator rather than reflection. See Json.cs.`
 
 **Let a test say what it proves, and nothing more.** Why the code is shaped that way belongs at the source. A test
 repeating it gives a reader two places to keep in step and no reason to trust either.
