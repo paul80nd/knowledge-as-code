@@ -257,7 +257,7 @@ public class ExporterTests
         Assert.Contains("see [gls-two]", referring.GetProperty("not").GetString());
     }
 
-    // A link to something outside the export — a service, an ADR — is not a cross-reference and is not
+    // A link to something outside the export (a service, an ADR) is not a cross-reference and is not
     // reported as one. Only a link reaching another record of the same export can name a part of it.
     [Fact]
     public void A_link_leaving_the_export_is_neither_carried_nor_reported()

@@ -475,12 +475,12 @@ public static class Validator
         // this field belongs to, which reads to whoever holds these files as a target the tool answers
         // for. So both halves of it are asked: that the id names a document, and that the document is of a
         // type the declaration admits. Asked of every ref field alike, reciprocal or not: a one-directional
-        // edge — `depends-on`, the estate's own dependency graph — has no counterpart obliged to keep it
+        // edge (`depends-on`, the estate's own dependency graph) has no counterpart obliged to keep it
         // in step. That makes it the edge with least behind it rather than the one to leave alone.
         //
         // The wrong type is the quieter of the two faults. A dangling id is visibly broken to anyone who
         // follows it. One of the wrong type lands on a real page, so it reads as intentional. Whatever
-        // walks the edge afterwards — `no-dependency-cycles`, for one — takes it at its word. A literal
+        // walks the edge afterwards (`no-dependency-cycles`, for one) takes it at its word. A literal
         // the field admits is not an id and is skipped, as it is everywhere else.
         foreach (var d in docs)
         {
@@ -555,7 +555,7 @@ public static class Validator
     private static bool Admits(List<TypeSchema> admitted, Doc target) =>
         admitted.Count == 0 || target.Type is null || admitted.Contains(target.Type);
 
-    // The types named as a reader would say them aloud — "a Service", "an FAQ or a Standard" — in the
+    // The types named as a reader would say them aloud ("a Service", "an FAQ or a Standard") in the
     // order the declaration lists them. That is the order whoever wrote it chose.
     private static string OneOf(List<TypeSchema> types)
     {

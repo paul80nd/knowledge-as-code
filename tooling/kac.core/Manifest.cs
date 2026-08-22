@@ -18,8 +18,8 @@ public class Manifest
 
     // Two manifests are written in this shape and neither is the other's business: the portability
     // manifest says which of a corpus's files are shared with the framework, and `template/`'s says
-    // which of its own files a corpus receives once. What they share is the grammar — ordered rules
-    // of globs, first match winning — so the reader takes a path rather than assuming one.
+    // which of its own files a corpus receives once. What they share is the grammar (ordered rules
+    // of globs, first match winning), so the reader takes a path rather than assuming one.
     public static Manifest LoadFrom(string manifestFile)
     {
         var m = new Manifest();

@@ -6,8 +6,8 @@ namespace kac.core;
 // what lets a link to a file be read as a citation of an id. `_universal.yaml` states the asymmetry it
 // defends: a filename may be corrected, an id may not.
 //
-// `numbered` and `mnemonic` put a fixed-width discriminator at the head of a longer filename — 0007-…,
-// vurm-… — so the rest of the name is a slug the author chose. `slug-max` measures that rest. A
+// `numbered` and `mnemonic` put a fixed-width discriminator at the head of a longer filename (0007-…,
+// vurm-…), so the rest of the name is a slug the author chose. `slug-max` measures that rest. A
 // `slug` id is the whole filename stem, with no head to skip.
 //
 // The shape of a discriminator is stated here once and read three ways: forwards, holding an id to its

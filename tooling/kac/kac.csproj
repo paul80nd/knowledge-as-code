@@ -21,7 +21,7 @@
        README.md says under Maturity. CHANGELOG.md beside this file records what each version carries.
 
        PACKAGE.md is written for whoever finds this on nuget.org. It is deliberately not ../README.md,
-       which says how to build and test the tool — the wrong page for someone installing it.
+       which says how to build and test the tool: the wrong page for someone installing it.
 
        The icon lives in docs/assets/ rather than beside this file, because the documentation site takes
        the same asset. `PackageReleaseNotes` names the release for this version instead of restating its

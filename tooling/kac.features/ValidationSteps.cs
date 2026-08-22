@@ -34,7 +34,7 @@ public sealed class ValidationSteps
     public void ThenNoWarningsAreReported()
         => Assert.DoesNotContain(Result.Findings, f => f.Severity == Sev.Warning);
 
-    // Whole-set assertion for one file: preserves the golden's "and nothing else" property — any
+    // Whole-set assertion for one file: preserves the golden's "and nothing else" property. Any
     // stray finding on this file, or a missing one, fails the exact-sequence comparison. The
     // `severity` column is optional; when a table omits it, every row is taken to be an error.
     [Then(@"the findings for ""(.*)"" are exactly:")]
@@ -60,7 +60,7 @@ public sealed class ValidationSteps
         Assert.Equal(expected, actual);
     }
 
-    // (severity, line, check, message) for one finding — the shape both assertions compare on.
+    // (severity, line, check, message) for one finding: the shape both assertions compare on.
     private static (string, int?, string, string) Row(Finding f)
         => (f.Severity.ToString().ToLowerInvariant(), f.Line, f.Check.Value, f.Message);
 
