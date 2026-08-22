@@ -1,7 +1,7 @@
 Feature: Cross-document graph checks
-  kac reconciles ids across the whole corpus: uniqueness, referenced ids, reciprocal fields, and
-  field/section mirroring. Driven in-process against the graph fixture, which lays a gizmo type over
-  the real schema — a second type is what gives an ADR a document of another type to point at, and a
+  kac reconciles ids across the whole corpus: uniqueness, referenced ids, reciprocal fields, and a
+  field mirroring a section. Driven in-process against the graph fixture, which lays a gizmo type over
+  the real schema. A second type gives an ADR a document of another type to point at, and it gives a
   field mirroring a section other than 'Related' something to mirror.
 
   Background:

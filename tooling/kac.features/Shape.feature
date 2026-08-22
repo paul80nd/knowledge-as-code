@@ -1,8 +1,8 @@
 Feature: Corpus shape checks
   Beyond the records themselves, kac asks whether the corpus has the shape its schema declares: every type
   stood up as both a page and a folder, and every file kac generate writes a block into still holding the
-  markers to write between — a type's page and a framework document alike. Driven in-process against the
-  type-setup and type-pages fixtures — the same corpora their JSON goldens pin.
+  markers to write between. That reaches a type's page and a framework document alike. Driven
+  in-process against the type-setup and type-pages fixtures: the same corpora their JSON goldens pin.
 
   Scenario: A type is stood up as both a page and a folder, or as neither
     Given the type-setup fixture corpus

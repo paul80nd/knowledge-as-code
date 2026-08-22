@@ -36,7 +36,7 @@ public class YamlTests : IDisposable
     }
 
     // Read literally, an unquoted `null` is the string "null", and it passes every emptiness test
-    // downstream — far enough that the glossary's checks table advertises an identity line it can never
+    // downstream, far enough that the glossary's checks table advertises an identity line it can never
     // carry. Quoting is how someone says they mean the word itself.
     [Theory]
     [InlineData("folder: null\n", null)]

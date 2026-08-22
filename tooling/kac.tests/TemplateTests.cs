@@ -40,7 +40,7 @@ public class TemplateTests
             .SequenceEqual(File.ReadAllBytes(Path.Combine(Corpus, rel)));
 
     // The manifest's final rule is a catch-all, so a file resolving to nothing means the rules
-    // stopped being read — not that a file was forgotten.
+    // stopped being read, and not that a file was forgotten.
     [Fact]
     public void Every_file_in_the_template_resolves_to_a_layer()
     {

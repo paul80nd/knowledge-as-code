@@ -1,6 +1,6 @@
 Feature: Frontmatter value checks
   kac flags documents whose frontmatter values break the schema. Each scenario drives kac.core's
-  Validator in-process over a fixture corpus assembled from the real schema — the same corpus the
+  Validator in-process over a fixture corpus assembled from the real schema: the same corpus the
   broken-values JSON golden pins, expressed here as behaviour.
 
   Background:

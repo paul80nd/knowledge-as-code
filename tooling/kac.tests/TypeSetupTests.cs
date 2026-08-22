@@ -4,9 +4,9 @@ using kac.core;
 // whole.
 //
 // The `type-setup` and `type-adoption` fixtures cover a corpus that gets it wrong through the CLI. They
-// cannot reach the two questions the pass asks about presence — `Tree` sets out which is which — because
-// every file in a fixture corpus is both tracked and on the disk. Only a corpus assembled from values
-// holds a template git does not track.
+// cannot reach the two questions the pass asks about presence, because every file in a fixture corpus
+// is both tracked and on the disk. `Tree` sets out which question is which. Only a corpus assembled
+// from values holds a template git does not track.
 
 namespace kac.tests;
 
@@ -100,7 +100,7 @@ public class TypeSetupTests
         rel => held.Contains(rel, StringComparer.Ordinal) || rel == onDisk);
 
     // Every `type-setup` finding the corpus produces, whatever else the validator has to say about it.
-    // `declared` is the corpus's `types:` block, and none means the corpus has not declared one — where
+    // `declared` is the corpus's `types:` block, and none means the corpus has not declared one. Then
     // adoption is read off the folders instead.
     private static List<Finding> Setup(Tree tree, params string[] declared)
     {

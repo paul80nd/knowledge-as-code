@@ -1,7 +1,7 @@
 #:property TargetFramework=net10.0
 #:property Nullable=enable
 
-// kac-tests — the golden-file test suite for kac.
+// kac-tests: the golden-file test suite for kac.
 //
 // `tooling/tests/README.md` is the reference: how a scenario runs, what each mode asserts, what the exit
 // codes mean, and what every fixture covers.
@@ -54,8 +54,8 @@ if (scenarios.Count == 0)
     return 2;
 }
 
-// Every scenario below runs kac as a subprocess, because what it asserts — the exit code and what
-// lands on stdout — is the CLI's contract rather than the library's. `dotnet run` would repeat its
+// Every scenario below runs kac as a subprocess, because what it asserts is the CLI's contract
+// rather than the library's: the exit code, and what lands on stdout. `dotnet run` would repeat its
 // up-to-date check on each of those invocations, which costs an order of magnitude more than the
 // suite's real work; building once and calling the built assembly keeps the process boundary
 // without paying for it a dozen times over.
@@ -101,7 +101,7 @@ foreach (var scenario in scenarios)
                 break;
             default:
                 failures.Add(name);
-                Console.WriteLine($"ERROR  {name}  — unknown mode '{mode}'");
+                Console.WriteLine($"ERROR  {name}: unknown mode '{mode}'");
                 break;
         }
     }
@@ -129,7 +129,7 @@ void RunValidateScenario(string name, string scenario, string corpusDir)
     if (!File.Exists(expectedPath))
     {
         failures.Add(name);
-        Console.WriteLine($"MISSING {name}  — no golden. Run: dotnet run tooling/kac-tests.cs -- --update {name}");
+        Console.WriteLine($"MISSING {name}: no golden. Run: dotnet run tooling/kac-tests.cs -- --update {name}");
         return;
     }
 
@@ -167,13 +167,13 @@ void RunGenerateScenario(string name, string scenario, bool mustBeStale)
         var (rexit, _) = RunGenerate(kac, schemaDir, corpusDir, check: true);
         Console.WriteLine(rexit == 0
             ? $"UPDATE {name}  (regenerated, fresh)"
-            : $"UPDATE {name}  — WARNING: still stale after regen");
+            : $"UPDATE {name}  (WARNING: still stale after regen)");
         return;
     }
 
     if (update)
     {
-        Console.WriteLine($"UPDATE {name}  (stale fixture — nothing to regenerate)");
+        Console.WriteLine($"UPDATE {name}  (stale fixture, nothing to regenerate)");
         return;
     }
 
@@ -184,7 +184,7 @@ void RunGenerateScenario(string name, string scenario, bool mustBeStale)
         if (exit == 0)
         {
             failures.Add(name);
-            Console.WriteLine($"FAIL   {name}  — expected generate --check to detect staleness, but it exited 0");
+            Console.WriteLine($"FAIL   {name}: expected generate --check to detect staleness, but it exited 0");
             return;
         }
 
@@ -196,7 +196,7 @@ void RunGenerateScenario(string name, string scenario, bool mustBeStale)
         if (missing.Count > 0)
         {
             failures.Add(name);
-            Console.WriteLine($"FAIL   {name}  — stale detected but these files were not named: {string.Join(", ", missing)}");
+            Console.WriteLine($"FAIL   {name}: stale detected but these files were not named: {string.Join(", ", missing)}");
         }
         else
         {
@@ -213,7 +213,7 @@ void RunGenerateScenario(string name, string scenario, bool mustBeStale)
     else
     {
         failures.Add(name);
-        Console.WriteLine($"FAIL   {name}  — committed generated files do not match the generator. Run: dotnet run tooling/kac-tests.cs -- --update {name}");
+        Console.WriteLine($"FAIL   {name}: committed generated files do not match the generator. Run: dotnet run tooling/kac-tests.cs -- --update {name}");
         foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"         {l}");
     }
 }
@@ -226,13 +226,13 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
     if (!Directory.Exists(referenceDir))
     {
         failures.Add(name);
-        Console.WriteLine($"ERROR  {name}  — no reference/ tree in the fixture");
+        Console.WriteLine($"ERROR  {name}: no reference/ tree in the fixture");
         return;
     }
 
     if (update)
     {
-        Console.WriteLine($"UPDATE {name}  (mechanism scenario — nothing to regenerate)");
+        Console.WriteLine($"UPDATE {name}  (mechanism scenario, nothing to regenerate)");
         return;
     }
 
@@ -257,7 +257,7 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
             else
             {
                 failures.Add(name);
-                Console.WriteLine($"FAIL   {name}  — expected the synced layer in step (exit 0), got exit {exit}");
+                Console.WriteLine($"FAIL   {name}: expected the synced layer in step (exit 0), got exit {exit}");
                 foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"         {l}");
             }
 
@@ -267,7 +267,7 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
         if (exit == 0)
         {
             failures.Add(name);
-            Console.WriteLine($"FAIL   {name}  — expected drift (exit 1) but the check passed");
+            Console.WriteLine($"FAIL   {name}: expected drift (exit 1) but the check passed");
             return;
         }
 
@@ -279,7 +279,7 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
         else
         {
             failures.Add(name);
-            Console.WriteLine($"FAIL   {name}  — drift detected but these paths were not named: {string.Join(", ", missing)}");
+            Console.WriteLine($"FAIL   {name}: drift detected but these paths were not named: {string.Join(", ", missing)}");
         }
     }
     finally
@@ -297,13 +297,13 @@ void RunSyncScenario(string name, string scenario, string corpusDir)
     if (!Directory.Exists(referenceDir))
     {
         failures.Add(name);
-        Console.WriteLine($"ERROR  {name}  — no reference/ tree in the fixture");
+        Console.WriteLine($"ERROR  {name}: no reference/ tree in the fixture");
         return;
     }
 
     if (update)
     {
-        Console.WriteLine($"UPDATE {name}  (sync scenario — nothing to regenerate)");
+        Console.WriteLine($"UPDATE {name}  (sync scenario, nothing to regenerate)");
         return;
     }
 
@@ -363,12 +363,12 @@ void RunExportScenario(string name, string scenario, string corpusDir)
         {
             if (exit != 0)
             {
-                Console.WriteLine($"UPDATE {name}  — WARNING: export failed (exit {exit}), golden left alone");
+                Console.WriteLine($"UPDATE {name}: WARNING: export failed (exit {exit}), golden left alone");
                 return;
             }
 
             var written = WriteGoldenExport(dist, golden);
-            Console.WriteLine($"UPDATE {name}  ({written} export file(s) — read the diff, it is the published shape)");
+            Console.WriteLine($"UPDATE {name}  ({written} export file(s), read the diff: it is the published shape)");
             return;
         }
 
@@ -417,13 +417,13 @@ void RunBundleScenario(string name, string scenario, string corpusDir)
     if (!Directory.Exists(pluginDir))
     {
         failures.Add(name);
-        Console.WriteLine($"ERROR  {name}  — no plugin/ tree in the fixture");
+        Console.WriteLine($"ERROR  {name}: no plugin/ tree in the fixture");
         return;
     }
 
     if (update)
     {
-        Console.WriteLine($"UPDATE {name}  (bundle scenario — nothing to regenerate)");
+        Console.WriteLine($"UPDATE {name}  (bundle scenario, nothing to regenerate)");
         return;
     }
 
@@ -500,7 +500,7 @@ static List<string> SameTree(string expected, string actual)
     {
         if (!got.TryGetValue(rel, out var b)) problems.Add($"the copied export is missing {rel}");
         else if (!want.TryGetValue(rel, out var a)) problems.Add($"the copied export holds {rel}, which the export does not");
-        else if (!a.SequenceEqual(b)) problems.Add($"the copied export differs from the export at {rel} — bundle edited it");
+        else if (!a.SequenceEqual(b)) problems.Add($"the copied export differs from the export at {rel}: bundle edited it");
     }
 
     return problems;
@@ -560,8 +560,8 @@ static List<string> CheckTree(string root, string scenario)
 static List<string> CheckGoldenExport(string dist, string golden)
 {
     if (!Directory.Exists(golden))
-        return [$"no committed export at {Path.GetFileName(golden)}/ — "
-                + "run: dotnet run tooling/kac-tests.cs -- --update export"];
+        return [$"no committed export at {Path.GetFileName(golden)}/. "
+                + "Run: dotnet run tooling/kac-tests.cs -- --update export"];
 
     var actual = ExportTree(dist);
     var expected = ExportTree(golden);
@@ -571,12 +571,12 @@ static List<string> CheckGoldenExport(string dist, string golden)
     foreach (var rel in paths)
     {
         if (!actual.TryGetValue(rel, out var got))
-            problems.Add($"the export no longer writes {rel} — what a consumer reads has changed");
+            problems.Add($"the export no longer writes {rel}: what a consumer reads has changed");
         else if (!expected.TryGetValue(rel, out var want))
             problems.Add(
-                $"the export writes {rel}, which the committed copy does not hold — a new file for a consumer");
+                $"the export writes {rel}, which the committed copy does not hold: a new file for a consumer");
         else if (!string.Equals(want, got, StringComparison.Ordinal))
-            problems.Add($"{rel} differs from the committed export — {FirstDifference(want, got)}");
+            problems.Add($"{rel} differs from the committed export: {FirstDifference(want, got)}");
     }
 
     return problems;
@@ -683,14 +683,14 @@ Console.WriteLine();
 
 // -- coverage meta-test --
 // Every reachable check must be exercised by some fixture, and both directions fail the build: a
-// check with no fixture, and a golden naming a check the catalogue does not hold — which is a rename
+// check with no fixture, and a golden naming a check the catalogue does not hold, which is a rename
 // that left a stale golden. Coverage is a property of the whole suite, so it is only computed on a
-// full run; a filtered run would undercount and read as a regression.
+// full run. A filtered run would undercount and read as a regression.
 if (filters.Count == 0)
 {
     // Checks that no discovered document can reach, so no fixture can exercise them. `type` fires
-    // only for a document whose folder maps to no schema, but discovery excludes non-type folders —
-    // a validated document therefore always has a type. Accounted for here so the coverage gate can
+    // only for a document whose folder maps to no schema, but discovery excludes non-type folders.
+    // A validated document therefore always has a type. Accounted for here so the coverage gate can
     // demand every *reachable* check has a fixture.
     var unreachable = new HashSet<string>(["type"], StringComparer.Ordinal);
 
@@ -704,7 +704,7 @@ if (filters.Count == 0)
         Console.WriteLine($"  unreachable (no fixture possible): {string.Join(", ", unreachableSeen)}");
     if (uncovered.Count > 0)
     {
-        Console.WriteLine($"  NOT COVERED — every reachable check needs a fixture: {string.Join(", ", uncovered)}");
+        Console.WriteLine($"  NOT COVERED, every reachable check needs a fixture: {string.Join(", ", uncovered)}");
         failures.Add("(coverage: reachable checks with no fixture)");
     }
 
@@ -727,8 +727,8 @@ if (filters.Count == 0)
     // -- what answers without a corpus --
     // `--version` and `--help` are answered by the parser, so an installed `kac` says what it is from
     // wherever it was typed; every verb needs a corpus and exits 2 without one. Asserted from a temp
-    // directory with no `.schema` above it, because the fault this catches — a corpus lookup running
-    // before the parse — passes every other test here, all of which run inside a corpus.
+    // directory with no `.schema` above it. The fault this catches is a corpus lookup running before
+    // the parse, and that passes every other test here, all of which run inside a corpus.
     var nowhere = Directory.CreateTempSubdirectory("kac-tests-nowhere-").FullName;
     try
     {
@@ -787,8 +787,8 @@ static string? FindRepoRoot(string start)
 }
 
 // Assemble a throwaway repo root: the real schema plus the fixture corpus. The temp dir is not a
-// git repo, so kac's discovery falls back to a filesystem walk — deterministic, and generated /
-// finding paths stay corpus-relative (no temp path leaks into a golden). Caller deletes it.
+// git repo, so kac's discovery falls back to a filesystem walk. That walk is deterministic, and
+// generated and finding paths stay corpus-relative (no temp path leaks into a golden). Caller deletes it.
 static string AssembleTemp(string schemaDir, string corpusDir)
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
@@ -870,8 +870,8 @@ static void Regenerate(string kac, string schemaDir, string corpusDir)
 
         // Only what the corpus itself owns comes back. `.schema/` is the real one, copied in to assemble
         // the run, and writing it back would commit a stale duplicate of the schema into the fixture.
-        // Everything else in the temp tree came from the fixture — including a `knowledge-as-code/` page
-        // a fixture stands up to assert what is generated into it.
+        // Everything else in the temp tree came from the fixture, including a `knowledge-as-code/`
+        // page a fixture stands up to assert what is generated into it.
         foreach (var dir in Directory.EnumerateDirectories(temp))
             if (Path.GetFileName(dir) is not ".schema")
                 CopyTree(dir, Path.Combine(corpusDir, Path.GetFileName(dir)));
@@ -992,7 +992,7 @@ static void CopyTree(string src, string dst)
 static void TryDelete(string dir)
 {
     try { if (Directory.Exists(dir)) Directory.Delete(dir, recursive: true); }
-    catch { /* best effort — it is under the system temp dir */ }
+    catch { /* best effort: it is under the system temp dir */ }
 }
 
 static string Rel(string root, string path) => Path.GetRelativePath(root, path).Replace('\\', '/');

@@ -16,6 +16,6 @@ internal static class Repo
             dir = dir.Parent;
 
         return dir?.FullName ?? throw new InvalidOperationException(
-            "no 'kac.slnx' above the test assembly — these tests read the repository they ship in.");
+            "no 'kac.slnx' above the test assembly: these tests read the repository they ship in.");
     }
 }

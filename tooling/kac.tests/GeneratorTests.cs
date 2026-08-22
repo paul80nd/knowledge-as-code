@@ -9,7 +9,7 @@ public class GeneratorTests
 {
     // The reader-facing table must stay a faithful, complete view of the catalogue, and the catalogue is
     // `_checks.yaml`. `kac checks` reconciles the two against the real schema and exits non-zero on any
-    // drift, which the golden suite asserts — the one place the shipped file is read.
+    // drift, which the golden suite asserts. That is the one place the shipped file is read.
     [Fact]
     public void ChecksTableProblems_names_a_row_the_catalogue_does_not_carry()
     {
@@ -98,7 +98,7 @@ public class GeneratorTests
 
         var page = Generator.IndexPage(t, Rows(("rbk-a", "sev3"), ("rbk-c", "sev1"), ("rbk-b", "sev1")));
 
-        // severity first, then id within it — so the sev1 pair leads, in id order, and sev3 follows.
+        // severity first, then id within it. So the sev1 pair leads, in id order, and sev3 follows.
         Assert.True(page.IndexOf("rbk-b", StringComparison.Ordinal)
                     < page.IndexOf("rbk-c", StringComparison.Ordinal));
         Assert.True(page.IndexOf("rbk-c", StringComparison.Ordinal)
@@ -140,7 +140,7 @@ public class GeneratorTests
         var table = Generator.SchemaTable(t, new Schema());
 
         Assert.Contains("SHORT", table);
-        Assert.DoesNotContain("LONG", table); // description wins outright — the two are not concatenated
+        Assert.DoesNotContain("LONG", table); // description wins outright: the two are not concatenated
         Assert.Contains("FALLBACK", table);   // notes still render where no description exists
     }
 
@@ -200,7 +200,7 @@ public class GeneratorTests
         var table = Generator.SchemaTable(t, new Schema());
         var row = table.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
 
-        // The set is what an author came to the page for, so it is what the column carries — the word
+        // The set is what an author came to the page for, so it is what the column carries. The word
         // `enum` is not something anyone can write into frontmatter.
         var header = table.Split('\n')[0];
         Assert.Contains("Value", header);
@@ -234,7 +234,7 @@ public class GeneratorTests
         var row = Generator.SchemaTable(t, s).Split('\n')
             .Single(l => l.StartsWith("| `tier`", StringComparison.Ordinal));
 
-        // Every document in the folder carries this one, and CI fails any that does not — the other
+        // Every document in the folder carries this one, and CI fails any that does not: the other
         // values are not choices the author has.
         Assert.Contains("`normative`", row);
         Assert.DoesNotContain("`decided`", row);
@@ -437,7 +437,7 @@ public class GeneratorTests
         => Assert.All(Generator.TypeCatalogue(Tiers, Four()).Split('\n'), l => Assert.True(l.Length <= 120));
 
     // A link broken after its label's first word still renders, but it reads badly and a formatter meeting
-    // it puts it back — after which the generator writes it out broken again on the next run.
+    // it puts it back. The generator then writes it out broken again on the next run.
     [Fact]
     public void A_link_label_is_never_broken_across_lines()
     {
@@ -669,7 +669,7 @@ public class GeneratorTests
         Assert.DoesNotContain("|", diagram);
     }
 
-    // One relationship, one arrow — where the table has two rows, because an author has two fields.
+    // One relationship draws one arrow, where the table has two rows because an author has two fields.
     [Fact]
     public void A_reciprocal_pair_is_drawn_once()
     {
@@ -696,7 +696,7 @@ public class GeneratorTests
         Assert.EndsWith("\nafter", result);
     }
 
-    // A corpus that adopted few types has blocks with nothing to say — no pair of its types is easily
+    // A corpus that adopted few types has blocks with nothing to say: no pair of its types is easily
     // confused, none of its words collides. Two blank lines between the markers reads as deleted content.
     [Fact]
     public void SpliceBlock_closes_an_empty_block_on_the_next_line()

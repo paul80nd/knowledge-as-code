@@ -1,7 +1,7 @@
 Feature: The schema's own declarations
   One level further out than the corpus: before asking whether a document obeys its type, kac asks whether
   the type says anything the tool cannot do. These files are copied into corpora whose authors cannot ask
-  what a key meant, so a declaration nothing dispatches is not inert — it reads as a commitment. Driven
+  what a key meant, so a declaration nothing dispatches is not inert: it reads as a commitment. Driven
   against the schema-declarations fixture, which lays a deliberately wrong type file over the real schema.
 
   Scenario: A schema that promises what the tool cannot deliver is reported against the file that says so

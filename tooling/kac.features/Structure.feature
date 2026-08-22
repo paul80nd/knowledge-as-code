@@ -1,6 +1,6 @@
 Feature: Document structure checks
   kac checks the filename, id, H1, identity line and sections of each document. Driven
-  in-process against the broken-structure fixture — the same corpus its JSON golden pins.
+  in-process against the broken-structure fixture: the same corpus its JSON golden pins.
 
   Background:
     Given the broken-structure fixture corpus

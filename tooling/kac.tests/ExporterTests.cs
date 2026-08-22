@@ -66,7 +66,7 @@ public class ExporterTests
     }
 
     // Across unrelated roots the order is stable and means nothing else. This asserts only that the
-    // order does not move — deliberately not that either entry is the general one.
+    // order does not move, and deliberately not that either entry is the general one.
     [Fact]
     public void Across_unrelated_roots_the_order_is_stable_and_claims_no_generality()
     {
@@ -132,8 +132,8 @@ public class ExporterTests
         Assert.Equal("the request the service received.", line.GetProperty("not").GetString());
     }
 
-    // Most terms carry no such line — the label marks a confusion worth heading off, and most words have
-    // none — so its absence is a null rather than an empty string standing in for one.
+    // Most terms carry no such line: the label marks a confusion worth heading off, and most words
+    // have none. So its absence is a null rather than an empty string standing in for one.
     [Fact]
     public void A_term_with_no_labelled_line_carries_a_null_rather_than_an_empty_one()
     {
@@ -224,8 +224,8 @@ public class ExporterTests
         var referring = TermLines(corpus).Single(l => l.GetProperty("id").GetString() == "gls-one.record");
         Assert.Equal(JsonValueKind.Null, referring.GetProperty("seeAlso").ValueKind);
 
-        // Both glossaries happen to call the term `record`, so the counterpart is guessable here — and
-        // guessing it is what this asserts the export does not do. The same guess is silently wrong for
+        // Both glossaries happen to call the term `record`, so the counterpart is guessable here.
+        // Guessing it is what this asserts the export does not do. The same guess is silently wrong for
         // a pair that does not share a word, and the run reports the link instead.
         Assert.Equal(["gls-one.record -> gls-two"], Plan(corpus).Unread);
     }
@@ -525,7 +525,7 @@ public class ExporterTests
         + $"narrows: {narrows}\nreview-by: \"{reviewBy}\"\n---\n\n"
         + $"# {id}\n\n## Scope\n\n{scope}\n\n## Terms\n\n{terms}";
 
-    // A loaded corpus holding the glossaries given, in the order given — which is deliberately not the
+    // A loaded corpus holding the glossaries given, in the order given. That is deliberately not the
     // order the export writes them in, so a passing ordering test is not reading its input back.
     private static LoadedCorpus Corpus(params string[] glossaries)
     {

@@ -12,7 +12,7 @@ namespace kac.tests;
 
 public class MechanismTests
 {
-    // A manifest with no catch-all, so a path none of the rules names is unclassified — which is the
+    // A manifest with no catch-all, so a path none of the rules names is unclassified. That is the
     // state the real manifest's final `**` rule exists to make impossible.
     private static Manifest Rules() => new()
     {

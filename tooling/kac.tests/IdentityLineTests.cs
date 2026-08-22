@@ -2,7 +2,7 @@ using kac.core;
 
 // In-process unit tests for how `identity-type` names the type the reader is actually looking at. The
 // fixture corpus covers the check on a policy, where the article is the ordinary one; what needs a
-// declaration of its own is a label that reads differently — an initialism, and a plural that is the
+// declaration of its own is a label that reads differently: an initialism, and a plural that is the
 // same word as its singular.
 
 namespace kac.tests;

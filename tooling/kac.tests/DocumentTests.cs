@@ -32,7 +32,7 @@ public class DocumentTests
     public void Doc_Parse_returns_null_without_frontmatter()
         => Assert.Null(Doc.Parse("notes.md", "# Just a heading, no frontmatter\n", new Schema()));
 
-    // The identity line's code spans are handed to the validator raw and in order — the parser makes
+    // The identity line's code spans are handed to the validator raw and in order. The parser makes
     // no judgement about how many there should be or what they should say, so a malformed line still
     // arrives as data the validator can quote back.
     [Theory]
@@ -206,7 +206,7 @@ public class DocumentTests
         Assert.Empty(doc.Parts);
     }
 
-    // A table under some other heading is not the clause table, however much it looks like one — the
+    // A table under some other heading is not the clause table, however much it looks like one. The
     // section the schema names is what makes it one.
     [Fact]
     public void A_table_outside_the_clause_section_is_not_read_as_clauses()
@@ -293,8 +293,9 @@ public class DocumentTests
     }
 
     // A link in a paragraph is a link. Inlines hang off leaf blocks, so a walk that descends from the
-    // top-level block finds the ones in a list and silently misses the ones in prose — the same link to
-    // whoever wrote it, and the difference between a section that reconciles and one that seems to.
+    // top-level block finds the ones in a list and silently misses the ones in prose. It is the same
+    // link to whoever wrote it, and the difference between a section that reconciles and one that
+    // seems to.
     [Fact]
     public void Links_written_as_prose_are_collected_as_readily_as_bullets()
     {

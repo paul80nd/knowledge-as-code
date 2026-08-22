@@ -53,7 +53,8 @@ public partial class ChangelogTests
 
         return match.Success
             ? match.Groups[1].Value.Trim()
-            : throw new InvalidOperationException("no '<Version>' in kac.csproj — this pass reads the changelog against it.");
+            : throw new InvalidOperationException(
+                "no '<Version>' in kac.csproj: this pass reads the changelog against it.");
     }
 
     // A released section opens `## 0.1.1 - 2026-08-20`. `## Unreleased` carries no date and is deliberately not one.

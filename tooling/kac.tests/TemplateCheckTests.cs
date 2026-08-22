@@ -4,8 +4,8 @@ using kac.core;
 //
 // The file is checked and is not a record: it holds no id, claims no place in the index, and is held to
 // everything a copy of it inherits. The goldens reach the pass through a fixture corpus, in which the
-// template is a tracked file like any other — so what is left here is the reading itself, and a template
-// nobody has added yet is exactly the state a contributor is in when they need the findings.
+// template is a tracked file like any other. So what is left here is the reading itself, and a
+// template nobody has added yet is exactly the state a contributor is in when they need the findings.
 
 namespace kac.tests;
 
@@ -20,7 +20,7 @@ public class TemplateCheckTests
         => Assert.Contains("a document copied from it starts with none",
             Assert.Single(Fields("# {{Title}}\n")).Message);
 
-    // Both directions are one question — would a copy of this file pass its own frontmatter checks? — so a
+    // Both directions are one question: would a copy of this file pass its own frontmatter checks? So a
     // missing required field and a key the type does not have report under one id.
     [Fact]
     public void A_template_missing_a_required_field_names_the_check_a_copy_would_fail()
