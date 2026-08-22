@@ -1,4 +1,4 @@
-# Example Libraries — a knowledge corpus
+# Example Libraries: a knowledge corpus
 
 > **Everything here is invented.** Example Libraries is a fictional public-library consortium. Its services, incidents,
 > decisions and obligations were written to give each knowledge type something real-shaped to hold, and to push the
@@ -71,13 +71,14 @@ terms. The clause model, the mnemonic ids, the per-clause alignment and the gap 
 on them rather than assumed. They are principle-level and stack-agnostic by design, so they name no service and invent
 no domain. That is why they would survive adoption with only the specifics rewritten.
 
-**Others need somewhere to stand.** A service catalogue demonstrates nothing without an estate; an NFR has to apply to
-something; a postmortem needs an incident. Those use the consortium above, so the records form a graph instead of a
-list.
+**Others need somewhere to stand.** A service catalogue demonstrates nothing without an estate. An NFR has to apply to
+something, and a postmortem needs an incident. Those use the consortium above, so the records form a graph instead of
+a list.
 
-**Delete these records; do not adapt them.** Each seeded type page says so at the top. They are chosen to exercise the
-schema's awkward corners rather than to resemble your estate: a monorepo shipping three deployables, a CDN whose
-`repo` cannot answer where its content comes from, and a service coupled to the whole estate with no dependency edges.
+**Delete these records rather than adapting them.** Each seeded type page says so at the top. They are chosen to
+exercise the schema's awkward corners, and will not resemble your estate: a monorepo shipping three deployables, a CDN
+whose `repo` cannot answer where its content comes from, and a service coupled to the whole estate with no dependency
+edges.
 
 ## Maturity
 
@@ -175,12 +176,12 @@ The rest is agreed and unbuilt:
 * **The distillation pass** that would fold what sessions learned back into the corpus
   ([#24](https://github.com/paul80nd/knowledge-as-code/issues/24)).
 * **A hook that matches a prompt against the glossary**, so a term is defined where it is used rather than when someone
-  thinks to ask. The `SessionStart` breadcrumb says the glossary is there; nothing yet reads what was typed.
+  thinks to ask. The `SessionStart` breadcrumb says the glossary is there, and nothing yet reads what was typed.
 
 ## Layout
 
 ```
-<type>.md              # what the type is, why it exists, how to contribute — one per type
+<type>.md              # what the type is, why it exists, how to contribute. One per type
 <type>/
   ├── _index.md        # GENERATED from frontmatter
   ├── _template.md     # what humans and agents copy
@@ -198,7 +199,7 @@ kac, kac.cmd           # launchers that wrap `dotnet run --project ../tooling/ka
 .corpus.yaml           # what this corpus is, and where it publishes
 .claude/skills/        # agent skills for working on this corpus
 .plugin/               # source for the plugin that carries this corpus's export to another repository
-.schema/               # the machine-readable schema — the source of truth
+.schema/               # the machine-readable schema, and the source of truth
 ```
 
 The machinery is dot-prefixed: `.schema/`, `.corpus.yaml`, `.plugin/`. The markdown stays the visible half, so an Azure

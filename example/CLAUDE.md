@@ -38,7 +38,7 @@ and contend over its output.
 
 * **Regenerate rather than edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter,
   then run `kac generate`. A schema edit without a regeneration fails CI.
-* **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt — a URL cannot be broken.
+* **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt: a URL cannot be broken.
   `.editorconfig` says so and no check enforces it.
 * **Write what exists today.** Agreed and unbuilt work goes to the issue tracker. One exception: a schema rule the tool
   does not implement, where prose says the rule is declared and does not run, and the generated checks table carries it.
@@ -48,7 +48,7 @@ and contend over its output.
   file reads in one voice and someone arriving cold cannot tell which paragraph is newest.
 * **Say it once.** Cite rather than duplicate. A paragraph that belongs in two documents belongs in
   `knowledge-as-code/`, written a single time.
-* **Extend one fictional estate** — Example Libraries, a public-library consortium, on `example.com`, which RFC 2606
+* **Extend one fictional estate**: Example Libraries, a public-library consortium, on `example.com`, which RFC 2606
   reserves. [`README.md`](README.md) explains why.
 * **Branch and open a PR.** Pushes to `main` are rejected.
 
@@ -60,13 +60,13 @@ ones.
 
 * **Load `technical-writing`.** The rules for the words, which are the same in every document and every commit message.
 * **Then `writing-a-record`.** What this corpus adds to them, and what the record's tier adds on top.
-* [`knowledge-as-code/contributing.md`](knowledge-as-code/contributing.md) — the link and template conventions CI
+* [`knowledge-as-code/contributing.md`](knowledge-as-code/contributing.md) holds the link and template conventions CI
   enforces, and what outranks what when two rules disagree.
 
 ## Your working style
 
 Say in one sentence what you are about to do before your first tool call. While working, report what you found or where
-you changed direction, and nothing else. Finish by leading with the outcome — what happened, or what you found — with
+you changed direction, and nothing else. Finish by leading with the outcome (what happened, or what you found) and put
 the supporting detail after it.
 
 Keep answers brief: a high-level summary unless depth is asked for, short caveats, and a written document no longer than
@@ -77,6 +77,6 @@ produce materially different work. Where the request looks mistaken, say so in a
 
 ## Going deeper
 
-* [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) — changing the validator, the generator, or the fixtures they are
-  tested against.
-* [`.schema/CLAUDE.md`](.schema/CLAUDE.md) — changing the schema, or writing a rule.
+* [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) covers changing the validator, the generator, or the fixtures they
+  are tested against.
+* [`.schema/CLAUDE.md`](.schema/CLAUDE.md) covers changing the schema, or writing a rule.

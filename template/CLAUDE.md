@@ -26,7 +26,7 @@ Both gate the branch, so a clean local run is what a pull request expects rather
 
 * **Regenerate rather than edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter,
   then run `kac generate`. A schema edit without a regeneration fails CI.
-* **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt — a URL cannot be broken.
+* **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt: a URL cannot be broken.
   `.editorconfig` says so and no check enforces it.
 * **Write what exists today.** Agreed and unbuilt work goes to the issue tracker. One exception: a schema rule the tool
   does not implement, where prose says the rule is declared and does not run, and the generated checks table carries it.
@@ -50,7 +50,7 @@ constraints, and nothing in CI will tell you that you used the wrong ones.
 ## Your working style
 
 Say in one sentence what you are about to do before your first tool call. While working, report what you found or where
-you changed direction, and nothing else. Finish by leading with the outcome — what happened, or what you found — with
+you changed direction, and nothing else. Finish by leading with the outcome (what happened, or what you found) and put
 the supporting detail after it.
 
 Keep answers brief: a high-level summary unless depth is asked for, short caveats, and a written document no longer than
@@ -61,5 +61,5 @@ produce materially different work. Where the request looks mistaken, say so in a
 
 ## Going deeper
 
-* [`.schema/CLAUDE.md`](.schema/CLAUDE.md) — changing the schema, or writing a rule.
-* `kac --help`, and the repository the tool is built in — changing the validator or the generator themselves.
+* [`.schema/CLAUDE.md`](.schema/CLAUDE.md) covers changing the schema, or writing a rule.
+* `kac --help`, and the repository the tool is built in, cover changing the validator or the generator themselves.
