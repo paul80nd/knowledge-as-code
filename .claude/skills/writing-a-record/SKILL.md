@@ -149,6 +149,8 @@ make it checkable, and keep the argument out of the part that gets quoted.
   vault* can be checked.
 * **A clause states its obligation without help.** A cross-reference points at the other side of a shared obligation,
   or at the policy that owns it. It does not finish the sentence.
+* **Write out every contraction.** A clause is quoted and acted on, and the formal register is what marks it as
+  binding.
 * **Read the clause again, deliberately, looking for the second reading.**
 * **A policy never claims a compliance posture.** Alignment with an external framework is a clause-level reference.
   Whether the organisation is certified, registered or audited belongs in `frameworks.md` alone, and
@@ -180,6 +182,8 @@ that reads comfortably has usually left something out. The constraint is structu
 * **Attribute a cause to a system, not to a person.** In a postmortem that is the condition under which the next
   account gets written honestly.
 * **Length is earned per point rather than per record.** Give each point the detail it needs, once.
+* **A contraction belongs here where speech would use one.** Context and Alternatives are an account of what a
+  team found and how it decided, so they read as a team talking. The decision sentence and the clauses do not.
 
 ### Observed
 

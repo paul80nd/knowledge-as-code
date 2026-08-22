@@ -69,19 +69,15 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 
 ## Punctuation
 
-* **One em dash survives: the interrupting aside that carries its own commas.** That is the whole test. The commas are
-  what settles it, because a comma pair cannot mark an aside that already holds commas, and a dash at the end of a
-  sentence fails it because it interrupts nothing.
-  **Settle the length first.** The aside does not count toward it. Split the sentence that is over-long even so,
-  then test each dash in the sentence you are left with. A dash the split leaves at a sentence end has stopped
-  interrupting, and takes the mark that states the relation.
-  Keep: *The bibliographic description of a title — author, edition, subject headings — held once and shared by every
-  branch.*
-* **Every other dash takes the mark that states the relation.** A dash separates without saying how the two parts
-  relate, so the reader does that work. Often the sentence reads best with the mark simply gone. Parentheses are a last
-  resort, for an aside a comma would garden-path and where the reader must not skip what they hold.
+* **No em dash survives.** A dash separates without saying how the two parts relate, so the reader does that work.
+  Take the mark that states the relation, and often the sentence reads best with the mark simply gone.
   Where the dash follows a link label opening a line, a colon deletes the line. Give the label a verb instead, and see
   the label rule below.
+* **An interrupting aside takes parentheses**, where the aside holds its own commas and a comma pair cannot mark it.
+  Parentheses say the reader may skip what they hold, which is what an aside is. A dash reads as drama it rarely earns.
+  Write: *The bibliographic description of a title (author, edition, subject headings) held once and shared by every
+  branch.*
+  Use them sparingly. A second aside in one paragraph is usually a sentence of its own.
 * **A colon points forward: what follows completes what precedes.** A list, an example, a reason, a consequence, a
   count or a definition all complete. Either half may be the reason for the other. A colon standing in for a verb or a
   conjunction completes nothing.
@@ -98,6 +94,8 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   Keep: *Its four operational obligations are deviable; those three prohibitions are not.*
 * **Write the alternative out.** Write: "a, b, or both." Not: "and/or", "read/write".
 * **Make anything in parentheses a whole grammatical unit.** A plural written "(s)" is never one.
+* **Write the contraction where speech would use one.** "It's" and "cannot" both read naturally, and the document
+  decides which fits. Whatever sent you here says how formal this one is.
 * **Use straight quotes.**
 
 ## Use the real words
