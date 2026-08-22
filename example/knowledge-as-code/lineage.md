@@ -125,8 +125,7 @@ exists because the two are written differently, rehearsed differently, and fail 
 
 ## Language
 
-The [style rules](style.md), and the [authoring rules](authoring.md) that follow a document's tier, draw on two bodies
-of work.
+The `technical-writing` skill, and the tier rules in `writing-a-record`, draw on two bodies of work.
 
 **[ASD-STE100 Simplified Technical English][ste]**, Issue 9 (2025), published by the Aerospace, Security and Defence
 Industries Association of Europe and maintained by its Simplified Technical English Maintenance Group. A controlled

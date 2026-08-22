@@ -146,8 +146,8 @@ becomes every document's problem, and the next author is the one who finds it.
 
 The agent-facing machinery. None of it runs in CI, and the framework ships it alongside the checks above.
 
-[`kb-review`](../.claude/skills/kb-review/SKILL.md) reads a record against the tier rules in [authoring](authoring.md)
-and the sentence rules in [style](style.md), then proposes rewrites. You ask for it, so what it hands back is a reading
+[`kb-review`](../.claude/skills/kb-review/SKILL.md) reads a record against `technical-writing` and
+`writing-a-record`, then proposes rewrites. You ask for it, so what it hands back is a reading
 rather than a gate. Everything that blocks a merge is above.
 
 We made it a skill rather than a per-folder `CLAUDE.md` for one reason. A subdirectory `CLAUDE.md` loads only when a

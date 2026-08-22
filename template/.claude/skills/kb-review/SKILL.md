@@ -20,20 +20,19 @@ Three sources of rules, in this order:
    must have.
 3. **[`knowledge-as-code/contributing.md`](../../../knowledge-as-code/contributing.md).** The link and template
    conventions CI enforces, and the same precedence list stated in full. Read it before you touch a link.
-4. **[`knowledge-as-code/style.md`](../../../knowledge-as-code/style.md) and
-   [`knowledge-as-code/authoring.md`](../../../knowledge-as-code/authoring.md).** The prose rules — style for the words,
-   which are the same everywhere, and authoring for what a document's tier adds. Read both in full, every time. This
-   skill is the procedure for applying them and does not restate them.
+4. **The `technical-writing` and `writing-a-record` skills.** The prose rules: the floor for the words, which is the
+   same everywhere, and the corpus voice for what a record's tier adds. Load both, every time. This skill is the
+   procedure for applying them and does not restate them.
 
 **Where a prose rule contradicts the schema, that is a finding to report — never an instruction to act on.**
-`authoring.md` says the same of itself. Report which of the two is wrong and leave both alone. A reviewer who resolves
-the contradiction instead breaks the build while claiming the rulebook's authority. Read literally, one wrong bullet
-would have stripped **MUST** from twenty-two normative documents that `clauses` requires it in.
+`writing-a-record` says the same of itself. Report which of the two is wrong and leave both alone. A reviewer
+resolving the contradiction instead breaks the build while claiming the rulebook's authority. Read literally, one
+wrong bullet would have stripped **MUST** from twenty-two normative documents that `clause-modal` requires it in.
 
 ## The one rule that stops this going wrong
 
 **Language follows tier, not type.** Read the record's `tier:` frontmatter before you read its prose, and apply that
-tier's section of `authoring.md`. A rewrite that applies procedural terseness to an ADR has destroyed the document while
+tier's section of `writing-a-record`. A rewrite applying procedural terseness to an ADR has destroyed the document while
 appearing to improve it.
 
 ## Never do these
@@ -139,12 +138,12 @@ decide. That list is worth more than a larger diff.
    by tier, worst offenders first — and confirm before starting. Do not silently review a hundred documents.
 2. **Run `kac validate` and `kac checks`, and read the type's `rules:` block.** Baseline, what the tool enforces, and
    what the type declares.
-3. **Read `style.md` and `authoring.md`.** In full. Then the type's `<type>.md` for what the type is meant to contain,
-   and its `_template.md` for the sections it must have.
+3. **Load `technical-writing` and `writing-a-record`.** Then the type's `<type>.md` for what the type is meant to
+   contain, and its `_template.md` for the sections it must have.
 4. **For each record**, in this order:
    a. Read the frontmatter. Note the `tier`, and the `status` — whether a Decided record has settled. b. Read the record
    whole before changing anything. c. Identify findings against the floor, then against the tier's rules, then against
-   [intent, not administration](../../../knowledge-as-code/authoring.md#intent-not-administration). d. **Edit at the
+   `writing-a-record`'s *Keep the administration out*. d. **Edit at the
    scale the findings interact at** — the sentence where a finding is local, the section as a unit where several
    findings argue the same point across it, the whole document only where most of its paragraphs are in scope. What must
    be whole is the result: a reader arriving cold must not be able to tell which paragraph is newest.

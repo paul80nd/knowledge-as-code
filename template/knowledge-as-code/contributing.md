@@ -4,11 +4,15 @@
 
 The rules are the same whether a person or an AI session is holding the keyboard.
 
-Four pages carry what a contribution needs, and a type's `_template.md` sends you here rather than repeating them.
-[Taxonomy](taxonomy.md) says where a document goes. [Metadata](metadata.md) covers the frontmatter.
-[Style](style.md) holds the rules for the words, which are the same in every document and every commit message.
-[Authoring](authoring.md) holds what a document's tier adds on top. This page holds the rest: the link and template
-conventions CI enforces, the review model, and what outranks what when two rules disagree.
+Two pages and two skills carry what a contribution needs, and a type's `_template.md` sends you here rather than
+repeating them. [Taxonomy](taxonomy.md) says where a document goes. [Metadata](metadata.md) covers the frontmatter.
+This page holds the rest: the link and template conventions CI enforces, the review model, and what outranks what when
+two rules disagree.
+
+**The rules for the words are skills rather than pages.** `technical-writing` carries the floor, which is how to build
+a sentence and how to write a commit message. `writing-a-record` carries what this corpus adds and what a record's tier
+asks on top. A skill loads beside the work at the moment of writing, and costs nothing on a session that writes no
+prose. Neither is restated here.
 
 ## What outranks what
 
@@ -19,7 +23,7 @@ Four sources of rules, in this order.
    formats, link forms, and which text rules a type actually declares.
 2. **The type's own pages.** `<type>.md` for what the type holds, `<type>/_template.md` for the sections it must have.
 3. **This page**, for the conventions below.
-4. **[Style](style.md) and [authoring](authoring.md)**, for the prose.
+4. **The `technical-writing` and `writing-a-record` skills**, for the prose.
 
 **Report a contradiction, do not act on it.** Where a prose rule contradicts the schema, say which of the two is wrong
 and leave both alone. Read literally, one wrong bullet in a rulebook can strip a keyword from every normative document
@@ -33,7 +37,7 @@ in the corpus while claiming the rulebook's authority.
 3. Allocate an ID in the style that type uses — the next unused number, a four-character mnemonic for the concept, or a
    slug. Check the folder's index for what is already taken; see [metadata](metadata.md#ids).
 4. Fill in the frontmatter — see [metadata](metadata.md).
-5. Write the content, to [style](style.md) and [authoring](authoring.md). Follow the template's section structure, which
+5. Write the content, to `technical-writing` and `writing-a-record`. Follow the template's section structure, which
    exists so documents of a type are comparable. The tier rules are why a runbook step and an ADR paragraph are held to
    different constraints.
 6. Open a PR against the corpus repository. Review expectations follow the tier, below.

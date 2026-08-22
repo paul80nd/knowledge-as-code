@@ -12,7 +12,7 @@
 # takes the framework from.
 
 # The version of the shared framework's shape.
-version: 5
+version: 6
 
 # Increment when the structure of the shared framework changes in a way that
 # corpora must respond to, such as:
@@ -181,8 +181,6 @@ rules:
 
   - { path: "knowledge-as-code/metadata.md",     layer: synced }
   - { path: "knowledge-as-code/contributing.md", layer: synced }
-  - { path: "knowledge-as-code/style.md",        layer: synced }
-  - { path: "knowledge-as-code/authoring.md",    layer: synced }
   - { path: "knowledge-as-code/principles.md",   layer: synced }
   - { path: "knowledge-as-code/lineage.md",      layer: synced }
   - { path: "knowledge-as-code/automation.md",   layer: synced }

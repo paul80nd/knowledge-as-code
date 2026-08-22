@@ -40,15 +40,12 @@ Both gate the branch, so a clean local run is what a pull request expects rather
 
 ## Writing a record
 
-**How a document is written follows its tier, not its type.** Read all three pages below before writing or rewriting
-one. A runbook step and an ADR paragraph obey different constraints, and nothing in CI will tell you that you used the
-wrong ones.
+**How a document is written follows its tier, not its type.** A runbook step and an ADR paragraph obey different
+constraints, and nothing in CI will tell you that you used the wrong ones.
 
-* [`knowledge-as-code/style.md`](knowledge-as-code/style.md) — the rules for the words, which are the same in every
-  document and every commit message.
-* [`knowledge-as-code/authoring.md`](knowledge-as-code/authoring.md) — what the record's tier adds on top.
-* [`knowledge-as-code/contributing.md`](knowledge-as-code/contributing.md) — the link and template conventions CI
-  enforces, and what outranks what when two rules disagree.
+* [`knowledge-as-code/contributing.md`](knowledge-as-code/contributing.md) names the two skills that carry the rules
+  for the words, and holds the link and template conventions CI enforces.
+* [`knowledge-as-code/taxonomy.md`](knowledge-as-code/taxonomy.md) says which tier a type belongs to.
 
 ## Your working style
 

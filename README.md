@@ -141,7 +141,7 @@ The taxonomy is the half that is only partly proven.
 
 Every document here describes what exists today, and the
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds everything considered but, as yet, unbuilt.
-[Write what exists](template/knowledge-as-code/authoring.md#write-what-exists) is the rule, and says why.
+[Contributing](template/knowledge-as-code/contributing.md) names the skills that carry that rule and say why.
 
 ## Opinions
 

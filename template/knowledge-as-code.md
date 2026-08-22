@@ -11,8 +11,6 @@ This page is the way in. The detail lives beneath it:
 | Understand what kinds of knowledge live here | [Taxonomy](knowledge-as-code/taxonomy.md)         |
 | Know why the framework is shaped this way    | [Principles](knowledge-as-code/principles.md)     |
 | Add or change something                      | [Contributing](knowledge-as-code/contributing.md) |
-| Write a clear sentence, anywhere at all      | [Style](knowledge-as-code/style.md)               |
-| Know how a document should be written        | [Authoring](knowledge-as-code/authoring.md)       |
 | Know what metadata a document needs          | [Metadata](knowledge-as-code/metadata.md)         |
 | Understand what CI checks and builds         | [Automation](knowledge-as-code/automation.md)     |
 | See where the taxonomy's names came from     | [Lineage](knowledge-as-code/lineage.md)           |
@@ -78,7 +76,7 @@ determines the rules.
 | **Observed**    | Perishable. Unreviewed until promoted. Expires by default.  | None until promotion                 |
 
 A new kind of knowledge does not need new machinery — it needs a tier. Every validation rule, review expectation,
-[language rule](knowledge-as-code/authoring.md#by-tier) and generated report keys off the tier rather than the type. Why
+language rule and generated report keys off the tier rather than the type. Why
 that is the load-bearing idea is set out in [principles](knowledge-as-code/principles.md#behaviour-before-subject).
 
 Observed is the row that surprises people: the tier carrying the least authority is the one the corpus most depends on,

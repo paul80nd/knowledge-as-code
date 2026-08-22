@@ -14,7 +14,7 @@
 
 # The version of the template's shape. Increment when a corpus has to respond to the change:
 # a file added or removed, a file renamed, or a file moving between the two layers.
-version: 1
+version: 2
 
 layers:
 
