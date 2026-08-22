@@ -33,7 +33,7 @@ All solutions we build or operate, and every asset required to rebuild one: appl
 definitions, database schema and migrations, pipeline definitions, non-secret configuration, operational scripts and the
 documentation that describes them.
 
-Secrets are the deliberate exception — see [pol-SCRT].
+Secrets are the deliberate exception. See [pol-SCRT].
 
 ## Clauses
 
@@ -45,13 +45,13 @@ Secrets are the deliberate exception — see [pol-SCRT].
 | `BRANCH`  | **MUST** protect the default branch, so changes arrive by reviewed merge rather than direct push                                                 | [ISO 27001:2022].A.8.4, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.1  |
 | `PARITY`  | **MUST** subject changes to infrastructure, schema and configuration to the same review as changes to application code                           | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PW.7 |
 | `ORPHAN`  | **MUST NOT** allow an asset that is necessary to reproduce a system to exist only on an individual's machine, in a console, or in a shared drive | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
-| `SHARED`  | **MUST NOT** accept shared or generic accounts that make a change unattributable — see [pol-ACCS]                                                | [ISO 27001:2022].A.8.4, [NIST SSDF 1.1].PS.1                           |
+| `SHARED`  | **MUST NOT** accept shared or generic accounts that make a change unattributable. See [pol-ACCS]                                                 | [ISO 27001:2022].A.8.4, [NIST SSDF 1.1].PS.1                           |
 | `SIGNED`  | COULD prove the authorship of a change cryptographically, rather than trusting what it claims                                                    | [NIST SSDF 1.1].PS.1                                                   |
 
 ## Exceptions
 
 Vendor-supplied binaries and third-party assets we cannot hold in source are referenced by version and provenance
-instead — see [pol-TRUS]. Any other asset held outside version control requires a recorded deviation under [pol-DEVI],
+instead. See [pol-TRUS]. Any other asset held outside version control requires a recorded deviation under [pol-DEVI],
 naming the asset, the reason and the recovery plan if it is lost.
 
 [pol-ACCS]: accs-access-by-identity.md

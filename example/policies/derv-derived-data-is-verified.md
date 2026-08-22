@@ -54,7 +54,7 @@ accepts a wrong answer reaching a decision. "The numbers have always looked abou
 ## Notes
 
 [ISO 27001:2022] treats integrity as protection against unauthorised alteration, and no Annex A control asks whether a
-computation was correct. `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]; citing it here as
+computation was correct. `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]. Citing it here as
 well would overstate what this policy adds.
 
 [pol-AUTV]: autv-automated-verification.md

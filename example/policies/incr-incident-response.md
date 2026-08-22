@@ -26,19 +26,20 @@ tags: [ incident-response, learning, postmortem ]
 When something goes wrong, we have a defined way to respond. Someone is in charge. Severity decides how large the
 response is. We record what happened, and we can show we are better for having been through it.
 
-Respond well and an incident ends in a recovery; respond badly and it becomes a second failure on top of the first.
+Respond well and an incident ends in a recovery. Respond badly and it becomes a second failure on top of the first.
 Review it afterwards and we do not pay for it twice. Both have to be settled before the incident, because nobody designs
 a good process at three in the morning.
 
 ## Scope
 
 Security and operational incidents affecting systems we build or operate, including those reported to us from outside
-the organisation. A personal data breach is a security incident and is in scope here; what the data itself requires of
+the organisation. A personal data breach is a security incident and is in scope here. What the data itself requires of
 us is [pol-DATA]'s.
 
-_Boundary: [pol-RECV] owns being able to recover — the objectives, the backups, and the proof that a restore works. This
-policy owns deciding to recover and doing it, held to the objectives [pol-RECV] set. `ACTIONS` is shared with
-[pol-SECD]: findings become tracked work whether they came from an incident review here or from threat modelling there._
+_Boundary: [pol-RECV] owns being able to recover, and that covers the objectives, the backups, and the proof that a
+restore works. This policy owns deciding to recover and doing it, held to the objectives [pol-RECV] set. `ACTIONS` is
+shared with [pol-SECD]: findings become tracked work whether they came from an incident review here or from threat
+modelling there._
 
 ## Clauses
 
@@ -52,7 +53,7 @@ policy owns deciding to recover and doing it, held to the objectives [pol-RECV] 
 | `INFORM`  | **MUST** tell the people a personal data breach puts at high risk, without undue delay                                                             | [UK GDPR].Art.34                                                      |
 | `REPORT`  | **MUST** encourage anyone to report a suspected incident, and make it easy to do so                                                                | [ISO 27001:2022].A.6.8                                                |
 | `LEARN`   | **MUST** review significant incidents afterwards, looking for the conditions that allowed them rather than for someone to blame                    | [ISO 27001:2022].A.5.27                                               |
-| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work — see [pol-SECD]                                                                     | [ISO 27001:2022].A.5.27                                               |
+| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work. See [pol-SECD]                                                                      | [ISO 27001:2022].A.5.27                                               |
 | `DRILL`   | **MUST** rehearse the process rather than first exercising it for real                                                                             | [ISO 27001:2022].A.5.24                                               |
 | `ADHOC`   | **MUST NOT** handle a significant incident informally, with no record and no named owner                                                           | [ISO 27001:2022].A.5.26                                               |
 | `TOOSOON` | **MUST NOT** close an incident before the learning from it is captured                                                                             | [ISO 27001:2022].A.5.27                                               |

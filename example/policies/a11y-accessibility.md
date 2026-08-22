@@ -48,7 +48,7 @@ is acceptable; concealing it is not.
 ## Notes
 
 What drives this policy is legal obligation rather than an information-security framework, so it carries no ISO/IEC
-27001 reference — see [Policies](/policies.md#why-we-use-them).
+27001 reference. See [Policies](/policies.md#why-we-use-them).
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [EN 301 549]: /frameworks.md#en-301-549

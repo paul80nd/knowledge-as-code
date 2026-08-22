@@ -38,11 +38,11 @@ pressure during an incident.
 | Id        | Clause                                                                                                                                     | Alignment               |
 |-----------|--------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
 | `RECORD`  | **MUST** record a deviation before departing from a policy or standard, or immediately afterwards where an incident left no time           | [ISO 27001:2022].A.5.36 |
-| `OWNER`   | **MUST** name an individual who accepts the risk — someone with the authority to accept it, never a team or a role in the abstract         | [ISO 27001:2022].A.5.4  |
+| `OWNER`   | **MUST** name an individual who accepts the risk: someone with the authority to accept it, never a team or a role in the abstract         | [ISO 27001:2022].A.5.4  |
 | `CONTENT` | **MUST** state what the deviation is, why it is needed and what compensates for it                                                         |                         |
 | `EXPIRY`  | **MUST** give every deviation a review date, and honour it                                                                                 |                         |
 | `SURFACE` | **MUST** make deviations visible to those affected by the risk, rather than filing them where only the person who raised them will look    |                         |
-| `CLOSE`   | **MUST** close a deviation by fixing the underlying gap or by consciously re-accepting the risk — with the same scrutiny as the first time | [ISO 27001:2022].A.5.36 |
+| `CLOSE`   | **MUST** close a deviation by fixing the underlying gap or by consciously re-accepting the risk, with the same scrutiny as the first time | [ISO 27001:2022].A.5.36 |
 | `PERM`    | **MUST NOT** treat a deviation as permanent by default, or let an expired one stand unreviewed                                             | [ISO 27001:2022].A.5.36 |
 | `CUSTOM`  | **MUST NOT** treat a long-standing practice as exempt from a policy it breaks                                                              | [ISO 27001:2022].A.5.4  |
 | `DEBT`    | SHOULD record a shortcut taken knowingly, so that it is tracked work rather than something the next person discovers                       |                         |
@@ -53,14 +53,15 @@ None. Departing from this policy means not recording a deviation, which is the o
 
 Some commitments here admit no deviation at all, and no record makes any of them acceptable:
 
-* [pol-SCRT] — embedding a secret, reusing a production secret outside production, or writing one to a log. Its four
-  operational obligations are deviable; those three prohibitions are not.
-* [pol-DATA] — handling personal data on a lawful basis. Its other obligations are deviable.
-* [pol-KNOW] — writing down what is needed to build, run and recover a system. The effort is proportionate to the
-  system; the commitment does not vary.
-* [pol-AGNT] — the acceptance gate. Agent-produced work carries no authority until a person accepts it, and convenience
-  does not make it authoritative.
-* [pol-INCR] — recording a significant incident, and recording a personal data breach whether or not it is notifiable.
+* [pol-SCRT] forbids embedding a secret, reusing a production secret outside production, or writing one to a log. Its
+  four operational obligations are deviable; those three prohibitions are not.
+* [pol-DATA] requires handling personal data on a lawful basis. Its other obligations are deviable.
+* [pol-KNOW] requires writing down what is needed to build, run and recover a system. The effort is proportionate to
+  the system. The commitment does not vary.
+* [pol-AGNT] sets the acceptance gate. Agent-produced work carries no authority until a person accepts it, and
+  convenience does not make it authoritative.
+* [pol-INCR] requires recording a significant incident, and recording a personal data breach whether or not it is
+  notifiable.
 * This policy, for the reason given above.
 
 ## Notes

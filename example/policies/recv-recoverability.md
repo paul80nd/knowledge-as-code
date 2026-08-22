@@ -33,14 +33,14 @@ fault tolerance and the ability to recover after failure.
 A failure domain is the set of things that fail together: a disk, a rack, a data centre, a region.
 
 Proving a restore needs the data the backup actually holds, so it runs in a controlled restore environment held at
-production tier — the same access controls, the same data handling, and not an environment below production. Masked or
+production tier: the same access controls, the same data handling, and not an environment below production. Masked or
 synthesised data would prove the mechanism rather than the restore. [pol-DATA] and [pol-ENVS] bind that environment as
 production, rather than excepting it.
 
-_Boundary: [pol-ENVS] governs separation between environments and [pol-DATA] the handling of what they hold. The restore
-environment sits at production tier, so their rules about lower environments do not reach it. [pol-INCR] owns the
-response to an outage: this policy owns being able to recover, and deciding to invoke it and running it are
-[pol-INCR]'s._
+_Boundary: [pol-ENVS] governs separation between environments and [pol-DATA] governs the handling of what they hold.
+The restore environment sits at production tier, so their rules about lower environments do not reach it. [pol-INCR]
+owns the response to an outage, which is deciding to invoke a recovery and running it. This policy owns being able to
+recover._
 
 ## Clauses
 
@@ -61,7 +61,7 @@ response to an outage: this policy owns being able to recover, and deciding to i
 
 ## Exceptions
 
-Systems holding no state that cannot be regenerated from source need no data backup — but their recovery path is still
+Systems holding no state that cannot be regenerated from source need no data backup. But their recovery path is still
 defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded
 deviation under [pol-DEVI], owned by whoever will answer for the downtime.
 

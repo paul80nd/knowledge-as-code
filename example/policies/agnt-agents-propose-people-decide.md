@@ -27,7 +27,7 @@ produced the work, and a person who puts their name on it. Where the agent was o
 
 ## Scope
 
-Anything an agent contributes to the systems we run or the documentation we keep — code, configuration, prose, or a
+Anything an agent contributes to the systems we run or the documentation we keep: code, configuration, prose, or a
 recorded observation. This applies whether a person told the agent what to do or it ran on a schedule with nobody
 watching.
 
@@ -40,7 +40,7 @@ the authority of what it produces._
 |-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
 | `PROV`    | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                    | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
 | `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                        | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].GOVERN |
-| `EQUAL`   | **MUST** hold agent-produced changes to every gate that applies to our own — the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25, [NIST AI RMF 1.0].MANAGE |
+| `EQUAL`   | **MUST** hold agent-produced changes to every gate that applies to our own: the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25, [NIST AI RMF 1.0].MANAGE |
 | `CONFID`  | **MUST** state how confident we are in an observation, and let unverified ones expire rather than stay on unchallenged                                                       | [NIST AI RMF 1.0].MEASURE                         |
 | `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                           | [NIST AI RMF 1.0].MEASURE                         |
 | `UNPROV`  | **MUST NOT** accept a proposal we cannot trace back to what produced it                                                                                                      | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
@@ -53,7 +53,7 @@ does a recorded deviation. If some agent output had authority and some did not, 
 reading.
 
 How much accepting takes depends on what is being accepted. Putting an agent's change up for review is enough. Turning
-one of its observations into a standard takes the person who owns that standard. Neither is an exception; they are the
+one of its observations into a standard takes the person who owns that standard. Neither is an exception. They are the
 same rule at different sizes.
 
 A person who accepts agent work becomes its author, not its approver, so [pol-ACCS] still requires a second person to
