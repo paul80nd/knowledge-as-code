@@ -27,15 +27,15 @@ Run on every PR. Failures block merge.
 
 - Every `id` referenced in a cross-reference field resolves to a document that exists.
 - Relative markdown links resolve.
-- Bidirectional pairs agree — `supersedes` / `superseded-by`, `promoted-from` / `promoted-to`,
+- Bidirectional pairs agree: `supersedes` / `superseded-by`, `promoted-from` / `promoted-to`,
   `verifies` / `verified-by`. A one-sided link fails. `implements` is deliberately not one of these. It points up from a
   standard to a policy, and the policy never points back.
 
 ### Per-tier rules
 
-- **Normative** — every standard cites an ADR in `derived-from` or a policy in `implements`.
-- **Procedural** — `last-rehearsed` present, `"never"` permitted.
-- **Observed** — `expires` present; `provenance` present when `source: dreamed`.
+- **Normative.** Every standard cites an ADR in `derived-from` or a policy in `implements`.
+- **Procedural.** `last-rehearsed` is present, and `"never"` is permitted.
+- **Observed.** `expires` is present, and `provenance` is present when `source: dreamed`.
 
 ### Hygiene
 
@@ -81,10 +81,10 @@ The table above says what each block is and where it lands. The repository the t
 from the generator's side, in `tooling/features/generate.md`, giving the rule that governs each block in place of its
 address.
 
-Most of those blocks describe the corpus rather than the schema. Everything on the taxonomy page covers the types *this*
-corpus holds: the decision table, the types at length, the disambiguations, and the graph with the edges beneath it. So
-do the lineage table, the strip on `metadata.md` and the index at the repository root. A corpus that adopted five of the
-framework's types gets five rows, and each row links to a page it holds.
+Most of those blocks describe the corpus. Everything on the taxonomy page covers the types *this* corpus holds: the
+decision table, the types at length, the disambiguations, and the graph with the edges beneath it. So do the lineage
+table, the strip on `metadata.md` and the index at the repository root. A corpus that adopted five of the framework's
+types gets five rows, and each row links to a page it holds.
 
 The corpus chooses which types it holds, and records them in `types:` in `.corpus.yaml`. Where a corpus has not declared
 them, `kac` reads them off the folders instead: a type counts when both halves are there, the page and the folder. That
@@ -101,8 +101,8 @@ it varies by corpus.
 
 The generator writes the graph to the subset of Mermaid an Azure DevOps wiki renders. That subset is narrower than
 Mermaid's own, and a diagram that exceeds it renders nothing at all, with no error to say why. So write `graph` rather
-than `flowchart`, use no subgraphs, and keep every arrow to `-->`. A fenced block carries the diagram rather than ADO's
-`:::` container, which GitHub shows as literal text.
+than `flowchart`, use no subgraphs, and keep every arrow to `-->`. A fenced block carries the diagram. ADO's `:::`
+container shows on GitHub as literal text.
 
 ## The export
 
@@ -120,16 +120,16 @@ against a schema.
 
 | Path                 | Why                                                |
 |----------------------|----------------------------------------------------|
-| `knowledge-as-code/` | Describes the system; is not governed by it        |
-| `_plan/`             | Temporary migration scaffolding; deleted when done |
+| `knowledge-as-code/` | Describes the system, and is not governed by it    |
+| `_plan/`             | Temporary migration scaffolding, deleted when done |
 | `_reports/`          | Generated output                                   |
-| `**/_template.md`    | Not a record; checked as a template — see below    |
-| Root `README.md`     | Orientation page, not a knowledge record           |
-| Root `CLAUDE.md`     | Agent guidance, not a knowledge record             |
+| `**/_template.md`    | Not a record. Checked as a template instead        |
+| Root `README.md`     | Orientation page                                   |
+| Root `CLAUDE.md`     | Agent guidance                                     |
 
 We name each path rather than hide it in a glob, so nobody answers a validation failure by quietly widening an
 exclusion. The `_` rows are the one deliberate glob. That prefix belongs to the framework's own artefacts, and the tool
-tests the prefix rather than the names. See [taxonomy](taxonomy.md#layout).
+matches on the prefix itself. See [taxonomy](taxonomy.md#layout).
 
 Excluding a file as a record does not excuse it from every check. The framework's own documents carry no frontmatter, so
 `kac validate` holds them to no schema. They still link to things, so it resolves their links and fragments like any
@@ -146,9 +146,8 @@ becomes every document's problem, and the next author is the one who finds it.
 
 The agent-facing machinery. None of it runs in CI, and the framework ships it alongside the checks above.
 
-[`kb-review`](../.claude/skills/kb-review/SKILL.md) reads a record against `technical-writing` and
-`writing-a-record`, then proposes rewrites. You ask for it, so what it hands back is a reading
-rather than a gate. Everything that blocks a merge is above.
+[`kb-review`](../.claude/skills/kb-review/SKILL.md) reads a record against `technical-writing` and `writing-a-record`,
+then proposes rewrites. You ask for it, so what it hands back is a reading. Everything that blocks a merge is above.
 
 We made it a skill rather than a per-folder `CLAUDE.md` for one reason. A subdirectory `CLAUDE.md` loads only when a
 session reads a file in that directory, so a session working in a service repository would never trigger one in the
@@ -165,10 +164,9 @@ enforces it. A file in the `synced` layer carrying corpus-specific content is a 
 organisation-specific belongs in the corpus, or in the `forked` layer. That layer holds the type root pages, the
 templates and the publishing config, and each of them exists to be filled with local content.
 
-What a corpus takes is its own decision. It records that decision in `.corpus.yaml`, rather than leaving anyone to infer
-it from what the folders happen to hold. `types:` names the knowledge types the corpus has adopted. `role:` says whether
-the corpus answers for the mechanism or only runs it, which settles whether it carries the `verification` layer, the
-tests and fixtures that prove the tool.
+What a corpus takes is its own decision, recorded in `.corpus.yaml`. `types:` names the knowledge types the corpus has
+adopted. `role:` says whether the corpus answers for the mechanism or only runs it, which settles whether it carries the
+`verification` layer, the tests and fixtures that prove the tool.
 
 `kac mechanism --sync` reads both keys. It brings down what the descriptor asked for, seeds the forked files a new type
 needs, records what it took, and regenerates. So a corpus adopts a type by adding a line to the descriptor and syncing,

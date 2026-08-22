@@ -9,8 +9,8 @@ close.
 
 ## Where does this go?
 
-The types this corpus holds, generated from the schema. The table is ordered by what you are holding rather than by
-where it ends up, so a corpus that has adopted five types is offered five, and every row opens.
+The types this corpus holds, generated from the schema. The table is ordered by what you are holding, so scan the left
+column for your row. A corpus that has adopted five types is offered five, and every row opens.
 
 <!-- BEGIN GENERATED: types-placement -->
 
@@ -39,15 +39,14 @@ where it ends up, so a corpus that has adopted five types is offered five, and e
 One thing appears on nobody's list: where you got to part-way through a piece of work. Session logs stay local and never
 reach the corpus.
 
-If nothing fits, raise it rather than improvising. A missing type is a taxonomy conversation. A `misc/` folder is a
-failure nobody notices until it is large. The framework declares more types than any one corpus stands up, so the answer
-may be to adopt one rather than to invent one.
+If nothing fits, raise it. A missing type is a taxonomy conversation. A `misc/` folder is a failure nobody notices
+until it is large. The framework declares more types than any one corpus stands up, so the answer may be to adopt one.
 
 ## The types
 
 Grouped by [tier](../knowledge-as-code.md#tiers), because tier determines how each behaves, and generated from the same
-schema as the table above. The fuller account of a type — what it looks like here, and the records already filed under
-it — is on the type's own page.
+schema as the table above. The fuller account of a type (what it looks like here, and the records already filed under
+it) is on the type's own page.
 
 <!-- BEGIN GENERATED: types-detail -->
 
@@ -143,8 +142,7 @@ so they stay local. Only distilled, reviewed discoveries reach the corpus.
 ## How the types relate
 
 The edges carry as much value as the nodes, and they are the part that breaks silently. Every one below is a
-cross-reference field the schema declares, so CI can check that it resolves to a document that exists. That is why the
-schema declares them, rather than an author writing a link in prose.
+cross-reference field the schema declares, so CI can check that it resolves to a document that exists.
 
 <!-- BEGIN GENERATED: types-graph -->
 
@@ -257,7 +255,7 @@ are the layer a downstream corpus inherits, and standards are the layer it write
 policy can know what implements it.
 
 Nor does every edge leave from a whole document. A policy aligns with a framework through a single **clause** rather
-than in its entirety, so the edge leaves the clause table and lands on a control — `pol-SCRT.KEYS` to Annex A A.8.24.
+than in its entirety, so the edge leaves the clause table and lands on a control: `pol-SCRT.KEYS` to Annex A A.8.24.
 [Frameworks](../frameworks.md) is the far end of every one of those edges, and the only page that records our standing
 against a framework. It carries no `ref:` and so appears in no row above.
 
@@ -266,9 +264,9 @@ against a framework. It carries no `ref:` and so appears in no row above.
 Each type follows the same shape:
 
 ```
-<type>.md              # what it is, why, how to contribute — human-written
+<type>.md              # what it is, why, how to contribute: human-written
 <type>/
-  ├── _index.md        # index — GENERATED
+  ├── _index.md        # index: GENERATED
   ├── _template.md     # what humans and agents copy
   └── <records>.md
 ```
@@ -286,12 +284,12 @@ README.md              # orientation
 CLAUDE.md              # agent guidance for working in this repository
 frameworks.md          # external frameworks, and what each obliges us to
 knowledge-as-code.md   # the approach
-knowledge-as-code/     # the system's own documentation — outside the taxonomy
+knowledge-as-code/     # the system's own documentation: outside the taxonomy
 .corpus.yaml           # what this corpus is, and where it takes the framework from
-.claude/skills/        # agent machinery for this corpus — SYNCED
-.plugin/               # source for the plugin that carries this corpus's export — SYNCED, bar its manifest
-.schema/               # the machine-readable schema — SYNCED
-_plan/                 # migration scaffolding — temporary
+.claude/skills/        # agent machinery for this corpus: SYNCED
+.plugin/               # source for the plugin that carries this corpus's export: SYNCED, bar its manifest
+.schema/               # the machine-readable schema: SYNCED
+_plan/                 # migration scaffolding: temporary
 _reports/              # GENERATED
 ```
 
@@ -342,7 +340,7 @@ register.
 
 <!-- END GENERATED: types-versus -->
 
-One more call has only one side here. A **capability** is the product surface — Billing, Search, Notifications —
+One more call has only one side here. A **capability** is the product surface (Billing, Search, Notifications),
 described once, above the epic layer, as a hub of links. A **spec** is the per-feature application of standards to a
 concrete contract, and it belongs in the repo that owns the feature, next to the API description and the feature files
 it describes. That follows the same central-versus-local rule as a decision record: cross-repo synthesis lives here, and
@@ -352,6 +350,6 @@ feature-level detail lives with the code.
 
 Not all types are proven. Where that matters to a corpus, its own README records the state.
 
-Changing the taxonomy — adding a type, merging two, moving a type between tiers — is a larger act than editing any
+Changing the taxonomy (adding a type, merging two, moving a type between tiers) is a larger act than editing any
 document within it. Where a corpus holds ADRs, that change belongs in one, amending whichever recorded the taxonomy in
 the first place.

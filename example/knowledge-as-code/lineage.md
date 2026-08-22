@@ -7,13 +7,12 @@ each behaves. Most of them still have close analogues in established frameworks.
 what each one lends, and where we deliberately part company with it.
 
 Three reasons it is worth writing down. An auditor arriving cold recognises the concepts faster if we tell them what the
-concepts are near. A future naming decision is constrained by precedent rather than argued from scratch. And several of
-these words already mean something else to a reader with a governance or agile background, which is a defect this page
-exists to close.
+concepts are near. A future naming decision answers to precedent. And several of these words already mean something
+else to a reader with a governance or agile background, which is a defect this page exists to close.
 
 **This is alignment, not compliance.** Naming a framework here says our thinking is near theirs. It does not claim
 conformance, certification, or that a document of ours would satisfy an assessment against theirs. Where this corpus has
-a *standing* against an external framework — obligations it accepts and is measured on — then
+a *standing* against an external framework (obligations it accepts and is measured on),
 [`frameworks.md`](../frameworks.md) records that, and nothing else does. We keep the two registers apart deliberately.
 Lineage is the framework's own intellectual debt and is identical in every corpus, and standing belongs wholly to the
 corpus holding it.
@@ -115,7 +114,7 @@ confidence-scored and self-expiring, with a defined promotion path into a review
 and an agile spike each share the provisional quality and none of the rest. The combination of an expiry and a
 confidence level is the most novel thing in this taxonomy.
 
-**The Process / Runbook split.** No framework we found divides its procedural layer by *reading conditions* — planned
+**The Process / Runbook split.** No framework we found divides its procedural layer by *reading conditions*: planned
 and deliberate against incident-time and under pressure. Both HCGF and Diátaxis have one procedural type. The split
 exists because the two are written differently, rehearsed differently, and fail differently.
 
@@ -156,9 +155,9 @@ Honesty about sourcing is part of the point of this page. We checked every row a
 these:
 
 * **ITIL** publications are paywalled, so the known-error definition behind the FAQ row rests on the publisher's own
-  summary rather than the text.
+  summary.
 * **ISO standards** are paywalled, so 25010's characteristics and 24495-1's principles come from the issuing body's
-  public descriptions rather than from the standards.
+  public descriptions.
 * **ArchiMate and TOGAF** are licence-gated beyond their public specification pages.
 * **ASD-STE100's** licensing terms and issue details come from the specification's own front matter and the maintenance
   group's published material. The numeric writing rules are corroborated from specialist secondary sources rather than

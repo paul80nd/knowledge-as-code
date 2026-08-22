@@ -13,7 +13,7 @@ sparingly, and derive rather than state wherever you can.
 
 A record holds three kinds of thing, and each has one home.
 
-**Frontmatter is metadata about the record** — what identifies it, places it in the taxonomy, and describes it as a
+**Frontmatter is metadata about the record**: what identifies it, places it in the taxonomy, and describes it as a
 whole. A field carries one value, or a set of them. An index sorts on it, a citation resolves against it, and an agent
 greps it.
 
@@ -57,16 +57,16 @@ frontmatter reaches the reader as a metadata table written for a machine, and le
 
 ## Naming
 
-* **Type name** — singular. An *ADR*, a *standard*, a *control*.
+* **Type name**: singular. An *ADR*, a *standard*, a *control*.
 
-* **Folder and page** — plural. `adrs/`, `standards/`, `controls/`. The folder is a collection, and CI infers a
+* **Folder and page**: plural. `adrs/`, `standards/`, `controls/`. The folder is a collection, and CI infers a
   document's type from it, so the mapping is a rule rather than a lookup. Two types take the singular: `data/` is a mass
   noun, and a corpus has one `glossary/` held in several files, one per bounded context. The singular says those files
   are one vocabulary presented in sections.
 
-* **ID prefix** — singular, since an ID names a single document. `adr-0017`, `std-0004`.
+* **ID prefix**: singular, since an ID names a single document. `adr-0017`, `std-0004`.
 
-* **ID style** — the schema sets this per type, and it takes one of three shapes.
+* **ID style**: the schema sets one per type, and it takes one of three shapes.
 
   *Numbered* (`adr-0017`) suits anything chronological. The id records the order things happened, which is information
   none of the others can carry.
@@ -80,7 +80,7 @@ frontmatter reaches the reader as a metadata table written for a machine, and le
   alphabetically. A mnemonic makes a claim a number never does, so draw it from the concept rather than the current
   wording, and leave it alone once the document is active.
 
-* **Slug length** — the filename slug, excluding the `NNNN-` or `mnem-` prefix, is at most 30 characters. The filename
+* **Slug length**: the filename slug, excluding the `NNNN-` or `mnem-` prefix, is at most 30 characters. The filename
   is a handle rather than a title. It identifies the document at a glance while the H1 carries the full descriptive
   title. CI fails on longer slugs.
 
@@ -106,7 +106,7 @@ Carried by every document in the taxonomy.
 
 <!-- END GENERATED: schema-universal -->
 
-`id` is the anchor for every cross-reference — see [IDs](#ids). Each type sets its own `status` values, and
+`id` is the anchor for every cross-reference. See [IDs](#ids). Each type sets its own `status` values, and
 [per-type fields](#per-type-fields) lists them.
 
 `tags` are **entry points**: the word a reader arrives with, on a document that does not use it. One document may be the
@@ -127,11 +127,11 @@ Deliberately absent, and why:
 | `type`                | Inferred from the folder                         |
 | `title`               | It's the H1, verbatim                            |
 | `created` / `updated` | Git knows, and won't forget to update it         |
-| `lifecycle`           | Follows from tier; a second field could disagree |
+| `lifecycle`           | Follows from tier. A second field could disagree |
 
 ## IDs
 
-Format: `<type-prefix>-<discriminator>` — `adr-0017`, `pol-VURM`, `svc-billing-api`. A type's schema sets which of the
+An id is `<type-prefix>-<discriminator>`: `adr-0017`, `pol-VURM`, `svc-billing-api`. A type's schema sets which of the
 three [ID styles](#naming) it uses.
 
 Numeric IDs are zero-padded to four digits, allocated sequentially, and **never reused**. Where a document is withdrawn
@@ -149,7 +149,7 @@ rather than renamed.
 Two separators reach past an id, each with one job. [Contributing](contributing.md) holds the link form a reference is
 written in.
 
-**`.` addresses a part of a document.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it;
+**`.` addresses a part of a document.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it.
 `gls-knowledge-as-code.corpus` names the glossary, then the term. A part is an identifiable child of a record, and a
 type decides which children its documents offer, under [What a record carries](#what-a-record-carries). CI resolves each
 citation against the document it names, so a reference to a part that does not exist fails the build. So does a
@@ -165,7 +165,7 @@ repositories its owner cannot edit. It may not take a type prefix's spelling, si
 
 ## The identity line
 
-Every record carries one line directly beneath its H1 — the type, the ID, then the status in upper case:
+Every record carries one line directly beneath its H1. It holds the type, the ID, then the status in upper case:
 
 ```markdown
 # Software we build is usable by everyone
