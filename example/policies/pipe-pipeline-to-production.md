@@ -54,7 +54,7 @@ made of, where it is held and whether its origin can be proved is [pol-TRUS]'s._
 
 An emergency change to restore service may bypass the normal path where the pipeline is itself unavailable or the delay
 would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the change is reconciled back
-into version control before the incident is closed. Otherwise the fix becomes the next outage.
+into version control before the incident is closed. Otherwise, the fix becomes the next outage.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-EVER]: ever-everything-in-version-control.md

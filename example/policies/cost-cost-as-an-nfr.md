@@ -15,20 +15,19 @@ tags: [ cost, efficiency, non-functional-requirements ]
 
 ## Purpose
 
-What a system costs to run is an engineering property of it, like its latency or its availability. It has an owner. The
-people whose decisions move it can see it. We design for it rather than discover it in an invoice. It is a constraint we
-optimise within, not a licence to cut resilience, security or accessibility.
+What a system costs to run is an engineering property of it, like its latency or its availability. Cost is owned and
+visible to the people whose decisions affect it. We design for cost rather than discover it in an invoice. It is a
+constraint we optimise within, but it is not a licence to cut resilience, security or accessibility.
 
 Treating cost as a finance concern puts the accountability a long way from the decisions that set it. Engineers choose
 the architecture, the data volumes and the resources, so engineers are the people who can act. The discipline we apply
-to any other non-functional requirement works here unchanged. A runaway bill is often a defect, and sometimes a
-compromise.
+to any other non-functional requirement applies here too. A runaway bill is often a defect, and sometimes a compromise.
 
 ## Scope
 
 All systems we operate on metered infrastructure, in every environment. Targets and thresholds are recorded as
-[NFRs](../nfrs.md) where they matter enough to be stated. This policy commits us to the ownership and the visibility that
-make them meaningful.
+[NFRs](../nfrs.md) where they matter enough to be stated. This policy commits us to the ownership and the visibility
+that make them meaningful.
 
 ## Clauses
 

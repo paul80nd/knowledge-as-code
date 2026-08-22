@@ -20,8 +20,8 @@ tags: [ exceptions, governance, risk-acceptance ]
 Sometimes we knowingly break one of these policies, or a standard beneath it. When we do, we write down what we did,
 name the person accepting the risk, and set a date to look at it again.
 
-The same holds for a shortcut that breaks no rule: skipping the retry logic to ship on Friday, knowing someone has to
-add it. That is technical debt. Nothing here forbids it, but the debt is real, so we record it the same way.
+The same holds for a shortcut that breaks no rule: skipping the retry logic to ship on Friday, knowing someone else will
+have to add it. That is technical debt. Nothing here forbids it, but the debt is real, so we record it the same way.
 
 Almost every policy here leaves a way out, in the words "without a recorded deviation". Those words point here. A
 departure someone decided on, wrote down and gave a review date is risk management. The same departure taken quietly is
@@ -29,35 +29,35 @@ erosion: a year later nobody can tell it from never having known the rule.
 
 ## Scope
 
-Any knowing departure from a policy here, or from a standard that implements one, in any environment. Also any shortcut
+Any knowing departure from a policy here, or from a standard that implements one, in any environment. Also, any shortcut
 taken knowing someone will have to undo it. This binds whether the departure is permanent, temporary, or made under
 pressure during an incident.
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                     | Alignment               |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
-| `RECORD`  | **MUST** record a deviation before departing from a policy or standard, or immediately afterwards where an incident left no time           | [ISO 27001:2022].A.5.36 |
+| Id        | Clause                                                                                                                                    | Alignment               |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `RECORD`  | **MUST** record a deviation before departing from a policy or standard, or immediately afterwards where an incident left no time          | [ISO 27001:2022].A.5.36 |
 | `OWNER`   | **MUST** name an individual who accepts the risk: someone with the authority to accept it, never a team or a role in the abstract         | [ISO 27001:2022].A.5.4  |
-| `CONTENT` | **MUST** state what the deviation is, why it is needed and what compensates for it                                                         |                         |
-| `EXPIRY`  | **MUST** give every deviation a review date, and honour it                                                                                 |                         |
-| `SURFACE` | **MUST** make deviations visible to those affected by the risk, rather than filing them where only the person who raised them will look    |                         |
+| `CONTENT` | **MUST** state what the deviation is, why it is needed and what compensates for it                                                        |                         |
+| `EXPIRY`  | **MUST** give every deviation a review date, and honour it                                                                                |                         |
+| `SURFACE` | **MUST** make deviations visible to those affected by the risk, rather than filing them where only the person who raised them will look   |                         |
 | `CLOSE`   | **MUST** close a deviation by fixing the underlying gap or by consciously re-accepting the risk, with the same scrutiny as the first time | [ISO 27001:2022].A.5.36 |
-| `PERM`    | **MUST NOT** treat a deviation as permanent by default, or let an expired one stand unreviewed                                             | [ISO 27001:2022].A.5.36 |
-| `CUSTOM`  | **MUST NOT** treat a long-standing practice as exempt from a policy it breaks                                                              | [ISO 27001:2022].A.5.4  |
-| `DEBT`    | SHOULD record a shortcut taken knowingly, so that it is tracked work rather than something the next person discovers                       |                         |
+| `PERM`    | **MUST NOT** treat a deviation as permanent by default, or let an expired one stand unreviewed                                            | [ISO 27001:2022].A.5.36 |
+| `CUSTOM`  | **MUST NOT** treat a long-standing practice as exempt from a policy it breaks                                                             | [ISO 27001:2022].A.5.4  |
+| `DEBT`    | SHOULD record a shortcut taken knowingly, so that it is tracked work rather than something the next person discovers                      |                         |
 
 ## Exceptions
 
 None. Departing from this policy means not recording a deviation, which is the one thing it exists to stop.
 
-Some commitments here admit no deviation at all, and no record makes any of them acceptable:
+Some commitments admit no deviation at all, and no record makes any of them acceptable:
 
 * [pol-SCRT] forbids embedding a secret, reusing a production secret outside production, or writing one to a log. Its
   four operational obligations are deviable; those three prohibitions are not.
 * [pol-DATA] requires handling personal data on a lawful basis. Its other obligations are deviable.
-* [pol-KNOW] requires writing down what is needed to build, run and recover a system. The effort is proportionate to
-  the system. The commitment does not vary.
+* [pol-KNOW] requires writing down what is needed to build, run and recover a system. The effort is proportionate to the
+  system. The commitment does not vary.
 * [pol-AGNT] sets the acceptance gate. Agent-produced work carries no authority until a person accepts it, and
   convenience does not make it authoritative.
 * [pol-INCR] requires recording a significant incident, and recording a personal data breach whether or not it is
@@ -69,8 +69,8 @@ Some commitments here admit no deviation at all, and no record makes any of them
 No standard implements this directly. Standards cite it wherever they carry an exception clause, and so do the
 [controls](../controls.md) that check those clauses are honoured.
 
-This policy says nothing about where a deviation is recorded. That belongs to the [process](../processes.md) that carries it,
-so that changing where we file deviations does not change what we committed to.
+This policy says nothing about where a deviation is recorded. That belongs to the [process](../processes.md) that
+carries it, so that changing where we file deviations does not change what we committed to.
 
 [pol-AGNT]: agnt-agents-propose-people-decide.md
 [pol-DATA]: data-data-protection.md

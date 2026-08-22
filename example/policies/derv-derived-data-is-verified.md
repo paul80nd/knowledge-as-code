@@ -15,8 +15,8 @@ tags: [ data-quality, integrity, provenance ]
 
 ## Purpose
 
-Where our code computes a result rather than storing what it was given, we check that result before anyone relies on it.
-A run that finished is not evidence that what it produced is right.
+Where our code computes a result, rather than storing what it was given, we check that result before anyone relies on
+it. A run that finished is not evidence that what it produced is right.
 
 Everywhere else here, verifying the code is enough. The code determines the output, so a test that exercises the code
 exercises the answer. That stops being true when correctness depends on data we did not author. A transformation can be

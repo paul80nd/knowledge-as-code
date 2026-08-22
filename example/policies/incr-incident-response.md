@@ -23,12 +23,11 @@ tags: [ incident-response, learning, postmortem ]
 
 ## Purpose
 
-When something goes wrong, we have a defined way to respond. Someone is in charge. Severity decides how large the
+When something goes wrong, we have a defined way to respond. Someone is in charge and severity decides how large the
 response is. We record what happened, and we can show we are better for having been through it.
 
 Respond well and an incident ends in a recovery. Respond badly and it becomes a second failure on top of the first.
-Review it afterwards and we do not pay for it twice. Both have to be settled before the incident, because nobody designs
-a good process at three in the morning.
+Review it afterwards and we do not pay for it twice.
 
 ## Scope
 

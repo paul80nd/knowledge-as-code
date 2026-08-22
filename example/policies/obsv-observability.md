@@ -18,18 +18,17 @@ tags: [ alerting, logging, monitoring, observability ]
 
 ## Purpose
 
-Our systems tell us what they are doing. They emit enough telemetry (logs, metrics and traces) to explain their
-behaviour afterwards. It is protected, and tied together so events in different systems line up on one timeline. We
-watch it closely enough to know about a problem before a customer reports it.
+Our systems tell us what they're doing. They emit enough telemetry (logs, metrics and traces) to explain their behaviour
+afterwards. It is protected and correlated so events in different systems line up on one timeline. We watch it closely
+enough to know about a problem before a customer reports it.
 
-Telemetry nobody watches is storage, and monitoring without adequate telemetry is guesswork. Both halves are needed:
-one reconstructs what happened, the other tells us it is happening now.
+Telemetry nobody watches is storage, and monitoring without adequate telemetry is guesswork. Both halves are needed.
 
 ## Scope
 
 All production systems we operate, and the lower environments where behaviour must be understood to validate a change.
 
-_Boundary: this policy sets how long telemetry is kept to stay useful, and that is long enough to investigate. Where
+_Boundary: this policy sets how long telemetry is kept to stay useful (which is long enough to investigate). Where
 that telemetry contains personal data, [pol-DATA] sets the lifetime and the shorter of the two governs. What may be
 written into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
 
@@ -39,7 +38,7 @@ written into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
 |-----------|------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
 | `CENTRAL` | **MUST** emit operational and security-relevant telemetry to a central store that the emitting system cannot alter or delete | [ISO 27001:2022].A.8.15, [Azure WAF].operational-excellence |
 | `CLOCKS`  | **MUST** keep timestamps consistent across systems, so events can be correlated into one timeline                            | [ISO 27001:2022].A.8.17, [Azure WAF].operational-excellence |
-| `RETAIN`  | **MUST** retain telemetry for a defined period: long enough to investigate, no longer than justified                        | [ISO 27001:2022].A.8.15, [Azure WAF].operational-excellence |
+| `RETAIN`  | **MUST** retain telemetry for a defined period: long enough to investigate, no longer than justified                         | [ISO 27001:2022].A.8.15, [Azure WAF].operational-excellence |
 | `HEALTH`  | **MUST** monitor the availability and health of production systems, and alert an accountable owner when they degrade         | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
 | `SECMON`  | **MUST** monitor for security-relevant events, not only for availability                                                     | [ISO 27001:2022].A.8.16                                     |
 | `ALERTS`  | **MUST** treat alerts as something to be acted on, and keep them few enough and meaningful enough that they still are        | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |

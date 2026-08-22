@@ -39,7 +39,7 @@ a secret is [pol-ACCS]'s, and what a secret protects is [pol-DATA]'s._
 |-----------|----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
 | `STORE`   | **MUST** hold secrets in a controlled store, with access granted by identity, restricted to those who need it, and recorded                  | [ISO 27001:2022].A.5.17 |
 | `ROTATE`  | **MUST** rotate any secret on a defined cycle and on any suspicion of compromise, without a code change                                      | [ISO 27001:2022].A.5.17 |
-| `KEYS`    | **MUST** protect the keys and certificates that protect our data through their full lifecycle: issue, storage, rotation, revocation         | [ISO 27001:2022].A.8.24 |
+| `KEYS`    | **MUST** protect the keys and certificates that protect our data through their full lifecycle: issue, storage, rotation, revocation          | [ISO 27001:2022].A.8.24 |
 | `LEAKED`  | **MUST** actively look for secrets that have leaked into places they should never reach                                                      | [ISO 27001:2022].A.5.17 |
 | `EMBED`   | **MUST NOT** commit a secret to version control, place one in a configuration file or pipeline definition, or bake one into a build artefact | [ISO 27001:2022].A.5.17 |
 | `REUSE`   | **MUST NOT** use a production secret anywhere outside production. See [pol-ENVS]                                                             | [ISO 27001:2022].A.5.17 |

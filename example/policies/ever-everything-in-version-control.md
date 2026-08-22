@@ -24,12 +24,11 @@ and attributable history. If one asset needed to rebuild the system is not versi
 reproducible. A schema migration and an application change differ in medium, not in the rigour they get.
 
 Almost every other policy here assumes there is one authoritative copy of everything. Review, traceability, reproducible
-builds, controlled release and recovery all rest on it. Without it, each of them becomes something we assert rather than
-something we can show.
+builds, controlled release and recovery all rest on it.
 
 ## Scope
 
-All solutions we build or operate, and every asset required to rebuild one: application code, infrastructure
+All solutions we build or operate, and every asset required to rebuild them: application code, infrastructure
 definitions, database schema and migrations, pipeline definitions, non-secret configuration, operational scripts and the
 documentation that describes them.
 

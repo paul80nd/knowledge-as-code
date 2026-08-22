@@ -22,9 +22,9 @@ tags: [ environments, production-data, separation ]
 We separate production from every environment below it, by access, by network and by credential. That way a change is
 checked before it reaches customers, and nothing outside production can reach production's data or its identity.
 
-A developer can only experiment freely because the boundary holds. Where it is soft, a mistake in development becomes an
-incident in production. Every copy of production data held below production widens how far a breach reaches, and
-protects nothing.
+A developer can only experiment freely because the boundary holds. Where it is soft, a mistake in development risks
+becoming an incident in production. Every copy of production data held below production widens how far a breach reaches,
+and protects nothing.
 
 ## Scope
 
