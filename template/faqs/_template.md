@@ -16,7 +16,7 @@ tags: [ a, b ]
 
 `FAQ: faq-{{nnnn}}` `ACTIVE`
 
-<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+<!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what an FAQ adds to that.

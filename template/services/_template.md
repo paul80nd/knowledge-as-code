@@ -18,7 +18,7 @@ tags:
 
 `Service: svc-{{slug}}` `LIVE`
 
-<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+<!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written,
 and how it is reviewed. Below is only what a service adds to that.
