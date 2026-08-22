@@ -14,7 +14,7 @@ land.
 
 | Posture            | What it means                                                                                                                     |
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| **Obliged**        | Something outside us requires it — certification we hold, or law that applies to us. Not optional.                                |
+| **Obliged**        | Something outside us requires it: certification we hold, or law that applies to us. Not optional.                                 |
 | **Self-obligated** | Nothing external compels it; a policy of ours does. Binding on us because we said so, and revocable only by changing that policy. |
 | **Inspiration**    | We took ideas from it. It shapes our thinking and binds nothing. A clause may cite it for provenance, not for obligation.         |
 
