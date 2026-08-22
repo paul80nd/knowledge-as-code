@@ -19,7 +19,7 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a data document adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 * **`owned-by`** — A single service id. Shared ownership means nobody is answerable, so resolve it before writing the
   document.

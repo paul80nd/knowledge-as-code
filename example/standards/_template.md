@@ -21,7 +21,7 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a standard adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 * **`id`** — `std-` plus a four-digit number, never reused.
 * **`status`** — `draft` until agreed, then `active`, and later `deprecated` or `superseded`. Values are lowercase.

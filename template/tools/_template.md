@@ -21,7 +21,7 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a tool adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 * **`status`** — `approved` · `trial` · `deprecated` · `rejected`. Approved means approved **for new work**; something
   already in use but not approved is drift, and the drift report will say so.

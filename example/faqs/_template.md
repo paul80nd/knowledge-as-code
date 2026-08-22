@@ -21,7 +21,7 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what an FAQ adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 Name the title and the filename for the **symptom**, not the cause — that is what people search for.
 

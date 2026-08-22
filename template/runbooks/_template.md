@@ -20,7 +20,7 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a runbook adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 Title this document for the **failure**, not the fix — that is what someone searches for at 2am.
 

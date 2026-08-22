@@ -18,7 +18,7 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
 and how it is reviewed. What is below is only what a policy adds to that.
 
-**Frontmatter.**
+**Frontmatter**
 
 * **`id`**: `pol-` plus a four-character mnemonic for the policy's concept. Upper-case here and lower-case in the
   filename, so `pol-VURM` sits in `vurm-vulnerability-remediation.md`. **Immutable once the policy is active.** A change

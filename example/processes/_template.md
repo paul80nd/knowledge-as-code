@@ -19,7 +19,7 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a process adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 * **`status`** — `active` · `draft` · `retired`.
 * **`last-rehearsed`** — A quoted date, and `"never"` is permitted — preferable to a guess, since an unrehearsed

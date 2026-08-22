@@ -21,7 +21,7 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a discovery adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 * **`source`** — `human` · `session` · `dreamed`.
 * **`confidence`** — Leave `unverified` unless you have genuinely proven it.

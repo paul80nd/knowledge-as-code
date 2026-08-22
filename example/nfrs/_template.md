@@ -20,7 +20,7 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what an NFR adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 * **`status`** — `draft` until someone has agreed it, then `agreed` — which is a commitment, not an aspiration.
 * **`applies-to`** — Service or capability ids. Estate-wide targets are almost always wrong, since a marketing page and

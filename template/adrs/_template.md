@@ -18,7 +18,7 @@ related:
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what an ADR adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 * **`id`** — Matches the filename number. Four digits, never reused.
 * **`tier`** — Always `decided` for an ADR.

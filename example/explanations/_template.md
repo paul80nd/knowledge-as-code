@@ -17,7 +17,7 @@ tags:
 **Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what an explanation adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 * **`status`** — `draft` · `active` · `stale`. `stale` is an honest state — say so rather than let the page quietly rot.
 * **`explains`** — The service or capability ids this explains.

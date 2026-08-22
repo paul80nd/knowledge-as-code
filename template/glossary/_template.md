@@ -20,7 +20,7 @@ is reviewed. What is below is only what a glossary adds to that.
 **One glossary, one bounded context.** The framework itself, a product surface, a system that names things its own way.
 Never a topic: a file called "infrastructure terms" starts an argument about placement every time somebody adds a word.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
 * **`status`** — `draft` · `active`. `draft` while the terms are still settling.
 * **`narrows`** — The more general glossary this one sits inside. Left empty by the corpus-wide glossary, which nothing
