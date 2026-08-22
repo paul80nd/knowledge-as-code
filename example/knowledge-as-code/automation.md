@@ -2,7 +2,7 @@
 
 > What CI checks, what it builds, and what it leaves alone.
 
-`kac checks` lists every check the validator implements, with its severity and what it asks. That command is the
+`kac checks` lists every check the validator implements along with its severity and what it asks. That command is the
 authority on what runs. This page groups the same checks so you can see what the pipeline is for, and it covers the
 generation and the exclusions that sit beside them.
 
@@ -43,7 +43,7 @@ Run on every PR. Failures block merge.
   integrations and data documents.
 - A generated region matches the source it was built from.
 
-### Rules the schema declares and nothing runs
+### Rules the schema declares but nothing runs
 
 A type may declare a rule with a description and no severity. `kac validate` skips it. The type page renders it beneath
 the checks table under *Declared, not yet enforced*, so a reader meets the gap on the page they are already on. Prose
