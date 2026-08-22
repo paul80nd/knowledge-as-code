@@ -51,7 +51,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `review-by` * | date                     | The field that stops this type rotting — explanations need the tightest staleness discipline. |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-explanations -->
 
@@ -74,7 +74,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `key-order`                  | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`             | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                   | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format`  | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format`  | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                       | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`              | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                 | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
@@ -94,7 +94,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `links-rather-than-restates` | warning | An explanation's prose stays proportionate to its links, rather than restating their facts.                     |
 | `not-normative`              | warning | No bold RFC 2119 keyword — MUST, MUST NOT, SHOULD, SHOULD NOT, MAY — binds from an explanation.                 |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule               | What it would verify                                                             |
 |--------------------|----------------------------------------------------------------------------------|

@@ -21,7 +21,7 @@ The type this corpus adopted. `generate` regenerates the two blocks below from t
 | `related`       | list                                            | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.             |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-adrs -->
 
@@ -36,7 +36,7 @@ The type this corpus adopted. `generate` regenerates the two blocks below from t
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
@@ -58,7 +58,7 @@ The type this corpus adopted. `generate` regenerates the two blocks below from t
 | `y-statement`               | warning | A Y-statement block-quote follows the H1, states all six moves, and is within its word ceiling.                 |
 | `alternatives-verdict`      | warning | Each Alternatives Considered bullet states a verdict.                                                           |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule                       | What it would verify                                                                             |
 |----------------------------|--------------------------------------------------------------------------------------------------|

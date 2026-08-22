@@ -23,7 +23,7 @@ public static class Generator
         // fails link-resolves. A headed table with no rows says less than nothing, so an empty index says
         // it is empty and points at the template.
         var body = docs.Count == 0
-            ? $"_Nothing here yet — copy [`{Artefact.Template}`]({Artefact.Template}) to add the first._"
+            ? $"_Nothing here yet. Copy [`{Artefact.Template}`]({Artefact.Template}) to add the first._"
             : RenderTable(
                 [.. t.IndexColumns.Select(Humanize)],
                 [
@@ -81,10 +81,10 @@ public static class Generator
             var members = byTier[tier.Name].OrderBy(t => t.DisplayName, StringComparer.Ordinal).ToList();
             if (members.Count == 0) continue;
 
-            var section = new StringBuilder($"### {tier.Label} — {tier.Behaviour}\n");
+            var section = new StringBuilder($"### {tier.Label}: {tier.Behaviour}\n");
             if (tier.Note.Length > 0) section.Append($"\n{Wrap(tier.Note)}\n");
             foreach (var t in members)
-                section.Append($"\n{Wrap($"**[{t.PluralName}]({Link(t)})** — {t.Summary} {t.Detail}")}\n");
+                section.Append($"\n{Wrap($"**[{t.PluralName}]({Link(t)}).** {t.Summary} {t.Detail}")}\n");
 
             sections.Add(section.ToString());
         }
@@ -415,7 +415,7 @@ public static class Generator
         List<string> parts = [];
         if (anyRequired) parts.Add("\\* Field is required");
         if (anyUniversal)
-            parts.Add("† Carried by every document in the taxonomy — see "
+            parts.Add("† Carried by every document in the taxonomy. See "
                       + "[Metadata](/knowledge-as-code/metadata.md).");
         return parts.Count == 0 ? "" : "\n\n" + string.Join("  \n", parts);
     }
@@ -459,7 +459,7 @@ public static class Generator
         ("required-field", [new("required-field")], "Required and conditionally-required fields are present.", null),
         ("bare-key", [new("bare-key")], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`.", null),
         ("date-quoted / date-format", [new("date-quoted"), new("date-format")],
-            "Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.", null),
+            "Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.", null),
         ("enum", [new("enum"), new("enum-lowercase")], "Enum values are in range and lowercase.", null),
         ("field-pattern", [new("field-pattern")],
             "Values match the pattern their field declares (e.g. `tags`).", null),
@@ -597,7 +597,7 @@ public static class Generator
         var rows = intended
             .Select(r => new List<string> { $"`{r.Id}`", Escape(r.Description ?? r.Message ?? "") })
             .ToList();
-        return "\n\n**Declared, not yet enforced** — carried by the schema, run by nothing.\n\n"
+        return "\n\n**Declared, not yet enforced**: carried by the schema, run by nothing.\n\n"
                + RenderTable(headers, rows);
     }
 
@@ -618,7 +618,7 @@ public static class Generator
             problems.Add($"check '{id}' has no row in the checks table. Write one, or declare "
                          + "'on-type-page: false' where the schema declares the check.");
         foreach (var id in documented.Where(id => catalogue.Contains(id) && !advertised.Contains(id)).Order())
-            problems.Add($"check '{id}' declares 'on-type-page: false' and has a row anyway — drop one of the two.");
+            problems.Add($"check '{id}' declares 'on-type-page: false' and has a row anyway. Drop one of the two.");
 
         // The rows written above, held to the bound a schema's rules are held to. Nothing else would
         // notice: these are C# literals rendered into a generated table, so a row that grows past it

@@ -51,86 +51,86 @@ it — is on the type's own page.
 
 <!-- BEGIN GENERATED: types-detail -->
 
-### Decided — immutable once accepted
+### Decided: immutable once accepted
 
 Superseded rather than rewritten, so what was thought at the time survives being wrong.
 
-**[ADRs](/adrs)** — An architecturally significant decision affecting more than one repository, and the reasoning behind
+**[ADRs](/adrs).** An architecturally significant decision affecting more than one repository, and the reasoning behind
 it. The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded by a new
 ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it, not here.
 
-**[Postmortems](/postmortems)** — What actually happened during an incident — timeline, impact, root cause, contributing
+**[Postmortems](/postmortems).** What actually happened during an incident — timeline, impact, root cause, contributing
 factors, actions. Blameless, and immutable once published. The honest counterpart to the decision log: an ADR records
 what was intended, a postmortem what the estate did about it.
 
-### Normative — living, owned, reviewed
+### Normative: living, owned, reviewed
 
-**[Controls](/controls)** — How a standard's rules are verified: the mechanism, the frequency, and the evidence it
+**[Controls](/controls).** How a standard's rules are verified: the mechanism, the frequency, and the evidence it
 leaves. Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
 honest state and the number worth watching.
 
-**[FAQs](/faqs)** — A problem with a confirmed fix, promoted from a discovery once a human has verified it. It carries
+**[FAQs](/faqs).** A problem with a confirmed fix, promoted from a discovery once a human has verified it. It carries
 provenance back to the observation it came from, so the reader can see how far the fix has been taken on trust.
 
-**[NFRs](/nfrs)** — A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.
+**[NFRs](/nfrs).** A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.
 Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
 
-**[Policies](/policies)** — A high-level engineering commitment: the what and the why, largely stack-agnostic and
+**[Policies](/policies).** A high-level engineering commitment: the what and the why, largely stack-agnostic and
 changing rarely. Alignment to an external framework is stated clause by clause, as alignment rather than certification.
 
-**[Standards](/standards)** — The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.
+**[Standards](/standards).** The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.
 Imperative throughout — **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece of work
 are the union of the layers that apply to it.
 
-### Descriptive — living, must mirror reality
+### Descriptive: living, must mirror reality
 
 These are the types CI can check against the estate rather than merely against themselves, which matters because they
 rot faster than anything else.
 
-**[Capabilities](/capabilities)** — What we offer a customer and why, as a hub linking to what implements, tests and
+**[Capabilities](/capabilities).** What we offer a customer and why, as a hub linking to what implements, tests and
 constrains it. A hub, sitting above the epic layer: it links to the work items that detail it, the services that
 implement it, the feature files that test it, and the NFRs that constrain it. A capability that starts accumulating
 detail of its own has stopped being one.
 
-**[Data](/data)** — Which service owns which data, how long it is kept, how sensitive it is, and where personal data
+**[Data](/data).** Which service owns which data, how long it is kept, how sensitive it is, and where personal data
 flows. Organised by data domain rather than by processing activity. An engineer can use it; a regulator cannot.
 
-**[Explanations](/explanations)** — Narrative that helps you understand how something works, or why it is shaped the way
+**[Explanations](/explanations).** Narrative that helps you understand how something works, or why it is shaped the way
 it is. Architecture overviews, conceptual walkthroughs, how the pieces fit together. It links rather than restates: an
 overview points at the documents holding the detail instead of repeating them. One that starts accumulating facts of its
 own has become a maintenance liability.
 
-**[Glossaries](/glossary)** — The ubiquitous language — terms whose meaning is specific to us, or which are easily
+**[Glossaries](/glossary).** The ubiquitous language — terms whose meaning is specific to us, or which are easily
 confused. One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
 time it appears belongs in the most general glossary that admits it, and everything else links to it.
 
-**[Integrations](/integrations)** — An external system we depend on: the contract, the auth, the failure modes, their
-SLA and our fallback. Every integration point needs a deliberate failure mode and a fallback, so the type requires both.
-It also names who to call when the system is down.
+**[Integrations](/integrations).** An external system we depend on: the contract, the auth, the failure modes, their SLA
+and our fallback. Every integration point needs a deliberate failure mode and a fallback, so the type requires both. It
+also names who to call when the system is down.
 
-**[Services](/services)** — One deployable component: purpose, repo, platform, environments, dependencies, data stores,
+**[Services](/services).** One deployable component: purpose, repo, platform, environments, dependencies, data stores,
 owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
 
-**[Tools](/tools)** — The approved-software register — what is chosen, rejected or deprecated, and the version ranges we
+**[Tools](/tools).** The approved-software register — what is chosen, rejected or deprecated, and the version ranges we
 stand behind. Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
 evaluation.
 
-### Procedural — living, must be rehearsed
+### Procedural: living, must be rehearsed
 
 Each records when it was last rehearsed. An unrehearsed process is annoying; an unrehearsed runbook is dangerous.
 
-**[Processes](/processes)** — A planned procedure followed deliberately — releasing, onboarding, provisioning, rotating
-a secret. Written to be followed by someone who has not done it before.
+**[Processes](/processes).** A planned procedure followed deliberately — releasing, onboarding, provisioning, rotating a
+secret. Written to be followed by someone who has not done it before.
 
-**[Runbooks](/runbooks)** — An incident-time procedure read under pressure: terse, imperative, structured as a decision
+**[Runbooks](/runbooks).** An incident-time procedure read under pressure: terse, imperative, structured as a decision
 tree. Disaster recovery and estate rebuild live here.
 
-### Observed — perishable, unreviewed until promoted
+### Observed: perishable, unreviewed until promoted
 
 The tier carrying the least authority is the one a corpus most depends on, because capture that is not free does not
 happen.
 
-**[Discoveries](/discoveries)** — Something noticed during work and not yet verified, captured cheaply and expiring
+**[Discoveries](/discoveries).** Something noticed during work and not yet verified, captured cheaply and expiring
 unless promoted. Deliberately low-ceremony — a title, an observation, why it might matter — and carrying a confidence
 level, so that "the build fails silently if X" has somewhere to go the moment it is noticed.
 

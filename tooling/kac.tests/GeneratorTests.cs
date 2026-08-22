@@ -427,7 +427,7 @@ public class GeneratorTests
     {
         var catalogue = Generator.TypeCatalogue(Tiers, Four());
 
-        Assert.Contains("**[ADRs](/adrs)** — What a adr holds. And the edge", catalogue);
+        Assert.Contains("**[ADRs](/adrs).** What a adr holds. And the edge", catalogue);
     }
 
     // Prose wraps at the margin the corpus holds every other paragraph to; a table cell cannot be broken

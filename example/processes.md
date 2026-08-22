@@ -51,7 +51,7 @@ A process is also not:
 | `requires-access`     | list                               | Systems or roles needed before step 1.                                                         |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-processes -->
 
@@ -84,7 +84,7 @@ A process is also not:
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
@@ -103,7 +103,7 @@ A process is also not:
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `no-hedged-ordering`        | warning | No step hedged with "typically", "usually" or "normally".                                                       |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule        | What it would verify                                                                                    |
 |-------------|---------------------------------------------------------------------------------------------------------|

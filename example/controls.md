@@ -55,7 +55,7 @@ may verify several rules, and one rule may need several controls.
 | `applies-to`  | list                                                                     | Service ids, or `all`.                                                                   |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-controls -->
 
@@ -85,7 +85,7 @@ may verify several rules, and one rule may need several controls.
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
@@ -105,7 +105,7 @@ may verify several rules, and one rule may need several controls.
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `mechanism-has-evidence`    | warning | A control whose mechanism is not `not-enforced` names where its evidence can be found.                          |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule              | What it would verify                                                                   |
 |-------------------|----------------------------------------------------------------------------------------|

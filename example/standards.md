@@ -81,7 +81,7 @@ distinct. The common and platform axes let a rule live once, at the layer where 
 | `review-by` *  | date                                       | Quoted. The date by which someone confirms this is still true.                       |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-standards -->
 
@@ -109,7 +109,7 @@ Standards are living documents, and we edit them in place. Record every material
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
@@ -129,7 +129,7 @@ Standards are living documents, and we edit them in place. Record every material
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `provenance-required`       | error   | A standard cites an ADR in `derived-from`, a policy in `implements`, or both.                                   |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule                           | What it would verify                                                                                       |
 |--------------------------------|------------------------------------------------------------------------------------------------------------|

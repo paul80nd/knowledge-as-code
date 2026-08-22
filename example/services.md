@@ -59,7 +59,7 @@ of the catalogue as well, because it deploys services.
 | `facets`        | list                                                                     | Slices the catalogue — one exposure, then any traits. Each value groups services.    |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-services -->
 
@@ -157,7 +157,7 @@ words worth keeping are the ones thrown away.
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
@@ -177,7 +177,7 @@ words worth keeping are the ones thrown away.
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `dependency-cycle`          | warning | A cycle in the dependency graph these records form, naming every record the loop runs through.                  |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule                  | What it would verify                                                |
 |-----------------------|---------------------------------------------------------------------|

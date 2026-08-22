@@ -2,4 +2,4 @@
 
 # Integration Index (INT)
 
-_Nothing here yet — copy [`_template.md`](_template.md) to add the first._
+_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
