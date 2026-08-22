@@ -18,7 +18,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a discovery adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -51,5 +51,5 @@ for.
 ---
 
 _(**Keep this short.** Discoveries are deliberately low-ceremony — the whole point is that capture costs nothing, so
-don't tidy it up, don't verify it first, and don't write it as an [FAQ](/faqs). If it turns out to be real, general and
+don't tidy it up, don't verify it first, and don't write it as an [FAQ](../faqs.md). If it turns out to be real, general and
 current, a human promotes it and the polish happens then.)_

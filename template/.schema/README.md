@@ -201,7 +201,7 @@ A type with no `parts:` block offers no parts. Declaring one is how a type says 
 a citation into a type that declares none is reported. `noun:` is the word the type's own readers use for one part, and
 a failing citation is worded with it. The rest of the block belongs to the table source alone: `columns:`,
 `id-pattern:` and the modals that open a binding row and an advisory one. Which of a record's content belongs in a part,
-and which belongs in frontmatter, is settled in [Metadata](/knowledge-as-code/metadata.md#what-a-record-carries).
+and which belongs in frontmatter, is settled in [Metadata](../knowledge-as-code/metadata.md#what-a-record-carries).
 
 `aside:` names the label a part's optional second block opens with, written bold — `Not` on a glossary term, naming what
 the term is most often confused with. It is here because it is a fact about how a type writes its parts. An export reads

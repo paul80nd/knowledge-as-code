@@ -111,6 +111,12 @@ public static class GeneratedFiles
 
     private readonly record struct FileSpec(string Path, bool MarkersRequired, Block[] Blocks);
 
+    // How far a block's own file sits below the corpus root, as the prefix a link from it climbs by. A
+    // generated link is written relative so it resolves wherever the corpus sits, whether that is the root
+    // of a wiki or a subfolder of a documentation site.
+    private static string Up(string path) =>
+        string.Concat(Enumerable.Repeat("../", path.Count(c => c == '/')));
+
     // The declaration itself. Everything above reads this and nothing else, so the block a corpus is held
     // to is by construction the block it is written.
     private static List<FileSpec> Declare(IReadOnlyList<TypeSchema> adopted)
@@ -123,7 +129,7 @@ public static class GeneratedFiles
             where !string.IsNullOrEmpty(t.Page)
             select new FileSpec(t.Page, true,
             [
-                new Block($"schema-{t.Key}", schema => Generator.SchemaTable(t, schema)),
+                new Block($"schema-{t.Key}", schema => Generator.SchemaTable(t, schema, Up(t.Page))),
                 new Block($"checks-{t.Key}", s => Generator.ChecksTable(s, t))
             ])).ToList();
 
@@ -134,13 +140,13 @@ public static class GeneratedFiles
         specs.Add(new FileSpec("knowledge-as-code/metadata.md", true,
         [
             new Block("schema-universal", Generator.UniversalSchemaTable),
-            new Block("types-metadata", _ => Generator.MetadataStrip(adopted))
+            new Block("types-metadata", _ => Generator.MetadataStrip(adopted, Up("knowledge-as-code/metadata.md")))
         ]));
 
         specs.Add(new FileSpec("knowledge-as-code/taxonomy.md", true,
         [
-            new Block("types-placement", _ => Generator.PlacementTable(adopted)),
-            new Block("types-detail", schema => Generator.TypeCatalogue(schema.Tiers, adopted)),
+            new Block("types-placement", _ => Generator.PlacementTable(adopted, Up("knowledge-as-code/taxonomy.md"))),
+            new Block("types-detail", schema => Generator.TypeCatalogue(schema.Tiers, adopted, Up("knowledge-as-code/taxonomy.md"))),
             new Block("types-versus", _ => Generator.Disambiguations(adopted)),
             new Block("types-graph", _ => Generator.RelationDiagram(adopted)),
             new Block("types-edges", _ => Generator.RelationTable(adopted))
@@ -148,13 +154,13 @@ public static class GeneratedFiles
 
         specs.Add(new FileSpec("knowledge-as-code/lineage.md", true,
         [
-            new Block("types-lineage", _ => Generator.LineageTable(adopted)),
+            new Block("types-lineage", _ => Generator.LineageTable(adopted, Up("knowledge-as-code/lineage.md"))),
             new Block("types-collisions", _ => Generator.Collisions(adopted))
         ]));
 
         specs.Add(new FileSpec("README.md", false,
         [
-            new Block("types-index", _ => Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md"))
+            new Block("types-index", _ => Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md", Up("README.md")))
         ]));
 
         return specs;

@@ -16,7 +16,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what an integration adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -61,7 +61,7 @@ single point of failure is the most expensive kind.)_
 ## Their SLA
 
 What they commit to, as written in the contract, and what happens when they miss it. Note where this caps one of our
-own [NFRs](/nfrs).
+own [NFRs](../nfrs.md).
 
 ## Commercials
 
@@ -84,6 +84,6 @@ SLA.
 * [rbk-{{a}}] — what to do when it is down.
 * [adr-{{a}}] — why we chose it.
 
-[adr-{{a}}]: /adrs/{{a}}.md
-[rbk-{{a}}]: /runbooks/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
+[adr-{{a}}]: ../adrs/{{a}}.md
+[rbk-{{a}}]: ../runbooks/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md

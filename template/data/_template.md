@@ -16,7 +16,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a data document adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -81,7 +81,7 @@ _(Especially anything crossing outside the estate.)_
 _(**Never put actual data here** — no sample records, no identifiers, no connection strings. This corpus is broadly
 readable.)_
 
-[adr-{{a}}]: /adrs/{{a}}.md
-[int-{{a}}]: /integrations/{{a}}.md
-[pol-{{a}}]: /policies/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
+[adr-{{a}}]: ../adrs/{{a}}.md
+[int-{{a}}]: ../integrations/{{a}}.md
+[pol-{{a}}]: ../policies/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md

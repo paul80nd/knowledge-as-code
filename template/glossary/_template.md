@@ -14,7 +14,7 @@ tags:
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a glossary adds to that.
 
 **One glossary, one bounded context.** The framework itself, a product surface, a system that names things its own way.
@@ -58,6 +58,6 @@ A one-sentence definition of what the word means in this context.
 
 Owned by [svc-{{a}}]. See [adr-{{a}}].
 
-[adr-{{a}}]: /adrs/{{a}}.md
+[adr-{{a}}]: ../adrs/{{a}}.md
 [gls-{{b}}.{{term}}]: {{b}}.md#{{term}}
-[svc-{{a}}]: /services/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md

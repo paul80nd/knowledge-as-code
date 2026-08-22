@@ -6,7 +6,7 @@ Where data lives, how long we keep it, and how sensitive it is.
 
 ## What is a data document?
 
-One document per data domain. It names the entities in the domain, the [service](/services) that owns them, and the
+One document per data domain. It names the entities in the domain, the [service](services.md) that owns them, and the
 stores they live in. The rest of the record says how sensitive they are, how long we keep them, and where they flow.
 
 ## Why we use them
@@ -14,7 +14,7 @@ stores they live in. The rest of the record says how sensitive they are, how lon
 Two readers arrive with different questions. Someone building a feature wants to know where bookings actually live and
 which service owns them. Ask around and the answers disagree. Someone answering an auditor wants to know what personal
 data we hold and how long we keep it. Nobody should have to read a database schema to answer that. A data document
-answers the first question the same way every time, and gives the [policy](/policies) tier its evidence for the second.
+answers the first question the same way every time, and gives the [policy](policies.md) tier its evidence for the second.
 
 An author filling in `owned-by` also finds the entities that two services both believe they own. That disagreement is a
 design problem worth finding on paper.
@@ -27,11 +27,11 @@ than by store, because a domain often spans stores and that spread is the part w
 Not the place for:
 
 * **Schema definitions.** Those live with the code that owns them.
-* **How to query the data.** That is a [process](/processes) or the service's own document.
-* **Retention rules as commitments.** A [policy](/policies) holds the commitment, and a data document records what the
+* **How to query the data.** That is a [process](processes.md) or the service's own document.
+* **Retention rules as commitments.** A [policy](policies.md) holds the commitment, and a data document records what the
   store actually does.
 
-The folder is singular, `data/`, because English gives no plural. It and [`glossary/`](/glossary) are the two
+The folder is singular, `data/`, because English gives no plural. It and [`glossary/`](glossary.md) are the two
 exceptions to the plural-folder rule.
 
 ## Metadata
@@ -51,7 +51,7 @@ exceptions to the plural-folder rule.
 | `flows-to`         | list                                                             | Data leaving the estate is the part that matters most.                                                                                                         |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-data -->
 
@@ -63,7 +63,7 @@ exceptions to the plural-folder rule.
 3. Classify honestly. Customer names, email addresses and payment histories are `personal`. Where the classification is
    `special-category`, record the lawful basis for holding it.
 4. State `retention` concretely. "Indefinitely" is an answer, and a revealing one.
-5. Record `flows-to`: the services and [integrations](/integrations) that receive this data.
+5. Record `flows-to`: the services and [integrations](integrations.md) that receive this data.
 
 **Conventions**
 

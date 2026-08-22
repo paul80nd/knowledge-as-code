@@ -18,7 +18,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a tool adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -67,7 +67,7 @@ _(Generated drift detection will compare this against the actual package manifes
 
 * **{{Alternative}}** — why it lost out.
 
-_(Brief. If the choice was contested or expensive, the reasoning belongs in an [ADR](/adrs) and this cites it via
+_(Brief. If the choice was contested or expensive, the reasoning belongs in an [ADR](../adrs.md) and this cites it via
 `decided-in`. Small, uncontroversial adoptions need only this section.)_
 
 ## Licence and obligations
@@ -79,6 +79,6 @@ _(Brief. If the choice was contested or expensive, the reasoning belongs in an [
 * [std-{{a}}] — standards that mandate or constrain its use.
 * [adr-{{a}}] — the decision, where there was one.
 
-[adr-{{a}}]: /adrs/{{a}}.md
-[std-{{a}}]: /standards/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
+[adr-{{a}}]: ../adrs/{{a}}.md
+[std-{{a}}]: ../standards/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md

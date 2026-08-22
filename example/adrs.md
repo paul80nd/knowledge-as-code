@@ -51,7 +51,7 @@ its id.
 | `related`       | list                                            | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.             |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-adrs -->
 
@@ -77,7 +77,7 @@ its id.
 * **Format**: lean Nygard style, with an explicit Alternatives Considered section.
   [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example.
 
-See [Contributing](/knowledge-as-code/contributing.md) for the review model that applies to all Decided-tier documents.
+See [Contributing](knowledge-as-code/contributing.md) for the review model that applies to all Decided-tier documents.
 
 ## What CI checks
 

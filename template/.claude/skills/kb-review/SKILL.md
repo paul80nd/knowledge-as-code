@@ -180,7 +180,7 @@ Nothing checks these. They are yours:
 * **Nothing changed inside a generated block.** The validator checks that the markers survive, not the content between
   them.
 * **Nothing added that was not in the original** — with one carve-out: **a link that replaces restated content is not an
-  addition.** Swapping a paragraph of convention for `[Services](/services)` is the fix, not an expansion. A link from a
+  addition.** Swapping a paragraph of convention for `[Services](../services.md)` is the fix, not an expansion. A link from a
   record to a type page resolves and validates; `link-resolves` accepts every link form and the `.md` is optional.
 * **Read the result cold.** If you cannot tell which paragraphs you changed, it is right.
 

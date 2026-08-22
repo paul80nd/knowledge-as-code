@@ -55,5 +55,5 @@ unimportant to monitor is a system to question the existence of.
 
 [pol-DATA]: data-data-protection.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
-[Azure WAF]: /frameworks.md#azure-well-architected-framework
-[ISO 27001:2022]: /frameworks.md#iso-27001
+[Azure WAF]: ../frameworks.md#azure-well-architected-framework
+[ISO 27001:2022]: ../frameworks.md#iso-27001

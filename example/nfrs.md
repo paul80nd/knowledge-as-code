@@ -13,7 +13,7 @@ the target is, and how we measure it.
 ## Why we use them
 
 An undocumented NFR is still real, and we discover it during an incident. Write it down and an assumption becomes a
-commitment somebody has agreed to. A [postmortem](/postmortems) then has something honest to measure against.
+commitment somebody has agreed to. A [postmortem](postmortems.md) then has something honest to measure against.
 
 A target also constrains design. An RTO of four hours and an RTO of four minutes produce different architectures, and
 settling that up front costs a fraction of rebuilding later.
@@ -23,13 +23,13 @@ settling that up front costs a fraction of rebuilding later.
 An NFR states a **target**, not a rule and not a mechanism.
 
 * "Availability is 99.5% monthly, measured by the uptime probe" is an NFR.
-* "Services **MUST** expose a `/health` endpoint" is a [standard](/standards).
-* "The uptime probe alerts at 99.5%" is a [control](/controls).
+* "Services **MUST** expose a `/health` endpoint" is a [standard](standards.md).
+* "The uptime probe alerts at 99.5%" is a [control](controls.md).
 
 **An NFR you cannot measure is a wish.** `measured-by` is required. Where nothing observes the target today, either
 build the instrument or state the target you *can* observe. "We'd notice" is not a measurement method.
 
-We cannot promise more than the dependencies we do not run. A third-party [integration](/integrations) with a 99% SLA
+We cannot promise more than the dependencies we do not run. A third-party [integration](integrations.md) with a 99% SLA
 caps everything built on it at 99%. Name that integration in `constrained-by`, and set the target at what the estate can
 deliver.
 
@@ -51,7 +51,7 @@ deliver.
 | `review-by` *    | date                       | Quoted. The date by which someone confirms this is still true.                                    |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-nfrs -->
 

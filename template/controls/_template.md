@@ -17,7 +17,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a control adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -68,5 +68,5 @@ exposure is meanwhile.)_
 
 Who is answerable for this control continuing to run, and who notices when it stops.
 
-[std-{{a}}]: /standards/{{a}}.md#{{anchor}}
-[std-{{b}}]: /standards/{{b}}.md#{{anchor}}
+[std-{{a}}]: ../standards/{{a}}.md#{{anchor}}
+[std-{{b}}]: ../standards/{{b}}.md#{{anchor}}

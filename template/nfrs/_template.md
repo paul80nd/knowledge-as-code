@@ -17,7 +17,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what an NFR adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -70,6 +70,6 @@ discovering it during an incident.)_
 * [cap-{{a}}] — the capability this constrains.
 * [pmt-{{a}}] — incidents measured against this target.
 
-[cap-{{a}}]: /capabilities/{{a}}.md
-[int-{{a}}]: /integrations/{{a}}.md
-[pmt-{{a}}]: /postmortems/{{a}}.md
+[cap-{{a}}]: ../capabilities/{{a}}.md
+[int-{{a}}]: ../integrations/{{a}}.md
+[pmt-{{a}}]: ../postmortems/{{a}}.md

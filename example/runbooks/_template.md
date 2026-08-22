@@ -17,7 +17,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a runbook adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -76,7 +76,7 @@ _(Near the top of the page if this document is long — it must be findable with
 
 ## Afterwards
 
-* Raise a [postmortem](/postmortems) if severity warrants it.
+* Raise a [postmortem](../postmortems.md) if severity warrants it.
 * Update this runbook with anything that was wrong or missing.
 
 ## Related
@@ -84,5 +84,5 @@ _(Near the top of the page if this document is long — it must be findable with
 * [svc-{{a}}] — the service this covers.
 * [exp-{{a}}] — how the system works, for afterwards. Not now.
 
-[exp-{{a}}]: /explanations/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
+[exp-{{a}}]: ../explanations/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md

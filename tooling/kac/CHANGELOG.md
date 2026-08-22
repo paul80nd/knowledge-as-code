@@ -22,6 +22,10 @@ the commit and opens a release carrying the section for that version.
 
 ### Changed
 
+- **`generate` writes a relative link naming the file**, where it wrote a root-relative link naming the folder. A block
+  in `README.md` links `[ADR](adrs.md)`, and one in `knowledge-as-code/taxonomy.md` links `[ADRs](../adrs.md)`. The link
+  resolves wherever the corpus sits, rather than only where a renderer maps a folder to the page inside it. Run
+  `kac generate` after upgrading: `--check` reports every block carrying the old form until you do.
 - **`validate` and `checks` list in aligned columns**, with the severity coloured. Only the message column wraps, so a
   narrow terminal breaks a sentence and never a check id. `checks` splits its count by severity.
 - **`generate` marks a file it created**, and counts what it wrote against the size of the whole plan.

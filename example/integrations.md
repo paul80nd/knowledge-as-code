@@ -16,23 +16,23 @@ vendor promises us, what we do when they break that promise, and who to contact.
 Some incidents start outside our estate. Whoever picks one up needs to know which vendor runs the system, what the
 contract says, what SLA they signed and who answers the phone when we call. None of that sits in our code or our logs.
 
-An integration also caps what we can promise. Where an [NFR](/nfrs) targets more availability than the vendor's SLA
+An integration also caps what we can promise. Where an [NFR](nfrs.md) targets more availability than the vendor's SLA
 supports, the vendor's bad day breaks our target. Whoever sets that target can read the vendor's number in `their-sla`
 first. Otherwise the gap turns up during an incident.
 
 ## Scope
 
-**The line is whether we deploy it.** If we deploy it, it is a [service](/services). If someone else runs it and we call
+**The line is whether we deploy it.** If we deploy it, it is a [service](services.md). If someone else runs it and we call
 it, it is an integration.
 
-A library or package we depend on is a [tool](/tools), because it reaches us as code in our own build and not as a
+A library or package we depend on is a [tool](tools.md), because it reaches us as code in our own build and not as a
 system somebody else runs.
 
 Not the place for:
 
-* **How to configure it.** That is a [process](/processes).
-* **What to do when it's down.** That is a [runbook](/runbooks), which this document links to.
-* **Why we chose it.** That is an [ADR](/adrs).
+* **How to configure it.** That is a [process](processes.md).
+* **What to do when it's down.** That is a [runbook](runbooks.md), which this document links to.
+* **Why we chose it.** That is an [ADR](adrs.md).
 
 ## Metadata
 
@@ -51,7 +51,7 @@ Not the place for:
 | `their-sla`     | string                              | What the contract actually says, not what the marketing page implies.                |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-integrations -->
 

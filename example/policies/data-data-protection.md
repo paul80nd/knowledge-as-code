@@ -70,5 +70,5 @@ answer; whether we were entitled to hold it at all is not.
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-ENVS]: envs-environment-separation.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[UK GDPR]: /frameworks.md#uk-gdpr
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[UK GDPR]: ../frameworks.md#uk-gdpr

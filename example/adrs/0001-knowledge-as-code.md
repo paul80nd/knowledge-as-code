@@ -53,7 +53,7 @@ We treat knowledge as code:
 * **The mechanism is separable from the content.** Tooling is provided via managed packages. Schema and skills are part
   of a template set adoptable in whole or part by a corpus.
 
-[Knowledge as Code](/knowledge-as-code.md) describes the full approach.
+[Knowledge as Code](../knowledge-as-code.md) describes the full approach.
 
 ## Alternatives Considered
 
@@ -104,8 +104,8 @@ We treat knowledge as code:
 
 ## References
 
-* [Knowledge as Code](/knowledge-as-code.md) describes the approach.
-* [Taxonomy](/knowledge-as-code/taxonomy.md) lists the types and how to choose between them.
-* [Metadata](/knowledge-as-code/metadata.md) defines the frontmatter schema.
-* [Contributing](/knowledge-as-code/contributing.md) covers the review model and the promotion path.
-* [Automation](/knowledge-as-code/automation.md) says what CI validates and generates.
+* [Knowledge as Code](../knowledge-as-code.md) describes the approach.
+* [Taxonomy](../knowledge-as-code/taxonomy.md) lists the types and how to choose between them.
+* [Metadata](../knowledge-as-code/metadata.md) defines the frontmatter schema.
+* [Contributing](../knowledge-as-code/contributing.md) covers the review model and the promotion path.
+* [Automation](../knowledge-as-code/automation.md) says what CI validates and generates.

@@ -22,7 +22,7 @@ byte-preserved.
 | `related`       | list                                            | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.             |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-adrs -->
 

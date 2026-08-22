@@ -58,4 +58,4 @@ Owned by [svc-catalogue-api].
 
 [gls-knowledge-as-code.record]: knowledge-as-code.md#record
 [gls-search.title]: search.md#title
-[svc-catalogue-api]: /services/catalogue-api.md
+[svc-catalogue-api]: ../services/catalogue-api.md

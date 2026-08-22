@@ -60,7 +60,7 @@ standard cites the ADR rather than restating it.
 
 Where a policy corresponds to an external framework it says so, clause by clause. That is **alignment, not
 certification**: it means the framework covers the same ground, not that anyone is audited against it. What this corpus
-actually stands obliged by is recorded in [`frameworks.md`](/frameworks.md) and nowhere else.
+actually stands obliged by is recorded in [`frameworks.md`](frameworks.md) and nowhere else.
 
 ## Tiers
 

@@ -10,8 +10,8 @@ A policy states what we commit to and why. It is durable, it is written at the l
 technology: *"secrets are never stored in source control"*, *"quality checks are gates, not advisories"*, *"changes to
 non-development environments go through the pipeline"*.
 
-Policies sit at the top of the normative hierarchy. A policy says what we hold true, a [standard](/standards) says what
-to do about it, a [control](/controls) says how we know it happened, and a [process](/processes) says how to do it.
+Policies sit at the top of the normative hierarchy. A policy says what we hold true, a [standard](standards.md) says what
+to do about it, a [control](controls.md) says how we know it happened, and a [process](processes.md) says how to do it.
 
 ## Why we use them
 
@@ -26,20 +26,20 @@ Each clause maps to external frameworks in the `Alignment` column of the clause 
 the cell empty where no genuine mapping exists, since an empty cell tells the reader more than an invented one.
 
 A framework can bind us by certification, bind us because we chose to hold ourselves to it, or serve as something we
-borrow from. [Frameworks](/frameworks.md) records which of the three applies, and no policy repeats it. Our standing
+borrow from. [Frameworks](frameworks.md) records which of the three applies, and no policy repeats it. Our standing
 changes on a schedule of its own, so a policy that carried it would need correcting alongside twenty others.
 
 ## Scope
 
 **The test:** would this still be true after replacing the entire technology estate? If yes, it is a policy. If it names
-a tool, a framework or a protocol, it is a [standard](/standards).
+a tool, a framework or a protocol, it is a [standard](standards.md).
 
 | Policy                                          | Standard                                                               |
 |-------------------------------------------------|------------------------------------------------------------------------|
 | "Secrets are never stored in source control."   | "Services **MUST** read secrets from Key Vault via workload identity." |
 | "Quality checks are gates that fail the build." | "ESLint **MUST** run with `--max-warnings 0`."                         |
 
-A policy commits and a [control](/controls) verifies, so the two are never the same document. An [ADR](/adrs) records
+A policy commits and a [control](controls.md) verifies, so the two are never the same document. An [ADR](adrs.md) records
 one decision and the alternatives weighed against it, where a policy states a position we hold across all such
 decisions.
 
@@ -73,7 +73,7 @@ under governance is the clearest of them.
 | `review-by` * | date                                            | Quoted. Annual is usually right for a policy.                                        |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-policies -->
 
@@ -91,21 +91,21 @@ under governance is the clearest of them.
    upper-case id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Write any explicit exceptions beneath the clauses,
    where a reader meets them before relying on the rule.
 6. Map clauses to framework controls in the `Alignment` column where a genuine mapping exists, and roll the references
-   up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](/frameworks.md). Decide its
+   up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](frameworks.md). Decide its
    posture there before citing it here.
 7. Set `review-by`. Policies change rarely, so an annual review is usually right.
 
 **Conventions**
 
 * **A policy does not state our standing against a framework.** A policy maps its clauses to controls and says nothing
-  about what that mapping is worth. Leave out "compliant", "certified" and "registered". [Frameworks](/frameworks.md)
+  about what that mapping is worth. Leave out "compliant", "certified" and "registered". [Frameworks](frameworks.md)
   holds the standing, and holds it once.
 * **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice, and
   a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
   standards against them, so nobody writing here can know the full set of implementers. A policy that nothing in *this*
   corpus implements is the normal state rather than a gap to be explained.
 * **A clause is the unit anything else cites.** A standard, a control or a deviation names the single obligation it
-  answers, in the form [Metadata](/knowledge-as-code/metadata.md#referring-to-an-id) sets out. Clause ids are immutable
+  answers, in the form [Metadata](knowledge-as-code/metadata.md#referring-to-an-id) sets out. Clause ids are immutable
   for the same reason policy ids are: removing or renaming one breaks every citation of it.
 * **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
   scope. The id does not move. Standards, controls and processes cite policies by id. Reassign a mnemonic and every one

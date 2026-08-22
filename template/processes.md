@@ -22,17 +22,17 @@ Processes carry `last-rehearsed` for that reason. A procedure nobody has walked 
 **Are you doing this because you planned to, or because something is broken?**
 
 * Planned: a process.
-* Broken: a [runbook](/runbooks).
+* Broken: a [runbook](runbooks.md).
 
 A process and a runbook have different readers, a different tone, and different consequences when they go stale. A
 process that is slightly out of date is annoying. A runbook that is slightly out of date is dangerous.
 
 A process is also not:
 
-* **A rule**: "deployments happen in dependency order" is a [standard](/standards). The release process cites it.
-* **A reference list.** System requirements and port tables belong in the [service](/services) catalogue. A document
+* **A rule**: "deployments happen in dependency order" is a [standard](standards.md). The release process cites it.
+* **A reference list.** System requirements and port tables belong in the [service](services.md) catalogue. A document
   with no steps is not a process.
-* **An explanation.** How the pipeline works is an [explanation](/explanations). How to use it is a process.
+* **An explanation.** How the pipeline works is an [explanation](explanations.md). How to use it is a process.
 
 ## Metadata
 
@@ -51,7 +51,7 @@ A process is also not:
 | `requires-access`     | list                               | Systems or roles needed before step 1.                                                         |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-processes -->
 

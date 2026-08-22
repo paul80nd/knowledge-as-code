@@ -16,7 +16,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a capability adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -64,7 +64,7 @@ you are writing belongs in an ADO item instead.)_
 What it deliberately does not do, and anything a reader would otherwise assume works. Link to work items where a
 limitation is scheduled to change.
 
-[adr-{{a}}]: /adrs/{{a}}.md
-[nfr-{{a}}]: /nfrs/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
-[svc-{{b}}]: /services/{{b}}.md
+[adr-{{a}}]: ../adrs/{{a}}.md
+[nfr-{{a}}]: ../nfrs/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md
+[svc-{{b}}]: ../services/{{b}}.md

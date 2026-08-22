@@ -18,7 +18,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what an FAQ adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -28,7 +28,7 @@ Name the title and the filename for the **symptom**, not the cause — that is w
 * **`symptom-keywords`** — Be generous: the literal error text, the service names, and the words someone would type who
   doesn't yet know what is wrong. This is the field that makes the document findable, so over-fill it.
 * **`confirmed-by`** — A named person.
-* **`confirmed-on`** — A real quoted date. An FAQ nobody confirmed is a [discovery](/discoveries).
+* **`confirmed-on`** — A real quoted date. An FAQ nobody confirmed is a [discovery](../discoveries.md).
 * **`status`** — `active` · `superseded` · `fixed-upstream`.
 
 **The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
@@ -70,5 +70,5 @@ be different, but the way in may be the same.
 * [svc-{{a}}] — the service affected.
 * [dsc-{{a}}] — the observation this was promoted from.
 
-[dsc-{{a}}]: /discoveries/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
+[dsc-{{a}}]: ../discoveries/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md

@@ -15,7 +15,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a policy adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -48,7 +48,7 @@ argument someone sceptical would need rather than the one that sounds best. Avoi
 here could be re-read as an obligation, it belongs in the table instead.
 
 _(Test before writing: would this still be true after replacing the entire technology estate? If it names a tool, a
-framework or a protocol, it is a [standard](/standards), not a policy.)_
+framework or a protocol, it is a [standard](../standards.md), not a policy.)_
 
 ## Scope
 
@@ -118,4 +118,4 @@ reader would otherwise raise. If a note is doing the job of a section, it belong
 
 Delete this heading if there is nothing to say. An empty section is worse than a missing one.
 
-[{{FRAMEWORK}}]: /frameworks.md#{{framework}}
+[{{FRAMEWORK}}]: ../frameworks.md#{{framework}}

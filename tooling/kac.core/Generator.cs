@@ -46,10 +46,11 @@ public static class Generator
     // admits it by this constant rather than by a string of its own.
     public const string Title = "title";
 
-    // How a generated block links to a type: the page without its extension, root-relative. Azure DevOps
-    // renders that form as a wiki page, and link-resolves finds the file behind it.
-    private static string Link(TypeSchema t) =>
-        "/" + (t.Page.EndsWith(".md", StringComparison.Ordinal) ? t.Page[..^3] : t.Page);
+    // How a generated block links to a type: the page itself, reached from the block's own file. `up`
+    // climbs to the corpus root, so the link resolves wherever the corpus sits, whether that is a wiki
+    // root or a subfolder of a documentation site. Naming the file rather than the folder is what stops
+    // the link depending on a renderer that maps one to the other.
+    private static string Link(TypeSchema t, string up) => up + t.Page;
 
     // The decision table: what a contributor has in hand, and where it goes. The corpus's own types
     // only, because a row pointing at a type this corpus never adopted is a dead link in the wiki and an
@@ -58,11 +59,11 @@ public static class Generator
     // Sorted on the left column, because a reader arrives holding something and scans for it. Ordering by
     // the right column would sort the table by the answer they came for and do not have yet. The link
     // carries the plural: it points at the collection.
-    public static string PlacementTable(IEnumerable<TypeSchema> types) =>
+    public static string PlacementTable(IEnumerable<TypeSchema> types, string up) =>
         RenderTable(["You have…", "It goes in"],
         [
             .. types.OrderBy(t => t.GoesHere, StringComparer.Ordinal)
-                .Select(t => new List<string> { Escape(t.GoesHere), $"[{t.PluralName}]({Link(t)})" })
+                .Select(t => new List<string> { Escape(t.GoesHere), $"[{t.PluralName}]({Link(t, up)})" })
         ]);
 
     // The types at length, under the tier that decides how each behaves. What the decision table answers
@@ -71,7 +72,7 @@ public static class Generator
     //
     // A tier no adopted type sits in is left out entirely. A heading with nothing under it tells a reader
     // the corpus has a gap where it has in fact made a choice.
-    public static string TypeCatalogue(IReadOnlyList<TierSpec> tiers, IEnumerable<TypeSchema> types)
+    public static string TypeCatalogue(IReadOnlyList<TierSpec> tiers, IEnumerable<TypeSchema> types, string up)
     {
         var byTier = types.ToLookup(t => t.Tier, StringComparer.Ordinal);
         var sections = new List<string>();
@@ -84,7 +85,7 @@ public static class Generator
             var section = new StringBuilder($"### {tier.Label}: {tier.Behaviour}\n");
             if (tier.Note.Length > 0) section.Append($"\n{Wrap(tier.Note)}\n");
             foreach (var t in members)
-                section.Append($"\n{Wrap($"**[{t.PluralName}]({Link(t)}).** {t.Summary} {t.Detail}")}\n");
+                section.Append($"\n{Wrap($"**[{t.PluralName}]({Link(t, up)}).** {t.Summary} {t.Detail}")}\n");
 
             sections.Add(section.ToString());
         }
@@ -95,22 +96,22 @@ public static class Generator
     // One way on to each type's own field reference. The anchor is the heading the `schema-*` block sits
     // under: keeping that heading is the type page's side of the bargain, and fragment-resolves holds it
     // there.
-    public static string MetadataStrip(IEnumerable<TypeSchema> types) =>
+    public static string MetadataStrip(IEnumerable<TypeSchema> types, string up) =>
         Wrap(string.Join(" · ", types
             .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
-            .Select(t => $"[{t.DisplayName}]({Link(t)}#metadata)")));
+            .Select(t => $"[{t.DisplayName}]({Link(t, up)}#metadata)")));
 
     // Where each type's name came from. A type with no useful ancestor carries that as its prior art and
     // leaves the other two columns empty, and an empty cell renders as an em dash. Saying a type has no
     // ancestor is the point of its row rather than a gap in it.
-    public static string LineageTable(IEnumerable<TypeSchema> types) =>
+    public static string LineageTable(IEnumerable<TypeSchema> types, string up) =>
         RenderTable(["Type", "Nearest prior art", "Alignment", "Divergence"],
         [
             .. types.Where(t => t.Lineage is not null)
                 .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
                 .Select(t => new List<string>
                 {
-                    $"[{t.DisplayName}]({Link(t)})", Escape(t.Lineage!.PriorArt),
+                    $"[{t.DisplayName}]({Link(t, up)})", Escape(t.Lineage!.PriorArt),
                     Cell(t.Lineage.Alignment), Cell(t.Lineage.Divergence)
                 })
         ]);
@@ -302,11 +303,11 @@ public static class Generator
     //
     // Sorted by name, because a reader looking a type up already knows its name. Tier is a column rather
     // than a grouping for the same reason: worth seeing beside a type, and not how anyone arrives.
-    public static string TypesIndex(IEnumerable<TypeSchema> types, string taxonomyPath) =>
+    public static string TypesIndex(IEnumerable<TypeSchema> types, string taxonomyPath, string up) =>
         RenderTable(["Type", "Tier", "What it holds"],
         [
             .. types.OrderBy(t => t.DisplayName, StringComparer.Ordinal).Select(t => new List<string>
-                { $"[{t.DisplayName}]({Link(t)})", t.Tier, Escape(t.Summary) })
+                { $"[{t.DisplayName}]({Link(t, up)})", t.Tier, Escape(t.Summary) })
         ])
         + "\n\n" + Wrap($"**Where does a document go?** The [taxonomy]({taxonomyPath}) has the decision table, "
                         + "what each type is and is not, and the calls that are genuinely close.");
@@ -349,7 +350,7 @@ public static class Generator
     // that refines one shows the refinement rather than the universal placeholder, and every type narrows
     // `status` to its own values. The universal ones are marked rather than separated: one table is one
     // scan, which is what someone filling in frontmatter wants.
-    public static string SchemaTable(TypeSchema t, Schema s)
+    public static string SchemaTable(TypeSchema t, Schema s, string up)
     {
         List<string> headers = ["Field", "Value", "Notes"];
         var universal = s.UniversalOrder.Where(n => s.EffectiveField(t, n) is not null).ToList();
@@ -362,7 +363,7 @@ public static class Generator
         var order = universal.Concat(own).ToList();
         var specs = order.Select(n => s.EffectiveField(t, n)!).ToList();
         var table = RenderTable(headers, rows);
-        return table + Legend(specs.Any(f => f.Required), universal.Count > 0);
+        return table + Legend(specs.Any(f => f.Required), universal.Count > 0, up);
 
         // `tier` is the one field whose value a type settles rather than chooses from: every document in
         // the folder carries the same one, and CI fails any that does not. Offering the reader the other
@@ -394,7 +395,7 @@ public static class Generator
             .Select(f => new List<string>
                 { $"`{f.Name}`{Marks(f.Required, false)}", ValueFor(f), NotesFor(f) })
             .ToList();
-        return RenderTable(headers, rows) + Legend(fields.Any(f => f.Required), false);
+        return RenderTable(headers, rows) + Legend(fields.Any(f => f.Required), false, "");
     }
 
     // Required and universal are marked on the field name rather than given a column of their own: a
@@ -410,13 +411,13 @@ public static class Generator
     // trailing spaces. A blank line would make them two paragraphs where they are one legend, and spaces
     // on one line would collapse to a single gap, HTML reducing any run of them to one. The asterisk is
     // escaped: a line opening with a bare one is a bullet.
-    private static string Legend(bool anyRequired, bool anyUniversal)
+    private static string Legend(bool anyRequired, bool anyUniversal, string up)
     {
         List<string> parts = [];
         if (anyRequired) parts.Add("\\* Field is required");
         if (anyUniversal)
             parts.Add("† Carried by every document in the taxonomy. See "
-                      + "[Metadata](/knowledge-as-code/metadata.md).");
+                      + $"[Metadata]({up}knowledge-as-code/metadata.md).");
         return parts.Count == 0 ? "" : "\n\n" + string.Join("  \n", parts);
     }
 

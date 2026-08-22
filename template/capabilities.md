@@ -33,10 +33,10 @@ Acceptance criteria go in ADO.
 Related but different:
 
 * **Spec**: how standards apply to one concrete contract. It lives in the repository that owns the feature, beside its
-  OpenAPI document and feature files. [ADRs](/adrs) split the same way: cross-repo synthesis here, feature-level detail
+  OpenAPI document and feature files. [ADRs](adrs.md) split the same way: cross-repo synthesis here, feature-level detail
   with the code.
-* **[Service](/services)**: a thing we deploy. A capability is a thing a customer gets.
-* **[Explanation](/explanations)**: how something works internally. A capability is what it does externally.
+* **[Service](services.md)**: a thing we deploy. A capability is a thing a customer gets.
+* **[Explanation](explanations.md)**: how something works internally. A capability is what it does externally.
 
 ## Metadata
 
@@ -55,7 +55,7 @@ Related but different:
 | `nfrs`             | list                                     | NFR ids — the targets this capability is held to.                                         |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-capabilities -->
 

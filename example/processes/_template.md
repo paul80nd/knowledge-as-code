@@ -16,7 +16,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a process adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -37,7 +37,7 @@ One sentence: what this achieves and when you would do it.
 
 ## When to use this
 
-The trigger. If you are here because something is broken, you probably want a [runbook](/runbooks) instead.
+The trigger. If you are here because something is broken, you probably want a [runbook](../runbooks.md) instead.
 
 ## Prerequisites
 
@@ -74,5 +74,5 @@ How to back out, or who to tell. If there is no rollback, say so explicitly — 
 * [svc-{{a}}] — the service this operates on.
 * [std-{{a}}] — rules this process must respect.
 
-[std-{{a}}]: /standards/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
+[std-{{a}}]: ../standards/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md

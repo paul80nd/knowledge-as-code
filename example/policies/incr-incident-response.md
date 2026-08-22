@@ -68,5 +68,5 @@ severity. Deciding that a breach was not notifiable is itself a decision we have
 [pol-DATA]: data-data-protection.md
 [pol-RECV]: recv-recoverability.md
 [pol-SECD]: secd-security-by-design.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[UK GDPR]: /frameworks.md#uk-gdpr
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[UK GDPR]: ../frameworks.md#uk-gdpr

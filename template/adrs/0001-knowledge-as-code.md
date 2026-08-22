@@ -45,9 +45,9 @@ towards several hundred, so anything relying on a human maintaining an index by 
 
 We treat knowledge as code. Concretely:
 
-* **Every document has a type**, drawn from an explicit [taxonomy](/knowledge-as-code/taxonomy.md), and lives in the
+* **Every document has a type**, drawn from an explicit [taxonomy](../knowledge-as-code/taxonomy.md), and lives in the
   folder for that type.
-* **Every document carries YAML frontmatter** conforming to a [schema](/knowledge-as-code/metadata.md). A wiki that
+* **Every document carries YAML frontmatter** conforming to a [schema](../knowledge-as-code/metadata.md). A wiki that
   renders frontmatter as a metadata table makes this visible to human readers rather than hidden plumbing, and the
   handwritten metadata tables documents currently carry are replaced by it.
 * **Types are grouped into tiers by behaviour** — decided, normative, descriptive, procedural, observed — and the tier,
@@ -59,7 +59,7 @@ We treat knowledge as code. Concretely:
 * **The mechanism is separable from the content.** The schema and the framework's own documentation carry no
   organisation specifics, arrive from upstream, and are not themselves governed by the taxonomy.
 
-The full approach is described in [Knowledge as Code](/knowledge-as-code.md).
+The full approach is described in [Knowledge as Code](../knowledge-as-code.md).
 
 ## Alternatives Considered
 
@@ -117,8 +117,8 @@ The full approach is described in [Knowledge as Code](/knowledge-as-code.md).
 
 ## References
 
-* [Knowledge as Code](/knowledge-as-code.md) — the approach.
-* [Taxonomy](/knowledge-as-code/taxonomy.md) — the types and how to choose between them.
-* [Metadata](/knowledge-as-code/metadata.md) — the frontmatter schema.
-* [Contributing](/knowledge-as-code/contributing.md) — review model and promotion path.
-* [Automation](/knowledge-as-code/automation.md) — what CI validates and generates.
+* [Knowledge as Code](../knowledge-as-code.md) — the approach.
+* [Taxonomy](../knowledge-as-code/taxonomy.md) — the types and how to choose between them.
+* [Metadata](../knowledge-as-code/metadata.md) — the frontmatter schema.
+* [Contributing](../knowledge-as-code/contributing.md) — review model and promotion path.
+* [Automation](../knowledge-as-code/automation.md) — what CI validates and generates.

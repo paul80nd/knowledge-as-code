@@ -90,7 +90,7 @@ the reference: a tool reading the corpus carries what the link states, and a lin
 
 **Use an inline link where the display text is prose**, since it differs from the target:
 
-    The rule lives in the [value-formats standard](/standards/public-api/value-formats.md).
+    The rule lives in the [value-formats standard](../standards/public-api/value-formats.md).
 
 Definitions go at the very foot of the document, after all prose sections, sorted by label. Where a `## Related` section
 exists it uses the same shortcut labels, so a path appears exactly once per document and a rename is a one-line change.

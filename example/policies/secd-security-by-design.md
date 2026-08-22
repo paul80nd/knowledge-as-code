@@ -60,7 +60,7 @@ moment.
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-INCR]: incr-incident-response.md
 [pol-VURM]: vurm-vulnerability-remediation.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[NIST SSDF 1.1]: /frameworks.md#nist-ssdf
-[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs
-[UK GDPR]: /frameworks.md#uk-gdpr
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf
+[OWASP ASVS 4.0]: ../frameworks.md#owasp-asvs
+[UK GDPR]: ../frameworks.md#uk-gdpr

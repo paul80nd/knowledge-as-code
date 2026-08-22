@@ -27,14 +27,14 @@ what talks to it?* A service document answers it.
 ## Scope
 
 One document per **deployable unit**, not per repository and not per feature. A repository containing three
-independently deployed apps gets three documents. A capability spanning six services gets a [capability](/capabilities)
+independently deployed apps gets three documents. A capability spanning six services gets a [capability](capabilities.md)
 document that links to all six.
 
 A service document is **descriptive**: it mirrors what is actually deployed. It is not the place for:
 
-* **How to deploy it.** That is a [process](/processes).
+* **How to deploy it.** That is a [process](processes.md).
 * **How to fix it when it breaks.** That is a runbook.
-* **Why it is shaped the way it is.** That is an [ADR](/adrs) or an [explanation](/explanations).
+* **Why it is shaped the way it is.** That is an [ADR](adrs.md) or an [explanation](explanations.md).
 * **What it promises.** Availability and latency targets are NFRs.
 
 A third-party system we depend on is an integration. The line is whether we deploy it. Infrastructure-as-code stays out
@@ -59,7 +59,7 @@ of the catalogue as well, because it deploys services.
 | `facets`        | list                                                                     | Slices the catalogue — one exposure, then any traits. Each value groups services.    |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-services -->
 

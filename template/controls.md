@@ -23,7 +23,7 @@ see, and the number is worth reading only while it is honest. Do not invent a me
 
 ## Scope
 
-A control is not the rule it checks. The rule lives in a [standard](/standards), and the control says how that rule is
+A control is not the rule it checks. The rule lives in a [standard](standards.md), and the control says how that rule is
 checked.
 
 | Standard                                                   | Control                                                                  |
@@ -34,7 +34,7 @@ checked.
 Anything that can fail a build, block a merge, raise an alert or produce an audit artefact is a control. Anything that
 tells you what to do is a standard.
 
-A control names the [services](/services) it applies to, because a control with no scope is one nobody owns. One control
+A control names the [services](services.md) it applies to, because a control with no scope is one nobody owns. One control
 may verify several rules, and one rule may need several controls.
 
 ## Metadata
@@ -55,7 +55,7 @@ may verify several rules, and one rule may need several controls.
 | `applies-to`  | list                                                                     | Service ids, or `all`.                                                                   |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-controls -->
 

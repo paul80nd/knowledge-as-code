@@ -44,4 +44,4 @@ The indexed field carrying a work's name, and one of several a query matches aga
 Owned by [svc-search].
 
 [gls-example-libraries.title]: example-libraries.md#title
-[svc-search]: /services/search.md
+[svc-search]: ../services/search.md

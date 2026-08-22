@@ -18,7 +18,7 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what a postmortem adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -90,6 +90,6 @@ _(Actions live in ADO; this links to them. A postmortem is not a tracker.)_
 _(**Blameless, always.** Write about decisions and conditions, not individuals — "the deploy ran before the migration
 completed", not "X deployed too early". The output is a system that fails less, not a person who feels worse.)_
 
-[adr-{{a}}]: /adrs/{{a}}.md
-[nfr-{{a}}]: /nfrs/{{a}}.md
-[rbk-{{a}}]: /runbooks/{{a}}.md
+[adr-{{a}}]: ../adrs/{{a}}.md
+[nfr-{{a}}]: ../nfrs/{{a}}.md
+[rbk-{{a}}]: ../runbooks/{{a}}.md

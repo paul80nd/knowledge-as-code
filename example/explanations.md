@@ -24,10 +24,10 @@ record.
 
 An explanation is **not**:
 
-* **Normative.** If it says what you must do, it is a [standard](/standards).
-* **Procedural.** If it says how to perform a task, it is a [process](/processes) or a [runbook](/runbooks).
-* **A catalogue entry.** If it describes one component, it is a [service](/services).
-* **A decision.** If it records what was chosen and why, it is an [ADR](/adrs).
+* **Normative.** If it says what you must do, it is a [standard](standards.md).
+* **Procedural.** If it says how to perform a task, it is a [process](processes.md) or a [runbook](runbooks.md).
+* **A catalogue entry.** If it describes one component, it is a [service](services.md).
+* **A decision.** If it records what was chosen and why, it is an [ADR](adrs.md).
 
 **Explanations link rather than restate.** An architecture overview points at the services, capabilities and ADRs that
 hold the detail. An explanation that states a fact those documents already own holds the second copy of it. That copy is
@@ -51,7 +51,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `review-by` * | date                     | The field that stops this type rotting — explanations need the tightest staleness discipline. |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-explanations -->
 

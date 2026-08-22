@@ -26,9 +26,9 @@ nothing uses any more.
 ## Scope
 
 A tool is something we **build with**, not something we run. A running system we call is an
-[integration](/integrations). Something we deploy is a [service](/services).
+[integration](integrations.md). Something we deploy is a [service](services.md).
 
-The register records **current state**. An [ADR](/adrs) records the **decision**, where there was one worth recording. A
+The register records **current state**. An [ADR](adrs.md) records the **decision**, where there was one worth recording. A
 small, uncontroversial adoption needs only a register entry. A contested or expensive choice earns both, and the entry
 cites the ADR in `decided-in`.
 
@@ -54,7 +54,7 @@ the evaluation we already did.
 | `successor`  | id                                         | The tool id that replaces this one.                                                                  |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-tools -->
 

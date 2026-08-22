@@ -14,7 +14,7 @@ tags:
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
+**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
 is reviewed. What is below is only what an explanation adds to that.
 
 **Frontmatter.** Delete this block once the fields above are filled in.
@@ -38,7 +38,7 @@ here.
 
 ## Where the detail lives
 
-- [{{Service}}](/services/{{a}}.md) — {{what it holds}}
+- [{{Service}}](../services/{{a}}.md) — {{what it holds}}
 - [adr-{{a}}] — {{what it decided}}
 
-[adr-{{a}}]: /adrs/{{a}}.md
+[adr-{{a}}]: ../adrs/{{a}}.md

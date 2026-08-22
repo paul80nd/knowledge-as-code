@@ -16,13 +16,13 @@ Add one when an investigation cost real time. You will hit the same problem agai
 The same problems come back, and the next person to hit one pays the cost again. An FAQ turns two hours of debugging
 into a thirty-second search, provided the words that person searches for are in `symptom-keywords`.
 
-A [discovery](/discoveries) can also become an FAQ. A human promotes it once the observation proves real, general and
+A [discovery](discoveries.md) can also become an FAQ. A human promotes it once the observation proves real, general and
 current.
 
 ## Scope
 
 An FAQ is **confirmed**. A human has verified that the problem is real, that the fix works, and that both are still
-current. A [discovery](/discoveries) arrives with none of that verification: nobody reviews one, and it might be wrong
+current. A [discovery](discoveries.md) arrives with none of that verification: nobody reviews one, and it might be wrong
 or already fixed.
 
 **Never write straight to an FAQ from a session.** An agent cannot confirm its own observations, so capture a discovery
@@ -30,10 +30,10 @@ and let a human confirm it at promotion.
 
 Other boundaries:
 
-* **[Runbook](/runbooks).** If it needs a diagnosis tree and an escalation path, it is a runbook. An FAQ has one known
+* **[Runbook](runbooks.md).** If it needs a diagnosis tree and an escalation path, it is a runbook. An FAQ has one known
   fix.
-* **[Standard](/standards).** If the real answer is "people should stop doing the thing that causes this", the fix is a
-  rule, and that needs an [ADR](/adrs) first.
+* **[Standard](standards.md).** If the real answer is "people should stop doing the thing that causes this", the fix is a
+  rule, and that needs an [ADR](adrs.md) first.
 * **One problem per document.** Someone arriving with a symptom matches the first one on the page and never reads the
   second.
 
@@ -56,7 +56,7 @@ Other boundaries:
 | `review-by` *        | date                                   | Quoted. The date by which someone confirms this is still true.                                      |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-faqs -->
 

@@ -11,7 +11,7 @@ new endpoint, header or contract, and the standard for that area tells you the s
 
 ## How standards relate to ADRs
 
-[ADRs](/adrs) and standards are two halves of one record:
+[ADRs](adrs.md) and standards are two halves of one record:
 
 * An **ADR** captures a decision: the context, the choice, the alternatives weighed, the consequences. It answers *why*,
   and it is immutable once accepted.
@@ -25,7 +25,7 @@ unique to that feature.
 
 | Layer         | Answers                      | Lifecycle                    |
 |---------------|------------------------------|------------------------------|
-| [ADRs](/adrs) | *Why* did we decide this?    | Immutable, append-only log   |
+| [ADRs](adrs.md) | *Why* did we decide this?    | Immutable, append-only log   |
 | Standard      | *What* must I do, and how?   | Living, maintained catalogue |
 | Spec          | What does *this* feature do? | Per-feature instance         |
 
@@ -81,7 +81,7 @@ distinct. The common and platform axes let a rule live once, at the layer where 
 | `review-by` *  | date                                       | Quoted. The date by which someone confirms this is still true.                       |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-standards -->
 

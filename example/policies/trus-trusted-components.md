@@ -65,5 +65,5 @@ deviation names the risk owner, the compensating controls and the plan to replac
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-PIPE]: pipe-pipeline-to-production.md
 [pol-VURM]: vurm-vulnerability-remediation.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[NIST SSDF 1.1]: /frameworks.md#nist-ssdf
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf

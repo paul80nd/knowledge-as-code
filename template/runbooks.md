@@ -21,13 +21,13 @@ the recovery has never been run, while there is still time to run it.
 
 ## Scope
 
-**Broken, not planned.** If you are doing this because you decided to, it is a [process](/processes).
+**Broken, not planned.** If you are doing this because you decided to, it is a [process](processes.md).
 
 Two other types sit close enough to confuse:
 
-* **[FAQ](/faqs)**: a known problem with a known fix, usually one or two steps, no urgency. If it needs a diagnosis
+* **[FAQ](faqs.md)**: a known problem with a known fix, usually one or two steps, no urgency. If it needs a diagnosis
   tree and an escalation path, it is a runbook.
-* **[Postmortem](/postmortems)**: an account of an incident that happened. A runbook gives instructions for an incident
+* **[Postmortem](postmortems.md)**: an account of an incident that happened. A runbook gives instructions for an incident
   that has not happened yet. A good postmortem frequently produces a runbook.
 
 Disaster recovery and rebuilding the estate from nothing belong here. You rehearse them deliberately, which makes them
@@ -51,7 +51,7 @@ look like processes. You open the document on a day when the estate is already d
 | `requires-access`     | list                               | Must be complete. Discovering you lack a permission mid-incident is its own outage.     |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-runbooks -->
 
@@ -66,7 +66,7 @@ look like processes. You open the document on a day when the estate is already d
 
 **Conventions**
 
-* **Short sentences, imperative mood.** No background, no rationale. Link to an [explanation](/explanations) where the
+* **Short sentences, imperative mood.** No background, no rationale. Link to an [explanation](explanations.md) where the
   reader wants the theory afterwards.
 * **No prerequisite the reader cannot satisfy at 2am.** Where a step needs someone else's approval, name who and how to
   reach them.

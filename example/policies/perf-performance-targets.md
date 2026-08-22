@@ -25,7 +25,7 @@ argument about whether something feels slow into a measurement, and makes a regr
 ## Scope
 
 Systems where throughput, latency, concurrency or capacity affect whether the system does its job, which is most
-customer-facing systems and many internal ones. Targets themselves are recorded as [NFRs](/nfrs). This policy commits
+customer-facing systems and many internal ones. Targets themselves are recorded as [NFRs](../nfrs.md). This policy commits
 us to having them.
 
 ## Clauses
@@ -45,5 +45,5 @@ targets. That judgement is a recorded deviation under [pol-DEVI] rather than an 
 is what catches the system that has since acquired users.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
-[Azure WAF]: /frameworks.md#azure-well-architected-framework
-[ISO 27001:2022]: /frameworks.md#iso-27001
+[Azure WAF]: ../frameworks.md#azure-well-architected-framework
+[ISO 27001:2022]: ../frameworks.md#iso-27001

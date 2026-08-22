@@ -2,7 +2,7 @@
 
 The external frameworks this corpus refers to, and what each one obliges us to.
 
-A [policy](/policies) maps its clauses to a framework's controls in the `Alignment` column of its clause table, as
+A [policy](policies.md) maps its clauses to a framework's controls in the `Alignment` column of its clause table, as
 `[ISO 27001:2022].A.8.24`. Those references resolve here. This page is the only place that says what the relationship
 is, because that standing changes on its own schedule and would otherwise need correcting in every policy that cites it
 at once.

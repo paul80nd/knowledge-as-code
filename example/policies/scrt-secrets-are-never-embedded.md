@@ -62,4 +62,4 @@ it and when it is revisited.
 [pol-DATA]: data-data-protection.md
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-ENVS]: envs-environment-separation.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
+[ISO 27001:2022]: ../frameworks.md#iso-27001

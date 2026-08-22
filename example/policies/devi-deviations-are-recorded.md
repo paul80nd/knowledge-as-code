@@ -67,9 +67,9 @@ Some commitments here admit no deviation at all, and no record makes any of them
 ## Notes
 
 No standard implements this directly. Standards cite it wherever they carry an exception clause, and so do the
-[controls](/controls) that check those clauses are honoured.
+[controls](../controls.md) that check those clauses are honoured.
 
-This policy says nothing about where a deviation is recorded. That belongs to the [process](/processes) that carries it,
+This policy says nothing about where a deviation is recorded. That belongs to the [process](../processes.md) that carries it,
 so that changing where we file deviations does not change what we committed to.
 
 [pol-AGNT]: agnt-agents-propose-people-decide.md
@@ -77,4 +77,4 @@ so that changing where we file deviations does not change what we committed to.
 [pol-INCR]: incr-incident-response.md
 [pol-KNOW]: know-knowledge-is-written-down.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
+[ISO 27001:2022]: ../frameworks.md#iso-27001

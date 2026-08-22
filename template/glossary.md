@@ -33,9 +33,9 @@ vocabulary does not: we are not writing a dictionary, and every entry lengthens 
 
 Not the place for:
 
-* **A component.** That is a [service](/services). The glossary may define the *concept* the service is named after.
-* **A rule about using the term.** That is a [standard](/standards).
-* **A full explanation of a pattern.** That is an [explanation](/explanations). A glossary entry is a sentence, and
+* **A component.** That is a [service](services.md). The glossary may define the *concept* the service is named after.
+* **A rule about using the term.** That is a [standard](standards.md).
+* **A full explanation of a pattern.** That is an [explanation](explanations.md). A glossary entry is a sentence, and
   links out for the rest.
 
 **Split by bounded context or product surface, never by topic.** A glossary covers the language of one context: the
@@ -59,9 +59,9 @@ the shared one still reads correctly in a corpus that never had the other half.
    the context, and set `narrows` to the glossary it sits inside.
 3. Add an H3 in alphabetical position.
 4. One sentence of definition. If it needs a paragraph, the paragraph belongs in an
-   [explanation](/explanations) and the entry links to it.
+   [explanation](explanations.md) and the entry links to it.
 5. Add a `**Not:**` line wherever confusion is plausible. Those lines are the most useful content here.
-6. Name the owning [service](/services) where the concept has one.
+6. Name the owning [service](services.md) where the concept has one.
 7. Where a narrower glossary redefines a term, reference the other entry from each. Where the general glossary is
    shared, only the narrower entry carries a reference.
 
@@ -92,7 +92,7 @@ nothing runs the rule and the limit is yours to keep.
 | `review-by` * | date             | Quoted. A glossary is reviewed whole, rather than a term at a time.                  |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-glossary -->
 
@@ -140,5 +140,5 @@ nothing runs the rule and the limit is yours to keep.
 
 <!-- END GENERATED: checks-glossary -->
 
-[adr-0001]: /adrs/0001-knowledge-as-code.md
+[adr-0001]: adrs/0001-knowledge-as-code.md
 [gls-knowledge-as-code]: glossary/knowledge-as-code.md
