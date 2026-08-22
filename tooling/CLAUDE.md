@@ -8,6 +8,32 @@
 **Load `technical-writing`, then `writing-in-the-tool`.** Between them they carry every rule for the comments and for
 the prose pages under `tooling/`, this one included.
 
+## Running `kac` here
+
+**Run the build, not the install.** `dotnet run --project tooling/kac -- <verb>` is the tool this branch holds. A bare
+`kac` is the published tool from `~/.dotnet/tools`, at whatever version was installed last, and it rewrites generated
+files with an older wording without saying so.
+
+**Run both corpora.** `example/` holds records and proves the tool against them. `template/` holds what a new corpus
+receives, and a copy of it has to validate before its owner has run anything.
+
+```sh
+# the corpus with the records in it
+cd example
+dotnet run --project ../tooling/kac -- validate
+dotnet run --project ../tooling/kac -- generate --check
+
+# what a new corpus receives
+cd ../template
+dotnet run --project ../tooling/kac -- validate
+dotnet run --project ../tooling/kac -- generate --check
+```
+
+`template/` carries no `.corpus.yaml`, so `mechanism` cannot read it. `validate` and `generate` ask only for the
+`.schema/` beside them, and both run there.
+
+**Run one invocation at a time.** Concurrent runs build the same project and contend over its output.
+
 ## Adding or changing a check
 
 **Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an

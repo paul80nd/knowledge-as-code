@@ -17,15 +17,18 @@ To decline a type, leave it out of `types:` rather than deleting files afterward
 ## Before you commit
 
 ```bash
-# here, in the corpus
-kac validate                       # the corpus
-kac generate --check               # generated output is fresh
+# here, in the corpus, through the tool this repository builds
+dotnet run --project ../tooling/kac -- validate         # the corpus
+dotnet run --project ../tooling/kac -- generate --check # generated output is fresh
 
 # from the repository above it, which holds the tool and the tests that prove it
 dotnet test tooling/kac.tests      # unit
 dotnet test tooling/kac.features   # Reqnroll behaviour specs
 dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and checks-table gates
 ```
+
+A bare `kac` runs the published tool rather than this one. [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) says what
+that costs, and carries the `template/` runs that go beside these.
 
 All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
 leave you green locally and red in CI. Run **one `kac` invocation at a time**: concurrent runs build the same project

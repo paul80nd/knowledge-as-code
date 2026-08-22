@@ -1,5 +1,6 @@
-# The gate on a pull request: kac run over the corpus at example/, the plugin that corpus builds, and
-# the tool's own three test layers. The corpus half mirrors example/azure-pipelines.yml.
+# The gate on a pull request: kac run over the corpus at example/ and the one at template/, the plugin
+# example/ builds, and the tool's own three test layers. The example/ half mirrors
+# example/azure-pipelines.yml, which is a corpus's own pipeline and therefore reads no template/.
 #
 # Nothing CI produces is written back over a file a human edits, and read-only permission is what
 # keeps it that way. `generate --check` only reports staleness, naming the command to run locally.
@@ -31,13 +32,25 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Each runs from example/, because kac takes the first ancestor holding a .schema/ as the corpus.
+      # Each runs from a corpus directory, because kac takes the first ancestor holding a .schema/ as one.
       - name: Validate frontmatter, links and structure
         working-directory: example
         run: dotnet run --project ../tooling/kac -- validate
 
       - name: Check generated output is fresh
         working-directory: example
+        run: dotnet run --project ../tooling/kac -- generate --check
+
+      # template/ is what a new corpus receives, so a copy of it has to validate before its owner has
+      # run anything. It carries no .corpus.yaml, which only stops `mechanism`: both verbs below ask
+      # for the .schema/ beside them and nothing else. example/azure-pipelines.yml stays corpus-only,
+      # because a corpus has no template/ to look at.
+      - name: Validate what a new corpus receives
+        working-directory: template
+        run: dotnet run --project ../tooling/kac -- validate
+
+      - name: Check the template's generated output is fresh
+        working-directory: template
         run: dotnet run --project ../tooling/kac -- generate --check
 
       - name: Build the export
