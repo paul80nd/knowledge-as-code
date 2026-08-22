@@ -14,8 +14,8 @@ Deliberately low-ceremony: a title, what you saw, the context you were in, and w
 ## Why we use them
 
 Capture has to be nearly free or it doesn't happen. Nobody writes up a gotcha that costs them a template, an owner and
-two reviewers, so a discovery asks for none of the three. You write what you saw, mark it unverified, and get **no
-review at all**. It expires on its own unless someone promotes it.
+two reviewers, so a discovery doesn't ask for them. You write what you saw, mark it unverified, and get **no review at
+all**. It expires on its own unless someone promotes it.
 
 A human adds the rigour at promotion. The corpus can then take in everything anyone notices while the documents that
 carry authority stay few and checked.
@@ -72,10 +72,10 @@ The one flow that crosses tiers. Where the observation turns out to be a rule pe
 2. Create the FAQ with `promoted-from`, `confirmed-by` and `confirmed-on`.
 3. Set the discovery's `status: promoted` and `promoted-to`.
 
-Nothing proposes a promotion automatically yet. [Automation](knowledge-as-code/automation.md) describes the
-distillation pass that would. Such a proposal arrives as a pull request carrying `provenance` back to the passage that
-produced it. Read that provenance before you accept anything: an unverifiable proposal is a rejected proposal. Checking
-it is the whole reason the field exists.
+Nothing proposes a promotion automatically yet. [Automation](knowledge-as-code/automation.md) describes the distillation
+pass that would. Such a proposal arrives as a pull request carrying `provenance` back to the passage that produced it.
+Read that provenance before you accept anything: an unverifiable proposal is a rejected proposal. Checking it is the
+whole reason the field exists.
 
 ## What CI checks
 

@@ -27,8 +27,8 @@ contracts, the service bus, auth, deployment ordering, infrastructure patterns. 
 
 ## Scope: central vs repo-local
 
-An ADR here covers a decision spanning **more than one** repository. A decision entirely local to a single repository
-(a library choice, an internal naming convention, a refactor approach) belongs in that repository, under `/docs/adrs/`.
+An ADR here covers a decision spanning **more than one** repository. A decision entirely local to a single repository (a
+library choice, an internal naming convention, a refactor approach) belongs in that repository, under `/docs/adrs/`.
 
 Where a central ADR later supersedes a repo-local one, set the local ADR to superseded and reference the central ADR by
 its id.
@@ -67,8 +67,8 @@ its id.
 
 * **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused. A withdrawn proposal retires its
   number.
-* **Immutability.** Once an ADR is accepted, change nothing in it beyond its status and its typos. To change a
-  decision, write a new ADR that supersedes the old one.
+* **Immutability.** Once an ADR is accepted, change nothing in it beyond its status and its typos. To change a decision,
+  write a new ADR that supersedes the old one.
 * **Superseding.** Set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
   supersession recorded on one side only fails the build.
 * **Prescriptive language.** An ADR that establishes a default or a policy may use

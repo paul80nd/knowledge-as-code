@@ -32,8 +32,8 @@ Other boundaries:
 
 * **[Runbook](runbooks.md).** If it needs a diagnosis tree and an escalation path, it is a runbook. An FAQ has one known
   fix.
-* **[Standard](standards.md).** If the real answer is "people should stop doing the thing that causes this", the fix is a
-  rule, and that needs an [ADR](adrs.md) first.
+* **[Standard](standards.md).** If the real answer is "people should stop doing the thing that causes this", the fix is
+  a rule, and that needs an [ADR](adrs.md) first.
 * **One problem per document.** Someone arriving with a symptom matches the first one on the page and never reads the
   second.
 

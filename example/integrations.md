@@ -22,8 +22,8 @@ first. Otherwise the gap turns up during an incident.
 
 ## Scope
 
-**The line is whether we deploy it.** If we deploy it, it is a [service](services.md). If someone else runs it and we call
-it, it is an integration.
+**The line is whether we deploy it.** If we deploy it, it is a [service](services.md). If someone else runs it and we
+call it, it is an integration.
 
 A library or package we depend on is a [tool](tools.md), because it reaches us as code in our own build and not as a
 system somebody else runs.

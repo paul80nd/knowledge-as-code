@@ -9,8 +9,8 @@ What actually happened, and why.
 A blameless account of one incident: when it began, what customers lost, what caused it, what worked, and the actions it
 left us with.
 
-Publishing one closes it, as with an [ADR](adrs.md): a postmortem holds what we understood at the time. Where we later
-understand the same incident differently, we write another one.
+Publishing one closes it and, as with an [ADR](adrs.md), a postmortem holds what we understood at the time. Where we
+later understand the same incident differently, we write another one.
 
 ## Why we use them
 
@@ -18,8 +18,8 @@ The ADR log records what we intended. A postmortem records what the estate did i
 what we did not know on the day we decided.
 
 One incident routinely produces an [FAQ](faqs.md), a [runbook](runbooks.md), a revised [NFR](nfrs.md) and sometimes an
-[ADR](adrs.md). A root cause that recurs shows up in no single account, so read several postmortems together when you want
-to know what keeps breaking.
+[ADR](adrs.md). A root cause that recurs shows up in no single account, so read several postmortems together when you
+want to know what keeps breaking.
 
 ## Scope
 
@@ -29,7 +29,8 @@ statements about decisions, conditions, systems and roles: "the deploy ran befor
 
 Boundaries:
 
-* **[Runbook](runbooks.md)**: instructions for an incident that might happen. A postmortem is an account of one that did.
+* **[Runbook](runbooks.md)**: instructions for an incident that might happen. A postmortem is an account of one that
+  did.
 * **[FAQ](faqs.md)**: a reusable fix, which an incident often produces as a by-product. A postmortem is the account of
   the incident itself.
 * **A work item.** Actions belong in ADO. The postmortem links to them and tracks nothing itself.

@@ -28,8 +28,8 @@ nothing uses any more.
 A tool is something we **build with**, not something we run. A running system we call is an
 [integration](integrations.md). Something we deploy is a [service](services.md).
 
-The register records **current state**. An [ADR](adrs.md) records the **decision**, where there was one worth recording. A
-small, uncontroversial adoption needs only a register entry. A contested or expensive choice earns both, and the entry
+The register records **current state**. An [ADR](adrs.md) records the **decision**, where there was one worth recording.
+A small, uncontroversial adoption needs only a register entry. A contested or expensive choice earns both, and the entry
 cites the ADR in `decided-in`.
 
 A `rejected` entry earns its place. Somebody proposes the same package eighteen months later, and the entry hands them
