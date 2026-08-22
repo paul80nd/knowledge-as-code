@@ -61,5 +61,5 @@ and someone reviews that use afterwards. Any other departure requires a recorded
 [pol-AGNT]: agnt-agents-propose-people-decide.md
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-EVER]: ever-everything-in-version-control.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[OWASP ASVS 4.0]: ../frameworks.md#owasp-asvs

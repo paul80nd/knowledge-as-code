@@ -55,6 +55,6 @@ recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards r
 
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-VURM]: vurm-vulnerability-remediation.md
-[DORA metrics]: /frameworks.md#dora-metrics
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[NIST SSDF 1.1]: /frameworks.md#nist-ssdf
+[DORA metrics]: ../frameworks.md#dora-metrics
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf
