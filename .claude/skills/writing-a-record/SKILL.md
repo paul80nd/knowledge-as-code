@@ -24,7 +24,8 @@ alignment are frontmatter. Prose restating any of them goes wrong before the fro
 * **"They do not reach a clause whose wording is the record of an obligation."** That exemption covers the words and
   not the marks. Repair a clause's punctuation, and keep every word carrying obligation: a citation quotes the row, so
   dropping a qualifier changes what `pol-DEVI.OWNER` says to whoever cites it. The author accepts that diff in review,
-  which is where a meaning that moved is caught.
+  which is where a meaning that moved is caught. A capital the new mark forces is not a word change:
+  `— see [pol-SCRT]` becomes `. See [pol-SCRT]`.
   **Inside a clause row this beats every other rule, on this page and on the floor.** A passive, an elided verb, a
   compound obligation, and a rationale the tier row would send to Purpose all stay, because each is wording a citation
   quotes. Report them and leave them. The tier row governs a clause you are writing, and this governs one you are

@@ -16,7 +16,8 @@ quoting what a program printed. Leave any of those as they are, and say which ru
 **The words a program prints are prose.** A message in a string literal, or a schema `message:` value, is written for a
 reader. A transcript quoting that message back is a fact.
 
-**Clarity outranks brevity.** Where two rules pull against each other, the one leaving the reader fewer readings wins.
+**Clarity outranks brevity.** Where two rules pull against each other, the one leaving the reader fewer readings
+wins. Where they tie, either answer is right: pick one and move on.
 
 Examples read `Write: ... Not: ...`. The first is the one to copy.
 
@@ -41,7 +42,8 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 
 * **One idea per sentence, and one instruction.** A sentence carrying an obligation and its justification is two
   sentences. Two steps joined by "and" are two sentences.
-* **Keep an instruction under about 20 words and other prose under about 25.**
+* **Keep an instruction under about 20 words and other prose under about 25.** An interrupting aside does not count
+  toward the length. A 30-word sentence holding a 9-word aside is a 21-word sentence, and stays whole.
 * **Put the condition before the step it guards.**
   Write: "To delete the document, click Delete." Not: "Click Delete to remove the document."
 * **Keep the articles.** Write: "Remove the backup file." Not: "Remove backup file."
@@ -70,8 +72,9 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 * **One em dash survives: the interrupting aside that carries its own commas.** That is the whole test. The commas are
   what settles it, because a comma pair cannot mark an aside that already holds commas, and a dash at the end of a
   sentence fails it because it interrupts nothing.
-  **Settle the length first.** Split the over-long sentence, then test each dash in the sentence you are left with. A
-  dash the split leaves at a sentence end has stopped interrupting, and takes the mark that states the relation.
+  **Settle the length first.** The aside does not count toward it. Split the sentence that is over-long even so,
+  then test each dash in the sentence you are left with. A dash the split leaves at a sentence end has stopped
+  interrupting, and takes the mark that states the relation.
   Keep: *The bibliographic description of a title — author, edition, subject headings — held once and shared by every
   branch.*
 * **Every other dash takes the mark that states the relation.** A dash separates without saying how the two parts
@@ -135,6 +138,9 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 * **Build a sentence on a contrast only where the reader would otherwise take the wrong reading.**
   Keep: "Copy `template/`, not `example/`." A reader would reach for the wrong folder.
   Cut: "The tool validates rather than generates." Say what it does.
+  **Count the contrasts before you finish.** Every one passes on its own. The fortieth in one shape fails.
+  Count `rather than`, `, not ` and `, never ` over what you wrote, and aim under 2 per 1000 words. A bulleted
+  rulebook scores higher by construction, since each bullet is its own reading unit.
 * **Use the honest number.** Two examples where two will do, four where four is true.
 * **End a section on a fact.** A crafted line closing every section reads as style rather than substance.
 * **A bold lead-in opens a list item or a paragraph, and new detail follows it.** A bold span closing inside a
