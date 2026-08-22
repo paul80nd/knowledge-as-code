@@ -38,19 +38,19 @@ of the catalogue as well, because it deploys services.
 
 <!-- BEGIN GENERATED: schema-services -->
 
-| Field           | Value                                                                    | Notes                                                                                |
-|-----------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| `id` *†         | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *†       | `descriptive`                                                            | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` *†     | `live` `building` `deprecated` `retired`                                 | Where the service is in its life.                                                    |
-| `owner` *†      | string                                                                   | A named person, never a team alias.                                                  |
-| `tags` †        | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `repo` *        | string                                                                   | Where the code lives.                                                                |
-| `platform` *    | `dotnet-web` `dotnet-api` `azure-function` `static` `typescript` `mixed` | What it is built on. Drives which standards apply.                                   |
-| `criticality` * | `critical` `important` `supporting`                                      | Judged by what a customer experiences when it is unavailable.                        |
-| `depends-on`    | list                                                                     | Downward only — what this service calls.                                             |
-| `data-stores`   | list                                                                     | Data ids this service owns or reads.                                                 |
-| `facets`        | list                                                                     | Slices the catalogue — one exposure, then any traits. Each value groups services.    |
+| Field           | Value                                                                    | Notes                                                                               |
+|-----------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `id` *†         | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `tier` *†       | `descriptive`                                                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` *†     | `live` `building` `deprecated` `retired`                                 | Where the service is in its life.                                                   |
+| `owner` *†      | string                                                                   | A named person, never a team alias.                                                 |
+| `tags` †        | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| `repo` *        | string                                                                   | Where the code lives.                                                               |
+| `platform` *    | `dotnet-web` `dotnet-api` `azure-function` `static` `typescript` `mixed` | What it is built on. Drives which standards apply.                                  |
+| `criticality` * | `critical` `important` `supporting`                                      | Judged by what a customer experiences when it is unavailable.                       |
+| `depends-on`    | list                                                                     | What this service calls, downward only.                                             |
+| `data-stores`   | list                                                                     | Data ids this service owns or reads.                                                |
+| `facets`        | list                                                                     | Slices the catalogue. One exposure, then any traits. Each value groups services.    |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).

@@ -7,7 +7,7 @@ folder: postmortems
 page: postmortems.md
 tier: decided
 lifecycle: immutable
-summary: What actually happened during an incident — timeline, impact, root cause, contributing factors, actions.
+summary: What actually happened during an incident (timeline, impact, root cause, contributing factors, actions).
 goes-here: An account of an incident and what caused it
 detail: >
   Blameless, and immutable once published. The honest counterpart to the decision log: an ADR records what was
@@ -16,10 +16,10 @@ detail: >
 lineage:
   prior-art: "[Google SRE, *Postmortem Culture*](https://sre.google/sre-book/postmortem-culture/)"
   alignment: >
-    The field set — impact, actions, root cause, follow-up — and blamelessness defined as causes without
+    The field set (impact, actions, root cause, follow-up) and blamelessness defined as causes without
     indictment
   divergence: >
-    Google reviews before publication and treats the document as living; ours is immutable once published. We
+    Google reviews before publication and treats the document as living. Ours is immutable once published. We
     separate root cause from contributing factors
 
 id:
@@ -27,7 +27,7 @@ id:
   style: numbered
   width: 4
   notes: >
-    `pmt-` names the document, which is what every other prefix here does — `adr-`, `pol-`, `std-`, `ctl-`. `inc-`
+    `pmt-` names the document, which is what every other prefix here does (`adr-`, `pol-`, `std-`, `ctl-`). `inc-`
     names the incident instead, and an incident can produce more than one record, so the id would promise an identity
     it does not hold.
 
@@ -42,7 +42,7 @@ fields:
     required: true
     type: enum
     values: [draft, published]
-    description: '`published` freezes the document; a new understanding is a new postmortem.'
+    description: '`published` freezes the document. A new understanding is a new postmortem.'
     notes: >
       `published` freezes the document. A materially different understanding is a new postmortem that
       references this one.
@@ -55,7 +55,7 @@ fields:
   detected-on:
     required: true
     type: date
-    notes: Separate from `occurred-on` for a reason — the gap between them is often the finding.
+    notes: Separate from `occurred-on`, because the gap between them is often the finding.
 
   duration:
     required: true
@@ -102,7 +102,7 @@ rules:
     # that omits one would be told about the same omission twice, in two vocabularies.
     expr: "present('detected-on') and present('occurred-on') implies field('detected-on') >= field('occurred-on')"
     message: >
-      `detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are
+      `detected-on` is before `occurred-on`. An incident cannot be found before it began. If the dates are
       right, the earlier one is when it started.
   - id: blameless
     description: >
@@ -110,4 +110,4 @@ rules:
       systems, not people.
   - id: recurring-root-causes
     description: >
-      Scheduled. Reports root causes recurring across postmortems — the highest-signal output in the corpus.
+      Scheduled. Reports root causes recurring across postmortems, the highest-signal output in the corpus.

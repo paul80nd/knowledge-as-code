@@ -41,7 +41,7 @@ A process is also not:
 | Field                 | Value                              | Notes                                                                                          |
 |-----------------------|------------------------------------|------------------------------------------------------------------------------------------------|
 | `id` *†               | string                             | Stable, unique across the corpus, never reused. Format set by the type.                        |
-| `tier` *†             | `procedural`                       | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.           |
+| `tier` *†             | `procedural`                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.            |
 | `status` *†           | `active` `draft` `retired`         | Whether the process is current, drafted, or stood down.                                        |
 | `owner` *†            | string                             | A named person, never a team alias.                                                            |
 | `tags` †              | list                               | Free-form, lowercase, hyphenated. Used for cross-cutting search.                               |

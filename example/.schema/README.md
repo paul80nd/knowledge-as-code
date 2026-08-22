@@ -3,7 +3,7 @@
 Machine-readable definitions of the frontmatter every knowledge type carries. These files are the **single source** for
 three things:
 
-1. **Validation** — what CI checks a document's frontmatter against.
+1. **Validation**: what CI checks a document's frontmatter against.
 2. **The `## Metadata` block** generated into each `<type>.md`.
 3. **The `## What CI checks` block** generated into each `<type>.md`.
 
@@ -23,9 +23,9 @@ opening its template and making the same change there. Assume that, rather than 
 | `_enums.yaml`           | Enums shared by more than one type            |
 | `_tiers.yaml`           | What each tier is called, and how it behaves  |
 | `<folder>.yaml`         | One per knowledge type, named for its folder  |
-| `meta/type.schema.json` | The shape of a `<folder>.yaml` — see below    |
+| `meta/type.schema.json` | The shape of a `<folder>.yaml`. See below     |
 
-Type files are named for the **folder**, not the type — `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a
+Type files are named for the **folder**, not the type: `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a
 document's type from its folder, so folder → schema is an identity lookup with no singularisation step.
 
 A tier is declared twice, deliberately. `_universal.yaml` gives the `tier` field its range, and every record is
@@ -42,7 +42,7 @@ so the stamp and its reader arrive together or not at all. Tracked in
 
 ## The shape of a type file
 
-**[`meta/type.schema.json`](meta/type.schema.json) is the reference for the keys** — every one a type file may carry,
+**[`meta/type.schema.json`](meta/type.schema.json) is the reference for the keys**: every one a type file may carry,
 what its value may be, and what each is for. Each type file opens with a modeline pointing at it. An editor with YAML
 language-server support then offers the keys, describes them on hover, and marks a wrong one as it is typed:
 
@@ -50,7 +50,7 @@ language-server support then offers the keys, describes them on hover, and marks
 # yaml-language-server: $schema=./meta/type.schema.json
 ```
 
-It answers shape and vocabulary — whether `required:` is a boolean, whether `fields:` is a mapping rather than a
+It answers shape and vocabulary: whether `required:` is a boolean, whether `fields:` is a mapping rather than a
 sequence, whether `tier:` is a word the tiers declare. What it cannot answer is anything spanning two files or reading
 the code. Whether an `$enums.` name is declared, whether a `ref:` names an adopted folder, whether a rule is dispatched,
 whether a `summary:` fits the cell it renders into: those are
@@ -108,7 +108,7 @@ beside it are still ids.
 `min-items` is for the field whose value is its breadth. A FAQ's `symptom-keywords` is the one the schema tells authors
 to over-fill, and nothing else holds it to more than a single entry.
 
-`min-records` counts the opposite way — how many records of the type carry each entry, rather than how many entries one
+`min-records` counts the opposite way: how many records of the type carry each entry, rather than how many entries one
 record carries. It is what a field says when its values are there to divide the type into groups. `internal` earns its
 place by naming several services, where a value carried by one record divides nothing and belongs in a field that is
 free to be unique.
@@ -131,7 +131,7 @@ value costs nothing in the width of the main table.
 **Conventions the validator enforces globally**
 
 * Dates are quoted strings in `YYYY-MM-DD` form, naming a day the calendar has.
-* An absent value is a **bare key** (`decided-on:`) — never `null`, `~`, `""`, `—` or `TBD`.
+* An absent value is a **bare key** (`decided-on:`), never `null`, `~`, `""`, `—` or `TBD`.
 * Enum values are lowercase and hyphenated.
 * Unknown keys fail, except the Azure DevOps reserved keys listed in `_universal.yaml` under `reserved`.
 
@@ -161,7 +161,7 @@ versus:
     The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept current.
 ```
 
-A pair is written **once**, by the type its heading is titled from — `versus: standards` on `adrs.yaml` renders as
+A pair is written **once**, by the type its heading is titled from: `versus: standards` on `adrs.yaml` renders as
 "ADR vs Standard". Which side that is is a judgement rather than something the tool could derive, so the tool holds the
 two sides against each other instead. A pair both sides declare is two accounts of one distinction with nothing keeping
 them in step, and fails. So does a pair against a folder no schema covers, or against the declaring type itself.
@@ -203,7 +203,7 @@ a failing citation is worded with it. The rest of the block belongs to the table
 `id-pattern:` and the modals that open a binding row and an advisory one. Which of a record's content belongs in a part,
 and which belongs in frontmatter, is settled in [Metadata](../knowledge-as-code/metadata.md#what-a-record-carries).
 
-`aside:` names the label a part's optional second block opens with, written bold — `Not` on a glossary term, naming what
+`aside:` names the label a part's optional second block opens with, written bold: `Not` on a glossary term, naming what
 the term is most often confused with. It is here because it is a fact about how a type writes its parts. An export reads
 it to carry a part's lead and its aside as two pieces.
 
@@ -250,7 +250,7 @@ id, is listed by `kac checks`, and renders its own row into the generated `## Wh
 below for what one may say.
 
 **A rule's `description` is capped at 120 characters, and the cap is enforced.** It says what is checked, in a table a
-reader scans to find the row they tripped; the reasoning belongs in the rule's `message:`, which is what the author who
+reader scans to find the row they tripped. The reasoning belongs in the rule's `message:`, which is what the author who
 trips it actually reads, or in a `#` comment for an intention that has no message. A description doing both jobs runs to
 two or three sentences, which `schema-shape` reports when the schema loads. An intention's description is bound too,
 because it renders in *Declared, not yet enforced* on the same page.
@@ -281,7 +281,7 @@ rather than as the fault.
 ```yaml
 rules:
   - id: symptoms-first
-    description: Symptoms is the first section after the H1 — that is how the reader finds the document.
+    description: Symptoms is the first section after the H1. That is how the reader finds the document.
     severity: error
     expr: "first_section() == 'Symptoms'"
     message: >
@@ -290,8 +290,8 @@ rules:
 ```
 
 * `description:` is what the rule *means*, and is rendered into the generated `## What CI checks` table on the type
-  page. `message:` is what an author is told when it fires. One is a definition, the other a diagnosis; do not make them
-  the same sentence.
+  page. `message:` is what an author is told when it fires. One is a definition, the other is a diagnosis. Do not make
+  them the same sentence.
 * A rule carrying an `expr:` **must** declare a severity and a message. A rule claiming to be finished is held to being
   able to report, and one that cannot is a schema error rather than a check that never fires.
 * A rule without an `expr:` keeps `id` + `description`, declares no severity, and is rendered as an intention. Where a
@@ -317,7 +317,7 @@ primary := STRING | INT | call | "(" expr ")"
 call    := IDENT "(" ( expr ("," expr)* )? ")"
 ```
 
-* **Types:** string, int, bool. No boolean literals — every condition starts from something the document says.
+* **Types:** string, int, bool. No boolean literals: every condition starts from something the document says.
 * **Strings** are single-quoted, and a doubled quote is one quote, as in YAML and SQL. There are no backslash escapes.
   The strings that most need a quote in them are regular expressions, and a second escaping layer over those is how they
   stop being readable.
@@ -334,7 +334,7 @@ call    := IDENT "(" ( expr ("," expr)* )? ")"
 `field(...)` returns string-or-null. **A comparison where either side is absent is false**, and `!=` is the negation of
 `==`, so it is true. One rule for every operator.
 
-The consequence is an idiom. `field('detected-on') >= field('occurred-on')` fires on a postmortem missing a date — where
+The consequence is an idiom. `field('detected-on') >= field('occurred-on')` fires on a postmortem missing a date, where
 `required-field` has already said so, in better words. A rule about a field that may be absent guards it:
 
 ```yaml
@@ -353,28 +353,28 @@ arithmetic on text, and a whole expression that is not a yes/no question.
 This matters more than it looks. Without it, `words() == 'three'` compiles and then evaluates false for the life of the
 schema. That is a check which appears wired up and never fires, the exact failure this layer exists to end.
 
-### Fact functions — the only callable surface
+### Fact functions, the only callable surface
 
 Everything an expression can see. Each reads what the parse pass already produced, so the evaluator never re-parses
 markdown.
 
-| Function                         | Returns | Reads                                                                                                                   |
-|----------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------|
-| `field('name')`                  | string? | a frontmatter scalar                                                                                                    |
-| `present('name')`                | bool    | whether that field carries anything, scalar or list — false for a bare key and an empty list as for a missing one       |
-| `field_matches('name', 're')`    | bool    | that scalar against a pattern — false where absent; the one pattern fact that sees frontmatter                          |
-| `section('Title')`               | bool    | whether an H2 of that name exists (case-insensitive)                                                                    |
-| `section_count('Title')`         | int     | how many times it appears — `section()` asks whether, this asks how many                                                |
-| `first_section()`                | string  | the first H2, or empty where there is none                                                                              |
-| `links()`                        | int     | how many links the body carries                                                                                         |
-| `words()`                        | int     | every heading and paragraph the document **renders** — frontmatter and fenced code carry no inline content and fall out |
-| `matches('re')`                  | bool    | the body **as written** — code fences, link targets and markdown syntax included; frontmatter is not                    |
-| `section_matches('Title', 're')` | bool    | the same, bounded to one section; false where the document holds no such section                                        |
+| Function                         | Returns | Reads                                                                                                                  |
+|----------------------------------|---------|------------------------------------------------------------------------------------------------------------------------|
+| `field('name')`                  | string? | a frontmatter scalar                                                                                                   |
+| `present('name')`                | bool    | whether that field carries anything, scalar or list. False for a bare key and an empty list as for a missing one       |
+| `field_matches('name', 're')`    | bool    | that scalar against a pattern. False where absent, and the one pattern fact that sees frontmatter                      |
+| `section('Title')`               | bool    | whether an H2 of that name exists (case-insensitive)                                                                   |
+| `section_count('Title')`         | int     | how many times it appears. `section()` asks whether, this asks how many                                                |
+| `first_section()`                | string  | the first H2, or empty where there is none                                                                             |
+| `links()`                        | int     | how many links the body carries                                                                                        |
+| `words()`                        | int     | every heading and paragraph the document **renders**. Frontmatter and fenced code carry no inline content and fall out |
+| `matches('re')`                  | bool    | the body **as written**, code fences, link targets and markdown syntax included. Frontmatter is not read               |
+| `section_matches('Title', 're')` | bool    | the same, bounded to one section, and false where the document holds no such section                                   |
 
 **`words()` and `matches()` deliberately see different documents.** One walks the rendered text, the other the source.
 That is what lets `matches` find a credential pasted into a fenced block, the case those rules exist for. It also finds
 `**MUST**`, an obligation the rendered text would have flattened into an ordinary word. Do not simplify one onto the
-other; a unit test pins the difference.
+other. A unit test pins the difference.
 
 Adding a fact is adding one method to `Facts`, one row to `RuleExpr.Functions`, which is what the type checker reads,
 and one row to the table above. That table is held against the registry, so the three cannot come apart quietly. The
@@ -405,7 +405,7 @@ validated, the schema is held against what the tool can act on, and each finding
 | `min-items:` or `min-records:` on any field that is not a `list`                         | `schema-dispatch`    |
 | An `index.order:` that is neither `ascending` nor `descending`                           | `schema-dispatch`    |
 | A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows           | `schema-shape`       |
-| A tier declaring no `label:` or no `behaviour:` — both head its section in the taxonomy  | `schema-shape`       |
+| A tier declaring no `label:` or no `behaviour:` (both head its section in the taxonomy)  | `schema-shape`       |
 | An `id.style` with no code behind the value                                              | `schema-dispatch`    |
 | A type declaring no `folder:`                                                            | `schema-shape`       |
 | A `mirrors-section:` at a section the type's `sections:` block does not declare          | `schema-shape`       |
@@ -415,7 +415,7 @@ validated, the schema is held against what the tool can act on, and each finding
 | An export entry declaring no fidelity at all                                             | `schema-shape`       |
 | A fidelity no export carries                                                             | `schema-dispatch`    |
 | A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:`   | `schema-shape`       |
-| A `label-plural:`, `summary:` or `goes-here:` past 120 characters — they render as cells | `schema-shape`       |
+| A `label-plural:`, `summary:` or `goes-here:` past 120 characters (they render as cells) | `schema-shape`       |
 | A rule `description:` past 120 characters, for the same reason                           | `schema-shape`       |
 | A `versus:` against the declaring type itself, or one both sides declare                 | `schema-shape`       |
 
@@ -448,8 +448,8 @@ is rendered on the type page as declared-but-not-enforced.
 
 ## Open questions
 
-* **`standards.yaml` `axis` values are unresolved** — four different formulations exist across the corpus. The schema
+* **`standards.yaml` `axis` values are unresolved.** Four different formulations exist across the corpus. The schema
   currently carries the `standards.md` version with a `TODO` note. Settle it before generating.
 * **ID styles** are assigned per type. Numbered where documents accrete in sequence and the number is useful in
-  navigation; slug where the thing has a natural stable name; mnemonic where a small, heavily-cited set benefits from an
-  id that says something. Worth a review pass — the split is a convention, not a derivation.
+  navigation. Slug where the thing has a natural stable name. Mnemonic where a small, heavily-cited set benefits from an
+  id that says something. Worth a review pass: the split is a convention rather than a derivation.

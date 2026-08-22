@@ -77,15 +77,15 @@ nothing runs the rule and the limit is yours to keep.
 
 <!-- BEGIN GENERATED: schema-glossary -->
 
-| Field         | Value            | Notes                                                                                |
-|---------------|------------------|--------------------------------------------------------------------------------------|
-| `id` *†       | string           | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *†     | `descriptive`    | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` *†   | `draft` `active` | `draft` while the terms are still settling.                                          |
-| `owner` *†    | string           | A named person, never a team alias.                                                  |
-| `tags` †      | list             | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `narrows`     | id               | The more general glossary this one narrows, where one sits above it.                 |
-| `review-by` * | date             | Quoted. A glossary is reviewed whole, rather than a term at a time.                  |
+| Field         | Value            | Notes                                                                               |
+|---------------|------------------|-------------------------------------------------------------------------------------|
+| `id` *†       | string           | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `tier` *†     | `descriptive`    | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` *†   | `draft` `active` | `draft` while the terms are still settling.                                         |
+| `owner` *†    | string           | A named person, never a team alias.                                                 |
+| `tags` †      | list             | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| `narrows`     | id               | The more general glossary this one narrows, where one sits above it.                |
+| `review-by` * | date             | Quoted. A glossary is reviewed whole, rather than a term at a time.                 |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).

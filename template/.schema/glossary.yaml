@@ -7,14 +7,14 @@ folder: glossary
 page: glossary.md
 tier: descriptive
 lifecycle: living
-summary: The ubiquitous language — terms whose meaning is specific to us, or which are easily confused.
+summary: The ubiquitous language. Terms whose meaning is specific to us, or which are easily confused.
 goes-here: A term whose meaning isn't obvious, or that we use in a specific way
 detail: >
   One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
   time it appears belongs in the most general glossary that admits it, and everything else links to it.
 
 lineage:
-  prior-art: "Evans, *Domain-Driven Design* — ubiquitous language"
+  prior-art: "Evans, *Domain-Driven Design*: ubiquitous language"
   alignment: >
     A rigorous shared vocabulary maintained against ambiguity, scoped to a bounded context and used identically
     within it
@@ -26,14 +26,14 @@ notes: >
   Folder is singular because a corpus has one glossary, held in several files. One of two exceptions to the
   plural-folder rule, alongside `data/`.
 
-  A glossary covers one bounded context or product surface — the framework itself, or a system that names
+  A glossary covers one bounded context or product surface: the framework itself, or a system that names
   things its own way. Never a topic. A term goes in the most general glossary that admits it, and a narrower
   one redefines it only where the meaning genuinely differs.
 
   A term is an H3 heading, a one-sentence definition, an optional `**Not:** …` line naming what it is most often
   confused with, and optional links to the owning service or an explanation. Those `**Not:**` lines are the most
   useful content in the file. One paragraph per term, because a glossary is read end to end and every paragraph
-  is paid for by every reader. The list is alphabetical and flat — no A–Z sub-headings — so that it scans and
+  is paid for by every reader. The list is alphabetical and flat (no A–Z sub-headings), so that it scans and
   greps cleanly. The tool checks that order, and it checks that the entries are there: `part-none` reports a `Terms`
   section holding no headings, and `part-empty` a heading with nothing beneath it. Nothing reads the words themselves,
   so whoever reviews the file holds an entry to its single sentence and its single paragraph. The rules below that
@@ -64,7 +64,7 @@ fields:
     ref: glossary
     description: The more general glossary this one narrows, where one sits above it.
     notes: >
-      Absent on a glossary nothing sits above — the corpus-wide one, and the framework's own. It records the
+      Absent on a glossary nothing sits above: the corpus-wide one, and the framework's own. It records the
       ordering the resolution rule reads, so "the most general glossary that admits this term" becomes a
       question a reader answers from the index rather than from knowing the estate. A glossary every corpus
       shares leaves it empty even where that corpus has a more general one, because a shared file cannot
@@ -145,7 +145,7 @@ rules:
     # glossary in full" names no single file: the digest takes them in some order and cuts off when the
     # budget is spent, which three glossaries are enough to do.
     #
-    # That order is the export's — roots by id, each root's chain beneath it — and it carries generality
+    # That order is the export's (roots by id, each root's chain beneath it), and it carries generality
     # only inside a chain. Across unrelated roots it is stable and arbitrary, so which of two roots loses
     # its tail to the budget is arbitrary too. Whoever builds the digest has to answer that, and naming
     # an order here is not the same as having answered it.

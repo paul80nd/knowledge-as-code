@@ -4,7 +4,7 @@
 # the checks that run against every document, whatever folder it sits in, and the ones that read the
 # schema or the corpus rather than a record.
 #
-# `description` says what the check proves correct, in the words a reader meets — `kac checks` prints
+# `description` says what the check proves correct, in the words a reader meets. `kac checks` prints
 # it. It is held to the same 120 characters a rule's description is, and for the same reason: it lands
 # in a table cell whose column is padded to its widest row.
 #
@@ -12,7 +12,7 @@
 # them. Why a check exists, what it deliberately does not cover, when it is skipped. What the code does
 # to answer the question stays beside the code.
 #
-# `severity` is what the check reports at; `warning` does not fail the build. `on-type-page: false`
+# `severity` is what the check reports at, and `warning` does not fail the build. `on-type-page: false`
 # withholds it from the table generated onto a type page, for a check whose subject is the schema, a
 # template or the page itself rather than a record somebody wrote.
 #
@@ -61,7 +61,7 @@ checks:
       It runs the other way too, for the one part of the code a registry can name: a check id a rule
       class reports under that this file does not declare. A check declared here and reported by
       nothing cannot be found at load, since every other check reports through a literal written where
-      the check is — the coverage gate answers that one, by failing on a check no fixture can reach.
+      the check is. The coverage gate answers that one, by failing on a check no fixture can reach.
 
       Not advertised on a type page, for the reason `schema-unknown-key` is not.
 
@@ -72,7 +72,7 @@ checks:
     notes: >
       Where `schema-dispatch` asks whether code acts on a value, this asks whether a second declaration
       in the same file agrees with it. A type declaring no `folder:` has nowhere for its records to
-      live; a `mirrors-section:` names a section the `sections:` block must also declare; a
+      live. A `mirrors-section:` names a section the `sections:` block must also declare. A
       `description:` past 120 characters widens every row of the table it lands in.
 
       Not advertised on a type page, for the reason `schema-unknown-key` is not.
@@ -120,7 +120,7 @@ checks:
 
   bare-key:
     severity: error
-    description: An absent value is a bare key — never `null`, `~`, `""`, `''` or an em dash.
+    description: An absent value is a bare key, never `null`, `~`, `""`, `''` or an em dash.
     notes: >
       One spelling of absence, so a search for a field nobody has filled in finds all of them. Each of
       the alternatives reads as a value to something.
@@ -150,7 +150,7 @@ checks:
     on-type-page: false
     description: A list field is written as a YAML sequence.
     notes: >
-      Not advertised on a type page — the field descriptions above the table already say which fields
+      Not advertised on a type page: the field descriptions above the table already say which fields
       are lists.
 
   min-items:
@@ -158,7 +158,7 @@ checks:
     description: A list field carries at least the `min-items:` its schema declares.
     notes: >
       Reported against the field rather than an entry, because no entry is at fault. For the field whose
-      value is its breadth — a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill.
+      value is its breadth: a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill.
 
   min-records:
     severity: warning
@@ -166,12 +166,12 @@ checks:
     notes: >
       The opposite count to `min-items`: how many records carry each value, rather than how many values
       one record carries. It is what a field says when its values divide the type into groups worth
-      browsing — a value carried by one record divides nothing, and belongs in a field free to be unique.
+      browsing. A value carried by one record divides nothing, and belongs in a field free to be unique.
       Counted per type, case-insensitively, once per record however often one repeats a value.
 
   field-pattern:
     severity: error
-    description: A value matches the `pattern:` its field declares — per entry for a list, per value for a scalar.
+    description: A value matches the `pattern:` its field declares, once per list entry and once per scalar value.
 
   list-order:
     severity: warning
@@ -205,7 +205,7 @@ checks:
 
   slug-length:
     severity: error
-    description: The slug — the filename minus any `NNNN-` or mnemonic prefix — is within `slug-max`.
+    description: The slug (the filename minus any `NNNN-` or mnemonic prefix) is within `slug-max`.
     notes: >
       A filename is a handle and the H1 carries the title. A slug that will not go under the limit is
       usually a document doing two things, so narrowing the scope beats abbreviating harder.
@@ -216,7 +216,7 @@ checks:
 
   identity:
     severity: error
-    description: "An identity line of two code spans follows the H1 — `` `Type: id` `STATUS` ``."
+    description: "An identity line of two code spans follows the H1: `` `Type: id` `STATUS` ``."
     notes: >
       A reader arrives at a record from a citation, so the top of the page answers what kind of document
       this is, which one, and whether it is in force. Frontmatter answers all three and renders as a
@@ -257,7 +257,7 @@ checks:
     notes: >
       Easy to do and easy to miss: the file has an id, a title and every section, so every other check
       passes and it reads as complete until someone follows a link to `{{a}}.md`. Reported once, naming
-      the first — an unfinished copy holds a dozen.
+      the first. An unfinished copy holds a dozen.
 
   # ── the parts of a record ────────────────────────────────────────────────────
 
@@ -320,7 +320,7 @@ checks:
     description: Each clause opens with a declared modal, bold where it binds and plain where it does not.
     notes: >
       Bold carries the binding level visually, and a reader skimming a long table reads the weight
-      before the words. A binding modal written plain reads as advice; an advisory one written bold
+      before the words. A binding modal written plain reads as advice. An advisory one written bold
       reads as an obligation.
 
   clause-order:
@@ -351,7 +351,7 @@ checks:
     notes: >
       The anchor is the heading lower-cased, spaces hyphenated and punctuation dropped, which is the one
       form every renderer agrees on. Azure DevOps percent-encodes what GitHub discards, so a heading
-      carrying `/`, `:` or `.` has two anchors — it fails here rather than only in the published wiki.
+      carrying `/`, `:` or `.` has two anchors. It fails here rather than only in the published wiki.
 
   undefined-label:
     severity: error
@@ -362,12 +362,12 @@ checks:
     description: An id-shaped shortcut label is written as the canonical id.
     notes: >
       Prefix lower-case, mnemonic upper-case, slug lower-case. Reference and definition match
-      case-insensitively, so a mis-cased label resolves and nothing else would catch it — while the
-      label is its own display text, and shows the reader an id that does not exist.
+      case-insensitively, so a mis-cased label resolves and nothing else would catch it. The label is
+      its own display text, so it shows the reader an id that does not exist.
 
   part-ref:
     severity: error
-    description: A part reference resolves — the document exists and carries that part.
+    description: A part reference names a document that exists and carries that part.
     notes: >
       Written `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`, and checked wherever it appears,
       since any type may cite a part. Three ways it fails, and each is reported in the words that fit:
@@ -382,7 +382,7 @@ checks:
     description: An id in a field declaring a `ref:` names a document that exists, of a type the `ref:` names.
     notes: >
       Both halves are asked, of a scalar and a list alike, and whether or not the field also declares a
-      `reciprocal:` — a one-directional edge has no counterpart obliged to keep it in step, which makes
+      `reciprocal:`. A one-directional edge has no counterpart obliged to keep it in step, which makes
       it the edge with least behind it. The wrong type is the quieter fault: it lands on a real page, so
       it reads as intentional and whatever walks the edge afterwards takes it at its word. A literal the
       field admits, such as `applies-to: [all]`, is not an id and is skipped.

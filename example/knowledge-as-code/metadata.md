@@ -94,13 +94,13 @@ Carried by every document in the taxonomy.
 
 <!-- BEGIN GENERATED: schema-universal -->
 
-| Field      | Value                                                       | Notes                                                                                |
-|------------|-------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| `id` *     | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` * | enum                                                        | Values vary by type.                                                                 |
-| `owner` *  | string                                                      | A named person, never a team alias.                                                  |
-| `tags`     | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| Field      | Value                                                       | Notes                                                                               |
+|------------|-------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `id` *     | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` * | enum                                                        | Values vary by type.                                                                |
+| `owner` *  | string                                                      | A named person, never a team alias.                                                 |
+| `tags`     | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 
 \* Field is required
 

@@ -46,7 +46,7 @@ fields:
     ref: services
     description: A single service. Shared ownership means nobody is answerable.
     notes: >
-      A single service. Shared ownership means nobody is answerable — resolve it before writing the document.
+      A single service. Shared ownership means nobody is answerable. Resolve it before writing the document.
 
   classification:
     required: true
@@ -58,10 +58,10 @@ fields:
     required: false
     required-when: 'classification in [personal, special-category]'
     type: string
-    description: The actual retention, not the policy's. Where they differ, record both — the gap is the point.
+    description: The actual retention, not the policy's. Where they differ, record both. The gap is the point.
     notes: >
-      "Indefinitely" is an answer, and a revealing one. Record the actual retention; where it differs from
-      what the policy commits to, record both — that gap is the useful part.
+      "Indefinitely" is an answer, and a revealing one. Record the actual retention. Where it differs from
+      what the policy commits to, record both. That gap is the useful part.
 
   flows-to:
     required: false

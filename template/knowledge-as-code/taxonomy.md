@@ -59,8 +59,8 @@ Superseded rather than rewritten, so what was thought at the time survives being
 behind it. The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded
 by a new ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it, not here.
 
-**[Postmortems](../postmortems.md).** What actually happened during an incident — timeline, impact, root cause,
-contributing factors, actions. Blameless, and immutable once published. The honest counterpart to the decision log: an
+**[Postmortems](../postmortems.md).** What actually happened during an incident (timeline, impact, root cause,
+contributing factors, actions). Blameless, and immutable once published. The honest counterpart to the decision log: an
 ADR records what was intended, a postmortem what the estate did about it.
 
 ### Normative: living, owned, reviewed
@@ -72,14 +72,14 @@ honest state and the number worth watching.
 **[FAQs](../faqs.md).** A problem with a confirmed fix, promoted from a discovery once a human has verified it. It
 carries provenance back to the observation it came from, so the reader can see how far the fix has been taken on trust.
 
-**[NFRs](../nfrs.md).** A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.
+**[NFRs](../nfrs.md).** A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
 Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
 
 **[Policies](../policies.md).** A high-level engineering commitment: the what and the why, largely stack-agnostic and
 changing rarely. Alignment to an external framework is stated clause by clause, as alignment rather than certification.
 
-**[Standards](../standards.md).** The rulebook — imperative, RFC 2119, with concrete examples and a conformance
-checklist. Imperative throughout — **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
+**[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
+checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
 of work are the union of the layers that apply to it.
 
 ### Descriptive: living, must mirror reality
@@ -100,7 +100,7 @@ way it is. Architecture overviews, conceptual walkthroughs, how the pieces fit t
 an overview points at the documents holding the detail instead of repeating them. One that starts accumulating facts of
 its own has become a maintenance liability.
 
-**[Glossaries](../glossary.md).** The ubiquitous language — terms whose meaning is specific to us, or which are easily
+**[Glossaries](../glossary.md).** The ubiquitous language. Terms whose meaning is specific to us, or which are easily
 confused. One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
 time it appears belongs in the most general glossary that admits it, and everything else links to it.
 
@@ -111,16 +111,16 @@ both. It also names who to call when the system is down.
 **[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
 stores, owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
 
-**[Tools](../tools.md).** The approved-software register — what is chosen, rejected or deprecated, and the version
-ranges we stand behind. Rejections are first-class content. Knowing what was turned down, and why, saves the next person
-the evaluation.
+**[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version ranges
+we stand behind. Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
+evaluation.
 
 ### Procedural: living, must be rehearsed
 
-Each records when it was last rehearsed. An unrehearsed process is annoying; an unrehearsed runbook is dangerous.
+Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed runbook is dangerous.
 
-**[Processes](../processes.md).** A planned procedure followed deliberately — releasing, onboarding, provisioning,
-rotating a secret. Written to be followed by someone who has not done it before.
+**[Processes](../processes.md).** A planned procedure followed deliberately (releasing, onboarding, provisioning,
+rotating a secret). Written to be followed by someone who has not done it before.
 
 **[Runbooks](../runbooks.md).** An incident-time procedure read under pressure: terse, imperative, structured as a
 decision tree. Disaster recovery and estate rebuild live here.
@@ -131,7 +131,7 @@ The tier carrying the least authority is the one a corpus most depends on, becau
 happen.
 
 **[Discoveries](../discoveries.md).** Something noticed during work and not yet verified, captured cheaply and expiring
-unless promoted. Deliberately low-ceremony — a title, an observation, why it might matter — and carrying a confidence
+unless promoted. Deliberately low-ceremony (a title, an observation, why it might matter) and carrying a confidence
 level, so that "the build fails silently if X" has somewhere to go the moment it is noticed.
 
 <!-- END GENERATED: types-detail -->
@@ -303,41 +303,41 @@ corpus holds both sides of it.
 <!-- BEGIN GENERATED: types-versus -->
 
 **ADR vs Standard.** The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept
-current. If you are writing "we considered X and rejected it", that is an ADR; if you are writing "you **MUST** do Y",
+current. If you are writing "we considered X and rejected it", that is an ADR. If you are writing "you **MUST** do Y",
 that is a standard. Most substantial changes produce both.
 
 **Capability vs Service.** A capability is what a customer gets. A service is a thing we deploy. One capability
-typically spans several services; one service often contributes to several capabilities.
+typically spans several services. One service often contributes to several capabilities.
 
 **Discovery vs FAQ.** A discovery is unverified and might be wrong or already fixed. An FAQ has been confirmed by a
-human and carries authority. Never write straight to an FAQ from a session — capture the discovery and let promotion do
+human and carries authority. Never write straight to an FAQ from a session. Capture the discovery and let promotion do
 the work.
 
-**Explanation vs ADR.** An explanation describes the shape something has; an ADR records the choice that gave it that
+**Explanation vs ADR.** An explanation describes the shape something has. An ADR records the choice that gave it that
 shape, and is frozen at the moment of choosing.
 
-**Explanation vs Process.** An explanation says how something works; a process says how to perform a task. If a reader
+**Explanation vs Process.** An explanation says how something works. A process says how to perform a task. If a reader
 is meant to follow it step by step, it is a process.
 
-**Explanation vs Service.** An explanation covers how the pieces fit together; a service document describes one
+**Explanation vs Service.** An explanation covers how the pieces fit together. A service document describes one
 deployable component. If it is about a single component, it is a service.
 
-**Explanation vs Standard.** An explanation helps you understand; a standard tells you what to do. If it says you
+**Explanation vs Standard.** An explanation helps you understand. A standard tells you what to do. If it says you
 **MUST** do something, it is a standard however much context surrounds it.
 
-**Policy vs Standard.** A policy is true regardless of stack, framework or year — "we do not store secrets in source
-control". A standard is specific enough to check — "read secrets from the vault via workload identity". If it would
-still be true after replacing the entire technology estate, it is a policy.
+**Policy vs Standard.** A policy is true regardless of stack, framework or year: "we do not store secrets in source
+control". A standard is specific enough to check: "read secrets from the vault via workload identity". If it would still
+be true after replacing the entire technology estate, it is a policy.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
 
-**Standard vs Control.** The standard says what to do; the control says how we know it happened. "Secrets **MUST** come
+**Standard vs Control.** The standard says what to do. The control says how we know it happened. "Secrets **MUST** come
 from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
 control.
 
 **Tool vs ADR.** Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR carries the
-reasoning; the register carries the current state and the version range. Small, uncontroversial adoptions need only the
+reasoning. The register carries the current state and the version range. Small, uncontroversial adoptions need only the
 register.
 
 <!-- END GENERATED: types-versus -->

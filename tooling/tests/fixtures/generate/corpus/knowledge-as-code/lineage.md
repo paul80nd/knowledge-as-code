@@ -6,7 +6,7 @@
 
 | Type              | Nearest prior art                                                                                                               | Alignment                                                                                                    | Divergence                                                                                                                    |
 |-------------------|---------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
-| [ADR](../adrs.md) | [Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011) | Context / Decision / Consequences, and the rule that a reversed decision is superseded rather than rewritten | Nygard scopes decisions to one codebase; ours must affect more than one repository. Mandatory *Alternatives* is ours, not his |
+| [ADR](../adrs.md) | [Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011) | Context / Decision / Consequences, and the rule that a reversed decision is superseded rather than rewritten | Nygard scopes decisions to one codebase. Ours must affect more than one repository. Mandatory *Alternatives* is ours, not his |
 
 <!-- END GENERATED: types-lineage -->
 

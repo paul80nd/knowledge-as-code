@@ -14,8 +14,8 @@ detail: >
 
 versus:
   standards: >
-    A policy is true regardless of stack, framework or year — "we do not store secrets in source control". A
-    standard is specific enough to check — "read secrets from the vault via workload identity". If it would
+    A policy is true regardless of stack, framework or year: "we do not store secrets in source control". A
+    standard is specific enough to check: "read secrets from the vault via workload identity". If it would
     still be true after replacing the entire technology estate, it is a policy.
 
 lineage:
@@ -32,12 +32,12 @@ collision: >
   reader arriving from an information security management system will read our policies as binding and be wrong
   about it.
 
-# A four-character mnemonic, upper-case in the id and lower-case in the filename — pol-VURM in
+# A four-character mnemonic, upper-case in the id and lower-case in the filename: pol-VURM in
 # vurm-vulnerability-remediation.md. Policies are long-lived and cited from standards, controls and
 # processes, so the id is what a reader meets most often and it should say something. Draw the mnemonic
 # from the policy's concept rather than its current wording, because it is immutable once the policy is
 # active: retitle freely, never re-mnemonic. A change substantial enough to invalidate the mnemonic is a
-# new policy and a retirement of the old one, not an edit. Chronological types keep numbers — an ADR's id
+# new policy and a retirement of the old one, not an edit. Chronological types keep numbers: an ADR's id
 # records when the decision was taken, which a mnemonic cannot.
 id:
   prefix: pol
@@ -56,7 +56,7 @@ fields:
     values: [security, delivery, operations, governance]
     description: The broad area the commitment belongs to. Controlled, and deliberately few.
     notes: >
-      Why the policy exists, where `tags` say what topics it touches — the two answer different questions
+      Why the policy exists, where `tags` say what topics it touches. The two answer different questions
       and stay separate. Deliberately a small, closed set: a category earns its place by grouping enough
       policies to be worth navigating, so resist adding a fifth until one is genuinely crowded out.
       Category is metadata rather than folder structure, so a policy is recategorised by editing one line
@@ -66,7 +66,7 @@ fields:
     required: true
     type: enum
     values: [draft, active, retired]
-    description: '`draft` until agreed; `retired` rather than deleted.'
+    description: '`draft` until agreed. `retired` rather than deleted.'
 
   aligns-with:
     required: false
@@ -78,20 +78,20 @@ fields:
       Every Annex A reference the document's clauses carry, collected here so the generated index can be
       read as a coverage table. The clause table is where a mapping is stated and this is a summary of it,
       so a reference here that no clause carries is a claim of coverage the document cannot show. What our
-      standing against a framework is — obliged, self-obligated, inspiration — is stated once in
-      `frameworks.md` and never in a policy.
+      standing against a framework is, whether obliged, self-obligated or inspiration, is stated
+      once in `frameworks.md` and never in a policy.
 
   review-by:
     required: true
     type: date
     description: Quoted. Annual is usually right for a policy.
 
-# `Clauses` is the policy proper — a table of individually addressable obligations, one row each, so a
+# `Clauses` is the policy proper: a table of individually addressable obligations, one row each, so a
 # standard or a control can cite the commitment it answers rather than the whole document. It is the only
 # place an obligation is stated: prose elsewhere in the document describes, qualifies or explains, and a
 # sentence that binds has escaped the table.
 #
-# `Notes` is the home for anything genuinely contextual about this policy — why it carries no framework
+# `Notes` is the home for anything genuinely contextual about this policy: why it carries no framework
 # alignment, how it relates to the taxonomy, what it deliberately leaves to an implementing process.
 sections:
   required: [Purpose, Scope, Clauses]
@@ -101,9 +101,9 @@ sections:
 # The declaration sits here so that a type carries clauses by describing them, and one with no `parts:`
 # block simply offers none.
 #
-# Ids are short and upper-case because they are read inside a citation — `pol-VURM.TIMEBOX` — where a
+# Ids are short and upper-case because they are read inside a citation (`pol-VURM.TIMEBOX`), where a
 # long one buries the policy it belongs to. Seven characters is enough for a word worth guessing at
-# and short enough that compressing to it is rare. Each is written beside its row; why a policy authors
+# and short enough that compressing to it is rare. Each is written beside its row. Why a policy authors
 # an id and a glossary derives one is settled in `/knowledge-as-code/metadata.md`.
 #
 # Binding levels are written bold and non-binding ones plain, and rows are grouped in the order below,
@@ -112,8 +112,8 @@ sections:
 # `Alignment` carries the frameworks a clause maps to, as reference links resolving into
 # `/frameworks.md`. Per clause rather than per document, because a policy aligns with a control through
 # one obligation and not through all of them, and an empty cell is the honest answer where no genuine
-# mapping exists. What our standing against a framework actually is — obliged, self-obligated,
-# inspiration — is stated once in `frameworks.md` and nowhere else.
+# mapping exists. What our standing against a framework actually is, whether obliged,
+# self-obligated or inspiration, is stated once in `frameworks.md` and nowhere else.
 parts:
   source: table
   section: Clauses
@@ -129,12 +129,12 @@ index:
 
 rules:
   - id: posture-belongs-to-frameworks
-    description: '"compliant", "certified" or "registered" near a framework reference — standing belongs in `frameworks.md`.'
+    description: '"compliant", "certified" or "registered" near a framework reference. Standing belongs in `frameworks.md`.'
     severity: warning
     # Proximity rather than the bare word: a policy may reasonably say "compliance" about a process without
     # claiming a standing. It is the claim beside a framework's name that belongs somewhere else.
     expr: >-
       not matches('(?i)(compliant|compliance|certified|registered)[^.]{0,80}(ISO|GDPR|SOC ?2|PCI)|(ISO|GDPR|SOC ?2|PCI)[^.]{0,80}(compliant|compliance|certified|registered)')
     message: >
-      This claims a standing against a framework. A policy maps clauses to controls; where the organisation
+      This claims a standing against a framework. A policy maps clauses to controls. Where the organisation
       stands belongs in `frameworks.md`, the one place it can be kept true.

@@ -7,27 +7,27 @@ folder: standards
 page: standards.md
 tier: normative
 lifecycle: living
-summary: The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.
+summary: The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.
 goes-here: A rule people must follow when building
 detail: >
-  Imperative throughout — **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
+  Imperative throughout: **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
   of work are the union of the layers that apply to it.
 
 versus:
   controls: >
-    The standard says what to do; the control says how we know it happened. "Secrets **MUST** come from the
+    The standard says what to do. The control says how we know it happened. "Secrets **MUST** come from the
     vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
     control.
 
 lineage:
-  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Standard layer; [BCP 14](https://www.rfc-editor.org/rfc/rfc8174) for the grammar"
+  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Standard layer, and [BCP 14](https://www.rfc-editor.org/rfc/rfc8174) for the grammar"
   alignment: >
-    Granular, prescriptive requirements; the RFC 2119 keyword set and the all-capitals rule
+    Granular and prescriptive requirements, the RFC 2119 keyword set, and the all-capitals rule
   divergence: >
     We compose standards by union across the axes the type declares. HCGF has no composition model
 
 collision: >
-  In ordinary engineering conversation a *standard* is something an external body publishes — an ISO, an IEEE,
+  In ordinary engineering conversation a *standard* is something an external body publishes: an ISO, an IEEE,
   an RFC. Here it is an internal rulebook. The collision is unavoidable, since the governance frameworks we take
   the layering from have the same problem, but it is worth saying aloud.
 
@@ -54,10 +54,10 @@ fields:
     required: true
     type: enum
     values: [draft, active, deprecated, superseded]
-    description: Plain values only — enforcement notes belong in `verified-by`.
+    description: Plain values only. Enforcement notes belong in `verified-by`.
     notes: >
-      Plain values only. Enforcement notes belong in `verified-by`; "until ADR-NNNN is accepted" is derivable
-      from `derived-from` plus that ADR's own status.
+      Plain values only. Enforcement notes belong in `verified-by`. A status of "until ADR-NNNN is accepted"
+      is derivable from `derived-from` plus that ADR's own status.
 
   axis:
     required: true
@@ -76,7 +76,7 @@ fields:
     ref: adrs
     description: The ADRs this standard distils. Provenance may come from `implements` instead.
     notes: >
-      The ADRs this standard distils. Provenance is required — see `provenance-required` below — but may be
+      The ADRs this standard distils. Provenance is required (see `provenance-required` below) but may be
       satisfied by `implements` instead where the standard descends from a policy rather than a decision.
 
   implements:
@@ -86,9 +86,9 @@ fields:
     ref: policies
     description: Policy ids this standard puts into practice.
     notes: >
-      One-way, and pointed upward. A standard names the policy it puts into practice; the policy does not
+      One-way, and pointed upward. A standard names the policy it puts into practice. The policy does not
       name its standards. Policies are the layer a downstream corpus inherits and a standard is the layer it
-      writes for itself, so the set of implementers is unknowable from where the policy sits — and a policy
+      writes for itself, so the set of implementers is unknowable from where the policy sits. A policy
       with no implementer named is the normal state, not a gap.
 
   verified-by:
@@ -126,14 +126,14 @@ rules:
     severity: error
     expr: "present('derived-from') or present('implements')"
     message: >
-      A standard cites where its authority comes from — an ADR in `derived-from`, a policy in `implements`,
+      A standard cites where its authority comes from: an ADR in `derived-from`, a policy in `implements`,
       or both. With neither this is guidance, and guidance is an explanation.
   - id: rules-have-controls
     description: >
       Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.
   - id: changelog-begins-at-active
     description: Changelog entries are material changes only, and begin when status becomes `active`.
-    # Material means a rule added, removed or changed in effect. Wording, examples, link fixes and typos are not; git
+    # Material means a rule added, removed or changed in effect. Wording, examples, link fixes and typos are not. Git
     # has those.
   - id: changelog-on-material-change
     description: >
