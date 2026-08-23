@@ -146,6 +146,28 @@ jobs:
           cd "$RUNNER_TEMP"
           "$GITHUB_WORKSPACE/.dist/tools/kac" --version
 
+  # The documentation site, built the way publish-docs.yml builds it. A job of its own because it
+  # needs Python and nothing else here does, and `strict:` in mkdocs.yml is what makes a dead link
+  # or an unreachable page fail rather than warn.
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+
+      - name: Install MkDocs and the theme
+        run: pip install -r docs/requirements.txt
+
+      - name: Build the site
+        run: mkdocs build
+
   # Installs what was assembled and asks it the questions its skill describes. On both platforms
   # because development happens on macOS and the first audience is on Windows.
   #

@@ -5,7 +5,7 @@
 `validate` is the command CI runs over a corpus, and the one an author runs before pushing. It decides which files are
 records, applies the checks the schema declares, and reports each fault against the file that caused it, with a line
 where it has one. Its reader is whoever writes a record: a finding has to name the fault precisely enough to be fixed
-without opening this tool. Where each check comes from, and what it proves, is [`checks.md`](checks.md).
+without opening this tool. Where each check comes from, and what it proves, is [Checks](../checks.md).
 
 ## What it is not
 
@@ -28,7 +28,7 @@ and `.git/` is never walked), then applies the taxonomy exclusions from `knowled
 
 - anything on a path with a `_`-prefixed segment, the reserved prefix for a framework artefact. The exclusion covers
   `**/_index.md` and `**/_template.md` as well as `_plan/` and `_reports/`. A type's `_template.md` is not a record and
-  is discovered as none, but it is checked. `template-fields` is the check, and [`checks.md`](checks.md) says where it
+  is discovered as none, but it is checked. `template-fields` is the check, and [Checks](../checks.md) says where it
   comes from
 - `knowledge-as-code/`, and `.git/` `.idea/` `.claude/`, which are excluded as *records* only. The framework's own
   documents are still read for their links (see below)

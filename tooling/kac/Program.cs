@@ -20,7 +20,7 @@
 //
 // The tool is deliberately free of type-specific rules: everything it enforces is
 // read from the YAML schema, so adding a type is adding a YAML file, not editing C#.
-// See tooling/features/checks.md for what fails versus warns and how each check maps to the schema.
+// See docs/checks.md for what fails versus warns and how each check maps to the schema.
 
 using System.ComponentModel;
 using System.Reflection;
@@ -160,7 +160,7 @@ internal sealed class GenerateCommand : Command<GenerateSettings>
 }
 
 // `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`
-// narrows what is written and never what is read; `tooling/features/export.md` says why the corpus is
+// narrows what is written and never what is read; `docs/cli/export.md` says why the corpus is
 // loaded whole either way.
 internal sealed class ExportSettings : KacSettings
 {

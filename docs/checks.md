@@ -6,7 +6,7 @@ Every check `kac` can emit is read from the schema and dispatched by id; nothing
 checks` prints that catalogue for the corpus it is run in, so "what will CI hold this corpus to" is answered by the
 corpus rather than by a document somebody remembers to maintain. Its readers are whoever is adding a check and whoever
 is deciding whether the check they want already exists. Which files a check runs against is
-[`validate.md`](validate.md).
+[`validate`](cli/validate.md).
 
 ## What it is not
 
@@ -22,10 +22,11 @@ the two have drifted, which makes it the thing that holds the table honest rathe
 
 A check marked **warning** does not fail the build.
 
-**A check is defined once, in the schema.** [`../../example/.schema/_checks.yaml`](../../example/.schema/_checks.yaml)
-declares the checks that run against every document, one entry each: its severity, the group it belongs to, what it
-proves correct, and the reasoning behind it. A type's own rules are declared beside the type, in `.schema/<type>.yaml`.
-Between them they are every check the validator can emit.
+**A check is defined once, in the schema.**
+[`.schema/_checks.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.schema/_checks.yaml) declares
+the checks that run against every document, one entry each: its severity, the group it belongs to, what it proves
+correct, and the reasoning behind it. A type's own rules are declared beside the type, in `.schema/<type>.yaml`. Between
+them they are every check the validator can emit.
 
 **`kac checks` prints what runs**, read from the schema of the corpus it is run in, and exits non-zero where the
 reader-facing table on a type page has drifted from it.
@@ -36,17 +37,19 @@ Before any document is read, the schema is held against what the tool can act on
 loader never reads, a value no code branches on. It goes first in the run, because the schema decides how every document
 below it is read, and a finding there names the schema file and the key rather than a record.
 
-[`../../example/.schema/README.md`](../../example/.schema/README.md) is the account of what that pass reports and why an
-inert declaration is treated as a defect. It is written for whoever authors a type file, which in a corpus that took
-this framework is somebody who cannot ask what a key was meant to do. That is the reason the pass exists at all.
+[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.schema/README.md) is the account
+of what that pass reports and why an inert declaration is treated as a defect. It is written for whoever authors a type
+file, which in a corpus that took this framework is somebody who cannot ask what a key was meant to do. That is the
+reason the pass exists at all.
 
 ### A type's own rules
 
 A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
 by an `expr:`, a one-line condition the schema states and the tool evaluates. Adding one is adding YAML rather than
-editing this tool, and [`../../example/.schema/README.md`](../../example/.schema/README.md) is the reference for what
-one may say. The rest are a class each in `kac.core/Rules/`, with unit tests beside them, for the questions the grammar
-cannot ask.
+editing this tool, and
+[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.schema/README.md) is the
+reference for what one may say. The rest are a class each in `kac.core/Rules/`, with unit tests beside them, for the
+questions the grammar cannot ask.
 
 `dependency-cycle` is the one that asks about the records together rather than about each one. It is reported once per
 loop against the lowest id on it.

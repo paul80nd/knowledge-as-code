@@ -55,10 +55,10 @@ parts, and for a glossary the two differ by an order of magnitude. A reader sizi
 reader asking how many files it was handed wants the records. One number would be read as either.
 
 **What travels is the type's decision**, declared in its `export:` block and described in
-[`../../example/.schema/README.md`](../../example/.schema/README.md). The exporter reads that declaration and nothing
-else. A corpus that adopted no exporting type still writes a manifest, with an empty type list, because "nothing" is a
-valid statement of what a corpus has. Every entry in the block names a **fidelity** beside the piece it selects, saying
-how much of that piece travels, and no entry falls back to one.
+[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.schema/README.md). The exporter
+reads that declaration and nothing else. A corpus that adopted no exporting type still writes a manifest, with an
+empty type list, because "nothing" is a valid statement of what a corpus has. Every entry in the block names a
+**fidelity** beside the piece it selects, saying how much of that piece travels, and no entry falls back to one.
 
 **`--type` narrows what is written and never what is read.** The corpus is loaded whole whatever the flag says, so ids
 resolve against every record rather than against the handful a narrowed run happened to want: a question about the set,

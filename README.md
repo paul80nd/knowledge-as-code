@@ -29,6 +29,10 @@ it receives again whenever it takes a newer framework.
 on every commit. It holds its own copy of every file the template shares, plus a set of illustrative records about a
 fictional library consortium.
 
+**[`docs/`](docs/)** is the documentation site for `kac`, published to
+[GitHub Pages](https://paul80nd.github.io/knowledge-as-code/) on every push to `main`. It documents the tool rather than
+any corpus, and it is the one place a command's behaviour is written down.
+
 No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is run
 from. The one in this repository proves the tool over real content rather than over fixtures alone.
 
@@ -97,8 +101,9 @@ A push to `main` publishes the tool whenever it carries a `<Version>`
 opens the release for it. [`tooling/README.md`](tooling/README.md#building) says how that version moves, and
 [`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) says what each version carried.
 
-Every command, one document apiece, is in [`tooling/features/`](tooling/features/).
-[`tooling/README.md`](tooling/README.md) maps them and carries the test commands.
+Every command has a page at **<https://paul80nd.github.io/knowledge-as-code/>**, beside a getting-started guide and the
+reference for `.corpus.yaml`. [`tooling/README.md`](tooling/README.md) is the other half: how to build the tool, and the
+test commands.
 
 ## Starting a corpus of your own
 

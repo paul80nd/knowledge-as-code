@@ -28,12 +28,12 @@ public sealed record ExportRun(string GeneratedAt, DateOnly Today, string? Commi
 // The corpus projected as data, for a consumer that reads it rather than cloning it.
 //
 // This reads each type's `export:` block and holds no list of its own, so a new type needs no line here.
-// `tooling/features/export.md` says what it all comes to, and why.
+// `docs/cli/export.md` says what it all comes to, and why.
 public static class Exporter
 {
     // The shape of the output, versioned independently of anything the corpus says about itself.
     // `Bundler` refuses an export built to another shape, so moving this number means rebuilding every
-    // export on disk. `tooling/features/export.md` says what moves it.
+    // export on disk. `docs/cli/export.md` says what moves it.
     public const int FormatVersion = 2;
 
     public const string ManifestFile = "manifest.json";
@@ -98,7 +98,7 @@ public static class Exporter
 
     // Replace the export whole: delete what is there, then write. Overwriting in place would leave a
     // deleted record readable in the output indefinitely, and nothing downstream would catch it.
-    // `tooling/features/export.md` says why an untracked artefact makes that the only safe order.
+    // `docs/cli/export.md` says why an untracked artefact makes that the only safe order.
     //
     // What is deleted is `Dist.Export` and never `.dist/` itself, because the bundle sits beside it
     // under the same root and an export is not entitled to take it.
@@ -120,7 +120,7 @@ public static class Exporter
     }
 
     // Whether a record travels, which by default every record does. A corpus may exclude what has not
-    // settled: a draft, or a record whose review date has passed. `tooling/features/export.md` says why
+    // settled: a draft, or a record whose review date has passed. `docs/cli/export.md` says why
     // carrying both, with their state attached, is the default.
     private static bool Travels(Doc doc, CorpusDescriptor descriptor, DateOnly today)
     {
@@ -144,7 +144,7 @@ public static class Exporter
     // nothing here to sit beneath. A type whose records narrow nothing at all sorts by id throughout,
     // which is the same rule with every record a root.
     //
-    // What a reader may take from that order, and what they may not, is in `tooling/features/export.md`.
+    // What a reader may take from that order, and what they may not, is in `docs/cli/export.md`.
     // The short of it: generality holds within a chain and says nothing across roots.
     //
     // Two records sharing an id would share an output filename, and the `TryAdd` below keeps the first.
@@ -215,11 +215,11 @@ public static class Exporter
 
     // Every absent value an export writes, spelled one way. A corpus writing `narrows:` with nothing
     // after it has not narrowed anything, so blank and missing arrive as the same `null`. What that buys
-    // a consumer is in `tooling/features/export.md`.
+    // a consumer is in `docs/cli/export.md`.
     private static string? Absent(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
     // The source's wrap column, taken back out. Blank lines are the author's and stay. A block a joiner
-    // would mangle is left as written. `tooling/features/export.md` says why the export does this at
+    // would mangle is left as written. `docs/cli/export.md` says why the export does this at
     // all, and why the doubtful cases go the way they do.
     private static string Unwrap(string text)
     {
@@ -261,7 +261,7 @@ public static class Exporter
 
     // The flat file of every addressable part of a type, one part to a line. JSONL rather than pretty
     // JSON, and each line repeats what a reader would otherwise have to look up.
-    // `tooling/features/export.md` says what that costs and what it buys.
+    // `docs/cli/export.md` says what that costs and what it buys.
     private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
         var spec = t.Parts!;
@@ -303,7 +303,7 @@ public static class Exporter
     // Every id here is read, and none is inferred. These references are the `redefinitions-are-reciprocal`
     // rule showing through, and that rule is about a term and its counterpart. The link has to name the
     // counterpart, and the anchor is where it names it. A link naming a record and no term inside it
-    // resolves to nothing, and `Unread` below reports it. `tooling/features/export.md` sets out why the
+    // resolves to nothing, and `Unread` below reports it. `docs/cli/export.md` sets out why the
     // guess that suggests itself is refused.
     private static IReadOnlyList<string>? SeeAlso(Doc doc, PartRow part, Dictionary<string, Doc> byPath, Tree tree)
     {

@@ -3,9 +3,10 @@
 ## Intent
 
 A corpus takes the framework as a copy (the validator, the schema, and the documents describing how the system works),
-and a copy drifts. `mechanism` is what makes a copy answerable to a declaration. [`manifest.yaml`](../manifest.yaml)
-declares each file's layer: `synced`, `verification`, `forked`, `generated`, `local` or `ignored`. `mechanism` enforces
-that declaration from both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the
+and a copy drifts. `mechanism` is what makes a copy answerable to a declaration.
+[`manifest.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/manifest.yaml) declares each file's
+layer: `synced`, `verification`, `forked`, `generated`, `local` or `ignored`. `mechanism` enforces that declaration
+from both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the
 shared layers from one. Its reader is whoever maintains a corpus downstream of this one.
 
 ## What it is not

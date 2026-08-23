@@ -1,16 +1,18 @@
 # Working in this repository
 
-This repository is not a corpus. It holds `kac`, the template a corpus is copied from, and one worked corpus that took
-that copy. The tool finds a corpus by walking up for a `.schema/`, so it reads `example/` and never this root.
+This repository is not a corpus. It holds `kac`, the documentation site published beside it, the template a corpus is
+copied from, and one worked corpus that took that copy. The tool finds a corpus by walking up for a `.schema/`, so it
+reads `example/` and never this root.
 
 **Load `i-want-to` before you plan.** It routes the work to the playbook carrying its steps, and names the writing
 skill for the surface you are on.
 
-| Working on                                  | Read                                                     |
-|---------------------------------------------|----------------------------------------------------------|
-| a record, or anything else `example/` holds | [`example/CLAUDE.md`](example/CLAUDE.md)                 |
-| the schema, or a rule it declares           | [`example/.schema/CLAUDE.md`](example/.schema/CLAUDE.md) |
-| `kac`, its checks, or the tests behind them | [`tooling/CLAUDE.md`](tooling/CLAUDE.md)                 |
+| Working on                                  | Read                                                                            |
+|---------------------------------------------|---------------------------------------------------------------------------------|
+| a record, or anything else `example/` holds | [`example/CLAUDE.md`](example/CLAUDE.md)                                        |
+| the schema, or a rule it declares           | [`example/.schema/CLAUDE.md`](example/.schema/CLAUDE.md)                        |
+| `kac`, its checks, or the tests behind them | [`tooling/CLAUDE.md`](tooling/CLAUDE.md)                                        |
+| a page of the documentation site            | [`tooling/README.md`](tooling/README.md#the-documentation-site) and `mkdocs.yml` |
 
 [`template/CLAUDE.md`](template/CLAUDE.md) is the fourth, and it is addressed to somebody working in a corpus that
 copied the template. It describes that corpus rather than this repository, so read it as content you may need to
@@ -36,7 +38,7 @@ that publish opens carries the matching section from [`tooling/kac/CHANGELOG.md`
 written after the merge reaches nobody, and `ChangelogTests` fails a version that has none.
 
 **Ask which pages your change makes wrong.** Nothing in CI reads prose for meaning, so this is yours to do. A change to
-a command reaches [`tooling/features/`](tooling/features/) and often [`tooling/README.md`](tooling/README.md); a change
+a command reaches [`docs/`](docs/) and often [`tooling/README.md`](tooling/README.md); a change
 to what the tool is for reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md); a
 change to the schema reaches the `.schema/README.md` in both trees.
 

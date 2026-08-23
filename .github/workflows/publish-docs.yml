@@ -1,0 +1,66 @@
+# Publishes the documentation site to GitHub Pages on every push to main. mkdocs.yml at the repository root
+# says what the site is; docs/ holds every page in it.
+# The site source is set to GitHub Actions in the repository's Pages settings, so nothing here pushes a branch.
+
+name: publish-docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/**
+      - mkdocs.yml
+      - .github/workflows/publish-docs.yml
+
+permissions:
+  contents: read
+
+# One live site, so a superseded run is cancelled rather than queued behind the newer one.
+concurrency:
+  group: publish-docs
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Short enough that a hang fails rather than holding the concurrency group for six hours.
+    timeout-minutes: 10
+    # `pages: write` and `id-token: write` are what the deploy step exchanges for its short-lived token.
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      # Pinned to a commit because a tag is mutable. Dependabot moves the pins.
+      - name: Check out the commit that merged
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+
+      - name: Install MkDocs and the theme
+        run: pip install -r docs/requirements.txt
+
+      # `strict:` in mkdocs.yml turns a dead link or an unreachable page into a failure here.
+      - name: Build the site
+        run: mkdocs build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: Upload the built site
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+
+      - name: Deploy to Pages
+        id: deploy
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0

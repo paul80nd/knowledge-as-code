@@ -31,7 +31,7 @@ public sealed record TrimmedComponent(string Path, IReadOnlyList<string> Require
 // goes a second time.
 //
 // `Problems` is what stops the run. A plan carrying one is not written, for the reason
-// `tooling/features/bundle.md` gives.
+// `docs/cli/bundle.md` gives.
 public sealed record BundlePlan(
     IReadOnlyList<BundleFile> Files,
     string PluginName,
@@ -98,7 +98,7 @@ public static class Bundler
                 + "It is the directory the plugin's skills address the export through.");
 
         // The export lands under `corpusRoot` inside the plugin, so a plugin tree already holding that
-        // directory is refused rather than merged. `tooling/features/bundle.md` says why.
+        // directory is refused rather than merged. `docs/cli/bundle.md` says why.
         if (source.PluginTree.FirstOrDefault(f => Owns(corpusRoot, f.Path)) is { } clash)
             return Stop(problems,
                 $"{ManifestFile} names metadata.corpusRoot '{corpusRoot}', and the plugin tree already holds "
@@ -110,7 +110,7 @@ public static class Bundler
                 $"the export holds no readable {Exporter.ManifestFile}. Run the export first: kac export");
 
         // The shape the export declares, held against the shape this build knows how to read. A
-        // mismatch is refused, and both numbers are named. `tooling/features/bundle.md` says what a
+        // mismatch is refused, and both numbers are named. `docs/cli/bundle.md` says what a
         // silent one would produce, and how two builds of this tool come to disagree.
         var declaredFormat = JsonRead.Int(exportManifest["formatVersion"]);
         if (declaredFormat != Exporter.FormatVersion)
@@ -147,7 +147,7 @@ public static class Bundler
                   + $"{RecordFile} names each one and the type it needed.");
 
         // The plugin's version is the corpus content version, taken from the export.
-        // `tooling/features/bundle.md` says why, and why the format version stays put.
+        // `docs/cli/bundle.md` says why, and why the format version stays put.
         var version = JsonRead.Str(exportManifest["contentVersion"]);
         if (version is null)
             warnings.Add("the export states no contentVersion, so the plugin keeps the version its own "
@@ -171,7 +171,7 @@ public static class Bundler
 
         // The breadcrumb, rendered here because everything it states is settled here. Asking the
         // surviving files rather than the components is what ties it to the hook directory.
-        // `tooling/features/bundle.md` says what that settles.
+        // `docs/cli/bundle.md` says what that settles.
         var breadcrumbDir = $"{Dist.PluginDir}/{Breadcrumb.RenderedFile[..Breadcrumb.RenderedFile.LastIndexOf('/')]}";
         if (files.Any(f => Owns(breadcrumbDir, f.Path)))
             files.Add(Utf8($"{Dist.PluginDir}/{Breadcrumb.RenderedFile}",

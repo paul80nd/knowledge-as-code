@@ -77,9 +77,9 @@ you keep your prose, and the generator keeps the tables current.
 | Where a name collides            | `.schema/` + the types adopted | `lineage.md` `types-collisions` block       |
 | What this corpus holds           | `.schema/` + the types adopted | Root `README.md` `types-index` block        |
 
-The table above says what each block is and where it lands. The repository the tool is built from carries the same list
-from the generator's side, in `tooling/features/generate.md`, giving the rule that governs each block in place of its
-address.
+The table above says what each block is and where it lands. The tool's own documentation carries the same list from the
+generator's side, at <https://paul80nd.github.io/knowledge-as-code/cli/generate/>, giving the rule that governs each
+block in place of its address.
 
 Most of those blocks describe the corpus. Everything on the taxonomy page covers the types *this* corpus holds: the
 decision table, the types at length, the disambiguations, and the graph with the edges beneath it. So do the lineage
@@ -108,7 +108,7 @@ container shows on GitHub as literal text.
 
 Built on every PR. `kac export` writes the corpus into `.dist/export/` as data a consumer reads instead of cloning the
 repository. The export holds a manifest saying what it is, one file per record, and a flat file cheap to grep.
-`tooling/features/export.md` is the reference for its contents.
+<https://paul80nd.github.io/knowledge-as-code/cli/export/> is the reference for its contents.
 
 A change that breaks the export therefore fails its own build. Nothing is kept. `.dist/` is gitignored, the build
 rewrites it whole each run, and the pipeline discards it with the job.
@@ -134,7 +134,8 @@ matches on the prefix itself. See [taxonomy](taxonomy.md#layout).
 Excluding a file as a record does not excuse it from every check. The framework's own documents carry no frontmatter, so
 `kac validate` holds them to no schema. They still link to things, so it resolves their links and fragments like any
 page's. A file holding a generated block must still carry the markers the generator writes between, however it is
-otherwise excluded. `tooling/features/validate.md` lists each of those extra passes and what it asks.
+otherwise excluded. <https://paul80nd.github.io/knowledge-as-code/cli/validate/> lists each of those extra passes and
+what it asks.
 
 A template is excluded as a record and checked as a template. It holds no id, claims no place in an index, and answers
 to nothing that needs a filename. Discovering it as a record would report a run of faults that are the file doing its
