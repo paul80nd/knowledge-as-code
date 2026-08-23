@@ -10,7 +10,7 @@
      [changing-the-schema](changing-the-schema.md) and stop here.
    * **A new fact plus an `expr:`** is both. Adding a fact is one method on `Facts`, one row in `RuleExpr.Functions`
      and one row in the fact table in `.schema/README.md`, which `DocumentationTests` holds equal. The grammar never
-     changes. Take steps 6 to 9 below for the C# half, then run `changing-the-schema` for the rule.
+     changes. Take steps 5 to 9 below for the C# half, fixture included, then run `changing-the-schema` for the rule.
    * A question no expression can ask is a rule class. Carry on down this page.
    Check the fact table before assuming a rung: `words()` is whole-document, and there is no fact measuring a section.
 3. **Write the class in `kac.core/Rules/`**, where the third rung was the answer. Its unit tests sit beside it and

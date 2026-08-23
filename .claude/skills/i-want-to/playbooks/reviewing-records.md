@@ -40,9 +40,10 @@ twenty-two documents that `clause-modal` requires it in.
 
 1. **Establish scope, and count what is in it.** One record, a folder, or a named set. Asked to review "the corpus",
    propose an order and confirm it. Do not silently review a hundred documents.
-   **A type folder here usually holds nothing.** Three of the seventeen hold any record at all, so a folder named in a
-   request may have only its `_index.md` and `_template.md`, both of which the never-list puts out of reach. Say so and
-   agree what was meant before going further.
+   **A type folder here usually holds nothing.** Most hold no record at all, so a folder named in a request may have
+   only its `_index.md` and `_template.md`, both of which the never-list puts out of reach. Say so, and say what the
+   candidates are: where the request meant the type page or the template, it belongs to
+   [sweeping-prose](sweeping-prose.md) rather than here.
    **Test the claim the request makes.** "These are verbose" and "there are semicolons everywhere" are counts, and a
    count that comes back small or empty is the answer rather than the start of one.
 2. **Run `kac validate` and expect it clean.** CI gates the branch, so a clean corpus is the normal state. It is your

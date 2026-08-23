@@ -15,10 +15,10 @@ allowed.
 **Where no playbook fits, say so and work without one.** Forcing a task into the nearest playbook is worse than carrying
 none.
 
-**Count first, from the files, whatever the playbook says.** A request carries a claim about the corpus and the claim
-is often wrong. "The runbooks are verbose" named a folder holding no records. "Semicolons all over the policies" was
-five, every one of them the mark the floor keeps. Establish that the thing exists and how much of it there is before
-planning what to do about it, and report the count where it answers the request on its own.
+**Count first, from the files, whatever the playbook says.** A request carries a claim about the corpus, and the claim
+is often wrong. A folder it names may hold no records at all. A mark said to be everywhere may be a handful, each one
+the form a rule deliberately keeps. Establish that the thing exists and how much of it there is before planning what to
+do about it, and report the count where it answers the request on its own.
 
 ## The playbooks
 

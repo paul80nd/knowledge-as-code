@@ -20,10 +20,12 @@
 5. **Write the `description:` and `notes:` to `technical-writing` and then `writing-a-record`.** The generator prints
    them onto the type page, so they are read by an author rather than by you.
 6. **Run `kac generate` in both corpora**, then `kac validate` in both.
-7. **Run the golden suite.** The fixtures validate against the real `.schema/`, so this edit can move expectations in
-   `tooling/tests/fixtures/`. Regenerate with `--update` only after reading the diff.
-8. **Copy the file across by hand.** `.schema/` is held byte-equal between `template/` and `example/` by
+7. **Write a fixture that trips a new rule**, under `tooling/tests/fixtures/rules/`, one per check id it reports. The
+   coverage gate builds its catalogue from `kac checks` and fails a rule nothing exercises.
+8. **Run the golden suite.** The fixtures validate against the real `.schema/`, so this edit can also move expectations
+   already committed there. Regenerate with `--update` only after reading the diff.
+9. **Copy the file across by hand.** `.schema/` is held byte-equal between `template/` and `example/` by
    `TemplateTests`, and `kac mechanism --sync` cannot do it here.
-9. Run **[opening-a-pull-request](opening-a-pull-request.md)**.
+10. Run **[opening-a-pull-request](opening-a-pull-request.md)**.
 
 **Reply:** what the schema now declares, which pass would catch it being wrong, and any golden expectation that moved.

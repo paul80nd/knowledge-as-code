@@ -34,25 +34,28 @@ have.
 **The opening paragraph says what the reader gets.** Two openings fail here, and both are tempting. A definition
 answers a question nobody has asked yet. A problem statement, sitting directly under the project's name, reads as a
 description of what the project hands you.
-Write: "A structured, validated body of knowledge that people and AI sessions both read from and contribute to."
 Not: "A corpus is one repository of knowledge documents."
 Not: "Engineering knowledge is spread thin."
+
+**Say enough for a reader to place the thing.** Somebody who cannot tell whether this is a service, a library or a
+command they run has not been told what they get. An opening that summarises is fine where the sentence after it lands
+the nouns: the format, the tool's name, where the thing lives.
+Write: "`kac` reads a folder of Markdown records and holds each one to the schema its type declares."
 
 **Take the plain word in the opening, and introduce the term where the reader needs it.** The gloss rule says to define
 a term on first use. It does not say to reach for the term first. A body of knowledge becomes a corpus a paragraph
 later, once there is something to call by its name.
 
-**A definition built on a contrast asks a reader to hold two ideas** when they have not got the first one yet.
-Write: "`kac` reads a folder of Markdown records and holds each one to the schema its type declares."
-
-**Three contrasts in a row is the shape to watch for.** It reads as rhythm and lands as nothing, and it is where this
-project's prose goes wrong when it is trying to sound confident.
+**A definition built on a contrast asks a reader to hold two ideas** when they have not got the first one yet, and
+three contrasts in a row reads as rhythm and lands as nothing. That is where this project's prose goes wrong when it is
+trying to sound confident.
 Cut: "An index is generated rather than maintained, a broken cross-reference fails CI rather than rotting quietly, and
 an agent can be told where a thing goes instead of guessing."
 
-[`README.md`](../../../README.md) at the repository root carries the register to match. It runs at about four contrasts
-per thousand words, in sentences averaging fourteen. Count yours the same way and read what you find, as the floor
-says. Measure prose alone: a code block and a table skew both numbers.
+**No page here is the model.** Where a page and this one disagree, the page is what changes, unless somebody decided
+otherwise on purpose. The register is a pair of numbers rather than a file to copy: under four contrasts per thousand
+words, in sentences averaging fourteen. Count yours the same way and read what you find, as the floor says. Measure
+prose alone, because a code block and a table skew both numbers.
 
 ## Get the reader to a command
 
