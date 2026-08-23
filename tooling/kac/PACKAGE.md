@@ -28,9 +28,7 @@ kac bundle       # assemble that export and .plugin/ into an installable plugin
 kac checks       # list every check the validator implements
 ```
 
-`kac --help` lists them, and every command carries its own `--help`. Every one takes `--no-color`, and reads
-`NO_COLOR` from the environment. A redirected stream carries no colour on its own, though a CI runner that renders
-escapes in its logs turns it back on. `--json` never carries colour anywhere.
+`kac --help` lists them, and every command carries its own `--help`.
 
 ## Exit codes
 

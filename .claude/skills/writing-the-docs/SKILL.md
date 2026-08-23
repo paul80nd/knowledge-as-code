@@ -53,6 +53,9 @@ what running it looks like.
 **A comment beside a command says what that command does.**
 Write: `kac validate     # frontmatter, links, structure, clauses and the graph`
 
+**A flag the reader meets while running the tool is documented where they meet it.** `--help` and the reference pages
+carry that. A page somebody reads before installing carries what decides them, and nothing they can look up later.
+
 ## Check the claim before you write it
 
 **A public page states facts about the tool, and the reader can check none of them.** They have no checkout. A sentence
