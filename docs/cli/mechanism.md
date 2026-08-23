@@ -21,25 +21,25 @@ A corpus takes the framework as a copy (the validator, the schema, and the docum
 and a copy drifts. `mechanism` is what makes a copy answerable to a declaration.
 [`manifest.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/manifest.yaml) declares each file's
 layer: `synced`, `verification`, `forked`, `generated`, `local` or `ignored`. `mechanism` enforces that declaration
-from both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the
-shared layers from one. Its reader is whoever maintains a corpus downstream of this one.
+from both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the shared layers from
+one. Its reader is whoever maintains a corpus downstream of this one.
 
 ## What it is not
 
 **It is not `git pull`.** The two trees are separate repositories with separate histories. `--sync` copies the shared
-layers file by file and records what it took; it merges nothing, and neither half reads either side's commits.
+layers file by file and records what it took. It merges nothing, and neither half reads either side's commits.
 
 **It is not `generate --check`.** Both recompute and compare, and they compare different halves of a file. `mechanism`
 empties every generated block before it compares, so what it judges is the authored prose. What sits between the markers
 is `generate --check`'s alone, and a shared page can be byte-identical everywhere and stale everywhere.
 
-**It is not `validate`.** Drift is not invalidity. A corpus that has edited its copy of the schema has drifted and may
-be entirely valid; a corpus in step with upstream may be full of broken records.
+**It is not `validate`.** Drift is not invalidity. A corpus that has edited its copy of the schema has drifted, and may
+be entirely valid. A corpus in step with upstream may be full of broken records.
 
 ## Approach
 
-The two halves read one manifest and share one vocabulary of layers. `--check` decides and reports; `--sync` decides and
-then writes. Neither touches a layer the manifest says a corpus owns.
+The two halves read one manifest and share one vocabulary of layers. `--check` decides and reports. `--sync` decides
+and then writes. Neither touches a layer the manifest says a corpus owns.
 
 ### `--check`
 
@@ -76,10 +76,10 @@ a deletion nobody recorded. A descriptor that declares neither takes the whole s
 
 `--check` normalises line endings before it compares, so a working copy checked out with CRLF never reads as drift. It
 then compares the **authored half** of each file, emptying everything between `BEGIN GENERATED` and `END GENERATED`
-first. A shared page may therefore carry a block built from the corpus holding it (the taxonomy's tables list the types
-that corpus adopted), while the prose around the block stays byte-identical everywhere. The markers themselves are
-compared, so deleting a block rather than regenerating it is still drift. `generate --check` stays the one voice on
-whether the generated half is right.
+first. So a shared page may carry a block built from the corpus holding it. The taxonomy's tables are the case, because
+they list the types that corpus adopted. The prose around the block stays byte-identical everywhere. The markers
+themselves are compared, so deleting a block instead of regenerating it is still drift. `generate --check` stays the
+one voice on whether the generated half is right.
 
 ### `--sync`
 
@@ -112,6 +112,6 @@ Sync then stamps `descriptor-version`, `upstream.mechanism-version`, `synced-fro
 It rewrites those four lines rather than re-serialising the file, so the descriptor's commentary survives. The file's
 own format is the mechanism's to state, because a corpus cannot know the shape a newer one writes. `content-version` is
 left alone: what a corpus knows is not something an upstream can tell it. Finally it runs `generate`. Copying a page
-whole is only safe because of that last step: the page arrives carrying the reference's generated block, and is right
+whole is only safe because of that last step. The page arrives carrying the reference's generated block, and it is right
 only once rebuilt against the types the receiving corpus holds. A passing `generate --check` is sync's postcondition.
 

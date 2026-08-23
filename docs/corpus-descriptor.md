@@ -114,8 +114,8 @@ Validation and index generation cover the types listed here and no others. Omit 
 so the tool reads adoption off the folders it finds. A type counts where both halves are there, meaning the page and
 the folder.
 
-Declaring turns "these folders happen to be here" into "these are the types we chose", and validation can then hold the
-corpus to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared, standing a
+Declaring turns "these folders happen to be here" into "these are the types this corpus chose", and validation can then
+hold the corpus to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared, standing a
 type up without adopting it is a defect [`validate`](cli/validate.md) reports.
 
 ## What an export leaves behind
