@@ -97,7 +97,7 @@ postmortem means something.
 | `tier-matches-type`            | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                           | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
 | `id-unique`                    | error   | `id` is unique across the whole corpus.                                                                         |
-| `filename / slug-length`       | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
+| `filename / slug-length`       | error   | Filename matches the pattern. The slug is within 30 characters.                                                 |
 | `h1`                           | error   | The document has an H1.                                                                                         |
 | `identity`                     | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `sections`                     | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |

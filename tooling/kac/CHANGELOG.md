@@ -35,6 +35,9 @@ the commit and opens a release carrying the section for that version.
   What the heading names stays plain beneath it.
 - **`--json` and every exit code answer as before.** `--json` goes straight to the stream and never carries colour,
   whatever the terminal.
+- **Two messages lose a semicolon the house style does not keep.** The `filename / slug-length` row in every generated
+  checks table, and the meta-test reporting an over-long description. Run `kac generate` after upgrading: `--check`
+  reports every type page carrying the old wording until you do.
 
 ## 0.2.1 - 2026-08-21
 

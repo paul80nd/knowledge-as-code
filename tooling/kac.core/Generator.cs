@@ -480,7 +480,7 @@ public static class Generator
             + "as the filename.", null),
         ("id-unique", [new("id-unique")], "`id` is unique across the whole corpus.", null),
         ("filename / slug-length", [new("filename-pattern"), new("slug-length")],
-            "Filename matches the pattern; the slug is within 30 characters.", null),
+            "Filename matches the pattern. The slug is within 30 characters.", null),
         ("h1", [new("h1")], "The document has an H1.", null),
         ("identity", [new("identity"), new("identity-type"), new("identity-id"), new("identity-status")],
             "An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.",
@@ -626,7 +626,7 @@ public static class Generator
         // reads as intentional in the diff and as noise on the page.
         foreach (var row in DocRows.Where(r => r.Description.Length > DescriptionMax))
             problems.Add($"the checks table row '{row.Label}' has a {row.Description.Length}-character "
-                         + $"description; the limit is {DescriptionMax}.");
+                         + $"description. the limit is {DescriptionMax}.");
 
         return problems;
     }
