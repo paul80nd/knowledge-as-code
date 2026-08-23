@@ -6,7 +6,7 @@ owner: paul.law
 tags: [ documentation, knowledge-management, tooling ]
 ---
 
-# Knowledge as code — a structured, validated wiki that AI sessions can read and contribute to
+# Knowledge as code: a structured, validated wiki that AI sessions can read and contribute to
 
 `ADR: adr-0001` `PROPOSED`
 

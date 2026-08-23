@@ -41,9 +41,9 @@ One physical copy of a title, with its own barcode, living on one branch's shelv
 
 ### Record
 
-The bibliographic description of a title — author, edition, subject headings — held once and shared by every branch.
+The bibliographic description of a title (author, edition, subject headings) held once and shared by every branch.
 
-**Not:** a knowledge record in this repository, which is a document filed under a type — see
+**Not:** a knowledge record in this repository, which is a document filed under a type. See
 [gls-knowledge-as-code.record].
 
 Owned by [svc-catalogue-api].
@@ -52,7 +52,7 @@ Owned by [svc-catalogue-api].
 
 A work the consortium holds, as catalogued, distinct from the copies of it on the shelves.
 
-**Not:** the indexed field of the same name — see [gls-search.title].
+**Not:** the indexed field of the same name. See [gls-search.title].
 
 Owned by [svc-catalogue-api].
 

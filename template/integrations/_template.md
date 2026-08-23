@@ -16,18 +16,18 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
-is reviewed. What is below is only what an integration adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
+and how it is reviewed. What is below is only what an integration adds to that.
 
 **Frontmatter**
 
-* **`status`** — `active` · `trial` · `retired`.
-* **`used-by`** — The service ids that call it. An integration nothing uses is a candidate for retirement.
-* **`criticality`** — Judged by what breaks for a customer when it is unavailable.
-* **`their-sla`** — What the contract actually says, not what the marketing page implies.
+* **`status`**: `active` · `trial` · `retired`.
+* **`used-by`**: the service ids that call it. An integration nothing uses is a candidate for retirement.
+* **`criticality`**: judged by what breaks for a customer when it is unavailable.
+* **`their-sla`**: what the contract actually says, not what the marketing page implies.
 
-**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
-reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
+**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
+what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
@@ -43,7 +43,7 @@ The role it plays, and which parts of the product would stop working without it.
 |--------------|-----------------------------------------|
 | **Protocol** | {{REST / SFTP / webhook / GraphQL / …}} |
 | **Endpoint** |                                         |
-| **Auth**     | {{mechanism — never the credentials}}   |
+| **Auth**     | {{mechanism, never the credentials}}    |
 | **Docs**     | {{link to their documentation}}         |
 
 _(Nothing secret goes in this corpus. Name the mechanism and where the credential is stored, not the credential.)_
@@ -55,7 +55,7 @@ _(Nothing secret goes in this corpus. Name the mechanism and where the credentia
 |         |                 |              |
 
 _("It goes down sometimes" is not a failure mode. "Returns 503 during their Sunday maintenance window; we queue and
-retry with backoff" is. **Every integration names a fallback, or explicitly states there isn't one** — an undocumented
+retry with backoff" is. **Every integration names a fallback, or explicitly states there isn't one.** An undocumented
 single point of failure is the most expensive kind.)_
 
 ## Their SLA
@@ -80,9 +80,9 @@ SLA.
 
 ## Related
 
-* [svc-{{a}}] — services that depend on this.
-* [rbk-{{a}}] — what to do when it is down.
-* [adr-{{a}}] — why we chose it.
+* [svc-{{a}}] depends on this.
+* [rbk-{{a}}] says what to do when it is down.
+* [adr-{{a}}] records why we chose it.
 
 [adr-{{a}}]: ../adrs/{{a}}.md
 [rbk-{{a}}]: ../runbooks/{{a}}.md

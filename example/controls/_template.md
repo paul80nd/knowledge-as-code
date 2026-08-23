@@ -17,20 +17,20 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
-is reviewed. What is below is only what a control adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
+and how it is reviewed. What is below is only what a control adds to that.
 
 **Frontmatter**
 
-* **`status`** — `active` · `planned` · `retired`.
-* **`verifies`** — Standard ids, ideally rule-level anchors.
-* **`mechanism`** — `ci` · `review-checklist` · `manual-periodic` · `runtime-alert` · `not-enforced`. Pick the real one:
+* **`status`**: `active` · `planned` · `retired`.
+* **`verifies`**: standard ids, ideally rule-level anchors.
+* **`mechanism`**: `ci` · `review-checklist` · `manual-periodic` · `runtime-alert` · `not-enforced`. Pick the real one:
   `not-enforced` is a first-class value and the whole point of the coverage report, so do not invent a mechanism to
   avoid using it.
-* **`frequency`** — `per-pr` · `per-deploy` · `daily` · `monthly` · `quarterly` · `annual`.
+* **`frequency`**: `per-pr` · `per-deploy` · `daily` · `monthly` · `quarterly` · `annual`.
 
-**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
-reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
+**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
+what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
@@ -40,8 +40,8 @@ One sentence: what this control proves.
 
 The rules this control verifies, quoted or anchored:
 
-* [std-{{a}}] — "Services **MUST** …"
-* [std-{{b}}] — "Responses **MUST NOT** …"
+* [std-{{a}}] says "Services **MUST** …"
+* [std-{{b}}] says "Responses **MUST NOT** …"
 
 _(Name rules, not intentions. "We review carefully" is not a control; "the PR template requires a tick against each
 conformance checklist item" is.)_
@@ -53,7 +53,7 @@ find it and confirm it is running.
 
 ## Evidence
 
-Where the proof lives — the build log, the audit note, the dashboard. Someone asking "how do you know?" should be able
+Where the proof lives: the build log, the audit note, the dashboard. Someone asking "how do you know?" should be able
 to follow this to an artefact.
 
 ## Coverage and gaps

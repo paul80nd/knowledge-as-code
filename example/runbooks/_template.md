@@ -17,26 +17,27 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
-is reviewed. What is below is only what a runbook adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
+and how it is reviewed. What is below is only what a runbook adds to that.
 
 **Frontmatter**
 
-Title this document for the **failure**, not the fix — that is what someone searches for at 2am.
+Title this document for the **failure**, not the fix. A reader at 2am searches for the failure.
 
-* **`severity`** — `sev1` · `sev2` · `sev3`.
-* **`last-rehearsed`** — A quoted date; `"never"` is permitted, and is exactly the thing worth knowing before the
-  incident rather than during it.
-* **`requires-access`** — Must be complete. Discovering you lack a permission mid-incident is its own outage.
+* **`severity`**: `sev1` · `sev2` · `sev3`.
+* **`last-rehearsed`**: a quoted date. `"never"` is permitted, and it is what you want to know before the incident
+  rather than during it.
+* **`requires-access`**: name every system and role the fix needs. Discovering you lack a permission mid-incident is its
+  own outage.
 
-**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
-reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
+**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
+what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 ## Symptoms
 
-* What you are seeing — alerts, error messages, customer reports, in the words they actually appear in.
+* What you are seeing: alerts, error messages and customer reports, in the words they appear in.
 * What you are **not** seeing, where its absence is diagnostic.
 
 _(Symptoms come first because that is how the reader finds this document.)_
@@ -60,7 +61,7 @@ _(Before diagnosis. Contain first, understand afterwards.)_
 * **Yes** → {{action}}.
 * **No** → [escalate](#escalation).
 
-_(A tree, not prose. Each branch ends in a resolution or an escalation — never in a dead end.)_
+_(A tree, not prose. Each branch ends in a resolution or an escalation, never in a dead end.)_
 
 ## Resolution
 
@@ -72,7 +73,7 @@ Steps to restore service, imperative and numbered. Then how to confirm it is act
 |---------------|-----------------|-------------|
 | {{condition}} | {{name / role}} | {{channel}} |
 
-_(Near the top of the page if this document is long — it must be findable without scrolling.)_
+_(If this document is long, put this table near the top of the page. A reader has to find it without scrolling.)_
 
 ## Afterwards
 
@@ -81,8 +82,8 @@ _(Near the top of the page if this document is long — it must be findable with
 
 ## Related
 
-* [svc-{{a}}] — the service this covers.
-* [exp-{{a}}] — how the system works, for afterwards. Not now.
+* [svc-{{a}}] is the service this covers.
+* [exp-{{a}}] explains how the system works. Read it afterwards, not now.
 
 [exp-{{a}}]: ../explanations/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md

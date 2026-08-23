@@ -98,7 +98,7 @@ The framework's files as they sit in one corpus: the half that travels.
 
 ### Page
 
-A type's root page — what the type holds, what it is not, and how to add one — carrying no frontmatter of its own.
+A type's root page, carrying no frontmatter of its own. It says what the type holds, what it is not, and how to add one.
 
 **Not:** a record. It describes the records rather than being one, so nothing gives it an id or an identity line.
 
@@ -135,7 +135,7 @@ The file a contributor copies to start a record, held to the fields its type dec
 
 ### Tier
 
-What a record's type says about how far it may be trusted and how it must be written — decided, normative, descriptive,
+What a record's type says about how far it may be trusted and how it must be written: decided, normative, descriptive,
 procedural or observed.
 
 **Not:** type. Several types share a tier, and the writing rules and the review bar follow the tier.

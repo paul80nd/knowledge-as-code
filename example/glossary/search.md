@@ -23,7 +23,7 @@ being searched for belong to the whole estate, so they sit in its glossary rathe
 
 ### Facet
 
-A field a reader narrows results by — branch, format, availability — offered with a count beside each value.
+A field a reader narrows results by (branch, format, availability), offered with a count beside each value.
 
 ### Query
 
@@ -39,7 +39,7 @@ The score that orders results, drawn from how often and where a query's words ap
 
 The indexed field carrying a work's name, and one of several a query matches against.
 
-**Not:** a title in the catalogue, which is the work itself — see [gls-example-libraries.title].
+**Not:** a title in the catalogue, which is the work itself. See [gls-example-libraries.title].
 
 Owned by [svc-search].
 

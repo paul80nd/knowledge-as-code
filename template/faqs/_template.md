@@ -18,27 +18,27 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
-is reviewed. What is below is only what an FAQ adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
+and how it is reviewed. What is below is only what an FAQ adds to that.
 
 **Frontmatter**
 
-Name the title and the filename for the **symptom**, not the cause — that is what people search for.
+Name the title and the filename for the **symptom**, not the cause. That is what people search for.
 
-* **`symptom-keywords`** — Be generous: the literal error text, the service names, and the words someone would type who
-  doesn't yet know what is wrong. This is the field that makes the document findable, so over-fill it.
-* **`confirmed-by`** — A named person.
-* **`confirmed-on`** — A real quoted date. An FAQ nobody confirmed is a [discovery](../discoveries.md).
-* **`status`** — `active` · `superseded` · `fixed-upstream`.
+* **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not
+  yet know what is wrong. This is the field that makes the document findable, so over-fill it.
+* **`confirmed-by`**: a named person.
+* **`confirmed-on`**: a real quoted date. An FAQ nobody confirmed is a [discovery](../discoveries.md).
+* **`status`**: `active` · `superseded` · `fixed-upstream`.
 
-**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
-reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
+**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
+what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 ## Symptom
 
-What you see. Quote the error message verbatim where there is one, including the parts that look like noise — that is
+What you see. Quote the error message verbatim where there is one, including the parts that look like noise. That is
 what someone will paste into a search.
 
 ## Cause
@@ -62,13 +62,13 @@ is not a place to park unowned work, but it is a fine place to point at it.)_
 
 ## How we found it
 
-The diagnostic route, not just the destination. This is often more reusable than the fix itself — the next problem will
-be different, but the way in may be the same.
+The diagnostic route, not just the destination. This is often more reusable than the fix itself: the next problem
+will be different, but the way in may be the same.
 
 ## Related
 
-* [svc-{{a}}] — the service affected.
-* [dsc-{{a}}] — the observation this was promoted from.
+* [svc-{{a}}] is the service affected.
+* [dsc-{{a}}] is the observation this was promoted from.
 
 [dsc-{{a}}]: ../discoveries/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md
