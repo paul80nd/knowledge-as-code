@@ -44,14 +44,14 @@ may verify several rules, and one rule may need several controls.
 | Field         | Value                                                                    | Notes                                                                                    |
 |---------------|--------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
 | `id` *†       | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.                  |
-| `tier` *†     | `normative`                                                              | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.     |
+| `tier` *†     | `normative`                                                              | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.      |
 | `status` *†   | `active` `planned` `retired`                                             | Whether the control is running, intended, or stood down.                                 |
 | `owner` *†    | string                                                                   | A named person, never a team alias.                                                      |
 | `tags` †      | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                         |
 | `verifies` *  | list                                                                     | Standard ids, ideally rule-level anchors. A control that names no rule is not a control. |
-| `mechanism` * | `ci` `review-checklist` `manual-periodic` `runtime-alert` `not-enforced` | How the check happens. `not-enforced` is first-class — an honest gap beats a fiction.    |
+| `mechanism` * | `ci` `review-checklist` `manual-periodic` `runtime-alert` `not-enforced` | How the check happens. `not-enforced` is first-class. An honest gap beats a fiction.     |
 | `frequency`   | `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual`             | How often it runs. Required when `mechanism != not-enforced`.                            |
-| `evidence`    | string                                                                   | Where the proof lives — the build log, the audit note, the dashboard.                    |
+| `evidence`    | string                                                                   | Where the proof lives (the build log, the audit note, the dashboard).                    |
 | `applies-to`  | list                                                                     | Service ids, or `all`.                                                                   |
 
 \* Field is required  

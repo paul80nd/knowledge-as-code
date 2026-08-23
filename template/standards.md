@@ -66,19 +66,19 @@ distinct. The common and platform axes let a rule live once, at the layer where 
 
 <!-- BEGIN GENERATED: schema-standards -->
 
-| Field          | Value                                      | Notes                                                                                |
-|----------------|--------------------------------------------|--------------------------------------------------------------------------------------|
-| `id` *†        | string                                     | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *†      | `normative`                                | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` *†    | `draft` `active` `deprecated` `superseded` | Plain values only — enforcement notes belong in `verified-by`.                       |
-| `owner` *†     | string                                     | A named person, never a team alias.                                                  |
-| `tags` †       | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `axis` *       | `common` `platform` `interface` `domain`   | The layer where the rule is actually true.                                           |
-| `derived-from` | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead.       |
-| `implements`   | list                                       | Policy ids this standard puts into practice.                                         |
-| `verified-by`  | list                                       | Control ids that check it.                                                           |
-| `applies-to` * | list                                       | Service ids, or `all`.                                                               |
-| `review-by` *  | date                                       | Quoted. The date by which someone confirms this is still true.                       |
+| Field          | Value                                      | Notes                                                                               |
+|----------------|--------------------------------------------|-------------------------------------------------------------------------------------|
+| `id` *†        | string                                     | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `tier` *†      | `normative`                                | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` *†    | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                       |
+| `owner` *†     | string                                     | A named person, never a team alias.                                                 |
+| `tags` †       | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| `axis` *       | `common` `platform` `interface` `domain`   | The layer where the rule is actually true.                                          |
+| `derived-from` | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead.      |
+| `implements`   | list                                       | Policy ids this standard puts into practice.                                        |
+| `verified-by`  | list                                       | Control ids that check it.                                                          |
+| `applies-to` * | list                                       | Service ids, or `all`.                                                              |
+| `review-by` *  | date                                       | Quoted. The date by which someone confirms this is still true.                      |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).

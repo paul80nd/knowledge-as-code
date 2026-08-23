@@ -42,17 +42,17 @@ Related but different:
 
 <!-- BEGIN GENERATED: schema-capabilities -->
 
-| Field              | Value                                    | Notes                                                                                     |
-|--------------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| `id` *†            | string                                   | Stable, unique across the corpus, never reused. Format set by the type.                   |
-| `tier` *†          | `descriptive`                            | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.      |
-| `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the capability, not of the services behind it.                               |
-| `owner` *†         | string                                   | A named person, never a team alias.                                                       |
-| `tags` †           | list                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                          |
-| `implemented-by` * | list                                     | Service ids. A capability no service implements is a plan.                                |
-| `ado-epics`        | list                                     | ADO work item ids. Not resolvable by CI; recorded for humans and for the reverse harvest. |
-| `feature-files`    | list                                     | Repo-relative paths. Nothing resolves them today.                                         |
-| `nfrs`             | list                                     | NFR ids — the targets this capability is held to.                                         |
+| Field              | Value                                    | Notes                                                                                               |
+|--------------------|------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| `id` *†            | string                                   | Stable, unique across the corpus, never reused. Format set by the type.                             |
+| `tier` *†          | `descriptive`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                 |
+| `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the capability, not of the services behind it.                                         |
+| `owner` *†         | string                                   | A named person, never a team alias.                                                                 |
+| `tags` †           | list                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                    |
+| `implemented-by` * | list                                     | Service ids. A capability no service implements is a plan.                                          |
+| `ado-epics`        | list                                     | ADO work item ids. CI cannot resolve them, so they are here for humans and for the reverse harvest. |
+| `feature-files`    | list                                     | Repo-relative paths. Nothing resolves them today.                                                   |
+| `nfrs`             | list                                     | NFR ids, the targets this capability is held to.                                                    |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -103,7 +103,7 @@ Related but different:
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `hub-not-specification`     | warning | A capability's prose stays proportionate to its links — a hub, not a specification.                             |
+| `hub-not-specification`     | warning | A capability's prose stays proportionate to its links, because it is a hub.                                     |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

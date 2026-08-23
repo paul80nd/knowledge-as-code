@@ -41,13 +41,13 @@ Boundaries:
 | Field          | Value                                   | Notes                                                                                                                             |
 |----------------|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | `id` *†        | string                                  | Stable, unique across the corpus, never reused. Format set by the type.                                                           |
-| `tier` *†      | `observed`                              | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                                              |
+| `tier` *†      | `observed`                              | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                                               |
 | `status` *†    | `open` `promoted` `expired` `rejected`  | Open until promoted, expired or rejected.                                                                                         |
 | `owner` *†     | string                                  | A named person, never a team alias.                                                                                               |
 | `tags` †       | list                                    | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                                  |
 | `source` *     | `human` `session` `dreamed`             | Who or what observed it. `dreamed` means proposed by an agent.                                                                    |
 | `confidence` * | `unverified` `corroborated` `confirmed` | Starts at `unverified`, and stays there unless genuinely proven.                                                                  |
-| `expires` *    | date                                    | Quoted. Ninety days from capture by convention — the template says so.                                                            |
+| `expires` *    | date                                    | Quoted. Ninety days from capture, a convention the template carries.                                                              |
 | `provenance`   | string                                  | A reference back to the session and passage, so review is a check rather than an act of faith. Required when `source == dreamed`. |
 | `applies-to`   | list                                    | Service ids this observation concerns.                                                                                            |
 | `promoted-to`  | id                                      | The FAQ or standard this became. Required when `status == promoted`.                                                              |

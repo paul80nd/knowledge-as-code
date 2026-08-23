@@ -42,12 +42,12 @@ the evaluation we already did.
 | Field        | Value                                      | Notes                                                                                                |
 |--------------|--------------------------------------------|------------------------------------------------------------------------------------------------------|
 | `id` *†      | string                                     | Stable, unique across the corpus, never reused. Format set by the type.                              |
-| `tier` *†    | `descriptive`                              | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                 |
-| `status` *†  | `approved` `trial` `deprecated` `rejected` | `approved` means approved for new work; existing use that is not approved is drift.                  |
+| `tier` *†    | `descriptive`                              | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                  |
+| `status` *†  | `approved` `trial` `deprecated` `rejected` | `approved` means approved for new work. Existing use that is not approved is drift.                  |
 | `owner` *†   | string                                     | A named person, never a team alias.                                                                  |
 | `tags` †     | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                     |
 | `category` * | string                                     | e.g. `testing`, `build`, `observability`, `runtime`.                                                 |
-| `versions`   | string                                     | A range, not a pin. The register states what we stand behind; the manifests state what is installed. |
+| `versions`   | string                                     | A range, not a pin. The register states what we stand behind. The manifests state what is installed. |
 | `licence`    | string                                     | SPDX identifier. The field nobody wants until they urgently do.                                      |
 | `decided-in` | id                                         | Where a decision was worth recording. Small, uncontroversial adoptions need only a register entry.   |
 | `replaces`   | id                                         | The tool id this supersedes.                                                                         |

@@ -41,19 +41,19 @@ postmortem means something.
 
 <!-- BEGIN GENERATED: schema-postmortems -->
 
-| Field           | Value                | Notes                                                                                 |
-|-----------------|----------------------|---------------------------------------------------------------------------------------|
-| `id` *†         | string               | Stable, unique across the corpus, never reused. Format set by the type.               |
-| `tier` *†       | `decided`            | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.  |
-| `status` *†     | `draft` `published`  | `published` freezes the document; a new understanding is a new postmortem.            |
-| `owner` *†      | string               | A named person, never a team alias.                                                   |
-| `tags` †        | list                 | Free-form, lowercase, hyphenated. Used for cross-cutting search.                      |
-| `occurred-on` * | date                 | Quoted. When the incident began, not when it was noticed.                             |
-| `detected-on` * | date                 | Separate from `occurred-on` for a reason — the gap between them is often the finding. |
-| `duration` *    | string               | How long it lasted, in whatever unit reads honestly.                                  |
-| `severity` *    | `sev1` `sev2` `sev3` | The severity it was handled at.                                                       |
-| `affected` *    | list                 | Service and capability ids that suffered.                                             |
-| `prompted`      | list                 | What this incident caused to be written.                                              |
+| Field           | Value                | Notes                                                                               |
+|-----------------|----------------------|-------------------------------------------------------------------------------------|
+| `id` *†         | string               | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `tier` *†       | `decided`            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` *†     | `draft` `published`  | `published` freezes the document. A new understanding is a new postmortem.          |
+| `owner` *†      | string               | A named person, never a team alias.                                                 |
+| `tags` †        | list                 | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| `occurred-on` * | date                 | Quoted. When the incident began, not when it was noticed.                           |
+| `detected-on` * | date                 | Separate from `occurred-on`, because the gap between them is often the finding.     |
+| `duration` *    | string               | How long it lasted, in whatever unit reads honestly.                                |
+| `severity` *    | `sev1` `sev2` `sev3` | The severity it was handled at.                                                     |
+| `affected` *    | list                 | Service and capability ids that suffered.                                           |
+| `prompted`      | list                 | What this incident caused to be written.                                            |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -115,6 +115,6 @@ postmortem means something.
 |-----------------------------|------------------------------------------------------------------------------------------------------------------------|
 | `immutable-after-published` | Once status is `published`, content changes are limited to typo fixes. Same rule as ADRs.                              |
 | `blameless`                 | Flags personal names inside the Timeline, Root cause and Contributing factors sections. Roles and systems, not people. |
-| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems — the highest-signal output in the corpus.                 |
+| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems, the highest-signal output in the corpus.                  |
 
 <!-- END GENERATED: checks-postmortems -->

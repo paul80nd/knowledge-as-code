@@ -40,12 +40,12 @@ deliver.
 | Field            | Value                      | Notes                                                                                             |
 |------------------|----------------------------|---------------------------------------------------------------------------------------------------|
 | `id` *†          | string                     | Stable, unique across the corpus, never reused. Format set by the type.                           |
-| `tier` *†        | `normative`                | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.              |
+| `tier` *†        | `normative`                | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.               |
 | `status` *†      | `draft` `agreed` `retired` | `agreed` is a commitment someone accepted, not an aspiration.                                     |
 | `owner` *†       | string                     | A named person, never a team alias.                                                               |
 | `tags` †         | list                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                  |
-| `applies-to` *   | list                       | Estate-wide targets are almost always wrong — scope them.                                         |
-| `target` *       | string                     | Concrete and arguable — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`. Include the measurement window. |
+| `applies-to` *   | list                       | Estate-wide targets are almost always wrong. Scope them.                                          |
+| `target` *       | string                     | Concrete and arguable (`99.5% monthly`, `p95 < 400ms`, `RTO 4h`). Include the measurement window. |
 | `measured-by` *  | string                     | An NFR you cannot measure is a wish. "We'd notice" is not a measurement method.                   |
 | `constrained-by` | list                       | Integrations whose own SLA caps this target.                                                      |
 | `review-by` *    | date                       | Quoted. The date by which someone confirms this is still true.                                    |
@@ -98,7 +98,7 @@ deliver.
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `target-is-measurable`      | warning | `measured-by` names an instrument, not a hedge — "monitored", "as needed", "where practical".                   |
+| `target-is-measurable`      | warning | `measured-by` names an instrument, not a hedge: "monitored", "as needed", "where practical".                    |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

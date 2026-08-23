@@ -61,16 +61,16 @@ under governance is the clearest of them.
 
 <!-- BEGIN GENERATED: schema-policies -->
 
-| Field         | Value                                           | Notes                                                                                |
-|---------------|-------------------------------------------------|--------------------------------------------------------------------------------------|
-| `id` *†       | string                                          | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *†     | `normative`                                     | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` *†   | `draft` `active` `retired`                      | `draft` until agreed; `retired` rather than deleted.                                 |
-| `owner` *†    | string                                          | A named person, never a team alias.                                                  |
-| `tags` †      | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `category` *  | `security` `delivery` `operations` `governance` | The broad area the commitment belongs to. Controlled, and deliberately few.          |
-| `aligns-with` | list                                            | e.g. `ISO27001:2022 A.8.25`. The document-level roll-up of what its clauses map to.  |
-| `review-by` * | date                                            | Quoted. Annual is usually right for a policy.                                        |
+| Field         | Value                                           | Notes                                                                               |
+|---------------|-------------------------------------------------|-------------------------------------------------------------------------------------|
+| `id` *†       | string                                          | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `tier` *†     | `normative`                                     | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` *†   | `draft` `active` `retired`                      | `draft` until agreed. `retired` rather than deleted.                                |
+| `owner` *†    | string                                          | A named person, never a team alias.                                                 |
+| `tags` †      | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| `category` *  | `security` `delivery` `operations` `governance` | The broad area the commitment belongs to. Controlled, and deliberately few.         |
+| `aligns-with` | list                                            | e.g. `ISO27001:2022 A.8.25`. The document-level roll-up of what its clauses map to. |
+| `review-by` * | date                                            | Quoted. Annual is usually right for a policy.                                       |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -148,6 +148,6 @@ under governance is the clearest of them.
 | `undefined-label`                | error   | Every shortcut reference has a link definition.                                                                   |
 | `label-canonical`                | error   | A shortcut label that names a document is written as that document's id.                                          |
 | `unused-definition`              | warning | A link definition that nothing references.                                                                        |
-| `posture-belongs-to-frameworks`  | warning | "compliant", "certified" or "registered" near a framework reference — standing belongs in `frameworks.md`.        |
+| `posture-belongs-to-frameworks`  | warning | "compliant", "certified" or "registered" near a framework reference. Standing belongs in `frameworks.md`.         |
 
 <!-- END GENERATED: checks-policies -->

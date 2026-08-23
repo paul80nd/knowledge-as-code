@@ -40,7 +40,7 @@ look like processes. You open the document on a day when the estate is already d
 | Field                 | Value                              | Notes                                                                                   |
 |-----------------------|------------------------------------|-----------------------------------------------------------------------------------------|
 | `id` *†               | string                             | Stable, unique across the corpus, never reused. Format set by the type.                 |
-| `tier` *†             | `procedural`                       | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.    |
+| `tier` *†             | `procedural`                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.     |
 | `status` *†           | `active` `draft` `retired`         | Whether the runbook is current, drafted, or stood down.                                 |
 | `owner` *†            | string                             | A named person, never a team alias.                                                     |
 | `tags` †              | list                               | Free-form, lowercase, hyphenated. Used for cross-cutting search.                        |
@@ -101,7 +101,7 @@ look like processes. You open the document on a day when the estate is already d
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `symptoms-first`            | error   | Symptoms is the first section after the H1 — that is how the reader finds the document.                         |
+| `symptoms-first`            | error   | Symptoms is the first section after the H1. That is how the reader finds the document.                          |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
