@@ -67,11 +67,11 @@ The first published version.
 
 ### Added
 
-- `kac validate` — holds a corpus to the schema it carries: frontmatter, identity, structure, clauses, links, the graph
+- `kac validate` holds a corpus to the schema it carries: frontmatter, identity, structure, clauses, links, the graph
   and the type setup.
-- `kac index` — regenerates `_index.md` and the generated blocks in each type page. `--check` reports what is stale
+- `kac index` regenerates `_index.md` and the generated blocks in each type page. `--check` reports what is stale
   rather than writing it.
-- `kac checks` — lists every check the validator implements, read from the schema rather than from a list in the tool.
-- `kac export` — writes the corpus to `.dist/export/` as data a consumer reads instead of cloning.
-- `kac bundle` — assembles that export and `.plugin/` into an installable plugin.
-- `kac mechanism` — compares the shared layers against a reference corpus, or takes them from one.
+- `kac checks` lists every check the validator implements, read from the schema rather than from a list in the tool.
+- `kac export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning.
+- `kac bundle` assembles that export and `.plugin/` into an installable plugin.
+- `kac mechanism` compares the shared layers against a reference corpus, or takes them from one.

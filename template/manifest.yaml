@@ -1,4 +1,4 @@
-# knowledge-as-code — template manifest
+# knowledge-as-code: template manifest
 #
 # `template/` is what a corpus is made of. This file says, for each file in it, whether a corpus
 # receives that file once and then owns it, or receives it again every time it takes a newer
@@ -88,7 +88,7 @@ rules:
     layer: seed
     note: >
       The plugin manifest. Each corpus names, versions and licenses its own plugin, and declares
-      under `metadata.components` which record types each component needs — a skill reading the
+      under `metadata.components` which record types each component needs: a skill reading the
       glossary is dead weight in a corpus that declined the type.
 
   - path: ".plugin/**"
@@ -114,7 +114,7 @@ rules:
   - path: "*.md"
     layer: seed
     note: >
-      Type root pages — what the type is, why it exists, and how to contribute one. The rules above
+      Type root pages: what the type is, why it exists, and how to contribute one. The rules above
       carve out the framework's own pages, which are not a corpus's to rewrite. Written as a
       pattern rather than as seventeen names, so adding a type is adding its schema and its pages
       and nothing else.

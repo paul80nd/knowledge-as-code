@@ -1,4 +1,4 @@
-# knowledge-as-code — portability manifest
+# knowledge-as-code: portability manifest
 #
 # Declares which files are shared across every corpus running this framework, and
 # which belong to the corpus that holds them. Every file resolves to exactly one of
@@ -157,7 +157,7 @@ rules:
     layer: forked
     note: >
       The plugin manifest. Each corpus names, versions and licenses its own plugin, and
-      declares under `metadata.components` which record types each component needs — a
+      declares under `metadata.components` which record types each component needs: a
       skill reading the glossary is dead weight in a corpus that declined the type.
 
   - path: ".plugin/**"

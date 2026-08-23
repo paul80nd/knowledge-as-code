@@ -107,7 +107,7 @@ the framework's own documentation, a root page and a template for every type, an
 cp -R template/ ../my-corpus && cd ../my-corpus
 rm manifest.yaml README.md          # the template's own machinery, not a corpus's
 
-# write .corpus.yaml — the one file no template can supply
+# write .corpus.yaml: the one file no template can supply
 git init && git add -A              # kac reads the git listing, so a corpus is a repository
 
 dotnet tool install --global KnowledgeAsCode.Tool

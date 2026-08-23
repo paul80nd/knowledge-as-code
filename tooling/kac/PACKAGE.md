@@ -1,4 +1,4 @@
-# kac — knowledge as code
+# kac: knowledge as code
 
 `kac` validates and generates a knowledge corpus: markdown records in git, each with a type, and each type with a
 machine-readable schema the corpus carries in `.schema/`. An index is generated rather than maintained, a broken

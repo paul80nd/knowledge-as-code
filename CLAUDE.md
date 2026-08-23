@@ -48,7 +48,7 @@ invocation at a time: concurrent runs build the same project and contend over it
   because it fetches the commit `HEAD` stands on from `raw.githubusercontent.com`. That failure is not a defect. CI runs
   against a pushed head and passes.
 * **Regenerating goldens with `--update` blesses a regression as happily as a fix.** Regenerate, then read the diff.
-* **Three walk-ups look for `kac.slnx`, and each of them means the repository** — `tooling/kac-tests.cs`,
+* **Three walk-ups look for `kac.slnx`, and each of them means the repository**: `tooling/kac-tests.cs`,
   `tooling/kac.features/Harness.cs` and `tooling/kac.tests/Repo.cs`. The tool's own walk-up looks for a `.schema/` and
   means a corpus. Do not unify them without keeping that distinction.
 * **Never write a path into a file a corpus keeps.** The generated banner and the stale-index message both name the tool
