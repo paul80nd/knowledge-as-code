@@ -16,16 +16,16 @@ to it. The argument for building it this way is in [`template/knowledge-as-code.
 
 ## What is here
 
-**[`tooling/`](tooling/README.md)** ... `kac`, the validator and generator, and the three test layers that prove it. A
-.NET 10 entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures,
+**[`tooling/`](tooling/README.md)** holds `kac`, the validator and generator, and the three test layers that prove it.
+A .NET 10 entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures,
 feature specs and unit tests it is held to.
 
-**[`template/`](template/README.md)** ... what a corpus is made of, authored once: the machine-readable schema, the
+**[`template/`](template/README.md)** is what a corpus is made of, authored once: the machine-readable schema, the
 framework's own documentation, the plugin tree, and the pages and templates a corpus starts from.
 [`template/manifest.yaml`](template/manifest.yaml) sorts them: some a corpus receives once and owns afterwards, and some
 it receives again whenever it takes a newer framework.
 
-**[`example/`](example/README.md)** ... a complete corpus that took that template, run through the tool built beside it
+**[`example/`](example/README.md)** is a complete corpus that took that template, run through the tool built beside it
 on every commit. It holds its own copy of every file the template shares, plus a set of illustrative records about a
 fictional library consortium.
 
@@ -118,8 +118,9 @@ kac generate                        # write the indexes and generated blocks
 kac validate                        # comes back clean on an empty corpus
 ```
 
-[`.corpus.yaml`](example/.corpus.yaml) names the corpus, says where it publishes and lists the types it adopted, so no
-copied file can answer it. `example/`'s is commented throughout and is the one to read while writing yours.
+[`.corpus.yaml`](example/.corpus.yaml) names the corpus and says where it publishes, which no copied file can answer
+for you. It may also declare the types the corpus adopted. Leave that key out and `kac` reads adoption off the folders
+it finds instead. `example/`'s is commented throughout and is the one to read while writing yours.
 
 You also arrive with no `README.md`, no ignore rules, no editor conventions and no CI. Each is a question about your
 repository rather than about the framework.
