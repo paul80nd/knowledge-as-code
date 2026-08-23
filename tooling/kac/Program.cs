@@ -206,7 +206,7 @@ internal sealed class ChecksCommand : Command<ChecksSettings>
 internal sealed class MechanismSettings : KacSettings
 {
     [CommandOption("--check")]
-    [Description("Compare the shared layers against a reference and report drift; never writes.")]
+    [Description("Compare the shared layers against a reference and report drift. Never writes.")]
     public bool Check { get; init; }
 
     [CommandOption("--sync")]
@@ -214,7 +214,7 @@ internal sealed class MechanismSettings : KacSettings
     public bool Sync { get; init; }
 
     [CommandOption("--against <PATH>")]
-    [Description("Reference corpus (a path). Defaults to upstream.url in .corpus.yaml.")]
+    [Description("Name the reference corpus by path. Defaults to upstream.url in .corpus.yaml.")]
     public string? Against { get; init; }
 }
 
