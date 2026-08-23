@@ -1,8 +1,8 @@
 # kac: knowledge as code
 
-`kac` reads a folder of markdown documents kept in git and holds each one to a schema. The folder a document sits in
-names its type, and each type declares its fields and rules in a YAML file beside them. That whole folder is a
-**corpus**, meaning one repository of knowledge records.
+`kac` reads a folder of Markdown documents kept in git and holds each one to a schema. The folder a document sits in
+names its type. The corpus's own `.schema/` holds one file per type, saying what fields and rules that type carries.
+A repository of those documents, with the schema it runs, is a **corpus**.
 
 What the structure buys you: indexes built from the documents themselves, and a broken cross-reference that fails CI
 rather than rotting quietly. An agent contributing to the corpus can be told where a document goes.

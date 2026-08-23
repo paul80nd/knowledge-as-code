@@ -53,6 +53,16 @@ what running it looks like.
 **A comment beside a command says what that command does.**
 Write: `kac validate     # frontmatter, links, structure, clauses and the graph`
 
+## Check the claim before you write it
+
+**A public page states facts about the tool, and the reader can check none of them.** They have no checkout. A sentence
+that sounds right and is wrong costs them the hour they spend acting on it.
+
+Read the code, the schema or the folder under every factual claim, including one you are rewording rather than
+inventing. A rewrite drops a fact more easily than it drops a word, and the replacement reads just as fluently.
+Write: "the corpus's own `.schema/` holds one file per type."
+Not: "each type declares its fields and rules in a YAML file beside them."
+
 ## Leave the reader somewhere to go
 
 **A page names what to read next.** One link, chosen for where the reader now is. A list of everything is the same as
