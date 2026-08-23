@@ -3,7 +3,7 @@
 
 notes: >
   Which types each enum serves is not recorded here. A list of them would be a second place to keep in step with
-  `values: $enums.<name>`, and wrong in any corpus that adopted some of these types and not the others — where the
+  `values: $enums.<name>`, and wrong in any corpus that adopted some of these types and not the others. The
   reference itself is right by construction. Grep for the enum to find who draws on it.
 
 enums:
@@ -23,4 +23,4 @@ enums:
 
   review-cadence:
     values: [quarterly, biannual, annual]
-    notes: Guidance for setting `review-by`; not itself a frontmatter field.
+    notes: Guidance for setting `review-by`, and not itself a frontmatter field.

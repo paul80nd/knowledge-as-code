@@ -7,9 +7,9 @@ namespace kac.core;
 // JSON output models
 //
 // Every JSON document kac emits is a record serialized through the source generator
-// (KacJson) — reflection-based serialization is disabled under AOT. To add a new document
-// (e.g. `digest` or `drift` output): declare its record shape here and add one
-// `[JsonSerializable(typeof(...))]` line to KacJson; no other plumbing is needed.
+// (KacJson): reflection-based serialization is disabled under AOT. To add a new document
+// (e.g. `digest` or `drift` output), declare its record shape here and add one
+// `[JsonSerializable(typeof(...))]` line to KacJson. No other plumbing is needed.
 //
 // Property names are PascalCase and emitted camelCase; `int?` line is written as `null`.
 
@@ -94,8 +94,8 @@ public record ExportLinks(string Human, string Raw);
 //
 // `Path` and `Anchor` are what the manifest's link templates are substituted with, and they are all a
 // line carries of an address. Resolving both links on every line would repeat one host, one path prefix
-// and one commit for every part in the corpus — most of the file, and a rewrite of every line whenever
-// the commit moves, which buries a changed definition in noise.
+// and one commit for every part in the corpus. That is most of the file, and a rewrite of every line
+// whenever the commit moves, which buries a changed definition in noise.
 public record ExportPartLine(
     string Id,
     string Title,
@@ -121,7 +121,7 @@ public record ExportPartLine(
 // which it has; `tooling/features/bundle.md` says why that has to be stated rather than inferred.
 //
 // It carries no timestamp and no commit. The export it was built from is inside the plugin already,
-// and its manifest states both — a second clock here would be a second answer to one question.
+// and its manifest states both. A second clock here would be a second answer to one question.
 public record BundleRecord(
     int BundleVersion,
     string Plugin,

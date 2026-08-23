@@ -9,129 +9,128 @@ close.
 
 ## Where does this go?
 
-The types this corpus holds, generated from the schema. The table is ordered by what you are holding rather than by
-where it ends up, so a corpus that has adopted five types is offered five, and every row opens.
+The types this corpus holds, generated from the schema. The table is ordered by what you are holding, so scan the left
+column for your row. A corpus that has adopted five types is offered five, and every row opens.
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                                            | It goes in                    |
-|----------------------------------------------------------------------|-------------------------------|
-| A check that proves a rule is being followed                         | [Controls](/controls)         |
-| A commitment about how we engineer, at principle level               | [Policies](/policies)         |
-| A decision that affects more than one repo, and its reasoning        | [ADRs](/adrs)                 |
-| A description of what a deployable component is and does             | [Services](/services)         |
-| A description of what we offer a customer, and why                   | [Capabilities](/capabilities) |
-| A narrative of how something works or why it's shaped that way       | [Explanations](/explanations) |
-| A problem with a known, confirmed fix                                | [FAQs](/faqs)                 |
-| A rule people must follow when building                              | [Standards](/standards)       |
-| A step-by-step for a planned task                                    | [Processes](/processes)       |
-| A step-by-step for when something is broken                          | [Runbooks](/runbooks)         |
-| A target for speed, uptime, or recovery                              | [NFRs](/nfrs)                 |
-| A term whose meaning isn't obvious, or that we use in a specific way | [Glossaries](/glossary)       |
-| A third-party or external system we depend on                        | [Integrations](/integrations) |
-| A tool or package we've approved, rejected, or are trialling         | [Tools](/tools)               |
-| An account of an incident and what caused it                         | [Postmortems](/postmortems)   |
-| Something surprising you noticed and haven't verified                | [Discoveries](/discoveries)   |
-| Where data lives, how long we keep it, and how sensitive it is       | [Data](/data)                 |
+| You have…                                                            | It goes in                         |
+|----------------------------------------------------------------------|------------------------------------|
+| A check that proves a rule is being followed                         | [Controls](../controls.md)         |
+| A commitment about how we engineer, at principle level               | [Policies](../policies.md)         |
+| A decision that affects more than one repo, and its reasoning        | [ADRs](../adrs.md)                 |
+| A description of what a deployable component is and does             | [Services](../services.md)         |
+| A description of what we offer a customer, and why                   | [Capabilities](../capabilities.md) |
+| A narrative of how something works or why it's shaped that way       | [Explanations](../explanations.md) |
+| A problem with a known, confirmed fix                                | [FAQs](../faqs.md)                 |
+| A rule people must follow when building                              | [Standards](../standards.md)       |
+| A step-by-step for a planned task                                    | [Processes](../processes.md)       |
+| A step-by-step for when something is broken                          | [Runbooks](../runbooks.md)         |
+| A target for speed, uptime, or recovery                              | [NFRs](../nfrs.md)                 |
+| A term whose meaning isn't obvious, or that we use in a specific way | [Glossaries](../glossary.md)       |
+| A third-party or external system we depend on                        | [Integrations](../integrations.md) |
+| A tool or package we've approved, rejected, or are trialling         | [Tools](../tools.md)               |
+| An account of an incident and what caused it                         | [Postmortems](../postmortems.md)   |
+| Something surprising you noticed and haven't verified                | [Discoveries](../discoveries.md)   |
+| Where data lives, how long we keep it, and how sensitive it is       | [Data](../data.md)                 |
 
 <!-- END GENERATED: types-placement -->
 
 One thing appears on nobody's list: where you got to part-way through a piece of work. Session logs stay local and never
 reach the corpus.
 
-If nothing fits, raise it rather than improvising. A missing type is a taxonomy conversation. A `misc/` folder is a
-failure nobody notices until it is large. The framework declares more types than any one corpus stands up, so the answer
-may be to adopt one rather than to invent one.
+If nothing fits, raise it. A missing type is a taxonomy conversation. A `misc/` folder is a failure nobody notices
+until it is large. The framework declares more types than any one corpus stands up, so the answer may be to adopt one.
 
 ## The types
 
 Grouped by [tier](../knowledge-as-code.md#tiers), because tier determines how each behaves, and generated from the same
-schema as the table above. The fuller account of a type — what it looks like here, and the records already filed under
-it — is on the type's own page.
+schema as the table above. The fuller account of a type (what it looks like here, and the records already filed under
+it) is on the type's own page.
 
 <!-- BEGIN GENERATED: types-detail -->
 
-### Decided — immutable once accepted
+### Decided: immutable once accepted
 
 Superseded rather than rewritten, so what was thought at the time survives being wrong.
 
-**[ADRs](/adrs)** — An architecturally significant decision affecting more than one repository, and the reasoning behind
-it. The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded by a new
-ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it, not here.
+**[ADRs](../adrs.md).** An architecturally significant decision affecting more than one repository, and the reasoning
+behind it. The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded
+by a new ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it, not here.
 
-**[Postmortems](/postmortems)** — What actually happened during an incident — timeline, impact, root cause, contributing
-factors, actions. Blameless, and immutable once published. The honest counterpart to the decision log: an ADR records
-what was intended, a postmortem what the estate did about it.
+**[Postmortems](../postmortems.md).** What actually happened during an incident (timeline, impact, root cause,
+contributing factors, actions). Blameless, and immutable once published. The honest counterpart to the decision log: an
+ADR records what was intended, a postmortem what the estate did about it.
 
-### Normative — living, owned, reviewed
+### Normative: living, owned, reviewed
 
-**[Controls](/controls)** — How a standard's rules are verified: the mechanism, the frequency, and the evidence it
+**[Controls](../controls.md).** How a standard's rules are verified: the mechanism, the frequency, and the evidence it
 leaves. Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
 honest state and the number worth watching.
 
-**[FAQs](/faqs)** — A problem with a confirmed fix, promoted from a discovery once a human has verified it. It carries
-provenance back to the observation it came from, so the reader can see how far the fix has been taken on trust.
+**[FAQs](../faqs.md).** A problem with a confirmed fix, promoted from a discovery once a human has verified it. It
+carries provenance back to the observation it came from, so the reader can see how far the fix has been taken on trust.
 
-**[NFRs](/nfrs)** — A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.
+**[NFRs](../nfrs.md).** A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
 Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
 
-**[Policies](/policies)** — A high-level engineering commitment: the what and the why, largely stack-agnostic and
+**[Policies](../policies.md).** A high-level engineering commitment: the what and the why, largely stack-agnostic and
 changing rarely. Alignment to an external framework is stated clause by clause, as alignment rather than certification.
 
-**[Standards](/standards)** — The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.
-Imperative throughout — **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece of work
-are the union of the layers that apply to it.
+**[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
+checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
+of work are the union of the layers that apply to it.
 
-### Descriptive — living, must mirror reality
+### Descriptive: living, must mirror reality
 
 These are the types CI can check against the estate rather than merely against themselves, which matters because they
 rot faster than anything else.
 
-**[Capabilities](/capabilities)** — What we offer a customer and why, as a hub linking to what implements, tests and
+**[Capabilities](../capabilities.md).** What we offer a customer and why, as a hub linking to what implements, tests and
 constrains it. A hub, sitting above the epic layer: it links to the work items that detail it, the services that
 implement it, the feature files that test it, and the NFRs that constrain it. A capability that starts accumulating
 detail of its own has stopped being one.
 
-**[Data](/data)** — Which service owns which data, how long it is kept, how sensitive it is, and where personal data
+**[Data](../data.md).** Which service owns which data, how long it is kept, how sensitive it is, and where personal data
 flows. Organised by data domain rather than by processing activity. An engineer can use it; a regulator cannot.
 
-**[Explanations](/explanations)** — Narrative that helps you understand how something works, or why it is shaped the way
-it is. Architecture overviews, conceptual walkthroughs, how the pieces fit together. It links rather than restates: an
-overview points at the documents holding the detail instead of repeating them. One that starts accumulating facts of its
-own has become a maintenance liability.
+**[Explanations](../explanations.md).** Narrative that helps you understand how something works, or why it is shaped the
+way it is. Architecture overviews, conceptual walkthroughs, how the pieces fit together. It links rather than restates:
+an overview points at the documents holding the detail instead of repeating them. One that starts accumulating facts of
+its own has become a maintenance liability.
 
-**[Glossaries](/glossary)** — The ubiquitous language — terms whose meaning is specific to us, or which are easily
+**[Glossaries](../glossary.md).** The ubiquitous language. Terms whose meaning is specific to us, or which are easily
 confused. One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
 time it appears belongs in the most general glossary that admits it, and everything else links to it.
 
-**[Integrations](/integrations)** — An external system we depend on: the contract, the auth, the failure modes, their
-SLA and our fallback. Every integration point needs a deliberate failure mode and a fallback, so the type requires both.
-It also names who to call when the system is down.
+**[Integrations](../integrations.md).** An external system we depend on: the contract, the auth, the failure modes,
+their SLA and our fallback. Every integration point needs a deliberate failure mode and a fallback, so the type requires
+both. It also names who to call when the system is down.
 
-**[Services](/services)** — One deployable component: purpose, repo, platform, environments, dependencies, data stores,
-owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
+**[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
+stores, owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
 
-**[Tools](/tools)** — The approved-software register — what is chosen, rejected or deprecated, and the version ranges we
-stand behind. Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
+**[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version ranges
+we stand behind. Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
 evaluation.
 
-### Procedural — living, must be rehearsed
+### Procedural: living, must be rehearsed
 
-Each records when it was last rehearsed. An unrehearsed process is annoying; an unrehearsed runbook is dangerous.
+Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed runbook is dangerous.
 
-**[Processes](/processes)** — A planned procedure followed deliberately — releasing, onboarding, provisioning, rotating
-a secret. Written to be followed by someone who has not done it before.
+**[Processes](../processes.md).** A planned procedure followed deliberately (releasing, onboarding, provisioning,
+rotating a secret). Written to be followed by someone who has not done it before.
 
-**[Runbooks](/runbooks)** — An incident-time procedure read under pressure: terse, imperative, structured as a decision
-tree. Disaster recovery and estate rebuild live here.
+**[Runbooks](../runbooks.md).** An incident-time procedure read under pressure: terse, imperative, structured as a
+decision tree. Disaster recovery and estate rebuild live here.
 
-### Observed — perishable, unreviewed until promoted
+### Observed: perishable, unreviewed until promoted
 
 The tier carrying the least authority is the one a corpus most depends on, because capture that is not free does not
 happen.
 
-**[Discoveries](/discoveries)** — Something noticed during work and not yet verified, captured cheaply and expiring
-unless promoted. Deliberately low-ceremony — a title, an observation, why it might matter — and carrying a confidence
+**[Discoveries](../discoveries.md).** Something noticed during work and not yet verified, captured cheaply and expiring
+unless promoted. Deliberately low-ceremony (a title, an observation, why it might matter) and carrying a confidence
 level, so that "the build fails silently if X" has somewhere to go the moment it is noticed.
 
 <!-- END GENERATED: types-detail -->
@@ -143,8 +142,7 @@ so they stay local. Only distilled, reviewed discoveries reach the corpus.
 ## How the types relate
 
 The edges carry as much value as the nodes, and they are the part that breaks silently. Every one below is a
-cross-reference field the schema declares, so CI can check that it resolves to a document that exists. That is why the
-schema declares them, rather than an author writing a link in prose.
+cross-reference field the schema declares, so CI can check that it resolves to a document that exists.
 
 <!-- BEGIN GENERATED: types-graph -->
 
@@ -257,8 +255,8 @@ are the layer a downstream corpus inherits, and standards are the layer it write
 policy can know what implements it.
 
 Nor does every edge leave from a whole document. A policy aligns with a framework through a single **clause** rather
-than in its entirety, so the edge leaves the clause table and lands on a control — `pol-SCRT.KEYS` to Annex A A.8.24.
-[Frameworks](/frameworks.md) is the far end of every one of those edges, and the only page that records our standing
+than in its entirety, so the edge leaves the clause table and lands on a control: `pol-SCRT.KEYS` to Annex A A.8.24.
+[Frameworks](../frameworks.md) is the far end of every one of those edges, and the only page that records our standing
 against a framework. It carries no `ref:` and so appears in no row above.
 
 ## Layout
@@ -266,9 +264,9 @@ against a framework. It carries no `ref:` and so appears in no row above.
 Each type follows the same shape:
 
 ```
-<type>.md              # what it is, why, how to contribute — human-written
+<type>.md              # what it is, why, how to contribute: human-written
 <type>/
-  ├── _index.md        # index — GENERATED
+  ├── _index.md        # index: GENERATED
   ├── _template.md     # what humans and agents copy
   └── <records>.md
 ```
@@ -286,12 +284,12 @@ README.md              # orientation
 CLAUDE.md              # agent guidance for working in this repository
 frameworks.md          # external frameworks, and what each obliges us to
 knowledge-as-code.md   # the approach
-knowledge-as-code/     # the system's own documentation — outside the taxonomy
+knowledge-as-code/     # the system's own documentation: outside the taxonomy
 .corpus.yaml           # what this corpus is, and where it takes the framework from
-.claude/skills/        # agent machinery for this corpus — SYNCED
-.plugin/               # source for the plugin that carries this corpus's export — SYNCED, bar its manifest
-.schema/               # the machine-readable schema — SYNCED
-_plan/                 # migration scaffolding — temporary
+.claude/skills/        # agent machinery for this corpus: SYNCED
+.plugin/               # source for the plugin that carries this corpus's export: SYNCED, bar its manifest
+.schema/               # the machine-readable schema: SYNCED
+_plan/                 # migration scaffolding: temporary
 _reports/              # GENERATED
 ```
 
@@ -303,46 +301,46 @@ corpus holds both sides of it.
 <!-- BEGIN GENERATED: types-versus -->
 
 **ADR vs Standard.** The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept
-current. If you are writing "we considered X and rejected it", that is an ADR; if you are writing "you **MUST** do Y",
+current. If you are writing "we considered X and rejected it", that is an ADR. If you are writing "you **MUST** do Y",
 that is a standard. Most substantial changes produce both.
 
 **Capability vs Service.** A capability is what a customer gets. A service is a thing we deploy. One capability
-typically spans several services; one service often contributes to several capabilities.
+typically spans several services. One service often contributes to several capabilities.
 
 **Discovery vs FAQ.** A discovery is unverified and might be wrong or already fixed. An FAQ has been confirmed by a
-human and carries authority. Never write straight to an FAQ from a session — capture the discovery and let promotion do
+human and carries authority. Never write straight to an FAQ from a session. Capture the discovery and let promotion do
 the work.
 
-**Explanation vs ADR.** An explanation describes the shape something has; an ADR records the choice that gave it that
+**Explanation vs ADR.** An explanation describes the shape something has. An ADR records the choice that gave it that
 shape, and is frozen at the moment of choosing.
 
-**Explanation vs Process.** An explanation says how something works; a process says how to perform a task. If a reader
+**Explanation vs Process.** An explanation says how something works. A process says how to perform a task. If a reader
 is meant to follow it step by step, it is a process.
 
-**Explanation vs Service.** An explanation covers how the pieces fit together; a service document describes one
+**Explanation vs Service.** An explanation covers how the pieces fit together. A service document describes one
 deployable component. If it is about a single component, it is a service.
 
-**Explanation vs Standard.** An explanation helps you understand; a standard tells you what to do. If it says you
+**Explanation vs Standard.** An explanation helps you understand. A standard tells you what to do. If it says you
 **MUST** do something, it is a standard however much context surrounds it.
 
-**Policy vs Standard.** A policy is true regardless of stack, framework or year — "we do not store secrets in source
-control". A standard is specific enough to check — "read secrets from the vault via workload identity". If it would
-still be true after replacing the entire technology estate, it is a policy.
+**Policy vs Standard.** A policy is true regardless of stack, framework or year: "we do not store secrets in source
+control". A standard is specific enough to check: "read secrets from the vault via workload identity". If it would still
+be true after replacing the entire technology estate, it is a policy.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
 
-**Standard vs Control.** The standard says what to do; the control says how we know it happened. "Secrets **MUST** come
+**Standard vs Control.** The standard says what to do. The control says how we know it happened. "Secrets **MUST** come
 from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
 control.
 
 **Tool vs ADR.** Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR carries the
-reasoning; the register carries the current state and the version range. Small, uncontroversial adoptions need only the
+reasoning. The register carries the current state and the version range. Small, uncontroversial adoptions need only the
 register.
 
 <!-- END GENERATED: types-versus -->
 
-One more call has only one side here. A **capability** is the product surface — Billing, Search, Notifications —
+One more call has only one side here. A **capability** is the product surface (Billing, Search, Notifications),
 described once, above the epic layer, as a hub of links. A **spec** is the per-feature application of standards to a
 concrete contract, and it belongs in the repo that owns the feature, next to the API description and the feature files
 it describes. That follows the same central-versus-local rule as a decision record: cross-repo synthesis lives here, and
@@ -352,6 +350,6 @@ feature-level detail lives with the code.
 
 Not all types are proven. Where that matters to a corpus, its own README records the state.
 
-Changing the taxonomy — adding a type, merging two, moving a type between tiers — is a larger act than editing any
+Changing the taxonomy (adding a type, merging two, moving a type between tiers) is a larger act than editing any
 document within it. Where a corpus holds ADRs, that change belongs in one, amending whichever recorded the taxonomy in
 the first place.

@@ -2,8 +2,8 @@ using kac.core;
 
 // A corpus rule is handed every record at once, which makes it the hardest kind to drive from a
 // fixture: one graph per scenario, and a scenario is a whole mini-corpus. These tests hand it graphs
-// directly, so the shapes a fixture would only repeat — a longer loop, a loop entered from two sides,
-// an edge pointing nowhere — are each one method.
+// directly, so the shapes a fixture would only repeat are each one method: a longer loop, a loop
+// entered from two sides, an edge pointing nowhere.
 
 namespace kac.tests;
 

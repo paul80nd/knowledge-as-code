@@ -72,7 +72,7 @@ public static class GeneratedFiles
             plan.Add(new GeneratedFile(rel, tree.Exists(rel) ? tree.Read(rel) : null, Generator.IndexPage(t, records)));
         }
 
-        // Every block a file carries, spliced into one text and offered as one entry — a file is written
+        // Every block a file carries, spliced into one text and offered as one entry. A file is written
         // once, so two blocks in the same file cannot each overwrite the other's work. A file carrying no
         // marker resolves to itself, which is what lets a corpus decline the one block it may.
         foreach (var spec in Declare(adopted))
@@ -111,6 +111,12 @@ public static class GeneratedFiles
 
     private readonly record struct FileSpec(string Path, bool MarkersRequired, Block[] Blocks);
 
+    // How far a block's own file sits below the corpus root, as the prefix a link from it climbs by. A
+    // generated link is written relative so it resolves wherever the corpus sits, whether that is the root
+    // of a wiki or a subfolder of a documentation site.
+    private static string Up(string path) =>
+        string.Concat(Enumerable.Repeat("../", path.Count(c => c == '/')));
+
     // The declaration itself. Everything above reads this and nothing else, so the block a corpus is held
     // to is by construction the block it is written.
     private static List<FileSpec> Declare(IReadOnlyList<TypeSchema> adopted)
@@ -118,29 +124,29 @@ public static class GeneratedFiles
         // The schema and checks blocks derive from the schema alone, so every adopted type gets them
         // whether or not it holds records yet. Restricting this to populated types would leave the markers
         // on an empty page holding hand-written text nothing checks, to be overwritten by whoever adds the
-        // type's first record — surfacing the drift at the least convenient moment.
+        // type's first record, which surfaces the drift at the least convenient moment.
         var specs = (from t in adopted
             where !string.IsNullOrEmpty(t.Page)
             select new FileSpec(t.Page, true,
             [
-                new Block($"schema-{t.Key}", schema => Generator.SchemaTable(t, schema)),
+                new Block($"schema-{t.Key}", schema => Generator.SchemaTable(t, schema, Up(t.Page))),
                 new Block($"checks-{t.Key}", s => Generator.ChecksTable(s, t))
             ])).ToList();
 
         // The pages that describe the taxonomy to a reader rather than to the tool. Each lists types, and
-        // the list is the half that was wrong in every corpus that adopted some of them — so none can name
-        // a type whose page is not there to open. `metadata.md` also carries the universal field table,
+        // the list is the half that was wrong in every corpus that adopted some of them. So none can
+        // name a type whose page is not there to open. `metadata.md` also carries the universal field table,
         // which is the schema's alone.
         specs.Add(new FileSpec("knowledge-as-code/metadata.md", true,
         [
             new Block("schema-universal", Generator.UniversalSchemaTable),
-            new Block("types-metadata", _ => Generator.MetadataStrip(adopted))
+            new Block("types-metadata", _ => Generator.MetadataStrip(adopted, Up("knowledge-as-code/metadata.md")))
         ]));
 
         specs.Add(new FileSpec("knowledge-as-code/taxonomy.md", true,
         [
-            new Block("types-placement", _ => Generator.PlacementTable(adopted)),
-            new Block("types-detail", schema => Generator.TypeCatalogue(schema.Tiers, adopted)),
+            new Block("types-placement", _ => Generator.PlacementTable(adopted, Up("knowledge-as-code/taxonomy.md"))),
+            new Block("types-detail", schema => Generator.TypeCatalogue(schema.Tiers, adopted, Up("knowledge-as-code/taxonomy.md"))),
             new Block("types-versus", _ => Generator.Disambiguations(adopted)),
             new Block("types-graph", _ => Generator.RelationDiagram(adopted)),
             new Block("types-edges", _ => Generator.RelationTable(adopted))
@@ -148,13 +154,13 @@ public static class GeneratedFiles
 
         specs.Add(new FileSpec("knowledge-as-code/lineage.md", true,
         [
-            new Block("types-lineage", _ => Generator.LineageTable(adopted)),
+            new Block("types-lineage", _ => Generator.LineageTable(adopted, Up("knowledge-as-code/lineage.md"))),
             new Block("types-collisions", _ => Generator.Collisions(adopted))
         ]));
 
         specs.Add(new FileSpec("README.md", false,
         [
-            new Block("types-index", _ => Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md"))
+            new Block("types-index", _ => Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md", Up("README.md")))
         ]));
 
         return specs;

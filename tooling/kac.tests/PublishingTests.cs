@@ -4,7 +4,7 @@ using kac.core;
 //
 // The link forms cannot be shown by a golden fixture: the harness assembles a corpus that is not a git
 // repository, so no run there resolves a ref and no run there writes a link. That is the right shape
-// for the fixture — it proves the no-links path — and leaves the rules themselves to be proven here.
+// for the fixture: it proves the no-links path, and leaves the rules themselves to be proven here.
 
 namespace kac.tests;
 
@@ -133,7 +133,7 @@ public class PublishingTests
     }
 
     // The anchor rule is the target's, and GitHub's is the discarding form the corpus's own links
-    // already use — which is what lets one citation name a term and a link land on it.
+    // already use. That is what lets one citation name a term and a link land on it.
     [Fact]
     public void The_anchor_is_the_form_the_corpus_already_links_with()
     {

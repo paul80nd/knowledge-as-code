@@ -12,7 +12,7 @@
       "line": 1,
       "severity": "warning",
       "check": "hub-not-specification",
-      "message": "Prose has outgrown the links. A capability is a hub — move the detail into the documents it should be pointing at, and link to them from here."
+      "message": "Prose has outgrown the links. A capability is a hub. Move the detail into the documents it should be pointing at, and link to them from here."
     },
     {
       "file": "controls/0001-frequency-not-stated.md",
@@ -26,7 +26,7 @@
       "line": 1,
       "severity": "warning",
       "check": "mechanism-has-evidence",
-      "message": "This control claims to run and does not say where the proof of it lives. Set `evidence` to the build log, the audit note or the dashboard — an unevidenced control is an assertion, and `not-enforced` is the honest value for one."
+      "message": "This control claims to run and does not say where the proof of it lives. Set `evidence` to the build log, the audit note or the dashboard. An unevidenced control is an assertion, and `not-enforced` is the honest value for one."
     },
     {
       "file": "data/borrower-records.md",
@@ -47,14 +47,14 @@
       "line": 1,
       "severity": "warning",
       "check": "low-ceremony",
-      "message": "This is longer than a capture should be. If it needs this much explaining it has outgrown the tier — promote it rather than expanding it here."
+      "message": "This is longer than a capture should be. If it needs this much explaining it has outgrown the tier. Promote it rather than expanding it here."
     },
     {
       "file": "explanations/how-holds-are-queued.md",
       "line": 1,
       "severity": "warning",
       "check": "links-rather-than-restates",
-      "message": "Prose has outgrown the links. Each fact restated here is a second copy to keep true — link to the document that owns it instead."
+      "message": "Prose has outgrown the links. Each fact restated here is a second copy to keep true. Link to the document that owns it instead."
     },
     {
       "file": "explanations/why-holds-expire.md",
@@ -68,14 +68,14 @@
       "line": 1,
       "severity": "warning",
       "check": "one-problem-per-document",
-      "message": "This carries more than one Symptom section, so it is more than one FAQ. Someone arriving with a symptom matches on the first one and never reads the second — split it."
+      "message": "This carries more than one Symptom section, so it is more than one FAQ. Someone arriving with a symptom matches on the first one and never reads the second. Split it."
     },
     {
       "file": "glossary/out-of-order.md",
       "line": 30,
       "severity": "warning",
       "check": "terms-alphabetical",
-      "message": "'Branch' is out of order — it belongs before 'Item'."
+      "message": "'Branch' is out of order: it belongs before 'Item'."
     },
     {
       "file": "integrations/payment-gateway.md",
@@ -96,21 +96,21 @@
       "line": 1,
       "severity": "warning",
       "check": "target-is-measurable",
-      "message": "`measured-by` hedges rather than measures. Name the instrument and the number it reports — an NFR measured \"where practical\" is one nobody has to meet."
+      "message": "`measured-by` hedges rather than measures. Name the instrument and the number it reports. An NFR measured \"where practical\" is one nobody has to meet."
     },
     {
       "file": "policies/cert-certification-claim.md",
       "line": 1,
       "severity": "warning",
       "check": "posture-belongs-to-frameworks",
-      "message": "This claims a standing against a framework. A policy maps clauses to controls; where the organisation stands belongs in `frameworks.md`, the one place it can be kept true."
+      "message": "This claims a standing against a framework. A policy maps clauses to controls. Where the organisation stands belongs in `frameworks.md`, the one place it can be kept true."
     },
     {
       "file": "postmortems/0001-detected-before-it-happened.md",
       "line": 1,
       "severity": "error",
       "check": "detected-not-before-occurred",
-      "message": "`detected-on` is before `occurred-on` — an incident cannot be found before it began. If the dates are right, the earlier one is when it started."
+      "message": "`detected-on` is before `occurred-on`. An incident cannot be found before it began. If the dates are right, the earlier one is when it started."
     },
     {
       "file": "processes/rotate-a-signing-key.md",
@@ -138,7 +138,7 @@
       "line": 1,
       "severity": "error",
       "check": "provenance-required",
-      "message": "A standard cites where its authority comes from — an ADR in `derived-from`, a policy in `implements`, or both. With neither this is guidance, and guidance is an explanation."
+      "message": "A standard cites where its authority comes from: an ADR in `derived-from`, a policy in `implements`, or both. With neither this is guidance, and guidance is an explanation."
     },
     {
       "file": "tools/deprecated-no-successor.md",

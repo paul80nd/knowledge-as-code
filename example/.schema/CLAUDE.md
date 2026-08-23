@@ -32,7 +32,7 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
 
 ## Writing a rule
 
-* **Read the field declaration and the `sections:` block first — the rule may already be answered.** A `reciprocal:`, a
+* **Read the field declaration and the `sections:` block first.** The rule may already be answered. A `reciprocal:`, a
   `mirrors-section:`, a `required-when:`, a scalar type, a required section, a section left as a bare heading. Each has
   been written out as a rule at some point, and each read as outstanding work for as long as it survived.
 

@@ -27,8 +27,8 @@ contracts, the service bus, auth, deployment ordering, infrastructure patterns. 
 
 ## Scope: central vs repo-local
 
-An ADR here covers a decision spanning **more than one** repository. A decision entirely local to a single repository —
-a library choice, an internal naming convention, a refactor approach — belongs in that repository, under `/docs/adrs/`.
+An ADR here covers a decision spanning **more than one** repository. A decision entirely local to a single repository
+(a library choice, an internal naming convention, a refactor approach) belongs in that repository, under `/docs/adrs/`.
 
 Where a central ADR later supersedes a repo-local one, set the local ADR to superseded and reference the central ADR by
 its id.
@@ -40,18 +40,18 @@ its id.
 | Field           | Value                                           | Notes                                                                                                        |
 |-----------------|-------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
 | `id` *†         | string                                          | Stable, unique across the corpus, never reused. Format set by the type.                                      |
-| `tier` *†       | `decided`                                       | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.                         |
-| `status` *†     | `proposed` `accepted` `deprecated` `superseded` | Immutable once `accepted` — supersede rather than rewrite.                                                   |
+| `tier` *†       | `decided`                                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                          |
+| `status` *†     | `proposed` `accepted` `deprecated` `superseded` | Immutable once `accepted`. Supersede rather than rewrite.                                                    |
 | `owner` *†      | string                                          | A named person, never a team alias.                                                                          |
 | `tags` †        | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                             |
 | `decided-on`    | date                                            | The acceptance date. Bare key until accepted. Required when `status == accepted`.                            |
 | `supersedes`    | id                                              | The ADR this replaces.                                                                                       |
-| `superseded-by` | id                                              | CI enforces both directions; a one-sided supersession fails the build. Required when `status == superseded`. |
+| `superseded-by` | id                                              | CI enforces both directions. A one-sided supersession fails the build. Required when `status == superseded`. |
 | `deciders`      | list                                            | The people who agreed it.                                                                                    |
 | `related`       | list                                            | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.             |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-adrs -->
 
@@ -59,25 +59,25 @@ its id.
 
 1. Copy [`_template.md`](adrs/_template.md) to `NNNN-kebab-case-title.md`, where `NNNN` is the next unused four-digit
    number. The [index](adrs/_index.md) shows the highest one in use.
-2. Fill in the frontmatter and the sections. Keep it short — narrative paragraphs, not form-filling.
+2. Fill in the frontmatter and the sections. Keep it short: a few narrative paragraphs.
 3. Open a PR. The status starts at `proposed`.
 4. On acceptance, set `status: accepted` and `decided-on`. The index rebuilds itself.
 
 **Conventions**
 
-* **Filename** — `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused. A withdrawn proposal retires its
+* **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused. A withdrawn proposal retires its
   number.
-* **Immutability** — once an ADR is accepted, change nothing in it beyond its status and its typos. To change a
+* **Immutability.** Once an ADR is accepted, change nothing in it beyond its status and its typos. To change a
   decision, write a new ADR that supersedes the old one.
-* **Superseding** — set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
+* **Superseding.** Set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
   supersession recorded on one side only fails the build.
-* **Prescriptive language** — an ADR that establishes a default or a policy may use
+* **Prescriptive language.** An ADR that establishes a default or a policy may use
   [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. An ADR that records a decision uses plain
   declarative prose.
-* **Format** — a lean Nygard-style format with an explicit Alternatives Considered section.
+* **Format**: lean Nygard style, with an explicit Alternatives Considered section.
   [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example, and arrives with the corpus.
 
-See [Contributing](/knowledge-as-code/contributing.md) for the review model that applies to all Decided-tier documents.
+See [Contributing](knowledge-as-code/contributing.md) for the review model that applies to all Decided-tier documents.
 
 ## What CI checks
 
@@ -90,14 +90,14 @@ See [Contributing](/knowledge-as-code/contributing.md) for the review model that
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
 | `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
+| `filename / slug-length`    | error   | Filename matches the pattern. The slug is within 30 characters.                                                 |
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
@@ -112,7 +112,7 @@ See [Contributing](/knowledge-as-code/contributing.md) for the review model that
 | `y-statement`               | warning | A Y-statement block-quote follows the H1, states all six moves, and is within its word ceiling.                 |
 | `alternatives-verdict`      | warning | Each Alternatives Considered bullet states a verdict.                                                           |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule                       | What it would verify                                                                             |
 |----------------------------|--------------------------------------------------------------------------------------------------|

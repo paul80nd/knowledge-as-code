@@ -68,15 +68,15 @@ public static class Breadcrumb
 
         var named = Named(names);
         return named.Count > 0
-            ? $"{type.Type} — {body}: {Join(named)}."
-            : $"{type.Type} — {body}.";
+            ? $"{type.Type}. {body}: {Join(named)}."
+            : $"{type.Type}. {body}.";
     }
 
     // The names as the line will carry them: all of them where a type holds few, and the first of them
     // followed by a count of what is left where it holds many.
     //
     // The remainder is named rather than dropped. A list cut short silently reads as the whole of what
-    // the type covers, which is the one thing a reader would carry away wrongly — and it is the count,
+    // the type covers, which is the one thing a reader would carry away wrongly. It is the count,
     // not the titles, that the line exists to make.
     private static IReadOnlyList<string> Named(IReadOnlyList<string> names)
     {

@@ -16,23 +16,24 @@ tags: [ a, b ]
 
 `Tool: tol-{{slug}}` `TRIAL`
 
-<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+<!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
-is reviewed. What is below is only what a tool adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
+and how it is reviewed. What is below is only what a tool adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
-* **`status`** — `approved` · `trial` · `deprecated` · `rejected`. Approved means approved **for new work**; something
+* **`status`**: `approved` · `trial` · `deprecated` · `rejected`. Approved means approved **for new work**; something
   already in use but not approved is drift, and the drift report will say so.
-* **`versions`** — A range, not a pin: the register states what we stand behind, the manifests state what is installed.
-* **`licence`** — An SPDX identifier — the field nobody wants until they urgently do.
-* **`decided-in`** — An ADR, where one exists.
-* **`successor`** — What replaces this, once the status is `deprecated`. `replaces` is the same edge read the other way,
+* **`versions`**: a range, not a pin. The register states what we stand behind, and the manifests state what is
+  installed.
+* **`licence`**: an SPDX identifier. Nobody wants the field until they urgently do.
+* **`decided-in`**: an ADR, where one exists.
+* **`successor`**: what replaces this, once the status is `deprecated`. `replaces` is the same edge read the other way,
   and CI enforces both ends.
 
-**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
-reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
+**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
+what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
@@ -44,7 +45,7 @@ Where it sits in the stack and which problem it solves for us specifically.
 
 ## Status
 
-**{{approved / trial / deprecated / rejected}}** — since {{date}}.
+**{{approved / trial / deprecated / rejected}}** since {{date}}.
 
 For `deprecated`: name the replacement in `successor`, and say by when.
 
@@ -61,13 +62,14 @@ criteria stays a trial forever.
 
 * [svc-{{a}}]
 
-_(Generated drift detection will compare this against the actual package manifests once it exists — both directions.)_
+_(Generated drift detection will compare this against the actual package manifests in both directions, once it
+exists.)_
 
 ## Alternatives considered
 
-* **{{Alternative}}** — why it lost out.
+* **{{Alternative}}**: why it lost out.
 
-_(Brief. If the choice was contested or expensive, the reasoning belongs in an [ADR](/adrs) and this cites it via
+_(Brief. If the choice was contested or expensive, the reasoning belongs in an [ADR](../adrs.md) and this cites it via
 `decided-in`. Small, uncontroversial adoptions need only this section.)_
 
 ## Licence and obligations
@@ -76,9 +78,9 @@ _(Brief. If the choice was contested or expensive, the reasoning belongs in an [
 
 ## Related
 
-* [std-{{a}}] — standards that mandate or constrain its use.
-* [adr-{{a}}] — the decision, where there was one.
+* [std-{{a}}] mandates or constrains its use.
+* [adr-{{a}}] records the decision, where there was one.
 
-[adr-{{a}}]: /adrs/{{a}}.md
-[std-{{a}}]: /standards/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
+[adr-{{a}}]: ../adrs/{{a}}.md
+[std-{{a}}]: ../standards/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md

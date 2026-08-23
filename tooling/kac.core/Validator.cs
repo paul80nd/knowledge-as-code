@@ -8,9 +8,9 @@ public static class Validator
     // each record on its own, then the pages that are not records, then the questions that need every
     // record in hand, then whether the corpus has the shape its schema declares.
     //
-    // This is the whole of `validate` — the command around it only chooses how to print the result.
-    // Any caller wanting to know what the tool thinks of a corpus calls this, so no caller can end up
-    // running a subset and believing it ran the lot.
+    // This is the whole of `validate`: the command around it only chooses how to print the result. Any
+    // caller wanting to know what the tool thinks of a corpus calls this, so no caller can end up running
+    // a subset and believing it ran the lot.
     public static List<Finding> CheckAll(LoadedCorpus corpus)
     {
         var (schema, tree) = (corpus.Schema, corpus.Tree);
@@ -23,8 +23,8 @@ public static class Validator
             CheckDocument(doc, schema, tree, findings);
 
         // Every file `kac generate` writes a block into, held to still carrying the markers to write between.
-        // Driven from the list the generator writes from, so every file it writes is a file this visits: a
-        // type's page and the framework's own pages are one question and get one answer.
+        // Driven from the list the generator writes from, so every file that gets a block is a file this
+        // visits: a type's page and the framework's own pages are one question and get one answer.
         //
         // A file the corpus does not hold is skipped: its absence is type-setup's to report for a page, and
         // no fault at all for a framework document a corpus has not taken.
@@ -36,9 +36,9 @@ public static class Validator
             CheckGeneratedBlocks(file.Path, tree.Read(file.Path), file.Blocks, findings);
         }
 
-        // A type's page is not a record — it carries no frontmatter and describes the documents
-        // beneath it rather than being one — so the structural checks do not apply. What it does carry
-        // is links, and it is the page every record links back to and every contributor reads first.
+        // A type's page is not a record. It carries no frontmatter, and it describes the documents beneath
+        // it, so the structural checks do not apply. What it does carry is links, and it is the page every
+        // record links back to and every contributor reads first.
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             if (string.IsNullOrEmpty(t.Page)) continue;
@@ -53,7 +53,7 @@ public static class Validator
             // a forked file is never compared against upstream.
             if (page.FrontStartLine > 0)
                 findings.Add(new Finding(t.Page, page.FrontStartLine, Sev.Error, new CheckId("page-frontmatter"),
-                    "the page carries frontmatter — it describes the records beneath it and is not one, so it has "
+                    "the page carries frontmatter: it describes the records beneath it and is not one, so it has "
                     + $"no id, tier or status of its own. Move what it holds into '{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/' "
                     + "as a record, and delete the block."));
 
@@ -61,8 +61,8 @@ public static class Validator
         }
 
         // The template each collection type carries. It is the one file in a type that every future
-        // document is copied from, so a defect in it is not one document's problem but every
-        // document's — and it is found by the next author rather than by whoever last edited it.
+        // document is copied from, so a defect in it is not one document's problem but every document's.
+        // The defect is found by the next author rather than by whoever last edited it.
         //
         // It is checked here rather than discovered as a record, because it is not one: it holds no id,
         // claims no place in the index, and must not answer to id-unique or to a reciprocal edge. What
@@ -72,7 +72,7 @@ public static class Validator
             var template = Doc.Parse(rel, tree.Read(rel), schema);
             if (template is null)
                 findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
-                    "the template carries no frontmatter — a document copied from it starts with none."));
+                    "the template carries no frontmatter: a document copied from it starts with none."));
             else
                 CheckDocument(template, schema, tree, findings, DocKind.Template);
         }
@@ -81,13 +81,12 @@ public static class Validator
         // it, and one rule of its own about where the page will be read rather than about what it says.
         CheckFrameworkDocs(schema, tree, corpus.Docs, findings);
 
-        // Corpus-wide checks (uniqueness, reciprocity) need every doc in hand. The index they build is
-        // handed on rather than built again: it is the corpus's one account of which id names which
-        // document, and a second one would be free to answer differently.
+        // Uniqueness and reciprocity need every document in hand. The index they build is handed on rather
+        // than built again: it is the corpus's one account of which id names which document, and a second
+        // one would be free to answer differently.
         var byId = CheckCorpus(schema, corpus.Docs, findings);
 
-        // The rules whose question is about the set — a cycle in a dependency graph, a term nothing
-        // uses.
+        // The rules whose question is about the set: a cycle in a dependency graph, a term nothing uses.
         CheckCorpusRules(schema, corpus.Docs, byId, findings);
 
         // How often a value recurs is a question about the whole of a type.
@@ -122,25 +121,25 @@ public static class Validator
         foreach (var kv in d.Front.Children)
             present[((YamlScalarNode)kv.Key).Value ?? ""] = kv.Value;
 
-        // -- the frontmatter's keys --
-        // A record is asked whether every key it carries is known; whether the required ones are filled
-        // in is a separate question below. A template is asked both at once and answers for the
-        // documents copied from it rather than for itself, so the two live together in one check.
+        // The frontmatter's keys. A record is asked whether every key it carries is known. Whether the
+        // required ones are filled in is a separate question below. A template is asked both at once and
+        // answers for the documents copied from it rather than for itself, so the two live together in
+        // one check.
         if (kind == DocKind.Template) CheckTemplateFields(d, t, report);
         else
             foreach (var k in d.FrontKeys)
                 if (!t.KnownKeys.Contains(k))
                     report.Err(new CheckId("unknown-key"), $"unknown frontmatter key '{k}'.", d.FrontStartLine);
 
-        // The key order must be a topological extension of the chains the schema declares: every
-        // pair it orders must hold, and genuinely unconstrained pairs are free. See
+        // The key order must be a topological extension of the chains the schema declares: every pair it
+        // orders must hold, and genuinely unconstrained pairs are free. See
         // TypeSchema.DeriveKeyOrderEdges for why the constraint is a pair set rather than a total order.
         CheckKeyOrder(d, t, report);
 
-        // -- required fields (universal + type), incl. required-when --
-        // Not asked of a template. Every value in one is either bare or a placeholder, both of which
-        // say "not supplied yet" — which is the whole point of the file. That the fields are all there
-        // to be supplied is CheckTemplateFields' question above.
+        // The required fields, universal and type alike, including the ones `required-when` turns on. Not
+        // asked of a template. Every value in one is either bare or a placeholder, and both say "not
+        // supplied yet". That is the whole point of the file. Whether the fields are all there to be
+        // supplied is CheckTemplateFields' question above.
         if (kind == DocKind.Record)
             foreach (var spec in t.DeclaredFields)
             {
@@ -154,9 +153,9 @@ public static class Validator
                 }
             }
 
-        // -- per-field value checks --
-        // What a value is held to is the field's declaration and nothing about the document around it,
-        // so the whole of it lives in `ValueChecks` and is testable from a `FieldSpec` and a string.
+        // The per-field value checks. What a value is held to is the field's declaration and nothing about
+        // the document around it, so the whole of it lives in `ValueChecks` and is testable from a
+        // `FieldSpec` and a string.
         foreach (var (name, node) in present)
         {
             var spec = schema.EffectiveField(t, name);
@@ -170,10 +169,10 @@ public static class Validator
                 $"tier '{tier}' does not match the '{t.TypeName}' type tier '{t.Tier}'.",
                 Yaml.LineOf(tierNode, d.FrontStartLine));
 
-        // -- the id, the filename, and the agreement between them --
-        // None of it is asked of a template. It has no id — `svc-{{slug}}` is the instruction to allocate
-        // one — and `_template.md` is a reserved name that no type's filename pattern matches or should.
-        // What the identity line below still asks is that the template agrees with itself.
+        // The id, the filename, and the agreement between them. None of it is asked of a template. A
+        // template has no id: `svc-{{slug}}` is the instruction to allocate one. `_template.md` is also a
+        // reserved name that no type's filename pattern matches or should. What the identity line below
+        // still asks is that the template agrees with itself.
         if (kind == DocKind.Record)
         {
             if (present.TryGetValue("id", out var idNode) && Yaml.Raw(idNode) is { } id)
@@ -189,12 +188,11 @@ public static class Validator
             if (!d.Sections.Any(s => string.Equals(s.Title, sec, StringComparison.OrdinalIgnoreCase)))
                 report.Err(new CheckId("required-section"), $"missing required section '## {sec}'.");
 
-        // -- a section that is nothing but its heading --
-        // `required-section` is answered by a heading existing, and an author with nothing to say cannot
-        // delete a required one, so what they leave is a blank beneath it — which reads as a finished
-        // document to everyone but the person who needed the section. An optional section reaches the
-        // same state from the other side, emptied during a cleanup with the heading left behind, and the
-        // remedy differs enough to be worth two wordings.
+        // A section that is nothing but its heading. `required-section` is answered by a heading existing,
+        // and an author with nothing to say cannot delete a required one, so what they leave is a blank
+        // beneath it. That blank reads as a finished document to everyone but the person who needed the
+        // section. An optional section reaches the same state from the other side, emptied during a
+        // cleanup with the heading left behind, and the remedy differs enough to be worth two wordings.
         //
         // A section the schema never declared is the author's own. A template's stand empty for the copy
         // to fill. The section a type keeps its parts in is left to the checks that read them, which are
@@ -210,20 +208,19 @@ public static class Validator
                         $"required section '## {s.Title}' has nothing under it.", s.Line);
                 else if (t.OptionalSections.Contains(s.Title, StringComparer.OrdinalIgnoreCase))
                     report.Err(new CheckId("empty-section"),
-                        $"section '## {s.Title}' has nothing under it — write it or delete the heading.", s.Line);
+                        $"section '## {s.Title}' has nothing under it. Write it or delete the heading.", s.Line);
             }
 
-        // -- placeholders left from the template --
-        // The other half of the convention: `{{…}}` means "supply this", so a record still carrying one
-        // is a copy nobody finished. Easy to do and easy to miss — the file has an id, a title and every
-        // section, so every other check passes and the document reads as complete until someone follows
-        // a link to `{{a}}.md`. Reported once, naming the first: an unfinished copy holds a dozen, and
-        // eleven more findings say nothing the first did not.
+        // The other half of the template convention: `{{…}}` means "supply this", so a record still
+        // carrying one is a copy nobody finished. Easy to do and easy to miss: the file has an id, a title
+        // and every section, so every other check passes and the document reads as complete until someone
+        // follows a link to `{{a}}.md`. Reported once, naming the first, because an unfinished copy holds
+        // a dozen and eleven more findings say nothing the first did not.
         if (kind == DocKind.Record) CheckPlaceholders(d, report);
 
-        // -- clause table shape, ids and modals --
-        // A template's clause rows are a demonstration of the shape, with `{{ID}}` where the id goes, so
-        // they are neither unique nor citable and are not asked to be.
+        // The clause table's shape, its ids and its modals. A template's clause rows are a demonstration
+        // of the shape, with `{{ID}}` where the id goes, so they are neither unique nor citable and are
+        // not asked to be.
         if (kind == DocKind.Record) PartChecks.Check(d, t, report);
 
         // The notation a citation is written in, which any document may get wrong and a template may
@@ -232,29 +229,28 @@ public static class Validator
 
         LinkChecks.Check(d, schema, tree, report, kind);
 
-        // -- related mirrors ## Related --
-        // A reconciliation between two halves of the same document, both of which are examples in a
-        // template — it would hold the file to agreeing with itself about documents that do not exist.
+        // `related:` mirrors `## Related`. This reconciles two halves of the same document, and both
+        // halves are examples in a template, so asking it of a template would hold the file to agreeing
+        // with itself about documents that do not exist.
         if (kind == DocKind.Record) CheckMirrorsSection(d, t, schema, report);
 
-        // -- the type's own rules --
-        // Every one of them judges a filled-in document: whether the prose has outgrown the links,
-        // whether a step hedges, whether a control names its evidence. A template answers none of those
-        // questions, and its guidance prose would answer several of them wrongly. This is also the one
-        // open-ended set — a type may declare a rule tomorrow — so a template is exempt from the
-        // category rather than from the rules that happen to exist today.
+        // The type's own rules. Every one of them judges a filled-in document: whether the prose has
+        // outgrown the links, whether a step hedges, whether a control names its evidence. A template
+        // answers none of those questions, and its guidance prose would answer several of them wrongly.
+        // This is also the one open-ended set: a type may declare a rule tomorrow. So a template is exempt
+        // from the category rather than from the rules that happen to exist today.
         if (kind == DocKind.Record) CheckRules(d, t, report);
     }
 
-    // The markers a generated block lives between. `Generator.SpliceBlock` looks for the pair and
-    // returns the text untouched when either is missing, so a file that loses one silently stops
-    // being generated into — and `generate --check` agrees it is fresh, because what the generator would
-    // write is exactly what is already there. Nothing else can notice, which is why this is a check
-    // on the markers rather than on the content between them.
+    // The markers a generated block lives between. `Generator.SpliceBlock` looks for the pair and returns
+    // the text untouched when either is missing, so a file that loses one silently stops being generated
+    // into. `generate --check` then agrees it is fresh, because what the generator would write is exactly
+    // what is already there. Nothing else can notice, which is why this is a check on the markers rather
+    // than on the content between them.
     //
     // Asked of every file `GeneratedFiles.Blocks` names, and of every block it names there: a block whose
     // markers have both gone is the same fault as one that lost a single marker, and is the quieter of
-    // the two. `README.md` is the exception, and answers for itself — see `BlockFile.MarkersRequired`.
+    // the two. `README.md` is the exception and answers for itself. See `BlockFile.MarkersRequired`.
     public static void CheckGeneratedBlocks(string rel, string text, IEnumerable<string> names,
         List<Finding> f)
     {
@@ -266,7 +262,7 @@ public static class Validator
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block is missing its "
                     + (begin < 0 && end < 0 ? "markers" : begin < 0 ? "BEGIN marker" : "END marker")
-                    + " — `kac generate` writes between them and leaves the page alone without both."));
+                    + ": `kac generate` writes between them and leaves the page alone without both."));
             else if (end < begin)
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block's END marker comes before its BEGIN marker."));
@@ -275,20 +271,20 @@ public static class Validator
 
     // Whether each type the schema declares is stood up, and stood up completely.
     //
-    // A schema file says the tool manages this type; it does not say the corpus has built it yet. A
-    // corpus adopting the framework a type at a time holds the whole schema and grows into it, so a
-    // declared type with nothing behind it is a valid, silent state — nothing links to it, nothing
-    // generates for it, and no contributor can reach it.
+    // A schema file says the tool manages this type. It does not say the corpus has built it yet. A corpus
+    // adopting the framework a type at a time holds the whole schema and grows into it, so a declared type
+    // with nothing behind it is a valid, silent state: nothing links to it, nothing generates for it, and
+    // no contributor can reach it.
     //
-    // What is not valid is half of one. A folder is the signal that the type has been stood up, and
-    // from that point everything the type needs must be there: the page a reader arrives on, and the
-    // template a contributor copies. A page without a folder is the same fault from the other side.
-    // The generated index is deliberately not checked here — `generate --check` already reports it
-    // missing or stale, and one fault should not be reported by two commands.
+    // What is not valid is half of one. A folder is the signal that the type has been stood up, and from
+    // that point everything the type needs must be there: the page a reader arrives on, and the template a
+    // contributor copies. A page without a folder is the same fault from the other side. The generated
+    // index is deliberately not checked here, because `generate --check` already reports it missing or
+    // stale and one fault should not be reported by two commands.
     //
-    // A folder counts as present when it holds tracked files. An empty directory git has never seen
-    // is not part of the corpus, so the answer is the same in a fresh clone as on the machine that
-    // happened to create it.
+    // A folder counts as present when it holds tracked files. An empty directory git has never seen is not
+    // part of the corpus, so the answer is the same in a fresh clone as on the machine that happened to
+    // create it.
     private static void CheckTypeSetup(Schema schema, Tree tree, CorpusDescriptor descriptor, List<Finding> f)
     {
         CheckAdoption(schema, tree, descriptor, f);
@@ -303,7 +299,7 @@ public static class Validator
             {
                 if (pageExists)
                     f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                        $"type '{key}' has {t.Page} but no '{folder}/' — a type is set up as both or neither."));
+                        $"type '{key}' has {t.Page} but no '{folder}/': a type is set up as both or neither."));
                 continue;
             }
 
@@ -316,7 +312,7 @@ public static class Validator
             if (!tree.OnDisk(template)) missing.Add(template);
             if (missing.Count > 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                    $"type '{key}' has a '{folder}/' folder but is not fully set up — add {string.Join(", ", missing)}."));
+                    $"type '{key}' has a '{folder}/' folder but is not fully set up. Add {string.Join(", ", missing)}."));
         }
     }
 
@@ -333,7 +329,7 @@ public static class Validator
 
         foreach (var name in declared.Where(n => !schema.ByFolder.ContainsKey(n)))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                $"'{name}' is adopted here and no schema covers it — either '.schema/{name}.yaml' has not been synced "
+                $"'{name}' is adopted here and no schema covers it: either '.schema/{name}.yaml' has not been synced "
                 + "from upstream, or the name is wrong."));
 
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
@@ -345,20 +341,20 @@ public static class Validator
             // outstanding rather than as a contradiction.
             if (adopted && !stoodUp)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                    $"type '{key}' is adopted here and is not stood up — add {t.Page} and its folder, or drop it from "
+                    $"type '{key}' is adopted here and is not stood up. Add {t.Page} and its folder, or drop it from "
                     + "'types:' if it was not wanted."));
 
             // Built and not declared is the other way round, and is how a corpus drifts back to inferring:
             // the pages would leave the type out while the corpus plainly holds it.
             if (!adopted && stoodUp)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                    $"type '{key}' is stood up here and is not in 'types:' — every generated list leaves it out while "
+                    $"type '{key}' is stood up here and is not in 'types:'. Every generated list leaves it out while "
                     + "the corpus holds it. Adopt it, or delete what was built."));
         }
     }
 
     // The documents describing the framework itself, wherever a corpus keeps them, as globs the listing
-    // answers — see `Tree.Match`. The framework's own glossary is one of them, and the only one that is
+    // answers. See `Tree.Match`. The framework's own glossary is one of them, and the only one that is
     // also a record: it is filed under a type and validated like any other. Being shared byte-for-byte is
     // what brings it here as well.
     private static readonly string[] FrameworkDocs =
@@ -369,8 +365,8 @@ public static class Validator
     // type page cannot: it either resolves or is a dead end, depending on a decision the page cannot see.
     //
     // So a framework document names a type and never links to one. Where a link is genuinely wanted, the
-    // list it belongs in is generated from the types the corpus stood up, and a generated block is exempt
-    // for exactly that reason — it is written against this corpus rather than against the framework.
+    // list it belongs in is generated from the types the corpus stood up. A generated block is exempt for
+    // exactly that reason: it is written against this corpus rather than against the framework.
     //
     // Checked here rather than left to `link-resolves`, which would report it only downstream: every type
     // page exists in the corpus that writes these documents, so the defect is invisible precisely where it
@@ -388,8 +384,8 @@ public static class Validator
         foreach (var rel in FrameworkDocs.SelectMany(tree.Match))
         {
             // Read with the generated blocks emptied. Everything below is a question about what a person
-            // wrote, and a generated block answers to `generate --check` instead — it is regenerated from this
-            // corpus, so its links are this corpus's and are right by construction.
+            // wrote, and a generated block answers to `generate --check` instead: it is regenerated from
+            // this corpus, so its links are this corpus's and are right by construction.
             var doc = Doc.Parse(rel, Generator.Authored(tree.Read(rel)),
                 schema, requireFrontmatter: false);
             if (doc is null) continue;
@@ -427,8 +423,8 @@ public static class Validator
     }
 
     // The questions that need every record in hand, and the index of them that answering leaves behind:
-    // which document each id names, first writer winning, which is exactly what a corpus rule asks for
-    // next.
+    // which document each id names, first writer winning. That index is exactly what a corpus rule asks
+    // for next.
     public static Dictionary<string, Doc> CheckCorpus(Schema schema, List<Doc> docs, List<Finding> f)
     {
         // id uniqueness across the whole corpus.
@@ -444,8 +440,8 @@ public static class Validator
                 byId[id] = d;
         }
 
-        // Part citations — `pol-VURM.TIMEBOX`, `gls-knowledge-as-code.corpus`. The whole point of giving
-        // a part an address is that something else can name it, and a citation nothing answers to is the
+        // Part citations: `pol-VURM.TIMEBOX`, `gls-knowledge-as-code.corpus`. The whole point of giving a
+        // part an address is that something else can name it, and a citation nothing answers to is the
         // failure that machinery exists to prevent: it resolves to a document that plainly exists, so a
         // reader has no reason to doubt the half after the dot.
         //
@@ -468,25 +464,24 @@ public static class Validator
             var noun = target.Type?.Parts?.Noun;
             if (noun is null)
                 f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
-                    $"'{citation}' addresses a part of {target.Rel}, and its type offers none — cite the "
+                    $"'{citation}' addresses a part of {target.Rel}, and its type offers none. Cite the "
                     + $"document as '{docId}'."));
             else if (!target.Parts.Any(p => string.Equals(p.Id, partId, StringComparison.Ordinal)))
                 f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
                     $"'{citation}' cites a {noun} '{partId}' that {target.Rel} does not carry."));
         }
 
-        // Referenced ids — every field the schema gives a `ref:`. The declaration names the type an id
-        // in this field belongs to, which reads to whoever holds these files as a target the tool
-        // answers for, so both halves of it are asked: that the id names a document, and that the
-        // document is of a type the declaration admits. Asked of every ref field alike, reciprocal or
-        // not: a one-directional edge — `depends-on`, the estate's own dependency graph — has no
-        // counterpart obliged to keep it in step, which makes it the edge with least behind it rather
-        // than the one to leave alone.
+        // Referenced ids: every field the schema gives a `ref:`. The declaration names the type an id in
+        // this field belongs to, which reads to whoever holds these files as a target the tool answers
+        // for. So both halves of it are asked: that the id names a document, and that the document is of a
+        // type the declaration admits. Asked of every ref field alike, reciprocal or not: a one-directional
+        // edge (`depends-on`, the estate's own dependency graph) has no counterpart obliged to keep it
+        // in step. That makes it the edge with least behind it rather than the one to leave alone.
         //
         // The wrong type is the quieter of the two faults. A dangling id is visibly broken to anyone who
-        // follows it; one of the wrong type lands on a real page, so it reads as intentional, and
-        // whatever walks the edge afterwards — `no-dependency-cycles`, for one — takes it at its word.
-        // A literal the field admits is not an id and is skipped, as it is everywhere else.
+        // follows it. One of the wrong type lands on a real page, so it reads as intentional. Whatever
+        // walks the edge afterwards (`no-dependency-cycles`, for one) takes it at its word. A literal
+        // the field admits is not an id and is skipped, as it is everywhere else.
         foreach (var d in docs)
         {
             if (d.Type is null) continue;
@@ -515,9 +510,9 @@ public static class Validator
             }
         }
 
-        // reciprocal fields (e.g. supersedes / superseded-by). Whether the target exists, and whether it
-        // is a document this field may point at, are `ref-resolves`'s above; what is left here is the one
-        // question this field asks, which is whether the document at the other end points back.
+        // The reciprocal fields, `supersedes` and `superseded-by` among them. Whether the target exists,
+        // and whether it is a document this field may point at, are `ref-resolves`'s above. What is left
+        // here is the one question this field asks: whether the document at the other end points back.
         foreach (var d in docs)
         {
             if (d.Type is null) continue;
@@ -531,7 +526,7 @@ public static class Validator
                     if (!byId.TryGetValue(targetId, out var target)) continue;
 
                     // A target of the wrong type carries no counterpart field to answer with, so asking
-                    // would report one fault twice — once as the wrong type and once as a silence that
+                    // would report one fault twice: once as the wrong type, and once as a silence that
                     // is nothing but its consequence.
                     if (!Admits(admitted, target)) continue;
 
@@ -539,7 +534,7 @@ public static class Validator
                     var selfId = d.FrontScalar("id");
                     if (!back.Any(b => string.Equals(b, selfId, StringComparison.OrdinalIgnoreCase)))
                         f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, new CheckId("reciprocal"),
-                            $"'{name}: {targetId}' is not reciprocated — {target.Rel} must list '{spec.Reciprocal}: {selfId}'."));
+                            $"'{name}: {targetId}' is not reciprocated: {target.Rel} must list '{spec.Reciprocal}: {selfId}'."));
                 }
             }
         }
@@ -560,8 +555,8 @@ public static class Validator
     private static bool Admits(List<TypeSchema> admitted, Doc target) =>
         admitted.Count == 0 || target.Type is null || admitted.Contains(target.Type);
 
-    // The types named as a reader would say them aloud — "a Service", "an FAQ or a Standard" — in the
-    // order the declaration lists them, which is the order whoever wrote it chose.
+    // The types named as a reader would say them aloud ("a Service", "an FAQ or a Standard") in the
+    // order the declaration lists them. That is the order whoever wrote it chose.
     private static string OneOf(List<TypeSchema> types)
     {
         var names = types.Select(WithArticle).ToList();
@@ -575,7 +570,7 @@ public static class Validator
 
     // The type's `rules:` again, for the rules that read the corpus rather than a document. Driven from
     // the schema rather than from the types the records happen to cover, because a rule belongs to its
-    // type whether or not the corpus has stood that type up — a rule reporting on an empty set is the
+    // type whether or not the corpus has stood that type up. A rule reporting on an empty set is the
     // rule's answer to give, not the dispatcher's to withhold.
     //
     // A finding names the document the rule chose, so a corpus rule is handed the document to report
@@ -600,9 +595,9 @@ public static class Validator
     // records of the type, and one carried by fewer records than the floor is reported against every record
     // carrying it.
     //
-    // A warning, and permanently one. The corpus decides what its vocabulary is — the schema only says
-    // that a value in this field is for dividing the type into groups — and a value newly introduced is
-    // below the floor on the day it is written, on the way to being above it.
+    // A warning, and permanently one. The corpus decides what its vocabulary is, and the schema only says
+    // that a value in this field is for dividing the type into groups. A value newly introduced is below
+    // the floor on the day it is written, on the way to being above it.
     private static void CheckMinRecords(List<Doc> docs, List<Finding> f)
     {
         foreach (var group in docs.Where(d => d.Type is not null).GroupBy(d => d.Type!))
@@ -629,7 +624,7 @@ public static class Validator
                 {
                     var carriers = Count(count[value], $"{type.TypeName} record", $"{type.TypeName} records");
                     f.Add(new Finding(doc.Rel, doc.FrontStartLine, Sev.Warning, new CheckId("min-records"),
-                        $"'{name}: {value}' is carried by {carriers} — the schema asks for at least {floor}, "
+                        $"'{name}: {value}' is carried by {carriers}: the schema asks for at least {floor}, "
                         + "because a value here is meant to group records. One that does not belongs in a field "
                         + "that is free to be unique."));
                 }
@@ -639,17 +634,18 @@ public static class Validator
 
     // -- helpers for individual checks --
 
-    // The template's frontmatter against the type's fields, in both directions. Read as one question —
-    // would a document copied from this file pass its own frontmatter checks? — because the two answers
-    // have the same cause, a schema that moved and a template that did not, and the same fix.
+    // The template's frontmatter against the type's fields, in both directions. Read as one question:
+    // would a document copied from this file pass its own frontmatter checks? It is one question because
+    // the two answers have the same cause, a schema that moved and a template that did not, and the same
+    // fix.
     //
-    // The bar is what a copy would fail on, not what the type declares. A template is curated: it
-    // offers the fields a document of the type will usually fill in, and leaving out an optional one is
-    // an editorial choice rather than drift — the ADR template offers `decided-on` and not `deciders`,
-    // and no ADR is the worse for it. A required field is the opposite: absent from the template, every
-    // copy fails `required-field` on a line its author never wrote. `required-when` is not asked, for
-    // the same reason the value checks are not — the field it depends on is a placeholder or bare, so
-    // the condition has nothing to read.
+    // The bar is what a copy would fail on, not what the type declares. A template is curated: it offers
+    // the fields a document of the type will usually fill in, and leaving out an optional one is an
+    // editorial choice rather than drift. The ADR template offers `decided-on` and not `deciders`, and no
+    // ADR is the worse for it. A required field is the opposite: absent from the template, every copy
+    // fails `required-field` on a line its author never wrote. `required-when` is not asked, for the same
+    // reason the value checks are not: the field it depends on is a placeholder or bare, so the condition
+    // has nothing to read.
     //
     // A reserved key is admitted but never expected: `title` belongs to the publishing platform, and a
     // template has no reason to teach it.
@@ -657,13 +653,13 @@ public static class Validator
     {
         foreach (var k in d.FrontKeys.Where(k => !t.KnownKeys.Contains(k)))
             report.Err(new CheckId("template-fields"),
-                $"'{k}' is not a field of the '{t.TypeName}' type — every document copied from this "
+                $"'{k}' is not a field of the '{t.TypeName}' type: every document copied from this "
                 + "template would fail unknown-key.", d.FrontStartLine);
 
         var carried = new HashSet<string>(d.FrontKeys, StringComparer.Ordinal);
         foreach (var spec in t.DeclaredFields.Where(spec => spec.Required && !carried.Contains(spec.Name)))
             report.Err(new CheckId("template-fields"),
-                $"the template does not carry '{spec.Name}', which is required — every document copied "
+                $"the template does not carry '{spec.Name}', which is required: every document copied "
                 + "from it would fail required-field.", d.FrontStartLine);
     }
 
@@ -691,7 +687,7 @@ public static class Validator
                     $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
     }
 
-    // The H1 is plain descriptive text — no id, no prefix, no shape the schema constrains — so the only
+    // The H1 is plain descriptive text: no id, no prefix, no shape the schema constrains. So the only
     // thing left to check is that there is one. The type, the id and the status are the identity line's
     // to carry, and CheckIdentity depends on this having run: with no H1 there is no line beneath it,
     // and reporting both would be one fault counted twice.
@@ -700,11 +696,11 @@ public static class Validator
         if (d.H1 is null) report.Err(new CheckId("h1"), "document has no H1.", 1);
     }
 
-    // The identity line — "`Policy: pol-A11Y` `DRAFT`" directly beneath the H1. It states, on the page,
-    // the three things frontmatter already carries and an Azure DevOps reader may not scroll to see:
-    // what kind of document this is, which one it is, and whether it is in force. Each half is checked
-    // against the frontmatter separately, because "this says Standard" and "this says the wrong id" are
-    // different mistakes with different fixes and a reader deserves to be told which they made.
+    // The identity line, "`Policy: pol-A11Y` `DRAFT`" directly beneath the H1. It states, on the page, the
+    // three things frontmatter already carries and an Azure DevOps reader may not scroll to see: what kind
+    // of document this is, which one it is, and whether it is in force. Each half is checked against the
+    // frontmatter separately, because "this says Standard" and "this says the wrong id" are different
+    // mistakes with different fixes. A reader deserves to be told which they made.
     private static void CheckIdentity(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
         Report report)
     {
@@ -716,7 +712,7 @@ public static class Validator
 
         if (d.IdentitySpans is null)
         {
-            report.Err(new CheckId("identity"), $"no identity line follows the H1 — add {expected}.", d.H1Line);
+            report.Err(new CheckId("identity"), $"no identity line follows the H1. Add {expected}.", d.H1Line);
             return;
         }
 
@@ -726,7 +722,7 @@ public static class Validator
         if (d.IdentitySpans.Count != 2 || colon <= 0)
         {
             report.Err(new CheckId("identity"),
-                $"identity line is malformed — write it as {expected}.", d.IdentityLine);
+                $"identity line is malformed. Write it as {expected}.", d.IdentityLine);
             return;
         }
 
@@ -746,15 +742,15 @@ public static class Validator
                 $"identity line id '{gotId}' does not match the document's id '{id}'.",
                 d.IdentityLine);
 
-        // Status is lower-case in frontmatter and upper-case on the line — one value, written for a
-        // machine in one place and for a reader in the other, so the comparison is case-insensitive
-        // and the casing itself is what the message names when it is wrong.
+        // Status is lower-case in frontmatter and upper-case on the line: one value, written for a machine
+        // in one place and for a reader in the other. So the comparison is case-insensitive, and the
+        // casing itself is what the message names when it is wrong.
         if (status is not null && !string.Equals(gotStatus, status, StringComparison.OrdinalIgnoreCase))
             report.Err(new CheckId("identity-status"),
                 $"identity line status '{gotStatus}' does not match the document's status '{status}'.",
                 d.IdentityLine);
         else if (status is not null && !string.Equals(gotStatus, status.ToUpperInvariant(), StringComparison.Ordinal))
-            report.Err(new CheckId("identity-status"), $"identity line status '{gotStatus}' must be upper-case — "
+            report.Err(new CheckId("identity-status"), $"identity line status '{gotStatus}' must be upper-case: "
                                                        + $"`{status.ToUpperInvariant()}`.", d.IdentityLine);
     }
 
@@ -793,8 +789,8 @@ public static class Validator
         }
     }
 
-    // The type's own `rules:`, in the order the schema declares them. Two kinds arrive here: a rule
-    // carrying an `expr:` is answered by evaluating it, and needs no C# at all; a rule whose question
+    // The type's own `rules:`, in the order the schema declares them. Two kinds arrive here. A rule
+    // carrying an `expr:` is answered by evaluating it, and needs no C# at all. A rule whose question
     // needs a real algorithm is one of `DocumentRules`, looked up by id. `CLAUDE.md` beside this project
     // draws the line between them, and this loop is the whole of the dispatch either way.
     private static void CheckRules(Doc d, TypeSchema t, Report report)
@@ -838,11 +834,11 @@ public static class Validator
     // the schema declares, so every message that names a type reads as English whatever a corpus calls
     // its own.
     //
-    // A type whose singular and plural are the same word is a mass noun and takes no article — "this is
-    // Data" — which the schema has already said in declaring `label:` and `label-plural:` alike.
-    // Otherwise the article follows how the label is read aloud rather than how it is spelled: a label in
-    // capitals is read letter by letter, so it takes what the name of its first letter wants — "an ADR",
-    // "an NFR" — and the letters read with an opening vowel are the whole of that exception.
+    // A type whose singular and plural are the same word is a mass noun and takes no article, as in "this
+    // is Data". The schema has already said so in declaring `label:` and `label-plural:` alike. Otherwise
+    // the article follows how the label is read aloud rather than how it is spelled: a label in capitals
+    // is read letter by letter, so it takes what the name of its first letter wants: "an ADR", "an NFR".
+    // The letters read with an opening vowel are the whole of that exception.
     private static string WithArticle(TypeSchema t)
     {
         var name = t.DisplayName;

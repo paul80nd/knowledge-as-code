@@ -2,7 +2,7 @@
 
 The external frameworks this corpus refers to, and what each one obliges us to.
 
-A [policy](/policies) maps its clauses to a framework's controls in the `Alignment` column of its clause table, as
+A [policy](policies.md) maps its clauses to a framework's controls in the `Alignment` column of its clause table, as
 `[ISO 27001:2022].A.8.24`. Those references resolve here. This page is the only place that says what the relationship
 is, because that standing changes on its own schedule and would otherwise need correcting in every policy that cites it
 at once.
@@ -14,7 +14,7 @@ land.
 
 | Posture            | What it means                                                                                                                     |
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| **Obliged**        | Something outside us requires it — certification we hold, or law that applies to us. Not optional.                                |
+| **Obliged**        | Something outside us requires it: certification we hold, or law that applies to us. Not optional.                                 |
 | **Self-obligated** | Nothing external compels it; a policy of ours does. Binding on us because we said so, and revocable only by changing that policy. |
 | **Inspiration**    | We took ideas from it. It shapes our thinking and binds nothing. A clause may cite it for provenance, not for obligation.         |
 
@@ -38,7 +38,18 @@ can be traced to the decision that created it and dropped by changing that decis
 
 ## Inspiration
 
-_Nothing recorded yet._
-
 Frameworks that shaped the thinking and bind nothing. Keep the section, even when it is the longest: an idea taken
 openly is easier to argue with than one absorbed silently.
+
+### ISO 27001
+
+**Inspiration.** ISO/IEC 27001:2022, and Annex A in particular: the control set a security, delivery or operations
+policy maps its clauses to. [pol-DEVI] cites `A.5.4` and `A.5.36` to say where its thinking came from, rather than to
+claim it discharges either control.
+
+Move this entry to **Obliged** on the day the organisation registers against the standard, and say there what the
+registration covers. Until then an Annex A reference marks provenance and nothing more.
+
+Referenced by: [pol-DEVI].
+
+[pol-DEVI]: policies/devi-deviations-are-recorded.md

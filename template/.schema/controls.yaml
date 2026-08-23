@@ -24,7 +24,7 @@ lineage:
 collision: >
   **The most dangerous word in the taxonomy.** In [NIST SP
   800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC 27002 and
-  ComplianceForge, a *control* **is the safeguard itself** — the technical, administrative or physical measure
+  ComplianceForge, a *control* **is the safeguard itself**: the technical, administrative or physical measure
   that reduces risk. Here, a control is the **verification that a rule is being followed**, which those
   frameworks call an assessment procedure, a test, or a metric.
 
@@ -62,9 +62,9 @@ fields:
     required: true
     type: enum
     values: [ci, review-checklist, manual-periodic, runtime-alert, not-enforced]
-    description: How the check happens. `not-enforced` is first-class — an honest gap beats a fiction.
+    description: How the check happens. `not-enforced` is first-class. An honest gap beats a fiction.
     notes: >
-      `not-enforced` is a first-class value and the point of the coverage report — it converts an aspiration
+      `not-enforced` is a first-class value and the point of the coverage report: it converts an aspiration
       into a visible number rather than letting the rulebook quietly become fiction. Do not invent a
       mechanism to avoid using it.
 
@@ -78,7 +78,7 @@ fields:
   evidence:
     required: false
     type: string
-    notes: Where the proof lives — the build log, the audit note, the dashboard.
+    notes: Where the proof lives (the build log, the audit note, the dashboard).
 
   applies-to:
     required: false
@@ -104,7 +104,7 @@ rules:
     expr: "field('mechanism') != 'not-enforced' implies present('evidence')"
     message: >
       This control claims to run and does not say where the proof of it lives. Set `evidence` to the build
-      log, the audit note or the dashboard — an unevidenced control is an assertion, and `not-enforced` is
+      log, the audit note or the dashboard. An unevidenced control is an assertion, and `not-enforced` is
       the honest value for one.
   - id: coverage-report
     description: The share of MUST / MUST NOT rules in active standards claimed by an enforced control.

@@ -40,7 +40,7 @@ public class SchemaTests
     [Fact]
     public void KnownKeys_spans_universal_type_and_reserved_deduplicated()
     {
-        // 'status' appears in both universal and the type's field order — it collapses to one entry.
+        // 'status' appears in both universal and the type's field order, so it collapses to one entry.
         var keys = TypeSchema.DeriveKnownKeys(["id", "status"], ["status", "date"], ["title"]);
 
         Assert.Equal(["date", "id", "status", "title"], keys.Order(StringComparer.Ordinal));
@@ -78,7 +78,7 @@ public class SchemaTests
     //
     // The vocabulary is closed on purpose, and a form outside it stops the load. A form that parsed to
     // nothing would be a condition that never holds, leaving the field it guards quietly unrequired
-    // while the schema goes on claiming it is — which is the failure these cases exist to prevent.
+    // while the schema goes on claiming it is. That is the failure these cases exist to prevent.
 
     [Theory]
     [InlineData("status == accepted", "accepted", true)]

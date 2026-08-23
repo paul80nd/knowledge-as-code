@@ -7,7 +7,7 @@ folder: nfrs
 page: nfrs.md
 tier: normative
 lifecycle: living
-summary: A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.
+summary: A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
 goes-here: A target for speed, uptime, or recovery
 detail: >
   Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
@@ -15,7 +15,7 @@ detail: >
 lineage:
   prior-art: "[ISO/IEC 25010:2023](https://www.iso.org/standard/78176.html) product quality model"
   alignment: >
-    Quality characteristics that exist to be specified, measured and evaluated — the measurement obligation is
+    Quality characteristics that exist to be specified, measured and evaluated. The measurement obligation is
     25010's premise
   divergence: >
     25010 is a taxonomy of characteristics, not a document type. RPO and RTO come from continuity practice, and
@@ -45,15 +45,15 @@ fields:
     type: list
     of: id
     ref: [services, capabilities]
-    description: Estate-wide targets are almost always wrong — scope them.
+    description: Estate-wide targets are almost always wrong. Scope them.
     notes: >
-      Estate-wide targets are almost always wrong — a marketing page and the booking flow do not deserve the
+      Estate-wide targets are almost always wrong: a marketing page and the booking flow do not deserve the
       same budget.
 
   target:
     required: true
     type: string
-    notes: Concrete and arguable — `99.5% monthly`, `p95 < 400ms`, `RTO 4h`. Include the measurement window.
+    notes: Concrete and arguable (`99.5% monthly`, `p95 < 400ms`, `RTO 4h`). Include the measurement window.
 
   measured-by:
     required: true
@@ -86,13 +86,13 @@ index:
 
 rules:
   - id: target-is-measurable
-    description: '`measured-by` names an instrument, not a hedge — "monitored", "as needed", "where practical".'
+    description: '`measured-by` names an instrument, not a hedge: "monitored", "as needed", "where practical".'
     severity: warning
     expr: >-
       not field_matches('measured-by',
       '(?i)\b(monitored|manually|as needed|as required|where practical|where possible|if possible|ad hoc|periodically)\b')
     message: >
-      `measured-by` hedges rather than measures. Name the instrument and the number it reports — an NFR
+      `measured-by` hedges rather than measures. Name the instrument and the number it reports. An NFR
       measured "where practical" is one nobody has to meet.
   - id: constraint-consistency
     description: >

@@ -15,8 +15,8 @@ tags: [ data-quality, integrity, provenance ]
 
 ## Purpose
 
-Where our code computes a result rather than storing what it was given, we check that result before anyone relies on it.
-A run that finished is not evidence that what it produced is right.
+Where our code computes a result, rather than storing what it was given, we check that result before anyone relies on
+it. A run that finished is not evidence that what it produced is right.
 
 Everywhere else here, verifying the code is enough. The code determines the output, so a test that exercises the code
 exercises the answer. That stops being true when correctness depends on data we did not author. A transformation can be
@@ -54,7 +54,7 @@ accepts a wrong answer reaching a decision. "The numbers have always looked abou
 ## Notes
 
 [ISO 27001:2022] treats integrity as protection against unauthorised alteration, and no Annex A control asks whether a
-computation was correct. `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]; citing it here as
+computation was correct. `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]. Citing it here as
 well would overstate what this policy adds.
 
 [pol-AUTV]: autv-automated-verification.md
@@ -62,6 +62,6 @@ well would overstate what this policy adds.
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-OBSV]: obsv-observability.md
 [pol-PIPE]: pipe-pipeline-to-production.md
-[Azure WAF]: /frameworks.md#azure-well-architected-framework
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[UK GDPR]: /frameworks.md#uk-gdpr
+[Azure WAF]: ../frameworks.md#azure-well-architected-framework
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[UK GDPR]: ../frameworks.md#uk-gdpr

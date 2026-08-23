@@ -18,27 +18,27 @@ public static class ValueChecks
 {
     // One value, and every question the schema's declaration asks of it.
     //
-    // The caller has already established that the key is known — an unknown one is `unknown-key`'s and
-    // has no `FieldSpec` to judge against — so what arrives here is a value the type expects, carrying
-    // something the type may not.
+    // The caller has already established that the key is known, so what arrives here is a value the type
+    // expects, carrying something the type may not. An unknown key is `unknown-key`'s, and has no
+    // `FieldSpec` to judge against.
     public static void Check(string name, YamlNode node, FieldSpec spec, DocKind kind, int frontStart,
         Report report)
     {
-        // A placeholder opening a value is a flow mapping to YAML, not text — `{` is an indicator in
-        // that one position, so `review-by: {{date}}` parses as a mapping and arrives here with nothing
+        // A placeholder opening a value is a flow mapping to YAML, not text. `{` is an indicator in that
+        // one position, so `review-by: {{date}}` parses as a mapping and arrives here with nothing
         // readable in it. Reported with the fix rather than left to the value checks, which would say
         // the date is malformed and quote an empty string back at whoever wrote it.
         if (kind == DocKind.Template && node is YamlMappingNode)
         {
             report.Err(new CheckId("template-fields"),
-                $"'{name}' is read as a YAML mapping rather than a value — a placeholder that opens "
+                $"'{name}' is read as a YAML mapping rather than a value. A placeholder that opens "
                 + "one has to be quoted: " + name + ": \"{{…}}\".", Yaml.LineOf(node, frontStart));
             return;
         }
 
-        // A placeholder is not a value: `{{slug}}` is the instruction to supply one. Read as absent in a
-        // template — the field's own checks would otherwise report the mark as a malformed date, an
-        // unknown enum value or an id of the wrong shape, which is three ways of saying the file has not
+        // A placeholder is not a value: `{{slug}}` is the instruction to supply one. It is read as absent
+        // in a template. The field's own checks would otherwise report the mark as a malformed date, an
+        // unknown enum value or an id of the wrong shape. That is three ways of saying the file has not
         // been filled in.
         if (kind == DocKind.Template && HasPlaceholder(node)) return;
 
@@ -46,12 +46,12 @@ public static class ValueChecks
         {
             if (!IsBareKey(node))
                 report.Err(new CheckId("bare-key"),
-                    $"'{name}' is absent but not a bare key — use '{name}:' with no value (not null, ~, \"\", or —).",
+                    $"'{name}' is absent but not a bare key. Use '{name}:' with no value (not null, ~, \"\", or —).",
                     Yaml.LineOf(node, frontStart));
             return;
         }
 
-        // A word the field admits beside its declared type — `last-rehearsed: "never"`. It is taken as
+        // A word the field admits beside its declared type: `last-rehearsed: "never"`. It is taken as
         // written and nothing further is asked of it, which is the whole of what `allow-literal` means.
         // A list is not short-circuited here: there the literal is one entry among ids, and `Sequence`
         // exempts that entry rather than the field.
@@ -88,7 +88,7 @@ public static class ValueChecks
     private static bool IsBareKey(YamlNode node)
         => node is YamlScalarNode { Style: ScalarStyle.Plain } sc && string.IsNullOrEmpty(sc.Value);
 
-    // Whether a value carries the placeholder mark anywhere — the scalar itself, or any entry of a
+    // Whether a value carries the placeholder mark anywhere: the scalar itself, or any entry of a
     // sequence. Asked of the whole field rather than of each entry, because a list in a template is a
     // demonstration of the field's shape and `[ svc-{{a}}, svc-real ]` is not a state worth modelling.
     private static bool HasPlaceholder(YamlNode node) =>
@@ -100,7 +100,7 @@ public static class ValueChecks
         };
 
     // Shape then calendar, under one id: both answers leave the author with the same thing to do, and the
-    // message is what tells them which they wrote — `2026/06/12` is not written as a date at all, where
+    // message is what tells them which they wrote. `2026/06/12` is not written as a date at all, where
     // `2026-13-40` is written as one and names a day that has never existed.
     private static void Date(string name, YamlNode node, int frontStart, Report report)
     {
@@ -158,38 +158,37 @@ public static class ValueChecks
         // malformed will fix the second and re-run to find the first.
         if (spec.MinItems is { } min && seq.Children.Count < min)
             report.Err(new CheckId("min-items"),
-                $"'{name}' has {seq.Children.Count} {(seq.Children.Count == 1 ? "entry" : "entries")} — "
+                $"'{name}' has {seq.Children.Count} {(seq.Children.Count == 1 ? "entry" : "entries")}: "
                 + $"the schema asks for at least {min}.", Yaml.LineOf(node, frontStart));
 
         foreach (var item in seq.Children)
         {
             var v = Yaml.Raw(item);
-            if (spec.IsLiteral(v)) continue; // a word the field admits beside its ids — `applies-to: [all]`
+            if (spec.IsLiteral(v)) continue; // a word the field admits beside its ids: `applies-to: [all]`
             if (spec.Of == "id" && v is not null && !LooksLikeId(v))
                 report.Err(new CheckId("id-format"), $"'{name}' entry '{v}' is not a valid id.",
                     Yaml.LineOf(item, frontStart));
             Pattern(name, "entry", item, spec, frontStart, report);
         }
 
-        // Every list field in the taxonomy is a set — no field's sequence carries meaning — so
-        // alphabetical is the order that scan-reads and the one order two authors will agree
-        // on. Only the first pair out of order is reported; the rest are noise once the author
-        // re-sorts the field.
+        // Every list field in the taxonomy is a set: no field's sequence carries meaning. So
+        // alphabetical is the order that scan-reads, and the one order two authors will agree on. Only
+        // the first pair out of order is reported. The rest are noise once the author re-sorts the field.
         for (var i = 1; i < seq.Children.Count; i++)
         {
             if (Yaml.Raw(seq.Children[i - 1]) is not { } prev || Yaml.Raw(seq.Children[i]) is not { } cur) continue;
             if (Natural.Compare(prev, cur) <= 0) continue;
             report.Warn(new CheckId("list-order"),
-                $"'{name}' is not in alphabetical order — '{cur}' should come before '{prev}'.",
+                $"'{name}' is not in alphabetical order: '{cur}' should come before '{prev}'.",
                 Yaml.LineOf(seq.Children[i], frontStart));
             break;
         }
     }
 
     // Whether an entry is shaped like an id at all: a lower-case type prefix, a hyphen, then a
-    // discriminator. The prefix names a type and is lower-case in every style; the discriminator is
-    // upper-case where the type numbers its documents by mnemonic — `pol-VURM` — and lower-case where it
-    // numbers or slugs them — `adr-0007`, `svc-search`. So the case of the two halves is asked
+    // discriminator. The prefix names a type and is lower-case in every style. The discriminator is
+    // upper-case where the type numbers its documents by mnemonic (`pol-VURM`), and lower-case where it
+    // numbers or slugs them (`adr-0007`, `svc-search`). So the case of the two halves is asked
     // separately, and a mixed-case discriminator is what falls out.
     //
     // A shape and not an identity. Whether the entry names a document the corpus holds is the reference
@@ -205,7 +204,7 @@ public static class ValueChecks
                && (rest == rest.ToLowerInvariant() || rest == rest.ToUpperInvariant());
     }
 
-    // A field's declared `pattern:` — the schema's own regex, applied to whatever scalar carries the
+    // A field's declared `pattern:` is the schema's own regex, applied to whatever scalar carries the
     // value. `noun` distinguishes a scalar field's "value" from a list's "entry" in the message.
     private static void Pattern(string name, string noun, YamlNode node, FieldSpec spec, int frontStart,
         Report report)

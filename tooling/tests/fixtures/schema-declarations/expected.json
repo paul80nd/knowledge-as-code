@@ -12,21 +12,21 @@
       "line": null,
       "severity": "error",
       "check": "schema-unknown-key",
-      "message": "the file declares 'stability', which the loader does not read — implement it, drop it, or write what it was saying as 'notes:', the one key every level admits."
+      "message": "the file declares 'stability', which the loader does not read. Implement it, drop it, or write what it was saying as 'notes:', the one key every level admits."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-unknown-key",
-      "message": "field 'related' declares 'unique', which the loader does not read — implement it, drop it, or write what it was saying as 'notes:', the one key every level admits."
+      "message": "field 'related' declares 'unique', which the loader does not read. Implement it, drop it, or write what it was saying as 'notes:', the one key every level admits."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares no 'folder:' — say which folder holds its records."
+      "message": "type 'widgets' declares no 'folder:'. Say which folder holds its records."
     },
     {
       "file": ".schema/widgets.yaml",
@@ -61,42 +61,42 @@
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares 'export.sections: Provenance', and its 'sections:' block declares no such section — name a section the type has, or add it. Selecting by key is what keeps the two declarations in step."
+      "message": "type 'widgets' declares 'export.sections: Provenance', and its 'sections:' block declares no such section. Name a section the type has, or add it. Selecting by key is what keeps the two declarations in step."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares 'export.fields: colour', and neither the type nor '_universal.yaml' declares such a field — name a field a record carries, or 'title', which is a record's heading rather than its frontmatter."
+      "message": "type 'widgets' declares 'export.fields: colour', and neither the type nor '_universal.yaml' declares such a field. Name a field a record carries, or 'title', which is a record's heading rather than its frontmatter."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares 'export.parts:' and carries no 'parts:' block — say where a record keeps the parts an export is to carry, or drop the entry."
+      "message": "type 'widgets' declares 'export.parts:' and carries no 'parts:' block. Say where a record keeps the parts an export is to carry, or drop the entry."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' has a 206-character 'summary:'; the limit is 120. It is rendered as a table cell — the fuller account belongs on widgets.md."
+      "message": "type 'widgets' has a 206-character 'summary:'; the limit is 120. It is rendered as a table cell. The fuller account belongs on widgets.md."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares no 'goes-here:' — say what a contributor has in hand when this type is the answer, in one line the taxonomy and the corpus index can be generated from."
+      "message": "type 'widgets' declares no 'goes-here:'. Say what a contributor has in hand when this type is the answer, in one line the taxonomy and the corpus index can be generated from."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares no 'lineage.prior-art:' — name what the type is nearest to, or say that nothing established fits. Claiming an ancestor a type does not have is worse than admitting none."
+      "message": "type 'widgets' declares no 'lineage.prior-art:'. Name what the type is nearest to, or say that nothing established fits. Claiming an ancestor a type does not have is worse than admitting none."
     },
     {
       "file": ".schema/widgets.yaml",
@@ -110,21 +110,21 @@
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "field 'tags' is 'type: list' and declares 'values:', which only an enum's range is read from — declare it 'type: enum', or drop the values."
+      "message": "field 'tags' is 'type: list' and declares 'values:', which only an enum's range is read from. Declare it 'type: enum', or drop the values."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "field 'related' declares 'ref: gizmos', and no schema covers that folder — either the type was never adopted here, or the name is wrong."
+      "message": "field 'related' declares 'ref: gizmos', and no schema covers that folder. Either the type was never adopted here, or the name is wrong."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "field 'related' declares 'mirrors-section: See also', and the type's 'sections:' block declares no such section — name a section the type has, or add it."
+      "message": "field 'related' declares 'mirrors-section: See also', and the type's 'sections:' block declares no such section. Name a section the type has, or add it."
     },
     {
       "file": ".schema/widgets.yaml",
@@ -138,21 +138,21 @@
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "field 'retention' is 'type: string' and declares 'min-items:', which only a list's length is read against — declare it 'type: list', or drop the floor."
+      "message": "field 'retention' is 'type: string' and declares 'min-items:', which only a list's length is read against. Declare it 'type: list', or drop the floor."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "field 'retention' is 'type: string' and declares 'min-records:', which is read against the entries of a list — declare it 'type: list', or drop the floor."
+      "message": "field 'retention' is 'type: string' and declares 'min-records:', which is read against the entries of a list. Declare it 'type: list', or drop the floor."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "rule 'widgets-are-blue' on type 'widgets' declares 'severity: warning' and nothing dispatches it — give it an 'expr:', implement it as a rule class, or drop the severity and leave it declared as an intention."
+      "message": "rule 'widgets-are-blue' on type 'widgets' declares 'severity: warning' and nothing dispatches it. Give it an 'expr:', implement it as a rule class, or drop the severity and leave it declared as an intention."
     },
     {
       "file": ".schema/widgets.yaml",
@@ -166,28 +166,28 @@
       "line": null,
       "severity": "error",
       "check": "schema-unreadable",
-      "message": "rule 'widgets-are-documented' has an expr but no severity — say whether it fails a build or advises an author."
+      "message": "rule 'widgets-are-documented' has an expr but no severity. Say whether it fails a build or advises an author."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-unreadable",
-      "message": "rule 'widgets-are-named' has an expr but no message — an author has to be told what to do about it."
+      "message": "rule 'widgets-are-named' has an expr but no message: an author has to be told what to do about it."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "type 'widgets' declares 'versus: gizmos', and no schema covers that folder — either the type was never adopted here, or the name is wrong."
+      "message": "type 'widgets' declares 'versus: gizmos', and no schema covers that folder. Either the type was never adopted here, or the name is wrong."
     },
     {
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares a 'versus:' against itself — a disambiguation has two sides."
+      "message": "type 'widgets' declares a 'versus:' against itself: a disambiguation has two sides."
     }
   ]
 }

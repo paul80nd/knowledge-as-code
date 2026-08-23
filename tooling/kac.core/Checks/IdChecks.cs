@@ -1,20 +1,20 @@
 namespace kac.core;
 
-// An id is a prefix and a discriminator — `adr-0007`, `pol-VURM`, `svc-search`. The prefix names the
+// An id is a prefix and a discriminator: `adr-0007`, `pol-VURM`, `svc-search`. The prefix names the
 // type and the discriminator names the document, and the filename carries that same discriminator. That
 // agreement is what makes an id and a path two names for one document rather than two documents, and
 // what lets a link to a file be read as a citation of an id. `_universal.yaml` states the asymmetry it
 // defends: a filename may be corrected, an id may not.
 //
-// `numbered` and `mnemonic` put a fixed-width discriminator at the head of a longer filename — 0007-…,
-// vurm-… — so the rest of the name is a slug the author chose, and `slug-max` measures that rest. A
+// `numbered` and `mnemonic` put a fixed-width discriminator at the head of a longer filename (0007-…,
+// vurm-…), so the rest of the name is a slug the author chose. `slug-max` measures that rest. A
 // `slug` id is the whole filename stem, with no head to skip.
 //
 // The shape of a discriminator is stated here once and read three ways: forwards, holding an id to its
 // filename; backwards, reading a link's filename as the id it cites; and sideways, deciding whether a
 // bracketed label in prose is an id at all. A second copy of it in any of the three would be a place for
-// the styles to disagree, and the disagreement would be silent — a label that stops being read as an id
-// stops being checked.
+// the styles to disagree, and the disagreement would be silent. A label that stops being read as an
+// id stops being checked.
 public static class IdChecks
 {
     // The id styles these checks apply. Held here rather than in the schema loader because this is where
@@ -64,7 +64,7 @@ public static class IdChecks
                 break;
 
             // A slug is not a fixed-width discriminator cut from the front of the filename: it is the
-            // whole of it. So the two are compared entire, and case-sensitively — a slug is lower-case in
+            // whole of it. So the two are compared entire, and case-sensitively: a slug is lower-case in
             // both places, and this is where that is said.
             case "slug":
                 if (!IsSlug(rest))
@@ -137,8 +137,8 @@ public static class IdChecks
     // label written in prose to say what it should have been, so it has to recognise the
     // mis-cased form to be able to report it.
     //
-    // A part is addressed the same way, as `<record>.<part>` — `pol-VURM.TIMEBOX`, `gls-search.title` —
-    // which is the form a citation already uses and now the form a link to a part uses too. The record
+    // A part is addressed the same way, as `<record>.<part>`: `pol-VURM.TIMEBOX`, `gls-search.title`.
+    // That is the form a citation already uses, and now the form a link to a part uses too. The record
     // half canonicalises as above; the part half is judged against the type's own `parts:` declaration
     // and carried through as written, because only that declaration knows what a part id looks like.
     public static bool TryCanonicalId(string label, Schema schema, out string canonical)
@@ -203,14 +203,14 @@ public static class IdChecks
         return part.Length > 0 && part == Md.Slug(part);
     }
 
-    // The id a link cites, read from the file it points at — `0007-…md` under a numbered type is
+    // The id a link cites, read from the file it points at: `0007-…md` under a numbered type is
     // `adr-0007`. Null where the target is not a record of that type, which is the common answer: this
     // is asked of every link in a `## Related` section, and most of them are prose citations.
     //
     // The folder decides what type a target belongs to, not the filename. A numbered or mnemonic name is
     // distinctive enough that asking the folder rarely changes the answer, but a slug is shaped like any
-    // other word — `ripgrep.md` says nothing about which folder it came from, and `services.md`, a type
-    // page rather than a record, would read as a record of the type it heads. So a relative target is
+    // other word. `ripgrep.md` says nothing about which folder it came from. `services.md`, a type page
+    // rather than a record, would read as a record of the type it heads. So a relative target is
     // resolved against the folder the citing document sits in, and has to land in the type's own.
     public static string? IdFromLink(LinkRef link, string fromRel, TypeSchema refType)
     {
@@ -228,7 +228,7 @@ public static class IdChecks
         return refType.IdStyle switch
         {
             // A discriminator of the wrong width is a filename that opens with digits without being a
-            // record — the id checks report that where it is written, and it cites nothing here.
+            // record. The id checks report that where it is written, and it cites nothing here.
             "numbered" => discriminator.Length == refType.IdWidth ? $"{refType.IdPrefix}-{discriminator}" : null,
             "mnemonic" => $"{refType.IdPrefix}-{discriminator.ToUpperInvariant()}",
             "slug" => $"{refType.IdPrefix}-{discriminator}",
@@ -238,7 +238,7 @@ public static class IdChecks
 
     // The folder a target lands in, repo-relative: an absolute target from the root, a relative one from
     // the folder the citing document sits in. String work rather than a filesystem walk, because the
-    // question is which type the link names and not whether the file is there — `link-resolves` asks
+    // question is which type the link names and not whether the file is there. `link-resolves` asks
     // that, and asking it twice would report a missing file as a citation of nothing.
     private static string Folder(string target, string fromRel)
     {

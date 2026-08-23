@@ -18,28 +18,28 @@ tags: [ monitoring ]
 
 A nightly outside-in check that every branch's catalogue pages respond, reported by email.
 
-> **Being replaced** by the platform's own synthetic monitoring, and still running until that is in place.
+> **Being replaced** by the platform's own synthetic monitoring. This service runs until that is in place.
 
 ## What it does
 
-Once a night it walks the list of branch catalogue URLs and checks each one, confirming that both the bare and `www`
-forms respond over HTTPS. Results are collated and emailed.
+Once a night it walks the list of branch catalogue URLs and checks each one. The check confirms that both the bare and
+`www` forms respond over HTTPS. It collates the results and emails them.
 
-It is the estate's only outside-in check that the catalogue is reachable — and nothing consumes its output except a
-mailbox. Whether an unread nightly email is the right home for that signal is the question that got it deprecated.
+It is the estate's only outside-in check that the catalogue is reachable. Nothing consumes its output except a mailbox.
+Whether an unread nightly email is the right home for that signal is the question behind its deprecation.
 
 ## Where it lives
 
-* **Repository** — [`shelf-audit`](https://git.example.com/example-libraries/shelf-audit)
-* **Platform** — a PowerShell function and a workflow app, deployed together
-* **Deployed as** — both, by Terraform from within the same repository
+* **Repository**: [`shelf-audit`](https://git.example.com/example-libraries/shelf-audit)
+* **Platform**: a PowerShell function and a workflow app, deployed together
+* **Deployed as**: both, by Terraform from within the same repository
 
 **It is deployed unlike anything else in the estate.** There is no release pipeline. The repository holds its own
-Terraform configuration, applied from a workstation against a dedicated workspace rather than from source control. It
-runs in a pay-as-you-go subscription rather than the per-environment subscriptions the rest of the estate uses.
+Terraform configuration, which somebody applies from a workstation against a dedicated workspace. It runs in a
+pay-as-you-go subscription, while the rest of the estate uses a subscription per environment.
 
-`platform` is `mixed`: a PowerShell function and a workflow app are two runtimes. Terraform deploys this service rather
-than being what it is built on, so it does not decide the field.
+`platform` is `mixed`: a PowerShell function and a workflow app are two runtimes. Terraform deploys this service, and
+deployment does not decide the field.
 
 ## Environments
 
@@ -49,9 +49,9 @@ than being what it is built on, so it does not decide the field.
 | Test        |     | Does not exist                                     |
 | Production  |     | `func-shelf-audit-prd` and `logic-shelf-audit-prd` |
 
-**Production only**, and not by configuration: `-prd` is written into the resource names rather than derived from an
-environment variable, so there is no other environment to deploy to. A change cannot be rehearsed before it runs against
-production. Every other service in the estate runs in three environments.
+**Production only**, and by hard-coding: `-prd` is written into the resource names, so there is no other environment to
+deploy to. A change cannot be rehearsed before it runs against production. Every other service in the estate runs in
+three environments.
 
 ## Dependencies
 
@@ -60,8 +60,8 @@ reader would.
 
 ## Operational notes
 
-* **Schedule** — nightly.
-* **Output** — an email. Nothing else reads the result and no alert is raised from it.
-* **Criticality** — `supporting`. Nothing a reader touches depends on it; if it stops, the only loss is the signal
-  itself. That said, it is the check that would notice the catalogue being down, so its own silence is indistinguishable
-  from good news.
+* **Schedule**: nightly.
+* **Output**: an email. Nothing else reads the result, and no alert is raised from it.
+* **Criticality**: `supporting`. Nothing a reader touches depends on it. Where it stops, the only loss is the signal
+  itself. It is also the check that would notice the catalogue being down, so its own silence is indistinguishable from
+  good news.

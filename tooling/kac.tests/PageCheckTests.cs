@@ -1,6 +1,6 @@
 using kac.core;
 
-// In-process unit tests for the pass that reads a type's page — `adrs.md`, `policies.md`.
+// In-process unit tests for the pass that reads a type's page: `adrs.md`, `policies.md`.
 //
 // A page is not a record, so the structural checks do not apply. Two things are left, and the
 // `type-pages` fixture reaches both through the CLI. What it cannot reach is which question the pass

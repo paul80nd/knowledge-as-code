@@ -1,4 +1,4 @@
-# `update` — a corpus brought back into step
+# `update`: a corpus brought back into step
 
 > **Draft, pending implementation.** This page is the specification `kac update` is built to, written before the command
 > exists. It describes the command as it will be, in the same voice as its siblings, and becomes an ordinary feature
@@ -54,7 +54,7 @@ wording and are rewritten in the corpus's domain. Refreshing them on every run w
 files to revert by hand, which is noise rather than control. `update-policy: cautious` in `.corpus.yaml` is the default;
 `full` refreshes them and hands the reconciliation to the diff. `--policy` overrides either for one run.
 
-**A deletion is declared, never guessed.** A file missing from the template is not evidence it was dropped — it is as
+**A deletion is declared, never guessed.** A file missing from the template is not evidence it was dropped. It is as
 likely to be evidence of a mistake upstream. Only `layer: removed` deletes, and only within the overlay: once a seed
 file has been written, it belongs to the corpus.
 
@@ -88,7 +88,7 @@ template says a corpus receives.
 ### What it records
 
 The `upstream:` block in `.corpus.yaml` is rewritten: the commit resolved this run, the template's version, and the
-date. The ref is followed, not pinned — the commit is written down as what was taken, and nothing reads it back. The
+date. The ref is followed, not pinned: the commit is written down as what was taken, and nothing reads it back. The
 file is rewritten line by line rather than re-serialised, because most of its value is the commentary explaining what
 each key means.
 

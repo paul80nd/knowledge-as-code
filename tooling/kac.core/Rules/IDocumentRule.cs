@@ -1,7 +1,7 @@
 namespace kac.core;
 
 // A rule whose question the expression grammar cannot ask. Most rules are answered by an `expr:` in
-// `.schema/<type>.yaml`, which costs a line of YAML and a fixture; this interface is for the rest —
+// `.schema/<type>.yaml`, which costs a line of YAML and a fixture. This interface is for the rest:
 // the ones whose useful message names *which* part of a document is at fault, where one fixed string
 // could only say that something is. That is the test, and `../../CLAUDE.md` is where to argue with it.
 //

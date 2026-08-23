@@ -44,9 +44,9 @@ public static class LinkChecks
                 CheckFragment(tree.Read(file), fragment, path, link.Line, report);
         }
 
-        // undefined shortcut/reference labels left as literal '[label]'. Id-shaped is an error — the
-        // author meant to reference a document; anything else is only a warning, since a bracket in
-        // prose is legal.
+        // undefined shortcut and reference labels left as literal '[label]'. Id-shaped is an error:
+        // the author meant to reference a document. Anything else is only a warning, since a bracket
+        // in prose is legal.
         //
         // A template is exempt, because a bracket in its prose is as likely to demonstrate the form as
         // to reference anything. Guidance citing `[pol-DEVI]` shows an author what a clause pointing at
@@ -65,7 +65,7 @@ public static class LinkChecks
 
         // A shortcut label doubles as its own display text, so it is read as an id and must be written
         // as one. Reference and definition are matched case-insensitively, so a mis-cased label still
-        // resolves — nothing else would catch it.
+        // resolves: nothing else would catch it.
         foreach (var link in d.Links)
         {
             if (!link.IsReference || string.IsNullOrEmpty(link.Label)) continue;
@@ -120,7 +120,7 @@ public static class LinkChecks
         if (hash >= 0) target = target[..hash];
         var q = target.IndexOf('?');
         if (q >= 0) target = target[..q];
-        if (target.Length == 0) return null; // pure fragment — no file of its own
+        if (target.Length == 0) return null; // pure fragment: no file of its own
 
         var rel = target.StartsWith('/')
             ? Descend("", target.TrimStart('/'))
@@ -129,9 +129,9 @@ public static class LinkChecks
         if (rel is null) return null; // climbed out of the corpus, so nothing it could name
 
         // A directory is deliberately not a target. In Azure DevOps `data.md` is the page and `data/`
-        // is its children — one node — so `/data` is a link to the page, which the `.md` form below
-        // already resolves. Accepting the directory as well would resolve a link to a type whose page
-        // has gone.
+        // is its children, and the two are one node. So `/data` is a link to the page, which the `.md`
+        // form below already resolves. Accepting the directory as well would resolve a link to a type
+        // whose page has gone.
         if (tree.Exists(rel)) return rel;
         return tree.Exists(rel + ".md") ? rel + ".md" : null; // ADO resolves links with .md omitted
     }

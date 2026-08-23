@@ -17,7 +17,7 @@ detail: >
 versus:
   standards: >
     The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept current. If
-    you are writing "we considered X and rejected it", that is an ADR; if you are writing "you **MUST** do Y",
+    you are writing "we considered X and rejected it", that is an ADR. If you are writing "you **MUST** do Y",
     that is a standard. Most substantial changes produce both.
 
 lineage:
@@ -25,7 +25,7 @@ lineage:
   alignment: >
     Context / Decision / Consequences, and the rule that a reversed decision is superseded rather than rewritten
   divergence: >
-    Nygard scopes decisions to one codebase; ours must affect more than one repository. Mandatory *Alternatives*
+    Nygard scopes decisions to one codebase. Ours must affect more than one repository. Mandatory *Alternatives*
     is ours, not his
 
 id:
@@ -43,7 +43,7 @@ fields:
     required: true
     type: enum
     values: [proposed, accepted, deprecated, superseded]
-    description: Immutable once `accepted` — supersede rather than rewrite.
+    description: Immutable once `accepted`. Supersede rather than rewrite.
 
   decided-on:
     required: false
@@ -64,7 +64,7 @@ fields:
     type: id
     ref: adrs
     reciprocal: supersedes
-    notes: CI enforces both directions; a one-sided supersession fails the build.
+    notes: CI enforces both directions. A one-sided supersession fails the build.
 
   deciders:
     required: false

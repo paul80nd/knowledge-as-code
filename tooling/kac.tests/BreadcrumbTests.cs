@@ -54,14 +54,14 @@ public class BreadcrumbTests
     {
         var text = Render(Manifest("c", "1.0.0", Type("adrs", records: 7, parts: 0)));
 
-        Assert.Contains("adrs — 7 records", text);
+        Assert.Contains("adrs. 7 records", text);
         Assert.DoesNotContain("entries", text);
     }
 
     // Nothing in the renderer names a record type.
     [Fact]
     public void A_type_this_tool_has_never_heard_of_is_described_the_same_way()
-        => Assert.Contains("shanties — 12 entries across 2 records: Sea and Land",
+        => Assert.Contains("shanties. 12 entries across 2 records: Sea and Land",
             Render(Manifest("c", "1.0.0", Type("shanties", 2, 12)),
                 Record("shanties/one.json", "Sea"), Record("shanties/two.json", "Land")));
 

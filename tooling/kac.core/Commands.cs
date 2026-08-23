@@ -1,8 +1,8 @@
 using System.Text.Json;
 using Spectre.Console;
 
-// Subcommands — the orchestration behind each CLI verb. The entrypoint (tooling/kac/Program.cs) only wires
-// Spectre.Console.Cli to these; all the work lives here and in the rest of kac.core.
+// Subcommands: the orchestration behind each CLI verb. The entrypoint, tooling/kac/Program.cs, only wires
+// Spectre.Console.Cli to these. All the work lives here and in the rest of kac.core.
 
 namespace kac.core;
 
@@ -15,7 +15,7 @@ public static class Commands
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
-    // Build the export. The corpus is loaded whole whatever `type` names.
+    // Build the export. The corpus is loaded whole, whatever `type` names.
     public static int Export(string corpusRoot, string? type)
     {
         var corpus = Corpus.Load(corpusRoot);
@@ -41,28 +41,28 @@ public static class Commands
         var written = Exporter.Write(corpusRoot, plan);
         foreach (var path in written) Out.Markup(Wrote(path));
 
-        // What the export cannot say is worth saying here, where someone is watching. Neither state is
-        // an error: a corpus may publish nowhere, and an export built from a dirty tree is still an
-        // export — it is only one that cannot be rebuilt from the commit it names.
+        // What the export cannot say is worth saying here, where someone is watching. Neither state is an error. A
+        // corpus may publish nowhere, and an export built from a dirty tree is still an export. It is only one that
+        // cannot be rebuilt from the commit it names.
         if (publishing is null)
             Note(
-                "export: no published links — this corpus states no publishing target the tool can address, "
+                "export: no published links. This corpus states no publishing target the tool can address, "
                 + "or no bases for one. Records carry their paths and no URLs.");
         if (dirty is true)
             Note(
                 "export: built from a dirty working tree, and the manifest says so. The commit it names "
                 + "does not reproduce it.");
 
-        // Named rather than counted. A record left behind is invisible in the output by definition, so
-        // this run is the last place anyone sees which ones they were.
+        // Named rather than counted. A record left behind is invisible in the output, so this run is the last place
+        // anyone sees which ones they were.
         if (plan.Withheld.Count > 0)
             Note(
-                $"export: withheld {string.Join(", ", plan.Withheld)} — .corpus.yaml excludes "
+                $"export: withheld {string.Join(", ", plan.Withheld)}: .corpus.yaml excludes "
                 + $"{string.Join(" and ", corpus.Descriptor.ExportExclude)}.");
 
-        // The same reasoning for a cross-reference the export could not read. It carries what a link
-        // names, and a link naming a record rather than a term inside it leaves nothing to carry — so
-        // the omission is stated here, where an author can act on it, instead of being guessed at.
+        // The same reasoning for a cross-reference the export could not read. The export carries what a link names, and
+        // a link naming a record rather than a term inside it leaves nothing to carry. So this run states the omission,
+        // where an author can act on it, rather than leaving a reader to guess.
         if (plan.Unread.Count > 0)
         {
             Note(
@@ -72,9 +72,9 @@ public static class Commands
             Note("export: point each link at the part it means, as '<file>.md#<anchor>'.");
         }
 
-        // An empty type list is a statement of what this corpus has, and not a failure: a corpus may
-        // have adopted no type that declares an export, or have withheld everything the types it did
-        // adopt would have carried. The line above says which, where it was the second.
+        // An empty type list is a statement of what this corpus has, and not a failure. Either it adopted no type that
+        // declares an export, or it withheld everything the types it did adopt would have carried. The line above says
+        // which, where it was the second.
         Account(plan.Types.Count == 0
             ? $"export: wrote {written.Count} file(s); no type contributed a record."
             : $"export: wrote {written.Count} file(s) for {string.Join(", ", plan.Types.Select(t => t.Type))}.");
@@ -105,20 +105,20 @@ public static class Commands
         var written = Bundler.Write(corpusRoot, plan);
         foreach (var path in written) Out.Markup(Wrote(path));
 
-        // Named rather than counted, as the export names what it withheld. A component that was dropped
-        // is invisible in the output by definition, and two corpora building one plugin name may drop
-        // different ones — so the run says which, beside the `bundle.json` that will outlive it.
+        // Named rather than counted, as the export names what it withheld. A dropped component is invisible in the
+        // output, and two corpora building one plugin name may drop different ones. So the run says which, beside the
+        // `bundle.json` that will outlive it.
         foreach (var t in plan.Trimmed)
-            Note($"bundle: trimmed {t.Path} — {t.Reason}.");
+            Note($"bundle: trimmed {t.Path}: {t.Reason}.");
 
         foreach (var warning in plan.Warnings) Note($"bundle: {warning}");
 
         Account(
             $"bundle: wrote {written.Count} file(s) to {Dist.Plugin}/ as {plan.PluginName} "
-            + $"{plan.Version ?? "(no version)"} — {plan.Included.Count} component(s) included, "
+            + $"{plan.Version ?? "(no version)"}. {plan.Included.Count} component(s) included, "
             + $"{plan.Trimmed.Count} trimmed.");
 
-        // The command is the one part of this line anybody retypes, so it is the one part left bright.
+        // The command is the one part of this line anybody retypes, so it is the one part set in bold.
         Out.Markup(
             $"[grey]bundle:[/] {Dist.Root}/ is a marketplace holding it. Install it from a path with:  "
             + $"[bold]claude plugin marketplace add ./{Dist.Root}[/]");
@@ -129,9 +129,8 @@ public static class Commands
     {
         var corpus = Corpus.Load(corpusRoot);
 
-        // What every generated file should hold, beside what it holds now. `GeneratedFiles` owns which
-        // files those are and which blocks each carries, so that `validate` holds a corpus to the same
-        // list this writes.
+        // What every generated file should hold, beside what it holds now. `GeneratedFiles` owns which files those are
+        // and which blocks each carries, so `validate` holds a corpus to the same list this writes.
         var plan = GeneratedFiles.Plan(corpus.Schema, corpus.Adopted, corpus.Docs, corpus.Tree);
 
         if (check)
@@ -143,7 +142,7 @@ public static class Commands
                 return 0;
             }
 
-            Stop("generated files are stale — these differ from the schema/frontmatter:");
+            Stop("generated files are stale. These differ from the schema/frontmatter:");
             foreach (var s in stale) Out.ErrLine($"  {s}");
             Out.ErrLine("run:  kac generate");
             return 1;
@@ -153,12 +152,12 @@ public static class Commands
         return 0;
     }
 
-    // What a regeneration wrote. Shared with `mechanism --sync`, which ends by regenerating, so that a
-    // sync reports the files it rebuilt in the words `generate` uses for the same work.
+    // What a regeneration wrote. Shared with `mechanism --sync`, which ends by regenerating, so a sync reports the
+    // files it rebuilt in the words `generate` uses for the same work.
     //
-    // A file the corpus did not hold is marked, because creating one is the run that changes what the
-    // corpus contains rather than what a file inside it says. The tally names the whole plan beside the
-    // part of it that moved: a reader who sees one file written wants to know it was one of forty.
+    // A file the corpus did not hold is marked, because creating one changes what the corpus contains rather than what
+    // a file inside it says. The tally names the whole plan beside the part of it that moved: a reader who sees one
+    // file written wants to know it was one of forty.
     private static void ReportWritten(IReadOnlyList<GeneratedFiles.GeneratedFile> plan, List<string> written)
     {
         var created = plan.Where(f => f.Current is null).Select(f => f.Path).ToHashSet(StringComparer.Ordinal);
@@ -178,7 +177,7 @@ public static class Commands
 
         if (json)
         {
-            // Through the source generator rather than reflection — see Json.cs.
+            // Through the source generator rather than reflection. See Json.cs.
             var report = new ValidateReport(
                 new ValidateSummary(validated, templates, skipped, errors, warnings),
                 [
@@ -200,7 +199,7 @@ public static class Commands
             var grid = Rows();
             foreach (var f in grp.OrderBy(f => f.Line ?? 0))
             {
-                // The location repeats what the heading above already gave. `path:line` in one token
+                // The location repeats the file name the heading above already gave, because `path:line` in one token
                 // is the form a terminal offers to open.
                 var at = f.Line is { } ln ? $"  [grey]({file}:{ln})[/]" : "";
                 grid.AddRow(
@@ -213,12 +212,12 @@ public static class Commands
             Out.Line();
         }
 
-        // Templates are counted apart from documents because they are checked apart from them: a reader
-        // who sees a finding against a `_template.md` should find it accounted for in the tally, and one
-        // who sees none should be able to tell that the templates were read rather than skipped.
+        // Templates are counted apart from documents because they are checked apart from them. A reader who sees a
+        // finding against a `_template.md` should find it accounted for in the tally. A reader who sees none should be
+        // able to tell the templates were read rather than skipped.
         Out.Markup(
             $"validated {validated} document(s) and {templates} template(s), skipped {skipped} without "
-            + $"frontmatter — {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}");
+            + $"frontmatter. {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}");
         return errors > 0 ? 1 : 0;
     }
 
@@ -227,10 +226,10 @@ public static class Commands
         var schema = Schema.Load(corpusRoot);
         var catalogue = CheckCatalogue.For(schema);
 
-        // The catalogue is always valid data, so emit it either way; the reader-facing table's
-        // fidelity to it is a separate signal, reported to stderr and via the exit code below. This
-        // is the tie the test suite relies on: a new catalogue check with no table row (and no
-        // explicit waiver), or a row naming a check that no longer exists, exits non-zero here.
+        // The catalogue is always valid data, so emit it either way. Whether the reader-facing table is faithful to it
+        // is a separate signal, reported to stderr and through the exit code below. The test suite relies on that exit
+        // code. A new catalogue check with no table row and no explicit waiver exits non-zero here, and so does a row
+        // naming a check that no longer exists.
         if (json)
         {
             var report = new ChecksReport(
@@ -255,7 +254,7 @@ public static class Commands
             // Split by severity, because a reader comes to this list to learn how much of it fails a
             // build. The catalogue's own order says nothing about that.
             var errors = catalogue.Count(c => c.Severity == Sev.Error);
-            Out.Markup($"{catalogue.Count} checks — {Tally(errors, Sev.Error)}, "
+            Out.Markup($"{catalogue.Count} checks: {Tally(errors, Sev.Error)}, "
                        + $"{Tally(catalogue.Count - errors, Sev.Warning)}.");
         }
 
@@ -283,10 +282,10 @@ public static class Commands
         // misread, and a sync would stamp beside a key it does not read.
         if (CorpusDescriptor.RenamedKeyInUse(corpusRoot) is { } renamed) return Fail(renamed);
 
-        // A sync needs a declared upstream, and not just a directory it can read. `--against` says which
-        // copy of the upstream to take from — a local checkout rather than the URL. `upstream.url` says
-        // the corpus takes from an upstream at all. The corpus at the head of the chain names none:
-        // changes leave it and none arrive, so a sync has nowhere to run from.
+        // A sync needs a declared upstream, and not just a directory it can read. `--against` says which copy of the
+        // upstream to take from, a local checkout rather than the URL. `upstream.url` says that the corpus takes from
+        // an upstream at all. The corpus at the head of the chain names none: changes leave it and none arrive, so a
+        // sync has nowhere to run from.
         if (sync && descriptor.UpstreamUrl is null)
             return Fail("mechanism: this corpus names no upstream, so there is nothing to sync from. "
                         + "A corpus that takes from another records it in upstream.url in .corpus.yaml.");
@@ -300,7 +299,7 @@ public static class Commands
         if (!Directory.Exists(refRoot))
             return Fail($"mechanism: reference corpus not found: {refRoot}");
         if (Path.GetFullPath(refRoot) == Path.GetFullPath(corpusRoot))
-            return Fail("mechanism: the reference is this corpus itself — nothing to compare.");
+            return Fail("mechanism: the reference is this corpus itself. Nothing to compare.");
 
         var localFiles = MechanismCheck.ListFiles(corpusRoot);
         var refFiles = MechanismCheck.ListFiles(refRoot);
@@ -321,8 +320,8 @@ public static class Commands
         MechanismSync.Apply(plan, corpusRoot, refRoot, manifest, reference, today);
         return ReportSync(plan, corpusRoot, manifest.Version, reference, today);
 
-        // Whether two copies of a file say the same thing, which is the one question either engine asks of
-        // the disk. Passed in, so each engine decides from listings and a predicate rather than from a tree.
+        // Whether two copies of a file say the same thing. That is the one question either engine asks of the disk.
+        // Passed in, so each engine decides from listings and a predicate rather than from a tree.
         bool Same(string rel) => MechanismCheck.Same(corpusRoot, refRoot, rel);
     }
 
@@ -372,12 +371,12 @@ public static class Commands
 
     // A verb's own remark about the run. The verb's name is coloured to say which kind it is.
     //
-    // Advice is what nothing else will say: a link that carried nothing, a component dropped, an export
-    // that cannot be rebuilt from the commit it names. None of it is an error, and none of it shows in
-    // the artefact. Colour stops it reading as part of the tally.
+    // A note is what nothing else will say: a link that carried nothing, a component dropped, an export that cannot be
+    // rebuilt from the commit it names. None of it is an error, and none of it shows in the artefact. Colour stops it
+    // reading as part of the tally.
     private static void Note(string line) => Out.Markup(Prefix(line, "yellow"));
 
-    // An account of what the run came to, which closes each of these commands.
+    // An account of what the run came to, and the last thing a verb says about its own work.
     private static void Account(string line) => Out.Markup(Prefix(line, "grey"));
 
     private static string Prefix(string line, string colour)
@@ -386,8 +385,8 @@ public static class Commands
         return $"[{colour}]{line[..cut].EscapeMarkup()}[/]{line[cut..].EscapeMarkup()}";
     }
 
-    // A command stopping on something the caller asked for and cannot have. The message goes to stderr
-    // and the exit code says so, which is the same bargain every verb strikes.
+    // A command stopping on something the caller asked for and cannot have. The message goes to stderr and the exit
+    // code says so, as it does for every verb.
     private static int Fail(string message)
     {
         Stop(message);
@@ -409,15 +408,15 @@ public static class Commands
             + $"descriptor format {Stated(descriptor.DescriptorVersion)}, "
             + $"mechanism version {Stated(descriptor.MechanismVersion)}.");
         Out.Line($"mechanism: comparing the synced layer against {refRoot}");
-        Section("DRIFT — synced files differ from the reference", report.Drift);
-        Section("MISSING LOCALLY — synced files in the reference but not here", report.MissingLocally);
-        Section("MISSING UPSTREAM — synced files here but not in the reference", report.MissingUpstream);
-        Section("UNCLASSIFIED — files matching no manifest rule", report.Unclassified);
+        Section("DRIFT, synced files differ from the reference", report.Drift);
+        Section("MISSING LOCALLY, synced files in the reference but not here", report.MissingLocally);
+        Section("MISSING UPSTREAM, synced files here but not in the reference", report.MissingUpstream);
+        Section("UNCLASSIFIED, files matching no manifest rule", report.Unclassified);
 
         if (report.ResolvedDivergence.Count > 0)
         {
             Out.Line(
-                "RESOLVED — accepted divergences that are now identical again (delete them from .corpus.yaml):");
+                "RESOLVED, accepted divergences that are now identical again (delete them from .corpus.yaml):");
             foreach (var p in report.ResolvedDivergence) Out.Line($"  {p}");
         }
 
@@ -426,10 +425,9 @@ public static class Commands
             + $"forked: {report.ForkedShared} shared ({report.ForkedDiffer} differ, informational); "
             + $"accepted divergences: {report.AcceptedActive}.");
 
-        // Held but not asked for: schema files for types this corpus did not adopt, or a fixture tree in
-        // a corpus whose role declines the verification layer. Neither is drift, because nothing was
-        // compared. Say so anyway — no sync will refresh these files, and the alternative is leaving the
-        // reader to find them stale later.
+        // Held but not asked for: schema files for types this corpus did not adopt, or a fixture tree in a corpus whose
+        // role declines the verification layer. Neither is drift, because nothing was compared. Say so anyway. No sync
+        // will refresh these files, and the alternative is leaving the reader to find them stale later.
         if (report.DeclinedButHeld > 0)
             Out.Line(
                 $"declined: {report.DeclinedButHeld} file(s) held here that this corpus's descriptor does not ask for. "
@@ -437,7 +435,7 @@ public static class Commands
 
         if (report.Problems > 0)
         {
-            Out.ErrLine($"mechanism check failed — {report.Problems} synced-layer problem(s) above.");
+            Out.ErrLine($"mechanism check failed: {report.Problems} synced-layer problem(s) above.");
             return 1;
         }
 
@@ -458,10 +456,10 @@ public static class Commands
         string today)
     {
         Out.Line($"mechanism: syncing the shared layers from {reference}");
-        Section("UPDATED — brought down from the reference", plan.Updated);
-        Section("SEEDED — the corpus's own from here on, copied because it had none", plan.Seeded);
-        Section("SKIPPED — accepted divergences, left as they are", plan.Skipped);
-        Section("HELD HERE, NOT UPSTREAM — shared files the reference does not have (sync never deletes)",
+        Section("UPDATED, brought down from the reference", plan.Updated);
+        Section("SEEDED, the corpus's own from here on, copied because it had none", plan.Seeded);
+        Section("SKIPPED, accepted divergences, left as they are", plan.Skipped);
+        Section("HELD HERE, NOT UPSTREAM, shared files the reference does not have (sync never deletes)",
             plan.HeldHere);
 
         Out.Line(
@@ -471,16 +469,16 @@ public static class Commands
 
         if (plan.ReferenceIsUnsound)
         {
-            Out.ErrLine("UNCLASSIFIED — files in the reference matching no manifest rule, so not copied:");
+            Out.ErrLine("UNCLASSIFIED, files in the reference matching no manifest rule, so not copied:");
             foreach (var p in plan.Unclassified) Out.ErrLine($"  {p}");
             Out.ErrLine(
-                "mechanism sync: the reference's manifest does not resolve its own tree — fix it there.");
+                "mechanism sync: the reference's manifest does not resolve its own tree. Fix it there.");
             return 1;
         }
 
-        // Every synced page may carry a generated block built from this corpus's own types, so the copies
-        // above are only right once rebuilt against what this corpus holds. Regenerating here makes a
-        // passing `generate --check` sync's postcondition instead of the reader's next surprise.
+        // Every synced page may carry a generated block built from this corpus's own types, so the copies above are
+        // only right once rebuilt against what this corpus holds. Regenerating here makes a passing `generate --check`
+        // sync's postcondition.
         return Regenerate(corpusRoot);
 
         static void Section(string heading, IReadOnlyList<string> paths)
@@ -491,9 +489,9 @@ public static class Commands
         }
     }
 
-    // The corpus is loaded here rather than by the caller because a sync has just replaced the schema, and
-    // a schema this corpus cannot yet read is the one failure worth surviving: the files are already in
-    // place, and saying so is more use than a stack trace over a half-finished tree.
+    // The corpus is loaded here rather than by the caller, because a sync has just replaced the schema. A schema this
+    // corpus cannot yet read is the one failure worth surviving: the files are already in place, and saying so is more
+    // use than a stack trace over a half-finished tree.
     private static int Regenerate(string corpusRoot)
     {
         try
@@ -505,7 +503,7 @@ public static class Commands
         }
         catch (Exception ex)
         {
-            Out.ErrLine($"mechanism sync: regeneration failed — {ex.Message}");
+            Out.ErrLine($"mechanism sync: regeneration failed: {ex.Message}");
             Out.ErrLine(
                 "mechanism sync: the files are in place but the generated blocks were not rebuilt. "
                 + "Run kac validate to see what the corpus is missing, then kac generate.");

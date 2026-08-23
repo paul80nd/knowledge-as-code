@@ -1,6 +1,6 @@
 namespace kac.core;
 
-// A record's addressable parts — the children something else may cite by name. The type declares where
+// A record's addressable parts: the children something else may cite by name. The type declares where
 // they live and what holds them to shape, so nothing here is specific to policies or to glossaries
 // except by way of that declaration.
 //
@@ -47,7 +47,7 @@ public static class PartChecks
         if (d.Parts.Count > 0) return true;
 
         report.Err(new CheckId("part-none"),
-            $"the '## {spec.Section}' section holds no {spec.Noun}s — write each one as an H{spec.Level} heading.",
+            $"the '## {spec.Section}' section holds no {spec.Noun}s. Write each one as an H{spec.Level} heading.",
             d.PartSectionLine);
         return false;
     }
@@ -63,7 +63,7 @@ public static class PartChecks
     {
         foreach (var row in d.Parts.Where(row => !Md.HasContent(row.Body(d.Text))))
             report.Err(new CheckId("part-empty"),
-                $"{spec.Noun} '{Md.Snippet(row.Text)}' has nothing under it — write it or delete the heading.",
+                $"{spec.Noun} '{Md.Snippet(row.Text)}' has nothing under it. Write it or delete the heading.",
                 row.Line);
     }
 
@@ -77,7 +77,7 @@ public static class PartChecks
         if (d.PartTableHeaders is null)
         {
             report.Err(new CheckId("clause-table"),
-                $"the '## {spec.Section}' section holds no table — write one row per obligation, headed '{headers}'.",
+                $"the '## {spec.Section}' section holds no table. Write one row per obligation, headed '{headers}'.",
                 d.PartSectionLine);
             return false;
         }
@@ -85,7 +85,7 @@ public static class PartChecks
         if (!d.PartTableHeaders.SequenceEqual(spec.Columns, StringComparer.Ordinal))
         {
             report.Err(new CheckId("clause-table"),
-                $"the clause table is headed '{string.Join(" | ", d.PartTableHeaders)}' — it must be headed "
+                $"the clause table is headed '{string.Join(" | ", d.PartTableHeaders)}'. It must be headed "
                 + $"'{headers}'.", d.PartTableLine);
             return false;
         }
@@ -93,7 +93,7 @@ public static class PartChecks
         if (d.Parts.Count == 0)
         {
             report.Err(new CheckId("clause-table"),
-                "the clause table has no rows — a record that binds nothing binds nobody.", d.PartTableLine);
+                "the clause table has no rows: a record that binds nothing binds nobody.", d.PartTableLine);
             return false;
         }
 
@@ -105,8 +105,8 @@ public static class PartChecks
     // A table row's id is written by the author, so it can be written as something other than a code
     // span or fail the type's pattern. Both are `clause-id-format`, and neither can be asked of a
     // heading: a heading is its own id, and the slug admits whatever the heading says. A
-    // heading that slugs to nothing — punctuation alone — offers no address and is passed over, which is
-    // the same answer a link to it would get from `fragment-resolves`.
+    // heading that slugs to nothing, such as punctuation alone, offers no address and is passed over.
+    // A link to it gets the same answer from `fragment-resolves`.
     //
     // Uniqueness is asked of both, ordinally, because `pol-SCRT.LOGS` and `pol-SCRT.logs` differing only
     // in case is not two parts a reader could tell apart either.
@@ -120,7 +120,7 @@ public static class PartChecks
             {
                 if (spec.Source == PartSpec.Table)
                     report.Err(new CheckId("clause-id-format"),
-                        $"clause id '{Md.Snippet(row.IdText)}' is not a code span — write it as "
+                        $"clause id '{Md.Snippet(row.IdText)}' is not a code span. Write it as "
                         + $"`{Md.Snippet(row.IdText)}`.", row.Line);
                 continue;
             }
@@ -131,7 +131,7 @@ public static class PartChecks
 
             if (!seen.Add(row.Id))
                 report.Err(new CheckId("part-id-unique"),
-                    $"two {spec.Noun}s here address as '{row.Id}' — a citation of it names both and reaches neither.",
+                    $"two {spec.Noun}s here address as '{row.Id}': a citation of it names both and reaches neither.",
                     row.Line);
         }
     }
@@ -151,7 +151,7 @@ public static class PartChecks
             if (modal is null)
             {
                 report.Err(new CheckId("clause-modal"),
-                    $"clause '{Md.Snippet(row.Text)}' does not open with a modal — write one of "
+                    $"clause '{Md.Snippet(row.Text)}' does not open with a modal. Write one of "
                     + $"{string.Join(", ", spec.Levels)}.", row.Line);
                 continue;
             }
@@ -161,17 +161,17 @@ public static class PartChecks
             // that is bold reads as an obligation. Both are the wrong document.
             var binds = spec.Binding.Contains(modal, StringComparer.Ordinal);
             if (binds && !string.Equals(row.BoldLead, modal, StringComparison.Ordinal))
-                report.Err(new CheckId("clause-modal"), $"'{modal}' binds — write it bold, `**{modal}**`.", row.Line);
+                report.Err(new CheckId("clause-modal"), $"'{modal}' binds. Write it bold, `**{modal}**`.", row.Line);
             else if (!binds && row.BoldLead is not null)
                 report.Err(new CheckId("clause-modal"),
-                    $"'{modal}' does not bind — write it plain, not bold.", row.Line);
+                    $"'{modal}' does not bind. Write it plain, not bold.", row.Line);
 
             // A second modal in the same row is two obligations sharing one id, so a citation of it can
             // only ever name half of what it means.
             var rest = row.Text[modal.Length..];
             if (spec.ModalsLongestFirst.FirstOrDefault(m => rest.Contains(m, StringComparison.Ordinal)) is { } second)
                 report.Warn(new CheckId("clause-compound"),
-                    $"clause '{row.Id ?? row.IdText}' carries a second '{second}' — one obligation per clause, or the "
+                    $"clause '{row.Id ?? row.IdText}' carries a second '{second}': one obligation per clause, or the "
                     + "citation is ambiguous.", row.Line);
 
             // Reported once, against the first row that breaks the grouping: a table sorted wholly the
@@ -180,7 +180,7 @@ public static class PartChecks
             if (rank < highest && !disordered)
             {
                 report.Warn(new CheckId("clause-order"),
-                    $"clause '{row.Id ?? row.IdText}' is a '{modal}' but follows a '{spec.Levels[highest]}' — group "
+                    $"clause '{row.Id ?? row.IdText}' is a '{modal}' but follows a '{spec.Levels[highest]}'. Group "
                     + $"the table {string.Join(", ", spec.Levels)}.", row.Line);
                 disordered = true;
             }
@@ -190,8 +190,8 @@ public static class PartChecks
     }
 
     // The third way a citation fails, beside naming no document and naming no part: separating the two
-    // with a colon. Reported under `part-ref` because a reader meets one question — does this citation
-    // reach the thing it claims to — and the separator is the first way of answering no.
+    // with a colon. Reported under `part-ref` because a reader meets one question: does this citation
+    // reach the thing it claims to? The separator is the first way of answering no.
     //
     // Every document is asked, including the ones offering no parts of their own: a citation is written
     // where the part is answered, which is rarely a record of the same type. The other two ways need
@@ -204,6 +204,6 @@ public static class PartChecks
     {
         foreach (var (citation, line) in d.ColonCitations)
             report.Err(new CheckId("part-ref"),
-                $"'{citation}' separates the two halves with a colon — write '{citation.Replace(':', '.')}'.", line);
+                $"'{citation}' separates the two halves with a colon. Write '{citation.Replace(':', '.')}'.", line);
     }
 }

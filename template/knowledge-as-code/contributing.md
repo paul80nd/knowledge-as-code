@@ -4,11 +4,14 @@
 
 The rules are the same whether a person or an AI session is holding the keyboard.
 
-Four pages carry what a contribution needs, and a type's `_template.md` sends you here rather than repeating them.
-[Taxonomy](taxonomy.md) says where a document goes. [Metadata](metadata.md) covers the frontmatter.
-[Style](style.md) holds the rules for the words, which are the same in every document and every commit message.
-[Authoring](authoring.md) holds what a document's tier adds on top. This page holds the rest: the link and template
-conventions CI enforces, the review model, and what outranks what when two rules disagree.
+Two pages and two skills carry what a contribution needs, and a type's `_template.md` sends you here.
+[Taxonomy](taxonomy.md) says where a document goes. [Metadata](metadata.md) covers the frontmatter. This page holds the
+rest: the link and template conventions CI enforces, the review model, and what outranks what when two rules disagree.
+
+**The rules for the words are skills rather than pages.** `technical-writing` carries the floor, which is how to build
+a sentence and how to write a commit message. `writing-a-record` carries what this corpus adds and what a record's tier
+asks on top. A skill loads beside the work at the moment of writing, and costs nothing on a session that writes no
+prose. Neither is restated here.
 
 ## What outranks what
 
@@ -19,7 +22,7 @@ Four sources of rules, in this order.
    formats, link forms, and which text rules a type actually declares.
 2. **The type's own pages.** `<type>.md` for what the type holds, `<type>/_template.md` for the sections it must have.
 3. **This page**, for the conventions below.
-4. **[Style](style.md) and [authoring](authoring.md)**, for the prose.
+4. **The `technical-writing` and `writing-a-record` skills**, for the prose.
 
 **Report a contradiction, do not act on it.** Where a prose rule contradicts the schema, say which of the two is wrong
 and leave both alone. Read literally, one wrong bullet in a rulebook can strip a keyword from every normative document
@@ -27,13 +30,13 @@ in the corpus while claiming the rulebook's authority.
 
 ## The shape of a contribution
 
-1. Work out where it goes — [taxonomy](taxonomy.md) has a decision table.
+1. Work out where it goes. [Taxonomy](taxonomy.md) has a decision table.
 2. Copy the type's `_template.md`. It marks the parts you supply as `{{placeholder}}` and fences its own guidance
    between `DELETE FROM HERE` and `DELETE TO HERE` comments. A finished document has neither left in it.
-3. Allocate an ID in the style that type uses — the next unused number, a four-character mnemonic for the concept, or a
-   slug. Check the folder's index for what is already taken; see [metadata](metadata.md#ids).
-4. Fill in the frontmatter — see [metadata](metadata.md).
-5. Write the content, to [style](style.md) and [authoring](authoring.md). Follow the template's section structure, which
+3. Allocate an ID in the style that type uses: the next unused number, a four-character mnemonic for the concept, or a
+   slug. Check the folder's index for what is already taken. See [metadata](metadata.md#ids).
+4. Fill in the frontmatter. See [metadata](metadata.md).
+5. Write the content, to `technical-writing` and `writing-a-record`. Follow the template's section structure, which
    exists so documents of a type are comparable. The tier rules are why a runbook step and an ADR paragraph are held to
    different constraints.
 6. Open a PR against the corpus repository. Review expectations follow the tier, below.
@@ -43,7 +46,7 @@ built from is wrong.
 
 ### Writing a template
 
-`{{…}}` marks everything the author supplies, and nothing else does — not `NNNN`, not `XXXX`, not a slug called
+`{{…}}` marks everything the author supplies, and nothing else does: not `NNNN`, not `XXXX`, not a slug called
 `example`. One mark, so a template teaches exactly what the tool recognises. The casing carries what a sentence would
 otherwise have to: `pol-{{MNEM}}` in `{{mnem}}-kebab-slug.md` says a mnemonic is upper-case in the id and lower-case in
 the filename. `{{a}}` and `{{b}}` stand for *another* document, and `{{a}}.md` is its whole filename.
@@ -54,8 +57,8 @@ places it does not:
 * **A placeholder cannot sit in a flow sequence.** `related: [ adr-{{a}} ]` is a parse error, because a plain scalar in
   flow context may not contain a brace. Write the list as a block sequence.
 * **A placeholder opening a value has to be quoted.** YAML reads `review-by: {{date}}` as a flow mapping rather than as
-  text, so the field arrives holding nothing. Write `review-by: "{{date}}"`. A placeholder that follows something —
-  `svc-{{slug}}` — needs no quotes.
+  text, so the field arrives holding nothing. Write `review-by: "{{date}}"`. A placeholder that follows something needs
+  no quotes, as in `svc-{{slug}}`.
 
 ### Links
 
@@ -74,10 +77,10 @@ text:
 
     [adr-0013]: 0013-http-custom-header-naming.md
 
-**Name the part when you reference one** — a clause of a policy, a term of a glossary — as `<id>.<part>`, which is the
+**Name the part when you reference one** (a clause of a policy, a term of a glossary) as `<id>.<part>`, which is the
 form a citation already uses. The label carries it and the target lands on it:
 
-    A title in the catalogue is not the indexed field — see [gls-search.title].
+    A title in the catalogue is not the indexed field. See [gls-search.title].
 
     [gls-search.title]: search.md#title
 
@@ -86,12 +89,12 @@ the reference: a tool reading the corpus carries what the link states, and a lin
 
 **Use an inline link where the display text is prose**, since it differs from the target:
 
-    The rule lives in the [value-formats standard](/standards/public-api/value-formats.md).
+    The rule lives in the [value-formats standard](../standards/public-api/value-formats.md).
 
 Definitions go at the very foot of the document, after all prose sections, sorted by label. Where a `## Related` section
 exists it uses the same shortcut labels, so a path appears exactly once per document and a rename is a one-line change.
 
-**The label is the id exactly as that document carries it** — `adr-0013`, `pol-DEVI`, `svc-billing-api`. The prefix is
+**The label is the id exactly as that document carries it**: `adr-0013`, `pol-DEVI`, `svc-billing-api`. The prefix is
 always lower-case, and what follows takes the type's own form, so a mnemonic stays upper-case and a slug stays
 lower-case. A part id is the record's own id, a dot, and the part as its type writes one: `pol-DEVI.TIMEBOX`,
 `gls-search.title`. The label is its own display text, so a label that is not the id shows the reader an id that does
@@ -116,10 +119,10 @@ The review bar follows what a document *is*, not who wrote it.
 
 | Tier            | Review required                    | Merge criteria                                                                   |
 |-----------------|------------------------------------|----------------------------------------------------------------------------------|
-| **Decided**     | Two reviewers                      | Alternatives genuinely weighed; consequences stated including the unwelcome ones |
-| **Normative**   | The document's owner               | Rules are testable; RFC 2119 keywords used correctly; changelog updated          |
-| **Descriptive** | One reviewer                       | Cross-references resolve; content matches the estate as it actually is           |
-| **Procedural**  | One reviewer who has done the task | Steps are followable by someone who hasn't; rollback stated                      |
+| **Decided**     | Two reviewers                      | Alternatives genuinely weighed. Consequences stated including the unwelcome ones |
+| **Normative**   | The document's owner               | Rules are testable. RFC 2119 keywords used correctly. Changelog updated          |
+| **Descriptive** | One reviewer                       | Cross-references resolve. Content matches the estate as it actually is           |
+| **Procedural**  | One reviewer who has done the task | Steps are followable by someone who hasn't. Rollback stated                      |
 | **Observed**    | None                               | Merges on CI passing. Authority comes at promotion, not capture.                 |
 
 **Observed content is unreviewed by design.** A discovery is cheap because nobody gates it, and a capture step with a
@@ -135,7 +138,7 @@ If you are an agent contributing to this corpus:
 * **Capture as discoveries, not FAQs.** You cannot confirm your own observations. `source: session`,
   `confidence: unverified`.
 * **Never edit a Decided-tier document.** Propose a superseding one.
-* **Never hand-edit generated regions** — anything between `<!-- BEGIN GENERATED -->` and `<!-- END GENERATED -->`.
+* **Never hand-edit generated regions**: anything between `<!-- BEGIN GENERATED -->` and `<!-- END GENERATED -->`.
   Change the source and let CI rebuild.
 * **Cite, don't restate.** If the reasoning lives in an ADR, link it. Duplication is how this corpus rots.
 * **Use the glossary's terms exactly.** Where the glossary distinguishes two near-synonyms, the distinction is
@@ -144,10 +147,10 @@ If you are an agent contributing to this corpus:
 
 ## What not to add
 
-* Content duplicated from an ADO work item — link instead.
+* Content duplicated from an ADO work item. Link to it instead.
 * Anything containing secrets, connection strings, tokens or customer data. This corpus is broadly readable.
 * Raw session logs. Distilled discoveries only.
-* Speculative documentation for work not yet started — that is what the backlog is for.
+* Speculative documentation for work not yet started. Put it in the backlog.
 * A document that fits no type. Raise the gap instead.
 
 ## Branches and review
@@ -157,7 +160,7 @@ Trunk-based. Short-lived branches, PR into `main`, wiki publishes from `main`.
 ### Branch policy on `main`
 
 * Minimum one reviewer.
-* Build validation required — schema, links and generated-content freshness must pass.
+* Build validation is required. Schema, links and generated-content freshness must pass.
 * Path-scoped automatically-included reviewers raise the bar on Decided and Normative content (`adrs/*`, `standards/*`,
   `policies/*`) without raising it everywhere. This is how we enforce the tier model in practice. ADO's
   minimum-reviewer count is branch-level, and required reviewers can be scoped to paths.
@@ -170,5 +173,4 @@ pipeline that pushes fixes into the PR branch produces bot commits, re-triggers 
 unanswerable. That is a bad trade for a repository whose value is a trustworthy history.
 
 An agent proposing knowledge has its own identity: a service account that can open pull requests and cannot merge them.
-A human accepts what it proposes, and the branch policy is what makes that true rather than a convention anyone has to
-remember.
+A human accepts what it proposes. The branch policy enforces that, so nobody has to remember.

@@ -134,11 +134,11 @@ public class DocumentRuleTests
             Adr("## Terms\n\n### Borrower\n\nOne.\n\n### Item\n\nTwo.\n\n### Branch\n\nThree."));
 
         Assert.Equal("terms-alphabetical", Single(found).Check.Value);
-        Assert.Equal("'Branch' is out of order — it belongs before 'Item'.", Single(found).Message);
+        Assert.Equal("'Branch' is out of order: it belongs before 'Item'.", Single(found).Message);
     }
 
-    // Casing is the entry's own — a glossary holds `ADR` beside `Borrower` — so ordering by code point
-    // would report every initialism as misplaced where a reader scans them as fine.
+    // Casing is the entry's own, and a glossary holds `ADR` beside `Borrower`. So ordering by code
+    // point would report every initialism as misplaced where a reader scans them as fine.
     [Fact]
     public void Casing_does_not_decide_the_order()
         => Assert.Empty(Run(new TermsAreAlphabetical(),

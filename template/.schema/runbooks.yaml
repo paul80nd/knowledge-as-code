@@ -13,9 +13,9 @@ detail: >
   Disaster recovery and estate rebuild live here.
 
 lineage:
-  prior-art: "[Google SRE](https://sre.google/sre-book/introduction/) — the playbook"
+  prior-art: "[Google SRE](https://sre.google/sre-book/introduction/), the playbook"
   alignment: >
-    Recording the response ahead of time rather than improvising it; Google measures roughly a threefold
+    Recording the response ahead of time rather than improvising it. Google measures roughly a threefold
     improvement in mean time to recovery
   divergence: >
     Google specifies no form. We mandate one: terse, imperative, structured as a decision tree
@@ -28,7 +28,7 @@ collision: >
 id:
   prefix: rbk
   style: slug
-  notes: Named for the failure, not the fix — that is what someone searches for at 2am.
+  notes: Named for the failure, not the fix. That is what someone searches for at 2am.
 
 filename:
   pattern: '^[a-z0-9-]+\.md$'
@@ -86,7 +86,7 @@ index:
 
 rules:
   - id: symptoms-first
-    description: Symptoms is the first section after the H1 — that is how the reader finds the document.
+    description: Symptoms is the first section after the H1. That is how the reader finds the document.
     severity: error
     expr: "first_section() == 'Symptoms'"
     message: >
@@ -94,8 +94,8 @@ rules:
       seeing, not on what the document is called.
   - id: escalation-required
     description: Every diagnosis branch ends in a resolution or an escalation, never a dead end.
-    # `sections` requires the heading; the shape beneath it is what this adds, and only reading the tree finds a dead
+    # `sections` requires the heading. The shape beneath it is what this adds, and only reading the tree finds a dead
     # end.
   - id: staleness-loud
     description: Rehearsal staleness, reported more prominently than a process's.
-    # Scheduled. An unrehearsed process is annoying; an unrehearsed runbook is dangerous.
+    # Scheduled. An unrehearsed process is annoying. An unrehearsed runbook is dangerous.

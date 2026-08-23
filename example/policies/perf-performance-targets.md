@@ -19,15 +19,14 @@ tags: [ capacity, non-functional-requirements, performance ]
 Where performance matters, we say what "fast enough" means before we build, and we check against it before we release
 rather than discovering the answer from customers.
 
-An unstated performance target is met by definition, right up to the point where it isn't. Stating it converts an
-argument about whether something feels slow into a measurement, and makes a regression something the pipeline can catch
-rather than something the support queue reports.
+An unstated performance target is met by definition, right up to the point where it is not. Stating it converts an
+argument about whether something feels slow into a measurement, and makes a regression something the pipeline catches.
 
 ## Scope
 
-Systems where throughput, latency, concurrency or capacity affect whether the system does its job — which is most
-customer-facing systems and many internal ones. Targets themselves are recorded as [NFRs](/nfrs); this policy commits us
-to having them.
+Systems where throughput, latency, concurrency or capacity affect whether the system does its job, which is most
+customer-facing systems and many internal ones. Targets themselves are recorded as [NFRs](../nfrs.md). This policy
+commits us to having them.
 
 ## Clauses
 
@@ -41,10 +40,10 @@ to having them.
 
 ## Exceptions
 
-Systems where performance is genuinely not a concern — low-volume internal tooling with no user waiting on it — need no
-targets. That judgement is a recorded deviation under [pol-DEVI] rather than an assumption repeated, and its review date
-is what catches the system that has since acquired users.
+Systems where performance is genuinely not a concern (low-volume internal tooling with no user waiting on it) need no
+targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system that
+has since acquired users.
 
 [pol-DEVI]: devi-deviations-are-recorded.md
-[Azure WAF]: /frameworks.md#azure-well-architected-framework
-[ISO 27001:2022]: /frameworks.md#iso-27001
+[Azure WAF]: ../frameworks.md#azure-well-architected-framework
+[ISO 27001:2022]: ../frameworks.md#iso-27001

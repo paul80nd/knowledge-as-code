@@ -54,7 +54,7 @@ public sealed class Publishing
         prefix = pathPrefix?.Trim('/') is { Length: > 0 } p ? "/" + p : "";
     }
 
-    // How this corpus addresses its published form, or null where it has no addressable one — it
+    // How this corpus addresses its published form, or null where it has no addressable one: it
     // publishes nowhere, it names a target nothing builds links for, or it names one and supplies no
     // bases. Null in every case, because a caller's question is whether it can write a link at all, and
     // three ways of being unable to are one answer.

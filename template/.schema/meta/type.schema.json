@@ -32,12 +32,12 @@
       "$ref": "#/$defs/name"
     },
     "label": {
-      "description": "How one record is named in generated prose — \"Policy\", \"ADR\", \"NFR\".",
+      "description": "How one record is named in generated prose: \"Policy\", \"ADR\", \"NFR\".",
       "type": "string",
       "minLength": 1
     },
     "label-plural": {
-      "description": "How the collection is named — \"Policies\", \"ADRs\", \"NFRs\". Required where `label` is not, because nothing turns `nfr` into \"NFRs\".",
+      "description": "How the collection is named: \"Policies\", \"ADRs\", \"NFRs\". Required where `label` is not, because nothing turns `nfr` into \"NFRs\".",
       "type": "string",
       "minLength": 1
     },
@@ -51,7 +51,7 @@
       "pattern": "^[a-z][a-z0-9-]*\\.md$"
     },
     "tier": {
-      "description": "How a document of this type behaves. The vocabulary belongs to the `tier` field in `_universal.yaml`; `_tiers.yaml` says what each value means.",
+      "description": "How a document of this type behaves. The vocabulary belongs to the `tier` field in `_universal.yaml`, and `_tiers.yaml` says what each value means.",
       "enum": [
         "decided",
         "normative",
@@ -69,7 +69,7 @@
       ]
     },
     "summary": {
-      "description": "What the type is, in one line. Rendered as a table cell, so `kac` holds it to a length; the count is taken with whitespace folded, which is why it is not repeated here.",
+      "description": "What the type is, in one line. Rendered as a table cell, so `kac` holds it to a length. The count is taken with whitespace folded, which is why it is not repeated here.",
       "type": "string",
       "minLength": 1
     },
@@ -187,7 +187,7 @@
           "$ref": "#/$defs/regex"
         },
         "slug-max": {
-          "description": "The longest slug a filename may carry — the slug the author chose, so the extension is dropped and so is the discriminator where the name carries one ahead of it. Defaults to 30.",
+          "description": "The longest slug a filename may carry: the slug the author chose, so the extension is dropped and so is the discriminator where the name carries one ahead of it. Defaults to 30.",
           "type": "integer",
           "minimum": 1
         }
@@ -242,7 +242,7 @@
           }
         },
         "sort": {
-          "description": "The columns to sort on, in order of precedence — the first breaks ties with the next. A scalar is the one-column case. Defaults to `id`, the one column every document carries.",
+          "description": "The columns to sort on, in order of precedence. The first breaks ties with the next. A scalar is the one-column case. Defaults to `id`, the one column every document carries.",
           "oneOf": [
             {
               "$ref": "#/$defs/name"
@@ -266,7 +266,7 @@
       }
     },
     "parts": {
-      "description": "Where a record of this type keeps the parts something else may cite — the children a `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus` citation addresses. A type declaring no block offers no parts, and a citation into one of its records is reported as reaching nothing.",
+      "description": "Where a record of this type keeps the parts something else may cite: the children a `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus` citation addresses. A type declaring no block offers no parts, and a citation into one of its records is reported as reaching nothing.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -290,12 +290,12 @@
           "minLength": 1
         },
         "noun": {
-          "description": "What one part is called, used in the messages a citation failure reports — \"clause\", \"term\". Defaults to \"part\".",
+          "description": "What one part is called, used in the messages a citation failure reports: \"clause\", \"term\". Defaults to \"part\".",
           "type": "string",
           "minLength": 1
         },
         "aside": {
-          "description": "The label a part's optional second block opens with, written bold — \"Not\" on a glossary term. An export carries the lead and the aside as two pieces. Omit where a type's parts carry no such block.",
+          "description": "The label a part's optional second block opens with, written bold: \"Not\" on a glossary term. An export carries the lead and the aside as two pieces. Omit where a type's parts carry no such block.",
           "type": "string",
           "minLength": 1
         },
@@ -306,7 +306,7 @@
           "maximum": 6
         },
         "columns": {
-          "description": "The table's headers, in order, for `source: table`. The first two are read positionally as the id and the part; any further column is the type's own. Defaults to [Id, Clause].",
+          "description": "The table's headers, in order, for `source: table`. The first two are read positionally as the id and the part. Any further column is the type's own. Defaults to [Id, Clause].",
           "type": "array",
           "minItems": 2,
           "items": {
@@ -315,15 +315,15 @@
           }
         },
         "id-pattern": {
-          "description": "What an authored part id must match — the half after the dot, as `pol-VURM.TIMEBOX` carries it. Read for `source: table` only: a heading's id is derived from the heading rather than written.",
+          "description": "What an authored part id must match, the half after the dot as `pol-VURM.TIMEBOX` carries it. Read for `source: table` only: a heading's id is derived from the heading rather than written.",
           "$ref": "#/$defs/regex"
         },
         "binding": {
-          "description": "The modals written bold — these oblige. Ordered: rows appear in the order declared. `source: table` only.",
+          "description": "The modals written bold, which oblige. Ordered: rows appear in the order declared. `source: table` only.",
           "$ref": "#/$defs/modals"
         },
         "advisory": {
-          "description": "The modals written plain — these recommend. They follow the binding ones. `source: table` only.",
+          "description": "The modals written plain, which recommend. They follow the binding ones. `source: table` only.",
           "$ref": "#/$defs/modals"
         }
       },
@@ -379,7 +379,7 @@
       }
     },
     "rules": {
-      "description": "What CI holds a record of this type to, beyond its fields and sections. Reciprocity, section mirroring and conditional requirement are declared on the field instead; an entry restating one of those has no effect.",
+      "description": "What CI holds a record of this type to, beyond its fields and sections. Reciprocity, section mirroring and conditional requirement are declared on the field instead, and an entry restating one of those has no effect.",
       "type": "array",
       "items": {
         "$ref": "#/$defs/rule"
@@ -388,7 +388,7 @@
   },
   "$defs": {
     "notes": {
-      "description": "Commentary. The one key admitted at every level and required at none — what these files should say and the tool has no use for.",
+      "description": "Commentary. The one key admitted at every level and required at none: what these files should say and the tool has no use for.",
       "type": "string"
     },
     "name": {
@@ -433,7 +433,7 @@
           "$ref": "#/$defs/notes"
         },
         "description": {
-          "description": "What a reader needs at a glance, in one line. Rendered into the generated Metadata table, which pads every column to its widest cell — so keep it under about 100 characters and leave the reasoning to `notes:`.",
+          "description": "What a reader needs at a glance, in one line. Rendered into the generated Metadata table, which pads every column to its widest cell. Keep it under about 100 characters and leave the reasoning to `notes:`.",
           "type": "string",
           "minLength": 1
         },
@@ -514,7 +514,7 @@
           "minLength": 1
         },
         "allow-literal": {
-          "description": "Words admitted beside the field's declared type — `last-rehearsed: never`, `applies-to: [all]`. A value listed here is taken as written and nothing further is asked of it.",
+          "description": "Words admitted beside the field's declared type: `last-rehearsed: never`, `applies-to: [all]`. A value listed here is taken as written and nothing further is asked of it.",
           "type": "array",
           "minItems": 1,
           "items": {
@@ -613,7 +613,7 @@
       ]
     },
     "rule": {
-      "description": "One entry of a type's `rules:` block. A rule states an intention from the moment it is written; it gains a `severity:` when something can act on it.",
+      "description": "One entry of a type's `rules:` block. A rule states an intention from the moment it is written, and it gains a `severity:` when something can act on it.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -629,7 +629,7 @@
           "$ref": "#/$defs/name"
         },
         "description": {
-          "description": "What is checked, in the schema's own words. Rendered into the type page's checks table — the reasoning belongs in `message:`.",
+          "description": "What is checked, in the schema's own words. Rendered into the type page's checks table. The reasoning belongs in `message:`.",
           "type": "string",
           "minLength": 1
         },
@@ -646,7 +646,7 @@
           "minLength": 1
         },
         "message": {
-          "description": "What the author is told when the expression fails — a diagnosis, where `description:` is a definition.",
+          "description": "What the author is told when the expression fails, a diagnosis where `description:` is a definition.",
           "type": "string",
           "minLength": 1
         },

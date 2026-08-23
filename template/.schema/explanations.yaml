@@ -16,20 +16,20 @@ detail: >
 
 versus:
   standards: >
-    An explanation helps you understand; a standard tells you what to do. If it says you **MUST** do something,
+    An explanation helps you understand. A standard tells you what to do. If it says you **MUST** do something,
     it is a standard however much context surrounds it.
   processes: >
-    An explanation says how something works; a process says how to perform a task. If a reader is meant to
+    An explanation says how something works. A process says how to perform a task. If a reader is meant to
     follow it step by step, it is a process.
   services: >
-    An explanation covers how the pieces fit together; a service document describes one deployable component. If
+    An explanation covers how the pieces fit together. A service document describes one deployable component. If
     it is about a single component, it is a service.
   adrs: >
-    An explanation describes the shape something has; an ADR records the choice that gave it that shape, and is
+    An explanation describes the shape something has. An ADR records the choice that gave it that shape, and is
     frozen at the moment of choosing.
 
 lineage:
-  prior-art: "[Diátaxis](https://diataxis.fr/explanation/) — Explanation"
+  prior-art: "[Diátaxis](https://diataxis.fr/explanation/), Explanation"
   alignment: >
     Name for name. Understanding-oriented, discursive, gives background and considers alternatives
   divergence: >
@@ -50,7 +50,7 @@ fields:
     required: true
     type: enum
     values: [draft, active, stale]
-    description: '`stale` is an honest state — say so rather than let the page quietly rot.'
+    description: '`stale` is an honest state: say so rather than let the page quietly rot.'
 
   explains:
     required: true
@@ -62,7 +62,7 @@ fields:
   review-by:
     required: true
     type: date
-    description: The field that stops this type rotting — explanations need the tightest staleness discipline.
+    description: The field that stops this type rotting. Explanations need the tightest staleness discipline.
     notes: >
       The field that stops this type rotting. Explanations are the residual category, so they need the
       tightest staleness discipline, not the loosest.
@@ -71,7 +71,7 @@ sections:
   required: [Where the detail lives]
   optional: []
   notes: >
-    Body sections are free-form — an explanation is narrative and its shape follows its subject. Only the
+    Body sections are free-form: an explanation is narrative and its shape follows its subject. Only the
     outbound links section is required, because linking rather than restating is what defines the type.
 
 index:
@@ -84,10 +84,10 @@ rules:
     severity: warning
     expr: "words() <= links() * 40"
     message: >
-      Prose has outgrown the links. Each fact restated here is a second copy to keep true — link to the
+      Prose has outgrown the links. Each fact restated here is a second copy to keep true. Link to the
       document that owns it instead.
   - id: not-normative
-    description: No bold RFC 2119 keyword — MUST, MUST NOT, SHOULD, SHOULD NOT, MAY — binds from an explanation.
+    description: No bold RFC 2119 keyword (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) binds from an explanation.
     severity: warning
     # Bold is how a clause table states an obligation, so it is the bold that separates an explanation
     # quoting the word from one binding with it.

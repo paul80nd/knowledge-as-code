@@ -7,7 +7,7 @@ folder: processes
 page: processes.md
 tier: procedural
 lifecycle: living
-summary: A planned procedure followed deliberately — releasing, onboarding, provisioning, rotating a secret.
+summary: A planned procedure followed deliberately (releasing, onboarding, provisioning, rotating a secret).
 goes-here: A step-by-step for a planned task
 detail: >
   Written to be followed by someone who has not done it before.
@@ -18,11 +18,11 @@ versus:
     runbook.
 
 lineage:
-  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Procedure layer; [Diátaxis how-to guide](https://diataxis.fr/how-to-guides/)"
+  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Procedure layer, and [Diátaxis how-to guide](https://diataxis.fr/how-to-guides/)"
   alignment: >
     Steps that operationalise the standard above them
   divergence: >
-    Splitting the procedural layer by reading conditions is ours — see [First principles](#first-principles)
+    Splitting the procedural layer by reading conditions is ours. See [First principles](#first-principles)
 
 id:
   prefix: prc
@@ -53,7 +53,7 @@ fields:
     allow-literal: [never]
     description: Quoted date or `"never"`. Set when someone follows it end to end, not when the page is edited.
     notes: >
-      Quoted date, or `"never"` — which is permitted and preferable to a guess. Updated when someone actually
+      Quoted date, or `"never"`, which is permitted and preferable to a guess. Updated when someone actually
       follows the process end to end, not when someone edits the document.
 
   rehearsal-frequency:

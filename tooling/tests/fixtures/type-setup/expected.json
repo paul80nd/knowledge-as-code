@@ -12,14 +12,14 @@
       "line": null,
       "severity": "error",
       "check": "type-setup",
-      "message": "type 'data' has data.md but no 'data/' — a type is set up as both or neither."
+      "message": "type 'data' has data.md but no 'data/': a type is set up as both or neither."
     },
     {
       "file": ".schema/tools.yaml",
       "line": null,
       "severity": "error",
       "check": "type-setup",
-      "message": "type 'tools' has a 'tools/' folder but is not fully set up — add tools.md, tools/_template.md."
+      "message": "type 'tools' has a 'tools/' folder but is not fully set up. Add tools.md, tools/_template.md."
     }
   ]
 }

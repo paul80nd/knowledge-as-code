@@ -1,7 +1,7 @@
 # The tiers, in the order a reader meets them, and what each is called on a page.
 #
-# Tier is what a document's behaviour keys off — how it is reviewed, whether it may be edited in place,
-# what language it is written in — so the vocabulary itself belongs to `tier` in `_universal.yaml`, which
+# Tier is what a document's behaviour keys off (how it is reviewed, whether it may be edited in place,
+# what language it is written in), so the vocabulary itself belongs to `tier` in `_universal.yaml`, which
 # is the field every record carries. This file says what each of those values is *called* and what it
 # means. A generated page needs both, and a frontmatter enum has room for neither.
 #
@@ -35,7 +35,7 @@ tiers:
     label: Procedural
     behaviour: living, must be rehearsed
     note: >
-      Each records when it was last rehearsed. An unrehearsed process is annoying; an unrehearsed runbook
+      Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed runbook
       is dangerous.
 
   observed:

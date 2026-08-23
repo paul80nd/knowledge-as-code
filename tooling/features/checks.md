@@ -1,4 +1,4 @@
-# `checks` — where a check comes from
+# `checks`: where a check comes from
 
 ## Intent
 
@@ -38,30 +38,30 @@ below it is read, and a finding there names the schema file and the key rather t
 
 [`../../example/.schema/README.md`](../../example/.schema/README.md) is the account of what that pass reports and why an
 inert declaration is treated as a defect. It is written for whoever authors a type file, which in a corpus that took
-this framework is somebody who cannot ask what a key was meant to do — and that is the reason the pass exists at all.
+this framework is somebody who cannot ask what a key was meant to do. That is the reason the pass exists at all.
 
 ### A type's own rules
 
 A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are answered
-by an `expr:` — a one-line condition the schema states and the tool evaluates, so adding one is adding YAML rather than
-editing this tool; [`../../example/.schema/README.md`](../../example/.schema/README.md) is the reference for what one
-may say. The rest are a class each in `kac.core/Rules/`, with unit tests beside them, for the questions the grammar
+by an `expr:`, a one-line condition the schema states and the tool evaluates. Adding one is adding YAML rather than
+editing this tool, and [`../../example/.schema/README.md`](../../example/.schema/README.md) is the reference for what
+one may say. The rest are a class each in `kac.core/Rules/`, with unit tests beside them, for the questions the grammar
 cannot ask.
 
 `dependency-cycle` is the one that asks about the records together rather than about each one. It is reported once per
 loop against the lowest id on it.
 
-The schema declares roughly as many rules again that do not run — intentions, carrying a `description:` and no
-`severity:`, rendered on their type page under *Declared, not yet enforced*. Naming a severity without running is the
+The schema declares roughly as many rules again that do not run. Each is an intention, carrying a `description:` and no
+`severity:`, and rendered on its type page under *Declared, not yet enforced*. Naming a severity without running is the
 one arrangement this forbids, and `schema-dispatch` is what forbids it.
 
-A rule that counts words or links is a ratio or a ceiling whose number is a judgement rather than a measurement — no
+A rule that counts words or links is a ratio or a ceiling whose number is a judgement rather than a measurement: no
 corpus has yet held enough of those types to calibrate one. Each is pinned by a fixture, so changing it is visible.
 
 A rule that matches text is a heuristic, and its pattern lives in `.schema/` for that reason: a heuristic gets tuned,
 and tuning a regex there is a schema edit rather than a release every corpus has to take. Most read the document **as
-written** — a credential pasted into a fenced block is the case they exist for, and the flattened text a word count
-walks would never see it. `target-is-measurable` is the exception: it reads a frontmatter value, which the body patterns
+written**. A credential pasted into a fenced block is the case they exist for, and the flattened text a word count walks
+would never see it. `target-is-measurable` is the exception: it reads a frontmatter value, which the body patterns
 deliberately cannot see, because a field is judged against what its own declaration says.
 
 Code is excluded from every link and marker check: they walk the Markdig AST (inline links, literal runs), and fenced or
@@ -83,18 +83,18 @@ corpus, and still catches genuine disorder (`tags` before `id`, `related` before
 **A rule is data wherever it can be.** Wiring a rule as C# means a class, a registry line, unit tests, a row in
 `Generator.DocRows`, a row in two reference pages, and a fixture. Wiring it as an expression means a line of YAML and a
 fixture. That difference is the whole argument, and it compounds: a corpus that has *taken* this framework rather than
-authored it may add a whole type file of its own, and before this layer existed every rule in one was inert — enforcing
-it needed an upstream code change and a release.
+authored it may add a whole type file of its own. Without this layer every rule in that file would be inert, and
+enforcing one would need an upstream code change and a release.
 
 OPA/Rego was the obvious alternative and is the wrong shape. It would replace only the evaluation *tail* of the
 pipeline, leaving all the markdown and frontmatter extraction untouched, while adding a language and a runtime
-dependency and breaking the single-file, no-build-step design. A small hand-rolled evaluator buys the one property worth
-having — new rules as data — at a fraction of that. `RuleExpr.cs` says when that judgement expires.
+dependency and breaking the single-file, no-build-step design. The one property worth having is new rules as data, and a
+small hand-rolled evaluator buys it at a fraction of that cost. `RuleExpr.cs` says when that judgement expires.
 
 | File                         | Holds                                                                                 |
 |------------------------------|---------------------------------------------------------------------------------------|
 | `kac.core/Facts.cs`          | the fact functions, and nothing else an expression can reach                          |
-| `kac.core/RuleExpr.cs`       | lexer, recursive-descent parser, type checker, evaluator — no dependencies            |
+| `kac.core/RuleExpr.cs`       | lexer, recursive-descent parser, type checker and evaluator, with no dependencies     |
 | `RuleSpec` in `Schema.cs`    | `Expr`, `Compiled`, `Severity`, `Message`; `ParseRule` compiles at load               |
 | `kac.core/Rules/`            | one class per rule that needs C#, and the registry each dispatcher looks them up in   |
 | `Validator.CheckRules`       | evaluates every compiled rule, and looks up by id the ones that are not               |

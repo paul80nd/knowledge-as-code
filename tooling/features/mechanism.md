@@ -1,13 +1,12 @@
-# `mechanism` — portability
+# `mechanism`: portability
 
 ## Intent
 
-A corpus takes the framework as a copy — the validator, the schema, and the documents describing how the system works —
-and a copy drifts. `mechanism` is what makes a copy answerable to a declaration.
-[`manifest.yaml`](../manifest.yaml) declares each file's layer — `synced`, `verification`, `forked`, `generated`,
-`local`, `ignored` — and `mechanism` enforces that declaration from both ends. `--check` reports how far a corpus has
-moved from a reference. `--sync` takes the shared layers from one. Its reader is whoever maintains a corpus downstream
-of this one.
+A corpus takes the framework as a copy (the validator, the schema, and the documents describing how the system works),
+and a copy drifts. `mechanism` is what makes a copy answerable to a declaration. [`manifest.yaml`](../manifest.yaml)
+declares each file's layer: `synced`, `verification`, `forked`, `generated`, `local` or `ignored`. `mechanism` enforces
+that declaration from both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the
+shared layers from one. Its reader is whoever maintains a corpus downstream of this one.
 
 ## What it is not
 
@@ -39,19 +38,19 @@ kac mechanism --check --against ../other-corpus
 The reference defaults to `upstream.url` in `.corpus.yaml`, so a corpus that recorded where it synced from can run a
 bare `mechanism --check`. It reports:
 
-- **synced** and **verification** files that differ, are missing on either side, or match no manifest rule — each an
+- **synced** and **verification** files that differ, are missing on either side, or match no manifest rule. Each is an
   **error** (exit `1`).
-- **forked** files that differ — counted, never failed on, because a forked file is meant to diverge.
-- **generated**, **local** and **ignored** files — skipped, because each corpus owns its own.
-- **accepted divergences** named in `.corpus.yaml` — honoured rather than flagged, and reported as `RESOLVED` once they
-  match the reference again, so you can delete the stale entry.
-- **what the descriptor declines** — skipped, and counted where the corpus holds it anyway.
+- **forked** files that differ are counted, and never failed on, because a forked file is meant to diverge.
+- **generated**, **local** and **ignored** files are skipped, because each corpus owns its own.
+- **accepted divergences** named in `.corpus.yaml` are honoured rather than flagged, and reported as `RESOLVED` once
+  they match the reference again, so you can delete the stale entry.
+- **what the descriptor declines** is skipped, and counted where the corpus holds it anyway.
 
 It opens by reporting the three versions the descriptor states: `content-version`, `descriptor-version` and
 `upstream.mechanism-version`. A version the corpus has not stated is reported as not declared, because only the corpus
 can say what it knows. A descriptor still carrying the older `version:` key stops the command outright, in either half.
-The message names the old key, the new one and the file, and the rename is the corpus's to make — nothing rewrites this
-file on a corpus's behalf.
+The message names the old key, the new one and the file. The rename is the corpus's to make: nothing rewrites this file
+on a corpus's behalf.
 
 A corpus declines in two ways, and both work alike. Leaving a type out of `types:` leaves out its `.schema/<type>.yaml`,
 so that file is neither missing nor drifted. Setting `role:` to `consumer` does the same for the `verification` layer,
@@ -61,8 +60,8 @@ a deletion nobody recorded. A descriptor that declares neither takes the whole s
 
 `--check` normalises line endings before it compares, so a working copy checked out with CRLF never reads as drift. It
 then compares the **authored half** of each file, emptying everything between `BEGIN GENERATED` and `END GENERATED`
-first. A shared page may therefore carry a block built from the corpus holding it — the taxonomy's tables list the types
-that corpus adopted — while the prose around the block stays byte-identical everywhere. The markers themselves are
+first. A shared page may therefore carry a block built from the corpus holding it (the taxonomy's tables list the types
+that corpus adopted), while the prose around the block stays byte-identical everywhere. The markers themselves are
 compared, so deleting a block rather than regenerating it is still drift. `generate --check` stays the one voice on
 whether the generated half is right.
 
@@ -76,7 +75,7 @@ kac mechanism --sync --against ../source  # …or from a local checkout of it
 ```
 
 `--against` says which copy of the upstream to read. `upstream.url` says the corpus takes from an upstream at all. A
-corpus that names none sits at the head of the chain — changes leave it and none arrive — so `--sync` refuses to run
+corpus that names none sits at the head of the chain: changes leave it and none arrive, so `--sync` refuses to run
 there. A corpus that names one syncs from it whatever its role, so a mirror of the framework takes the tooling and the
 tests down like anything else.
 

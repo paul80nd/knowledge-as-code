@@ -9,7 +9,7 @@ public class GeneratorTests
 {
     // The reader-facing table must stay a faithful, complete view of the catalogue, and the catalogue is
     // `_checks.yaml`. `kac checks` reconciles the two against the real schema and exits non-zero on any
-    // drift, which the golden suite asserts — the one place the shipped file is read.
+    // drift, which the golden suite asserts. That is the one place the shipped file is read.
     [Fact]
     public void ChecksTableProblems_names_a_row_the_catalogue_does_not_carry()
     {
@@ -98,7 +98,7 @@ public class GeneratorTests
 
         var page = Generator.IndexPage(t, Rows(("rbk-a", "sev3"), ("rbk-c", "sev1"), ("rbk-b", "sev1")));
 
-        // severity first, then id within it — so the sev1 pair leads, in id order, and sev3 follows.
+        // severity first, then id within it. So the sev1 pair leads, in id order, and sev3 follows.
         Assert.True(page.IndexOf("rbk-b", StringComparison.Ordinal)
                     < page.IndexOf("rbk-c", StringComparison.Ordinal));
         Assert.True(page.IndexOf("rbk-c", StringComparison.Ordinal)
@@ -137,10 +137,10 @@ public class GeneratorTests
             }
         };
 
-        var table = Generator.SchemaTable(t, new Schema());
+        var table = Generator.SchemaTable(t, new Schema(), "");
 
         Assert.Contains("SHORT", table);
-        Assert.DoesNotContain("LONG", table); // description wins outright — the two are not concatenated
+        Assert.DoesNotContain("LONG", table); // description wins outright: the two are not concatenated
         Assert.Contains("FALLBACK", table);   // notes still render where no description exists
     }
 
@@ -167,7 +167,7 @@ public class GeneratorTests
             }
         };
 
-        var table = Generator.SchemaTable(t, s);
+        var table = Generator.SchemaTable(t, s, "");
 
         Assert.Contains("`id` *†", table);    // universal fields are marked, required ones twice…
         Assert.Contains("`status` †", table); // …including one the type redeclares
@@ -197,10 +197,10 @@ public class GeneratorTests
             }
         };
 
-        var table = Generator.SchemaTable(t, new Schema());
+        var table = Generator.SchemaTable(t, new Schema(), "");
         var row = table.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
 
-        // The set is what an author came to the page for, so it is what the column carries — the word
+        // The set is what an author came to the page for, so it is what the column carries. The word
         // `enum` is not something anyone can write into frontmatter.
         var header = table.Split('\n')[0];
         Assert.Contains("Value", header);
@@ -231,10 +231,10 @@ public class GeneratorTests
         };
         var t = new TypeSchema { Tier = "normative" };
 
-        var row = Generator.SchemaTable(t, s).Split('\n')
+        var row = Generator.SchemaTable(t, s, "").Split('\n')
             .Single(l => l.StartsWith("| `tier`", StringComparison.Ordinal));
 
-        // Every document in the folder carries this one, and CI fails any that does not — the other
+        // Every document in the folder carries this one, and CI fails any that does not: the other
         // values are not choices the author has.
         Assert.Contains("`normative`", row);
         Assert.DoesNotContain("`decided`", row);
@@ -257,7 +257,7 @@ public class GeneratorTests
             }
         };
 
-        var table = Generator.SchemaTable(t, new Schema());
+        var table = Generator.SchemaTable(t, new Schema(), "");
         var row = table.Split('\n').Single(l => l.StartsWith("| `retention`", StringComparison.Ordinal));
 
         // The condition is quoted exactly, and closes the note it qualifies rather than sitting in a
@@ -275,7 +275,7 @@ public class GeneratorTests
             Fields = new Dictionary<string, FieldSpec> { ["own-field"] = new() { Name = "own-field" } }
         };
 
-        Assert.DoesNotContain("†", Generator.SchemaTable(t, new Schema()));
+        Assert.DoesNotContain("†", Generator.SchemaTable(t, new Schema(), ""));
     }
 
     [Fact]
@@ -353,7 +353,7 @@ public class GeneratorTests
     [Fact]
     public void The_decision_table_is_sorted_by_what_the_reader_is_holding()
     {
-        var order = PositionsOf(Generator.PlacementTable(Four()),
+        var order = PositionsOf(Generator.PlacementTable(Four(), "../"),
             "A check that", "A decision that", "A rule people", "A step-by-step");
 
         Assert.Equal(order.Order(), order);
@@ -363,9 +363,9 @@ public class GeneratorTests
     [Fact]
     public void The_decision_table_names_a_type_in_the_plural()
     {
-        var rows = Generator.PlacementTable(Four());
+        var rows = Generator.PlacementTable(Four(), "../");
 
-        Assert.Contains("[ADRs](/adrs)", rows); // the link form ADO renders and LinkChecks resolves
+        Assert.Contains("[ADRs](../adrs.md)", rows); // relative to the block's own file, and naming the file
         Assert.DoesNotContain("[ADR](", rows);
     }
 
@@ -373,7 +373,7 @@ public class GeneratorTests
     [Fact]
     public void The_corpus_index_is_sorted_by_type_name()
     {
-        var order = PositionsOf(Generator.TypesIndex(Four(), "taxonomy.md"),
+        var order = PositionsOf(Generator.TypesIndex(Four(), "taxonomy.md", ""),
             "[ADR]", "[Control]", "[Runbook]", "[Standard]");
 
         Assert.Equal(order.Order(), order);
@@ -382,7 +382,7 @@ public class GeneratorTests
     [Fact]
     public void The_corpus_index_carries_the_way_on_to_the_taxonomy_inside_the_block()
     {
-        var index = Generator.TypesIndex(Four(), "knowledge-as-code/taxonomy.md");
+        var index = Generator.TypesIndex(Four(), "knowledge-as-code/taxonomy.md", "");
 
         Assert.Contains("[taxonomy](knowledge-as-code/taxonomy.md)", index);
         Assert.True(index.IndexOf("| [ADR]", StringComparison.Ordinal)
@@ -396,7 +396,7 @@ public class GeneratorTests
     [Fact]
     public void The_catalogue_runs_in_the_order_the_tiers_are_declared()
     {
-        var order = PositionsOf(Generator.TypeCatalogue(Tiers, Four()),
+        var order = PositionsOf(Generator.TypeCatalogue(Tiers, Four(), "../"),
             "### Decided", "### Normative", "### Procedural");
 
         Assert.Equal(order.Order(), order);
@@ -406,7 +406,7 @@ public class GeneratorTests
     [Fact]
     public void A_tier_no_stood_up_type_sits_in_gets_no_heading()
     {
-        var catalogue = Generator.TypeCatalogue(Tiers, Four());
+        var catalogue = Generator.TypeCatalogue(Tiers, Four(), "../");
 
         Assert.Contains("### Decided", catalogue);
         Assert.DoesNotContain("### Descriptive", catalogue);
@@ -416,7 +416,7 @@ public class GeneratorTests
     [Fact]
     public void A_tier_note_is_rendered_before_the_types_beneath_it()
     {
-        var catalogue = Generator.TypeCatalogue(Tiers, Four());
+        var catalogue = Generator.TypeCatalogue(Tiers, Four(), "../");
         var order = PositionsOf(catalogue, "### Normative", "The rules, and what verifies them.", "[Controls]");
 
         Assert.Equal(order.Order(), order);
@@ -425,19 +425,19 @@ public class GeneratorTests
     [Fact]
     public void A_catalogue_entry_names_the_collection_and_carries_both_halves_of_the_prose()
     {
-        var catalogue = Generator.TypeCatalogue(Tiers, Four());
+        var catalogue = Generator.TypeCatalogue(Tiers, Four(), "../");
 
-        Assert.Contains("**[ADRs](/adrs)** — What a adr holds. And the edge", catalogue);
+        Assert.Contains("**[ADRs](../adrs.md).** What a adr holds. And the edge", catalogue);
     }
 
     // Prose wraps at the margin the corpus holds every other paragraph to; a table cell cannot be broken
     // and is exempt, which is why the wrap belongs to the prose renderers rather than to RenderTable.
     [Fact]
     public void Catalogue_prose_wraps_at_the_corpus_margin()
-        => Assert.All(Generator.TypeCatalogue(Tiers, Four()).Split('\n'), l => Assert.True(l.Length <= 120));
+        => Assert.All(Generator.TypeCatalogue(Tiers, Four(), "../").Split('\n'), l => Assert.True(l.Length <= 120));
 
     // A link broken after its label's first word still renders, but it reads badly and a formatter meeting
-    // it puts it back — after which the generator writes it out broken again on the next run.
+    // it puts it back. The generator then writes it out broken again on the next run.
     [Fact]
     public void A_link_label_is_never_broken_across_lines()
     {
@@ -449,7 +449,7 @@ public class GeneratorTests
                      + "some more padding after that, before [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) lands."
         };
 
-        var catalogue = Generator.TypeCatalogue(Tiers, [t]);
+        var catalogue = Generator.TypeCatalogue(Tiers, [t], "../");
 
         Assert.Contains("[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119)", catalogue);
     }
@@ -464,7 +464,7 @@ public class GeneratorTests
             Summary = "Short.", Detail = long_
         };
 
-        Assert.Contains(long_, Generator.TypeCatalogue(Tiers, [t]));
+        Assert.Contains(long_, Generator.TypeCatalogue(Tiers, [t], "../"));
     }
 
     // -- the calls that are genuinely close --
@@ -508,15 +508,15 @@ public class GeneratorTests
     [Fact]
     public void The_metadata_strip_links_each_type_at_the_heading_its_field_table_sits_under()
     {
-        var strip = Generator.MetadataStrip(Four());
+        var strip = Generator.MetadataStrip(Four(), "../");
 
-        Assert.Contains("[ADR](/adrs#metadata)", strip);
+        Assert.Contains("[ADR](../adrs.md#metadata)", strip);
         Assert.Contains(" · ", strip);
     }
 
     [Fact]
     public void The_metadata_strip_wraps_at_the_corpus_margin()
-        => Assert.All(Generator.MetadataStrip(Four()).Split('\n'), l => Assert.True(l.Length <= 120));
+        => Assert.All(Generator.MetadataStrip(Four(), "../").Split('\n'), l => Assert.True(l.Length <= 120));
 
     // -- where the names came from --
 
@@ -532,9 +532,9 @@ public class GeneratorTests
         var table = Generator.LineageTable(
         [
             Ancestor("ADR", "adrs", new LineageSpec("[Nygard](https://x)", "The three sections", "Ours spans repos"))
-        ]);
+        ], "../");
 
-        Assert.Contains("| [ADR](/adrs)", table);
+        Assert.Contains("| [ADR](../adrs.md)", table);
         Assert.Contains("[Nygard](https://x)", table);
         Assert.Contains("The three sections", table);
         Assert.Contains("Ours spans repos", table);
@@ -544,7 +544,7 @@ public class GeneratorTests
     [Fact]
     public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
     {
-        var table = Generator.LineageTable([Ancestor("Discovery", "discoveries", new LineageSpec("None.", "", ""))]);
+        var table = Generator.LineageTable([Ancestor("Discovery", "discoveries", new LineageSpec("None.", "", ""))], "../");
 
         Assert.Contains("| None.", table);
         Assert.Contains("| — ", table);
@@ -552,7 +552,7 @@ public class GeneratorTests
 
     [Fact]
     public void A_type_that_declares_no_lineage_is_left_out_of_the_table()
-        => Assert.DoesNotContain("Widget", Generator.LineageTable([Ancestor("Widget", "widgets", null)]));
+        => Assert.DoesNotContain("Widget", Generator.LineageTable([Ancestor("Widget", "widgets", null)], "../"));
 
     // -- words a reader arrives already holding --
 
@@ -669,7 +669,7 @@ public class GeneratorTests
         Assert.DoesNotContain("|", diagram);
     }
 
-    // One relationship, one arrow — where the table has two rows, because an author has two fields.
+    // One relationship draws one arrow, where the table has two rows because an author has two fields.
     [Fact]
     public void A_reciprocal_pair_is_drawn_once()
     {
@@ -696,7 +696,7 @@ public class GeneratorTests
         Assert.EndsWith("\nafter", result);
     }
 
-    // A corpus that adopted few types has blocks with nothing to say — no pair of its types is easily
+    // A corpus that adopted few types has blocks with nothing to say: no pair of its types is easily
     // confused, none of its words collides. Two blank lines between the markers reads as deleted content.
     [Fact]
     public void SpliceBlock_closes_an_empty_block_on_the_next_line()

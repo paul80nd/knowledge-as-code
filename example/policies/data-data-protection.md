@@ -23,7 +23,7 @@ tags: [ classification, data-protection, encryption, privacy ]
 
 ## Purpose
 
-Data is classified by how sensitive it is and handled accordingly — protected in transit and at rest, kept away from
+Data is classified by how sensitive it is and handled accordingly: protected in transit and at rest, kept away from
 places it does not belong, and deleted when its purpose ends. Personal data carries the additional obligations owed to
 the people it describes.
 
@@ -51,10 +51,10 @@ secrets that protect it. This policy owns what the data itself requires, in whic
 | `LOCATE`  | **MUST** know where our sensitive and personal data lives                                                                                          | [ISO 27001:2022].A.5.9, [ISO 27001:2022].A.5.12, [UK GDPR].Art.30  |
 | `XBORDER` | **MUST** hold and process personal data only where a lawful transfer mechanism covers it                                                           | [ISO 27001:2022].A.5.14, [UK GDPR].Art.44                          |
 | `DELETE`  | **MUST** delete data when its defined retention period ends                                                                                        | [ISO 27001:2022].A.8.10, [UK GDPR].Art.17                          |
-| `UNMASK`  | **MUST NOT** place unmasked production or personal data into an environment below production — see [pol-ENVS]                                      | [ISO 27001:2022].A.8.11, [UK GDPR].Art.25                          |
+| `UNMASK`  | **MUST NOT** place unmasked production or personal data into an environment below production. See [pol-ENVS]                                       | [ISO 27001:2022].A.8.11, [UK GDPR].Art.25                          |
 | `SHARE`   | **MUST NOT** send personal data to a third party before a written processing agreement covers it                                                   | [ISO 27001:2022].A.5.14, [UK GDPR].Art.28                          |
 | `LINGER`  | **MUST NOT** retain sensitive or personal data beyond its defined lifetime without a recorded deviation ([pol-DEVI])                               | [ISO 27001:2022].A.8.10, [UK GDPR].Art.5(1)(e)                     |
-| `LOGS`    | **MUST NOT** write unmasked sensitive personal data into logs or telemetry — see [pol-SCRT]                                                        | [ISO 27001:2022].A.8.12, [UK GDPR].Art.5(1)(f)                     |
+| `LOGS`    | **MUST NOT** write unmasked sensitive personal data into logs or telemetry. See [pol-SCRT]                                                         | [ISO 27001:2022].A.8.12, [UK GDPR].Art.5(1)(f)                     |
 | `AGILE`   | COULD change cryptographic algorithm without re-architecting what depends on it, rather than treating the choice as permanent                      |                                                                    |
 | `CLEAR`   | COULD protect sensitive data so that it is never processed in the clear                                                                            | [UK GDPR].Art.32(1)(a)                                             |
 
@@ -70,5 +70,5 @@ answer; whether we were entitled to hold it at all is not.
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-ENVS]: envs-environment-separation.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[UK GDPR]: /frameworks.md#uk-gdpr
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[UK GDPR]: ../frameworks.md#uk-gdpr

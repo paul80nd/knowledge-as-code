@@ -2,28 +2,31 @@
 
 [![kac][ci-badge]][ci] [![NuGet][nuget-badge]][nuget] [![Licence: MIT][licence-badge]][licence]
 
-A structured, validated knowledge corpus that people and AI sessions both read from and contribute to, and the tool that
-holds it to its shape.
+A structured, validated body of knowledge that people and AI sessions both read from and contribute to, and the tool
+that holds it to its shape.
 
-Plain markdown in git, reviewed by PR, published as a wiki. What makes it more than a folder of documents is that
-**every document has a type, and every type has a schema**. The tool builds each index from the records. A broken
-cross-reference fails CI rather than rotting quietly. Skills help an agent use and contribute to the corpus.
+Every document carries a type, and every type declares a schema. An agent can therefore find the standard it needs
+before it writes code, and leave what it learns where a reviewer will see it. `kac` builds each index from the
+documents, so nobody maintains one by hand, and a broken cross-reference fails CI rather than rotting quietly. Plain
+Markdown in git, reviewed by pull request, published as a wiki: no proprietary format and no export step.
 
-The argument for building it this way is in [`template/knowledge-as-code.md`](template/knowledge-as-code.md).
+A repository of those documents, with the schema it runs, is a **corpus**, and a document filed under a type is a
+**record**. Skills, which are instructions an agent loads when it needs them, say how to read a corpus and how to add
+to it. The argument for building it this way is in [`template/knowledge-as-code.md`](template/knowledge-as-code.md).
 
 ## What is here
 
-**[`tooling/`](tooling/README.md)** ... `kac`, the validator and generator, and the three test layers that prove it. A
-.NET 10 entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures,
+**[`tooling/`](tooling/README.md)** holds `kac`, the validator and generator, and the three test layers that prove it.
+A .NET 10 entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures,
 feature specs and unit tests it is held to.
 
-**[`template/`](template/README.md)** ... what a corpus is made of, authored once: the machine-readable schema, the
+**[`template/`](template/README.md)** is what a corpus is made of, authored once: the machine-readable schema, the
 framework's own documentation, the plugin tree, and the pages and templates a corpus starts from.
 [`template/manifest.yaml`](template/manifest.yaml) sorts them: some a corpus receives once and owns afterwards, and some
 it receives again whenever it takes a newer framework.
 
-**[`example/`](example/README.md)** ... a complete corpus that took that template, run through the tool built beside it
-on every commit. It holds its own copy of everything the template overlays, plus a set of illustrative records about a
+**[`example/`](example/README.md)** is a complete corpus that took that template, run through the tool built beside it
+on every commit. It holds its own copy of every file the template shares, plus a set of illustrative records about a
 fictional library consortium.
 
 No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is run
@@ -52,8 +55,8 @@ your `PATH` to drop the `./`. The explicit form works the same way, and is what 
 
 ### As an installed tool, packed here
 
-`kac` packs as the dotnet tool `KnowledgeAsCode.Tool`. Packing it yourself is how to try a change to the tool exactly as
-a corpus will receive it, before the version carrying it is published.
+`kac` packs as the dotnet tool `KnowledgeAsCode.Tool`. Pack it yourself to try a change to the tool exactly as a corpus
+will receive it, before the version carrying it is published.
 
 ```bash
 dotnet pack tooling/kac/kac.csproj -o .dist/pack
@@ -90,8 +93,8 @@ dotnet tool run kac validate
 ```
 
 A push to `main` publishes the tool whenever it carries a `<Version>`
-[nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) does not already hold, then tags the commit and opens
-the release for it. [`tooling/README.md`](tooling/README.md#building) says how that version moves, and
+[nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) does not already hold. That publish tags the commit and
+opens the release for it. [`tooling/README.md`](tooling/README.md#building) says how that version moves, and
 [`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) says what each version carried.
 
 Every command, one document apiece, is in [`tooling/features/`](tooling/features/).
@@ -107,7 +110,7 @@ the framework's own documentation, a root page and a template for every type, an
 cp -R template/ ../my-corpus && cd ../my-corpus
 rm manifest.yaml README.md          # the template's own machinery, not a corpus's
 
-# write .corpus.yaml — the one file no template can supply
+# write .corpus.yaml: the one file no template can supply
 git init && git add -A              # kac reads the git listing, so a corpus is a repository
 
 dotnet tool install --global KnowledgeAsCode.Tool
@@ -115,8 +118,9 @@ kac generate                        # write the indexes and generated blocks
 kac validate                        # comes back clean on an empty corpus
 ```
 
-[`.corpus.yaml`](example/.corpus.yaml) names the corpus, says where it publishes and lists the types it adopted, so no
-copied file can answer it. `example/`'s is commented throughout and is the one to read while writing yours.
+[`.corpus.yaml`](example/.corpus.yaml) names the corpus and says where it publishes, which no copied file can answer
+for you. It may also declare the types the corpus adopted. Leave that key out and `kac` reads adoption off the folders
+it finds instead. `example/`'s is commented throughout and is the one to read while writing yours.
 
 You also arrive with no `README.md`, no ignore rules, no editor conventions and no CI. Each is a question about your
 repository rather than about the framework.
@@ -141,7 +145,7 @@ The taxonomy is the half that is only partly proven.
 
 Every document here describes what exists today, and the
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds everything considered but, as yet, unbuilt.
-[Write what exists](template/knowledge-as-code/authoring.md#write-what-exists) is the rule, and says why.
+[Contributing](template/knowledge-as-code/contributing.md) names the skills that carry that rule and say why.
 
 ## Opinions
 

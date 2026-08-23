@@ -2,7 +2,7 @@ namespace kac.core;
 
 // Every path the corpus holds, and a way to read one.
 //
-// The listing comes from git — see `Corpus.AllFiles`. A file the repository ignores is therefore not in
+// The listing comes from git. See `Corpus.AllFiles`. A file the repository ignores is therefore not in
 // the corpus, so these questions answer the same in a fresh clone as on the machine that created the
 // file. Ask the filesystem instead and a check passes for whoever wrote it and fails in CI, by which
 // time they have stopped looking.
@@ -36,8 +36,8 @@ public sealed class Tree(IReadOnlySet<string> paths, Func<string, string> read, 
         return paths.Any(p => p.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
     }
 
-    // Every path the corpus holds that matches a glob, in ordinal order. The pattern is the manifest's —
-    // see `Glob` — so `knowledge-as-code/*.md` names the markdown directly inside that folder, and
+    // Every path the corpus holds that matches a glob, in ordinal order. The pattern is the manifest's.
+    // See `Glob`. So `knowledge-as-code/*.md` names the markdown directly inside that folder, and
     // `**/*.md` names it at any depth.
     //
     // Ordered here, because a caller reporting against several of the files it names should name them in

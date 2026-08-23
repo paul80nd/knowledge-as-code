@@ -4,12 +4,12 @@ namespace kac.core;
 //
 // Its own type because the corpus has two kinds of id in play and they are one suffix apart:
 // `y-statement-present` is the rule a type declares, `y-statement` is what that rule reports under.
-// Held as strings the two swap silently, and the swap reads as correct in every place it can happen —
-// a registry lookup, a catalogue entry, a table row. Neither converts to the other or to a string, so
+// Held as strings the two swap silently. The swap reads as correct in every place it can happen: a
+// registry lookup, a catalogue entry, a table row. Neither converts to the other or to a string, so
 // the compiler asks the question a reader would have to.
 //
-// There is no conversion from string either: an id enters the program where one is declared — the
-// schema, or a rule class naming what it emits — rather than wherever a literal is convenient.
+// There is no conversion from string either. An id enters the program where one is declared, in the
+// schema or in a rule class naming what it emits, rather than wherever a literal is convenient.
 //
 // Ordered, because findings and catalogue entries are listed for people to read and an id is what they
 // are listed by. Ordinal, like every other comparison over these files.

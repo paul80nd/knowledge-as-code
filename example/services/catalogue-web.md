@@ -19,24 +19,23 @@ tags: [ discovery ]
 
 `Service: svc-catalogue-web` `LIVE`
 
-The public catalogue — the site a reader visits to browse the collection, search it and place a hold.
+The public catalogue: the site a reader visits to browse the collection, search it and place a hold.
 
 ## What it does
 
 Serves the reader-facing catalogue: search results, item pages, and a reader's own loans and holds. It renders no
-staff-facing screens and holds no data of its own — everything it shows arrives through [svc-catalogue-api].
+staff-facing screens and holds no data of its own. Everything it shows arrives through [svc-catalogue-api].
 
-Authentication is delegated to the identity provider at `id.example.com`, which issues the tokens the gateway validates.
-The branch terminals run the same application in a kiosk profile rather than a separate deployable, which is why there
-is no second service for them.
+It delegates authentication to the identity provider at `id.example.com`, which issues the tokens the gateway validates.
+The branch terminals run the same application in a kiosk profile, so no second service exists for them.
 
 ## Where it lives
 
-* **Repository** — [`platform`](https://git.example.com/example-libraries/platform) — `src/Web/Catalogue`
-* **Platform** — ASP.NET Core MVC (.NET 10)
-* **Deployed as** — App Service `app-catalogue-<env>`
+* **Repository**: [`platform`](https://git.example.com/example-libraries/platform), at `src/Web/Catalogue`
+* **Platform**: ASP.NET Core MVC (.NET 10)
+* **Deployed as**: App Service `app-catalogue-<env>`
 
-Deployed by the `platform` release pipeline as the `catalogue` app, from the `Catalogue.Web.zip` package.
+The `platform` release pipeline deploys it as the `catalogue` app, from the `Catalogue.Web.zip` package.
 
 ## Environments
 
@@ -46,24 +45,25 @@ Deployed by the `platform` release pipeline as the `catalogue` app, from the `Ca
 | Test        | https://catalogue-test.example.com |       |
 | Production  | https://catalogue.example.com      |       |
 
-**Quick check** — the collection home page:
+**Quick check**: the collection home page, in
 [dev](https://catalogue-dev.example.com/) ·
 [test](https://catalogue-test.example.com/) ·
-[prod](https://catalogue.example.com/)
+[prod](https://catalogue.example.com/).
 
-Runs locally on port 5100.
+It runs locally on port 5100.
 
 ## Dependencies
 
 Taken from the application settings the infrastructure declares for the app service.
 
-* [svc-catalogue-api] — the gateway, configured as `Urls__CatalogueApi`. Everything the site reads and writes.
-* [svc-search] — configured as `Urls__Search`, for the search box and faceted browse.
-* [svc-covers-cdn] — jacket imagery for result lists and item pages.
+* [svc-catalogue-api] is the gateway, configured as `Urls__CatalogueApi`. Everything the site reads and writes goes
+  through it.
+* [svc-search] serves the search box and faceted browse, configured as `Urls__Search`.
+* [svc-covers-cdn] serves jacket imagery for result lists and item pages.
 
-**A `critical` service depending on an `important` one.** When [svc-search] is unavailable the catalogue falls back to
-browse-by-shelf and every item page still renders, so a reader loses a feature rather than the site. The argument for
-that grading is recorded on [svc-search].
+**A `critical` service depending on an `important` one.** When [svc-search] is unavailable, the catalogue falls back to
+browse-by-shelf and every item page still renders. A reader loses a feature and keeps the site. The argument for that
+grading is recorded on [svc-search].
 
 ## Data
 

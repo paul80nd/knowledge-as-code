@@ -10,7 +10,7 @@ The catalogue of deployable components that make up the platform.
 
 ## What is a service?
 
-One document per independently deployable component — a web app, an API, a function app, a CDN asset bundle. It records
+One document per independently deployable component: a web app, an API, a function app, a CDN asset bundle. It records
 what the component is for, where its code lives, what it runs on, what it depends on, and what data it owns.
 
 ## Why we use them
@@ -25,39 +25,39 @@ what talks to it?* A service document answers it.
 ## Scope
 
 One document per **deployable unit**, not per repository and not per feature. A repository containing three
-independently deployed apps gets three documents; a capability spanning six services gets a
-[capability](/capabilities) document that links to all six.
+independently deployed apps gets three documents. A capability spanning six services gets a [capability](capabilities.md)
+document that links to all six.
 
 A service document is **descriptive**: it mirrors what is actually deployed. It is not the place for:
 
-* **How to deploy it** — that is a [process](/processes).
-* **How to fix it when it breaks** — that is a runbook.
-* **Why it is shaped the way it is** — that is an [ADR](/adrs) or an [explanation](/explanations).
-* **What it promises** — availability and latency targets are NFRs.
+* **How to deploy it.** That is a [process](processes.md).
+* **How to fix it when it breaks.** That is a runbook.
+* **Why it is shaped the way it is.** That is an [ADR](adrs.md) or an [explanation](explanations.md).
+* **What it promises.** Availability and latency targets are NFRs.
 
-A third-party system we depend on is an integration; the line is whether we deploy it. Infrastructure-as-code stays out
+A third-party system we depend on is an integration. The line is whether we deploy it. Infrastructure-as-code stays out
 of the catalogue as well, because it deploys services.
 
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-services -->
 
-| Field           | Value                                                                    | Notes                                                                                |
-|-----------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| `id` *†         | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *†       | `descriptive`                                                            | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` *†     | `live` `building` `deprecated` `retired`                                 | Where the service is in its life.                                                    |
-| `owner` *†      | string                                                                   | A named person, never a team alias.                                                  |
-| `tags` †        | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `repo` *        | string                                                                   | Where the code lives.                                                                |
-| `platform` *    | `dotnet-web` `dotnet-api` `azure-function` `static` `typescript` `mixed` | What it is built on. Drives which standards apply.                                   |
-| `criticality` * | `critical` `important` `supporting`                                      | Judged by what a customer experiences when it is unavailable.                        |
-| `depends-on`    | list                                                                     | Downward only — what this service calls.                                             |
-| `data-stores`   | list                                                                     | Data ids this service owns or reads.                                                 |
-| `facets`        | list                                                                     | Slices the catalogue — one exposure, then any traits. Each value groups services.    |
+| Field           | Value                                                                    | Notes                                                                               |
+|-----------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `id` *†         | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `tier` *†       | `descriptive`                                                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` *†     | `live` `building` `deprecated` `retired`                                 | Where the service is in its life.                                                   |
+| `owner` *†      | string                                                                   | A named person, never a team alias.                                                 |
+| `tags` †        | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| `repo` *        | string                                                                   | Where the code lives.                                                               |
+| `platform` *    | `dotnet-web` `dotnet-api` `azure-function` `static` `typescript` `mixed` | What it is built on. Drives which standards apply.                                  |
+| `criticality` * | `critical` `important` `supporting`                                      | Judged by what a customer experiences when it is unavailable.                       |
+| `depends-on`    | list                                                                     | What this service calls, downward only.                                             |
+| `data-stores`   | list                                                                     | Data ids this service owns or reads.                                                |
+| `facets`        | list                                                                     | Slices the catalogue. One exposure, then any traits. Each value groups services.    |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-services -->
 
@@ -65,7 +65,7 @@ of the catalogue as well, because it deploys services.
 
 1. Copy [`_template.md`](services/_template.md) to `<slug>.md`. Services take a **slug id**, `svc-<name>`, because they
    have natural stable names.
-2. Fill in the frontmatter. `depends-on` names other service ids; the [index](services/_index.md) is where to find them.
+2. Fill in the frontmatter. `depends-on` names other service ids. The [index](services/_index.md) is where to find them.
 3. Record environments and URLs, and the data stores it owns.
 4. Keep it current. Everything else in the corpus trusts this catalogue, so an entry that has drifted from the estate
    sends the next reader to the wrong repository.
@@ -77,14 +77,14 @@ of the catalogue as well, because it deploys services.
   Contributors get this wrong more often than anything else here. A repository list is the easiest list to reach for,
   and it is the wrong one.
 * **`repo` takes one value, and sometimes one value is not enough.** It names the repository you work in when you change
-  *this service*. Where the content a service serves comes from elsewhere, the field cannot say so and the body must —
+  *this service*. Where the content a service serves comes from elsewhere, the field cannot say so and the body must:
   an asset surface can be filled by two pipelines, or by another service at runtime.
-* **Criticality** — `critical` means a customer-facing failure, `important` means degraded service, and `supporting`
+* **Criticality.** `critical` means a customer-facing failure, `important` means degraded service, and `supporting`
   means internal impact only. Criticality drives runbook and NFR prioritisation, so grade a service honestly. A service
   graded above one of its own dependencies is not automatically wrong, but it is worth defending in the record.
 * **Dependencies point downward only.** Record what this service calls. Nothing generates a reverse view today, so
   anyone who writes a "depended on by" list maintains it by hand. Assume such a list is stale unless it says otherwise.
-* **`depends-on` records calls, not messages.** An edge means this service is configured to reach that one — a URL in
+* **`depends-on` records calls, not messages.** An edge means this service is configured to reach that one: a URL in
   its application settings, or a route pointing at it. Publish/subscribe coupling over a message bus is deliberately not
   an edge, because it is not a call and the publisher does not know its consumers. The graph therefore shows an
   event-driven service as unconnected when it is not, so its topics and queues sit in its own `## Operational notes`.
@@ -127,20 +127,20 @@ Two rules keep the vocabulary small enough to browse, and they are the transfera
 
 1. **Exposure describes the inbound surface.** A staff portal on the public internet is `internal`, because only staff
    are meant to reach it.
-2. **Never restate another field.** There is no `cdn` facet, because `platform: static` says it; no `monorepo` facet,
-   because `repo` says it. A value that duplicates a field can only ever disagree with it.
+2. **Never restate another field.** There is no `cdn` facet, because `platform: static` says it. There is no `monorepo`
+   facet, because `repo` says it. A value that duplicates a field can only ever disagree with it.
 
-Membership stays a judgement. The floor holds the shape of the vocabulary — that every value in it groups — and no
+Membership stays a judgement. The floor holds the shape of the vocabulary (that every value in it groups), and no
 declaration anywhere says which words this estate chose. That is the corpus's to decide and this page's to record.
 
 ### What a tag is for instead
 
 A **tag** brings a reader's word to a service that does not use it. `payments` reaches Reservations, `renewals` reaches
-Notices, `legacy` reaches Lending — each carried by one document, which is exactly right: a searcher arriving with that
-word wanted that service. Tags are free-form, and CI holds them to nothing beyond their shape.
+Notices, `legacy` reaches Lending. Each is carried by one document, which is exactly right: a searcher arriving with
+that word wanted that service. Tags are free-form, and CI holds them to nothing beyond their shape.
 
 So the two tests pull opposite ways, and that is the whole reason for two fields. A word matching a single service fails
-as a facet and succeeds as a tag; a word several services share divides the catalogue and belongs in `facets`, where the
+as a facet and succeeds as a tag. A word several services share divides the catalogue and belongs in `facets`, where the
 floor holds it to doing so. Judged as one field, the second kind reads as a vocabulary that never converged, and the
 words worth keeping are the ones thrown away.
 
@@ -155,7 +155,7 @@ words worth keeping are the ones thrown away.
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
@@ -163,7 +163,7 @@ words worth keeping are the ones thrown away.
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
 | `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
+| `filename / slug-length`    | error   | Filename matches the pattern. The slug is within 30 characters.                                                 |
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
@@ -175,7 +175,7 @@ words worth keeping are the ones thrown away.
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `dependency-cycle`          | warning | A cycle in the dependency graph these records form, naming every record the loop runs through.                  |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule                  | What it would verify                                                |
 |-----------------------|---------------------------------------------------------------------|

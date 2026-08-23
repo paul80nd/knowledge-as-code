@@ -47,4 +47,4 @@ None. The effort is proportionate: a small internal tool needs less than a custo
 write down what is needed does not vary.
 
 [pol-AGNT]: agnt-agents-propose-people-decide.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
+[ISO 27001:2022]: ../frameworks.md#iso-27001

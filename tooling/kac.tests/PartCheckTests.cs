@@ -2,8 +2,8 @@ using kac.core;
 
 // In-process unit tests for a record's addressable parts. Every branch here is driven by a type's
 // `parts:` declaration rather than by anything specific to policies or glossaries, so these build small
-// declarations of their own — which is also the only way to show that the source, the modals, the levels
-// and the id pattern are read from the schema rather than assumed.
+// declarations of their own. That is also the only way to show that the source, the modals, the
+// levels and the id pattern are read from the schema rather than assumed.
 
 namespace kac.tests;
 
@@ -69,14 +69,14 @@ public class PartCheckTests
     {
         var found = Run(Header + "| `LOGS` | MUST be retained for a year. |\n");
         Assert.Equal("clause-modal", Assert.Single(found).Check.Value);
-        Assert.Contains("write it bold", Assert.Single(found).Message);
+        Assert.Contains("Write it bold", Assert.Single(found).Message);
     }
 
     [Fact]
     public void An_advisory_modal_written_bold_is_reported()
     {
         var found = Run(Header + "| `LOGS` | **SHOULD** be retained for a year. |\n");
-        Assert.Contains("write it plain", Assert.Single(found).Message);
+        Assert.Contains("Write it plain", Assert.Single(found).Message);
     }
 
     // Longest first, or "MUST NOT" would be read as the "MUST" that prefixes it and then reported as a
@@ -100,7 +100,7 @@ public class PartCheckTests
     {
         var found = Run(Header + "| LOGS | **MUST** be retained. |\n");
         Assert.Equal("clause-id-format", Assert.Single(found).Check.Value);
-        Assert.Contains("write it as `LOGS`", Assert.Single(found).Message);
+        Assert.Contains("Write it as `LOGS`", Assert.Single(found).Message);
     }
 
     // The pattern is the type's, so this is what shows it is read rather than assumed.
@@ -112,7 +112,7 @@ public class PartCheckTests
     }
 
     // Ordinal, because `LOGS` and `logs` differing only in case is not two clauses a reader could tell
-    // apart either — though here the pattern catches the lower-cased one first.
+    // apart either. Here, though, the pattern catches the lower-cased one first.
     [Fact]
     public void An_id_used_twice_makes_a_citation_of_it_ambiguous()
     {
@@ -176,7 +176,7 @@ public class PartCheckTests
         Assert.Empty(Notation($"Written as `{span}` here.\n"));
     }
 
-    // The check reads no table, so it runs on a type that offers no parts — which is every type a
+    // The check reads no table, so it runs on a type that offers no parts. That is every type a
     // citation is actually written in.
     [Fact]
     public void The_notation_is_checked_where_no_parts_are_declared()
@@ -250,7 +250,7 @@ public class PartCheckTests
 
         var one = Assert.Single(found);
         Assert.Equal("part-none", one.Check.Value);
-        Assert.Contains("the '## Terms' section holds no terms — write each one as an H3 heading.", one.Message);
+        Assert.Contains("the '## Terms' section holds no terms. Write each one as an H3 heading.", one.Message);
     }
 
     // A heading at the wrong level is prose rather than a part, so a section holding only those holds no

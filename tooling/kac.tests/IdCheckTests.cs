@@ -1,9 +1,9 @@
 using kac.core;
 
 // In-process unit tests for the id and the filename that carries it. Three styles, each asking two
-// questions — is this id the shape the type declares, and does it name the file it sits in — behind two
-// check ids. The coverage gate reads ids, so a fixture tripping `id-format` on one style leaves the
-// other two branches green without ever having run them; these are where the styles are told apart.
+// questions behind two check ids: is this id the shape the type declares, and does it name the file
+// it sits in. The coverage gate reads ids, so a fixture tripping `id-format` on one style leaves the
+// other two branches green without ever having run them. These are where the styles are told apart.
 
 namespace kac.tests;
 

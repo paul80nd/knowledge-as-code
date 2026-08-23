@@ -4,9 +4,9 @@ using kac.core;
 // document: whether a `record-id.part` citation reaches the part it names. Three ways it fails and the
 // words differ for each, so what is asserted here is the wording as much as the finding.
 //
-// The corpus is handed to the check directly, as `RefCheckTests` does. One of the three arms — a citation
-// into a type that keeps no parts at all — needs three types in one corpus, two of them keeping parts a
-// different way, and a fixture would have to stand every one of them up to say it.
+// The corpus is handed to the check directly, as `RefCheckTests` does. One of the three arms is a
+// citation into a type that keeps no parts at all. That arm needs three types in one corpus, two of
+// them keeping parts a different way, and a fixture would have to stand every one of them up to say it.
 
 namespace kac.tests;
 
@@ -32,7 +32,7 @@ public class PartRefTests
     }
 
     // The second: the document is real and its type keeps no parts, so there was never a child to reach.
-    // Worth its own wording — the author is otherwise sent looking through a document for a heading it
+    // Worth its own wording: the author is otherwise sent looking through a document for a heading it
     // was never going to carry.
     [Fact]
     public void A_citation_into_a_type_that_keeps_no_parts_says_so()
@@ -40,8 +40,8 @@ public class PartRefTests
         var found = Assert.Single(Cite("adr-0002.ANY"));
 
         Assert.Equal("part-ref", found.Check.Value);
-        Assert.Equal("'adr-0002.ANY' addresses a part of adrs/adr-0002.md, and its type offers none — "
-                     + "cite the document as 'adr-0002'.", found.Message);
+        Assert.Equal("'adr-0002.ANY' addresses a part of adrs/adr-0002.md, and its type offers none. "
+                     + "Cite the document as 'adr-0002'.", found.Message);
     }
 
     // The third: the document is real, its type keeps parts, and this is not one of them. The type's own
@@ -70,7 +70,7 @@ public class PartRefTests
 
     // Three types: a policy keeping its parts in a table, a glossary keeping its as headings, and an ADR
     // keeping none. One record of each, and the citation under test is written into a fourth document
-    // whose own type keeps nothing — which is where a citation is usually written.
+    // whose own type keeps nothing. That is where a citation is usually written.
     private static List<Finding> Cite(string citation)
     {
         var policies = new TypeSchema

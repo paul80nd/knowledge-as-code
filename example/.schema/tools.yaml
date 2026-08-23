@@ -7,7 +7,7 @@ folder: tools
 page: tools.md
 tier: descriptive
 lifecycle: living
-summary: The approved-software register — what is chosen, rejected or deprecated, and the version ranges we stand behind.
+summary: The approved-software register. What is chosen, rejected or deprecated, and the version ranges we stand behind.
 goes-here: A tool or package we've approved, rejected, or are trialling
 detail: >
   Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
@@ -16,7 +16,7 @@ detail: >
 versus:
   adrs: >
     Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR carries the
-    reasoning; the register carries the current state and the version range. Small, uncontroversial adoptions
+    reasoning. The register carries the current state and the version range. Small, uncontroversial adoptions
     need only the register.
 
 lineage:
@@ -41,10 +41,10 @@ fields:
     required: true
     type: enum
     values: [approved, trial, deprecated, rejected]
-    description: '`approved` means approved for new work; existing use that is not approved is drift.'
+    description: '`approved` means approved for new work. Existing use that is not approved is drift.'
     notes: >
       `approved` means approved **for new work**. Something already in use but not approved is drift, and
-      finding it is a manual job — `drift-against-manifests` is declared and does not run.
+      finding it is a manual job. `drift-against-manifests` is declared and does not run.
 
   category:
     required: true
@@ -55,7 +55,7 @@ fields:
     required: false
     type: string
     notes: >
-      A range, not a pin. The register states what we stand behind; the manifests state what is installed.
+      A range, not a pin. The register states what we stand behind. The manifests state what is installed.
 
   licence:
     required: false

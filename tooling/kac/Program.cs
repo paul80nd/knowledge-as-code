@@ -1,4 +1,4 @@
-// kac — the knowledge-as-code validator and generator.
+// kac: the knowledge-as-code validator and generator.
 //
 // One tool, several subcommands, sharing a schema-loading and markdown-parsing core:
 //
@@ -11,8 +11,8 @@
 //              reference corpus, or sync them from one
 //
 // This file is only the CLI surface: it wires Spectre.Console.Cli to Commands and finds the corpus each
-// verb answers about. Every subcommand's logic lives in the kac.core project this one references — one class per
-// file, named for what it holds. Four carry the substance: Schema.cs loads .schema/*.yaml, Document.cs
+// verb answers about. Every subcommand's logic lives in the kac.core project this one references: one
+// class per file, named for what it holds. Four carry the substance: Schema.cs loads .schema/*.yaml, Document.cs
 // parses a record, Validator.cs holds the checks, Generator.cs builds the generated blocks.
 //
 // Spectre.Console.Cli is the parser because Spectre.Console is where a .NET tool goes for a prompt, and a
@@ -35,7 +35,7 @@ app.Configure(config =>
     config.SetApplicationName("kac");
 
     // `--version` exists only once a version is set, and the informational one is what the build stamps
-    // with the commit — so the answer names the source it was built from as well as the release.
+    // with the commit. So the answer names the source it was built from as well as the release.
     config.SetApplicationVersion(
         typeof(Cli).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
         ?? "unknown");
@@ -199,7 +199,7 @@ internal sealed class ChecksCommand : Command<ChecksSettings>
         Cli.InCorpus(settings, corpus => Commands.Checks(corpus, settings.Json));
 }
 
-// mechanism — enforce the portability manifest. `--check` compares this corpus's shared layers
+// mechanism: enforce the portability manifest. `--check` compares this corpus's shared layers
 // against a reference copy and reports drift, following the same discipline as `generate --check`:
 // recompute, compare, name what is stale, exit non-zero, never write. `--sync` is the write half:
 // it takes those layers from the reference, records what it took, and regenerates.

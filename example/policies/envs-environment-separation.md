@@ -22,9 +22,9 @@ tags: [ environments, production-data, separation ]
 We separate production from every environment below it, by access, by network and by credential. That way a change is
 checked before it reaches customers, and nothing outside production can reach production's data or its identity.
 
-A developer can only experiment freely because the boundary holds. Where it is soft, a mistake in development becomes an
-incident in production. Every copy of production data held below production widens how far a breach reaches, and
-protects nothing.
+A developer can only experiment freely because the boundary holds. Where it is soft, a mistake in development risks
+becoming an incident in production. Every copy of production data held below production widens how far a breach reaches,
+and protects nothing.
 
 ## Scope
 
@@ -36,14 +36,14 @@ temporary and on-demand environments.
 | Id        | Clause                                                                                                                                | Alignment                                     |
 |-----------|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
 | `SPLIT`   | **MUST** separate production from non-production, with distinct access controls at each tier                                          | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
-| `CREDS`   | **MUST** keep production credentials and secrets unreachable from any lower environment — see [pol-SCRT]                              | [ISO 27001:2022].A.8.3, [NIST SSDF 1.1].PO.5  |
+| `CREDS`   | **MUST** keep production credentials and secrets unreachable from any lower environment. See [pol-SCRT]                               | [ISO 27001:2022].A.8.3, [NIST SSDF 1.1].PO.5  |
 | `SAMEDEF` | **MUST** provision environments from the same definitions, so that what passes below production is a fair test of what will run in it | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
 | `BASELIN` | **MUST** be able to state the configuration an environment is running, and reproduce it                                               | [ISO 27001:2022].A.8.9                        |
 | `PROMOTE` | **MUST** promote changes between environments through automation rather than by manual copy                                           | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
 | `MASK`    | **MUST** mask or synthesise the data used below production                                                                            | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
 | `DEBUG`   | **MUST NOT** develop, test or debug against the live production system                                                                | [ISO 27001:2022].A.8.31, [NIST SSDF 1.1].PO.5 |
-| `REUSE`   | **MUST NOT** reuse a production secret in any environment below production — see [pol-SCRT]                                           | [ISO 27001:2022].A.8.3, [NIST SSDF 1.1].PO.5  |
-| `UNMASK`  | **MUST NOT** place unmasked production or personal data into a lower environment — see [pol-DATA]                                     | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
+| `REUSE`   | **MUST NOT** reuse a production secret in any environment below production. See [pol-SCRT]                                            | [ISO 27001:2022].A.8.3, [NIST SSDF 1.1].PO.5  |
+| `UNMASK`  | **MUST NOT** place unmasked production or personal data into a lower environment. See [pol-DATA]                                      | [ISO 27001:2022].A.8.33, [NIST SSDF 1.1].PO.5 |
 | `EPHEM`   | SHOULD be able to create an environment on demand and discard it when the work is done                                                |                                               |
 
 ## Exceptions
@@ -57,5 +57,5 @@ admits no exception. Any other departure requires a recorded deviation under [po
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-INCR]: incr-incident-response.md
 [pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[NIST SSDF 1.1]: /frameworks.md#nist-ssdf
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf

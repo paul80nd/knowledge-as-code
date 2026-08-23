@@ -14,20 +14,20 @@ tags: [ a, b ]
 
 `Capability: cap-{{slug}}` `PLANNED`
 
-<!-- DELETE FROM HERE — guidance for whoever fills this in, not part of the document ----------------------------- -->
+<!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](/knowledge-as-code/contributing.md)** — where a document goes, how it is written, and how it
-is reviewed. What is below is only what a capability adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
+and how it is reviewed. What is below is only what a capability adds to that.
 
-**Frontmatter.** Delete this block once the fields above are filled in.
+**Frontmatter**
 
-* **`status`** — `planned` · `building` · `live` · `deprecated`.
-* **`implemented-by`** — Service ids.
-* **`feature-files`** — Repo-relative paths, checked in both directions — a path that doesn't exist fails, and a feature
+* **`status`**: `planned` · `building` · `live` · `deprecated`.
+* **`implemented-by`**: service ids.
+* **`feature-files`**: repo-relative paths, checked in both directions. A path that doesn't exist fails, and a feature
   file claimed by no capability is reported.
 
-**The identity line.** The line beneath the title — the type, the `id`, then the `status` in upper case. It is what a
-reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
+**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
+what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
@@ -39,7 +39,7 @@ The customer-visible behaviour, in customer terms. Two or three paragraphs at mo
 
 ## Why it exists
 
-The problem it solves and who for. This is the part nothing else here holds — the ADO epics describe *what* gets built,
+The problem it solves and who for. This is the part nothing else here holds: the ADO epics describe *what* gets built,
 not *why the surface exists at all*.
 
 ## Surfaces
@@ -64,7 +64,7 @@ you are writing belongs in an ADO item instead.)_
 What it deliberately does not do, and anything a reader would otherwise assume works. Link to work items where a
 limitation is scheduled to change.
 
-[adr-{{a}}]: /adrs/{{a}}.md
-[nfr-{{a}}]: /nfrs/{{a}}.md
-[svc-{{a}}]: /services/{{a}}.md
-[svc-{{b}}]: /services/{{b}}.md
+[adr-{{a}}]: ../adrs/{{a}}.md
+[nfr-{{a}}]: ../nfrs/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md
+[svc-{{b}}]: ../services/{{b}}.md

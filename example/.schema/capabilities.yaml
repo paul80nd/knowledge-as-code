@@ -17,21 +17,21 @@ detail: >
 versus:
   services: >
     A capability is what a customer gets. A service is a thing we deploy. One capability typically spans several
-    services; one service often contributes to several capabilities.
+    services. One service often contributes to several capabilities.
 
 lineage:
-  prior-art: "None that fits — see [Capability](#capability) below"
+  prior-art: "None that fits. See [Capability](#capability) below"
 
 collision: >
   **The weakest row in the set, and the one carrying two collisions at once.**
 
   [ArchiMate](https://pubs.opengroup.org/architecture/archimate3-doc/ch-Strategy-Layer.html) defines a
-  capability as an *ability an organisation possesses*. Ours is what the organisation *offers a customer* —
+  capability as an *ability an organisation possesses*. Ours is what the organisation *offers a customer*,
   which in ArchiMate's own vocabulary is a Product, a Business Service, or a Value Stream. The concepts are
   adjacent but not the same, and ArchiMate's Value Stream is the closer fit.
 
   [SAFe](https://framework.scaledagile.com/features-and-capabilities) defines a capability as large solution
-  functionality spanning multiple trains within a programme increment — which sits **below** an epic. Ours sits
+  functionality spanning multiple trains within a programme increment, which sits **below** an epic. Ours sits
   **above** the epic layer. The hierarchy is inverted relative to the framework in which most engineering
   organisations will have met the word.
 
@@ -65,7 +65,7 @@ fields:
     required: false
     type: list
     of: int
-    notes: ADO work item ids. Not resolvable by CI; recorded for humans and for the reverse harvest.
+    notes: ADO work item ids. CI cannot resolve them, so they are here for humans and for the reverse harvest.
 
   feature-files:
     required: false
@@ -82,7 +82,7 @@ fields:
     type: list
     of: id
     ref: nfrs
-    description: NFR ids — the targets this capability is held to.
+    description: NFR ids, the targets this capability is held to.
 
 sections:
   required: [What it does, Why it exists, Where the detail lives]
@@ -94,13 +94,13 @@ index:
 
 rules:
   - id: hub-not-specification
-    description: A capability's prose stays proportionate to its links — a hub, not a specification.
+    description: A capability's prose stays proportionate to its links, because it is a hub.
     severity: warning
     # A capability linking to nothing is a specification however short it is, which is why the
     # allowance is a ratio rather than a ceiling.
     expr: "words() <= links() * 40"
     message: >
-      Prose has outgrown the links. A capability is a hub — move the detail into the documents it should
+      Prose has outgrown the links. A capability is a hub. Move the detail into the documents it should
       be pointing at, and link to them from here.
   - id: feature-file-orphans
     description: >

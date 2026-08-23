@@ -1,6 +1,6 @@
 // Two tables in `.schema/README.md` restate something the code already holds: the facts an expression
-// may call, and the checks the schema-load pass reports. Neither is generated — each carries a column
-// of hand-written prose that is the reason to read it at all — so what is held here are the *names* in
+// may call, and the checks the schema-load pass reports. Neither is generated: each carries a column
+// of hand-written prose that is the reason to read it at all. So what is held here are the *names* in
 // them, and the wording is left alone.
 //
 // These read the repository rather than a value built in the test. That is what they are for: the fault

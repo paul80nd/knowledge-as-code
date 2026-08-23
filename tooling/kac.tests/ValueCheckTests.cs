@@ -6,7 +6,7 @@ using YamlDotNet.RepresentationModel;
 //
 // Each drives a `FieldSpec` the test declares itself against a scrap of YAML, because that is the whole
 // of what `ValueChecks` reads: no corpus, no document, no schema file. The declarations here are
-// deliberately not any real type's — what is being shown is that the checks act on what the schema
+// deliberately not any real type's. What is being shown is that the checks act on what the schema
 // declares rather than on anything they assume about policies or glossaries.
 //
 // The golden fixtures cover each check id once, which is what the coverage gate asks. The branches
@@ -54,7 +54,7 @@ public class ValueCheckTests
         Assert.Contains("date-quoted", Ids(Run("field: 2027-08-04\n", Field("date"))));
     }
 
-    // Not written as a date at all — the characters are wrong before any day is named.
+    // Not written as a date at all: the characters are wrong before any day is named.
     [Fact]
     public void A_date_in_the_wrong_shape_says_so()
     {
@@ -125,7 +125,7 @@ public class ValueCheckTests
     public void One_entry_is_an_entry_not_entries()
     {
         var spec = new FieldSpec { Name = "field", Type = "list", MinItems = 2 };
-        Assert.Contains("has 1 entry —", Assert.Single(Run("field: [ a ]\n", spec)).Message);
+        Assert.Contains("has 1 entry:", Assert.Single(Run("field: [ a ]\n", spec)).Message);
     }
 
     [Fact]

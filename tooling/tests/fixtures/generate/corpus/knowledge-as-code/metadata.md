@@ -4,6 +4,6 @@
 
 <!-- BEGIN GENERATED: types-metadata -->
 
-[ADR](/adrs#metadata)
+[ADR](../adrs.md#metadata)
 
 <!-- END GENERATED: types-metadata -->

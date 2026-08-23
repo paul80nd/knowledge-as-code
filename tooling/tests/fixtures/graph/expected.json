@@ -33,7 +33,7 @@
       "line": 1,
       "severity": "error",
       "check": "reciprocal",
-      "message": "'supersedes: adr-0002' is not reciprocated — adrs/0002-second.md must list 'superseded-by: adr-0001'."
+      "message": "'supersedes: adr-0002' is not reciprocated: adrs/0002-second.md must list 'superseded-by: adr-0001'."
     },
     {
       "file": "adrs/0001-first.md",

@@ -4,8 +4,8 @@ using System.Text.Json.Nodes;
 namespace kac.core;
 
 // `Json.cs` holds the documents kac emits, which are records and are serialized. This holds the other
-// direction: the documents kac reads back — a corpus's own `plugin.json`, and an export's manifest and
-// record files, which may have been written by a different build of this tool.
+// direction: the documents kac reads back. Those are a corpus's own `plugin.json`, and an export's
+// manifest and record files, which may have been written by a different build of this tool.
 //
 // Every reader here survives a value of the wrong shape rather than throwing over one. Nothing
 // validates these files before they are read, and a run that fell over on a mistyped key would report

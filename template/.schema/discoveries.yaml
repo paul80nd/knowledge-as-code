@@ -10,17 +10,17 @@ lifecycle: perishable
 summary: Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.
 goes-here: Something surprising you noticed and haven't verified
 detail: >
-  Deliberately low-ceremony — a title, an observation, why it might matter — and carrying a confidence level, so
+  Deliberately low-ceremony (a title, an observation, why it might matter) and carrying a confidence level, so
   that "the build fails silently if X" has somewhere to go the moment it is noticed.
 
 versus:
   faqs: >
     A discovery is unverified and might be wrong or already fixed. An FAQ has been confirmed by a human and
-    carries authority. Never write straight to an FAQ from a session — capture the discovery and let promotion
+    carries authority. Never write straight to an FAQ from a session. Capture the discovery and let promotion
     do the work.
 
 lineage:
-  prior-art: "None — see [First principles](#first-principles)"
+  prior-art: "None. See [First principles](#first-principles)"
 
 id:
   prefix: dsc
@@ -55,7 +55,7 @@ fields:
   expires:
     required: true
     type: date
-    description: Quoted. Ninety days from capture by convention — the template says so.
+    description: Quoted. Ninety days from capture, a convention the template carries.
     notes: >
       Perishable by default: ninety days from the day it was written, which the template carries rather than the
       schema, since nothing here writes a document's frontmatter. An observation nobody has needed in three months
@@ -99,8 +99,8 @@ rules:
     severity: warning
     expr: "words() <= 200"
     message: >
-      This is longer than a capture should be. If it needs this much explaining it has outgrown the tier —
-      promote it rather than expanding it here.
+      This is longer than a capture should be. If it needs this much explaining it has outgrown the tier.
+      Promote it rather than expanding it here.
   - id: expiry-sweep
     description: >
       Scheduled. Discoveries past `expires` with no promotion are set to `expired` with a note, not deleted.

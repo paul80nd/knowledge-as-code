@@ -17,8 +17,8 @@ public class AnchorTests
     [InlineData("ISO/IEC 27001:2022", "isoiec-270012022")]
     [InlineData("WCAG 2.2 AA", "wcag-22-aa")]
     [InlineData("Scope: central vs repo-local", "scope-central-vs-repo-local")]
-    // A heading carrying the `{#id}` attribute syntax — which nothing this corpus publishes through
-    // implements — folds the attribute into the anchor instead of becoming it.
+    // A heading carrying the `{#id}` attribute syntax folds the attribute into the anchor instead of
+    // becoming it. Nothing this corpus publishes through implements that syntax.
     [InlineData("ISO/IEC 27001:2022 {#iso27001-2022}", "isoiec-270012022-iso27001-2022")]
     // Each side of an em dash is a word, and the spaces around it survive as their own hyphens.
     [InlineData("Say less — once", "say-less--once")]

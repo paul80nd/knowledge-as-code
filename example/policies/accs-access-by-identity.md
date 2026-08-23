@@ -47,19 +47,19 @@ author, not its approver, so `DUTIES` still requires a second person to release 
 | `AUTHN`   | **MUST** require strong authentication for access to our systems, our code and our data                               | [ISO 27001:2022].A.8.5, [OWASP ASVS 4.0].V2     |
 | `RECERT`  | **MUST** review access rights periodically, and remove them promptly when a role changes or a person leaves           | [ISO 27001:2022].A.5.18                         |
 | `ADMIN`   | **MUST** control and record the use of privileged administrative tooling                                              | [ISO 27001:2022].A.8.2, [ISO 27001:2022].A.8.18 |
-| `SHARED`  | **MUST NOT** operate shared or generic privileged accounts where individual attribution is lost — see [pol-EVER]      | [ISO 27001:2022].A.8.2                          |
+| `SHARED`  | **MUST NOT** operate shared or generic privileged accounts where individual attribution is lost. See [pol-EVER]       | [ISO 27001:2022].A.8.2                          |
 | `PERSIST` | **MUST NOT** leave standing production access in place beyond what the role genuinely requires                        | [ISO 27001:2022].A.8.2                          |
 | `DIRECT`  | SHOULD hold identity in a single directory, so that access granted or removed once takes effect everywhere            | [ISO 27001:2022].A.5.16                         |
 | `ZERO`    | COULD hold no standing privilege at all, granting privileged access on request and only for as long as the work takes | [ISO 27001:2022].A.8.2                          |
 
 ## Exceptions
 
-Incident response sometimes needs a break-glass account — one kept for emergencies, outside the normal grants. That is
+Incident response sometimes needs a break-glass account: one kept for emergencies, outside the normal grants. That is
 allowed where a person cannot otherwise act. The account is still attributable, its use raises an alert and is recorded,
 and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI].
 
 [pol-AGNT]: agnt-agents-propose-people-decide.md
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-EVER]: ever-everything-in-version-control.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[OWASP ASVS 4.0]: /frameworks.md#owasp-asvs
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[OWASP ASVS 4.0]: ../frameworks.md#owasp-asvs

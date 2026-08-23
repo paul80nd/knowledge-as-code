@@ -4,14 +4,9 @@ The words we use, and what we mean by them.
 
 **[→ Index](glossary/_index.md)**
 
-> **`example-libraries.md` and `search.md` are an example estate, not your estate.** They describe a fictional
-> public-library consortium, and they are here to demonstrate what a second glossary buys: one word, `title`, that the
-> estate and one system inside it mean differently. **Delete them before you add your first real glossary.**
-> `knowledge-as-code.md` stays. It is the framework's own vocabulary, it arrives synced, and editing it here is drift.
-
 ## What is a glossary?
 
-The ubiquitous language of one bounded context — one entry per term whose meaning is specific to us, or which is easily
+The ubiquitous language of one bounded context: one entry per term whose meaning is specific to us, or which is easily
 confused with a neighbouring term.
 
 One file per context, collected under `glossary/`, and each of them is read end to end. The index gives a row per
@@ -23,23 +18,23 @@ A glossary is the highest value-per-byte content in the corpus, and the corpus-w
 in full before starting work.
 
 The terms particular to the domain are often not interchangeable, and neighbouring terms are easily confused. A
-contributor — human or agent — who doesn't know the distinctions will produce work that is plausible, confident and
-subtly wrong, in code and in documentation alike. Every other document here assumes these terms mean something precise;
-this is where that precision lives.
+contributor (human or agent) who doesn't know the distinctions will produce work that is plausible, confident and subtly
+wrong, in code and in documentation alike. Every other document here assumes these terms mean something precise. This is
+where that precision lives.
 
 ## Scope
 
 A term belongs here if it is **specific to the domain, or easily confused with something else**. General industry
-vocabulary does not — we are not writing a dictionary, and every entry lengthens a page somebody reads end to end.
+vocabulary does not: we are not writing a dictionary, and every entry lengthens a page somebody reads end to end.
 
 Not the place for:
 
-* **A component** — that is a [service](/services). The glossary may define the *concept* the service is named after.
-* **A rule about using the term** — that is a [standard](/standards).
-* **A full explanation of a pattern** — that is an [explanation](/explanations). A glossary entry is a sentence, and
+* **A component.** That is a [service](services.md). The glossary may define the *concept* the service is named after.
+* **A rule about using the term.** That is a [standard](standards.md).
+* **A full explanation of a pattern.** That is an [explanation](explanations.md). A glossary entry is a sentence, and
   links out for the rest.
 
-**Split by bounded context or product surface, never by topic.** A glossary covers the language of one context — the
+**Split by bounded context or product surface, never by topic.** A glossary covers the language of one context: the
 framework itself, a product area, a system that names things its own way. A file called "infrastructure terms" starts an
 argument about placement every time somebody adds a word, and the words drift while the argument runs.
 
@@ -55,45 +50,45 @@ the shared one still reads correctly in a corpus that never had the other half.
 
 ## Adding a term
 
-1. Choose the glossary — the most general one that admits the term.
+1. Choose the most general glossary that admits the term.
 2. Where no glossary covers the context, copy [`_template.md`](glossary/_template.md) to a kebab-case filename named for
    the context, and set `narrows` to the glossary it sits inside.
 3. Add an H3 in alphabetical position.
 4. One sentence of definition. If it needs a paragraph, the paragraph belongs in an
-   [explanation](/explanations) and the entry links to it.
+   [explanation](explanations.md) and the entry links to it.
 5. Add a `**Not:**` line wherever confusion is plausible. Those lines are the most useful content here.
-6. Name the owning [service](/services) where the concept has one.
+6. Name the owning [service](services.md) where the concept has one.
 7. Where a narrower glossary redefines a term, reference the other entry from each. Where the general glossary is
    shared, only the narrower entry carries a reference.
 
 **Conventions**
 
-* **Cross-references name the term** — `[gls-search.title]`, defined as `search.md#title`. The anchor is the term's
-  identifier; there are no numeric ids.
+* **Cross-references name the term**: `[gls-search.title]`, defined as `search.md#title`. The anchor is the term's
+  identifier. There are no numeric ids.
 * **Terms are singular and in canonical casing.** `Term`, not `terms`.
 
 **Declared.** `carried-in-full-by-digest` holds an entry to one paragraph, and orders the glossaries in the digest
-[adr-0001] describes. That digest cuts off when its budget is spent rather than overrunning it, and three glossaries are
-enough to spend it. So the ordering decides which vocabulary a session arrives holding. It orders a `narrows` chain and
-nothing else, so which of two unrelated glossaries loses its tail is a question the ordering does not answer. Nothing
-generates a digest, so nothing runs the rule and the limit is yours to keep.
+[adr-0001] describes. That digest cuts off when its budget is spent, and three glossaries are enough to spend it. So the
+ordering decides which vocabulary a session arrives holding. It orders a `narrows` chain and nothing else, so which of
+two unrelated glossaries loses its tail is a question the ordering does not answer. Nothing generates a digest, so
+nothing runs the rule and the limit is yours to keep.
 
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-glossary -->
 
-| Field         | Value            | Notes                                                                                |
-|---------------|------------------|--------------------------------------------------------------------------------------|
-| `id` *†       | string           | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *†     | `descriptive`    | Fixed for the type — a trust signal for the reader. CI checks it matches the folder. |
-| `status` *†   | `draft` `active` | `draft` while the terms are still settling.                                          |
-| `owner` *†    | string           | A named person, never a team alias.                                                  |
-| `tags` †      | list             | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `narrows`     | id               | The more general glossary this one narrows, where one sits above it.                 |
-| `review-by` * | date             | Quoted. A glossary is reviewed whole, rather than a term at a time.                  |
+| Field         | Value            | Notes                                                                               |
+|---------------|------------------|-------------------------------------------------------------------------------------|
+| `id` *†       | string           | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `tier` *†     | `descriptive`    | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` *†   | `draft` `active` | `draft` while the terms are still settling.                                         |
+| `owner` *†    | string           | A named person, never a team alias.                                                 |
+| `tags` †      | list             | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| `narrows`     | id               | The more general glossary this one narrows, where one sits above it.                |
+| `review-by` * | date             | Quoted. A glossary is reviewed whole, rather than a term at a time.                 |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-glossary -->
 
@@ -108,14 +103,14 @@ generates a digest, so nothing runs the rule and the limit is yours to keep.
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
 | `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
+| `filename / slug-length`    | error   | Filename matches the pattern. The slug is within 30 characters.                                                 |
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
@@ -129,7 +124,7 @@ generates a digest, so nothing runs the rule and the limit is yours to keep.
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `terms-alphabetical`        | warning | A glossary's entries read in alphabetical order.                                                                |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule                           | What it would verify                                                                                                   |
 |--------------------------------|------------------------------------------------------------------------------------------------------------------------|
@@ -141,5 +136,5 @@ generates a digest, so nothing runs the rule and the limit is yours to keep.
 
 <!-- END GENERATED: checks-glossary -->
 
-[adr-0001]: /adrs/0001-knowledge-as-code.md
+[adr-0001]: adrs/0001-knowledge-as-code.md
 [gls-knowledge-as-code]: glossary/knowledge-as-code.md

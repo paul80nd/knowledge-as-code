@@ -3,6 +3,9 @@
 This repository is not a corpus. It holds `kac`, the template a corpus is copied from, and one worked corpus that took
 that copy. The tool finds a corpus by walking up for a `.schema/`, so it reads `example/` and never this root.
 
+**Load `i-want-to` before you plan.** It routes the work to the playbook carrying its steps, and names the writing
+skill for the surface you are on.
+
 | Working on                                  | Read                                                     |
 |---------------------------------------------|----------------------------------------------------------|
 | a record, or anything else `example/` holds | [`example/CLAUDE.md`](example/CLAUDE.md)                 |
@@ -12,6 +15,10 @@ that copy. The tool finds a corpus by walking up for a `.schema/`, so it reads `
 [`template/CLAUDE.md`](template/CLAUDE.md) is the fourth, and it is addressed to somebody working in a corpus that
 copied the template. It describes that corpus rather than this repository, so read it as content you may need to
 change. The schema page beside it is the same file as `example/`'s, for the reason below.
+
+**Load `technical-writing`, then `writing-the-docs`, before you change [`README.md`](README.md) or
+[`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md).** Both are read by somebody who has installed nothing and has
+nobody here to ask.
 
 ## Two trees hold the same file
 
@@ -48,7 +55,7 @@ invocation at a time: concurrent runs build the same project and contend over it
   because it fetches the commit `HEAD` stands on from `raw.githubusercontent.com`. That failure is not a defect. CI runs
   against a pushed head and passes.
 * **Regenerating goldens with `--update` blesses a regression as happily as a fix.** Regenerate, then read the diff.
-* **Three walk-ups look for `kac.slnx`, and each of them means the repository** — `tooling/kac-tests.cs`,
+* **Three walk-ups look for `kac.slnx`, and each of them means the repository**: `tooling/kac-tests.cs`,
   `tooling/kac.features/Harness.cs` and `tooling/kac.tests/Repo.cs`. The tool's own walk-up looks for a `.schema/` and
   means a corpus. Do not unify them without keeping that distinction.
 * **Never write a path into a file a corpus keeps.** The generated banner and the stale-index message both name the tool

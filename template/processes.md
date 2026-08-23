@@ -21,18 +21,18 @@ Processes carry `last-rehearsed` for that reason. A procedure nobody has walked 
 
 **Are you doing this because you planned to, or because something is broken?**
 
-* Planned — a process.
-* Broken — a [runbook](/runbooks).
+* Planned: a process.
+* Broken: a [runbook](runbooks.md).
 
 A process and a runbook have different readers, a different tone, and different consequences when they go stale. A
-process that is slightly out of date is annoying; a runbook that is slightly out of date is dangerous.
+process that is slightly out of date is annoying. A runbook that is slightly out of date is dangerous.
 
 A process is also not:
 
-* **A rule** — "deployments happen in dependency order" is a [standard](/standards); the release process cites it.
-* **A reference list** — system requirements and port tables belong in the [service](/services) catalogue. A document
+* **A rule**: "deployments happen in dependency order" is a [standard](standards.md). The release process cites it.
+* **A reference list.** System requirements and port tables belong in the [service](services.md) catalogue. A document
   with no steps is not a process.
-* **An explanation** — how the pipeline works is an [explanation](/explanations); how to use it is a process.
+* **An explanation.** How the pipeline works is an [explanation](explanations.md). How to use it is a process.
 
 ## Metadata
 
@@ -41,7 +41,7 @@ A process is also not:
 | Field                 | Value                              | Notes                                                                                          |
 |-----------------------|------------------------------------|------------------------------------------------------------------------------------------------|
 | `id` *†               | string                             | Stable, unique across the corpus, never reused. Format set by the type.                        |
-| `tier` *†             | `procedural`                       | Fixed for the type — a trust signal for the reader. CI checks it matches the folder.           |
+| `tier` *†             | `procedural`                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.            |
 | `status` *†           | `active` `draft` `retired`         | Whether the process is current, drafted, or stood down.                                        |
 | `owner` *†            | string                             | A named person, never a team alias.                                                            |
 | `tags` †              | list                               | Free-form, lowercase, hyphenated. Used for cross-cutting search.                               |
@@ -51,13 +51,13 @@ A process is also not:
 | `requires-access`     | list                               | Systems or roles needed before step 1.                                                         |
 
 \* Field is required  
-† Carried by every document in the taxonomy — see [Metadata](/knowledge-as-code/metadata.md).
+† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
 <!-- END GENERATED: schema-processes -->
 
 ## Adding a process
 
-1. Copy [`_template.md`](processes/_template.md) to `<slug>.md`. Processes use slug ids — `prc-releasing`.
+1. Copy [`_template.md`](processes/_template.md) to `<slug>.md`. Processes use slug ids: `prc-releasing`.
 2. Write the steps in order and in the imperative, for a reader who has not done this before.
 3. Include prerequisites, a verification step ("you know it worked when…") and a rollback.
 4. Set `last-rehearsed`, and write `"never"` rather than guess a date.
@@ -84,14 +84,14 @@ A process is also not:
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has — `YYYY-MM-DD`.                                         |
+| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
 | `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |
-| `filename / slug-length`    | error   | Filename matches the pattern; the slug is within 30 characters.                                                 |
+| `filename / slug-length`    | error   | Filename matches the pattern. The slug is within 30 characters.                                                 |
 | `h1`                        | error   | The document has an H1.                                                                                         |
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
@@ -103,7 +103,7 @@ A process is also not:
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `no-hedged-ordering`        | warning | No step hedged with "typically", "usually" or "normally".                                                       |
 
-**Declared, not yet enforced** — carried by the schema, run by nothing.
+**Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule        | What it would verify                                                                                    |
 |-------------|---------------------------------------------------------------------------------------------------------|

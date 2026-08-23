@@ -82,8 +82,8 @@ public class RefCheckTests
         new() { Name = name, Type = "id", Refs = refs, Reciprocal = "superseded-by" };
 
     // Three types, so that a field can name one, two or none of them. The labels are the real ones
-    // because how a message names a type is read off them: the article follows how the label sounds —
-    // "an ADR", "a Service" — and a label whose plural is the same word takes none.
+    // because how a message names a type is read off them. The article follows how the label sounds,
+    // as "an ADR" and "a Service" do, and a label whose plural is the same word takes none.
     //
     // The cast is fixed: an ADR carrying the field, and one document of each type to aim it at. An id
     // outside the cast is the target that does not exist.

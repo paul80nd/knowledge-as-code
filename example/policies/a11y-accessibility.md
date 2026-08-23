@@ -19,8 +19,7 @@ The software we put in front of users works for people with disabilities, and me
 we designed it that way, not because we corrected it afterwards.
 
 The law in the markets we serve requires this. It is also the difference between software that serves its users and
-software that serves most of them. Building it in costs a fraction of fixing it later, because the expensive failures
-are structural, and a late fix does not reach them.
+software that serves _most_ of them. Building it in costs a fraction of fixing it later.
 
 ## Scope
 
@@ -48,9 +47,9 @@ is acceptable; concealing it is not.
 ## Notes
 
 What drives this policy is legal obligation rather than an information-security framework, so it carries no ISO/IEC
-27001 reference — see [Policies](/policies.md#why-we-use-them).
+27001 reference. See [Policies](../policies.md#why-we-use-them).
 
 [pol-DEVI]: devi-deviations-are-recorded.md
-[EN 301 549]: /frameworks.md#en-301-549
-[PSBAR 2018]: /frameworks.md#psbar-2018
-[WCAG 2.2 AA]: /frameworks.md#wcag
+[EN 301 549]: ../frameworks.md#en-301-549
+[PSBAR 2018]: ../frameworks.md#psbar-2018
+[WCAG 2.2 AA]: ../frameworks.md#wcag

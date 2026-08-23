@@ -1,4 +1,4 @@
-# `tooling` — the `kac` tool
+# `tooling`: the `kac` tool
 
 `kac` validates and generates a knowledge corpus against the machine-readable schema that corpus carries in
 `.schema/`. The command is a **thin .NET 10 entrypoint** ([`kac/`](kac/)) over a small **`kac.core`** library holding
@@ -119,13 +119,14 @@ explain. **Decisions** takes only the ones belonging to a feature as a whole.
 
 ## Tests
 
-Three layers, all run from the repository root and all run in CI (see
-[`.github/workflows/kac.yml`](../.github/workflows/kac.yml)):
+Three layers, all run from the repository root and all run in CI, on GitHub through
+[`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and on Azure DevOps through
+[`.azuredevops/kac.yml`](../.azuredevops/kac.yml):
 
 | Layer       | Project / file            | Run                                | Covers                                                                                                                                                           |
 |-------------|---------------------------|------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Unit**    | `kac.tests` (xUnit v3)    | `dotnet test tooling/kac.tests`    | `kac.core`'s shared primitives (`Glob`, `Yaml`, `Schema` helpers, `Manifest.Resolve`, `Md`, …) — fast, precise localisation.                                     |
-| **Feature** | `kac.features` (Reqnroll) | `dotnet test tooling/kac.features` | Validator **behaviour** — "what findings this document produces" — as Gherkin specs driving `kac.core` in-process.                                               |
+| **Unit**    | `kac.tests` (xUnit v3)    | `dotnet test tooling/kac.tests`    | `kac.core`'s shared primitives (`Glob`, `Yaml`, `Schema` helpers, `Manifest.Resolve`, `Md`, …). Fast, precise localisation.                                      |
+| **Feature** | `kac.features` (Reqnroll) | `dotnet test tooling/kac.features` | Validator **behaviour**, which is what findings a document produces, as Gherkin specs driving `kac.core` in-process.                                             |
 | **Golden**  | `kac-tests.cs`            | `dotnet run tooling/kac-tests.cs`  | Fixtures diffed against committed goldens, plus the coverage and checks-table gates and the CLI contract (exit codes). See [`tests/README.md`](tests/README.md). |
 
 The unit layer catches breakage in the pieces early. The feature layer is the readable regression net for what the

@@ -32,11 +32,11 @@ establish is one we are trusting on faith.
 ## Scope
 
 All third-party and open-source components used by systems we build or operate, including transitive dependencies, base
-images and build-time tooling; the third-party and cloud services those systems depend on; and every artefact we deploy,
-whether we built it or obtained it from someone else.
+images and build-time tooling. It also covers the third-party and cloud services those systems depend on, and every
+artefact we deploy, whether we built it or obtained it from someone else.
 
 _Boundary: this policy governs what we admit into the estate and what we can prove about it. Finding, prioritising and
-closing the vulnerabilities in what we have admitted is [pol-VURM]'s — including whether a finding blocks a release. The
+closing the vulnerabilities in what we have admitted is [pol-VURM]'s, including whether a finding blocks a release. The
 route an artefact takes into production, and the approval behind it, is [pol-PIPE]'s._
 
 ## Clauses
@@ -51,7 +51,7 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 | `CLOUD`   | **MUST** establish which security responsibilities we hold and which the provider holds, before adopting a service                           | [ISO 27001:2022].A.5.23                       |
 | `EXIT`    | **MUST** know how we would leave a service before we depend on it                                                                            | [ISO 27001:2022].A.5.23                       |
 | `REPO`    | **MUST** hold build artefacts in a managed repository, versioned and retained so a release can be identified, rolled back and examined later | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3 |
-| `TRACE`   | **MUST** be able to trace a deployed artefact to the change and the build that produced it — see [pol-PIPE]                                  | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PS.2 |
+| `TRACE`   | **MUST** be able to trace a deployed artefact to the change and the build that produced it. See [pol-PIPE]                                   | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PS.2 |
 | `REVIEW`  | **MUST** review the components and services we depend on periodically, not only when we adopt them                                           | [ISO 27001:2022].A.5.22                       |
 | `UNTRUST` | **MUST NOT** introduce a component or artefact from an untrusted or unverifiable source                                                      | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4 |
 | `MUTATE`  | **MUST NOT** alter a released artefact in place                                                                                              | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3 |
@@ -65,5 +65,5 @@ deviation names the risk owner, the compensating controls and the plan to replac
 [pol-DEVI]: devi-deviations-are-recorded.md
 [pol-PIPE]: pipe-pipeline-to-production.md
 [pol-VURM]: vurm-vulnerability-remediation.md
-[ISO 27001:2022]: /frameworks.md#iso-27001
-[NIST SSDF 1.1]: /frameworks.md#nist-ssdf
+[ISO 27001:2022]: ../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf

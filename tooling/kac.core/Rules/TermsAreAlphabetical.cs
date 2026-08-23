@@ -9,7 +9,7 @@ namespace kac.core;
 // That naming is why the rule is a class. The grammar holds no collections, and a rule saying only that
 // the file is unsorted leaves the author to find the word themselves.
 //
-// Compared case-insensitively, because casing is the entry's own — `ADR` and `Borrower` sit in the
+// Compared case-insensitively, because casing is the entry's own. `ADR` and `Borrower` sit in the
 // order a reader scans, not the order their code points fall in.
 public sealed class TermsAreAlphabetical : IDocumentRule
 {
@@ -29,7 +29,7 @@ public sealed class TermsAreAlphabetical : IDocumentRule
         {
             if (previous is not null && string.Compare(term, previous, StringComparison.OrdinalIgnoreCase) < 0)
                 ctx.Report.Warn(Reports,
-                    $"'{Md.Snippet(term)}' is out of order — it belongs before '{Md.Snippet(previous)}'.", line);
+                    $"'{Md.Snippet(term)}' is out of order: it belongs before '{Md.Snippet(previous)}'.", line);
 
             previous = term;
         }

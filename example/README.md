@@ -1,4 +1,4 @@
-# Example Libraries — a knowledge corpus
+# Example Libraries: a knowledge corpus
 
 > **Everything here is invented.** Example Libraries is a fictional public-library consortium. Its services, incidents,
 > decisions and obligations were written to give each knowledge type something real-shaped to hold, and to push the
@@ -20,25 +20,25 @@ Why it is built this way is in [`knowledge-as-code.md`](knowledge-as-code.md) an
 
 <!-- BEGIN GENERATED: types-index -->
 
-| Type                         | Tier        | What it holds                                                                                                    |
-|------------------------------|-------------|------------------------------------------------------------------------------------------------------------------|
-| [ADR](/adrs)                 | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it.         |
-| [Capability](/capabilities)  | descriptive | What we offer a customer and why, as a hub linking to what implements, tests and constrains it.                  |
-| [Control](/controls)         | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                   |
-| [Data](/data)                | descriptive | Which service owns which data, how long it is kept, how sensitive it is, and where personal data flows.          |
-| [Discovery](/discoveries)    | observed    | Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.               |
-| [Explanation](/explanations) | descriptive | Narrative that helps you understand how something works, or why it is shaped the way it is.                      |
-| [FAQ](/faqs)                 | normative   | A problem with a confirmed fix, promoted from a discovery once a human has verified it.                          |
-| [Glossary](/glossary)        | descriptive | The ubiquitous language — terms whose meaning is specific to us, or which are easily confused.                   |
-| [Integration](/integrations) | descriptive | An external system we depend on: the contract, the auth, the failure modes, their SLA and our fallback.          |
-| [NFR](/nfrs)                 | normative   | A non-functional requirement — availability, latency, RPO, RTO — stated with how it is measured.                 |
-| [Policy](/policies)          | normative   | A high-level engineering commitment: the what and the why, largely stack-agnostic and changing rarely.           |
-| [Postmortem](/postmortems)   | decided     | What actually happened during an incident — timeline, impact, root cause, contributing factors, actions.         |
-| [Process](/processes)        | procedural  | A planned procedure followed deliberately — releasing, onboarding, provisioning, rotating a secret.              |
-| [Runbook](/runbooks)         | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.                |
-| [Service](/services)         | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.               |
-| [Standard](/standards)       | normative   | The rulebook — imperative, RFC 2119, with concrete examples and a conformance checklist.                         |
-| [Tool](/tools)               | descriptive | The approved-software register — what is chosen, rejected or deprecated, and the version ranges we stand behind. |
+| Type                           | Tier        | What it holds                                                                                                   |
+|--------------------------------|-------------|-----------------------------------------------------------------------------------------------------------------|
+| [ADR](adrs.md)                 | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it.        |
+| [Capability](capabilities.md)  | descriptive | What we offer a customer and why, as a hub linking to what implements, tests and constrains it.                 |
+| [Control](controls.md)         | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                  |
+| [Data](data.md)                | descriptive | Which service owns which data, how long it is kept, how sensitive it is, and where personal data flows.         |
+| [Discovery](discoveries.md)    | observed    | Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.              |
+| [Explanation](explanations.md) | descriptive | Narrative that helps you understand how something works, or why it is shaped the way it is.                     |
+| [FAQ](faqs.md)                 | normative   | A problem with a confirmed fix, promoted from a discovery once a human has verified it.                         |
+| [Glossary](glossary.md)        | descriptive | The ubiquitous language. Terms whose meaning is specific to us, or which are easily confused.                   |
+| [Integration](integrations.md) | descriptive | An external system we depend on: the contract, the auth, the failure modes, their SLA and our fallback.         |
+| [NFR](nfrs.md)                 | normative   | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.                  |
+| [Policy](policies.md)          | normative   | A high-level engineering commitment: the what and the why, largely stack-agnostic and changing rarely.          |
+| [Postmortem](postmortems.md)   | decided     | What actually happened during an incident (timeline, impact, root cause, contributing factors, actions).        |
+| [Process](processes.md)        | procedural  | A planned procedure followed deliberately (releasing, onboarding, provisioning, rotating a secret).             |
+| [Runbook](runbooks.md)         | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.               |
+| [Service](services.md)         | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.              |
+| [Standard](standards.md)       | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                         |
+| [Tool](tools.md)               | descriptive | The approved-software register. What is chosen, rejected or deprecated, and the version ranges we stand behind. |
 
 **Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
 and is not, and the calls that are genuinely close.
@@ -71,13 +71,14 @@ terms. The clause model, the mnemonic ids, the per-clause alignment and the gap 
 on them rather than assumed. They are principle-level and stack-agnostic by design, so they name no service and invent
 no domain. That is why they would survive adoption with only the specifics rewritten.
 
-**Others need somewhere to stand.** A service catalogue demonstrates nothing without an estate; an NFR has to apply to
-something; a postmortem needs an incident. Those use the consortium above, so the records form a graph instead of a
-list.
+**Others need somewhere to stand.** A service catalogue demonstrates nothing without an estate. An NFR has to apply to
+something, and a postmortem needs an incident. Those use the consortium above, so the records form a graph instead of
+a list.
 
-**Delete these records; do not adapt them.** Each seeded type page says so at the top. They are chosen to exercise the
-schema's awkward corners rather than to resemble your estate: a monorepo shipping three deployables, a CDN whose
-`repo` cannot answer where its content comes from, and a service coupled to the whole estate with no dependency edges.
+**Delete these records rather than adapting them.** Each seeded type page says so at the top. They are chosen to
+exercise the schema's awkward corners, and will not resemble your estate: a monorepo shipping three deployables, a CDN
+whose `repo` cannot answer where its content comes from, and a service coupled to the whole estate with no dependency
+edges.
 
 ## Maturity
 
@@ -175,12 +176,12 @@ The rest is agreed and unbuilt:
 * **The distillation pass** that would fold what sessions learned back into the corpus
   ([#24](https://github.com/paul80nd/knowledge-as-code/issues/24)).
 * **A hook that matches a prompt against the glossary**, so a term is defined where it is used rather than when someone
-  thinks to ask. The `SessionStart` breadcrumb says the glossary is there; nothing yet reads what was typed.
+  thinks to ask. The `SessionStart` breadcrumb says the glossary is there, and nothing yet reads what was typed.
 
 ## Layout
 
 ```
-<type>.md              # what the type is, why it exists, how to contribute — one per type
+<type>.md              # what the type is, why it exists, how to contribute. One per type
 <type>/
   ├── _index.md        # GENERATED from frontmatter
   ├── _template.md     # what humans and agents copy
@@ -191,8 +192,6 @@ knowledge-as-code/     # the system's own documentation
   ├── taxonomy.md      # the seventeen types and where things go
   ├── metadata.md      # the frontmatter fields
   ├── contributing.md  # how a contribution is made and reviewed
-  ├── style.md         # how we write, in every document and every commit
-  ├── authoring.md     # what a document's tier adds to that
   ├── principles.md    # why the framework is shaped this way
   ├── lineage.md       # where the taxonomy's names came from
   └── automation.md    # what is generated, validated and scheduled
@@ -200,7 +199,7 @@ kac, kac.cmd           # launchers that wrap `dotnet run --project ../tooling/ka
 .corpus.yaml           # what this corpus is, and where it publishes
 .claude/skills/        # agent skills for working on this corpus
 .plugin/               # source for the plugin that carries this corpus's export to another repository
-.schema/               # the machine-readable schema — the source of truth
+.schema/               # the machine-readable schema, and the source of truth
 ```
 
 The machinery is dot-prefixed: `.schema/`, `.corpus.yaml`, `.plugin/`. The markdown stays the visible half, so an Azure

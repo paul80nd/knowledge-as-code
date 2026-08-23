@@ -1,7 +1,7 @@
 Feature: Cross-document graph checks
-  kac reconciles ids across the whole corpus: uniqueness, referenced ids, reciprocal fields, and
-  field/section mirroring. Driven in-process against the graph fixture, which lays a gizmo type over
-  the real schema — a second type is what gives an ADR a document of another type to point at, and a
+  kac reconciles ids across the whole corpus: uniqueness, referenced ids, reciprocal fields, and a
+  field mirroring a section. Driven in-process against the graph fixture, which lays a gizmo type over
+  the real schema. A second type gives an ADR a document of another type to point at, and it gives a
   field mirroring a section other than 'Related' something to mirror.
 
   Background:
@@ -42,7 +42,7 @@ Feature: Cross-document graph checks
       | adrs/0001-first.md    | error    | 1    | related-matches-section | 'related' lists 'adr-0002' but it is not referenced in the '## Related' section.                    |
       | adrs/0001-first.md    | error    | 1    | related-matches-section | 'related' lists 'adr-0099' but it is not referenced in the '## Related' section.                    |
       | adrs/0001-first.md    | error    | 1    | ref-resolves            | 'related' points at 'adr-0099', which does not exist.                                               |
-      | adrs/0001-first.md    | error    | 1    | reciprocal              | 'supersedes: adr-0002' is not reciprocated — adrs/0002-second.md must list 'superseded-by: adr-0001'. |
+      | adrs/0001-first.md    | error    | 1    | reciprocal              | 'supersedes: adr-0002' is not reciprocated: adrs/0002-second.md must list 'superseded-by: adr-0001'. |
       | adrs/0001-first.md    | error    | 30   | link-resolves           | link target 'nonexistent-target.md' does not resolve.                                               |
       | adrs/0001-first.md    | error    | 30   | undefined-label         | reference '[ADR-0099]' has no link definition.                                                      |
       | adrs/0001-first.md    | error    | 32   | fragment-resolves       | '#renamed-away' names no heading in '0002-second.md'.                                               |

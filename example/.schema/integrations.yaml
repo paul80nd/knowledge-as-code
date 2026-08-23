@@ -14,11 +14,11 @@ detail: >
   names who to call when the system is down.
 
 lineage:
-  prior-art: "[Nygard, *Release It!* (2nd ed.)](https://pragprog.com/titles/mnee2/release-it-second-edition/) — integration points"
+  prior-art: "[Nygard, *Release It!* (2nd ed.)](https://pragprog.com/titles/mnee2/release-it-second-edition/): integration points"
   alignment: >
     That every integration point needs a deliberate failure mode and fallback, so the type requires both
   divergence: >
-    A pattern book, not a document type — and prior art for only half the fields. The commercial ones come from
+    A pattern book, not a document type, and prior art for only half the fields. The commercial ones come from
     supplier management
 
 id:

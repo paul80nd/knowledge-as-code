@@ -1,6 +1,6 @@
 // The expression layer for `rules:`. Two things are pinned here that nothing else can pin: what the
 // grammar accepts, and what a comparison means when the field it names is absent. Both are contracts
-// with whoever writes a schema, and neither is visible in a golden — a corpus only ever shows the
+// with whoever writes a schema, and neither is visible in a golden. A corpus only ever shows the
 // answer for the documents it happens to hold.
 
 using kac.core;
@@ -56,8 +56,8 @@ public class RuleExprTests
         Assert.True(Eval("first_section() == ''", body: "No headings at all."));
     }
 
-    // `section()` asks whether a document has one; `section_count()` asks whether it has more than one,
-    // which is a different fault. Matched without case, as `section()` is — a heading is prose someone
+    // `section()` asks whether a document has one. `section_count()` asks whether it has more than one,
+    // which is a different fault. Matched without case, as `section()` is: a heading is prose someone
     // wrote, and `## symptom` is the section the schema means however it was capitalised.
     [Fact]
     public void Section_count_counts_the_heading_and_ignores_its_casing()
@@ -69,7 +69,7 @@ public class RuleExprTests
 
     // The body pattern facts cannot see frontmatter, because a field is judged against what its own
     // declaration says. `field_matches` is how a rule asks about the value rather than the shape, and it
-    // is false for an absent field — whether the field ought to be there is `required-field`'s question.
+    // is false for an absent field. Whether the field ought to be there is `required-field`'s question.
     [Fact]
     public void Field_matches_reads_the_frontmatter_that_matches_cannot()
     {
@@ -185,7 +185,7 @@ public class RuleExprTests
         => Assert.True(Eval("words() == 4 and matches('secret')",
             body: "Configure it:\n\n```\nTOKEN=secret\n```\n"));
 
-    // Markdown syntax is in scope, which is what lets a rule find a bold modal — the emphasis markers
+    // Markdown syntax is in scope, which is what lets a rule find a bold modal: the emphasis markers
     // are gone by the time the text is flattened.
     [Fact]
     public void Matches_sees_markdown_syntax()

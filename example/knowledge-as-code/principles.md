@@ -15,10 +15,10 @@ page keys off that.
 
 An ADR and a postmortem have nothing in common as subject matter. As behaviour they are identical: both are accounts
 that were true at a moment, both become misleading if edited afterwards, and both are superseded rather than corrected.
-So they share a tier, and the tier carries the rules — the review bar, the validation, the language, and the expectation
+So they share a tier, and the tier carries the rules: the review bar, the validation, the language, and the expectation
 of immutability.
 
-The taxonomy therefore grows without new machinery. A new kind of knowledge needs a tier rather than a new mechanism.
+The taxonomy therefore grows without new machinery.
 
 ## The mechanism is separable from the knowledge
 
@@ -36,10 +36,9 @@ exactly one layer, and each layer has a rule about what divergence means.
 
 The authoritative form of a record is structured. Prose renders it.
 
-`kac` generates an index from frontmatter rather than asking someone to maintain it alongside. It validates every
-cross-reference on every build, and derives a type's schema table from the schema file that table documents. Where a
-machine could derive something and a person maintains it instead, the person's copy is the one that goes stale, and
-nothing will say so.
+`kac` generates an index from frontmatter. It validates every cross-reference on every build, and derives a type's
+schema table from the schema file that table documents. Where a machine could derive something and a person maintains it
+instead, the person's copy is the one that goes stale, and nothing will say so.
 
 This is also why adding a knowledge type means adding a YAML file rather than editing the tool. A corpus grows its
 taxonomy without waiting on a change to the code.
@@ -62,7 +61,7 @@ copying it.
 
 Duplication does not stay duplicated. Someone updates one copy and not the other, and afterwards nobody can tell which
 is current, so a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none,
-because the second failure is visible.
+because a gap is visible and a contradiction is not.
 
 ## Cheap capture, deliberate promotion
 

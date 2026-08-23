@@ -16,28 +16,27 @@ tags: [ legacy, loans ]
 
 `Service: svc-lending` `LIVE`
 
-Loans, returns and holds — a strangler wrapper over the legacy library management system, and the only route to the data
+Loans, returns and holds: a strangler wrapper over the legacy library management system, and the only route to the data
 that still lives there.
 
 ## What it does
 
-Exposes loans, holds and borrower records as a RESTful API. It fronts the legacy library management system and overrides
-the routes it replaces as it gains functionality — the strangler pattern, deliberately.
+Exposes loans, holds and borrower records as a RESTful API. It fronts the legacy library management system, and
+overrides the routes it replaces as it gains functionality. That is the strangler pattern, and it is deliberate.
 
-**It maps onto the legacy database rather than owning one.** This is the estate's one deliberate exception to
-service-owned data: it maps directly onto the same database the legacy system still writes to, does not own that schema,
-and does not migrate it. The object-relational mapping is a mapper over pre-existing tables, not a model this service
-designed.
+**It maps onto the legacy database and owns no schema of its own.** This is the estate's one deliberate exception to
+service-owned data. The legacy system still writes to that same database, and this service migrates none of it. Its
+object-relational mapping is a mapper over pre-existing tables that this service did not design.
 
-**It is therefore the only way to reach legacy-only data.** Anything that exists only in that database — the branch
-opening calendars are the worked example — is reachable only by asking this service. A service that needs it calls this
-one rather than reading the database itself.
+**It is therefore the only way to reach legacy-only data.** Anything that exists only in that database is reachable only
+by asking this service. A service that needs such data calls this one. The branch opening calendars are the worked
+example.
 
 ## Where it lives
 
-* **Repository** — [`lending`](https://git.example.com/example-libraries/lending)
-* **Platform** — ASP.NET Core Web API (.NET 10)
-* **Deployed as** — App Service `app-lending-<env>`
+* **Repository**: [`lending`](https://git.example.com/example-libraries/lending)
+* **Platform**: ASP.NET Core Web API (.NET 10)
+* **Deployed as**: App Service `app-lending-<env>`
 
 ## Environments
 
@@ -47,36 +46,33 @@ one rather than reading the database itself.
 | Test        | https://app-lending-test.example.net | No custom domain |
 | Production  | https://app-lending-prd.example.net  | No custom domain |
 
-**Quick check** — the OpenAPI document:
+**Quick check**: the OpenAPI document, in
 [dev](https://app-lending-dev.example.net/openapi/v1.json) ·
 [test](https://app-lending-test.example.net/openapi/v1.json) ·
-[prod](https://app-lending-prd.example.net/openapi/v1.json)
+[prod](https://app-lending-prd.example.net/openapi/v1.json).
 
-Reached over the private network rather than these hostnames wherever possible. The hostnames exist because the platform
-assigns them, not because anything is meant to call them.
+Callers reach it over the private network wherever possible. The hostnames exist because the platform assigns them, and
+nothing is meant to call them.
 
 ## Dependencies
 
-No service in this catalogue. Its downward dependencies are all legacy:
+No service in this catalogue (which is why `depends-on` is bare). Its downward dependencies are all legacy:
 
 * The **legacy database**, configured as `ConnectionStrings__Legacy`.
-* The **legacy circulation API**, reached through a reverse-proxy cluster. This is the half of the strangler that has
-  not been replaced yet.
-
-Neither is a service in this catalogue, so `depends-on` is bare on a service that depends on a great deal.
+* The **legacy circulation API**, reached through a reverse-proxy cluster. That API is the unreplaced half of the
+  strangler.
 
 ## Data
 
-**The legacy database**, which it maps but does not own. Any data document describing that database has to record more
+**The legacy database**, which this service maps and does not own. Any data document describing it has to record more
 than one writer: the legacy library management system still writes to it directly.
 
 ## Operational notes
 
-* **Authentication** — callers present an API key, configured as `Api__Key`. Each caller holds its own.
-* **Consumers** — [svc-catalogue-api] and [svc-reservations] are each configured to reach it. Maintained by hand;
-  nothing checks it.
-* **Criticality** — `critical`. It is the estate's single point of access to loan data, and nothing degrades gracefully
-  without it.
+* **Authentication.** Callers present an API key, configured as `Api__Key`. Each caller holds its own.
+* **Consumers.** [svc-catalogue-api] and [svc-reservations] are each configured to reach it. Nothing checks this line,
+  so it goes stale.
+* **Criticality**: `critical`. It is the estate's only route to loan data, and nothing degrades gracefully without it.
 
 [svc-catalogue-api]: catalogue-api.md
 [svc-reservations]: reservations.md

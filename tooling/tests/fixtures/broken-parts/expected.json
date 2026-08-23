@@ -12,28 +12,28 @@
       "line": 26,
       "severity": "error",
       "check": "part-id-unique",
-      "message": "two terms here address as 'identity-line' — a citation of it names both and reaches neither."
+      "message": "two terms here address as 'identity-line': a citation of it names both and reaches neither."
     },
     {
       "file": "glossary/holl-empty-term.md",
       "line": 27,
       "severity": "error",
       "check": "part-empty",
-      "message": "term 'Hollow' has nothing under it — write it or delete the heading."
+      "message": "term 'Hollow' has nothing under it. Write it or delete the heading."
     },
     {
       "file": "glossary/holl-empty-term.md",
       "line": 31,
       "severity": "error",
       "check": "part-empty",
-      "message": "term 'Placeholder' has nothing under it — write it or delete the heading."
+      "message": "term 'Placeholder' has nothing under it. Write it or delete the heading."
     },
     {
       "file": "glossary/none-terms-section-empty.md",
       "line": 20,
       "severity": "error",
       "check": "part-none",
-      "message": "the '## Terms' section holds no terms — write each one as an H3 heading."
+      "message": "the '## Terms' section holds no terms. Write each one as an H3 heading."
     },
     {
       "file": "glossary/tref-unknown-term.md",
@@ -47,14 +47,14 @@
       "line": 24,
       "severity": "error",
       "check": "clause-table",
-      "message": "the '## Clauses' section holds no table — write one row per obligation, headed 'Id | Clause | Alignment'."
+      "message": "the '## Clauses' section holds no table. Write one row per obligation, headed 'Id | Clause | Alignment'."
     },
     {
       "file": "policies/bold-binding-not-bold.md",
       "line": 27,
       "severity": "error",
       "check": "clause-modal",
-      "message": "'MUST' binds — write it bold, `**MUST**`."
+      "message": "'MUST' binds. Write it bold, `**MUST**`."
     },
     {
       "file": "policies/case-lower-clause-id.md",
@@ -68,14 +68,14 @@
       "line": 28,
       "severity": "warning",
       "check": "clause-compound",
-      "message": "clause 'CLEAN' carries a second 'MUST' — one obligation per clause, or the citation is ambiguous."
+      "message": "clause 'CLEAN' carries a second 'MUST': one obligation per clause, or the citation is ambiguous."
     },
     {
       "file": "policies/coln-colon-separator.md",
       "line": 16,
       "severity": "error",
       "check": "part-ref",
-      "message": "'pol-COLN:CLEAN' separates the two halves with a colon — write 'pol-COLN.CLEAN'."
+      "message": "'pol-COLN:CLEAN' separates the two halves with a colon. Write 'pol-COLN.CLEAN'."
     },
     {
       "file": "policies/cref-unknown-clause.md",
@@ -89,42 +89,42 @@
       "line": 28,
       "severity": "error",
       "check": "part-id-unique",
-      "message": "two clauses here address as 'SAME' — a citation of it names both and reaches neither."
+      "message": "two clauses here address as 'SAME': a citation of it names both and reaches neither."
     },
     {
       "file": "policies/empt-no-rows.md",
       "line": 25,
       "severity": "error",
       "check": "clause-table",
-      "message": "the clause table has no rows — a record that binds nothing binds nobody."
+      "message": "the clause table has no rows: a record that binds nothing binds nobody."
     },
     {
       "file": "policies/head-wrong-headers.md",
       "line": 26,
       "severity": "error",
       "check": "clause-table",
-      "message": "the clause table is headed 'Ref | Obligation' — it must be headed 'Id | Clause | Alignment'."
+      "message": "the clause table is headed 'Ref | Obligation'. It must be headed 'Id | Clause | Alignment'."
     },
     {
       "file": "policies/moda-no-modal.md",
       "line": 28,
       "severity": "error",
       "check": "clause-modal",
-      "message": "clause 'We will trigger clause-modal and nothing else' does not open with a modal — write one of MUST, MUST NOT, SHOULD, COULD."
+      "message": "clause 'We will trigger clause-modal and nothing else' does not open with a modal. Write one of MUST, MUST NOT, SHOULD, COULD."
     },
     {
       "file": "policies/nota-clauses-as-bullets.md",
       "line": 24,
       "severity": "error",
       "check": "clause-table",
-      "message": "the '## Clauses' section holds no table — write one row per obligation, headed 'Id | Clause | Alignment'."
+      "message": "the '## Clauses' section holds no table. Write one row per obligation, headed 'Id | Clause | Alignment'."
     },
     {
       "file": "policies/ordr-out-of-order.md",
       "line": 28,
       "severity": "warning",
       "check": "clause-order",
-      "message": "clause 'SECND' is a 'MUST' but follows a 'MUST NOT' — group the table MUST, MUST NOT, SHOULD, COULD."
+      "message": "clause 'SECND' is a 'MUST' but follows a 'MUST NOT'. Group the table MUST, MUST NOT, SHOULD, COULD."
     },
     {
       "file": "policies/refs-unknown-document.md",
@@ -138,7 +138,7 @@
       "line": 28,
       "severity": "error",
       "check": "clause-id-format",
-      "message": "clause id 'CLEAN' is not a code span — write it as `CLEAN`."
+      "message": "clause id 'CLEAN' is not a code span. Write it as `CLEAN`."
     }
   ]
 }

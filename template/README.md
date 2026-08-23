@@ -1,4 +1,4 @@
-# `template` — what a corpus is made of
+# `template`: what a corpus is made of
 
 Everything a corpus receives is authored here: the machine-readable schema `kac` enforces, the framework's own
 documentation, the tree a corpus's plugin is built from, and the pages and templates a corpus starts writing against.

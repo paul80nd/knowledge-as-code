@@ -3,7 +3,7 @@ using kac.core;
 // In-process unit tests for the pass that reads the schema itself. Built from in-memory objects,
 // because what each case pins is a single declaration held against a single dispatch table, and a
 // fixture would have to carry a whole broken type file to say the same thing. The fixture that does
-// carry one — tests/fixtures/schema-declarations — is there to prove the findings reach the CLI.
+// carry one is tests/fixtures/schema-declarations, and it is there to prove the findings reach the CLI.
 //
 // Every case is a declaration a schema can carry that nothing else would report, and each was found in
 // a real schema rather than imagined for a test.
@@ -40,12 +40,12 @@ public class SchemaCheckTests
         Export = export
     };
 
-    // The tiers a type may claim, and the field that admits them, as a sound schema carries them — so a
+    // The tiers a type may claim, and the field that admits them, as a sound schema carries them. So a
     // case declaring nothing about tiers reports nothing about them. CheckTiers has its own cases below.
     private static readonly string[] TierNames = ["decided", "normative", "descriptive", "procedural", "observed"];
 
     // What `_checks.yaml` carries in a sound schema: an entry for every id the rule classes report
-    // under. Defaulted here for the same reason the tiers are — a case about a field should not also
+    // under. Defaulted here for the same reason the tiers are: a case about a field should not also
     // report that the catalogue is incomplete.
     private static IReadOnlyList<CheckDef> SoundChecks() =>
         [.. CheckCatalogue.EmittedByRules().Select(id => new CheckDef(id, Sev.Warning, "It is checked."))];
@@ -105,7 +105,7 @@ public class SchemaCheckTests
     }
 
     // A rule with no severity is an intention, and the type page renders it as one. Nothing about it is
-    // a defect — it is the state most of the taxonomy's rules are honestly in.
+    // a defect: it is the state most of the taxonomy's rules are honestly in.
     [Fact]
     public void A_rule_with_no_severity_is_an_intention_and_passes()
         => Assert.Empty(Check(Widgets(
@@ -336,7 +336,7 @@ public class SchemaCheckTests
     }
 
     // Required where `label:` is not, because a singular can be derived from the type name and a plural
-    // cannot — an `s` appended to `nfr` is not "NFRs".
+    // cannot: an `s` appended to `nfr` is not "NFRs".
     [Fact]
     public void A_type_that_does_not_name_its_collection_is_reported()
     {

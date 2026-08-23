@@ -30,8 +30,8 @@ public static class Yaml
                 yield return (((YamlScalarNode)kv.Key).Value ?? "", kv.Value);
     }
 
-    // A plain `null` or `~` reads as absent, not as the four-character string "null" — the same rule
-    // the validator applies to a document's frontmatter, applied to the schema that declares it. The
+    // A plain `null` or `~` reads as absent, not as the four-character string "null". That is the same
+    // rule the validator applies to a document's frontmatter, applied to the schema that declares it. The
     // schema writes `folder: null` and `prefix: null` where a type has neither, and without this a
     // folderless type is one whose folder is named "null": every emptiness test downstream silently
     // passes. Plain style only, so a value quoted "null" is still the string someone meant.

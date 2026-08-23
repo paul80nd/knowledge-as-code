@@ -5,8 +5,8 @@ using Markdig.Syntax;
 namespace kac.core;
 
 // Everything a rule expression is allowed to ask about a document, and the whole of it. Each answer
-// reads what the parse pass already produced — the evaluator never re-parses markdown — so adding a
-// fact means adding one method here and one entry to RuleExpr's function table, and never touching
+// reads what the parse pass already produced, and the evaluator never re-parses markdown. So adding
+// a fact means adding one method here and one entry to RuleExpr's function table, and never touching
 // the grammar.
 //
 // Built per document and discarded after its rules have run, which is what makes the measurements it
@@ -30,8 +30,8 @@ public sealed class Facts(Doc doc)
     public bool Section(string title) =>
         doc.Sections.Any(s => string.Equals(s.Title, title, StringComparison.OrdinalIgnoreCase));
 
-    // How many times that heading appears. `section()` answers whether a document has one; this answers
-    // whether it has more than one, which is a different fault — a page carrying two of a heading that
+    // How many times that heading appears. `section()` answers whether a document has one. This answers
+    // whether it has more than one, which is a different fault: a page carrying two of a heading that
     // names the thing it is about is two documents that have been filed as one.
     public int SectionCount(string title) =>
         doc.Sections.Count(s => string.Equals(s.Title, title, StringComparison.OrdinalIgnoreCase));
@@ -52,7 +52,7 @@ public sealed class Facts(Doc doc)
 
     // A pattern asked of one frontmatter scalar, which `matches()` deliberately cannot reach: the body
     // is prose and the frontmatter is fields, and a field is judged against what its own declaration
-    // says. False for an absent field, so a rule about a value guards nothing — whether the field ought
+    // says. False for an absent field, so a rule about a value guards nothing. Whether the field ought
     // to be there is `required-field`'s question, asked in better words.
     public bool FieldMatches(string name, string pattern) =>
         doc.FrontScalar(name) is { Length: > 0 } value && Pattern(pattern).IsMatch(value);
@@ -64,7 +64,7 @@ public sealed class Facts(Doc doc)
         SectionText(title) is { } text && Pattern(pattern).IsMatch(text);
 
     // Words of prose: every heading and paragraph the document renders, and nothing else. Frontmatter
-    // is excluded because it is not prose, and fenced code with it — neither carries inline content, so
+    // is excluded because it is not prose, and fenced code with it. Neither carries inline content, so
     // both fall out of the walk rather than needing to be skipped. Whitespace-separated runs, which is
     // what a person means when they say a Y-statement is too long.
     public int Words() => words ??= CountWords();
@@ -75,7 +75,7 @@ public sealed class Facts(Doc doc)
 
     private string? body;
 
-    // The source of one section — the first of them, where a document repeats a heading, which is the
+    // The source of one section: the first of them, where a document repeats a heading, which is the
     // one a rule naming it means. Found on the heading text, because that is what the schema names a
     // section by everywhere else, and case-insensitively for the same reason `section()` is.
     private string? SectionText(string title) =>
