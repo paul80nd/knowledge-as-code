@@ -2,12 +2,14 @@
 
 [![kac][ci-badge]][ci] [![NuGet][nuget-badge]][nuget] [![Licence: MIT][licence-badge]][licence]
 
-A structured, validated knowledge corpus that people and AI sessions both read from and contribute to, and the tool that
-holds it to its shape.
+A **corpus** is one repository of knowledge documents that people and AI sessions both read from and contribute to.
+Plain Markdown in git, reviewed by pull request, published as a wiki. This repository holds one, the template it was
+copied from, and the tool that holds both to their shape.
 
-Plain markdown in git, reviewed by PR, published as a wiki. What makes it more than a folder of documents is that
-**every document has a type, and every type has a schema**. The tool builds each index from the records. A broken
-cross-reference fails CI rather than rotting quietly. Skills help an agent use and contribute to the corpus.
+What makes a corpus more than a folder of documents is that **every document has a type, and every type has a schema**.
+A document filed under a type is a **record**. `kac` builds each index from the records, so nobody maintains one by
+hand. A broken cross-reference fails CI rather than rotting quietly. Skills, which are instructions an agent loads when
+it needs them, say how to read the corpus and how to add to it.
 
 The argument for building it this way is in [`template/knowledge-as-code.md`](template/knowledge-as-code.md).
 
@@ -23,7 +25,7 @@ framework's own documentation, the plugin tree, and the pages and templates a co
 it receives again whenever it takes a newer framework.
 
 **[`example/`](example/README.md)** ... a complete corpus that took that template, run through the tool built beside it
-on every commit. It holds its own copy of everything the template overlays, plus a set of illustrative records about a
+on every commit. It holds its own copy of every file the template shares, plus a set of illustrative records about a
 fictional library consortium.
 
 No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is run
@@ -52,8 +54,8 @@ your `PATH` to drop the `./`. The explicit form works the same way, and is what 
 
 ### As an installed tool, packed here
 
-`kac` packs as the dotnet tool `KnowledgeAsCode.Tool`. Packing it yourself is how to try a change to the tool exactly as
-a corpus will receive it, before the version carrying it is published.
+`kac` packs as the dotnet tool `KnowledgeAsCode.Tool`. Pack it yourself to try a change to the tool exactly as a corpus
+will receive it, before the version carrying it is published.
 
 ```bash
 dotnet pack tooling/kac/kac.csproj -o .dist/pack
@@ -90,8 +92,8 @@ dotnet tool run kac validate
 ```
 
 A push to `main` publishes the tool whenever it carries a `<Version>`
-[nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) does not already hold, then tags the commit and opens
-the release for it. [`tooling/README.md`](tooling/README.md#building) says how that version moves, and
+[nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) does not already hold. That publish tags the commit and
+opens the release for it. [`tooling/README.md`](tooling/README.md#building) says how that version moves, and
 [`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) says what each version carried.
 
 Every command, one document apiece, is in [`tooling/features/`](tooling/features/).
