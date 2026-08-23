@@ -6,7 +6,8 @@
 ## Writing here
 
 **Load `technical-writing`, then `writing-in-the-tool`.** Between them they carry every rule for the comments and for
-the prose pages under `tooling/`, this one included.
+the prose pages under `tooling/`, this one included. [`kac/PACKAGE.md`](kac/PACKAGE.md) is the exception: nuget.org
+renders it for somebody who has installed nothing, so it takes `writing-the-docs` instead.
 
 ## Running `kac` here
 

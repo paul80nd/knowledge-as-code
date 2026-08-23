@@ -13,6 +13,10 @@ that copy. The tool finds a corpus by walking up for a `.schema/`, so it reads `
 copied the template. It describes that corpus rather than this repository, so read it as content you may need to
 change. The schema page beside it is the same file as `example/`'s, for the reason below.
 
+**Load `technical-writing`, then `writing-the-docs`, before you change [`README.md`](README.md) or
+[`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md).** Both are read by somebody who has installed nothing and has
+nobody here to ask.
+
 ## Two trees hold the same file
 
 `.schema/` and everything else the overlay layer names live once in `template/` and again in `example/`, and

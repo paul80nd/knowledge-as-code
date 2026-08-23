@@ -1,11 +1,14 @@
 # kac: knowledge as code
 
-`kac` validates and generates a knowledge corpus: markdown records in git, each with a type, and each type with a
-machine-readable schema the corpus carries in `.schema/`. An index is generated rather than maintained, a broken
-cross-reference fails CI rather than rotting quietly, and an agent can be told where a thing goes instead of guessing.
+`kac` reads a folder of markdown documents kept in git and holds each one to a schema. The folder a document sits in
+names its type, and each type declares its fields and rules in a YAML file beside them. That whole folder is a
+**corpus**, meaning one repository of knowledge records.
 
-The tool holds no type-specific rules. Everything it enforces is read from the corpus's own schema, so adding a
-knowledge type is adding a YAML file rather than changing the tool.
+What the structure buys you: indexes built from the documents themselves, and a broken cross-reference that fails CI
+rather than rotting quietly. An agent contributing to the corpus can be told where a document goes.
+
+`kac` carries no rules about any particular type. It reads what to enforce from the schema the corpus holds, so you add
+a knowledge type by writing a YAML file.
 
 ## Install
 
@@ -37,11 +40,13 @@ escapes in its logs turns it back on. `--json` never carries colour anywhere.
 | `1`  | A corpus error, or a bad invocation.                                          |
 | `2`  | A verb found no corpus. `--version` and `--help` need none and answer anyway. |
 
-## What a corpus is made of, and where the rest lives
+## Where to go next
 
-A corpus is a folder of typed markdown plus the `.schema/` describing those types. Documentation for the framework, the
-record types, and the reference for each command are in the repository this tool is built from:
+The repository this tool is built from carries the framework's documentation, a page for each record type, and a
+reference for every command:
 
 **<https://github.com/paul80nd/knowledge-as-code>**
+
+It also holds a worked corpus you can read before you write your own.
 
 Released under the MIT licence.

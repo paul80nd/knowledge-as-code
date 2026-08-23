@@ -1,0 +1,61 @@
+---
+name: writing-the-docs
+description: How to write the public face of this project. Covers the root `README.md`, `PACKAGE.md` as nuget.org renders it, and the documentation site. Load it after `technical-writing` whenever you write or change a page addressed to somebody who does not yet use this.
+---
+
+# Writing the docs
+
+Load `technical-writing` first. Everything below either adds to it or says plainly which of its rules it overrides.
+
+**The reader has no corpus, no checkout and nobody to ask.** They arrived from a package page, a search or the
+repository, and they have installed nothing. Everything they need is on the page or one link from it.
+
+**They decide in a paragraph whether to keep reading.** That paragraph says what the thing is, in words they already
+have.
+
+## What this overrides
+
+* **"Gloss a precise term on first use."** The floor's rule stands here, and keeping it is the one thing this voice
+  does that both the others undo. `writing-a-record` drops it because the corpus has a glossary. `writing-in-the-tool`
+  drops it because the reader maintains the tool. This reader has neither.
+  The framework carries its own vocabulary in
+  [`knowledge-as-code.md`](../../../example/glossary/knowledge-as-code.md): corpus, record, type, tier, layer,
+  mechanism, drift, forked, synced, upstream and the rest. Gloss each on its first use **on every page**, because a
+  reader arrives in the middle of the set rather than at the front of it.
+  Write: "a corpus, meaning one repository of knowledge records."
+* **"Write 'we' for us and 'you' for the reader."** Narrowed: a public page says **you**, and never **we**. No
+  commitment is being made here and no organisation is making it. Name `kac`, or the framework, or the corpus, and let
+  it act.
+  Write: "`kac` builds each index from the records." Not: "We generate the indexes for you."
+* **Nothing else.** Where the floor and this page appear to disagree anywhere below, the floor wins.
+
+## Say what it is before you say what it is unlike
+
+**The opening paragraph names the thing.** A definition built on a contrast asks a reader to hold two ideas when they
+have not got the first one yet.
+Write: "`kac` reads a folder of markdown records and holds each one to the schema its type declares."
+
+**Three contrasts in a row is the shape to watch for.** It reads as rhythm and lands as nothing, and it is where this
+project's prose goes wrong when it is trying to sound confident.
+Cut: "An index is generated rather than maintained, a broken cross-reference fails CI rather than rotting quietly, and
+an agent can be told where a thing goes instead of guessing."
+
+[`README.md`](../../../README.md) at the repository root carries the register to match. It runs at about four contrasts
+per thousand words, in sentences averaging sixteen. Count yours the same way and read what you find, as the floor says.
+
+## Get the reader to a command
+
+**A command appears before the explanation of why it exists.** Somebody deciding whether to install this wants to see
+what running it looks like.
+
+**A command works on a clean machine**, or the line above it names what has to be there first.
+
+**A comment beside a command says what that command does.**
+Write: `kac validate     # frontmatter, links, structure, clauses and the graph`
+
+## Leave the reader somewhere to go
+
+**A page names what to read next.** One link, chosen for where the reader now is. A list of everything is the same as
+no link at all.
+
+**No page assumes another was read first**, unless it links that page in the sentence that needs it.
