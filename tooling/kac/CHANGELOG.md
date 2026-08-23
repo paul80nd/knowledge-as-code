@@ -13,7 +13,7 @@ surface may still change shape.
 A push to `main` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and that publish tags
 the commit and opens a release carrying the section for that version.
 
-## Unreleased
+## 0.3.0 - 2026-08-23
 
 ### Added
 
