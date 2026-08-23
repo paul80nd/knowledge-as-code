@@ -1,4 +1,4 @@
-# `checks`: the catalogue printed
+# `checks`: list every check the validator can report
 
 <!-- BEGIN GENERATED: usage-checks -->
 

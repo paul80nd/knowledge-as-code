@@ -1,4 +1,4 @@
-# `checks`: where a check comes from
+# Checks: where a check comes from
 
 ## Intent
 

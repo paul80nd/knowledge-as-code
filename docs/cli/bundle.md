@@ -1,4 +1,4 @@
-# `bundle`: the export as something installable
+# `bundle`: assemble the export into an installable plugin
 
 <!-- BEGIN GENERATED: usage-bundle -->
 

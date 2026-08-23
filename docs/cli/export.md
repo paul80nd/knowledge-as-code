@@ -1,4 +1,4 @@
-# `export`: the corpus as data
+# `export`: write the corpus out as data a consumer can read
 
 <!-- BEGIN GENERATED: usage-export -->
 

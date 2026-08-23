@@ -1,4 +1,4 @@
-# `mechanism`: portability
+# `mechanism`: compare a corpus against upstream, or sync from it
 
 <!-- BEGIN GENERATED: usage-mechanism -->
 

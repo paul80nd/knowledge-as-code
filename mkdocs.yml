@@ -66,17 +66,19 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
 
+# The verb alone in the sidebar. Each page's own heading then says what that verb does, which is the line
+# a reader wants once they are on the page and noise in a list of eight.
 nav:
   - Introduction: index.md
   - Getting started: getting-started.md
   - CLI reference:
-      - cli/validate.md
-      - cli/generate.md
-      - cli/export.md
-      - cli/bundle.md
-      - cli/checks.md
-      - cli/mechanism.md
-      - cli/new.md
-      - cli/update.md
+      - validate: cli/validate.md
+      - generate: cli/generate.md
+      - export: cli/export.md
+      - bundle: cli/bundle.md
+      - checks: cli/checks.md
+      - mechanism: cli/mechanism.md
+      - new: cli/new.md
+      - update: cli/update.md
   - The corpus descriptor: corpus-descriptor.md
   - Checks: checks.md

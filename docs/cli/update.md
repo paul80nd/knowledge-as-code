@@ -1,4 +1,4 @@
-# `update`: a corpus brought back into step
+# `update`: take a newer framework into a corpus
 
 > **Draft, pending implementation.** This page is the specification `kac update` is built to, written before the command
 > exists. It describes the command as it will be, in the same voice as its siblings, and becomes an ordinary feature

@@ -1,4 +1,4 @@
-# `validate`: the corpus read and reported on
+# `validate`: check the corpus against its schema
 
 <!-- BEGIN GENERATED: usage-validate -->
 
