@@ -14,7 +14,8 @@ stores they live in. The rest of the record says how sensitive they are, how lon
 Two readers arrive with different questions. Someone building a feature wants to know where bookings actually live and
 which service owns them. Ask around and the answers disagree. Someone answering an auditor wants to know what personal
 data we hold and how long we keep it. Nobody should have to read a database schema to answer that. A data document
-answers the first question the same way every time, and gives the [policy](policies.md) tier its evidence for the second.
+answers the first question the same way every time, and gives the [policy](policies.md) tier its evidence for the
+second.
 
 An author filling in `owned-by` also finds the entities that two services both believe they own. That disagreement is a
 design problem worth finding on paper.

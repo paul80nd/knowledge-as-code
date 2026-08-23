@@ -33,8 +33,8 @@ Acceptance criteria go in ADO.
 Related but different:
 
 * **Spec**: how standards apply to one concrete contract. It lives in the repository that owns the feature, beside its
-  OpenAPI document and feature files. [ADRs](adrs.md) split the same way: cross-repo synthesis here, feature-level detail
-  with the code.
+  OpenAPI document and feature files. [ADRs](adrs.md) split the same way: cross-repo synthesis here, feature-level
+  detail with the code.
 * **[Service](services.md)**: a thing we deploy. A capability is a thing a customer gets.
 * **[Explanation](explanations.md)**: how something works internally. A capability is what it does externally.
 

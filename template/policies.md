@@ -10,8 +10,9 @@ A policy states what we commit to and why. It is durable, it is written at the l
 technology: *"secrets are never stored in source control"*, *"quality checks are gates, not advisories"*, *"changes to
 non-development environments go through the pipeline"*.
 
-Policies sit at the top of the normative hierarchy. A policy says what we hold true, a [standard](standards.md) says what
-to do about it, a [control](controls.md) says how we know it happened, and a [process](processes.md) says how to do it.
+Policies sit at the top of the normative hierarchy. A policy says what we hold true, a [standard](standards.md) says
+what to do about it, a [control](controls.md) says how we know it happened, and a [process](processes.md) says how to
+do it.
 
 ## Why we use them
 
@@ -39,8 +40,8 @@ a tool, a framework or a protocol, it is a [standard](standards.md).
 | "Secrets are never stored in source control."   | "Services **MUST** read secrets from Key Vault via workload identity." |
 | "Quality checks are gates that fail the build." | "ESLint **MUST** run with `--max-warnings 0`."                         |
 
-A policy commits and a [control](controls.md) verifies, so the two are never the same document. An [ADR](adrs.md) records
-one decision and the alternatives weighed against it, where a policy states a position we hold across all such
+A policy commits and a [control](controls.md) verifies, so the two are never the same document. An [ADR](adrs.md)
+records one decision and the alternatives weighed against it, where a policy states a position we hold across all such
 decisions.
 
 ## Categories

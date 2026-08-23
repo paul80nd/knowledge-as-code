@@ -27,8 +27,8 @@ Two other types sit close enough to confuse:
 
 * **[FAQ](faqs.md)**: a known problem with a known fix, usually one or two steps, no urgency. If it needs a diagnosis
   tree and an escalation path, it is a runbook.
-* **[Postmortem](postmortems.md)**: an account of an incident that happened. A runbook gives instructions for an incident
-  that has not happened yet. A good postmortem frequently produces a runbook.
+* **[Postmortem](postmortems.md)**: an account of an incident that happened. A runbook gives instructions for an
+  incident that has not happened yet. A good postmortem frequently produces a runbook.
 
 Disaster recovery and rebuilding the estate from nothing belong here. You rehearse them deliberately, which makes them
 look like processes. You open the document on a day when the estate is already down.

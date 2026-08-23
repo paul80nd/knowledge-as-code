@@ -34,8 +34,8 @@ checked.
 Anything that can fail a build, block a merge, raise an alert or produce an audit artefact is a control. Anything that
 tells you what to do is a standard.
 
-A control names the [services](services.md) it applies to, because a control with no scope is one nobody owns. One control
-may verify several rules, and one rule may need several controls.
+A control names the [services](services.md) it applies to, because a control with no scope is one nobody owns. One
+control may verify several rules, and one rule may need several controls.
 
 ## Metadata
 
