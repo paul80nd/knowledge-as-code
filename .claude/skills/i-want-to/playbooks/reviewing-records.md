@@ -32,17 +32,26 @@ twenty-two documents that `clause-modal` requires it in.
 * **Never change frontmatter**, beyond a demonstrable error in the record in front of you, and say so where you do. The
   same error across a folder is a migration to report rather than a review edit.
 * **Never delete a required section.** An empty one is a content gap to report.
-* **Never edit a `_template.md` or a `<type>.md`.** See *Template defects* below.
+* **Never edit a `_template.md` or a `<type>.md`.** See *Template defects* below. Where the request is *about* one of
+  those files rather than about the records, this is the wrong playbook: run
+  [sweeping-prose](sweeping-prose.md), whose step 8 is the only one covering them.
 
 ## The procedure
 
-1. **Establish scope.** One record, a folder, or a named set. Asked to review "the corpus", propose an order and
-   confirm it. Do not silently review a hundred documents.
+1. **Establish scope, and count what is in it.** One record, a folder, or a named set. Asked to review "the corpus",
+   propose an order and confirm it. Do not silently review a hundred documents.
+   **A type folder here usually holds nothing.** Three of the seventeen hold any record at all, so a folder named in a
+   request may have only its `_index.md` and `_template.md`, both of which the never-list puts out of reach. Say so and
+   agree what was meant before going further.
+   **Test the claim the request makes.** "These are verbose" and "there are semicolons everywhere" are counts, and a
+   count that comes back small or empty is the answer rather than the start of one.
 2. **Run `kac validate` and expect it clean.** CI gates the branch, so a clean corpus is the normal state. It is your
    regression baseline rather than a source of findings, and it hands you no starting list.
 3. **Establish which text rules reach this type.** `kac checks` lists what the validator implements; the type's `rules:`
    block lists what the type declares. A declared rule with no code behind it binds you exactly as much as one that
    fails the build. Most types declare none, and for `services/` not one fires.
+   **A rule can bind and appear in neither.** The prose rules live only in the skills, so a mark the floor governs is
+   invisible to `kac checks` and to the schema. Read the floor before concluding that nothing reaches this type.
 4. **Load `technical-writing` and `writing-a-record`**, then the type's root page and its template.
 5. **Per record:** read the frontmatter for `tier` and `status`, then read the record whole before changing anything.
    Edit at the scale the findings interact at. What must be whole is the result, so a reader arriving cold cannot tell
@@ -52,8 +61,10 @@ twenty-two documents that `clause-modal` requires it in.
    change neither.
 7. **Walk the categories below once each, over the whole set.** A reviewer settles into whichever category the first
    record rewarded and finishes feeling finished. Naming them in turn is what makes two runs agree.
-8. **Run `kac validate` again**, and `kac generate` where any frontmatter changed.
-9. **Propose rather than commit.** Run [opening-a-pull-request](opening-a-pull-request.md) only if asked.
+8. **Check the second tree.** `template/` holds its own copy of every type page and template. Those are `seed`, so
+   `TemplateTests` does not hold them equal and nothing catches drift. A record under `example/` has no twin.
+9. **Run `kac validate` again**, and `kac generate` where any frontmatter changed.
+10. **Propose rather than commit.** Run [opening-a-pull-request](opening-a-pull-request.md) only if asked.
 
 ## What to look for
 

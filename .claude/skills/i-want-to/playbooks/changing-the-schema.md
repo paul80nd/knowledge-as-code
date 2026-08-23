@@ -7,10 +7,16 @@
    field-order trap, and the test for whether a rule needs C#.
 2. **Check the question is not already answered.** A `reciprocal:`, a `mirrors-section:`, a `required-when:`, a scalar
    type or a required section may already say it. Each has been written out as a rule at some point.
-3. **Make the edit.** A new key means an edit to `Schema.cs`, to the code reading what it parsed into, and to
-   `meta/type.schema.json` in the same change. A value nothing dispatches fails `schema-dispatch` one step later.
-4. **Add the field to `<type>/_template.md` by hand.** Nothing generates a template. `template-fields` catches a
-   required field you left out and says nothing about an optional one.
+3. **Make the edit.** A field using keys the schema language already has costs nothing in C#. A key the language does
+   **not** have means an edit to `Schema.cs`, to the code reading what it parsed into, and to `meta/type.schema.json`
+   in the same change. A value nothing dispatches fails `schema-dispatch` one step later.
+   Where the obligation is conditional, `required-when:` is the existing key and it always reports an error. A
+   should-have-done-this is a rule with an `expr:`, which chooses its own severity. Check what the type's neighbouring
+   obligations do before making this one harsher than they are.
+4. **Add the field to `<type>/_template.md` by hand, in both trees.** Nothing generates a template, and a template is
+   `seed`, so nothing holds the two copies equal. `template-fields` reads `Required` alone: it catches a required field
+   you left out, and says nothing about an optional one **or a `required-when:` one**. For a conditionally required
+   field this step is the only thing standing between it and every document copied from the template.
 5. **Write the `description:` and `notes:` to `technical-writing` and then `writing-a-record`.** The generator prints
    them onto the type page, so they are read by an author rather than by you.
 6. **Run `kac generate` in both corpora**, then `kac validate` in both.

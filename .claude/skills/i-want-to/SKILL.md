@@ -1,6 +1,6 @@
 ---
 name: i-want-to
-description: Route a piece of work in this repository to the playbook carrying its steps. Covers writing and reviewing a record, changing the schema, changing `kac`, adding a knowledge type, sweeping prose, writing the public documentation, and opening a pull request. Load it before planning any of those, and whenever somebody types /i-want-to.
+description: Route a piece of work in this repository to the playbook carrying its steps. Load it before planning any change here, however the request was phrased: "tidy up", "have a look at", "get rid of", "review", "clean up", "fix" and "add" all land somewhere in it. Covers writing and reviewing a record, changing the schema, changing `kac`, adding a knowledge type, sweeping prose, writing the public documentation, and opening a pull request. Also whenever somebody types /i-want-to.
 ---
 
 # I want to
@@ -14,6 +14,11 @@ allowed.
 
 **Where no playbook fits, say so and work without one.** Forcing a task into the nearest playbook is worse than carrying
 none.
+
+**Count first, from the files, whatever the playbook says.** A request carries a claim about the corpus and the claim
+is often wrong. "The runbooks are verbose" named a folder holding no records. "Semicolons all over the policies" was
+five, every one of them the mark the floor keeps. Establish that the thing exists and how much of it there is before
+planning what to do about it, and report the count where it answers the request on its own.
 
 ## The playbooks
 
