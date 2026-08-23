@@ -1,5 +1,18 @@
 # `export`: the corpus as data
 
+<!-- BEGIN GENERATED: usage-export -->
+
+```text
+kac export [--no-color] [--type <TYPE>]
+```
+
+| Option          | What it does                                                |
+|-----------------|-------------------------------------------------------------|
+| `--no-color`    | Turn colour off. NO_COLOR in the environment does the same. |
+| `--type <TYPE>` | Export one type rather than every type that contributes.    |
+
+<!-- END GENERATED: usage-export -->
+
 ## Intent
 
 A consumer of a corpus should not clone it. `export` writes what the corpus knows into `.dist/export/` as data built for

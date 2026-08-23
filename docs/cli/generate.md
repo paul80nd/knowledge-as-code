@@ -1,5 +1,18 @@
 # `generate`: the derived half of a corpus
 
+<!-- BEGIN GENERATED: usage-generate -->
+
+```text
+kac generate [--check] [--no-color]
+```
+
+| Option       | What it does                                                |
+|--------------|-------------------------------------------------------------|
+| `--check`    | Fail if a generated file is stale instead of writing it.    |
+| `--no-color` | Turn colour off. NO_COLOR in the environment does the same. |
+
+<!-- END GENERATED: usage-generate -->
+
 ## Intent
 
 `generate` regenerates the content of a corpus that is derived from frontmatter and the schema, so that nobody

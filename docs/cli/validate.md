@@ -1,5 +1,18 @@
 # `validate`: the corpus read and reported on
 
+<!-- BEGIN GENERATED: usage-validate -->
+
+```text
+kac validate [--json] [--no-color]
+```
+
+| Option       | What it does                                                |
+|--------------|-------------------------------------------------------------|
+| `--json`     | Emit the summary and findings as JSON.                      |
+| `--no-color` | Turn colour off. NO_COLOR in the environment does the same. |
+
+<!-- END GENERATED: usage-validate -->
+
 ## Intent
 
 `validate` is the command CI runs over a corpus, and the one an author runs before pushing. It decides which files are

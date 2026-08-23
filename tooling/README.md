@@ -77,12 +77,18 @@ Every command has a page at <https://paul80nd.github.io/knowledge-as-code/>, bui
 and published by [`publish-docs.yml`](../.github/workflows/publish-docs.yml). `../mkdocs.yml` names the pages and the
 order they read in, and a page reachable from no nav entry fails the build rather than going quietly unread.
 
-Each command page follows the same sections in this order: **Intent**, **What it is not**, **Approach**, **Decisions**,
-**Known limits**. It is prose throughout and not a form. A heading with nothing true to say is left out, because filler
-reads as an answer where an absence reads as work not yet done. Reasons stay inline in **Approach**, beside whatever
-they explain. **Decisions** takes only the ones belonging to a command as a whole.
+A command page opens with a usage block generated from the parser's own command model, and `CliReferenceTests` holds it
+to matching. A command that grows an option gets its page back in step with
+`KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests`. Read the diff afterwards, because the update blesses a regression as
+happily as a fix.
+
+Beneath that block, each page follows the same sections in this order: **Intent**, **What it is not**, **Approach**,
+**Decisions**, **Known limits**. It is prose throughout and not a form. A heading with nothing true to say is left out,
+because filler reads as an answer where an absence reads as work not yet done. Reasons stay inline in **Approach**,
+beside whatever they explain. **Decisions** takes only the ones belonging to a command as a whole.
 
 `new.md` and `update.md` are specifications written before their commands exist, and say so at their head.
+`CliReferenceTests` is what holds them to saying it.
 
 [`CLAUDE.md`](CLAUDE.md) is what will bite you while changing any of it.
 

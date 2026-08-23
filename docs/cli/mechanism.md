@@ -1,5 +1,20 @@
 # `mechanism`: portability
 
+<!-- BEGIN GENERATED: usage-mechanism -->
+
+```text
+kac mechanism [--against <PATH>] [--check] [--no-color] [--sync]
+```
+
+| Option             | What it does                                                                         |
+|--------------------|--------------------------------------------------------------------------------------|
+| `--against <PATH>` | Reference corpus (a path). Defaults to upstream.url in .corpus.yaml.                 |
+| `--check`          | Compare the shared layers against a reference and report drift; never writes.        |
+| `--no-color`       | Turn colour off. NO_COLOR in the environment does the same.                          |
+| `--sync`           | Take the shared layers from the reference, then record what it took in .corpus.yaml. |
+
+<!-- END GENERATED: usage-mechanism -->
+
 ## Intent
 
 A corpus takes the framework as a copy (the validator, the schema, and the documents describing how the system works),

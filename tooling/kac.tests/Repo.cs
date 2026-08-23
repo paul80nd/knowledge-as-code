@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace kac.tests;
 
 // The repository, found by the solution at its root. A corpus is what `kac` walks up for; what the tests using this
@@ -8,6 +10,13 @@ namespace kac.tests;
 internal static class Repo
 {
     internal static readonly string Root = Find();
+
+    // The `kac` the CLI reference asks for its usage. Its path is stamped into this assembly by kac.tests.csproj,
+    // because only the build knows which configuration it put the executable in.
+    internal static readonly string KacAssembly =
+        typeof(Repo).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+            .First(a => a.Key == "KacAssembly").Value
+        ?? throw new InvalidOperationException("kac.tests: no 'KacAssembly' metadata. kac.tests.csproj stamps it.");
 
     private static string Find()
     {

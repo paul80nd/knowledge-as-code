@@ -1,5 +1,18 @@
 # `checks`: the catalogue printed
 
+<!-- BEGIN GENERATED: usage-checks -->
+
+```text
+kac checks [--json] [--no-color]
+```
+
+| Option       | What it does                                                |
+|--------------|-------------------------------------------------------------|
+| `--json`     | Emit the check catalogue as JSON.                           |
+| `--no-color` | Turn colour off. NO_COLOR in the environment does the same. |
+
+<!-- END GENERATED: usage-checks -->
+
 ## Intent
 
 `checks` prints every check the validator can emit against the corpus it is run in. It reads them from that corpus's

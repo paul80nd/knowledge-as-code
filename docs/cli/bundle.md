@@ -1,5 +1,17 @@
 # `bundle`: the export as something installable
 
+<!-- BEGIN GENERATED: usage-bundle -->
+
+```text
+kac bundle [--no-color]
+```
+
+| Option       | What it does                                                |
+|--------------|-------------------------------------------------------------|
+| `--no-color` | Turn colour off. NO_COLOR in the environment does the same. |
+
+<!-- END GENERATED: usage-bundle -->
+
 ## Intent
 
 An export is data, and data has to be handed to something. `bundle` assembles what `export` wrote, plus the `.plugin/`
