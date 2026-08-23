@@ -74,10 +74,6 @@ rules:
       beside it and leaves this one alone. Matched by name because everything else in a type folder
       belongs to the corpus.
 
-  - path: ".claude/skills/**"
-    layer: overlay
-    note: Agent skills for working inside a corpus, and the same in every corpus that holds one.
-
   # ── the plugin ─────────────────────────────────────────────────────────────
 
   # Both `.plugin/` rules sit here, out of layer order, because the order is what decides. A

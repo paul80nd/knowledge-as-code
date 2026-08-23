@@ -137,15 +137,6 @@ rules:
       marketplace naming it. Untracked and rebuilt whole each run, so this is named here to be resolved
       rather than to be compared.
 
-  # ── synced ─────────────────────────────────────────────────────────────────
-
-  - path: ".claude/skills/**"
-    layer: synced
-    note: >
-      Agent skills for working on this corpus. `kb-review` reads a record against the
-      authoring and style rules and proposes rewrites. The rules below cover skills for
-      an agent working outside this corpus.
-
   # ── the plugin ─────────────────────────────────────────────────────────────
 
   # Both `.plugin/` rules sit here, out of layer order, because the order is what

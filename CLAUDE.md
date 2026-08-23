@@ -3,6 +3,9 @@
 This repository is not a corpus. It holds `kac`, the template a corpus is copied from, and one worked corpus that took
 that copy. The tool finds a corpus by walking up for a `.schema/`, so it reads `example/` and never this root.
 
+**Load `i-want-to` before you plan.** It routes the work to the playbook carrying its steps, and names the writing
+skill for the surface you are on.
+
 | Working on                                  | Read                                                     |
 |---------------------------------------------|----------------------------------------------------------|
 | a record, or anything else `example/` holds | [`example/CLAUDE.md`](example/CLAUDE.md)                 |
