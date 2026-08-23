@@ -1,4 +1,4 @@
-# `export` — the corpus as data
+# `export`: the corpus as data
 
 ## Intent
 
@@ -12,7 +12,7 @@ changing.
 
 **It is not `bundle`.** `export` produces data; [`bundle`](bundle.md) assembles that data and the `.plugin/` tree into
 something a consumer can install. Nothing here trims components, packages a plugin or publishes anything, and nothing
-here knows a bundle exists — `bundle` reads what this wrote and never the other way round.
+here knows a bundle exists. `bundle` reads what `export` wrote, and `export` reads nothing a bundle holds.
 
 **It is not `generate`.** `generate` writes into the corpus, for a person reading the corpus. `export` writes outside
 it, for something that will never open the Markdown. Both are built from the same frontmatter, and neither is derivable
@@ -30,7 +30,7 @@ must not leave an entry behind and no diff would show the orphan. And the manife
 say nothing about an export once it has left: it carries the commit it was built from and a dirty flag beside it,
 because a commit on its own would describe a dirty tree as reproducible. What holds the shape steady in place of a diff
 is a committed fixture in the framework's own test suite, which exports a corpus and compares the whole tree file by
-file — so a corpus that runs the tool without the tests receives a format already proved.
+file. A corpus that runs the tool without the tests therefore receives a format already proved.
 
 ```
 .dist/export/
@@ -41,13 +41,13 @@ file — so a corpus that runs the tool without the tests receives a format alre
 ```
 
 That tree is one corpus's, and the names in it are read from the schema. A type's directory is its own key, and its flat
-file is named for what the type calls one of its parts — `terms.jsonl` because a glossary's `parts:` block says
+file is named for what the type calls one of its parts: `terms.jsonl` because a glossary's `parts:` block says
 `noun: term`. Both are fixed once the type has declared them, because a skill addresses them by name.
 
 **The manifest is what makes the tree usable two ways.** A flat file is read whole and grepped, because a lookup does
 not know which record holds the term it wants. A record file is read one at a time, because a reader that has a hit
-wants the single file behind it. One large file would charge the second reader the first one's cost, and a bare tree of
-files would leave a reader nothing to orient on — which types are here, how many records and parts each holds, and where
+wants the single file behind it. One large file would charge the second reader the first one's cost. A bare tree of
+files would leave a reader nothing to orient on: which types are here, how many records and parts each holds, and where
 the flat file for one of them sits. The manifest answers that first, so a reader can choose.
 
 **Each type in the manifest carries two counts, named apart.** One is how many records it holds and the other how many
@@ -56,9 +56,9 @@ reader asking how many files it was handed wants the records. One number would b
 
 **What travels is the type's decision**, declared in its `export:` block and described in
 [`../../example/.schema/README.md`](../../example/.schema/README.md). The exporter reads that declaration and nothing
-else, so a corpus that adopted no exporting type still writes a manifest, with an empty type list — "nothing" is a valid
-statement of what a corpus has. Every entry in the block names a **fidelity** beside the piece it selects, saying how
-much of that piece travels, and no entry falls back to one.
+else. A corpus that adopted no exporting type still writes a manifest, with an empty type list, because "nothing" is a
+valid statement of what a corpus has. Every entry in the block names a **fidelity** beside the piece it selects, saying
+how much of that piece travels, and no entry falls back to one.
 
 **`--type` narrows what is written and never what is read.** The corpus is loaded whole whatever the flag says, so ids
 resolve against every record rather than against the handful a narrowed run happened to want: a question about the set,
@@ -77,26 +77,27 @@ manifest carries the two templates they go into.
 **`part` and `anchor` hold the same string, and that is an invariant rather than duplication.** The two answer different
 questions: a part's id is what a citation from elsewhere in the corpus resolves against, and an anchor is what a link's
 fragment has to be. A type that takes its parts from headings makes one string do both jobs, because a heading's slug is
-its id and its anchor alike — so every line of a glossary's flat file carries the pair equal. A line where they differ
-is a defect.
+its id and its anchor alike. Every line of a glossary's flat file therefore carries the pair equal. A line where they
+differ is a defect.
 
 **Records are ordered roots-by-id, each root's chain depth-first beneath it.** Terms sort alphabetically within a
 record. Generality holds **within a chain** and nowhere else: `gls-search` narrows `gls-example-libraries`, so a grep
 for `title` meets the general entry before the one refining it. Across unrelated roots the order is stable and says
-nothing — `record` is defined by `gls-example-libraries` and `gls-knowledge-as-code`, neither narrowing the other, and
-reading the first hit as the more general one would give a reader the wrong domain. `narrows` on the owning records is
+nothing: `record` is defined by `gls-example-libraries` and `gls-knowledge-as-code`, and neither narrows the other.
+Reading the first hit as the more general one would give a reader the wrong domain. `narrows` on the owning records is
 what tells the two cases apart, and every line names the record it came from.
 
 **A key name is a word the corpus may also define.** `record` and `title` are keys on every line and terms in this
 corpus's own glossary. Every line carries both keys, so a search for either hands back the whole file and identifies
 nothing in it. That is a property of the format rather than of the content, and it holds for any key named with an
-ordinary English noun — which is a constraint on what a type's `export:` block may call a field. The skill compensates
+ordinary English noun. That constraint reaches what a type's `export:` block may call a field. The skill compensates
 by reading each hit's `title` before it uses the hit: a line defines a term when its `title` says so, never because it
 matched.
 
 **A cross-reference is read, never inferred.** A `**Not:**` line pointing at another glossary is a link, and a link's
-target is stripped out of the prose — so the export carries the part it names in `seeAlso`, as `gls-search.title`. It
-resolves to the term rather than the record, because `redefinitions-are-reciprocal` is about a term and its counterpart.
+target is stripped out of the prose. The export therefore carries the part it names in `seeAlso`, as
+`gls-search.title`. It resolves to the term rather than the record, because `redefinitions-are-reciprocal` is about a
+term and its counterpart.
 
 A link naming a record and no term inside it leaves nothing to read, so nothing is carried. The obvious guess is the
 same word in the other glossary; it is right only for a pair that happens to share a spelling, and silently wrong for a
@@ -125,7 +126,7 @@ export was built from, so a citation names the version the agent read rather tha
 
 * **The ref is inside the template.** A ref left as a placeholder is forty hex characters copied by an agent, and a
   one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a substitution
-  can produce is a wrong path — visible, and correctable.
+  can produce is a wrong path, which the reader can see and correct.
 * **Only the human template takes an anchor.** Raw source has no fragment to honour, so the asymmetry is a property of
   the templates rather than a rule each reader has to remember.
 * **The bases are not carried beside them.** They are in the templates already, and a manifest stating one address twice
@@ -150,12 +151,12 @@ which of the four caused it. A term line is unaffected: `path` and `anchor` are 
 where it is published, and they travel either way.
 
 **Two versions, and they are independent.** `formatVersion` in the manifest is the shape of the output. `contentVersion`
-is `content-version` from `.corpus.yaml` — what the corpus knows, semantically versioned and bumped by hand, with major,
-minor and patch defined in that file beside the key. Neither implies the other: a corpus can rewrite every definition
-without `formatVersion` moving, and `formatVersion` can move over a corpus nobody has edited.
+is `content-version` from `.corpus.yaml`. It states what the corpus knows, semantically versioned and bumped by hand,
+with major, minor and patch defined in that file beside the key. Neither implies the other: a corpus can rewrite every
+definition without `formatVersion` moving, and `formatVersion` can move over a corpus nobody has edited.
 
 **`bundle` is what reads `formatVersion`.** It refuses an export whose number is not the one this build of the tool
-writes, and names both — the number the export declares and the number the tool reads. `.dist/export/` is untracked and
+writes, and names both: the number the export declares and the number the tool reads. `.dist/export/` is untracked and
 outlives the run that wrote it, so a bundle built after a pull is the ordinary way to meet an export this tool did not
 ship beside. What the refusal prevents is a plugin assembled around a manifest whose keys have moved: its breadcrumb
 would state nothing and its skill would find nothing, and a lookup that silently returns nothing is indistinguishable
@@ -166,7 +167,7 @@ key to a file, or a file to a type's directory, leaves that reader correct and m
 one, changing the type of a value, or changing what a key means each turn a correct read into a wrong one, and each
 moves the number. Reordering the keys within a line does not, because every key is addressed by name; reordering the
 records in a flat file does, because that order carries meaning within a chain. It went from 1 to 2 when a term line's
-two resolved URLs became a `path` and an `anchor` — keys dropped, which is the breaking side of that boundary.
+two resolved URLs became a `path` and an `anchor`. Dropping those keys is the breaking side of that boundary.
 
 **Output is deterministic.** Ordering is `StringComparer.Ordinal` throughout, as the generator's is, and every value
 that varies between two runs is confined to the manifest. Two runs from one commit produce identical bytes but for
@@ -181,12 +182,12 @@ because a record left out of the output cannot be seen there.
 
 **A term line's `anchor` is the part id, whatever the type sourced its parts from.** The exporter writes both keys from
 one value. That is correct for a heading-sourced type, where a heading's slug is its id and its anchor alike, and it is
-wrong for a table-sourced one, whose part id is authored — a policy clause id is `TIMEBOX`, and no fragment resolves to
+wrong for a table-sourced one, whose part id is authored. A policy clause id is `TIMEBOX`, and no fragment resolves to
 it. Deriving the anchor from the part source is what would fix it. No table-sourced type declares an `export:` block
 today, so the path is unexercised and no fixture covers it.
 
 **One fidelity of three is carried.** A type may declare `full`, `summary` or `reference` against each piece its
 `export:` block selects, and the exporter carries `full`. A type declaring either of the others is reported as declaring
-a fidelity nothing carries, and the schema pass fails — which is the safe way round, since the alternative is an export
+a fidelity nothing carries, and the schema pass fails. Failing is the safe way round, since the alternative is an export
 quietly thinner than the type asked for. Glossary needs only `full`. The model is three-valued so that the first type
 wanting a section reduced to a line does not force it to be rebuilt.
