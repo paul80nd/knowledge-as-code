@@ -36,6 +36,11 @@ valid.
 
 ## Approach
 
+A run lists the corpus's Markdown, decides which of it counts as a record, and applies the checks the schema declares to
+each one. What is not a record still gets read, by the three narrower passes below.
+
+### What is discovered
+
 `kac` discovers Markdown with `git ls-files`, so **`.gitignore`, `.git/info/exclude` and global excludes all count**,
 and `.git/` is never walked. It then applies the taxonomy exclusions that `knowledge-as-code/automation.md` states:
 
@@ -48,11 +53,15 @@ and `.git/` is never walked. It then applies the taxonomy exclusions that `knowl
 - root `README.md` and root `CLAUDE.md`
 - anything outside a folder that maps to a type schema
 
+### What makes a document a record
+
 A document is validated **only if it carries a YAML frontmatter block**. The frontmatter is how a document opts into
 the schema. A file in a type folder without one is counted as *skipped (not yet migrated)* and reported in the summary.
 It does not fail the run.
 
-**The framework's own documentation gets a pass of its own.** `knowledge-as-code.md` and the documents beneath it are
+### The framework's own documentation gets a pass of its own
+
+`knowledge-as-code.md` and the documents beneath it are
 not records, and discovery leaves them out. They are still Markdown that links to things. So they are read for link and
 fragment resolution, the way a type page is, and for `framework-names-types`. Generated blocks are emptied first.
 `generate --check` answers for those, and the links inside them are written from this corpus and not from the
@@ -61,11 +70,15 @@ framework.
 The framework's own glossary is in that set and is also a record, filed under a type and validated like any other. It
 gets the naming rule and not a second link pass, which would report every dead link in it twice.
 
-**Type pages get a pass of their own.** A page (`adrs.md`, `services.md`) is not a record and carries no frontmatter,
+### Type pages get a pass of their own
+
+A page (`adrs.md`, `services.md`) is not a record and carries no frontmatter,
 so the structural checks do not apply. It is checked for link resolution, undefined and non-canonical labels, unused
 definitions, and frontmatter it should not be carrying.
 
-**Every file carrying a generated block gets one more.** A type's page and the framework's own pages alike are held to
+### Every file carrying a generated block gets one more
+
+A type's page and the framework's own pages alike are held to
 still carrying both markers of every block `generate` writes into them. The list of blocks is the one `generate` writes
 from.
 

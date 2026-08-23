@@ -21,7 +21,7 @@ glossary ships no glossary skill either.
 
 ## What it is not
 
-**It is not `export`.** `export` reads the corpus and writes data; `bundle` reads that data and writes a package. They
+**It is not `export`.** `export` reads the corpus and writes data. `bundle` reads that data and writes a package. They
 are two commands because they fail differently: an export is wrong about the corpus, and a bundle is wrong about what
 it shipped. They are proved differently too: the export has a committed golden of its output, and the bundle has an
 assertion that it did not touch that output.
@@ -36,15 +36,19 @@ it was handed, and the export is the only thing that will actually travel.
 
 ## Approach
 
-**Two directories under one root, and each command replaces its own whole.** `export` owns `.dist/export/` and
-`bundle` owns `.dist/plugin/`. Both delete before they write, for the reason `export` already had: an artefact nobody
+A run reads the export `export` wrote and the corpus's own `.plugin/` tree. It decides which components that export can
+support, copies what survives into `.dist/plugin/`, renders the breadcrumb, and writes a manifest naming what shipped.
+
+### Two directories under one root, and each command replaces its own whole
+
+`export` owns `.dist/export/` and `bundle` owns `.dist/plugin/`. Both delete before they write, for the reason `export` already had: an artefact nobody
 reviews must not keep a file that nothing backs any more. That rule only stays local if neither command deletes the
 other's tree, which is why the export is a named subtree rather than the root. `Dist` is the one statement of the
 layout, and `.gitignore` covers all of it in a line.
 
 **The export is copied in, and therefore exists twice.** Once at `.dist/export/` as `export` wrote it, and once inside
 the plugin under the directory `metadata.corpusRoot` names. **That duplication is intended.** An installed plugin is
-copied into a cache of its own, so a path outside the plugin root does not travel and resolves nowhere at runtime; and
+copied into a cache of its own, so a path outside the plugin root does not travel and resolves nowhere at runtime. And
 `export` has to stay independently runnable and independently proved without `bundle` having run. The copy is the seam
 between the two commands rather than an accident of one.
 
@@ -52,7 +56,9 @@ between the two commands rather than an accident of one.
 a copy cannot acquire an opinion about encoding or line endings on the way through. A difference between the two copies
 is a defect, and the golden fixture asserts their equality directly.
 
-**Trimming reads the export, not the corpus.** A component declares under `metadata.components` which record types it
+### Trimming reads the export, not the corpus
+
+A component declares under `metadata.components` which record types it
 reads, and it travels only where the export carries every one of them. What that catches is the skill that finds
 nothing. To whoever asked it a question, that skill reads exactly like a corpus that does not define the term. Reading
 the export rather than the corpus is what makes the criterion the same in both states `.corpus.yaml` can be in: a corpus
@@ -66,7 +72,13 @@ adopted, so a README or a licence in the plugin tree needs no declaration.
 matches the declared path itself as well as anything beneath it. The match is on a whole segment, so `skills/a` does not
 take `skills/ab` with it.
 
-**The breadcrumb is rendered here rather than computed at runtime.** A `SessionStart` hook injects a few lines into
+**Trimming everything warns and still builds.** Refusing would leave a corpus unable to produce the thing that would
+have told it why. The empty plugin is itself the report: it installs, does nothing, and `bundle.json` beside it names
+each component that was dropped and the type it needed.
+
+### The breadcrumb is rendered here, not computed at runtime
+
+A `SessionStart` hook injects a few lines into
 every session saying which corpus is installed, how many entries it holds, which records cover them, and which skill to
 ask. That is the whole of its job: an agent never asks for a glossary because it does not know a word is ambiguous, so
 the breadcrumb exists to create the question rather than to answer it, and a longer one would be paid for by every
@@ -78,7 +90,7 @@ asked for a JSON parser, an interpreter or a runtime. The corpus takes the same 
 projection: compute it once into an artefact rather than have each reader recompute it.
 
 The rendered file travels with the directory that prints it and nowhere else. A corpus shipping no hook has nothing to
-read it; a corpus whose hook was trimmed would otherwise keep a file describing a component that left. Asking the
+read it. A corpus whose hook was trimmed would otherwise keep a file describing a component that left. Asking the
 surviving files rather than the components settles both without a corpus having to declare that a generated file belongs
 to one.
 
@@ -94,36 +106,42 @@ than however many records a corpus turns out to keep. A type over the bound has 
 given as a count, which is the last of the six: a list cut short in silence would read as the whole of what the type
 covers, and the count is what the line was for.
 
-**A hook is copied with its permission bit.** One file in the plugin tree is run rather than read, and a command copied
+### A hook is copied with its permission bit
+
+One file in the plugin tree is run rather than read, and a command copied
 without that bit is a plugin that installs and then fails at the first session with a message about permissions rather
 than about the corpus. The bit does not exist on Windows and is not asked for there: a hook ships as a POSIX script and
 a `.cmd` twin, the same pair and the same reasoning as `kac` and `kac.cmd` at a corpus's root.
 
-**The plugin's version is the corpus content version.** It is read off the export's manifest rather than out of
+### The plugin's version is the corpus content version
+
+It is read off the export's manifest rather than out of
 `.corpus.yaml`, so the number on the plugin is the number of the data inside it. The export **format** version stays
 where it is, inside the export's own manifest: one says what the corpus knows and the other says which parser will read
 it, and stamping the second onto the plugin would describe the wrong thing confidently. A corpus stating no content
 version keeps the version its plugin manifest carried, and the run says so rather than stamping nothing.
 
-**The plugin manifest is edited, not rebuilt.** `plugin.json` is forked in the portability manifest, so each corpus owns
+### The plugin manifest is edited, not rebuilt
+
+`plugin.json` is forked in the portability manifest, so each corpus owns
 its own. `bundle` reads it as a DOM, gives it a new version, gives it the surviving components, and writes it back with
 every other key exactly as the corpus wrote it. Mapping it onto a shape known here would delete whatever the corpus had
 added, without a word.
 
-**The bundle records what it shipped.** `bundle.json` at the plugin root names the plugin, its version, the export it
-was built around, every component included and every one trimmed with the reason. Two corpora running one plugin name
-may ship different component sets. That is correct, and it makes "does this plugin do X" unanswerable from outside
-unless the plugin says. `bundle.json` carries no timestamp and no commit: the export inside the plugin states both, and
-a second clock would be a second answer to one question.
+### The bundle records what it shipped
 
-**Trimming everything warns and still builds.** Refusing would leave a corpus unable to produce the thing that would
-have told it why. The empty plugin is itself the report: it installs, does nothing, and `bundle.json` beside it names
-each component that was dropped and the type it needed.
+`bundle.json` at the plugin root carries the plugin, its version, the export it was built
+around, every component included and every one trimmed with the reason. Two corpora running one plugin name may ship
+different component sets. That is correct, and it makes "does this plugin do X" unanswerable from outside unless the
+plugin says. `bundle.json` carries no timestamp and no commit: the export inside the plugin states both, and a second
+clock would be a second answer to one question.
 
-**`.dist/` is the marketplace.** A marketplace is a directory holding `.claude-plugin/marketplace.json`, and it resolves
-each plugin's source against that directory; a source containing `..` is refused. So a marketplace cannot sit beside the
-plugin and point sideways at it, and the root is where it goes. `claude plugin marketplace add ./.dist`
-installs what was just built.
+### `.dist/` is the marketplace
+
+A marketplace is a directory holding `.claude-plugin/marketplace.json`, and it resolves
+each plugin's source against that directory. A source containing `..` is refused. So a marketplace cannot sit beside the
+plugin and point sideways at it, and the root is where it goes. `claude plugin marketplace add ./.dist` installs what
+was just built.
 
 ## Decisions
 
@@ -131,9 +149,13 @@ installs what was just built.
 between building and asking the plugin a question.
 
 **A run that cannot answer a question stops before writing.** Each of these ends the run with the reason and nothing
-written: a plugin tree with no manifest; a manifest that is not JSON, or that states no name, or no `corpusRoot`, or a
-`corpusRoot` the plugin tree already uses; an export with no manifest; and an export whose `formatVersion` is not the
-one this build reads.
+written:
+
+* a plugin tree with no manifest
+* a manifest that is not JSON, or that states no name, or no `corpusRoot`, or a `corpusRoot` the plugin tree already
+  uses
+* an export with no manifest
+* an export whose `formatVersion` is not the one this build reads
 
 That last one is where the export format version is finally held to account. Both numbers are named, because the
 reader's next move differs: an export behind the tool is rebuilt, and an export ahead of it says the tool is the stale
@@ -167,5 +189,5 @@ with the same message as one naming a type this corpus declined, and the two mea
 the other is a decision. Nothing reports the first.
 
 **The export is copied whole.** A component surviving trimming pulls in the entire export, including types no surviving
-component names. That costs nothing today, because the trim and the export are driven by the same adoption; it is worth
+component names. That costs nothing today, because the trim and the export are driven by the same adoption. It is worth
 reopening for a corpus exporting many types where a plugin reads one.
