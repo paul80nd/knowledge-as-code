@@ -2,16 +2,17 @@
 
 [![kac][ci-badge]][ci] [![NuGet][nuget-badge]][nuget] [![Licence: MIT][licence-badge]][licence]
 
-A **corpus** is one repository of knowledge documents that people and AI sessions both read from and contribute to.
-Plain Markdown in git, reviewed by pull request, published as a wiki. This repository holds one, the template it was
-copied from, and the tool that holds both to their shape.
+A structured, validated body of knowledge that people and AI sessions both read from and contribute to, and the tool
+that holds it to its shape.
 
-What makes a corpus more than a folder of documents is that **every document has a type, and every type has a schema**.
-A document filed under a type is a **record**. `kac` builds each index from the records, so nobody maintains one by
-hand. A broken cross-reference fails CI rather than rotting quietly. Skills, which are instructions an agent loads when
-it needs them, say how to read the corpus and how to add to it.
+Every document carries a type, and every type declares a schema. An agent can therefore find the standard it needs
+before it writes code, and leave what it learns where a reviewer will see it. `kac` builds each index from the
+documents, so nobody maintains one by hand, and a broken cross-reference fails CI rather than rotting quietly. Plain
+Markdown in git, reviewed by pull request, published as a wiki: no proprietary format and no export step.
 
-The argument for building it this way is in [`template/knowledge-as-code.md`](template/knowledge-as-code.md).
+A repository of those documents, with the schema it runs, is a **corpus**, and a document filed under a type is a
+**record**. Skills, which are instructions an agent loads when it needs them, say how to read a corpus and how to add
+to it. The argument for building it this way is in [`template/knowledge-as-code.md`](template/knowledge-as-code.md).
 
 ## What is here
 

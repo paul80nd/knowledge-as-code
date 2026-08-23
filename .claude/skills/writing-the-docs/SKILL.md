@@ -29,11 +29,21 @@ have.
   Write: "`kac` builds each index from the records." Not: "We generate the indexes for you."
 * **Nothing else.** Where the floor and this page appear to disagree anywhere below, the floor wins.
 
-## Say what it is before you say what it is unlike
+## Open on what the reader gets
 
-**The opening paragraph names the thing.** A definition built on a contrast asks a reader to hold two ideas when they
-have not got the first one yet.
-Write: "`kac` reads a folder of markdown records and holds each one to the schema its type declares."
+**The opening paragraph says what the reader gets.** Two openings fail here, and both are tempting. A definition
+answers a question nobody has asked yet. A problem statement, sitting directly under the project's name, reads as a
+description of what the project hands you.
+Write: "A structured, validated body of knowledge that people and AI sessions both read from and contribute to."
+Not: "A corpus is one repository of knowledge documents."
+Not: "Engineering knowledge is spread thin."
+
+**Take the plain word in the opening, and introduce the term where the reader needs it.** The gloss rule says to define
+a term on first use. It does not say to reach for the term first. A body of knowledge becomes a corpus a paragraph
+later, once there is something to call by its name.
+
+**A definition built on a contrast asks a reader to hold two ideas** when they have not got the first one yet.
+Write: "`kac` reads a folder of Markdown records and holds each one to the schema its type declares."
 
 **Three contrasts in a row is the shape to watch for.** It reads as rhythm and lands as nothing, and it is where this
 project's prose goes wrong when it is trying to sound confident.
@@ -41,7 +51,8 @@ Cut: "An index is generated rather than maintained, a broken cross-reference fai
 an agent can be told where a thing goes instead of guessing."
 
 [`README.md`](../../../README.md) at the repository root carries the register to match. It runs at about four contrasts
-per thousand words, in sentences averaging sixteen. Count yours the same way and read what you find, as the floor says.
+per thousand words, in sentences averaging fourteen. Count yours the same way and read what you find, as the floor
+says. Measure prose alone: a code block and a table skew both numbers.
 
 ## Get the reader to a command
 
