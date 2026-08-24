@@ -192,7 +192,6 @@ knowledge-as-code/     # the system's own documentation
   ├── taxonomy.md      # the seventeen types and where things go
   ├── metadata.md      # the frontmatter fields
   ├── contributing.md  # how a contribution is made and reviewed
-  ├── principles.md    # why the framework is shaped this way
   ├── lineage.md       # where the taxonomy's names came from
   └── automation.md    # what is generated, validated and scheduled
 kac, kac.cmd           # launchers that wrap `dotnet run --project ../tooling/kac`

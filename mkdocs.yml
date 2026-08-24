@@ -81,6 +81,9 @@ nav:
   - Introduction: index.md
   - Getting started: getting-started.md
   - Running it in CI: ci.md
+  - The framework:
+      - framework/index.md
+      - Principles: framework/principles.md
   - CLI reference:
       - cli/index.md
       - validate: cli/validate.md

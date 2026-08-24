@@ -9,7 +9,7 @@ This page is the way in. The detail lives beneath it:
 | If you want to…                              | Go to                                             |
 |----------------------------------------------|---------------------------------------------------|
 | Understand what kinds of knowledge live here | [Taxonomy](knowledge-as-code/taxonomy.md)         |
-| Know why the framework is shaped this way    | [Principles](knowledge-as-code/principles.md)     |
+| Know why the framework is shaped this way    | [Principles][principles]                          |
 | Add or change something                      | [Contributing](knowledge-as-code/contributing.md) |
 | Know what metadata a document needs          | [Metadata](knowledge-as-code/metadata.md)         |
 | Understand what CI checks and builds         | [Automation](knowledge-as-code/automation.md)     |
@@ -77,11 +77,11 @@ determines the rules.
 
 A new kind of knowledge needs a tier, and no new machinery. Every validation rule, review expectation, language rule
 and generated report keys off the tier rather than the type. Why that is the load-bearing idea is set out in
-[principles](knowledge-as-code/principles.md#behaviour-before-subject).
+[principles][principles-behaviour].
 
 Observed is the row that surprises people: the tier carrying the least authority is the one the corpus most depends on,
 because capture that is not free does not happen.
-[Cheap capture, deliberate promotion](knowledge-as-code/principles.md#cheap-capture-deliberate-promotion) is where that
+[Cheap capture, deliberate promotion][principles-capture] is where that
 argument lives.
 
 **Lifecycle** (`immutable` / `living` / `perishable`) follows from tier and is not stated separately. Two fields that
@@ -101,3 +101,7 @@ can contradict each other is a defect waiting to happen.
 **A note on scope.** The documents under `knowledge-as-code/` describe the system. They are not themselves part of the
 taxonomy and carry no taxonomy frontmatter. The constitution is not one of the laws. This also keeps the mechanism
 (schema, validators, generators, skills) cleanly separable from the corpus's content.
+
+[principles]: https://paul80nd.github.io/knowledge-as-code/framework/principles/
+[principles-behaviour]: https://paul80nd.github.io/knowledge-as-code/framework/principles/#behaviour-before-subject
+[principles-capture]: https://paul80nd.github.io/knowledge-as-code/framework/principles/#cheap-capture-deliberate-promotion

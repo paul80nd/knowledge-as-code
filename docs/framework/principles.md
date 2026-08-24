@@ -1,12 +1,11 @@
 # Principles
 
-> Why the framework is shaped the way it is.
-
-[Taxonomy](taxonomy.md) says what the types are. This page says what they are for, and what the design will not trade
-away.
+Why the framework is shaped the way it is. A corpus's own taxonomy page says what its types are. This page says what
+they are for, and what the design will not trade away.
 
 These are meant to outlast the implementation. Each describes how the framework works today, and where one is only
-partly built, the tracker holds the rest.
+partly built, the
+[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds the rest.
 
 ## Behaviour before subject
 
@@ -15,8 +14,8 @@ page keys off that.
 
 An ADR and a postmortem have nothing in common as subject matter. As behaviour they are identical: both are accounts
 that were true at a moment, both become misleading if edited afterwards, and both are superseded rather than corrected.
-So they share a tier, and the tier carries the rules: the review bar, the validation, the language, and the expectation
-of immutability.
+So they share a **tier**, meaning the group a type belongs to by how it behaves, and the tier carries the rules: the
+review bar, the validation, the language, and the expectation of immutability.
 
 The taxonomy therefore grows without new machinery.
 
@@ -25,12 +24,13 @@ The taxonomy therefore grows without new machinery.
 A corpus has two halves. The **mechanism** is the schema, the validator, the generator and the agent skills, and it is
 identical everywhere. The **knowledge** is the organisation's, and it is shared with nobody.
 
-That split lets us improve the mechanism without touching anyone's content, and lets an organisation take a copy without
+That split lets the mechanism improve without touching anyone's content, and lets an organisation take a copy without
 inheriting someone else's opinions about accessibility. It also turns *which of these files are mine?* into a question
-`kac mechanism --check` answers.
+[`kac mechanism --check`](../cli/mechanism.md) answers.
 
-`tooling/manifest.yaml` declares which files fall on which side, so no prose has to assert it. Every file resolves to
-exactly one layer, and each layer has a rule about what divergence means.
+The framework's own `manifest.yaml` declares which files fall on which side, so no prose has to assert it. Every file
+resolves to exactly one **layer**, meaning who owns a file and what happens when it differs from upstream, and each
+layer has a rule about what divergence means.
 
 ## Schema before prose
 
@@ -89,9 +89,9 @@ if they later go their own way.
 What comes from upstream is `kac` itself, installed as a versioned tool and pinned the way any other dependency is. A
 newer one is a version they choose to take.
 
-The cost is drift in the half they own. A manifest and a descriptor answer it. A corpus records which version of the
-shared layer it is on, and which divergences it has deliberately accepted, so a necessary deviation does not look like
-an accident.
+The cost is **drift** in the half they own, meaning a file that no longer matches the upstream it came from. A manifest
+and a descriptor answer it. A corpus records which version of the shared layer it is on, and which divergences it has
+deliberately accepted, so a necessary deviation does not look like an accident.
 
 ## Readable and writable by agents
 
