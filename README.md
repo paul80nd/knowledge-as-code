@@ -31,13 +31,16 @@ YAML file rather than changing the tool.
 A .NET 10 entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures,
 feature specs and unit tests it is held to.
 
+**[`manifest.yaml`](manifest.yaml)** says which files a corpus is made of. A template is not a folder here: it is the
+set of files these rules name, read from wherever they are authored, and `to:` on a rule says where each one lands in a
+corpus.
+
 **[`.schema/`](.schema/README.md)** is the machine-readable statement of what a record of each type carries, authored
 once at the root and read by both corpora below. A corpus of your own carries its own copy, at its own root.
 
-**[`template/`](template/README.md)** is the rest of what a corpus is made of, authored once: the framework's own
-documentation, the plugin tree, and the pages and templates a corpus starts from.
-[`template/manifest.yaml`](template/manifest.yaml) sorts them: some a corpus receives once and owns afterwards, and some
-it receives again whenever it takes a newer framework.
+**[`template/`](template/README.md)** holds the rest: the framework's own documentation, the plugin tree, the pages and
+templates a corpus starts from, and the repository-shaped files it cannot work without. Some a corpus receives once and
+owns afterwards, and some it receives again whenever it takes a newer framework.
 
 **[`example/`](example/README.md)** is a complete corpus that took that template, run through the tool built beside it
 on every commit. It holds its own copy of every file the template shares, plus a set of illustrative records about a
@@ -134,10 +137,11 @@ library consortium to delete.
 cp -R template/ ../my-corpus
 cp -R .schema ../my-corpus/         # authored at this root, and a corpus carries its own copy
 cd ../my-corpus
-rm manifest.yaml README.md          # the template's own machinery, not a corpus's
+rm README.md                        # the template describing itself, not a corpus's own
 
 # edit .corpus.yaml: the one file no template can answer for you
 git init && git add -A              # kac reads the git listing, so a corpus is a repository
+                                    # the .gitignore you copied keeps .dist/ and _reports/ out of it
 
 dotnet tool install --global KnowledgeAsCode.Tool
 kac generate                        # write the indexes and generated blocks
@@ -149,9 +153,10 @@ template, so those are the two values to write first. It may also declare the ty
 out and `kac` reads adoption off the folders it finds instead. `example/`'s is commented throughout and is the one to
 read while writing yours.
 
-You also arrive with no `README.md`, no ignore rules, no editor conventions and no CI. Each is a question about your
-repository rather than about the framework. A command that stands a corpus up carrying answers to all of them sits in
-the [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues/242).
+You arrive with ignore rules, editor conventions, a wiki ordering and a starter pipeline for each of the two hosts. Keep
+whichever pipeline you run on and delete the other. What you do not arrive with is a `README.md`, which is the one page
+nobody else can write for you. A command that stands all of this up for you sits in the
+[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues/242).
 
 **A copy carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which is not part of any corpus.
 Install it from nuget.org as above and run it from the copy: it needs nothing but the `.schema/` the copy already

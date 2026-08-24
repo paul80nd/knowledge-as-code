@@ -140,7 +140,7 @@ the whole framework, and a link to this site would send that fork's reader back 
 
 **A file in the overlay layer cites the site by URL.** `.schema/`, `knowledge-as-code/` and `.plugin/` reach every
 corpus word for word, and `docs/` reaches none of them, so a path written there resolves to nothing.
-[`template/manifest.yaml`](../../../template/manifest.yaml) says which files this covers.
+[`manifest.yaml`](../../../manifest.yaml) says which files this covers.
 
 **A link inside `docs/` is a relative path to the `.md` file**, and `mkdocs build --strict` fails a dead one. A page
 the nav does not list is a separate fault, caught by `NavigationTests`, because the build reports it at INFO and

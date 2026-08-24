@@ -15,6 +15,30 @@ the commit and opens a release carrying the section for that version.
 
 ## Unreleased
 
+## 0.5.0 - 2026-08-24
+
+### Changed
+
+- **`.corpus.yaml` takes a new shape.** `upstream:` now says `path`, `ref`, `commit`, `template-version` and
+  `taken-on`, where it said `mechanism-version`, `synced-from` and `synced-on`. `accepted-divergences:` becomes
+  `skip:`, and drops `since` and `revisit`. `update-policy:` arrives, defaulting to `cautious`. Every renamed key is
+  reported by name, with what to write instead, so nothing is misread in silence; `upstream.synced-from` was dropped
+  rather than renamed, and the message says to delete it.
+  [The corpus descriptor](https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/) covers the whole file.
+- **`mechanism --sync` stamps `upstream.template-version` and `upstream.taken-on`**, where it stamped three keys. It
+  leaves `upstream.commit` alone, because a sync reads a directory rather than a git ref and has no commit to record.
+- **`mechanism --check` reports a template version**, where it reported a mechanism version. The number has not moved.
+
+### Added
+
+- **A template manifest reads `to:` on a rule**, naming where that rule's files land in a corpus. It replaces the
+  pattern's directory prefix, so a template authored in a subdirectory of the repository serving it reaches a corpus's
+  own root.
+- **A template manifest reads `layer: removed`**, a tombstone naming a file a corpus should delete when it takes a
+  newer framework. Nothing acts on it yet: `kac update` is what will.
+- **A template manifest reads `minimum-tool`**, the oldest tool that can read it. The template is fetched rather than
+  shipped inside the package, so the two version independently.
+
 ## 0.4.0 - 2026-08-24
 
 ### Changed

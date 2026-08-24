@@ -22,7 +22,7 @@ version: 6
 #
 # Do not increment for normal content changes to synced files.
 #
-# `upstream.mechanism-version` in each corpus's `.corpus.yaml` records the
+# `upstream.template-version` in each corpus's `.corpus.yaml` records the
 # version that corpus took.
 
 layers:

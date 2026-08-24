@@ -61,14 +61,14 @@ bare `mechanism --check`. It reports:
 - **forked** files that differ are counted, and never failed on, because a forked file is meant to diverge.
 - **generated**, **local** and **ignored** files are skipped, because a corpus builds its own, owns its own, or has no
   business comparing them.
-- **accepted divergences** named in `.corpus.yaml` are honoured rather than flagged, and reported as `RESOLVED` once
+- **files named under `skip:`** in `.corpus.yaml` are honoured rather than flagged, and reported as `RESOLVED` once
   they match the reference again, so you can delete the stale entry.
 - **what the descriptor declines** is skipped, and counted where the corpus holds it anyway.
 
 #### The versions it opens with
 
 It reports the three versions the descriptor states: `content-version`, `descriptor-version` and
-`upstream.mechanism-version`. A version the corpus has not stated is reported as not declared, because only the corpus
+`upstream.template-version`. A version the corpus has not stated is reported as not declared, because only the corpus
 can say what it knows. A descriptor still carrying the older `version:` key stops the command outright, in either half.
 The message names the old key, the new one and the file. The rename is the corpus's to make: nothing rewrites this file
 on a corpus's behalf.
@@ -123,7 +123,8 @@ In one pass over both trees:
 
 #### What it records
 
-Sync then stamps `descriptor-version`, `upstream.mechanism-version`, `synced-from` and `synced-on` into `.corpus.yaml`.
+Sync then stamps `descriptor-version`, `upstream.template-version` and `upstream.taken-on` into `.corpus.yaml`. It
+leaves `upstream.commit` alone: a sync reads a directory rather than a git ref, so it has no commit to record.
 It rewrites those four lines rather than re-serialising the file, so the descriptor's commentary survives. The file's
 own format is the mechanism's to state, because a corpus cannot know the shape a newer one writes. `content-version` is
 left alone: what a corpus knows is not something an upstream can tell it.

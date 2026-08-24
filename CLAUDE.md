@@ -28,7 +28,7 @@ tool's second walk-up is for. Everything else the overlay layer names does live 
 `example/`, and `TemplateTests` holds the two copies to the same bytes. `kac mechanism --sync` cannot do that job here,
 because it reads a manifest at `tooling/manifest.yaml` that describes this repository rather than a corpus. Copy the
 file across by hand, in whichever direction the change came from, and let the test prove you did.
-[`template/manifest.yaml`](template/manifest.yaml) says which files this reaches.
+[`manifest.yaml`](manifest.yaml) says which files this reaches.
 
 ## Before you raise a pull request
 

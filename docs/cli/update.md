@@ -50,8 +50,9 @@ corpus derives from somebody else's framework. A corpus can be fresh and behind,
 
 ### The plan
 
-Every file the template holds resolves to exactly one layer, and the first matching rule wins. `to:` sends a file
-somewhere other than where it sat upstream; the manifest at the template's root is what decides.
+Every file the template names resolves to exactly one layer, and the first matching rule wins. `to:` sends a file
+somewhere other than where it sat upstream. The manifest deciding all of this sits at the upstream repository's root,
+or in the folder `upstream.path` names.
 
 | Layer      | What happens                                                                         |
 |------------|--------------------------------------------------------------------------------------|
