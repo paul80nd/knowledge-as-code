@@ -3,28 +3,49 @@ using YamlDotNet.RepresentationModel;
 namespace kac.core;
 
 // One rule from a manifest: a set of path globs that all resolve to one layer.
-public record ManifestRule(IReadOnlyList<string> Patterns, string Layer);
+//
+// `To` is where the files a rule names land in a corpus, and is null where they land on the path they
+// were read from. The template manifest is written against the repository holding the template, so a
+// file authored at `template/knowledge-as-code.md` reaches a corpus as `knowledge-as-code.md`, and a
+// fork laying its repository out differently says so here rather than in the tool.
+public record ManifestRule(IReadOnlyList<string> Patterns, string Layer, string? To = null);
+
+// Where one file of a template lands in a corpus, and under which layer.
+public record Placement(string Layer, string Path);
 
 public class Manifest
 {
+    // The layers a template manifest sorts its files into. The portability manifest names four of its
+    // own, so this is the template's vocabulary rather than every manifest's.
+    public const string Overlay = "overlay";
+    public const string Seed = "seed";
+    public const string Withheld = "withheld";
+    public const string Removed = "removed";
+
     public List<ManifestRule> Rules = [];
 
     // The mechanism's version, which a sync stamps into the receiving corpus's descriptor. Read from the
     // reference rather than assumed, so a corpus taking from an older upstream records what it took.
     public int Version;
 
+    // The oldest `kac` that can read this template, or null where the manifest names none. The template
+    // is fetched rather than shipped inside the package, so the two version independently. An older tool
+    // meeting a newer template stops on this rather than half-reading it.
+    public string? MinimumTool;
+
     public static Manifest Load(string corpusRoot) =>
         LoadFrom(Path.Combine(corpusRoot, "tooling", "manifest.yaml"));
 
     // Two manifests are written in this shape and neither is the other's business: the portability
-    // manifest says which of a corpus's files are shared with the framework, and `template/`'s says
-    // which of its own files a corpus receives once. What they share is the grammar (ordered rules
-    // of globs, first match winning), so the reader takes a path rather than assuming one.
+    // manifest says which of a corpus's files are shared with the framework, and the template manifest
+    // says which files a corpus is made of. What they share is the grammar (ordered rules of globs,
+    // first match winning), so the reader takes a path rather than assuming one.
     public static Manifest LoadFrom(string manifestFile)
     {
         var m = new Manifest();
         var root = Yaml.LoadFile(manifestFile);
         if (int.TryParse(Yaml.Str(Yaml.Get(root, "version")), out var version)) m.Version = version;
+        m.MinimumTool = Yaml.Str(Yaml.Get(root, "minimum-tool"));
         if (Yaml.Get(root, "rules") is YamlSequenceNode rules)
             foreach (var rule in rules.Children)
             {
@@ -34,9 +55,13 @@ public class Manifest
                     : Yaml.Str(pathNode) is { } single
                         ? [single]
                         : [];
+
+                // Read from the key being there rather than from its value, so `to: ""` says the corpus
+                // root and is not mistaken for a rule that named no destination at all.
+                var to = Yaml.Get(rule, "to") is { } toNode ? Yaml.Str(toNode) ?? "" : null;
                 var layer = Yaml.Str(Yaml.Get(rule, "layer"));
                 if (patterns.Count > 0 && layer is not null)
-                    m.Rules.Add(new ManifestRule(patterns, layer));
+                    m.Rules.Add(new ManifestRule(patterns, layer, to));
             }
 
         return m;
@@ -45,13 +70,41 @@ public class Manifest
     // First rule with a matching glob wins, mirroring the manifest's own "evaluated in order"
     // contract. Returns null when nothing matches. The check reports that as an error, since the
     // manifest is meant to resolve every file (its final rule is a catch-all).
-    public string? Resolve(string relPath)
+    public Placement? Place(string relPath)
     {
         foreach (var rule in Rules)
         foreach (var pattern in rule.Patterns)
             if (Glob.IsMatch(relPath, pattern))
-                return rule.Layer;
+                return new Placement(rule.Layer, Destination(relPath, pattern, rule.To));
         return null;
+    }
+
+    // The layer alone, for a caller that only sorts files and never writes them.
+    public string? Resolve(string relPath) => Place(relPath)?.Layer;
+
+    // The patterns a rule's files land on, which are its own patterns with `to:` applied to each. A
+    // check reading the corpus side asks what a corpus is allowed to hold there, and this is how it
+    // gets that from the same rule that decided what was sent.
+    public static IEnumerable<string> Destinations(ManifestRule rule) =>
+        rule.Patterns.Select(p => Destination(p, p, rule.To));
+
+    // Where a matched file lands. `to:` replaces the pattern's directory prefix, meaning everything up
+    // to and including the last `/` before its first wildcard. So one rule relocates a whole folder and
+    // keeps the shape inside it, and several single-file patterns sharing a folder relocate under one
+    // `to:` rather than needing one apiece.
+    //
+    // A pattern opening on a wildcard, or naming a file at the root, has no directory prefix. It names
+    // no one folder, so there is nothing to rewrite a tail against and the destination is `to:` itself.
+    internal static string Destination(string relPath, string pattern, string? to)
+    {
+        if (to is null) return relPath;
+
+        var star = pattern.IndexOf('*', StringComparison.Ordinal);
+        var head = star < 0 ? pattern : pattern[..star];
+        var prefix = head[..(head.LastIndexOf('/') + 1)];
+        return prefix.Length > 0 && relPath.StartsWith(prefix, StringComparison.Ordinal)
+            ? to + relPath[prefix.Length..]
+            : to;
     }
 }
 

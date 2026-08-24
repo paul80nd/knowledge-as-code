@@ -32,6 +32,78 @@ public class ManifestTests
         Assert.Null(m.Resolve("adrs/0001-x.md"));
     }
 
+    // -- where a file lands --
+
+    // A rule naming no destination leaves the path alone, which is every rule of the portability
+    // manifest and most of the template's.
+    [Fact]
+    public void A_rule_with_no_destination_lands_a_file_where_it_was_read()
+    {
+        var m = new Manifest { Rules = [new ManifestRule(["knowledge-as-code/**"], Manifest.Overlay)] };
+
+        Assert.Equal(
+            new Placement(Manifest.Overlay, "knowledge-as-code/taxonomy.md"),
+            m.Place("knowledge-as-code/taxonomy.md"));
+    }
+
+    // `to:` replaces the pattern's directory prefix, so a whole folder relocates and the shape inside it
+    // survives. This is what lets a template be authored in a subdirectory of the repository serving it.
+    // A single-file pattern is rewritten by its folder too, so several of them relocate under one `to:`.
+    [Theory]
+    [InlineData("template/knowledge-as-code/**", "knowledge-as-code/", "template/knowledge-as-code/taxonomy.md",
+        "knowledge-as-code/taxonomy.md")]
+    [InlineData("template/**", "", "template/adrs/_template.md", "adrs/_template.md")]
+    [InlineData("template/CLAUDE.md", "", "template/CLAUDE.md", "CLAUDE.md")]
+    [InlineData("template/.gitignore", "", "template/.gitignore", ".gitignore")]
+    [InlineData("template/**/_template.md", "", "template/adrs/_template.md", "adrs/_template.md")]
+    [InlineData("template/glossary/knowledge-as-code.md", "glossary/", "template/glossary/knowledge-as-code.md",
+        "glossary/knowledge-as-code.md")]
+    public void To_replaces_the_patterns_directory_prefix(string pattern, string to, string read, string lands)
+    {
+        var m = new Manifest { Rules = [new ManifestRule([pattern], Manifest.Seed, to)] };
+
+        Assert.Equal(new Placement(Manifest.Seed, lands), m.Place(read));
+    }
+
+    // A rule's destination patterns are its own with the same rewrite applied, which is how a check
+    // reading the corpus side knows what a corpus may hold there.
+    [Theory]
+    [InlineData("template/knowledge-as-code/**", "knowledge-as-code/", "knowledge-as-code/**")]
+    [InlineData("template/*.md", "", "*.md")]
+    [InlineData(".schema/**", null, ".schema/**")]
+    public void A_rules_destinations_are_its_patterns_rewritten(string pattern, string? to, string destination)
+    {
+        var rule = new ManifestRule([pattern], Manifest.Overlay, to);
+
+        Assert.Equal([destination], Manifest.Destinations(rule));
+    }
+
+    // A pattern opening on `**/` matches at any depth, so it names no one folder to rewrite. The
+    // destination is then `to:` itself, and a rule wanting a tail carried has to name the folder it
+    // starts from.
+    [Fact]
+    public void A_rule_matching_at_any_depth_lands_everything_it_matches_on_one_path()
+    {
+        var m = new Manifest { Rules = [new ManifestRule(["**/notes.md"], Manifest.Seed, "notes.md")] };
+
+        Assert.Equal("notes.md", m.Place("deeply/nested/notes.md")?.Path);
+    }
+
+    // A tombstone is a layer like any other to the reader. What deletes the file is `update`, and what
+    // matters here is that the layer survives being read.
+    [Fact]
+    public void A_tombstone_resolves_to_the_removed_layer()
+    {
+        var m = new Manifest
+        {
+            Rules = [new ManifestRule(["template/knowledge-as-code/style.md"], Manifest.Removed, "knowledge-as-code/")]
+        };
+
+        Assert.Equal(
+            new Placement(Manifest.Removed, "knowledge-as-code/style.md"),
+            m.Place("template/knowledge-as-code/style.md"));
+    }
+
     // -- the types a corpus has adopted --
 
     // The two answers are different states, not the same one written two ways. A descriptor that says

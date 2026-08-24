@@ -1,0 +1,212 @@
+# knowledge-as-code: template manifest
+#
+# A template is not a folder. It is the set of files the rules below name, read from anywhere in this
+# repository, and this file is the only place that set is written down. That is what lets one `.schema/`
+# at the root be part of the template while sitting outside `template/`, and it is what lets a fork lay
+# its own repository out however it likes.
+#
+# Every rule says which layer its files belong to, and `to:` says where they land in a corpus. Omit
+# `to:` and a file lands on the path it was read from. Give it one and it replaces the pattern's
+# directory prefix, meaning everything up to the last `/` before the first wildcard, so a folder
+# relocates whole and several files sharing one folder relocate together.
+#
+# A file whose destination is its source is shared with the corpora in this repository rather than
+# copied into them: `.schema/` and the two skills below are read from this root by `example/` and by
+# `template/` alike. A corpus created elsewhere receives its own copy of each.
+#
+# The rules are read in order and the first match wins, so a rule carving one file out of a folder is
+# written above the rule claiming the folder.
+
+# The version of the template's shape. Increment when a corpus has to respond to the change: a file
+# added or removed, a file renamed, or a file moving between layers.
+version: 4
+
+# The oldest `kac` that can read this manifest. The template is fetched rather than shipped inside the
+# package, so the two version independently. An older tool meeting a newer template stops on this and
+# says so, rather than half-reading it.
+minimum-tool: "0.5.0"
+
+layers:
+
+  overlay:
+    rule: Identical in every corpus, and written again whenever the corpus takes a newer framework.
+    notes: >
+      The schema the tool enforces, the framework's own documentation, the writing rules a corpus
+      author answers to, and the tree a corpus's plugin is built from. An edit to one of these is a
+      divergence from the framework rather than a customisation of it, and the next overlay takes it
+      back.
+
+  seed:
+    rule: Written once, when the corpus is created, and never touched again.
+    notes: >
+      Starting points a corpus fills with its own content: the page saying what each type is for here,
+      the template a contributor copies, the agent guidance, and the repository-shaped files a corpus
+      cannot work without. Each arrives carrying this repository's wording, which the corpus rewrites
+      in its own domain.
+
+  removed:
+    rule: Deleted from a corpus when it takes a newer framework.
+    notes: >
+      A tombstone. A file missing from a template is as likely to be a mistake upstream as a deliberate
+      removal, so a deletion is declared here and never inferred. The reach is the overlay: once a seed
+      file has been written, it belongs to the corpus.
+
+  withheld:
+    rule: Never written into a corpus at all.
+    notes: >
+      This repository's own machinery: the tool, its tests, the documentation site, the worked corpus
+      at `example/`, and this file. A corpus is told what it holds by `.corpus.yaml` and by the folders
+      it stood up, and has nothing to ask of the repository it came from.
+
+rules:
+
+  # ── withheld, ahead of the folders they sit in ─────────────────────────────
+
+  - path:
+      - "manifest.yaml"
+      - "template/README.md"
+    layer: withheld
+    note: The template describing itself, which is a fact about this repository and not about a corpus.
+
+  - path: "template/.corpus.yaml"
+    layer: withheld
+    note: >
+      Present so that `kac` reads `template/` as a corpus and can validate it here. A corpus's own
+      descriptor is written fresh when the corpus is created, from what the invocation was told, rather
+      than copied from a file carrying somebody else's name.
+
+  # ── overlay ────────────────────────────────────────────────────────────────
+
+  - path: ".schema/**"
+    layer: overlay
+    note: >
+      The machine-readable schema, authored once at this root and read from here by both corpora in
+      this repository. Which of it a corpus receives is `types:` in `.corpus.yaml`, so a declined type's
+      file is not written rather than written and ignored. It lands at a corpus's own root, which is
+      where the tool looks first, so no `to:` is needed.
+
+  - path: "template/knowledge-as-code.md"
+    to: ""
+    layer: overlay
+    note: >
+      The framework's own documentation: the taxonomy, the metadata fields, how to contribute, and
+      where the names came from. Shared word for word, because a corpus that rewrote them would be
+      running a framework of its own.
+
+  - path: "template/knowledge-as-code/**"
+    to: "knowledge-as-code/"
+    layer: overlay
+    note: The pages under it, which is the same document set and the same argument as the page above.
+
+  - path: "template/glossary/knowledge-as-code.md"
+    to: "glossary/"
+    layer: overlay
+    note: >
+      The framework's own vocabulary, inherited word for word. A corpus writes its own glossaries beside
+      it and leaves this one alone. Matched by name because everything else in a type folder belongs to
+      the corpus.
+
+  - path:
+      - ".claude/skills/technical-writing/**"
+      - ".claude/skills/writing-a-record/**"
+    layer: overlay
+    note: >
+      The two writing skills a corpus author needs: the floor every surface answers to, and the voice
+      for a record. `writing-in-the-tool` and `writing-the-docs` describe C# and a documentation site
+      that no corpus has, so the catch-all withholds them. A skill is addressed the same way from any
+      repository root, so these land where they were read and need no `to:`.
+
+  # ── the plugin ─────────────────────────────────────────────────────────────
+
+  # Both `.plugin/` rules sit here, out of layer order, because the order is what decides. A
+  # `.plugin/**` overlay rule written among the rules above would claim the manifest before this rule
+  # reached it, and a corpus would lose the one file in the plugin it names for itself.
+
+  - path: "template/.plugin/.claude-plugin/plugin.json"
+    to: ".plugin/.claude-plugin/"
+    layer: seed
+    note: >
+      The plugin manifest. Each corpus names, versions and licenses its own plugin, and declares under
+      `metadata.components` which record types each component needs: a skill reading the glossary is
+      dead weight in a corpus that declined the type.
+
+  - path: "template/.plugin/**"
+    to: ".plugin/"
+    layer: overlay
+    note: >
+      The tree a plugin is built from. Its skills and hooks serve an agent working in a repository that
+      consumes a corpus rather than one working in the corpus itself, and they read the export through
+      `${CLAUDE_PLUGIN_ROOT}` rather than opening the tree, so every corpus ships the same words.
+
+  # ── seed ───────────────────────────────────────────────────────────────────
+
+  - path: "template/**/_template.md"
+    to: ""
+    layer: seed
+    note: Templates a corpus fills with example values from its own domain.
+
+  - path: "template/CLAUDE.md"
+    to: ""
+    layer: seed
+    note: >
+      Agent guidance for working in the corpus. The framework provides the structure and the corpus
+      fills it with its own conventions.
+
+  - path:
+      - "template/.gitignore"
+      - "template/.gitattributes"
+    to: ""
+    layer: seed
+    note: >
+      Load-bearing, and the reason a corpus cannot be a folder of Markdown alone. `kac` reads the git
+      listing, so a corpus without an ignore file tracks `.dist/` and `_reports/` after `git add -A` and
+      then validates its own generated output as records. Without `eol=lf` a Windows checkout presents
+      CRLF and trips `generate --check`.
+
+  - path: "template/.editorconfig"
+    to: ""
+    layer: seed
+    note: >
+      Editor conventions, so a save does not fight the generators. Whole rather than an addition to
+      anything, because a corpus is created away from the repository these rules were written in and has
+      to arrive carrying its own.
+
+  - path:
+      - "template/.order"
+      - "template/azure-pipelines.yml"
+    to: ""
+    layer: seed
+    note: >
+      The Azure Pipelines starter, and the navigation ordering an Azure DevOps wiki reads. A corpus keeps
+      whichever pipeline it runs on and deletes the other. Each is a question about the corpus's own
+      repository, so each arrives working and is then the corpus's to change.
+
+  - path: "template/.github/workflows/kac.yml"
+    to: ".github/workflows/"
+    layer: seed
+    note: The GitHub Actions starter, the twin of the pipeline above and the same bargain.
+
+  - path: "template/*.md"
+    to: ""
+    layer: seed
+    note: >
+      Type root pages: what the type is, why it exists, and how to contribute one. The rules above carve
+      out the framework's own pages, which are not a corpus's to rewrite. Written as a pattern rather
+      than as seventeen names, so adding a type is adding its schema and its pages and nothing else.
+
+  # Everything else `template/` holds: the worked records that show the shape, and the `_index.md` a
+  # corpus arrives with fresh so that it validates before its owner has run anything. `generate` owns
+  # those afterwards.
+  #
+  # It seeds, so a file added to `template/` and classified by nothing is the corpus's from the moment it
+  # arrives. That is the safe way round here: a corpus's own edit is never overwritten by a file nobody
+  # thought about, and every template file reaches a corpus whether or not a rule was written for it.
+  - { path: "template/**", to: "", layer: seed }
+
+  # Everything this repository holds and no corpus receives: the tool, the three test layers, the
+  # documentation site, the worked corpus at `example/`, and the repository's own CI and licence.
+  #
+  # This catch-all withholds, where the one above it seeds. The rules name the whole repository, so a
+  # file outside `template/` that nobody classified is far more likely to be this repository's own than
+  # a corpus's, and silence has to mean "stays here".
+  - { path: "**", layer: withheld }
