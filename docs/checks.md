@@ -25,8 +25,9 @@ A check marked **warning** does not fail the build.
 
 **A check is defined once, in the schema.**
 [`.schema/_checks.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.schema/_checks.yaml) declares
-the checks that run against every document, one entry each. An entry carries its severity, the group it belongs to,
-what it proves correct, and the reasoning behind it. A type's own rules are declared beside the type, in
+the checks that run against every document, one entry each. An entry carries its severity, what it proves correct, and
+the reasoning behind it. The banner comments grouping them are for whoever reads that file, and the loader passes over
+them like any other comment. A type's own rules are declared beside the type, in
 `.schema/<type>.yaml`. Between them they are every check the validator can emit.
 
 **`kac checks` prints what runs**, read from the schema of the corpus it is run in.
