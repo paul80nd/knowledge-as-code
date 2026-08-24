@@ -13,7 +13,7 @@ public class SchemaTests
         Universal = new Dictionary<string, FieldSpec>
         {
             ["id"] = new() { Name = "id" },
-            ["status"] = new() { Name = "status" } // universal status
+            ["status"] = new() { Name = "status" }
         },
         Reserved = ["title"]
     };
@@ -31,9 +31,9 @@ public class SchemaTests
         var schema = SampleSchema();
         var t = SampleType();
 
-        Assert.Same(t.Fields["status"], schema.EffectiveField(t, "status")); // type wins
-        Assert.Same(schema.Universal["id"], schema.EffectiveField(t, "id")); // falls back to universal
-        Assert.Null(schema.EffectiveField(t, "nope"));                       // unknown → null
+        Assert.Same(t.Fields["status"], schema.EffectiveField(t, "status"));
+        Assert.Same(schema.Universal["id"], schema.EffectiveField(t, "id"));
+        Assert.Null(schema.EffectiveField(t, "nope"));
     }
 
     // The comparison is on membership, sorted to be stable.

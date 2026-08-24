@@ -9,17 +9,7 @@
 // loops, joins or quantifiers is a rule class in `Rules/`, and wanting them here is the signal that
 // OPA is being rebuilt by increments.
 //
-// When to abandon this: the moment a real need appears for variables, function definitions or
-// quantifiers, swap this for CEL (Common Expression Language, and a .NET port exists). That means a
-// real need, and not a rule that could be written another way.
-//
-// The `expr:` strings largely carry over and the engine drops in. Not before: the dependency is not
-// worth it at this size, which is the same judgement that rejected OPA/Rego and is recorded with its
-// reasoning in `docs/checks.md`.
-//
-// Non-goals, so that a later reader does not mistake an absence for an oversight: a general policy
-// engine, rules-as-data beyond this grammar, a date or collection type system, runtime or
-// tenant-specific rule sets, and replacing any check that stays C#.
+// `docs/checks.md` records why a rule engine was rejected at this size, which is the same judgement.
 
 namespace kac.core;
 

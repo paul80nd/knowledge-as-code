@@ -58,7 +58,6 @@ public class BundlerTests
             Assert.Single(Plan(plugin: [(Bundler.ManifestFile, Source())], export: [("glossary/terms.jsonl", "{}")])
                 .Problems));
 
-    // A refused plan writes nothing.
     [Fact]
     public void A_refused_plan_names_no_files()
         => Assert.Empty(Plan(plugin: [("README.md", "# nothing")], export: [Manifest()]).Files);
@@ -170,7 +169,6 @@ public class BundlerTests
         Assert.Equal(["hooks/hooks.json"], plan.Included.Select(c => c.Path));
     }
 
-    // A component may be a directory or a single file.
     [Fact]
     public void Trimming_a_component_that_is_one_file_removes_that_file()
     {

@@ -15,7 +15,7 @@ public static class Commands
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
-    // Build the export. The corpus is loaded whole, whatever `type` names.
+    // The corpus is loaded whole, whatever `type` names.
     public static int Export(string corpusRoot, string? type)
     {
         var corpus = Corpus.Load(corpusRoot);

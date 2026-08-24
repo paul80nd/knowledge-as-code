@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace kac.core;
 
-// One file the export writes, named relative to the export root.
+// Named relative to the export root, not to the corpus.
 public sealed record ExportFile(string Path, string Content);
 
 // What an export comes to: the files it writes, the types it found something to write for, and the

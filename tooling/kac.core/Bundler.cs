@@ -68,7 +68,6 @@ public static class Bundler
     // which holds the manifest and nothing else.
     public const string RecordFile = "bundle.json";
 
-    // What a bundle comes to, given the two trees it is assembled from.
     public static BundlePlan Plan(BundleSource source)
     {
         var problems = new List<string>();

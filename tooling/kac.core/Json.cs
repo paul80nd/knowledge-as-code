@@ -4,14 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace kac.core;
 
-// JSON output models
-//
-// Every JSON document kac emits is a record serialized through the source generator
-// (KacJson): reflection-based serialization is disabled under AOT. To add a new document
-// (e.g. `digest` or `drift` output), declare its record shape here and add one
-// `[JsonSerializable(typeof(...))]` line to KacJson. No other plumbing is needed.
-//
-// Property names are PascalCase and emitted camelCase; `int?` line is written as `null`.
+// Every JSON document kac emits is a record serialized through the source generator below. The project
+// sets `IsAotCompatible`, so the trim analyzers fail the build on a reflection-based serializer call.
 
 public record ValidateReport(ValidateSummary Summary, IReadOnlyList<ValidateFinding> Findings);
 
