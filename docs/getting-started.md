@@ -46,23 +46,8 @@ kac mechanism --check --against ../other-corpus   # shared-layer drift against a
 kac mechanism --sync                              # take the shared layers from upstream
 ```
 
-## Colour
-
-Every verb takes `--no-color`, and every verb reads `NO_COLOR` from the environment. `NO_COLOR` is the cross-tool
-standard for the same request, and the flag is there for a caller who cannot set a variable.
-
-A redirected stream carries no colour on its own. An environment naming a runner that renders escapes in its logs turns
-it back on, and GitHub Actions is one such runner. Set `NO_COLOR` wherever the bytes have to be the same everywhere.
-
-## Exit codes
-
-| Code | Meaning                                                                            |
-|------|------------------------------------------------------------------------------------|
-| `0`  | No errors. Warnings may still have been printed.                                   |
-| `1`  | A corpus **error**, or a bad invocation (missing or unknown subcommand or option). |
-| `2`  | A verb found no corpus. `--version` and `--help` need none and answer anyway.      |
-
-Warnings never change the exit code.
+Every command takes the same few options and answers with one of three exit codes.
+[The CLI reference](cli/index.md) covers both, and gives a page to each command.
 
 ## Start a corpus from nothing
 

@@ -32,6 +32,7 @@ theme:
     repo: fontawesome/brands/github
   features:
     - content.code.copy
+    - navigation.indexes
     - navigation.sections
     - navigation.top
     - navigation.tracking
@@ -72,6 +73,7 @@ nav:
   - Introduction: index.md
   - Getting started: getting-started.md
   - CLI reference:
+      - cli/index.md
       - validate: cli/validate.md
       - generate: cli/generate.md
       - export: cli/export.md

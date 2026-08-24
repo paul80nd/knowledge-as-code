@@ -15,10 +15,6 @@ namespace kac.tests;
 
 public partial class CliReferenceTests
 {
-    // Written before their commands exist, so the parser knows nothing about them. Each says so at its head, and the
-    // test below holds it to saying so. An exception that stops being true is an exception that stops being silent.
-    private static readonly string[] NoCommandYet = ["new", "update"];
-
     private static bool Updating => Environment.GetEnvironmentVariable("KAC_UPDATE_DOCS") == "1";
 
     // The first heading of a page, after which a missing block is inserted.
@@ -31,7 +27,8 @@ public partial class CliReferenceTests
         var declared = CliReference.Verbs().Select(v => v.Name).ToHashSet(StringComparer.Ordinal);
         var pages = Directory.EnumerateFiles(CliReference.Cli, "*.md")
             .Select(Path.GetFileNameWithoutExtension)
-            .Where(name => !NoCommandYet.Contains(name, StringComparer.Ordinal))
+            .Where(name => name is not "index")
+            .Where(name => !CliReference.Unbuilt.Contains(name, StringComparer.Ordinal))
             .ToHashSet(StringComparer.Ordinal)!;
 
         Assert.Equal(declared.Order(StringComparer.Ordinal), pages.Order(StringComparer.Ordinal));
@@ -40,7 +37,7 @@ public partial class CliReferenceTests
     [Fact]
     public void A_page_without_a_command_says_it_is_a_specification()
     {
-        foreach (var name in NoCommandYet)
+        foreach (var name in CliReference.Unbuilt)
         {
             var page = File.ReadAllText(Path.Combine(CliReference.Cli, name + ".md"));
             Assert.Contains("**Draft, pending implementation.**", page, StringComparison.Ordinal);
@@ -56,7 +53,7 @@ public partial class CliReferenceTests
         {
             var path = Path.Combine(CliReference.Cli, verb.Name + ".md");
             var page = File.ReadAllText(path);
-            var wanted = Replaced(page, verb);
+            var wanted = Replaced(page, "usage-" + verb.Name, CliReference.Render(verb));
 
             if (page == wanted) continue;
 
@@ -69,12 +66,27 @@ public partial class CliReferenceTests
             + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
     }
 
-    // The page with its block replaced, or with one inserted below the heading where it has none yet.
-    private static string Replaced(string page, CliReference.Verb verb)
+    // The overview indexes every page of the reference, and takes each row's wording from that page's own heading. So
+    // a command whose page is added, renamed or retitled drops out of step here rather than quietly out of the list.
+    [Fact]
+    public void The_overview_indexes_every_page()
     {
-        var begin = CliReference.BeginMarker(verb.Name);
-        var end = CliReference.EndMarker(verb.Name);
-        var block = $"{begin}\n\n{CliReference.Render(verb)}\n{end}";
+        var page = File.ReadAllText(CliReference.Index);
+        var wanted = Replaced(page, "command-table", CliReference.CommandTable());
+
+        if (page == wanted) return;
+
+        if (Updating) File.WriteAllText(CliReference.Index, wanted);
+        else Assert.Fail("the command table is stale in docs/cli/index.md. "
+                         + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
+    }
+
+    // The page with its block replaced, or with one inserted below the heading where it has none yet.
+    private static string Replaced(string page, string name, string body)
+    {
+        var begin = CliReference.BeginMarker(name);
+        var end = CliReference.EndMarker(name);
+        var block = $"{begin}\n\n{body}\n{end}";
 
         var from = page.IndexOf(begin, StringComparison.Ordinal);
         var to = page.IndexOf(end, StringComparison.Ordinal);
@@ -83,7 +95,7 @@ public partial class CliReferenceTests
             return page[..from] + block + page[(to + end.Length)..];
 
         var heading = Heading().Match(page);
-        Assert.True(heading.Success, $"docs/cli/{verb.Name}.md has no heading to put a usage block under.");
+        Assert.True(heading.Success, $"the page carrying '{name}' has no heading to put a generated block under.");
 
         return page[..(heading.Index + heading.Length)] + "\n\n" + block + page[(heading.Index + heading.Length)..];
     }

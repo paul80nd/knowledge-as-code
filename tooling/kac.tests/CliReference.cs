@@ -5,30 +5,72 @@ using System.Xml.Linq;
 
 namespace kac.tests;
 
-// The usage block at the head of each CLI reference page, rendered from the parser's own command model.
+// The generated blocks of the CLI reference: a usage block at the head of each command's page, and the table of
+// commands on the overview that indexes them.
 //
-// `Spectre.Console.Cli` carries a hidden `cli xmldoc` command that prints that model, so a page shows the usage the
-// tool accepts and not a second statement of it. The model is asked of the built `kac`, because one assembled here
+// `Spectre.Console.Cli` carries a hidden `cli xmldoc` command that prints its command model, so a page shows the usage
+// the tool accepts and not a second statement of it. The model is asked of the built `kac`, because one assembled here
 // would prove the renderer and nothing else.
 //
 // Two properties of that output are worked around below. It is hard-wrapped to eighty columns even when redirected,
 // which drops a newline where a description had a space, so every description is put back onto one line. And it names
-// no global option, because `--help` and `--version` belong to the parser. Getting started carries those.
+// no global option, because `--help` and `--version` belong to the parser. The overview carries those.
 internal static partial class CliReference
 {
-    // The folder holding one page per command.
+    // The folder holding one page per command, and the overview that indexes them.
     internal static readonly string Cli = Path.Combine(Repo.Root, "docs", "cli");
+    internal static readonly string Index = Path.Combine(Cli, "index.md");
+
+    // Written before their commands exist, so the parser knows nothing about them. Each says so at its head, and a
+    // test beside this holds it to saying so. An exception that stops being true is an exception that stops being
+    // silent.
+    internal static readonly string[] Unbuilt = ["new", "update"];
 
     private static readonly Lazy<IReadOnlyList<Verb>> Model = new(Read);
 
-    internal static string BeginMarker(string verb) => $"<!-- BEGIN GENERATED: usage-{verb} -->";
-    internal static string EndMarker(string verb) => $"<!-- END GENERATED: usage-{verb} -->";
+    internal static string BeginMarker(string block) => $"<!-- BEGIN GENERATED: {block} -->";
+    internal static string EndMarker(string block) => $"<!-- END GENERATED: {block} -->";
 
     [GeneratedRegex(@"\s+")]
     private static partial Regex Whitespace();
 
+    // A command page opens `# `verb` what running it does`, and the overview's table is built from both halves.
+    [GeneratedRegex(@"^# `(?<verb>[a-z]+)` (?<does>.+)$")]
+    private static partial Regex PageHeading();
+
     // Every verb the parser declares, in the order it declares them. Read once, however many tests ask.
     internal static IReadOnlyList<Verb> Verbs() => Model.Value;
+
+    // Every page of the reference, in the order the parser declares its commands, with the unbuilt two last.
+    internal static IReadOnlyList<string> Pages() => [.. Verbs().Select(v => v.Name), .. Unbuilt];
+
+    // The overview's index of the commands, one row each, taking what a command does from that command's own heading.
+    // The heading is the one statement of it, and a second wording here would be the copy that goes stale.
+    internal static string CommandTable()
+    {
+        var rows = Pages().Select(page =>
+        {
+            var heading = PageHeading().Match(File.ReadLines(Path.Combine(Cli, page + ".md")).First());
+            if (!heading.Success)
+                throw new InvalidOperationException(
+                    $"kac.tests: docs/cli/{page}.md opens on no `# `verb` what running it does` heading.");
+
+            var does = heading.Groups["does"].Value.TrimEnd('.');
+            return (Command: Cell($"[`{page}`]({page}.md)"),
+                    Does: Cell(char.ToUpperInvariant(does[0]) + does[1..] + "."));
+        }).ToList();
+
+        var left = Math.Max("Command".Length, rows.Max(r => r.Command.Length));
+        var right = Math.Max("What it does".Length, rows.Max(r => r.Does.Length));
+
+        var table = new StringBuilder();
+        table.Append($"| {"Command".PadRight(left)} | {"What it does".PadRight(right)} |\n");
+        table.Append($"|{new string('-', left + 2)}|{new string('-', right + 2)}|\n");
+        foreach (var row in rows)
+            table.Append($"| {row.Command.PadRight(left)} | {row.Does.PadRight(right)} |\n");
+
+        return table.ToString();
+    }
 
     // The block body for one verb: the invocation it accepts, then a row per option.
     internal static string Render(Verb verb)

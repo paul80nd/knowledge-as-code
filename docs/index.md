@@ -25,7 +25,8 @@ cross-reference fails CI rather than rotting quietly.
 The reference for `kac`: what each command does, what it refuses, and what it leaves alone.
 
 * **[Getting started](getting-started.md)** installs the tool and runs it against a corpus.
-* **[CLI reference](cli/validate.md)** gives a page to each command, saying what it is for and how it behaves.
+* **[CLI reference](cli/index.md)** gives a page to each command, plus the exit codes and the options every command
+  takes. Each page opens with its usage, generated from the parser.
 * **[The corpus descriptor](corpus-descriptor.md)** covers `.corpus.yaml`, the one file a corpus writes for itself.
 * **[Checks](checks.md)** says where a check comes from, and how a rule declared in YAML reaches the validator.
 
