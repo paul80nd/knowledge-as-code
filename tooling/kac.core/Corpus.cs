@@ -37,6 +37,25 @@ public static class Corpus
 {
     private static readonly string[] SkipDirs = [".git", ".idea", ".claude"];
 
+    // The descriptor a corpus is found by. `kac` walks up for this rather than for `.schema/`, because a
+    // repository may author one schema above several corpora.
+    public const string Descriptor = ".corpus.yaml";
+
+    // The corpus `start` sits in: the nearest folder at or above it carrying a `.corpus.yaml`, or null
+    // where there is none. Every verb but one is answered from what this finds, so where the tool's own
+    // files sit says nothing about which corpus it reads. `new` is the one that refuses what this finds.
+    public static string? FindRoot(string start)
+    {
+        var dir = new DirectoryInfo(start);
+        while (dir is not null)
+        {
+            if (File.Exists(Path.Combine(dir.FullName, Descriptor))) return dir.FullName;
+            dir = dir.Parent;
+        }
+
+        return null;
+    }
+
     // What `Tree` is built over. `GitFiles` says why the listing is the git one where there is a git one.
     //
     // The two branches do not answer the same question, and the difference is silent: the walk lists

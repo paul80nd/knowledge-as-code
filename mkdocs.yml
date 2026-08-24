@@ -98,13 +98,13 @@ nav:
       - Lineage: framework/lineage.md
   - CLI reference:
       - cli/index.md
+      - new: cli/new.md
       - validate: cli/validate.md
       - generate: cli/generate.md
       - export: cli/export.md
       - bundle: cli/bundle.md
       - checks: cli/checks.md
       - mechanism: cli/mechanism.md
-      - new: cli/new.md
       - update: cli/update.md
   - The corpus descriptor: corpus-descriptor.md
   - Checks: checks.md

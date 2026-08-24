@@ -16,6 +16,16 @@ a knowledge type by writing a YAML file.
 dotnet tool install --global KnowledgeAsCode.Tool
 ```
 
+## Start a corpus
+
+`kac new` turns the folder you are standing in into one. It takes the framework from the repository below, writes what
+a corpus is made of, and stops short of committing so you can read what it staged.
+
+```bash
+mkdir my-corpus && cd my-corpus
+kac new          # asks four things, and has a default for each
+```
+
 ## Use
 
 `kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, the descriptor naming the corpus, so

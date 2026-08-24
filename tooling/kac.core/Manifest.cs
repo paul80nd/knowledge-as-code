@@ -8,9 +8,13 @@ namespace kac.core;
 // were read from. The template manifest is written against the repository holding the template, so a
 // file authored at `template/knowledge-as-code.md` reaches a corpus as `knowledge-as-code.md`, and a
 // fork laying its repository out differently says so here rather than in the tool.
-public record ManifestRule(IReadOnlyList<string> Patterns, string Layer, string? To = null);
+// `Ci` names the continuous integration system a rule's files serve, and is null for the files every
+// corpus receives whatever it builds on. A corpus runs on one system, so the starter for another is a
+// file it would delete unread, and a GitHub workflow reaching a corpus that chose Azure DevOps is one
+// that runs uninvited.
+public record ManifestRule(IReadOnlyList<string> Patterns, string Layer, string? To = null, string? Ci = null);
 
-public record Placement(string Layer, string Path);
+public record Placement(string Layer, string Path, string? Ci = null);
 
 public class Manifest
 {
@@ -32,8 +36,11 @@ public class Manifest
     // meeting a newer template stops on this rather than half-reading it.
     public string? MinimumTool;
 
+    // What a template's manifest is called, wherever the repository serving it keeps the file.
+    public const string FileName = "manifest.yaml";
+
     public static Manifest Load(string corpusRoot) =>
-        LoadFrom(Path.Combine(corpusRoot, "tooling", "manifest.yaml"));
+        LoadFrom(Path.Combine(corpusRoot, "tooling", FileName));
 
     // Two manifests are written in this shape and neither is the other's business: the portability
     // manifest says which of a corpus's files are shared with the framework, and the template manifest
@@ -59,8 +66,9 @@ public class Manifest
                 // root and is not mistaken for a rule that named no destination at all.
                 var to = Yaml.Get(rule, "to") is { } toNode ? Yaml.Str(toNode) ?? "" : null;
                 var layer = Yaml.Str(Yaml.Get(rule, "layer"));
+                var ci = Yaml.Str(Yaml.Get(rule, "ci"));
                 if (patterns.Count > 0 && layer is not null)
-                    m.Rules.Add(new ManifestRule(patterns, layer, to));
+                    m.Rules.Add(new ManifestRule(patterns, layer, to, ci));
             }
 
         return m;
@@ -74,7 +82,7 @@ public class Manifest
         foreach (var rule in Rules)
         foreach (var pattern in rule.Patterns)
             if (Glob.IsMatch(relPath, pattern))
-                return new Placement(rule.Layer, Destination(relPath, pattern, rule.To));
+                return new Placement(rule.Layer, Destination(relPath, pattern, rule.To), rule.Ci);
         return null;
     }
 
@@ -135,6 +143,10 @@ public class CorpusDescriptor
         ("upstream", "synced-from", null)
     ];
 
+    // The part a corpus plays. A source answers for the framework and carries the layer that proves the
+    // tool; a consumer takes both already proven. `docs/corpus-descriptor.md` argues the pair.
+    public const string Source = "source";
+    public const string Consumer = "consumer";
     public string Role = "";
 
     // Where the framework comes from, and what was last taken from it. `Path` is null where the manifest
@@ -218,7 +230,7 @@ public class CorpusDescriptor
     // proven upstream, so a fixture tree it will never run sits between its readers and the code they
     // came for. Every other role answers for the tool and holds the tests that prove it. A descriptor
     // naming no role answers yes, as `Adopted` does: a corpus that has said nothing is held to everything.
-    public bool Verifies => !Role.Equals("consumer", StringComparison.Ordinal);
+    public bool Verifies => !Role.Equals(Consumer, StringComparison.Ordinal);
 
     public static CorpusDescriptor Load(string corpusRoot)
     {

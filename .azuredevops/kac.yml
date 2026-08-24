@@ -59,11 +59,10 @@ steps:
     displayName: Check generated output is fresh
     workingDirectory: $(Build.SourcesDirectory)/example
 
-  # template/ is what a new corpus receives, so a copy of it has to validate before its owner has
-  # run anything. Its .corpus.yaml is what makes kac read it as a corpus, and the schema both verbs
-  # judge it against is the one at the repository root.
+  # `generate --check` is askable only here. The corpus the installed tool stands up further down is
+  # generated as it is created, so nothing there holds these committed copies fresh.
   - script: dotnet run --project ../tooling/kac -- validate
-    displayName: Validate what a new corpus receives
+    displayName: Validate the template where it is authored
     workingDirectory: $(Build.SourcesDirectory)/template
 
   - script: dotnet run --project ../tooling/kac -- generate --check
@@ -165,10 +164,18 @@ steps:
   - script: |
       dotnet pack tooling/kac/kac.csproj -o .dist/pack
       dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
-      cd "$TEMPDIR"
+      cd "$TEMP_ROOT"
       "$SOURCES/.dist/tools/kac" --version
-    displayName: Pack the tool and run the installed copy
+
+      # `new` validates before it returns. The two verbs after it put the same questions to a
+      # separate process, which is what finds a corpus only its creator can read.
+      mkdir -p "$TEMP_ROOT/created"
+      cd "$TEMP_ROOT/created"
+      "$SOURCES/.dist/tools/kac" new --yes --from "$SOURCES" --name created --ci github
+      "$SOURCES/.dist/tools/kac" validate
+      "$SOURCES/.dist/tools/kac" generate --check
+    displayName: Pack the tool, then stand a corpus up with the installed copy
     workingDirectory: $(Build.SourcesDirectory)
     env:
-      TEMPDIR: $(Agent.TempDirectory)
+      TEMP_ROOT: $(Agent.TempDirectory)
       SOURCES: $(Build.SourcesDirectory)

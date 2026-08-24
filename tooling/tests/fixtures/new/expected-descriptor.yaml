@@ -1,0 +1,55 @@
+# What this corpus is, and where it stands against the framework it took.
+#
+# https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key here means.
+
+# The format of this file, which the tool owns rather than the corpus.
+descriptor-version: 1
+
+# What this corpus calls itself, and the version of what it knows. Move `content-version` by hand.
+corpus: acme-corpus
+content-version: "0.1.0"
+
+# `consumer` takes the framework from a source, and holds none of the machinery that proves the tool.
+role: consumer
+
+# How this corpus is published. One of: azure-devops-wiki | github | mkdocs | none.
+publishing-target: none
+
+# Where this corpus takes the framework from, and what the last take resolved to.
+upstream:
+  url: <repository>
+  path:
+  ref:
+  commit:
+  template-version: 4
+  taken-on: <today>
+
+# How far an update goes. `cautious` writes a seed only where this corpus has none.
+update-policy: cautious
+
+# The types this corpus adopted. Validation and index generation cover these and no others.
+types:
+  - adrs
+  - capabilities
+  - controls
+  - data
+  - discoveries
+  - explanations
+  - faqs
+  - glossary
+  - integrations
+  - nfrs
+  - policies
+  - postmortems
+  - processes
+  - runbooks
+  - services
+  - standards
+  - tools
+
+# What `kac export` leaves behind. Empty means a consumer reads what this corpus actually holds.
+export:
+  exclude: []
+
+# Files this corpus holds differently from the framework, each with the reason it does.
+skip: []

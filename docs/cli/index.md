@@ -10,20 +10,20 @@ behind it, and its known limits.
 
 | Command                     | What it does                                            |
 |-----------------------------|---------------------------------------------------------|
+| [`new`](new.md)             | Stand a corpus up in the folder you are in.             |
 | [`validate`](validate.md)   | Check the corpus against its schema.                    |
 | [`generate`](generate.md)   | Rewrite the parts of a corpus derived from its records. |
 | [`export`](export.md)       | Write the corpus out as data a consumer can read.       |
 | [`bundle`](bundle.md)       | Assemble the export into an installable agent plugin.   |
 | [`checks`](checks.md)       | List every check the validator can report.              |
 | [`mechanism`](mechanism.md) | Compare a corpus against upstream, or sync from it.     |
-| [`new`](new.md)             | Stand a corpus up in the folder you are in.             |
 | [`update`](update.md)       | Take a newer framework into a corpus.                   |
 
 <!-- END GENERATED: command-table -->
 
-!!! warning "`new` and `update` do not exist yet"
+!!! warning "`update` does not exist yet"
 
-    Both pages are specifications, written before their commands. Each says so at its head.
+    Its page is a specification, written before the command, and says so at its head.
 
 ## Where a command runs
 
@@ -49,10 +49,10 @@ it was built from.
 
 ## Exit codes
 
-| Code | Meaning                                                                          |
-|------|----------------------------------------------------------------------------------|
-| `0`  | No errors. Warnings may still have been printed.                                 |
-| `1`  | A corpus **error**, or a bad invocation (missing or unknown command or option).  |
-| `2`  | A command found no corpus. `--version` and `--help` need none and answer anyway. |
+| Code | Meaning                                                                                 |
+|------|-----------------------------------------------------------------------------------------|
+| `0`  | No errors. Warnings may still have been printed.                                        |
+| `1`  | A corpus **error**, or a bad invocation (missing or unknown command or option).         |
+| `2`  | A command found no corpus. `new`, `--version` and `--help` need none and answer anyway. |
 
 Warnings never change the exit code.

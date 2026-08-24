@@ -251,8 +251,8 @@ public static class Validator
     {
         foreach (var name in names)
         {
-            var begin = text.IndexOf($"<!-- BEGIN GENERATED: {name} -->", StringComparison.Ordinal);
-            var end = text.IndexOf($"<!-- END GENERATED: {name} -->", StringComparison.Ordinal);
+            var begin = text.IndexOf(Generator.Begin(name), StringComparison.Ordinal);
+            var end = text.IndexOf(Generator.End(name), StringComparison.Ordinal);
             if (begin < 0 || end < 0)
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block is missing its "

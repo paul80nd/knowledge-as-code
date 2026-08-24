@@ -42,8 +42,10 @@ if (!Directory.Exists(fixturesDir))
     return 2;
 }
 
+// A scenario is a directory holding a corpus to run against, or a `mode` naming a command that builds
+// its own. `new` is the second: it creates a corpus rather than reading one.
 var scenarios = Directory.EnumerateDirectories(fixturesDir)
-    .Where(d => Directory.Exists(Path.Combine(d, "corpus")))
+    .Where(d => Directory.Exists(Path.Combine(d, "corpus")) || File.Exists(Path.Combine(d, "mode")))
     .Where(d => filters.Count == 0 || filters.Any(f => Path.GetFileName(d).Contains(f, StringComparison.OrdinalIgnoreCase)))
     .OrderBy(d => d, StringComparer.Ordinal)
     .ToList();
@@ -98,6 +100,9 @@ foreach (var scenario in scenarios)
                 break;
             case "bundle":
                 RunBundleScenario(name, scenario, corpusDir);
+                break;
+            case "new":
+                RunNewScenario(name, scenario);
                 break;
             default:
                 failures.Add(name);
@@ -291,6 +296,105 @@ void RunMechanismScenario(string name, string scenario, string corpusDir)
 
 // sync, over the same two trees. It asserts the one thing a check cannot: the tree afterwards.
 // `tooling/tests/README.md` says what each expectation file carries.
+// `new` builds its own corpus, so this scenario has no `corpus/` tree to read. It runs the real template
+// at the repository root, because what is worth proving is the command people will actually run.
+//
+// Two things are asserted and no more: every path the creation wrote, and the descriptor it composed.
+// Eighty file bodies would be a second copy of the template, and the template has tests of its own.
+//
+// The exit code is the third. `new` runs `validate` before it returns, so exit 0 says the corpus it
+// created validates, which is the whole exit check for this command.
+void RunNewScenario(string name, string scenario)
+{
+    var temp = Path.Combine(Path.GetTempPath(), "kac-new-" + Guid.NewGuid().ToString("N"));
+    Directory.CreateDirectory(temp);
+    try
+    {
+        var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "new", "--yes",
+            "--from", repoRoot, "--name", "acme-corpus", "--ci", "github");
+
+        var descriptorPath = Path.Combine(temp, ".corpus.yaml");
+        var listing = Listing(temp);
+        var tree = string.Join('\n', listing) + "\n";
+        var descriptor = File.Exists(descriptorPath)
+            ? Stable(File.ReadAllText(descriptorPath), repoRoot)
+            : "";
+
+        var treePath = Path.Combine(scenario, "expected-tree.txt");
+        var yamlPath = Path.Combine(scenario, "expected-descriptor.yaml");
+
+        if (update)
+        {
+            File.WriteAllText(treePath, tree);
+            File.WriteAllText(yamlPath, descriptor);
+            Console.WriteLine($"UPDATE {name}  ({listing.Count} file(s), exit {exit})");
+            return;
+        }
+
+        var problems = new List<string>();
+        if (exit != 0) problems.Add($"expected a corpus that validates (exit 0), got exit {exit}");
+        problems.AddRange(Differences("the file list", treePath, tree));
+        problems.AddRange(Differences(".corpus.yaml", yamlPath, descriptor));
+
+        if (problems.Count == 0)
+        {
+            Console.WriteLine($"ok     {name}  (created {listing.Count} file(s))");
+        }
+        else
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}");
+            foreach (var p in problems) Console.WriteLine($"         {p}");
+            foreach (var l in (stderr + stdout).Split('\n').Where(l => l.Trim().Length > 0).TakeLast(5))
+                Console.WriteLine($"       | {l}");
+        }
+    }
+    finally
+    {
+        TryDelete(temp);
+    }
+}
+
+// Every path the corpus holds, `.git` aside, relative and forward-slashed. Ordered so that the file is
+// read as a listing and a diff against it names the paths that moved.
+static List<string> Listing(string root) =>
+[
+    .. Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
+        .Select(f => Path.GetRelativePath(root, f).Replace('\\', '/'))
+        .Where(rel => rel != ".git" && !rel.StartsWith(".git/", StringComparison.Ordinal))
+        .OrderBy(rel => rel, StringComparer.Ordinal)
+];
+
+// The descriptor with the two facts about this machine taken out of it: where the repository sits, and
+// what day it is. Both are right in the file and neither can be committed to a golden.
+static string Stable(string descriptor, string repoRoot) =>
+    string.Join('\n', descriptor
+        .Replace(repoRoot, "<repository>", StringComparison.Ordinal)
+        .Replace("\r\n", "\n")
+        .Split('\n')
+        .Select(l => l.StartsWith("  taken-on:", StringComparison.Ordinal) ? "  taken-on: <today>" : l));
+
+// The first lines that differ, named rather than dumped. A whole-file diff of a hundred paths buries
+// the one that moved.
+static List<string> Differences(string what, string expectedPath, string actual)
+{
+    if (!File.Exists(expectedPath))
+        return [$"no expectation for {what} at {Path.GetFileName(expectedPath)}. run with --update, then read the diff"];
+
+    var expected = File.ReadAllText(expectedPath).Replace("\r\n", "\n");
+    if (expected == actual.Replace("\r\n", "\n")) return [];
+
+    var wanted = expected.Split('\n');
+    var got = actual.Replace("\r\n", "\n").Split('\n');
+
+    return
+    [
+        $"{what} differs from {Path.GetFileName(expectedPath)}:",
+        .. wanted.Except(got, StringComparer.Ordinal).Take(5).Select(l => $"  expected, not found: {l}"),
+        .. got.Except(wanted, StringComparer.Ordinal).Take(5).Select(l => $"  found, not expected: {l}")
+    ];
+}
+
 void RunSyncScenario(string name, string scenario, string corpusDir)
 {
     var referenceDir = Path.Combine(scenario, "reference");

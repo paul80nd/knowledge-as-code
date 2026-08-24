@@ -26,14 +26,14 @@ app.Configure(config =>
 
     // `--version` exists only once a version is set, and the informational one is what the build stamps
     // with the commit. So the answer names the source it was built from as well as the release.
-    config.SetApplicationVersion(
-        typeof(Cli).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-        ?? "unknown");
+    config.SetApplicationVersion(Cli.Version);
 
     // Without this an option the verb does not declare is dropped in silence, and a mistyped flag
     // reads as a clean run.
     config.UseStrictParsing();
 
+    config.AddCommand<NewCommand>("new")
+        .WithDescription("Turn the folder you are in into a corpus.");
     config.AddCommand<ValidateCommand>("validate")
         .WithDescription("Check the corpus against .schema/*.yaml.");
     config.AddCommand<GenerateCommand>("generate")
@@ -70,11 +70,17 @@ return exit == -1 ? 1 : exit;
 // Colour is settled here too, because this is the one step every verb takes before it writes anything.
 internal static class Cli
 {
+    // The release the build stamped this assembly with, and the commit it came from. `--version` prints
+    // it, and `new` holds itself against a template's `minimum-tool`.
+    public static readonly string Version =
+        typeof(Cli).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+        ?? "unknown";
+
     public static int InCorpus(KacSettings settings, Func<string, int> run)
     {
         if (settings.NoColor) Out.NoColor();
 
-        var corpusRoot = FindCorpusRoot(Directory.GetCurrentDirectory());
+        var corpusRoot = Corpus.FindRoot(Directory.GetCurrentDirectory());
         if (corpusRoot is null)
         {
             Out.ErrMarkup("[red]kac: could not locate a corpus (no .corpus.yaml above the cwd).[/]");
@@ -91,25 +97,6 @@ internal static class Cli
         }
 
         return run(corpusRoot);
-    }
-
-    // The corpus this command runs against: the nearest folder above the working directory carrying a
-    // `.corpus.yaml`. Every subcommand is answered from there, so where the tool's own files sit says
-    // nothing about which corpus it reads.
-    //
-    // The descriptor is the marker rather than the schema, because a repository may author one schema
-    // above several corpora. `Schema.FindRoot` is the walk that then finds it.
-    private static string? FindCorpusRoot(string start)
-    {
-        var dir = new DirectoryInfo(start);
-        while (dir is not null)
-        {
-            if (File.Exists(Path.Combine(dir.FullName, ".corpus.yaml")))
-                return dir.FullName;
-            dir = dir.Parent;
-        }
-
-        return null;
     }
 }
 
@@ -131,6 +118,69 @@ internal class KacSettings : CommandSettings
 
 // A verb taking nothing but the corpus it stands in.
 internal sealed class CorpusSettings : KacSettings;
+
+// `new` is the one verb answering about a corpus that is not there yet, so it takes the working directory
+// and never `Cli.InCorpus`. Finding a corpus is what stops it rather than what lets it run.
+//
+// Every answer has a flag, so nothing the command needs is reachable only by typing, and a run with no
+// terminal exits rather than waiting. `docs/cli/new.md` carries the defaults and the order it asks in.
+internal sealed class NewSettings : KacSettings
+{
+    [CommandOption("--name <NAME>")]
+    [Description("What the corpus is called. Defaults to the name of this folder.")]
+    public string? Name { get; init; }
+
+    [CommandOption("--from <URL|PATH>")]
+    [Description("The repository or folder serving the template. Defaults to the framework's own.")]
+    public string From { get; init; } = Asking.DefaultFrom;
+
+    [CommandOption("--ref <REF>")]
+    [Description("The branch or tag to take the template from.")]
+    public string? Ref { get; init; }
+
+    [CommandOption("--path <PATH>")]
+    [Description("The folder inside that repository holding manifest.yaml, where it is not at the root.")]
+    public string? Path { get; init; }
+
+    [CommandOption("--types <TYPES>")]
+    [Description("The types to adopt, comma-separated, or 'all'.")]
+    public string? Types { get; init; }
+
+    [CommandOption("--publishing <TARGET>")]
+    [Description("Where the corpus is published: github, azure-devops-wiki, mkdocs or none.")]
+    public string? Publishing { get; init; }
+
+    [CommandOption("--ci <SYSTEM>")]
+    [Description("What builds the corpus: github, azure-devops or none.")]
+    public string? Ci { get; init; }
+
+    [CommandOption("--yes")]
+    [Description("Take the default for every answer not given, and ask nothing.")]
+    public bool Yes { get; init; }
+}
+
+internal sealed class NewCommand : Command<NewSettings>
+{
+    protected override int Execute(CommandContext context, NewSettings settings, CancellationToken token)
+    {
+        if (settings.NoColor) Out.NoColor();
+
+        var request = new NewRequest
+        {
+            Name = settings.Name,
+            Types = settings.Types,
+            Publishing = settings.Publishing,
+            Ci = settings.Ci,
+            From = settings.From,
+            Ref = settings.Ref,
+            Path = settings.Path,
+            Yes = settings.Yes
+        };
+
+        return Commands.New(Directory.GetCurrentDirectory(), request, Cli.Version,
+            DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd"));
+    }
+}
 
 // `validate` takes no paths: several of its checks ask about the shape of the corpus rather than
 // about a document, and a subset cannot answer them.

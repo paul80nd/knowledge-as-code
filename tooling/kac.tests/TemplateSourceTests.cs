@@ -1,0 +1,166 @@
+// Unit tests for where `new` reads a template from, driven through real temp trees. Nothing here reaches
+// the network: a folder is read where it sits, and the clone is tested against a `file://` URL, which is
+// a real clone of a real repository on this machine.
+
+using kac.core;
+
+namespace kac.tests;
+
+public class TemplateSourceTests : IDisposable
+{
+    private readonly DirectoryInfo _temp = Directory.CreateTempSubdirectory("kac-template-");
+
+    public void Dispose() => _temp.Delete(recursive: true);
+
+    private string Dir(string name)
+    {
+        var path = Path.Combine(_temp.FullName, name);
+        Directory.CreateDirectory(path);
+        return path;
+    }
+
+    private static void Write(string root, string rel, string text = "")
+    {
+        var path = Path.Combine(root, rel.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, text);
+    }
+
+    // -- a folder on this machine --
+
+    [Fact]
+    public void A_folder_is_read_where_it_sits()
+    {
+        var from = Dir("template");
+        Write(from, "manifest.yaml");
+
+        var fetch = TemplateSource.Read(from, null, null, _temp.FullName, prompt: false);
+
+        Assert.Null(fetch.Problem);
+        Assert.Equal(from, fetch.Source!.Root);
+        Assert.Null(fetch.Source.Commit);
+    }
+
+    [Fact]
+    public void A_folder_survives_being_disposed()
+    {
+        var from = Dir("template");
+        Write(from, "manifest.yaml");
+
+        TemplateSource.Read(from, null, null, _temp.FullName, prompt: false).Source!.Dispose();
+
+        Assert.True(Directory.Exists(from));
+    }
+
+    [Fact]
+    public void A_path_names_the_folder_holding_the_manifest()
+    {
+        var from = Dir("repo");
+        Write(from, "framework/manifest.yaml");
+
+        var fetch = TemplateSource.Read(from, null, "framework", _temp.FullName, prompt: false);
+
+        Assert.Equal(Path.Combine(from, "framework"), fetch.Source!.Root);
+    }
+
+    // -- the listing --
+
+    [Fact]
+    public void A_repository_is_listed_by_git_so_what_it_ignores_is_never_read()
+    {
+        var from = Dir("repo");
+        Write(from, ".gitignore", "bin/\n");
+        Write(from, "manifest.yaml");
+        Write(from, "bin/kac.dll");
+        if (!GitCli.Repository(from)) return;
+
+        var files = TemplateSource.Read(from, null, null, _temp.FullName, prompt: false).Source!.Files();
+
+        Assert.Contains("manifest.yaml", files);
+        Assert.DoesNotContain("bin/kac.dll", files);
+    }
+
+    [Fact]
+    public void A_folder_that_is_no_repository_is_walked()
+    {
+        var from = Dir("plain");
+        Write(from, "manifest.yaml");
+        Write(from, "template/CLAUDE.md");
+
+        var files = TemplateSource.Read(from, null, null, _temp.FullName, prompt: false).Source!.Files();
+
+        Assert.Equal(["manifest.yaml", "template/CLAUDE.md"], files.OrderBy(f => f, StringComparer.Ordinal));
+    }
+
+    // -- the clone --
+
+    [Fact]
+    public void A_repository_is_cloned_and_the_ref_resolves_to_a_commit()
+    {
+        var origin = Dir("origin");
+        Write(origin, "manifest.yaml", "version: 4\n");
+        if (!GitCli.Repository(origin)) return;
+
+        var read = TemplateSource.Read(Url(origin), GitCli.Branch, null, _temp.FullName, prompt: false);
+
+        Assert.Null(read.Problem);
+        using var fetch = read.Source!;
+        Assert.NotEqual(origin, fetch.Root);
+        Assert.Equal(40, fetch.Commit!.Length);
+        Assert.Contains("manifest.yaml", fetch.Files());
+    }
+
+    [Fact]
+    public void A_clone_is_removed_when_it_is_no_longer_needed()
+    {
+        var origin = Dir("origin");
+        Write(origin, "manifest.yaml");
+        if (!GitCli.Repository(origin)) return;
+
+        var fetch = TemplateSource.Read(Url(origin), null, null, _temp.FullName, prompt: false);
+        Assert.Null(fetch.Problem);
+
+        var clone = fetch.Source!.Root;
+        fetch.Source.Dispose();
+
+        Assert.False(Directory.Exists(clone));
+    }
+
+    [Fact]
+    public void A_clone_that_failed_carries_what_git_said()
+    {
+        var fetch = TemplateSource.Read(Url(Path.Combine(_temp.FullName, "absent")), "main", null,
+            _temp.FullName, prompt: false);
+
+        Assert.Null(fetch.Source);
+        Assert.Contains("could not clone", fetch.Problem);
+        Assert.Contains("at 'main'", fetch.Problem);
+        Assert.Contains("git said:", fetch.Problem);
+    }
+
+    [Fact]
+    public void A_clone_holding_no_such_path_is_refused()
+    {
+        var origin = Dir("origin");
+        Write(origin, "manifest.yaml");
+        if (!GitCli.Repository(origin)) return;
+
+        var fetch = TemplateSource.Read(Url(origin), null, "framework", _temp.FullName, prompt: false);
+
+        Assert.Null(fetch.Source);
+        Assert.Contains("holds no 'framework' folder", fetch.Problem);
+    }
+
+    [Fact]
+    public void A_failed_clone_leaves_no_folder_behind()
+    {
+        var into = Dir("into");
+        TemplateSource.Read(Url(Path.Combine(_temp.FullName, "absent")), null, null, into, prompt: false);
+
+        Assert.Empty(Directory.EnumerateFileSystemEntries(into));
+    }
+
+    // A local repository addressed as a URL, which is what makes the clone above a real clone and still
+    // reaches nothing outside this machine.
+    private static string Url(string path) => new Uri(path).AbsoluteUri;
+}

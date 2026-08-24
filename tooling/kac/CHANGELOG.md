@@ -4,8 +4,9 @@
 
 This page covers the tool, published to nuget.org as
 [`KnowledgeAsCode.Tool`](https://www.nuget.org/packages/KnowledgeAsCode.Tool). The same repository holds the schema, the
-framework's documentation and the pages a corpus starts from. Those carry no version of their own and reach a corpus
-through `kac mechanism`, so nothing about them is recorded here.
+framework's documentation and the pages a corpus starts from. Those travel as a template with a version of its own,
+which `manifest.yaml` declares and `kac new` stamps into every corpus it creates. A change there is recorded here where
+somebody running `kac` can observe it, and nowhere otherwise.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions sit below 1.0.0 while the command
 surface may still change shape.
@@ -14,6 +15,29 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version.
 
 ## Unreleased
+
+## 0.6.0 - 2026-08-24
+
+### Added
+
+- **`kac new` turns the folder you are standing in into a corpus.** It takes the framework from a template repository at
+  a ref, writes what the manifest says a corpus receives, and writes the two files no template can supply:
+  `.corpus.yaml` and `README.md`. It then runs `generate`, `validate` and `git add -A`, and stops short of committing.
+  [`new`](https://paul80nd.github.io/knowledge-as-code/cli/new/) covers the flags, the defaults and the order it asks
+  in.
+- **`--from` defaults to the framework's own repository**, and accepts a local path as well as a URL. The template is
+  cloned rather than fetched over HTTP, so a repository needing authentication uses the credential helper you already
+  have. A local path is the offline escape hatch.
+- **`--yes` takes the default for every answer not given.** A run with no terminal and a missing answer exits with an
+  error rather than waiting, because a hung pipeline is worse than a failed one.
+
+### Changed
+
+- **A manifest rule may declare `ci:`**, naming the continuous integration system its files serve. `kac new --ci`
+  writes the matching starter and no other, so a corpus built by Azure DevOps no longer receives a GitHub Actions
+  workflow that would run uninvited.
+- **`minimum-tool` in the template manifest moves to `0.6.0`.** A 0.5.0 tool reads that manifest, ignores every `ci:`
+  in it, and takes both starters.
 
 ## 0.5.0 - 2026-08-24
 

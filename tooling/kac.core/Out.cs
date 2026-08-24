@@ -22,6 +22,15 @@ public static class Out
     private static IAnsiConsole Std => s_std ??= Make(Console.Out, Console.IsOutputRedirected);
     private static IAnsiConsole Err => s_err ??= Make(Console.Error, Console.IsErrorRedirected);
 
+    // The console a question is asked on. A prompt writes as well as reads, so it goes through the same
+    // console every other line of output does, and `--no-color` reaches it.
+    public static IAnsiConsole Terminal => Std;
+
+    // Whether there is somebody to ask. Spectre's own `Interactive` answers for the terminal it would
+    // draw on and not for the keyboard, so a redirected stdin passes it and reads back nothing.
+    public static bool Interactive =>
+        Std.Profile.Capabilities.Interactive && !System.Console.IsInputRedirected;
+
     // Plain text, written as given. Markup is not read here, so a message quoting '[ADR-0004]' or a
     // regex reaches the reader intact rather than throwing on an unbalanced tag.
     public static void Line(string text = "") => Std.WriteLine(text);

@@ -128,41 +128,34 @@ test commands.
 
 ## Starting a corpus of your own
 
-**Copy [`template/`](template/) and [`.schema/`](.schema/), not `example/`.** Between them they are the corpus with the
-content taken out: the schema, the framework's own documentation, a root page and a template for every type, and nothing
-about anybody's estate. `example/` is a worked corpus to read for ideas, and copying it hands you a fictional library
-consortium to delete.
+**`kac new` stands one up in the folder you are in.** It clones this repository, writes the files
+[`manifest.yaml`](manifest.yaml) says a corpus receives, and writes the two no template can supply: `.corpus.yaml`,
+which names your corpus, and a `README.md` to rewrite. Nothing here is what you copy by hand.
 
 ```bash
-cp -R template/ ../my-corpus
-cp -R .schema ../my-corpus/         # authored at this root, and a corpus carries its own copy
-cd ../my-corpus
-rm README.md                        # the template describing itself, not a corpus's own
-
-# edit .corpus.yaml: the one file no template can answer for you
-git init && git add -A              # kac reads the git listing, so a corpus is a repository
-                                    # the .gitignore you copied keeps .dist/ and _reports/ out of it
-
 dotnet tool install --global KnowledgeAsCode.Tool
-kac generate                        # write the indexes and generated blocks
-kac validate                        # comes back clean on an empty corpus
+
+mkdir ../my-corpus && cd ../my-corpus
+kac new                             # asks four things, and defaults every one of them
+git commit -m "Start a corpus"      # new stages what it wrote; the first commit is yours
 ```
 
-[`.corpus.yaml`](example/.corpus.yaml) names the corpus and says where it publishes. The one you copied names the
-template, so those are the two values to write first. It may also declare the types the corpus adopted. Leave that key
-out and `kac` reads adoption off the folders it finds instead. `example/`'s is commented throughout and is the one to
-read while writing yours.
+It asks what the corpus is called, which types it adopts, where it publishes and what builds it. Answer nothing and you
+still end with a corpus that validates. `--yes` takes every default and asks nothing, which is what a pipeline runs.
+Each answer also has a flag, so nothing is reachable only by typing.
 
-You arrive with ignore rules, editor conventions, a wiki ordering and a starter pipeline for each of the two hosts. Keep
-whichever pipeline you run on and delete the other. What you do not arrive with is a `README.md`, which is the one page
-nobody else can write for you. A command that stands all of this up for you sits in the
-[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues/242).
+`new` runs `generate` and then `validate` before it stages anything, so a corpus arrives with its indexes built and
+proved. It stops short of committing, because a first commit is a person's own act.
+[`new`](https://paul80nd.github.io/knowledge-as-code/cli/new/) covers every flag and what stops it.
 
-**A copy carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which is not part of any corpus.
-Install it from nuget.org as above and run it from the copy: it needs nothing but the `.schema/` the copy already
-carries.
+**A corpus carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which reaches no corpus. Install it
+from nuget.org as above and run it from wherever the corpus sits: it needs nothing but the `.schema/` that corpus
+already carries.
 
-**What a copy cannot yet do is take a newer framework.** `kac mechanism` wants a reference corpus, through `--against`
+**Read [`example/`](example/) rather than copying it.** It is a worked corpus with a fictional library consortium in it,
+kept to show what real records look like. `new` never sends you any of it.
+
+**What a corpus cannot yet do is take a newer framework.** `kac mechanism` wants a reference corpus, through `--against`
 or an `upstream.url`. Past that it reads a manifest at `tooling/manifest.yaml` that no corpus holds. A command that
 updates the schema beneath a corpus sits in the
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues), and is not described here.

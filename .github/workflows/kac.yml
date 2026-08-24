@@ -1,6 +1,7 @@
-# The gate on a pull request: kac run over the corpus at example/ and the one at template/, the plugin
-# example/ builds, and the tool's own three test layers. The example/ half mirrors
-# example/azure-pipelines.yml, which is a corpus's own pipeline and therefore reads no template/.
+# The gate on a pull request: kac run over the corpus at example/ and the one at template/, a corpus
+# stood up from nothing by the packed tool, the plugin example/ builds, and the tool's own three test
+# layers. The example/ half mirrors example/azure-pipelines.yml, which is a corpus's own pipeline and
+# therefore reads no template/.
 #
 # Nothing CI produces is written back over a file a human edits, and read-only permission is what
 # keeps it that way. `generate --check` only reports staleness, naming the command to run locally.
@@ -41,11 +42,10 @@ jobs:
         working-directory: example
         run: dotnet run --project ../tooling/kac -- generate --check
 
-      # template/ is what a new corpus receives, so a copy of it has to validate before its owner has
-      # run anything. Its .corpus.yaml is what makes kac read it as a corpus, and the schema both verbs
-      # judge it against is the one at the repository root. example/azure-pipelines.yml stays corpus-only,
-      # because a corpus has no template/ to look at.
-      - name: Validate what a new corpus receives
+      # `generate --check` is askable only here. The corpus the installed tool stands up further down
+      # is generated as it is created, so nothing there holds these committed copies fresh.
+      # example/azure-pipelines.yml stays corpus-only: a corpus has no template/ to look at.
+      - name: Validate the template where it is authored
         working-directory: template
         run: dotnet run --project ../tooling/kac -- validate
 
@@ -142,12 +142,27 @@ jobs:
       # Pack fails on package metadata no test layer above reads, such as a readme the project names
       # and nobody wrote. Installing what was packed catches a package that is well-formed and still
       # does not resolve to a runnable command.
-      - name: Pack the tool and run the installed copy
+      #
+      # Word for word the script in .azuredevops/kac.yml, so the two names it reads are set below rather
+      # than taken from whichever runner names them.
+      - name: Pack the tool, then stand a corpus up with the installed copy
+        shell: sh
+        env:
+          TEMP_ROOT: ${{ runner.temp }}
+          SOURCES: ${{ github.workspace }}
         run: |
           dotnet pack tooling/kac/kac.csproj -o .dist/pack
           dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
-          cd "$RUNNER_TEMP"
-          "$GITHUB_WORKSPACE/.dist/tools/kac" --version
+          cd "$TEMP_ROOT"
+          "$SOURCES/.dist/tools/kac" --version
+
+          # `new` validates before it returns. The two verbs after it put the same questions to a
+          # separate process, which is what finds a corpus only its creator can read.
+          mkdir -p "$TEMP_ROOT/created"
+          cd "$TEMP_ROOT/created"
+          "$SOURCES/.dist/tools/kac" new --yes --from "$SOURCES" --name created --ci github
+          "$SOURCES/.dist/tools/kac" validate
+          "$SOURCES/.dist/tools/kac" generate --check
 
   # The documentation site, built the way publish-docs.yml builds it. A job of its own because it
   # needs Python and nothing else here does, and `strict:` in mkdocs.yml is what makes a dead link

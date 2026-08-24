@@ -81,6 +81,180 @@ public static class Commands
         return 0;
     }
 
+    // Turn the folder this was run in into a corpus.
+    //
+    // The one verb answering about a corpus that is not there yet, so it takes the working directory
+    // rather than a corpus root, and refuses where the others require one.
+    //
+    // The order is the whole design: everything that can fail is settled before the first question, so
+    // that nobody answers six of them and is then told the URL was unreachable. `docs/cli/new.md` argues
+    // each step. `today` is passed in rather than read here, so a golden can pin what the descriptor says.
+    public static int New(string dir, NewRequest request, string toolVersion, string today)
+    {
+        var ground = kac.core.New.Survey(dir);
+
+        if (ground.Corpus is { } already)
+            return Fail($"new: {already} is already a corpus, so there is nothing here to create. "
+                        + "taking a newer framework into one is `kac update`.");
+
+        // A dirty tree stops the run, so that what `new` writes is legible as a diff against what was
+        // there. A tree git could not answer for is not reported as clean, and is not stopped either.
+        if (ground.Dirty is true)
+            return Fail("new: this repository holds uncommitted changes. commit or stash them first, so "
+                        + "that what `new` writes reads as a diff of its own.");
+
+        // Nobody to ask, in the two ways that happen: `--yes` answered everything in advance, and a run
+        // with no terminal has nobody at the keyboard. What each comes to differs, and `--yes` decides.
+        var asker = request.Yes || !Out.Interactive ? null : new ConsoleAsker();
+
+        if (!ground.Repository && Initialise(dir, request, asker) is { } refused) return refused;
+
+        if (ground.Holds.Count > 0)
+        {
+            Note($"new: this folder already holds {string.Join(", ", ground.Holds)}. without a committed "
+                 + "baseline there is nothing to tell those from the files about to arrive.");
+            if (asker is not null && !asker.Confirm("Create the corpus here anyway?")) return Cancelled();
+        }
+
+        var read = TemplateSource.Read(request.From, request.Ref, request.Path, Path.GetTempPath(),
+            prompt: asker is not null);
+        if (read.Problem is { } unreachable) return Fail(unreachable);
+        using var template = read.Source!;
+
+        var manifestFile = Path.Combine(template.Root, Manifest.FileName);
+        if (!File.Exists(manifestFile))
+            return Fail($"new: {request.From} holds no {Manifest.FileName}, so there is no template to "
+                        + "read. --path names the folder holding it, where it is not at the root.");
+
+        var manifest = Manifest.LoadFrom(manifestFile);
+        if (kac.core.New.TooOldFor(manifest.MinimumTool, toolVersion) is { } tooOld) return Fail(tooOld);
+
+        // The schema the template serves, which is the one account of what types there are to adopt.
+        var schema = Schema.Load(Schema.FindRoot(template.Root) ?? template.Root);
+        var declared = schema.ByFolder.Keys.OrderBy(k => k, StringComparer.Ordinal).ToList();
+
+        var answered = Asking.Resolve(request, new DirectoryInfo(dir).Name, declared,
+            Git.Run(dir, "remote get-url origin")?.Trim(), asker);
+        if (answered.Problem is { } unanswered) return Fail(unanswered);
+        var answers = answered.Answers!;
+
+        var upstream = new Upstream(request.From, request.Path, request.Ref, template.Commit,
+            manifest.Version, today);
+
+        Summarise(dir, answers, upstream, declared.Count);
+        if (asker is not null && !asker.Confirm("Create it?")) return Cancelled();
+
+        var plan = kac.core.New.Plan(template.Files(), manifest, answers, upstream,
+            kac.core.New.DeclinesTypes(schema, answers.Types));
+        if (plan.TemplateIsUnsound) return Unsound(plan, request.From);
+
+        foreach (var path in kac.core.New.Apply(plan, template.Root, dir)) Out.Markup(Wrote(path));
+
+        // Named where a reader can act on it, counted where they cannot. A declined type is a decision
+        // just made and needs no list; a starter withheld is one file, and which one is the whole fact.
+        if (plan.DeclinedTypes.Count > 0)
+            Account($"new: {plan.DeclinedTypes.Count} file(s) withheld for the types this corpus declined.");
+        if (plan.DeclinedCi.Count > 0)
+            Account($"new: did not write {string.Join(", ", plan.DeclinedCi)}: this corpus is built by "
+                    + $"{answers.Ci}.");
+
+        Account($"new: wrote {plan.Copied.Count + plan.Composed.Count} file(s) for {answers.Name}, taken "
+                + $"from {request.From}{At(template.Commit)}.");
+
+        // Generation writes the `_index.md` files and the generated blocks that validation then checks,
+        // so it goes first. Staging goes last, so everything the command did is visible in one place.
+        Generate(dir, check: false);
+        var validated = Validate(dir, json: false);
+        Stage(dir);
+
+        if (validated == 0) return 0;
+
+        // Two different faults end here, and the message has to say which. A corpus taking every type and
+        // failing is a defect upstream, and the person who just ran the command should not be left
+        // thinking they caused it. A corpus that declined types is meeting the cross-references on the
+        // pages it did receive, and those pages are seeds it owns.
+        Stop(plan.DeclinedTypes.Count > 0
+            ? "new: the corpus this created does not validate. a page it received links to a type this "
+              + "corpus declined. those pages are yours from here, so edit the links out. the files are "
+              + "written and staged."
+            : "new: the corpus this created does not validate. that is a defect in the template or in the "
+              + "tool, and not in anything you answered. the files are written and staged.");
+        return 1;
+    }
+
+    // Offer `git init`, and answer with the refusal where there is one. Discovery reads the git listing,
+    // so the choice is between running it and cancelling rather than carrying on without a repository.
+    private static int? Initialise(string dir, NewRequest request, IAsker? asker)
+    {
+        if (asker is null && !request.Yes)
+            return Fail("new: this folder is not a git repository, and there is no terminal to ask on. "
+                        + "run `git init` first, or pass --yes to have it run.");
+
+        if (asker is not null && !asker.Confirm($"{dir} is not a git repository. Run `git init` here?"))
+            return Cancelled();
+
+        return Git.Run(dir, "init -q") is null
+            ? Fail("new: `git init` failed. the tool reads the git listing to find what a corpus holds, "
+                   + "so a corpus git cannot see is not one worth writing.")
+            : null;
+    }
+
+    // What the run is about to do, before the one question that can still stop it.
+    private static void Summarise(string dir, NewAnswers answers, Upstream upstream, int declared)
+    {
+        Out.Markup($"[grey]new:[/] creating [bold]{answers.Name.EscapeMarkup()}[/] in {dir.EscapeMarkup()}");
+
+        var grid = Rows();
+        Row(grid, "types", answers.Types.Count == declared
+            ? $"all {declared}"
+            : $"{string.Join(", ", answers.Types)} ({answers.Types.Count} of {declared})");
+        Row(grid, "publishing", answers.PublishingTarget);
+        Row(grid, "built by", answers.Ci);
+        Row(grid, "template", upstream.Url + Ref(upstream.Ref) + At(upstream.Commit));
+        Out.Write(grid);
+
+        static void Row(Grid g, string label, string value) =>
+            g.AddRow($"  [grey]{label}[/]", value.EscapeMarkup());
+
+        static string Ref(string? name) => name is { Length: > 0 } r ? $" at {r}" : "";
+    }
+
+    // Everything the command did, in one place, before anybody commits it. A failure here is worth a note
+    // and not a stop: the files are written either way, and staging is the part a person can redo.
+    private static void Stage(string dir)
+    {
+        if (Git.Run(dir, "add -A") is null)
+            Note("new: `git add -A` did not run, so nothing is staged. the files are written.");
+        else
+            Account("new: staged. `git status` shows everything this wrote, and the first commit is yours.");
+    }
+
+    // Both halves of `NewPlan.TemplateIsUnsound`, each naming what the template did rather than the
+    // count of it, because the fix is upstream and needs the paths.
+    private static int Unsound(NewPlan plan, string from)
+    {
+        if (plan.Unclassified.Count > 0)
+        {
+            Stop($"new: {from} has a manifest that does not place its own tree. these files match no rule:");
+            foreach (var path in plan.Unclassified) Out.ErrLine($"  {path}");
+        }
+
+        if (plan.UnknownCi.Count > 0)
+            Stop($"new: {from} serves {string.Join(" and ", plan.UnknownCi)}, which this tool cannot offer. "
+                 + $"it offers {string.Join(", ", CiSystem.All)}.");
+
+        return 1;
+    }
+
+    private static int Cancelled()
+    {
+        Note("new: cancelled. nothing was written.");
+        return 1;
+    }
+
+    // The commit a take resolved to, short, or nothing where the template was read from a folder.
+    private static string At(string? commit) => commit is { Length: >= 7 } c ? $" at {c[..7]}" : "";
+
     // Assemble the plugin from the export and the `.plugin/` tree. Two trees in, one directory out, and
     // the corpus is never loaded: what a bundle has to decide is a fact about the export it was handed.
     public static int Bundle(string corpusRoot)
