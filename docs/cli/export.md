@@ -164,14 +164,18 @@ that varies between two runs is confined to the manifest. Two runs from one comm
 
 ### The two links
 
-**Two link forms, both naming a ref.** A person follows the rendered one and an agent fetches the raw one. The rules
-joining a base to a path, and the anchor rule for a part, belong to `publishing-target` and live in `Publishing`.
-`.corpus.yaml` supplies where the corpus is served from and nothing else. Every link resolves against the commit the
-export was built from. So a citation names the version the agent read rather than whatever the branch holds later.
+#### A person follows one form and an agent fetches the other
 
-**The manifest states both forms as templates, and a per-record file resolves them.** The templates are
-`https://…/blob/<sha>/{path}#{anchor}` and `https://raw…/<sha>/{path}`, and a consumer substitutes the `path` and
-`anchor` a term line carries. Four things follow from writing them this way:
+The rules joining a base to a path, and the anchor rule for a part, belong to `publishing-target` and live in
+`Publishing`. `.corpus.yaml` supplies where the corpus is served from and nothing else. Every link resolves against the
+commit the export was built from. So a citation names the version the agent read rather than whatever the branch holds
+later.
+
+#### The manifest states both forms as templates
+
+A per-record file resolves them. The templates are `https://…/blob/<sha>/{path}#{anchor}` and
+`https://raw…/<sha>/{path}`, and a consumer substitutes the `path` and `anchor` a term line carries. Four things follow
+from writing them this way:
 
 * **The ref is inside the template.** A ref left as a placeholder is forty hex characters copied by an agent. A
   one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a substitution
@@ -187,16 +191,20 @@ export was built from. So a citation names the version the agent read rather tha
 `Publishing.Links` substitutes into those same templates, so a link the export resolves and a link a consumer builds for
 one part are the same string.
 
-**A per-record file pays the churn a term line no longer does.** Its links are resolved, so the commit sits inside them.
-The file therefore rewrites on every export from a new commit, whatever its content did. It is bought deliberately:
-a reader that has already dereferenced one record wants a URL in its hand, not a template and a substitution rule. At a
-handful of records the cost is a few untracked files. It is worth reopening where a type exports records by the hundred,
-because the churn scales with the record count and what it buys does not.
+#### A per-record file pays the churn a term line no longer does
 
-Four kinds of corpus have no address the tool can build on: one publishing nowhere, one naming a target nothing builds
-links for, one stating a target but no bases, and one git cannot answer for. Each exports without links. The manifest
-carries the target it was given and null templates beside it, so a consumer sees the absence stated. The run itself says
-which of the four caused it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than about
+Its links are resolved, so the commit sits inside them. The file therefore rewrites on every export from a new commit,
+whatever its content did. It is bought deliberately: a reader that has already dereferenced one record wants a URL in
+its hand, not a template and a substitution rule. At a handful of records the cost is a few untracked files. It is
+worth reopening where a type exports records by the hundred, because the churn scales with the record count and what it
+buys does not.
+
+#### Four kinds of corpus have no address
+
+The tool can build on none of them: one publishing nowhere, one naming a target nothing builds links for, one stating a
+target but no bases, and one git cannot answer for. Each exports without links. The manifest carries the target it was
+given and null templates beside it, so a consumer sees the absence stated. The run itself says which of the four caused
+it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than about
 where it is published, and they travel either way.
 
 ### Two versions, and they are independent

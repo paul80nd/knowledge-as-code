@@ -74,22 +74,23 @@ validation can hold the corpus to it.
 
 ### What it writes
 
-The manifest decides, and `new` writes both of its layers: a corpus is created by taking everything at once.
+**The manifest decides, and `new` writes both of its layers.** A corpus is created by taking everything at once.
 `layer: withheld` is the template's own machinery and reaches no corpus. Where a rule declares `to:`, the file lands
 there rather than where it sat upstream, which is how a template serving its schema from a repository root places it at
 a corpus's own root.
 
-`.corpus.yaml` is written rather than copied. No template can carry a descriptor without carrying somebody else's name
-in it, so the file is composed from the answers above and stamped with the `upstream:` block: the URL, the path within
-it, the ref followed, the commit resolved, the template's version and the date. That block is what `update` reads later.
+**`.corpus.yaml` is written rather than copied.** No template can carry a descriptor without carrying somebody else's
+name in it, so the file is composed from the answers above and stamped with the `upstream:` block: the URL, the path
+within it, the ref followed, the commit resolved, the template's version and the date. That block is what `update`
+reads later.
 
-`README.md` is written too, and for the same reason. The template's own is `withheld`, because it describes the
+**`README.md` is written too, and for the same reason.** The template's own is `withheld`, because it describes the
 template rather than a corpus. A corpus that copied everything would therefore arrive with no README at all. What
 `new` writes is short: the corpus's name, what it holds, and how to run the tool against it. It is a starting point,
 not a document, and the corpus owns it from the moment it lands.
 
-One file needs more than its bytes: `.plugin/hooks/breadcrumb` is executable, and a hook that arrives without its mode
-bit fails silently on Unix.
+**One file needs more than its bytes.** `.plugin/hooks/breadcrumb` is executable, and a hook that arrives without its
+mode bit fails silently on Unix.
 
 ### What it does last
 

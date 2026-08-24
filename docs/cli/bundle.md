@@ -97,34 +97,42 @@ does not take `skills/ab` with it.
 have told it why. The empty plugin is itself the report: it installs, does nothing, and `bundle.json` beside it names
 each component that was dropped and the type it needed.
 
-### The breadcrumb is rendered here, not computed at runtime
+### The breadcrumb
 
-A `SessionStart` hook injects a few lines into
-every session. They say which corpus is installed, how many entries it holds, which records cover them, and which skill
-to ask. That is the whole of its job. An agent never asks for a glossary, because it does not know a word is ambiguous,
-so the breadcrumb exists to create the question rather than to answer it. A longer one would be paid for by every
-session that had none to ask.
+#### What it says, and why it stops there
+
+A `SessionStart` hook injects a few lines into every session. They say which corpus is installed, how many entries it
+holds, which records cover them, and which skill to ask. That is the whole of its job. An agent never asks for a
+glossary, because it does not know a word is ambiguous, so the breadcrumb exists to create the question rather than to
+answer it. A longer one would be paid for by every session that had none to ask.
+
+#### It is rendered here, and not computed at runtime
 
 Everything it states is a fact about the export sitting inside the plugin, and an installed plugin's export does not
 change between builds. So `bundle` writes the text once and the hook is one `cat`. Nothing on the consumer's machine is
 asked for a JSON parser, an interpreter or a runtime. The corpus takes the same position about every other generated
 projection: compute it once into an artefact rather than have each reader recompute it.
 
+#### It travels with the hook that prints it
+
 The rendered file travels with the directory that prints it and nowhere else. A corpus shipping no hook has nothing to
 read it. A corpus whose hook was trimmed would otherwise keep a file describing a component that left. Asking the
 surviving files rather than the components settles both without a corpus having to declare that a generated file belongs
 to one.
 
-**Nothing in the render names a record type.** The counts, the record names and the skill to ask are read off the
-export and off the surviving components. So a corpus adopting a type this tool has never heard of gets a breadcrumb
-about it with no line changing.
+#### Nothing in the render names a record type
+
+The counts, the record names and the skill to ask are read off the export and off the surviving components. So a corpus
+adopting a type this tool has never heard of gets a breadcrumb about it with no line changing.
 
 The record names are the point of the line a count alone cannot make. A corpus keeps one glossary per bounded context.
 Three names say which contexts are covered, where the number three says only that there are some.
 
-**A line names at most six things.** The names do a job that stops at a handful. The length of the breadcrumb is what
-every session pays at start, resume, clear and compact. The bound is therefore a number the renderer holds rather than
-however many records a corpus turns out to keep.
+#### A line names at most six things
+
+The names do a job that stops at a handful. The length of the breadcrumb is what every session pays at start, resume,
+clear and compact. The bound is therefore a number the renderer holds rather than however many records a corpus turns
+out to keep.
 
 A type over the bound has its first names carried and the rest given as a count, which is the last of the six. A list
 cut short in silence would read as the whole of what the type covers, and the count is what the line was for.
