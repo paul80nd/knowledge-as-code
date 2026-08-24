@@ -1,8 +1,5 @@
 Feature: What `new` settles before it writes anything
 
-  Everything that can stop a run is read before the first question, so that nobody answers six of them
-  and is then told the folder was not empty. Two of those states refuse and two carry on.
-
 Scenario: A folder already inside a corpus is refused
   Given an empty folder
   And a corpus descriptor above it

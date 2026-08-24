@@ -151,7 +151,7 @@ standing a type up without adopting it is a defect [`validate`](cli/validate.md)
 
 ```yaml
 export:
-  exclude: [ ]
+  exclude: []
 ```
 
 Empty by default, and that is the important part. A record still in draft travels, and so does one whose review date has

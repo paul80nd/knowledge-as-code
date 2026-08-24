@@ -51,8 +51,8 @@ reviewers, issue templates and the rest are questions about your repository, and
 
 ### Everything that can fail, fails first
 
-The order matters more than the steps. All of this runs before the first prompt, so that nobody answers six questions
-and is then told the URL was unreachable:
+The order matters more than the steps. All of this runs before the first prompt, so that nobody works through the
+questions below and is then told the URL was unreachable:
 
 1. **A corpus here already?** A `.corpus.yaml` at or above the working directory means this is one. Stop, and name
    `update`.

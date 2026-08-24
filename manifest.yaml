@@ -11,8 +11,7 @@
 # relocates whole and several files sharing one folder relocate together.
 #
 # A rule may also say `ci:`, naming the continuous integration system its files serve. A corpus is
-# created for one system and receives that system's rule alone. Only two rules need it, because
-# everything else here is read the same way whoever builds the corpus.
+# created for one system and receives that system's rule alone.
 #
 # A file whose destination is its source is shared with the corpora in this repository rather than
 # copied into them: `.schema/` and the two skills below are read from this root by `example/` and by
@@ -179,9 +178,8 @@ rules:
     to: ""
     layer: seed
     note: >
-      The navigation ordering an Azure DevOps wiki reads. It sits with the seeds every corpus receives
-      rather than with the two starters below, because what publishes a corpus and what builds it are
-      separate questions, and a file no other target reads costs a corpus nothing.
+      The navigation ordering an Azure DevOps wiki reads. It carries no `ci:` because it answers to how
+      a corpus is published rather than to how it is built.
 
   - path: "template/azure-pipelines.yml"
     to: ""
@@ -195,9 +193,7 @@ rules:
     to: ".github/workflows/"
     layer: seed
     ci: github
-    note: >
-      The GitHub Actions starter, the twin of the pipeline above and the same bargain. This is the one
-      whose `ci:` earns its keep: a workflow reaching a corpus that builds elsewhere runs uninvited.
+    note: The GitHub Actions starter, the twin of the pipeline above and the same bargain.
 
   - path: "template/*.md"
     to: ""

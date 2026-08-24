@@ -318,8 +318,6 @@ public static class New
 
         sb.Append("# What this corpus is, and where it stands against the framework it took.\n");
         sb.Append("#\n");
-        sb.Append("# This file is the corpus's own: nothing syncs it and nothing reconciles it. `kac` finds"
-                  + " the corpus by it.\n");
         sb.Append("# https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key"
                   + " here means.\n\n");
 

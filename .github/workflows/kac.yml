@@ -1,7 +1,7 @@
 # The gate on a pull request: kac run over the corpus at example/ and the one at template/, a corpus
 # stood up from nothing by the packed tool, the plugin example/ builds, and the tool's own three test
-# layers. The example/ half mirrors
-# example/azure-pipelines.yml, which is a corpus's own pipeline and therefore reads no template/.
+# layers. The example/ half mirrors example/azure-pipelines.yml, which is a corpus's own pipeline and
+# therefore reads no template/.
 #
 # Nothing CI produces is written back over a file a human edits, and read-only permission is what
 # keeps it that way. `generate --check` only reports staleness, naming the command to run locally.
@@ -42,11 +42,9 @@ jobs:
         working-directory: example
         run: dotnet run --project ../tooling/kac -- generate --check
 
-      # template/ read where it is authored, which is not what a corpus receives: the manifest
-      # relocates what it sends, and adds the schema and the writing skills from this root. The corpus
-      # a reader actually gets is stood up further down, by the installed tool. This pair stays because
-      # it is the direct signal, and because `generate --check` is askable only here, against the
-      # committed copies. example/azure-pipelines.yml stays corpus-only: a corpus has no template/.
+      # `generate --check` is askable only here. The corpus the installed tool stands up further down
+      # is generated as it is created, so nothing there holds these committed copies fresh.
+      # example/azure-pipelines.yml stays corpus-only: a corpus has no template/ to look at.
       - name: Validate the template where it is authored
         working-directory: template
         run: dotnet run --project ../tooling/kac -- validate
@@ -145,8 +143,8 @@ jobs:
       # and nobody wrote. Installing what was packed catches a package that is well-formed and still
       # does not resolve to a runnable command.
       #
-      # Word for word the script in azure-pipelines.yml, so the two names it reads are set below
-      # rather than taken from whichever runner it is on.
+      # Word for word the script in .azuredevops/kac.yml, so the two names it reads are set below rather
+      # than taken from whichever runner names them.
       - name: Pack the tool, then stand a corpus up with the installed copy
         shell: sh
         env:
@@ -158,9 +156,7 @@ jobs:
           cd "$TEMP_ROOT"
           "$SOURCES/.dist/tools/kac" --version
 
-          # A corpus created outside this repository, by the tool as a reader installs it. The golden
-          # suite runs `new` from the build, so only this can say that the packed tool stands a corpus
-          # up. `new` validates before it returns; the two verbs after it put the same questions to a
+          # `new` validates before it returns. The two verbs after it put the same questions to a
           # separate process, which is what finds a corpus only its creator can read.
           mkdir -p "$TEMP_ROOT/created"
           cd "$TEMP_ROOT/created"

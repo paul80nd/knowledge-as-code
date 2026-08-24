@@ -59,10 +59,8 @@ steps:
     displayName: Check generated output is fresh
     workingDirectory: $(Build.SourcesDirectory)/example
 
-  # template/ read where it is authored, which is not what a corpus receives: the manifest relocates
-  # what it sends, and adds the schema and the writing skills from this root. The corpus a reader
-  # actually gets is stood up further down, by the installed tool. This pair stays because it is the
-  # direct signal, and because `generate --check` is askable only here, against the committed copies.
+  # `generate --check` is askable only here. The corpus the installed tool stands up further down is
+  # generated as it is created, so nothing there holds these committed copies fresh.
   - script: dotnet run --project ../tooling/kac -- validate
     displayName: Validate the template where it is authored
     workingDirectory: $(Build.SourcesDirectory)/template
@@ -169,9 +167,7 @@ steps:
       cd "$TEMP_ROOT"
       "$SOURCES/.dist/tools/kac" --version
 
-      # A corpus created outside this repository, by the tool as a reader installs it. The golden
-      # suite runs `new` from the build, so only this can say that the packed tool stands a corpus
-      # up. `new` validates before it returns; the two verbs after it put the same questions to a
+      # `new` validates before it returns. The two verbs after it put the same questions to a
       # separate process, which is what finds a corpus only its creator can read.
       mkdir -p "$TEMP_ROOT/created"
       cd "$TEMP_ROOT/created"
