@@ -129,8 +129,9 @@ generated usage block above it. A command with two halves keeps each half at `##
 that heading to build the overview's table, so a form it cannot read fails `CliReferenceTests`.
 Write: ``# `checks` list every check the validator can report``
 
-**An admonition carries what a reader would otherwise act on wrongly.** Every one on the site is a `!!! warning`, and
-two of them say the command below is not built yet. It is not a way to emphasise a paragraph.
+**An admonition carries what a reader would otherwise act on wrongly.** Two kinds are in use: a `!!! warning` for a
+page describing a command that is not built yet, and a `!!! note` for a step that has to happen before the next command
+block. It is not a way to emphasise a paragraph.
 
 ## Cite the site by URL, and `docs/` by path
 
