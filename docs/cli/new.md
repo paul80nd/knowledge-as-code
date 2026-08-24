@@ -25,6 +25,10 @@ real records look like. Copying it hands you somebody else's library consortium 
 reverse. Between them a corpus is created once and kept current after that, and neither command has to guess which it is
 doing.
 
+**It does not install the tool.** `new` is run by a `kac` that is already on the machine. It fetches the rest of the
+framework: the schema, the framework's own documentation, the plugin tree, and the root page and `_template.md` each
+type starts from. The two halves are versioned apart from the moment a corpus is created.
+
 **It does not decide what your repository looks like.** It writes what a corpus is made of. Branch protection,
 reviewers, issue templates and the rest are questions about your repository, and it asks none of them.
 
@@ -104,8 +108,9 @@ It stops short of committing. A first commit is a person's own act, and staging 
 template repository cannot create a corpus. `--from` accepts a local path as well as a URL, which is the offline escape
 hatch and is also what the tool's own tests use.
 
-**It is not idempotent and does not try to be.** Running it twice in the same folder stops on the first check. Taking a
-newer template into a corpus that already exists is `update`, which is a different question with a different answer.
+**It is not idempotent and does not try to be.** Running it twice in the same folder stops on the first check. Taking
+a newer framework into a corpus that already exists is `update`, which is a different question with a different
+answer.
 
 **The default upstream is compiled in.** A tool that cannot bootstrap without a URL you have to look up is a tool people
 get wrong, so `--from` defaults to the framework's own repository. A corpus taking its framework from elsewhere passes

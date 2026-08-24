@@ -1,4 +1,4 @@
-# `update` take a newer template into a corpus
+# `update` take a newer framework into a corpus
 
 !!! warning "Draft, pending implementation"
 
@@ -8,9 +8,9 @@
 
 ## Intent
 
-`update` takes a newer template into a corpus that already has one, and is where a corpus adopts a type or gives one
-up. It reads where the corpus took its template from, fetches that template again at its ref, decides file by file what
-the corpus receives, writes it, and records what it took.
+`update` takes a newer framework into a corpus that already has one, and is where a corpus adopts a type or gives one
+up. It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file
+what the corpus receives, writes it, and records what it took.
 
 Its reader is whoever maintains a corpus. The command's promise is narrow and worth stating plainly: **it leaves every
 change in the working tree and commits nothing.** Git is the review step, so `update` can be liberal where a tool
@@ -18,24 +18,24 @@ without that safety net would have to be timid.
 
 ## What it is not
 
-**It is not how the tool is updated.** Two things reach a corpus from outside, and they arrive by different routes.
-`kac` itself comes from nuget.org, and `dotnet tool update KnowledgeAsCode.Tool` is what moves it. The template comes
-from wherever `.corpus.yaml` says, and `update` is what moves that: the schema, the framework's own documentation, the
-plugin tree, and the pages and templates a corpus starts from.
+**It is not how the tool is updated.** The framework is the schema, the tooling and the documentation that travel
+between corpora. Its two halves reach a corpus by different routes. `kac` itself comes from nuget.org, and
+`dotnet tool update KnowledgeAsCode.Tool` is what moves it. Everything else comes from the template `.corpus.yaml`
+points at, and `update` is what moves that.
 
-The two move independently. A corpus can run a new tool over an old template, or the reverse, and neither is a fault on
-its own. A template names the oldest tool that can read it in `minimum-tool`, which is the one place the two are held
-together.
+The two halves move independently. A corpus can run a new tool over an old copy of the framework's files, or the
+reverse, and neither is a fault on its own. The template's manifest names the oldest tool that can read it in
+`minimum-tool`, which is the one place the two are held together.
 
 **It is not a merge tool.** It writes files and stops. Where the result is wrong, the answer is `git checkout` on the
 file, or a `skip:` entry saying the corpus owns it. Nothing here resolves a conflict, because a clean tree means there
 are none.
 
 **It is not `validate`.** Whether a corpus's records are correct is a separate question with a separate answer, and a
-corpus can be perfectly in step with its template and full of bad records.
+corpus can be perfectly in step with its framework and full of bad records.
 
 **It is not `generate`.** That recomputes what a corpus derives from its own frontmatter. This one brings in what the
-corpus derives from somebody else's template. A corpus can be fresh and behind, or in step and stale.
+corpus derives from somebody else's framework. A corpus can be fresh and behind, or in step and stale.
 
 ## Approach
 

@@ -16,7 +16,7 @@ command is for, what it is not, and how it works.
 | [`checks`](checks.md)       | List every check the validator can report.              |
 | [`mechanism`](mechanism.md) | Compare a corpus against upstream, or sync from it.     |
 | [`new`](new.md)             | Stand a corpus up in the folder you are in.             |
-| [`update`](update.md)       | Take a newer template into a corpus.                    |
+| [`update`](update.md)       | Take a newer framework into a corpus.                   |
 
 <!-- END GENERATED: command-table -->
 
