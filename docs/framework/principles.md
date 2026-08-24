@@ -3,7 +3,7 @@
 Why the framework is shaped the way it is. A corpus's own taxonomy page says what its types are. This page says what
 they are for, and what the design will not trade away.
 
-These are meant to outlast the implementation. Each describes how the framework works today, the
+These are meant to outlast the implementation. Each describes how the framework works today. The
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds what's to come.
 
 ## Behaviour before subject
