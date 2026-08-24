@@ -635,10 +635,17 @@ public static class Generator
     private const string EndMarker = "<!-- END GENERATED: ";
     private const string MarkerClose = " -->";
 
+    // The marker pair one block lives between. Composed here so that nothing else spells them out: a
+    // second spelling is free to drift, and a marker nothing matches is a block that stops being written
+    // in silence.
+    public static string Begin(string name) => $"{BeginMarker}{name}{MarkerClose}";
+
+    public static string End(string name) => $"{EndMarker}{name}{MarkerClose}";
+
     public static string SpliceBlock(string text, string name, string inner)
     {
-        var begin = $"{BeginMarker}{name}{MarkerClose}";
-        var end = $"{EndMarker}{name}{MarkerClose}";
+        var begin = Begin(name);
+        var end = End(name);
         var bi = text.IndexOf(begin, StringComparison.Ordinal);
         if (bi < 0) return text;
         var ei = text.IndexOf(end, bi, StringComparison.Ordinal);

@@ -135,6 +135,10 @@ public class CorpusDescriptor
         ("upstream", "synced-from", null)
     ];
 
+    // The part a corpus plays. A source answers for the framework and carries the layer that proves the
+    // tool; a consumer takes both already proven. `docs/corpus-descriptor.md` argues the pair.
+    public const string Source = "source";
+    public const string Consumer = "consumer";
     public string Role = "";
 
     // Where the framework comes from, and what was last taken from it. `Path` is null where the manifest
@@ -218,7 +222,7 @@ public class CorpusDescriptor
     // proven upstream, so a fixture tree it will never run sits between its readers and the code they
     // came for. Every other role answers for the tool and holds the tests that prove it. A descriptor
     // naming no role answers yes, as `Adopted` does: a corpus that has said nothing is held to everything.
-    public bool Verifies => !Role.Equals("consumer", StringComparison.Ordinal);
+    public bool Verifies => !Role.Equals(Consumer, StringComparison.Ordinal);
 
     public static CorpusDescriptor Load(string corpusRoot)
     {

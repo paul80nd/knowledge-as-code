@@ -24,6 +24,10 @@ public sealed class Publishing
     public const string MkDocs = "mkdocs";
     public const string None = "none";
 
+    // Every target a descriptor may name. `new` offers this list and holds `--publishing` to it, so a
+    // target the tool cannot act on is refused at the flag rather than written into a corpus.
+    public static readonly IReadOnlyList<string> Targets = [AzureDevOpsWiki, GitHub, MkDocs, None];
+
     // The two placeholders a template leaves for its reader to fill.
     public const string PathToken = "{path}";
     public const string AnchorToken = "{anchor}";
