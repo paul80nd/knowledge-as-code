@@ -46,8 +46,8 @@ surfaces as a broken golden in the same run.
 ## What is not here
 
 `.corpus.yaml` is not a template file, though one sits here. It is present so that `kac` reads this folder as a corpus
-and can validate it, and the manifest withholds it. A corpus's descriptor names the corpus, says where it publishes,
-and lists the types it adopted, and no copied file could answer any of that.
+and can validate it, and the manifest withholds it. A corpus's descriptor names the corpus, says where it publishes, and
+lists the types it adopted, and no copied file could answer any of that.
 
 A `README.md` for the corpus is not here either. This folder's own is withheld, and what a corpus says about itself is
 the one page nobody else can write.

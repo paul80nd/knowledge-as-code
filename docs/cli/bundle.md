@@ -17,16 +17,14 @@ kac bundle [--no-color]
 An export is data, and data has to be handed to something. `bundle` assembles what `export` wrote, plus the `.plugin/`
 tree, into a Claude Code plugin directory under `.dist/plugin/`. It writes the marketplace that offers it into `.dist/`
 above, so the result can be installed. What ends up in the plugin is a function of what the export carried: a corpus
-that ships no
-glossary ships no glossary skill either.
+that ships no glossary ships no glossary skill either.
 
 ## What it is not
 
 **It is not [`export`](export.md).** `export` reads the corpus and writes data. `bundle` reads that data and writes a
-package. They
-are two commands because they fail differently: an export is wrong about the corpus, and a bundle is wrong about what
-it shipped. They are proved differently too. The export has a committed golden of its output, and the bundle has an
-assertion that it did not touch that output.
+package. They are two commands because they fail differently: an export is wrong about the corpus, and a bundle is wrong
+about what it shipped. They are proved differently too. The export has a committed golden of its output, and the bundle
+has an assertion that it did not touch that output.
 
 **It does not publish.** It writes a directory and a marketplace that names it, both untracked. Pushing either anywhere
 is CI's job (on GitHub, `publish-plugin.yml`), and so is running `claude plugin validate` over the result. What that
@@ -57,9 +55,9 @@ lands under that directory inside the plugin, so a clash would have one side sil
 won, the loser would be missing from an artefact nobody reviews.
 
 The `formatVersion` refusal is where the export format version is finally held to account. Both numbers are named,
-because the reader's next move differs. An export behind the tool is rebuilt, and an export ahead of it says the tool
-is the stale half. `.dist/export/` is untracked and outlives the run that wrote it, so a bundle built after a pull is
-the ordinary way to meet an export this tool did not ship beside. That case is what the field exists for.
+because the reader's next move differs. An export behind the tool is rebuilt, and an export ahead of it says the tool is
+the stale half. `.dist/export/` is untracked and outlives the run that wrote it, so a bundle built after a pull is the
+ordinary way to meet an export this tool did not ship beside. That case is what the field exists for.
 
 ### Two directories under one root, and each command replaces its own whole
 
@@ -74,15 +72,15 @@ copied into a cache of its own, so a path outside the plugin root does not trave
 `export` has to stay independently runnable and independently proved without `bundle` having run. The copy is the seam
 between the two commands.
 
-**`bundle` never edits what it copies.** The export travels byte for byte. The plan carries bytes rather than text, so
-a copy cannot acquire an opinion about encoding or line endings on the way through. A difference between the two copies
-is a defect, and the golden fixture asserts their equality directly.
+**`bundle` never edits what it copies.** The export travels byte for byte. The plan carries bytes rather than text, so a
+copy cannot acquire an opinion about encoding or line endings on the way through. A difference between the two copies is
+a defect, and the golden fixture asserts their equality directly.
 
 ### Trimming reads the export, not the corpus
 
-A component declares under `metadata.components` which record types it
-reads, and it travels only where the export carries every one of them. What that catches is the skill that finds
-nothing. To whoever asked it a question, that skill reads exactly like a corpus that does not define the term.
+A component declares under `metadata.components` which record types it reads, and it travels only where the export
+carries every one of them. What that catches is the skill that finds nothing. To whoever asked it a question, that skill
+reads exactly like a corpus that does not define the term.
 
 Reading the export is what makes the criterion the same in both states `.corpus.yaml` can be in. A corpus that declared
 `types:` and one whose adoption is inferred from its folders both reach the export through `Corpus.Adopted`. And a type
@@ -141,9 +139,8 @@ cut short in silence would read as the whole of what the type covers, and the co
 
 ### A hook is copied with its permission bit
 
-One file in the plugin tree is run rather than read. A command copied without
-that bit is a plugin that installs and then fails at the first session, with a message about permissions rather than
-about the corpus.
+One file in the plugin tree is run rather than read. A command copied without that bit is a plugin that installs and
+then fails at the first session, with a message about permissions rather than about the corpus.
 
 The bit does not exist on Windows and is not asked for there. A hook ships as a POSIX script and a `.cmd` twin, so one
 plugin serves a session on either platform.
@@ -164,18 +161,17 @@ wrote it. Mapping it onto a shape known here would delete whatever the corpus ha
 
 ### The bundle records what it shipped
 
-`bundle.json` at the plugin root carries the plugin, its version, the export it was built
-around, every component included and every one trimmed with the reason. Two corpora running one plugin name may ship
-different component sets. That is correct, and it makes "does this plugin do X" unanswerable from outside unless the
-plugin says. `bundle.json` carries no timestamp and no commit: the export inside the plugin states both, and a second
-clock would be a second answer to one question.
+`bundle.json` at the plugin root carries the plugin, its version, the export it was built around, every component
+included and every one trimmed with the reason. Two corpora running one plugin name may ship different component sets.
+That is correct, and it makes "does this plugin do X" unanswerable from outside unless the plugin says. `bundle.json`
+carries no timestamp and no commit: the export inside the plugin states both, and a second clock would be a second
+answer to one question.
 
 ### `.dist/` is the marketplace
 
-A marketplace is a directory holding `.claude-plugin/marketplace.json`, and it resolves
-each plugin's source against that directory. A source containing `..` is refused. So a marketplace cannot sit beside the
-plugin and point sideways at it, and the root is where it goes. `claude plugin marketplace add ./.dist` installs what
-was just built.
+A marketplace is a directory holding `.claude-plugin/marketplace.json`, and it resolves each plugin's source against
+that directory. A source containing `..` is refused. So a marketplace cannot sit beside the plugin and point sideways at
+it, and the root is where it goes. `claude plugin marketplace add ./.dist` installs what was just built.
 
 ## Decisions
 
@@ -183,14 +179,13 @@ was just built.
 between building and asking the plugin a question.
 
 **`corpusRoot` is read rather than defaulted.** The plugin's skills address the export as
-`${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that name. A default here would be the tool quietly disagreeing with words
-the corpus wrote in its own skill. The disagreement would surface only when someone asked the installed plugin a
-question.
+`${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that name. A default here would be the tool quietly disagreeing with words the
+corpus wrote in its own skill. The disagreement would surface only when someone asked the installed plugin a question.
 
 ## Known limits
 
-**This command validates nothing it assembles.** `claude plugin validate` is a CI step rather than part of the build.
-So a component misplaced inside `.claude-plugin/` leaves here unreported, and is caught one layer out. That is the same
+**This command validates nothing it assembles.** `claude plugin validate` is a CI step rather than part of the build. So
+a component misplaced inside `.claude-plugin/` leaves here unreported, and is caught one layer out. That is the same
 division as publishing: the build stays runnable without the CLI installed.
 
 **The hook has been proved on macOS only.** The assembled plugin installs from the marketplace beside it. Its

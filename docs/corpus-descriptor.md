@@ -3,8 +3,8 @@
 ## What it is for
 
 `.corpus.yaml` sits at the root of a corpus and says what that corpus is, and where it stands against the shared
-framework. Everything else a corpus holds arrives from a template and can be taken again. This file is the corpus's
-own, so nothing syncs it and nothing reconciles it.
+framework. Everything else a corpus holds arrives from a template and can be taken again. This file is the corpus's own,
+so nothing syncs it and nothing reconciles it.
 
 You write it by hand. [`mechanism --sync`](cli/mechanism.md) stamps four of its keys, and of the commands that exist
 today it is the only one that touches the file at all.
@@ -13,11 +13,11 @@ throughout, and it is the copy to keep open while you write your own.
 
 ## What it is not
 
-**It is not the schema.** `.schema/` says what a record of each type must carry. This file says which of those types
-the corpus adopted, and says nothing about their shape.
+**It is not the schema.** `.schema/` says what a record of each type must carry. This file says which of those types the
+corpus adopted, and says nothing about their shape.
 
-**It is not configuration for a run.** It records decisions, and a command reads them. `--against` is the one flag
-that replaces a value here, and only for the run it is passed to.
+**It is not configuration for a run.** It records decisions, and a command reads them. `--against` is the one flag that
+replaces a value here, and only for the run it is passed to.
 
 ## Three versions live here
 
@@ -66,8 +66,8 @@ publishing:
   path-prefix: example
 ```
 
-`publishing-target` is one of `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather than leave it to
-be guessed. It is recorded rather than inferred, so `export` knows whether it can build a link at all. And
+`publishing-target` is one of `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather than leave it to be
+guessed. It is recorded rather than inferred, so `export` knows whether it can build a link at all. And
 [`export`](cli/export.md)
 knows whether it can write a link that a reader and an agent could each follow.
 
@@ -80,8 +80,8 @@ carries no links. No link is better than a link built on a convention nobody has
 handed an address that resolves nowhere. It is the one value that needs no `publishing:` block.
 
 Only *where* the corpus is served from lives here. How a record's path and a term's anchor join a base is a property of
-the target, and it lives in the mechanism. Every corpus on one target then builds the same link, and none of them
-writes the rule down a second time.
+the target, and it lives in the mechanism. Every corpus on one target then builds the same link, and none of them writes
+the rule down a second time.
 
 `path-prefix` is for a repository holding more than the corpus. You might expect to fold that folder into the two bases
 above. The commit a link resolves against sits between a base and the record's path, so there is nowhere to put it.
@@ -100,8 +100,8 @@ upstream:
 ```
 
 Where this corpus takes the framework from, if anywhere. `url` says it takes from an upstream at all, and
-`mechanism --check` uses it as the default for `--against`. A `--sync` refuses to run without it. The corpus at the
-head of the chain names none, so a sync there would have nowhere to run from.
+`mechanism --check` uses it as the default for `--against`. A `--sync` refuses to run without it. The corpus at the head
+of the chain names none, so a sync there would have nowhere to run from.
 
 `path` is the folder inside that repository holding `manifest.yaml`. Leave it out where the manifest sits at the
 repository root, which is where this project keeps it.
@@ -134,9 +134,8 @@ types:
   - policies
 ```
 
-Index generation covers the types listed here and no others. Omit the key and you have not declared yet,
-so the tool reads adoption off the folders it finds. A type counts where both halves are there, meaning the page and
-the folder.
+Index generation covers the types listed here and no others. Omit the key and you have not declared yet, so the tool
+reads adoption off the folders it finds. A type counts where both halves are there, meaning the page and the folder.
 
 Declaring turns "these folders happen to be here" into "these are the types this corpus chose", and validation can then
 hold the corpus to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared,
@@ -149,9 +148,9 @@ export:
   exclude: []
 ```
 
-Empty by default, and that is the important part. A record still in draft travels, and so does one whose review date
-has passed. Each carries its own state, so a consumer reads what the corpus actually holds and decides for itself how
-far to trust it.
+Empty by default, and that is the important part. A record still in draft travels, and so does one whose review date has
+passed. Each carries its own state, so a consumer reads what the corpus actually holds and decides for itself how far to
+trust it.
 
 Filter here and you make the corpus's own state invisible downstream. Your consumer sees a smaller, tidier vocabulary
 and no sign that anything was withheld. The option is there for a corpus publishing to an audience it cannot warn.

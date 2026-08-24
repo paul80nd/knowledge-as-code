@@ -99,8 +99,9 @@ public partial class CliReferenceTests
         if (page == wanted) return;
 
         if (Updating) File.WriteAllText(CliReference.Index, wanted);
-        else Assert.Fail("the command table is stale in docs/cli/index.md. "
-                         + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
+        else
+            Assert.Fail("the command table is stale in docs/cli/index.md. "
+                        + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
     }
 
     // The page with its block replaced, or with one inserted below the heading where it has none yet.

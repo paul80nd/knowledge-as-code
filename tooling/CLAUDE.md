@@ -1,7 +1,7 @@
 # Working on `kac`
 
-The [documentation site](https://paul80nd.github.io/knowledge-as-code/) is the reference for what each command does,
-one page apiece, and [`README.md`](README.md) says how it is built. This is what will bite you while changing it.
+The [documentation site](https://paul80nd.github.io/knowledge-as-code/) is the reference for what each command does, one
+page apiece, and [`README.md`](README.md) says how it is built. This is what will bite you while changing it.
 
 ## Writing here
 
@@ -30,22 +30,22 @@ dotnet run --project ../tooling/kac -- validate
 dotnet run --project ../tooling/kac -- generate --check
 ```
 
-Both find their corpus by the `.corpus.yaml` at its root, and then find the `.schema/` to judge it against by walking
-up to this repository's root, where it is authored once.
+Both find their corpus by the `.corpus.yaml` at its root, and then find the `.schema/` to judge it against by walking up
+to this repository's root, where it is authored once.
 
 **Run one invocation at a time.** Concurrent runs build the same project and contend over its output.
 
 **Three pipelines, and each has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
 [`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.
-[`example/azure-pipelines.yml`](../example/azure-pipelines.yml) is a corpus's own, forked by each corpus that takes
-one, so it runs `kac` over that corpus and reads no `template/`.
+[`example/azure-pipelines.yml`](../example/azure-pipelines.yml) is a corpus's own, forked by each corpus that takes one,
+so it runs `kac` over that corpus and reads no `template/`.
 
 ## Adding or changing a check
 
 **Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
-`expr:` on a rule in `.schema/<type>.yaml`. See [`../.schema/README.md`](../.schema/README.md) for
-what one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the
-checks table and `kac checks` all pick it up from the schema.
+`expr:` on a rule in `.schema/<type>.yaml`. See [`../.schema/README.md`](../.schema/README.md) for what one may say.
+That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks table and
+`kac checks` all pick it up from the schema.
 
 **What decides it is what the author is told.** Write the expression where one fixed message says everything the code
 would have said. Write the code where it can name *which* part of the document is at fault and a single string cannot. A
@@ -131,9 +131,9 @@ needs no list at all, because `Schema.Load` reads every mapping through a `Level
 adding a `Get` is what admits a key. Add one without the code that reads what it parsed into and the failure moves from
 `schema-unknown-key` to `schema-dispatch`; it does not go away.
 
-Not every question there is about a vocabulary. A `mirrors-section:` names any section and the code acts on whatever
-it names. What makes it sound is the type's own `sections:` block, one declaration held against another in the same
-file. That is `schema-shape`, not `schema-dispatch`.
+Not every question there is about a vocabulary. A `mirrors-section:` names any section and the code acts on whatever it
+names. What makes it sound is the type's own `sections:` block, one declaration held against another in the same file.
+That is `schema-shape`, not `schema-dispatch`.
 
 Wherever it lives, three places have to agree, and each fails a meta-test rather than a test you were looking at:
 
@@ -144,15 +144,15 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
    `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one of its
    records. The flag is for a check that reads the schema, the template or the page itself, which is real and is not
    theirs to act on. The flag sits with the check because it is a fact about the check.
-3. **A fixture that trips it.** The coverage gate fails on any reachable check no fixture exercises, and that is
-   also what catches a check declared in the schema and reported by nothing.
+3. **A fixture that trips it.** The coverage gate fails on any reachable check no fixture exercises, and that is also
+   what catches a check declared in the schema and reported by nothing.
 
 No prose states a check count: `kac checks` reports it. [Checks](https://paul80nd.github.io/knowledge-as-code/checks/)
 carries no table of checks either: it points at the schema, so there is nothing there to go quietly out of date.
 
-`DocRows` is deliberately *not* generated from the catalogue. Rows are grouped and hand-worded, so several catalogue
-ids fold into one reader-facing row. An expression rule is the opposite, one id reporting under its own name, so its
-row comes from its `description:` and writing one into `DocRows` would duplicate it.
+`DocRows` is deliberately *not* generated from the catalogue. Rows are grouped and hand-worded, so several catalogue ids
+fold into one reader-facing row. An expression rule is the opposite, one id reporting under its own name, so its row
+comes from its `description:` and writing one into `DocRows` would duplicate it.
 
 **The coverage gate reads ids, not branches**, so a rule reporting three faults under one id needs a fixture for each,
 and unit tests beside the rule class for the branches a fixture would only duplicate.
@@ -185,8 +185,8 @@ the ones the plan already reports, so nothing is decided twice.
 
 ## Adding a generated block
 
-**`kac.core/GeneratedFiles.cs` is the one list of what `generate` writes and where.** Adding a block is one entry
-there, naming it beside the renderer that fills it, and nothing else.
+**`kac.core/GeneratedFiles.cs` is the one list of what `generate` writes and where.** Adding a block is one entry there,
+naming it beside the renderer that fills it, and nothing else.
 
 `Commands.Generate` writes what the list says and `Validator.CheckAll` holds the corpus to the same list. So a block
 cannot be written under a name nothing checks, or checked for under a name nothing writes.
@@ -207,8 +207,8 @@ from the framework carrying them, and one that has gone is a block that stopped 
   scenario may narrow one side with `corpus-schema.txt`, which names the type files that side holds *before* the sync.
   The real schema cannot express a corpus holding fewer files than upstream, and that is the state a sync resolves.
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`
-  beside it. Types it does not use are absent, which is silent. Adding a folder to a fixture without standing the
-  type up adds a finding to every scenario that reads it.
+  beside it. Types it does not use are absent, which is silent. Adding a folder to a fixture without standing the type
+  up adds a finding to every scenario that reads it.
 * Only fixtures in **`validate` mode** run the validator. `generate`, `generate-stale`, `mechanism`, `sync`, `export`
   and `bundle` modes do not, so a new check cannot affect them. `sync`, `export` and `bundle` are the modes that write.
   Each asserts the tree the command left rather than only what the command printed, so its expectations name files and
@@ -222,9 +222,9 @@ from the framework carrying them, and one that has gone is a block that stopped 
 
 ## The feature specs pin more than findings
 
-A scenario asserting a whole corpus, such as `Structure.feature` or `Shape.feature`, pins how many documents the
-fixture holds as well as every finding it produces. Adding a file to a fixture changes that count, and regenerating the
-goldens will not tell you: the golden layer and the feature layer assert different things about the same corpus.
+A scenario asserting a whole corpus, such as `Structure.feature` or `Shape.feature`, pins how many documents the fixture
+holds as well as every finding it produces. Adding a file to a fixture changes that count, and regenerating the goldens
+will not tell you: the golden layer and the feature layer assert different things about the same corpus.
 
 `Harness` runs `Corpus.Load` then `Validator.CheckAll`: the two calls `Commands.Validate` makes. Keep it that way: a
 harness assembling its own subset of the sequence leaves whole checks unreachable from a spec, and every spec goes on
@@ -262,5 +262,5 @@ changing.
 
 Everything after the fetch is glossary-specific and skipped where the export carries none. Two of those assertions
 restate over the real corpus what `ExporterTests` pins over corpora it builds for the purpose: the chain ordering, and
-the stability that carries no ranking. A rule and the artefact a reader receives are the two things that could have
-come apart.
+the stability that carries no ranking. A rule and the artefact a reader receives are the two things that could have come
+apart.

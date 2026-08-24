@@ -4,8 +4,8 @@
 
 [`.corpus.yaml`](.corpus.yaml) declares `role:`. This repository is a **source**: those two directories are yours to
 change, what you write propagates to every corpus that took a copy, and the tests that prove the tool live here. Write
-for someone who cannot see this conversation. The schema sits at the repository root rather than in this corpus,
-because `template/` is judged against the same copy.
+for someone who cannot see this conversation. The schema sits at the repository root rather than in this corpus, because
+`template/` is judged against the same copy.
 
 Where a corpus declares `role: consumer`, both directories arrive from upstream and a local edit is drift rather than
 customisation. `kac mechanism --check` reports it. Fix it upstream and run `kac mechanism --sync`. A consumer holds the
@@ -13,8 +13,7 @@ tool and none of the tests, because the tool reaches it already proven.
 
 **Adding a knowledge type is adding a YAML file to `../.schema/`.** A corpus adopts a type by adding its name to
 `types:` in `.corpus.yaml` and running `kac mechanism --sync`, which brings down the schema and seeds the root page and
-template.
-To decline a type, leave it out of `types:` rather than deleting files afterwards.
+template. To decline a type, leave it out of `types:` rather than deleting files afterwards.
 
 ## Before you commit
 
@@ -29,8 +28,8 @@ dotnet test tooling/kac.features   # Reqnroll behaviour specs
 dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and checks-table gates
 ```
 
-A bare `kac` runs the published tool rather than this one. [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) says what
-that costs, and carries the `template/` runs that go beside these.
+A bare `kac` runs the published tool rather than this one. [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) says what that
+costs, and carries the `template/` runs that go beside these.
 
 All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
 leave you green locally and red in CI. Run **one `kac` invocation at a time**: concurrent runs build the same project
@@ -80,6 +79,6 @@ produce materially different work. Where the request looks mistaken, say so in a
 
 ## Going deeper
 
-* [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) covers changing the validator, the generator, or the fixtures they
-  are tested against.
+* [`../tooling/CLAUDE.md`](../tooling/CLAUDE.md) covers changing the validator, the generator, or the fixtures they are
+  tested against.
 * [`../.schema/CLAUDE.md`](../.schema/CLAUDE.md) covers changing the schema, or writing a rule.

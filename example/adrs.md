@@ -77,7 +77,8 @@ its id.
 * **Format**: lean Nygard style, with an explicit Alternatives Considered section.
   [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example.
 
-See [Contributing](https://paul80nd.github.io/knowledge-as-code/framework/contributing/) for the review model that applies to all Decided-tier documents.
+See [Contributing](https://paul80nd.github.io/knowledge-as-code/framework/contributing/) for the review model that
+applies to all Decided-tier documents.
 
 ## What CI checks
 

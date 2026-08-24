@@ -24,10 +24,10 @@ and how it is reviewed. What is below is only what a data document adds to that.
 * **`owned-by`**: a single service id. Shared ownership means nobody is answerable, so resolve it before writing the
   document.
 * **`classification`**: `public` · `internal` · `confidential` · `personal` · `special-category`.
-* **`retention`**: required where classification is `personal` or `special-category`. "indefinitely" is an answer, and
-  a revealing one.
-* **`flows-to`**: the services and integrations that receive this data. Data leaving the estate is the part that
-  matters most.
+* **`retention`**: required where classification is `personal` or `special-category`. "indefinitely" is an answer, and a
+  revealing one.
+* **`flows-to`**: the services and integrations that receive this data. Data leaving the estate is the part that matters
+  most.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

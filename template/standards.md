@@ -23,18 +23,18 @@ came from: the ADR owns the *why* and the standard owns the *what*. Where a stan
 the policy. Below both sits a feature **spec**, which applies the standards to a concrete API and documents only what is
 unique to that feature.
 
-| Layer         | Answers                      | Lifecycle                    |
-|---------------|------------------------------|------------------------------|
+| Layer           | Answers                      | Lifecycle                    |
+|-----------------|------------------------------|------------------------------|
 | [ADRs](adrs.md) | *Why* did we decide this?    | Immutable, append-only log   |
-| Standard      | *What* must I do, and how?   | Living, maintained catalogue |
-| Spec          | What does *this* feature do? | Per-feature instance         |
+| Standard        | *What* must I do, and how?   | Living, maintained catalogue |
+| Spec            | What does *this* feature do? | Per-feature instance         |
 
 ## Why we use them
 
 The ADR log preserves the reasoning, and reasoning is the wrong thing to read when you are mid-build and want the rule.
-A standard states the pattern itself, in one place a reader can scan. Someone designing new functionality (a
-contributor or an AI session) finds the rule and checks the design against a conformance checklist. They open the ADR
-only when they want the deeper *why*.
+A standard states the pattern itself, in one place a reader can scan. Someone designing new functionality (a contributor
+or an AI session) finds the rule and checks the design against a conformance checklist. They open the ADR only when they
+want the deeper *why*.
 
 ## Categories
 

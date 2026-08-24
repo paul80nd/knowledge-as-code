@@ -3,8 +3,8 @@
 > The kinds of knowledge this corpus holds, what each is for, and what each is not.
 
 The [decision table](#where-does-this-go) below is the quickest route to the right answer, and the
-[disambiguations](#disambiguations) explain the calls that are genuinely close. Both cover the types this corpus
-adopted and no others.
+[disambiguations](#disambiguations) explain the calls that are genuinely close. Both cover the types this corpus adopted
+and no others.
 
 [Taxonomy][taxonomy] carries what is true of every corpus: what a tier is and what the five ask, the shape a type takes
 on disk, and what changing a taxonomy costs.
@@ -38,8 +38,8 @@ column for your row.
 
 <!-- END GENERATED: types-placement -->
 
-If nothing fits, raise it. A missing type is a taxonomy conversation, and the answer is sometimes a type this corpus
-has not adopted.
+If nothing fits, raise it. A missing type is a taxonomy conversation, and the answer is sometimes a type this corpus has
+not adopted.
 
 ## The types
 

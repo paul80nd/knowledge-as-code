@@ -79,9 +79,9 @@ and published by [`publish-docs.yml`](../.github/workflows/publish-docs.yml). `.
 order they read in. A dead link fails `mkdocs build --strict`; a page no nav entry reaches is reported at INFO and
 passes, so `NavigationTests` is what catches that.
 
-The site also carries the framework itself, under `../docs/framework/`: what a type and a tier are, the types that
-ship, what a record carries, how knowledge is contributed, and where the type names came from. A corpus keeps the
-narrow, corpus-facing half of each of those pages, around tables generated from the types it adopted.
+The site also carries the framework itself, under `../docs/framework/`: what a type and a tier are, the types that ship,
+what a record carries, how knowledge is contributed, and where the type names came from. A corpus keeps the narrow,
+corpus-facing half of each of those pages, around tables generated from the types it adopted.
 `DefaultTypesTests` holds the types page to the names and tiers the schema declares, and leaves the wording alone.
 
 A command page opens with a usage block generated from the parser's own command model, and `CliReferenceTests` holds it
@@ -95,9 +95,9 @@ command and find the answer in the same place. Deeper structure goes under those
 command with two halves keeps them at `###` and subsections them at `####`. `mechanism` is the page that does this, and
 `CliReferenceTests` holds every page to the five.
 
-It is prose throughout and not a form. A heading with nothing true to say is left out, because filler reads as an
-answer where an absence reads as work not yet done. Reasons stay inline in **How it works**, beside whatever they
-explain. **Decisions** takes only the ones belonging to a command as a whole.
+It is prose throughout and not a form. A heading with nothing true to say is left out, because filler reads as an answer
+where an absence reads as work not yet done. Reasons stay inline in **How it works**, beside whatever they explain.
+**Decisions** takes only the ones belonging to a command as a whole.
 
 `new.md` and `update.md` are specifications written before their commands exist, and say so at their head.
 `CliReferenceTests` is what holds them to saying it.

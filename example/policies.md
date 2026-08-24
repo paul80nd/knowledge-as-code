@@ -11,8 +11,8 @@ technology: *"secrets are never stored in source control"*, *"quality checks are
 non-development environments go through the pipeline"*.
 
 Policies sit at the top of the normative hierarchy. A policy says what we hold true, a [standard](standards.md) says
-what to do about it, a [control](controls.md) says how we know it happened, and a [process](processes.md) says how to
-do it.
+what to do about it, a [control](controls.md) says how we know it happened, and a [process](processes.md) says how to do
+it.
 
 ## Why we use them
 
@@ -88,9 +88,9 @@ under governance is the clearest of them.
    ``` `Policy: pol-MNEM` `DRAFT` ```, and CI checks it against the frontmatter.
 4. Set `category` to whichever of the four the commitment belongs to. If two fit, pick the one a reader looking for this
    policy would try first. If none does, that is a taxonomy question, and not a fifth category invented in passing.
-5. State the scope it binds, then the commitment itself as clauses: one obligation per row, each with a short
-   upper-case id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Write any explicit exceptions beneath the clauses,
-   where a reader meets them before relying on the rule.
+5. State the scope it binds, then the commitment itself as clauses: one obligation per row, each with a short upper-case
+   id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Write any explicit exceptions beneath the clauses, where a reader
+   meets them before relying on the rule.
 6. Map clauses to framework controls in the `Alignment` column where a genuine mapping exists, and roll the references
    up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](frameworks.md). Decide its
    posture there before citing it here.
@@ -106,12 +106,11 @@ under governance is the clearest of them.
   standards against them, so nobody writing here can know the full set of implementers. A policy that nothing in *this*
   corpus implements is the normal state rather than a gap to be explained.
 * **A clause is the unit anything else cites.** A standard, a control or a deviation names the single obligation it
-  answers, in the form [Metadata][referring] sets out. Clause ids are immutable for the same reason policy ids
-  are: removing or renaming one breaks every citation of it.
-* **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
-  scope. The id does not move. Standards, controls and processes cite policies by id. Reassign a mnemonic and every one
-  of those citations tells the reader something untrue: the reference still resolves, so nothing fails and no check
-  fires.
+  answers, in the form [Metadata][referring] sets out. Clause ids are immutable for the same reason policy ids are:
+  removing or renaming one breaks every citation of it.
+* **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the scope.
+  The id does not move. Standards, controls and processes cite policies by id. Reassign a mnemonic and every one of
+  those citations tells the reader something untrue: the reference still resolves, so nothing fails and no check fires.
 
   This is why the mnemonic comes from the concept rather than the wording. A policy whose *meaning* has changed enough
   to invalidate its mnemonic has not been edited. It has been replaced. **Retire the old policy and write a new one**,

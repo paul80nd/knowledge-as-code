@@ -40,5 +40,4 @@ should follow.
   minimum reviewer count per branch and scopes required reviewers per path, which is the pairing this needs.
 * `discoveries/*` has no path rule and merges on a green build.
 
-
 [contributing]: https://paul80nd.github.io/knowledge-as-code/framework/contributing/

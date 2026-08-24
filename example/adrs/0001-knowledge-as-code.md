@@ -97,8 +97,8 @@ We treat knowledge as code:
   unverified assertions, and trust in everything else falls with them.
 * **The corpus will grow from a few dozen documents towards several hundred** as the taxonomy fills. A generated index
   carries weight at that size, so we automate the indexes before the growth.
-* **Session logs will stay out of this corpus.** They routinely contain credentials and customer data. We commit
-  only distilled, reviewed discoveries.
+* **Session logs will stay out of this corpus.** They routinely contain credentials and customer data. We commit only
+  distilled, reviewed discoveries.
 * **The mechanism will be reusable elsewhere.** Keeping schema, validators and skills free of organisation specifics
   costs a little discipline. That discipline makes the approach portable to another estate.
 

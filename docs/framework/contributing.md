@@ -1,18 +1,18 @@
 # Contributing
 
-A corpus, meaning one repository of knowledge records, grows at the rate work happens only if a person and an AI
-session can both write to it. It stays worth reading only if both answer to the same bar. So the rules below are the
-same whichever is holding the keyboard.
+A corpus, meaning one repository of knowledge records, grows at the rate work happens only if a person and an AI session
+can both write to it. It stays worth reading only if both answer to the same bar. So the rules below are the same
+whichever is holding the keyboard.
 
 This page is the model. The rules for the words themselves are skills, which an agent loads beside the work at the
-moment of writing and which cost nothing on a session that writes no prose. A person contributing by hand reads them
-as the full rule list.
+moment of writing and which cost nothing on a session that writes no prose. A person contributing by hand reads them as
+the full rule list.
 
-| The skill           | Carries                                                                     |
-|---------------------|-----------------------------------------------------------------------------|
-| `technical-writing` | the floor: how to build a sentence, and how to write a commit message       |
-| `writing-a-record`  | what a corpus adds to the floor, and what each tier asks on top of that     |
-| `writing-the-docs`  | the upstream project's own public pages, which is this site                 |
+| The skill           | Carries                                                                 |
+|---------------------|-------------------------------------------------------------------------|
+| `technical-writing` | the floor: how to build a sentence, and how to write a commit message   |
+| `writing-a-record`  | what a corpus adds to the floor, and what each tier asks on top of that |
+| `writing-the-docs`  | the upstream project's own public pages, which is this site             |
 
 ## What outranks what
 
@@ -21,8 +21,8 @@ Four sources of rules, in this order.
 1. **The schema and the validator.** `.schema/*.yaml`, and what `kac validate` and `kac checks` report. These are
    executable, so they are the authority on anything mechanical: required sections, clause modals, id and filename
    formats, link forms, and which text rules a type actually declares.
-2. **The type's own pages.** `<type>.md` for what the type holds, and `<type>/_template.md` for the sections a record
-   of it must have.
+2. **The type's own pages.** `<type>.md` for what the type holds, and `<type>/_template.md` for the sections a record of
+   it must have.
 3. **The corpus's own contributing page**, for the conventions it sets locally.
 4. **The skills**, for the prose.
 
@@ -69,9 +69,9 @@ decision, write a new one that supersedes it.
 An agent proposing knowledge has an identity of its own: a service account that can open pull requests and cannot merge
 them. A human accepts what it proposes, and a branch policy enforces that so nobody has to remember.
 
-What an agent may write follows from that. It captures a discovery rather than an FAQ, because it cannot confirm its
-own observations. It proposes a superseding record rather than editing a Decided one. It asks where a record goes
-rather than guessing, because a well-written record in the wrong folder is a cost.
+What an agent may write follows from that. It captures a discovery rather than an FAQ, because it cannot confirm its own
+observations. It proposes a superseding record rather than editing a Decided one. It asks where a record goes rather
+than guessing, because a well-written record in the wrong folder is a cost.
 
 ## What a pipeline will not do
 
@@ -85,5 +85,5 @@ unanswerable. That is a bad trade for a repository whose value is a trustworthy 
 * Anything holding secrets, connection strings, tokens or customer data. A corpus is broadly readable.
 * Raw session logs. Distilled discoveries only.
 * Speculative documentation for work not yet started. That belongs in the backlog.
-* A record that fits no type. Raise the gap, because a missing type is a taxonomy conversation and a `misc/` folder is
-  a failure nobody notices until it is large.
+* A record that fits no type. Raise the gap, because a missing type is a taxonomy conversation and a `misc/` folder is a
+  failure nobody notices until it is large.

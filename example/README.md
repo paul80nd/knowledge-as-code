@@ -57,8 +57,8 @@ kac bundle       # assemble that export and .plugin/ into a plugin under .dist/p
 kac checks       # list every check the validator implements
 ```
 
-While you are changing the tool, run `dotnet run --project ../tooling/kac -- validate` instead. That reaches the
-working tree, and an installed `kac` does not.
+While you are changing the tool, run `dotnet run --project ../tooling/kac -- validate` instead. That reaches the working
+tree, and an installed `kac` does not.
 
 The example records are every `<type>/*.md` that is not `_index.md` or `_template.md`. `kac validate` covers them, so
 they are held to the same standard as real content. A schema change that breaks them fails CI here rather than in
@@ -72,8 +72,8 @@ on them rather than assumed. They are principle-level and stack-agnostic by desi
 no domain. That is why they would survive adoption with only the specifics rewritten.
 
 **Others need somewhere to stand.** A service catalogue demonstrates nothing without an estate. An NFR has to apply to
-something, and a postmortem needs an incident. Those use the consortium above, so the records form a graph instead of
-a list.
+something, and a postmortem needs an incident. Those use the consortium above, so the records form a graph instead of a
+list.
 
 **Delete these records rather than adapting them.** Each seeded type page says so at the top. They are chosen to
 exercise the schema's awkward corners, and will not resemble your estate: a monorepo shipping three deployables, a CDN

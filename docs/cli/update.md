@@ -9,8 +9,8 @@
 ## What it is for
 
 `update` takes a newer framework into a corpus that already has one, and is where a corpus adopts a type or gives one
-up. It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file
-what the corpus receives, writes it, and records what it took.
+up. It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file what
+the corpus receives, writes it, and records what it took.
 
 Its reader is whoever maintains a corpus. The command's promise is narrow and worth stating plainly: **it leaves every
 change in the working tree and commits nothing.** Git is the review step, so `update` can be liberal where a tool
@@ -51,8 +51,8 @@ corpus derives from somebody else's framework. A corpus can be fresh and behind,
 ### The plan
 
 Every file the template names resolves to exactly one layer, and the first matching rule wins. `to:` sends a file
-somewhere other than where it sat upstream. The manifest deciding all of this sits at the upstream repository's root,
-or in the folder `upstream.path` names.
+somewhere other than where it sat upstream. The manifest deciding all of this sits at the upstream repository's root, or
+in the folder `upstream.path` names.
 
 | Layer      | What happens                                                                         |
 |------------|--------------------------------------------------------------------------------------|

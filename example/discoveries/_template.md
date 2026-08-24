@@ -26,8 +26,8 @@ and how it is reviewed. What is below is only what a discovery adds to that.
 * **`source`**: `human` · `session` · `dreamed`.
 * **`confidence`**: leave `unverified` unless you have genuinely proven it.
 * **`expires`**: a quoted date. The default is 90 days from capture.
-* **`provenance`**: required when `source: dreamed`. A reference back to the session and passage it came from, so
-  review is a thirty-second check rather than an act of faith.
+* **`provenance`**: required when `source: dreamed`. A reference back to the session and passage it came from, so review
+  is a thirty-second check rather than an act of faith.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

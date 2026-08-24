@@ -2,9 +2,9 @@
 
 > The YAML block every document in the taxonomy opens with.
 
-Frontmatter is what makes this corpus machine-readable. CI validates it, the generator builds indexes from it, and
-agent sessions grep it to find things. The table and the strip below are generated from this corpus's own schema, so
-they cover the fields it actually carries.
+Frontmatter is what makes this corpus machine-readable. CI validates it, the generator builds indexes from it, and agent
+sessions grep it to find things. The table and the strip below are generated from this corpus's own schema, so they
+cover the fields it actually carries.
 
 [Metadata][metadata] carries the model behind them: what belongs in frontmatter and what belongs in the body, why a
 field is derived wherever it can be, how ids and their prefixes are formed, and how a citation reaches a part of a
@@ -33,8 +33,8 @@ own page.
 
 ## Per-type fields
 
-Each type's fields are documented on its own page, generated into it from `.schema/`. A reader working in one folder
-has what they need without leaving it, and there is still one definition.
+Each type's fields are documented on its own page, generated into it from `.schema/`. A reader working in one folder has
+what they need without leaving it, and there is still one definition.
 
 <!-- BEGIN GENERATED: types-metadata -->
 
@@ -69,8 +69,7 @@ tags: [ public-api, http ]
 ## Adding a field
 
 Declare it in the type's `.schema/<folder>.yaml`, add it to that type's `_template.md`, and run `kac generate` so the
-type's own page carries it. The validator reads the schema, so it needs no change of its own. What to ask before you
-add one
-is in [Metadata][metadata].
+type's own page carries it. The validator reads the schema, so it needs no change of its own. What to ask before you add
+one is in [Metadata][metadata].
 
 [metadata]: https://paul80nd.github.io/knowledge-as-code/framework/metadata/

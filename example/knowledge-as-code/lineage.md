@@ -7,8 +7,8 @@ below record each analogue, what it lends, and where this framework parts compan
 schema, so they cover the types this corpus adopted and no others.
 
 **This is alignment, not compliance.** Naming a framework in a row says the thinking is near theirs. It does not claim
-conformance, certification, or that a record of ours would satisfy an assessment against theirs. Where this corpus has
-a *standing* against an external framework, meaning obligations it accepts and is measured on,
+conformance, certification, or that a record of ours would satisfy an assessment against theirs. Where this corpus has a
+*standing* against an external framework, meaning obligations it accepts and is measured on,
 [`frameworks.md`](../frameworks.md) records it and nowhere else does.
 
 [Lineage][lineage] carries the rest, and the argument does not vary by corpus. Why the register is worth keeping, what

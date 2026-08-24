@@ -50,8 +50,8 @@ We treat knowledge as code. Concretely:
 * **Every document carries YAML frontmatter** conforming to a [schema](../knowledge-as-code/metadata.md). A wiki that
   renders frontmatter as a metadata table makes this visible to human readers rather than hidden plumbing, and the
   handwritten metadata tables documents currently carry are replaced by it.
-* **Types are grouped into tiers by behaviour**: decided, normative, descriptive, procedural and observed. The tier,
-  not the type, determines the review bar, the validation rules and the lifecycle.
+* **Types are grouped into tiers by behaviour**: decided, normative, descriptive, procedural and observed. The tier, not
+  the type, determines the review bar, the validation rules and the lifecycle.
 * **A cheap-capture, deliberate-promotion path exists** for observed knowledge. Unverified discoveries are recorded with
   no review and expire by default; promotion to an FAQ or a standard requires a human.
 * **CI validates** schema conformance, ID uniqueness, link resolution and bidirectional relationships, and **generates**
@@ -70,21 +70,21 @@ The full approach is described in [Knowledge as Code](../knowledge-as-code.md).
 * **Move to a hosted knowledge platform (Confluence, SharePoint, Notion).** Such a platform offers better discovery,
   better editing and broader reach across non-engineers. Rejected: agents can read such platforms at best and generally
   cannot write to them. The Microsoft 365 connector exposes search and read tools only, with no write path. Since the
-  accumulation half of the problem is the half we cannot currently solve at all, a platform that structurally forbids
-  it cannot be the answer. Documentation also stops travelling with the code it describes, so it can no longer be
-  reviewed in the same pull request as the change that invalidated it.
+  accumulation half of the problem is the half we cannot currently solve at all, a platform that structurally forbids it
+  cannot be the answer. Documentation also stops travelling with the code it describes, so it can no longer be reviewed
+  in the same pull request as the change that invalidated it.
 
-* **A vector-indexed knowledge store with semantic search** solves retrieval at scale and finds related material
-  without curated links. Rejected as premature and, for this corpus, actively risky. At a few dozen documents an index
-  adds a build artefact that goes stale, cannot be diffed in review, and buys little over grep plus a generated index.
-  More seriously, vector search returns *chunks*: an ADR's "Alternatives Considered" section consists of
-  confidently-worded descriptions of options we **rejected**, and a chunk retrieved out of context reads exactly like a
-  decision. For a corpus whose purpose is recording what we chose and what we didn't, that failure mode is unacceptable.
-  Explicit `related` links, which we already write, are more precise because they record *how* two documents relate.
-  Revisit if the corpus grows past the point where a generated index is navigable.
+* **A vector-indexed knowledge store with semantic search** solves retrieval at scale and finds related material without
+  curated links. Rejected as premature and, for this corpus, actively risky. At a few dozen documents an index adds a
+  build artefact that goes stale, cannot be diffed in review, and buys little over grep plus a generated index. More
+  seriously, vector search returns *chunks*: an ADR's "Alternatives Considered" section consists of confidently-worded
+  descriptions of options we **rejected**, and a chunk retrieved out of context reads exactly like a decision. For a
+  corpus whose purpose is recording what we chose and what we didn't, that failure mode is unacceptable. Explicit
+  `related` links, which we already write, are more precise because they record *how* two documents relate. Revisit if
+  the corpus grows past the point where a generated index is navigable.
 
-* **Adopt an off-the-shelf agent memory tool.** It is a ready-made vault with verbs to save, load and pin. Rejected as
-  a dependency: these are personal-scope tools with no multi-writer model, no review and no conflict handling. The
+* **Adopt an off-the-shelf agent memory tool.** It is a ready-made vault with verbs to save, load and pin. Rejected as a
+  dependency: these are personal-scope tools with no multi-writer model, no review and no conflict handling. The
   underlying ideas (human-readable Markdown, explicit promotion of an insight into durable knowledge) are good, and we
   adopt them. The dependency is not worth taking for what amounts to a directory convention and three skills.
 

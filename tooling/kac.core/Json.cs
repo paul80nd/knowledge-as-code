@@ -141,7 +141,8 @@ public record BundleTrimmed(string Path, IReadOnlyList<string> Requires, string 
 // marketplace root it sits. `Dist.Root` says why the marketplace is the root and not a sibling.
 
 public record MarketplaceManifest(
-    [property: JsonPropertyName("$schema")] string Schema,
+    [property: JsonPropertyName("$schema")]
+    string Schema,
     string Name,
     string Description,
     MarketplaceOwner Owner,

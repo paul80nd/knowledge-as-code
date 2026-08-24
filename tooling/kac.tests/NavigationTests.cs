@@ -47,7 +47,12 @@ public partial class NavigationTests
 
         foreach (var line in Nav)
         {
-            if (line.StartsWith("nav:", StringComparison.Ordinal)) { inNav = true; continue; }
+            if (line.StartsWith("nav:", StringComparison.Ordinal))
+            {
+                inNav = true;
+                continue;
+            }
+
             if (!inNav) continue;
             if (line.Length > 0 && !char.IsWhiteSpace(line[0]) && line[0] != '#') break;
 

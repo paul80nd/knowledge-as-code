@@ -34,8 +34,8 @@ public class LinkCheckTests
     [Fact]
     public void A_directory_is_not_a_target_but_the_page_beside_it_is()
     {
-        Assert.Empty(Unresolved("index.md", "[adrs](/adrs)"));       // resolves as adrs.md
-        Assert.Single(Unresolved("index.md", "[pics](/pictures)"));  // a folder with no page
+        Assert.Empty(Unresolved("index.md", "[adrs](/adrs)"));      // resolves as adrs.md
+        Assert.Single(Unresolved("index.md", "[pics](/pictures)")); // a folder with no page
     }
 
     // A file the repository ignores is not in the corpus. It is on the disk of whoever created it and in

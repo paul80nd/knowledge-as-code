@@ -7,37 +7,36 @@ description: How to write inside a knowledge corpus. Covers a record of any tier
 
 Load `technical-writing` first. Everything below either adds to it or says plainly which of its rules it overrides.
 
-**Tier decides how a record is written, and type does not.** A runbook and a process are read under different
-conditions and answer to different rules. An ADR and a discovery are not long and short versions of one thing. The
-frontmatter carries `tier`, so read that row of the table below and leave the other four alone.
+**Tier decides how a record is written, and type does not.** A runbook and a process are read under different conditions
+and answer to different rules. An ADR and a discovery are not long and short versions of one thing. The frontmatter
+carries `tier`, so read that row of the table below and leave the other four alone.
 
-**A record holds the thing being governed, not information about it.** Ownership, lifecycle, relationships and
-alignment are frontmatter. Prose restating any of them goes wrong before the frontmatter does.
+**A record holds the thing being governed, not information about it.** Ownership, lifecycle, relationships and alignment
+are frontmatter. Prose restating any of them goes wrong before the frontmatter does.
 
 ## What this overrides
 
-* **"Write in the present tense."** A postmortem records what happened, so its timeline and its account of the
-  incident are past tense. A Decided record's consequences have not happened yet, so a consequence takes the future
-  and the mechanism producing it stays present.
-  Write: "**CI will become a gate on documentation.** A malformed document fails the build."
+* **"Write in the present tense."** A postmortem records what happened, so its timeline and its account of the incident
+  are past tense. A Decided record's consequences have not happened yet, so a consequence takes the future and the
+  mechanism producing it stays present. Write: "**CI will become a gate on documentation.** A malformed document fails
+  the build."
   Whatever either record says about the estate today stays present.
-* **"They do not reach a clause whose wording is the record of an obligation."** That exemption covers the words and
-  not the marks. Repair a clause's punctuation, and keep every word carrying obligation: a citation quotes the row, so
+* **"They do not reach a clause whose wording is the record of an obligation."** That exemption covers the words and not
+  the marks. Repair a clause's punctuation, and keep every word carrying obligation: a citation quotes the row, so
   dropping a qualifier changes what `pol-DEVI.OWNER` says to whoever cites it. The author accepts that diff in review,
   which is where a meaning that moved is caught. A capital the new mark forces is not a word change:
-  `— see [pol-SCRT]` becomes `. See [pol-SCRT]`.
-  **Inside a clause row this beats every other rule, on this page and on the floor.** A passive, an elided verb, a
-  compound obligation, and a rationale the tier row would send to Purpose all stay, because each is wording a citation
-  quotes. Report them and leave them. The tier row governs a clause you are writing, and this governs one you are
-  editing.
+  `— see [pol-SCRT]` becomes `. See [pol-SCRT]`. **Inside a clause row this beats every other rule, on this page and on
+  the floor.** A passive, an elided verb, a compound obligation, and a rationale the tier row would send to Purpose all
+  stay, because each is wording a citation quotes. Report them and leave them. The tier row governs a clause you are
+  writing, and this governs one you are editing.
 * **"Gloss a precise term on first use."** The corpus has a glossary, and a term it defines is defined once. Link the
   entry rather than restating it.
 * **Nothing else.** Where the floor and this page appear to disagree anywhere below, the floor wins.
 
 ## What outranks this page
 
-**The schema is executable and this page is not.** Where the two disagree, the schema is right. Report the
-contradiction rather than editing records to match this.
+**The schema is executable and this page is not.** Where the two disagree, the schema is right. Report the contradiction
+rather than editing records to match this.
 
 **Run `kac checks` for the type in front of you.** Each text rule is declared on a single type, and many types carry
 none at all. The absence of a check is not permission.
@@ -104,8 +103,8 @@ exists as a decision. Its Decision section is written in the present, and none o
 
 ## Fill the frontmatter first
 
-**Quote every date.** YAML reads unquoted `2026-06-12` as a datetime, and renders it with a locale format and a
-timezone shift. `"2026-06-12"` renders as written.
+**Quote every date.** YAML reads unquoted `2026-06-12` as a datetime, and renders it with a locale format and a timezone
+shift. `"2026-06-12"` renders as written.
 
 **Enum values are lower-case and hyphenated.** They are grep targets first and prose second.
 
@@ -114,8 +113,8 @@ point at the entry that caused it rather than at the field. `tags:` is the excep
 `tags: [ a, b ]`, because it says how a record is found rather than what it says, and a block list would give the least
 interesting field in the block the most lines.
 
-**A list reads alphabetically.** No list field's sequence carries meaning, so alphabetical is the order that
-scan-reads and the one two authors agree on without discussion. Numbers inside an entry compare as numbers, so
+**A list reads alphabetically.** No list field's sequence carries meaning, so alphabetical is the order that scan-reads
+and the one two authors agree on without discussion. Numbers inside an entry compare as numbers, so
 `ISO27001:2022 A.8.7` comes before `ISO27001:2022 A.8.29`.
 
 **A tag is an entry point, and never a grouping.** It is the word a reader arrives with, on a record that does not use
@@ -131,8 +130,8 @@ own for it.
 `Policy: pol-A11Y` `DRAFT`
 ```
 
-You arrive at a record from a citation, so the top of the page answers what kind of record this is, which one it is,
-and whether it is in force, before the prose starts. Frontmatter answers all three and is written for a machine. The id
+You arrive at a record from a citation, so the top of the page answers what kind of record this is, which one it is, and
+whether it is in force, before the prose starts. Frontmatter answers all three and is written for a machine. The id
 appears exactly as the frontmatter carries it. The status is the exception: lower-case in frontmatter because a machine
 reads it, and upper-case on the line because a person reads it as a stamp.
 
@@ -175,21 +174,21 @@ uses the same shortcut labels. An undefined label and an unused definition both 
 read as code rather than as links.
 
 **A framework page names a type and never links to one.** That rule reaches `knowledge-as-code.md` and the documents
-beneath it, and nothing else. Every corpus holds the same copy of those files, and a corpus that never adopted
-standards has no `/standards` page to open. A link into a type's folder is worse again, because the records it points
-at are the first thing a corpus deletes. Where a link genuinely belongs there, put it in a generated block: `kac`
+beneath it, and nothing else. Every corpus holds the same copy of those files, and a corpus that never adopted standards
+has no `/standards` page to open. A link into a type's folder is worse again, because the records it points at are the
+first thing a corpus deletes. Where a link genuinely belongs there, put it in a generated block: `kac`
 writes those from the types the corpus adopted, so they can only name pages that exist. `framework-names-types` holds
 you to this.
 
 ## Write to the tier
 
-| Tier            | Written as                                                                    |
-|-----------------|-------------------------------------------------------------------------------|
+| Tier            | Written as                                                                     |
+|-----------------|--------------------------------------------------------------------------------|
 | **Procedural**  | One action per step, imperative, condition before action. No reason in a step. |
 | **Normative**   | One obligation per clause, testable, keyword leading. Reason lives in Purpose. |
-| **Descriptive** | Indicative, present tense. State what is.                                     |
-| **Decided**     | Prose earns its keep. Constrain structure and length, not vocabulary.         |
-| **Observed**    | Symptom, cause, why it might matter. Three sentences beat three paragraphs.   |
+| **Descriptive** | Indicative, present tense. State what is.                                      |
+| **Decided**     | Prose earns its keep. Constrain structure and length, not vocabulary.          |
+| **Observed**    | Symptom, cause, why it might matter. Three sentences beat three paragraphs.    |
 
 ### Procedural
 
@@ -204,8 +203,8 @@ here. A reader who stops halfway through *Restart the consumer if the queue dept
 * **Do not hedge an order.** *Typically*, *usually* and *normally* tell a reader under pressure that the sequence is
   negotiable. Where it genuinely is, say what decides it. `no-hedged-ordering` warns on this in a process and nothing
   catches it in a runbook.
-* **A runbook opens with Symptoms**, because that is how a reader who does not yet know which record they need finds
-  it. `symptoms-first` is an error rather than a warning.
+* **A runbook opens with Symptoms**, because that is how a reader who does not yet know which record they need finds it.
+  `symptoms-first` is an error rather than a warning.
 
 ### Normative
 
@@ -223,20 +222,19 @@ make it checkable, and keep the argument out of the part that gets quoted.
   a policy clause from a standard's is altitude: a policy clause stays true when the whole technology estate is
   replaced.
 * **Purpose does not preview the clauses.** A sentence there a reader could re-read as an obligation belongs in the
-  table, where a citation can reach it. Purpose states the position and earns it, and the table is what binds.
-  Cut from a Purpose: "We do not change it under its consumers without a version and reasonable notice."
+  table, where a citation can reach it. Purpose states the position and earns it, and the table is what binds. Cut from
+  a Purpose: "We do not change it under its consumers without a version and reasonable notice."
 * **One obligation per clause.** A clause that cannot be failed in exactly one way splits. `clause-order` and
   `clause-compound` warn where a row carries more than one.
 * **A clause is testable, or it is a wish.** *Services are secure* is untestable. *Services read secrets from a managed
   vault* can be checked.
-* **A clause states its obligation without help.** A cross-reference points at the other side of a shared obligation,
-  or at the policy that owns it. It does not finish the sentence.
-* **Write out every contraction in a clause.** A clause is quoted and acted on, and the formal register is what
-  marks it as binding. Purpose and Scope are prose and take the contraction speech would use.
-* **Do not hedge the commitment, and do state a risk as a risk.** A policy that hedges what it binds you to is not
-  a policy. Naming what may follow from a departure is not hedging, and flattening it into a certainty makes the
-  policy claim something untrue.
-  Write: "a mistake in development risks becoming an incident in production."
+* **A clause states its obligation without help.** A cross-reference points at the other side of a shared obligation, or
+  at the policy that owns it. It does not finish the sentence.
+* **Write out every contraction in a clause.** A clause is quoted and acted on, and the formal register is what marks it
+  as binding. Purpose and Scope are prose and take the contraction speech would use.
+* **Do not hedge the commitment, and do state a risk as a risk.** A policy that hedges what it binds you to is not a
+  policy. Naming what may follow from a departure is not hedging, and flattening it into a certainty makes the policy
+  claim something untrue. Write: "a mistake in development risks becoming an incident in production."
 * **Read the clause again, deliberately, looking for the second reading.**
 * **A policy never claims a compliance posture.** Alignment with an external framework is a clause-level reference.
   Whether the organisation is certified, registered or audited belongs in `frameworks.md` alone, and
@@ -262,14 +260,14 @@ These mirror reality, so anything reading as intent eventually reads as a lie.
 The one tier where extended prose is the point. An ADR that cannot be argued with recorded nothing, and a postmortem
 that reads comfortably has usually left something out. The constraint is structural rather than lexical.
 
-* **Alternatives were genuinely weighed**, and the record shows the weighing. An option listed only to be dismissed in
-  a clause was not considered.
+* **Alternatives were genuinely weighed**, and the record shows the weighing. An option listed only to be dismissed in a
+  clause was not considered.
 * **Consequences include the unwelcome ones.** A consequences section holding only benefits is a sales document.
-* **Attribute a cause to a system, not to a person.** In a postmortem that is the condition under which the next
-  account gets written honestly.
+* **Attribute a cause to a system, not to a person.** In a postmortem that is the condition under which the next account
+  gets written honestly.
 * **Length is earned per point rather than per record.** Give each point the detail it needs, once.
-* **A contraction belongs here where speech would use one.** Context and Alternatives are an account of what a
-  team found and how it decided, so they read as a team talking. The decision sentence and the clauses do not.
+* **A contraction belongs here where speech would use one.** Context and Alternatives are an account of what a team
+  found and how it decided, so they read as a team talking. The decision sentence and the clauses do not.
 
 ### Observed
 
@@ -278,8 +276,8 @@ Capture stays nearly free, or it does not happen.
 * **Symptom, cause where known, why it might matter.** Nothing else is required, and `low-ceremony` warns past two
   hundred words. A discovery long enough to need structure has become something else, and is promoted rather than
   padded.
-* **Say what you do not know.** *Unconfirmed*, *seen once* and *may be specific to this branch* are honest here, and
-  are what the confidence level carries.
+* **Say what you do not know.** *Unconfirmed*, *seen once* and *may be specific to this branch* are honest here, and are
+  what the confidence level carries.
 * **Do not tidy a discovery into authority.** A discovery reading like an FAQ is trusted like one. Promotion is where
   certainty is added.
 

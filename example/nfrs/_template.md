@@ -22,8 +22,7 @@ and how it is reviewed. What is below is only what an NFR adds to that.
 
 **Frontmatter**
 
-* **`status`**: `draft` until someone has agreed it, then `agreed`. An agreed target is a commitment, not an
-  aspiration.
+* **`status`**: `draft` until someone has agreed it, then `agreed`. An agreed target is a commitment, not an aspiration.
 * **`applies-to`**: service or capability ids. Estate-wide targets are almost always wrong, since a marketing page and
   the checkout flow don't deserve the same budget.
 * **`target`**: a concrete figure, such as `99.5% monthly`, `p95 < 400ms` or `RTO 4h`.

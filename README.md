@@ -27,8 +27,8 @@ YAML file rather than changing the tool.
 
 ## What is here
 
-**[`tooling/`](tooling/README.md)** holds `kac`, the validator and generator, and the three test layers that prove it.
-A .NET 10 entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures,
+**[`tooling/`](tooling/README.md)** holds `kac`, the validator and generator, and the three test layers that prove it. A
+.NET 10 entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures,
 feature specs and unit tests it is held to.
 
 **[`manifest.yaml`](manifest.yaml)** says which files a corpus is made of. A template is not a folder here: it is the
@@ -48,8 +48,8 @@ fictional library consortium.
 
 **[`docs/`](docs/)** is the documentation site, published to
 [GitHub Pages](https://paul80nd.github.io/knowledge-as-code/) on every push to `main`. It is the reference for KaC and
-for `kac`, and the one place a command's behaviour is written down. It documents the framework rather than the corpus
-in this repository.
+for `kac`, and the one place a command's behaviour is written down. It documents the framework rather than the corpus in
+this repository.
 
 `kac` finds a corpus by walking up for a `.corpus.yaml`, so it reads whichever corpus it is run from, and then walks up
 again for the `.schema/` to judge it against. That second walk is what lets one schema at this root serve both corpora
@@ -74,8 +74,8 @@ dotnet run --project ../tooling/kac -- generate  # regenerate the indexes and ge
 dotnet run --project ../tooling/kac -- checks    # list every check the validator implements
 ```
 
-That form runs the tool this checkout holds, and it is what CI runs. A `kac` already on your `PATH` is whichever
-version you installed last, and it rewrites generated files with an older wording without saying so.
+That form runs the tool this checkout holds, and it is what CI runs. A `kac` already on your `PATH` is whichever version
+you installed last, and it rewrites generated files with an older wording without saying so.
 
 ### As an installed tool, packed here
 
@@ -106,8 +106,8 @@ kac validate
 ```
 
 Install it into a [tool manifest](https://learn.microsoft.com/dotnet/core/tools/local-tools-how-to-use) instead to pin
-it, which is what a corpus with CI of its own wants. The version lands in `dotnet-tools.json` at the repository root
-and travels with it. Every machine and every build then runs the version the corpus was written against.
+it, which is what a corpus with CI of its own wants. The version lands in `dotnet-tools.json` at the repository root and
+travels with it. Every machine and every build then runs the version the corpus was written against.
 
 ```bash
 dotnet new tool-manifest
@@ -129,9 +129,9 @@ test commands.
 ## Starting a corpus of your own
 
 **Copy [`template/`](template/) and [`.schema/`](.schema/), not `example/`.** Between them they are the corpus with the
-content taken out: the schema, the framework's own documentation, a root page and a template for every type, and
-nothing about anybody's estate. `example/` is a worked corpus to read for ideas, and copying it hands you a fictional
-library consortium to delete.
+content taken out: the schema, the framework's own documentation, a root page and a template for every type, and nothing
+about anybody's estate. `example/` is a worked corpus to read for ideas, and copying it hands you a fictional library
+consortium to delete.
 
 ```bash
 cp -R template/ ../my-corpus
@@ -178,7 +178,8 @@ The taxonomy is the half that is only partly proven.
 
 Every document here describes what exists today, and the
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds everything considered but, as yet, unbuilt.
-[Contributing](https://paul80nd.github.io/knowledge-as-code/framework/contributing/) names the skills that carry that rule and say why.
+[Contributing](https://paul80nd.github.io/knowledge-as-code/framework/contributing/) names the skills that carry that
+rule and say why.
 
 ## Opinions
 

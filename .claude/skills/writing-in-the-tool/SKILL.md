@@ -20,8 +20,7 @@ The floor's label rule already covers a comment above a declaration. Read it the
 ## What this overrides
 
 * **"Write in the present tense. Keep 'will' for something that genuinely happens later."** A comment often describes
-  something that does not exist yet, so "will" is ordinary here.
-  Write: `// The plugin manifest as it will travel.`
+  something that does not exist yet, so "will" is ordinary here. Write: `// The plugin manifest as it will travel.`
 * **"Gloss a precise term on first use."** A comment is addressed to whoever maintains this tool, so a term the trade
   knows needs no gloss. Write DOM, AST and idempotent plainly.
 * **Nothing else.** Where the floor and this page appear to disagree anywhere below, the floor wins.
@@ -31,8 +30,8 @@ The floor's label rule already covers a comment above a declaration. Read it the
 **A comment that misdescribes the code is worse than no comment, because it is believed.** Read the code under every
 comment you touch, and fix what has drifted.
 
-A sweep in #253 found sixteen of these. Two would have cost somebody real time: a field called unread that another
-class refuses an export over, and a duplicate id said to replace the first where the code keeps it.
+A sweep in #253 found sixteen of these. Two would have cost somebody real time: a field called unread that another class
+refuses an export over, and a duplicate id said to replace the first where the code keeps it.
 
 Every one of them was true when it was written.
 
@@ -54,14 +53,13 @@ below it. A section heading inside a long file is not a banner and earns its pla
 **A message opens lower case and closes with a full stop.** A reader meets it as the tail of the command they ran.
 Write: `id 'adr-7' must start with 'adr-'.`
 
-**The second sentence of a split message opens lower case too.** An interpolated path or id opening it keeps the case
-of the value itself.
-Write: `the index is stale. {path} changed after it was built.`
+**The second sentence of a split message opens lower case too.** An interpolated path or id opening it keeps the case of
+the value itself. Write: `the index is stale. {path} changed after it was built.`
 
 ## Say it once
 
-**Before writing a sentence you have written before, grep a phrase from it.** An explanation here tends to land in
-three places at once: the comment, the feature document and the README.
+**Before writing a sentence you have written before, grep a phrase from it.** An explanation here tends to land in three
+places at once: the comment, the feature document and the README.
 
 * [`docs/`](../../../docs/) is the reference for what a command does, published at
   <https://paul80nd.github.io/knowledge-as-code/>.
@@ -69,8 +67,8 @@ three places at once: the comment, the feature document and the README.
 
 Where the argument already sits in one of those, link it and stop.
 
-**A sibling source file is a citation target too.** Name the file, or the method that holds the reasoning.
-Write: `// Through the source generator rather than reflection. See Json.cs.`
+**A sibling source file is a citation target too.** Name the file, or the method that holds the reasoning. Write:
+`// Through the source generator rather than reflection. See Json.cs.`
 
 **Let a test say what it proves, and nothing more.** Why the code is shaped that way belongs at the source. A test
 repeating it gives a reader two places to keep in step and no reason to trust either.

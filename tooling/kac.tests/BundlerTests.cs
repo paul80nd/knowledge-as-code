@@ -278,7 +278,8 @@ public class BundlerTests
     [Fact]
     public void The_export_is_copied_under_the_corpus_root_the_manifest_names()
         => Assert.Contains(
-            Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest(), ("glossary/terms.jsonl", "{}")]).Files,
+            Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest(), ("glossary/terms.jsonl", "{}")])
+                .Files,
             f => f.Path == "plugin/corpus/glossary/terms.jsonl");
 
     // The copy is the seam between the two commands. A bundle that edited what it copied would make a
@@ -288,7 +289,8 @@ public class BundlerTests
     {
         const string line = """{"id":"gls-a.term","title":"Term"}""";
         var copied = Assert.Single(
-            Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest(), ("glossary/terms.jsonl", line)]).Files,
+            Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest(), ("glossary/terms.jsonl", line)])
+                .Files,
             f => f.Path.EndsWith("terms.jsonl", StringComparison.Ordinal));
 
         Assert.Equal(line, Encoding.UTF8.GetString(copied.Content));
