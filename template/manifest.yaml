@@ -8,13 +8,9 @@
 # the first match wins, so a rule carving one file out of a folder is written above the rule
 # claiming the folder.
 #
-# `.corpus.yaml` is not here. A corpus's descriptor is written fresh when the corpus is created,
-# from what the invocation was told, rather than copied from a file that would have to carry
-# somebody else's name.
-
 # The version of the template's shape. Increment when a corpus has to respond to the change:
 # a file added or removed, a file renamed, or a file moving between the two layers.
-version: 2
+version: 3
 
 layers:
 
@@ -50,13 +46,14 @@ rules:
     layer: withheld
     note: The template describing itself, which is a fact about this folder and not about a corpus.
 
-  # ── overlay ────────────────────────────────────────────────────────────────
-
-  - path: ".schema/**"
-    layer: overlay
+  - path: ".corpus.yaml"
+    layer: withheld
     note: >
-      The machine-readable schema. Which of it a corpus receives is `types:` in `.corpus.yaml`, so
-      a declined type's file is not written rather than written and ignored.
+      Present so that `kac` reads this folder as a corpus and can validate it. A corpus's own
+      descriptor is written fresh when the corpus is created, from what the invocation was told,
+      rather than copied from a file carrying somebody else's name.
+
+  # ── overlay ────────────────────────────────────────────────────────────────
 
   - path:
       - "knowledge-as-code.md"

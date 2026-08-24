@@ -18,7 +18,8 @@ dotnet tool install --global KnowledgeAsCode.Tool
 
 ## Use
 
-`kac` finds a corpus by walking up from the working directory for a `.schema/`, so run it from anywhere inside one.
+`kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, the descriptor naming the corpus,
+so run it from anywhere inside one.
 
 ```bash
 kac validate     # frontmatter, links, structure, clauses and the graph

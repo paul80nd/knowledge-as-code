@@ -54,16 +54,17 @@ option carries generated `--help`. `Program.cs` says why that library and not an
 
 ## Running it against a corpus
 
-`kac` finds a corpus by walking up from the working directory for a `.schema/`, so it is run from inside one. Running it
-from here reaches no corpus at all, and the corpus in this repository is `example/`.
+`kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, so it is run from inside one.
+Running it from here reaches no corpus at all. This repository holds two: `example/`, which carries the records, and
+`template/`, which carries what a new corpus receives.
 
 ```bash
 cd ../example
 dotnet run --project ../tooling/kac -- validate
 ```
 
-That is the form CI runs, and the one you want while changing the tool. The `./kac` launcher at `example/`'s root wraps
-it, and `kac.cmd` beside it does the same on Windows.
+That is the form CI runs, and the one you want while changing the tool. A `kac` already on your `PATH` is the published
+tool at whatever version you installed last, and it rewrites generated files with an older wording without saying so.
 
 [The CLI reference](https://paul80nd.github.io/knowledge-as-code/cli/) carries every verb, its options and the exit
 codes, written for whoever installed the tool. Two things there are worth repeating here because they bite during
@@ -123,9 +124,8 @@ The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac va
 command can emit is reachable from a spec. The golden layer builds `kac/` once per run and invokes the built assembly.
 Each scenario is then a real process, without paying `dotnet run`'s up-to-date check for every one.
 
-All three read the schema from [`../template/.schema/`](../template/.schema/), where it is authored. A schema edit
+All three read the schema from [`../.schema/`](../.schema/), the one copy at the repository root. A schema edit
 therefore ripples into every fixture in the same run, rather than into a copy someone has to keep in step.
-`TemplateTests` holds `example/`'s copy of it to matching, in both directions.
 
 ### The round-trip
 

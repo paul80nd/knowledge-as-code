@@ -45,7 +45,7 @@ is its way in to everything here.
 covers building `kac`, its three test layers, and what bites you while editing any of it.
 
 **How to author a schema** is
-[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/template/.schema/README.md). It travels
+[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md). It travels
 with the schema it describes, so a corpus reads its own copy.
 
 ## Maturity

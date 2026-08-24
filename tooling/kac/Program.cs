@@ -88,22 +88,34 @@ internal static class Cli
         var corpusRoot = FindCorpusRoot(Directory.GetCurrentDirectory());
         if (corpusRoot is null)
         {
-            Out.ErrMarkup("[red]kac: could not locate a corpus (no .schema above the cwd).[/]");
+            Out.ErrMarkup("[red]kac: could not locate a corpus (no .corpus.yaml above the cwd).[/]");
             return 2;
+        }
+
+        // A corpus with no schema above it is a corpus this tool cannot judge, so it is declined here
+        // rather than left to fail on the first file the loader opens.
+        if (Schema.FindRoot(corpusRoot) is null)
+        {
+            Out.ErrMarkup($"[red]kac: {corpusRoot} has no .schema/ at or above it, so there is nothing to "
+                          + "check the corpus against.[/]");
+            return 1;
         }
 
         return run(corpusRoot);
     }
 
     // The corpus this command runs against: the nearest folder above the working directory carrying a
-    // `.schema/`. Every subcommand is answered from there, so where the tool's own files sit says nothing
-    // about which corpus it reads.
+    // `.corpus.yaml`. Every subcommand is answered from there, so where the tool's own files sit says
+    // nothing about which corpus it reads.
+    //
+    // The descriptor is the marker rather than the schema, because a repository may author one schema
+    // above several corpora. `Schema.FindRoot` is the walk that then finds it.
     private static string? FindCorpusRoot(string start)
     {
         var dir = new DirectoryInfo(start);
         while (dir is not null)
         {
-            if (Directory.Exists(Path.Combine(dir.FullName, ".schema")))
+            if (File.Exists(Path.Combine(dir.FullName, ".corpus.yaml")))
                 return dir.FullName;
             dir = dir.Parent;
         }

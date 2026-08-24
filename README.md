@@ -31,8 +31,11 @@ YAML file rather than changing the tool.
 A .NET 10 entrypoint over a `kac.core` library, packed as the dotnet tool `KnowledgeAsCode.Tool`, plus the fixtures,
 feature specs and unit tests it is held to.
 
-**[`template/`](template/README.md)** is what a corpus is made of, authored once: the machine-readable schema, the
-framework's own documentation, the plugin tree, and the pages and templates a corpus starts from.
+**[`.schema/`](.schema/README.md)** is the machine-readable statement of what a record of each type carries, authored
+once at the root and read by both corpora below. A corpus of your own carries its own copy, at its own root.
+
+**[`template/`](template/README.md)** is the rest of what a corpus is made of, authored once: the framework's own
+documentation, the plugin tree, and the pages and templates a corpus starts from.
 [`template/manifest.yaml`](template/manifest.yaml) sorts them: some a corpus receives once and owns afterwards, and some
 it receives again whenever it takes a newer framework.
 
@@ -45,8 +48,10 @@ fictional library consortium.
 for `kac`, and the one place a command's behaviour is written down. It documents the framework rather than the corpus
 in this repository.
 
-No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is run
-from. The one in this repository proves the tool over real content rather than over fixtures alone.
+`kac` finds a corpus by walking up for a `.corpus.yaml`, so it reads whichever corpus it is run from, and then walks up
+again for the `.schema/` to judge it against. That second walk is what lets one schema at this root serve both corpora
+here. A corpus of your own holds both files at its own root, so both walks stop there. `example/` proves the tool over
+real content rather than over fixtures alone.
 
 ## Running the tool
 
@@ -61,13 +66,13 @@ manage.
 git clone https://github.com/paul80nd/knowledge-as-code.git
 cd knowledge-as-code/example
 
-./kac validate     # frontmatter, links, structure, clauses and the graph
-./kac generate     # regenerate the indexes and generated blocks
-./kac checks       # list every check the validator implements
+dotnet run --project ../tooling/kac -- validate  # frontmatter, links, structure, clauses and the graph
+dotnet run --project ../tooling/kac -- generate  # regenerate the indexes and generated blocks
+dotnet run --project ../tooling/kac -- checks    # list every check the validator implements
 ```
 
-`./kac` (Windows: `kac.cmd`) sits at the corpus root and wraps `dotnet run --project ../tooling/kac`. Add that folder to
-your `PATH` to drop the `./`. The explicit form works the same way, and is what CI runs.
+That form runs the tool this checkout holds, and it is what CI runs. A `kac` already on your `PATH` is whichever
+version you installed last, and it rewrites generated files with an older wording without saying so.
 
 ### As an installed tool, packed here
 
@@ -83,8 +88,8 @@ cd example
 ```
 
 `--tool-path` keeps the install inside this repository, where `.dist/` is untracked. `--global` puts `kac` on your
-`PATH` instead. Either way it finds a corpus by walking up for a `.schema/`, the way the local one does. It reads
-whichever corpus it is run from: this one, or a corpus of your own anywhere on the machine.
+`PATH` instead. Either way it finds a corpus the way the local one does, and reads whichever corpus it is run from:
+this one, or a corpus of your own anywhere on the machine.
 
 ### From nuget.org
 
@@ -120,15 +125,18 @@ test commands.
 
 ## Starting a corpus of your own
 
-**Copy [`template/`](template/), not `example/`.** The template is the corpus with the content taken out: the schema,
-the framework's own documentation, a root page and a template for every type, and nothing about anybody's estate.
-`example/` is a worked corpus to read for ideas, and copying it hands you a fictional library consortium to delete.
+**Copy [`template/`](template/) and [`.schema/`](.schema/), not `example/`.** Between them they are the corpus with the
+content taken out: the schema, the framework's own documentation, a root page and a template for every type, and
+nothing about anybody's estate. `example/` is a worked corpus to read for ideas, and copying it hands you a fictional
+library consortium to delete.
 
 ```bash
-cp -R template/ ../my-corpus && cd ../my-corpus
+cp -R template/ ../my-corpus
+cp -R .schema ../my-corpus/         # authored at this root, and a corpus carries its own copy
+cd ../my-corpus
 rm manifest.yaml README.md          # the template's own machinery, not a corpus's
 
-# write .corpus.yaml: the one file no template can supply
+# edit .corpus.yaml: the one file no template can answer for you
 git init && git add -A              # kac reads the git listing, so a corpus is a repository
 
 dotnet tool install --global KnowledgeAsCode.Tool
@@ -136,12 +144,14 @@ kac generate                        # write the indexes and generated blocks
 kac validate                        # comes back clean on an empty corpus
 ```
 
-[`.corpus.yaml`](example/.corpus.yaml) names the corpus and says where it publishes, which no copied file can answer
-for you. It may also declare the types the corpus adopted. Leave that key out and `kac` reads adoption off the folders
-it finds instead. `example/`'s is commented throughout and is the one to read while writing yours.
+[`.corpus.yaml`](example/.corpus.yaml) names the corpus and says where it publishes. The one you copied names the
+template, so those are the two values to write first. It may also declare the types the corpus adopted. Leave that key
+out and `kac` reads adoption off the folders it finds instead. `example/`'s is commented throughout and is the one to
+read while writing yours.
 
 You also arrive with no `README.md`, no ignore rules, no editor conventions and no CI. Each is a question about your
-repository rather than about the framework.
+repository rather than about the framework. A command that stands a corpus up carrying answers to all of them sits in
+the [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues/242).
 
 **A copy carries no tool, and takes one from outside.** `kac` lives in `tooling/`, which is not part of any corpus.
 Install it from nuget.org as above and run it from the copy: it needs nothing but the `.schema/` the copy already

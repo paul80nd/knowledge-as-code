@@ -32,7 +32,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Each runs from a corpus directory, because kac takes the first ancestor holding a .schema/ as one.
+      # Each runs from a corpus directory, because kac takes the first ancestor holding a .corpus.yaml as one.
       - name: Validate frontmatter, links and structure
         working-directory: example
         run: dotnet run --project ../tooling/kac -- validate
@@ -42,8 +42,8 @@ jobs:
         run: dotnet run --project ../tooling/kac -- generate --check
 
       # template/ is what a new corpus receives, so a copy of it has to validate before its owner has
-      # run anything. It carries no .corpus.yaml, which only stops `mechanism`: both verbs below ask
-      # for the .schema/ beside them and nothing else. example/azure-pipelines.yml stays corpus-only,
+      # run anything. Its .corpus.yaml is what makes kac read it as a corpus, and the schema both verbs
+      # judge it against is the one at the repository root. example/azure-pipelines.yml stays corpus-only,
       # because a corpus has no template/ to look at.
       - name: Validate what a new corpus receives
         working-directory: template
@@ -111,8 +111,11 @@ jobs:
           TEMPDIR: ${{ runner.temp }}
         run: |
           mkdir -p "$TEMPDIR/no-types"
-          cp -R .schema "$TEMPDIR/no-types/.schema"
+          cp -R ../.schema "$TEMPDIR/no-types/.schema"
           cp -R .plugin "$TEMPDIR/no-types/.plugin"
+
+          # kac reads a folder as a corpus by this file, and a corpus adopting no type declares nothing.
+          echo "descriptor-version: 1" > "$TEMPDIR/no-types/.corpus.yaml"
 
           cd "$TEMPDIR/no-types"
           dotnet run --project "$GITHUB_WORKSPACE/tooling/kac" -- export

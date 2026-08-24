@@ -1,0 +1,9 @@
+# The template read as a corpus, so that `kac validate` and `kac generate --check` can run over it.
+#
+# `kac` finds a corpus by the presence of this file, and what a new corpus receives has to be provable
+# before its owner has run anything. The manifest withholds this file, because a corpus's descriptor
+# names the corpus, says where it publishes and lists the types it adopted, and no copied file could
+# answer any of that.
+descriptor-version: 1
+corpus: template
+publishing-target: none

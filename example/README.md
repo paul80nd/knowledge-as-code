@@ -57,8 +57,8 @@ kac bundle       # assemble that export and .plugin/ into a plugin under .dist/p
 kac checks       # list every check the validator implements
 ```
 
-A `kac` and a `kac.cmd` sit beside this file, wrapping `dotnet run --project ../tooling/kac`. Run them as
-`./kac validate` while you are changing the tool, because they reach the working tree and an installed `kac` does not.
+While you are changing the tool, run `dotnet run --project ../tooling/kac -- validate` instead. That reaches the
+working tree, and an installed `kac` does not.
 
 The example records are every `<type>/*.md` that is not `_index.md` or `_template.md`. `kac validate` covers them, so
 they are held to the same standard as real content. A schema change that breaks them fails CI here rather than in
@@ -193,15 +193,16 @@ knowledge-as-code/     # the system's own documentation
   ├── metadata.md      # the frontmatter fields
   ├── contributing.md  # the way in for somebody adding to this corpus
   └── lineage.md       # where the taxonomy's names came from
-kac, kac.cmd           # launchers that wrap `dotnet run --project ../tooling/kac`
 .corpus.yaml           # what this corpus is, and where it publishes
 .claude/skills/        # agent skills for working on this corpus
 .plugin/               # source for the plugin that carries this corpus's export to another repository
-.schema/               # the machine-readable schema, and the source of truth
 ```
 
-The machinery is dot-prefixed: `.schema/`, `.corpus.yaml`, `.plugin/`. The markdown stays the visible half, so an Azure
-DevOps wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
+The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays the visible half, so an Azure DevOps
+wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
 nothing else: what the tool reads lives beside the tool.
+
+The `.schema/` this corpus is judged against sits at the repository root, one copy shared with `template/`. A corpus
+outside this repository carries its own at its own root, which is where `kac` looks first.
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.

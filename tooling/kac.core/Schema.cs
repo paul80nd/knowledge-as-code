@@ -473,8 +473,28 @@ public sealed partial class Schema
         IReadOnlyList<string> Reserved,
         IReadOnlyDictionary<string, IReadOnlyList<string>> Enums);
 
-    // Takes whatever holds a `.schema/`: a corpus, or the template a corpus is made from. The schema is
-    // the same document in both, and the callers that read it from the template are the ones proving it.
+    // The folder holding the schema a corpus is judged against: the nearest one at or above the corpus
+    // root carrying a `.schema/`. A standalone corpus stops on its own root, which is the ordinary case.
+    // A repository authoring one schema above several corpora goes up to wherever that schema sits, so
+    // the copies stay one file.
+    //
+    // Null where nothing above the corpus holds a schema. `kac` declines that corpus before loading it,
+    // and `Corpus.Load` falls back to the corpus root so the failure stays a plain missing file.
+    public static string? FindRoot(string corpusRoot)
+    {
+        var dir = new DirectoryInfo(corpusRoot);
+        while (dir is not null)
+        {
+            if (Directory.Exists(Path.Combine(dir.FullName, ".schema")))
+                return dir.FullName;
+            dir = dir.Parent;
+        }
+
+        return null;
+    }
+
+    // Takes whatever holds a `.schema/`. A caller starting from a corpus finds that folder with `FindRoot`
+    // above. The schema is one document however many corpora read it.
     public static Schema Load(string root)
     {
         var dir = Path.Combine(root, ".schema");
