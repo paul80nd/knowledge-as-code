@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 namespace kac.core;
 
 // A few lines injected at the start of a session, saying which corpus is installed, how much of it
-// there is and what to ask. `tooling/features/bundle.md` says why it is rendered here rather than
+// there is and what to ask. `docs/cli/bundle.md` says why it is rendered here rather than
 // computed at runtime, and why nothing in the render names a record type.
 public static class Breadcrumb
 {

@@ -82,7 +82,7 @@ public record ExportRecord(
 
 public record ExportLinks(string Human, string Raw);
 
-// One part on one line of the flat file, self-contained by design. `tooling/features/export.md` sets out what
+// One part on one line of the flat file, self-contained by design. `docs/cli/export.md` sets out what
 // that costs and buys; the fields it explains least obviously are these two.
 //
 // `Status` and `ReviewBy` live on the record as well. They are repeated because a consumer that grepped
@@ -118,7 +118,7 @@ public record ExportPartLine(
 // What the assembled plugin holds, and why anything is missing from it.
 //
 // Two corpora running one plugin name may ship different component sets. This is where a plugin says
-// which it has; `tooling/features/bundle.md` says why that has to be stated rather than inferred.
+// which it has; `docs/cli/bundle.md` says why that has to be stated rather than inferred.
 //
 // It carries no timestamp and no commit. The export it was built from is inside the plugin already,
 // and its manifest states both. A second clock here would be a second answer to one question.

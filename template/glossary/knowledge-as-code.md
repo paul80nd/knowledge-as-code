@@ -79,6 +79,12 @@ are live in every corpus, and only the register carries a compliance posture.
 The line beneath a record's H1 naming its type, id and status, written for a person where the frontmatter above it is
 written for a machine.
 
+### KaC
+
+Knowledge as Code, written short: the framework itself, and what the tool `kac` is named for.
+
+**Not:** `kac`, which names the tool alone.
+
 ### Layer
 
 Which kind of file this is: synced, forked, generated, local, verification or ignored. The portability manifest declares

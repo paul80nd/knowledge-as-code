@@ -21,6 +21,17 @@
 
   <ItemGroup>
     <ProjectReference Include="../kac.core/kac.core.csproj" />
+    <!-- CliReferenceTests asks the built tool for its command model, so the build has to have produced one. -->
+    <ProjectReference Include="../kac/kac.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Where that build put it. Only MSBuild knows the configuration, so it writes the path in rather than
+         leaving the test to guess at one. -->
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>KacAssembly</_Parameter1>
+      <_Parameter2>$(MSBuildThisFileDirectory)../kac/bin/$(Configuration)/$(TargetFramework)/kac.dll</_Parameter2>
+    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>

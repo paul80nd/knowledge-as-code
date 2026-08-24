@@ -20,7 +20,7 @@
 //
 // The tool is deliberately free of type-specific rules: everything it enforces is
 // read from the YAML schema, so adding a type is adding a YAML file, not editing C#.
-// See tooling/features/checks.md for what fails versus warns and how each check maps to the schema.
+// See docs/checks.md for what fails versus warns and how each check maps to the schema.
 
 using System.ComponentModel;
 using System.Reflection;
@@ -160,7 +160,7 @@ internal sealed class GenerateCommand : Command<GenerateSettings>
 }
 
 // `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`
-// narrows what is written and never what is read; `tooling/features/export.md` says why the corpus is
+// narrows what is written and never what is read; `docs/cli/export.md` says why the corpus is
 // loaded whole either way.
 internal sealed class ExportSettings : KacSettings
 {
@@ -206,7 +206,7 @@ internal sealed class ChecksCommand : Command<ChecksSettings>
 internal sealed class MechanismSettings : KacSettings
 {
     [CommandOption("--check")]
-    [Description("Compare the shared layers against a reference and report drift; never writes.")]
+    [Description("Compare the shared layers against a reference and report drift. Never writes.")]
     public bool Check { get; init; }
 
     [CommandOption("--sync")]
@@ -214,7 +214,7 @@ internal sealed class MechanismSettings : KacSettings
     public bool Sync { get; init; }
 
     [CommandOption("--against <PATH>")]
-    [Description("Reference corpus (a path). Defaults to upstream.url in .corpus.yaml.")]
+    [Description("Name the reference corpus by path. Defaults to upstream.url in .corpus.yaml.")]
     public string? Against { get; init; }
 }
 

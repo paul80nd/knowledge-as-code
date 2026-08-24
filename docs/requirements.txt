@@ -1,0 +1,4 @@
+# Pinned, as the workflow pins its actions to a commit: a theme release should change the site when we take it,
+# not on its own. Dependabot moves these.
+mkdocs==1.6.1
+mkdocs-material==9.7.7

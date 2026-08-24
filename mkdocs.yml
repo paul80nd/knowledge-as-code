@@ -1,0 +1,96 @@
+# The documentation site for `kac`, published to GitHub Pages by .github/workflows/publish-docs.yml.
+#
+# The site documents the tool. It is not a corpus, and `publishing-target: mkdocs` in a corpus descriptor is a
+# separate thing that this build does not exercise. MkDocs is here because it is what tool documentation uses.
+#
+# `docs/` holds every page and nothing else does: a page in both trees is the drift this site exists to end.
+
+site_name: knowledge-as-code
+site_description: Validator and generator for a knowledge-as-code corpus, driven by its own schema.
+site_url: https://paul80nd.github.io/knowledge-as-code/
+site_author: Paul Law
+
+repo_url: https://github.com/paul80nd/knowledge-as-code
+repo_name: paul80nd/knowledge-as-code
+edit_uri: edit/main/docs/
+
+copyright: MIT licensed.
+
+# A warning is a page that lies: a dead link, or a file no nav entry reaches. The build refuses it.
+strict: true
+
+# The pins the workflow installs from. It sits beside the pages so Dependabot finds one directory, and the
+# site is not a place to serve it from.
+exclude_docs: |
+  requirements.txt
+
+theme:
+  name: material
+  logo: assets/icon.svg
+  favicon: assets/icon.svg
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    # `edit_uri` above renders as a pencil on each page only where this feature is on.
+    - content.action.edit
+    - content.code.copy
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - toc.follow
+  palette:
+    # The reader's own setting decides, and the two toggles below override it either way.
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Follow the system setting
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  # Publishes tooling/kac/CHANGELOG.md without a second copy of it, so the file stays beside the project whose
+  # versions it records. `check_paths` fails a moved path rather than publishing an empty page.
+  - pymdownx.snippets:
+      base_path: ['.']
+      check_paths: true
+
+# The verb alone in the sidebar. Each page's own heading then says what that verb does, which is the line
+# a reader wants once they are on the page and noise in a list of eight.
+nav:
+  - Introduction: index.md
+  - Getting started: getting-started.md
+  - Running it in CI: ci.md
+  - CLI reference:
+      - cli/index.md
+      - validate: cli/validate.md
+      - generate: cli/generate.md
+      - export: cli/export.md
+      - bundle: cli/bundle.md
+      - checks: cli/checks.md
+      - mechanism: cli/mechanism.md
+      - new: cli/new.md
+      - update: cli/update.md
+  - The corpus descriptor: corpus-descriptor.md
+  - Checks: checks.md
+  - Changelog: changelog.md

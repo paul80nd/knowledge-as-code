@@ -63,7 +63,8 @@ Write: `the index is stale. {path} changed after it was built.`
 **Before writing a sentence you have written before, grep a phrase from it.** An explanation here tends to land in
 three places at once: the comment, the feature document and the README.
 
-* [`features/`](../../../tooling/features/) is the reference for what a command does.
+* [`docs/`](../../../docs/) is the reference for what a command does, published at
+  <https://paul80nd.github.io/knowledge-as-code/>.
 * [`tests/README.md`](../../../tooling/tests/README.md) is the reference for what a scenario asserts.
 
 Where the argument already sits in one of those, link it and stop.

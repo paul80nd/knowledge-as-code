@@ -238,7 +238,7 @@ The other two are named now, so that a type arriving with sections too long to c
 `kac export` reads the block out, and holds no list of its own: a field, a section or a part travels because the type
 said so. Two things run beside it. One checks that every key resolves, which stops a type declaring an export it cannot
 supply. The other checks that every fidelity is one something carries. What the exporter writes, and how a consumer
-reads it, is in `tooling/features/export.md`.
+reads it, is at <https://paul80nd.github.io/knowledge-as-code/cli/export/>.
 
 **`index.order`** applies to the sort as a whole rather than to one column of it. A type wanting one column each way is
 asking two questions with one key. A postmortem index is the case for `descending`: the incident someone is looking for

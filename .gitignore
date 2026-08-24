@@ -20,5 +20,8 @@
 # Claude Code local settings
 .claude/settings.local.json
 
+# What `mkdocs build` writes from docs/, rebuilt on every run and published by publish-docs.yml.
+site/
+
 # Working material — drafts and source notes that are not themselves knowledge documents
 _plan/

@@ -54,66 +54,46 @@ option carries generated `--help`. `Program.cs` says why that library and not an
 
 ## Running it against a corpus
 
-`kac` finds a corpus by walking up from the working directory for a `.schema/`, so it is run from inside one. Where the
-tool's own files sit says nothing about which corpus it reads. Running it from here reaches no corpus at all.
+`kac` finds a corpus by walking up from the working directory for a `.schema/`, so it is run from inside one. Running it
+from here reaches no corpus at all, and the corpus in this repository is `example/`.
 
 ```bash
 cd ../example
-
-kac validate            # validate the corpus
-kac validate --json     # machine-readable summary + findings
-kac generate            # regenerate indexes and blocks
-kac generate --check    # verify generated output is fresh
-kac export              # write the corpus to .dist/export/ as data a consumer reads
-kac export --type glossary                        # …one type rather than every one that contributes
-kac bundle              # assemble that export and .plugin/ into a plugin under .dist/plugin/
-kac checks              # list every check the validator implements
-kac checks --json       # …as JSON (the test suite reads this)
-kac mechanism --check --against ../other-corpus   # shared-layer drift vs a reference
-kac mechanism --sync                              # take the shared layers from upstream
+dotnet run --project ../tooling/kac -- validate
 ```
 
-Those read as a corpus runs them, against an installed `kac`. While changing the tool you want the working tree instead:
-`dotnet run --project ../tooling/kac -- validate`, which is what CI uses, or the `./kac` launcher at
-`example/`'s root that wraps it.
+That is the form CI runs, and the one you want while changing the tool. The `./kac` launcher at `example/`'s root wraps
+it, and `kac.cmd` beside it does the same on Windows.
 
-Every verb takes `--no-color`, and every verb reads `NO_COLOR` from the environment. `NO_COLOR` is the cross-tool
-standard for the same request. A redirected stream carries no colour on its own, but an environment naming a runner
-that renders escapes in its logs turns it back on, and GitHub Actions is one. Set `NO_COLOR` wherever the bytes have to
-be the same everywhere. The golden suite sets it on every process it starts, for that reason.
+[Getting started](https://paul80nd.github.io/knowledge-as-code/getting-started/) carries every verb, its options and the
+exit codes, written for whoever installed the tool. Two things there are worth repeating here because they bite during
+development. The golden suite sets `NO_COLOR` on every process it starts, because a runner that renders escapes in its
+logs turns colour back on where a redirected stream would have dropped it. And `--version` and `--help` are answered by
+the parser from wherever they were typed, so neither needs a corpus.
 
-### Exit codes
+## The documentation site
 
-| Code | Meaning                                                                         |
-|------|---------------------------------------------------------------------------------|
-| `0`  | No errors. Warnings may still have been printed.                                |
-| `1`  | A corpus **error**, or a bad invocation (missing/unknown subcommand or option). |
-| `2`  | A verb found no corpus. `--version` and `--help` need none and answer anyway.   |
+Every command has a page at <https://paul80nd.github.io/knowledge-as-code/>, built by MkDocs from [`../docs/`](../docs/)
+and published by [`publish-docs.yml`](../.github/workflows/publish-docs.yml). `../mkdocs.yml` names the pages and the
+order they read in, and a page reachable from no nav entry fails the build rather than going quietly unread.
 
-Warnings never change the exit code.
+A command page opens with a usage block generated from the parser's own command model, and `CliReferenceTests` holds it
+to matching. A command that grows an option gets its page back in step with
+`KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests`. Read the diff afterwards, because the update blesses a regression as
+happily as a fix.
 
-## The features
+Beneath that block, each page follows the same sections in this order: **What it is for**, **What it is not**, **How it
+works**, **Decisions**, **Known limits**. That set is fixed, and it is what lets a reader ask the same question of any
+command and find the answer in the same place. Deeper structure goes under those headings rather than beside them, so a
+command with two halves keeps them at `###` and subsections them at `####`. `mechanism` is the page that does this, and
+`CliReferenceTests` holds every page to the five.
 
-One document per command, in [`features/`](features/). These are developer context rather than corpus records: they
-carry no frontmatter, `validate` does not read them, and they are not becoming a knowledge type.
-
-Each follows the same sections in this order: **Intent**, **What it is not**, **Approach**, **Decisions**, **Known
-limits**. It is prose throughout and not a form. A heading with nothing true to say is left out, because filler reads as
-an answer where an absence reads as work not yet done. Reasons stay inline in **Approach**, beside whatever they
-explain. **Decisions** takes only the ones belonging to a feature as a whole.
-
-| Document                                         | Covers                                                                                                |
-|--------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| [`features/validate.md`](features/validate.md)   | Which files are read as records, which are passed over, and which get a pass of their own.            |
-| [`features/checks.md`](features/checks.md)       | Where a check comes from, how the schema is held to what the tool dispatches, and why a rule is data. |
-| [`features/generate.md`](features/generate.md)   | What is generated, from what, and the two rules that keep the output byte-stable.                     |
-| [`features/export.md`](features/export.md)       | The corpus written to `.dist/export/` as data an agent reads without cloning it.                      |
-| [`features/bundle.md`](features/bundle.md)       | That export and the `.plugin/` tree assembled into an installable plugin, trimmed to what it can do.  |
-| [`features/mechanism.md`](features/mechanism.md) | Drift against a reference corpus, and taking the shared layers down from it.                          |
-| [`features/new.md`](features/new.md)             | Standing a corpus up in the folder you are in, from a template fetched at a ref.                      |
-| [`features/update.md`](features/update.md)       | Taking a newer framework into a corpus, and adopting or giving up a type.                             |
+It is prose throughout and not a form. A heading with nothing true to say is left out, because filler reads as an
+answer where an absence reads as work not yet done. Reasons stay inline in **How it works**, beside whatever they
+explain. **Decisions** takes only the ones belonging to a command as a whole.
 
 `new.md` and `update.md` are specifications written before their commands exist, and say so at their head.
+`CliReferenceTests` is what holds them to saying it.
 
 [`CLAUDE.md`](CLAUDE.md) is what will bite you while changing any of it.
 

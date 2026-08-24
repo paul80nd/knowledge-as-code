@@ -32,3 +32,11 @@ updates:
           - xunit*
           - Reqnroll*
           - Microsoft.NET.Test.Sdk
+
+  # MkDocs and its theme, pinned in docs/requirements.txt so a theme release changes the site when we take it.
+  - package-ecosystem: pip
+    directory: /docs
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: docs

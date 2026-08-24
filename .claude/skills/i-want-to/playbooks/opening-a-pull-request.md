@@ -3,7 +3,7 @@
 Run at the end of every other playbook. A push to `main` is rejected, so this is how work lands.
 
 1. **Ask which pages your change made wrong.** Nothing in CI reads prose for meaning, so this is yours. A change to a
-   command reaches [`tooling/features/`](../../../../tooling/features/) and often `tooling/README.md`. A change to what
+   command reaches [`docs/`](../../../../docs/) and often `tooling/README.md`. A change to what
    the tool is for reaches the root `README.md` and `PACKAGE.md`. A change to the schema reaches the `.schema/README.md`
    in both trees.
 2. **Move `<Version>` and write the changelog section together**, where the tool changed. A push to `main` publishes

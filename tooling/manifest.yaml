@@ -108,9 +108,10 @@ rules:
   - path: "tooling/**"
     layer: synced
     note: >
-      The validator, the generator, the sync command, this manifest, and the reference
-      for what the tool does. The rule above carves out the part a corpus running the
-      tool has no use for.
+      The validator, the generator, the sync command and this manifest. The rule above
+      carves out the part a corpus running the tool has no use for. What each command
+      does is published at https://paul80nd.github.io/knowledge-as-code/ and travels as
+      a website rather than as files a corpus holds a copy of.
 
   - path: ".schema/**"
     layer: synced

@@ -46,12 +46,12 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
   is `required-when`, and a should-have-done-this is a rule.
 
 * **Thresholds are judgements**, and each is pinned by a fixture so moving one is visible.
-  `tooling/features/checks.md`, in the repository the tool is built from, says where the numbers came from. A ratio like
+  <https://paul80nd.github.io/knowledge-as-code/checks/> says where the numbers came from. A ratio like
   `words() <= links() * 40` fails a document linking to nothing at any length. For a capability or an explanation, that
   is the intended reading.
 
 * **The text rules are heuristics** and will be tuned wrong first. Their patterns belong here rather than in C# for that
-  reason, argued in `tooling/features/checks.md`.
+  reason, argued at <https://paul80nd.github.io/knowledge-as-code/checks/>.
 
 * **A rule reporting several faults under one id needs a fixture for each**, because one fixture turns the whole id
   green.

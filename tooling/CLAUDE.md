@@ -1,7 +1,7 @@
 # Working on `kac`
 
-[`features/`](features/) is the reference for what each command does, one document apiece, and
-[`README.md`](README.md) maps them. This is what will bite you while changing it.
+The [documentation site](https://paul80nd.github.io/knowledge-as-code/) is the reference for what each command does,
+one page apiece, and [`README.md`](README.md) says how it is built. This is what will bite you while changing it.
 
 ## Writing here
 
@@ -140,8 +140,8 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
 3. **A fixture that trips it.** The coverage gate fails on any reachable check no fixture exercises, and that is
    also what catches a check declared in the schema and reported by nothing.
 
-No prose states a check count: `kac checks` reports it. [`features/checks.md`](features/checks.md) carries no table of
-checks either: it points at the schema, so there is nothing there to go quietly out of date.
+No prose states a check count: `kac checks` reports it. [Checks](https://paul80nd.github.io/knowledge-as-code/checks/)
+carries no table of checks either: it points at the schema, so there is nothing there to go quietly out of date.
 
 `DocRows` is deliberately *not* generated from the catalogue. Rows are grouped and hand-worded, so several catalogue
 ids fold into one reader-facing row. An expression rule is the opposite, one id reporting under its own name, so its

@@ -18,10 +18,12 @@
 4. **Declare what it reports.** An entry in `_checks.yaml`, and either a row in `Generator.DocRows` or
    `on-type-page: false`. Three places have to agree and each fails a different meta-test.
 5. **Write a fixture that trips it**, one per check id it emits. The coverage gate reads ids rather than branches.
-6. **Load `technical-writing`, then `writing-in-the-tool`** for the comments, the test names and the feature document.
-   Read the code under every comment you touch.
-7. **Update [`tooling/features/`](../../../../tooling/features/)** for the command you changed, and
-   [`tooling/README.md`](../../../../tooling/README.md) where it maps them.
+6. **Load `technical-writing`, then `writing-in-the-tool`** for the comments and the test names. Read the code under
+   every comment you touch.
+7. **Update the command's page in [`docs/cli/`](../../../../docs/cli/)**, loading `writing-the-docs` for it, and
+   [`tooling/README.md`](../../../../tooling/README.md) where the change reaches it. The usage block at the head of the
+   page is generated, so an option that moved is regenerated with `KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests`
+   rather than typed.
 8. **Run all four layers**, one `kac` invocation at a time. Unit, behaviour specs, golden fixtures, then `validate` and
    `generate --check` in both corpora. Run the goldens as CI sees them: they read the environment, so
    `GITHUB_ACTIONS=true` is what reproduces a pass here and a failure there.

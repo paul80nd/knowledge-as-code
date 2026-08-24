@@ -13,6 +13,13 @@ surface may still change shape.
 A push to `main` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and that publish tags
 the commit and opens a release carrying the section for that version.
 
+## Unreleased
+
+### Changed
+
+- **`kac mechanism --help` reads its two option descriptions as sentences.** `--check` closed on a semicolon,
+  and `--against` opened on a bare noun phrase. What either flag does has not moved.
+
 ## 0.3.0 - 2026-08-23
 
 ### Added

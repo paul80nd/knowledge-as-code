@@ -2,17 +2,28 @@
 
 [![kac][ci-badge]][ci] [![NuGet][nuget-badge]][nuget] [![Licence: MIT][licence-badge]][licence]
 
-A structured, validated body of knowledge that people and AI sessions both read from and contribute to, and the tool
-that holds it to its shape.
+Knowledge as Code (KaC) is a framework for knowledge that people and AI sessions both read from and contribute to. It's
+plain Markdown in git, reviewed by pull request. But every document carries a type, and every type declares a schema.
 
-Every document carries a type, and every type declares a schema. An agent can therefore find the standard it needs
-before it writes code, and leave what it learns where a reviewer will see it. `kac` builds each index from the
-documents, so nobody maintains one by hand, and a broken cross-reference fails CI rather than rotting quietly. Plain
-Markdown in git, reviewed by pull request, published as a wiki: no proprietary format and no export step.
+`kac` is the tool that holds each document to the schema its type declares. It reports every fault against the file that
+caused it. A broken cross-reference fails CI rather than rotting quietly. It writes the indexes and tables nobody should
+be keeping by hand. It also writes the documents out as an **export**: data an agent can read.
 
-A repository of those documents, with the schema it runs, is a **corpus**, and a document filed under a type is a
-**record**. Skills, which are instructions an agent loads when it needs them, say how to read a corpus and how to add
-to it. The argument for building it this way is in [`template/knowledge-as-code.md`](template/knowledge-as-code.md).
+A repository of those documents, with the schema it runs, is a **corpus**. A document filed under a type is a
+**record**. A corpus has two readers and one set of files. A person reads the rendered wiki. An agent reads the export,
+built from the same documents. Nothing has to be kept true twice.
+
+An agent can therefore find the standard it needs before it writes code, and leave what it learns where a reviewer will
+see it.
+
+Skills, which are instructions an agent loads when it needs them, say how to read a corpus and how to add to it. The
+argument for building it this way is in [`template/knowledge-as-code.md`](template/knowledge-as-code.md).
+
+## A type declares its own schema
+
+A **type** is a category such as a policy, a runbook or a glossary. Its **schema** is the machine-readable statement of
+what a record of that type carries. The schema travels inside the corpus, in `.schema/`, so adding a type is adding a
+YAML file rather than changing the tool.
 
 ## What is here
 
@@ -28,6 +39,11 @@ it receives again whenever it takes a newer framework.
 **[`example/`](example/README.md)** is a complete corpus that took that template, run through the tool built beside it
 on every commit. It holds its own copy of every file the template shares, plus a set of illustrative records about a
 fictional library consortium.
+
+**[`docs/`](docs/)** is the documentation site, published to
+[GitHub Pages](https://paul80nd.github.io/knowledge-as-code/) on every push to `main`. It is the reference for KaC and
+for `kac`, and the one place a command's behaviour is written down. It documents the framework rather than the corpus
+in this repository.
 
 No folder contains another. `kac` finds a corpus by walking up for a `.schema/`, so it reads whichever corpus it is run
 from. The one in this repository proves the tool over real content rather than over fixtures alone.
@@ -82,8 +98,8 @@ kac validate
 ```
 
 Install it into a [tool manifest](https://learn.microsoft.com/dotnet/core/tools/local-tools-how-to-use) instead to pin
-it, which is what a corpus with CI of its own wants. The version lands in `.config/dotnet-tools.json` and travels with
-the repository. Every machine and every build then runs the version the corpus was written against.
+it, which is what a corpus with CI of its own wants. The version lands in `dotnet-tools.json` at the repository root
+and travels with it. Every machine and every build then runs the version the corpus was written against.
 
 ```bash
 dotnet new tool-manifest
@@ -95,10 +111,12 @@ dotnet tool run kac validate
 A push to `main` publishes the tool whenever it carries a `<Version>`
 [nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) does not already hold. That publish tags the commit and
 opens the release for it. [`tooling/README.md`](tooling/README.md#building) says how that version moves, and
-[`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) says what each version carried.
+[`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) says what each version carried, and is published as the
+site's [changelog](https://paul80nd.github.io/knowledge-as-code/changelog/).
 
-Every command, one document apiece, is in [`tooling/features/`](tooling/features/).
-[`tooling/README.md`](tooling/README.md) maps them and carries the test commands.
+Every command has a page at **<https://paul80nd.github.io/knowledge-as-code/>**, beside a getting-started guide and the
+reference for `.corpus.yaml`. [`tooling/README.md`](tooling/README.md) is the other half: how to build the tool, and the
+test commands.
 
 ## Starting a corpus of your own
 

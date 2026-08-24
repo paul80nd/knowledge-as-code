@@ -16,7 +16,7 @@
 //
 // The `expr:` strings largely carry over and the engine drops in. Not before: the dependency is not
 // worth it at this size, which is the same judgement that rejected OPA/Rego and is recorded with its
-// reasoning in `tooling/features/checks.md`.
+// reasoning in `docs/checks.md`.
 //
 // Non-goals, so that a later reader does not mistake an absence for an oversight: a general policy
 // engine, rules-as-data beyond this grammar, a date or collection type system, runtime or
