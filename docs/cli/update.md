@@ -1,8 +1,10 @@
 # `update` take a newer template into a corpus
 
-> **Draft, pending implementation.** This page is the specification `kac update` is built to, written before the command
-> exists. It describes the command as it will be, in the same voice as its siblings, and becomes an ordinary feature
-> page the moment the command ships.
+!!! warning "Draft, pending implementation"
+
+    `kac update` does not exist yet. This page is the specification it is built to, written before the command. It
+    describes the command as it will be, in the same voice as its siblings, and becomes an ordinary page the moment the
+    command ships.
 
 ## Intent
 

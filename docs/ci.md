@@ -112,11 +112,12 @@ steps:
     displayName: Check generated output is fresh
 ```
 
-**Azure Repos ignores the `pr:` trigger above.** Wire the pipeline up as a branch policy instead, or it never runs on a
-pull request:
+!!! warning "Azure Repos ignores the `pr:` trigger above"
 
-> Project settings, then Repositories, then your repository, then Policies, then Branch Policies, then `main`, then
-> Build Validation, then **+**. Select this pipeline and mark it Required.
+    Wire the pipeline up as a branch policy, or it never runs on a pull request and nothing says so.
+
+    Project settings, then Repositories, then your repository, then Policies, then Branch Policies, then `main`, then
+    Build Validation, then **+**. Select this pipeline and mark it Required.
 
 The `pr:` block states the intent, and it works as written if the repository is ever mirrored to GitHub.
 

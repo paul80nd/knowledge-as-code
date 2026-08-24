@@ -20,7 +20,9 @@ command is for, what it is not, and how it works.
 
 <!-- END GENERATED: command-table -->
 
-`new` and `update` are specifications, written before their commands exist. Each says so at its head.
+!!! warning "`new` and `update` do not exist yet"
+
+    Both pages are specifications, written before their commands. Each says so at its head.
 
 ## Where a command runs
 

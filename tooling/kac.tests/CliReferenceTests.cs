@@ -40,7 +40,7 @@ public partial class CliReferenceTests
         foreach (var name in CliReference.Unbuilt)
         {
             var page = File.ReadAllText(Path.Combine(CliReference.Cli, name + ".md"));
-            Assert.Contains("**Draft, pending implementation.**", page, StringComparison.Ordinal);
+            Assert.Contains("!!! warning \"Draft, pending implementation\"", page, StringComparison.Ordinal);
         }
     }
 
