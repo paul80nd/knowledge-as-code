@@ -41,8 +41,9 @@ the commit and opens a release carrying the section for that version.
 - **`kac mechanism` is gone**, and `kac update` replaces both its halves. It compared two corpora on identical paths and
   read a manifest at `tooling/manifest.yaml` that no corpus held, so no corpus could run it against the framework it
   actually took.
-- **`role:` in `.corpus.yaml` is no longer read.** It said whether a corpus carried the tests that prove the tool, and
-  no corpus does. A descriptor still carrying the key is named and the run stops, as it does for any retired key.
+- **`role:` in `.corpus.yaml` is no longer written or read.** It said whether a corpus carried the tests that prove the
+  tool, and no corpus does. `new` stops writing it, and an `update` over a descriptor still carrying it names the key
+  and stops, as it does for any retired key.
 
 ### Changed
 

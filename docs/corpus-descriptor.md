@@ -4,7 +4,7 @@
 
 `.corpus.yaml` sits at the root of a corpus and says what that corpus is, and where it stands against the shared
 framework. Everything else a corpus holds arrives from a template and can be taken again. This file is the corpus's own,
-so nothing syncs it and nothing reconciles it.
+and no update writes over it.
 
 [`new`](cli/new.md) writes it when the corpus is created, from what that invocation was told, and it arrives commented
 key by key. After that it is yours: you edit it by hand, and [`update`](cli/update.md) stamps four of its keys. The
@@ -24,11 +24,11 @@ corpus adopted, and says nothing about their shape.
 
 None of them is called `version` alone, because each answers a different question.
 
-| Key                         | Answers                                 | Written by | Moved by  |
-|-----------------------------|-----------------------------------------|------------|-----------|
-| `descriptor-version`        | the format of this file                 | `new`      | `update`  |
-| `content-version`           | the version of what this corpus *knows* | `new`      | by hand   |
-| `upstream.template-version` | the template shape this corpus took     | `new`      | `update`  |
+| Key                         | Answers                                 | Written by | Moved by |
+|-----------------------------|-----------------------------------------|------------|----------|
+| `descriptor-version`        | the format of this file                 | `new`      | `update` |
+| `content-version`           | the version of what this corpus *knows* | `new`      | by hand  |
+| `upstream.template-version` | the template shape this corpus took     | `new`      | `update` |
 
 `content-version` is semantically versioned: major where a meaning changed or a published URL broke, minor for
 additions, patch for wording. Quote it when one corpus tells another which version of the content it holds. Nothing
@@ -43,10 +43,6 @@ content-version: "0.1.0"
 
 `corpus` is what this corpus calls itself. An export states it, so a consumer holding several exports can tell whose
 vocabulary it is reading. The folder it vendored the files into may not say.
-
-Any corpus may author a framework change. Real content is the only thing that reveals a schema is wrong, so the corpus
-that found the problem is often the one best placed to fix it. A change is settled once the repository serving the
-template accepts it.
 
 ## Publishing
 
@@ -107,6 +103,10 @@ all three to it. A template read from a folder resolves no commit, and `commit` 
 made. A `new` that read a folder rather than a repository leaves `ref` and `commit` bare, because a folder has no ref to
 follow and no commit to resolve.
 
+Taking from a template does not make a corpus a lesser one. Real content is the only thing that reveals a schema is
+wrong, so the corpus that found the problem is often the one best placed to fix it. A change is settled once the
+repository serving the template accepts it.
+
 ## How far an update goes
 
 ```yaml
@@ -129,19 +129,23 @@ types:
   - policies
 ```
 
-Index generation covers the types listed here and no others. [`new`](cli/new.md) writes the list, because a corpus
-created by it has already been asked. Omit the key and you have not declared yet, so the tool reads adoption off the
-folders it finds. A type counts where both halves are there, meaning the page and the folder.
+Validation, index generation and what an update writes all cover the types listed here and no others.
+[`new`](cli/new.md) writes the list, because a corpus created by it has already been asked. Omit the key and you have
+not declared yet, so the tool reads adoption off the folders it finds. A type counts where both halves are there,
+meaning the page and the folder.
 
 Declaring turns "these folders happen to be here" into "these are the types this corpus chose", and validation can then
 hold the corpus to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared,
 standing a type up without adopting it is a defect [`validate`](cli/validate.md) reports.
 
+`kac update --add-type` and `--drop-type` are what change the list, so the name and the type's files move together.
+Editing it by hand leaves the corpus holding a type it does not claim, or claiming one it does not hold.
+
 ## What an export leaves behind
 
 ```yaml
 export:
-  exclude: []
+  exclude: [ ]
 ```
 
 Empty by default, and that is the important part. A record still in draft travels, and so does one whose review date has

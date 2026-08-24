@@ -99,7 +99,7 @@ upstream:
   template-version: 4
 
   # The day the framework last arrived.
-  taken-on: "2026-08-08"
+  taken-on: "2026-08-24"
 
 # How far an update goes. One of: cautious | full.
 #
@@ -111,7 +111,7 @@ upstream:
 update-policy: cautious
 
 # The record types this corpus has adopted.
-# Validation and index generation cover the types listed here.
+# Validation, index generation and what an update writes all cover the types listed here.
 #
 # A corpus that omits the key has not declared yet, and the tool reads adoption
 # off the folders it finds instead. Declaring turns "these folders happen to be
@@ -138,10 +138,9 @@ export:
 
 # Files this corpus deliberately holds differently from the framework.
 #
-# Each entry names the file and says why. Neither is read nor written, in either direction: this is the
-# one way to say "I own this" about a file the overlay would otherwise reclaim on every run.
-# `kac update` steps over them in either direction. Delete an entry once the file matches the framework
-# again.
+# Each entry names the file and says why. `kac update` reads and writes neither, in either direction, so
+# this is the one way to say "I own this" about a file the overlay would otherwise reclaim on every run.
+# Delete an entry once the file matches the framework again.
 #
 # Example:
 #

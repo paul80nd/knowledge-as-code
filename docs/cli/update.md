@@ -55,8 +55,8 @@ corpus derives from somebody else's framework. A corpus can be fresh and behind,
 
 ### Preconditions
 
-1. **A corpus.** A `.corpus.yaml` at or above the working directory. Without one there is nothing to update, and the
-   message names `new`.
+1. **A corpus.** A `.corpus.yaml` at or above the working directory. Standing one up where there is none is
+   [`new`](new.md).
 2. **A clean tree.** This is the whole safety model: everything the command writes has to be distinguishable from
    everything the person wrote, and only a clean tree makes that true. `--check` writes nothing, so it runs over a tree
    in any state.
@@ -69,12 +69,12 @@ Every file the template names resolves to exactly one layer, and the first match
 somewhere other than where it sat upstream. The manifest deciding all of this sits at the upstream repository's root, or
 in the folder `upstream.path` names.
 
-| Layer      | What happens                                                                         |
-|------------|--------------------------------------------------------------------------------------|
-| `overlay`  | Always written. This is framework property and an edit to it is drift, not a change. |
-| `seed`     | Written when absent. Written again only under `update-policy: full`.                 |
-| `removed`  | Deleted. A tombstone in the manifest, so a removal is stated rather than inferred.   |
-| `withheld` | Never written. The template's own machinery.                                         |
+| Layer      | What happens                                                                                   |
+|------------|------------------------------------------------------------------------------------------------|
+| `overlay`  | Written wherever the two copies differ. This is framework property and an edit to it is drift. |
+| `seed`     | Written when absent. Written again only under `update-policy: full`.                           |
+| `removed`  | Deleted. A tombstone in the manifest, so a removal is stated rather than inferred.             |
+| `withheld` | Never written. The template's own machinery.                                                   |
 
 **Seed files are the corpus's own words.** A type's root page and its `_template.md` arrive carrying the framework's
 wording and are rewritten in the corpus's domain. Refreshing them on every run would open each update with three dozen
@@ -82,8 +82,9 @@ files to revert by hand, which is noise rather than control. `update-policy: cau
 `full` refreshes them and hands the reconciliation to the diff. `--policy` overrides either for one run.
 
 **A deletion is declared, never guessed.** A file missing from the template is not evidence it was dropped. It is as
-likely to be evidence of a mistake upstream. Only `layer: removed` deletes, and only within the overlay: once a seed
-file has been written, it belongs to the corpus.
+likely to be evidence of a mistake upstream. Only `layer: removed` deletes, and it deletes exactly what it names. Write
+a tombstone for a file the framework owned. A seed belongs to the corpus once written, so retiring one is the corpus's
+own call.
 
 **`skip:` is how a corpus takes a file back.** A path listed there is not read and not written, in either direction. It
 is the one way to say "I own this and I mean it" about a file the overlay would otherwise reclaim on every run:
@@ -121,14 +122,18 @@ template sends nothing to, is a framework change made in the wrong tree. It woul
 this one reads as though anything is missing, so the check is the only place it surfaces. Move it upstream, or claim it
 with a `skip:` entry.
 
-This is what proves the framework's own repository, where `example/` holds a materialised copy of everything the
-template says a corpus receives.
+This is what proves the framework's own repository, where `example/` holds a materialised copy of what the template
+sends a corpus. A file whose destination is where it was already read from is shared with both corpora there rather than
+copied into either, and `.schema/` is that file.
 
 ### What it records
 
-The `upstream:` block in `.corpus.yaml` is rewritten: the commit resolved this run, the template's version, and the
-date. The ref is followed, not pinned: the commit is written down as what was taken, and nothing reads it back. The file
-is rewritten one line at a time, because most of its value is the commentary explaining what each key means.
+Four keys are rewritten: `descriptor-version`, and `upstream.commit`, `upstream.template-version` and
+`upstream.taken-on`. The ref is followed, not pinned: the commit is written down as what was taken, and nothing reads it
+back. A template read from a folder resolves no commit, so that key is left as it stands. The file is rewritten one line
+at a time, because most of its value is the commentary explaining what each key means.
+
+`--add-type` and `--drop-type` rewrite `types:` as well, and a run passing neither leaves the list alone.
 
 ## Known limits
 

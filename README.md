@@ -157,7 +157,7 @@ kept to show what real records look like. `new` never sends you any of it.
 
 **A corpus takes a newer framework with [`kac update`](https://paul80nd.github.io/knowledge-as-code/cli/update/).** It
 fetches the template `.corpus.yaml` points at, decides file by file what the corpus receives, and leaves every change in
-the working tree. Nothing is committed, so `git diff` is the review step. `kac update --check` answers the same question
+the working tree. Nothing is committed, so `git diff` is the review step. `kac update --check` reports what would change
 and writes nothing, which is the form for a pipeline.
 
 ## Maturity

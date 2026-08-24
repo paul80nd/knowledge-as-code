@@ -8,8 +8,8 @@ corpus means to own a file, say so with a `skip:` entry in [`.corpus.yaml`](.cor
 
 This corpus holds the tool and none of the tests that prove it, because the tool reaches it already proven.
 
-**Adding a knowledge type is adding a YAML file to `.schema/`.** A corpus adopts a type with
-`kac update --add-type <name>`, which writes the schema, the root page and the template, and adds the name to `types:`.
+**Adopting a knowledge type is one command.** `kac update --add-type <name>` writes the type's schema, its root page and
+its template, and adds the name to `types:`. The template declares which types there are to take.
 `kac update --drop-type <name>` gives one up, and refuses where the folder still holds records.
 
 ## Before you commit
