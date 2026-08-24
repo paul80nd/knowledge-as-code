@@ -32,6 +32,18 @@ public sealed record Upstream(
     int TemplateVersion,
     string TakenOn);
 
+// The continuous integration systems a corpus can be created for, which is what `--ci` is held to and
+// what a template's `ci:` may name. Read from here by both, so a system the tool cannot offer is refused
+// at the flag and reported in the template, rather than quietly taking a starter nobody can run.
+public static class CiSystem
+{
+    public const string GitHub = "github";
+    public const string AzureDevOps = "azure-devops";
+    public const string None = "none";
+
+    public static readonly IReadOnlyList<string> All = [GitHub, AzureDevOps, None];
+}
+
 // What the invocation was told, however it was told: a flag, a prompt, or a default.
 public sealed record NewAnswers
 {
@@ -49,6 +61,10 @@ public sealed record NewAnswers
     public string PublishingTarget { get; init; } = Publishing.None;
     public string? HumanBase { get; init; }
     public string? RawBase { get; init; }
+
+    // Which continuous integration system the corpus is built by. Asked apart from publishing, because a
+    // corpus can be built by one system and read on another.
+    public string Ci { get; init; } = CiSystem.None;
 }
 
 // What creating a corpus comes to. Every list names paths in the corpus about to exist, except `Copied`,
@@ -56,18 +72,21 @@ public sealed record NewAnswers
 public sealed record NewPlan(
     IReadOnlyList<PlannedFile> Copied,
     IReadOnlyList<ComposedFile> Composed,
-    IReadOnlyList<string> Declined,
-    IReadOnlyList<string> Unclassified)
+    IReadOnlyList<string> DeclinedTypes,
+    IReadOnlyList<string> DeclinedCi,
+    IReadOnlyList<string> Unclassified,
+    IReadOnlyList<string> UnknownCi)
 {
     // Every path the creation writes, in the order a listing reads them. What a golden snapshots, and
     // what a caller reports.
     public IEnumerable<string> Paths =>
         Copied.Select(f => f.To).Concat(Composed.Select(f => f.Path)).OrderBy(p => p, StringComparer.Ordinal);
 
-    // A template whose own manifest cannot place its own tree. The creation stops rather than guessing:
-    // an unplaced file is a defect upstream, and taking it anyway is how a corpus receives a file nobody
-    // meant to send.
-    public bool TemplateIsUnsound => Unclassified.Count > 0;
+    // A template this tool cannot read the whole of: a file its own manifest cannot place, or a rule
+    // serving a continuous integration system the tool does not offer. The creation stops rather than
+    // guessing, because each of those is a defect upstream, and acting anyway means a corpus receives a
+    // file nobody meant to send or loses one nobody meant to withhold.
+    public bool TemplateIsUnsound => Unclassified.Count > 0 || UnknownCi.Count > 0;
 }
 
 public static class New
@@ -88,8 +107,10 @@ public static class New
         Upstream upstream, Func<string, bool> declines)
     {
         var copied = new List<PlannedFile>();
-        var declined = new List<string>();
+        var declinedTypes = new List<string>();
+        var declinedCi = new List<string>();
         var unclassified = new List<string>();
+        var unknownCi = new List<string>();
 
         foreach (var from in templateFiles.OrderBy(f => f, StringComparer.Ordinal))
         {
@@ -106,8 +127,25 @@ public static class New
 
             if (declines(placement.Path))
             {
-                declined.Add(placement.Path);
+                declinedTypes.Add(placement.Path);
                 continue;
+            }
+
+            // A starter for a system this corpus does not build on. Not written rather than written and
+            // deleted unread, and a GitHub workflow is the one that would otherwise run uninvited.
+            if (placement.Ci is { } ci)
+            {
+                if (!CiSystem.All.Contains(ci, StringComparer.Ordinal))
+                {
+                    if (!unknownCi.Contains(ci, StringComparer.Ordinal)) unknownCi.Add(ci);
+                    continue;
+                }
+
+                if (!ci.Equals(answers.Ci, StringComparison.Ordinal))
+                {
+                    declinedCi.Add(placement.Path);
+                    continue;
+                }
             }
 
             // A template that sends its own descriptor sends its own name, publishing bases and adopted
@@ -125,8 +163,10 @@ public static class New
             composed.Add(new ComposedFile(ReadmeFile, Readme(answers)));
 
         copied.Sort((a, b) => string.CompareOrdinal(a.To, b.To));
-        declined.Sort(StringComparer.Ordinal);
-        return new NewPlan(copied, composed, declined, unclassified);
+        declinedTypes.Sort(StringComparer.Ordinal);
+        declinedCi.Sort(StringComparer.Ordinal);
+        unknownCi.Sort(StringComparer.Ordinal);
+        return new NewPlan(copied, composed, declinedTypes, declinedCi, unclassified, unknownCi);
     }
 
     // Whether a destination belongs to a type the corpus declined: the type's schema file, its root page,

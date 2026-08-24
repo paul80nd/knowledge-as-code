@@ -1,7 +1,8 @@
 // Unit tests for the `new` engine: which template file lands where, which never lands at all, and what
-// the two composed files say. Everything here is decided from a listing and a manifest, so no test writes
-// a tree, clones a repository or reads the network. `tooling/tests/fixtures/new/` is the layer that runs
-// the command over a real template.
+// the two composed files say. Every creation here is decided from a listing and a manifest written in the
+// test, so nothing writes a tree, clones a repository or reads the network. The last test is the one
+// exception, and says why. `tooling/tests/fixtures/new/` is the layer that runs the command over a real
+// template.
 
 using kac.core;
 
@@ -21,6 +22,8 @@ public class NewTests
             new ManifestRule([".schema/**"], Manifest.Overlay),
             new ManifestRule(["template/knowledge-as-code/**"], Manifest.Overlay, "knowledge-as-code/"),
             new ManifestRule(["template/retired.md"], Manifest.Removed, ""),
+            new ManifestRule(["template/azure-pipelines.yml"], Manifest.Seed, "", CiSystem.AzureDevOps),
+            new ManifestRule(["template/.github/**"], Manifest.Seed, ".github/", CiSystem.GitHub),
             new ManifestRule(["template/**"], Manifest.Seed, ""),
             new ManifestRule(["**"], Manifest.Withheld)
         ]
@@ -118,7 +121,7 @@ public class NewTests
         ], Answers("adrs"), New.DeclinesTypes(schema, ["adrs"]));
 
         Assert.Equal([".schema/adrs.yaml", "adrs.md", "adrs/_template.md"], plan.Copied.Select(f => f.To));
-        Assert.Equal([".schema/policies.yaml", "policies.md", "policies/_template.md"], plan.Declined);
+        Assert.Equal([".schema/policies.yaml", "policies.md", "policies/_template.md"], plan.DeclinedTypes);
     }
 
     // A type is declined by where its files land, not by where the template holds them. The pages of this
@@ -129,6 +132,53 @@ public class NewTests
         var declines = New.DeclinesTypes(SchemaOf(("policies", "policies.md", "policies")), []);
         Assert.False(declines("template/policies.md"));
         Assert.True(declines("policies.md"));
+    }
+
+    // -- the system the corpus builds on --
+
+    // A corpus runs on one system, so the starter for another is a file it would delete unread. The
+    // GitHub workflow is the one that earns the rule: it runs uninvited in a repository that builds
+    // elsewhere.
+    [Theory]
+    [InlineData(CiSystem.GitHub, ".github/workflows/kac.yml")]
+    [InlineData(CiSystem.AzureDevOps, "azure-pipelines.yml")]
+    public void Only_the_chosen_systems_starter_is_written(string ci, string kept)
+    {
+        var plan = Plan(["template/azure-pipelines.yml", "template/.github/workflows/kac.yml"],
+            Answers() with { Ci = ci });
+
+        Assert.Equal([kept], plan.Copied.Select(f => f.To));
+        Assert.Single(plan.DeclinedCi);
+    }
+
+    [Fact]
+    public void A_corpus_building_nowhere_takes_no_starter()
+    {
+        var plan = Plan(["template/azure-pipelines.yml", "template/.github/workflows/kac.yml"]);
+
+        Assert.Empty(plan.Copied);
+        Assert.Equal([".github/workflows/kac.yml", "azure-pipelines.yml"], plan.DeclinedCi);
+    }
+
+    // A file no rule ties to a system reaches every corpus, whatever it builds on.
+    [Fact]
+    public void A_file_naming_no_system_reaches_every_corpus()
+        => Assert.Equal(["CLAUDE.md"], Plan(["template/CLAUDE.md"]).Copied.Select(f => f.To));
+
+    // A template offering a system this tool cannot is a defect upstream. Its files are neither taken
+    // nor silently dropped: the creation stops and names the system.
+    [Fact]
+    public void A_system_the_tool_does_not_offer_stops_the_creation()
+    {
+        var manifest = new Manifest
+        {
+            Rules = [new ManifestRule(["template/Jenkinsfile"], Manifest.Seed, "", "jenkins")]
+        };
+        var plan = New.Plan(Set("template/Jenkinsfile"), manifest, Answers(), Taken(), _ => false);
+
+        Assert.Equal(["jenkins"], plan.UnknownCi);
+        Assert.Empty(plan.Copied);
+        Assert.True(plan.TemplateIsUnsound);
     }
 
     // -- the two composed files --
@@ -262,6 +312,18 @@ public class NewTests
     [Fact]
     public void No_readme_line_runs_past_120_characters()
         => Assert.DoesNotContain(New.Readme(Answers()).Split('\n'), l => l.Length > 120);
+
+    // The manifest this repository ships, which is the one thing here read from disk. A rule naming a
+    // system the tool cannot offer withholds its files from every corpus, and the fault is easiest to
+    // read beside the vocabulary rather than in a golden diff.
+    [Fact]
+    public void Every_system_this_repositorys_manifest_names_is_one_the_tool_offers()
+    {
+        var manifest = Manifest.LoadFrom(Path.Combine(Repo.Root, "manifest.yaml"));
+        var named = manifest.Rules.Select(r => r.Ci).OfType<string>().Distinct(StringComparer.Ordinal);
+
+        Assert.All(named, ci => Assert.Contains(ci, CiSystem.All));
+    }
 
     // A schema holding nothing but the folder, page and key of each type, which is all `DeclinesTypes`
     // reads. Building one here keeps the test off the real `.schema/`, whose types change.

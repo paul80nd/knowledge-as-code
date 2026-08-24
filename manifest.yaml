@@ -10,6 +10,10 @@
 # directory prefix, meaning everything up to the last `/` before the first wildcard, so a folder
 # relocates whole and several files sharing one folder relocate together.
 #
+# A rule may also say `ci:`, naming the continuous integration system its files serve. A corpus is
+# created for one system and receives that system's rule alone. Only two rules need it, because
+# everything else here is read the same way whoever builds the corpus.
+#
 # A file whose destination is its source is shared with the corpora in this repository rather than
 # copied into them: `.schema/` and the two skills below are read from this root by `example/` and by
 # `template/` alike. A corpus created elsewhere receives its own copy of each.
@@ -24,7 +28,7 @@ version: 4
 # The oldest `kac` that can read this manifest. The template is fetched rather than shipped inside the
 # package, so the two version independently. An older tool meeting a newer template stops on this and
 # says so, rather than half-reading it.
-minimum-tool: "0.5.0"
+minimum-tool: "0.6.0"
 
 layers:
 
@@ -171,20 +175,29 @@ rules:
       anything, because a corpus is created away from the repository these rules were written in and has
       to arrive carrying its own.
 
-  - path:
-      - "template/.order"
-      - "template/azure-pipelines.yml"
+  - path: "template/.order"
     to: ""
     layer: seed
     note: >
-      The Azure Pipelines starter, and the navigation ordering an Azure DevOps wiki reads. A corpus keeps
-      whichever pipeline it runs on and deletes the other. Each is a question about the corpus's own
-      repository, so each arrives working and is then the corpus's to change.
+      The navigation ordering an Azure DevOps wiki reads. It sits with the seeds every corpus receives
+      rather than with the two starters below, because what publishes a corpus and what builds it are
+      separate questions, and a file no other target reads costs a corpus nothing.
+
+  - path: "template/azure-pipelines.yml"
+    to: ""
+    layer: seed
+    ci: azure-devops
+    note: >
+      The Azure Pipelines starter. It arrives working and is then the corpus's own to change, because how
+      a repository builds is a question about that repository.
 
   - path: "template/.github/workflows/kac.yml"
     to: ".github/workflows/"
     layer: seed
-    note: The GitHub Actions starter, the twin of the pipeline above and the same bargain.
+    ci: github
+    note: >
+      The GitHub Actions starter, the twin of the pipeline above and the same bargain. This is the one
+      whose `ci:` earns its keep: a workflow reaching a corpus that builds elsewhere runs uninvited.
 
   - path: "template/*.md"
     to: ""

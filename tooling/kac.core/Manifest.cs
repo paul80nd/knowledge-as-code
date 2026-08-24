@@ -8,9 +8,13 @@ namespace kac.core;
 // were read from. The template manifest is written against the repository holding the template, so a
 // file authored at `template/knowledge-as-code.md` reaches a corpus as `knowledge-as-code.md`, and a
 // fork laying its repository out differently says so here rather than in the tool.
-public record ManifestRule(IReadOnlyList<string> Patterns, string Layer, string? To = null);
+// `Ci` names the continuous integration system a rule's files serve, and is null for the files every
+// corpus receives whatever it builds on. A corpus runs on one system, so the starter for another is a
+// file it would delete unread, and a GitHub workflow reaching a corpus that chose Azure DevOps is one
+// that runs uninvited.
+public record ManifestRule(IReadOnlyList<string> Patterns, string Layer, string? To = null, string? Ci = null);
 
-public record Placement(string Layer, string Path);
+public record Placement(string Layer, string Path, string? Ci = null);
 
 public class Manifest
 {
@@ -59,8 +63,9 @@ public class Manifest
                 // root and is not mistaken for a rule that named no destination at all.
                 var to = Yaml.Get(rule, "to") is { } toNode ? Yaml.Str(toNode) ?? "" : null;
                 var layer = Yaml.Str(Yaml.Get(rule, "layer"));
+                var ci = Yaml.Str(Yaml.Get(rule, "ci"));
                 if (patterns.Count > 0 && layer is not null)
-                    m.Rules.Add(new ManifestRule(patterns, layer, to));
+                    m.Rules.Add(new ManifestRule(patterns, layer, to, ci));
             }
 
         return m;
@@ -74,7 +79,7 @@ public class Manifest
         foreach (var rule in Rules)
         foreach (var pattern in rule.Patterns)
             if (Glob.IsMatch(relPath, pattern))
-                return new Placement(rule.Layer, Destination(relPath, pattern, rule.To));
+                return new Placement(rule.Layer, Destination(relPath, pattern, rule.To), rule.Ci);
         return null;
     }
 
