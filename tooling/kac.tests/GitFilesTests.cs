@@ -2,7 +2,6 @@
 // (GitFiles.Walk), and the one place GitFiles.Tracked differs from `git ls-files`. The golden suite
 // assembles a non-git tree, so what git reports is only asked here. Corpus.Discover is covered there.
 
-using System.Diagnostics;
 using kac.core;
 
 namespace kac.tests;
@@ -47,10 +46,7 @@ public class GitFilesTests
             File.WriteAllText(Path.Combine(dir.FullName, "gone.md"), "");
 
             // No git on this machine is the state Tracked answers null for, and the callers walk instead.
-            if (!Git(dir.FullName, "init", "-q", ".")) return;
-            Git(dir.FullName, "add", "-A");
-            Git(dir.FullName, "-c", "user.email=test@example.com", "-c", "user.name=Test",
-                "-c", "commit.gpgsign=false", "commit", "-qm", "fixture");
+            if (!GitCli.Repository(dir.FullName)) return;
 
             File.Delete(Path.Combine(dir.FullName, "gone.md"));
 
@@ -62,30 +58,6 @@ public class GitFilesTests
         finally
         {
             dir.Delete(recursive: true);
-        }
-    }
-
-    private static bool Git(string root, params string[] args)
-    {
-        var psi = new ProcessStartInfo("git")
-        {
-            WorkingDirectory = root,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false
-        };
-        foreach (var a in args) psi.ArgumentList.Add(a);
-
-        try
-        {
-            using var p = Process.Start(psi);
-            if (p is null) return false;
-            p.WaitForExit();
-            return p.ExitCode == 0;
-        }
-        catch
-        {
-            return false;
         }
     }
 }
