@@ -6,10 +6,10 @@
 framework. Everything else a corpus holds arrives from a template and can be taken again. This file is the corpus's own,
 so nothing syncs it and nothing reconciles it.
 
-You write it by hand. [`mechanism --sync`](cli/mechanism.md) stamps four of its keys, and of the commands that exist
-today it is the only one that touches the file at all.
-[`example/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.corpus.yaml) is commented
-throughout, and it is the copy to keep open while you write your own.
+[`new`](cli/new.md) writes it when the corpus is created, from what that invocation was told, and it arrives commented
+key by key. After that it is yours: you edit it by hand, and [`mechanism --sync`](cli/mechanism.md) stamps four of its
+keys. [`example/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.corpus.yaml) is the
+longer worked copy, commented throughout, and it is the one to read while changing yours.
 
 ## What it is not
 
@@ -23,11 +23,11 @@ replaces a value here, and only for the run it is passed to.
 
 None of them is called `version` alone, because each answers a different question.
 
-| Key                         | Answers                                 | Moved by           |
-|-----------------------------|-----------------------------------------|--------------------|
-| `descriptor-version`        | the format of this file                 | `mechanism --sync` |
-| `content-version`           | the version of what this corpus *knows* | by hand            |
-| `upstream.template-version` | the template shape this corpus took     | `mechanism --sync` |
+| Key                         | Answers                                 | Written by | Moved by           |
+|-----------------------------|-----------------------------------------|------------|--------------------|
+| `descriptor-version`        | the format of this file                 | `new`      | `mechanism --sync` |
+| `content-version`           | the version of what this corpus *knows* | `new`      | by hand            |
+| `upstream.template-version` | the template shape this corpus took     | `new`      | `mechanism --sync` |
 
 `content-version` is semantically versioned: major where a meaning changed or a published URL broke, minor for
 additions, patch for wording. Quote it when one corpus tells another which version of the content it holds. Nothing
@@ -112,6 +112,10 @@ never read back. Together they say that a corpus tracks a moving line, and that 
 `taken-on` is the day the framework last came down. `--sync` writes it beside `template-version`, so leave both to it.
 It leaves `commit` alone, because a sync reads a directory rather than a git ref and has no commit to record.
 
+[`new`](cli/new.md) writes the whole block when the corpus is created, from the flags it was given and the clone it
+made. A `new` that read a folder rather than a repository leaves `ref` and `commit` bare, because a folder has no ref
+to follow and no commit to resolve.
+
 ## How far an update goes
 
 ```yaml
@@ -134,8 +138,9 @@ types:
   - policies
 ```
 
-Index generation covers the types listed here and no others. Omit the key and you have not declared yet, so the tool
-reads adoption off the folders it finds. A type counts where both halves are there, meaning the page and the folder.
+Index generation covers the types listed here and no others. [`new`](cli/new.md) writes the list, because a corpus
+created by it has already been asked. Omit the key and you have not declared yet, so the tool reads adoption off the
+folders it finds. A type counts where both halves are there, meaning the page and the folder.
 
 Declaring turns "these folders happen to be here" into "these are the types this corpus chose", and validation can then
 hold the corpus to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared,

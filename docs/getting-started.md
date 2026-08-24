@@ -12,37 +12,35 @@ kac --version
 
 ## Start a corpus
 
-Copy [`template/`](https://github.com/paul80nd/knowledge-as-code/tree/main/template) and the
-[`.schema/`](https://github.com/paul80nd/knowledge-as-code/tree/main/.schema) beside it. Together they hold the schema,
-the framework's own documentation, a root page and a template for every type, plus three worked records to show the
-shape. Copy `example/` instead and you inherit a fictional library consortium corpus.
+`kac new` turns the folder you are standing in into a corpus. It takes the framework from the knowledge-as-code
+repository, writes the files that framework says a corpus receives, and writes the two no template can supply:
+`.corpus.yaml`, which names your corpus, and a `README.md` to rewrite.
 
 ```bash
-git clone https://github.com/paul80nd/knowledge-as-code
-cp -R knowledge-as-code/template/ my-corpus
-cp -R knowledge-as-code/.schema my-corpus/  # authored at the repository root, above both corpora there
-cd my-corpus
-rm README.md                                # the template describing itself, not a corpus's own
+mkdir my-corpus && cd my-corpus
+kac new
 ```
 
-!!! note "Edit `.corpus.yaml` next"
+It asks four things and has a default for each: what the corpus is called, which types it adopts, where it publishes,
+and what builds it. Answer nothing at all and you still end with a corpus that validates. `--yes` takes every default
+and asks nothing, which is what a pipeline runs.
 
-    It arrives naming the template, because no template can name your corpus for you.
-    [The corpus descriptor](corpus-descriptor.md) says what goes in it.
-
-`kac` reads the git listing to find what a corpus holds, so make the corpus a repository. The `.gitignore` you copied
-already holds `.dist/` and `_reports/`, which is what keeps the commands below from writing their own output back into
-the corpus. Commit before running them: an export stamps the commit it was built from, and a dirty tree gets a manifest
-naming a commit that does not reproduce it.
+The folder does not have to be a repository yet. `kac` reads the git listing to find what a corpus holds, so `new`
+offers to run `git init` where there is none. It finishes by running `generate`, then `validate`, then `git add -A`, and
+stops there. The first commit is yours to make, once you have read what is staged.
 
 ```bash
-git init && git add -A
-git commit -m "Start a corpus from the knowledge-as-code template"
+git commit -m "Start a corpus"
 ```
 
-You arrive with ignore rules, editor conventions, a wiki ordering and a starter pipeline for each of the two hosts. Keep
-whichever pipeline you run on and delete the other. What you do not arrive with is a `README.md`, which is the one page
-nobody else can write for you.
+!!! note "Look at `.corpus.yaml` before you commit"
+
+    `new` writes it from your answers. [The corpus descriptor](corpus-descriptor.md) says what every key in it means,
+    and which ones you move by hand afterwards.
+
+You arrive with ignore rules, editor conventions, a wiki ordering and the starter pipeline for the system you named.
+The other host's is not written, because a corpus builds on one of them and the other is a file you would delete
+unread. [`new`](cli/new.md) covers every flag, the order it asks in, and what stops it.
 
 ## Run the tool against your corpus
 

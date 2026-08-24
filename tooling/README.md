@@ -56,7 +56,8 @@ option carries generated `--help`. `Program.cs` says why that library and not an
 
 `kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, so it is run from inside one.
 Running it from here reaches no corpus at all. This repository holds two: `example/`, which carries the records, and
-`template/`, which carries what a new corpus receives.
+`template/`, which holds most of what `kac new` sends a corpus. [`manifest.yaml`](../manifest.yaml) names the rest, and
+is the only account of which files a corpus receives and where each one lands.
 
 ```bash
 cd ../example
