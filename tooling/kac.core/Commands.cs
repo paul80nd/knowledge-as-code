@@ -116,7 +116,7 @@ public static class Commands
             if (asker is not null && !asker.Confirm("Create the corpus here anyway?")) return Cancelled();
         }
 
-        var read = TemplateSource.Read(request.From, request.Ref, request.Path, Path.GetTempPath(),
+        var read = TemplateSource.Read("new", request.From, request.Ref, request.Path, Path.GetTempPath(),
             prompt: asker is not null);
         if (read.Problem is { } unreachable) return Fail(unreachable);
         using var template = read.Source!;
@@ -127,7 +127,7 @@ public static class Commands
                         + "read. --path names the folder holding it, where it is not at the root.");
 
         var manifest = Manifest.LoadFrom(manifestFile);
-        if (kac.core.New.TooOldFor(manifest.MinimumTool, toolVersion) is { } tooOld) return Fail(tooOld);
+        if (kac.core.New.TooOldFor(manifest.MinimumTool, toolVersion, "new") is { } tooOld) return Fail(tooOld);
 
         // The schema the template serves, which is the one account of what types there are to adopt.
         var schema = Schema.Load(Schema.FindRoot(template.Root) ?? template.Root);
@@ -326,8 +326,8 @@ public static class Commands
         return 0;
     }
 
-    // What a regeneration wrote. Shared with `mechanism --sync`, which ends by regenerating, so a sync reports the
-    // files it rebuilt in the words `generate` uses for the same work.
+    // What a regeneration wrote. Shared with `update`, which ends by regenerating, so an update reports the files it
+    // rebuilt in the words `generate` uses for the same work.
     //
     // A file the corpus did not hold is marked, because creating one changes what the corpus contains rather than what
     // a file inside it says. The tally names the whole plan beside the part of it that moved: a reader who sees one
@@ -445,60 +445,112 @@ public static class Commands
         return 1;
     }
 
-    public static int Mechanism(string corpusRoot, bool check, bool sync, string? against)
+    // Take a newer framework into a corpus that already has one.
+    //
+    // The order mirrors `New`: everything that can stop the run is settled before anything is written.
+    // Nothing is committed, which is the whole safety model and the reason `update` can be liberal.
+    // `docs/cli/update.md` argues each step. `today` is passed in rather than read here, so a golden can
+    // pin what the descriptor says.
+    public static int Update(string corpusRoot, UpdateRequest request, string toolVersion, string today)
     {
-        if (check == sync)
-            return Fail(check
-                ? "mechanism: --check and --sync are the two halves of this command; ask for one."
-                : "mechanism: specify --check to compare against a reference, or --sync to take from one.");
+        if (request.AddType is not null && request.DropType is not null)
+            return Fail("update: --add-type and --drop-type change the same list. ask for one.");
+
+        // A descriptor still on a renamed key stops the run. It would otherwise report on a file it has
+        // misread, and stamp beside a key it does not read.
+        if (CorpusDescriptor.RenamedKeyInUse(corpusRoot) is { } renamed) return Fail(renamed);
 
         var descriptor = CorpusDescriptor.Load(corpusRoot);
 
-        // A descriptor still on a renamed key stops both halves. A check would report on a file it has
-        // misread, and a sync would stamp beside a key it does not read.
-        if (CorpusDescriptor.RenamedKeyInUse(corpusRoot) is { } renamed) return Fail(renamed);
-
-        // A sync needs a declared upstream, and not just a directory it can read. `--against` says which copy of the
-        // upstream to take from, a local checkout rather than the URL. `upstream.url` says that the corpus takes from
-        // an upstream at all. The corpus at the head of the chain names none: changes leave it and none arrive, so a
-        // sync has nowhere to run from.
-        if (sync && descriptor.UpstreamUrl is null)
-            return Fail("mechanism: this corpus names no upstream, so there is nothing to sync from. "
-                        + "A corpus that takes from another records it in upstream.url in .corpus.yaml.");
-
-        var reference = against ?? descriptor.UpstreamUrl;
-        if (string.IsNullOrWhiteSpace(reference))
-            return Fail("mechanism: no reference to compare against. Pass --against <path>, "
+        var from = request.From ?? descriptor.UpstreamUrl;
+        if (from is null)
+            return Fail("update: this corpus names no template, so there is nothing to take. pass --from, "
                         + "or set upstream.url in .corpus.yaml.");
 
-        var refRoot = Path.GetFullPath(reference, corpusRoot);
-        if (!Directory.Exists(refRoot))
-            return Fail($"mechanism: reference corpus not found: {refRoot}");
-        if (Path.GetFullPath(refRoot) == Path.GetFullPath(corpusRoot))
-            return Fail("mechanism: the reference is this corpus itself. Nothing to compare.");
+        var policy = request.Policy ?? descriptor.UpdatePolicy;
+        if (!CorpusDescriptor.Policies.Contains(policy, StringComparer.Ordinal))
+            return Fail($"update: '{policy}' is not an update policy. it is "
+                        + $"{string.Join(" or ", CorpusDescriptor.Policies)}.");
 
-        var localFiles = MechanismCheck.ListFiles(corpusRoot);
-        var refFiles = MechanismCheck.ListFiles(refRoot);
+        // A clean tree is what makes everything this writes distinguishable from everything the person
+        // wrote. A tree git could not answer for is not reported as clean, and is not stopped either.
+        // `--check` writes nothing, so it runs over a tree in any state.
+        if (!request.Check && Git.Dirty(corpusRoot) is true)
+            return Fail("update: this repository holds uncommitted changes. commit or stash them first, "
+                        + "so that what `update` writes reads as a diff of its own.");
 
-        // Check reads this corpus's manifest, because it reports whether this corpus is in step with the
-        // boundary it believes in. Sync reads the reference's, because it takes that boundary down along
-        // with the files the boundary describes.
-        if (check)
-            return ReportMechanism(
-                MechanismCheck.Classify(localFiles, refFiles, Manifest.Load(corpusRoot), descriptor, Same),
-                descriptor, refRoot);
+        var read = TemplateSource.Read("update", from, request.Ref ?? descriptor.UpstreamRef,
+            request.Path ?? descriptor.UpstreamPath, Path.GetTempPath(),
+            prompt: Out.Interactive && !request.Yes);
+        if (read.Problem is { } unreachable) return Fail(unreachable);
+        using var template = read.Source!;
 
-        var manifest = Manifest.Load(refRoot);
-        var plan = MechanismSync.Plan(localFiles, refFiles, manifest, descriptor,
-            MechanismSync.DeclinedTypePaths(refRoot, descriptor), Same);
+        var manifestFile = Path.Combine(template.Root, Manifest.FileName);
+        if (!File.Exists(manifestFile))
+            return Fail($"update: {from} holds no {Manifest.FileName}, so there is no template to read. "
+                        + "--path names the folder holding it, where it is not at the root.");
 
-        var today = DateTime.Today.ToString("yyyy-MM-dd");
-        MechanismSync.Apply(plan, corpusRoot, refRoot, manifest, today);
-        return ReportSync(plan, corpusRoot, manifest.Version, reference, today);
+        var manifest = Manifest.LoadFrom(manifestFile);
+        if (kac.core.New.TooOldFor(manifest.MinimumTool, toolVersion, "update") is { } tooOld)
+            return Fail(tooOld);
 
-        // Whether two copies of a file say the same thing. That is the one question either engine asks of the disk.
-        // Passed in, so each engine decides from listings and a predicate rather than from a tree.
-        bool Same(string rel) => MechanismCheck.Same(corpusRoot, refRoot, rel);
+        // The schema the template serves, which is the one account of what types there are to adopt.
+        var schema = Schema.Load(Schema.FindRoot(template.Root) ?? template.Root);
+        var declared = schema.ByFolder.Keys.OrderBy(k => k, StringComparer.Ordinal).ToList();
+
+        var corpusFiles = kac.core.Update.Listing(corpusRoot);
+        var adoption = kac.core.Update.Adopt(corpusFiles, descriptor, schema, declared,
+            request.AddType, request.DropType);
+        if (adoption.Problem is { } refused) return Fail(refused);
+
+        var types = new UpdateTypes(declared, adoption.Types,
+            kac.core.New.DeclinesTypes(schema, adoption.Types ?? declared));
+
+        var plan = kac.core.Update.Plan(template.Files(), corpusFiles, manifest, descriptor, types, policy,
+            kac.core.Update.ReadInPlace(template.Root, corpusRoot),
+            file => kac.core.Update.Same(template.Root, corpusRoot, file));
+
+        // A type being given up takes its own files with it, and they are deletions like any other. So
+        // they join the plan rather than being carried beside it, and `--check` reports them too.
+        if (adoption.Deleted.Count > 0)
+            plan = plan with
+            {
+                Deleted = [.. plan.Deleted.Concat(adoption.Deleted)
+                    .Distinct(StringComparer.Ordinal)
+                    .Order(StringComparer.Ordinal)]
+            };
+
+        if (plan.TemplateIsUnsound) return Unsound(plan, from);
+
+        var taken = from + At(template.Commit);
+        if (request.Check) return ReportCheck(plan, taken, request.DropType);
+
+        kac.core.Update.Apply(plan, template.Root, corpusRoot);
+        CorpusDescriptor.Stamp(corpusRoot, manifest.Version, today, template.Commit);
+
+        // Only where a flag asked for it. `types:` is the corpus's own list, and rewriting it on a run
+        // that changed nothing would reformat a block somebody laid out by hand.
+        if (adoption.Account is not null && adoption.Types is { } adopted)
+            CorpusDescriptor.SetTypes(corpusRoot, adopted);
+
+        return ReportUpdate(plan, adoption, corpusRoot, taken, manifest.Version, today, request.DropType);
+    }
+
+    // A template this tool cannot read the whole of, in either of the two ways. Each names what the
+    // template did rather than the count of it, because the fix is upstream and needs the paths.
+    private static int Unsound(UpdatePlan plan, string from)
+    {
+        if (plan.Unclassified.Count > 0)
+        {
+            Stop($"update: {from} has a manifest that does not place its own tree. these files match no rule:");
+            foreach (var path in plan.Unclassified) Out.ErrLine($"  {path}");
+        }
+
+        if (plan.UnknownCi.Count > 0)
+            Stop($"update: {from} serves {string.Join(" and ", plan.UnknownCi)}, which this tool cannot "
+                 + $"offer. it offers {string.Join(", ", CiSystem.All)}.");
+
+        return 1;
     }
 
     // The shape both listings take: how loud, what it is called, and what it says. Only the last column
@@ -574,100 +626,107 @@ public static class Commands
     // names stays plain beneath it.
     private static void Stop(string line) => Out.ErrMarkup($"[red]{line.EscapeMarkup()}[/]");
 
-    private static int ReportMechanism(MechanismReport report, CorpusDescriptor descriptor, string refRoot)
+    // What `--check` found: nothing, or the files that would change. The same discipline as
+    // `generate --check`, and for the same reason. A pipeline says whether a corpus has fallen behind,
+    // and never pushes.
+    private static int ReportCheck(UpdatePlan plan, string taken, string? dropped)
     {
-        // Where the corpus says it stands, before what the comparison found. Three versions answering
-        // three questions, so a reader can tell which one moved. See CorpusDescriptor for why an unstated
-        // one is reported and not filled in.
-        Out.Line(
-            $"mechanism: content version {Stated(descriptor.ContentVersion)}, "
-            + $"descriptor format {Stated(descriptor.DescriptorVersion)}, "
-            + $"template version {Stated(descriptor.TemplateVersion)}.");
-        Out.Line($"mechanism: comparing the synced layer against {refRoot}");
-        Section("DRIFT, synced files differ from the reference", report.Drift);
-        Section("MISSING LOCALLY, synced files in the reference but not here", report.MissingLocally);
-        Section("MISSING UPSTREAM, synced files here but not in the reference", report.MissingUpstream);
-        Section("UNCLASSIFIED, files matching no manifest rule", report.Unclassified);
+        Out.Line($"update: comparing this corpus against {taken}.");
+        Aside(plan, dropped);
 
-        if (report.ResolvedDivergence.Count > 0)
+        if (!plan.Changes)
         {
-            Out.Line(
-                "RESOLVED, accepted divergences that are now identical again (delete them from .corpus.yaml):");
-            foreach (var p in report.ResolvedDivergence) Out.Line($"  {p}");
+            Out.Line($"update: in step, {plan.InStep} file(s) compared.");
+            return 0;
         }
 
-        Out.Line(
-            $"synced: {report.SyncedInStep} in step, {report.Drift.Count} drifted; "
-            + $"forked: {report.ForkedShared} shared ({report.ForkedDiffer} differ, informational); "
-            + $"accepted divergences: {report.AcceptedActive}.");
+        Stop(HasWrites(plan)
+            ? "this corpus is behind its framework. these would change:"
+            : "this corpus is out of step with its framework:");
+        Listed("WRITE, framework files this corpus holds differently", plan.Written.Select(f => f.To));
+        Listed("SEED, files the corpus has none of", plan.Seeded.Select(f => f.To));
+        Listed("DELETE, files the template has retired", plan.Deleted);
+        Listed("UNSHARED, framework files this corpus holds and the template does not send",
+            plan.Unshared);
+        Out.ErrLine(plan.Unshared.Count > 0 && !HasWrites(plan)
+            ? "an unshared file is a framework change made in the wrong tree. move it upstream, or say "
+              + "the corpus owns it with a skip: entry."
+            : "run:  kac update");
+        return 1;
 
-        // Held but not asked for: schema files for types this corpus did not adopt, or a fixture tree in a corpus whose
-        // role declines the verification layer. Neither is drift, because nothing was compared. Say so anyway. No sync
-        // will refresh these files, and the alternative is leaving the reader to find them stale later.
-        if (report.DeclinedButHeld > 0)
-            Out.Line(
-                $"declined: {report.DeclinedButHeld} file(s) held here that this corpus's descriptor does not ask for. "
-                + "They are not synced or compared; delete them, or adopt what they belong to.");
+        static bool HasWrites(UpdatePlan p) => p.Written.Count > 0 || p.Seeded.Count > 0 || p.Deleted.Count > 0;
 
-        if (report.Problems > 0)
+        static void Listed(string heading, IEnumerable<string> paths)
         {
-            Out.ErrLine($"mechanism check failed: {report.Problems} synced-layer problem(s) above.");
-            return 1;
-        }
-
-        Out.Line("mechanism: synced layer in step.");
-        return 0;
-
-        static void Section(string heading, IReadOnlyList<string> paths)
-        {
-            if (paths.Count == 0) return;
+            var found = paths.ToList();
+            if (found.Count == 0) return;
             Out.ErrLine($"{heading}:");
-            foreach (var p in paths) Out.ErrLine($"  {p}");
+            foreach (var p in found) Out.ErrLine($"  {p}");
         }
-
-        static string Stated(object? version) => version?.ToString() is { Length: > 0 } v ? v : "not declared";
     }
 
-    private static int ReportSync(SyncPlan plan, string corpusRoot, int mechanismVersion, string reference,
-        string today)
+    // What the update did. Every file it touched, then the tally and what the descriptor now records.
+    private static int ReportUpdate(UpdatePlan plan, Adoption adoption, string corpusRoot, string taken,
+        int templateVersion, string today, string? dropped)
     {
-        Out.Line($"mechanism: syncing the shared layers from {reference}");
-        Section("UPDATED, brought down from the reference", plan.Updated);
-        Section("SEEDED, the corpus's own from here on, copied because it had none", plan.Seeded);
-        Section("SKIPPED, accepted divergences, left as they are", plan.Skipped);
-        Section("HELD HERE, NOT UPSTREAM, shared files the reference does not have (sync never deletes)",
-            plan.HeldHere);
+        Out.Line($"update: taking the framework from {taken}.");
+        foreach (var file in plan.Written) Out.Markup(Wrote(file.To));
+        foreach (var file in plan.Seeded) Out.Markup(Wrote(file.To) + "  [grey](new)[/]");
+        foreach (var rel in plan.Deleted) Out.Markup($"  [red]deleted[/]  {rel.EscapeMarkup()}");
 
-        Out.Line(
-            $"synced: {plan.Updated.Count} updated, {plan.InStep} already in step; seeded {plan.Seeded.Count}; "
-            + $"skipped {plan.Skipped.Count}; declined {plan.Declined}. "
-            + $"Recorded in .corpus.yaml as mechanism version {mechanismVersion}, taken {today}.");
+        Aside(plan, dropped);
+        if (adoption.Account is { } changed) Account(changed);
 
-        if (plan.ReferenceIsUnsound)
+        // An update writes nothing for one of these, so saying so is the whole of what the tool can do.
+        if (plan.Unshared.Count > 0)
         {
-            Out.ErrLine("UNCLASSIFIED, files in the reference matching no manifest rule, so not copied:");
-            foreach (var p in plan.Unclassified) Out.ErrLine($"  {p}");
-            Out.ErrLine(
-                "mechanism sync: the reference's manifest does not resolve its own tree. Fix it there.");
-            return 1;
+            Note($"update: {plan.Unshared.Count} file(s) sit where the framework's rules apply, and the "
+                 + "template sends nothing to them:");
+            foreach (var rel in plan.Unshared) Out.Line($"  {rel}");
         }
 
-        // Every synced page may carry a generated block built from this corpus's own types, so the copies above are
-        // only right once rebuilt against what this corpus holds. Regenerating here makes a passing `generate --check`
-        // sync's postcondition.
+        Account($"update: wrote {plan.Written.Count}, seeded {plan.Seeded.Count}, deleted "
+                + $"{plan.Deleted.Count}; {plan.InStep} already in step. recorded in .corpus.yaml as "
+                + $"template version {templateVersion}, taken {today}.");
+        Account("update: nothing is committed. `git diff` is the review step, and `git checkout` on a "
+                + "file is how to decline one.");
+
+        // Every overlay page may carry a generated block built from this corpus's own types, so the
+        // copies above are only right once rebuilt against what this corpus holds. Regenerating here
+        // makes a passing `generate --check` the update's postcondition.
         return Regenerate(corpusRoot);
-
-        static void Section(string heading, IReadOnlyList<string> paths)
-        {
-            if (paths.Count == 0) return;
-            Out.Line($"{heading}:");
-            foreach (var p in paths) Out.Line($"  {p}");
-        }
     }
 
-    // The corpus is loaded here rather than by the caller, because a sync has just replaced the schema. A schema this
-    // corpus cannot yet read is the one failure worth surviving: the files are already in place, and saying so is more
-    // use than a stack trace over a half-finished tree.
+    // What the run stepped over and what it could still take. Neither is a change, and both are worth a
+    // line: a skipped file is one nothing will refresh, and an unadopted type is one nothing will offer
+    // again unless this says so.
+    //
+    // A type this run has just given up is left out. The corpus could indeed take it back, and saying so
+    // beside the deletions reads as the tool arguing with the decision it was handed.
+    private static void Aside(UpdatePlan plan, string? dropped)
+    {
+        if (plan.Skipped.Count > 0)
+        {
+            Account($"update: stepped over {plan.Skipped.Count} file(s) that .corpus.yaml claims:");
+            foreach (var p in plan.Skipped) Out.Line($"  {p}");
+        }
+
+        if (plan.Declined > 0)
+            Account($"update: withheld {plan.Declined} file(s) for types this corpus has not adopted.");
+
+        if (plan.DeclinedCi > 0)
+            Account($"update: withheld {plan.DeclinedCi} continuous integration starter(s) this corpus "
+                    + "does not hold. which system builds it is not an update's to decide.");
+
+        var offered = plan.Offered.Where(t => !t.Equals(dropped, StringComparison.Ordinal)).ToList();
+        if (offered.Count > 0)
+            Account($"update: this template also declares {string.Join(", ", offered)}. take one with "
+                    + "kac update --add-type <name>.");
+    }
+
+    // The corpus is loaded here rather than by the caller, because an update has just replaced the schema. A schema
+    // this corpus cannot yet read is the one failure worth surviving: the files are already in place, and saying so is
+    // more use than a stack trace over a half-finished tree.
     private static int Regenerate(string corpusRoot)
     {
         try
@@ -679,10 +738,10 @@ public static class Commands
         }
         catch (Exception ex)
         {
-            Out.ErrLine($"mechanism sync: regeneration failed: {ex.Message}");
+            Out.ErrLine($"update: regeneration failed: {ex.Message}");
             Out.ErrLine(
-                "mechanism sync: the files are in place but the generated blocks were not rebuilt. "
-                + "Run kac validate to see what the corpus is missing, then kac generate.");
+                "update: the files are in place but the generated blocks were not rebuilt. "
+                + "run kac validate to see what the corpus is missing, then kac generate.");
             return 1;
         }
     }

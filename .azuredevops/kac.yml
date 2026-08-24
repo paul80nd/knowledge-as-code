@@ -59,6 +59,12 @@ steps:
     displayName: Check generated output is fresh
     workingDirectory: $(Build.SourcesDirectory)/example
 
+  # The worked corpus holds a materialised copy of what the template sends, so this is what keeps the
+  # two trees equal in both directions.
+  - script: dotnet run --project ../tooling/kac -- update --check --from ../
+    displayName: Check the corpus is in step with the template
+    workingDirectory: $(Build.SourcesDirectory)/example
+
   # `generate --check` is askable only here. The corpus the installed tool stands up further down is
   # generated as it is created, so nothing there holds these committed copies fresh.
   - script: dotnet run --project ../tooling/kac -- validate

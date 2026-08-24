@@ -29,7 +29,6 @@ var exampleRoot = Path.Combine(repoRoot, "example");
 // copy serves the template, `example/` and every fixture, so a schema edit surfaces as a broken golden
 // in the same run that made it.
 var schemaDir = Path.Combine(repoRoot, ".schema");
-var manifestFile = Path.Combine(repoRoot, "tooling", "manifest.yaml");
 var fixturesDir = Path.Combine(repoRoot, "tooling", "tests", "fixtures");
 
 var rawArgs = args.ToList();
@@ -89,11 +88,8 @@ foreach (var scenario in scenarios)
             case "generate-stale":
                 RunGenerateScenario(name, scenario, mustBeStale: true);
                 break;
-            case "mechanism":
-                RunMechanismScenario(name, scenario, corpusDir);
-                break;
-            case "sync":
-                RunSyncScenario(name, scenario, corpusDir);
+            case "update":
+                RunUpdateScenario(name, scenario);
                 break;
             case "export":
                 RunExportScenario(name, scenario, corpusDir);
@@ -223,79 +219,6 @@ void RunGenerateScenario(string name, string scenario, bool mustBeStale)
     }
 }
 
-// mechanism, over the fixture's `corpus/` and `reference/`. `tooling/tests/README.md` says what
-// `expected-drift.txt` pins and what an absent one means.
-void RunMechanismScenario(string name, string scenario, string corpusDir)
-{
-    var referenceDir = Path.Combine(scenario, "reference");
-    if (!Directory.Exists(referenceDir))
-    {
-        failures.Add(name);
-        Console.WriteLine($"ERROR  {name}: no reference/ tree in the fixture");
-        return;
-    }
-
-    if (update)
-    {
-        Console.WriteLine($"UPDATE {name}  (mechanism scenario, nothing to regenerate)");
-        return;
-    }
-
-    var expectedFile = Path.Combine(scenario, "expected-drift.txt");
-    var expected = File.Exists(expectedFile)
-        ? File.ReadAllLines(expectedFile).Select(l => l.Trim()).Where(l => l.Length > 0).ToList()
-        : [];
-
-    var localTemp = AssembleMechanismTemp(schemaDir, manifestFile, corpusDir);
-    var refTemp = AssembleMechanismTemp(schemaDir, manifestFile, referenceDir);
-    try
-    {
-        var (stdout, stderr, exit) = Run(localTemp, "dotnet", kac, "mechanism", "--check", "--against", refTemp);
-        var output = stderr + stdout;
-
-        if (expected.Count == 0)
-        {
-            if (exit == 0)
-            {
-                Console.WriteLine($"ok     {name}  (synced layer in step)");
-            }
-            else
-            {
-                failures.Add(name);
-                Console.WriteLine($"FAIL   {name}: expected the synced layer in step (exit 0), got exit {exit}");
-                foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"         {l}");
-            }
-
-            return;
-        }
-
-        if (exit == 0)
-        {
-            failures.Add(name);
-            Console.WriteLine($"FAIL   {name}: expected drift (exit 1) but the check passed");
-            return;
-        }
-
-        var missing = expected.Where(l => !output.Contains(l)).ToList();
-        if (missing.Count == 0)
-        {
-            Console.WriteLine($"ok     {name}  (drift detected)");
-        }
-        else
-        {
-            failures.Add(name);
-            Console.WriteLine($"FAIL   {name}: drift detected but these paths were not named: {string.Join(", ", missing)}");
-        }
-    }
-    finally
-    {
-        TryDelete(localTemp);
-        TryDelete(refTemp);
-    }
-}
-
-// sync, over the same two trees. It asserts the one thing a check cannot: the tree afterwards.
-// `tooling/tests/README.md` says what each expectation file carries.
 // `new` builds its own corpus, so this scenario has no `corpus/` tree to read. It runs the real template
 // at the repository root, because what is worth proving is the command people will actually run.
 //
@@ -395,57 +318,87 @@ static List<string> Differences(string what, string expectedPath, string actual)
     ];
 }
 
-void RunSyncScenario(string name, string scenario, string corpusDir)
+// update, over a corpus this scenario stands up itself.
+//
+// The two commands are proved as a round trip rather than apart, because the promise worth pinning is
+// that one leaves the other with nothing to say. A corpus is created from the real template, committed,
+// broken in the three ways an update answers for, and then taken back.
+//
+// `tooling/tests/README.md` says what `expected-check.txt` carries.
+void RunUpdateScenario(string name, string scenario)
 {
-    var referenceDir = Path.Combine(scenario, "reference");
-    if (!Directory.Exists(referenceDir))
-    {
-        failures.Add(name);
-        Console.WriteLine($"ERROR  {name}: no reference/ tree in the fixture");
-        return;
-    }
-
-    if (update)
-    {
-        Console.WriteLine($"UPDATE {name}  (sync scenario, nothing to regenerate)");
-        return;
-    }
-
-    var expected = ReadLines(Path.Combine(scenario, "expected-sync.txt"));
-    var localTemp = AssembleMechanismTemp(schemaDir, manifestFile, corpusDir, ReadKeptTypes(scenario));
-    var refTemp = AssembleMechanismTemp(schemaDir, manifestFile, referenceDir);
+    var temp = Path.Combine(Path.GetTempPath(), "kac-update-" + Guid.NewGuid().ToString("N"));
+    Directory.CreateDirectory(temp);
     try
     {
-        var (stdout, stderr, exit) = Run(localTemp, "dotnet", kac, "mechanism", "--sync", "--against", refTemp);
-        var output = stderr + stdout;
+        Run(temp, "dotnet", kac, "new", "--yes", "--from", repoRoot, "--name", "acme-corpus", "--ci", "github");
+        Commit(temp, "the corpus as created");
+
+        // An overlay file edited here, and a seed deleted. One is drift the framework takes back, and the
+        // other is a starting point the corpus never wrote over, so the two answer to different rules.
+        File.AppendAllText(Path.Combine(temp, "knowledge-as-code.md"), "\nAn edit this corpus made.\n");
+        File.Delete(Path.Combine(temp, ".editorconfig"));
+        Commit(temp, "drift");
+
+        var (checkOut, checkErr, checkExit) = Run(temp, "dotnet", kac, "update", "--check", "--from", repoRoot);
+        var reported = checkOut + checkErr;
+
+        var expectedPath = Path.Combine(scenario, "expected-check.txt");
+        if (update)
+        {
+            File.WriteAllText(expectedPath, Reportable(reported, repoRoot));
+            Console.WriteLine($"UPDATE {name}  (check exit {checkExit})");
+            return;
+        }
 
         var problems = new List<string>();
-        if (exit != 0) problems.Add($"expected a clean sync (exit 0), got exit {exit}");
-        problems.AddRange(expected.Where(l => !output.Contains(l)).Select(l => $"not reported: {l}"));
+        if (checkExit != 1)
+            problems.Add($"expected --check to fail on a corpus behind its framework (exit 1), got exit {checkExit}");
+        problems.AddRange(Differences("what --check reported", expectedPath, Reportable(reported, repoRoot)));
 
-        // The tree the sync left. `expected-content.txt` pins copy-then-regenerate here: a shared page
-        // comes down whole, generated block and all, and is only right once rebuilt against the types
-        // the receiving corpus holds.
-        problems.AddRange(CheckTree(localTemp, scenario));
+        var (applyOut, applyErr, applyExit) = Run(temp, "dotnet", kac, "update", "--from", repoRoot);
+        if (applyExit != 0)
+            problems.Add($"expected the update to succeed (exit 0), got exit {applyExit}\n{applyErr}{applyOut}");
+
+        // Nothing is committed, which is the whole safety model, so the tree is dirty by design and the
+        // second check runs over it as it stands.
+        var (_, _, againExit) = Run(temp, "dotnet", kac, "update", "--check", "--from", repoRoot);
+        if (againExit != 0)
+            problems.Add($"expected the corpus to be in step after an update (exit 0), got exit {againExit}");
 
         if (problems.Count == 0)
         {
-            Console.WriteLine($"ok     {name}  (synced)");
+            Console.WriteLine($"ok     {name}  (behind, updated, in step)");
         }
         else
         {
             failures.Add(name);
             Console.WriteLine($"FAIL   {name}");
             foreach (var p in problems) Console.WriteLine($"         {p}");
-            foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"       | {l}");
         }
     }
     finally
     {
-        TryDelete(localTemp);
-        TryDelete(refTemp);
+        TryDelete(temp);
     }
 }
+
+// Commit whatever the tree holds, under an identity of this run's own. A clean tree is what `update`
+// asks for, and the machine running this suite is not required to have configured one.
+void Commit(string dir, string message)
+{
+    Run(dir, "git", "add", "-A");
+    Run(dir, "git", "-c", "user.email=kac@example.invalid", "-c", "user.name=kac", "commit", "-q", "-m", message);
+}
+
+// What a run said, with this machine taken out of it: the repository's own path, and the tallies that
+// move whenever the template gains a file. What is left is the lines naming what the update decided.
+static string Reportable(string output, string root) =>
+    string.Join('\n', output.Replace(root, "<template>").Split('\n')
+        .Select(l => l.TrimEnd())
+        .Where(l => l.Length > 0)
+        .Where(l => !l.Contains("file(s) compared", StringComparison.Ordinal))
+        .Where(l => !l.Contains("withheld", StringComparison.Ordinal))) + "\n";
 
 // export, over the fixture corpus. The golden is the whole export, committed under `expected-dist/` and
 // diffed file for file, because this is where a change to what a consumer reads becomes visible.
@@ -775,14 +728,6 @@ static List<string> ReadLines(string path) =>
         ? [.. File.ReadAllLines(path).Select(l => l.Trim()).Where(l => l.Length > 0 && !l.StartsWith('#'))]
         : [];
 
-// corpus-schema.txt names the type schema files the local corpus holds *before* the sync, which is the
-// half-adopted state a consumer runs one from. Absent means the corpus holds them all.
-static HashSet<string>? ReadKeptTypes(string scenario)
-{
-    var path = Path.Combine(scenario, "corpus-schema.txt");
-    return File.Exists(path) ? new HashSet<string>(ReadLines(path), StringComparer.Ordinal) : null;
-}
-
 Console.WriteLine();
 
 // -- coverage meta-test --
@@ -910,29 +855,6 @@ static void MarkCorpus(string temp)
     Directory.CreateDirectory(temp);
     File.WriteAllText(Path.Combine(temp, ".corpus.yaml"),
         "# Written by the golden suite so that kac reads this tree as a corpus.\n");
-}
-
-// Like AssembleTemp, but the mechanism check also reads the manifest, so copy the real one in too.
-// The subtree (a corpus/ or reference/) is laid over the top, and may add its own .corpus.yaml.
-// `keptTypes`, where a fixture supplies one, names the per-type schema files this side holds. The real
-// `.schema/` cannot express a corpus holding fewer of them than upstream, and that is the state a sync
-// resolves. Underscore-prefixed files belong to no type, so every corpus holds them whatever it adopted.
-static string AssembleMechanismTemp(string schemaDir, string manifestFile, string subtree,
-    HashSet<string>? keptTypes = null)
-{
-    var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
-    CopyTree(schemaDir, Path.Combine(temp, ".schema"));
-    MarkCorpus(temp);
-    if (keptTypes is not null)
-        foreach (var file in Directory.EnumerateFiles(Path.Combine(temp, ".schema"), "*.yaml"))
-            if (!Path.GetFileName(file).StartsWith('_') && !keptTypes.Contains(Path.GetFileNameWithoutExtension(file)))
-                File.Delete(file);
-
-    // The schema lives at .schema/, so nothing else creates tooling/ for us.
-    Directory.CreateDirectory(Path.Combine(temp, "tooling"));
-    File.Copy(manifestFile, Path.Combine(temp, "tooling", "manifest.yaml"));
-    CopyTree(subtree, temp);
-    return temp;
 }
 
 // Run `kac validate --json` against an assembled corpus. The exit code comes back beside the JSON,

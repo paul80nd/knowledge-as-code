@@ -9,9 +9,6 @@ descriptor-version: 1
 corpus: acme-corpus
 content-version: "0.1.0"
 
-# `consumer` takes the framework from a source, and holds none of the machinery that proves the tool.
-role: consumer
-
 # How this corpus is published. One of: azure-devops-wiki | github | mkdocs | none.
 publishing-target: none
 

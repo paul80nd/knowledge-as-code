@@ -158,19 +158,19 @@ public static class New
     // `tool` is the running version, which the entry point reads off its own assembly. Build metadata is
     // dropped from it, so `0.6.0+abc123` and `0.6.0` are one version. A version neither side can parse
     // does not stop a run: the tool's own is a build stamp, and refusing over it would ground a tool that
-    // works.
-    public static string? TooOldFor(string? minimum, string tool)
+    // works. `verb` opens the message, because `new` and `update` both read a template.
+    public static string? TooOldFor(string? minimum, string tool, string verb)
     {
         if (minimum is not { Length: > 0 }) return null;
 
         if (!Version.TryParse(Release(minimum), out var wanted))
-            return $"new: the template declares minimum-tool '{minimum}', which is not a version.";
+            return $"{verb}: the template declares minimum-tool '{minimum}', which is not a version.";
 
         if (!Version.TryParse(Release(tool), out var running)) return null;
 
         return running >= wanted
             ? null
-            : $"new: this template needs kac {minimum} or newer, and this is {tool}. "
+            : $"{verb}: this template needs kac {minimum} or newer, and this is {tool}. "
               + "update the tool, or name an older ref with --ref.";
 
         // The release the version names, without the build metadata or the pre-release tag beside it.
@@ -277,13 +277,7 @@ public static class New
     public static IReadOnlyList<string> Apply(NewPlan plan, string templateRoot, string corpusRoot)
     {
         foreach (var file in plan.Copied)
-        {
-            var source = Path.Combine(templateRoot, file.From);
-            var target = Path.Combine(corpusRoot, file.To);
-            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-            File.Copy(source, target, overwrite: true);
-            CarryMode(source, target);
-        }
+            Files.Copy(Path.Combine(templateRoot, file.From), Path.Combine(corpusRoot, file.To));
 
         foreach (var file in plan.Composed)
         {
@@ -293,17 +287,6 @@ public static class New
         }
 
         return [.. plan.Paths];
-    }
-
-    // The mode the template holds a file under, carried to the copy. `.plugin/hooks/breadcrumb` is
-    // executable, and a hook arriving without its bit fails silently rather than reporting anything.
-    //
-    // Read from the source rather than named here, so a template making a second file executable needs no
-    // change. Windows has no mode to read, and git there records none either.
-    private static void CarryMode(string source, string target)
-    {
-        if (OperatingSystem.IsWindows()) return;
-        File.SetUnixFileMode(target, File.GetUnixFileMode(source));
     }
 
     // `.corpus.yaml` as a corpus receives it: what the invocation was told, and the block saying where the
@@ -328,10 +311,6 @@ public static class New
                   + " `content-version` by hand.\n");
         sb.Append($"corpus: {Scalar(answers.Name)}\n");
         sb.Append($"content-version: \"{FirstContentVersion}\"\n\n");
-
-        sb.Append("# `consumer` takes the framework from a source, and holds none of the machinery that"
-                  + " proves the tool.\n");
-        sb.Append($"role: {CorpusDescriptor.Consumer}\n\n");
 
         sb.Append("# How this corpus is published. One of: "
                   + $"{string.Join(" | ", Publishing.Targets)}.\n");

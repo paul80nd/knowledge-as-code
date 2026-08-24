@@ -3,5 +3,4 @@
 descriptor-version: 1
 corpus: example-libraries
 content-version: "2.3.4"
-role: source
 publishing-target: none

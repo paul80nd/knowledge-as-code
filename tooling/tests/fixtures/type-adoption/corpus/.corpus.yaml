@@ -1,6 +1,5 @@
 descriptor-version: 1
 corpus: test-adoption
-role: consumer
 
 types:
   - runbooks

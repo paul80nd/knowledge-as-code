@@ -21,11 +21,6 @@ internal static partial class CliReference
     internal static readonly string Cli = Path.Combine(Repo.Root, "docs", "cli");
     internal static readonly string Index = Path.Combine(Cli, "index.md");
 
-    // Written before their commands exist, so the parser knows nothing about them. Each says so at its head, and a
-    // test beside this holds it to saying so. An exception that stops being true is an exception that stops being
-    // silent.
-    internal static readonly string[] Unbuilt = ["update"];
-
     private static readonly Lazy<IReadOnlyList<Verb>> Model = new(Read);
 
     internal static string BeginMarker(string block) => $"<!-- BEGIN GENERATED: {block} -->";
@@ -41,8 +36,8 @@ internal static partial class CliReference
     // Every verb the parser declares, in the order it declares them. Read once, however many tests ask.
     internal static IReadOnlyList<Verb> Verbs() => Model.Value;
 
-    // Every page of the reference, in the order the parser declares its commands, with the unbuilt two last.
-    internal static IReadOnlyList<string> Pages() => [.. Verbs().Select(v => v.Name), .. Unbuilt];
+    // Every page of the reference, in the order the parser declares its commands.
+    internal static IReadOnlyList<string> Pages() => [.. Verbs().Select(v => v.Name)];
 
     // The overview's index of the commands, one row each, taking what a command does from that command's own heading.
     // The heading is the one statement of it, and a second wording here would be the copy that goes stale.
