@@ -10,7 +10,8 @@ public sealed record ValidationResult(List<Finding> Findings, int Validated, int
 
 public static class Harness
 {
-    private static readonly string RepoRoot = FindRepoRoot();
+    // Shared with `Creation`, which needs the same tree for a different reason: the template it reads.
+    internal static readonly string RepoRoot = FindRepoRoot();
 
     public static ValidationResult Validate(string fixtureName)
     {

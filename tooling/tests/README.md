@@ -17,7 +17,7 @@ id `kac` no longer emits, stale generated output, or a reachable check with no f
 ## How a scenario runs
 
 Each `fixtures/<scenario>/` is a mini-corpus minus its schema. A `mode` file selects what is asserted, and a fixture
-without one is validated:
+without one is validated. `new` is the one scenario carrying no corpus, because the command it runs creates one:
 
 ```
 fixtures/
@@ -77,7 +77,16 @@ The modes:
   than something to interpret; `corpus-root` names where that copy landed. `export-type`, where present, names the type
   to pass to `--type`. The run happens twice, the second over a plugin seeded with a skill no component backs.
 
-Only `validate` runs the validator, so a new check cannot affect the rest.
+- **`new`.** `kac new --yes` runs into an empty temp folder, taking its template from this repository. Nothing is
+  cloned and nothing reaches the network. Two files hold what it wrote: `expected-tree.txt` is every path the creation
+  left, and `expected-descriptor.yaml` is the `.corpus.yaml` it composed. The two facts about the machine that ran it
+  are replaced by their own names, since neither can be committed: the repository's path, and today's date. Eighty file
+  bodies are deliberately not asserted, because they are the template's and the template has tests of its own. The exit
+  code is the third assertion and carries the most: `new` runs `validate` before it returns, so exit 0 says the corpus
+  it created validates.
+
+Only `validate` runs the validator directly, so a new check cannot affect the rest. `new` reaches it at one remove,
+through the corpus it creates.
 
 ## Writing a scenario
 
@@ -147,6 +156,7 @@ scenario holds is best read from the fixture; what it is *for* is here.
 | `export`              | Three glossaries, two roots and a chain under one of them, through `kac export --type glossary`. The export it writes is committed under `expected-dist/` and diffed whole, which is where a change to what a consumer reads shows up. Asserts the documented layout, a record carrying its type's declared fields and no others, a term split into its definition and its labelled line, a cross-reference resolved to its counterpart, prose unwrapped with its paragraph breaks kept, and the corpus-publishes-nowhere path, which is the only publishing state a fixture can reach. A second run over an output seeded with a file no record backs asserts the overwrite is delete-then-write. See [`fixtures/export/README.md`](fixtures/export/README.md). |
 | `bundle`              | The `export` fixture's corpus, and a plugin declaring two components: one requiring `glossary`, which the corpus holds, and one requiring `adrs`, which it does not. Asserts the trim in both directions, that a file under no component's path travels regardless, that the plugin's version is the corpus content version rather than the one the source manifest carried, that a key this tool does not know survives the rewrite, and that the copy of the export inside the plugin is byte-identical to the export beside it. See [`fixtures/bundle/README.md`](fixtures/bundle/README.md).                                                                                                                                                                 |
 | `bundle-empty`        | A corpus that adopted no type, and a plugin whose only component requires one. Asserts that trimming everything warns clearly and still produces a plugin, and that a corpus stating no content version leaves the plugin on the version its own manifest carried. See [`fixtures/bundle-empty/README.md`](fixtures/bundle-empty/README.md).                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `new`                 | An empty folder, and this repository read as a template. Asserts every path `kac new --yes --ci github` wrote, the descriptor it composed, and exit 0, which is the corpus it created validating. The GitHub starter is there and `azure-pipelines.yml` is not, which is `--ci` narrowing what lands. The git preconditions are the behaviour layer's: see `kac.features/Creation.feature`. |
 
 ### Known validator gaps surfaced by the suite
 
