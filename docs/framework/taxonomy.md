@@ -29,7 +29,8 @@ table above. Two fields that can contradict each other are a defect waiting to h
 
 ## Which types a corpus holds
 
-The framework declares more types than any one corpus stands up. A corpus names the ones it adopted in `types:` in
+The framework declares more types than any one corpus stands up, and
+[The default types](types.md) introduces every one of them. A corpus names the ones it adopted in `types:` in
 [`.corpus.yaml`](../corpus-descriptor.md). Its own taxonomy page then carries a decision table covering those and no
 others: what you are holding in the left column, where it goes in the right.
 

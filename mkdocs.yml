@@ -85,6 +85,7 @@ nav:
       - framework/index.md
       - Principles: framework/principles.md
       - Taxonomy: framework/taxonomy.md
+      - The default types: framework/types.md
       - Metadata: framework/metadata.md
       - Contributing: framework/contributing.md
       - Automation: framework/automation.md
