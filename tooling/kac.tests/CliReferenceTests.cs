@@ -29,7 +29,7 @@ public partial class CliReferenceTests
             .Select(Path.GetFileNameWithoutExtension)
             .Where(name => name is not "index")
             .Where(name => !CliReference.Unbuilt.Contains(name, StringComparer.Ordinal))
-            .ToHashSet(StringComparer.Ordinal)!;
+            .ToHashSet(StringComparer.Ordinal);
 
         Assert.Equal(declared.Order(StringComparer.Ordinal), pages.Order(StringComparer.Ordinal));
     }

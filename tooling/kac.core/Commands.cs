@@ -319,7 +319,7 @@ public static class Commands
             MechanismSync.DeclinedTypePaths(refRoot, descriptor), Same);
 
         var today = DateTime.Today.ToString("yyyy-MM-dd");
-        MechanismSync.Apply(plan, corpusRoot, refRoot, manifest, reference, today);
+        MechanismSync.Apply(plan, corpusRoot, refRoot, manifest, today);
         return ReportSync(plan, corpusRoot, manifest.Version, reference, today);
 
         // Whether two copies of a file say the same thing. That is the one question either engine asks of the disk.

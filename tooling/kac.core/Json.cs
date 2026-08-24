@@ -164,18 +164,18 @@ public record MarketplacePlugin(string Name, string Description, string Source);
 [JsonSerializable(typeof(MarketplaceManifest))]
 public partial class KacJson : JsonSerializerContext
 {
-    private static KacJson? _relaxed;
-    private static KacJson? _line;
+    private static KacJson? s_relaxed;
+    private static KacJson? s_line;
 
     // Shared context for CLI output: the source-generated metadata from Default, plus relaxed escaping,
     // so a quote or an em dash in a finding reaches the reader as itself rather than as a numeric
     // escape. Lazily initialised so it does not touch the generator's Default during static
     // construction, whose order across the partial is unspecified.
-    public static KacJson Relaxed => _relaxed ??= new KacJson(Escaped(indented: true));
+    public static KacJson Relaxed => s_relaxed ??= new KacJson(Escaped(indented: true));
 
     // The same, not indented, for a document whose unit is the line. JSONL exists so that a grep hands
     // back a complete object, which an indented one spread over several lines never does.
-    public static KacJson Line => _line ??= new KacJson(Escaped(indented: false));
+    public static KacJson Line => s_line ??= new KacJson(Escaped(indented: false));
 
     // `Options` is the generator's own name on this partial, so this one is named for what it does.
     private static JsonSerializerOptions Escaped(bool indented) => new(Default.Options)

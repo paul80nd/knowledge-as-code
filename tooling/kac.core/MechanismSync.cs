@@ -112,8 +112,7 @@ public static class MechanismSync
     // Carry the plan out: copy what it names, then record what was taken. Copying and stamping are one
     // step because a corpus holding the reference's files and not saying so has taken a sync it cannot
     // be held to.
-    public static void Apply(SyncPlan plan, string localRoot, string refRoot, Manifest manifest,
-        string reference, string today)
+    public static void Apply(SyncPlan plan, string localRoot, string refRoot, Manifest manifest, string today)
     {
         foreach (var rel in plan.Copies) Copy(refRoot, localRoot, rel);
         CorpusDescriptor.Stamp(localRoot, manifest.Version, today);

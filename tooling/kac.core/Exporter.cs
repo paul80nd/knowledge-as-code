@@ -164,9 +164,9 @@ public static class Exporter
         foreach (var d in byId.Values)
         {
             var above = d.FrontScalar("narrows");
-            if (above is { Length: > 0 } parent && byId.ContainsKey(parent) && parent != Id(d))
+            if (above is { Length: > 0 } && byId.ContainsKey(above) && above != Id(d))
             {
-                if (!children.TryGetValue(parent, out var list)) children[parent] = list = [];
+                if (!children.TryGetValue(above, out var list)) children[above] = list = [];
                 list.Add(d);
             }
             else

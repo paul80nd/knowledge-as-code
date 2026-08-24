@@ -33,13 +33,13 @@ public sealed class Publishing
     // on a convention no one has settled.
     private static readonly IReadOnlyList<string> Addressable = [GitHub];
 
-    private readonly string humanBase;
-    private readonly string rawBase;
+    private readonly string _humanBase;
+    private readonly string _rawBase;
 
     // The corpus root's place inside the published repository, carrying its own leading slash, or empty
     // where the corpus is the repository. Normalised on the way in so the rest of the class joins it the
     // same way whether the descriptor wrote it with slashes or without.
-    private readonly string prefix;
+    private readonly string _prefix;
 
     public required string Target { get; init; }
 
@@ -49,9 +49,9 @@ public sealed class Publishing
 
     private Publishing(string humanBase, string rawBase, string? pathPrefix)
     {
-        this.humanBase = humanBase.TrimEnd('/');
-        this.rawBase = rawBase.TrimEnd('/');
-        prefix = pathPrefix?.Trim('/') is { Length: > 0 } p ? "/" + p : "";
+        _humanBase = humanBase.TrimEnd('/');
+        _rawBase = rawBase.TrimEnd('/');
+        _prefix = pathPrefix?.Trim('/') is { Length: > 0 } p ? "/" + p : "";
     }
 
     // How this corpus addresses its published form, or null where it has no addressable one: it
@@ -67,9 +67,9 @@ public sealed class Publishing
         if (!Addressable.Contains(target, StringComparer.Ordinal)) return null;
         if (descriptor.HumanBase is not { Length: > 0 } human) return null;
         if (descriptor.RawBase is not { Length: > 0 } raw) return null;
-        if (gitRef is not { Length: > 0 } commit) return null;
+        if (gitRef is not { Length: > 0 }) return null;
 
-        return new Publishing(human, raw, descriptor.PathPrefix) { Target = target, Ref = commit };
+        return new Publishing(human, raw, descriptor.PathPrefix) { Target = target, Ref = gitRef };
     }
 
     // The anchor a link uses to land on a part. GitHub derives it from the heading by discarding the
@@ -88,7 +88,7 @@ public sealed class Publishing
     // corpus sits and never varies between two records, so a reader substituting into the template has
     // one thing to supply and cannot put it on the wrong side of the commit.
     public LinkTemplates Templates() =>
-        new($"{humanBase}/{Ref}{prefix}/{PathToken}#{AnchorToken}", $"{rawBase}/{Ref}{prefix}/{PathToken}");
+        new($"{_humanBase}/{Ref}{_prefix}/{PathToken}#{AnchorToken}", $"{_rawBase}/{Ref}{_prefix}/{PathToken}");
 
     // Where a record is read and where it is fetched, resolved. `anchor` names a part inside it, and a
     // link with no anchor drops the fragment along with it.

@@ -25,7 +25,7 @@ public sealed class Tree(IReadOnlySet<string> paths, Func<string, string> read, 
     //
     // A corpus assembled from values supplies no answer, so the listing answers: everything it holds is
     // present, and nothing else is.
-    public bool OnDisk(string rel) => onDisk is null ? Exists(rel) : onDisk(Normalise(rel));
+    public bool OnDisk(string rel) => onDisk?.Invoke(Normalise(rel)) ?? Exists(rel);
 
     // An empty directory is not a folder the corpus has: git cannot track one, so counting it would make
     // the answer depend on who is asking.

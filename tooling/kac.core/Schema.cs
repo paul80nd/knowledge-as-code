@@ -111,11 +111,11 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     public IReadOnlyList<string> Advisory { get; } = advisory; // written plain: these recommend
 
     // The order rows must appear in: binding levels before advisory ones, each as the type declares it.
-    private readonly List<string> levels = [.. binding, .. advisory];
-    public IReadOnlyList<string> Levels => levels;
+    private readonly List<string> _levels = [.. binding, .. advisory];
+    public IReadOnlyList<string> Levels => _levels;
 
     // Where a modal sits in that order, or -1 for a modal the type does not declare.
-    public int Rank(string modal) => levels.IndexOf(modal);
+    public int Rank(string modal) => _levels.IndexOf(modal);
 
     // Longest first, so "MUST NOT" is recognised before the "MUST" that prefixes it.
     public IReadOnlyList<string> ModalsLongestFirst { get; } =
@@ -373,7 +373,7 @@ public sealed record UnreadKey(string File, string Where, string Key);
 // what a key was for. Naming commentary is what lets the rest of the key space be closed around it.
 internal sealed class Level(YamlNode? node, string where)
 {
-    private readonly HashSet<string> asked = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _asked = new(StringComparer.Ordinal);
 
     public string Where { get; } = where;
 
@@ -384,30 +384,30 @@ internal sealed class Level(YamlNode? node, string where)
 
     public YamlNode? Get(string key)
     {
-        asked.Add(key);
+        _asked.Add(key);
         return Yaml.Get(node, key);
     }
 
     public IEnumerable<string> Unread() => Yaml.Map(node)
         .Select(entry => entry.Item1)
-        .Where(key => key != Schema.Commentary && !asked.Contains(key));
+        .Where(key => key != Schema.Commentary && !_asked.Contains(key));
 }
 
 // The mappings read from one schema file. Levels are harvested in the order they are opened, so a file
 // with several unread keys reports them in the order someone reading it would meet them.
 internal sealed class KeyReader(string file)
 {
-    private readonly List<Level> levels = [];
+    private readonly List<Level> _levels = [];
 
     public Level At(YamlNode? node, string where)
     {
         var level = new Level(node, where);
-        levels.Add(level);
+        _levels.Add(level);
         return level;
     }
 
     public IEnumerable<UnreadKey> Unread() =>
-        levels.SelectMany(l => l.Unread().Select(key => new UnreadKey(file, l.Where, key)));
+        _levels.SelectMany(l => l.Unread().Select(key => new UnreadKey(file, l.Where, key)));
 }
 
 // One tier: the word a document carries in its frontmatter, what it is called on a page, how a document
@@ -454,10 +454,8 @@ public sealed partial class Schema
     // shape. Derived from the types themselves, so a corpus adopting one gains its prefix here and a
     // corpus declining one stops reading citations into it. Empty prefixes are dropped: a type declaring
     // none would otherwise admit every code span carrying a dot.
-    public IReadOnlySet<string> IdPrefixes => idPrefixes ??=
+    public IReadOnlySet<string> IdPrefixes => field ??=
         ByFolder.Values.Select(t => t.IdPrefix).Where(p => p.Length > 0).ToHashSet(StringComparer.Ordinal);
-
-    private IReadOnlySet<string>? idPrefixes;
 
     // Every key these files carry that the loader never asks for, in the order a reader would meet them.
     // A key nothing reads is a declaration in a file documented as the contract the tool enforces. A

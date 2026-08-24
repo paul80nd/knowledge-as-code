@@ -57,7 +57,7 @@ internal static partial class CliReference
 
             var does = heading.Groups["does"].Value.TrimEnd('.');
             return (Command: Cell($"[`{page}`]({page}.md)"),
-                    Does: Cell(char.ToUpperInvariant(does[0]) + does[1..] + "."));
+                Does: Cell(char.ToUpperInvariant(does[0]) + does[1..] + "."));
         }).ToList();
 
         var left = Math.Max("Command".Length, rows.Max(r => r.Command.Length));
@@ -89,7 +89,7 @@ internal static partial class CliReference
 
         var rows = verb.Options
             .Select(o => (Option: Cell(o.Value is null ? $"`--{o.Long}`" : $"`--{o.Long} <{o.Value}>`"),
-                          Does: Cell(o.Description)))
+                Does: Cell(o.Description)))
             .ToList();
 
         // Fixed column widths, as the corpus generator writes them. A description that changes length then moves one
@@ -110,18 +110,20 @@ internal static partial class CliReference
     {
         var xml = XDocument.Parse(XmlDoc());
 
-        return xml.Root!.Elements("Command")
-            .Select(c => new Verb(
-                c.Attribute("Name")!.Value,
-                c.Element("Parameters")?.Elements("Option")
-                    .Select(o => new Option(
-                        o.Attribute("Long")!.Value,
-                        o.Attribute("Value")!.Value is "NULL" ? null : o.Attribute("Value")!.Value,
-                        o.Attribute("Required")!.Value is "true",
-                        OneLine(o.Element("Description")?.Value)))
-                    .OrderBy(o => o.Long, StringComparer.Ordinal).ToList()
-                ?? []))
-            .ToList();
+        return
+        [
+            .. xml.Root!.Elements("Command")
+                .Select(c => new Verb(
+                    c.Attribute("Name")!.Value,
+                    c.Element("Parameters")?.Elements("Option")
+                        .Select(o => new Option(
+                            o.Attribute("Long")!.Value,
+                            o.Attribute("Value")!.Value is "NULL" ? null : o.Attribute("Value")!.Value,
+                            o.Attribute("Required")!.Value is "true",
+                            OneLine(o.Element("Description")?.Value)))
+                        .OrderBy(o => o.Long, StringComparer.Ordinal).ToList()
+                    ?? []))
+        ];
     }
 
     private static string Cell(string text) => text.Replace("|", "\\|", StringComparison.Ordinal);

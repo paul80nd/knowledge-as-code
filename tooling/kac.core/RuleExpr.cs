@@ -204,8 +204,7 @@ public static class RuleExpr
                     // only where the values have an order: strings by ISO-friendly ordinal order,
                     // integers by magnitude.
                     case "==" or "!=":
-                        if (l != r) throw Mismatch(bin.Op, l, r, source);
-                        return ValueType.Bool;
+                        return l != r ? throw Mismatch(bin.Op, l, r, source) : ValueType.Bool;
 
                     case "<" or "<=" or ">" or ">=":
                         if (l != r || l == ValueType.Bool) throw Mismatch(bin.Op, l, r, source);
@@ -247,15 +246,15 @@ public static class RuleExpr
 
     private sealed class Parser(string source)
     {
-        private readonly List<(string Kind, string Text, int Pos)> tokens = Lex(source);
-        private int at;
+        private readonly List<(string Kind, string Text, int Pos)> _tokens = Lex(source);
+        private int _at;
 
         public Expr ParseAll()
         {
             var expr = Implies();
-            if (Peek().Kind != "end")
-                throw new RuleExprException($"unexpected '{Peek().Text}' at {Peek().Pos} in '{source}'.");
-            return expr;
+            return Peek().Kind != "end"
+                ? throw new RuleExprException($"unexpected '{Peek().Text}' at {Peek().Pos} in '{source}'.")
+                : expr;
         }
 
         private Expr Implies()
@@ -321,9 +320,9 @@ public static class RuleExpr
                 case "(":
                 {
                     var inner = Implies();
-                    if (Next().Kind != ")")
-                        throw new RuleExprException($"expected ')' at {token.Pos} in '{source}'.");
-                    return inner;
+                    return Next().Kind != ")"
+                        ? throw new RuleExprException($"expected ')' at {token.Pos} in '{source}'.")
+                        : inner;
                 }
                 case "ident":
                 {
@@ -335,9 +334,9 @@ public static class RuleExpr
                         do
                             args.Add(Implies());
                         while (Take(","));
-                    if (Next().Kind != ")")
-                        throw new RuleExprException($"expected ')' closing '{token.Text}(' in '{source}'.");
-                    return new Call(token.Text, args);
+                    return Next().Kind != ")"
+                        ? throw new RuleExprException($"expected ')' closing '{token.Text}(' in '{source}'.")
+                        : new Call(token.Text, args);
                 }
                 default:
                     throw new RuleExprException(
@@ -345,14 +344,14 @@ public static class RuleExpr
             }
         }
 
-        private (string Kind, string Text, int Pos) Peek() => tokens[at];
-        private (string Kind, string Text, int Pos) Next() => tokens[at < tokens.Count - 1 ? at++ : at];
+        private (string Kind, string Text, int Pos) Peek() => _tokens[_at];
+        private (string Kind, string Text, int Pos) Next() => _tokens[_at < _tokens.Count - 1 ? _at++ : _at];
 
         private bool Take(string kindOrWord)
         {
             var token = Peek();
             var matches = token.Kind == kindOrWord || (token.Kind == "word" && token.Text == kindOrWord);
-            if (matches) at++;
+            if (matches) _at++;
             return matches;
         }
 
