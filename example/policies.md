@@ -106,8 +106,8 @@ under governance is the clearest of them.
   standards against them, so nobody writing here can know the full set of implementers. A policy that nothing in *this*
   corpus implements is the normal state rather than a gap to be explained.
 * **A clause is the unit anything else cites.** A standard, a control or a deviation names the single obligation it
-  answers, in the form [Metadata](knowledge-as-code/metadata.md#referring-to-an-id) sets out. Clause ids are immutable
-  for the same reason policy ids are: removing or renaming one breaks every citation of it.
+  answers, in the form [Metadata][referring] sets out. Clause ids are immutable for the same reason policy ids
+  are: removing or renaming one breaks every citation of it.
 * **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the
   scope. The id does not move. Standards, controls and processes cite policies by id. Reassign a mnemonic and every one
   of those citations tells the reader something untrue: the reference still resolves, so nothing fails and no check
@@ -152,3 +152,5 @@ under governance is the clearest of them.
 | `posture-belongs-to-frameworks`  | warning | "compliant", "certified" or "registered" near a framework reference. Standing belongs in `frameworks.md`.         |
 
 <!-- END GENERATED: checks-policies -->
+
+[referring]: https://paul80nd.github.io/knowledge-as-code/framework/metadata/#referring-to-an-id

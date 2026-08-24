@@ -13,21 +13,24 @@ and fills it with its own knowledge.
   away.
 * **[Taxonomy](taxonomy.md)** says what a type and a tier are, what the five tiers ask, and the shape a type takes on
   disk.
+* **[Metadata](metadata.md)** says what a record carries in frontmatter, how ids are formed, and how a citation reaches
+  a part of one.
 * **[Contributing](contributing.md)** says how knowledge is added, reviewed and merged, and where the rules for the
   words themselves live.
 * **[Automation](automation.md)** says what a pipeline does for a corpus, and what it leaves alone.
 * **[Lineage](lineage.md)** says how the types relate to their prior art, and on what terms.
 
-## What a corpus holds instead
+## What a corpus holds beside these
 
-Three pages travel with each corpus rather than sitting here, because each carries tables generated from the types that
-corpus adopted. A corpus that took five of the framework's types gets five rows, and the rows link to pages it holds.
+Four pages travel with each corpus as well, because each carries tables generated from the types that corpus adopted. A
+corpus that took five of the framework's types gets five rows, and the rows link to pages it holds.
 
-| The page     | What it answers                                                      |
-|--------------|----------------------------------------------------------------------|
-| Taxonomy     | which types this corpus adopted, and where a record goes             |
-| Metadata     | what the frontmatter of a record carries                             |
-| Contributing | the way in to all of the above, and anything the corpus asks locally |
-| Lineage      | the prior art behind each type this corpus adopted                   |
+| In the corpus | Answers                                                              |
+|---------------|----------------------------------------------------------------------|
+| Taxonomy      | which types this corpus adopted, and where a record goes             |
+| Metadata      | which fields this corpus's own types carry                           |
+| Lineage       | the prior art behind each type this corpus adopted                   |
+| Contributing  | the way in to all of the above, and anything the corpus asks locally |
 
-Each sits under `knowledge-as-code/` in the corpus, beside a root page that is the way in.
+Each sits under `knowledge-as-code/` in the corpus, beside a root page that is the way in. Every one of them is the
+narrow, corpus-facing half of a page here.

@@ -102,6 +102,44 @@ level or higher.
 **The rule is about the estate rather than about a decision.** A record at `status: proposed` holds a decision that
 exists as a decision. Its Decision section is written in the present, and none of it claims the estate already changed.
 
+## Fill the frontmatter first
+
+**Quote every date.** YAML reads unquoted `2026-06-12` as a datetime, and renders it with a locale format and a
+timezone shift. `"2026-06-12"` renders as written.
+
+**Enum values are lower-case and hyphenated.** They are grep targets first and prose second.
+
+**A list is a block sequence, one entry per line.** An entry stays individually reviewable in a diff, and a finding can
+point at the entry that caused it rather than at the field. `tags:` is the exception and takes the compact flow form,
+`tags: [ a, b ]`, because it says how a record is found rather than what it says, and a block list would give the least
+interesting field in the block the most lines.
+
+**A list reads alphabetically.** No list field's sequence carries meaning, so alphabetical is the order that
+scan-reads and the one two authors agree on without discussion. Numbers inside an entry compare as numbers, so
+`ISO27001:2022 A.8.7` comes before `ISO27001:2022 A.8.29`.
+
+**A tag is an entry point, and never a grouping.** It is the word a reader arrives with, on a record that does not use
+it. One record may be the only one carrying a tag, and often is. A tag must never restate another field, since the two
+can only ever disagree. Where a value divides a type into groups worth browsing, the type declares a list field of its
+own for it.
+
+**The identity line carries three facts, directly beneath the H1**: the type, the id, then the status in upper case.
+
+```markdown
+# Software we build is usable by everyone
+
+`Policy: pol-A11Y` `DRAFT`
+```
+
+You arrive at a record from a citation, so the top of the page answers what kind of record this is, which one it is,
+and whether it is in force, before the prose starts. Frontmatter answers all three and is written for a machine. The id
+appears exactly as the frontmatter carries it. The status is the exception: lower-case in frontmatter because a machine
+reads it, and upper-case on the line because a person reads it as a stamp.
+
+**The H1 is the title and nothing else**: no id, no prefix, no type name. The identity line carries the handle instead.
+A title competing with a handle is a worse title, and a generated index would have to strip the id back off to fill a
+column that already held it.
+
 ## Link rather than restate
 
 **Reference another record by its id, with a shortcut reference link.** The label is the id and doubles as the display
