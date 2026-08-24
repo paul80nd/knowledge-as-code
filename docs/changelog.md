@@ -1,0 +1,1 @@
+--8<-- "tooling/kac/CHANGELOG.md"

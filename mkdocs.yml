@@ -69,6 +69,11 @@ markdown_extensions:
       permalink: true
   - pymdownx.details
   - pymdownx.superfences
+  # Publishes tooling/kac/CHANGELOG.md without a second copy of it, so the file stays beside the project whose
+  # versions it records. `check_paths` fails a moved path rather than publishing an empty page.
+  - pymdownx.snippets:
+      base_path: ['.']
+      check_paths: true
 
 # The verb alone in the sidebar. Each page's own heading then says what that verb does, which is the line
 # a reader wants once they are on the page and noise in a list of eight.
@@ -88,3 +93,4 @@ nav:
       - update: cli/update.md
   - The corpus descriptor: corpus-descriptor.md
   - Checks: checks.md
+  - Changelog: changelog.md

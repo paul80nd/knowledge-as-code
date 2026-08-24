@@ -111,7 +111,8 @@ dotnet tool run kac validate
 A push to `main` publishes the tool whenever it carries a `<Version>`
 [nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) does not already hold. That publish tags the commit and
 opens the release for it. [`tooling/README.md`](tooling/README.md#building) says how that version moves, and
-[`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) says what each version carried.
+[`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) says what each version carried, and is published as the
+site's [changelog](https://paul80nd.github.io/knowledge-as-code/changelog/).
 
 Every command has a page at **<https://paul80nd.github.io/knowledge-as-code/>**, beside a getting-started guide and the
 reference for `.corpus.yaml`. [`tooling/README.md`](tooling/README.md) is the other half: how to build the tool, and the

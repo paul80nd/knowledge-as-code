@@ -54,6 +54,10 @@ with the schema it describes, so a corpus reads its own copy.
 [nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) sits below `1.0.0` because the commands may still
 change shape.
 
+**This site is built from `main`, so it can describe a `kac` no release carries yet.** Ask your own copy what it
+is with `kac --version`, and read the [changelog](changelog.md) for what each published version brought. Where
+the two disagree, the site is ahead.
+
 Every page here describes what exists today. The
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds what has been considered and not yet built.
 Two pages break that rule and say so at their head: [`new`](cli/new.md) and [`update`](cli/update.md) are
