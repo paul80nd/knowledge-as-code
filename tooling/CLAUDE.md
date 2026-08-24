@@ -30,8 +30,8 @@ dotnet run --project ../tooling/kac -- validate
 dotnet run --project ../tooling/kac -- generate --check
 ```
 
-`template/` carries no `.corpus.yaml`, so `mechanism` cannot read it. `validate` and `generate` ask only for the
-`.schema/` beside them, and both run there.
+Both find their corpus by the `.corpus.yaml` at its root, and then find the `.schema/` to judge it against by walking
+up to this repository's root, where it is authored once.
 
 **Run one invocation at a time.** Concurrent runs build the same project and contend over its output.
 
@@ -43,7 +43,7 @@ one, so it runs `kac` over that corpus and reads no `template/`.
 ## Adding or changing a check
 
 **Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
-`expr:` on a rule in `.schema/<type>.yaml`. See [`../example/.schema/README.md`](../example/.schema/README.md) for
+`expr:` on a rule in `.schema/<type>.yaml`. See [`../.schema/README.md`](../.schema/README.md) for
 what one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the
 checks table and `kac checks` all pick it up from the schema.
 
@@ -137,7 +137,7 @@ file. That is `schema-shape`, not `schema-dispatch`.
 
 Wherever it lives, three places have to agree, and each fails a meta-test rather than a test you were looking at:
 
-1. **An entry in [`../example/.schema/_checks.yaml`](../example/.schema/_checks.yaml)**, the declaration. Its
+1. **An entry in [`../.schema/_checks.yaml`](../.schema/_checks.yaml)**, the declaration. Its
    `description:` is what `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the boundary.
    A check a rule class reports under with no entry here fails `schema-dispatch` when the schema loads.
 2. **A row in `Generator.DocRows`**, unless the check declares `on-type-page: false`. One or the other, or
@@ -201,8 +201,9 @@ from the framework carrying them, and one that has gone is a block that stopped 
 
 ## The fixtures
 
-* They share the **real** `.schema/`. `AssembleTemp` copies it beside each fixture corpus, so a schema change ripples
-  into every fixture at once. Run the golden suite after touching `.schema/`, not just `kac validate`. A `sync`
+* They share the **real** `.schema/`. `AssembleTemp` copies it beside each fixture corpus, and writes the `.corpus.yaml`
+  that makes the tool read the assembled tree as one. So a schema change ripples into every fixture at once. Run the
+  golden suite after touching `.schema/`, not just `kac validate`. A `sync`
   scenario may narrow one side with `corpus-schema.txt`, which names the type files that side holds *before* the sync.
   The real schema cannot express a corpus holding fewer files than upstream, and that is the state a sync resolves.
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`

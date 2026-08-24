@@ -48,13 +48,17 @@ public static class Corpus
     // the tool put together.
     //
     // This is the one place a path becomes a corpus. Everything below it is decided from values.
+    //
+    // The schema is read from wherever `Schema.FindRoot` lands, which is the corpus itself in a standalone
+    // one. Falling back to the corpus root leaves a corpus with no schema anywhere above it failing on the
+    // file it cannot open, as it did before the walk existed. `kac` declines such a corpus ahead of this.
     public static LoadedCorpus Load(string corpusRoot) =>
         Load(
             new Tree(
                 new HashSet<string>(AllFiles(corpusRoot).Select(f => f.Replace('\\', '/')), StringComparer.Ordinal),
                 rel => Files.ReadLf(Path.Combine(corpusRoot, rel)),
                 rel => File.Exists(Path.Combine(corpusRoot, rel))),
-            Schema.Load(corpusRoot),
+            Schema.Load(Schema.FindRoot(corpusRoot) ?? corpusRoot),
             CorpusDescriptor.Load(corpusRoot));
 
     // The listing, the schema it is judged against, and what the corpus records about itself. That is

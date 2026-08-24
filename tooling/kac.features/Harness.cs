@@ -14,12 +14,20 @@ public static class Harness
 
     public static ValidationResult Validate(string fixtureName)
     {
-        var schemaDir = Path.Combine(RepoRoot, "template", ".schema");
+        var schemaDir = Path.Combine(RepoRoot, ".schema");
         var corpusDir = Path.Combine(RepoRoot, "tooling", "tests", "fixtures", fixtureName, "corpus");
         var temp = Path.Combine(Path.GetTempPath(), "kac-features-" + Guid.NewGuid().ToString("N"));
         try
         {
             CopyTree(schemaDir, Path.Combine(temp, ".schema"));
+
+            // `kac` reads a folder as a corpus by the `.corpus.yaml` in it, so the assembled tree gets
+            // one holding a comment and nothing else. That is what an absent descriptor comes to, so no
+            // scenario's findings move for the file being there. A fixture carrying its own overwrites it.
+            Directory.CreateDirectory(temp);
+            File.WriteAllText(Path.Combine(temp, ".corpus.yaml"),
+                "# Written by the behaviour specs so that kac reads this tree as a corpus.\n");
+
             CopyTree(corpusDir, temp);
 
             var corpus = Corpus.Load(temp);

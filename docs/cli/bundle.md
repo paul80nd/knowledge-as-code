@@ -145,8 +145,8 @@ One file in the plugin tree is run rather than read. A command copied without
 that bit is a plugin that installs and then fails at the first session, with a message about permissions rather than
 about the corpus.
 
-The bit does not exist on Windows and is not asked for there. A hook ships as a POSIX script and a `.cmd` twin, the
-same pair and the same reasoning as `kac` and `kac.cmd` at a corpus's root.
+The bit does not exist on Windows and is not asked for there. A hook ships as a POSIX script and a `.cmd` twin, so one
+plugin serves a session on either platform.
 
 ### The plugin's version is the corpus content version
 

@@ -25,10 +25,10 @@ var kacProject = Path.Combine(repoRoot, "tooling", "kac", "kac.csproj");
 // rather than an assembled fixture. The command has to start inside a corpus to find anything.
 var exampleRoot = Path.Combine(repoRoot, "example");
 
-// The schema every fixture is assembled from: the template's, which is the copy every corpus receives.
-// Read where it is authored rather than from a corpus's copy of it, so a schema edit surfaces as a
-// broken golden in the same run that made it.
-var schemaDir = Path.Combine(repoRoot, "template", ".schema");
+// The schema every fixture is assembled from, read at the repository root where it is authored. One
+// copy serves the template, `example/` and every fixture, so a schema edit surfaces as a broken golden
+// in the same run that made it.
+var schemaDir = Path.Combine(repoRoot, ".schema");
 var manifestFile = Path.Combine(repoRoot, "tooling", "manifest.yaml");
 var fixturesDir = Path.Combine(repoRoot, "tooling", "tests", "fixtures");
 
@@ -727,7 +727,7 @@ if (filters.Count == 0)
     // -- what answers without a corpus --
     // `--version` and `--help` are answered by the parser, so an installed `kac` says what it is from
     // wherever it was typed; every verb needs a corpus and exits 2 without one. Asserted from a temp
-    // directory with no `.schema` above it. The fault this catches is a corpus lookup running before
+    // directory with no `.corpus.yaml` above it. The fault this catches is a corpus lookup running before
     // the parse, and that passes every other test here, all of which run inside a corpus.
     var nowhere = Directory.CreateTempSubdirectory("kac-tests-nowhere-").FullName;
     try
@@ -770,7 +770,7 @@ Console.WriteLine($"all {scenarios.Count} scenario(s) passed.");
 return 0;
 
 // The repository, found by the solution at its root rather than by the corpus beside it. `kac` itself walks
-// up for a `.schema/` because what it wants is a corpus; this suite wants the tree that holds the engine,
+// up for a `.corpus.yaml` because what it wants is a corpus; this suite wants the tree that holds the engine,
 // the fixtures and the corpus at once, and only one folder answers to that. The solution file is the right
 // marker for it: it names every project in the tree, and a corpus that installed the tool holds no such thing.
 static string? FindRepoRoot(string start)
@@ -793,8 +793,20 @@ static string AssembleTemp(string schemaDir, string corpusDir)
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
     CopyTree(schemaDir, Path.Combine(temp, ".schema"));
+    MarkCorpus(temp);
     CopyTree(corpusDir, temp);
     return temp;
+}
+
+// `kac` reads a folder as a corpus by the `.corpus.yaml` in it, so every assembled tree gets one. It
+// holds a comment and nothing else, which is what a descriptor absent altogether comes to: every value
+// a fixture does not state stays at its default, and no golden moves for the file being there. A fixture
+// with something to declare carries its own, copied over this one.
+static void MarkCorpus(string temp)
+{
+    Directory.CreateDirectory(temp);
+    File.WriteAllText(Path.Combine(temp, ".corpus.yaml"),
+        "# Written by the golden suite so that kac reads this tree as a corpus.\n");
 }
 
 // Like AssembleTemp, but the mechanism check also reads the manifest, so copy the real one in too.
@@ -807,6 +819,7 @@ static string AssembleMechanismTemp(string schemaDir, string manifestFile, strin
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
     CopyTree(schemaDir, Path.Combine(temp, ".schema"));
+    MarkCorpus(temp);
     if (keptTypes is not null)
         foreach (var file in Directory.EnumerateFiles(Path.Combine(temp, ".schema"), "*.yaml"))
             if (!Path.GetFileName(file).StartsWith('_') && !keptTypes.Contains(Path.GetFileNameWithoutExtension(file)))
@@ -868,15 +881,16 @@ static void Regenerate(string kac, string schemaDir, string corpusDir)
         var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "generate");
         if (exit != 0) throw new Exception($"kac generate failed (exit {exit}).\n{Indent(stderr)}");
 
-        // Only what the corpus itself owns comes back. `.schema/` is the real one, copied in to assemble
-        // the run, and writing it back would commit a stale duplicate of the schema into the fixture.
+        // Only what the corpus itself owns comes back. `.schema/` and `.corpus.yaml` were both put there
+        // to assemble the run, and writing either back would commit into the fixture a file it never had.
         // Everything else in the temp tree came from the fixture, including a `knowledge-as-code/`
         // page a fixture stands up to assert what is generated into it.
         foreach (var dir in Directory.EnumerateDirectories(temp))
             if (Path.GetFileName(dir) is not ".schema")
                 CopyTree(dir, Path.Combine(corpusDir, Path.GetFileName(dir)));
         foreach (var file in Directory.EnumerateFiles(temp))
-            File.Copy(file, Path.Combine(corpusDir, Path.GetFileName(file)), overwrite: true);
+            if (Path.GetFileName(file) is not ".corpus.yaml")
+                File.Copy(file, Path.Combine(corpusDir, Path.GetFileName(file)), overwrite: true);
     }
     finally
     {

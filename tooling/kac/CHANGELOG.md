@@ -15,8 +15,17 @@ the commit and opens a release carrying the section for that version.
 
 ## Unreleased
 
+## 0.4.0 - 2026-08-24
+
 ### Changed
 
+- **`kac` finds a corpus by its `.corpus.yaml`**, where it looked for a `.schema/`. It then walks up again from the
+  corpus root for the schema to judge that corpus against, so one schema can serve several corpora in one repository.
+  A standalone corpus holds both files at its own root and both walks stop there, which is the ordinary case and is
+  unchanged. A corpus with no descriptor is no longer found: write one, and
+  [the corpus descriptor](https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/) says what goes in it.
+- **`kac` names `.corpus.yaml` when it cannot find a corpus**, and reports separately on a corpus with no schema above
+  it. The second exits 1 rather than crashing on the first schema file it tries to open.
 - **`kac mechanism --help` reads its two option descriptions as sentences.** `--check` closed on a semicolon,
   and `--against` opened on a bare noun phrase. What either flag does has not moved.
 

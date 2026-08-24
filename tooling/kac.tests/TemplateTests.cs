@@ -1,8 +1,9 @@
 using kac.core;
 
-// `template/` is the master copy of everything a corpus is made of, and `example/` holds a
-// materialised copy of the part it receives. Two copies of one file is the arrangement the tool
-// exists to manage, and it is also the arrangement that goes quietly wrong: an edit lands in
+// `template/` is the master copy of what a corpus is made of beyond its schema, and `example/` holds a
+// materialised copy of the part it receives. The schema itself is authored once at the repository root
+// and read from there by both, so nothing below reaches it. Two copies of one file is the arrangement
+// the tool exists to manage, and it is also the arrangement that goes quietly wrong: an edit lands in
 // whichever copy the author had open, and nothing about the other one looks different afterwards.
 //
 // So these hold the overlaid half of the two trees to being the same bytes, in both directions.

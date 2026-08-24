@@ -1,10 +1,11 @@
 # `template`: what a corpus is made of
 
-Everything a corpus receives is authored here: the machine-readable schema `kac` enforces, the framework's own
-documentation, the tree a corpus's plugin is built from, and the pages and templates a corpus starts writing against.
+Everything a corpus receives is authored here beyond its schema: the framework's own documentation, the tree a corpus's
+plugin is built from, and the pages and templates a corpus starts writing against. The machine-readable schema `kac`
+enforces is authored at [`../.schema/`](../.schema/), one copy above this folder and `../example/` alike.
 
-**This folder is what a new corpus copies.** Take everything but `manifest.yaml` and this file, which are the template's
-own machinery and belong to no corpus.
+**A new corpus copies this folder and that schema.** Take everything here but `manifest.yaml` and this file, which are
+the template's own machinery and belong to no corpus.
 [`../README.md`](../README.md#starting-a-corpus-of-your-own) has the steps, and a copy validates clean before a word is
 written.
 
@@ -33,13 +34,14 @@ the corpus changed, and one the corpus has that the template does not.
 **Author an overlaid change here, then copy it across.** Both trees are checked, so the order is a habit rather than a
 rule. The template is where the file belongs, and the corpus is where a copy of it lives.
 
-Every test layer reads the schema straight from [`.schema/`](.schema/) rather than from the corpus's copy. A schema edit
-made here surfaces as a broken golden in the same run.
+Every test layer reads the schema straight from [`../.schema/`](../.schema/), where it is authored. A schema edit
+surfaces as a broken golden in the same run.
 
 ## What is not here
 
-`.corpus.yaml` is not a template file. A corpus's descriptor names the corpus, says where it publishes, and lists the
-types it adopted. No copied file could answer any of that.
+`.corpus.yaml` is not a template file, though one sits here. It is present so that `kac` reads this folder as a corpus
+and can validate it, and the manifest withholds it. A corpus's descriptor names the corpus, says where it publishes,
+and lists the types it adopted, and no copied file could answer any of that.
 
 Nor are the repository-shaped files a corpus needs and this folder does not yet carry: its ignore rules, its editor
 conventions, its wiki ordering and its own CI. Each is a question about the corpus rather than about the framework. They

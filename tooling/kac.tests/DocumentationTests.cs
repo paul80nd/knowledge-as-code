@@ -19,10 +19,10 @@ namespace kac.tests;
 
 public partial class DocumentationTests
 {
-    // The template, where the schema and the page describing it are authored. Every corpus receives a
-    // copy of both, and `TemplateTests` holds those copies to matching.
-    private static readonly string Template = Path.Combine(Repo.Root, "template");
-    private static readonly string Readme = File.ReadAllText(Path.Combine(Template, ".schema", "README.md"));
+    // The page describing the schema, beside the schema it describes at the repository root. One copy
+    // serves the template and `example/` alike.
+    private static readonly string Readme =
+        File.ReadAllText(Path.Combine(Repo.Root, ".schema", "README.md"));
 
     // A row of the fact table opens with the call it documents: `| \`section_count('Title')\` | int |`.
     [GeneratedRegex(@"^\| `([a-z_]+)\(", RegexOptions.Multiline)]
@@ -48,7 +48,7 @@ public partial class DocumentationTests
     [Fact]
     public void The_held_to_table_names_every_check_the_schema_pass_reports()
     {
-        var declared = Schema.Load(Template).Checks
+        var declared = Schema.Load(Repo.Root).Checks
             .Select(c => c.Id.Value)
             .Where(id => id.StartsWith("schema-", StringComparison.Ordinal))
             .ToHashSet(StringComparer.Ordinal);

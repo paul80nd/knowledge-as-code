@@ -26,7 +26,7 @@ public partial class DefaultTypesTests
     [Fact]
     public void Every_type_the_schema_declares_is_introduced_under_its_own_tier()
         => Assert.Equal(
-            Schema.Load(Path.Combine(Repo.Root, "template")).ByFolder.Values
+            Schema.Load(Repo.Root).ByFolder.Values
                 .Select(t => (t.Tier, t.Folder))
                 .OrderBy(x => x, Comparer<(string, string)>.Default),
             Listed().OrderBy(x => x, Comparer<(string, string)>.Default));

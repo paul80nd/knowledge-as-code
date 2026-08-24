@@ -223,7 +223,9 @@ public static class Commands
 
     public static int Checks(string corpusRoot, bool json)
     {
-        var schema = Schema.Load(corpusRoot);
+        // The only verb that reads the schema without loading the corpus around it, so it takes the walk
+        // itself. `Corpus.Load` is where every other verb gets the same answer.
+        var schema = Schema.Load(Schema.FindRoot(corpusRoot) ?? corpusRoot);
         var catalogue = CheckCatalogue.For(schema);
 
         // The catalogue is always valid data, so emit it either way. Whether the reader-facing table is faithful to it

@@ -12,19 +12,22 @@ kac --version
 
 ## Start a corpus
 
-Copy [`template/`](https://github.com/paul80nd/knowledge-as-code/tree/main/template). It holds the schema, the
-framework's own documentation, a root page and a template for every type, plus three worked records to show the shape.
-Copy `example/` instead and you inherit a fictional library consortium corpus.
+Copy [`template/`](https://github.com/paul80nd/knowledge-as-code/tree/main/template) and the
+[`.schema/`](https://github.com/paul80nd/knowledge-as-code/tree/main/.schema) beside it. Together they hold the schema,
+the framework's own documentation, a root page and a template for every type, plus three worked records to show the
+shape. Copy `example/` instead and you inherit a fictional library consortium corpus.
 
 ```bash
 git clone https://github.com/paul80nd/knowledge-as-code
-cp -R knowledge-as-code/template/ my-corpus && cd my-corpus
-rm manifest.yaml README.md  # the template's own machinery, not a corpus's
+cp -R knowledge-as-code/template/ my-corpus
+cp -R knowledge-as-code/.schema my-corpus/  # authored at the repository root, above both corpora there
+cd my-corpus
+rm manifest.yaml README.md                  # the template's own machinery, not a corpus's
 ```
 
-!!! note "Write `.corpus.yaml` next"
+!!! note "Edit `.corpus.yaml` next"
 
-    It is the one file no template can supply, because no template can name your corpus for you.
+    It arrives naming the template, because no template can name your corpus for you.
     [The corpus descriptor](corpus-descriptor.md) says what goes in it.
 
 `kac` reads the git listing to find what a corpus holds, so make the corpus a repository. Write a `.gitignore` holding
@@ -42,7 +45,8 @@ you about your repository rather than about the framework.
 
 ## Run the tool against your corpus
 
-`kac` finds a corpus by walking up from the working directory looking for `.schema/`. Run it from inside your corpus.
+`kac` finds a corpus by walking up from the working directory looking for `.corpus.yaml`. Run it from inside your
+corpus.
 
 ```bash
 cd path/to/your/corpus

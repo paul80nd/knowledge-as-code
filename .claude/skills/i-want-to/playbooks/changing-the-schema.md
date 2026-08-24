@@ -3,7 +3,7 @@
 **A schema edit alone leaves the corpus stale.** Every type page carries generated blocks derived from these files, and
 `generate --check` fails in CI until you regenerate.
 
-1. **Read [`.schema/CLAUDE.md`](../../../../example/.schema/CLAUDE.md) first.** It carries the closed key space, the
+1. **Read [`.schema/CLAUDE.md`](../../../../.schema/CLAUDE.md) first.** It carries the closed key space, the
    field-order trap, and the test for whether a rule needs C#.
 2. **Check the question is not already answered.** A `reciprocal:`, a `mirrors-section:`, a `required-when:`, a scalar
    type or a required section may already say it. Each has been written out as a rule at some point.
