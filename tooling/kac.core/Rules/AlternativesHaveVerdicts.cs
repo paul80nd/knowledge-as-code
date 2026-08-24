@@ -11,8 +11,6 @@ public sealed class AlternativesHaveVerdicts : IDocumentRule
 {
     public RuleId RuleId => new("alternatives-have-verdicts");
 
-    // A field so that what the rule declares it emits and what it reports cannot come apart.
-    // `_checks.yaml` declares what the id means.
     private static readonly CheckId Reports = new("alternatives-verdict");
 
     public IReadOnlyList<CheckId> Emits => [Reports];

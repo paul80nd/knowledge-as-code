@@ -284,8 +284,7 @@ public static class Bundler
     // install from. A name qualified by where this copy sits would be wrong as soon as the copy moved.
     //
     // `.dist/` is the marketplace root and the plugin sits beneath it as `./plugin`, for the reason
-    // `Dist.Root` gives: a marketplace refuses a plugin source containing `..`, so one sitting beside
-    // the plugin could not point at it.
+    // `Dist.Root` gives.
     private static string Marketplace(JsonObject manifest, string pluginName) =>
         Serialize(new MarketplaceManifest(
             "https://anthropic.com/claude-code/marketplace.schema.json",

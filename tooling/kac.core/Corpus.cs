@@ -1,8 +1,9 @@
 namespace kac.core;
 
 // The corpus as one loaded thing: the schema it is judged against, what it holds, and every record
-// parsed. Every entry point begins by building one of these, so there is a single account of what "the
-// corpus" is, and no per-command copy of it to drift.
+// parsed. A verb asking about records begins by building one of these, so there is a single account of
+// what "the corpus" is and no per-command copy of it to drift. `checks`, `bundle` and `mechanism --check`
+// ask about something else and each says so where it skips this.
 public sealed class LoadedCorpus
 {
     public required Schema Schema;
@@ -36,10 +37,11 @@ public static class Corpus
 {
     private static readonly string[] SkipDirs = [".git", ".idea", ".claude"];
 
-    // Every file the corpus contains, before any exclusion: what `Tree` is built over.
+    // What `Tree` is built over. `GitFiles` says why the listing is the git one where there is a git one.
     //
-    // git ls-files respects .gitignore, .git/info/exclude and global excludes, and never lists .git/
-    // itself, which is exactly the "respect .gitignore" requirement. The walk is the non-git fallback.
+    // The two branches do not answer the same question, and the difference is silent: the walk lists
+    // markdown alone, so in a corpus git has never seen, a link to an image or a YAML file resolves to
+    // nothing. It is the fallback rather than the path anything is proven on.
     private static List<string> AllFiles(string corpusRoot) =>
         GitFiles.Tracked(corpusRoot) ?? GitFiles.Walk(corpusRoot, "*.md", SkipDirs);
 

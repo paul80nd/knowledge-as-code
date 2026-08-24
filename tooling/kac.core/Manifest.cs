@@ -10,7 +10,6 @@ namespace kac.core;
 // fork laying its repository out differently says so here rather than in the tool.
 public record ManifestRule(IReadOnlyList<string> Patterns, string Layer, string? To = null);
 
-// Where one file of a template lands in a corpus, and under which layer.
 public record Placement(string Layer, string Path);
 
 public class Manifest
@@ -108,8 +107,8 @@ public class Manifest
     }
 }
 
-// One file a corpus holds differently from the framework, and means to. The tool reads the path and the
-// reason, and the reason is for whoever opens the file next.
+// One file a corpus holds differently from the framework, and means to. The reason is for whoever opens
+// the descriptor next, and nothing in the tool reads it.
 public record SkippedFile(string Path, string? Reason);
 
 public class CorpusDescriptor
@@ -138,26 +137,22 @@ public class CorpusDescriptor
 
     public string Role = "";
 
-    // Where the framework comes from, and what was last taken from it. `Path` is the folder inside that
-    // repository holding `manifest.yaml`, null meaning its root. `Ref` is a branch or a tag and is
-    // followed; `Commit` is what the last take resolved to, recorded and never followed, so a reader can
-    // see exactly what arrived without the corpus being pinned to it.
+    // Where the framework comes from, and what was last taken from it. `Path` is null where the manifest
+    // sits at the upstream repository's root. `docs/corpus-descriptor.md` covers the rest of the block.
     public string? UpstreamUrl;
     public string? UpstreamPath;
     public string? UpstreamRef;
     public string? UpstreamCommit;
     public string? TakenOn;
 
-    // How far an update goes. `cautious` writes a seed only where the corpus has none, because a seed is
-    // the corpus's own words and refreshing every one of them opens each update with three dozen files to
-    // revert by hand. `full` refreshes them and hands the reconciliation to the diff.
+    // How far an update goes. `docs/cli/update.md` argues the default.
     public const string Cautious = "cautious";
     public const string Full = "full";
     public static readonly IReadOnlyList<string> Policies = [Cautious, Full];
     public string UpdatePolicy = Cautious;
 
-    // Files this corpus holds differently on purpose. Neither read nor written, in either direction: it
-    // is the one way to say "I own this" about a file the overlay would otherwise reclaim on every run.
+    // Files this corpus holds differently on purpose, neither read nor written in either direction.
+    // `docs/cli/update.md` says what that buys a corpus.
     public readonly List<SkippedFile> Skipped = [];
 
     // What this corpus calls itself. An export states it so that a consumer holding several exports can

@@ -14,9 +14,8 @@
 # config directory of its own, so it leaves the machine it ran on as it found it.
 #
 # Held to the subset Git Bash and older macOS bash agree on: no arrays, no `[[`, no process
-# substitution. Command substitution is used freely, which the pipelines that call this could not
-# do inline — an Azure pipeline reads `$(...)` as its own macro — and which is safe here because a
-# file on disk reaches the shell unparsed.
+# substitution. Command substitution is used freely, because a file on disk reaches the shell
+# unparsed.
 #
 # Three prerequisites, all already on a GitHub runner: `jq` reads the manifests, `curl` fetches a
 # raw link, and the Claude Code CLI installs the plugin.

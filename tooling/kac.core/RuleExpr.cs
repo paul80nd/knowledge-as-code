@@ -1,4 +1,3 @@
-//
 // A hand-rolled lexer, recursive-descent parser, type checker and evaluator, in one file with no
 // dependencies. `.schema/README.md` is the reference for what an expression may say; this comment is
 // about the boundary, because this is the file someone stands in when they want to cross it.

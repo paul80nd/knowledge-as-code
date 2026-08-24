@@ -84,9 +84,8 @@ public static class Exporter
                 corpus.Descriptor.Name,
                 corpus.Descriptor.ContentVersion,
 
-                // The descriptor calls this `upstream.template-version`, and the export manifest still
-                // publishes it as `mechanismVersion`. Renaming a field a consumer reads is a move of the
-                // export's own `formatVersion`, which is not this change's to make.
+                // The descriptor calls this `upstream.template-version`. Renaming the published name is
+                // gated behind a move of `FormatVersion` above, which a consumer reads.
                 corpus.Descriptor.TemplateVersion,
                 run.Commit,
                 run.Dirty,

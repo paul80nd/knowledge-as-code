@@ -21,8 +21,8 @@ if (repoRoot is null)
 
 var kacProject = Path.Combine(repoRoot, "tooling", "kac", "kac.csproj");
 
-// The corpus in this repository, and what the suite runs `kac` against where a scenario needs a real one
-// rather than an assembled fixture. The command has to start inside a corpus to find anything.
+// The corpus in this repository, which the coverage and checks-table gates below run `kac` against. No
+// scenario uses it: each assembles a fixture of its own.
 var exampleRoot = Path.Combine(repoRoot, "example");
 
 // The schema every fixture is assembled from, read at the repository root where it is authored. One
@@ -798,10 +798,9 @@ static string AssembleTemp(string schemaDir, string corpusDir)
     return temp;
 }
 
-// `kac` reads a folder as a corpus by the `.corpus.yaml` in it, so every assembled tree gets one. It
-// holds a comment and nothing else, which is what a descriptor absent altogether comes to: every value
-// a fixture does not state stays at its default, and no golden moves for the file being there. A fixture
-// with something to declare carries its own, copied over this one.
+// A descriptor holding a comment and nothing else, which is what an absent one comes to: every value
+// stays at its default, so no golden moves for the file being there. A fixture with something to declare
+// carries its own, copied over this one.
 static void MarkCorpus(string temp)
 {
     Directory.CreateDirectory(temp);
@@ -832,7 +831,8 @@ static string AssembleMechanismTemp(string schemaDir, string manifestFile, strin
     return temp;
 }
 
-// Run `kac validate --json` against an assembled corpus and return the JSON.
+// Run `kac validate --json` against an assembled corpus. The exit code comes back beside the JSON,
+// because the scenario holds the tool to both.
 static (string json, int exit) RunValidate(string kac, string schemaDir, string corpusDir)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);
@@ -871,8 +871,8 @@ static (int exit, string output) RunGenerate(string kac, string schemaDir, strin
 }
 
 // Regenerate a scenario's committed generated files: run `kac generate` (writing) in a temp assembled
-// from the corpus, then copy everything the corpus owns (all but `.schema/`) back over it.
-// `generate` leaves source docs untouched, so only _index.md and the spliced <type>.md change.
+// from the corpus, then copy what the corpus owns back over it. `generate` leaves source docs untouched,
+// so only _index.md and the spliced <type>.md change.
 static void Regenerate(string kac, string schemaDir, string corpusDir)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);

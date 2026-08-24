@@ -5,8 +5,8 @@ using kac.core;
 // fixture would have to carry a whole broken type file to say the same thing. The fixture that does
 // carry one is tests/fixtures/schema-declarations, and it is there to prove the findings reach the CLI.
 //
-// Every case is a declaration a schema can carry that nothing else would report, and each was found in
-// a real schema rather than imagined for a test.
+// Every case is a declaration a schema can carry that nothing else would report. The types are invented,
+// because a case naming a real one would move whenever that type did.
 
 namespace kac.tests;
 

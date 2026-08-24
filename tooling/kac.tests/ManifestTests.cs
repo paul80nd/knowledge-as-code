@@ -1,6 +1,6 @@
-// Unit tests for Manifest.Resolve: the first-rule-wins glob layering. Manifest.Load and
-// CorpusDescriptor.Load read files and are covered by the golden 'mechanism' scenario. The engines
-// that read what they return are in MechanismTests.
+// Unit tests for the two files a corpus is sorted by: the manifest's first-rule-wins layering and where
+// `to:` lands what it matched, and the descriptor's own keys, read from `.corpus.yaml` written into a
+// temp directory. The engines that act on what they return are in MechanismTests.
 
 using kac.core;
 

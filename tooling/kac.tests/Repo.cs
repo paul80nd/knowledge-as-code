@@ -5,8 +5,8 @@ namespace kac.tests;
 // The repository, found by the solution at its root. A corpus is what `kac` walks up for; what the tests using this
 // want is the tree carrying the engine and the pages written beside it, and one folder answers to that.
 //
-// The two walk-ups are deliberately separate. `kac.features/Harness.cs` and `kac-tests.cs` hold their own copies for
-// the same reason: each is a different assembly, and neither references this one.
+// `kac.features/Harness.cs` and `kac-tests.cs` hold their own copies because each is a different assembly and neither
+// references this one. The root `CLAUDE.md` says why none of the three may be unified with the tool's own.
 internal static class Repo
 {
     internal static readonly string Root = Find();

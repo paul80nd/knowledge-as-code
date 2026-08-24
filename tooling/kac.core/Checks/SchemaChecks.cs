@@ -392,7 +392,6 @@ public static class SchemaChecks
     // The other direction is an entry nothing ever reports, and the registry cannot decide that. A core
     // check reports through a literal string written where the check is, and no registry holds those.
     // The coverage gate answers it instead, by failing on a declared check no fixture can reach.
-    //
     private static void CheckDeclaredChecks(Schema schema, List<Finding> f)
     {
         const string at = ".schema/_checks.yaml";
