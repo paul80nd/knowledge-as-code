@@ -1,28 +1,24 @@
 # knowledge-as-code
 
-Knowledge as Code (KaC) is a framework for managing structured, validated bodies of knowledge that people and AI
-sessions both read from and contribute to. At its core it's just plain Markdown in git but every document carries a
-type, and every type declares a schema.
+Knowledge as Code (KaC) is a framework for knowledge that people and AI sessions both read from and contribute to. It's
+plain Markdown in git, reviewed by pull request. But every document carries a type, and every type declares a schema.
 
 `kac` is the tool that holds each document to the schema its type declares. It reports every fault against the file that
-caused it and writes the indexes and tables nobody should be keeping by hand. It also writes the whole folder out as
-data an agent can read.
+caused it. A broken cross-reference fails CI rather than rotting quietly. It writes the indexes and tables nobody should
+be keeping by hand. It also writes the documents out as an **export**: data an agent can read.
 
-That folder is a **corpus**, meaning one repository of knowledge documents kept in git and reviewed by pull request. A
-document filed under a type is a **record**. A **type** is a category such as a policy, a runbook or a glossary. Each
-type declares a **schema**: the machine-readable statement of what a record of that type carries. The schema travels
-inside the corpus, in `.schema/`, so adding a type is adding a YAML file rather than changing this tool.
+A repository of those documents, with the schema it runs, is a **corpus**. A document filed under a type is a
+**record**. A corpus has two readers and one set of files. A person reads the rendered wiki. An agent reads the export,
+built from the same documents. Nothing has to be kept true twice.
 
-```bash
-dotnet tool install --global KnowledgeAsCode.Tool
+An agent can therefore find the standard it needs before it writes code, and leave what it learns where a reviewer will
+see it.
 
-cd path/to/your/corpus
-kac validate     # frontmatter, links, structure, clauses and the graph
-```
+## A type declares its own schema
 
-A corpus has two readers and one set of files. A person reads the rendered wiki. An agent reads an **export**, meaning
-the corpus written out as data, built from the same frontmatter. Nothing has to be kept true twice, and a broken
-cross-reference fails CI rather than rotting quietly.
+A **type** is a category such as a policy, a runbook or a glossary. Its **schema** is the machine-readable statement of
+what a record of that type carries. The schema travels inside the corpus, in `.schema/`, so adding a type is adding a
+YAML file rather than changing the tool.
 
 ## What this site is
 
