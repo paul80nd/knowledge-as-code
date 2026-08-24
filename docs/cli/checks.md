@@ -13,7 +13,7 @@ kac checks [--json] [--no-color]
 
 <!-- END GENERATED: usage-checks -->
 
-## Intent
+## What it is for
 
 `checks` prints every check the validator can emit against the corpus it is run in. It reads them from that corpus's
 own `.schema/`. So the corpus answers "what will CI hold this corpus to", and no document has to be remembered and
@@ -30,7 +30,17 @@ is what keeps the table honest.
 **It is not [`validate`](validate.md).** `checks` opens no record and reports no fault in one. A check missing from a
 validate run has either not been declared or not been tripped. `checks` is how you tell those two apart.
 
-## The specification
+## How it works
 
-[Checks](../checks.md) carries the rest: where a check comes from, what the schema pass refuses before any record is
-read, and why a rule is data wherever it can be.
+`checks` loads the `.schema/` of the corpus it is run in and builds the catalogue from it: every check the schema
+declares, with the severity it reports at and what it proves. The list prints one check to a line, with a tally at
+the foot split by severity, because a reader comes to it to learn how much of it fails a build.
+
+`--json` writes that same catalogue as data, one object per check, and prints nothing else.
+
+Either way the run then compares the catalogue against the reader-facing checks table generated onto each type
+page. A check the catalogue declares and no row covers, or a row naming a check that no longer exists, is named on
+stderr and exits `1`. That comparison happens whether or not `--json` was asked for.
+
+[Checks](../checks.md) carries the rest: where a check comes from, what the schema pass refuses before any record
+is read, and why a rule is data wherever it can be.

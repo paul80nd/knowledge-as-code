@@ -6,7 +6,7 @@
     describes the command as it will be, in the same voice as its siblings, and becomes an ordinary page the moment the
     command ships.
 
-## Intent
+## What it is for
 
 `new` turns the folder you are standing in into a corpus. It takes the framework from a template repository at a ref,
 writes the files that template says a corpus receives, and writes the one file no template can supply: `.corpus.yaml`,
@@ -32,7 +32,7 @@ type starts from. The two halves are versioned apart from the moment a corpus is
 **It does not decide what your repository looks like.** It writes what a corpus is made of. Branch protection,
 reviewers, issue templates and the rest are questions about your repository, and it asks none of them.
 
-## Approach
+## How it works
 
 ### Everything that can fail, fails first
 

@@ -13,7 +13,7 @@ kac export [--no-color] [--type <TYPE>]
 
 <!-- END GENERATED: usage-export -->
 
-## Intent
+## What it is for
 
 A consumer of a corpus should not clone it. `export` writes what the corpus knows into `.dist/export/` as data built for
 an agent to read. It writes three kinds of file: a manifest saying what the export is, one file per record for a reader
@@ -34,7 +34,7 @@ from the other, because they answer to different readers.
 **It is not a backup.** A record travels as the fields and sections its type declared, so a corpus cannot be rebuilt
 from an export of it. The direction is one way: `.dist/export/` is rebuilt whole from the corpus.
 
-## Approach
+## How it works
 
 A run loads the corpus whole, then decides which records travel and what of each one goes with them. It deletes
 `.dist/export/` and writes it again: a manifest, one file per record, and one flat file per type. Every link it writes

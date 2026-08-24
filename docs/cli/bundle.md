@@ -12,7 +12,7 @@ kac bundle [--no-color]
 
 <!-- END GENERATED: usage-bundle -->
 
-## Intent
+## What it is for
 
 An export is data, and data has to be handed to something. `bundle` assembles what `export` wrote, plus the `.plugin/`
 tree, into a Claude Code plugin directory under `.dist/plugin/`. It writes the marketplace that offers it beside it, so
@@ -34,10 +34,30 @@ there exactly what CI publishes.
 **It does not read the corpus.** `Corpus.Load` is never called. Everything a bundle decides is a fact about the export
 it was handed, and the export is the only thing that will actually travel.
 
-## Approach
+## How it works
 
 A run reads the export `export` wrote and the corpus's own `.plugin/` tree. It decides which components that export can
 support, copies what survives into `.dist/plugin/`, renders the breadcrumb, and writes a manifest naming what shipped.
+
+### What stops a run before it writes
+
+Each of these ends the run with the reason and nothing written:
+
+* a plugin tree with no manifest
+* a manifest that is not JSON, or that states no name, or no `corpusRoot`, or a `corpusRoot` the plugin tree already
+  uses
+* an export with no manifest
+* an export whose `formatVersion` is not the one this build reads
+
+Stopping is the point in every one of them. The alternative is a plugin assembled around a missing answer, which
+installs and fails later somewhere less obvious. The `corpusRoot` collision is the one worth naming twice. The export
+lands under that directory inside the plugin, so a clash would have one side silently overwrite the other. Whichever
+won, the loser would be missing from an artefact nobody reviews.
+
+The `formatVersion` refusal is where the export format version is finally held to account. Both numbers are named,
+because the reader's next move differs. An export behind the tool is rebuilt, and an export ahead of it says the tool
+is the stale half. `.dist/export/` is untracked and outlives the run that wrote it, so a bundle built after a pull is
+the ordinary way to meet an export this tool did not ship beside. That case is what the field exists for.
 
 ### Two directories under one root, and each command replaces its own whole
 
@@ -151,25 +171,6 @@ was just built.
 
 **The output is a directory rather than an archive.** A marketplace can point at a path. There is nothing to unpack
 between building and asking the plugin a question.
-
-**A run that cannot answer a question stops before writing.** Each of these ends the run with the reason and nothing
-written:
-
-* a plugin tree with no manifest
-* a manifest that is not JSON, or that states no name, or no `corpusRoot`, or a `corpusRoot` the plugin tree already
-  uses
-* an export with no manifest
-* an export whose `formatVersion` is not the one this build reads
-
-That last one is where the export format version is finally held to account. Both numbers are named, because the
-reader's next move differs. An export behind the tool is rebuilt, and an export ahead of it says the tool is the stale
-half. `.dist/export/` is untracked and outlives the run that wrote it, so a bundle built after a pull is the ordinary
-way to meet an export this tool did not ship beside. That case is what the field exists for.
-
-Stopping is the point in every one of them. The alternative is a plugin assembled around a missing answer, which
-installs and fails later somewhere less obvious. The `corpusRoot` collision is the one worth naming twice. The export
-lands under that directory inside the plugin, so a clash would have one side silently overwrite the other. Whichever
-won, the loser would be missing from an artefact nobody reviews.
 
 **`corpusRoot` is read rather than defaulted.** The plugin's skills address the export as
 `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that name. A default here would be the tool quietly disagreeing with words

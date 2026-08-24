@@ -13,7 +13,7 @@ kac generate [--check] [--no-color]
 
 <!-- END GENERATED: usage-generate -->
 
-## Intent
+## What it is for
 
 `generate` regenerates the content of a corpus that is derived from frontmatter and the schema, so that nobody maintains
 it by hand. Its readers are the people who read the corpus: a type's index page, the frontmatter reference and checks
@@ -32,7 +32,7 @@ drifted, or in step and stale.
 **It will not stand a type up.** Generation covers what the corpus adopted, so a folder appearing without its type
 declared is not something `generate` fills in. `validate` reports it.
 
-## Approach
+## How it works
 
 A run reads the corpus's frontmatter and its schema, and rewrites each generated file and each generated block from
 them. It writes only between the markers, and only for the types the corpus adopted.

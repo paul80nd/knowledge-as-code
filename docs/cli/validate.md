@@ -13,7 +13,7 @@ kac validate [--json] [--no-color]
 
 <!-- END GENERATED: usage-validate -->
 
-## Intent
+## What it is for
 
 `validate` is the command CI runs over a corpus, and the one an author runs before pushing. It decides which files are
 records and applies the checks the schema declares. It reports each fault against the file that caused it, with a line
@@ -34,7 +34,7 @@ apart.
 `validate` asks whether this corpus's own records are correct, and a corpus that has drifted badly can still be entirely
 valid.
 
-## Approach
+## How it works
 
 A run lists the corpus's Markdown, decides which of it counts as a record, and applies the checks the schema declares to
 each one. What is not a record still gets read, by the three narrower passes below.

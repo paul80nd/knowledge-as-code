@@ -1,6 +1,6 @@
 # Checks: where a check comes from
 
-## Intent
+## What it is for
 
 Every check `kac` can emit is read from the schema and dispatched by id. Nothing is hard-coded per type. `kac checks`
 prints that catalogue for the corpus it is run in, so the corpus itself answers "what will CI hold this corpus to". No
@@ -19,7 +19,7 @@ the two are told apart.
 and several catalogue ids fold into one row of it. The catalogue is flat and keyed by id. `kac checks` exits non-zero
 once the two have drifted, and that exit is what keeps the table honest.
 
-## Approach
+## How it works
 
 A check marked **warning** does not fail the build.
 

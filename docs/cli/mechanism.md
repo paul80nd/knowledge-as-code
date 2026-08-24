@@ -15,7 +15,7 @@ kac mechanism [--against <PATH>] [--check] [--no-color] [--sync]
 
 <!-- END GENERATED: usage-mechanism -->
 
-## Intent
+## What it is for
 
 A corpus takes the framework as a copy (the validator, the schema, and the documents describing how the system works),
 and a copy drifts. `mechanism` is what makes a copy answerable to a declaration.
@@ -36,7 +36,7 @@ is `generate --check`'s alone, and a shared page can be byte-identical everywher
 **It is not `validate`.** Drift is not invalidity. A corpus that has edited its copy of the schema has drifted, and may
 be entirely valid. A corpus in step with upstream may be full of broken records.
 
-## Approach
+## How it works
 
 The two halves read one manifest and share one vocabulary of layers. `--check` decides and reports. `--sync` decides
 and then writes. Neither touches a layer the manifest says a corpus owns.

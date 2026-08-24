@@ -6,7 +6,7 @@
     describes the command as it will be, in the same voice as its siblings, and becomes an ordinary page the moment the
     command ships.
 
-## Intent
+## What it is for
 
 `update` takes a newer framework into a corpus that already has one, and is where a corpus adopts a type or gives one
 up. It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file
@@ -37,7 +37,7 @@ corpus can be perfectly in step with its framework and full of bad records.
 **It is not `generate`.** That recomputes what a corpus derives from its own frontmatter. This one brings in what the
 corpus derives from somebody else's framework. A corpus can be fresh and behind, or in step and stale.
 
-## Approach
+## How it works
 
 ### Preconditions
 
