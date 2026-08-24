@@ -51,6 +51,8 @@ never write.
 kac mechanism --check --against ../other-corpus
 ```
 
+#### What it reports
+
 The reference defaults to `upstream.url` in `.corpus.yaml`, so a corpus that recorded where it synced from can run a
 bare `mechanism --check`. It reports:
 
@@ -62,17 +64,23 @@ bare `mechanism --check`. It reports:
   they match the reference again, so you can delete the stale entry.
 - **what the descriptor declines** is skipped, and counted where the corpus holds it anyway.
 
-It opens by reporting the three versions the descriptor states: `content-version`, `descriptor-version` and
+#### The versions it opens with
+
+It reports the three versions the descriptor states: `content-version`, `descriptor-version` and
 `upstream.mechanism-version`. A version the corpus has not stated is reported as not declared, because only the corpus
 can say what it knows. A descriptor still carrying the older `version:` key stops the command outright, in either half.
 The message names the old key, the new one and the file. The rename is the corpus's to make: nothing rewrites this file
 on a corpus's behalf.
+
+#### What a corpus may decline
 
 A corpus declines in two ways, and both work alike. Leaving a type out of `types:` leaves out its `.schema/<type>.yaml`,
 so that file is neither missing nor drifted. Setting `role:` to `consumer` does the same for the `verification` layer,
 because a consumer runs a tool proven upstream instead of proving it. These are the only ways a corpus may hold less of
 a shared layer than upstream does, and the descriptor is where it says so. Without that entry the same absence reads as
 a deletion nobody recorded. A descriptor that declares neither takes the whole shared layer.
+
+#### What it compares
 
 `--check` normalises line endings before it compares, so a working copy checked out with CRLF never reads as drift. It
 then compares the **authored half** of each file, emptying everything between `BEGIN GENERATED` and `END GENERATED`
@@ -90,10 +98,14 @@ kac mechanism --sync                      # from upstream.url
 kac mechanism --sync --against ../source  # …or from a local checkout of it
 ```
 
+#### Where it takes from
+
 `--against` says which copy of the upstream to read. `upstream.url` says the corpus takes from an upstream at all. A
 corpus that names none sits at the head of the chain: changes leave it and none arrive, so `--sync` refuses to run
 there. A corpus that names one syncs from it whatever its role, so a mirror of the framework takes the tooling and the
 tests down like anything else.
+
+#### What comes down
 
 In one pass over both trees:
 
@@ -108,10 +120,16 @@ In one pass over both trees:
 - Files this corpus holds and the reference does not are **named, not deleted**. Sync copies. Emptying a corpus because
   an upstream tree was smaller is not a decision a tool makes.
 
+#### What it records
+
 Sync then stamps `descriptor-version`, `upstream.mechanism-version`, `synced-from` and `synced-on` into `.corpus.yaml`.
 It rewrites those four lines rather than re-serialising the file, so the descriptor's commentary survives. The file's
 own format is the mechanism's to state, because a corpus cannot know the shape a newer one writes. `content-version` is
-left alone: what a corpus knows is not something an upstream can tell it. Finally it runs `generate`. Copying a page
-whole is only safe because of that last step. The page arrives carrying the reference's generated block, and it is right
-only once rebuilt against the types the receiving corpus holds. A passing `generate --check` is sync's postcondition.
+left alone: what a corpus knows is not something an upstream can tell it.
+
+#### It regenerates last
+
+The run finishes by calling `generate`, and copying a page whole is only safe because of that step. The page
+arrives carrying the reference's generated block, and it is right only once rebuilt against the types the
+receiving corpus holds. A passing `generate --check` is sync's postcondition.
 

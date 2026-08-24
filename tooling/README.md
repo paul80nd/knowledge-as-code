@@ -82,10 +82,11 @@ to matching. A command that grows an option gets its page back in step with
 `KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests`. Read the diff afterwards, because the update blesses a regression as
 happily as a fix.
 
-Beneath that block, each page follows the same sections in this order: **What it is for**, **What it is not**,
-**How it works**, **Decisions**, **Known limits**. That set is fixed, and it is what lets a reader ask the same
-question of any command and find the answer in the same place. Deeper structure goes under those headings rather
-than beside them, so a command with two halves keeps them at `###`. `CliReferenceTests` holds every page to it.
+Beneath that block, each page follows the same sections in this order: **What it is for**, **What it is not**, **How it
+works**, **Decisions**, **Known limits**. That set is fixed, and it is what lets a reader ask the same question of any
+command and find the answer in the same place. Deeper structure goes under those headings rather than beside them, so a
+command with two halves keeps them at `###` and subsections them at `####`. `mechanism` is the page that does this, and
+`CliReferenceTests` holds every page to the five.
 
 It is prose throughout and not a form. A heading with nothing true to say is left out, because filler reads as an
 answer where an absence reads as work not yet done. Reasons stay inline in **How it works**, beside whatever they
