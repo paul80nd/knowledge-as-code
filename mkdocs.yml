@@ -72,6 +72,7 @@ markdown_extensions:
 nav:
   - Introduction: index.md
   - Getting started: getting-started.md
+  - Running it in CI: ci.md
   - CLI reference:
       - cli/index.md
       - validate: cli/validate.md

@@ -13,7 +13,7 @@ kac --version
 A corpus with CI of its own wants the version pinned instead, so that every machine and every build runs the version
 the corpus was written against. Install it into a
 [tool manifest](https://learn.microsoft.com/dotnet/core/tools/local-tools-how-to-use). The version lands in
-`.config/dotnet-tools.json` and travels with the repository.
+`dotnet-tools.json` at the repository root and travels with it. [Running it in CI](ci.md) is where that pays off.
 
 ```bash
 dotnet new tool-manifest

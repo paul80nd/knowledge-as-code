@@ -25,6 +25,8 @@ YAML file rather than changing the tool.
 The reference for KaC: what a corpus holds, and what `kac` does to one.
 
 * **[Getting started](getting-started.md)** installs the tool and runs it against a corpus.
+* **[Running it in CI](ci.md)** wires the two commands that answer for a corpus into a pull request, on GitHub
+  Actions or Azure Pipelines.
 * **[CLI reference](cli/index.md)** gives a page to each command, saying what it does, what it refuses and what it
   leaves alone. The overview carries the exit codes and the options every command takes.
 * **[The corpus descriptor](corpus-descriptor.md)** covers `.corpus.yaml`, the one file a corpus writes for itself.
