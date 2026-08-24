@@ -16,7 +16,7 @@ edit_uri: edit/main/docs/
 
 copyright: MIT licensed.
 
-# A warning is a page that lies: a dead link, or a file no nav entry reaches. The build refuses it.
+# Strict mode fails a dead link. A page the nav does not list is only reported at INFO, so `NavigationTests` has it.
 strict: true
 
 # The pins the workflow installs from. It sits beside the pages so Dependabot finds one directory, and the
