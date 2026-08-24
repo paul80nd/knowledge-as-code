@@ -313,6 +313,39 @@ public class NewTests
     public void No_readme_line_runs_past_120_characters()
         => Assert.DoesNotContain(New.Readme(Answers()).Split('\n'), l => l.Length > 120);
 
+    // -- what a template asks of the tool reading it --
+
+    [Theory]
+    [InlineData("0.6.0", "0.6.0")]        // the version it asks for
+    [InlineData("0.6.0", "0.7.1")]        // newer
+    [InlineData("0.6.0", "0.6.0+abc123")] // the build stamp is not part of the version
+    [InlineData("0.6.0", "1.0.0-rc.1")]   // nor is a pre-release tag
+    [InlineData(null, "0.1.0")]           // a template asking for nothing
+    [InlineData("", "0.1.0")]
+    public void A_tool_new_enough_for_the_template_is_not_stopped(string? minimum, string tool)
+        => Assert.Null(New.TooOldFor(minimum, tool));
+
+    // Every key an older tool does not know is one it ignores in silence, and a rule it ignores is a file
+    // a corpus loses. So it stops rather than half-reading the manifest.
+    [Fact]
+    public void A_tool_older_than_the_template_is_told_which_version_to_get()
+    {
+        var problem = New.TooOldFor("0.6.0", "0.5.0");
+
+        Assert.Contains("needs kac 0.6.0 or newer", problem);
+        Assert.Contains("this is 0.5.0", problem);
+    }
+
+    [Fact]
+    public void A_minimum_that_is_not_a_version_is_reported_as_one()
+        => Assert.Contains("which is not a version", New.TooOldFor("latest", "0.6.0"));
+
+    // The tool's own version is a build stamp, and grounding a working tool over one it cannot parse
+    // would be worse than reading a template it might be too old for.
+    [Fact]
+    public void A_tool_version_nothing_can_parse_stops_nothing()
+        => Assert.Null(New.TooOldFor("0.6.0", "dev"));
+
     // The manifest this repository ships, which is the one thing here read from disk. A rule naming a
     // system the tool cannot offer withholds its files from every corpus, and the fault is easiest to
     // read beside the vocabulary rather than in a golden diff.

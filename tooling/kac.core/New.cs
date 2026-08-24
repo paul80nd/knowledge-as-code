@@ -67,6 +67,28 @@ public sealed record NewAnswers
     public string Ci { get; init; } = CiSystem.None;
 }
 
+// What `new` found in the folder before it asked anything.
+//
+// Everything that can stop a run is read here, so that nobody answers six questions and is then told the
+// folder was not empty. What each state comes to is the command's to decide: two of them are a refusal,
+// and two are a question.
+public sealed record Ground
+{
+    // The corpus this folder already sits in, or null. A descriptor at or above the working directory
+    // means the framework is here already, and taking a newer one into it is `update`.
+    public string? Corpus { get; init; }
+
+    // Whether git reads this folder as a repository, and whether that repository holds changes its last
+    // commit does not. `Dirty` is null where there is no repository to ask, or where git could not
+    // answer, and a tree nobody can ask about is not the same as a clean one.
+    public bool Repository { get; init; }
+    public bool? Dirty { get; init; }
+
+    // What the folder already holds, `.git` aside. Named rather than counted: the warning is worth
+    // reading only where it says what a creation is about to be mixed in with.
+    public IReadOnlyList<string> Holds { get; init; } = [];
+}
+
 // What creating a corpus comes to. Every list names paths in the corpus about to exist, except `Copied`,
 // which also carries where each file was read from.
 public sealed record NewPlan(
@@ -97,6 +119,63 @@ public static class New
     // The version a corpus starts on. Semantically versioned and moved by hand, so the tool supplies a
     // first number and never a later one.
     private const string FirstContentVersion = "0.1.0";
+
+    // Read the folder `new` was run in, before anything is asked and before anything is written.
+    public static Ground Survey(string dir)
+    {
+        var repository = Git.Run(dir, "rev-parse --is-inside-work-tree")?.Trim() == "true";
+
+        return new Ground
+        {
+            Corpus = Corpus.FindRoot(dir),
+            Repository = repository,
+            Dirty = repository ? Git.Dirty(dir) : null,
+            Holds = Holdings(dir)
+        };
+    }
+
+    // What a folder holds, `.git` aside, or nothing at all where the folder is not there yet.
+    private static IReadOnlyList<string> Holdings(string dir)
+    {
+        if (!Directory.Exists(dir)) return [];
+
+        return
+        [
+            .. Directory.EnumerateFileSystemEntries(dir)
+                .Select(Path.GetFileName)
+                .OfType<string>()
+                .Where(name => name != ".git")
+                .OrderBy(name => name, StringComparer.Ordinal)
+        ];
+    }
+
+    // Why this tool cannot read this template, or null where it can.
+    //
+    // The template is fetched rather than shipped inside the package, so the two version independently. A
+    // tool meeting a manifest it is too old for stops here rather than half-reading it: every key it does
+    // not know is one it would ignore in silence, and a rule it ignores is a file a corpus loses.
+    //
+    // `tool` is the running version, which the entry point reads off its own assembly. Build metadata is
+    // dropped from it, so `0.6.0+abc123` and `0.6.0` are one version. A version neither side can parse
+    // does not stop a run: the tool's own is a build stamp, and refusing over it would ground a tool that
+    // works.
+    public static string? TooOldFor(string? minimum, string tool)
+    {
+        if (minimum is not { Length: > 0 }) return null;
+
+        if (!Version.TryParse(Release(minimum), out var wanted))
+            return $"new: the template declares minimum-tool '{minimum}', which is not a version.";
+
+        if (!Version.TryParse(Release(tool), out var running)) return null;
+
+        return running >= wanted
+            ? null
+            : $"new: this template needs kac {minimum} or newer, and this is {tool}. "
+              + "update the tool, or name an older ref with --ref.";
+
+        // The release the version names, without the build metadata or the pre-release tag beside it.
+        static string Release(string version) => version.Split('+', '-')[0];
+    }
 
     // What creating a corpus from this template comes to.
     //
