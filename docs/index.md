@@ -1,8 +1,12 @@
 # knowledge-as-code
 
-`kac` reads a folder of Markdown documents and holds each one to the schema its type declares. It reports every fault
-against the file that caused it. It writes the indexes and tables nobody should be keeping by hand. It also writes the
-whole folder out as data an agent can read.
+Knowledge as Code (KaC) is a framework for managing structured, validated bodies of knowledge that people and AI
+sessions both read from and contribute to. At its core it's just plain Markdown in git but every document carries a
+type, and every type declares a schema.
+
+`kac` is the tool that holds each document to the schema its type declares. It reports every fault against the file that
+caused it and writes the indexes and tables nobody should be keeping by hand. It also writes the whole folder out as
+data an agent can read.
 
 That folder is a **corpus**, meaning one repository of knowledge documents kept in git and reviewed by pull request. A
 document filed under a type is a **record**. A **type** is a category such as a policy, a runbook or a glossary. Each
@@ -22,11 +26,11 @@ cross-reference fails CI rather than rotting quietly.
 
 ## What this site is
 
-The reference for `kac`: what each command does, what it refuses, and what it leaves alone.
+The reference for KaC: what a corpus holds, and what `kac` does to one.
 
 * **[Getting started](getting-started.md)** installs the tool and runs it against a corpus.
-* **[CLI reference](cli/index.md)** gives a page to each command, plus the exit codes and the options every command
-  takes. Each page opens with its usage, generated from the parser.
+* **[CLI reference](cli/index.md)** gives a page to each command, saying what it does, what it refuses and what it
+  leaves alone. The overview carries the exit codes and the options every command takes.
 * **[The corpus descriptor](corpus-descriptor.md)** covers `.corpus.yaml`, the one file a corpus writes for itself.
 * **[Checks](checks.md)** says where a check comes from, and how a rule declared in YAML reaches the validator.
 
@@ -34,7 +38,7 @@ The reference for `kac`: what each command does, what it refuses, and what it le
 
 Three documents sit outside this site, each written for a different reader.
 
-**The argument for working this way** is
+**The argument for KaC** is
 [`knowledge-as-code.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/template/knowledge-as-code.md). Every
 corpus receives its own copy of it and may then diverge.
 
