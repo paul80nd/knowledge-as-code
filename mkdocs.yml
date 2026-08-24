@@ -35,8 +35,10 @@ theme:
     - content.action.edit
     - content.code.copy
     - navigation.footer
+    # `navigation.indexes` puts each section's own index page behind the section's name. Without
+    # `navigation.sections` beside it, the two sections then collapse, so a reader browsing the flat
+    # pages is not scrolling past sixteen entries to reach the changelog.
     - navigation.indexes
-    - navigation.sections
     - navigation.top
     - navigation.tracking
     - toc.follow
@@ -60,6 +62,10 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light
+
+# Two gaps in the sidebar, and nothing else. `docs/assets/extra.css` says which and why.
+extra_css:
+  - assets/extra.css
 
 markdown_extensions:
   - admonition
