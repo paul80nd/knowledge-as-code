@@ -24,7 +24,7 @@ internal static partial class CliReference
     // Written before their commands exist, so the parser knows nothing about them. Each says so at its head, and a
     // test beside this holds it to saying so. An exception that stops being true is an exception that stops being
     // silent.
-    internal static readonly string[] Unbuilt = ["new", "update"];
+    internal static readonly string[] Unbuilt = ["update"];
 
     private static readonly Lazy<IReadOnlyList<Verb>> Model = new(Read);
 

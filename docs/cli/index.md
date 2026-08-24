@@ -10,13 +10,13 @@ behind it, and its known limits.
 
 | Command                     | What it does                                            |
 |-----------------------------|---------------------------------------------------------|
+| [`new`](new.md)             | Stand a corpus up in the folder you are in.             |
 | [`validate`](validate.md)   | Check the corpus against its schema.                    |
 | [`generate`](generate.md)   | Rewrite the parts of a corpus derived from its records. |
 | [`export`](export.md)       | Write the corpus out as data a consumer can read.       |
 | [`bundle`](bundle.md)       | Assemble the export into an installable agent plugin.   |
 | [`checks`](checks.md)       | List every check the validator can report.              |
 | [`mechanism`](mechanism.md) | Compare a corpus against upstream, or sync from it.     |
-| [`new`](new.md)             | Stand a corpus up in the folder you are in.             |
 | [`update`](update.md)       | Take a newer framework into a corpus.                   |
 
 <!-- END GENERATED: command-table -->

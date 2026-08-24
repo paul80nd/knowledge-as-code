@@ -36,8 +36,11 @@ public class Manifest
     // meeting a newer template stops on this rather than half-reading it.
     public string? MinimumTool;
 
+    // What a template's manifest is called, wherever the repository serving it keeps the file.
+    public const string FileName = "manifest.yaml";
+
     public static Manifest Load(string corpusRoot) =>
-        LoadFrom(Path.Combine(corpusRoot, "tooling", "manifest.yaml"));
+        LoadFrom(Path.Combine(corpusRoot, "tooling", FileName));
 
     // Two manifests are written in this shape and neither is the other's business: the portability
     // manifest says which of a corpus's files are shared with the framework, and the template manifest

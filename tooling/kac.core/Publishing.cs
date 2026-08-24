@@ -76,6 +76,31 @@ public sealed class Publishing
         return new Publishing(human, raw, descriptor.PathPrefix) { Target = target, Ref = gitRef };
     }
 
+    // The two bases a repository's origin implies, or null where nothing here can derive them.
+    //
+    // A URL nobody can recall is a URL nobody should be made to type, so `new` fills the answer in and
+    // asks the person to confirm it. Only `github` is derivable: the other targets serve a corpus from
+    // somewhere the repository's own remote says nothing about.
+    //
+    // Both SSH and HTTPS remotes are read, because which one a clone used is a fact about the person
+    // rather than about the repository.
+    public static (string Human, string Raw)? BasesFrom(string target, string? origin)
+    {
+        if (!target.Equals(GitHub, StringComparison.Ordinal)) return null;
+        if (origin?.Trim() is not { Length: > 0 } url) return null;
+
+        var repo = url.EndsWith(".git", StringComparison.Ordinal) ? url[..^4] : url;
+        var at = repo.IndexOf("github.com", StringComparison.OrdinalIgnoreCase);
+        if (at < 0) return null;
+
+        // What follows the host, however the remote spelled the separator: `:` after an SSH host, `/`
+        // after an HTTPS one.
+        var path = repo[(at + "github.com".Length)..].TrimStart(':', '/').TrimEnd('/');
+        if (path.Count(c => c == '/') != 1 || path.Split('/').Any(p => p.Length == 0)) return null;
+
+        return ($"https://github.com/{path}/blob", $"https://raw.githubusercontent.com/{path}");
+    }
+
     // The anchor a link uses to land on a part. GitHub derives it from the heading by discarding the
     // punctuation it meets, which is the form `Md.Slug` writes and the form the corpus's own links
     // already use.

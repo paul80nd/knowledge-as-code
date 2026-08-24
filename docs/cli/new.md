@@ -1,10 +1,24 @@
 # `new` stand a corpus up in the folder you are in
 
-!!! warning "Draft, pending implementation"
+<!-- BEGIN GENERATED: usage-new -->
 
-    `kac new` does not exist yet. This page is the specification it is built to, written before the command. It
-    describes the command as it will be, in the same voice as its siblings, and becomes an ordinary page the moment the
-    command ships.
+```text
+kac new [--ci <SYSTEM>] [--from <URL|PATH>] [--name <NAME>] [--no-color] [--path <PATH>] [--publishing <TARGET>] [--ref <REF>] [--types <TYPES>] [--yes]
+```
+
+| Option                  | What it does                                                                          |
+|-------------------------|---------------------------------------------------------------------------------------|
+| `--ci <SYSTEM>`         | What builds the corpus: github, azure-devops or none.                                 |
+| `--from <URL\|PATH>`    | The repository or folder serving the template. Defaults to the framework's own.       |
+| `--name <NAME>`         | What the corpus is called. Defaults to the name of this folder.                       |
+| `--no-color`            | Turn colour off. NO_COLOR in the environment does the same.                           |
+| `--path <PATH>`         | The folder inside that repository holding manifest.yaml, where it is not at the root. |
+| `--publishing <TARGET>` | Where the corpus is published: github, azure-devops-wiki, mkdocs or none.             |
+| `--ref <REF>`           | The branch or tag to take the template from.                                          |
+| `--types <TYPES>`       | The types to adopt, comma-separated, or 'all'.                                        |
+| `--yes`                 | Take the default for every answer not given, and ask nothing.                         |
+
+<!-- END GENERATED: usage-new -->
 
 ## What it is for
 
