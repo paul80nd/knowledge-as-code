@@ -31,7 +31,10 @@ theme:
   icon:
     repo: fontawesome/brands/github
   features:
+    # `edit_uri` above renders as a pencil on each page only where this feature is on.
+    - content.action.edit
     - content.code.copy
+    - navigation.footer
     - navigation.indexes
     - navigation.sections
     - navigation.top
