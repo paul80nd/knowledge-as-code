@@ -163,7 +163,7 @@ The taxonomy is the half that is only partly proven.
 
 Every document here describes what exists today, and the
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds everything considered but, as yet, unbuilt.
-[Contributing](template/knowledge-as-code/contributing.md) names the skills that carry that rule and say why.
+[Contributing](https://paul80nd.github.io/knowledge-as-code/framework/contributing/) names the skills that carry that rule and say why.
 
 ## Opinions
 

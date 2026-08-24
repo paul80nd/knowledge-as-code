@@ -19,7 +19,7 @@ intellectual debt. Standing belongs wholly to the corpus holding it.
 A type declares its lineage in its own `.schema/<type>.yaml`, beside the fields it declares, in three parts. The ADR is
 the clearest to read:
 
-**Nearest prior art.** [Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011).
+**Nearest prior art.** [Nygard, *Documenting Architecture Decisions*][nygard] (2011).
 
 **Alignment**, which is what the framework took: "Context / Decision / Consequences, and the rule that a reversed
 decision is superseded rather than rewritten."
@@ -96,5 +96,6 @@ primary source, except these:
 Where a claim is later found wrong, correct the row. Do not soften it.
 
 [diataxis]: https://diataxis.fr/
+[nygard]: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
 [iso24495]: https://www.iso.org/standard/78907.html
 [ste]: https://www.asd-ste100.org/

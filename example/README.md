@@ -191,7 +191,7 @@ knowledge-as-code.md   # the approach, and the way in to everything below
 knowledge-as-code/     # the system's own documentation
   ├── taxonomy.md      # the seventeen types and where things go
   ├── metadata.md      # the frontmatter fields
-  ├── contributing.md  # how a contribution is made and reviewed
+  ├── contributing.md  # the way in for somebody adding to this corpus
   └── lineage.md       # where the taxonomy's names came from
 kac, kac.cmd           # launchers that wrap `dotnet run --project ../tooling/kac`
 .corpus.yaml           # what this corpus is, and where it publishes

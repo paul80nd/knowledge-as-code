@@ -84,6 +84,7 @@ nav:
   - The framework:
       - framework/index.md
       - Principles: framework/principles.md
+      - Contributing: framework/contributing.md
       - Automation: framework/automation.md
       - Lineage: framework/lineage.md
   - CLI reference:

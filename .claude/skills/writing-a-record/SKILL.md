@@ -102,6 +102,47 @@ level or higher.
 **The rule is about the estate rather than about a decision.** A record at `status: proposed` holds a decision that
 exists as a decision. Its Decision section is written in the present, and none of it claims the estate already changed.
 
+## Link rather than restate
+
+**Reference another record by its id, with a shortcut reference link.** The label is the id and doubles as the display
+text, so a path appears once per document and a rename is a one-line change.
+
+    New headers are governed by [adr-0013].
+
+    [adr-0013]: 0013-http-custom-header-naming.md
+
+**Name the part when you reference one**, as `<id>.<part>`, which is the form a citation already takes. A clause of a
+policy and a term of a glossary are both parts. The label carries it and the target lands on it.
+
+    A title in the catalogue is not the indexed field. See [gls-search.title].
+
+    [gls-search.title]: search.md#title
+
+Linking to the file instead lands a reader at the top of the document to find the part themselves. It also loses the
+reference: a tool reading the corpus carries what the link states, and a link naming no part states none.
+
+**The label is the id exactly as that record carries it**: `adr-0013`, `pol-DEVI`, `svc-billing-api`. The prefix is
+always lower-case, and what follows takes the type's own form, so a mnemonic stays upper-case and a slug stays
+lower-case. A part id is the record's own id, a dot, and the part as its type writes one: `pol-DEVI.TIMEBOX`,
+`gls-search.title`. The label is its own display text, so a label that is not the id shows the reader an id that does
+not exist. `label-canonical` is the check, and it matters because Markdown matches a reference to its definition
+case-insensitively: `[ADR-0013]` resolves perfectly happily, and nothing else would ever catch it.
+
+**Use an inline link where the display text is prose**, since it differs from the target.
+
+    The rule lives in the [value-formats standard](../standards/public-api/value-formats.md).
+
+**Definitions go at the very foot of the document**, after every prose section, sorted by label. A `## Related` section
+uses the same shortcut labels. An undefined label and an unused definition both fail, and a fenced or indented block is
+read as code rather than as links.
+
+**A framework page names a type and never links to one.** That rule reaches `knowledge-as-code.md` and the documents
+beneath it, and nothing else. Every corpus holds the same copy of those files, and a corpus that never adopted
+standards has no `/standards` page to open. A link into a type's folder is worse again, because the records it points
+at are the first thing a corpus deletes. Where a link genuinely belongs there, put it in a generated block: `kac`
+writes those from the types the corpus adopted, so they can only name pages that exist. `framework-names-types` holds
+you to this.
+
 ## Write to the tier
 
 | Tier            | Written as                                                                    |
@@ -217,6 +258,19 @@ reason, which a procedural record may not. Conventions sit close to normative wi
 same thing, cut the prose. Nobody updates it, and the generator rewrites its own.
 
 ## A `_template.md`
+
+**`{{…}}` marks everything the author supplies, and nothing else does**: not `NNNN`, not `XXXX`, not a slug called
+`example`. One mark, so a template teaches exactly what the tool recognises. The casing carries what a sentence would
+otherwise have to: `pol-{{MNEM}}` in `{{mnem}}-kebab-slug.md` says a mnemonic is upper-case in the id and lower-case in
+the filename. `{{a}}` and `{{b}}` stand for *another* record, and `{{a}}.md` is its whole filename.
+
+**The mark has to survive YAML**, and in two places it does not.
+
+* **A placeholder cannot sit in a flow sequence.** `related: [ adr-{{a}} ]` is a parse error, because a plain scalar in
+  flow context may not contain a brace. Write the list as a block sequence.
+* **A placeholder opening a value has to be quoted.** YAML reads `review-by: {{date}}` as a flow mapping rather than as
+  text, so the field arrives holding nothing. Write `review-by: "{{date}}"`. A placeholder that follows something needs
+  no quotes, as in `svc-{{slug}}`.
 
 **A `{{placeholder}}`'s braces are the mark, and what sits inside them is prose.** `{{Stop the bleeding.}}` is a figure
 dressing a plain instruction, and the tier's rules reach it.

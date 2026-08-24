@@ -11,6 +11,8 @@ and fills it with its own knowledge.
 
 * **[Principles](principles.md)** says why the framework is shaped the way it is, and what the design will not trade
   away.
+* **[Contributing](contributing.md)** says how knowledge is added, reviewed and merged, and where the rules for the
+  words themselves live.
 * **[Automation](automation.md)** says what a pipeline does for a corpus, and what it leaves alone.
 * **[Lineage](lineage.md)** says how the types relate to their prior art, and on what terms.
 
@@ -23,7 +25,7 @@ corpus adopted. A corpus that took five of the framework's types gets five rows,
 |--------------|-----------------------------------------------------------------------|
 | Taxonomy     | which kinds of knowledge this corpus holds, and where a document goes |
 | Metadata     | what the frontmatter of a record carries                              |
-| Contributing | how a contribution is made, reviewed and merged                       |
+| Contributing | the way in to all of the above, and anything the corpus asks locally  |
 | Lineage      | the prior art behind each type this corpus adopted                    |
 
 Each sits under `knowledge-as-code/` in the corpus, beside a root page that is the way in.

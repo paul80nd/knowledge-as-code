@@ -59,9 +59,10 @@ runbook step and an ADR paragraph obey different constraints, and nothing in CI 
 ones.
 
 * **Load `technical-writing`.** The rules for the words, which are the same in every document and every commit message.
-* **Then `writing-a-record`.** What this corpus adds to them, and what the record's tier adds on top.
-* [`knowledge-as-code/contributing.md`](knowledge-as-code/contributing.md) holds the link and template conventions CI
-  enforces, and what outranks what when two rules disagree.
+* **Then `writing-a-record`.** What this corpus adds to them, what the record's tier adds on top, the link forms CI
+  enforces, and what a `_template.md` may say.
+* **Where a prose rule and the schema disagree, the schema is right.** Report the contradiction rather than editing
+  records to match.
 
 ## Your working style
 
