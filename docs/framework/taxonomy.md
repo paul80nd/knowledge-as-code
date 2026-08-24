@@ -24,8 +24,8 @@ What review each tier asks for is in [Contributing](contributing.md#review-follo
 on, because capture that is not free does not happen.
 [Cheap capture, deliberate promotion](principles.md#cheap-capture-deliberate-promotion) is where that argument lives.
 
-**Lifecycle follows from tier and is never stated separately.** Immutable, living and perishable are readable off the
-table above. Two fields that can contradict each other are a defect waiting to happen.
+**No record states its lifecycle.** Immutable, living and perishable are readable off the table above, so a record
+carries `tier` and nothing that could disagree with it. A type declares both, and the schema requires it.
 
 ## Which types a corpus holds
 

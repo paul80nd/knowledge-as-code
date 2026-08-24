@@ -6,8 +6,8 @@ Knowledge as Code (KaC) is a framework for knowledge that people and AI sessions
 plain Markdown in git, reviewed by pull request. But every document carries a type, and every type declares a schema.
 
 `kac` is the tool that holds each document to the schema its type declares. It reports every fault against the file that
-caused it. A broken cross-reference fails CI rather than rotting quietly. It writes the indexes and tables nobody should
-be keeping by hand. It also writes the documents out as an **export**: data an agent can read.
+caused it. A broken cross-reference fails CI rather than rotting quietly. `kac` writes the indexes and tables nobody
+should be keeping by hand. It also writes the documents out as an **export**: data an agent can read.
 
 A repository of those documents, with the schema it runs, is a **corpus**. A document filed under a type is a
 **record**. A corpus has two readers and one set of files. A person reads the rendered wiki. An agent reads the export,

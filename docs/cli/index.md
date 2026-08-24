@@ -1,7 +1,8 @@
 # CLI reference
 
 One page per command. Each opens with the usage the parser accepts, generated from `kac` itself, and then says what the
-command is for, what it is not, and how it works.
+command is for, what it is not, and how it works. Two more sections appear where a command has them: the decisions
+behind it, and its known limits.
 
 ## The commands
 

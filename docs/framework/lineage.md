@@ -16,16 +16,16 @@ intellectual debt. Standing belongs wholly to the corpus holding it.
 
 ## What a row says
 
-A type declares its lineage in its own `.schema/<type>.yaml`, beside the fields it declares, in three parts. The ADR is
-the clearest to read:
+A type declares its lineage in its own `.schema/<type>.yaml`, beside the fields it declares. Most carry three parts,
+and a type with no ancestor carries the first alone. The ADR is the clearest to read:
 
-**Nearest prior art.** [Nygard, *Documenting Architecture Decisions*][nygard] (2011).
+**`prior-art`.** [Nygard, *Documenting Architecture Decisions*][nygard] (2011).
 
-**Alignment**, which is what the framework took: "Context / Decision / Consequences, and the rule that a reversed
-decision is superseded rather than rewritten."
+**`alignment`**, which is what the framework took: "Context / Decision / Consequences, and the rule that a reversed
+decision is superseded rather than rewritten".
 
-**Divergence**, which is where it parted company: "Nygard scopes decisions to one codebase. Ours must affect more than
-one repository. Mandatory *Alternatives* is ours, not his."
+**`divergence`**, which is where it parted company: "Nygard scopes decisions to one codebase. Ours must affect more than
+one repository. Mandatory *Alternatives* is ours, not his".
 
 A type carrying a fourth part, `collision`, means the word already denotes something else to a reader arriving from
 another framework. Five of them do, and where the collision is severe the type's own root page repeats the warning,
@@ -35,9 +35,9 @@ because a reader who never opens the lineage page still needs it.
 so it shows the types that corpus adopted. A corpus that declares a type of its own writes that type's lineage too, and
 owns the sourcing behind it exactly as the framework owns the sourcing below.
 
-## The types with no ancestor
+## What has no precedent
 
-Three things have none, and claiming one would be worse than admitting none.
+Three things here have no useful ancestor, and claiming one would be worse than admitting none.
 
 **Discovery.** Nothing established defines a document type that is low-ceremony, explicitly unverified,
 confidence-scored and self-expiring, with a defined promotion path into a reviewed type. A lab notebook, a fleeting
@@ -55,18 +55,24 @@ The split exists because the two are written differently, rehearsed differently,
 
 The `technical-writing` skill, and the tier rules in `writing-a-record`, draw on two bodies of work.
 
-**[ASD-STE100 Simplified Technical English][ste]**, Issue 9 (2025), published by the Aerospace, Security and Defence
+### ASD-STE100
+
+**[Simplified Technical English][ste]**, Issue 9 (2025), published by the Aerospace, Security and Defence
 Industries Association of Europe and maintained by its Simplified Technical English Maintenance Group. A controlled
 language for aerospace maintenance documentation. It is a closed dictionary of approved words, each carrying one
 meaning and one part of speech, plus writing rules covering sentence length, one instruction per sentence, permitted
 verb forms and noun-cluster length. Its influence here is direct, and heaviest on the procedural tier, which is the
 material it was built for.
 
+### ISO 24495-1
+
 **[ISO 24495-1:2023][iso24495]**, plain language governing principles: that readers get what they need, can find it,
 can understand it, and can use it. These are principles, and no machine can check them. They are still the right
 statement of what the mechanics are for.
 
-**How they are cited, and why it matters.** ASD-STE100 is free to obtain and is not freely licensed. Reproduction or
+### How they are cited, and why it matters
+
+ASD-STE100 is free to obtain and is not freely licensed. Reproduction or
 publication in whole or in part requires written authority from ASD, unauthorised redistribution is prohibited, and ASD
 does not endorse third-party compliance claims. ISO 24495-1 is sold and is likewise all rights reserved.
 
@@ -88,7 +94,7 @@ primary source, except these:
   summary.
 * **ISO standards** are paywalled, so 25010's characteristics and 24495-1's principles come from the issuing body's
   public descriptions.
-* **ArchiMate and TOGAF** are licence-gated beyond their public specification pages.
+* **ArchiMate** is licence-gated beyond its public specification pages.
 * **ASD-STE100's** licensing terms and issue details come from the specification's own front matter and the
   maintenance group's published material. The numeric writing rules are corroborated from specialist secondary sources
   rather than from the rule text, so the framework states its own limits instead of quoting theirs.

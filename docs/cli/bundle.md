@@ -15,24 +15,26 @@ kac bundle [--no-color]
 ## What it is for
 
 An export is data, and data has to be handed to something. `bundle` assembles what `export` wrote, plus the `.plugin/`
-tree, into a Claude Code plugin directory under `.dist/plugin/`. It writes the marketplace that offers it beside it, so
-the result can be installed. What ends up in the plugin is a function of what the export carried: a corpus that ships no
+tree, into a Claude Code plugin directory under `.dist/plugin/`. It writes the marketplace that offers it into `.dist/`
+above, so the result can be installed. What ends up in the plugin is a function of what the export carried: a corpus
+that ships no
 glossary ships no glossary skill either.
 
 ## What it is not
 
-**It is not `export`.** `export` reads the corpus and writes data. `bundle` reads that data and writes a package. They
+**It is not [`export`](export.md).** `export` reads the corpus and writes data. `bundle` reads that data and writes a
+package. They
 are two commands because they fail differently: an export is wrong about the corpus, and a bundle is wrong about what
 it shipped. They are proved differently too. The export has a committed golden of its output, and the bundle has an
 assertion that it did not touch that output.
 
 **It does not publish.** It writes a directory and a marketplace that names it, both untracked. Pushing either anywhere
-is CI's job (on GitHub, the `publish` workflow), and so is running `claude plugin validate` over the result. What that
+is CI's job (on GitHub, `publish-plugin.yml`), and so is running `claude plugin validate` over the result. What that
 division buys is a command a reader runs on a laptop, without credentials and without a branch to write to. It produces
 there exactly what CI publishes.
 
 **It does not read the corpus.** `Corpus.Load` is never called. Everything a bundle decides is a fact about the export
-it was handed, and the export is the only thing that will actually travel.
+it was handed, and the export is the only thing that travels.
 
 ## How it works
 
@@ -89,8 +91,8 @@ that contributed no record is absent from the export's manifest either way.
 A trimmed component's files leave with it. A path under no component's is unconditional and travels whatever the corpus
 adopted, so a README or a licence in the plugin tree needs no declaration.
 
-**A component may be a directory or a single file.** A skill is a directory and a hook definition is a file. So the
-trim matches the declared path itself as well as anything beneath it. The match is on a whole segment, so `skills/a`
+**A component may be a directory or a single file.** So the trim matches the declared path itself as well as anything
+beneath it. The match is on a whole segment, so `skills/a`
 does not take `skills/ab` with it.
 
 **Trimming everything warns and still builds.** Refusing would leave a corpus unable to produce the thing that would

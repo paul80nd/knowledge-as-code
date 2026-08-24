@@ -1,8 +1,8 @@
 # Contributing
 
-How knowledge is added, reviewed and merged. The rules are the same whether a person or an AI session is holding the
-keyboard, which is the point: a corpus grows at the rate work happens only if both can write to it, and it stays worth
-reading only if both answer to the same bar.
+A corpus, meaning one repository of knowledge records, grows at the rate work happens only if a person and an AI
+session can both write to it. It stays worth reading only if both answer to the same bar. So the rules below are the
+same whichever is holding the keyboard.
 
 This page is the model. The rules for the words themselves are skills, which an agent loads beside the work at the
 moment of writing and which cost nothing on a session that writes no prose. A person contributing by hand reads them
@@ -12,7 +12,7 @@ as the full rule list.
 |---------------------|-----------------------------------------------------------------------------|
 | `technical-writing` | the floor: how to build a sentence, and how to write a commit message       |
 | `writing-a-record`  | what a corpus adds to the floor, and what each tier asks on top of that     |
-| `writing-the-docs`  | the public face of the framework, which is this site                        |
+| `writing-the-docs`  | the upstream project's own public pages, which is this site                 |
 
 ## What outranks what
 
@@ -46,7 +46,9 @@ Nobody edits generated content by hand. Where an index looks wrong, the frontmat
 
 ## Review follows the tier
 
-The review bar follows what a record *is*, and never who wrote it.
+The bar below follows what a record *is*, and never who wrote it. It is what each tier asks for. How much rigour a
+corpus actually requires is that corpus's to set, and its own contributing page carries the branch policy it starts
+from.
 
 | Tier            | Review required                    | Merge criteria                                                                   |
 |-----------------|------------------------------------|----------------------------------------------------------------------------------|
@@ -61,10 +63,6 @@ review attached is a capture step that does not happen. The tier's low authority
 
 **Decided content is immutable after merge.** Corrections are limited to typos and status transitions. To change a
 decision, write a new one that supersedes it.
-
-**How much rigour each type needs is the corpus's to decide.** The table above is what the tiers ask; a branch policy
-is how a corpus enforces it, and the owners set that. Every corpus starts from the suggestion its own contributing page
-carries.
 
 ## An agent contributes, and a human accepts
 

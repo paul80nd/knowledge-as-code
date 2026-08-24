@@ -68,6 +68,7 @@ stands obliged by is recorded in [`frameworks.md`](frameworks.md) and nowhere el
 determines the rules. Every validation rule, review expectation, language rule and generated report keys off the tier
 rather than the type, so a new kind of knowledge needs a tier and no new machinery.
 
+The five are **Decided**, **Normative**, **Descriptive**, **Procedural** and **Observed**.
 [The five tiers][tiers] says what each one asks, and [principles][principles-behaviour] says why that is the
 load-bearing idea. Which tier a type carries is on [Taxonomy](knowledge-as-code/taxonomy.md).
 
@@ -87,6 +88,6 @@ taxonomy and carry no taxonomy frontmatter. The constitution is not one of the l
 (schema, validators, generators, skills) cleanly separable from the corpus's content.
 
 [automation]: https://paul80nd.github.io/knowledge-as-code/framework/automation/
-[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-five-tiers
 [principles]: https://paul80nd.github.io/knowledge-as-code/framework/principles/
 [principles-behaviour]: https://paul80nd.github.io/knowledge-as-code/framework/principles/#behaviour-before-subject
+[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-five-tiers

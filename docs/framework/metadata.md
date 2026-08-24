@@ -1,7 +1,7 @@
 # Metadata
 
 Frontmatter is what makes a corpus machine-readable. The validator checks it, the generator builds indexes from it, and
-an agent greps it to find things. What each type declares is the type's own business; this page is the model every type
+an agent greps it to find things. What each type declares is the type's own business. This page is the model every type
 answers to.
 
 ## What a record carries
@@ -35,9 +35,12 @@ is a heading, and the schema says nothing about either.
 A field costs every record of its type a column, because a wiki renders frontmatter as a table at the top of the page.
 So a field is a decision about the reader as much as about the schema.
 
-**Type comes from the folder. Tier comes from the type. Title is the H1. Creation and modification dates come from
-git.** None of those belong in frontmatter. What does belong is what is semantically the record's own: `decided-on` is
-a real fact about a decision, where the file's last-modified date is git's business.
+**Type comes from the folder. Title is the H1. Creation and modification dates come from git.** None of those belong in
+frontmatter. What does belong is what is semantically the record's own: `decided-on` is a real fact about a decision,
+where the file's last-modified date is git's business.
+
+`tier` is the deliberate exception. It follows from the type and is stated anyway, because a reader meets it as a trust
+signal at the top of the page, and because the validator holds the two to agreeing.
 
 Four fields are deliberately absent, and the reasoning is the same each time.
 
@@ -97,9 +100,9 @@ so a reference to a part that does not exist fails the build. So does a referenc
 record the reading corpus holds is cited bare, and qualifying one is an error, because two spellings of a single
 obligation defeat search. The form is reserved and carries nothing today, since no corpus yet imports another.
 
-**The corpus a shortcode names declares it**, in its `.corpus.yaml`, and the shortcode reaches every corpus consuming
-that one. A shortcode is immutable for the same reason an id is, and more strictly: a rename invalidates citations in
-repositories its owner cannot edit. It may not take a type prefix's spelling, since `std:pol-VURM` reads as a standard.
+No corpus declares a shortcode today, and `.corpus.yaml` carries no key for one. When it does, that shortcode will be
+immutable for the same reason an id is, and more strictly: a rename invalidates citations in repositories its owner
+cannot edit. It will not take a type prefix's spelling either, since `std:pol-VURM` reads as a standard.
 
 ## Adding a field
 

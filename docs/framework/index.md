@@ -23,8 +23,9 @@ and fills it with its own knowledge.
 
 ## What a corpus holds beside these
 
-Four pages travel with each corpus as well, because each carries tables generated from the types that corpus adopted. A
-corpus that took five of the framework's types gets five rows, and the rows link to pages it holds.
+Four pages travel with each corpus as well. Three of them carry tables generated from the types that corpus adopted, so
+a corpus that took five of the framework's types gets five rows linking to pages it holds. Contributing carries no
+generated block: it is the way in, and what a corpus adds locally.
 
 | In the corpus | Answers                                                              |
 |---------------|----------------------------------------------------------------------|

@@ -18,8 +18,8 @@ kac checks [--json] [--no-color]
 `checks` prints every check the validator can emit against the corpus it is run in, read from that corpus's own
 `.schema/`. There is no second list to keep in step.
 
-`--json` gives you the same catalogue as data. The test suite reads that form, and holds every check to having a
-fixture that trips it.
+`--json` gives you the same catalogue as data. The test suite reads that form, and holds every reachable check to
+having a fixture that trips it.
 
 ## What it is not
 
@@ -29,7 +29,6 @@ fixture that trips it.
 
 A run loads that `.schema/` and builds the catalogue from it: every check the schema declares, with the severity it
 reports at and what it proves. The list prints one check to a line, and a tally at the foot splits them by severity.
-A reader comes to it to learn how much of it fails a build.
 
 `--json` writes that same catalogue as data, one object per check, and prints nothing else.
 

@@ -38,8 +38,8 @@ column for your row.
 
 <!-- END GENERATED: types-placement -->
 
-If nothing fits, raise it. A missing type is a taxonomy conversation, and the framework declares more types than any
-one corpus stands up, so the answer may be to adopt one.
+If nothing fits, raise it. A missing type is a taxonomy conversation, and the answer is sometimes a type this corpus
+has not adopted.
 
 ## The types
 
@@ -303,7 +303,7 @@ register.
 
 ## Status of this taxonomy
 
-Not all types are proven. Where that matters, this corpus's own README records the state.
+Not all types are proven. Where that matters, this corpus's own `README.md` records which have met real content.
 
 [taxonomy]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/
 [tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-five-tiers

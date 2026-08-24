@@ -1,20 +1,21 @@
 # Running it in CI
 
-Two commands hold a corpus to its schema on every pull request, so a broken cross-reference fails the build instead of
-rotting quietly. A corpus is one repository of knowledge documents kept in git, and a record is one document in it
-filed under a type. Both commands run from inside the corpus.
+Two commands hold a corpus to its schema on every pull request, so a broken cross-reference fails CI. A corpus is one
+repository of knowledge documents kept in git, and a record is one document in it filed under a type. Both commands run
+from inside the corpus.
 
 | Command                | Fails when                                                                  |
 |------------------------|-----------------------------------------------------------------------------|
 | `kac validate`         | a record breaks a check the schema declares                                 |
 | `kac generate --check` | a generated file no longer matches the records and schema it was built from |
 
-[Checks](checks.md) says where each check comes from. A corpus that ships an agent plugin adds
-[`export`](cli/export.md) and [`bundle`](cli/bundle.md) beside the two, so a change breaking either fails its own build.
+[Checks](checks.md) is the page for adding a check. A corpus that ships an agent plugin adds
+[`export`](cli/export.md) and [`bundle`](cli/bundle.md) beside the two, so a change that breaks the export or the
+bundle fails the pull request. [Automation](framework/automation.md) says what the checks are for.
 
 ## Pin the tool first
 
-CI should run the version the corpus was written against, so put `kac` in a tool manifest and commit it. Do this once,
+Run the version the corpus was written against. Put `kac` in a tool manifest and commit it. Do this once,
 on your own machine:
 
 ```bash
@@ -30,7 +31,7 @@ dotnet tool restore
 dotnet tool run kac validate
 ```
 
-## Two rules
+## CI never commits, and checks out with git
 
 **CI never commits.** `generate --check` recomputes every generated file, names the ones that differ, and exits `1`. It
 writes nothing. Give the job read-only permission, and let whoever broke it run `kac generate` on their own machine.
@@ -130,9 +131,15 @@ dotnet tool run kac export      # the corpus as data, into .dist/export/
 dotnet tool run kac bundle      # that export plus .plugin/, into .dist/plugin/
 ```
 
-Both write into `.dist/`, which is untracked and rebuilt whole. Running them in CI proves the corpus still exports and
-still assembles. It publishes nothing: pushing the result anywhere is a separate job, and one that needs credentials
-this one should not have.
+Each replaces its own directory under `.dist/` and leaves the other alone, so a `.gitignore` holding `.dist/` keeps
+both out of the tree. Running them in CI proves the corpus still exports and still assembles. It publishes nothing:
+pushing the result anywhere is a separate job, and one that needs credentials this one should not have.
 
-Add `claude plugin validate ./.dist/plugin --strict` after `bundle`, because [`bundle`](cli/bundle.md) validates
-nothing it assembles.
+[`bundle`](cli/bundle.md) validates nothing it assembles, so validate both the plugin and the marketplace above it. The
+Claude Code CLI has to be on the runner first:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude plugin validate ./.dist/plugin --strict
+claude plugin validate ./.dist --strict
+```
