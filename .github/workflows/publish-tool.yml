@@ -24,20 +24,15 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 
 jobs:
-  publish:
+  # Separate from `publish` because an environment's protection rules are evaluated when a job is
+  # queued, before any step of it runs. Asking the question here is what keeps a merge that moved no
+  # version from waking a reviewer: a job skipped by `if:` never queues, so it never asks.
+  decide:
     runs-on: ubuntu-latest
-    # Short enough that a hang fails rather than holding the concurrency group for six hours.
-    timeout-minutes: 20
-    # `id-token: write` is what lets GitHub issue the token nuget.org exchanges for a key, and
-    # `contents: write` is what lets the last step tag the commit and open the release.
-    permissions:
-      contents: write
-      id-token: write
-    # Named in the policy too, so a token from anywhere else is refused, and where the required
-    # reviewer sits: every publish waits for a person before any of the steps below run.
-    environment:
-      name: nuget.org
-      url: https://www.nuget.org/packages/KnowledgeAsCode.Tool
+    timeout-minutes: 5
+    outputs:
+      new: ${{ steps.decide.outputs.new }}
+      version: ${{ steps.decide.outputs.version }}
     steps:
       # Pinned to a commit because a tag is mutable. Dependabot moves the pins.
       - name: Check out the commit that merged
@@ -48,7 +43,6 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Asked first, so a merge that moved no version costs one web request rather than the whole suite.
       # The flat container answers 404 for a package never published, which is not a failure.
       - name: Decide whether this version is new
         id: decide
@@ -74,30 +68,52 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "new=$NEW" >> "$GITHUB_OUTPUT"
 
+  publish:
+    needs: decide
+    if: needs.decide.outputs.new == 'true'
+    runs-on: ubuntu-latest
+    # Short enough that a hang fails rather than holding the concurrency group for six hours.
+    timeout-minutes: 20
+    # `id-token: write` is what lets GitHub issue the token nuget.org exchanges for a key, and
+    # `contents: write` is what lets the last step tag the commit and open the release.
+    permissions:
+      contents: write
+      id-token: write
+    # Named in the policy too, so a token from anywhere else is refused, and where the required
+    # reviewer sits: every publish waits for a person before any of the steps below run.
+    environment:
+      name: nuget.org
+      url: https://www.nuget.org/packages/KnowledgeAsCode.Tool
+    env:
+      VERSION: ${{ needs.decide.outputs.version }}
+    steps:
+      - name: Check out the commit that merged
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
       # The gate ran these against the pull request's head, and main moved beneath it. A published
       # version cannot be replaced, only followed, so they are asked again about the merge commit.
       - name: Run kac.core unit tests
-        if: steps.decide.outputs.new == 'true'
         run: dotnet test tooling/kac.tests
 
       - name: Run kac feature tests
-        if: steps.decide.outputs.new == 'true'
         run: dotnet test tooling/kac.features
 
       - name: Run the golden test suite
-        if: steps.decide.outputs.new == 'true'
         run: dotnet run tooling/kac-tests.cs
 
       # Packed once, so what is pushed is what the two steps below proved. Pack also fails on package
       # metadata no test layer reads, such as a readme the project names and nobody wrote.
       - name: Pack the tool
-        if: steps.decide.outputs.new == 'true'
         run: dotnet pack tooling/kac/kac.csproj -o .dist/pack
 
       # A well-formed package can still fail to resolve to a runnable command. `--version` needs no
       # corpus, so it is asked from a directory that is not one.
       - name: Install what was packed and ask it its version
-        if: steps.decide.outputs.new == 'true'
         run: |
           dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
           cd "$RUNNER_TEMP"
@@ -106,7 +122,6 @@ jobs:
       # The key lasts an hour and one token buys one key, so it is asked for immediately before use.
       - name: Exchange this job's identity for a short-lived nuget.org key
         id: nuget-login
-        if: steps.decide.outputs.new == 'true'
         uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
         with:
           # The profile name, not the email address. A secret because nuget.org asks for that.
@@ -115,10 +130,8 @@ jobs:
       # `--skip-duplicate` covers the window the decision above cannot see into: nuget.org accepts a
       # version minutes before it lists one.
       - name: Publish to nuget.org
-        if: steps.decide.outputs.new == 'true'
         env:
           NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
-          VERSION: ${{ steps.decide.outputs.version }}
         run: |
           set -e
 
@@ -132,10 +145,8 @@ jobs:
       # The tag arrives as a consequence of publishing rather than as a second thing to remember, and
       # `ChangelogTests` is what makes sure a section exists to become the release body.
       - name: Tag the commit and open the release
-        if: steps.decide.outputs.new == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ steps.decide.outputs.version }}
         run: |
           set -e
 
