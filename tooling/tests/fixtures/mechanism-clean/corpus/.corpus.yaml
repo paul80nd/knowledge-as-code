@@ -3,4 +3,4 @@ corpus: test-source
 role: source
 upstream:
   url:
-accepted-divergences: []
+skip: []

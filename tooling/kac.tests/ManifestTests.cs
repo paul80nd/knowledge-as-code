@@ -176,13 +176,16 @@ public class ManifestTests
         var dir = Directory.CreateTempSubdirectory().FullName;
         File.WriteAllText(Path.Combine(dir, ".corpus.yaml"),
             "descriptor-version: 1\ncorpus: sample\ncontent-version: \"2.1.0\"\n"
-            + "upstream:\n  mechanism-version: 3\n");
+            + "upstream:\n  template-version: 3\n  ref: main\n  commit: 5fa039b0\n  taken-on: \"2026-08-20\"\n");
 
         var descriptor = CorpusDescriptor.Load(dir);
 
         Assert.Equal(1, descriptor.DescriptorVersion);
         Assert.Equal("2.1.0", descriptor.ContentVersion);
-        Assert.Equal(3, descriptor.MechanismVersion);
+        Assert.Equal(3, descriptor.TemplateVersion);
+        Assert.Equal("main", descriptor.UpstreamRef);
+        Assert.Equal("5fa039b0", descriptor.UpstreamCommit);
+        Assert.Equal("2026-08-20", descriptor.TakenOn);
     }
 
     // A descriptor saying nothing about a version is not one saying zero. The check names the silence.
@@ -196,7 +199,31 @@ public class ManifestTests
 
         Assert.Null(descriptor.DescriptorVersion);
         Assert.Null(descriptor.ContentVersion);
-        Assert.Null(descriptor.MechanismVersion);
+        Assert.Null(descriptor.TemplateVersion);
+    }
+
+    // The default is the cautious one, so a corpus that never chose is never handed three dozen rewritten
+    // seed files by an update it did not ask for.
+    [Fact]
+    public void A_descriptor_naming_no_update_policy_is_cautious()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "corpus: sample\n");
+
+        Assert.Equal(CorpusDescriptor.Cautious, CorpusDescriptor.Load(dir).UpdatePolicy);
+    }
+
+    [Fact]
+    public void A_descriptor_reads_the_files_it_skips()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"),
+            "update-policy: full\nskip:\n  - path: .plugin/hooks/breadcrumb\n    reason: Patched for our proxy.\n");
+
+        var descriptor = CorpusDescriptor.Load(dir);
+
+        Assert.Equal(CorpusDescriptor.Full, descriptor.UpdatePolicy);
+        Assert.Equal([new SkippedFile(".plugin/hooks/breadcrumb", "Patched for our proxy.")], descriptor.Skipped);
     }
 
     // The migration is the author's to make, so the message has to carry everything the edit needs.
@@ -212,6 +239,37 @@ public class ManifestTests
         Assert.Contains("`version:`", message);
         Assert.Contains("`descriptor-version:`", message);
         Assert.Contains(Path.Combine(dir, ".corpus.yaml"), message);
+    }
+
+    // A key nested in a block is found where it lives, and one that was dropped rather than renamed says
+    // so instead of naming a replacement that does not exist.
+    [Theory]
+    [InlineData("upstream:\n  mechanism-version: 3\n", "`upstream.mechanism-version:`", "`template-version:`")]
+    [InlineData("upstream:\n  synced-on: \"2026-01-01\"\n", "`upstream.synced-on:`", "`taken-on:`")]
+    [InlineData("accepted-divergences: []\n", "`accepted-divergences:`", "`skip:`")]
+    public void A_descriptor_on_a_renamed_key_is_told_what_it_became(string content, string names, string becomes)
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), content);
+
+        var message = CorpusDescriptor.RenamedKeyInUse(dir);
+
+        Assert.NotNull(message);
+        Assert.Contains(names, message);
+        Assert.Contains(becomes, message);
+    }
+
+    [Fact]
+    public void A_descriptor_on_a_dropped_key_is_told_to_delete_it()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "upstream:\n  synced-from: ../src\n");
+
+        var message = CorpusDescriptor.RenamedKeyInUse(dir);
+
+        Assert.NotNull(message);
+        Assert.Contains("`upstream.synced-from:`", message);
+        Assert.Contains("Delete it.", message);
     }
 
     [Theory]
@@ -240,18 +298,18 @@ public class ManifestTests
         var path = Path.Combine(dir, ".corpus.yaml");
         File.WriteAllText(path,
             "descriptor-version: 0\ncontent-version: \"2.1.0\"\nrole: consumer\n\nupstream:\n  url:               ../src\n"
-            + "  mechanism-version: 1\n  synced-from:       # n/a\n  synced-on:         \"2026-01-01\"\n\n"
-            + "# Why a divergence is worth accepting.\naccepted-divergences: []\n");
+            + "  template-version:  1\n  commit:            5fa039b0\n  taken-on:          \"2026-01-01\"\n\n"
+            + "# Why a divergence is worth accepting.\nskip: []\n");
 
-        CorpusDescriptor.Stamp(dir, 3, "../src", "2026-08-11");
+        CorpusDescriptor.Stamp(dir, 3, "2026-08-11");
 
         var after = File.ReadAllText(path);
         Assert.Contains($"descriptor-version: {CorpusDescriptor.Format}\n", after);
-        Assert.Contains("  mechanism-version: 3\n", after);
-        Assert.Contains("  synced-from:       ../src\n", after);
-        Assert.Contains("  synced-on:         \"2026-08-11\"\n", after);
-        Assert.Contains("  url:               ../src\n", after); // untouched: the sync does not own it
-        Assert.Contains("content-version: \"2.1.0\"\n", after);  // untouched: only the corpus knows this one
+        Assert.Contains("  template-version:  3\n", after);
+        Assert.Contains("  taken-on:          \"2026-08-11\"\n", after);
+        Assert.Contains("  url:               ../src\n", after);       // untouched: the sync does not own it
+        Assert.Contains("  commit:            5fa039b0\n", after);     // untouched: a sync resolves no commit
+        Assert.Contains("content-version: \"2.1.0\"\n", after);        // untouched: only the corpus knows this one
         Assert.Contains("# Why a divergence is worth accepting.", after);
     }
 
@@ -264,7 +322,7 @@ public class ManifestTests
         var path = Path.Combine(dir, ".corpus.yaml");
         File.WriteAllText(path, "# What this corpus is.\ncorpus: sample\nrole: consumer\n");
 
-        CorpusDescriptor.Stamp(dir, 3, "../src", "2026-08-11");
+        CorpusDescriptor.Stamp(dir, 3, "2026-08-11");
 
         Assert.Equal(CorpusDescriptor.Format, CorpusDescriptor.Load(dir).DescriptorVersion);
         Assert.Contains($"# What this corpus is.\ndescriptor-version: {CorpusDescriptor.Format}\ncorpus: sample\n",
@@ -278,7 +336,7 @@ public class ManifestTests
         var dir = Directory.CreateTempSubdirectory().FullName;
         File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "role: consumer\n");
 
-        CorpusDescriptor.Stamp(dir, 3, "../src", "2026-08-11");
+        CorpusDescriptor.Stamp(dir, 3, "2026-08-11");
 
         var reloaded = CorpusDescriptor.Load(dir);
         Assert.Equal("consumer", reloaded.Role);

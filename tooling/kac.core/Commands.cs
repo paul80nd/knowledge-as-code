@@ -408,7 +408,7 @@ public static class Commands
         Out.Line(
             $"mechanism: content version {Stated(descriptor.ContentVersion)}, "
             + $"descriptor format {Stated(descriptor.DescriptorVersion)}, "
-            + $"mechanism version {Stated(descriptor.MechanismVersion)}.");
+            + $"template version {Stated(descriptor.TemplateVersion)}.");
         Out.Line($"mechanism: comparing the synced layer against {refRoot}");
         Section("DRIFT, synced files differ from the reference", report.Drift);
         Section("MISSING LOCALLY, synced files in the reference but not here", report.MissingLocally);

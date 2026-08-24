@@ -7,10 +7,9 @@ types:
 
 upstream:
   url: ../reference
-  mechanism-version: 1
-  synced-from: ../reference
-  synced-on: "2026-01-01"
+  template-version: 1
+  taken-on: "2026-01-01"
 
-accepted-divergences:
+skip:
   - path: knowledge-as-code/contributing.md
     reason: This corpus takes contributions through its own process.

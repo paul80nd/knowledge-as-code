@@ -7,4 +7,4 @@ types:
 
 upstream:
   url:
-accepted-divergences: []
+skip: []

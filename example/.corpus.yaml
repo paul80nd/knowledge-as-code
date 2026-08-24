@@ -6,7 +6,7 @@
 # between corpora. This file records:
 # - the part this corpus plays in the framework, and where it publishes
 # - which version of its own content this corpus is on
-# - which framework version it runs, and where it takes that from
+# - which template version it runs, and where it takes that from
 # - which record types it has adopted
 # - any accepted differences from the shared baseline
 #
@@ -27,7 +27,7 @@ corpus: knowledge-as-code
 # The version of what this corpus knows: its records, and the meanings they carry.
 #
 # Not the format of this file, which `descriptor-version` above states. Not the
-# framework this corpus runs, which `upstream.mechanism-version` below states.
+# template this corpus runs, which `upstream.template-version` below states.
 #
 # It is the number to quote when one corpus tells another which version of the
 # content it has. Semantically versioned:
@@ -99,17 +99,35 @@ publishing:
 
 # Where this corpus takes the framework from, if anywhere.
 upstream:
-  # URL or path of the upstream corpus.
+  # URL of the repository serving the template.
   url: # unset — this corpus is the source
 
-  # Framework version currently adopted from the upstream corpus.
-  mechanism-version: 6
+  # The folder inside that repository holding `manifest.yaml`. Absent means its root, which is where
+  # this repository keeps it.
+  path:
 
-  # Where the most recent sync took the framework from.
-  synced-from: # n/a for a source
+  # The branch or tag to take from. Followed on every update, so a corpus tracks a moving line rather
+  # than a fixed point.
+  ref:
 
-  # Date of the most recent successful sync.
-  synced-on: "2026-08-08"
+  # What the last take resolved to. Recorded and never followed, so a reader can see exactly what
+  # arrived without the corpus being pinned to it.
+  commit:
+
+  # The version of the template's shape this corpus is on. Stamped by `kac mechanism --sync`.
+  template-version: 6
+
+  # The day the framework last arrived.
+  taken-on: "2026-08-08"
+
+# How far an update goes. One of: cautious | full.
+#
+# `cautious` writes a seed only where this corpus has none. A seed is the corpus's own words, and
+# refreshing every one of them would open each update with three dozen files to revert by hand.
+#
+# `full` refreshes them too, and hands the reconciliation to the diff. Overlay files are written either
+# way, because they are the framework's rather than the corpus's.
+update-policy: cautious
 
 # The record types this corpus has adopted.
 # Validation and index generation cover the types listed here.
@@ -137,23 +155,17 @@ upstream:
 export:
   exclude: []
 
-# Files in the `synced` layer that this corpus deliberately holds differently.
+# Files this corpus deliberately holds differently from the framework.
 #
-# Each entry records:
-# - the file
-# - why it differs
-# - when the divergence started
-# - when to look at it again
-#
-# `kac mechanism --check` reports these as accepted rather than as errors, and
-# `--sync` steps over them. Delete an entry once the file matches upstream again.
+# Each entry names the file and says why. Neither is read nor written, in either direction: this is the
+# one way to say "I own this" about a file the overlay would otherwise reclaim on every run.
+# `kac mechanism --check` reports these as accepted rather than as errors, and `--sync` steps over them.
+# Delete an entry once the file matches upstream again.
 #
 # Example:
 #
-# accepted-divergences:
-#   - path: tooling/kac/Program.cs
-#     reason: Pinned to .NET 8 because the local build agent does not provide .NET 10.
-#     since: 2026-08-03
-#     revisit: When the build agent image is upgraded.
+# skip:
+#   - path: .plugin/hooks/breadcrumb
+#     reason: Patched for our proxy.
 
-accepted-divergences: []
+skip: []
