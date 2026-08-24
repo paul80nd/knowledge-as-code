@@ -220,6 +220,28 @@ public static class Update
         Rules = [.. manifest.Rules.Select(r => new ManifestRule([.. Manifest.Destinations(r)], r.Layer))]
     };
 
+    // Where to read the template from, given what `--from` or `upstream.url` said.
+    //
+    // A relative path is resolved against the corpus root and never against the working directory. Every
+    // other verb answers the same question wherever inside a corpus it is run, and one that did not would
+    // work at the root and fail a folder down. `upstream.url` is a value the corpus wrote about itself, so
+    // the corpus is what it is relative to.
+    //
+    // Anything that does not resolve to a folder is handed back exactly as it was given, which is what a
+    // URL is. A path a platform cannot parse at all is the same case.
+    public static string TemplatePath(string from, string corpusRoot)
+    {
+        try
+        {
+            var below = Path.GetFullPath(from, corpusRoot);
+            return Directory.Exists(below) ? below : from;
+        }
+        catch (ArgumentException)
+        {
+            return from;
+        }
+    }
+
     // Whether the corpus sits inside the repository serving its template, which is what makes a file
     // authored at the template's root reachable from the corpus without a copy.
     public static bool ReadInPlace(string templateRoot, string corpusRoot)

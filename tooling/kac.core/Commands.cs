@@ -479,9 +479,9 @@ public static class Commands
             return Fail("update: this repository holds uncommitted changes. commit or stash them first, "
                         + "so that what `update` writes reads as a diff of its own.");
 
-        var read = TemplateSource.Read("update", from, request.Ref ?? descriptor.UpstreamRef,
-            request.Path ?? descriptor.UpstreamPath, Path.GetTempPath(),
-            prompt: Out.Interactive && !request.Yes);
+        var read = TemplateSource.Read("update", kac.core.Update.TemplatePath(from, corpusRoot),
+            request.Ref ?? descriptor.UpstreamRef, request.Path ?? descriptor.UpstreamPath,
+            Path.GetTempPath(), prompt: Out.Interactive && !request.Yes);
         if (read.Problem is { } unreachable) return Fail(unreachable);
         using var template = read.Source!;
 

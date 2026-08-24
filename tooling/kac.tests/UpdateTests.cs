@@ -321,6 +321,28 @@ public class UpdateTests
         Assert.Equal([".schema/adrs.yaml"], plan.Written.Select(f => f.To));
     }
 
+    // -- where the template is read from --
+
+    // Every other verb answers the same wherever inside a corpus it is run. One resolving `upstream.url`
+    // against the working directory would work at the root and fail a folder down, which is the shape of
+    // bug nobody reports because they never stood there.
+    [Fact]
+    public void A_relative_template_path_is_resolved_against_the_corpus_and_not_the_working_directory()
+    {
+        var corpus = Directory.CreateTempSubdirectory().FullName;
+        var template = Directory.CreateDirectory(Path.Combine(corpus, "framework")).FullName;
+
+        Assert.Equal(template, Update.TemplatePath("framework", corpus));
+    }
+
+    // A URL resolves to no folder, so it is handed back exactly as it was given.
+    [Theory]
+    [InlineData("https://github.com/paul80nd/knowledge-as-code")]
+    [InlineData("git@github.com:paul80nd/knowledge-as-code.git")]
+    [InlineData("nowhere-on-this-machine")]
+    public void Anything_that_is_not_a_folder_is_handed_back_unchanged(string from)
+        => Assert.Equal(from, Update.TemplatePath(from, Directory.CreateTempSubdirectory().FullName));
+
     [Theory]
     [InlineData("/repo", "/repo/example", true)]
     [InlineData("/repo", "/repo", false)]   // the corpus is the repository
