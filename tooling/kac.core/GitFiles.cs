@@ -1,4 +1,4 @@
-// File listing: shared by corpus discovery and the mechanism check
+// File listing: shared by corpus discovery and by what an update reads of either tree
 
 namespace kac.core;
 

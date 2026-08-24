@@ -270,8 +270,8 @@ public class ManifestTests
         Assert.Null(CorpusDescriptor.RenamedKeyInUse(dir));
     }
 
-    // A corpus with no descriptor at all has no key to rename, and the mechanism command has its own
-    // answer for what is missing.
+    // A corpus with no descriptor at all has no key to rename, and `update` has its own answer for what is
+    // missing.
     [Fact]
     public void A_corpus_with_no_descriptor_has_nothing_to_rename()
         => Assert.Null(CorpusDescriptor.RenamedKeyInUse(Directory.CreateTempSubdirectory().FullName));

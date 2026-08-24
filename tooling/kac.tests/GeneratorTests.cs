@@ -713,8 +713,8 @@ public class GeneratorTests
         Assert.Equal(text, Generator.SpliceBlock(text, "missing", "NEW"));
     }
 
-    // Authored is what `mechanism --check` compares, so what it keeps and what it drops decides whether a
-    // shared page may carry a corpus-specific table.
+    // Authored is what `update --check` compares, so what it keeps and what it drops decides whether an
+    // overlay page may carry a corpus-specific table.
     [Fact]
     public void Authored_drops_what_a_generated_block_holds_and_keeps_the_markers()
     {

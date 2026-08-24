@@ -13,7 +13,7 @@ kac update [--add-type <TYPE>] [--check] [--drop-type <TYPE>] [--from <URL|PATH>
 | `--drop-type <TYPE>` | Give up a type. Refused where its folder still holds records.                            |
 | `--from <URL\|PATH>` | The repository or folder serving the template. Defaults to upstream.url in .corpus.yaml. |
 | `--no-color`         | Turn colour off. NO_COLOR in the environment does the same.                              |
-| `--path <PATH>`      | The folder inside that repository holding manifest.yaml, where it is not at the root.    |
+| `--path <PATH>`      | The folder inside that repository holding manifest.yaml. Defaults to upstream.path.      |
 | `--policy <POLICY>`  | How far this run goes: cautious or full. Defaults to update-policy in .corpus.yaml.      |
 | `--ref <REF>`        | The branch or tag to take the template from. Defaults to upstream.ref.                   |
 | `--yes`              | Never wait on a credential prompt, for a run with nobody at the keyboard.                |

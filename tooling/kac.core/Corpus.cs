@@ -2,8 +2,8 @@ namespace kac.core;
 
 // The corpus as one loaded thing: the schema it is judged against, what it holds, and every record
 // parsed. A verb asking about records begins by building one of these, so there is a single account of
-// what "the corpus" is and no per-command copy of it to drift. `checks`, `bundle` and `mechanism --check`
-// ask about something else and each says so where it skips this.
+// what "the corpus" is and no per-command copy of it to drift. `checks`, `bundle` and `update` ask about
+// something else and each says so where it skips this.
 public sealed class LoadedCorpus
 {
     public required Schema Schema;

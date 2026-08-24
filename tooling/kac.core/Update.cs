@@ -9,8 +9,7 @@ namespace kac.core;
 //
 // `docs/cli/update.md` is the reference for what each layer means and why a seed is left alone.
 
-// What the invocation was told. Every answer is a flag, because an update runs in a pipeline as often as
-// it runs under somebody watching. `From`, `Ref` and `Path` are null where `.corpus.yaml` is to answer.
+// What the invocation was told. `From`, `Ref` and `Path` are null where `.corpus.yaml` is to answer.
 public sealed record UpdateRequest
 {
     public string? From { get; init; }
@@ -27,8 +26,7 @@ public sealed record UpdateRequest
     public string? AddType { get; init; }
     public string? DropType { get; init; }
 
-    // Never wait on a credential prompt. An update asks no question of its own, so this reaches the clone
-    // and nothing else.
+    // An update asks no question of its own, so this reaches the clone and nothing else.
     public bool Yes { get; init; }
 }
 
@@ -80,10 +78,7 @@ public sealed record UpdatePlan(
     // the wrong tree, and it would reach no other corpus.
     public bool Changes => Written.Count > 0 || Seeded.Count > 0 || Deleted.Count > 0 || Unshared.Count > 0;
 
-    // A template this tool cannot read the whole of: a file its own manifest cannot place, or a rule
-    // serving a continuous integration system the tool does not offer. The update stops rather than
-    // guessing, because each of those is a defect upstream, and acting anyway means a corpus receives a
-    // file nobody meant to send or loses one nobody meant to withhold.
+    // The same two faults `NewPlan.TemplateIsUnsound` names, and stopped for the same reason.
     public bool TemplateIsUnsound => Unclassified.Count > 0 || UnknownCi.Count > 0;
 }
 
@@ -128,9 +123,8 @@ public static class Update
                 continue;
             }
 
-            // `withheld` is the template's own machinery and reaches no corpus. `removed` is a tombstone,
-            // and the loop below is what acts on it: the template no longer holds the file it names, so
-            // nothing here would ever match one.
+            // A tombstone names a file the template no longer holds, so nothing here would ever match
+            // one. The corpus-side loop below is what acts on `removed`.
             if (placement.Layer is Manifest.Withheld or Manifest.Removed) continue;
 
             sent.Add(placement.Path);
@@ -142,9 +136,9 @@ public static class Update
                 continue;
             }
 
-            // A starter for a continuous integration system, written only where this corpus already holds
-            // it. Which system builds a corpus is a fact about that repository, and an update introducing
-            // a workflow would hand it one that runs uninvited.
+            // Written only where this corpus already holds one. `New.Plan` argues why a starter belongs
+            // to the repository rather than to the framework, and an update may not introduce what `new`
+            // was careful not to send.
             if (placement.Ci is { } ci)
             {
                 if (!CiSystem.All.Contains(ci, StringComparer.Ordinal))
@@ -264,11 +258,8 @@ public static class Update
     // the run rather than for the tool.
     private static string Owned(string rel, string? reason) => reason is null ? rel : $"{rel}  ({reason})";
 
-    // Carry the plan out. Nothing is committed and nothing is staged: everything this writes stays in the
-    // working tree, which is the whole safety model and the reason `update` can be liberal.
-    //
-    // The plan decided all of it, so this asks the template nothing beyond the bytes and the mode of each
-    // file it was told to copy.
+    // Carry the plan out. The plan decided all of it, so this asks the template nothing beyond the bytes
+    // and the mode of each file it was told to copy, and it commits and stages nothing.
     public static void Apply(UpdatePlan plan, string templateRoot, string corpusRoot)
     {
         foreach (var file in plan.Copies)
@@ -373,8 +364,8 @@ public static class Update
         Generator.Authored(Files.ReadLf(Path.Combine(templateRoot, file.From)))
         == Generator.Authored(Files.ReadLf(Path.Combine(corpusRoot, file.To)));
 
-    // Every tracked (and not-ignored) file a corpus holds, relative and forward-slashed. The walk lets an
-    // update run in a tree git cannot answer for, which is what the golden fixtures assemble.
+    // Every tracked (and not-ignored) file a corpus holds, relative and forward-slashed. `GitFiles` falls
+    // back to a walk where git cannot answer, which is a corpus outside version control.
     internal static IReadOnlySet<string> Listing(string root) =>
         new HashSet<string>(GitFiles.Tracked(root) ?? GitFiles.Walk(root, "*", ".git"), StringComparer.Ordinal);
 }

@@ -198,8 +198,8 @@ public class CorpusDescriptor
     // records mean, semantically versioned, bumped by hand and read by whatever publishes an export. It
     // stays a string because it is a version and not a count, and nothing but a person writes it.
     //
-    // Each is null where the descriptor has not stated one, and `mechanism --check` reports that as not
-    // declared. Only the corpus can say what it knows, so the tool never supplies a number here.
+    // Each is null where the descriptor has not stated one. Only the corpus can say what it knows, so the
+    // tool never supplies `ContentVersion`, and an update stamps the other two.
     public int? DescriptorVersion;
     public string? ContentVersion;
     public int? TemplateVersion;

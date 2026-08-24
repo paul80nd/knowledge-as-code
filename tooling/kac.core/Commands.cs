@@ -456,8 +456,6 @@ public static class Commands
         if (request.AddType is not null && request.DropType is not null)
             return Fail("update: --add-type and --drop-type change the same list. ask for one.");
 
-        // A descriptor still on a renamed key stops the run. It would otherwise report on a file it has
-        // misread, and stamp beside a key it does not read.
         if (CorpusDescriptor.RenamedKeyInUse(corpusRoot) is { } renamed) return Fail(renamed);
 
         var descriptor = CorpusDescriptor.Load(corpusRoot);
@@ -494,7 +492,6 @@ public static class Commands
         if (kac.core.New.TooOldFor(manifest.MinimumTool, toolVersion, "update") is { } tooOld)
             return Fail(tooOld);
 
-        // The schema the template serves, which is the one account of what types there are to adopt.
         var schema = Schema.Load(Schema.FindRoot(template.Root) ?? template.Root);
         var declared = schema.ByFolder.Keys.OrderBy(k => k, StringComparer.Ordinal).ToList();
 

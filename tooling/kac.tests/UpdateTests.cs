@@ -40,8 +40,6 @@ public class UpdateTests
 
     // -- the overlay layer --
 
-    // Framework property. An edit to one is drift rather than a customisation, and the next update takes
-    // it back.
     [Fact]
     public void An_overlay_file_whose_copies_differ_is_written()
     {
@@ -70,8 +68,6 @@ public class UpdateTests
         Assert.Equal([".schema/adrs.yaml"], plan.Written.Select(f => f.To));
     }
 
-    // `to:` sends a file somewhere other than where it sat upstream, and everything after the plan reads
-    // the destination. So a relocated file is compared and written where it lands, not where it was read.
     [Fact]
     public void A_relocated_file_is_planned_against_where_it_lands()
     {
@@ -84,8 +80,6 @@ public class UpdateTests
 
     // -- the seed layer --
 
-    // A seed is the corpus's own words from the moment it lands. Refreshing every one of them would open
-    // each update with three dozen files to revert by hand.
     [Fact]
     public void A_seed_the_corpus_holds_is_left_alone_under_cautious()
     {
@@ -103,7 +97,6 @@ public class UpdateTests
         Assert.Equal(["CLAUDE.md"], plan.Seeded.Select(f => f.To));
     }
 
-    // `full` hands the reconciliation to the diff, and holds a seed to the template like any other file.
     [Fact]
     public void A_seed_the_corpus_holds_is_refreshed_under_full()
     {
@@ -112,8 +105,7 @@ public class UpdateTests
         Assert.Equal(["CLAUDE.md"], plan.Seeded.Select(f => f.To));
     }
 
-    // Even under `full`, a seed that already matches is not rewritten. The policy widens what is compared
-    // and never what is copied.
+    // The policy widens what is compared and never what is copied.
     [Fact]
     public void A_seed_that_already_matches_is_left_alone_under_full()
     {
@@ -126,8 +118,8 @@ public class UpdateTests
 
     // -- the removed layer --
 
-    // A tombstone names a file the template no longer holds, so it is matched against the corpus rather
-    // than against the template. Nothing else would ever reach it.
+    // The template no longer holds the file a tombstone names, so nothing but the corpus-side pass
+    // reaches one.
     [Fact]
     public void A_tombstoned_file_the_corpus_still_holds_is_deleted()
     {
@@ -159,7 +151,6 @@ public class UpdateTests
 
     // -- what the corpus takes back --
 
-    // The one way to say "I own this" about a file the overlay would otherwise reclaim on every run.
     [Fact]
     public void A_skipped_path_is_neither_read_nor_written()
     {
@@ -172,8 +163,7 @@ public class UpdateTests
         Assert.Contains("Patched for our proxy.", Assert.Single(plan.Skipped));
     }
 
-    // A tombstone does not reach a file the corpus has claimed either. `skip:` is stated in both
-    // directions, and a deletion is the direction that cannot be undone by hand.
+    // A deletion is the direction that cannot be undone by hand, so `skip:` has to hold there too.
     [Fact]
     public void A_skipped_path_is_not_deleted_by_a_tombstone()
     {
@@ -200,8 +190,6 @@ public class UpdateTests
         Assert.Equal(1, plan.Declined);
     }
 
-    // Reported, never adopted. Silence would hide a type the corpus could take, and adoption would put
-    // folders in a corpus nobody asked for.
     [Fact]
     public void A_type_the_template_declares_and_the_corpus_has_not_adopted_is_offered()
     {
@@ -210,8 +198,6 @@ public class UpdateTests
         Assert.Equal(["runbooks"], Plan(Files(), Files(), types: types).Offered);
     }
 
-    // A corpus that has declared nothing is held to everything, as it is everywhere else the descriptor
-    // is read. So there is nothing to offer it.
     [Fact]
     public void A_corpus_declaring_no_types_is_offered_none()
     {
@@ -222,8 +208,6 @@ public class UpdateTests
 
     // -- a starter for a continuous integration system --
 
-    // Which system builds a corpus is a fact about that repository. An update introducing a workflow
-    // would hand it one that runs uninvited.
     [Fact]
     public void A_ci_starter_the_corpus_does_not_hold_is_never_introduced()
     {
@@ -274,8 +258,6 @@ public class UpdateTests
 
     // -- the other direction --
 
-    // A framework change written in the wrong tree. It reaches no other corpus, and nothing in this one
-    // reads as though anything is missing, so the check is the only place it surfaces.
     [Fact]
     public void An_overlay_file_the_template_does_not_send_is_reported()
     {
@@ -286,8 +268,7 @@ public class UpdateTests
         Assert.Empty(plan.Written);
     }
 
-    // A seed the template stopped sending belongs to the corpus, so the corpus keeps it and hears
-    // nothing. Only the overlay is the framework's to account for.
+    // Only the overlay is the framework's to account for.
     [Fact]
     public void A_seed_the_template_does_not_send_is_left_unreported()
     {
@@ -299,9 +280,6 @@ public class UpdateTests
 
     // -- a corpus inside the repository serving its template --
 
-    // `.schema/` and the travelling skills are authored once at this repository's root and read from
-    // there by both corpora below it. A file whose destination is its source is that arrangement, and
-    // there is no copy to compare or to write.
     [Fact]
     public void A_file_whose_destination_is_its_source_is_shared_rather_than_copied()
     {
@@ -311,8 +289,6 @@ public class UpdateTests
         Assert.False(plan.Changes);
     }
 
-    // And only where the corpus sits inside that repository. Everywhere else `.schema/` is a copy the
-    // corpus receives, which is the ordinary case.
     [Fact]
     public void A_corpus_of_its_own_receives_that_file_as_a_copy()
     {
@@ -323,9 +299,6 @@ public class UpdateTests
 
     // -- where the template is read from --
 
-    // Every other verb answers the same wherever inside a corpus it is run. One resolving `upstream.url`
-    // against the working directory would work at the root and fail a folder down, which is the shape of
-    // bug nobody reports because they never stood there.
     [Fact]
     public void A_relative_template_path_is_resolved_against_the_corpus_and_not_the_working_directory()
     {
@@ -335,7 +308,6 @@ public class UpdateTests
         Assert.Equal(template, Update.TemplatePath("framework", corpus));
     }
 
-    // A URL resolves to no folder, so it is handed back exactly as it was given.
     [Theory]
     [InlineData("https://github.com/paul80nd/knowledge-as-code")]
     [InlineData("git@github.com:paul80nd/knowledge-as-code.git")]
@@ -387,8 +359,6 @@ public class UpdateTests
         Assert.Contains(says, adoption.Problem);
     }
 
-    // Reading adoption off the folders is what a corpus that has declared nothing gets, and there is no
-    // list there to change.
     [Fact]
     public void A_corpus_declaring_no_types_is_told_to_declare_before_changing_the_list()
     {
@@ -397,8 +367,6 @@ public class UpdateTests
         Assert.Contains("no `types:`", adoption.Problem);
     }
 
-    // Everything else in a corpus exists to serve its records, so the records are the one thing a drop
-    // will not take with it.
     [Fact]
     public void Giving_up_a_type_whose_folder_holds_records_is_refused_with_the_count()
     {
@@ -410,8 +378,6 @@ public class UpdateTests
         Assert.Contains("holds 2 record(s)", adoption.Problem);
     }
 
-    // With no record to lose, a drop is the inverse of an adoption: the schema, the root page and the
-    // folder all go, and `types:` stops naming it.
     [Fact]
     public void Giving_up_an_empty_type_takes_its_schema_page_and_folder()
     {
@@ -425,8 +391,6 @@ public class UpdateTests
             adoption.Deleted);
     }
 
-    // A run naming neither flag answers with the list the corpus already holds, so the caller reads one
-    // list whether or not it asked for a change.
     [Fact]
     public void A_run_changing_no_type_answers_with_the_list_as_it_stands()
     {

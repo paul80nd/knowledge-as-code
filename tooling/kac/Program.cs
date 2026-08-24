@@ -253,8 +253,8 @@ internal sealed class ChecksCommand : Command<ChecksSettings>
 // type or gives one up. Everything it writes stays in the working tree and nothing is committed, which is
 // what lets it be liberal where a tool without that safety net would have to be timid.
 //
-// Every answer is a flag, because an update runs in a pipeline as often as it runs under somebody
-// watching. `docs/cli/update.md` carries the defaults and what each layer means.
+// It asks nothing, because an update runs in a pipeline as often as it runs under somebody watching.
+// `docs/cli/update.md` carries the defaults and what each layer means.
 internal sealed class UpdateSettings : KacSettings
 {
     [CommandOption("--from <URL|PATH>")]
@@ -266,7 +266,7 @@ internal sealed class UpdateSettings : KacSettings
     public string? Ref { get; init; }
 
     [CommandOption("--path <PATH>")]
-    [Description("The folder inside that repository holding manifest.yaml, where it is not at the root.")]
+    [Description("The folder inside that repository holding manifest.yaml. Defaults to upstream.path.")]
     public string? Path { get; init; }
 
     [CommandOption("--check")]
