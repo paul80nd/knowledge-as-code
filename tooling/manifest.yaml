@@ -172,10 +172,15 @@ rules:
       what lies between the markers.
 
   - { path: "knowledge-as-code/metadata.md",     layer: synced }
-  - { path: "knowledge-as-code/contributing.md", layer: synced }
-  - { path: "knowledge-as-code/principles.md",   layer: synced }
   - { path: "knowledge-as-code/lineage.md",      layer: synced }
-  - { path: "knowledge-as-code/automation.md",   layer: synced }
+
+  - path: "knowledge-as-code/contributing.md"
+    layer: forked
+    note: >
+      The way in for somebody adding to this corpus. What the framework asks of a
+      contribution is published on the documentation site; what arrives here is the
+      routing to the corpus's own pages and the branch policy it starts from. A corpus
+      deciding how much rigour each type needs is editing this file on purpose.
 
   - path: "knowledge-as-code.md"
     layer: synced

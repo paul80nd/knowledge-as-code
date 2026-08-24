@@ -121,4 +121,4 @@ The full approach is described in [Knowledge as Code](../knowledge-as-code.md).
 * [Taxonomy](../knowledge-as-code/taxonomy.md) lists the types and how to choose between them.
 * [Metadata](../knowledge-as-code/metadata.md) defines the frontmatter schema.
 * [Contributing](../knowledge-as-code/contributing.md) covers the review model and the promotion path.
-* [Automation](../knowledge-as-code/automation.md) says what CI validates and generates.
+* [Automation](https://paul80nd.github.io/knowledge-as-code/framework/automation/) says what CI validates and generates.

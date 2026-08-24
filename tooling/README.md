@@ -65,8 +65,8 @@ dotnet run --project ../tooling/kac -- validate
 That is the form CI runs, and the one you want while changing the tool. The `./kac` launcher at `example/`'s root wraps
 it, and `kac.cmd` beside it does the same on Windows.
 
-[Getting started](https://paul80nd.github.io/knowledge-as-code/getting-started/) carries every verb, its options and the
-exit codes, written for whoever installed the tool. Two things there are worth repeating here because they bite during
+[The CLI reference](https://paul80nd.github.io/knowledge-as-code/cli/) carries every verb, its options and the exit
+codes, written for whoever installed the tool. Two things there are worth repeating here because they bite during
 development. The golden suite sets `NO_COLOR` on every process it starts, because a runner that renders escapes in its
 logs turns colour back on where a redirected stream would have dropped it. And `--version` and `--help` are answered by
 the parser from wherever they were typed, so neither needs a corpus.
@@ -75,7 +75,13 @@ the parser from wherever they were typed, so neither needs a corpus.
 
 Every command has a page at <https://paul80nd.github.io/knowledge-as-code/>, built by MkDocs from [`../docs/`](../docs/)
 and published by [`publish-docs.yml`](../.github/workflows/publish-docs.yml). `../mkdocs.yml` names the pages and the
-order they read in, and a page reachable from no nav entry fails the build rather than going quietly unread.
+order they read in. A dead link fails `mkdocs build --strict`; a page no nav entry reaches is reported at INFO and
+passes, so `NavigationTests` is what catches that.
+
+The site also carries the framework itself, under `../docs/framework/`: what a type and a tier are, the types that
+ship, what a record carries, how knowledge is contributed, and where the type names came from. A corpus keeps the
+narrow, corpus-facing half of each of those pages, around tables generated from the types it adopted.
+`DefaultTypesTests` holds the types page to the names and tiers the schema declares, and leaves the wording alone.
 
 A command page opens with a usage block generated from the parser's own command model, and `CliReferenceTests` holds it
 to matching. A command that grows an option gets its page back in step with

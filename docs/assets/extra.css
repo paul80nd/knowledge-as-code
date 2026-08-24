@@ -1,0 +1,18 @@
+/* The sidebar runs to eight top-level entries and two collapsible sections, which reads as one long
+   list. Two gaps break it into what a reader is doing: getting going, then the framework and the
+   commands, then the reference material that closes it.
+
+   Material has no divider of its own. Both rules find their item by where it sits rather than by
+   what it links to, because a section's own link is written `../` on every page inside it and names
+   nothing a selector could match. `:has()` is what reaches an `<li>` from its neighbour, and a
+   browser without it renders the list unspaced rather than wrongly. */
+
+/* Below the last plain page that comes before the sections. */
+.md-nav--primary > .md-nav__list > .md-nav__item:not(.md-nav__item--nested):has(+ .md-nav__item--nested) {
+  margin-bottom: 0.9rem;
+}
+
+/* Above the changelog, which is always the last thing in the nav. */
+.md-nav--primary > .md-nav__list > .md-nav__item:last-child {
+  margin-top: 0.9rem;
+}

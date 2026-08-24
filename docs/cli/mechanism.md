@@ -29,7 +29,7 @@ one. Its reader is whoever maintains a corpus downstream of this one.
 **It is not `git pull`.** The two trees are separate repositories with separate histories. `--sync` copies the shared
 layers file by file and records what it took. It merges nothing, and neither half reads either side's commits.
 
-**It is not `generate --check`.** Both recompute and compare, and they compare different halves of a file. `mechanism`
+**It is not `generate --check`.** Both compare, and they compare different halves of a file. `mechanism`
 empties every generated block before it compares, so what it judges is the authored prose. What sits between the markers
 is `generate --check`'s alone, and a shared page can be byte-identical everywhere and stale everywhere.
 
@@ -44,7 +44,7 @@ and then writes. Neither touches a layer the manifest says a corpus owns.
 ### `--check`
 
 `mechanism --check` resolves every tracked file against the manifest and compares the shared layers against a reference
-corpus. It follows the same discipline as `generate --check`: recompute, compare, name what differs, exit non-zero,
+corpus. It follows the same discipline as `generate --check`: compare, name what differs, exit non-zero,
 never write.
 
 ```bash
@@ -56,10 +56,11 @@ kac mechanism --check --against ../other-corpus
 The reference defaults to `upstream.url` in `.corpus.yaml`, so a corpus that recorded where it synced from can run a
 bare `mechanism --check`. It reports:
 
-- **synced** and **verification** files that differ, are missing on either side, or match no manifest rule. Each is an
-  **error** (exit `1`).
+- **synced** and **verification** files that differ, or are missing on either side. Each is an **error** (exit `1`).
+- any file at all matching no manifest rule, whatever layer it would otherwise have taken.
 - **forked** files that differ are counted, and never failed on, because a forked file is meant to diverge.
-- **generated**, **local** and **ignored** files are skipped, because each corpus owns its own.
+- **generated**, **local** and **ignored** files are skipped, because a corpus builds its own, owns its own, or has no
+  business comparing them.
 - **accepted divergences** named in `.corpus.yaml` are honoured rather than flagged, and reported as `RESOLVED` once
   they match the reference again, so you can delete the stale entry.
 - **what the descriptor declines** is skipped, and counted where the corpus holds it anyway.
@@ -133,3 +134,10 @@ The run finishes by calling `generate`, and copying a page whole is only safe be
 arrives carrying the reference's generated block, and it is right only once rebuilt against the types the
 receiving corpus holds. A passing `generate --check` is sync's postcondition.
 
+## Known limits
+
+**`--sync` can exit `1` after it has written.** Regeneration runs last, and a failure there leaves the files in place
+with the generated blocks unrebuilt. The message says so, and `kac generate` on its own finishes the job.
+
+**A reference whose own manifest cannot place its own tree stops the run.** That is a defect upstream rather than in
+the corpus syncing from it, and nothing is written.

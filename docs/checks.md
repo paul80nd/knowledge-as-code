@@ -2,12 +2,12 @@
 
 ## What it is for
 
-Every check `kac` can emit is read from the schema and dispatched by id. Nothing is hard-coded per type. `kac checks`
-prints that catalogue for the corpus it is run in, so the corpus itself answers "what will CI hold this corpus to". No
-document has to be remembered and maintained beside it.
+`kac` declares every check it can emit in the schema, and prints that declaration back with `kac checks`. The schema
+decides what runs and against which type, so nothing is hard-coded per type. The corpus itself answers "what will CI
+hold this corpus to", and no second catalogue is kept by hand.
 
-Read this page when you are adding a check, or deciding whether the check you want already exists. Which files a check
-runs against is [`validate`](cli/validate.md).
+A check marked **warning** does not fail the build. Read this page when you are adding a check, or deciding whether
+the check you want already exists. Which files a check runs against is [`validate`](cli/validate.md).
 
 ## What it is not
 
@@ -21,20 +21,19 @@ once the two have drifted, and that exit is what keeps the table honest.
 
 ## How it works
 
-A check marked **warning** does not fail the build.
-
 **A check is defined once, in the schema.**
 [`.schema/_checks.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.schema/_checks.yaml) declares
-the checks that run against every document, one entry each. An entry carries its severity, the group it belongs to,
-what it proves correct, and the reasoning behind it. A type's own rules are declared beside the type, in
+the checks that run against every document, and the ones that read the schema or the corpus rather than a record. An
+entry carries its severity, what it proves correct, the reasoning behind it, and whether it belongs on a type page.
+The banner comments grouping them are for whoever reads that file, and the loader passes over
+them like any other comment. A type's own rules are declared beside the type, in
 `.schema/<type>.yaml`. Between them they are every check the validator can emit.
-
-**`kac checks` prints what runs**, read from the schema of the corpus it is run in.
 
 ### The schema itself
 
-Before any document is read, the schema is held against what the tool can act on: a rule nothing dispatches, a key the
-loader never reads, a value no code branches on. That pass goes first, because the schema decides how every document
+`kac` reads the schema before it reads any document, and holds it to what the tool can act on: a rule nothing
+dispatches, a key the loader never reads, a value no code branches on. That pass goes first, because the schema
+decides how every document
 below it is read. A finding there names the schema file and the key it found.
 
 [`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.schema/README.md) is the account
@@ -44,12 +43,15 @@ reason the pass exists at all.
 
 ### A type's own rules
 
-A rule fires against the documents of the type whose schema declares it, and reports under its own id. Most are
-answered by an `expr:`, a one-line condition the schema states and the tool evaluates. Adding one is adding YAML rather
-than editing this tool, and
+A rule fires against the documents of the type whose schema declares it. A rule written as an `expr:`, a one-line
+condition the schema states and the tool evaluates, reports under its own id. Adding one is adding YAML rather than
+editing this tool, and
 [`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.schema/README.md) is the
-reference for what one may say. The rest are a class each in `kac.core/Rules/`, with unit tests beside them, for the
-questions the grammar cannot ask.
+reference for what one may say.
+
+A question the grammar cannot ask needs a rule written in C# instead, and that rule names the check id it reports
+under: `no-dependency-cycles` reports as `dependency-cycle`. More than half the rules declared today run nothing yet,
+and the paragraph below says how that is written.
 
 `dependency-cycle` is the one rule that reads every record at once. It reports a loop once, against the lowest id on
 that loop.
@@ -64,7 +66,7 @@ held enough records of those types to calibrate one. Each number is pinned by a 
 A rule that matches text is a heuristic, and a heuristic gets tuned. Its pattern lives in `.schema/` for that reason.
 Tuning a regex there costs a schema edit. Moving it in the tool would cost a release every corpus has to take.
 
-Most such rules read the document **as written**. A credential pasted into a fenced block is the case they exist for,
+Most such rules read the document *as written*. A credential pasted into a fenced block is the case they exist for,
 and the flattened text a word count walks would never see it. `target-is-measurable` is the exception. It reads a
 frontmatter value, which the body patterns deliberately cannot see, because a field is judged against what its own
 declaration says.
@@ -95,18 +97,8 @@ pipeline, leaving all the markdown and frontmatter extraction untouched. It woul
 dependency to the tool. The one property worth having is new rules as data, and a small hand-rolled evaluator buys it
 at a fraction of that cost. `RuleExpr.cs` says when that judgement expires.
 
-| File                         | Holds                                                                                  |
-|------------------------------|----------------------------------------------------------------------------------------|
-| `kac.core/Facts.cs`          | the fact functions, and nothing else an expression can reach                           |
-| `kac.core/RuleExpr.cs`       | lexer, recursive-descent parser, type checker and evaluator, with no dependencies      |
-| `RuleSpec` in `Schema.cs`    | `Expr`, `Compiled`, `Severity` and `Message`. `ParseRule` compiles at load             |
-| `kac.core/Rules/`            | one class per rule that needs C#, and the registry each dispatcher looks them up in    |
-| `Validator.CheckRules`       | evaluates every compiled rule, and looks up by id the ones that are not                |
-| `Validator.CheckCorpusRules` | runs the rules that read every record at once, over the index the corpus checks build  |
-
-`CheckRules` emits at the rule's own severity, which is why it is not `CheckWarnings`. `Facts` is built per document
-and discarded once its rules have run. That is what makes `words()` safe to memoise there, where the immutable `Doc`
-could not hold it.
+Where a rule needs C# rather than an expression, it is written in the tool rather than in a corpus.
+[`tooling/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/README.md) is where that is done.
 
 ## Known limits
 

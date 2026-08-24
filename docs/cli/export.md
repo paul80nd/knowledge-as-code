@@ -27,7 +27,8 @@ it without the tool changing.
 something a consumer can install. Nothing here trims components, packages a plugin or publishes anything, and nothing
 here knows a bundle exists. `bundle` reads what `export` wrote, and `export` reads nothing a bundle holds.
 
-**It is not `generate`.** `generate` writes into the corpus, for a person reading the corpus. `export` writes outside
+**It is not [`generate`](generate.md).** `generate` writes into the corpus, for a person reading the corpus. `export`
+writes outside
 it, for something that will never open the Markdown. Both are built from the same frontmatter, and neither is derivable
 from the other, because they answer to different readers.
 
@@ -45,8 +46,9 @@ resolves against the commit it was built from.
 **What travels is the type's decision**, declared in its `export:` block and described in
 [`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.schema/README.md). The exporter
 reads that declaration and nothing else. A corpus that adopted no exporting type still writes a manifest, with an empty
-type list. "Nothing" is a valid statement of what a corpus has. Every entry in the block names a **fidelity**
-beside the piece it selects, saying how much of that piece travels. No entry falls back to one.
+type list. "Nothing" is a valid statement of what a corpus has. Every section and the parts entry names a **fidelity**
+beside the piece it selects, saying how much of that piece travels, and neither falls back to one. `fields:` is a plain
+list: a field travels whole or not at all.
 
 **An unsettled record travels by default.** A draft glossary, and one whose `review-by` has passed, are both exported
 carrying their own state. Filtering them would make the corpus's own condition invisible downstream. A corpus may
@@ -147,7 +149,8 @@ artefact nobody reviews is invisible.
 
 ### What holds in every file
 
-**Absent is `null`,** for every key. A field a record leaves blank and a field it does not carry are one absence to a
+**Absent is `null`.** Every key writes it that way. A field a record leaves blank and a field it does not carry are
+one absence to a
 consumer. Writing `""` in one file beside `null` in another would leave that consumer checking which file it had opened
 before it could test for nothing.
 
@@ -158,20 +161,25 @@ because the two mistakes do not cost the same. A list joined onto one line is de
 it. A paragraph left wrapped merely arrives as it was written. Every doubtful line therefore goes the safe way, and a
 corpus whose sections happen to hold only paragraphs today is not a reason to narrow it.
 
-**Output is deterministic.** Ordering is `StringComparer.Ordinal` throughout, as the generator's is, and every value
+**Output is deterministic.** Ordering is `StringComparer.Ordinal` everywhere but a term line's own position, which
+sorts case-insensitively on the term, and every value
 that varies between two runs is confined to the manifest. Two runs from one commit produce identical bytes but for
 `generatedAt`.
 
 ### The two links
 
-**Two link forms, both naming a ref.** A person follows the rendered one and an agent fetches the raw one. The rules
-joining a base to a path, and the anchor rule for a part, belong to `publishing-target` and live in `Publishing`.
-`.corpus.yaml` supplies where the corpus is served from and nothing else. Every link resolves against the commit the
-export was built from. So a citation names the version the agent read rather than whatever the branch holds later.
+#### A person follows one form and an agent fetches the other
 
-**The manifest states both forms as templates, and a per-record file resolves them.** The templates are
-`https://…/blob/<sha>/{path}#{anchor}` and `https://raw…/<sha>/{path}`, and a consumer substitutes the `path` and
-`anchor` a term line carries. Four things follow from writing them this way:
+The rules joining a base to a path, and the anchor rule for a part, belong to `publishing-target` and live in
+`Publishing`. `.corpus.yaml` supplies where the corpus is served from and nothing else. Every link resolves against the
+commit the export was built from. So a citation names the version the agent read rather than whatever the branch holds
+later.
+
+#### The manifest states both forms as templates
+
+A per-record file resolves them. The templates are `https://…/blob/<sha>/{path}#{anchor}` and
+`https://raw…/<sha>/{path}`, and a consumer substitutes the `path` and `anchor` a term line carries. Four things follow
+from writing them this way:
 
 * **The ref is inside the template.** A ref left as a placeholder is forty hex characters copied by an agent. A
   one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a substitution
@@ -187,16 +195,20 @@ export was built from. So a citation names the version the agent read rather tha
 `Publishing.Links` substitutes into those same templates, so a link the export resolves and a link a consumer builds for
 one part are the same string.
 
-**A per-record file pays the churn a term line no longer does.** Its links are resolved, so the commit sits inside them.
-The file therefore rewrites on every export from a new commit, whatever its content did. It is bought deliberately:
-a reader that has already dereferenced one record wants a URL in its hand, not a template and a substitution rule. At a
-handful of records the cost is a few untracked files. It is worth reopening where a type exports records by the hundred,
-because the churn scales with the record count and what it buys does not.
+#### A per-record file pays the churn a term line no longer does
 
-Four kinds of corpus have no address the tool can build on: one publishing nowhere, one naming a target nothing builds
-links for, one stating a target but no bases, and one git cannot answer for. Each exports without links. The manifest
-carries the target it was given and null templates beside it, so a consumer sees the absence stated. The run itself says
-which of the four caused it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than about
+Its links are resolved, so the commit sits inside them. The file therefore rewrites on every export from a new commit,
+whatever its content did. It is bought deliberately: a reader that has already dereferenced one record wants a URL in
+its hand, not a template and a substitution rule. At a handful of records the cost is a few untracked files. It is
+worth reopening where a type exports records by the hundred, because the churn scales with the record count and what it
+buys does not.
+
+#### Four kinds of corpus have no address
+
+The tool can build on none of them: one publishing nowhere, one naming a target nothing builds links for, one stating a
+target but no bases, and one git cannot answer for. Each exports without links. The manifest carries the target it was
+given and null templates beside it, so a consumer sees the absence stated. The run itself says which of the four caused
+it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than about
 where it is published, and they travel either way.
 
 ### Two versions, and they are independent

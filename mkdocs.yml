@@ -16,7 +16,7 @@ edit_uri: edit/main/docs/
 
 copyright: MIT licensed.
 
-# A warning is a page that lies: a dead link, or a file no nav entry reaches. The build refuses it.
+# Strict mode fails a dead link. A page the nav does not list is only reported at INFO, so `NavigationTests` has it.
 strict: true
 
 # The pins the workflow installs from. It sits beside the pages so Dependabot finds one directory, and the
@@ -35,8 +35,10 @@ theme:
     - content.action.edit
     - content.code.copy
     - navigation.footer
+    # `navigation.indexes` puts each section's own index page behind the section's name. Without
+    # `navigation.sections` beside it, the two sections then collapse, so a reader browsing the flat
+    # pages is not scrolling past sixteen entries to reach the changelog.
     - navigation.indexes
-    - navigation.sections
     - navigation.top
     - navigation.tracking
     - toc.follow
@@ -61,6 +63,10 @@ theme:
         icon: material/brightness-4
         name: Switch to light
 
+# Two gaps in the sidebar, and nothing else. `docs/assets/extra.css` says which and why.
+extra_css:
+  - assets/extra.css
+
 markdown_extensions:
   - admonition
   - attr_list
@@ -81,6 +87,15 @@ nav:
   - Introduction: index.md
   - Getting started: getting-started.md
   - Running it in CI: ci.md
+  - The framework:
+      - framework/index.md
+      - Principles: framework/principles.md
+      - Taxonomy: framework/taxonomy.md
+      - The default types: framework/types.md
+      - Metadata: framework/metadata.md
+      - Contributing: framework/contributing.md
+      - Automation: framework/automation.md
+      - Lineage: framework/lineage.md
   - CLI reference:
       - cli/index.md
       - validate: cli/validate.md

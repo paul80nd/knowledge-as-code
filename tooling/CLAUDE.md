@@ -86,6 +86,13 @@ declared-but-not-enforced, so long as it declares no `severity:`. `SchemaChecks`
 | `IDocumentRule` | one document, through a `RuleContext`                            | `Validator.CheckRules`       | against that document                         |
 | `ICorpusRule`   | every record and the `byId` index, through a `CorpusRuleContext` | `Validator.CheckCorpusRules` | against the document it names, rarely its own |
 
+**Where an expression is evaluated.** `Facts.cs` holds the fact functions and nothing else an expression can reach.
+`RuleExpr.cs` is the lexer, recursive-descent parser, type checker and evaluator, and takes no dependency. `RuleSpec`
+in `Schema.cs` carries `Expr`, `Compiled`, `Severity` and `Message`, and `ParseRule` compiles at load.
+
+`Facts` is built for one document and discarded once that document's rules have run. That lifetime is what makes
+`words()` safe to memoise there.
+
 Take the narrower one wherever it will do. A rule handed every record to judge one document reads as though it needs
 them all, and nothing in its signature says otherwise. A rule needing git history fits neither interface; design that
 one against the first real case.

@@ -85,8 +85,7 @@ sections:
 
 # Where a glossary keeps the parts something else can cite. A term is an H3 under `Terms`, and its
 # address is the anchor the heading slugs to, so `gls-knowledge-as-code.corpus` names the entry a link
-# to `#corpus` would land on. Why the address is derived here and written out on a policy is settled in
-# `/knowledge-as-code/metadata.md`.
+# to `#corpus` would land on.
 parts:
   source: headings
   section: Terms

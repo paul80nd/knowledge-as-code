@@ -80,9 +80,78 @@ inventing. A rewrite drops a fact more easily than it drops a word, and the repl
 Write: "the corpus's own `.schema/` holds one file per type."
 Not: "each type declares its fields and rules in a YAML file beside them."
 
+## Choose the page by its reader
+
+`README.md` and `PACKAGE.md` are one page each, so a fact either belongs there or it does not. The site adds the
+question neither of them asks: which of its pages carries this one.
+
+**Diátaxis is the map, and this site departs from it in one place.** Diátaxis splits documentation four ways, into a
+tutorial, a how-to, a reference and an explanation, and puts each in its own page. Here the reasoning stays inline,
+beside whatever it explains. A command page argues its case under *How it works*, and `--check`'s reason sits under
+`--check`.
+
+**A second page is earned by a second reader.** [`cli/checks.md`](../../../docs/cli/checks.md) is for somebody running
+the command. [`checks.md`](../../../docs/checks.md) is for somebody adding one. Two readers, so two pages. One reader
+who wants more detail is a `####` under the heading they are already on.
+
+**Where two pages share a subject, neither argues the other's case.** The command page says what running the command
+does and cites the other for why. A claim written on both goes out of step on the day one is edited.
+
+## Put each fact where its reader meets it
+
+| The reader wants                                       | The page                                               |
+|--------------------------------------------------------|--------------------------------------------------------|
+| to find the flags a command takes                      | `kac <command> --help`, and the page's generated block |
+| to learn what a command does, refuses and leaves alone | `docs/cli/<verb>.md`                                   |
+| to learn why it works the way it does                  | the concept page, or that command's *Decisions*        |
+| to run it once, having installed nothing               | `docs/getting-started.md`                              |
+| to wire it into a pipeline                             | `docs/ci.md`                                           |
+| to decide whether to install it at all                 | `README.md` and `docs/index.md`                        |
+| to change `kac` itself                                 | `tooling/README.md`, which the site links out to       |
+
+**`README.md` and `docs/index.md` open on the same four paragraphs, byte-identical.** Both are read by somebody who
+has installed nothing. Edit one and copy the change across, because nothing in CI holds the two together.
+
+## Write a page somebody lands in the middle of
+
+**A reader arrives at a heading from search**, rather than at the top of the page. So a heading says what is under it,
+and a section assumes nothing from the section above it.
+
+**Count the words between headings.** Most pages here sit near 80 words. Past about 120 a reader has to read a
+section to find out whether it answers them, and `export` at 173 and `bundle` at 143 are the two that have not yet had
+that cut. The count is a prompt to look, never the diagnosis.
+
+**A command page carries five fixed sections, and grows deeper rather than wider.**
+[`tooling/README.md`](../../../tooling/README.md#the-documentation-site) is the reference for that set and for the
+generated usage block above it. A command with two halves keeps each half at `###` and steps it at `####`.
+
+**A command page opens on its verb and what running it does, with no colon between them.** `CliReference.cs` parses
+that heading to build the overview's table, so a form it cannot read fails `CliReferenceTests`.
+Write: ``# `checks` list every check the validator can report``
+
+**An admonition carries what a reader would otherwise act on wrongly.** Two kinds are in use: a `!!! warning` for a
+page describing a command that is not built yet, and a `!!! note` for a step that has to happen before the next command
+block. It is not a way to emphasise a paragraph.
+
+## Cite the site by URL, and `docs/` by path
+
+**A file under `tooling/` cites a page by path**, as `docs/cli/export.md`. The two folders travel together in a fork of
+the whole framework, and a link to this site would send that fork's reader back upstream.
+
+**A file in the overlay layer cites the site by URL.** `.schema/`, `knowledge-as-code/` and `.plugin/` reach every
+corpus word for word, and `docs/` reaches none of them, so a path written there resolves to nothing.
+[`template/manifest.yaml`](../../../template/manifest.yaml) says which files this covers.
+
+**A link inside `docs/` is a relative path to the `.md` file**, and `mkdocs build --strict` fails a dead one. A page
+the nav does not list is a separate fault, caught by `NavigationTests`, because the build reports it at INFO and
+exits `0`.
+
 ## Leave the reader somewhere to go
 
 **A page names what to read next.** One link, chosen for where the reader now is. A list of everything is the same as
 no link at all.
+Write: "[Checks](../checks.md) is the page for adding a check, or for deciding whether the one you want already
+exists."
+Not: "[Checks](../checks.md) says where a check comes from, what the schema pass refuses, and why a rule is data."
 
 **No page assumes another was read first**, unless it links that page in the sentence that needs it.

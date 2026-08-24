@@ -9,10 +9,10 @@ This page is the way in. The detail lives beneath it:
 | If you want to…                              | Go to                                             |
 |----------------------------------------------|---------------------------------------------------|
 | Understand what kinds of knowledge live here | [Taxonomy](knowledge-as-code/taxonomy.md)         |
-| Know why the framework is shaped this way    | [Principles](knowledge-as-code/principles.md)     |
+| Know why the framework is shaped this way    | [Principles][principles]                          |
 | Add or change something                      | [Contributing](knowledge-as-code/contributing.md) |
 | Know what metadata a document needs          | [Metadata](knowledge-as-code/metadata.md)         |
-| Understand what CI checks and builds         | [Automation](knowledge-as-code/automation.md)     |
+| Understand what CI checks and builds         | [Automation][automation]                          |
 | See where the taxonomy's names came from     | [Lineage](knowledge-as-code/lineage.md)           |
 
 Working this way is itself a decision, and a corpus that holds ADRs should record it as one.
@@ -34,7 +34,7 @@ Knowledge is treated as code:
 * **Plain Markdown in git.** Diffable, reviewable, versioned, blamable. No proprietary format, no export step.
 * **Structured metadata.** Every document carries frontmatter, so a machine can validate, index and cross-reference the
   corpus.
-* **Reviewed through pull requests**, at a rigour proportionate to what the document is. See [tiers](#tiers).
+* **Reviewed through pull requests**, at a rigour proportionate to what the document is. See [tiers][tiers].
 * **Published as a wiki**, so it stays readable by anyone without a terminal or IDE.
 * **Readable and writable by agents.** Sessions consult it before working and contribute back what they learn.
 
@@ -65,27 +65,12 @@ stands obliged by is recorded in [`frameworks.md`](frameworks.md) and nowhere el
 ## Tiers
 
 **What a document is about** (its type) and **how it behaves** (its tier) are different things, and it is behaviour that
-determines the rules.
+determines the rules. Every validation rule, review expectation, language rule and generated report keys off the tier
+rather than the type, so a new kind of knowledge needs a tier and no new machinery.
 
-| Tier            | Behaviour                                                   | Review                               |
-|-----------------|-------------------------------------------------------------|--------------------------------------|
-| **Decided**     | Immutable once accepted. Superseded, never rewritten.       | PR, two reviewers                    |
-| **Normative**   | Living. Owned. Edited in place with a changelog.            | PR, owner approves                   |
-| **Descriptive** | Living. Must mirror reality. Verifiable against the estate. | PR, but drift detection catches more |
-| **Procedural**  | Living. Must be rehearsed to stay true.                     | PR + evidence of last rehearsal      |
-| **Observed**    | Perishable. Unreviewed until promoted. Expires by default.  | None until promotion                 |
-
-A new kind of knowledge needs a tier, and no new machinery. Every validation rule, review expectation, language rule
-and generated report keys off the tier rather than the type. Why that is the load-bearing idea is set out in
-[principles](knowledge-as-code/principles.md#behaviour-before-subject).
-
-Observed is the row that surprises people: the tier carrying the least authority is the one the corpus most depends on,
-because capture that is not free does not happen.
-[Cheap capture, deliberate promotion](knowledge-as-code/principles.md#cheap-capture-deliberate-promotion) is where that
-argument lives.
-
-**Lifecycle** (`immutable` / `living` / `perishable`) follows from tier and is not stated separately. Two fields that
-can contradict each other is a defect waiting to happen.
+The five are **Decided**, **Normative**, **Descriptive**, **Procedural** and **Observed**.
+[The five tiers][tiers] says what each one asks, and [principles][principles-behaviour] says why that is the
+load-bearing idea. Which tier a type carries is on [Taxonomy](knowledge-as-code/taxonomy.md).
 
 ## What this is not
 
@@ -101,3 +86,8 @@ can contradict each other is a defect waiting to happen.
 **A note on scope.** The documents under `knowledge-as-code/` describe the system. They are not themselves part of the
 taxonomy and carry no taxonomy frontmatter. The constitution is not one of the laws. This also keeps the mechanism
 (schema, validators, generators, skills) cleanly separable from the corpus's content.
+
+[automation]: https://paul80nd.github.io/knowledge-as-code/framework/automation/
+[principles]: https://paul80nd.github.io/knowledge-as-code/framework/principles/
+[principles-behaviour]: https://paul80nd.github.io/knowledge-as-code/framework/principles/#behaviour-before-subject
+[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-five-tiers

@@ -6,8 +6,8 @@
 framework. Everything else a corpus holds arrives from a template and can be taken again. This file is the corpus's
 own, so nothing syncs it and nothing reconciles it.
 
-You write it by hand. [`mechanism --sync`](cli/mechanism.md) stamps four of its keys, and it is the only command that
-touches the file at all.
+You write it by hand. [`mechanism --sync`](cli/mechanism.md) stamps four of its keys, and of the commands that exist
+today it is the only one that touches the file at all.
 [`example/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.corpus.yaml) is commented
 throughout, and it is the copy to keep open while you write your own.
 
@@ -16,7 +16,8 @@ throughout, and it is the copy to keep open while you write your own.
 **It is not the schema.** `.schema/` says what a record of each type must carry. This file says which of those types
 the corpus adopted, and says nothing about their shape.
 
-**It is not configuration for a run.** No flag on any command overrides what you write here.
+**It is not configuration for a run.** It records decisions, and a command reads them. `--against` is the one flag
+that replaces a value here, and only for the run it is passed to.
 
 ## Three versions live here
 
@@ -66,7 +67,8 @@ publishing:
 ```
 
 `publishing-target` is one of `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather than leave it to
-be guessed. `mechanism --check` can then name the publishing file a corpus is missing. And [`export`](cli/export.md)
+be guessed. It is recorded rather than inferred, so `export` knows whether it can build a link at all. And
+[`export`](cli/export.md)
 knows whether it can write a link that a reader and an agent could each follow.
 
 `github` says the repository is itself the published form. A person reads a record rendered on github.com, and an agent
@@ -110,13 +112,13 @@ types:
   - policies
 ```
 
-Validation and index generation cover the types listed here and no others. Omit the key and you have not declared yet,
+Index generation covers the types listed here and no others. Omit the key and you have not declared yet,
 so the tool reads adoption off the folders it finds. A type counts where both halves are there, meaning the page and
 the folder.
 
 Declaring turns "these folders happen to be here" into "these are the types this corpus chose", and validation can then
-hold the corpus to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared, standing a
-type up without adopting it is a defect [`validate`](cli/validate.md) reports.
+hold the corpus to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared,
+standing a type up without adopting it is a defect [`validate`](cli/validate.md) reports.
 
 ## What an export leaves behind
 
@@ -145,7 +147,9 @@ accepted-divergences:
     revisit: When the build agent image is upgraded.
 ```
 
-Files in the `synced` layer that you deliberately hold differently. `mechanism --check` reports these as accepted
-instead of failing on them, and `--sync` steps over them. Delete an entry once the file matches upstream again.
+Files in the `synced` or `verification` layer that you deliberately hold differently. `mechanism --check` reports these
+as accepted instead of failing on them, and `--sync` steps over them. Delete an entry once the file matches upstream
+again.
 
-Each entry is a small promise to your future self, which is what `revisit` is for.
+The tool reads the path and the reason. `since` and `revisit` are for you, and each entry is a small promise to your
+future self.
