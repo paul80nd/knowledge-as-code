@@ -38,9 +38,9 @@ git commit -m "Start a corpus"
     `new` writes it from your answers. [The corpus descriptor](corpus-descriptor.md) says what every key in it means,
     and which ones you move by hand afterwards.
 
-You arrive with ignore rules, editor conventions, a wiki ordering and the starter pipeline for the system you named.
-The other host's is not written, because a corpus builds on one of them and the other is a file you would delete
-unread. [`new`](cli/new.md) covers every flag, the order it asks in, and what stops it.
+You arrive with ignore rules, editor conventions and a wiki ordering. Name a CI system and its starter pipeline comes
+too. `new` writes that one system's and no other, so a corpus is never handed a workflow for a host it does not build
+on. [`new`](cli/new.md) covers every flag, the order it asks in, and what stops it.
 
 ## Run the tool against your corpus
 
@@ -61,8 +61,9 @@ Every command takes the same few options. Each answers with one of three exit co
 
 ## Add your first record
 
-Your corpus arrives holding three records, one each under `adrs/`, `policies/` and `glossary/`. They are there to show
-the shape, and yours go beside them.
+Your corpus arrives holding three records. The ADR under `adrs/` and the policy under `policies/` are there to show the
+shape, and yours go beside them. The glossary under `glossary/` is the framework's own vocabulary, inherited word for
+word: write your own glossaries beside it and leave that one as it is.
 
 1. **Pick the type.** `knowledge-as-code/taxonomy.md` in your own corpus has a decision table saying where a record
    goes, covering the types that corpus adopted. [The default types](framework/types.md) introduces all seventeen.

@@ -7,9 +7,10 @@ framework. Everything else a corpus holds arrives from a template and can be tak
 so nothing syncs it and nothing reconciles it.
 
 [`new`](cli/new.md) writes it when the corpus is created, from what that invocation was told, and it arrives commented
-key by key. After that it is yours: you edit it by hand, and [`mechanism --sync`](cli/mechanism.md) stamps four of its
-keys. [`example/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.corpus.yaml) is the
-longer worked copy, commented throughout, and it is the one to read while changing yours.
+key by key. After that it is yours: you edit it by hand, and [`mechanism --sync`](cli/mechanism.md) stamps three of its
+keys. The longer worked copy is
+[`example/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.corpus.yaml), commented
+throughout, and it is the one to read while changing yours.
 
 ## What it is not
 
@@ -113,8 +114,8 @@ never read back. Together they say that a corpus tracks a moving line, and that 
 It leaves `commit` alone, because a sync reads a directory rather than a git ref and has no commit to record.
 
 [`new`](cli/new.md) writes the whole block when the corpus is created, from the flags it was given and the clone it
-made. A `new` that read a folder rather than a repository leaves `ref` and `commit` bare, because a folder has no ref
-to follow and no commit to resolve.
+made. A `new` that read a folder rather than a repository leaves `ref` and `commit` bare, because a folder has no ref to
+follow and no commit to resolve.
 
 ## How far an update goes
 
@@ -150,7 +151,7 @@ standing a type up without adopting it is a defect [`validate`](cli/validate.md)
 
 ```yaml
 export:
-  exclude: []
+  exclude: [ ]
 ```
 
 Empty by default, and that is the important part. A record still in draft travels, and so does one whose review date has

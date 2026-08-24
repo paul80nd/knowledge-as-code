@@ -21,9 +21,9 @@ behind it, and its known limits.
 
 <!-- END GENERATED: command-table -->
 
-!!! warning "`new` and `update` do not exist yet"
+!!! warning "`update` does not exist yet"
 
-    Both pages are specifications, written before their commands. Each says so at its head.
+    Its page is a specification, written before the command, and says so at its head.
 
 ## Where a command runs
 
@@ -49,10 +49,10 @@ it was built from.
 
 ## Exit codes
 
-| Code | Meaning                                                                          |
-|------|----------------------------------------------------------------------------------|
-| `0`  | No errors. Warnings may still have been printed.                                 |
-| `1`  | A corpus **error**, or a bad invocation (missing or unknown command or option).  |
-| `2`  | A command found no corpus. `--version` and `--help` need none and answer anyway. |
+| Code | Meaning                                                                                 |
+|------|-----------------------------------------------------------------------------------------|
+| `0`  | No errors. Warnings may still have been printed.                                        |
+| `1`  | A corpus **error**, or a bad invocation (missing or unknown command or option).         |
+| `2`  | A command found no corpus. `new`, `--version` and `--help` need none and answer anyway. |
 
 Warnings never change the exit code.

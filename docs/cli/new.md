@@ -23,8 +23,8 @@ kac new [--ci <SYSTEM>] [--from <URL|PATH>] [--name <NAME>] [--no-color] [--path
 ## What it is for
 
 `new` turns the folder you are standing in into a corpus. It takes the framework from a template repository at a ref,
-writes the files that template says a corpus receives, and writes the one file no template can supply: `.corpus.yaml`,
-which names the corpus and records where the framework came from.
+writes the files that template says a corpus receives, and writes the two no template can supply: `.corpus.yaml`, which
+names the corpus and records where the framework came from, and a `README.md` to rewrite.
 
 Its reader is someone who has installed the tool and has nothing else. Every answer the command needs it either asks
 for, infers from the folder, or defaults, and a person who answers nothing at all still ends with a corpus that
@@ -61,8 +61,8 @@ and is then told the URL was unreachable:
    because discovery reads the git listing and an ungitted corpus is a corpus the tool cannot read.
 3. **A folder holding files** is a warning and a confirmation, not a refusal. Without a committed baseline there is
    nothing to tell your files from the ones about to arrive.
-4. **The template**, cloned shallow at its ref into a temporary folder. A failure here is a URL, a ref or a
-   credential. Only git can tell those apart, so the message quotes what git wrote.
+4. **The template**, cloned shallow at its ref into a temporary folder. A failure here is a URL, a ref or a credential.
+   Only git can tell those apart, so the message quotes what git wrote.
 5. **The tool.** The template's manifest declares `minimum-tool`. An older tool stops rather than half-reading a
    template it cannot understand.
 
@@ -80,15 +80,15 @@ pipeline is worse than a failed one.
 | Which CI system    | `none`                           | `--ci`         |
 
 Publishing and CI are asked separately because they are separate facts: a corpus can be built by one system and read on
-another. Where a publishing target needs base URLs, they are pre-filled from `git remote get-url origin` rather than
-asked for: a URL nobody can recall is a URL nobody should be made to type.
+another. Where a publishing target needs base URLs, the question arrives already filled in from
+`git remote get-url origin`. A URL nobody can recall is a URL nobody should be made to type.
 
 Types are asked as a multi-select with everything ticked, because declining is the exception. A declined type's schema
 file is not written, rather than written and then ignored, and `types:` in `.corpus.yaml` records the decision so that
 validation can hold the corpus to it.
 
-The CI answer narrows what lands in the same way. A corpus runs on one system, and the starter for another is a file
-its owner would delete unread. A GitHub Actions workflow reaching a corpus built elsewhere is worse than unread: on
+The CI answer narrows what lands in the same way. A corpus runs on one system, and the starter for another is a file its
+owner would delete unread. A GitHub Actions workflow reaching a corpus built elsewhere is worse than unread: on
 github.com it runs uninvited. The manifest names the system each starter serves, which is where a fork laying its
 repository out differently declares its own.
 
@@ -112,9 +112,9 @@ template rather than a corpus. A corpus that copied everything would therefore a
 `new` writes is short: the corpus's name, what it holds, and how to run the tool against it. It is a starting point, not
 a document, and the corpus owns it from the moment it lands.
 
-**It arrives carrying the markers for the generated block that file may hold**, and a line saying so. `README.md` is the
-one page a corpus may decline a block on, by deleting the pair of markers around it. A README written without them
-would decline on every new corpus's behalf, and nobody would have chosen that.
+**The README arrives carrying the markers for the block it may hold**, and a line saying so. `README.md` is the one page
+a corpus may decline a block on, by deleting the pair of markers around it. A README written without them would decline
+on every new corpus's behalf, and nobody would have chosen that.
 
 **One file needs more than its bytes.** `.plugin/hooks/breadcrumb` is executable, and a hook that arrives without its
 mode bit fails silently on Unix.
@@ -124,9 +124,11 @@ mode bit fails silently on Unix.
 `generate`, then `validate`, then `git add -A`.
 
 Generation first, because it writes the `_index.md` files and the generated blocks that validation then checks.
-Validation second, because a corpus that `new` created and cannot validate is a defect in the template or the tool, and
-the person who just ran the command is not the one who should discover it. Staging last, so that everything the command
-did is visible in one place before it is committed.
+Validation second, because a corpus that fails it is one its owner has to be told about at once. Where every type was
+adopted, that failure is a defect in the template or in the tool, and the person who just ran the command is not the one
+who should discover it. Where types were declined, it is the cross-references named under Known limits below. The
+message says which of the two it is. Staging last, so that everything the command did is visible in one place before it
+is committed.
 
 It stops short of committing. A first commit is a person's own act, and staging shows them everything first.
 
@@ -138,8 +140,8 @@ hatch and is also what the tool's own tests use.
 
 **A corpus that declines types arrives with links to what it declined.** The type pages cross-reference each other, so
 `glossary.md` names `services.md` whether or not you adopted services. Those pages are seeds: yours from the moment they
-land, and yours to edit. `new` names that fault for what it is, so nobody goes looking upstream for a link they can
-fix themselves.
+land, and yours to edit. `new` names that fault for what it is, so nobody goes looking upstream for a link they can fix
+themselves.
 
 **It is not idempotent and does not try to be.** Running it twice in the same folder stops on the first check. Taking a
 newer framework into a corpus that already exists is `update`, which is a different question with a different answer.

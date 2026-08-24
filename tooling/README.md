@@ -6,8 +6,9 @@ the mechanics. It packs as the dotnet tool `KnowledgeAsCode.Tool`, which install
 install and pin a version instead of carrying a copy. The schema is the source of truth: `kac` reads it and enforces it,
 so **adding a knowledge type is adding a YAML file, not editing this tool**.
 
-[`manifest.yaml`](manifest.yaml) sits here too, and says which files a corpus shares with the framework. Each corpus's
-own `.corpus.yaml`, at the corpus root, says what that corpus is.
+[`manifest.yaml`](manifest.yaml) sits here too, and says which files a corpus shares with the framework.
+[`../manifest.yaml`](../manifest.yaml) is the other one, at the repository root, and says which files a corpus is made
+of in the first place. Each corpus's own `.corpus.yaml`, at the corpus root, says what that corpus is.
 
 Writing records rather than changing the tool?
 [`../template/knowledge-as-code.md`](../template/knowledge-as-code.md) is the document for that: the taxonomy, the style
@@ -56,8 +57,8 @@ option carries generated `--help`. `Program.cs` says why that library and not an
 
 `kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, so it is run from inside one.
 Running it from here reaches no corpus at all. This repository holds two: `example/`, which carries the records, and
-`template/`, which holds most of what `kac new` sends a corpus. [`manifest.yaml`](../manifest.yaml) names the rest, and
-is the only account of which files a corpus receives and where each one lands.
+`template/`, which holds most of what `kac new` sends a corpus. The template manifest at the repository root names the
+rest, and is the only account of which files a corpus receives and where each one lands.
 
 ```bash
 cd ../example
@@ -100,8 +101,9 @@ It is prose throughout and not a form. A heading with nothing true to say is lef
 where an absence reads as work not yet done. Reasons stay inline in **How it works**, beside whatever they explain.
 **Decisions** takes only the ones belonging to a command as a whole.
 
-`new.md` and `update.md` are specifications written before their commands exist, and say so at their head.
-`CliReferenceTests` is what holds them to saying it.
+`update.md` is a specification written before its command exists, and says so at its head. `CliReference.Unbuilt` is
+the list it sits on, and `CliReferenceTests` holds every page there to saying it. A page comes off that list on the day
+its command ships.
 
 [`CLAUDE.md`](CLAUDE.md) is what will bite you while changing any of it.
 
@@ -114,7 +116,7 @@ Three layers, all run from the repository root and all run in CI, on GitHub thro
 | Layer       | Project / file            | Run                                | Covers                                                                                                                                                           |
 |-------------|---------------------------|------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Unit**    | `kac.tests` (xUnit v3)    | `dotnet test tooling/kac.tests`    | `kac.core`'s shared primitives (`Glob`, `Yaml`, `Schema` helpers, `Manifest.Resolve`, `Md`, …). Fast, precise localisation.                                      |
-| **Feature** | `kac.features` (Reqnroll) | `dotnet test tooling/kac.features` | Validator **behaviour**, which is what findings a document produces, as Gherkin specs driving `kac.core` in-process.                                             |
+| **Feature** | `kac.features` (Reqnroll) | `dotnet test tooling/kac.features` | **Behaviour**, as Gherkin specs driving `kac.core` in-process: what findings a document produces, and what `new` settles before it writes anything.              |
 | **Golden**  | `kac-tests.cs`            | `dotnet run tooling/kac-tests.cs`  | Fixtures diffed against committed goldens, plus the coverage and checks-table gates and the CLI contract (exit codes). See [`tests/README.md`](tests/README.md). |
 
 The unit layer catches breakage in the pieces early. The feature layer is the readable regression net for what the
@@ -122,8 +124,11 @@ validator does. The golden layer owns the end-to-end CLI contract that the in-pr
 expectations after an intended rule change with `dotnet run tooling/kac-tests.cs -- --update`.
 
 The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check the
-command can emit is reachable from a spec. The golden layer builds `kac/` once per run and invokes the built assembly.
-Each scenario is then a real process, without paying `dotnet run`'s up-to-date check for every one.
+command can emit is reachable from a spec. Its creation specs call `Commands.New`, which is the whole of what `kac new`
+runs, so a precondition cannot stop that command and go unnoticed here.
+
+The golden layer builds `kac/` once per run and invokes the built assembly. Each scenario is then a real process,
+without paying `dotnet run`'s up-to-date check for every one.
 
 All three read the schema from [`../.schema/`](../.schema/), the one copy at the repository root. A schema edit
 therefore ripples into every fixture in the same run, rather than into a copy someone has to keep in step.

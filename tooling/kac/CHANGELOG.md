@@ -4,8 +4,9 @@
 
 This page covers the tool, published to nuget.org as
 [`KnowledgeAsCode.Tool`](https://www.nuget.org/packages/KnowledgeAsCode.Tool). The same repository holds the schema, the
-framework's documentation and the pages a corpus starts from. Those carry no version of their own and reach a corpus
-through `kac mechanism`, so nothing about them is recorded here.
+framework's documentation and the pages a corpus starts from. Those travel as a template with a version of its own,
+which `manifest.yaml` declares and `kac new` stamps into every corpus it creates. A change there is recorded here where
+somebody running `kac` can observe it, and nowhere otherwise.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions sit below 1.0.0 while the command
 surface may still change shape.
@@ -19,8 +20,8 @@ the commit and opens a release carrying the section for that version.
 
 ### Added
 
-- **`kac new` turns the folder you are standing in into a corpus.** It takes the framework from a template repository
-  at a ref, writes what the manifest says a corpus receives, and writes the two files no template can supply:
+- **`kac new` turns the folder you are standing in into a corpus.** It takes the framework from a template repository at
+  a ref, writes what the manifest says a corpus receives, and writes the two files no template can supply:
   `.corpus.yaml` and `README.md`. It then runs `generate`, `validate` and `git add -A`, and stops short of committing.
   [`new`](https://paul80nd.github.io/knowledge-as-code/cli/new/) covers the flags, the defaults and the order it asks
   in.
