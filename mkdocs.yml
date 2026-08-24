@@ -104,7 +104,6 @@ nav:
       - export: cli/export.md
       - bundle: cli/bundle.md
       - checks: cli/checks.md
-      - mechanism: cli/mechanism.md
       - update: cli/update.md
   - The corpus descriptor: corpus-descriptor.md
   - Checks: checks.md

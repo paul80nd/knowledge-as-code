@@ -25,9 +25,14 @@ here to ask.
 
 `.schema/` is not one of them. It is authored once at this root and read from there by both corpora, which is what the
 tool's second walk-up is for. Everything else the overlay layer names does live once in `template/` and again in
-`example/`, and `TemplateTests` holds the two copies to the same bytes. `kac mechanism --sync` cannot do that job here,
-because it reads a manifest at `tooling/manifest.yaml` that describes this repository rather than a corpus. Copy the
-file across by hand, in whichever direction the change came from, and let the test prove you did.
+`example/`. Copy the file across by hand, in whichever direction the change came from, then run the check that proves
+you did:
+
+```sh
+cd example && dotnet run --project ../tooling/kac -- update --check --from ../
+```
+
+It answers in both directions: a copy that differs, and a file `example/` holds that the template sends nothing to.
 [`manifest.yaml`](manifest.yaml) says which files this reaches.
 
 ## Before you raise a pull request

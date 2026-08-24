@@ -1,19 +1,17 @@
 # Working in this repository
 
-## Read the role before you touch `../.schema/` or `../tooling/`
+## Know where you are before you touch `../.schema/` or `../tooling/`
 
-[`.corpus.yaml`](.corpus.yaml) declares `role:`. This repository is a **source**: those two directories are yours to
-change, what you write propagates to every corpus that took a copy, and the tests that prove the tool live here. Write
-for someone who cannot see this conversation. The schema sits at the repository root rather than in this corpus, because
-`template/` is judged against the same copy.
+This corpus sits inside the repository serving the template, so those two directories are yours to change and what you
+write reaches every corpus that took a copy. Write for someone who cannot see this conversation. The schema sits at the
+repository root and not in this corpus, because `template/` is judged against the same copy.
 
-Where a corpus declares `role: consumer`, both directories arrive from upstream and a local edit is drift rather than
-customisation. `kac mechanism --check` reports it. Fix it upstream and run `kac mechanism --sync`. A consumer holds the
-tool and none of the tests, because the tool reaches it already proven.
+A corpus created elsewhere receives its own copy of `.schema/`, and a local edit there is drift. `kac update --check`
+reports it. Fix it in the template and run `kac update`.
 
-**Adding a knowledge type is adding a YAML file to `../.schema/`.** A corpus adopts a type by adding its name to
-`types:` in `.corpus.yaml` and running `kac mechanism --sync`, which brings down the schema and seeds the root page and
-template. To decline a type, leave it out of `types:` rather than deleting files afterwards.
+**Adding a knowledge type is adding a YAML file to `../.schema/`.** A corpus adopts a type with
+`kac update --add-type <name>`, which writes the schema, the root page and the template, and adds the name to `types:`.
+`kac update --drop-type <name>` gives one up, and refuses where the folder still holds records.
 
 ## Before you commit
 

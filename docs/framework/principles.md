@@ -25,7 +25,7 @@ identical everywhere. The **knowledge** is the organisation's, and it is shared 
 
 That split lets the mechanism improve without touching anyone's content, and lets an organisation take a copy without
 inheriting someone else's opinions about accessibility. It also turns *which of these files are mine?* into a question
-[`kac mechanism --check`](../cli/mechanism.md) answers.
+[`kac update --check`](../cli/update.md) answers.
 
 The framework's own `manifest.yaml` declares which files fall on which side, so no prose has to assert it. Every file
 resolves to exactly one **layer**, meaning who owns a file and what happens when it differs from upstream, and each

@@ -100,7 +100,7 @@ Whether a type's records stay current or become immutable once accepted, fixed b
 
 The framework's files as they sit in one corpus: the half that travels.
 
-**Not:** the knowledge. `kac mechanism` compares that half against an upstream corpus and reads no record.
+**Not:** the knowledge. `kac update` takes that half from a template again and reads no record.
 
 ### Page
 

@@ -8,22 +8,17 @@ behind it, and its known limits.
 
 <!-- BEGIN GENERATED: command-table -->
 
-| Command                     | What it does                                            |
-|-----------------------------|---------------------------------------------------------|
-| [`new`](new.md)             | Stand a corpus up in the folder you are in.             |
-| [`validate`](validate.md)   | Check the corpus against its schema.                    |
-| [`generate`](generate.md)   | Rewrite the parts of a corpus derived from its records. |
-| [`export`](export.md)       | Write the corpus out as data a consumer can read.       |
-| [`bundle`](bundle.md)       | Assemble the export into an installable agent plugin.   |
-| [`checks`](checks.md)       | List every check the validator can report.              |
-| [`mechanism`](mechanism.md) | Compare a corpus against upstream, or sync from it.     |
-| [`update`](update.md)       | Take a newer framework into a corpus.                   |
+| Command                   | What it does                                            |
+|---------------------------|---------------------------------------------------------|
+| [`new`](new.md)           | Stand a corpus up in the folder you are in.             |
+| [`validate`](validate.md) | Check the corpus against its schema.                    |
+| [`generate`](generate.md) | Rewrite the parts of a corpus derived from its records. |
+| [`export`](export.md)     | Write the corpus out as data a consumer can read.       |
+| [`bundle`](bundle.md)     | Assemble the export into an installable agent plugin.   |
+| [`checks`](checks.md)     | List every check the validator can report.              |
+| [`update`](update.md)     | Take a newer framework into a corpus.                   |
 
 <!-- END GENERATED: command-table -->
-
-!!! warning "`update` does not exist yet"
-
-    Its page is a specification, written before the command, and says so at its head.
 
 ## Where a command runs
 

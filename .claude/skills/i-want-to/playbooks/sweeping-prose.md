@@ -16,9 +16,9 @@ trial design, and testing a rule is a different job from applying one.
    regions against `HEAD`. Every report this branch produced held up, and checking cost seconds.
 7. **Read the whole file, not the diff.** A sweep that leaves a document reading in two voices has failed even where
    every rule was obeyed.
-8. **Copy the overlay files across.** `.schema/**`, `knowledge-as-code/**` and `glossary/knowledge-as-code.md` are held
-   byte-equal by `TemplateTests`. A root page and a `_template.md` are `seed`, so nothing catches drift and the copy is
-   yours.
+8. **Copy the overlay files across.** `knowledge-as-code/**` and `glossary/knowledge-as-code.md` live in both trees,
+   and `kac update --check --from ../` inside `example/` holds them equal. `.schema/**` is authored once at the root,
+   so it needs no copy. A root page and a `_template.md` are `seed`, so nothing catches drift and the copy is yours.
 9. **Ask the agents where a rule failed them.** A rule two readers understand differently is a defect, however good
    either result looks.
 10. Run **[opening-a-pull-request](opening-a-pull-request.md)**.

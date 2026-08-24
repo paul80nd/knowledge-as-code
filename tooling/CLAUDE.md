@@ -160,14 +160,14 @@ and unit tests beside the rule class for the branches a fixture would only dupli
 
 ## Where the console is
 
-**`kac.core` answers in values and `Commands` writes them out.** `Validator.CheckAll` returns findings,
-`MechanismCheck.Classify` returns a report, `MechanismSync.Plan` returns a plan, and none of them prints. The exit code
-is `Commands`'s too, derived from the value it was handed.
+**`kac.core` answers in values and `Commands` writes them out.** `Validator.CheckAll` returns findings, `New.Plan`
+returns a plan, `Update.Plan` returns another, and none of them prints. The exit code is `Commands`'s too, derived from
+the value it was handed.
 
 That is what makes each of them testable from a set of strings, and never from a tree and a subprocess.
 
-The two mechanism engines take the file listings and a `Func<string, bool>` answering whether two copies of a path say
-the same thing. The whole classification is therefore decidable without a filesystem, and a new arm is a unit test
+`New.Plan` and `Update.Plan` take file listings, a manifest and a `Func` answering whether two copies of a path say the
+same thing. What either command comes to is therefore decidable without a filesystem, and a new arm is a unit test
 instead of a fixture corpus. `Tree` strikes the same bargain for the corpus itself: a listing, a `Func` that reads one
 of its paths, and a `Func` answering whether a path is on the disk at all. **Every pass reads the corpus through it,
 `Validator.CheckAll` included.**
@@ -179,7 +179,7 @@ unit tests as well as a fixture.
 Ask the listing about presence and `Tree.OnDisk` only where `Tree` says to. A check that asks the disk directly passes
 for whoever wrote the file and fails in CI, by which time they have stopped looking.
 
-Deciding and doing stay apart on both sides. `MechanismSync.Plan` names what a sync comes to and `Apply` carries it out;
+Deciding and doing stay apart on both sides. `Update.Plan` names what an update comes to and `Apply` carries it out;
 `GeneratedFiles.Plan` names what a regeneration comes to and `Write` carries it out. In each case the files acted on are
 the ones the plan already reports, so nothing is decided twice.
 
@@ -203,16 +203,15 @@ from the framework carrying them, and one that has gone is a block that stopped 
 
 * They share the **real** `.schema/`. `AssembleTemp` copies it beside each fixture corpus, and writes the `.corpus.yaml`
   that makes the tool read the assembled tree as one. So a schema change ripples into every fixture at once. Run the
-  golden suite after touching `.schema/`, not just `kac validate`. A `sync`
-  scenario may narrow one side with `corpus-schema.txt`, which names the type files that side holds *before* the sync.
-  The real schema cannot express a corpus holding fewer files than upstream, and that is the state a sync resolves.
+  golden suite after touching `.schema/`, not just `kac validate`. The `update` and `new` scenarios read no fixture
+  corpus at all: each stands one up from the real template, so a manifest change reaches them too.
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`
   beside it. Types it does not use are absent, which is silent. Adding a folder to a fixture without standing the type
   up adds a finding to every scenario that reads it.
-* Only fixtures in **`validate` mode** run the validator. `generate`, `generate-stale`, `mechanism`, `sync`, `export`
-  and `bundle` modes do not, so a new check cannot affect them. `sync`, `export` and `bundle` are the modes that write.
-  Each asserts the tree the command left rather than only what the command printed, so its expectations name files and
-  their content instead of a findings golden.
+* Only fixtures in **`validate` mode** run the validator. `generate`, `generate-stale`, `update`, `export`, `bundle`
+  and `new` modes do not, so a new check cannot affect them directly. `update`, `export`, `bundle` and `new` are the
+  modes that write. Each asserts the tree the command left rather than only what the command printed, so its
+  expectations name files and their content instead of a findings golden.
 * **The `export` fixture commits the export itself**, under `expected-dist/`, and a diff there is a change to what a
   consumer reads. Its [README](tests/fixtures/export/README.md) says what that asks of you. Nothing else in the suite
   holds a tracked copy of an untracked artefact. The `bundle` fixtures deliberately do not, because most of a bundle is

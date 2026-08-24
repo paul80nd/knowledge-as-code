@@ -1,17 +1,16 @@
 # Working in this repository
 
-## Read the role before you touch `.schema/`
+## Know what is yours before you touch `.schema/`
 
-[`.corpus.yaml`](.corpus.yaml) declares `role:`. This corpus is a **consumer**. `.schema/` and the framework's own
-documentation arrive from upstream, and a local edit to either is drift rather than customisation.
-`kac mechanism --check` reports it. Fix it upstream and take it down again.
+`.schema/` and the framework's own documentation arrive from the template this corpus took, and a local edit to either
+is drift. `kac update --check` reports it. Fix it in the template and take it down again with `kac update`. Where this
+corpus means to own a file, say so with a `skip:` entry in [`.corpus.yaml`](.corpus.yaml).
 
-A consumer holds the tool and none of the tests that prove it, because the tool reaches it already proven. Only a corpus
-declaring `role: source` develops the framework, and that one holds both.
+This corpus holds the tool and none of the tests that prove it, because the tool reaches it already proven.
 
-**Adding a knowledge type is adding a YAML file to `.schema/`.** A corpus adopts a type by adding its name to `types:`
-in `.corpus.yaml` and running `kac mechanism --sync`. That brings down the schema and seeds the root page and template.
-To decline a type, leave it out of `types:` rather than deleting files afterwards.
+**Adding a knowledge type is adding a YAML file to `.schema/`.** A corpus adopts a type with
+`kac update --add-type <name>`, which writes the schema, the root page and the template, and adds the name to `types:`.
+`kac update --drop-type <name>` gives one up, and refuses where the folder still holds records.
 
 ## Before you commit
 
