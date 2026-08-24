@@ -31,7 +31,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>kac</ToolCommandName>
     <PackageId>KnowledgeAsCode.Tool</PackageId>
-    <Version>0.6.0</Version>
+    <Version>0.7.0</Version>
     <Authors>Paul Law</Authors>
     <Description>Validator and generator for a knowledge-as-code corpus, driven by its own schema.</Description>
     <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
