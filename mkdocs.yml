@@ -85,6 +85,7 @@ nav:
       - framework/index.md
       - Principles: framework/principles.md
       - Automation: framework/automation.md
+      - Lineage: framework/lineage.md
   - CLI reference:
       - cli/index.md
       - validate: cli/validate.md

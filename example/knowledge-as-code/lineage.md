@@ -1,26 +1,23 @@
 # Lineage
 
-> Where this taxonomy's names came from.
+> Where this corpus's type names came from.
 
-We derived the types from first principles: what kinds of knowledge an engineering organisation actually holds, and how
-each behaves. Most of them still have close analogues in established frameworks. This page records those analogues,
-what each one lends, and where we deliberately part company with it.
+Each type is derived from first principles, and most still have a close analogue in an established framework. The rows
+below record each analogue, what it lends, and where this framework parts company with it. They are generated from the
+schema, so they cover the types this corpus adopted and no others.
 
-Three reasons it is worth writing down. An auditor arriving cold recognises the concepts faster if we tell them what the
-concepts are near. A future naming decision answers to precedent. And several of these words already mean something
-else to a reader with a governance or agile background, which is a defect this page exists to close.
+**This is alignment, not compliance.** Naming a framework in a row says the thinking is near theirs. It does not claim
+conformance, certification, or that a record of ours would satisfy an assessment against theirs. Where this corpus has
+a *standing* against an external framework, meaning obligations it accepts and is measured on,
+[`frameworks.md`](../frameworks.md) records it and nowhere else does.
 
-**This is alignment, not compliance.** Naming a framework here says our thinking is near theirs. It does not claim
-conformance, certification, or that a document of ours would satisfy an assessment against theirs. Where this corpus has
-a *standing* against an external framework (obligations it accepts and is measured on),
-[`frameworks.md`](../frameworks.md) records that, and nothing else does. We keep the two registers apart deliberately.
-Lineage is the framework's own intellectual debt and is identical in every corpus, and standing belongs wholly to the
-corpus holding it.
+[Lineage][lineage] carries the rest, and is the same for every corpus: why the register is worth keeping, the three
+types with no ancestor at all, the language work the writing rules draw on, and which of the framework's own rows rest
+on a secondary source. A type this corpus declared for itself is this corpus's to source honestly, on the same terms.
 
 ## The types
 
-Generated from the schema, so the row is written where the type is defined and a corpus sees only the types it holds. A
-type with no useful ancestor says so, and claiming one would be worse than admitting it.
+A type with no useful ancestor says so, and claiming one would be worse than admitting it.
 
 <!-- BEGIN GENERATED: types-lineage -->
 
@@ -105,66 +102,4 @@ rule this type depends on. Citing RFC 2119 alone leaves it unsupported.
 
 <!-- END GENERATED: types-collisions -->
 
-## First principles
-
-Three things here have no useful ancestor, and claiming one would be worse than admitting none.
-
-**Discovery.** Nothing established defines a document type that is low-ceremony, explicitly unverified,
-confidence-scored and self-expiring, with a defined promotion path into a reviewed type. A lab notebook, a fleeting note
-and an agile spike each share the provisional quality and none of the rest. The combination of an expiry and a
-confidence level is the most novel thing in this taxonomy.
-
-**The Process / Runbook split.** No framework we found divides its procedural layer by *reading conditions*: planned
-and deliberate against incident-time and under pressure. Both HCGF and Diátaxis have one procedural type. The split
-exists because the two are written differently, rehearsed differently, and fail differently.
-
-**The tiers.** Classifying by obligation and decay rather than by subject matter has precedent in shape.
-[Diátaxis][diataxis] also classifies behaviourally, by user need. The axes are ours.
-
-## Language
-
-The `technical-writing` skill, and the tier rules in `writing-a-record`, draw on two bodies of work.
-
-**[ASD-STE100 Simplified Technical English][ste]**, Issue 9 (2025), published by the Aerospace, Security and Defence
-Industries Association of Europe and maintained by its Simplified Technical English Maintenance Group. A controlled
-language for aerospace maintenance documentation. It is a closed dictionary of approved words, each carrying one meaning
-and one part of speech, plus writing rules covering sentence length, one instruction per sentence, permitted verb forms
-and noun-cluster length. Its influence here is direct, and heaviest on the procedural tier, which is the material it was
-built for.
-
-**[ISO 24495-1:2023][iso24495]**, plain language governing principles: that readers get what they need, can find it, can
-understand it, and can use it. These are principles rather than mechanics. No machine can check them, and they are still
-the right statement of what the mechanics are for.
-
-**How we cite them, and why it matters.** ASD-STE100 is free to obtain and is not freely licensed. Reproduction or
-publication in whole or in part requires written authority from ASD, unauthorised redistribution is prohibited, and ASD
-does not endorse third-party compliance claims. ISO 24495-1 is sold and is likewise all rights reserved.
-
-So this corpus cites both, learns from both, and reproduces neither. We write the authoring rules in our own words and
-set them at our own limits. They are not an implementation of either document, and we describe no output of this corpus
-as STE-compliant or as conforming to ISO 24495-1. A corpus wanting genuine conformance should obtain the specifications
-directly. This is the same alignment-not-compliance stance the rest of this page takes, applied to the one framework
-that also constrains how it may be quoted.
-
-The same care applies to [Diátaxis][diataxis] above, licensed CC BY-SA, whose share-alike condition does not sit
-comfortably with this repository's MIT licence. We link and attribute it, and do not quote it at length.
-
-## What is not verified
-
-Honesty about sourcing is part of the point of this page. We checked every row above against a primary source, except
-these:
-
-* **ITIL** publications are paywalled, so the known-error definition behind the FAQ row rests on the publisher's own
-  summary.
-* **ISO standards** are paywalled, so 25010's characteristics and 24495-1's principles come from the issuing body's
-  public descriptions.
-* **ArchiMate and TOGAF** are licence-gated beyond their public specification pages.
-* **ASD-STE100's** licensing terms and issue details come from the specification's own front matter and the maintenance
-  group's published material. The numeric writing rules are corroborated from specialist secondary sources rather than
-  from the rule text, so this corpus states its own limits instead of quoting theirs.
-
-Where a claim here is later found wrong, correct the row. Do not soften it.
-
-[diataxis]: https://diataxis.fr/
-[iso24495]: https://www.iso.org/standard/78907.html
-[ste]: https://www.asd-ste100.org/
+[lineage]: https://paul80nd.github.io/knowledge-as-code/framework/lineage/
