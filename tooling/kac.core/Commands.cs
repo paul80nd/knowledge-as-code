@@ -229,9 +229,8 @@ public static class Commands
             Account("new: staged. `git status` shows everything this wrote, and the first commit is yours.");
     }
 
-    // A template this tool cannot read the whole of. Its files are neither taken nor silently dropped,
-    // because each state is a defect upstream and acting on half a manifest is how a corpus goes wrong
-    // quietly.
+    // Both halves of `NewPlan.TemplateIsUnsound`, each naming what the template did rather than the
+    // count of it, because the fix is upstream and needs the paths.
     private static int Unsound(NewPlan plan, string from)
     {
         if (plan.Unclassified.Count > 0)

@@ -19,8 +19,6 @@ public class BasesTests
             ("https://github.com/acme/corpus/blob", "https://raw.githubusercontent.com/acme/corpus"),
             Publishing.BasesFrom(Publishing.GitHub, origin));
 
-    // Only `github` is derivable. The other targets serve a corpus from somewhere its own remote says
-    // nothing about, and a base guessed at is worse than one the person types.
     [Theory]
     [InlineData(Publishing.AzureDevOpsWiki)]
     [InlineData(Publishing.MkDocs)]

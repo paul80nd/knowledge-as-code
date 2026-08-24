@@ -57,8 +57,6 @@ public class NewTests
         Assert.Equal(["template/CLAUDE.md"], plan.Copied.Select(f => f.From));
     }
 
-    // A tombstone names a file an update deletes. Writing one into a corpus being created would hand it a
-    // file the first update takes straight back.
     [Fact]
     public void A_removed_file_reaches_no_corpus()
     {
@@ -82,8 +80,6 @@ public class NewTests
         Assert.Equal(Manifest.Seed, plan.Copied.Single(f => f.To == "CLAUDE.md").Layer);
     }
 
-    // The plan is read as a listing, so it is ordered by where a file lands rather than by where the
-    // template happened to hold it.
     [Fact]
     public void The_plan_is_ordered_by_destination()
     {
@@ -108,8 +104,6 @@ public class NewTests
 
     // -- types the corpus declined --
 
-    // A declined type's schema file is not written rather than written and then ignored, so `validate`
-    // never meets a type the corpus stood up and did not adopt.
     [Fact]
     public void A_declined_types_schema_page_and_folder_are_not_written()
     {
@@ -124,8 +118,6 @@ public class NewTests
         Assert.Equal([".schema/policies.yaml", "policies.md", "policies/_template.md"], plan.DeclinedTypes);
     }
 
-    // A type is declined by where its files land, not by where the template holds them. The pages of this
-    // repository's template sit under `template/` and reach a corpus at its root.
     [Fact]
     public void A_type_is_declined_by_where_its_files_land()
     {
@@ -136,9 +128,6 @@ public class NewTests
 
     // -- the system the corpus builds on --
 
-    // A corpus runs on one system, so the starter for another is a file it would delete unread. The
-    // GitHub workflow is the one that earns the rule: it runs uninvited in a repository that builds
-    // elsewhere.
     [Theory]
     [InlineData(CiSystem.GitHub, ".github/workflows/kac.yml")]
     [InlineData(CiSystem.AzureDevOps, "azure-pipelines.yml")]
@@ -160,13 +149,10 @@ public class NewTests
         Assert.Equal([".github/workflows/kac.yml", "azure-pipelines.yml"], plan.DeclinedCi);
     }
 
-    // A file no rule ties to a system reaches every corpus, whatever it builds on.
     [Fact]
     public void A_file_naming_no_system_reaches_every_corpus()
         => Assert.Equal(["CLAUDE.md"], Plan(["template/CLAUDE.md"]).Copied.Select(f => f.To));
 
-    // A template offering a system this tool cannot is a defect upstream. Its files are neither taken
-    // nor silently dropped: the creation stops and names the system.
     [Fact]
     public void A_system_the_tool_does_not_offer_stops_the_creation()
     {
@@ -195,7 +181,6 @@ public class NewTests
     public void A_readme_is_composed_where_the_template_sends_none()
         => Assert.Contains("README.md", Plan(["template/README.md"]).Composed.Select(f => f.Path));
 
-    // A template that does send a README wrote it for a corpus to keep, and that copy wins.
     [Fact]
     public void A_readme_the_template_sends_is_kept_instead()
     {
@@ -238,8 +223,6 @@ public class NewTests
         Assert.Contains("  taken-on: \"2026-08-24\"\n", yaml);
     }
 
-    // A template read from a folder has no ref to follow and no commit to resolve. The keys are written
-    // bare, which YAML reads as absent, so the block is there to fill in rather than there holding "".
     [Fact]
     public void A_key_the_take_could_not_answer_is_written_bare()
     {
@@ -275,7 +258,6 @@ public class NewTests
         Assert.Contains("  raw-base: https://raw.githubusercontent.com/acme/corpus\n", yaml);
     }
 
-    // A folder called `no` or `1.5` is a name YAML would load as something other than a string.
     [Theory]
     [InlineData("no", "corpus: \"no\"\n")]
     [InlineData("1.5", "corpus: \"1.5\"\n")]
@@ -291,8 +273,6 @@ public class NewTests
 
     // -- what the README says --
 
-    // `README.md` is the one file a corpus may decline a generated block on, by deleting the markers. A
-    // README arriving without them would decline on every corpus's behalf without anybody choosing to.
     [Fact]
     public void The_readme_arrives_carrying_the_markers_for_every_block_declared_on_it()
     {
@@ -325,8 +305,6 @@ public class NewTests
     public void A_tool_new_enough_for_the_template_is_not_stopped(string? minimum, string tool)
         => Assert.Null(New.TooOldFor(minimum, tool));
 
-    // Every key an older tool does not know is one it ignores in silence, and a rule it ignores is a file
-    // a corpus loses. So it stops rather than half-reading the manifest.
     [Fact]
     public void A_tool_older_than_the_template_is_told_which_version_to_get()
     {
@@ -340,8 +318,6 @@ public class NewTests
     public void A_minimum_that_is_not_a_version_is_reported_as_one()
         => Assert.Contains("which is not a version", New.TooOldFor("latest", "0.6.0"));
 
-    // The tool's own version is a build stamp, and grounding a working tool over one it cannot parse
-    // would be worse than reading a template it might be too old for.
     [Fact]
     public void A_tool_version_nothing_can_parse_stops_nothing()
         => Assert.Null(New.TooOldFor("0.6.0", "dev"));

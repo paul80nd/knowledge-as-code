@@ -33,8 +33,6 @@ public class GroundTests : IDisposable
         Assert.Equal(dir, New.Survey(dir).Corpus);
     }
 
-    // The framework reaching a subfolder of a corpus is the same fault as it reaching the corpus itself,
-    // and it is the quieter of the two.
     [Fact]
     public void A_descriptor_above_this_folder_is_found_too()
     {
@@ -70,7 +68,6 @@ public class GroundTests : IDisposable
         Assert.False(ground.Dirty);
     }
 
-    // A dirty tree stops the run, so that what `new` writes is legible as a diff.
     [Fact]
     public void A_repository_holding_uncommitted_work_is_dirty()
     {

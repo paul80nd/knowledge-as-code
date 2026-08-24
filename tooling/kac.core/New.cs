@@ -421,8 +421,6 @@ public static class New
     private static readonly string[] Reserved =
         ["true", "false", "y", "n", "yes", "no", "on", "off", "null", "~"];
 
-    // A scalar quoted where YAML would otherwise read it as something other than a name. A plain scalar
-    // cannot open on an indicator or hold `": "`, and a folder called `1.5` would load as a number.
     private static string Scalar(string value)
     {
         var plain = value.Length > 0

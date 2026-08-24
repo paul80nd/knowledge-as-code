@@ -74,8 +74,6 @@ public class AskingTests
         Assert.Contains(asker.Asked, q => q.Contains("called"));
     }
 
-    // `--yes` takes the default for everything unasked: the folder's name, every type, and neither a
-    // publishing target nor a CI system.
     [Fact]
     public void Yes_takes_the_default_for_everything_unasked()
     {
@@ -87,8 +85,6 @@ public class AskingTests
         Assert.Equal(CiSystem.None, answers.Ci);
     }
 
-    // A hung pipeline is worse than a failed one, so a run with nobody to ask and no `--yes` exits. Every
-    // flag it needed is named at once, so one more run fixes all of it.
     [Fact]
     public void A_run_with_nobody_to_ask_names_every_flag_it_needed()
     {
@@ -129,8 +125,6 @@ public class AskingTests
         Assert.Contains("adrs, glossary, policies", problem);
     }
 
-    // Declining is the exception, so the multi-select opens with everything ticked. Ticking nothing is
-    // still an answer: a corpus that adopted no type is a state the descriptor holds.
     [Fact]
     public void A_corpus_may_adopt_no_type_at_all()
         => Assert.Empty(Resolve(new NewRequest(), new Scripted(many: [])).Answers!.Types);
@@ -163,7 +157,6 @@ public class AskingTests
         Assert.DoesNotContain(asker.Asked, q => q.Contains("read a record"));
     }
 
-    // A URL nobody can recall is a URL nobody should be made to type, so the remote fills the answer in.
     [Fact]
     public void The_bases_are_filled_in_from_the_repositorys_own_remote()
     {

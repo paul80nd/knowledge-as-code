@@ -17,12 +17,6 @@ using System.Reflection;
 using kac.core;
 using Spectre.Console.Cli;
 
-// The running version, as the build stamped it: the release plus the commit it was built from. Both
-// `--version` and `new` read it, the second to hold itself against a template's `minimum-tool`.
-var version =
-    typeof(Cli).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-    ?? "unknown";
-
 var app = new CommandApp();
 app.Configure(config =>
 {
@@ -32,8 +26,7 @@ app.Configure(config =>
 
     // `--version` exists only once a version is set, and the informational one is what the build stamps
     // with the commit. So the answer names the source it was built from as well as the release.
-    config.SetApplicationVersion(version);
-    Cli.Version = version;
+    config.SetApplicationVersion(Cli.Version);
 
     // Without this an option the verb does not declare is dropped in silence, and a mistyped flag
     // reads as a clean run.
@@ -77,9 +70,11 @@ return exit == -1 ? 1 : exit;
 // Colour is settled here too, because this is the one step every verb takes before it writes anything.
 internal static class Cli
 {
-    // What the build stamped this assembly with, for the verb that has to hold itself against a
-    // template's `minimum-tool`. Set once, where the parser is configured.
-    public static string Version = "unknown";
+    // The release the build stamped this assembly with, and the commit it came from. `--version` prints
+    // it, and `new` holds itself against a template's `minimum-tool`.
+    public static readonly string Version =
+        typeof(Cli).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+        ?? "unknown";
 
     public static int InCorpus(KacSettings settings, Func<string, int> run)
     {

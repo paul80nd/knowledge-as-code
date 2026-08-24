@@ -28,8 +28,6 @@ public class TemplateSourceTests : IDisposable
 
     // -- a folder on this machine --
 
-    // The offline escape hatch, and what the tool's own tests read. A folder is used where it sits, so
-    // nothing is copied and nothing is cleaned up afterwards.
     [Fact]
     public void A_folder_is_read_where_it_sits()
     {
@@ -54,8 +52,6 @@ public class TemplateSourceTests : IDisposable
         Assert.True(Directory.Exists(from));
     }
 
-    // A fork keeping its manifest below the repository root says so with `--path`, and every path the
-    // manifest names is then read from there.
     [Fact]
     public void A_path_names_the_folder_holding_the_manifest()
     {
@@ -69,8 +65,6 @@ public class TemplateSourceTests : IDisposable
 
     // -- the listing --
 
-    // A folder passed with `--from` is somebody's working tree, and `bin/` and `obj/` are in it. Read
-    // through git, the manifest never sees what the repository ignores.
     [Fact]
     public void A_repository_is_listed_by_git_so_what_it_ignores_is_never_read()
     {
@@ -86,7 +80,6 @@ public class TemplateSourceTests : IDisposable
         Assert.DoesNotContain("bin/kac.dll", files);
     }
 
-    // A fixture is a folder and not a repository, so the walk is what answers for it.
     [Fact]
     public void A_folder_that_is_no_repository_is_walked()
     {
@@ -133,8 +126,6 @@ public class TemplateSourceTests : IDisposable
         Assert.False(Directory.Exists(clone));
     }
 
-    // git is the only account of whether the URL, the ref or the credential was wrong, so what it wrote
-    // is carried into the message rather than summarised.
     [Fact]
     public void A_clone_that_failed_carries_what_git_said()
     {
@@ -160,7 +151,6 @@ public class TemplateSourceTests : IDisposable
         Assert.Contains("holds no 'framework' folder", fetch.Problem);
     }
 
-    // A failed clone leaves nothing behind, so a run that stops here costs the temp folder nothing.
     [Fact]
     public void A_failed_clone_leaves_no_folder_behind()
     {

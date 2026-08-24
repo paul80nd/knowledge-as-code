@@ -26,9 +26,8 @@ public static class Out
     // console every other line of output does, and `--no-color` reaches it.
     public static IAnsiConsole Terminal => Std;
 
-    // Whether there is somebody to ask. A prompt needs a terminal to draw on and a keyboard to read from,
-    // and a redirected stdin is the second one missing: `new` refuses a question it cannot ask rather
-    // than waiting on an answer nobody can type, because a hung pipeline is worse than a failed one.
+    // Whether there is somebody to ask. Spectre's own `Interactive` answers for the terminal it would
+    // draw on and not for the keyboard, so a redirected stdin passes it and reads back nothing.
     public static bool Interactive =>
         Std.Profile.Capabilities.Interactive && !System.Console.IsInputRedirected;
 

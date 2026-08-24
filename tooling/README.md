@@ -101,9 +101,9 @@ It is prose throughout and not a form. A heading with nothing true to say is lef
 where an absence reads as work not yet done. Reasons stay inline in **How it works**, beside whatever they explain.
 **Decisions** takes only the ones belonging to a command as a whole.
 
-`update.md` is a specification written before its command exists, and says so at its head. `CliReference.Unbuilt` is
-the list it sits on, and `CliReferenceTests` holds every page there to saying it. A page comes off that list on the day
-its command ships.
+`update.md` is a specification written before its command exists, and says so at its head. `CliReference.Unbuilt` is the
+list it sits on, and `CliReferenceTests` holds every page there to saying it. A page comes off that list on the day its
+command ships.
 
 [`CLAUDE.md`](CLAUDE.md) is what will bite you while changing any of it.
 

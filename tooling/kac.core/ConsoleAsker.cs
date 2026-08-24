@@ -23,8 +23,8 @@ public sealed class ConsoleAsker : IAsker
                 .Title(question)
                 .AddChoices(Ordered(options, fallback)));
 
-    // Everything ticked, because declining is the exception. `NotRequired` is what lets a corpus tick
-    // nothing: adopting no type is a state the descriptor holds and validation acts on.
+    // `NotRequired` is what lets a corpus tick nothing. Without it Spectre refuses to return an empty
+    // selection, and adopting no type is a state the descriptor holds.
     public IReadOnlyList<string> ChooseMany(string question, IReadOnlyList<string> options)
     {
         var prompt = new MultiSelectionPrompt<string>().Title(question).NotRequired();

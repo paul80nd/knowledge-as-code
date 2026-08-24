@@ -12,7 +12,6 @@ public interface IAsker
 
     string Choose(string question, IReadOnlyList<string> options, string fallback);
 
-    // Every option offered ticked, because declining is the exception. A caller may come back with none.
     IReadOnlyList<string> ChooseMany(string question, IReadOnlyList<string> options);
 
     bool Confirm(string question);
@@ -158,11 +157,9 @@ public static class Asking
                + $"it declares {string.Join(", ", declared)}.";
     }
 
-    // Where the published form is served from, filled in from the repository's own remote.
-    //
-    // A URL nobody can recall is a URL nobody should be made to type, so the derived pair is offered as
-    // the answer rather than asked for from scratch. A target needing no bases is asked nothing, and a
-    // run with nobody to ask takes what the remote implied or states none.
+    // Where the published form is served from, offered already filled in by `Publishing.BasesFrom`. A
+    // target needing no bases is asked nothing, and a run with nobody to ask takes what the remote
+    // implied or states none.
     private static (string? Human, string? Raw) Bases(string target, string? origin, IAsker? asker)
     {
         if (target.Equals(Publishing.None, StringComparison.Ordinal)) return (null, null);
