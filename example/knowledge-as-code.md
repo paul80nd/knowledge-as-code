@@ -12,7 +12,7 @@ This page is the way in. The detail lives beneath it:
 | Know why the framework is shaped this way    | [Principles][principles]                          |
 | Add or change something                      | [Contributing](knowledge-as-code/contributing.md) |
 | Know what metadata a document needs          | [Metadata](knowledge-as-code/metadata.md)         |
-| Understand what CI checks and builds         | [Automation](knowledge-as-code/automation.md)     |
+| Understand what CI checks and builds         | [Automation][automation]                          |
 | See where the taxonomy's names came from     | [Lineage](knowledge-as-code/lineage.md)           |
 
 Working this way is itself a decision, and a corpus that holds ADRs should record it as one.
@@ -102,6 +102,7 @@ can contradict each other is a defect waiting to happen.
 taxonomy and carry no taxonomy frontmatter. The constitution is not one of the laws. This also keeps the mechanism
 (schema, validators, generators, skills) cleanly separable from the corpus's content.
 
+[automation]: https://paul80nd.github.io/knowledge-as-code/framework/automation/
 [principles]: https://paul80nd.github.io/knowledge-as-code/framework/principles/
 [principles-behaviour]: https://paul80nd.github.io/knowledge-as-code/framework/principles/#behaviour-before-subject
 [principles-capture]: https://paul80nd.github.io/knowledge-as-code/framework/principles/#cheap-capture-deliberate-promotion

@@ -192,8 +192,7 @@ knowledge-as-code/     # the system's own documentation
   ├── taxonomy.md      # the seventeen types and where things go
   ├── metadata.md      # the frontmatter fields
   ├── contributing.md  # how a contribution is made and reviewed
-  ├── lineage.md       # where the taxonomy's names came from
-  └── automation.md    # what is generated, validated and scheduled
+  └── lineage.md       # where the taxonomy's names came from
 kac, kac.cmd           # launchers that wrap `dotnet run --project ../tooling/kac`
 .corpus.yaml           # what this corpus is, and where it publishes
 .claude/skills/        # agent skills for working on this corpus

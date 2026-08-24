@@ -72,7 +72,7 @@ The one flow that crosses tiers. Where the observation turns out to be a rule pe
 2. Create the FAQ with `promoted-from`, `confirmed-by` and `confirmed-on`.
 3. Set the discovery's `status: promoted` and `promoted-to`.
 
-Nothing proposes a promotion automatically yet. [Automation](knowledge-as-code/automation.md) describes the
+Nothing proposes a promotion automatically yet. [Automation](https://paul80nd.github.io/knowledge-as-code/framework/automation/) describes the
 distillation pass that would. Such a proposal arrives as a pull request carrying `provenance` back to the passage that
 produced it. Read that provenance before you accept anything: an unverifiable proposal is a rejected proposal. Checking
 it is the whole reason the field exists.

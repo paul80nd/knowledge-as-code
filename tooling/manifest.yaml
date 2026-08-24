@@ -174,7 +174,6 @@ rules:
   - { path: "knowledge-as-code/metadata.md",     layer: synced }
   - { path: "knowledge-as-code/contributing.md", layer: synced }
   - { path: "knowledge-as-code/lineage.md",      layer: synced }
-  - { path: "knowledge-as-code/automation.md",   layer: synced }
 
   - path: "knowledge-as-code.md"
     layer: synced

@@ -52,6 +52,13 @@ them. It writes only between the markers, and only for the types the corpus adop
 
 `GeneratedFiles` holds that list, so `validate` holds a corpus to the same files and blocks this writes.
 
+### The graph is written to the narrowest renderer
+
+The types graph goes into a fenced Mermaid block, in the subset an Azure DevOps wiki renders. That subset is narrower
+than Mermaid's own, and a diagram exceeding it renders nothing at all with no error to say why. So the generator writes
+`graph` rather than `flowchart`, uses no subgraphs, and keeps every arrow to `-->`. A corpus publishing somewhere more
+capable still receives the same diagram, because one generator writes for every publishing target.
+
 ### Only the region between the markers is rewritten
 
 The rest of the file is byte-preserved. Every

@@ -11,6 +11,7 @@ and fills it with its own knowledge.
 
 * **[Principles](principles.md)** says why the framework is shaped the way it is, and what the design will not trade
   away.
+* **[Automation](automation.md)** says what a pipeline does for a corpus, and what it leaves alone.
 
 ## What a corpus holds instead
 
