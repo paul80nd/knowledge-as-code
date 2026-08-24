@@ -17,8 +17,8 @@ kac validate [--json] [--no-color]
 
 `validate` is the command CI runs over a corpus, and the one an author runs before pushing. It decides which files are
 records and applies the checks the schema declares. It reports each fault against the file that caused it, with a line
-where it has one. Its reader is whoever writes a record, so a finding has to name the fault precisely enough to be
-fixed without opening this tool. Where each check comes from, and what it proves, is [Checks](../checks.md).
+where it has one. Its reader is whoever writes a record, so a finding has to name the fault precisely enough to be fixed
+without opening this tool. Where each check comes from, and what it proves, is [Checks](../checks.md).
 
 ## What it is not
 
@@ -49,25 +49,24 @@ and `.git/` is never walked. It then applies the taxonomy exclusions that
   `**/_index.md` and `**/_template.md` as well as `_plan/` and `_reports/`. A type's `_template.md` is not a record and
   is discovered as none, but it is checked. `template-fields` is the check, and [Checks](../checks.md) says where it
   comes from
-- `knowledge-as-code/`, excluded as a *record* only. The framework's own documents are still read for their links
-  (see below)
+- `knowledge-as-code/`, excluded as a *record* only. The framework's own documents are still read for their links (see
+  below)
 - `.git/`, `.idea/` and `.claude/`, which nothing reads at all
 - root `README.md` and root `CLAUDE.md`
 - anything outside a folder that maps to a type schema
 
 ### What makes a document a record
 
-A document is validated **only if it carries a YAML frontmatter block**. The frontmatter is how a document opts into
-the schema. A file in a type folder without one is counted in the summary as skipped without
-frontmatter, and does not fail the run.
+A document is validated **only if it carries a YAML frontmatter block**. The frontmatter is how a document opts into the
+schema. A file in a type folder without one is counted in the summary as skipped without frontmatter, and does not fail
+the run.
 
 ### The framework's own documentation gets a pass of its own
 
 `knowledge-as-code.md` and the documents beneath it are not records, and discovery leaves them out. They are still
 Markdown that links to things, so they are read for link and fragment resolution, the way a type page is, and for
 `framework-names-types`. Generated blocks are emptied first.
-`generate --check` answers for those, and the links inside them are written from this corpus and not from the
-framework.
+`generate --check` answers for those, and the links inside them are written from this corpus and not from the framework.
 
 The framework's own glossary is in that set and is also a record, filed under a type and validated like any other. It
 gets the naming rule and not a second link pass, which would report every dead link in it twice.
@@ -75,8 +74,8 @@ gets the naming rule and not a second link pass, which would report every dead l
 ### Type pages get a pass of their own
 
 A page (`adrs.md`, `services.md`) is not a record and carries no frontmatter, so the structural checks do not apply. It
-is checked for link resolution, undefined and non-canonical labels, unused definitions, and frontmatter it should not
-be carrying.
+is checked for link resolution, undefined and non-canonical labels, unused definitions, and frontmatter it should not be
+carrying.
 
 ### Every file carrying a generated block is held to its markers
 
@@ -93,6 +92,6 @@ file it can find no marker in is that file as it stands.
 `.git/info/exclude` and global excludes count. A tree that is not a repository, or one where git cannot be run, is
 walked for `*.md` instead. That walk skips `.git`, `.idea` and `.claude` by name and honours nothing else.
 
-The taxonomy exclusions still apply, so what changes is narrow: a Markdown file the corpus had ignored is discovered
-and validated. The test harness assembles such a tree deliberately. A corpus outside version control would meet it
-without asking.
+The taxonomy exclusions still apply, so what changes is narrow: a Markdown file the corpus had ignored is discovered and
+validated. The test harness assembles such a tree deliberately. A corpus outside version control would meet it without
+asking.

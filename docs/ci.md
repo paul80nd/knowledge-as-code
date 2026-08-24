@@ -10,21 +10,21 @@ from inside the corpus.
 | `kac generate --check` | a generated file no longer matches the records and schema it was built from |
 
 [Checks](checks.md) is the page for adding a check. A corpus that ships an agent plugin adds
-[`export`](cli/export.md) and [`bundle`](cli/bundle.md) beside the two, so a change that breaks the export or the
-bundle fails the pull request. [Automation](framework/automation.md) says what the checks are for.
+[`export`](cli/export.md) and [`bundle`](cli/bundle.md) beside the two, so a change that breaks the export or the bundle
+fails the pull request. [Automation](framework/automation.md) says what the checks are for.
 
 ## Pin the tool first
 
-Run the version the corpus was written against. Put `kac` in a tool manifest and commit it. Do this once,
-on your own machine:
+Run the version the corpus was written against. Put `kac` in a tool manifest and commit it. Do this once, on your own
+machine:
 
 ```bash
 dotnet new tool-manifest
 dotnet tool install KnowledgeAsCode.Tool
 ```
 
-That writes `dotnet-tools.json` at the repository root and names the version in it. CI restores from that file, so
-every machine runs the same `kac`.
+That writes `dotnet-tools.json` at the repository root and names the version in it. CI restores from that file, so every
+machine runs the same `kac`.
 
 ```bash
 dotnet tool restore
@@ -131,8 +131,8 @@ dotnet tool run kac export      # the corpus as data, into .dist/export/
 dotnet tool run kac bundle      # that export plus .plugin/, into .dist/plugin/
 ```
 
-Each replaces its own directory under `.dist/` and leaves the other alone, so a `.gitignore` holding `.dist/` keeps
-both out of the tree. Running them in CI proves the corpus still exports and still assembles. It publishes nothing:
+Each replaces its own directory under `.dist/` and leaves the other alone, so a `.gitignore` holding `.dist/` keeps both
+out of the tree. Running them in CI proves the corpus still exports and still assembles. It publishes nothing:
 pushing the result anywhere is a separate job, and one that needs credentials this one should not have.
 
 [`bundle`](cli/bundle.md) validates nothing it assembles, so validate both the plugin and the marketplace above it. The

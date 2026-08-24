@@ -146,7 +146,8 @@ public static class GeneratedFiles
         specs.Add(new FileSpec("knowledge-as-code/taxonomy.md", true,
         [
             new Block("types-placement", _ => Generator.PlacementTable(adopted, Up("knowledge-as-code/taxonomy.md"))),
-            new Block("types-detail", schema => Generator.TypeCatalogue(schema.Tiers, adopted, Up("knowledge-as-code/taxonomy.md"))),
+            new Block("types-detail",
+                schema => Generator.TypeCatalogue(schema.Tiers, adopted, Up("knowledge-as-code/taxonomy.md"))),
             new Block("types-versus", _ => Generator.Disambiguations(adopted)),
             new Block("types-graph", _ => Generator.RelationDiagram(adopted)),
             new Block("types-edges", _ => Generator.RelationTable(adopted))
@@ -160,7 +161,8 @@ public static class GeneratedFiles
 
         specs.Add(new FileSpec("README.md", false,
         [
-            new Block("types-index", _ => Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md", Up("README.md")))
+            new Block("types-index",
+                _ => Generator.TypesIndex(adopted, "knowledge-as-code/taxonomy.md", Up("README.md")))
         ]));
 
         return specs;

@@ -7,8 +7,6 @@ using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 
-// Parsed document
-
 public class LinkRef
 {
     public string Target = ""; // the url, taken from the definition where a label stands in for it
@@ -249,7 +247,6 @@ public partial class Doc
             if (leaf.Inline is not null)
                 ScanContainer(leaf.Inline, doc.BareBracketTokens);
 
-        // Y-statement: the first block quote after the H1.
         doc.YStatement = ast.Descendants<QuoteBlock>().FirstOrDefault(q => q.Line > (doc.H1Line - 1));
 
         doc.MirroredSectionLinks = SectionLinks(ast, type?.DeclaredFields.Select(spec => spec.MirrorsSection));

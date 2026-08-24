@@ -21,9 +21,7 @@ public static class Harness
         {
             CopyTree(schemaDir, Path.Combine(temp, ".schema"));
 
-            // `kac` reads a folder as a corpus by the `.corpus.yaml` in it, so the assembled tree gets
-            // one holding a comment and nothing else. That is what an absent descriptor comes to, so no
-            // scenario's findings move for the file being there. A fixture carrying its own overwrites it.
+            // The marker that makes the assembled tree a corpus. `kac-tests.cs` says why it is empty.
             Directory.CreateDirectory(temp);
             File.WriteAllText(Path.Combine(temp, ".corpus.yaml"),
                 "# Written by the behaviour specs so that kac reads this tree as a corpus.\n");

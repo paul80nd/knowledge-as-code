@@ -27,8 +27,8 @@ The reference for KaC: what a corpus holds, and what `kac` does to one.
 * **[Getting started](getting-started.md)** installs the tool and runs it against a corpus.
 * **[The framework](framework/index.md)** is the ideas the tool serves: what a type and a tier are, the types that ship,
   what a record carries, and how knowledge is contributed.
-* **[Running it in CI](ci.md)** wires the two commands that answer for a corpus into a pull request, on GitHub
-  Actions or Azure Pipelines.
+* **[Running it in CI](ci.md)** wires the two commands that answer for a corpus into a pull request, on GitHub Actions
+  or Azure Pipelines.
 * **[CLI reference](cli/index.md)** gives a page to each command, saying what it does, what it refuses and what it
   leaves alone. The overview carries the exit codes and the options every command takes.
 * **[The corpus descriptor](corpus-descriptor.md)** covers `.corpus.yaml`, the one file a corpus writes for itself.
@@ -45,8 +45,8 @@ is its way in to everything here.
 covers building `kac`, its three test layers, and what bites you while editing any of it.
 
 **How to author a schema** is
-[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md). It travels
-with the schema it describes, so a corpus reads its own copy.
+[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md). It travels with the
+schema it describes, so a corpus reads its own copy.
 
 ## Maturity
 
@@ -54,9 +54,9 @@ with the schema it describes, so a corpus reads its own copy.
 [nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) sits below `1.0.0` because the commands may still
 change shape.
 
-This site is built from `main`, so it can describe a `kac` no release carries yet. Ask your own copy what it
-is with `kac --version`, and read the [changelog](changelog.md) for what each published version brought. Where
-the two disagree, the site is ahead.
+This site is built from `main`, so it can describe a `kac` no release carries yet. Ask your own copy what it is with
+`kac --version`, and read the [changelog](changelog.md) for what each published version brought. Where the two disagree,
+the site is ahead.
 
 Every page here describes what exists today. The
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds what has been considered and not yet built.

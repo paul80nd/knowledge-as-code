@@ -13,7 +13,6 @@ namespace kac.core;
 // what lets a check be written against a corpus nobody wrote to disk.
 public sealed class Tree(IReadOnlySet<string> paths, Func<string, string> read, Func<string, bool>? onDisk = null)
 {
-    // Whether the corpus holds this file.
     public bool Exists(string rel) => paths.Contains(Normalise(rel));
 
     // Whether the file is present, tracked or not. Ask this where a file's absence and its untracked
@@ -26,10 +25,10 @@ public sealed class Tree(IReadOnlySet<string> paths, Func<string, string> read, 
     //
     // A corpus assembled from values supplies no answer, so the listing answers: everything it holds is
     // present, and nothing else is.
-    public bool OnDisk(string rel) => onDisk is null ? Exists(rel) : onDisk(Normalise(rel));
+    public bool OnDisk(string rel) => onDisk?.Invoke(Normalise(rel)) ?? Exists(rel);
 
-    // Whether the corpus holds anything inside this folder. An empty directory is not a folder the corpus
-    // has: git cannot track one, so counting it would make the answer depend on who is asking.
+    // An empty directory is not a folder the corpus has: git cannot track one, so counting it would make
+    // the answer depend on who is asking.
     public bool HasFolder(string folder)
     {
         var prefix = Normalise(folder) + "/";

@@ -53,8 +53,8 @@ find it and confirm it is running.
 
 ## Evidence
 
-Where the proof lives: the build log, the audit note, the dashboard. Someone asking "how do you know?" should be able
-to follow this to an artefact.
+Where the proof lives: the build log, the audit note, the dashboard. Someone asking "how do you know?" should be able to
+follow this to an artefact.
 
 ## Coverage and gaps
 

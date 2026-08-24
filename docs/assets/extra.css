@@ -9,10 +9,10 @@
 
 /* Below the last plain page that comes before the sections. */
 .md-nav--primary > .md-nav__list > .md-nav__item:not(.md-nav__item--nested):has(+ .md-nav__item--nested) {
-  margin-bottom: 0.9rem;
+    margin-bottom: 0.9rem;
 }
 
 /* Above the changelog, which is always the last thing in the nav. */
 .md-nav--primary > .md-nav__list > .md-nav__item:last-child {
-  margin-top: 0.9rem;
+    margin-top: 0.9rem;
 }

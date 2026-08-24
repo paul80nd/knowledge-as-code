@@ -135,7 +135,7 @@ public class RuleExprTests
     [InlineData("words() <= links() * 40", true)]
     [InlineData("(1 + 2) * 3 == 9", true)]
     [InlineData("1 + 2 * 3 == 7", true)] // precedence, not left to right
-    [InlineData("4 / 0 == 0", true)]     // division by zero yields zero
+    [InlineData("4 / 0 == 0", true)]
     public void The_grammar_evaluates_as_declared(string expr, bool expected)
         => Assert.Equal(expected, Eval(expr, body: "One [link](/a.md)."));
 

@@ -62,8 +62,7 @@ criteria stays a trial forever.
 
 * [svc-{{a}}]
 
-_(Generated drift detection will compare this against the actual package manifests in both directions, once it
-exists.)_
+_(Generated drift detection will compare this against the actual package manifests in both directions, once it exists.)_
 
 ## Alternatives considered
 

@@ -43,7 +43,7 @@ public static class MechanismSync
     public static SyncPlan Plan(IReadOnlySet<string> localFiles, IReadOnlySet<string> refFiles,
         Manifest manifest, CorpusDescriptor descriptor, DeclinedPaths declinedTypes, Func<string, bool> same)
     {
-        var accepted = descriptor.Accepted.ToDictionary(a => a.Path, a => a.Reason, StringComparer.Ordinal);
+        var accepted = descriptor.Skipped.ToDictionary(a => a.Path, a => a.Reason, StringComparer.Ordinal);
 
         var updated = new List<string>();
         var seeded = new List<string>();
@@ -112,11 +112,10 @@ public static class MechanismSync
     // Carry the plan out: copy what it names, then record what was taken. Copying and stamping are one
     // step because a corpus holding the reference's files and not saying so has taken a sync it cannot
     // be held to.
-    public static void Apply(SyncPlan plan, string localRoot, string refRoot, Manifest manifest,
-        string reference, string today)
+    public static void Apply(SyncPlan plan, string localRoot, string refRoot, Manifest manifest, string today)
     {
         foreach (var rel in plan.Copies) Copy(refRoot, localRoot, rel);
-        CorpusDescriptor.Stamp(localRoot, manifest.Version, reference, today);
+        CorpusDescriptor.Stamp(localRoot, manifest.Version, today);
     }
 
     private static void Copy(string fromRoot, string toRoot, string rel)

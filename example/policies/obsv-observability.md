@@ -28,9 +28,9 @@ Telemetry nobody watches is storage, and monitoring without adequate telemetry i
 
 All production systems we operate, and the lower environments where behaviour must be understood to validate a change.
 
-_Boundary: this policy sets how long telemetry is kept to stay useful (which is long enough to investigate). Where
-that telemetry contains personal data, [pol-DATA] sets the lifetime and the shorter of the two governs. What may be
-written into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
+_Boundary: this policy sets how long telemetry is kept to stay useful (which is long enough to investigate). Where that
+telemetry contains personal data, [pol-DATA] sets the lifetime and the shorter of the two governs. What may be written
+into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
 
 ## Clauses
 

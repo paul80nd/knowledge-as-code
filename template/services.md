@@ -25,7 +25,8 @@ what talks to it?* A service document answers it.
 ## Scope
 
 One document per **deployable unit**, not per repository and not per feature. A repository containing three
-independently deployed apps gets three documents. A capability spanning six services gets a [capability](capabilities.md)
+independently deployed apps gets three documents. A capability spanning six services gets
+a [capability](capabilities.md)
 document that links to all six.
 
 A service document is **descriptive**: it mirrors what is actually deployed. It is not the place for:
@@ -84,9 +85,9 @@ of the catalogue as well, because it deploys services.
   graded above one of its own dependencies is not automatically wrong, but it is worth defending in the record.
 * **Dependencies point downward only.** Record what this service calls. Nothing generates a reverse view today, so
   anyone who writes a "depended on by" list maintains it by hand. Assume such a list is stale unless it says otherwise.
-* **`depends-on` records calls, not messages.** An edge means this service is configured to reach that one: a URL in
-  its application settings, or a route pointing at it. Publish/subscribe coupling over a message bus is deliberately not
-  an edge, because it is not a call and the publisher does not know its consumers. The graph therefore shows an
+* **`depends-on` records calls, not messages.** An edge means this service is configured to reach that one: a URL in its
+  application settings, or a route pointing at it. Publish/subscribe coupling over a message bus is deliberately not an
+  edge, because it is not a call and the publisher does not know its consumers. The graph therefore shows an
   event-driven service as unconnected when it is not, so its topics and queues sit in its own `## Operational notes`.
 * **A bare field means "nothing in this catalogue", not "nothing at all".** A service that calls a legacy system, a
   third-party integration or anything else outside this catalogue carries a bare `depends-on`. None of those is an edge.

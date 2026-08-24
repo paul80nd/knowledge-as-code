@@ -1,4 +1,3 @@
-//
 // A hand-rolled lexer, recursive-descent parser, type checker and evaluator, in one file with no
 // dependencies. `.schema/README.md` is the reference for what an expression may say; this comment is
 // about the boundary, because this is the file someone stands in when they want to cross it.
@@ -10,17 +9,7 @@
 // loops, joins or quantifiers is a rule class in `Rules/`, and wanting them here is the signal that
 // OPA is being rebuilt by increments.
 //
-// When to abandon this: the moment a real need appears for variables, function definitions or
-// quantifiers, swap this for CEL (Common Expression Language, and a .NET port exists). That means a
-// real need, and not a rule that could be written another way.
-//
-// The `expr:` strings largely carry over and the engine drops in. Not before: the dependency is not
-// worth it at this size, which is the same judgement that rejected OPA/Rego and is recorded with its
-// reasoning in `docs/checks.md`.
-//
-// Non-goals, so that a later reader does not mistake an absence for an oversight: a general policy
-// engine, rules-as-data beyond this grammar, a date or collection type system, runtime or
-// tenant-specific rule sets, and replacing any check that stays C#.
+// `docs/checks.md` records why a rule engine was rejected at this size, which is the same judgement.
 
 namespace kac.core;
 
@@ -215,8 +204,7 @@ public static class RuleExpr
                     // only where the values have an order: strings by ISO-friendly ordinal order,
                     // integers by magnitude.
                     case "==" or "!=":
-                        if (l != r) throw Mismatch(bin.Op, l, r, source);
-                        return ValueType.Bool;
+                        return l != r ? throw Mismatch(bin.Op, l, r, source) : ValueType.Bool;
 
                     case "<" or "<=" or ">" or ">=":
                         if (l != r || l == ValueType.Bool) throw Mismatch(bin.Op, l, r, source);
@@ -258,15 +246,15 @@ public static class RuleExpr
 
     private sealed class Parser(string source)
     {
-        private readonly List<(string Kind, string Text, int Pos)> tokens = Lex(source);
-        private int at;
+        private readonly List<(string Kind, string Text, int Pos)> _tokens = Lex(source);
+        private int _at;
 
         public Expr ParseAll()
         {
             var expr = Implies();
-            if (Peek().Kind != "end")
-                throw new RuleExprException($"unexpected '{Peek().Text}' at {Peek().Pos} in '{source}'.");
-            return expr;
+            return Peek().Kind != "end"
+                ? throw new RuleExprException($"unexpected '{Peek().Text}' at {Peek().Pos} in '{source}'.")
+                : expr;
         }
 
         private Expr Implies()
@@ -332,9 +320,9 @@ public static class RuleExpr
                 case "(":
                 {
                     var inner = Implies();
-                    if (Next().Kind != ")")
-                        throw new RuleExprException($"expected ')' at {token.Pos} in '{source}'.");
-                    return inner;
+                    return Next().Kind != ")"
+                        ? throw new RuleExprException($"expected ')' at {token.Pos} in '{source}'.")
+                        : inner;
                 }
                 case "ident":
                 {
@@ -346,9 +334,9 @@ public static class RuleExpr
                         do
                             args.Add(Implies());
                         while (Take(","));
-                    if (Next().Kind != ")")
-                        throw new RuleExprException($"expected ')' closing '{token.Text}(' in '{source}'.");
-                    return new Call(token.Text, args);
+                    return Next().Kind != ")"
+                        ? throw new RuleExprException($"expected ')' closing '{token.Text}(' in '{source}'.")
+                        : new Call(token.Text, args);
                 }
                 default:
                     throw new RuleExprException(
@@ -356,14 +344,14 @@ public static class RuleExpr
             }
         }
 
-        private (string Kind, string Text, int Pos) Peek() => tokens[at];
-        private (string Kind, string Text, int Pos) Next() => tokens[at < tokens.Count - 1 ? at++ : at];
+        private (string Kind, string Text, int Pos) Peek() => _tokens[_at];
+        private (string Kind, string Text, int Pos) Next() => _tokens[_at < _tokens.Count - 1 ? _at++ : _at];
 
         private bool Take(string kindOrWord)
         {
             var token = Peek();
             var matches = token.Kind == kindOrWord || (token.Kind == "word" && token.Text == kindOrWord);
-            if (matches) at++;
+            if (matches) _at++;
             return matches;
         }
 

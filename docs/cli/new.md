@@ -86,8 +86,8 @@ reads later.
 
 **`README.md` is written too, and for the same reason.** The template's own is `withheld`, because it describes the
 template rather than a corpus. A corpus that copied everything would therefore arrive with no README at all. What
-`new` writes is short: the corpus's name, what it holds, and how to run the tool against it. It is a starting point,
-not a document, and the corpus owns it from the moment it lands.
+`new` writes is short: the corpus's name, what it holds, and how to run the tool against it. It is a starting point, not
+a document, and the corpus owns it from the moment it lands.
 
 **One file needs more than its bytes.** `.plugin/hooks/breadcrumb` is executable, and a hook that arrives without its
 mode bit fails silently on Unix.
@@ -109,9 +109,8 @@ It stops short of committing. A first commit is a person's own act, and staging 
 template repository cannot create a corpus. `--from` accepts a local path as well as a URL, which is the offline escape
 hatch and is also what the tool's own tests use.
 
-**It is not idempotent and does not try to be.** Running it twice in the same folder stops on the first check. Taking
-a newer framework into a corpus that already exists is `update`, which is a different question with a different
-answer.
+**It is not idempotent and does not try to be.** Running it twice in the same folder stops on the first check. Taking a
+newer framework into a corpus that already exists is `update`, which is a different question with a different answer.
 
 **The default upstream is compiled in.** A tool that cannot bootstrap without a URL you have to look up is a tool people
 get wrong, so `--from` defaults to the framework's own repository. A corpus taking its framework from elsewhere passes

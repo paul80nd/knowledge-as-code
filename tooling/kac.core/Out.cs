@@ -16,11 +16,11 @@ public static class Out
     // a golden captures and what `grep` expects. A terminal reports its own width and keeps it.
     private const int RedirectedWidth = 1000;
 
-    private static IAnsiConsole? _std;
-    private static IAnsiConsole? _err;
+    private static IAnsiConsole? s_std;
+    private static IAnsiConsole? s_err;
 
-    private static IAnsiConsole Std => _std ??= Make(Console.Out, Console.IsOutputRedirected);
-    private static IAnsiConsole Err => _err ??= Make(Console.Error, Console.IsErrorRedirected);
+    private static IAnsiConsole Std => s_std ??= Make(Console.Out, Console.IsOutputRedirected);
+    private static IAnsiConsole Err => s_err ??= Make(Console.Error, Console.IsErrorRedirected);
 
     // Plain text, written as given. Markup is not read here, so a message quoting '[ADR-0004]' or a
     // regex reaches the reader intact rather than throwing on an unbalanced tag.

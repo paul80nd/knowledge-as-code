@@ -33,10 +33,10 @@ public class PublishingTests
     // Four ways of being unable to write a link, and one answer to all of them: the caller's question is
     // whether it can write one, and a null says no without asking it to tell the four apart.
     [Theory]
-    [InlineData(Publishing.None, Human, Raw, Sha)]           // publishes nowhere
-    [InlineData(Publishing.MkDocs, Human, Raw, Sha)]         // a target nothing addresses yet
-    [InlineData(Publishing.GitHub, null, Raw, Sha)]          // a target, and no base to build on
-    [InlineData(Publishing.GitHub, Human, Raw, null)]        // no ref, so no stable address
+    [InlineData(Publishing.None, Human, Raw, Sha)]    // publishes nowhere
+    [InlineData(Publishing.MkDocs, Human, Raw, Sha)]  // a target nothing addresses yet
+    [InlineData(Publishing.GitHub, null, Raw, Sha)]   // a target, and no base to build on
+    [InlineData(Publishing.GitHub, Human, Raw, null)] // no ref, so no stable address
     public void A_corpus_the_tool_cannot_address_resolves_to_nothing(
         string? target, string? human, string? raw, string? gitRef)
     {

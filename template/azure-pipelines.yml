@@ -1,0 +1,65 @@
+# CI for this corpus, on Azure Pipelines.
+#
+# Runs the validator, the freshness check and the two packaging commands on every pull request into
+# main. It writes nothing back: `generate --check` reports staleness and names the command you run
+# locally, and the export and the bundle land in an untracked `.dist/` the agent throws away.
+# Publishing what was built is a separate act, and no step here does it.
+#
+# Wiring PR validation, which is the part that catches people out: this is an Azure Repos repository,
+# where the `pr:` trigger below is ignored. Add this pipeline as a required build validation on main:
+#   Project settings -> Repositories -> <your-repo> -> Policies -> Branch Policies ->
+#   main -> Build Validation -> + -> select this pipeline -> Required.
+# The `pr:` block is kept for intent, and works as written if the repository is mirrored to GitHub.
+#
+# Publishing to an Azure DevOps wiki: `.order` beside this file drives the navigation, and frontmatter
+# renders as a metadata table. What `publishing-target: azure-devops-wiki` does not yet give you is
+# links in the export. `kac` builds those for `github` alone, so an export from a corpus on this target
+# carries none. Nothing here is broken by that, and an agent reading the export gets no address to
+# follow.
+
+trigger: none # no CI on branch pushes; PR validation is via branch policy
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
+steps:
+  - task: UseDotNet@2
+    displayName: Install the .NET 10 SDK
+    inputs:
+      packageType: sdk
+      version: 10.0.x
+
+  # Installed globally, so this runs whichever version nuget.org holds on the day. Pin it instead by
+  # committing a tool manifest (`dotnet new tool-manifest && dotnet tool install KnowledgeAsCode.Tool`)
+  # and swapping this step for `dotnet tool restore`. Then every machine and every build runs the
+  # version the corpus was written against.
+  - script: dotnet tool install --global KnowledgeAsCode.Tool
+    displayName: Install kac
+
+  # One invocation per subcommand, run sequentially. Concurrent runs contend over the same output.
+  - script: kac validate
+    displayName: Validate frontmatter, links and structure
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - script: kac generate --check
+    displayName: Check generated output is fresh
+    workingDirectory: $(Build.SourcesDirectory)
+
+  # Proves the corpus still exports, and that the plugin still assembles from what it wrote. Delete
+  # both steps if this corpus publishes neither.
+  - script: kac export
+    displayName: Build the export
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - script: kac bundle
+    displayName: Assemble the plugin bundle
+    workingDirectory: $(Build.SourcesDirectory)

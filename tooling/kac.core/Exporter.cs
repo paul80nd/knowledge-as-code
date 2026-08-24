@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace kac.core;
 
-// One file the export writes, named relative to the export root.
+// Named relative to the export root, not to the corpus.
 public sealed record ExportFile(string Path, string Content);
 
 // What an export comes to: the files it writes, the types it found something to write for, and the
@@ -83,7 +83,10 @@ public static class Exporter
                 FormatVersion,
                 corpus.Descriptor.Name,
                 corpus.Descriptor.ContentVersion,
-                corpus.Descriptor.MechanismVersion,
+
+                // The descriptor calls this `upstream.template-version`. Renaming the published name is
+                // gated behind a move of `FormatVersion` above, which a consumer reads.
+                corpus.Descriptor.TemplateVersion,
                 run.Commit,
                 run.Dirty,
                 run.GeneratedAt,
@@ -161,9 +164,9 @@ public static class Exporter
         foreach (var d in byId.Values)
         {
             var above = d.FrontScalar("narrows");
-            if (above is { Length: > 0 } parent && byId.ContainsKey(parent) && parent != Id(d))
+            if (above is { Length: > 0 } && byId.ContainsKey(above) && above != Id(d))
             {
-                if (!children.TryGetValue(parent, out var list)) children[parent] = list = [];
+                if (!children.TryGetValue(above, out var list)) children[above] = list = [];
                 list.Add(d);
             }
             else

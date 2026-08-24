@@ -86,13 +86,8 @@ public static class Validator
         // one would be free to answer differently.
         var byId = CheckCorpus(schema, corpus.Docs, findings);
 
-        // The rules whose question is about the set: a cycle in a dependency graph, a term nothing uses.
         CheckCorpusRules(schema, corpus.Docs, byId, findings);
-
-        // How often a value recurs is a question about the whole of a type.
         CheckMinRecords(corpus.Docs, findings);
-
-        // Whether each declared type is stood up.
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
 
         return findings;
@@ -427,7 +422,6 @@ public static class Validator
     // for next.
     public static Dictionary<string, Doc> CheckCorpus(Schema schema, List<Doc> docs, List<Finding> f)
     {
-        // id uniqueness across the whole corpus.
         var byId = new Dictionary<string, Doc>(StringComparer.OrdinalIgnoreCase);
         foreach (var d in docs)
         {

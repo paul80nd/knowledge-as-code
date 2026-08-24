@@ -67,13 +67,11 @@ public sealed class Facts(Doc doc)
     // is excluded because it is not prose, and fenced code with it. Neither carries inline content, so
     // both fall out of the walk rather than needing to be skipped. Whitespace-separated runs, which is
     // what a person means when they say a Y-statement is too long.
-    public int Words() => words ??= CountWords();
+    public int Words() => _words ??= CountWords();
 
-    private int? words;
+    private int? _words;
 
-    private string Body => body ??= doc.Text[doc.BodyStart..];
-
-    private string? body;
+    private string Body => field ??= doc.Text[doc.BodyStart..];
 
     // The source of one section: the first of them, where a document repeats a heading, which is the
     // one a rule naming it means. Found on the heading text, because that is what the schema names a

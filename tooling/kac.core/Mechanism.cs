@@ -38,7 +38,7 @@ public static class MechanismCheck
     public static MechanismReport Classify(IReadOnlySet<string> localFiles, IReadOnlySet<string> refFiles,
         Manifest manifest, CorpusDescriptor descriptor, Func<string, bool> same)
     {
-        var accepted = descriptor.Accepted.Select(a => a.Path).ToHashSet(StringComparer.Ordinal);
+        var accepted = descriptor.Skipped.Select(a => a.Path).ToHashSet(StringComparer.Ordinal);
 
         var drift = new List<string>();
         var missingLocally = new List<string>();

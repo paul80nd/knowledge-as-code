@@ -15,19 +15,43 @@ the commit and opens a release carrying the section for that version.
 
 ## Unreleased
 
+## 0.5.0 - 2026-08-24
+
+### Changed
+
+- **`.corpus.yaml` takes a new shape.** `upstream:` now says `path`, `ref`, `commit`, `template-version` and
+  `taken-on`, where it said `mechanism-version`, `synced-from` and `synced-on`. `accepted-divergences:` becomes
+  `skip:`, and drops `since` and `revisit`. `update-policy:` arrives, defaulting to `cautious`. Every renamed key is
+  reported by name, with what to write instead, so nothing is misread in silence; `upstream.synced-from` was dropped
+  rather than renamed, and the message says to delete it.
+  [The corpus descriptor](https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/) covers the whole file.
+- **`mechanism --sync` stamps `upstream.template-version` and `upstream.taken-on`**, where it stamped three keys. It
+  leaves `upstream.commit` alone, because a sync reads a directory rather than a git ref and has no commit to record.
+- **`mechanism --check` reports a template version**, where it reported a mechanism version. The number has not moved.
+
+### Added
+
+- **A template manifest reads `to:` on a rule**, naming where that rule's files land in a corpus. It replaces the
+  pattern's directory prefix, so a template authored in a subdirectory of the repository serving it reaches a corpus's
+  own root.
+- **A template manifest reads `layer: removed`**, a tombstone naming a file a corpus should delete when it takes a newer
+  framework. Nothing acts on it yet: `kac update` is what will.
+- **A template manifest reads `minimum-tool`**, the oldest tool that can read it. The template is fetched rather than
+  shipped inside the package, so the two version independently.
+
 ## 0.4.0 - 2026-08-24
 
 ### Changed
 
 - **`kac` finds a corpus by its `.corpus.yaml`**, where it looked for a `.schema/`. It then walks up again from the
-  corpus root for the schema to judge that corpus against, so one schema can serve several corpora in one repository.
-  A standalone corpus holds both files at its own root and both walks stop there, which is the ordinary case and is
+  corpus root for the schema to judge that corpus against, so one schema can serve several corpora in one repository. A
+  standalone corpus holds both files at its own root and both walks stop there, which is the ordinary case and is
   unchanged. A corpus with no descriptor is no longer found: write one, and
   [the corpus descriptor](https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/) says what goes in it.
 - **`kac` names `.corpus.yaml` when it cannot find a corpus**, and reports separately on a corpus with no schema above
   it. The second exits 1 rather than crashing on the first schema file it tries to open.
-- **`kac mechanism --help` reads its two option descriptions as sentences.** `--check` closed on a semicolon,
-  and `--against` opened on a bare noun phrase. What either flag does has not moved.
+- **`kac mechanism --help` reads its two option descriptions as sentences.** `--check` closed on a semicolon, and
+  `--against` opened on a bare noun phrase. What either flag does has not moved.
 
 ## 0.3.0 - 2026-08-23
 
@@ -45,8 +69,8 @@ the commit and opens a release carrying the section for that version.
 - **`validate` and `checks` list in aligned columns**, with the severity coloured. Only the message column wraps, so a
   narrow terminal breaks a sentence and never a check id. `checks` splits its count by severity.
 - **`generate` marks a file it created**, and counts what it wrote against the size of the whole plan.
-- **`export` and `bundle` dim the directory in each path they write**, and colour a remark by whether it is advice or
-  an account of the run. Neither changes a word it prints.
+- **`export` and `bundle` dim the directory in each path they write**, and colour a remark by whether it is advice or an
+  account of the run. Neither changes a word it prints.
 - **A failure is red on stderr.** That covers every verb's hard stop, and the heading over a list of what stopped it.
   What the heading names stays plain beneath it.
 - **`--json` and every exit code answer as before.** `--json` goes straight to the stream and never carries colour,
@@ -67,8 +91,8 @@ the commit and opens a release carrying the section for that version.
 
 ### Changed
 
-- **`kac index` is now `kac generate`.** The command writes each type's `_index.md` and rewrites the generated blocks
-  in every type page, and only the first of those is an index. `--check` is unchanged, and so is everything either half
+- **`kac index` is now `kac generate`.** The command writes each type's `_index.md` and rewrites the generated blocks in
+  every type page, and only the first of those is an index. `--check` is unchanged, and so is everything either half
   writes. There is no alias: a pipeline or script still naming `index` fails until it names `generate`.
 
 ## 0.1.1 - 2026-08-20
@@ -88,8 +112,8 @@ The first published version.
 
 - `kac validate` holds a corpus to the schema it carries: frontmatter, identity, structure, clauses, links, the graph
   and the type setup.
-- `kac index` regenerates `_index.md` and the generated blocks in each type page. `--check` reports what is stale
-  rather than writing it.
+- `kac index` regenerates `_index.md` and the generated blocks in each type page. `--check` reports what is stale rather
+  than writing it.
 - `kac checks` lists every check the validator implements, read from the schema rather than from a list in the tool.
 - `kac export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning.
 - `kac bundle` assembles that export and `.plugin/` into an installable plugin.

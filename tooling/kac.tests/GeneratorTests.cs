@@ -116,7 +116,6 @@ public class GeneratorTests
 
         var page = Generator.IndexPage(t, Rows(("rbk-a", "sev3"), ("rbk-c", "sev1"), ("rbk-b", "sev1")));
 
-        // The direction applies to the sort as a whole, tie-breaker included.
         Assert.True(page.IndexOf("rbk-a", StringComparison.Ordinal)
                     < page.IndexOf("rbk-c", StringComparison.Ordinal));
         Assert.True(page.IndexOf("rbk-c", StringComparison.Ordinal)
@@ -544,7 +543,8 @@ public class GeneratorTests
     [Fact]
     public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
     {
-        var table = Generator.LineageTable([Ancestor("Discovery", "discoveries", new LineageSpec("None.", "", ""))], "../");
+        var table = Generator.LineageTable([Ancestor("Discovery", "discoveries", new LineageSpec("None.", "", ""))],
+            "../");
 
         Assert.Contains("| None.", table);
         Assert.Contains("| — ", table);
@@ -562,7 +562,6 @@ public class GeneratorTests
         Summary = "A thing.", Detail = "A longer thing.", GoesHere = "A thing", Collision = collision
     };
 
-    // Most types collide with nothing.
     [Fact]
     public void Only_a_type_that_collides_with_something_gets_a_heading()
     {

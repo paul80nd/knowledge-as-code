@@ -4,14 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace kac.core;
 
-// JSON output models
-//
-// Every JSON document kac emits is a record serialized through the source generator
-// (KacJson): reflection-based serialization is disabled under AOT. To add a new document
-// (e.g. `digest` or `drift` output), declare its record shape here and add one
-// `[JsonSerializable(typeof(...))]` line to KacJson. No other plumbing is needed.
-//
-// Property names are PascalCase and emitted camelCase; `int?` line is written as `null`.
+// Every JSON document kac emits is a record serialized through the source generator below. The project
+// sets `IsAotCompatible`, so the trim analyzers fail the build on a reflection-based serializer call.
 
 public record ValidateReport(ValidateSummary Summary, IReadOnlyList<ValidateFinding> Findings);
 
@@ -147,7 +141,8 @@ public record BundleTrimmed(string Path, IReadOnlyList<string> Requires, string 
 // marketplace root it sits. `Dist.Root` says why the marketplace is the root and not a sibling.
 
 public record MarketplaceManifest(
-    [property: JsonPropertyName("$schema")] string Schema,
+    [property: JsonPropertyName("$schema")]
+    string Schema,
     string Name,
     string Description,
     MarketplaceOwner Owner,
@@ -170,18 +165,18 @@ public record MarketplacePlugin(string Name, string Description, string Source);
 [JsonSerializable(typeof(MarketplaceManifest))]
 public partial class KacJson : JsonSerializerContext
 {
-    private static KacJson? _relaxed;
-    private static KacJson? _line;
+    private static KacJson? s_relaxed;
+    private static KacJson? s_line;
 
     // Shared context for CLI output: the source-generated metadata from Default, plus relaxed escaping,
     // so a quote or an em dash in a finding reaches the reader as itself rather than as a numeric
     // escape. Lazily initialised so it does not touch the generator's Default during static
     // construction, whose order across the partial is unspecified.
-    public static KacJson Relaxed => _relaxed ??= new KacJson(Escaped(indented: true));
+    public static KacJson Relaxed => s_relaxed ??= new KacJson(Escaped(indented: true));
 
     // The same, not indented, for a document whose unit is the line. JSONL exists so that a grep hands
     // back a complete object, which an indented one spread over several lines never does.
-    public static KacJson Line => _line ??= new KacJson(Escaped(indented: false));
+    public static KacJson Line => s_line ??= new KacJson(Escaped(indented: false));
 
     // `Options` is the generator's own name on this partial, so this one is named for what it does.
     private static JsonSerializerOptions Escaped(bool indented) => new(Default.Options)

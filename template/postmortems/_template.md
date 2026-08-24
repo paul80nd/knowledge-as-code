@@ -58,8 +58,8 @@ Measured against [nfr-{{a}}]: {{met / breached}}. _(If no NFR covered this, that
 
 ## Root cause
 
-The one thing that, had it been different, would have prevented this. Resist listing several. Contributing factors
-are the next section.
+The one thing that, had it been different, would have prevented this. Resist listing several. Contributing factors are
+the next section.
 
 ## Contributing factors
 

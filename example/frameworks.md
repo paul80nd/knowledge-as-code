@@ -3,8 +3,8 @@
 The external frameworks this corpus refers to, and what each one obliges us to.
 
 A [policy](policies.md) maps its clauses to a framework's controls in the `Alignment` column of its clause table, as
-`[ISO 27001:2022].A.8.24`. Those references resolve here. This page is the only place that says what the relationship
-is (bound, self-held, or merely borrowed) because that standing changes on its own schedule and would otherwise need
+`[ISO 27001:2022].A.8.24`. Those references resolve here. This page is the only place that says what the relationship is
+(bound, self-held, or merely borrowed) because that standing changes on its own schedule and would otherwise need
 correcting in every policy that cites it at once.
 
 Maintained by hand: no frontmatter, no id, no index. It exists so the references in the corpus have somewhere honest to
@@ -37,19 +37,19 @@ nothing genuinely maps, the control is absent from the corpus and that absence i
 this corpus is the engineering function's share and no more. Roughly a third of Annex A is deliberately answered
 elsewhere in the management system:
 
-| Area                                                      | Owned by                                  |
-|-----------------------------------------------------------|-------------------------------------------|
-| Physical controls: `A.7.1`–`A.7.14` entire                | Facilities                                |
-| People controls: `A.6.1`–`A.6.7`                          | HR, with the security awareness programme |
-| The management system itself: `A.5.1`, `A.5.2`, `A.5.35`  | The ISMS owner                            |
-| Organisational reach: `A.5.5`, `A.5.6`, `A.5.31`          | Legal and the ISMS owner                  |
-| Asset handling: `A.5.10`, `A.5.11`, `A.5.13`              | IT operations                             |
-| Supplier contracting: `A.5.20`                            | Procurement and legal                     |
-| Corporate IT: `A.8.1`, `A.8.23`, `A.8.34`                 | IT operations                             |
+| Area                                                     | Owned by                                  |
+|----------------------------------------------------------|-------------------------------------------|
+| Physical controls: `A.7.1`–`A.7.14` entire               | Facilities                                |
+| People controls: `A.6.1`–`A.6.7`                         | HR, with the security awareness programme |
+| The management system itself: `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                            |
+| Organisational reach: `A.5.5`, `A.5.6`, `A.5.31`         | Legal and the ISMS owner                  |
+| Asset handling: `A.5.10`, `A.5.11`, `A.5.13`             | IT operations                             |
+| Supplier contracting: `A.5.20`                           | Procurement and legal                     |
+| Corporate IT: `A.8.1`, `A.8.23`, `A.8.34`                | IT operations                             |
 
 Without saying so, a reader who takes the rule above at face value counts every uncited control as a finding, and most
-of them are not ours to answer. The ones that *are* ours and still uncited are the real ones, and they are worth
-naming as gaps.
+of them are not ours to answer. The ones that *are* ours and still uncited are the real ones, and they are worth naming
+as gaps.
 
 Referenced by: most policies under `category: security`, `delivery` and `operations`.
 
@@ -59,11 +59,11 @@ Referenced by: most policies under `category: security`, `delivery` and `operati
 GDPR applies in parallel for people in the EU and shares the article numbering, so a clause citing `Art.5(1)(e)` cites
 both; only the supervisory authority differs.
 
-This is where [pol-DATA]'s obligations originate. ISO/IEC 27001:2022 covers the same ground in a single control
-(A.5.34, *privacy and protection of personal data*), but a control that says "comply with the applicable law" is a
-pointer, not the duty. The practical difference is who can waive it: an Annex A control is ours to scope out with a
-documented justification, and an article is not. A recorded deviation ([pol-DEVI]) against one of these clauses is a
-decision to break the law rather than a risk to accept.
+This is where [pol-DATA]'s obligations originate. ISO/IEC 27001:2022 covers the same ground in a single control (A.5.34,
+*privacy and protection of personal data*), but a control that says "comply with the applicable law" is a pointer, not
+the duty. The practical difference is who can waive it: an Annex A control is ours to scope out with a documented
+justification, and an article is not. A recorded deviation ([pol-DEVI]) against one of these clauses is a decision to
+break the law rather than a risk to accept.
 
 Referenced by: [pol-DATA], [pol-DERV].
 
@@ -94,9 +94,8 @@ Referenced by: [pol-A11Y].
 
 ## Inspiration
 
-Nothing here binds. A clause cites one of these to say where the thinking came from: we are restating what the
-industry already knows rather than inventing it. Citing one is never an argument for keeping a clause we would
-otherwise drop.
+Nothing here binds. A clause cites one of these to say where the thinking came from: we are restating what the industry
+already knows rather than inventing it. Citing one is never an argument for keeping a clause we would otherwise drop.
 
 ### DORA metrics
 
@@ -137,8 +136,8 @@ SSDF.
 The closest thing to a peer this corpus has. SSDF says what a practice must achieve and leaves the tooling to whoever
 adopts it, which puts it at the same altitude as a policy clause and is why it reaches across the whole policy set.
 Several of our clauses turn out to be SSDF practices arrived at independently, and [pol-ENVS] is `PO.5` nearly in its
-entirety. That cuts both ways: the corpus is conventional where it should be, and where it
-says something SSDF does not is where it is worth defending.
+entirety. That cuts both ways: the corpus is conventional where it should be, and where it says something SSDF does not
+is where it is worth defending.
 
 NIST also publishes SP 800-218A, an SSDF profile for generative AI. It addresses producers of models rather than
 consumers of coding agents, so it does not cover what [pol-AGNT] governs; the AI RMF below does.
@@ -153,8 +152,8 @@ Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-
 
 [pol-AGNT] is the policy this exists for, and 27001 answers it with `A.8.30`, *outsourced development*. That is a
 control written for contracting out a system build, pressed into service for an agent proposing a change. It reads
-plausibly and is wrong in the way that matters: an outsourced supplier is accountable for its work, and the premise
-of pol-AGNT is that an agent is not, so accountability sits with the person who accepts the output. GOVERN says that
+plausibly and is wrong in the way that matters: an outsourced supplier is accountable for its work, and the premise of
+pol-AGNT is that an agent is not, so accountability sits with the person who accepts the output. GOVERN says that
 directly.
 
 **ISO/IEC 42001** is the certifiable sibling, an AI management system standard and the natural companion to our 27001

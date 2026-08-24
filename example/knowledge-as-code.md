@@ -19,9 +19,9 @@ Working this way is itself a decision, and a corpus that holds ADRs should recor
 
 ## The problem
 
-Engineering knowledge is spread thin. Architectural reasoning lives in one place. Functional detail lives in work
-items. Operational know-how lives in people's heads or in a chat message from eight months ago. The answer to "why does
-the build fail when I do X" is rediscovered roughly every quarter by whoever hits it next.
+Engineering knowledge is spread thin. Architectural reasoning lives in one place. Functional detail lives in work items.
+Operational know-how lives in people's heads or in a chat message from eight months ago. The answer to "why does the
+build fail when I do X" is rediscovered roughly every quarter by whoever hits it next.
 
 AI coding sessions sharpen this in both directions. A session that does not know the standards will confidently produce
 work that violates them. A session that *discovers* something useful has nowhere to put it, so the discovery dies when

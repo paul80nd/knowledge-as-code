@@ -12,8 +12,8 @@ wrong tier's rules.
 4. **Load `technical-writing`, then `writing-a-record`.** Read the section for the tier the type carries, not the one
    you are used to.
 5. **List what the record needs and what you were told.** A request is usually one sentence and a template is a dozen
-   required fields. Go back and ask for the difference rather than inventing it. A field you cannot answer is a
-   question for a person, not a placeholder.
+   required fields. Go back and ask for the difference rather than inventing it. A field you cannot answer is a question
+   for a person, not a placeholder.
 6. **Copy the template and fill it.** Keep every required section. A section with nothing to say is a content gap to
    report, never a heading to delete.
 7. **Write the frontmatter last**, once the record has settled. Field order is topological and `key-order` checks it.

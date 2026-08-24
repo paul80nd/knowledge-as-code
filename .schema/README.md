@@ -25,8 +25,8 @@ opening its template and making the same change there. Assume that, rather than 
 | `<folder>.yaml`         | One per knowledge type, named for its folder  |
 | `meta/type.schema.json` | The shape of a `<folder>.yaml`. See below     |
 
-Type files are named for the **folder**, not the type: `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a
-document's type from its folder, so folder → schema is an identity lookup with no singularisation step.
+Type files are named for the **folder**, not the type: `adrs.yaml`, `services.yaml`, `data.yaml`. CI infers a document's
+type from its folder, so folder → schema is an identity lookup with no singularisation step.
 
 A tier is declared twice, deliberately. `_universal.yaml` gives the `tier` field its range, and every record is
 validated against it. `_tiers.yaml` says what each of those values is called and how a document of it behaves, and

@@ -1,8 +1,6 @@
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
-// YAML helpers over the representation model
-
 namespace kac.core;
 
 public static class Yaml

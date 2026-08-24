@@ -1,19 +1,9 @@
-// kac: the knowledge-as-code validator and generator.
-//
-// One tool, several subcommands, sharing a schema-loading and markdown-parsing core:
-//
-//   validate   check the corpus against .schema/*.yaml
-//   generate   regenerate _index.md and the generated blocks in <type>.md
-//   export     write the corpus to .dist/export/ as data a consumer reads instead of cloning
-//   bundle     assemble that export and the .plugin/ tree into an installable plugin
-//   checks     list every check the validator implements
-//   mechanism  enforce the portability manifest: check the shared layers against a
-//              reference corpus, or sync them from one
+// kac: the knowledge-as-code validator and generator. One tool, several subcommands, sharing a
+// schema-loading and markdown-parsing core. Each is described where it is registered below.
 //
 // This file is only the CLI surface: it wires Spectre.Console.Cli to Commands and finds the corpus each
-// verb answers about. Every subcommand's logic lives in the kac.core project this one references: one
-// class per file, named for what it holds. Four carry the substance: Schema.cs loads .schema/*.yaml, Document.cs
-// parses a record, Validator.cs holds the checks, Generator.cs builds the generated blocks.
+// verb answers about. Every subcommand's logic lives in the kac.core project this one references, one class
+// per file. `tooling/CLAUDE.md` says how that project is laid out and which file answers what.
 //
 // Spectre.Console.Cli is the parser because Spectre.Console is where a .NET tool goes for a prompt, and a
 // tool that asks a question and parses a command line should carry one library rather than two.
@@ -67,9 +57,8 @@ if (args.Length == 0)
     return 1;
 }
 
-// Spectre answers a parse failure with -1, which a shell reads as 255. A usage error has always exited
-// 1 here, beside a corpus error at 1 and no corpus at 2, and that is the table in tooling/README.md.
-// No verb returns -1, so nothing else can be caught by this.
+// Spectre answers a parse failure with -1, which a shell reads as 255. No verb returns -1, so nothing
+// else can be caught by this. `docs/cli/index.md` carries the exit codes.
 var exit = app.Run(args);
 return exit == -1 ? 1 : exit;
 

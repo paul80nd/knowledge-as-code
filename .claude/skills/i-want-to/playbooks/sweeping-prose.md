@@ -7,8 +7,8 @@ trial design, and testing a rule is a different job from applying one.
    branch missed the type templates and `glossary/` because they were counted as folders rather than as files.
 2. **Put a version check at the top of the prompt.** Name three or four lines only the current skills carry, and tell
    the agent to stop if any is missing. Load skills with the Read tool: the Skill tool has served a stale render.
-3. **Name the trap for that batch.** A schema sweep meets plain YAML scalars where a colon is a parse error. A type
-   page meets generated regions. A policy meets the clause override. A named trap has never fired.
+3. **Name the trap for that batch.** A schema sweep meets plain YAML scalars where a colon is a parse error. A type page
+   meets generated regions. A policy meets the clause override. A named trap has never fired.
 4. **Say which files belong to somebody else**, including a human reading a folder right now.
 5. **Forbid `kac` and `dotnet` while agents run in parallel.** They build the same project and contend over its output.
    Run every check yourself at the end.

@@ -22,7 +22,7 @@ git clone https://github.com/paul80nd/knowledge-as-code
 cp -R knowledge-as-code/template/ my-corpus
 cp -R knowledge-as-code/.schema my-corpus/  # authored at the repository root, above both corpora there
 cd my-corpus
-rm manifest.yaml README.md                  # the template's own machinery, not a corpus's
+rm README.md                                # the template describing itself, not a corpus's own
 ```
 
 !!! note "Edit `.corpus.yaml` next"
@@ -30,18 +30,19 @@ rm manifest.yaml README.md                  # the template's own machinery, not 
     It arrives naming the template, because no template can name your corpus for you.
     [The corpus descriptor](corpus-descriptor.md) says what goes in it.
 
-`kac` reads the git listing to find what a corpus holds, so make the corpus a repository. Write a `.gitignore` holding
-`.dist/` first, because the commands below build into it. Then commit: an export stamps the commit it was built from,
-and a dirty tree gets a manifest naming a commit that does not reproduce it.
+`kac` reads the git listing to find what a corpus holds, so make the corpus a repository. The `.gitignore` you copied
+already holds `.dist/` and `_reports/`, which is what keeps the commands below from writing their own output back into
+the corpus. Commit before running them: an export stamps the commit it was built from, and a dirty tree gets a manifest
+naming a commit that does not reproduce it.
 
 ```bash
-echo '.dist/' > .gitignore
 git init && git add -A
 git commit -m "Start a corpus from the knowledge-as-code template"
 ```
 
-You also arrive with no `README.md`, no ignore rules, no editor conventions and no CI. Each of those is a question for
-you about your repository rather than about the framework.
+You arrive with ignore rules, editor conventions, a wiki ordering and a starter pipeline for each of the two hosts. Keep
+whichever pipeline you run on and delete the other. What you do not arrive with is a `README.md`, which is the one page
+nobody else can write for you.
 
 ## Run the tool against your corpus
 

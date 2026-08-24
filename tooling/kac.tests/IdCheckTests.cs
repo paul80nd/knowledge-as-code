@@ -174,12 +174,12 @@ public class IdCheckTests
     // The part half has to fit the declaration, and a type declaring no parts has none to be named. That
     // is what keeps `pol-DEVI.md` and a filename in brackets out of this.
     [Theory]
-    [InlineData("pol-SCRT.timebox")]  // the declared pattern is upper-case
-    [InlineData("pol-SCRT.md")]       // a file extension is not a clause
-    [InlineData("gls-search.Title")]  // a heading part is its slug, and a slug is lower-case
-    [InlineData("adr-0001.context")]  // the type declares no parts at all
-    [InlineData("pol-SCRT.")]         // nothing after the dot
-    [InlineData(".TIMEBOX")]          // nothing before it
+    [InlineData("pol-SCRT.timebox")] // the declared pattern is upper-case
+    [InlineData("pol-SCRT.md")]      // a file extension is not a clause
+    [InlineData("gls-search.Title")] // a heading part is its slug, and a slug is lower-case
+    [InlineData("adr-0001.context")] // the type declares no parts at all
+    [InlineData("pol-SCRT.")]        // nothing after the dot
+    [InlineData(".TIMEBOX")]         // nothing before it
     public void A_part_that_does_not_fit_its_type_s_declaration_is_prose(string label)
         => Assert.False(IdChecks.TryCanonicalId(label, SchemaWith(Clauses(), Terms(), Numbered()), out _));
 

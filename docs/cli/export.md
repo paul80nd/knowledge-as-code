@@ -28,9 +28,8 @@ something a consumer can install. Nothing here trims components, packages a plug
 here knows a bundle exists. `bundle` reads what `export` wrote, and `export` reads nothing a bundle holds.
 
 **It is not [`generate`](generate.md).** `generate` writes into the corpus, for a person reading the corpus. `export`
-writes outside
-it, for something that will never open the Markdown. Both are built from the same frontmatter, and neither is derivable
-from the other, because they answer to different readers.
+writes outside it, for something that will never open the Markdown. Both are built from the same frontmatter, and
+neither is derivable from the other, because they answer to different readers.
 
 **It is not a backup.** A record travels as the fields and sections its type declared, so a corpus cannot be rebuilt
 from an export of it. The direction is one way: `.dist/export/` is rebuilt whole from the corpus.
@@ -44,9 +43,9 @@ resolves against the commit it was built from.
 ### What travels
 
 **What travels is the type's decision**, declared in its `export:` block and described in
-[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md). The exporter
-reads that declaration and nothing else. A corpus that adopted no exporting type still writes a manifest, with an empty
-type list. "Nothing" is a valid statement of what a corpus has. Every section and the parts entry names a **fidelity**
+[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md). The exporter reads
+that declaration and nothing else. A corpus that adopted no exporting type still writes a manifest, with an empty type
+list. "Nothing" is a valid statement of what a corpus has. Every section and the parts entry names a **fidelity**
 beside the piece it selects, saying how much of that piece travels, and neither falls back to one. `fields:` is a plain
 list: a field travels whole or not at all.
 
@@ -149,10 +148,9 @@ artefact nobody reviews is invisible.
 
 ### What holds in every file
 
-**Absent is `null`.** Every key writes it that way. A field a record leaves blank and a field it does not carry are
-one absence to a
-consumer. Writing `""` in one file beside `null` in another would leave that consumer checking which file it had opened
-before it could test for nothing.
+**Absent is `null`.** Every key writes it that way. A field a record leaves blank and a field it does not carry are one
+absence to a consumer. Writing `""` in one file beside `null` in another would leave that consumer checking which file
+it had opened before it could test for nothing.
 
 **Prose arrives unwrapped.** The corpus wraps at 120 columns, which is a fact about the file rather than about the
 words. A grep for a phrase straddling the wrap would find nothing. Blank lines are the author's and stay. A list,
@@ -161,9 +159,9 @@ because the two mistakes do not cost the same. A list joined onto one line is de
 it. A paragraph left wrapped merely arrives as it was written. Every doubtful line therefore goes the safe way, and a
 corpus whose sections happen to hold only paragraphs today is not a reason to narrow it.
 
-**Output is deterministic.** Ordering is `StringComparer.Ordinal` everywhere but a term line's own position, which
-sorts case-insensitively on the term, and every value
-that varies between two runs is confined to the manifest. Two runs from one commit produce identical bytes but for
+**Output is deterministic.** Ordering is `StringComparer.Ordinal` everywhere but a term line's own position, which sorts
+case-insensitively on the term, and every value that varies between two runs is confined to the manifest. Two runs from
+one commit produce identical bytes but for
 `generatedAt`.
 
 ### The two links
@@ -199,17 +197,17 @@ one part are the same string.
 
 Its links are resolved, so the commit sits inside them. The file therefore rewrites on every export from a new commit,
 whatever its content did. It is bought deliberately: a reader that has already dereferenced one record wants a URL in
-its hand, not a template and a substitution rule. At a handful of records the cost is a few untracked files. It is
-worth reopening where a type exports records by the hundred, because the churn scales with the record count and what it
-buys does not.
+its hand, not a template and a substitution rule. At a handful of records the cost is a few untracked files. It is worth
+reopening where a type exports records by the hundred, because the churn scales with the record count and what it buys
+does not.
 
 #### Four kinds of corpus have no address
 
 The tool can build on none of them: one publishing nowhere, one naming a target nothing builds links for, one stating a
 target but no bases, and one git cannot answer for. Each exports without links. The manifest carries the target it was
 given and null templates beside it, so a consumer sees the absence stated. The run itself says which of the four caused
-it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than about
-where it is published, and they travel either way.
+it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than about where it is published,
+and they travel either way.
 
 ### Two versions, and they are independent
 

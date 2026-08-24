@@ -35,7 +35,7 @@ public partial class NavigationTests
             .Concat(CliReference.Pages().Select(page => $"cli/{page}.md"))
             .ToList();
 
-        Assert.Equal(wanted, Listed().Where(page => page.StartsWith("cli/", StringComparison.Ordinal)).ToList());
+        Assert.Equal(wanted, [.. Listed().Where(page => page.StartsWith("cli/", StringComparison.Ordinal))]);
     }
 
     // Every page the nav names, in the order it names them. The block runs to the next top-level key, of which there
@@ -47,7 +47,12 @@ public partial class NavigationTests
 
         foreach (var line in Nav)
         {
-            if (line.StartsWith("nav:", StringComparison.Ordinal)) { inNav = true; continue; }
+            if (line.StartsWith("nav:", StringComparison.Ordinal))
+            {
+                inNav = true;
+                continue;
+            }
+
             if (!inNav) continue;
             if (line.Length > 0 && !char.IsWhiteSpace(line[0]) && line[0] != '#') break;
 

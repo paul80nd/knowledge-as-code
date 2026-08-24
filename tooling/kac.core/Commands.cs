@@ -15,7 +15,7 @@ public static class Commands
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
-    // Build the export. The corpus is loaded whole, whatever `type` names.
+    // The corpus is loaded whole, whatever `type` names.
     public static int Export(string corpusRoot, string? type)
     {
         var corpus = Corpus.Load(corpusRoot);
@@ -319,7 +319,7 @@ public static class Commands
             MechanismSync.DeclinedTypePaths(refRoot, descriptor), Same);
 
         var today = DateTime.Today.ToString("yyyy-MM-dd");
-        MechanismSync.Apply(plan, corpusRoot, refRoot, manifest, reference, today);
+        MechanismSync.Apply(plan, corpusRoot, refRoot, manifest, today);
         return ReportSync(plan, corpusRoot, manifest.Version, reference, today);
 
         // Whether two copies of a file say the same thing. That is the one question either engine asks of the disk.
@@ -408,7 +408,7 @@ public static class Commands
         Out.Line(
             $"mechanism: content version {Stated(descriptor.ContentVersion)}, "
             + $"descriptor format {Stated(descriptor.DescriptorVersion)}, "
-            + $"mechanism version {Stated(descriptor.MechanismVersion)}.");
+            + $"template version {Stated(descriptor.TemplateVersion)}.");
         Out.Line($"mechanism: comparing the synced layer against {refRoot}");
         Section("DRIFT, synced files differ from the reference", report.Drift);
         Section("MISSING LOCALLY, synced files in the reference but not here", report.MissingLocally);

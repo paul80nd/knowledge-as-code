@@ -25,8 +25,8 @@ and how it is reviewed. What is below is only what an FAQ adds to that.
 
 Name the title and the filename for the **symptom**, not the cause. That is what people search for.
 
-* **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not
-  yet know what is wrong. This is the field that makes the document findable, so over-fill it.
+* **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not yet
+  know what is wrong. This is the field that makes the document findable, so over-fill it.
 * **`confirmed-by`**: a named person.
 * **`confirmed-on`**: a real quoted date. An FAQ nobody confirmed is a [discovery](../discoveries.md).
 * **`status`**: `active` · `superseded` · `fixed-upstream`.
@@ -62,8 +62,8 @@ is not a place to park unowned work, but it is a fine place to point at it.)_
 
 ## How we found it
 
-The diagnostic route, not just the destination. This is often more reusable than the fix itself: the next problem
-will be different, but the way in may be the same.
+The diagnostic route, not just the destination. This is often more reusable than the fix itself: the next problem will
+be different, but the way in may be the same.
 
 ## Related
 

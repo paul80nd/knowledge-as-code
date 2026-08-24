@@ -35,8 +35,8 @@ corpus's, and a corpus that took the file has neither. Leave both out of an entr
 
 **Point a redefinition at the term, not at the file.** Where another glossary defines the same word differently, the
 `**Not:**` line names that entry and lands on it. Write `[gls-other.term]: other.md#term`. A link to `other.md` alone
-puts a reader at the top of a glossary and leaves them to find what was meant, and anything reading the corpus can
-only carry the reference the link states.
+puts a reader at the top of a glossary and leaves them to find what was meant, and anything reading the corpus can only
+carry the reference the link states.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

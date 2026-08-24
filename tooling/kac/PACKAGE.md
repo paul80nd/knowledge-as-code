@@ -1,8 +1,8 @@
 # kac: knowledge as code
 
 `kac` reads a folder of Markdown documents kept in git and holds each one to a schema. The folder a document sits in
-names its type. The corpus's own `.schema/` holds one file per type, saying what fields and rules that type carries.
-A repository of those documents, with the schema it runs, is a **corpus**.
+names its type. The corpus's own `.schema/` holds one file per type, saying what fields and rules that type carries. A
+repository of those documents, with the schema it runs, is a **corpus**.
 
 What the structure buys you: indexes built from the documents themselves, and a broken cross-reference that fails CI
 rather than rotting quietly. An agent contributing to the corpus can be told where a document goes.
@@ -18,8 +18,8 @@ dotnet tool install --global KnowledgeAsCode.Tool
 
 ## Use
 
-`kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, the descriptor naming the corpus,
-so run it from anywhere inside one.
+`kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, the descriptor naming the corpus, so
+run it from anywhere inside one.
 
 ```bash
 kac validate     # frontmatter, links, structure, clauses and the graph

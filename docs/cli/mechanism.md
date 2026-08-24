@@ -20,9 +20,9 @@ kac mechanism [--against <PATH>] [--check] [--no-color] [--sync]
 A corpus takes the framework as a copy (the validator, the schema, and the documents describing how the system works),
 and a copy drifts. `mechanism` is what makes a copy answerable to a declaration.
 [`manifest.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/manifest.yaml) declares each file's
-layer: `synced`, `verification`, `forked`, `generated`, `local` or `ignored`. `mechanism` enforces that declaration
-from both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the shared layers from
-one. Its reader is whoever maintains a corpus downstream of this one.
+layer: `synced`, `verification`, `forked`, `generated`, `local` or `ignored`. `mechanism` enforces that declaration from
+both ends. `--check` reports how far a corpus has moved from a reference. `--sync` takes the shared layers from one. Its
+reader is whoever maintains a corpus downstream of this one.
 
 ## What it is not
 
@@ -38,14 +38,13 @@ be entirely valid. A corpus in step with upstream may be full of broken records.
 
 ## How it works
 
-The two halves read one manifest and share one vocabulary of layers. `--check` decides and reports. `--sync` decides
-and then writes. Neither touches a layer the manifest says a corpus owns.
+The two halves read one manifest and share one vocabulary of layers. `--check` decides and reports. `--sync` decides and
+then writes. Neither touches a layer the manifest says a corpus owns.
 
 ### `--check`
 
 `mechanism --check` resolves every tracked file against the manifest and compares the shared layers against a reference
-corpus. It follows the same discipline as `generate --check`: compare, name what differs, exit non-zero,
-never write.
+corpus. It follows the same discipline as `generate --check`: compare, name what differs, exit non-zero, never write.
 
 ```bash
 kac mechanism --check --against ../other-corpus
@@ -61,14 +60,14 @@ bare `mechanism --check`. It reports:
 - **forked** files that differ are counted, and never failed on, because a forked file is meant to diverge.
 - **generated**, **local** and **ignored** files are skipped, because a corpus builds its own, owns its own, or has no
   business comparing them.
-- **accepted divergences** named in `.corpus.yaml` are honoured rather than flagged, and reported as `RESOLVED` once
-  they match the reference again, so you can delete the stale entry.
+- **files named under `skip:`** in `.corpus.yaml` are honoured rather than flagged, and reported as `RESOLVED` once they
+  match the reference again, so you can delete the stale entry.
 - **what the descriptor declines** is skipped, and counted where the corpus holds it anyway.
 
 #### The versions it opens with
 
 It reports the three versions the descriptor states: `content-version`, `descriptor-version` and
-`upstream.mechanism-version`. A version the corpus has not stated is reported as not declared, because only the corpus
+`upstream.template-version`. A version the corpus has not stated is reported as not declared, because only the corpus
 can say what it knows. A descriptor still carrying the older `version:` key stops the command outright, in either half.
 The message names the old key, the new one and the file. The rename is the corpus's to make: nothing rewrites this file
 on a corpus's behalf.
@@ -87,8 +86,8 @@ a deletion nobody recorded. A descriptor that declares neither takes the whole s
 then compares the **authored half** of each file, emptying everything between `BEGIN GENERATED` and `END GENERATED`
 first. So a shared page may carry a block built from the corpus holding it. The taxonomy's tables are the case, because
 they list the types that corpus adopted. The prose around the block stays byte-identical everywhere. The markers
-themselves are compared, so deleting a block instead of regenerating it is still drift. `generate --check` stays the
-one voice on whether the generated half is right.
+themselves are compared, so deleting a block instead of regenerating it is still drift. `generate --check` stays the one
+voice on whether the generated half is right.
 
 ### `--sync`
 
@@ -123,21 +122,22 @@ In one pass over both trees:
 
 #### What it records
 
-Sync then stamps `descriptor-version`, `upstream.mechanism-version`, `synced-from` and `synced-on` into `.corpus.yaml`.
-It rewrites those four lines rather than re-serialising the file, so the descriptor's commentary survives. The file's
-own format is the mechanism's to state, because a corpus cannot know the shape a newer one writes. `content-version` is
-left alone: what a corpus knows is not something an upstream can tell it.
+Sync then stamps `descriptor-version`, `upstream.template-version` and `upstream.taken-on` into `.corpus.yaml`. It
+leaves `upstream.commit` alone: a sync reads a directory rather than a git ref, so it has no commit to record. It
+rewrites those four lines rather than re-serialising the file, so the descriptor's commentary survives. The file's own
+format is the mechanism's to state, because a corpus cannot know the shape a newer one writes. `content-version` is left
+alone: what a corpus knows is not something an upstream can tell it.
 
 #### It regenerates last
 
-The run finishes by calling `generate`, and copying a page whole is only safe because of that step. The page
-arrives carrying the reference's generated block, and it is right only once rebuilt against the types the
-receiving corpus holds. A passing `generate --check` is sync's postcondition.
+The run finishes by calling `generate`, and copying a page whole is only safe because of that step. The page arrives
+carrying the reference's generated block, and it is right only once rebuilt against the types the receiving corpus
+holds. A passing `generate --check` is sync's postcondition.
 
 ## Known limits
 
 **`--sync` can exit `1` after it has written.** Regeneration runs last, and a failure there leaves the files in place
 with the generated blocks unrebuilt. The message says so, and `kac generate` on its own finishes the job.
 
-**A reference whose own manifest cannot place its own tree stops the run.** That is a defect upstream rather than in
-the corpus syncing from it, and nothing is written.
+**A reference whose own manifest cannot place its own tree stops the run.** That is a defect upstream rather than in the
+corpus syncing from it, and nothing is written.

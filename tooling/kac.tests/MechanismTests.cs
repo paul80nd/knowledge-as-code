@@ -30,7 +30,7 @@ public class MechanismTests
         params (string Path, string? Reason)[] accepted)
     {
         var descriptor = new CorpusDescriptor { Role = role, Types = types };
-        foreach (var (path, reason) in accepted) descriptor.Accepted.Add(new AcceptedDivergence(path, reason));
+        foreach (var (path, reason) in accepted) descriptor.Skipped.Add(new SkippedFile(path, reason));
         return descriptor;
     }
 
