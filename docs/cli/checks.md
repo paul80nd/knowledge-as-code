@@ -15,26 +15,21 @@ kac checks [--json] [--no-color]
 
 ## What it is for
 
-`checks` prints every check the validator can emit against the corpus it is run in. It reads them from that corpus's
-own `.schema/`. So the corpus answers "what will CI hold this corpus to", and no document has to be remembered and
-maintained alongside it.
+`checks` prints every check the validator can emit against the corpus it is run in, read from that corpus's own
+`.schema/`. There is no second list to keep in step.
 
 `--json` gives you the same catalogue as data. The test suite reads that form, and holds every check to having a
 fixture that trips it.
 
-The command also exits non-zero where the reader-facing table on a type page has drifted from the catalogue. That exit
-is what keeps the table honest.
-
 ## What it is not
 
-**It is not [`validate`](validate.md).** `checks` opens no record and reports no fault in one. A check missing from a
-validate run has either not been declared or not been tripped. `checks` is how you tell those two apart.
+**It is not [`validate`](validate.md).** `checks` opens no record and reports no fault in one.
 
 ## How it works
 
-`checks` loads the `.schema/` of the corpus it is run in and builds the catalogue from it: every check the schema
-declares, with the severity it reports at and what it proves. The list prints one check to a line, with a tally at
-the foot split by severity, because a reader comes to it to learn how much of it fails a build.
+A run loads that `.schema/` and builds the catalogue from it: every check the schema declares, with the severity it
+reports at and what it proves. The list prints one check to a line, and a tally at the foot splits them by severity.
+A reader comes to it to learn how much of it fails a build.
 
 `--json` writes that same catalogue as data, one object per check, and prints nothing else.
 
@@ -42,5 +37,5 @@ Either way the run then compares the catalogue against the reader-facing checks 
 page. A check the catalogue declares and no row covers, or a row naming a check that no longer exists, is named on
 stderr and exits `1`. That comparison happens whether or not `--json` was asked for.
 
-[Checks](../checks.md) carries the rest: where a check comes from, what the schema pass refuses before any record
-is read, and why a rule is data wherever it can be.
+[Checks](../checks.md) is the page for adding a check, or for deciding whether the one you want already exists. It
+says where a check comes from, what the schema pass refuses, and why a rule is data wherever it can be.
