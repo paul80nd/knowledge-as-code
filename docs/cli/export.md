@@ -86,6 +86,9 @@ refused by name.
   glossary/
     gls-<name>.json      one record: its declared fields, its declared sections, and its links
     terms.jsonl          every term, one to a line, addressed by path and anchor
+  policies/
+    pol-<MNEM>.json      the same, for a policy
+    clauses.jsonl        every clause, one to a line, carrying the level it binds at
 ```
 
 That tree is one corpus's, and the names in it are read from the schema. A type's directory is its own key. Its flat
@@ -122,7 +125,7 @@ asking how many files it was handed wants the records. One number would be read 
 like a whole section. It belongs to the type rather than to a record, so each entry under `types` carries it once.
 
 ```json
-"sections": { "Clause": "full", "Exceptions": "summary", "Notes": "reference" }
+"sections": { "Purpose": "summary", "Scope": "full", "Exceptions": "full" }
 ```
 
 **The manifest carries both of the corpus's names.** `corpus` is what the corpus calls itself, which tells one export
@@ -142,11 +145,12 @@ the very file this one exists to save them opening.
 An address is the one thing a line does not repeat. It carries the record's `path` and the part's `anchor`, and the
 manifest carries the two templates they go into.
 
-**`part` and `anchor` hold the same string, and that is an invariant rather than duplication.** The two answer different
-questions. A part's id is what a citation from elsewhere in the corpus resolves against. An anchor is what a link's
-fragment has to be. A type that takes its parts from headings makes one string do both jobs, because a heading's slug is
-its id and its anchor alike. Every line of a glossary's flat file therefore carries the pair equal. A line where they
-differ is a defect.
+**`part` and `anchor` answer different questions, and the part source decides whether one string does both.** A part's
+id is what a citation from elsewhere in the corpus resolves against. An anchor is what a link's fragment has to be. A
+heading's slug is its id and its anchor alike, so every line of a glossary's flat file carries the pair equal. A table
+row has no fragment of its own, and its id is authored: a policy clause id is `TIMEBOX`, and no fragment resolves to
+that. So a clause line carries the clause id in `part` and the slug of the section holding the table in `anchor`, and a
+link built from that line lands on the table.
 
 ### A key name is a word the corpus may also define
 
@@ -158,12 +162,16 @@ defines a term when its `title` says so, never because it matched.
 
 ### Order carries meaning within a chain
 
-**Records are ordered roots-by-id, each root's chain depth-first beneath it.** Terms sort alphabetically within a
-record. Generality holds **within a chain** and nowhere else: `gls-search` narrows `gls-example-libraries`, so a grep
-for `title` meets the general entry before the one refining it. Across unrelated roots the order is stable and says
-nothing: `record` is defined by `gls-example-libraries` and `gls-knowledge-as-code`, and neither narrows the other.
+**Records are ordered roots-by-id, each root's chain depth-first beneath it.** Generality holds **within a chain** and
+nowhere else: `gls-search` narrows `gls-example-libraries`, so a grep for `title` meets the general entry before the
+one refining it. Across unrelated roots the order is stable and says nothing: `record` is defined by
+`gls-example-libraries` and `gls-knowledge-as-code`, and neither narrows the other.
 Reading the first hit as the more general one would give a reader the wrong domain. `narrows` on the owning records is
 what tells the two cases apart, and every line names the record it came from.
+
+**Within a record, the part source decides.** A glossary's terms sort alphabetically. A policy's clauses travel in the
+order the table writes them, because that order groups the obligations ahead of the recommendations. Sorting them would
+hand a consumer a different policy from the one the page shows.
 
 ### A cross-reference is read, never inferred
 
@@ -189,6 +197,10 @@ heading, quote, table or fence is left exactly as written. That last part is a d
 because the two mistakes do not cost the same. A list joined onto one line is destroyed, and the reader cannot recover
 it. A paragraph left wrapped merely arrives as it was written. Every doubtful line therefore goes the safe way, and a
 corpus whose sections happen to hold only paragraphs today is not a reason to narrow it.
+
+**A link reference definition never travels.** The definitions sit in a block at the foot of a record, which puts them
+inside whichever section is written last. They render as nothing on the page, so a section carried as prose ends on the
+author's words and a consumer is never handed the paths.
 
 **Output is deterministic.** Ordering is `StringComparer.Ordinal` everywhere but a term line's own position, which sorts
 case-insensitively on the term, and every value that varies between two runs is confined to the manifest. Two runs from
@@ -279,11 +291,13 @@ built after a pull is the ordinary way to meet an export this tool did not ship 
 
 ## Known limits
 
-**A part's `anchor` is its id, whatever the type sourced its parts from.** A type asking for `part.anchor` gets the
-part id. That is correct for a heading-sourced type, where a heading's slug is its id and its anchor alike. It is wrong
-for a table-sourced one, whose part id is authored. A policy clause id is `TIMEBOX`, and no fragment resolves to it.
-Deriving the anchor from the part source is what would fix it. No type in `.schema/` sources its parts from a table and
-declares an `export:` block, so no fixture covers the path and the unit tests carry it instead.
+**A record's exported field is a scalar.** `export.fields:` reads each name as one value, so a field the record writes
+as a list arrives as `null`. A policy's `aligns-with` is that case, and it stays out of the block for that reason.
+Nothing is lost: the roll-up summarises the `Alignment` cells, and every clause line carries its own.
+
+**A clause line carries no `seeAlso`.** A cross-reference is read from the body beneath a part, and a table row has
+none. So a clause pointing at another policy reaches a consumer as the id inside its words, and the run does not name
+that link as unread. A glossary term is unaffected: its body is everything under the heading.
 
 **A part line carries one fidelity of three.** A section travels at any of `full`, `summary` and `reference`, and an
 `export.parts:` entry travels at `full`. A type declaring either of the others against its parts is reported as

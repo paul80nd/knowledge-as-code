@@ -107,6 +107,8 @@ sections:
 #
 # Binding levels are written bold and non-binding ones plain, and rows are grouped in the order below,
 # so a reader sees the weight drop off down the table without needing a divider it cannot carry.
+# `clause-order` reports a table that leaves a level and re-enters it. Inside a level the author's order
+# stands, unchecked: related obligations are grouped by hand, and nobody reads a clause table by id.
 #
 # `Alignment` carries the frameworks a clause maps to, as reference links resolving into
 # `/frameworks.md`. Per clause rather than per document, because a policy aligns with a control through
@@ -121,6 +123,44 @@ parts:
   id-pattern: '^[A-Z][A-Z0-9]{1,6}$'
   binding: [MUST, MUST NOT]
   advisory: [SHOULD, COULD]
+
+export:
+  version: 1
+  fields: [id, title, category, status, review-by]
+  sections:
+    Purpose: summary
+    Scope: full
+    Exceptions: full
+  parts:
+    fidelity: full
+    line:
+      id: part.id
+      clause: part.text
+      level: part.level
+      alignment: column.Alignment
+      type: record.type
+      record: record.id
+      part: part.key
+      status: front.status
+      reviewBy: front.review-by
+      path: record.path
+      anchor: part.anchor
+  notes: >
+    A clause carries its level as a key of its own. `MUST` and `COULD` open the same shape of sentence,
+    so reading the words alone means holding this type's modals to tell an obligation from a
+    suggestion. The key names the level instead, and an agent asking what it has to do filters on one
+    value.
+
+    `Scope` and `Exceptions` travel whole, because each bounds the clauses beneath it. A consumer
+    holding a clause without them reads a stricter policy than the one we wrote. `Purpose` travels as
+    its opening paragraph, which is where a policy states its position.
+
+    `alignment` is the clause's own cell, so a mapping reaches a consumer against the obligation
+    carrying it. The document's `aligns-with` roll-up stays behind: it summarises those cells, and a
+    consumer reading both would hold two accounts of one fact.
+
+    A clause carries no `seeAlso`: a cross-reference is read from the body beneath a part, and a table
+    row has none. A clause pointing at another policy reaches a consumer as the id inside its words.
 
 index:
   columns: [id, title, category, status, aligns-with, review-by]

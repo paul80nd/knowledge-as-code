@@ -593,6 +593,47 @@ public class ExporterTests
     public void A_column_the_row_leaves_empty_carries_a_null()
         => Assert.Equal(JsonValueKind.Null, ClauseLines()[1].GetProperty("alignment").ValueKind);
 
+    // Sorting these would put `AUDIT` first, which is a different policy from the one the page shows.
+    [Fact]
+    public void Clauses_travel_in_the_order_the_table_writes_them()
+    {
+        var lines = Single(Plan(Corpus(PolicyType(), ("pol-ORDR", Unsorted()))), "policies/clauses.jsonl")
+            .Content.Split('\n', StringSplitOptions.RemoveEmptyEntries)
+            .Select(l => JsonDocument.Parse(l).RootElement);
+
+        Assert.Equal(["ZONE", "AUDIT"], lines.Select(l => l.GetProperty("part").GetString()));
+    }
+
+    // The definitions sit at the foot of the document, which is inside whichever section is written
+    // last. They render as nothing, so a section carried as prose must not hand a consumer a run of
+    // paths that no reader of the page sees.
+    [Fact]
+    public void A_carried_section_leaves_the_link_reference_definitions_behind()
+    {
+        var record = Single(Plan(Corpus(PolicyType(), ("pol-DATA", Policy()))), "policies/pol-DATA.json").Content;
+        var sections = JsonDocument.Parse(record).RootElement.GetProperty("sections");
+
+        Assert.Equal("A finding may be accepted where [pol-DEVI] records who accepted it.",
+            sections.GetProperty("Exceptions").GetString());
+    }
+
+    [Fact]
+    public void A_clause_anchors_on_the_section_holding_the_table_and_not_on_its_own_id()
+    {
+        var line = ClauseLines()[0];
+
+        Assert.Equal("TIMEBOX", line.GetProperty("part").GetString());
+        Assert.Equal("clauses", line.GetProperty("anchor").GetString());
+    }
+
+    [Fact]
+    public void A_term_anchors_on_its_own_id()
+    {
+        var line = Assert.Single(TermLines(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"))));
+
+        Assert.Equal(line.GetProperty("part").GetString(), line.GetProperty("anchor").GetString());
+    }
+
     private static List<JsonElement> ClauseLines() =>
     [
         .. Single(Plan(Corpus(PolicyType(), ("pol-DATA", Policy()))), "policies/clauses.jsonl").Content
@@ -624,6 +665,38 @@ public class ExporterTests
         | `TIMEBOX` | **MUST** be time-boxed. | ISO27001 A.5.1 |
         | `REVIEW`  | SHOULD be reviewed.     |                |
 
+        ## Exceptions
+
+        A finding may be accepted where [pol-DEVI] records who accepted it.
+
+        [pol-DEVI]: devi-deviations-are-recorded.md
+
+        """;
+
+    // A policy whose clauses share a level, written in an order alphabetising would not produce.
+    private static string Unsorted() =>
+        """
+        ---
+        id: pol-ORDR
+        tier: normative
+        status: active
+        owner: someone
+        review-by: "2030-01-01"
+        ---
+
+        # Zones
+
+        ## Purpose
+
+        Why this exists.
+
+        ## Clauses
+
+        | Id      | Clause                                    | Alignment |
+        |---------|-------------------------------------------|-----------|
+        | `ZONE`  | **MUST** zone a store by what it holds.   |           |
+        | `AUDIT` | **MUST** audit each zone once a year.     |           |
+
         """;
 
     // The type behind those clauses. Its line names a modal and a column, and neither has a home in a
@@ -642,7 +715,7 @@ public class ExporterTests
         {
             Version = 1,
             Fields = ["id", "title"],
-            Sections = [("Purpose", ExportSpec.Full)],
+            Sections = [("Purpose", ExportSpec.Full), ("Exceptions", ExportSpec.Full)],
             Parts = ExportSpec.Full,
             PartsDeclared = true,
             Line =

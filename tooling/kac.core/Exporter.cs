@@ -215,9 +215,31 @@ public static class Exporter
         foreach (var (name, fidelity) in export.Sections)
             if (doc.Sections.FirstOrDefault(s =>
                     string.Equals(s.Title, name, StringComparison.OrdinalIgnoreCase)) is { } section)
-                sections[name] = Carry(doc.Text[section.BodyStart..section.BodyEnd], fidelity);
+                sections[name] = Carry(Body(doc, section), fidelity);
 
         return new ExportRecord(t.Key, doc.Rel, fields, sections, Links(links));
+    }
+
+    // A section's own words, with its link reference definitions taken out.
+    //
+    // The definitions sit in a block at the foot of the document, so they fall inside whichever section
+    // is written last: `Exceptions` on a policy. They render as nothing, and a consumer reading the
+    // section as prose would meet a run of paths a reader of the page never sees. `Doc.DefinitionSpans`
+    // is what locates them, because a line that looks like one inside a fenced block is not one.
+    private static string Body(Doc doc, Section section)
+    {
+        var kept = new StringBuilder();
+        var at = section.BodyStart;
+
+        foreach (var (start, end) in doc.DefinitionSpans
+                     .Where(d => d.Start >= section.BodyStart && d.Start < section.BodyEnd)
+                     .OrderBy(d => d.Start))
+        {
+            if (start > at) kept.Append(doc.Text[at..start]);
+            at = Math.Max(at, Math.Min(end, section.BodyEnd));
+        }
+
+        return kept.Append(doc.Text[at..section.BodyEnd]).ToString();
     }
 
     // One section, cut to the fidelity its type declared. `docs/cli/export.md` says what each promises.
@@ -297,8 +319,7 @@ public static class Exporter
         foreach (var doc in records)
         {
             var id = Id(doc);
-            foreach (var row in doc.Parts.OrderBy(p => p.Text, StringComparer.OrdinalIgnoreCase)
-                         .ThenBy(p => p.Id, StringComparer.Ordinal))
+            foreach (var row in Ordered(doc.Parts, spec))
             {
                 if (row.Id is not { Length: > 0 } partId) continue;
 
@@ -319,6 +340,19 @@ public static class Exporter
         // writes no file at all, and the manifest names none for it.
         return lines.Length > 0 ? new ExportFile($"{t.Key}/{spec.Noun}s.jsonl", lines.ToString()) : null;
     }
+
+    // The order a record's parts travel in, decided by where the type takes them from.
+    //
+    // A heading-sourced type sorts on the heading, so a grep meets a term where a reader looking down
+    // the record would find it. A table's rows are ordered by their author, and that order carries the
+    // binding levels: sorting them here would leave the export and the rendered page disagreeing about
+    // which obligations come first, and the page is where a person reads the policy. `clause-order`
+    // holds the author to the grouping instead. `docs/cli/export.md` states both rules.
+    private static IEnumerable<PartRow> Ordered(IEnumerable<PartRow> parts, PartSpec spec) =>
+        spec.Source == PartSpec.Table
+            ? parts
+            : parts.OrderBy(p => p.Text, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(p => p.Id, StringComparer.Ordinal);
 
     // One part, and everything a line about it is built from. Gathered once so each source below reads a
     // value rather than works one out, and so no source can reach past the part it is describing.
@@ -349,10 +383,7 @@ public static class Exporter
                 ? null
                 : new JsonArray([.. part.SeeAlso.Select(v => (JsonNode?)JsonValue.Create(v))]),
 
-            // The anchor a part resolves at. A heading's slug is its id and its anchor alike, and a
-            // table-sourced type authors an id no fragment resolves to. `docs/cli/export.md` carries
-            // that under its known limits.
-            PartLineSource.PartAnchor => JsonValue.Create(part.Id),
+            PartLineSource.PartAnchor => JsonValue.Create(t.Parts!.Anchor(part.Id)),
 
             PartLineSource.RecordId => JsonValue.Create(part.Record),
             PartLineSource.RecordType => JsonValue.Create(t.Key),
