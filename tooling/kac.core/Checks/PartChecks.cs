@@ -147,7 +147,7 @@ public static class PartChecks
         {
             // The modal is the binding level, so a row without one is a sentence rather than an
             // obligation and nothing below it can be judged either.
-            var modal = spec.ModalsLongestFirst.FirstOrDefault(m => row.Text.StartsWith(m, StringComparison.Ordinal));
+            var modal = spec.Modal(row.Text);
             if (modal is null)
             {
                 report.Err(new CheckId("clause-modal"),

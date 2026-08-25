@@ -356,6 +356,11 @@
         "notes": {
           "$ref": "#/$defs/notes"
         },
+        "version": {
+          "description": "The shape a consumer holds this type's exported files to. Moved by hand when a reader written against the shape before it would now be wrong: a key renamed or dropped, a value whose type changed, a key that means something new. Adding a key moves nothing. Each type carries its own, so a change to one type's shape cannot refuse a consumer reading another.",
+          "type": "integer",
+          "minimum": 1
+        },
         "fields": {
           "description": "The frontmatter a record contributes, in the order an export writes it. Each names a field the type declares or inherits, or `title`, which is the record's heading rather than a field.",
           "type": "array",
@@ -373,8 +378,30 @@
           }
         },
         "parts": {
-          "description": "The fidelity a record's parts travel at. They are read from the type's `parts:` block, so a type exporting parts declares one.",
-          "$ref": "#/$defs/fidelity"
+          "description": "What a record's parts contribute, and the shape of the line each one is written as. They are read from the type's `parts:` block, so a type exporting parts declares one.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "fidelity",
+            "line"
+          ],
+          "properties": {
+            "notes": {
+              "$ref": "#/$defs/notes"
+            },
+            "fidelity": {
+              "description": "How much of each part travels.",
+              "$ref": "#/$defs/fidelity"
+            },
+            "line": {
+              "description": "The keys one part writes, in the order the line writes them, each naming the source that fills it. The key is the type's own word and reaches a consumer as written, so a glossary's `definition` and a policy's `level` never meet in one shape.",
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "$ref": "#/$defs/lineSource"
+              }
+            }
+          }
         }
       }
     },
@@ -414,6 +441,34 @@
         "full",
         "summary",
         "reference"
+      ]
+    },
+    "lineSource": {
+      "description": "Where one key of a part line takes its value from. `part.lead` and `part.aside` read a part's body, which only a heading-sourced type gives a part: a table row is its own body, and a table-sourced type carries the row through `part.text` and its columns. `front.<field>` names a field the type declares or inherits. `column.<Header>` names a header the type's `parts.columns:` declares.",
+      "anyOf": [
+        {
+          "enum": [
+            "part.id",
+            "part.key",
+            "part.text",
+            "part.lead",
+            "part.aside",
+            "part.level",
+            "part.see-also",
+            "part.anchor",
+            "record.id",
+            "record.type",
+            "record.path"
+          ]
+        },
+        {
+          "type": "string",
+          "pattern": "^front\\.[a-z][a-z0-9-]*$"
+        },
+        {
+          "type": "string",
+          "pattern": "^column\\.\\S.*$"
+        }
       ]
     },
     "modals": {

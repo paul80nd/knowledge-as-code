@@ -39,6 +39,12 @@ public class PartRow
     public string? BoldLead;   // the leading bold run's text, when the cell opens with one
     public int Line;
 
+    // The row's cells flattened, keyed by the header standing over each. Null for a heading, which
+    // stands under no headers at all. The first two cells are read positionally into `Id` and `Text`,
+    // and this is how any further column reaches a reader: a type's `parts.columns:` names them, and an
+    // export line draws on one through `column.<Header>`.
+    public IReadOnlyDictionary<string, string>? Cells;
+
     // Where the part's body begins and ends in the document's text, for a part written as a heading:
     // everything beneath it, up to the next part, the end of the section holding it, or the end of the
     // document. Both zero for a part written as a table row, whose body is the row.
@@ -432,11 +438,25 @@ public partial class Doc
                 BoldLead = clause?.FirstChild is EmphasisInline { DelimiterCount: 2 } bold
                     ? Md.PlainText(bold)
                     : null,
-                Line = row.Line + 1
+                Line = row.Line + 1,
+                Cells = Cells(doc.PartTableHeaders, cells)
             });
         }
 
         doc.PartTableHeaders ??= [];
+        return;
+
+        // The row against the headers, pairing each cell with the one above it. A table whose header row
+        // the parser never met, or a row shorter than its headers, keys only the cells there are: a
+        // header the author moved is `clause-table` to report, and a second account of it here would
+        // invent an empty cell to report it with.
+        static Dictionary<string, string> Cells(IReadOnlyList<string>? headers, List<ContainerInline?> row)
+        {
+            var byHeader = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            for (var i = 0; i < Math.Min(headers?.Count ?? 0, row.Count); i++)
+                byHeader.TryAdd(headers![i], Md.PlainText(row[i]));
+            return byHeader;
+        }
     }
 
     private static string StripFences(string text, YamlFrontMatterBlock block)

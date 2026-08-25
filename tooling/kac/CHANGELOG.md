@@ -14,6 +14,34 @@ surface may still change shape.
 A push to `main` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and that publish tags
 the commit and opens a release carrying the section for that version.
 
+## 0.9.0 - 2026-08-25
+
+### Added
+
+- **A type declares the keys of its own export line.** `export.parts.line:` in `.schema/<type>.yaml` names the keys one
+  part writes and the source filling each, drawn from a closed vocabulary covering a part's text, its body, its modal,
+  a frontmatter field and a table column. `kac export` reads that declaration and names no key itself, so a second type
+  exporting parts costs no code. Glossary is the type that declares one, and its `terms.jsonl` is byte for byte what it
+  was.
+
+- **Each type states its own shape version in the export manifest.** `export.version:` in the schema reaches the
+  manifest as `shapeVersion` on that type's entry. `formatVersion` covers the envelope alone, so a key added to one
+  type's line cannot refuse a consumer reading another.
+
+- **`kac bundle` refuses a component reading a type at a shape the export does not carry.** A `requires` entry may name
+  the shape, as `glossary@1`. A bare `glossary` asks for the type and opens none of its files. Either is trimmed, as
+  before, where the export carries no such type at all.
+
+- **`kac validate` reports a `line:` that would export nothing.** A key with no source, a source nothing fills, a
+  `front.` naming a field no record carries, a `column.` naming a header the type does not declare, and a `part.lead`
+  or `part.aside` against a table row are each an error. So is an `export:` block with no `version:`.
+
+### Changed
+
+- **`export.parts:` in a type's schema is a block, and the fidelity moves inside it.** `export.parts: full` becomes
+  `export.parts.fidelity: full` with `line:` beside it. `kac validate` reports a type file still carrying the older
+  form, naming the fidelity, the `line:` and the `version:` it lacks.
+
 ## 0.8.0 - 2026-08-25
 
 ### Added

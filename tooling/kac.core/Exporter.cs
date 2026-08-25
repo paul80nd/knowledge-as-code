@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace kac.core;
 
@@ -75,7 +76,8 @@ public static class Exporter
             // Two counts, because they answer two questions and one number cannot. `ExportedType` says
             // which is which.
             types.Add(new ExportedType(
-                t.Key, records.Count, parts is null ? 0 : Lines(parts.Content), t.Key, parts?.Path));
+                t.Key, t.Export.Version, records.Count,
+                parts is null ? 0 : Lines(parts.Content), t.Key, parts?.Path));
         }
 
         files.Add(new ExportFile(ManifestFile,
@@ -266,6 +268,9 @@ public static class Exporter
     // The flat file of every addressable part of a type, one part to a line. JSONL rather than pretty
     // JSON, and each line repeats what a reader would otherwise have to look up.
     // `docs/cli/export.md` says what that costs and what it buys.
+    //
+    // What a line holds is the type's to declare. Nothing here names a key, so a second type exporting
+    // parts costs an `export.parts.line:` block and no line of C#.
     private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
         var spec = t.Parts!;
@@ -275,20 +280,20 @@ public static class Exporter
         foreach (var doc in records)
         {
             var id = Id(doc);
-            foreach (var part in doc.Parts.OrderBy(p => p.Text, StringComparer.OrdinalIgnoreCase)
+            foreach (var row in doc.Parts.OrderBy(p => p.Text, StringComparer.OrdinalIgnoreCase)
                          .ThenBy(p => p.Id, StringComparer.Ordinal))
             {
-                if (part.Id is not { Length: > 0 } partId) continue;
+                if (row.Id is not { Length: > 0 } partId) continue;
 
-                var (lead, aside) = Split(doc, part, spec.Aside);
-                lines.Append(Serialize(new ExportPartLine(
-                    $"{id}.{partId}", part.Text, lead, aside,
-                    SeeAlso(doc, part, byPath, tree),
-                    t.Key, id, partId,
-                    Absent(doc.FrontScalar("status")), Absent(doc.FrontScalar("review-by")),
-                    doc.Rel, partId)));
+                var (lead, aside) = Split(doc, row, spec.Aside);
+                var part = new Part(doc, row, partId, id, lead, aside, SeeAlso(doc, row, byPath, tree));
+
+                var line = new JsonObject();
+                foreach (var (key, source) in t.Export!.Line) line[key] = Value(source, part, t);
+
+                lines.Append(Serialize(line));
                 lines.Append('\n');
-                unread.AddRange(Unread(doc, part, partId, byPath, tree));
+                unread.AddRange(Unread(doc, row, partId, byPath, tree));
             }
         }
 
@@ -296,6 +301,47 @@ public static class Exporter
         // finds a glossary's terms in `terms.jsonl`. A type whose records hold no addressable part
         // writes no file at all, and the manifest names none for it.
         return lines.Length > 0 ? new ExportFile($"{t.Key}/{spec.Noun}s.jsonl", lines.ToString()) : null;
+    }
+
+    // One part, and everything a line about it is built from. Gathered once so each source below reads a
+    // value rather than works one out, and so no source can reach past the part it is describing.
+    private sealed record Part(
+        Doc Doc, PartRow Row, string Id, string Record, string? Lead, string? Aside,
+        IReadOnlyList<string>? SeeAlso);
+
+    // What one declared source comes to for one part. The vocabulary is `PartLineSource`, and
+    // `SchemaChecks` has already refused a source outside it, so the fall-through writes null for a
+    // source this build does not know rather than stopping an export over one.
+    private static JsonNode? Value(string source, Part part, TypeSchema t)
+    {
+        if (PartLineSource.Argument(source, PartLineSource.FrontPrefix) is { } field)
+            return JsonValue.Create(Absent(part.Doc.FrontScalar(field)));
+
+        if (PartLineSource.Argument(source, PartLineSource.ColumnPrefix) is { } header)
+            return JsonValue.Create(Absent(part.Row.Cells?.GetValueOrDefault(header)));
+
+        return source switch
+        {
+            PartLineSource.PartId => JsonValue.Create($"{part.Record}.{part.Id}"),
+            PartLineSource.PartKey => JsonValue.Create(part.Id),
+            PartLineSource.PartText => JsonValue.Create(part.Row.Text),
+            PartLineSource.PartLead => JsonValue.Create(part.Lead),
+            PartLineSource.PartAside => JsonValue.Create(part.Aside),
+            PartLineSource.PartLevel => JsonValue.Create(t.Parts!.Modal(part.Row.Text)),
+            PartLineSource.PartSeeAlso => part.SeeAlso is null
+                ? null
+                : new JsonArray([.. part.SeeAlso.Select(v => (JsonNode?)JsonValue.Create(v))]),
+
+            // The anchor a part resolves at. A heading's slug is its id and its anchor alike, and a
+            // table-sourced type authors an id no fragment resolves to. `docs/cli/export.md` carries
+            // that under its known limits.
+            PartLineSource.PartAnchor => JsonValue.Create(part.Id),
+
+            PartLineSource.RecordId => JsonValue.Create(part.Record),
+            PartLineSource.RecordType => JsonValue.Create(t.Key),
+            PartLineSource.RecordPath => JsonValue.Create(part.Doc.Rel),
+            _ => null
+        };
     }
 
     // The parts this part points at, as full part ids, or null where it points at none.
@@ -412,6 +458,6 @@ public static class Exporter
 
     // One object on one line, through the context that does not indent. A JSONL line is the unit a grep
     // hands back, so the object cannot be spread over several of them.
-    private static string Serialize(ExportPartLine p) =>
-        JsonSerializer.Serialize(p, KacJson.Line.ExportPartLine);
+    private static string Serialize(JsonObject line) =>
+        JsonSerializer.Serialize(line, KacJson.Line.JsonObject);
 }

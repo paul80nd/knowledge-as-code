@@ -16,7 +16,9 @@ namespace kac.core;
 public sealed record BundleFile(string Path, byte[] Content, bool Executable = false);
 
 // One component the plugin manifest declares, as the manifest states it. `Requires` names the record
-// types the component reads. A component naming none is unconditional and always travels.
+// types the component reads, each optionally with the shape version it reads that type at, as
+// `glossary@1`. Held as the manifest wrote them, because `bundle.json` reports them back. A component
+// naming no type is unconditional and always travels.
 public sealed record PluginComponent(string Path, IReadOnlyList<string> Requires, string? Note);
 
 // A component left out, and the type whose absence left it out. The reason is carried, because it is
@@ -117,23 +119,54 @@ public static class Bundler
                 $"the export declares format version {declaredFormat?.ToString() ?? "none"} and this tool reads "
                 + $"version {Exporter.FormatVersion}. Rebuild it: kac export");
 
-        // What the export carried, which is what decides the trimming below. A type the corpus adopted
-        // and exported nothing for is absent here, so a component reading it would find nothing.
+        // What the export carried and the shape each type is at, which is what decides the trimming
+        // below. A type the corpus adopted and exported nothing for is absent here, so a component
+        // reading it would find nothing.
         var carried = Types(exportManifest);
 
         var declared = Components(JsonRead.Object(manifest["metadata"])?["components"]);
         var included = new List<PluginComponent>();
         var trimmed = new List<TrimmedComponent>();
 
+        // An absent type and a shape the component cannot read are answered differently, because they
+        // are different states. A missing type trims the component and leaves a plugin that does less.
+        // A type present at another shape leaves the component reading files whose keys have moved, and
+        // that is a plugin returning nothing where it should return an answer. `docs/cli/bundle.md`
+        // says why one is a trim and the other stops the run.
         foreach (var component in declared)
         {
-            var missing = component.Requires.Where(r => !carried.Contains(r)).ToList();
+            var missing = new List<string>();
+
+            foreach (var entry in component.Requires)
+            {
+                var (type, shape) = Need(entry);
+                var held = carried.FirstOrDefault(c => string.Equals(c.Type, type, StringComparison.Ordinal));
+                if (held.Type is null)
+                {
+                    missing.Add(type);
+                    continue;
+                }
+
+                if (shape is null) continue;
+
+                if (!int.TryParse(shape, out var wanted))
+                    problems.Add($"{ManifestFile} declares '{component.Path}' against '{entry}', and a shape "
+                                 + "version is a whole number. Write it as '<type>@<version>'.");
+                else if (wanted != held.Shape)
+                    problems.Add($"{ManifestFile} declares '{component.Path}' against '{type}' shape version "
+                                 + $"{wanted}, and the export carries version {held.Shape}. Write the component "
+                                 + "against the shape the export carries, or bundle an export built at "
+                                 + $"version {wanted}.");
+            }
+
             if (missing.Count == 0)
                 included.Add(component);
             else
                 trimmed.Add(new TrimmedComponent(component.Path, component.Requires,
                     $"the export carries no {string.Join(" or ", missing)}"));
         }
+
+        if (problems.Count > 0) return new BundlePlan([], "", null, [], [], [], problems);
 
         // A plugin with nothing left in it is still assembled. Refusing would leave a corpus unable to
         // build the thing that would have told it why. The empty plugin is the report: it installs, does
@@ -181,7 +214,7 @@ public static class Bundler
                 RecordVersion, pluginName, version ?? JsonRead.Str(manifest["version"]), corpusRoot,
                 new BundleExport(
                     JsonRead.Int(exportManifest["formatVersion"]), JsonRead.Str(exportManifest["corpus"]),
-                    JsonRead.Str(exportManifest["contentVersion"]), [.. carried]),
+                    JsonRead.Str(exportManifest["contentVersion"]), [.. carried.Select(c => c.Type)]),
                 [.. included.Select(c => new BundleIncluded(c.Path, c.Requires, c.Note))],
                 [.. trimmed.Select(t => new BundleTrimmed(t.Path, t.Requires, t.Reason))]))));
 
@@ -303,18 +336,34 @@ public static class Bundler
     private static string? Owner(JsonObject manifest) =>
         JsonRead.Str(manifest["author"]) ?? JsonRead.Str(JsonRead.Object(manifest["author"])?["name"]);
 
-    // The types the export carried, read off its manifest. A type that contributed no record is absent
-    // from that list.
-    private static HashSet<string> Types(JsonObject exportManifest)
+    // The types the export carried and the shape each is at, read off its manifest in the order it
+    // lists them. A type that contributed no record is absent from that list.
+    //
+    // A type stating no shape reads as version 0, which no type declares, so a component naming a
+    // version against it is refused rather than matched by accident.
+    private static List<(string Type, int Shape)> Types(JsonObject exportManifest)
     {
-        var types = new HashSet<string>(StringComparer.Ordinal);
+        var types = new List<(string, int)>();
         if (exportManifest["types"] is not JsonArray declared) return types;
 
         foreach (var node in declared)
-            if (JsonRead.Str(JsonRead.Object(node)?["type"]) is { } key)
-                types.Add(key);
+            if (JsonRead.Object(node) is { } entry && JsonRead.Str(entry["type"]) is { } key)
+                types.Add((key, JsonRead.Int(entry["shapeVersion"]) ?? 0));
 
         return types;
+    }
+
+    // A `requires` entry split into the type and the shape version the component reads it at, which is
+    // null where the entry names none. A bare `glossary` needs a glossary in the export and opens none
+    // of its files; `glossary@1` reads the keys of a term line. Those are different needs, and a
+    // breadcrumb naming the first must not be refused over a change to the second.
+    //
+    // The version is carried as written rather than parsed here, so an entry nobody can read is
+    // reported against the manifest that holds it.
+    private static (string Type, string? Shape) Need(string entry)
+    {
+        var at = entry.IndexOf('@');
+        return at < 0 ? (entry, null) : (entry[..at], entry[(at + 1)..]);
     }
 
     // The components a manifest declares. A component with no `path` is skipped: the path is what a

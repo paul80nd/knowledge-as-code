@@ -462,7 +462,7 @@ public class SchemaCheckTests
     [Fact]
     public void An_exported_section_the_type_does_not_declare_is_reported()
     {
-        var export = new ExportSpec { Sections = [("Provenance", ExportSpec.Full)] };
+        var export = new ExportSpec { Version = 1, Sections = [("Provenance", ExportSpec.Full)] };
         var found = Assert.Single(Check(Widgets(sections: ["Scope"], export: export)));
 
         Assert.Equal("schema-shape", found.Check.Value);
@@ -474,7 +474,7 @@ public class SchemaCheckTests
     [Fact]
     public void An_exported_fidelity_nothing_carries_names_the_ones_that_are_written()
     {
-        var export = new ExportSpec { Sections = [("Scope", ExportSpec.Summary)] };
+        var export = new ExportSpec { Version = 1, Sections = [("Scope", ExportSpec.Summary)] };
         var found = Assert.Single(Check(Widgets(sections: ["Scope"], export: export)));
 
         Assert.Equal("schema-dispatch", found.Check.Value);
@@ -487,7 +487,7 @@ public class SchemaCheckTests
     [Fact]
     public void An_export_entry_declaring_no_fidelity_is_reported()
     {
-        var export = new ExportSpec { Sections = [("Scope", "")] };
+        var export = new ExportSpec { Version = 1, Sections = [("Scope", "")] };
         var found = Assert.Single(Check(Widgets(sections: ["Scope"], export: export)));
 
         Assert.Equal("schema-shape", found.Check.Value);
@@ -497,7 +497,7 @@ public class SchemaCheckTests
     [Fact]
     public void An_exported_field_no_record_carries_is_reported()
     {
-        var export = new ExportSpec { Fields = ["colour"] };
+        var export = new ExportSpec { Version = 1, Fields = ["colour"] };
         var found = Assert.Single(Check(Widgets(export: export)));
 
         Assert.Equal("schema-shape", found.Check.Value);
@@ -508,17 +508,128 @@ public class SchemaCheckTests
     // the type's own declarations.
     [Fact]
     public void An_exported_field_the_type_inherits_passes()
-        => Assert.Empty(Check(Widgets(export: new ExportSpec { Fields = ["tier"] })));
+        => Assert.Empty(Check(Widgets(export: new ExportSpec { Version = 1, Fields = ["tier"] })));
+
+    // A consumer holds a type's files to its shape version, so an export block naming none leaves that
+    // consumer with nothing to refuse a moved shape by.
+    [Fact]
+    public void An_export_block_declaring_no_shape_version_is_reported()
+    {
+        var found = Assert.Single(Check(Widgets(export: new ExportSpec())));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("no 'version:' above 0", found.Message);
+    }
 
     // Parts are taken from wherever the `parts:` block locates them, so a type exporting them without
     // one has named a source that does not exist.
     [Fact]
     public void Exported_parts_on_a_type_that_locates_none_are_reported()
     {
-        var found = Assert.Single(Check(Widgets(export: new ExportSpec { Parts = ExportSpec.Full })));
+        var export = new ExportSpec { Version = 1, Parts = ExportSpec.Full, PartsDeclared = true };
+        var found = Assert.Single(Check(Widgets(export: export)));
 
         Assert.Equal("schema-shape", found.Check.Value);
         Assert.Contains("carries no 'parts:' block", found.Message);
+    }
+
+    // The line is the whole of what a consumer greps, so a type exporting parts and naming none of its
+    // keys writes a file of empty objects.
+    [Fact]
+    public void Exported_parts_with_no_line_are_reported()
+    {
+        var found = Assert.Single(Check(Widgets(
+            sections: ["Terms"],
+            parts: new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" },
+            export: new ExportSpec { Version = 1, Parts = ExportSpec.Full, PartsDeclared = true })));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("no 'line:' beneath it", found.Message);
+    }
+
+    // A source outside the vocabulary fills nothing, so the key would be null on every line while the
+    // schema goes on saying the type carries it.
+    [Fact]
+    public void A_line_source_nothing_fills_is_reported()
+    {
+        var found = Assert.Single(Check(Line(("colour", "part.colour"))));
+
+        Assert.Equal("schema-dispatch", found.Check.Value);
+        Assert.Contains("at source 'part.colour', which nothing fills", found.Message);
+        Assert.Contains("'part.text'", found.Message);
+    }
+
+    [Fact]
+    public void A_line_key_with_no_source_is_reported()
+    {
+        var found = Assert.Single(Check(Line(("colour", ""))));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("with no source", found.Message);
+    }
+
+    // `front.` resolves against the same declarations `export.fields:` does, so a field neither the type
+    // nor the universal layer declares is reported rather than exported as a null.
+    [Fact]
+    public void A_line_source_naming_a_field_no_record_carries_is_reported()
+    {
+        var found = Assert.Single(Check(Line(("colour", "front.colour"))));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("'front.colour'", found.Message);
+    }
+
+    [Fact]
+    public void A_line_source_naming_an_inherited_field_passes()
+        => Assert.Empty(Check(Line(("tier", "front.tier"))));
+
+    // A record's heading is a part's own text here, so `front.title` names a field no record carries.
+    [Fact]
+    public void A_line_source_naming_the_title_as_a_field_is_reported()
+        => Assert.Contains("'front.title'", Assert.Single(Check(Line(("title", "front.title")))).Message);
+
+    // A heading-sourced type stands under no headers, so a column source on one names nothing.
+    [Fact]
+    public void A_line_source_naming_a_column_the_type_does_not_declare_is_reported()
+    {
+        var found = Assert.Single(Check(Line(("alignment", "column.Alignment"))));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("declares no such column", found.Message);
+    }
+
+    [Fact]
+    public void A_line_source_naming_a_declared_column_passes()
+        => Assert.Empty(Check(Line(
+            ("alignment", "column.Alignment"),
+            parts: new PartSpec(PartSpec.Table, "", ["MUST"], [])
+                { Section = "Terms", Columns = ["Id", "Clause", "Alignment"] })));
+
+    // A table row is its own body, so neither source has anything to read and both would write null on
+    // every line.
+    [Theory]
+    [InlineData("part.lead")]
+    [InlineData("part.aside")]
+    public void A_line_source_reading_a_body_against_a_table_is_reported(string source)
+    {
+        var found = Assert.Single(Check(Line(
+            ("definition", source),
+            parts: new PartSpec(PartSpec.Table, "", ["MUST"], []) { Section = "Terms" })));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("A row is its own body", found.Message);
+    }
+
+    // The level is matched against the modals the type declares, so a type declaring none carries a key
+    // that is null wherever it appears. A heading-sourced type is the case with nothing else to say it:
+    // a table-sourced one declaring no modals is already reported against its `parts:` block.
+    [Fact]
+    public void A_line_source_taking_a_level_from_a_type_declaring_none_is_reported()
+    {
+        var found = Assert.Single(Check(Line(("level", "part.level"))));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("no binding or advisory levels", found.Message);
     }
 
     [Fact]
@@ -528,10 +639,27 @@ public class SchemaCheckTests
             parts: new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" },
             export: new ExportSpec
             {
+                Version = 1,
                 Fields = ["tier"],
                 Sections = [("Scope", ExportSpec.Full)],
-                Parts = ExportSpec.Full
+                Parts = ExportSpec.Full,
+                PartsDeclared = true,
+                Line = [("id", PartLineSource.PartId), ("title", PartLineSource.PartText)]
             })));
+
+    // A type whose parts and export are otherwise sound, carrying the one line entry under test. Every
+    // other key resolves, so the single finding a test asserts is the one it declared.
+    private static TypeSchema Line((string Key, string Source) entry, PartSpec? parts = null)
+        => Widgets(
+            sections: ["Terms"],
+            parts: parts ?? new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" },
+            export: new ExportSpec
+            {
+                Version = 1,
+                Parts = ExportSpec.Full,
+                PartsDeclared = true,
+                Line = [entry]
+            });
 
     [Fact]
     public void A_type_declaring_no_export_is_asked_nothing_about_one()

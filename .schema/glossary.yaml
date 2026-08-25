@@ -96,14 +96,34 @@ parts:
 # What a glossary contributes to a published export, and how much of each piece travels. `Terms` is
 # absent from the sections because the terms under it are parts, and `parts:` above carries them.
 export:
+  version: 1
   fields: [id, title, narrows, status, review-by]
   sections:
     Scope: full
-  parts: full
+  parts:
+    fidelity: full
+    line:
+      id: part.id
+      title: part.text
+      definition: part.lead
+      not: part.aside
+      seeAlso: part.see-also
+      type: record.type
+      record: record.id
+      part: part.key
+      status: front.status
+      reviewBy: front.review-by
+      path: record.path
+      anchor: part.anchor
   notes: >
     A term travels whole: the definition and the `**Not:**` line beneath it, carried as two pieces
     because they answer two questions. A definition on its own is mostly guessable from the word, so
     an export that dropped the `**Not:**` line would carry the guessable half.
+
+    `line:` names the keys of one term's line and where each takes its value from. They are a
+    glossary's own words: `definition` is what an entry states, and a type stating obligations instead
+    carries none. `version:` is what a consumer reads that line against. It belongs to the glossary and
+    moves on its own, so a second type reshaping its own line refuses no glossary consumer's bundle.
 
     The fields are the glossary's, and together they are what a consumer judges an entry by. `Scope`
     says which context admits the term. `status` and `review-by` say how far the file has settled and

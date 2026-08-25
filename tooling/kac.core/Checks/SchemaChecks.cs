@@ -225,15 +225,99 @@ public static class SchemaChecks
                 + $"declares such a field. Name a field a record carries, or '{Generator.Title}', which is a "
                 + "record's heading rather than its frontmatter."));
 
-        if (export.Parts.Length == 0) return;
+        // The number a consumer holds this type's files to. Zero is the absence of one, and an export
+        // stating it would leave a consumer nothing to refuse a moved shape by.
+        if (export.Version <= 0)
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"type '{key}' declares an 'export:' block and no 'version:' above 0. A consumer reads these "
+                + "files against that number, and moving it by hand is what says a reader written against the "
+                + "shape before it would now be wrong."));
 
-        if (t.Parts is null)
+        if (!export.PartsDeclared) return;
+
+        // Nowhere to read a part from stops the pass. Everything below asks what one part writes, and a
+        // type with no parts at all would have every one of those answers reported against it.
+        if (t.Parts is not { } parts)
+        {
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares 'export.parts:' and carries no 'parts:' block. Say where a record "
                 + "keeps the parts an export is to carry, or drop the entry."));
+            return;
+        }
 
-        Fidelity("export.parts:", export.Parts);
+        Fidelity("export.parts.fidelity:", export.Parts);
+
+        // The line is the whole of what a consumer greps, so a type exporting parts and declaring none
+        // of its keys exports a file of empty objects. Nothing further down would report that.
+        if (export.Line.Count == 0)
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"type '{key}' declares 'export.parts:' and no 'line:' beneath it. Name the keys one part "
+                + "writes, each with the source filling it. Nothing else decides what a consumer reads."));
+
+        foreach (var (name, source) in export.Line)
+            Source(name, source);
+
         return;
+
+        // One key of the part line, against the source declared beside it.
+        //
+        // A `front.` and a `column.` name something the type declares elsewhere, so each is resolved
+        // against that declaration. Every fault here is the same fault: a source resolving to nothing
+        // exports a key that is null on every line, while the schema goes on saying the type carries it.
+        void Source(string name, string source)
+        {
+            if (source.Length == 0)
+            {
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"type '{key}' declares 'export.parts.line: {name}' with no source. Say where the key "
+                    + "takes its value from."));
+                return;
+            }
+
+            if (PartLineSource.Argument(source, PartLineSource.FrontPrefix) is { } field)
+            {
+                if (schema.EffectiveField(t, field) is null)
+                    f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                        $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and neither the type "
+                        + "nor '_universal.yaml' declares such a field. A record's heading is 'part.text' rather "
+                        + "than a field."));
+                return;
+            }
+
+            if (PartLineSource.Argument(source, PartLineSource.ColumnPrefix) is { } header)
+            {
+                if (!parts.Columns.Contains(header, StringComparer.OrdinalIgnoreCase))
+                    f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                        $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and the type's "
+                        + "'parts.columns:' declares no such column. Name a header a row stands under."));
+                return;
+            }
+
+            if (!PartLineSource.Fixed.Contains(source, StringComparer.Ordinal))
+            {
+                Dispatch(at, $"type '{key}' declares 'export.parts.line: {name}' at source '{source}', which "
+                             + $"nothing fills. A line takes {List(PartLineSource.Fixed)}, a "
+                             + $"'{PartLineSource.FrontPrefix}<field>' or a "
+                             + $"'{PartLineSource.ColumnPrefix}<Header>'.", f);
+                return;
+            }
+
+            // Both of these read a part's body, and only the heading source gives a part one: a table
+            // row is its own body. A table-sourced type carries the row through 'part.text' and its
+            // columns instead.
+            if ((source is PartLineSource.PartLead or PartLineSource.PartAside)
+                && parts.Source == PartSpec.Table)
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and sources its parts "
+                    + "from a table. A row is its own body, so the source would write null on every line. "
+                    + $"Carry the row through '{PartLineSource.PartText}' and its columns."));
+
+            if (source == PartLineSource.PartLevel && parts.Levels.Count == 0)
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and its 'parts:' block "
+                    + "declares no binding or advisory levels. Declare the modals a part may open with, or "
+                    + "drop the key."));
+        }
 
         void Fidelity(string entry, string value)
         {

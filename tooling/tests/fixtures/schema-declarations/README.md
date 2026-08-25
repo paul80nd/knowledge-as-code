@@ -22,10 +22,16 @@ so the golden is the schema pass and nothing else.
   `label-plural:` and `detail:` are present, since a type with nothing to say about itself would report the same fault
   four times and pin nothing extra.
 * **Export** — a projection every part of which resolves to nothing: `colour` where the type declares no such field,
-  `Provenance` where it declares no such section, `parts: full` where it locates no parts, and `Summary` at a fidelity
-  nothing carries. `Summary` is a section the type really does declare, so what it pins is the fidelity alone. An entry
-  declaring no fidelity is pinned by a unit test instead. The type declares one section, `Summary` has spent it, and
-  hanging a second fault on `Provenance` would report two faults from one line.
+  `Provenance` where it declares no such section, `parts: full` where it locates no parts, `Summary` at a fidelity
+  nothing carries, and no `version:` for a consumer to read the type's files against. `Summary` is a section the type
+  really does declare, so what it pins is the fidelity alone. An entry declaring no fidelity is pinned by a unit test
+  instead. The type declares one section, `Summary` has spent it, and hanging a second fault on `Provenance` would
+  report two faults from one line.
+
+  **The `line:` vocabulary is pinned by unit tests.** Reaching those checks needs a type that locates its parts, and
+  giving `widgets` a `parts:` block trades the `export.parts:` fault above for two others: a fidelity read from
+  nowhere, and the missing `line:`. `SchemaCheckTests` covers each source, and a fixture type existing only to host
+  them would pin those same findings under a second name.
 * **Versus** — a disambiguation against `gizmos`, which no schema covers, and one against `widgets` itself. The third
   way a pair goes wrong — both sides declaring it — needs two types and is pinned by a unit test instead.
 * **Unknown** — `stability:` at the top of the file and `unique:` on a field, at two levels, because the vocabulary is

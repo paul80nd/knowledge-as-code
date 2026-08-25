@@ -131,6 +131,7 @@ public static class Breadcrumb
 
             types.Add(new ExportedType(
                 key,
+                JsonRead.Int(entry["shapeVersion"]) ?? 0,
                 JsonRead.Int(entry["records"]) ?? 0,
                 JsonRead.Int(entry["parts"]) ?? 0,
                 JsonRead.Str(entry["dir"]) ?? key,

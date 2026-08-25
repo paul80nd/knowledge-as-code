@@ -14,7 +14,7 @@
       {
         "path": "skills/glossary-lookup",
         "requires": [
-          "glossary"
+          "glossary@1"
         ],
         "note": "Reads a term from corpus/glossary/terms.jsonl."
       },

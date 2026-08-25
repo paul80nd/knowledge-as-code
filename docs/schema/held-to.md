@@ -30,7 +30,14 @@ them, and every finding names the file and the key.
 | A `mirrors-section:` at a section the type's `sections:` block does not declare          | `schema-shape`       |
 | An `export.sections:` key at a section the type's `sections:` block does not declare     | `schema-shape`       |
 | An `export.fields:` entry naming a field neither the type nor `_universal.yaml` declares | `schema-shape`       |
+| An `export:` block declaring no `version:`, which a consumer reads its files at          | `schema-shape`       |
 | An `export.parts:` on a type carrying no `parts:` block                                  | `schema-shape`       |
+| An `export.parts:` with no `line:` beneath it, or a `line:` key naming no source         | `schema-shape`       |
+| A `line:` source outside the vocabulary the exporter fills                               | `schema-dispatch`    |
+| A `front.<field>` naming a field neither the type nor `_universal.yaml` declares         | `schema-shape`       |
+| A `column.<Header>` at a header the type's `parts.columns:` does not declare             | `schema-shape`       |
+| A `part.lead` or `part.aside` on a type sourcing its parts from a table                  | `schema-shape`       |
+| A `part.level` on a type declaring no binding or advisory modals                         | `schema-shape`       |
 | An export entry declaring no fidelity at all                                             | `schema-shape`       |
 | A fidelity no export carries                                                             | `schema-dispatch`    |
 | A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:`   | `schema-shape`       |
