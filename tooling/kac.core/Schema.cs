@@ -492,20 +492,39 @@ public sealed partial class Schema
 
     // Takes whatever holds a `.schema/`. A caller starting from a corpus finds that folder with `FindRoot`
     // above. The schema is one document however many corpora read it.
+    //
+    // This is the one place a path becomes a schema. Everything below it is decided from values.
     public static Schema Load(string root)
     {
         var dir = Path.Combine(root, ".schema");
+        return Load(Directory.GetFiles(dir, "*.yaml")
+            .ToDictionary(f => Path.GetFileName(f), File.ReadAllText, StringComparer.Ordinal));
+    }
+
+    // The schema's files by name, already read: `_enums.yaml`, `adrs.yaml`, and the rest of `.schema/`.
+    // A caller holding no filesystem hands over strings, so what the loader makes of a declaration is
+    // decidable without one. `Corpus.Load` strikes the same bargain for the corpus.
+    //
+    // The names are walked in ordinal order rather than the map's, because a map has none and `ByFolder`
+    // carries its insertion order to whoever iterates it without sorting first.
+    //
+    // A name the map does not hold reads as an empty document. A `.schema/` short of one of the four
+    // shared blocks then fails through the findings naming what is missing, rather than on the file it
+    // could not open.
+    public static Schema Load(IReadOnlyDictionary<string, string> files)
+    {
         var unread = new List<UnreadKey>();
+        YamlNode Read(string name) => Yaml.Load(files.GetValueOrDefault(name, ""));
 
         var enumKeys = new KeyReader(".schema/_enums.yaml");
-        var enumsRoot = enumKeys.At(Yaml.LoadFile(Path.Combine(dir, "_enums.yaml")), TheFile);
+        var enumsRoot = enumKeys.At(Read("_enums.yaml"), TheFile);
         var enums = new Dictionary<string, IReadOnlyList<string>>();
         foreach (var (name, node) in Yaml.Map(enumsRoot.Get("enums")))
             enums[name] = Yaml.StrList(enumKeys.At(node, $"enum '{name}'").Get("values"));
         unread.AddRange(enumKeys.Unread());
 
         var tierKeys = new KeyReader(".schema/_tiers.yaml");
-        var tiersRoot = tierKeys.At(Yaml.LoadFile(Path.Combine(dir, "_tiers.yaml")), TheFile);
+        var tiersRoot = tierKeys.At(Read("_tiers.yaml"), TheFile);
         var tiers = new List<TierSpec>();
         foreach (var (name, node) in Yaml.Map(tiersRoot.Get("tiers")))
         {
@@ -517,7 +536,7 @@ public sealed partial class Schema
         unread.AddRange(tierKeys.Unread());
 
         var checkKeys = new KeyReader(".schema/_checks.yaml");
-        var checksRoot = checkKeys.At(Yaml.LoadFile(Path.Combine(dir, "_checks.yaml")), TheFile);
+        var checksRoot = checkKeys.At(Read("_checks.yaml"), TheFile);
         var checks = new List<CheckDef>();
         foreach (var (id, node) in Yaml.Map(checksRoot.Get("checks")))
         {
@@ -533,7 +552,7 @@ public sealed partial class Schema
         unread.AddRange(checkKeys.Unread());
 
         var universalKeys = new KeyReader(".schema/_universal.yaml");
-        var uni = universalKeys.At(Yaml.LoadFile(Path.Combine(dir, "_universal.yaml")), TheFile);
+        var uni = universalKeys.At(Read("_universal.yaml"), TheFile);
         var universalOrder = new List<string>();
         var universal = new Dictionary<string, FieldSpec>();
         foreach (var (name, node) in Yaml.Map(uni.Get("fields")))
@@ -546,13 +565,14 @@ public sealed partial class Schema
         unread.AddRange(universalKeys.Unread());
 
         var byFolder = new Dictionary<string, TypeSchema>();
-        foreach (var file in Directory.GetFiles(dir, "*.yaml").OrderBy(f => f))
+        foreach (var name in files.Keys.Where(n => n.EndsWith(".yaml", StringComparison.Ordinal))
+                     .OrderBy(n => n, StringComparer.Ordinal))
         {
-            var baseName = Path.GetFileNameWithoutExtension(file);
+            var baseName = Path.GetFileNameWithoutExtension(name);
             if (baseName.StartsWith('_')) continue; // the shared blocks, which declare no type
 
             var keys = new KeyReader($".schema/{baseName}.yaml");
-            byFolder[baseName] = ParseType(keys.At(Yaml.LoadFile(file), TheFile), keys, layer, baseName);
+            byFolder[baseName] = ParseType(keys.At(Read(name), TheFile), keys, layer, baseName);
             unread.AddRange(keys.Unread());
         }
 

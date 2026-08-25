@@ -5,10 +5,14 @@ namespace kac.core;
 
 public static class Yaml
 {
-    public static YamlNode LoadFile(string path)
+    public static YamlNode LoadFile(string path) => Load(File.ReadAllText(path));
+
+    // The same parse over text the caller already holds, so a document can arrive from somewhere other
+    // than a file. `Schema.Load` reads a schema handed over as strings through this.
+    public static YamlNode Load(string text)
     {
         var stream = new YamlStream();
-        stream.Load(new StringReader(File.ReadAllText(path)));
+        stream.Load(new StringReader(text));
         return stream.Documents.Count > 0 ? stream.Documents[0].RootNode : new YamlMappingNode();
     }
 
