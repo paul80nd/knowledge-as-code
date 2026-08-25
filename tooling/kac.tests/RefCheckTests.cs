@@ -13,8 +13,6 @@ public class RefCheckTests
     public void A_target_of_the_type_the_declaration_names_passes()
         => Assert.Empty(Refs(Field("supersedes", "adrs"), "adr-0002"));
 
-    // The message names both ends as a reader would say them: what the target turned out to be, and
-    // what the field was declared to take.
     [Fact]
     public void A_target_of_another_type_is_reported_naming_both()
     {
@@ -25,7 +23,6 @@ public class RefCheckTests
             Assert.Single(found).Message);
     }
 
-    // A field may name several types, and any of them satisfies it.
     [Fact]
     public void A_declaration_naming_several_types_admits_each_of_them()
         => Assert.Empty(Refs(Field("promoted-to", "adrs", "services"), "svc-catalogue"));
@@ -35,7 +32,6 @@ public class RefCheckTests
         => Assert.Equal("'promoted-to' points at 'dat-borrowers', which is Data, not an ADR or a Service.",
             Assert.Single(Refs(Field("promoted-to", "adrs", "services"), "dat-borrowers")).Message);
 
-    // A type whose singular and plural are one word takes no article, at either end of the message.
     [Fact]
     public void A_type_whose_label_is_a_mass_noun_is_named_without_an_article()
     {
@@ -45,8 +41,7 @@ public class RefCheckTests
             Assert.Single(Refs(Field("supersedes", "adrs"), "dat-borrowers")).Message);
     }
 
-    // An id nothing carries is the other half of this check, and the type question cannot be asked of a
-    // document that is not there.
+    // The type question cannot be asked of a document that is not there.
     [Fact]
     public void A_target_that_does_not_exist_is_reported_as_absent()
         => Assert.Equal("'supersedes' points at 'adr-0099', which does not exist.",
@@ -61,19 +56,15 @@ public class RefCheckTests
             Assert.Single(Refs(Field("supersedes", "widgets"), "adr-0099")).Message);
     }
 
-    // A wrong-type target carries no counterpart field to point back with, so the reciprocity check
-    // stays out of it and one fault stays one finding.
+    // A wrong-type target carries no counterpart field to point back with, so the reciprocity check stays out of it.
     [Fact]
     public void A_wrong_type_target_on_a_reciprocal_field_is_reported_once()
         => Assert.Equal("ref-resolves",
             Assert.Single(Refs(Reciprocating("supersedes", "adrs"), "svc-catalogue")).Check.Value);
 
-    // Where the target is of the right type, the same field asks the question this one is named for.
     [Fact]
     public void A_target_of_the_right_type_is_still_held_to_pointing_back()
         => Assert.Equal("reciprocal", Assert.Single(Refs(Reciprocating("supersedes", "adrs"), "adr-0002")).Check.Value);
-
-    // -- driving the check --
 
     private static FieldSpec Field(string name, params string[] refs) =>
         new() { Name = name, Type = "id", Refs = refs };

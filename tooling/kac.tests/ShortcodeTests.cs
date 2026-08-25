@@ -10,15 +10,12 @@ namespace kac.tests;
 
 public class ShortcodeTests
 {
-    // -- a corpus that has not declared one --
 
     // A key written with no value never reaches here: the loader reads an empty scalar as absent, which
     // `ManifestTests` holds it to.
     [Fact]
     public void A_corpus_declaring_no_shortcode_is_not_asked_anything()
         => Assert.Empty(Shortcode(null));
-
-    // -- the spellings a citation can carry --
 
     [Theory]
     [InlineData("eng")]
@@ -27,8 +24,6 @@ public class ShortcodeTests
     [InlineData("acme2026")]
     public void A_lower_case_shortcode_of_letters_and_digits_is_silent(string shortcode)
         => Assert.Empty(Shortcode(shortcode));
-
-    // -- and the ones it cannot --
 
     [Fact]
     public void A_shortcode_of_one_character_is_too_short()
@@ -55,20 +50,17 @@ public class ShortcodeTests
     public void A_shortcode_carrying_anything_but_a_lower_case_letter_or_a_digit_is_refused(string shortcode)
         => Assert.Contains("carries something other than", Assert.Single(Shortcode(shortcode)).Message);
 
-    // -- and the one a type has taken --
-
     [Fact]
     public void A_shortcode_a_type_uses_as_its_id_prefix_names_the_type()
         => Assert.Contains("is the id prefix of 'standards'", Assert.Single(Shortcode("std")).Message);
 
-    // A type the schema does not declare has no prefix to collide with, so the spelling is free. The
-    // prefixes are read from the schema for exactly this reason.
+    // The prefixes are read from the schema, so a spelling no declared type uses is free.
     [Fact]
     public void A_shortcode_no_type_uses_is_left_alone()
         => Assert.Empty(Shortcode("adr2"));
 
-    // Both faults at once, which is what the prefix comparison ignores case for. Correcting the casing
-    // alone would leave the second refusal waiting on the next run.
+    // The prefix comparison ignores case, so correcting the casing alone does not leave the second
+    // refusal waiting on the next run.
     [Fact]
     public void A_miscased_type_prefix_is_reported_as_both()
     {
@@ -78,8 +70,6 @@ public class ShortcodeTests
         Assert.Contains(findings, f => f.Message.Contains("does not open on a lower-case letter"));
         Assert.Contains(findings, f => f.Message.Contains("is the id prefix of 'standards'"));
     }
-
-    // -- the corpus these are asked against --
 
     // Two types, so that one spelling is taken and the rest are free. Nothing here is stood up: the pass
     // reads the descriptor and never the listing.

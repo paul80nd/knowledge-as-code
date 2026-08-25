@@ -1,8 +1,5 @@
-// Unit tests for the `new` engine: which template file lands where, which never lands at all, and what
-// the two composed files say. Every creation here is decided from a listing and a manifest written in the
-// test, so nothing writes a tree, clones a repository or reads the network. The last test is the one
-// exception, and says why. `tooling/tests/fixtures/new/` is the layer that runs the command over a real
-// template.
+// Every creation here is decided from a listing and a manifest written in the test, so nothing writes a
+// tree, clones a repository or reads the network. `tooling/tests/fixtures/new/` runs the real command.
 
 using kac.core;
 
@@ -48,8 +45,6 @@ public class NewTests
     private static string? Landing(NewPlan plan, string from) =>
         plan.Copied.FirstOrDefault(f => f.From == from)?.To;
 
-    // -- which files reach a corpus --
-
     [Fact]
     public void A_withheld_file_reaches_no_corpus()
     {
@@ -87,8 +82,6 @@ public class NewTests
         Assert.Equal([".schema/adrs.yaml", "adrs.md", "policies.md"], plan.Copied.Select(f => f.To));
     }
 
-    // -- a template the manifest cannot place --
-
     [Fact]
     public void A_file_no_rule_places_is_named_and_the_template_is_unsound()
     {
@@ -101,8 +94,6 @@ public class NewTests
 
     [Fact]
     public void A_template_every_rule_places_is_sound() => Assert.False(Plan(["template/CLAUDE.md"]).TemplateIsUnsound);
-
-    // -- types the corpus declined --
 
     [Fact]
     public void A_declined_types_schema_page_and_folder_are_not_written()
@@ -125,8 +116,6 @@ public class NewTests
         Assert.False(declines("template/policies.md"));
         Assert.True(declines("policies.md"));
     }
-
-    // -- the system the corpus builds on --
 
     [Theory]
     [InlineData(CiSystem.GitHub, ".github/workflows/kac.yml")]
@@ -167,8 +156,6 @@ public class NewTests
         Assert.True(plan.TemplateIsUnsound);
     }
 
-    // -- the two composed files --
-
     [Fact]
     public void The_descriptor_is_composed_and_never_copied()
     {
@@ -197,8 +184,6 @@ public class NewTests
         var plan = Plan(["template/CLAUDE.md", ".schema/adrs.yaml"]);
         Assert.Equal([".corpus.yaml", ".schema/adrs.yaml", "CLAUDE.md", "README.md"], plan.Paths);
     }
-
-    // -- what the descriptor says --
 
     [Fact]
     public void The_descriptor_names_the_corpus_and_the_types_it_adopted()
@@ -271,8 +256,6 @@ public class NewTests
     public void No_descriptor_line_runs_past_120_characters()
         => Assert.DoesNotContain(New.Descriptor(Answers(), Taken()).Split('\n'), l => l.Length > 120);
 
-    // -- what the README says --
-
     [Fact]
     public void The_readme_arrives_carrying_the_markers_for_every_block_declared_on_it()
     {
@@ -292,8 +275,6 @@ public class NewTests
     [Fact]
     public void No_readme_line_runs_past_120_characters()
         => Assert.DoesNotContain(New.Readme(Answers()).Split('\n'), l => l.Length > 120);
-
-    // -- what a template asks of the tool reading it --
 
     [Theory]
     [InlineData("0.6.0", "0.6.0")]        // the version it asks for

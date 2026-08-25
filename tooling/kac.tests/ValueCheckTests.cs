@@ -39,8 +39,6 @@ public class ValueCheckTests
 
     private static string[] Ids(List<Finding> f) => [.. f.Select(x => x.Check.Value)];
 
-    // -- dates: the shape and the calendar are two faults under one id --
-
     [Fact]
     public void A_quoted_iso_date_passes()
     {
@@ -54,7 +52,6 @@ public class ValueCheckTests
         Assert.Contains("date-quoted", Ids(Run("field: 2027-08-04\n", Field("date"))));
     }
 
-    // Not written as a date at all: the characters are wrong before any day is named.
     [Fact]
     public void A_date_in_the_wrong_shape_says_so()
     {
@@ -63,8 +60,7 @@ public class ValueCheckTests
         Assert.Contains("must be a YYYY-MM-DD date", date.Message);
     }
 
-    // Written as a date, and naming a day that has never existed. The distinct wording is the whole
-    // reason the shape and the calendar are asked separately.
+    // The distinct wording is the whole reason the shape and the calendar are asked separately.
     [Fact]
     public void A_date_that_is_not_on_the_calendar_says_something_else()
     {
@@ -72,8 +68,6 @@ public class ValueCheckTests
         var date = Assert.Single(found, f => f.Check.Value == "date-format");
         Assert.Contains("not a date on the calendar", date.Message);
     }
-
-    // -- enums: membership and casing are separate, and one value can fail both --
 
     [Fact]
     public void An_out_of_range_enum_lists_what_was_allowed()
@@ -100,8 +94,6 @@ public class ValueCheckTests
         Assert.Contains("must be a scalar", found.Message);
     }
 
-    // -- lists --
-
     [Fact]
     public void A_scalar_where_a_list_is_declared_is_reported_once()
     {
@@ -120,7 +112,7 @@ public class ValueCheckTests
         Assert.Contains("has 2 entries", found.Message);
     }
 
-    // The singular is worth a test of its own: the message reads as English at one entry or it does not.
+    // The message reads as English at one entry or it does not.
     [Fact]
     public void One_entry_is_an_entry_not_entries()
     {
@@ -153,9 +145,8 @@ public class ValueCheckTests
         Assert.Contains("entry 'NotAnId'", found.Message);
     }
 
-    // Every id style a type may declare reaches a list field, and a mnemonic carries its discriminator
-    // upper-case. `implements: [ pol-KNOW ]` is the edge the taxonomy declares between a standard and a
-    // policy, so a shape test that read the whole entry as lower-case made that edge unwritable.
+    // `implements: [ pol-KNOW ]` is the edge the taxonomy declares between a standard and a policy, so a
+    // shape test that read the whole entry as lower-case made that edge unwritable.
     [Theory]
     [InlineData("pol-KNOW")]
     [InlineData("adr-0007")]
@@ -164,8 +155,7 @@ public class ValueCheckTests
     public void Every_id_style_is_id_shaped_in_a_list(string id)
         => Assert.Empty(Run($"field: [ {id} ]\n", new FieldSpec { Name = "field", Type = "list", Of = "id" }));
 
-    // The prefix names a type and is lower-case wherever it appears, and a discriminator is cased one way
-    // or the other rather than both. Loosening the case test to reach the mnemonic stops here.
+    // Loosening the case test to reach the mnemonic stops here.
     [Theory]
     [InlineData("Pol-KNOW")]
     [InlineData("pol-Know")]
@@ -175,8 +165,6 @@ public class ValueCheckTests
         var spec = new FieldSpec { Name = "field", Type = "list", Of = "id" };
         Assert.Equal("id-format", Assert.Single(Run($"field: [ {id} ]\n", spec)).Check.Value);
     }
-
-    // -- patterns: the same declaration reads differently for a scalar and for a list --
 
     [Fact]
     public void A_pattern_on_a_scalar_field_calls_it_a_value()
@@ -202,8 +190,6 @@ public class ValueCheckTests
         Assert.Contains("entry 'Nope1'", found.Message);
     }
 
-    // -- absence, and the one shape of it that is correct --
-
     [Fact]
     public void A_bare_key_is_how_absence_is_written()
     {
@@ -220,14 +206,12 @@ public class ValueCheckTests
         Assert.Equal("bare-key", found.Check.Value);
     }
 
-    // An empty sequence is absent too, and is the one absent value that is not a scalar.
+    // An empty sequence is the one absent value that is not a scalar.
     [Fact]
     public void An_empty_sequence_is_absent()
     {
         Assert.Equal("bare-key", Assert.Single(Run("field: []\n", Field("list"))).Check.Value);
     }
-
-    // -- literals: a word the field admits beside its declared type --
 
     [Fact]
     public void A_literal_short_circuits_a_scalar_field()
@@ -236,7 +220,6 @@ public class ValueCheckTests
         Assert.Empty(Run("field: never\n", spec));
     }
 
-    // A list is not short-circuited: the literal exempts its own entry and the rest are still read.
     [Fact]
     public void A_literal_in_a_list_exempts_the_entry_and_not_the_field()
     {
@@ -245,8 +228,6 @@ public class ValueCheckTests
         Assert.Equal("id-format", found.Check.Value);
         Assert.Contains("'NotAnId'", found.Message);
     }
-
-    // -- a template answers for the documents copied from it, not for itself --
 
     [Fact]
     public void A_placeholder_in_a_template_is_read_as_absent()
@@ -261,8 +242,7 @@ public class ValueCheckTests
         Assert.Empty(Run("field: [ \"svc-{{a}}\", NotAnId ]\n", spec, DocKind.Template));
     }
 
-    // The same value in a record is an unfinished copy, so the field's own checks read the mark and
-    // report it as the malformed date it is. The exemption is the template's alone.
+    // A record holding a placeholder is an unfinished copy, so the field's checks report the malformed date.
     [Fact]
     public void The_same_placeholder_in_a_record_is_not_exempt()
     {
@@ -279,10 +259,7 @@ public class ValueCheckTests
         Assert.Contains("read as a YAML mapping", found.Message);
     }
 
-    // -- where a finding lands --
-
-    // The parser reads a frontmatter block on its own, so its line 1 is the block's first key. A finding
-    // has to name the line in the document, which is what `frontStart` turns it into.
+    // The parser reads a frontmatter block on its own, so its line 1 is the block's first key.
     [Fact]
     public void A_finding_names_the_line_in_the_document_not_in_the_block()
     {
@@ -293,8 +270,6 @@ public class ValueCheckTests
 
         Assert.Equal(FrontStart + 1, Assert.Single(findings).Line);
     }
-
-    // -- the reading of "absent" that the required-field pass shares --
 
     [Theory]
     [InlineData("field:\n", true)]

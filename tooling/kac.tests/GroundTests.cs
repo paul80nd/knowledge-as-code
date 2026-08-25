@@ -18,8 +18,6 @@ public class GroundTests : IDisposable
         return path;
     }
 
-    // -- a corpus already here --
-
     [Fact]
     public void A_folder_with_no_descriptor_above_it_is_no_corpus()
         => Assert.Null(New.Survey(Dir("empty")).Corpus);
@@ -43,8 +41,6 @@ public class GroundTests : IDisposable
 
         Assert.Equal(above, New.Survey(below).Corpus);
     }
-
-    // -- git --
 
     [Fact]
     public void A_folder_that_is_no_repository_says_so_and_reports_no_state()
@@ -79,8 +75,6 @@ public class GroundTests : IDisposable
         Assert.True(New.Survey(dir).Dirty);
     }
 
-    // -- what the folder holds --
-
     [Fact]
     public void An_empty_folder_holds_nothing()
         => Assert.Empty(New.Survey(Dir("empty")).Holds);
@@ -96,8 +90,7 @@ public class GroundTests : IDisposable
         Assert.Equal(["LICENCE", "notes.md", "src"], New.Survey(dir).Holds);
     }
 
-    // A repository with no other content is an empty folder as far as the warning goes: `.git` is what
-    // the run is about to write into, and not something a creation is mixed in with.
+    // `.git` is what the run is about to write into, and not something a creation is mixed in with.
     [Fact]
     public void A_repository_holding_nothing_else_still_holds_nothing()
     {

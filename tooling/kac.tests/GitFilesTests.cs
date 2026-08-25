@@ -1,6 +1,4 @@
-// Unit tests for the two file listings, driven through real temp trees: the non-git fallback walk
-// (GitFiles.Walk), and the one place GitFiles.Tracked differs from `git ls-files`. The golden suite
-// assembles a non-git tree, so what git reports is only asked here. Corpus.Discover is covered there.
+// The golden suite assembles a non-git tree, so what git itself reports is only asked here.
 
 using kac.core;
 

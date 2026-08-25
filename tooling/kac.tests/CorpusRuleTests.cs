@@ -9,7 +9,6 @@ namespace kac.tests;
 
 public class CorpusRuleTests
 {
-    // -- the registry --
 
     [Fact]
     public void Every_registered_rule_has_a_distinct_id_and_reports_something()
@@ -24,8 +23,6 @@ public class CorpusRuleTests
     {
         Assert.All(CorpusRules.All.SelectMany(r => r.Emits), e => Assert.NotEmpty(e.Value));
     }
-
-    // -- no-dependency-cycles --
 
     [Fact]
     public void A_graph_with_no_loop_is_left_alone()
@@ -44,22 +41,20 @@ public class CorpusRuleTests
         Assert.Equal("'depends-on' forms a cycle: svc-a → svc-b → svc-a.", Single(found).Message);
     }
 
-    // The route names every record on the loop, in the order the edges run, which is the whole reason
-    // this is a class: a reader deciding whether a cycle was meant needs to see what it runs through.
+    // A reader deciding whether a cycle was meant needs to see what it runs through.
     [Fact]
     public void A_longer_loop_names_each_record_on_it_in_order()
         => Assert.Equal("'depends-on' forms a cycle: svc-a → svc-b → svc-c → svc-a.",
             Single(Cycles(("svc-a", ["svc-b"]), ("svc-b", ["svc-c"]), ("svc-c", ["svc-a"]))).Message);
 
-    // The warning goes on the lowest id on the loop rather than wherever the walk entered it, so the
-    // record that carries it follows from the corpus rather than from the order the files were read.
+    // The record carrying the warning follows from the corpus rather than from the order the files were read.
     [Fact]
     public void The_finding_is_reported_against_the_lowest_id_on_the_loop()
         => Assert.Equal("services/svc-b.md",
             Single(Cycles(("svc-c", ["svc-b"]), ("svc-b", ["svc-c"]))).File);
 
-    // Two ways into one loop is one loop. Rotating the route to open at the lowest id is what makes the
-    // two spellings of it the same string, and the same string is what recognises them as one.
+    // Rotating the route to open at the lowest id makes the two spellings of one loop the same string, and
+    // the same string is what recognises them as one.
     [Fact]
     public void A_loop_reachable_from_two_sides_is_reported_once()
         => Assert.Equal("'depends-on' forms a cycle: svc-b → svc-c → svc-b.",
@@ -68,8 +63,7 @@ public class CorpusRuleTests
                 ("svc-b", ["svc-c"]),
                 ("svc-c", ["svc-b"]))).Message);
 
-    // Records hanging off a loop are not on it, and naming them would send the reader to edges that
-    // break nothing.
+    // Naming a record hanging off the loop would send the reader to edges that break nothing.
     [Fact]
     public void A_record_leading_into_a_loop_is_not_named_on_it()
         => Assert.Equal("'depends-on' forms a cycle: svc-b → svc-c → svc-b.",
@@ -98,8 +92,7 @@ public class CorpusRuleTests
     public void An_edge_pointing_at_nothing_is_not_this_rules_business()
         => Assert.Empty(Cycles(("svc-a", ["svc-missing"]), ("svc-b", ["svc-a"])));
 
-    // The graph is read off the schema: the field whose `ref:` names the type's own key. A field
-    // pointing at another type is a different graph and is not walked, however it is spelled.
+    // The graph is read off the schema: the field whose `ref:` names the type's own key.
     [Fact]
     public void A_field_pointing_at_another_type_is_not_walked()
     {
@@ -108,8 +101,6 @@ public class CorpusRuleTests
 
         Assert.Empty(Cycles(Type(stores), ("svc-a", ["svc-b"]), ("svc-b", ["svc-a"])));
     }
-
-    // -- driving the rule --
 
     private static readonly FieldSpec DependsOn = new()
         { Name = "depends-on", Type = "list", Of = "id", Refs = ["services"] };

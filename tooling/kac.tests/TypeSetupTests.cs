@@ -12,14 +12,12 @@ namespace kac.tests;
 
 public class TypeSetupTests
 {
-    // -- both halves, or neither --
 
     [Fact]
     public void A_type_with_a_page_a_folder_and_a_template_is_silent()
         => Assert.Empty(Setup(Holding("adrs.md", "adrs/0001-a.md", "adrs/_template.md")));
 
-    // A type the schema declares and the corpus has not built is a valid, quiet state: a corpus grows into
-    // the framework it took.
+    // A corpus grows into the framework it took.
     [Fact]
     public void A_type_the_corpus_has_not_built_is_not_reported()
         => Assert.Empty(Setup(Holding("README.md")));
@@ -39,8 +37,6 @@ public class TypeSetupTests
         => Assert.Contains("Add adrs/_template.md",
             Assert.Single(Setup(Holding("adrs.md", "adrs/0001-a.md"))).Message);
 
-    // -- held, or merely present --
-
     // The template is asked for on disk. One a contributor has written and not yet added is there to copy,
     // and telling them to add it would send them to write a file they are looking at.
     [Fact]
@@ -54,16 +50,13 @@ public class TypeSetupTests
         => Assert.Contains("Add adrs.md",
             Assert.Single(Setup(Holding(["adrs/0001-a.md", "adrs/_template.md"], onDisk: "adrs.md"))).Message);
 
-    // -- what the corpus says it adopted --
-
     [Fact]
     public void A_type_adopted_and_not_stood_up_is_reported_as_work_outstanding()
         => Assert.Contains("is adopted here and is not stood up",
             Assert.Single(Setup(Holding("README.md"), "adrs")).Message);
 
     // Asked only of a corpus that declares a `types:` block at all: one that declares none has adoption
-    // read off its folders, where the question answers itself. So this corpus adopts the other type and
-    // holds both.
+    // read off its folders, where the question answers itself.
     [Fact]
     public void A_type_stood_up_and_not_adopted_is_reported_as_a_contradiction()
         => Assert.Contains("is not in 'types:'",
@@ -76,8 +69,6 @@ public class TypeSetupTests
     public void A_type_adopted_that_no_schema_covers_names_the_file_that_would_cover_it()
         => Assert.Contains(".schema/widgets.yaml",
             Setup(Holding("README.md"), "adrs", "widgets").Select(f => f.Message).First(m => m.Contains("widgets")));
-
-    // -- the corpus these are asked against --
 
     // Two types, because the last case needs a corpus that has adopted something: a corpus declaring no
     // `types:` at all is not asked what it adopted. Everything else is asked of `adrs` and leaves the

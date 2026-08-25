@@ -32,16 +32,12 @@ public class IdCheckTests
         Parts = new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms", Level = 3 }
     };
 
-    // -- the prefix, which is the type --
-
     [Fact]
     public void An_id_under_the_wrong_prefix_is_reported_and_stops()
     {
         var found = Run("xyz-0006", "adrs/0006-a.md", Numbered());
         Assert.Equal("id-prefix", Assert.Single(found).Check.Value);
     }
-
-    // -- the shape of the discriminator, style by style --
 
     [Theory]
     [InlineData("adr-7")]     // too few digits
@@ -64,13 +60,10 @@ public class IdCheckTests
     public void A_slug_id_is_lower_case_letters_digits_and_hyphens(string id)
         => Assert.Equal("id-format", Assert.Single(Run(id, "tools/site-server.md", Slug())).Check.Value);
 
-    // The shape is asked first, so a malformed id is one finding. The filename it fails to match is not
-    // worth saying while the id itself is unreadable.
+    // The filename a malformed id fails to match is not worth saying while the id itself is unreadable.
     [Fact]
     public void A_malformed_id_is_not_also_held_to_the_filename()
         => Assert.Equal("id-format", Assert.Single(Run("adr-7", "adrs/0004-a.md", Numbered())).Check.Value);
-
-    // -- agreement with the filename --
 
     [Theory]
     [InlineData("adr-0009", "adrs/0004-missing.md")]
@@ -86,15 +79,14 @@ public class IdCheckTests
     public void An_id_agreeing_with_its_filename_is_silent(string id, string rel)
         => Assert.Empty(Run(id, rel, TypeFor(rel)));
 
-    // A slug is compared entire, where the other two styles match a leading segment. That is the whole
-    // difference: `svc-search` in `search-service.md` names another document.
+    // A leading-segment match would accept `svc-search` in `search-service.md`, which names another
+    // document.
     [Fact]
     public void A_slug_is_compared_whole_and_not_as_a_prefix()
         => Assert.Equal("id-matches-filename",
             Assert.Single(Run("tol-site", "tools/site-server.md", Slug())).Check.Value);
 
-    // Where the filename carries no discriminator in the style's shape it has failed filename-pattern,
-    // and one broken name earns one finding.
+    // One broken name earns one finding.
     [Theory]
     [InlineData("adr-0004", "adrs/no-digits-at-all.md")]
     [InlineData("pol-VURM", "policies/toolong-a.md")]
@@ -102,12 +94,10 @@ public class IdCheckTests
     public void A_filename_that_carries_no_discriminator_is_left_to_filename_pattern(string id, string rel)
         => Assert.Empty(Run(id, rel, TypeFor(rel)));
 
-    // -- what slug-max measures --
-
     private const string TooLong = "slug-that-is-definitely-way-too-long";
 
-    // The same stem under two styles. A numbered type's `0003-` is a discriminator the author did not
-    // choose and is not counted; under a slug type the whole stem is the name they did choose.
+    // A numbered type's `0003-` is a discriminator the author did not choose, so it is not counted. Under
+    // a slug type the whole stem is the name they did choose.
     [Fact]
     public void The_discriminator_is_excluded_from_the_slug_but_a_slug_id_is_measured_whole()
     {
@@ -128,8 +118,6 @@ public class IdCheckTests
     public void A_slug_within_the_limit_is_silent()
         => Assert.Empty(Filename("tools/ripgrep.md", Slug()));
 
-    // -- is this label an id? --
-
     // `label-canonical` is the difference between a label and the id as a document carries it.
     [Theory]
     [InlineData("adr-0001", "adr-0001")]
@@ -143,7 +131,7 @@ public class IdCheckTests
         Assert.Equal(expected, canonical);
     }
 
-    // Anything else is prose in brackets, and warns as `bracket-literal`.
+    // Prose in brackets warns as `bracket-literal`.
     [Theory]
     [InlineData("adr-001")]   // too few digits for the declared width
     [InlineData("adr-00011")] // too many
@@ -156,11 +144,8 @@ public class IdCheckTests
     public void Anything_else_is_prose_in_brackets(string label)
         => Assert.False(IdChecks.TryCanonicalId(label, SchemaWith(Numbered(), Mnemonic(), Slug()), out _));
 
-    // -- and is it a part of one? --
-
-    // A part is addressed as `<record>.<part>`, which is the form a citation uses and now the form a link
-    // to a part uses. The record half canonicalises as any id does; the part half is judged against the
-    // type's own `parts:` block, because only that says what a part id looks like.
+    // The record half canonicalises as any id does. The part half is judged against the type's own `parts:`
+    // block, because only that says what a part id looks like.
     [Theory]
     [InlineData("pol-scrt.TIMEBOX", "pol-SCRT.TIMEBOX")] // the record half is written back upper
     [InlineData("POL-SCRT.TIMEBOX", "pol-SCRT.TIMEBOX")]
@@ -171,8 +156,7 @@ public class IdCheckTests
         Assert.Equal(expected, canonical);
     }
 
-    // The part half has to fit the declaration, and a type declaring no parts has none to be named. That
-    // is what keeps `pol-DEVI.md` and a filename in brackets out of this.
+    // The declaration is what keeps a filename in brackets, such as `pol-DEVI.md`, out of this.
     [Theory]
     [InlineData("pol-SCRT.timebox")] // the declared pattern is upper-case
     [InlineData("pol-SCRT.md")]      // a file extension is not a clause
@@ -183,8 +167,6 @@ public class IdCheckTests
     public void A_part_that_does_not_fit_its_type_s_declaration_is_prose(string label)
         => Assert.False(IdChecks.TryCanonicalId(label, SchemaWith(Clauses(), Terms(), Numbered()), out _));
 
-    // -- which id does a link cite? --
-
     [Theory]
     [InlineData("0007-a-decision.md", "adr-0007")] // relative, from a document in the folder
     [InlineData("/adrs/0007-a-decision.md", "adr-0007")]
@@ -194,13 +176,12 @@ public class IdCheckTests
     public void A_link_to_a_numbered_record_is_read_as_its_id(string target, string expected)
         => Assert.Equal(expected, Cite(target, "adrs/0001-first.md", Numbered()));
 
-    // The filename carries the mnemonic lower-case; the id it cites is the upper-case form.
+    // The filename carries the mnemonic lower-case.
     [Fact]
     public void A_link_to_a_mnemonic_record_is_written_back_upper_case()
         => Assert.Equal("pol-VURM", Cite("/policies/vurm-vulnerability.md", "adrs/0001-first.md", Mnemonic()));
 
-    // The style with nothing distinctive in the filename to recognise, and so the one the folder is
-    // load-bearing for.
+    // A slug filename carries nothing distinctive to recognise, so the folder is load-bearing here.
     [Theory]
     [InlineData("/tools/ripgrep.md", "tol-ripgrep")]
     [InlineData("ripgrep.md", "tol-ripgrep")]
@@ -224,8 +205,6 @@ public class IdCheckTests
     [InlineData("#a-heading-here")] // a fragment addressing this document
     public void A_link_to_anything_else_cites_no_id(string target)
         => Assert.Null(Cite(target, "adrs/0001-first.md", Numbered()));
-
-    // -- driving the checks --
 
     private static Schema SchemaWith(params TypeSchema[] types) =>
         new() { ByFolder = types.ToDictionary(t => t.Folder) };

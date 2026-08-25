@@ -731,7 +731,6 @@ static List<string> ReadLines(string path) =>
 
 Console.WriteLine();
 
-// -- coverage meta-test --
 // Every reachable check must be exercised by some fixture, and both directions fail the build: a
 // check with no fixture, and a golden naming a check the catalogue does not hold, which is a rename
 // that left a stale golden. Coverage is a property of the whole suite, so it is only computed on a
@@ -774,7 +773,6 @@ if (filters.Count == 0)
         failures.Add("(checks table vs catalogue)");
     }
 
-    // -- what answers without a corpus --
     // `--version` and `--help` are answered by the parser, so an installed `kac` says what it is from
     // wherever it was typed; every verb needs a corpus and exits 2 without one. Asserted from a temp
     // directory with no `.corpus.yaml` above it. The fault this catches is a corpus lookup running before

@@ -1,6 +1,4 @@
-// Unit tests over `Schema.Load`, built from strings rather than from a `.schema/` on disk. Each case is
-// a declaration nobody would commit, which is what the golden suite against the real schema cannot
-// reach.
+// Built from strings rather than a `.schema/` on disk, so each case is a declaration nobody would commit.
 
 using kac.core;
 
@@ -71,8 +69,6 @@ public class SchemaLoadTests
         Assert.Equal(["adrs", "policies", "tools"], Schema.Load(files).ByFolder.Keys);
     }
 
-    // -- enums --
-
     [Fact]
     public void A_field_drawing_on_a_declared_enum_takes_its_values()
     {
@@ -94,8 +90,7 @@ public class SchemaLoadTests
         Assert.Null(status.Problem);
     }
 
-    // The declaration says the values are written down somewhere. A field loaded with no range would go
-    // unchecked while the schema went on claiming it has one.
+    // A field loaded with no range would go unchecked while the schema went on claiming it has one.
     [Fact]
     public void A_field_drawing_on_an_enum_nothing_declares_records_the_problem()
     {
@@ -128,8 +123,6 @@ public class SchemaLoadTests
 
         Assert.Contains("declares no 'status'", Schema.Load(files).Universal["status"].Problem!);
     }
-
-    // -- rules --
 
     private static RuleSpec OnlyRule(string typeYaml)
     {
@@ -197,8 +190,8 @@ public class SchemaLoadTests
         Assert.Contains("has-a-title", rule.Problem!);
     }
 
-    // A severity the tool does not recognise reads as absent, which leaves the rule declared but not
-    // enforced. A rule declaring no expr at all is a statement of intent and carries no problem.
+    // A severity the tool does not recognise reads as absent too, which leaves the rule declared but not
+    // enforced.
     [Fact]
     public void A_rule_declaring_only_an_id_is_a_statement_of_intent()
     {
@@ -211,8 +204,6 @@ public class SchemaLoadTests
         Assert.Null(rule.Problem);
         Assert.Null(rule.Compiled);
     }
-
-    // -- what the loader never asked for --
 
     // A key nothing reads is a declaration in a file documented as the contract the tool enforces.
     [Fact]
@@ -249,10 +240,8 @@ public class SchemaLoadTests
         Assert.Empty(Schema.Load(files).UnreadKeys);
     }
 
-    // -- the shapes a declaration may take --
-
-    // `Yaml.Str` answers null for a sequence, so a key the schema may write either way has to arrive as
-    // a list. Read as a scalar, every declaration using the list form would look like an absent key.
+    // `Yaml.Str` answers null for a sequence, so every declaration using the list form would look like an
+    // absent key if it were read as a scalar.
     [Theory]
     [InlineData("ref: adrs", new[] { "adrs" })]
     [InlineData("ref: [adrs, policies]", new[] { "adrs", "policies" })]
@@ -268,7 +257,7 @@ public class SchemaLoadTests
         Assert.Equal(expected, Schema.Load(files).Universal["supersedes"].Refs);
     }
 
-    // A description is written over several lines in the schema and rendered into a table cell as one.
+    // A description is rendered into a table cell as one line.
     [Fact]
     public void A_description_written_over_several_lines_collapses_to_one()
     {

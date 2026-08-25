@@ -32,8 +32,7 @@ public class GeneratorTests
         Assert.Contains(problems, p => p.Contains("'invented-check'") && p.Contains("no row in the checks table"));
     }
 
-    // A check waived and rendered at once: the two declarations disagree, and the page would advertise
-    // a check the schema says a record author cannot act on.
+    // The page would advertise a check the schema says a record author cannot act on.
     [Fact]
     public void ChecksTableProblems_names_a_waived_check_that_has_a_row_anyway()
     {
@@ -317,8 +316,6 @@ public class GeneratorTests
         Assert.Contains("reciprocal", table);
     }
 
-    // -- the tables of types --
-
     private static TypeSchema Type(string label, string plural, string tier, string page, string goesHere,
         params (string Other, string Text)[] versus) => new()
     {
@@ -348,7 +345,7 @@ public class GeneratorTests
     private static List<int> PositionsOf(string text, params string[] needles) =>
         [.. needles.Select(n => text.IndexOf(n, StringComparison.Ordinal))];
 
-    // The decision table is read down its left column, so that is the column it is ordered by.
+    // The decision table is read down its left column.
     [Fact]
     public void The_decision_table_is_sorted_by_what_the_reader_is_holding()
     {
@@ -358,7 +355,7 @@ public class GeneratorTests
         Assert.Equal(order.Order(), order);
     }
 
-    // It points at the collection, so it names the collection.
+    // The link points at the collection.
     [Fact]
     public void The_decision_table_names_a_type_in_the_plural()
     {
@@ -368,7 +365,7 @@ public class GeneratorTests
         Assert.DoesNotContain("[ADR](", rows);
     }
 
-    // A lookup table, ordered by the one thing the reader already knows. Tier is a column, not a grouping.
+    // Tier is a column, not a grouping.
     [Fact]
     public void The_corpus_index_is_sorted_by_type_name()
     {
@@ -389,9 +386,6 @@ public class GeneratorTests
         Assert.All(index.Split('\n').Where(l => !l.StartsWith('|')), l => Assert.True(l.Length <= 120));
     }
 
-    // -- the types at length --
-
-    // Tier order comes from the schema, not the alphabet: Decided leads and Observed closes.
     [Fact]
     public void The_catalogue_runs_in_the_order_the_tiers_are_declared()
     {
@@ -429,8 +423,8 @@ public class GeneratorTests
         Assert.Contains("**[ADRs](../adrs.md).** What a adr holds. And the edge", catalogue);
     }
 
-    // Prose wraps at the margin the corpus holds every other paragraph to; a table cell cannot be broken
-    // and is exempt, which is why the wrap belongs to the prose renderers rather than to RenderTable.
+    // A table cell cannot be broken and is exempt, which is why the wrap belongs to the prose renderers
+    // rather than to RenderTable.
     [Fact]
     public void Catalogue_prose_wraps_at_the_corpus_margin()
         => Assert.All(Generator.TypeCatalogue(Tiers, Four(), "../").Split('\n'), l => Assert.True(l.Length <= 120));
@@ -466,8 +460,6 @@ public class GeneratorTests
         Assert.Contains(long_, Generator.TypeCatalogue(Tiers, [t], "../"));
     }
 
-    // -- the calls that are genuinely close --
-
     private static TypeSchema[] Pair(params (string Other, string Text)[] versus) =>
     [
         Type("ADR", "ADRs", "decided", "adrs.md", "A decision", versus),
@@ -482,8 +474,8 @@ public class GeneratorTests
         Assert.Contains("**ADR vs Standard.** The ADR is the decision, frozen.", text);
     }
 
-    // A pair needs both its types: a corpus with no standards is not helped by being told how one differs
-    // from an ADR, and the heading would name a page it cannot open.
+    // A corpus with no standards is not helped by being told how one differs from an ADR, and the
+    // heading would name a page it cannot open.
     [Fact]
     public void A_pair_whose_other_half_is_not_stood_up_is_left_out()
     {
@@ -502,8 +494,6 @@ public class GeneratorTests
         Assert.DoesNotContain("Never rendered", text);
     }
 
-    // -- the way on to each type's own fields --
-
     [Fact]
     public void The_metadata_strip_links_each_type_at_the_heading_its_field_table_sits_under()
     {
@@ -516,8 +506,6 @@ public class GeneratorTests
     [Fact]
     public void The_metadata_strip_wraps_at_the_corpus_margin()
         => Assert.All(Generator.MetadataStrip(Four(), "../").Split('\n'), l => Assert.True(l.Length <= 120));
-
-    // -- where the names came from --
 
     private static TypeSchema Ancestor(string label, string key, LineageSpec? lineage) => new()
     {
@@ -539,7 +527,7 @@ public class GeneratorTests
         Assert.Contains("Ours spans repos", table);
     }
 
-    // A type may have no ancestor, and its row exists to say so. An empty cell would read as unfinished.
+    // An empty cell would read as unfinished.
     [Fact]
     public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
     {
@@ -553,8 +541,6 @@ public class GeneratorTests
     [Fact]
     public void A_type_that_declares_no_lineage_is_left_out_of_the_table()
         => Assert.DoesNotContain("Widget", Generator.LineageTable([Ancestor("Widget", "widgets", null)], "../"));
-
-    // -- words a reader arrives already holding --
 
     private static TypeSchema Colliding(string label, string key, string collision) => new()
     {
@@ -604,8 +590,6 @@ public class GeneratorTests
             l => Assert.True(l.Length <= 120));
     }
 
-    // -- how the types relate --
-
     private static TypeSchema Linked(string label, string key, params (string Field, string[] Refs, string? Back)[] fs)
     {
         var fields = fs.ToDictionary(f => f.Field,
@@ -636,7 +620,7 @@ public class GeneratorTests
         Assert.Contains("`verifies`    |", table); // …each naming the other in the last column
     }
 
-    // A one-directional edge has nobody obliged to answer it, and the empty cell is what says so.
+    // A one-directional edge has nobody obliged to answer it.
     [Fact]
     public void A_one_directional_edge_names_no_counterpart()
         => Assert.Matches(@"\| Standard \| `implements`\s+\| Policy\s+\|\s+\|", Generator.RelationTable(Graph()));
@@ -668,7 +652,7 @@ public class GeneratorTests
         Assert.DoesNotContain("|", diagram);
     }
 
-    // One relationship draws one arrow, where the table has two rows because an author has two fields.
+    // The table carries two rows for the pair, because an author has two fields.
     [Fact]
     public void A_reciprocal_pair_is_drawn_once()
     {
@@ -713,8 +697,8 @@ public class GeneratorTests
         Assert.Equal(text, Generator.SpliceBlock(text, "missing", "NEW"));
     }
 
-    // Authored is what `update --check` compares, so what it keeps and what it drops decides whether an
-    // overlay page may carry a corpus-specific table.
+    // Authored is what `update --check` compares, so it decides whether an overlay page may carry a
+    // corpus-specific table.
     [Fact]
     public void Authored_drops_what_a_generated_block_holds_and_keeps_the_markers()
     {

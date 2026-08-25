@@ -25,8 +25,6 @@ public class TreeTests
         },
         rel => $"the text of {rel}");
 
-    // -- presence --
-
     [Fact]
     public void The_listing_is_what_the_corpus_holds()
     {
@@ -34,8 +32,7 @@ public class TreeTests
         Assert.False(Corpus().Exists("adrs/0099-gone.md"));
     }
 
-    // The two questions come apart in the one direction that matters: a file git does not track is in no
-    // clone, so it is present without being held.
+    // A file git does not track is in no clone, so it is present without being held.
     [Fact]
     public void A_file_the_corpus_does_not_hold_may_still_be_on_disk()
     {
@@ -48,8 +45,8 @@ public class TreeTests
         Assert.True(tree.OnDisk("adrs/_template.md"));
     }
 
-    // A corpus assembled from values has no disk to ask, so the listing answers for both. That is what
-    // makes a test corpus a set of paths rather than a set of paths and a second set beside it.
+    // A corpus assembled from values has no disk to ask, which is what makes a test corpus a set of paths
+    // rather than a set of paths and a second set beside it.
     [Fact]
     public void A_corpus_built_from_values_answers_on_disk_from_its_listing()
     {
@@ -66,10 +63,8 @@ public class TreeTests
         Assert.False(Corpus().HasFolder("policies"));
     }
 
-    // -- naming a set --
-
-    // `*` stops at a slash, so a pattern names the markdown directly inside a folder. This is the
-    // framework's own documentation, which is read as a set and reported against file by file.
+    // `*` stops at a slash. The framework's own documentation is read as a set and reported against file
+    // by file.
     [Fact]
     public void A_glob_names_the_files_directly_inside_a_folder()
         => Assert.Equal(["knowledge-as-code/style.md", "knowledge-as-code/taxonomy.md"],
@@ -92,8 +87,6 @@ public class TreeTests
     [Fact]
     public void A_glob_matching_nothing_names_nothing()
         => Assert.Empty(Corpus().Match("policies/*.md"));
-
-    // -- reading --
 
     // A path is normalised before it is looked up or read, so a caller that built one with the platform's
     // separator asks the same question as one that wrote it with a slash.

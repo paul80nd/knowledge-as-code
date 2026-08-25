@@ -9,7 +9,6 @@ namespace kac.tests;
 
 public class DocumentRuleTests
 {
-    // -- the registry --
 
     [Fact]
     public void Every_registered_rule_has_a_distinct_id_and_reports_something()
@@ -18,14 +17,12 @@ public class DocumentRuleTests
         Assert.All(DocumentRules.All, r => Assert.NotEmpty(r.Emits));
     }
 
-    // What each emitted id *means* is `_checks.yaml`'s to say. Here the ids only have to be ids.
+    // What each emitted id *means* is `_checks.yaml`'s to say.
     [Fact]
     public void Every_emitted_id_is_a_usable_check_id()
     {
         Assert.All(DocumentRules.All.SelectMany(r => r.Emits), e => Assert.NotEmpty(e.Value));
     }
-
-    // -- y-statement-present: three ways to fail, one check id --
 
     [Fact]
     public void A_document_with_no_block_quote_is_told_the_Y_statement_is_absent()
@@ -68,8 +65,8 @@ public class DocumentRuleTests
         Assert.Contains("keep it under 20.", Single(found).Message);
     }
 
-    // The ceiling comes from the schema so that a corpus can tune it without a release; the default is
-    // only what applies when the schema declares none.
+    // A corpus can tune the ceiling without a release, and the default applies only where the schema
+    // declares none.
     [Fact]
     public void The_ceiling_is_the_schemas_and_a_Y_statement_within_it_is_silent()
     {
@@ -92,8 +89,6 @@ public class DocumentRuleTests
     public void Moves_are_matched_as_whole_words_and_without_case(string text, int missing)
         => Assert.Equal(missing, YStatementPresent.MissingMoves(text).Count);
 
-    // -- alternatives-have-verdicts: one finding per open bullet, quoting it --
-
     [Fact]
     public void An_alternative_left_open_is_quoted_back_and_a_settled_one_is_not()
     {
@@ -106,7 +101,7 @@ public class DocumentRuleTests
         Assert.Contains("A message queue", Single(found).Message);
     }
 
-    // The bullets are found by heading, so a list under any other heading is not this rule's business.
+    // The bullets are found by heading.
     [Fact]
     public void Bullets_outside_the_section_are_left_alone()
         => Assert.Empty(Run(new AlternativesHaveVerdicts(),
@@ -119,14 +114,11 @@ public class DocumentRuleTests
     public void A_verdict_is_an_outcome_word_or_a_contrastive_cue(string bullet, bool settled)
         => Assert.Equal(settled, AlternativesHaveVerdicts.HasVerdict(bullet));
 
-    // -- terms-are-alphabetical --
-
     [Fact]
     public void Entries_in_order_are_left_alone()
         => Assert.Empty(Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### Borrower\n\nOne.\n\n### Item\n\nTwo.\n\n### Title\n\nThree.")));
 
-    // The message names the entry that moved and the one it belongs before.
     [Fact]
     public void An_entry_out_of_place_names_itself_and_where_it_belongs()
     {
@@ -144,14 +136,11 @@ public class DocumentRuleTests
         => Assert.Empty(Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### ADR\n\nOne.\n\n### Borrower\n\nTwo.\n\n### corpus\n\nThree.")));
 
-    // Each entry is judged against the one before it, so a file with two words in the wrong place
-    // reports both rather than stopping at the first.
+    // Each entry is judged against the one before it.
     [Fact]
     public void Every_entry_out_of_place_is_reported()
         => Assert.Equal(2, Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### Item\n\nOne.\n\n### Borrower\n\nTwo.\n\n### Adr\n\nThree.")).Count);
-
-    // -- driving a rule --
 
     private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null)
     {

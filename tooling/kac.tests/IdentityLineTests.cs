@@ -19,14 +19,11 @@ public class IdentityLineTests
         => Assert.Equal("identity line says 'Standard', but this is a Service.",
             IdentityType(Type("services", "Service", "Services"), "svc-catalogue"));
 
-    // A type whose singular and plural are one word is a mass noun, and "a Data" is the reading that
-    // gives it away.
+    // "a Data" is the reading that gives a mass noun away.
     [Fact]
     public void A_label_whose_plural_is_the_same_word_takes_no_article()
         => Assert.Equal("identity line says 'Standard', but this is Data.",
             IdentityType(Type("data", "Data", "Data"), "dat-borrowers"));
-
-    // -- driving the check --
 
     private static TypeSchema Type(string key, string label, string plural) =>
         new() { Key = key, Folder = key, Label = label, LabelPlural = plural };

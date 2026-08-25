@@ -1,6 +1,4 @@
-// Unit tests for how `new` settles its answers: what a flag decides, what a person is asked, what
-// `--yes` defaults to, and what a run with nobody to ask refuses. The console is on the other side of
-// `IAsker`, so every one of these runs without a terminal.
+// The console sits on the other side of `IAsker`, so every case here runs without a terminal.
 
 using kac.core;
 
@@ -52,8 +50,6 @@ public class AskingTests
         Name = "acme", Types = Asking.AllTypes, Publishing = Publishing.None, Ci = CiSystem.None
     };
 
-    // -- what settles an answer --
-
     [Fact]
     public void A_flag_given_is_never_asked_for()
     {
@@ -103,14 +99,11 @@ public class AskingTests
     public void A_corpus_needs_a_name()
         => Assert.Contains("a corpus needs a name", Resolve(Flagged() with { Name = "  " }).Problem);
 
-    // -- types --
-
     [Fact]
     public void All_names_every_type_the_template_declares()
         => Assert.Equal(Declared, Resolve(Flagged()).Answers!.Types);
 
-    // Kept in the order the schema declares them, whatever order the flag named them in, so two corpora
-    // adopting the same types write the same descriptor.
+    // Two corpora adopting the same types write the same descriptor.
     [Fact]
     public void A_named_subset_is_kept_in_the_order_the_schema_declares()
         => Assert.Equal(["adrs", "policies"],
@@ -129,8 +122,6 @@ public class AskingTests
     public void A_corpus_may_adopt_no_type_at_all()
         => Assert.Empty(Resolve(new NewRequest(), new Scripted(many: [])).Answers!.Types);
 
-    // -- the two vocabularies --
-
     [Fact]
     public void A_publishing_target_the_tool_cannot_act_on_is_refused()
     {
@@ -143,8 +134,6 @@ public class AskingTests
     [Fact]
     public void A_ci_system_the_tool_does_not_offer_is_refused()
         => Assert.Contains("'jenkins' is not a system", Resolve(Flagged() with { Ci = "jenkins" }).Problem);
-
-    // -- the publishing bases --
 
     [Fact]
     public void A_corpus_publishing_nowhere_is_asked_for_no_bases()

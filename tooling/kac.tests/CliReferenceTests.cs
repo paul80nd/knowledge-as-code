@@ -1,13 +1,8 @@
-// The CLI reference pages restate the command line, which is the one thing in this repository that a page cannot be
-// left to state for itself. A hand-written usage drifts from the parser inside two pull requests and nothing notices.
+// A hand-written usage drifts from the parser inside two pull requests and nothing notices, so each page
+// carries a generated block and these hold it to the parser's own command model.
 //
-// So each page carries a generated block, and these hold it to the parser's own command model. No `kac docs` verb
-// stands behind it, because a verb no corpus would ever run is weight every consumer carries. `kac generate` does not
-// write it either: plenty of corpora have a `docs/` folder, and rewriting one would be a bad surprise.
-//
-// Set `KAC_UPDATE_DOCS=1` to rewrite the blocks instead of asserting on them, which is how a command that grew an
-// option gets its page back in step. Read the diff afterwards, because the update blesses a regression as happily as
-// a fix.
+// `KAC_UPDATE_DOCS=1` rewrites the blocks instead of asserting on them. Read the diff afterwards: the
+// update blesses a regression as happily as a fix.
 
 using System.Text.RegularExpressions;
 
@@ -77,8 +72,8 @@ public partial class CliReferenceTests
         }
     }
 
-    // The overview indexes every page of the reference, and takes each row's wording from that page's own heading. So
-    // a command whose page is added, renamed or retitled drops out of step here rather than quietly out of the list.
+    // Each row's wording comes from the page it indexes, so a command whose page is added, renamed or
+    // retitled drops out of step here rather than quietly out of the list.
     [Fact]
     public void The_overview_indexes_every_page()
     {

@@ -13,7 +13,6 @@ namespace kac.tests;
 
 public class LinkCheckTests
 {
-    // -- does this target resolve? --
 
     [Fact]
     public void A_target_resolves_absolute_from_the_root_or_relative_to_the_document()
@@ -30,7 +29,6 @@ public class LinkCheckTests
     public void The_md_extension_may_be_omitted()
         => Assert.Empty(Unresolved("adrs/0001-a.md", "[b](/adrs/0002-b)"));
 
-    // A directory is deliberately not a target: `/adrs` is a link to the page `adrs.md`.
     [Fact]
     public void A_directory_is_not_a_target_but_the_page_beside_it_is()
     {
@@ -38,8 +36,8 @@ public class LinkCheckTests
         Assert.Single(Unresolved("index.md", "[pics](/pictures)")); // a folder with no page
     }
 
-    // A file the repository ignores is not in the corpus. It is on the disk of whoever created it and in
-    // no clone, so a link to one is dead everywhere the corpus is read.
+    // An ignored file is on the disk of whoever created it and in no clone, so a link to one is dead
+    // everywhere the corpus is read.
     [Fact]
     public void A_target_the_corpus_does_not_hold_does_not_resolve()
         => Assert.Single(Unresolved("index.md", "[draft](/_plan/notes.md)"));
@@ -66,8 +64,6 @@ public class LinkCheckTests
     [InlineData("/adrs/0002-b.md", false)]
     public void An_external_target_is_left_alone(string target, bool external)
         => Assert.Equal(external, LinkChecks.IsExternal(target));
-
-    // -- the corpus these are asked against --
 
     private static List<string> Unresolved(string fromRel, string markdown) =>
     [

@@ -119,16 +119,11 @@ public class CorpusDescriptor
     // newer tool writes, so an update stamps this alongside what it took.
     public const int Format = 1;
 
-    // Keys the descriptor once used, beside what each is called now. `version:` alone said the file's own
-    // format, which is one of three versions the file states, so a reader met a number without knowing
-    // which question it answered.
+    // Keys the descriptor once used, beside what each is called now. The tool names the old key, the new
+    // one and the file, and rewrites nothing: a corpus that has taken a copy is a repository someone owns.
     //
-    // A rename is the author's to make. No part of this file comes down from an upstream, and a corpus
-    // that has taken a copy is a repository someone owns, so the tool names the old key, the new one and
-    // the file, and stops. Rewriting it would save a single edit and break the file's own promise.
     // A key is named by the block it sits in, so `upstream.mechanism-version` is found where it lives
-    // rather than at the root. `New` is null where the key was dropped, and `Gone` is then what to say
-    // instead of naming a replacement.
+    // rather than at the root. `New` is null where the key was dropped, and `Gone` says so instead.
     private static readonly (string Section, string Old, string? New, string Gone)[] Renamed =
     [
         ("", "version", "descriptor-version", ""),

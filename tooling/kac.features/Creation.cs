@@ -1,8 +1,5 @@
-// The harness behind the creation specs: put a folder into a state, run `new` against it in-process, and
-// answer with the exit code. It calls `Commands.New`, which is the whole of what `kac new` runs, so a
-// precondition cannot stop the command and go unnoticed here.
-//
-// The template is this repository, read as a folder rather than cloned. Nothing here reaches the network.
+// Runs `new` in-process through `Commands.New`, so a precondition cannot stop the command and go unnoticed
+// here. The template is this repository read as a folder, so nothing reaches the network.
 
 using kac.core;
 

@@ -24,8 +24,8 @@ public class PlaceholderTests
     public void Anything_without_the_mark_is_a_value(string? value)
         => Assert.False(Placeholder.In(value));
 
-    // Words that read as stand-ins and are not the mark. Each is ordinary text, so a template writing
-    // one gets the finding it has coming. `example` stays available as a slug a real document may want.
+    // A word that reads as a stand-in is ordinary text, so a template writing one gets the finding it has
+    // coming. `example` stays available as a slug a real document may want.
     [Theory]
     [InlineData("adr-NNNN")]
     [InlineData("pol-XXXX")]
@@ -55,10 +55,7 @@ public class PlaceholderTests
         Assert.Equal("adr-{{a}}", ((YamlDotNet.RepresentationModel.YamlScalarNode)seq.Children[0]).Value);
     }
 
-    // -- what a record is scanned for, and what it is not --
-
-    // The four places a half-filled copy keeps one, none of which is ordinary prose alone. The
-    // identity line matters most and is the easiest to miss: it is written in code spans, so a scan
+    // The identity line matters most and is the easiest to miss: it is written in code spans, so a scan
     // that skipped code to protect fenced examples would skip the repeated id along with them.
     [Theory]
     [InlineData("---\nid: svc-{{slug}}\n---\n\n# A title\n", "{{slug}}")]
@@ -73,8 +70,7 @@ public class PlaceholderTests
         Assert.Contains(expected, found.Select(f => f.Token));
     }
 
-    // A document describing a templating language is not a document that failed to finish. Both forms
-    // of code are excluded, which is why the scan reads the parsed inlines.
+    // A document describing a templating language is not a document that failed to finish.
     [Theory]
     [InlineData("---\nid: svc-a\n---\n\n# A title\n\n```yaml\nrun: echo ${{ vars.id }}\n```\n")]
     [InlineData("---\nid: svc-a\n---\n\n# A title\n\nWrite `${{ vars.id }}` to read it.\n")]

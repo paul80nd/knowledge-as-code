@@ -17,8 +17,8 @@ public class GlobTests
     public void IsMatch_matches_expected(string path, string pattern, bool expected)
         => Assert.Equal(expected, Glob.IsMatch(path, pattern));
 
-    // This is the state that corrupted the cache, and it failed in whichever scenario was running
-    // rather than here.
+    // A corrupted cache surfaces in whichever spec scenario happens to be running, never in a test that
+    // names the cache, so the concurrent ask is put here deliberately.
     [Fact]
     public void The_cache_survives_being_asked_from_several_threads()
     {
