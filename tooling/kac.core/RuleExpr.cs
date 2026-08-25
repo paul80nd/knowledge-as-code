@@ -1,6 +1,6 @@
 // A hand-rolled lexer, recursive-descent parser, type checker and evaluator, in one file with no
-// dependencies. `.schema/README.md` is the reference for what an expression may say; this comment is
-// about the boundary, because this is the file someone stands in when they want to cross it.
+// dependencies. `docs/schema/expressions.md` is the reference for what an expression may say; this comment
+// is about the boundary, because this is the file someone stands in when they want to cross it.
 //
 // The grammar is frozen. It has no variables, no user-defined functions, no quantifiers and no
 // collections, and that is the property being bought rather than a shortfall to be corrected. A rule
@@ -64,7 +64,7 @@ public static class RuleExpr
         };
 
     // The callable surface by name, for the meta-test holding the reference table in
-    // `.schema/README.md` against it. Exposed for the reason `IdChecks.IdStyles` is: a reader learns
+    // `docs/schema/expressions.md` against it. Exposed for the reason `IdChecks.IdStyles` is: a reader learns
     // what an expression may call from a page, and the page has to be a list of what runs rather than
     // a list of what is spelled correctly.
     public static IReadOnlyCollection<string> FunctionNames => Functions.Keys;

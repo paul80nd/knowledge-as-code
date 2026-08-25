@@ -43,9 +43,9 @@ so it runs `kac` over that corpus and reads no `template/`.
 ## Adding or changing a check
 
 **Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
-`expr:` on a rule in `.schema/<type>.yaml`. See [`../.schema/README.md`](../.schema/README.md) for what one may say.
-That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks table and
-`kac checks` all pick it up from the schema.
+`expr:` on a rule in `.schema/<type>.yaml`. See [`docs/schema/expressions.md`](../docs/schema/expressions.md) for what
+one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks table
+and `kac checks` all pick it up from the schema.
 
 **What decides it is what the author is told.** Write the expression where one fixed message says everything the code
 would have said. Write the code where it can name *which* part of the document is at fault and a single string cannot. A

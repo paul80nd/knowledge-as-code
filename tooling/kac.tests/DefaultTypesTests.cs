@@ -6,7 +6,7 @@ using kac.core;
 // and a page that generated them would be a second copy of a sentence the schema already owns.
 //
 // So what is held here are the names and the tier each sits under, and the wording is left alone. That is the
-// stance `DocumentationTests` takes for `.schema/README.md`, and it catches the faults that matter: a type
+// stance `DocumentationTests` takes for the schema reference, and it catches the faults that matter: a type
 // added, retired, renamed or moved between tiers, on a page nobody opens while doing any of those.
 
 namespace kac.tests;

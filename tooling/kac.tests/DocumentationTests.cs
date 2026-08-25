@@ -1,7 +1,7 @@
-// Two tables in `.schema/README.md` restate something the code already holds: the facts an expression
-// may call, and the checks the schema-load pass reports. Neither is generated: each carries a column
-// of hand-written prose that is the reason to read it at all. So what is held here are the *names* in
-// them, and the wording is left alone.
+// Two tables on the documentation site restate something the code already holds: the facts an
+// expression may call, and the checks the schema-load pass reports. Neither is generated: each carries
+// a column of hand-written prose that is the reason to read it at all. So what is held here are the
+// *names* in them, and the wording is left alone.
 //
 // These read the repository rather than a value built in the test. That is what they are for: the fault
 // they exist to catch is a page going quietly out of step with the code beside it, and a page nobody
@@ -19,10 +19,10 @@ namespace kac.tests;
 
 public partial class DocumentationTests
 {
-    // The page describing the schema, beside the schema it describes at the repository root. One copy
-    // serves the template and `example/` alike.
-    private static readonly string Readme =
-        File.ReadAllText(Path.Combine(Repo.Root, ".schema", "README.md"));
+    // The two pages of the site's schema reference. They document the schema without travelling with
+    // it, so a corpus that took a copy reads them at the published URL.
+    private static string Page(string name) =>
+        File.ReadAllText(Path.Combine(Repo.Root, "docs", "schema", name));
 
     // A row of the fact table opens with the call it documents: `| \`section_count('Title')\` | int |`.
     [GeneratedRegex(@"^\| `([a-z_]+)\(", RegexOptions.Multiline)]
@@ -35,7 +35,9 @@ public partial class DocumentationTests
     [Fact]
     public void The_fact_table_documents_every_callable_fact()
     {
-        var documented = FactRow().Matches(Readme).Select(m => m.Groups[1].Value).ToHashSet(StringComparer.Ordinal);
+        var documented = FactRow().Matches(Page("expressions.md"))
+            .Select(m => m.Groups[1].Value)
+            .ToHashSet(StringComparer.Ordinal);
 
         Assert.Equal(
             RuleExpr.FunctionNames.Order(StringComparer.Ordinal),
@@ -53,7 +55,9 @@ public partial class DocumentationTests
             .Where(id => id.StartsWith("schema-", StringComparison.Ordinal))
             .ToHashSet(StringComparer.Ordinal);
 
-        var cited = HeldToRow().Matches(Readme).Select(m => m.Groups[1].Value).ToHashSet(StringComparer.Ordinal);
+        var cited = HeldToRow().Matches(Page("held-to.md"))
+            .Select(m => m.Groups[1].Value)
+            .ToHashSet(StringComparer.Ordinal);
 
         Assert.Equal(declared.Order(StringComparer.Ordinal), cited.Order(StringComparer.Ordinal));
     }

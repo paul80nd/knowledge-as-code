@@ -1,6 +1,6 @@
-/* The sidebar runs to eight top-level entries and two collapsible sections, which reads as one long
-   list. Two gaps break it into what a reader is doing: getting going, then the framework and the
-   commands, then the reference material that closes it.
+/* The sidebar runs to nine top-level entries and three collapsible sections, which reads as one long
+   list. Two gaps break it into what a reader is doing: getting going, then the framework, the commands
+   and the schema, then the reference material that closes it.
 
    Material has no divider of its own. Both rules find their item by where it sits rather than by
    what it links to, because a section's own link is written `../` on every page inside it and names

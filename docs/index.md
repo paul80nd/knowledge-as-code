@@ -44,9 +44,8 @@ is its way in to everything here.
 [`tooling/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/README.md), beside the code. It
 covers building `kac`, its three test layers, and what bites you while editing any of it.
 
-**How to author a schema** is
-[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md). It travels with the
-schema it describes, so a corpus reads its own copy.
+**How to author a schema** is the [Schema reference](schema/index.md). It covers the rules a type may declare and what
+`kac` refuses when it loads one.
 
 ## Maturity
 
