@@ -1,16 +1,5 @@
-// kac: the knowledge-as-code validator and generator. One tool, several subcommands, sharing a
-// schema-loading and markdown-parsing core. Each is described where it is registered below.
-//
-// This file is only the CLI surface: it wires Spectre.Console.Cli to Commands and finds the corpus each
-// verb answers about. Every subcommand's logic lives in the kac.core project this one references, one class
-// per file. `tooling/CLAUDE.md` says how that project is laid out and which file answers what.
-//
-// Spectre.Console.Cli is the parser because Spectre.Console is where a .NET tool goes for a prompt, and a
-// tool that asks a question and parses a command line should carry one library rather than two.
-//
-// The tool is deliberately free of type-specific rules: everything it enforces is
-// read from the YAML schema, so adding a type is adding a YAML file, not editing C#.
-// See docs/checks.md for what fails versus warns and how each check maps to the schema.
+// The CLI surface: it wires Spectre.Console.Cli to `Commands` and finds the corpus each verb answers about.
+// Every verb's logic is in kac.core, and `tooling/CLAUDE.md` says which file answers what.
 
 using System.ComponentModel;
 using System.Reflection;

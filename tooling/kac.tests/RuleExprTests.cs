@@ -1,7 +1,5 @@
-// The expression layer for `rules:`. Two things are pinned here that nothing else can pin: what the
-// grammar accepts, and what a comparison means when the field it names is absent. Both are contracts
-// with whoever writes a schema, and neither is visible in a golden. A corpus only ever shows the
-// answer for the documents it happens to hold.
+// What the grammar accepts, and what a comparison means when the field it names is absent. Both are
+// contracts with whoever writes a schema, and a corpus only ever shows the answer for what it holds.
 
 using kac.core;
 

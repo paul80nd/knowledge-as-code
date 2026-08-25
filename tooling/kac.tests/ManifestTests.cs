@@ -1,6 +1,4 @@
-// Unit tests for the two files a corpus is sorted by: the manifest's first-rule-wins layering and where
-// `to:` lands what it matched, and the descriptor's own keys, read from `.corpus.yaml` written into a
-// temp directory. The engines that act on what they return are in NewTests and UpdateTests.
+// The manifest and the descriptor as values. The engines acting on them are in NewTests and UpdateTests.
 
 using kac.core;
 

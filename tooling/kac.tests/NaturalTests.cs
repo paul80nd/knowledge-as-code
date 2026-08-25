@@ -1,6 +1,4 @@
-// In-process unit tests for the natural comparer behind the `list-order` check. The fixtures pin
-// the check's behaviour on real documents; this pins the ordering rule itself, including the edges
-// no frontmatter in the corpus reaches yet.
+// The ordering rule itself, including the edges no frontmatter in the corpus reaches yet.
 
 using kac.core;
 

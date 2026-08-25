@@ -1,8 +1,5 @@
-// Unit tests for the `new` engine: which template file lands where, which never lands at all, and what
-// the two composed files say. Every creation here is decided from a listing and a manifest written in the
-// test, so nothing writes a tree, clones a repository or reads the network. The last test is the one
-// exception, and says why. `tooling/tests/fixtures/new/` is the layer that runs the command over a real
-// template.
+// Every creation here is decided from a listing and a manifest written in the test, so nothing writes a
+// tree, clones a repository or reads the network. `tooling/tests/fixtures/new/` runs the real command.
 
 using kac.core;
 

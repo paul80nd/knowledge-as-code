@@ -1,6 +1,4 @@
-// Unit tests over `Schema.Load`, built from strings rather than from a `.schema/` on disk. Each case is
-// a declaration nobody would commit, which is what the golden suite against the real schema cannot
-// reach.
+// Built from strings rather than a `.schema/` on disk, so each case is a declaration nobody would commit.
 
 using kac.core;
 

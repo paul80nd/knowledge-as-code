@@ -1,7 +1,5 @@
-// A comment citing a page carries the argument by reference, which is the only way to hold one account of it. The
-// citation is the half that rots: a page renamed or moved leaves the path behind, and nothing reads a comment.
-//
-// So the paths are read back and resolved here, and a citation naming nothing fails the build.
+// Citing a page rather than restating it holds one account of an argument, and leaves a path that rots
+// when the page moves. Nothing reads a comment, so the paths are resolved here instead.
 
 using System.Text.RegularExpressions;
 

@@ -1,8 +1,5 @@
-// The harness behind every behaviour spec: assemble a throwaway repo root (the real schema plus a
-// fixture corpus) and run the validate pipeline in-process against kac.core. It calls Corpus.Load and
-// Validator.CheckAll (the same two calls `kac validate` makes, so a check cannot be visible to the
-// command and invisible here) and returns the findings rather than printing them. That is the seam
-// the steps bind to: a List<Finding> with no Console involved.
+// Runs `Corpus.Load` then `Validator.CheckAll`, which are the two calls `kac validate` makes. Assembling a
+// subset of that sequence would leave checks unreachable from a spec while every spec went on passing.
 
 using kac.core;
 

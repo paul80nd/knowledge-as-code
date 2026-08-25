@@ -1,9 +1,5 @@
-// `mkdocs.yml` states the site's order by hand, and each page now links to the one before and after it. Two things go
-// quietly wrong there. A page written and never listed is published and reachable from nothing. A command added to the
-// parser leaves the reference in an order that no longer matches the tool.
-//
-// `mkdocs build --strict` catches neither. It mentions an unlisted page at INFO and exits 0, and it says nothing at
-// all about order.
+// `mkdocs build --strict` mentions an unlisted page at INFO and exits 0, and says nothing at all about
+// order. Both faults are silent there, so `mkdocs.yml` is read against `docs/` here instead.
 
 using System.Text.RegularExpressions;
 

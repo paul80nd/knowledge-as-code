@@ -1,6 +1,5 @@
-// Unit tests for where `new` reads a template from, driven through real temp trees. Nothing here reaches
-// the network: a folder is read where it sits, and the clone is tested against a `file://` URL, which is
-// a real clone of a real repository on this machine.
+// Nothing here reaches the network: a folder is read where it sits, and the clone runs against a `file://`
+// URL naming a real repository on this machine.
 
 using kac.core;
 

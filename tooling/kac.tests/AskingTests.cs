@@ -1,6 +1,4 @@
-// Unit tests for how `new` settles its answers: what a flag decides, what a person is asked, what
-// `--yes` defaults to, and what a run with nobody to ask refuses. The console is on the other side of
-// `IAsker`, so every one of these runs without a terminal.
+// The console sits on the other side of `IAsker`, so every case here runs without a terminal.
 
 using kac.core;
 

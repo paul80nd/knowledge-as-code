@@ -1,15 +1,10 @@
-// A hand-rolled lexer, recursive-descent parser, type checker and evaluator, in one file with no
-// dependencies. `docs/schema/expressions.md` is the reference for what an expression may say; this comment
-// is about the boundary, because this is the file someone stands in when they want to cross it.
+// A hand-rolled lexer, parser, type checker and evaluator, taking no dependency.
+// `docs/schema/expressions.md` is the reference for what an expression may say.
 //
-// The grammar is frozen. It has no variables, no user-defined functions, no quantifiers and no
-// collections, and that is the property being bought rather than a shortfall to be corrected. A rule
-// that will not fit almost always wants a new fact: one method on `Facts`, one row in `Functions`
-// below. Reaching for the grammar instead is the move to distrust. A rule that genuinely needs
-// loops, joins or quantifiers is a rule class in `Rules/`, and wanting them here is the signal that
-// OPA is being rebuilt by increments.
-//
-// `docs/checks.md` records why a rule engine was rejected at this size, which is the same judgement.
+// The grammar is frozen, and that is the property being bought rather than a shortfall. A rule that will
+// not fit wants a new fact: one method on `Facts`, one row in `Functions` below. One that genuinely needs
+// loops, joins or quantifiers is a rule class in `Rules/`. Reaching for the grammar instead rebuilds OPA
+// by increments.
 
 namespace kac.core;
 

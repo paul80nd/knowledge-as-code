@@ -1,16 +1,9 @@
-// Two tables on the documentation site restate something the code already holds: the facts an
-// expression may call, and the checks the schema-load pass reports. Neither is generated: each carries
-// a column of hand-written prose that is the reason to read it at all. So what is held here are the
-// *names* in them, and the wording is left alone.
+// Two tables on the documentation site restate what the code holds: the facts an expression may call, and
+// the checks the schema-load pass reports. Each carries hand-written prose that is the reason to read it,
+// so what is held here are the names in them and the wording is left alone.
 //
-// These read the repository rather than a value built in the test. That is what they are for: the fault
-// they exist to catch is a page going quietly out of step with the code beside it, and a page nobody
-// opens is exactly where that happens.
-//
-// The reach is the names and no further. A row per *check id* is held, so a check that is renamed,
-// retired or introduced is caught; an id that grows a second way to fail is not, because nothing in the
-// code distinguishes one arm from another. That belongs to the `schema-declarations` fixture, which
-// trips the arms and pins what each one says.
+// A check renamed, retired or introduced is caught. An id growing a second way to fail is not, because
+// nothing in the code tells one arm from another. The `schema-declarations` fixture pins those.
 
 using System.Text.RegularExpressions;
 using kac.core;
