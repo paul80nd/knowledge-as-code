@@ -35,18 +35,15 @@ own rules are declared beside the type, in
 dispatches, a key the loader never reads, a value no code branches on. That pass goes first, because the schema decides
 how every document below it is read. A finding there names the schema file and the key it found.
 
-[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md) is the account of what
-that pass reports, and why an inert declaration counts as a defect. It is written for whoever authors a type file. In a
-corpus that took this framework, that is somebody who cannot ask what a key was meant to do, which is the reason the
-pass exists at all.
+[What the schema is held to](schema/held-to.md) is the account of what that pass reports, and why an inert declaration
+counts as a defect. It is written for whoever authors a type file. In a corpus that took this framework, that is
+somebody who cannot ask what a key was meant to do, which is the reason the pass exists at all.
 
 ### A type's own rules
 
 A rule fires against the documents of the type whose schema declares it. A rule written as an `expr:`, a one-line
 condition the schema states and the tool evaluates, reports under its own id. Adding one is adding YAML rather than
-editing this tool, and
-[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md) is the reference for
-what one may say.
+editing this tool, and [Rule expressions](schema/expressions.md) is the reference for what one may say.
 
 A question the grammar cannot ask needs a rule written in C# instead, and that rule names the check id it reports under:
 `no-dependency-cycles` reports as `dependency-cycle`. More than half the rules declared today run nothing yet, and the

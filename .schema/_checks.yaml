@@ -34,8 +34,8 @@ checks:
       a key gains its meaning and its admission in one edit, and a key that stops being read stops being
       admitted without anyone having to remember.
 
-      Not advertised on a type page. Its audience is whoever edits `.schema/`, and `.schema/README.md`
-      is written for them.
+      Not advertised on a type page. Its audience is whoever edits `.schema/`, and
+      <https://paul80nd.github.io/knowledge-as-code/schema/held-to/> is written for them.
 
   schema-unreadable:
     severity: error

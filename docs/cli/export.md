@@ -42,12 +42,12 @@ resolves against the commit it was built from.
 
 ### What travels
 
-**What travels is the type's decision**, declared in its `export:` block and described in
-[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md). The exporter reads
-that declaration and nothing else. A corpus that adopted no exporting type still writes a manifest, with an empty type
-list. "Nothing" is a valid statement of what a corpus has. Every section and the parts entry names a **fidelity**
-beside the piece it selects, saying how much of that piece travels, and neither falls back to one. `fields:` is a plain
-list: a field travels whole or not at all.
+**What travels is the type's decision**, declared in its `export:` block and described key by key in
+[`meta/type.schema.json`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/meta/type.schema.json). The
+exporter reads that declaration and nothing else. A corpus that adopted no exporting type still writes a manifest, with
+an empty type list. "Nothing" is a valid statement of what a corpus has. Every section and the parts entry names a
+**fidelity** beside the piece it selects, saying how much of that piece travels, and neither falls back to one.
+`fields:` is a plain list: a field travels whole or not at all.
 
 **An unsettled record travels by default.** A draft glossary, and one whose `review-by` has passed, are both exported
 carrying their own state. Filtering them would make the corpus's own condition invisible downstream. A corpus may
