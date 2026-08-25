@@ -32,8 +32,8 @@ validates.
 
 ## What it is not
 
-**It is not a copy of `example/`.** That is a worked corpus with a fictional estate in it, kept as a reference for what
-real records look like. Copying it hands you somebody else's library consortium to delete.
+**It is not a copy of `examples/`.** Those are worked corpora with fictional estates in them, kept as a reference for
+what real records look like. Copying one hands you somebody else's library consortium to delete.
 
 **It is not `update`.** `new` runs where there is no corpus and refuses where there is one. `update` refuses the
 reverse. Between them a corpus is created once and kept current after that, and neither command has to guess which it is

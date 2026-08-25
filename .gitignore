@@ -1,6 +1,6 @@
 # What any folder here produces, and the repository's own working material. The .NET build
 # output is in tooling/.gitignore, beside the only projects that write it, and what kac
-# generates is in example/.gitignore, beside the corpus it generates from.
+# generates is in each corpus's own .gitignore, beside the content it generates from.
 
 # JetBrains Rider — a project directory beside the repository root and beside each project,
 # and the state it writes beside kac.slnx after opening it: absolute paths, test-session ids
@@ -10,8 +10,8 @@
 *.iml
 
 # What `dotnet pack` and `dotnet tool install --tool-path` leave behind when the tool is packed
-# and installed from here, as README.md describes. The corpus has its own .dist/, for what kac
-# writes, and declares it in example/.gitignore.
+# and installed from here, as README.md describes. Each corpus has its own .dist/, for what kac
+# writes, and declares it in its own .gitignore.
 .dist/
 
 # macOS

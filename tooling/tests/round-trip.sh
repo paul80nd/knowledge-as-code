@@ -8,7 +8,7 @@
 #
 # Run it from the corpus root, after `kac export` and `kac bundle`:
 #
-#   cd example && sh ../tooling/tests/round-trip.sh
+#   cd examples/library && sh ../../tooling/tests/round-trip.sh
 #
 # It reads `.dist/`, writes only inside a work directory of its own, and installs into a Claude
 # config directory of its own, so it leaves the machine it ran on as it found it.

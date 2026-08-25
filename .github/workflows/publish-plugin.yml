@@ -48,16 +48,16 @@ jobs:
 
       # The gate ran against the pull request's head, and main moved beneath it, so this asks again.
       - name: Validate frontmatter, links and structure
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- validate
+        working-directory: examples/library
+        run: dotnet run --project ../../tooling/kac -- validate
 
       - name: Build the export
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- export
+        working-directory: examples/library
+        run: dotnet run --project ../../tooling/kac -- export
 
       - name: Assemble the plugin bundle
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- bundle
+        working-directory: examples/library
+        run: dotnet run --project ../../tooling/kac -- bundle
 
       # Unpinned for the reason kac.yml gives, which holds only where the CLI cannot reach a push.
       - name: Install the Claude Code CLI
@@ -65,7 +65,7 @@ jobs:
 
       # The last thing between a broken bundle and the people who have it installed.
       - name: Validate the assembled plugin and its marketplace
-        working-directory: example
+        working-directory: examples/library
         run: |
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
@@ -97,18 +97,18 @@ jobs:
       # Every link the export writes names the commit HEAD stands on, which here is one the raw host
       # serves.
       - name: Build the export
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- export
+        working-directory: examples/library
+        run: dotnet run --project ../../tooling/kac -- export
 
       - name: Assemble the plugin bundle
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- bundle
+        working-directory: examples/library
+        run: dotnet run --project ../../tooling/kac -- bundle
 
       # Claude Code offers an update only when the manifest `version` string changes, so a push
       # carrying the same content-version reaches nobody. A match ends the job here rather than
       # leaving a commit that says otherwise.
       - name: Publish the bundle to the marketplace branch
-        working-directory: example
+        working-directory: examples/library
         env:
           BRANCH: marketplace
           WORKTREE: ${{ runner.temp }}/marketplace

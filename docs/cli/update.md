@@ -122,9 +122,9 @@ template sends nothing to, is a framework change made in the wrong tree. It woul
 this one reads as though anything is missing, so the check is the only place it surfaces. Move it upstream, or claim it
 with a `skip:` entry.
 
-This is what proves the framework's own repository, where `example/` holds a materialised copy of what the template
-sends a corpus. A file whose destination is where it was already read from is shared with both corpora there rather than
-copied into either, and `.schema/` is that file.
+This is what proves the framework's own repository, where each corpus under `examples/` holds a materialised copy of
+what the template sends a corpus. A file whose destination is where it was already read from is shared with every
+corpus there rather than copied into any of them, and `.schema/` is that file.
 
 ### What it records
 

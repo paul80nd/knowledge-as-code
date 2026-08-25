@@ -138,7 +138,7 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
 ## Watch the shape
 
 * **Build a sentence on a contrast only where the reader would otherwise take the wrong reading.**
-  Keep: "Copy `template/`, not `example/`." A reader would reach for the wrong folder. Cut: "The tool validates rather
+  Keep: "Copy `template/`, not `examples/`." A reader would reach for the wrong folder. Cut: "The tool validates rather
   than generates." Say what it does. **Count the contrasts before you finish.** Every one passes on its own. The
   fortieth in one shape fails. Count `rather than`, `, not ` and `, never ` over what you wrote, and aim under 5 per
   1000 words. A bulleted rulebook scores higher by construction, since each bullet is its own reading unit.

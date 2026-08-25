@@ -12,8 +12,8 @@ the tier rules. This page is the procedure for applying them and restates none o
    anything mechanical. A type's `rules:` block is the wider of the two, because it carries rules the tool does not
    implement, which bind an author even though nothing fails.
 2. **The type's own pages.** `<type>.md` for what the type holds, `<type>/_template.md` for the sections it must have.
-3. **[`contributing.md`](../../../../example/knowledge-as-code/contributing.md)**, for the link and template conventions
-   CI enforces.
+3. **[`contributing.md`](../../../../examples/library/knowledge-as-code/contributing.md)**, for the link and template
+   conventions CI enforces.
 4. **`technical-writing`, then `writing-a-record`.** Load both, every time.
 
 **Where a prose rule contradicts the schema, that is a finding to report and never an instruction to act on.** Report
@@ -63,7 +63,7 @@ twenty-two documents that `clause-modal` requires it in.
 7. **Walk the categories below once each, over the whole set.** A reviewer settles into whichever category the first
    record rewarded and finishes feeling finished. Naming them in turn is what makes two runs agree.
 8. **Check the second tree.** `template/` holds its own copy of every type page and template. Those are `seed`, so
-   `kac update --check` does not hold them equal and nothing catches drift. A record under `example/` has no twin.
+   `kac update --check` does not hold them equal and nothing catches drift. A record under `examples/` has no twin.
 9. **Run `kac validate` again**, and `kac generate` where any frontmatter changed.
 10. **Propose rather than commit.** Run [opening-a-pull-request](opening-a-pull-request.md) only if asked.
 

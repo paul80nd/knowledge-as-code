@@ -30,8 +30,8 @@ dotnet pack tooling/kac/kac.csproj -o .dist/pack   # the tool as a package, whic
 ```
 
 The solution sits at the repository root. It names projects in this folder, and an IDE opening it should see
-`template/` and `example/` too. This page names it rather than linking it. The solution is in the verification layer, so
-a corpus running a tool proven upstream holds no such file for a link to reach.
+`template/` and `examples/` too. This page names it rather than linking it. The solution is in the verification layer,
+so a corpus running a tool proven upstream holds no such file for a link to reach.
 
 The package's version is `<Version>` in [`kac/kac.csproj`](kac/kac.csproj), moved by hand.
 [`kac/PACKAGE.md`](kac/PACKAGE.md) is what nuget.org shows, written for whoever installs the tool rather than for
@@ -56,13 +56,13 @@ option carries generated `--help`. `Program.cs` says why that library and not an
 ## Running it against a corpus
 
 `kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, so it is run from inside one.
-Running it from here reaches no corpus at all. This repository holds two: `example/`, which carries the records, and
-`template/`, which holds most of what `kac new` sends a corpus. The template manifest at the repository root names the
-rest, and is the only account of which files a corpus receives and where each one lands.
+Running it from here reaches no corpus at all. This repository holds four: the three under `examples/`, which carry the
+records, and `template/`, which holds most of what `kac new` sends a corpus. The template manifest at the repository
+root names the rest, and is the only account of which files a corpus receives and where each one lands.
 
 ```bash
-cd ../example
-dotnet run --project ../tooling/kac -- validate
+cd ../examples/library
+dotnet run --project ../../tooling/kac -- validate
 ```
 
 That is the form CI runs, and the one you want while changing the tool. A `kac` already on your `PATH` is the published
@@ -141,7 +141,7 @@ the raw link the export wrote. That fetch is the one assertion that cannot be fa
 corpus, after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
 
 ```bash
-cd ../example && sh ../tooling/tests/round-trip.sh
+cd ../examples/library && sh ../../tooling/tests/round-trip.sh
 ```
 
 CI runs it on Linux and Windows, which is why it is a shell script held to the subset Git Bash and older macOS bash

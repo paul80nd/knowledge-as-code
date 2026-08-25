@@ -2,9 +2,9 @@
 #
 # Markdown, YAML and JSON are settled here, because every folder writes all three, and so is
 # the solution file, because it sits here. The languages only the tool writes are settled in
-# `tooling/.editorconfig`, which adds to this file rather than replacing it. `example/` answers
-# for itself and says so with its own `root = true`, because a corpus is copied out of here and
-# has to arrive carrying its rules.
+# `tooling/.editorconfig`, which adds to this file rather than replacing it. Each corpus under
+# `examples/` answers for itself and says so with its own `root = true`, because a corpus is
+# copied out of here and has to arrive carrying its rules.
 #
 # For Markdown this covers whitespace alone. It cannot pin how a formatter renders a markdown
 # table — see the note under [*.md] for what actually guards that.

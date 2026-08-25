@@ -2,7 +2,8 @@
 
 Everything a corpus receives is authored here beyond its schema: the framework's own documentation, the tree a corpus's
 plugin is built from, and the pages and templates a corpus starts writing against. The machine-readable schema `kac`
-enforces is authored at [`../.schema/`](../.schema/), one copy above this folder and `../example/` alike.
+enforces is authored at [`../.schema/`](../.schema/), one copy above this folder and every corpus under
+[`../examples/`](../examples/) alike.
 
 **A new corpus copies this folder and that schema.** Take everything here but this file, which describes the template
 rather than a corpus.
@@ -28,17 +29,17 @@ Two catch-alls sit at the foot. The first seeds anything in this folder nobody c
 never overwritten by a file no one thought about. The second withholds everything else, because a file elsewhere in the
 repository that nobody classified is far more likely to be the repository's own.
 
-## Its relationship to `example/`
+## Its relationship to `examples/`
 
-[`../example/`](../example/) is a corpus that took this template. It holds its own copy of every overlaid file, real,
-visible and git-tracked, the way a corpus keeps them.
+[`../examples/`](../examples/) holds three corpora that took this template. Each keeps its own copy of every overlaid
+file, real, visible and git-tracked, the way a corpus keeps them.
 
-Two copies of one file is what this arrangement is for, and also how it goes quietly wrong. `TemplateTests` in
-[`../tooling/kac.tests`](../tooling/kac.tests) holds the two to matching in both directions. It catches an overlaid file
-the corpus changed, and one the corpus has that the template does not.
+Four copies of one file is what this arrangement is for, and also how it goes quietly wrong. `kac update --check`, run
+from inside a corpus against this repository's root, holds that corpus and the template to matching in both directions.
+It catches an overlaid file the corpus changed, and one the corpus has that the template does not.
 
-**Author an overlaid change here, then copy it across.** Both trees are checked, so the order is a habit rather than a
-rule. The template is where the file belongs, and the corpus is where a copy of it lives.
+**Author an overlaid change here, then copy it across.** Every tree is checked, so the order is a habit rather than a
+rule. The template is where the file belongs, and each corpus is where a copy of it lives.
 
 Every test layer reads the schema straight from [`../.schema/`](../.schema/), where it is authored. A schema edit
 surfaces as a broken golden in the same run.

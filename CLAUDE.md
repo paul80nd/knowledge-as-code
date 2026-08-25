@@ -1,15 +1,16 @@
 # Working in this repository
 
-This repository is not a corpus. It holds `kac`, the documentation site published beside it, the schema both corpora
-below are judged against, the template `kac new` sends a corpus, and one worked corpus standing in for one that took it.
-The tool finds a corpus by walking up for a `.corpus.yaml`, so it reads `example/` or `template/` and never this root.
+This repository is not a corpus. It holds `kac`, the documentation site published beside it, the schema every corpus
+below is judged against, the template `kac new` sends a corpus, and three worked corpora standing in for ones that took
+it. The tool finds a corpus by walking up for a `.corpus.yaml`, so it reads one of the corpora under `examples/`, or
+`template/`, and never this root.
 
 **Load `i-want-to` before you plan.** It routes the work to the playbook carrying its steps, and names the writing skill
 for the surface you are on.
 
 | Working on                                  | Read                                                                             |
 |---------------------------------------------|----------------------------------------------------------------------------------|
-| a record, or anything else `example/` holds | [`example/CLAUDE.md`](example/CLAUDE.md)                                         |
+| a record, or anything else a corpus holds   | [`examples/README.md`](examples/README.md)                                       |
 | the schema, or a rule it declares           | [`.schema/CLAUDE.md`](.schema/CLAUDE.md)                                         |
 | `kac`, its checks, or the tests behind them | [`tooling/CLAUDE.md`](tooling/CLAUDE.md)                                         |
 | a page of the documentation site            | [`tooling/README.md`](tooling/README.md#the-documentation-site) and `mkdocs.yml` |
@@ -21,18 +22,18 @@ copied the template. It describes that corpus rather than this repository, so re
 [`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md).** Both are read by somebody who has installed nothing and has nobody
 here to ask.
 
-## Two trees hold the same file
+## Four trees hold the same file
 
-`.schema/` is not one of them. It is authored once at this root and read from there by both corpora, which is what the
-tool's second walk-up is for. Everything else the overlay layer names does live once in `template/` and again in
-`example/`. Copy the file across by hand, in whichever direction the change came from, then run the check that proves
-you did:
+`.schema/` is not one of them. It is authored once at this root and read from there by every corpus, which is what the
+tool's second walk-up is for. Everything else the overlay layer names does live once in `template/` and again in each
+corpus under `examples/`. Copy the file across by hand, in whichever direction the change came from, then run the check
+that proves you did, once per corpus:
 
 ```sh
-cd example && dotnet run --project ../tooling/kac -- update --check --from ../
+cd examples/library && dotnet run --project ../../tooling/kac -- update --check --from ../../
 ```
 
-It answers in both directions: a copy that differs, and a file `example/` holds that the template sends nothing to.
+It answers in both directions: a copy that differs, and a file the corpus holds that the template sends nothing to.
 [`manifest.yaml`](manifest.yaml) says which files this reaches.
 
 ## Before you raise a pull request
@@ -48,13 +49,17 @@ reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACK
 [`.schema/README.md`](.schema/README.md), [`.schema/meta/type.schema.json`](.schema/meta/type.schema.json) and
 [`docs/schema/`](docs/schema/).
 
-**Run the layers your change touches.** [`example/CLAUDE.md`](example/CLAUDE.md) carries the commands. Run one `kac`
-invocation at a time: concurrent runs build the same project and contend over its output.
+**Run the layers your change touches.** [`examples/library/CLAUDE.md`](examples/library/CLAUDE.md) carries the commands,
+and every corpus carries the same set. Run one `kac` invocation at a time: concurrent runs build the same project and
+contend over its output.
 
 ## What has already cost a session
 
-* **Count characters, not bytes, when sweeping for long lines.** This corpus is full of em dashes, so
+* **Count characters, not bytes, when sweeping for long lines.** These corpora are full of em dashes, so
   `awk 'length > 120'` reports violations that are not there.
+* **A seeded root type page assumes every type exists.** `services.md` and its siblings link to the other sixteen, so a
+  corpus adopting a subset carries links to pages it does not hold, and `validate` fails on every one. Name the type
+  and drop the link, which is what the pages under `knowledge-as-code/` already do for the same reason.
 * **An XML comment cannot contain a double hyphen.** A `.csproj` comment therefore cannot spell a flag such as
   `--version`, and MSBuild fails to load the project rather than warning about it.
 * **nuget.org answers 404 for a version it has already accepted**, for minutes afterwards. `--skip-duplicate` on the

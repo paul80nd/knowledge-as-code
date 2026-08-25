@@ -1,0 +1,49 @@
+# Editor conventions for this corpus, so a save does not fight the generators.
+#
+# `root = true`, and the file is whole rather than an addition to anything: a corpus is copied
+# out of the repository it was created in, and has to arrive carrying its own rules.
+#
+# Markdown, YAML and JSON is the whole of it, because a corpus holds no code.
+#
+# For Markdown this covers whitespace alone. It cannot pin how a formatter renders a markdown
+# table — see the note under [*.md] for what actually guards that.
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+[*.md]
+indent_size = 2
+max_line_length = 120
+
+# Reflow prose to the 120 margin, so hand-written sections match what the generators
+# emit. Both properties are needed: wrap_text_if_long breaks over-long lines, and
+# keep_line_breaks = false lets the short lines below them be pulled back up. Setting
+# only the first gives ragged output rather than a reflow.
+#
+# The one trailing-space hard break in the corpus is the legend under a generated schema
+# table, which a reflow must leave alone. `kac generate --check` fails if one eats it.
+ij_markdown_wrap_text_if_long = true
+ij_markdown_keep_line_breaks_inside_text_blocks = false
+
+# kac writes table separators as |------|, dashes filling the padding cells, because that
+# is the form the JetBrains formatter normalises to. There is no vendor-neutral property
+# for this, so a formatter preferring | ---- | (Prettier, for one) will still disagree and
+# this file cannot stop it. CI is the real guard: `kac generate --check` fails on any generated
+# file that differs from what the generator would write.
+ij_markdown_format_tables = true
+
+[*.{yaml,yml}]
+indent_size = 2
+
+# A flow sequence is written `[a, b]`. `.schema/` is synced, so padding it is a diff every
+# consumer corpus absorbs for no change in what the file means.
+ij_yaml_spaces_within_brackets = false
+
+[*.json]
+indent_size = 2
