@@ -9,7 +9,8 @@ and no update writes over it.
 [`new`](cli/new.md) writes it when the corpus is created, from what that invocation was told, and it arrives commented
 key by key. After that it is yours: you edit it by hand, and [`update`](cli/update.md) stamps four of its keys. The
 longer worked copy is
-[`example/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.corpus.yaml), commented
+[`examples/library/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/examples/library/.corpus.yaml),
+commented
 throughout, and it is the one to read while changing yours.
 
 ## What it is not
@@ -51,7 +52,7 @@ publishing-target: github
 publishing:
   human-base: https://github.com/paul80nd/knowledge-as-code/blob
   raw-base: https://raw.githubusercontent.com/paul80nd/knowledge-as-code
-  path-prefix: example
+  path-prefix: examples/library
 ```
 
 `publishing-target` is one of `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather than leave it to be

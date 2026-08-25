@@ -54,7 +54,7 @@ These are not repeated in the playbooks. Read them where they live.
 
 * [`CLAUDE.md`](../../../CLAUDE.md) at the root says which of the four guidance pages your work answers to, and what has
   already cost a session here.
-* [`example/CLAUDE.md`](../../../example/CLAUDE.md) carries the corpus conventions and the commands for all four test
-  layers.
+* [`examples/library/CLAUDE.md`](../../../examples/library/CLAUDE.md) carries the corpus conventions and the commands
+  for all four test layers. Every corpus under `examples/` carries the same set.
 * **Run one `kac` invocation at a time.** Concurrent runs build the same project and contend over its output.
 * **Branch and open a pull request.** A push to `main` is rejected.

@@ -3,8 +3,8 @@
 **The tier decides how it is written, and the type decides what it holds.** Nothing in CI tells you that you used the
 wrong tier's rules.
 
-1. **Pick the type.** [`knowledge-as-code/taxonomy.md`](../../../../example/knowledge-as-code/taxonomy.md) carries the
-   decision table. Where two types both fit, the record belongs in the more general one.
+1. **Pick the type.** [`knowledge-as-code/taxonomy.md`](../../../../examples/library/knowledge-as-code/taxonomy.md)
+   carries the decision table. Where two types both fit, the record belongs in the more general one.
 2. **Read the type's root page and its `_template.md`.** The page says what the type holds and what it is not. The
    template says which sections the schema requires.
 3. **Run `kac checks` for that type**, and read its `rules:` block in `.schema/<type>.yaml`. A rule declaring no

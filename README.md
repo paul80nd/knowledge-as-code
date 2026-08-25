@@ -42,9 +42,9 @@ once at the root and read by both corpora below. A corpus of your own carries it
 templates a corpus starts from, and the repository-shaped files it cannot work without. Some a corpus receives once and
 owns afterwards, and some it receives again whenever it takes a newer framework.
 
-**[`example/`](example/README.md)** is a complete corpus that took that template, run through the tool built beside it
-on every commit. It holds its own copy of every file the template shares, plus a set of illustrative records about a
-fictional library consortium.
+**[`examples/`](examples/README.md)** holds three complete corpora that took that template, run through the tool built
+beside them on every commit. Each holds its own copy of every file the template shares, and each demonstrates a
+different deployment shape over a fictional bounded context of its own.
 
 **[`docs/`](docs/)** is the documentation site, published to
 [GitHub Pages](https://paul80nd.github.io/knowledge-as-code/) on every push to `main`. It is the reference for KaC and
@@ -52,8 +52,8 @@ for `kac`, and the one place a command's behaviour is written down. It documents
 this repository.
 
 `kac` finds a corpus by walking up for a `.corpus.yaml`, so it reads whichever corpus it is run from, and then walks up
-again for the `.schema/` to judge it against. That second walk is what lets one schema at this root serve both corpora
-here. A corpus of your own holds both files at its own root, so both walks stop there. `example/` proves the tool over
+again for the `.schema/` to judge it against. That second walk is what lets one schema at this root serve every corpus
+here. A corpus of your own holds both files at its own root, so both walks stop there. `examples/` proves the tool over
 real content rather than over fixtures alone.
 
 ## Running the tool
@@ -67,11 +67,11 @@ manage.
 
 ```bash
 git clone https://github.com/paul80nd/knowledge-as-code.git
-cd knowledge-as-code/example
+cd knowledge-as-code/examples/library
 
-dotnet run --project ../tooling/kac -- validate  # frontmatter, links, structure, clauses and the graph
-dotnet run --project ../tooling/kac -- generate  # regenerate the indexes and generated blocks
-dotnet run --project ../tooling/kac -- checks    # list every check the validator implements
+dotnet run --project ../../tooling/kac -- validate  # frontmatter, links, structure, clauses and the graph
+dotnet run --project ../../tooling/kac -- generate  # regenerate the indexes and generated blocks
+dotnet run --project ../../tooling/kac -- checks    # list every check the validator implements
 ```
 
 That form runs the tool this checkout holds, and it is what CI runs. A `kac` already on your `PATH` is whichever version
@@ -86,8 +86,8 @@ will receive it, before the version carrying it is published.
 dotnet pack tooling/kac/kac.csproj -o .dist/pack
 dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
 
-cd example
-../.dist/tools/kac validate
+cd examples/library
+../../.dist/tools/kac validate
 ```
 
 `--tool-path` keeps the install inside this repository, where `.dist/` is untracked. `--global` puts `kac` on your
@@ -152,7 +152,7 @@ proved. It stops short of committing, because a first commit is a person's own a
 from nuget.org as above and run it from wherever the corpus sits: it needs nothing but the `.schema/` that corpus
 already carries.
 
-**Read [`example/`](example/) rather than copying it.** It is a worked corpus with a fictional library consortium in it,
+**Read [`examples/`](examples/) rather than copying them.** They are worked corpora with fictional content in them,
 kept to show what real records look like. `new` never sends you any of it.
 
 **A corpus takes a newer framework with [`kac update`](https://paul80nd.github.io/knowledge-as-code/cli/update/).** It
@@ -167,7 +167,9 @@ graph and the type setup, and generates the indexes and reference tables from th
 behind it, and a round-trip that installs what was built and asks it questions.
 
 The taxonomy is the half that is only partly proven.
-[`example/README.md`](example/README.md#maturity) records which types have met real content and which are still drafts.
+[`examples/library/README.md`](examples/library/README.md#maturity) and
+[`examples/engineering/README.md`](examples/engineering/README.md#maturity) record which types have met real content
+and which are still drafts.
 
 Every document here describes what exists today, and the
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds everything considered but, as yet, unbuilt.

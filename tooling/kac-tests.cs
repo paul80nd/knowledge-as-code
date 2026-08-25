@@ -21,13 +21,14 @@ if (repoRoot is null)
 
 var kacProject = Path.Combine(repoRoot, "tooling", "kac", "kac.csproj");
 
-// The corpus in this repository, which the coverage and checks-table gates below run `kac` against. No
-// scenario uses it: each assembles a fixture of its own.
-var exampleRoot = Path.Combine(repoRoot, "example");
+// One of the corpora in this repository, which the coverage and checks-table gates below run `kac`
+// against. Any of the three answers the same, because `kac checks` reads the schema and never the
+// corpus's adoption. No scenario uses it: each assembles a fixture of its own.
+var libraryRoot = Path.Combine(repoRoot, "examples", "library");
 
 // The schema every fixture is assembled from, read at the repository root where it is authored. One
-// copy serves the template, `example/` and every fixture, so a schema edit surfaces as a broken golden
-// in the same run that made it.
+// copy serves the template, the corpora under `examples/` and every fixture, so a schema edit surfaces
+// as a broken golden in the same run that made it.
 var schemaDir = Path.Combine(repoRoot, ".schema");
 var fixturesDir = Path.Combine(repoRoot, "tooling", "tests", "fixtures");
 
@@ -743,7 +744,7 @@ if (filters.Count == 0)
     // demand every *reachable* check has a fixture.
     var unreachable = new HashSet<string>(["type"], StringComparer.Ordinal);
 
-    var catalogue = CheckCatalogue(kac, exampleRoot);
+    var catalogue = CheckCatalogue(kac, libraryRoot);
     var stale = coveredChecks.Where(c => !catalogue.Contains(c)).OrderBy(c => c).ToList();
     var uncovered = catalogue.Where(c => !coveredChecks.Contains(c) && !unreachable.Contains(c)).OrderBy(c => c).ToList();
     var unreachableSeen = catalogue.Where(unreachable.Contains).OrderBy(c => c).ToList();
@@ -766,7 +767,7 @@ if (filters.Count == 0)
     // The reader-facing "What CI checks" table must stay a faithful view of the catalogue. `kac
     // checks` self-verifies its curated rows against the catalogue and exits non-zero on any drift
     // (a new check with no row, a row naming a check that no longer exists, a stale waiver).
-    var (_, checksErr, checksExit) = Run(exampleRoot, "dotnet", kac, "checks");
+    var (_, checksErr, checksExit) = Run(libraryRoot, "dotnet", kac, "checks");
     if (checksExit != 0)
     {
         Console.WriteLine($"  CHECKS TABLE out of step with the catalogue:\n{Indent(checksErr)}");

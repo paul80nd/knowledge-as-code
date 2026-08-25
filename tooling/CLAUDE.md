@@ -15,17 +15,17 @@ renders it for somebody who has installed nothing, so it takes `writing-the-docs
 `kac` is the published tool from `~/.dotnet/tools`, at whatever version was installed last, and it rewrites generated
 files with an older wording without saying so.
 
-**Run both corpora.** `example/` holds records and proves the tool against them. `template/` holds what a new corpus
-receives, and a copy of it has to validate before its owner has run anything.
+**Run every corpus.** The three under `examples/` hold records and prove the tool against them. `template/` holds what
+a new corpus receives, and a copy of it has to validate before its owner has run anything.
 
 ```sh
-# the corpus with the records in it
-cd example
-dotnet run --project ../tooling/kac -- validate
-dotnet run --project ../tooling/kac -- generate --check
+# each corpus, one at a time: library, engineering, payments
+cd examples/library
+dotnet run --project ../../tooling/kac -- validate
+dotnet run --project ../../tooling/kac -- generate --check
 
 # what a new corpus receives
-cd ../template
+cd ../../template
 dotnet run --project ../tooling/kac -- validate
 dotnet run --project ../tooling/kac -- generate --check
 ```
@@ -37,7 +37,8 @@ to this repository's root, where it is authored once.
 
 **Three pipelines, and each has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
 [`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.
-[`example/azure-pipelines.yml`](../example/azure-pipelines.yml) is a corpus's own, forked by each corpus that takes one,
+[`examples/library/azure-pipelines.yml`](../examples/library/azure-pipelines.yml) is a corpus's own, forked by each
+corpus that takes one,
 so it runs `kac` over that corpus and reads no `template/`.
 
 ## Adding or changing a check
@@ -251,7 +252,7 @@ So it installs the plugin into a Claude config directory of its own and asks it 
 root after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
 
 ```sh
-cd example && sh ../tooling/tests/round-trip.sh
+cd examples/library && sh ../../tooling/tests/round-trip.sh
 ```
 
 **It runs on two platforms in CI**, which is the reason it is a shell script rather than another scenario in the golden

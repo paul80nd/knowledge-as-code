@@ -14,8 +14,8 @@
 # created for one system and receives that system's rule alone.
 #
 # A file whose destination is its source is shared with the corpora in this repository rather than
-# copied into them: `.schema/` and the two skills below are read from this root by `example/` and by
-# `template/` alike. A corpus created elsewhere receives its own copy of each.
+# copied into them: `.schema/` and the two skills below are read from this root by every corpus under
+# `examples/` and by `template/` alike. A corpus created elsewhere receives its own copy of each.
 #
 # The rules are read in order and the first match wins, so a rule carving one file out of a folder is
 # written above the rule claiming the folder.
@@ -57,9 +57,9 @@ layers:
   withheld:
     rule: Never written into a corpus at all.
     notes: >
-      This repository's own machinery: the tool, its tests, the documentation site, the worked corpus
-      at `example/`, and this file. A corpus is told what it holds by `.corpus.yaml` and by the folders
-      it stood up, and has nothing to ask of the repository it came from.
+      This repository's own machinery: the tool, its tests, the documentation site, the worked corpora
+      under `examples/`, and this file. A corpus is told what it holds by `.corpus.yaml` and by the
+      folders it stood up, and has nothing to ask of the repository it came from.
 
 rules:
 
@@ -83,7 +83,7 @@ rules:
   - path: ".schema/**"
     layer: overlay
     note: >
-      The machine-readable schema, authored once at this root and read from here by both corpora in
+      The machine-readable schema, authored once at this root and read from here by every corpus in
       this repository. Which of it a corpus receives is `types:` in `.corpus.yaml`, so a declined type's
       file is not written rather than written and ignored. It lands at a corpus's own root, which is
       where the tool looks first, so no `to:` is needed.
@@ -213,7 +213,7 @@ rules:
   - { path: "template/**", to: "", layer: seed }
 
   # Everything this repository holds and no corpus receives: the tool, the three test layers, the
-  # documentation site, the worked corpus at `example/`, and the repository's own CI and licence.
+  # documentation site, the worked corpora under `examples/`, and the repository's own CI and licence.
   #
   # This catch-all withholds, where the one above it seeds. The rules name the whole repository, so a
   # file outside `template/` that nobody classified is far more likely to be this repository's own than

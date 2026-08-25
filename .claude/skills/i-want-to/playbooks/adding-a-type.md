@@ -3,8 +3,9 @@
 **Adding a type is adding a YAML file to `.schema/`, and three files beside it.** A type with a schema and no folder
 counts as absent, and one with a folder and no page fails `type-setup`.
 
-1. **Argue it belongs.** [`knowledge-as-code/taxonomy.md`](../../../../example/knowledge-as-code/taxonomy.md) carries
-   the types that exist and what each is not. A type earning its place holds records no existing type would take.
+1. **Argue it belongs.** [`knowledge-as-code/taxonomy.md`](../../../../examples/library/knowledge-as-code/taxonomy.md)
+   carries the types that exist and what each is not. A type earning its place holds records no existing type would
+   take.
 2. **Pick the tier before the fields.** The tier fixes how its records are written and what the review bar is, and
    several types share one.
 3. **Write `.schema/<type>.yaml`.** Run [changing-the-schema](changing-the-schema.md) for the rules that govern it.

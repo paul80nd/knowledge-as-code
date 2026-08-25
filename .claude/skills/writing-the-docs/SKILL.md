@@ -18,7 +18,7 @@ have.
 * **"Gloss a precise term on first use."** The floor's rule stands here, and keeping it is the one thing this voice does
   that both the others undo. `writing-a-record` drops it because the corpus has a glossary. `writing-in-the-tool`
   drops it because the reader maintains the tool. This reader has neither. The framework carries its own vocabulary in
-  [`knowledge-as-code.md`](../../../example/glossary/knowledge-as-code.md): corpus, record, type, tier, layer,
+  [`knowledge-as-code.md`](../../../examples/library/glossary/knowledge-as-code.md): corpus, record, type, tier, layer,
   mechanism, drift, forked, synced, upstream and the rest. Gloss each on its first use **on every page**, because a
   reader arrives in the middle of the set rather than at the front of it. Write: "a corpus, meaning one repository of
   knowledge records."
