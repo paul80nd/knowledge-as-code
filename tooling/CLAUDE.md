@@ -176,6 +176,12 @@ of its paths, and a `Func` answering whether a path is on the disk at all. **Eve
 corpus. A test can therefore ask the whole of `validate` about a corpus nobody ever wrote to disk, and a new check gets
 unit tests as well as a fixture.
 
+`Schema.Load` strikes the same bargain a level up. Its values overload takes the schema's files by name, already read,
+and its path overload lists `.schema/` and is the one place a path becomes a schema. So a test can ask what the loader
+makes of a declaration nobody would commit. A name the map does not hold reads as an empty document, which leaves a
+`.schema/` short of a shared block failing through the findings that name what is missing. The names are walked in
+ordinal order, because a map carries none and `New` iterates `ByFolder` without sorting it first.
+
 Ask the listing about presence and `Tree.OnDisk` only where `Tree` says to. A check that asks the disk directly passes
 for whoever wrote the file and fails in CI, by which time they have stopped looking.
 
