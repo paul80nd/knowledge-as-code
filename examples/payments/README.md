@@ -1,7 +1,7 @@
 # Example Payments: a domain corpus
 
-> **Everything here is invented.** Example Payments is a fictional payments system. Nothing in this corpus describes
-> anyone, and no hostname it ever holds will resolve: every one is under `example.com`, which
+> **Everything here is invented.** Example Payments is a fictional payments system, and nothing in this corpus
+> describes anyone. A record written here takes its hostnames from `example.com`, which
 > [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered.
 
 A corpus is plain markdown in git where every document has a type and every type has a schema. This one is a domain
@@ -9,8 +9,8 @@ corpus, and it is thin on purpose. It adopts three types and holds no records in
 governance rather than restating it, and a thin corpus shows that where a full one hides it.
 [`../README.md`](../README.md) sets it beside the other two corpora here and says what each one demonstrates.
 
-**Read this one, copy [`../../template/`](../../template/).** The template is the same corpus with the content taken
-out, and it is what a new corpus starts from.
+**A new corpus starts from [`../../template/`](../../template/)**, which is the same corpus with the content taken out.
+This one is closer to that template than either of its neighbours, and it is still a corpus rather than a copy of one.
 
 Why it is built this way is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath it.
 
@@ -50,9 +50,9 @@ A corpus with no records still validates, generates, exports and bundles, and th
 smallest honest declaration a corpus can make is three types and no content, and every piece of machinery runs over it
 unchanged.
 
-It also marks what a domain corpus does not hold. There are no policies here, no standards written from scratch and no
-compliance posture. Those belong to `../engineering/`, and a payments team reads them from there rather than keeping a
-copy that drifts.
+It also marks what a domain corpus does not hold. There are no policies here and no compliance posture. Both belong to
+`../engineering/`, and a payments team reads them from there rather than keeping a copy that drifts. The `standards`
+this corpus does adopt are for rules specific to payments, which belong nowhere else.
 
 ## What it does not do yet
 
@@ -68,8 +68,8 @@ live in it, each named for what it versions, and the file's own comments say wha
 
 Declaring `types:` states a decision rather than the shape the folders happen to have. `validate` then holds the corpus
 to standing up everything it declared, and every generated list of types is written from that declaration. That matters
-most here: fourteen of the seventeen types this framework offers were declined, and the file is where that decision
-is written down.
+most here: fourteen of the seventeen types this framework offers were declined, and the file is where that decision is
+written down.
 
 ## Layout
 

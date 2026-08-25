@@ -49,9 +49,9 @@ working tree, and an installed `kac` does not.
 
 ## The policies are the part worth reading
 
-This is the closest thing in the repository to real content. The clause model, the mnemonic ids, the per-clause
-alignment and the gap analysis that closed it were worked out on these records rather than assumed. Policies alone
-forced the mnemonic id style, a category field, the identity line, the clause table and the checks that hold it.
+The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were worked out on
+these records rather than assumed. Policies alone forced the mnemonic id style, a category field, the identity line,
+the clause table and the checks that hold it.
 
 They are principle-level and stack-agnostic by design, so they name no service and invent no domain. That is why they
 would survive adoption with only the specifics rewritten, where a service catalogue would not.

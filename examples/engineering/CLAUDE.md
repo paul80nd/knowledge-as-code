@@ -48,8 +48,8 @@ and contend over its output.
   file reads in one voice and someone arriving cold cannot tell which paragraph is newest.
 * **Say it once.** Cite rather than duplicate. A paragraph that belongs in two documents belongs in
   `knowledge-as-code/`, written a single time.
-* **Extend one fictional organisation**: Example Engineering, whose policies stay stack-agnostic and name no
-  service. [`README.md`](README.md) explains why.
+* **Extend one fictional organisation**: Example Engineering, whose policies stay stack-agnostic and name no service.
+  [`README.md`](README.md) explains why.
 * **Branch and open a PR.** Pushes to `main` are rejected.
 
 ## Writing a record

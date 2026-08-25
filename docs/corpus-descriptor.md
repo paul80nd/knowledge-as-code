@@ -10,8 +10,7 @@ and no update writes over it.
 key by key. After that it is yours: you edit it by hand, and [`update`](cli/update.md) stamps four of its keys. The
 longer worked copy is
 [`examples/library/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/examples/library/.corpus.yaml),
-commented
-throughout, and it is the one to read while changing yours.
+commented throughout, and it is the one to read while changing yours.
 
 ## What it is not
 
