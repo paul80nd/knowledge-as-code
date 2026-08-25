@@ -1,5 +1,5 @@
 // In-process unit tests for the pure Schema helpers, built from in-memory objects (no YAML files
-// needed). Schema.Load itself is covered end-to-end by the golden suite against the real schema.
+// needed). What the loader makes of a declaration is `SchemaLoadTests`.
 
 using kac.core;
 

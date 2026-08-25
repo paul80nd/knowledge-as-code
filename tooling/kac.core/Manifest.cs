@@ -258,7 +258,7 @@ public class CorpusDescriptor
         return descriptor;
 
         // A key written with no value parses as an empty scalar, which is a corpus saying nothing rather
-        // than saying "". `example/.corpus.yaml` writes `url:` bare, with the reason in a comment.
+        // than saying "". `example/.corpus.yaml` writes `path:` bare, with the reason in a comment.
         static string? Blank(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
     }
 
