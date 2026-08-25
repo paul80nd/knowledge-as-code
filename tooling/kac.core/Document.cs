@@ -3,6 +3,7 @@ using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
@@ -168,14 +169,21 @@ public partial class Doc
                 if (stream.Documents.Count > 0 && stream.Documents[0].RootNode is YamlMappingNode map)
                 {
                     doc.Front = map;
+
+                    // A key that is itself a sequence or a mapping is legal YAML and names no field, so
+                    // it is read as the empty key. `unknown-key` then reports it against the document
+                    // that wrote it, where a cast would have stopped the parse.
                     foreach (var kv in map.Children)
-                        doc.FrontKeys.Add(((YamlScalarNode)kv.Key).Value ?? "");
+                        doc.FrontKeys.Add((kv.Key as YamlScalarNode)?.Value ?? "");
                 }
             }
-            catch
+            // What a document YAML cannot read throws, and nothing else. Anything else is a defect in
+            // this parser, and catching it here would tell an author their frontmatter is at fault.
+            // `frontmatter-parses` reports what this catches.
+            catch (YamlException)
             {
                 doc.Front = null;
-            } // `frontmatter-parses` reports it downstream
+            }
         }
 
         // H1 and H2 in one walk, over the headings that divide the document: an H2's body ends at the

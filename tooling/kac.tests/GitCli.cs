@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace kac.tests;
@@ -38,7 +39,8 @@ internal static class GitCli
             p.WaitForExit();
             return p.ExitCode == 0;
         }
-        catch
+        // A machine with no git on it, which is what this answers false for.
+        catch (Win32Exception)
         {
             return false;
         }
