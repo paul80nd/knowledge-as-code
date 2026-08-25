@@ -213,7 +213,7 @@ public static class SchemaChecks
                     + "such section. Name a section the type has, or add it. Selecting by key is what keeps the "
                     + "two declarations in step."));
 
-            Fidelity($"export.sections: {section}", fidelity);
+            Fidelity($"export.sections: {section}", fidelity, ExportSpec.Carried);
         }
 
         // `title` answers as a field without being one: a record's title is its H1, which every record
@@ -245,7 +245,7 @@ public static class SchemaChecks
             return;
         }
 
-        Fidelity("export.parts.fidelity:", export.Parts);
+        Fidelity("export.parts.fidelity:", export.Parts, ExportSpec.CarriedByParts);
 
         // The line is the whole of what a consumer greps, so a type exporting parts and declaring none
         // of its keys exports a file of empty objects. Nothing further down would report that.
@@ -319,15 +319,16 @@ public static class SchemaChecks
                     + "drop the key."));
         }
 
-        void Fidelity(string entry, string value)
+        // A section and a part line admit different fidelities, so each call says which.
+        void Fidelity(string entry, string value, IReadOnlyList<string> carried)
         {
             if (value.Length == 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares '{entry}' at no fidelity. Say how much of it travels. Fidelity is "
                     + "what a consumer reads the export for, and is defaulted nowhere."));
-            else if (!ExportSpec.Carried.Contains(value, StringComparer.Ordinal))
-                Dispatch(at, $"type '{key}' declares '{entry}' at fidelity '{value}', which nothing carries. "
-                             + $"An export carries {List(ExportSpec.Carried)}.", f);
+            else if (!carried.Contains(value, StringComparer.Ordinal))
+                Dispatch(at, $"type '{key}' declares '{entry}' at fidelity '{value}', which nothing carries "
+                             + $"there. An export carries {List(carried)}.", f);
         }
     }
 

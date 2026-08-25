@@ -135,10 +135,24 @@ public static class Breadcrumb
                 JsonRead.Int(entry["records"]) ?? 0,
                 JsonRead.Int(entry["parts"]) ?? 0,
                 JsonRead.Str(entry["dir"]) ?? key,
-                JsonRead.Str(entry["partsFile"])));
+                JsonRead.Str(entry["partsFile"]),
+                Fidelities(entry["sections"])));
         }
 
         return types;
+    }
+
+    // The fidelity each of a type's sections travelled at, read back off the manifest entry.
+    private static IReadOnlyDictionary<string, string> Fidelities(JsonNode? node)
+    {
+        var found = new Dictionary<string, string>(StringComparer.Ordinal);
+        if (JsonRead.Object(node) is not { } sections) return found;
+
+        foreach (var (section, fidelity) in sections)
+            if (JsonRead.Str(fidelity) is { } value)
+                found[section] = value;
+
+        return found;
     }
 
     // An English list, because the breadcrumb is read by a person as often as by an agent and a

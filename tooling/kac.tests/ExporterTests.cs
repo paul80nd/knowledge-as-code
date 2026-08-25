@@ -17,7 +17,8 @@ public class ExporterTests
 
     // A glossary as this corpus writes one: `narrows:` orders it, `Scope` travels whole, and the terms
     // under `Terms` are its parts.
-    private static TypeSchema GlossaryType() => new()
+    // A caller naming no sections gets `Scope` whole, which is what a glossary declares.
+    private static TypeSchema GlossaryType(params (string Section, string Fidelity)[] sections) => new()
     {
         Key = "glossary",
         TypeName = "glossary",
@@ -31,7 +32,7 @@ public class ExporterTests
         {
             Version = 1,
             Fields = ["id", "title", "narrows", "status", "review-by"],
-            Sections = [("Scope", ExportSpec.Full)],
+            Sections = sections.Length > 0 ? sections : [("Scope", ExportSpec.Full)],
             Parts = ExportSpec.Full,
             PartsDeclared = true,
             Line =
@@ -348,6 +349,60 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, publishing.GetProperty("rawTemplate").ValueKind);
     }
 
+    // -- how much of a section travels --
+
+    [Fact]
+    public void A_section_carried_at_summary_keeps_its_opening_block_and_drops_the_rest()
+    {
+        var sections = Sections(GlossaryType(("Scope", ExportSpec.Summary)),
+            "What this admits.\n\nAnd the qualification nobody reads first.");
+
+        Assert.Equal("What this admits.", sections.GetProperty("Scope").GetString());
+    }
+
+    [Fact]
+    public void A_summary_is_the_whole_opening_paragraph_and_never_the_first_wrapped_line()
+    {
+        var sections = Sections(GlossaryType(("Scope", ExportSpec.Summary)),
+            "What this admits, said over\ntwo lines of source.\n\nA second paragraph.");
+
+        Assert.Equal("What this admits, said over two lines of source.",
+            sections.GetProperty("Scope").GetString());
+    }
+
+    [Fact]
+    public void A_section_carried_at_reference_keeps_its_key_and_none_of_its_words()
+    {
+        var sections = Sections(GlossaryType(("Scope", ExportSpec.Reference)), "What this admits.");
+
+        Assert.Equal(JsonValueKind.Null, sections.GetProperty("Scope").ValueKind);
+    }
+
+    // A consumer reading one absence as the other would report a record as silent on something its type
+    // never asked it to send.
+    [Fact]
+    public void A_section_the_record_never_wrote_is_absent_where_a_referenced_one_is_null()
+    {
+        var type = GlossaryType(("Scope", ExportSpec.Reference), ("Provenance", ExportSpec.Reference));
+        var sections = Sections(type, "What this admits.");
+
+        Assert.Equal(["Scope"], sections.EnumerateObject().Select(p => p.Name));
+        Assert.Equal(JsonValueKind.Null, sections.GetProperty("Scope").ValueKind);
+    }
+
+    // Without this a summary reaches a consumer looking exactly like a whole section.
+    [Fact]
+    public void The_manifest_states_the_fidelity_each_section_travelled_at()
+    {
+        var type = GlossaryType(("Scope", ExportSpec.Summary));
+        var plan = Plan(Corpus(type, ("gls-one", Glossary("gls-one", null, "### Alpha\n\nA.\n"))));
+
+        var declared = JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+            .GetProperty("types")[0].GetProperty("sections");
+
+        Assert.Equal("summary", declared.GetProperty("Scope").GetString());
+    }
+
     // -- the address a line carries --
 
     // A line names what varies and nothing else. The host, the path prefix and the commit are in the
@@ -551,6 +606,13 @@ public class ExporterTests
 
     private static ExportFile Single(ExportPlan plan, string path) =>
         Assert.Single(plan.Files, f => f.Path == path);
+
+    // The `sections` object of the one record a type wrote, for the tests that ask what reached it.
+    private static JsonElement Sections(TypeSchema type, string scope) =>
+        JsonDocument.Parse(
+                Single(Plan(Corpus(type, ("gls-one", Glossary("gls-one", null, "### Alpha\n\nA.\n", scope: scope)))),
+                    "glossary/gls-one.json").Content)
+            .RootElement.GetProperty("sections");
 
     // -- a type whose parts are rows, and whose line says so --
 

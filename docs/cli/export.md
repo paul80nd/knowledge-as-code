@@ -49,6 +49,25 @@ an empty type list. "Nothing" is a valid statement of what a corpus has. Every s
 **fidelity** beside the piece it selects, saying how much of that piece travels, and neither falls back to one.
 `fields:` is a plain list: a field travels whole or not at all.
 
+#### What each fidelity carries
+
+Take a policy whose `Exceptions` section runs to two paragraphs. Its record carries one of these three.
+
+| Fidelity    | What the record's `Exceptions` key holds                                                    |
+|-------------|---------------------------------------------------------------------------------------------|
+| `full`      | `"A team may deviate where the data stays in the region.\n\nRecord it against the clause."` |
+| `summary`   | `"A team may deviate where the data stays in the region."`                                  |
+| `reference` | `null`                                                                                      |
+
+`full` keeps the wrapped lines joined and the paragraph breaks. `summary` takes the opening paragraph, which is where a
+section says what it is about. `reference` leaves a consumer the record's own `path` and `links` to follow.
+
+A section the record never wrote is absent from `sections` altogether. A `null` says the type sent a reference, and an
+absent key says nobody wrote the section.
+
+**An `export.parts:` entry carries `full` alone.** A part line is already a reduction: `line:` names key by key what of
+a part travels, so a type wanting a thinner line drops a key from it.
+
 **An unsettled record travels by default.** A draft glossary, and one whose `review-by` has passed, are both exported
 carrying their own state. Filtering them would make the corpus's own condition invisible downstream. A corpus may
 exclude either with `export.exclude:` in `.corpus.yaml`. Where it does, the run names every record it withheld, because
@@ -98,6 +117,13 @@ first, so a reader can choose.
 **Each type in the manifest carries two counts, named apart.** One is how many records it holds and the other how many
 parts. For a glossary the two differ by an order of magnitude. A reader sizing the vocabulary wants the parts. A reader
 asking how many files it was handed wants the records. One number would be read as either.
+
+**The manifest states the fidelity each section travelled at.** Without it a summary reaches a consumer looking exactly
+like a whole section. It belongs to the type rather than to a record, so each entry under `types` carries it once.
+
+```json
+"sections": { "Clause": "full", "Exceptions": "summary", "Notes": "reference" }
+```
 
 **The manifest carries both of the corpus's names.** `corpus` is what the corpus calls itself, which tells one export
 from another. `shortcode` is what a citation writes before the colon, so a consumer resolving `eng:pol-VURM` knows which
@@ -259,8 +285,8 @@ for a table-sourced one, whose part id is authored. A policy clause id is `TIMEB
 Deriving the anchor from the part source is what would fix it. No type in `.schema/` sources its parts from a table and
 declares an `export:` block, so no fixture covers the path and the unit tests carry it instead.
 
-**One fidelity of three is carried.** A type may declare `full`, `summary` or `reference` against each piece its
-`export:` block selects, and the exporter carries `full`. A type declaring either of the others is reported as declaring
-a fidelity nothing carries, and the schema pass fails. Failing is the safe way round, since the alternative is an export
-quietly thinner than the type asked for. Glossary needs only `full`. The model is three-valued so that the first type
-wanting a section reduced to a line does not force it to be rebuilt.
+**A part line carries one fidelity of three.** A section travels at any of `full`, `summary` and `reference`, and an
+`export.parts:` entry travels at `full`. A type declaring either of the others against its parts is reported as
+declaring a fidelity nothing carries there, and the schema pass fails. Failing is the safe way round, since the
+alternative is an export quietly thinner than the type asked for. The value stays three-valued so that the first type
+wanting a shorter line does not force it to be rebuilt.

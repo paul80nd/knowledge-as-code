@@ -54,7 +54,7 @@
       "line": null,
       "severity": "error",
       "check": "schema-dispatch",
-      "message": "type 'widgets' declares 'export.sections: Summary' at fidelity 'summary', which nothing carries. An export carries 'full'."
+      "message": "type 'widgets' declares 'export.sections: Summary' at fidelity 'gist', which nothing carries there. An export carries 'full', 'reference', 'summary'."
     },
     {
       "file": ".schema/widgets.yaml",

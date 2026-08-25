@@ -77,7 +77,8 @@ public static class Exporter
             // which is which.
             types.Add(new ExportedType(
                 t.Key, t.Export.Version, records.Count,
-                parts is null ? 0 : Lines(parts.Content), t.Key, parts?.Path));
+                parts is null ? 0 : Lines(parts.Content), t.Key, parts?.Path,
+                t.Export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal)));
         }
 
         files.Add(new ExportFile(ManifestFile,
@@ -210,13 +211,29 @@ public static class Exporter
         foreach (var name in export.Fields)
             fields[name] = Absent(name == Generator.Title ? doc.H1 : doc.FrontScalar(name));
 
-        var sections = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var (name, _) in export.Sections)
+        var sections = new Dictionary<string, string?>(StringComparer.Ordinal);
+        foreach (var (name, fidelity) in export.Sections)
             if (doc.Sections.FirstOrDefault(s =>
                     string.Equals(s.Title, name, StringComparison.OrdinalIgnoreCase)) is { } section)
-                sections[name] = Unwrap(doc.Text[section.BodyStart..section.BodyEnd]);
+                sections[name] = Carry(doc.Text[section.BodyStart..section.BodyEnd], fidelity);
 
         return new ExportRecord(t.Key, doc.Rel, fields, sections, Links(links));
+    }
+
+    // One section, cut to the fidelity its type declared. `docs/cli/export.md` says what each promises.
+    //
+    // The unwrap comes first, so a summary is the paragraph the author wrote rather than the line the
+    // wrap column happened to end.
+    private static string? Carry(string body, string fidelity)
+    {
+        var text = Unwrap(body);
+
+        return fidelity switch
+        {
+            ExportSpec.Reference => null,
+            ExportSpec.Summary => text.Split("\n\n", 2)[0],
+            _ => text
+        };
     }
 
     // Every absent value an export writes, spelled one way. A corpus writing `narrows:` with nothing
