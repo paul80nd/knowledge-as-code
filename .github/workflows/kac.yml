@@ -194,6 +194,19 @@ jobs:
           "$SOURCES/.dist/tools/kac" validate
           "$SOURCES/.dist/tools/kac" generate --check
 
+  # The one name the branch rule on `main` requires, and it does no work. `corpora` is a matrix, so it
+  # reports as `corpora (library)` and two more rather than as `corpora`, and a rule naming a matrix job
+  # waits for a check that never arrives. Gathering both jobs behind one name is what keeps the rule to
+  # a single entry that survives a corpus being added or dropped.
+  validate:
+    needs:
+      - corpora
+      - tool
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report that the gate passed
+        run: echo "corpora and tool both passed."
+
   # The documentation site, built the way publish-docs.yml builds it. A job of its own because it
   # needs Python and nothing else here does, and `strict:` in mkdocs.yml is what makes a dead link
   # or an unreachable page fail rather than warn.
