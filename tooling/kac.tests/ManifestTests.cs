@@ -150,6 +150,35 @@ public class ManifestTests
         Assert.Equal(["adrs", "policies"], CorpusDescriptor.Load(dir).Types);
     }
 
+    // -- what the corpus calls itself --
+
+    // Two names for one corpus, answering two questions: what it calls itself, and what a citation from
+    // another corpus writes before the colon.
+    [Fact]
+    public void A_descriptor_reads_both_of_the_names_a_corpus_has()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "corpus: sample\nshortcode: smp\n");
+
+        var descriptor = CorpusDescriptor.Load(dir);
+
+        Assert.Equal("sample", descriptor.Name);
+        Assert.Equal("smp", descriptor.Shortcode);
+    }
+
+    // A corpus nothing cites has none, and the key `kac new` writes is bare. Both have to reach the
+    // validator as absent: an empty string there would be reported as a shortcode that is too short.
+    [Theory]
+    [InlineData("corpus: sample\n")]
+    [InlineData("corpus: sample\nshortcode:\n")]
+    public void A_descriptor_declaring_no_shortcode_reads_as_silent(string yaml)
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), yaml);
+
+        Assert.Null(CorpusDescriptor.Load(dir).Shortcode);
+    }
+
     // -- the three versions --
 
     // Each key answers a different question, and the descriptor is read for all three at once.

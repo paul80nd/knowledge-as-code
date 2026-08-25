@@ -312,6 +312,13 @@ public static class New
         sb.Append($"corpus: {Scalar(answers.Name)}\n");
         sb.Append($"content-version: \"{FirstContentVersion}\"\n\n");
 
+        // Written bare, and never filled in here. A shortcode is what another corpus cites this one by,
+        // and it cannot be changed once anything has, so it is declared when something is about to cite
+        // this corpus rather than invented at creation.
+        sb.Append("# The shorthand another corpus cites this one by. Fill it in when one does, and never"
+                  + " change it after.\n");
+        sb.Append("shortcode:\n\n");
+
         sb.Append("# How this corpus is published. One of: "
                   + $"{string.Join(" | ", Publishing.Targets)}.\n");
         sb.Append($"publishing-target: {answers.PublishingTarget}\n");

@@ -107,6 +107,10 @@ name in it, so the file is composed from the answers above and stamped with the 
 within it, the ref followed, the commit resolved, the template's version and the date. That block is what `update`
 reads later.
 
+**One key arrives bare: `shortcode`.** `new` neither asks for it nor invents one, because a shortcode cannot be changed
+once another corpus has cited it. Fill it in when one is about to.
+[`.corpus.yaml`](../corpus-descriptor.md#identity) says what a legal shortcode looks like.
+
 **`README.md` is written too, and for the same reason.** The template's own is `withheld`, because it describes the
 template rather than a corpus. A corpus that copied everything would therefore arrive with no README at all. What
 `new` writes is short: the corpus's name, what it holds, and how to run the tool against it. It is a starting point, not

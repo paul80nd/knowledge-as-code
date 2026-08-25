@@ -28,9 +28,15 @@ public record CheckInfo(string Check, string Severity, string Summary);
 // `Commit` and `Dirty` together say whether the export can be rebuilt from its own account of itself: a
 // commit alone would read as reproducible over a tree that was not. Both are null where git could not
 // answer, which is honest about a corpus unpacked from an archive rather than cloned.
+//
+// `Corpus` and `Shortcode` are two names for one corpus and answer two questions. The first is what the
+// corpus calls itself, for a consumer telling one export from another. The second is what a citation
+// writes before the colon, so a consumer resolving `eng:pol-VURM` knows which export answers it. It is
+// null where the corpus has not declared one.
 public record ExportManifest(
     int FormatVersion,
     string? Corpus,
+    string? Shortcode,
     string? ContentVersion,
     int? MechanismVersion,
     string? Commit,

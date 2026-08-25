@@ -24,6 +24,17 @@ descriptor-version: 1
 # The name of this corpus.
 corpus: example-engineering
 
+# The shorthand another corpus cites this one by, as the `eng` in `eng:pol-VURM.TIMEBOX`.
+# This corpus owns the spelling, so a corpus citing it writes this rather than an alias of
+# its own.
+#
+# Immutable, and more strictly than an id is: a rename invalidates citations in
+# repositories this corpus's owner cannot edit.
+#
+# Lower case, letters and digits alone, and no type's prefix. `kac validate` holds it to
+# that.
+shortcode: eng
+
 # The version of what this corpus knows: its records, and the meanings they carry.
 #
 # Not the format of this file, which `descriptor-version` above states. Not the

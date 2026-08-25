@@ -163,6 +163,20 @@ public class CorpusDescriptor
     // tell whose vocabulary it is reading, which the folder it vendored the files into may not say.
     public string? Name;
 
+    // The shorthand another corpus cites this one by, as the `eng` in `eng:pol-VURM.TIMEBOX`. The
+    // producer owns it, so a consumer citing this corpus spells it this way and never invents an alias
+    // of its own. `docs/framework/metadata.md` carries the notation and why the value never changes.
+    //
+    // Null where the corpus has not declared one, which is every corpus nothing cites yet. Declaring is
+    // what a corpus does when something is about to cite it, so nobody invents a value they may later
+    // want back.
+    public string? Shortcode;
+
+    // How long a shortcode may be. The rest of the spelling is `Validator.CheckShortcode`, and
+    // `.schema/_checks.yaml` argues each part of it.
+    public const int ShortcodeMin = 2;
+    public const int ShortcodeMax = 8;
+
     // How this corpus is published, and where the published form is served from. The target names a set
     // of link-building rules and `Publishing` holds them; the two bases are the only part a corpus
     // supplies, because they are the only part that differs between two corpora on one target.
@@ -240,6 +254,7 @@ public class CorpusDescriptor
         descriptor.UpdatePolicy = Blank(Yaml.Str(Yaml.Get(root, "update-policy"))) ?? Cautious;
 
         descriptor.Name = Yaml.Str(Yaml.Get(root, "corpus"));
+        descriptor.Shortcode = Blank(Yaml.Str(Yaml.Get(root, "shortcode")));
         descriptor.PublishingTarget = Yaml.Str(Yaml.Get(root, "publishing-target"));
         var publishing = Yaml.Get(root, "publishing");
         descriptor.HumanBase = Yaml.Str(Yaml.Get(publishing, "human-base"));

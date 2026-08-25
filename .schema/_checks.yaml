@@ -430,6 +430,30 @@ checks:
 
       Not advertised on a type page, which is one of the two files it reports the absence of.
 
+  shortcode:
+    severity: error
+    on-type-page: false
+    description: The shortcode a corpus declares for itself can be written before a colon, and is no type's prefix.
+    notes: >
+      A shortcode is two to eight characters, lower case, opens on a letter, and carries letters and
+      digits alone. It is what another corpus writes before the colon, as the `eng` in
+      `eng:pol-VURM.TIMEBOX`, so it is read far more often than it is written and stays short.
+      <https://paul80nd.github.io/knowledge-as-code/framework/metadata/> carries the notation.
+
+      No hyphen, because the citation parser is built on its absence. That parser reads a hyphen before a
+      colon as an id, so a shortcode carrying one turns a scoped reference into a citation written with
+      the wrong separator.
+
+      Not a type prefix either, whatever the schema declares: `std:pol-VURM` reads as a standard. The
+      prefixes come from the schema, so adopting a type shuts its spelling off with no list here to keep
+      in step. Case is ignored for that comparison alone, so `STD` is told both that it is miscased and
+      that the spelling underneath is taken.
+
+      A corpus that declares no shortcode is not asked any of this. Nothing cites it yet, and the value
+      is immutable once written, so there is nothing to gain by inventing one early.
+
+      Not advertised on a type page: it reads `.corpus.yaml` rather than any record.
+
   framework-names-types:
     severity: error
     on-type-page: false

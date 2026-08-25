@@ -38,11 +38,20 @@ refuses to load because the number moved. It is a notification.
 
 ```yaml
 corpus: knowledge-as-code
+shortcode: kac
 content-version: "0.1.0"
 ```
 
 `corpus` is what this corpus calls itself. An export states it, so a consumer holding several exports can tell whose
 vocabulary it is reading. The folder it vendored the files into may not say.
+
+`shortcode` is the shorthand another corpus cites this one by, as the `eng` in `eng:pol-VURM.TIMEBOX`. You declare it
+and a corpus citing yours writes what you chose, so one obligation carries one spelling wherever it is referred to.
+[A shortcode is the half before the colon](framework/metadata.md#a-shortcode-is-the-half-before-the-colon) sets out what
+a legal one looks like and why it never changes. `kac validate` holds you to it.
+
+Leave the key out until something cites this corpus, which is the ordinary case. [`new`](cli/new.md) writes it bare, and
+an export from a corpus that has not declared one states `null`.
 
 ## Publishing
 

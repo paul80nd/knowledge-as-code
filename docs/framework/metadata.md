@@ -98,11 +98,22 @@ a reference to a part that does not exist fails the build. So does a reference i
 
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, record, part. A
 record the reading corpus holds is cited bare, and qualifying one is an error, because two spellings of a single
-obligation defeat search. The form is reserved and carries nothing today, since no corpus yet imports another.
+obligation defeat search. Nothing yet resolves a scoped reference, since no corpus imports another.
 
-No corpus declares a shortcode today, and `.corpus.yaml` carries no key for one. When it does, that shortcode will be
-immutable for the same reason an id is, and more strictly: a rename invalidates citations in repositories its owner
-cannot edit. It will not take a type prefix's spelling either, since `std:pol-VURM` reads as a standard.
+### A shortcode is the half before the colon
+
+A corpus declares its shortcode as `shortcode:` in [`.corpus.yaml`](../corpus-descriptor.md#identity). The producer
+declares it, and a corpus citing that one writes what the producer chose. A consumer picking an alias of its own would
+put two consumers on two spellings of one obligation, which is the thing the colon exists to prevent.
+
+**A shortcode is immutable**, for the reason an id is and more strictly. A rename invalidates citations in repositories
+its owner cannot edit. So a corpus declares one when something is about to cite it, rather than at creation:
+[`kac new`](../cli/new.md) writes the key bare and leaves the value to you.
+
+**It is two to eight characters, lower case, opening on a letter and carrying letters and digits after it.** No hyphen,
+because the parser reads a hyphen before a colon as an id and would take the reference for a citation written with the
+wrong separator. No type's prefix either, since `std:pol-VURM` reads as a standard. `kac validate` refuses both, and
+[`kac export`](../cli/export.md) states the declared shortcode in its manifest.
 
 ## Adding a field
 
