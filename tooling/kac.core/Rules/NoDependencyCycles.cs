@@ -35,6 +35,15 @@ public sealed class NoDependencyCycles : ICorpusRule
         => (f.Type == "id" || f is { Type: "list", Of: "id" })
            && f.Refs.Contains(t.Key, StringComparer.Ordinal);
 
+    // Where one record stands in the walk. `Unseen` is zero, so a record the state does not hold yet
+    // answers with it and the walk needs no entry to ask about one.
+    private enum Step
+    {
+        Unseen,
+        OnPath,
+        Done
+    }
+
     private static void Walk(CorpusRuleContext ctx, FieldSpec field)
     {
         // Ids as their own documents write them. A second document claiming an id is `id-unique`'s to
@@ -63,7 +72,7 @@ public sealed class NoDependencyCycles : ICorpusRule
         // way. Every cycle leaves at least one edge back into the path being walked, so following those
         // finds each looping group of records. A group reachable by several of them is recognised as one
         // cycle below and reported once.
-        var state = new Dictionary<string, int>(StringComparer.Ordinal); // 0 unseen, 1 on the path, 2 done
+        var state = new Dictionary<string, Step>(StringComparer.Ordinal);
         var path = new List<string>();
         var reported = new HashSet<string>(StringComparer.Ordinal);
 
@@ -73,17 +82,17 @@ public sealed class NoDependencyCycles : ICorpusRule
 
         void Visit(string id)
         {
-            if (state.GetValueOrDefault(id) != 0) return;
+            if (state.GetValueOrDefault(id) != Step.Unseen) return;
 
-            state[id] = 1;
+            state[id] = Step.OnPath;
             path.Add(id);
 
             foreach (var next in edges[id])
-                if (state.GetValueOrDefault(next) == 1) Report(next);
+                if (state.GetValueOrDefault(next) == Step.OnPath) Report(next);
                 else Visit(next);
 
             path.RemoveAt(path.Count - 1);
-            state[id] = 2;
+            state[id] = Step.Done;
         }
 
         void Report(string target)
