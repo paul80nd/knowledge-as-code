@@ -32,6 +32,19 @@ public class DocumentTests
     public void Doc_Parse_returns_null_without_frontmatter()
         => Assert.Null(Doc.Parse("notes.md", "# Just a heading, no frontmatter\n", new Schema()));
 
+    // A key that is itself a sequence is legal YAML and names no field. It arrives as the empty key,
+    // which the validator reports, rather than stopping the parse.
+    [Fact]
+    public void Doc_Parse_reads_a_complex_frontmatter_key_as_the_empty_key()
+    {
+        const string text = "---\nid: adr-0001\n? [a, b]\n: value\n---\n\n# ADR-0001: A title\n";
+        var doc = Doc.Parse("adrs/0001-a-title.md", text, new Schema());
+
+        Assert.NotNull(doc);
+        Assert.NotNull(doc.Front);
+        Assert.Equal(["id", ""], doc.FrontKeys);
+    }
+
     // The identity line's code spans are handed to the validator raw and in order. The parser makes
     // no judgement about how many there should be or what they should say, so a malformed line still
     // arrives as data the validator can quote back.

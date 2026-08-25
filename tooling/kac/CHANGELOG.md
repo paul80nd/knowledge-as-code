@@ -16,6 +16,13 @@ the commit and opens a release carrying the section for that version.
 
 ## Unreleased
 
+### Fixed
+
+- **`kac validate` reads a record whose frontmatter carries a complex key.** A key written as a sequence
+  or a mapping is legal YAML and names no field. It was reported as frontmatter that would not parse,
+  which named the wrong fault. It now arrives as an empty key, which `unknown-key` reports against the
+  document that wrote it.
+
 ## 0.7.0 - 2026-08-24
 
 ### Added

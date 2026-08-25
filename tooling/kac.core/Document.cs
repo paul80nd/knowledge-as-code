@@ -168,8 +168,12 @@ public partial class Doc
                 if (stream.Documents.Count > 0 && stream.Documents[0].RootNode is YamlMappingNode map)
                 {
                     doc.Front = map;
+
+                    // A key that is itself a sequence or a mapping is legal YAML and names no field, so
+                    // it is read as the empty key. `unknown-key` then reports it against the document
+                    // that wrote it, where a cast would have stopped the parse.
                     foreach (var kv in map.Children)
-                        doc.FrontKeys.Add(((YamlScalarNode)kv.Key).Value ?? "");
+                        doc.FrontKeys.Add((kv.Key as YamlScalarNode)?.Value ?? "");
                 }
             }
             catch
