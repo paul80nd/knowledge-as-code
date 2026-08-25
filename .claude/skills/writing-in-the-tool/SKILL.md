@@ -10,6 +10,11 @@ Load `technical-writing` first. Everything below either adds to it or says plain
 **The code says what it does. A comment says why it is that way.** A comment restating the line below it has spent a
 reader's attention and given nothing back.
 
+**A comment sits at a different level of detail than the code beneath it.** Higher, to say what the code is for. Lower,
+to state a fact the code cannot carry: what a foreign library does, what a null means, which order two calls have to
+keep. A comment at the same level as the code is a restatement, whatever words it dresses it in. Apply that test first.
+It settles most of them, and it settles them without an argument.
+
 ## What the floor does not reach here
 
 Headings, bold labels, numbered lists and the "we" and "you" rule are for pages. They have no meaning in a comment, so
@@ -43,10 +48,30 @@ Every one of them was true when it was written.
 costs a page three words costs a nested comment a whole line. Where two repairs are equally clear, take the shorter.
 Clarity still outranks brevity, exactly as the floor says.
 
-**No banners.** A title fenced in hyphens is decoration, and the fence usually wraps a shorter version of the comment
-below it. A section heading inside a long file is not a banner and earns its place.
+**No banners, and no `#region`.** A title fenced in hyphens is decoration, and the fence usually wraps a shorter
+version of the comment below it. A region is worse. It collapses by default, so it hides the structure a heading exists
+to show, and it is invisible to a grep, to a diff and to the file viewer on a pull request. StyleCop bans regions under
+`SA1124` for that reason.
+
+**A file wanting section headings is a file wanting splitting.** Eight headings are eight arguments for four files.
+Split it, and the parts need no headings at all.
 
 **No apologising.** Not `hacky`, `sorry`, `for now`. A constraint is worth naming and an apology for it is not.
+
+## Two kinds of comment, in two different marks
+
+**A caller reads `///`. A maintainer reads `//`.** An IDE renders the first beside the call and never shows the second,
+so which mark a comment takes decides who ever reads it.
+
+**`///` carries what a caller must know to use the member correctly.** What a null means, what it throws, an order two
+calls have to keep, a cost worth knowing about. Write one wherever a caller outside the file has a decision to make. A
+member whose name and signature already answer it needs none.
+
+**`//` carries why the implementation is the way it is**, inside a body or above a private member. A caller never needs
+it, and putting it in `///` puts the inside of the class on the outside.
+
+Keeping the two apart is what lets a class stand on its own. A caller who has to open the file to learn what a method
+promises has been handed an implementation where an interface was owed.
 
 ## The words the tool prints
 
@@ -66,6 +91,10 @@ places at once: the comment, the feature document and the README.
 * [`tests/README.md`](../../../tooling/tests/README.md) is the reference for what a scenario asserts.
 
 Where the argument already sits in one of those, link it and stop.
+
+**Name the path, and never summarise what it says.** A citation carrying its own precis of the page goes stale the day
+the page moves on, and nothing reports it. A citation naming the path alone breaks where a reader can see it, because
+`CommentCitationTests` fails a `.md` path no file answers to.
 
 **A sibling source file is a citation target too.** Name the file, or the method that holds the reasoning. Write:
 `// Through the source generator rather than reflection. See Json.cs.`

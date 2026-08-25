@@ -185,10 +185,8 @@ public static class Generator
     // longer arrow. No subgraphs, because ADO does not support a link crossing one. GitHub renders this
     // subset too, so the fence goes in rather than ADO's `:::` container, which it shows as literal text.
     //
-    // Edges carry their label as `-- text -->` rather than `-->|text|`. The two are the same diagram, but a
-    // markdown formatter reading a file for tables finds pipes in the second and reformats what it takes
-    // for cells. `superseded-by` came back as `superseded - by`, inside a fenced block it should never have
-    // entered. `generate --check` catches it, which is the guard working. Not provoking it is better.
+    // Edges carry their label as `-- text -->` rather than `-->|text|`. A markdown formatter reading the
+    // file for tables finds the pipes in the second form and reformats the fenced block as cells.
     public static string RelationDiagram(IEnumerable<TypeSchema> types)
     {
         var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);

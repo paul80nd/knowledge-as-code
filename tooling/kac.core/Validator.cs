@@ -47,10 +47,8 @@ public static class Validator
             var page = Doc.Parse(t.Page, tree.Read(t.Page), schema, requireFrontmatter: false);
             if (page is null) continue;
 
-            // A page is not a record, so frontmatter on one is a leftover. It comes from a type that
-            // used to be a single document: the folder arrives in a sync and the old page survives
-            // beside it, still holding the content. Nothing else says so, because a page is forked and
-            // a forked file is never compared against upstream.
+            // A page is forked and a forked file is never compared against upstream, so nothing else
+            // reports frontmatter left on one by a type that became a folder.
             if (page.FrontStartLine > 0)
                 findings.Add(new Finding(t.Page, page.FrontStartLine, Sev.Error, new CheckId("page-frontmatter"),
                     "the page carries frontmatter: it describes the records beneath it and is not one, so it has "

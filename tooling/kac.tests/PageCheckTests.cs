@@ -15,7 +15,6 @@ public class PageCheckTests
     public void A_page_of_prose_and_links_is_silent()
         => Assert.Empty(Page("# ADRs\n\nThe [first](/adrs/0001-a.md).\n"));
 
-    // Frontmatter on a page is a leftover from a type that used to be a single document.
     [Fact]
     public void Frontmatter_on_a_page_is_reported_and_names_where_it_belongs()
     {
