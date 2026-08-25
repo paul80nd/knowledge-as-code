@@ -1,5 +1,6 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace kac.core;
@@ -20,7 +21,8 @@ public record CheckInfo(string Check, string Severity, string Summary);
 // Export documents
 //
 // A consumer reads these instead of cloning the corpus, so their shape is a contract from the moment
-// one is published. `ExportManifest.FormatVersion` is what says which contract is in hand.
+// one is published. Two numbers say which contract is in hand: `ExportManifest.FormatVersion` for the
+// envelope, and `ExportedType.ShapeVersion` for the files of one type.
 
 // What this export is, where it came from, and what is in it. Everything that varies between two runs
 // over one commit is confined here, so the rest of the output is byte-identical run to run.
@@ -65,7 +67,12 @@ public record ExportPublishing(string Target, string? HumanTemplate, string? Raw
 //
 // `PartsFile` is null for a type whose records hold no addressable parts, so a consumer reads the
 // per-record files alone rather than seeking a file that was never written; `Parts` is then zero.
-public record ExportedType(string Type, int Records, int Parts, string Dir, string? PartsFile);
+//
+// `ShapeVersion` is what this type's files are shaped like, and it moves alone. A consumer reading the
+// glossary is refused a bundle only where the glossary's own shape moved past what it knows, so a policy
+// gaining a key leaves it alone. `docs/cli/export.md` sets the three versions out and what moves each.
+public record ExportedType(
+    string Type, int ShapeVersion, int Records, int Parts, string Dir, string? PartsFile);
 
 // One record, carrying what its type's `export:` block declares and nothing else. `Fields` and
 // `Sections` are keyed by what the schema named, so a consumer reading a corpus with a type it does not
@@ -82,33 +89,12 @@ public record ExportRecord(
 
 public record ExportLinks(string Human, string Raw);
 
-// One part on one line of the flat file, self-contained by design. `docs/cli/export.md` sets out what
-// that costs and buys; the fields it explains least obviously are these two.
+// One part of the flat file is one line, and no record here describes it. The type declares its keys in
+// its own `export.parts.line:` block, and `Exporter.Value` fills each from the source named beside it.
+// A fixed record would spell one type's words onto every other type's parts.
 //
-// `Status` and `ReviewBy` live on the record as well. They are repeated because a consumer that grepped
-// this file has not opened the record, and a hit without them is a definition with nothing saying its
-// glossary is still settling.
-//
-// `SeeAlso` carries the cross-references as ids. A link's target is stripped out of `Definition` and
-// `Not`, so the bracket left behind in the prose leads nowhere on its own.
-//
-// `Path` and `Anchor` are what the manifest's link templates are substituted with, and they are all a
-// line carries of an address. Resolving both links on every line would repeat one host, one path prefix
-// and one commit for every part in the corpus. That is most of the file, and a rewrite of every line
-// whenever the commit moves, which buries a changed definition in noise.
-public record ExportPartLine(
-    string Id,
-    string Title,
-    string? Definition,
-    string? Not,
-    IReadOnlyList<string>? SeeAlso,
-    string Type,
-    string Record,
-    string Part,
-    string? Status,
-    string? ReviewBy,
-    string Path,
-    string Anchor);
+// `docs/cli/export.md` says what a self-contained line costs and buys, and why a line carries a `path`
+// and an `anchor` rather than the two resolved links the manifest's templates build from them.
 
 // Bundle documents
 //
@@ -131,8 +117,10 @@ public record BundleRecord(
     IReadOnlyList<BundleIncluded> Included,
     IReadOnlyList<BundleTrimmed> Trimmed);
 
-// The export this plugin was assembled around, named so that a reader holding the plugin alone can
-// tell which corpus and which shape it has, without walking into the copy to find out.
+// The export this plugin was assembled around, named so that a reader holding the plugin alone can tell
+// which corpus and which envelope it has, without walking into the copy to find out. The shape each type
+// is at is not restated: it is in the copied manifest, and `Included` already names the shape every
+// surviving component reads.
 public record BundleExport(int? FormatVersion, string? Corpus, string? ContentVersion, IReadOnlyList<string> Types);
 
 public record BundleIncluded(string Path, IReadOnlyList<string> Requires, string? Note);
@@ -166,7 +154,7 @@ public record MarketplacePlugin(string Name, string Description, string Source);
 [JsonSerializable(typeof(ChecksReport))]
 [JsonSerializable(typeof(ExportManifest))]
 [JsonSerializable(typeof(ExportRecord))]
-[JsonSerializable(typeof(ExportPartLine))]
+[JsonSerializable(typeof(JsonObject))]
 [JsonSerializable(typeof(BundleRecord))]
 [JsonSerializable(typeof(MarketplaceManifest))]
 public partial class KacJson : JsonSerializerContext

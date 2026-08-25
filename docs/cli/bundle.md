@@ -48,6 +48,7 @@ Each of these ends the run with the reason and nothing written:
   uses
 * an export with no manifest
 * an export whose `formatVersion` is not the one this build reads
+* a component reading a type at a shape version the export does not carry
 
 Stopping is the point in every one of them. The alternative is a plugin assembled around a missing answer, which
 installs and fails later somewhere less obvious. The `corpusRoot` collision is the one worth naming twice. The export
@@ -58,6 +59,19 @@ The `formatVersion` refusal is where the export format version is finally held t
 because the reader's next move differs. An export behind the tool is rebuilt, and an export ahead of it says the tool is
 the stale half. `.dist/export/` is untracked and outlives the run that wrote it, so a bundle built after a pull is the
 ordinary way to meet an export this tool did not ship beside. That case is what the field exists for.
+
+#### A shape refusal is not a trim
+
+A component names the types it reads under `metadata.components[].requires`. An entry may name a shape as well:
+`glossary@1` reads the keys of a term line, and a bare `glossary` needs the type present and opens none of its files.
+The breadcrumb hook is the second kind.
+
+A type the export left out **trims** the component, and the plugin installs doing less. A type the export carries at
+another shape **stops** the run. The difference is what the plugin would do if it shipped. A trimmed skill is absent and
+`bundle.json` says why. A skill reading keys that moved installs, runs, and returns nothing, which reads exactly like a
+term the corpus does not define.
+
+[`export`](export.md) is the page for what a shape version covers and what moves it.
 
 ### Two directories under one root, and each command replaces its own whole
 

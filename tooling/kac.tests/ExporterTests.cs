@@ -29,9 +29,26 @@ public class ExporterTests
             { Section = "Terms", Noun = "term", Level = 3, Aside = "Not" },
         Export = new ExportSpec
         {
+            Version = 1,
             Fields = ["id", "title", "narrows", "status", "review-by"],
             Sections = [("Scope", ExportSpec.Full)],
-            Parts = ExportSpec.Full
+            Parts = ExportSpec.Full,
+            PartsDeclared = true,
+            Line =
+            [
+                ("id", PartLineSource.PartId),
+                ("title", PartLineSource.PartText),
+                ("definition", PartLineSource.PartLead),
+                ("not", PartLineSource.PartAside),
+                ("seeAlso", PartLineSource.PartSeeAlso),
+                ("type", PartLineSource.RecordType),
+                ("record", PartLineSource.RecordId),
+                ("part", PartLineSource.PartKey),
+                ("status", $"{PartLineSource.FrontPrefix}status"),
+                ("reviewBy", $"{PartLineSource.FrontPrefix}review-by"),
+                ("path", PartLineSource.RecordPath),
+                ("anchor", PartLineSource.PartAnchor)
+            ]
         }
     };
 
@@ -535,6 +552,101 @@ public class ExporterTests
     private static ExportFile Single(ExportPlan plan, string path) =>
         Assert.Single(plan.Files, f => f.Path == path);
 
+    // -- a type whose parts are rows, and whose line says so --
+
+    // A clause carries its modal and the type's own third column, and carries none of a glossary's
+    // words. This is what a type declaring its own line buys: two types export parts through one
+    // exporter, and neither one's vocabulary reaches the other's file.
+    [Fact]
+    public void A_clause_line_carries_the_modal_and_the_column_the_type_declares()
+    {
+        var line = ClauseLines()[0];
+
+        Assert.Equal("pol-DATA.TIMEBOX", line.GetProperty("id").GetString());
+        Assert.Equal("MUST be time-boxed.", line.GetProperty("clause").GetString());
+        Assert.Equal("MUST", line.GetProperty("level").GetString());
+        Assert.Equal("ISO27001 A.5.1", line.GetProperty("alignment").GetString());
+        Assert.False(line.TryGetProperty("definition", out _));
+    }
+
+    // An advisory clause is plain rather than bold, so the modal is read from the words rather than
+    // from the emphasis around them.
+    [Fact]
+    public void A_clause_that_does_not_bind_still_carries_its_level()
+        => Assert.Equal("SHOULD", ClauseLines()[1].GetProperty("level").GetString());
+
+    // An empty cell is the absence of a value, spelled as every other absence in an export is.
+    [Fact]
+    public void A_column_the_row_leaves_empty_carries_a_null()
+        => Assert.Equal(JsonValueKind.Null, ClauseLines()[1].GetProperty("alignment").ValueKind);
+
+    private static List<JsonElement> ClauseLines() =>
+    [
+        .. Single(Plan(Corpus(PolicyType(), ("pol-DATA", Policy()))), "policies/clauses.jsonl").Content
+            .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+            .Select(l => JsonDocument.Parse(l).RootElement)
+    ];
+
+    // A policy as this corpus writes one: clauses are rows under `Clauses`, the binding ones bold.
+    private static string Policy() =>
+        """
+        ---
+        id: pol-DATA
+        tier: normative
+        status: active
+        owner: someone
+        review-by: "2030-01-01"
+        ---
+
+        # Data
+
+        ## Purpose
+
+        Why this exists.
+
+        ## Clauses
+
+        | Id        | Clause                  | Alignment      |
+        |-----------|-------------------------|----------------|
+        | `TIMEBOX` | **MUST** be time-boxed. | ISO27001 A.5.1 |
+        | `REVIEW`  | SHOULD be reviewed.     |                |
+
+        """;
+
+    // The type behind those clauses. Its line names a modal and a column, and neither has a home in a
+    // glossary's line.
+    private static TypeSchema PolicyType() => new()
+    {
+        Key = "policies",
+        TypeName = "policy",
+        Folder = "policies",
+        Page = "policies.md",
+        IdPrefix = "pol",
+        RequiredSections = ["Purpose", "Clauses"],
+        Parts = new PartSpec(PartSpec.Table, "", ["MUST", "MUST NOT"], ["SHOULD"])
+            { Section = "Clauses", Noun = "clause", Columns = ["Id", "Clause", "Alignment"] },
+        Export = new ExportSpec
+        {
+            Version = 1,
+            Fields = ["id", "title"],
+            Sections = [("Purpose", ExportSpec.Full)],
+            Parts = ExportSpec.Full,
+            PartsDeclared = true,
+            Line =
+            [
+                ("id", PartLineSource.PartId),
+                ("clause", PartLineSource.PartText),
+                ("level", PartLineSource.PartLevel),
+                ("alignment", $"{PartLineSource.ColumnPrefix}Alignment"),
+                ("type", PartLineSource.RecordType),
+                ("record", PartLineSource.RecordId),
+                ("part", PartLineSource.PartKey),
+                ("path", PartLineSource.RecordPath),
+                ("anchor", PartLineSource.PartAnchor)
+            ]
+        }
+    };
+
     private static List<JsonElement> TermLines(LoadedCorpus corpus) => Lines(Plan(corpus));
 
     private static List<JsonElement> Lines(ExportPlan plan) =>
@@ -552,16 +664,18 @@ public class ExporterTests
 
     // A loaded corpus holding the glossaries given, in the order given. That is deliberately not the
     // order the export writes them in, so a passing ordering test is not reading its input back.
-    private static LoadedCorpus Corpus(params string[] glossaries)
+    private static LoadedCorpus Corpus(params string[] glossaries) =>
+        Corpus(GlossaryType(), [.. glossaries.Select(t => (t.Split('\n')[1]["id: ".Length..], t))]);
+
+    // The same, for a type the caller supplies. A record is named by its id, as every record here is.
+    private static LoadedCorpus Corpus(TypeSchema type, params (string Id, string Text)[] records)
     {
-        var type = GlossaryType();
-        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["glossary"] = type } };
+        var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { [type.Key] = type } };
 
         var docs = new List<Doc>();
-        foreach (var text in glossaries)
+        foreach (var (id, text) in records)
         {
-            var id = text.Split('\n')[1]["id: ".Length..];
-            var doc = Doc.Parse($"glossary/{id}.md", text, schema);
+            var doc = Doc.Parse($"{type.Folder}/{id}.md", text, schema);
             Assert.NotNull(doc);
             docs.Add(doc);
         }

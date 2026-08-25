@@ -157,6 +157,57 @@ public class BundlerTests
                 plugin: [(Bundler.ManifestFile, Source(Component("skills/both", "glossary", "adrs")))],
                 export: [Manifest("glossary")]).Trimmed).Reason);
 
+    // -- the shape a component reads a type at --
+
+    [Fact]
+    public void A_component_reading_the_shape_the_export_carries_is_included()
+    {
+        var plan = Plan(plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary@1")))],
+            export: [Manifest("glossary")]);
+
+        Assert.Equal(["skills/look"], plan.Included.Select(c => c.Path));
+        Assert.Empty(plan.Problems);
+    }
+
+    // Both numbers are named, because the author cannot tell from one whether to rebuild the export or
+    // rewrite the component.
+    [Fact]
+    public void A_component_reading_a_shape_the_export_does_not_carry_stops_the_run()
+    {
+        var problem = Assert.Single(Plan(
+            plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary@2")))],
+            export: [Manifest("glossary")]).Problems);
+
+        Assert.Contains("shape version 2", problem);
+        Assert.Contains("carries version 1", problem);
+    }
+
+    // A bare name needs the type present and opens none of its files, which is what a breadcrumb hook
+    // does. A shape it never reads must not refuse it.
+    [Fact]
+    public void A_component_naming_no_shape_is_untouched_by_one()
+        => Assert.Empty(Plan(
+            plugin: [(Bundler.ManifestFile, Source(Component("hooks", "glossary")))],
+            export: [Manifest("glossary")]).Problems);
+
+    // The type is absent, so the component is trimmed and the shape it would have read never arises.
+    // A plugin that does less is the answer here, and refusing the run would be the wrong one.
+    [Fact]
+    public void A_component_reading_a_shape_of_a_type_the_export_omits_is_trimmed()
+    {
+        var plan = Plan(plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary@1")))],
+            export: [Manifest("adrs")]);
+
+        Assert.Empty(plan.Problems);
+        Assert.Equal("the export carries no glossary", Assert.Single(plan.Trimmed).Reason);
+    }
+
+    [Fact]
+    public void A_shape_that_is_not_a_number_is_reported_against_the_manifest()
+        => Assert.Contains("a shape version is a whole number", Assert.Single(Plan(
+            plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary@one")))],
+            export: [Manifest("glossary")]).Problems));
+
     // A component naming no type reads nothing the corpus decides, so nothing decides whether it
     // travels. `bundle.json` still records it, because a reader asking what is in the plugin wants it
     // listed beside the ones that had to earn their place.
@@ -389,9 +440,14 @@ public class BundlerTests
                 "formatVersion": {{Exporter.FormatVersion}},
                 "corpus": "example-libraries",
                 "contentVersion": {{(contentVersion is null ? "null" : $"\"{contentVersion}\"")}},
-                "types": [{{string.Join(",", types.Select(t => $$"""{"type":"{{t}}","records":1}"""))}}]
+                "types": [{{Entries(types)}}]
               }
               """);
+
+    // The manifest's type entries. Every type is at shape 1, which is what a component naming a shape
+    // is held against.
+    private static string Entries(string[] types) =>
+        string.Join(",", types.Select(t => $$"""{"type":"{{t}}","shapeVersion":1,"records":1}"""));
 
     // One file the plan would write, as text. The breadcrumb is prose rather than a document, so it is
     // read whole rather than picked apart.

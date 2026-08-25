@@ -120,6 +120,12 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     public IReadOnlyList<string> ModalsLongestFirst { get; } =
         [.. binding.Concat(advisory).OrderByDescending(m => m.Length)];
 
+    // The modal a part opens with, or null where it opens with none. Held here rather than at either
+    // caller, because `part-level-order` reports the order rows appear in and the exporter writes the
+    // level onto a line: two readings free to disagree would rank a clause the export calls advisory.
+    public string? Modal(string text) =>
+        ModalsLongestFirst.FirstOrDefault(m => text.StartsWith(m, StringComparison.Ordinal));
+
     // The sources an extractor exists for. Read by `schema-dispatch` from here, so a type naming a source
     // nothing reads is reported instead of quietly offering no parts.
     public const string Table = "table";
@@ -137,10 +143,17 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
 // the type's `sections:` block declares, and parts are the ones its `parts:` block already locates.
 //
 // Fidelity is written against every entry and defaulted nowhere. A section carried whole and a section
-// reduced to a line are different promises to whoever reads the export. That difference is the whole of
-// what this block says.
+// reduced to a line are different promises to whoever reads the export.
+//
+// Three things are declared here and each answers a different question: which pieces travel, how much of
+// each, and what the keys of a part line are called. `Version` is what a consumer holds all three to.
 public sealed class ExportSpec
 {
+    // The shape a consumer holds this type's export to, moved by hand when a reader written against the
+    // shape before it would now be wrong. It sits beside the declaration it describes, so a change to a
+    // policy's line and a glossary consumer's bundle never meet. `docs/cli/export.md` says what moves it.
+    public int Version { get; init; }
+
     // The frontmatter a record contributes, in the order an export writes it. Each names a field the
     // type declares or inherits, so an export carries what a record actually holds.
     public IReadOnlyList<string> Fields { get; init; } = [];
@@ -148,10 +161,22 @@ public sealed class ExportSpec
     // The sections that travel, each with the fidelity it travels at, in declared order.
     public IReadOnlyList<(string Section, string Fidelity)> Sections { get; init; } = [];
 
-    // The fidelity a record's parts travel at, and empty where none do. A glossary's terms carry the
-    // definition and the line naming what the term is confused with. That is the content that changes
-    // what a reader does.
+    // The fidelity a record's parts travel at, and empty where none do. `Line` below says which keys
+    // that fidelity fills.
     public string Parts { get; init; } = "";
+
+    // Whether the type writes `export.parts:` at all. An absent block and one written as anything but a
+    // block are different faults, and only this tells them apart: both leave the fidelity and the line
+    // empty, and the second would otherwise read as a type exporting no parts.
+    public bool PartsDeclared { get; init; }
+
+    // The keys of one part line, in the order the line writes them, each with the source filling it.
+    //
+    // The key is the type's own word and reaches the wire as written. `definition` and `not` are a
+    // glossary's, and a policy clause has neither: it carries a modal, a clause and an `Alignment` cell.
+    // One shape serving both would fit neither, so the type declares its own. `PartLineSource` is the
+    // vocabulary the source is drawn from.
+    public IReadOnlyList<(string Key, string Source)> Line { get; init; } = [];
 
     // Carried whole: the record's own words reach the consumer unchanged.
     public const string Full = "full";
@@ -164,6 +189,47 @@ public sealed class ExportSpec
     // The fidelities an export writes. Read by `schema-dispatch` from here, so a type declaring one of
     // the others is told so rather than exporting silence under it.
     public static readonly IReadOnlyList<string> Carried = [Full];
+}
+
+// Where one key of a part line takes its value from. Read by `schema-dispatch` from here, so a type
+// naming a source nothing fills is told so rather than exporting a key that is null on every line.
+//
+// Two of these take what follows the dot as an argument, because the thing named belongs to the type
+// rather than to this list: `front.review-by` names a field the type declares or inherits, and
+// `column.Alignment` names a header its `parts.columns:` declares. The rest each name one thing.
+//
+// `part.lead` and `part.aside` read a part's body, which only the heading source gives a part. A table
+// row is its own body, and `SchemaChecks` refuses either against a table-sourced type.
+public static class PartLineSource
+{
+    public const string PartId = "part.id";         // `<record-id>.<part-id>`, the whole address
+    public const string PartKey = "part.key";       // the part id alone
+    public const string PartText = "part.text";     // the heading as written, or the second cell flattened
+    public const string PartLead = "part.lead";     // the body's first block
+    public const string PartAside = "part.aside";   // the block `parts.aside:` labels, without its label
+    public const string PartLevel = "part.level";   // the modal the part opens with
+    public const string PartSeeAlso = "part.see-also";
+    public const string PartAnchor = "part.anchor"; // the fragment the part resolves at
+    public const string RecordId = "record.id";
+    public const string RecordType = "record.type";
+    public const string RecordPath = "record.path";
+
+    // What a source naming a field or a column opens with. The remainder is the name, and an empty one
+    // is a source naming nothing, which `SchemaChecks` reports.
+    public const string FrontPrefix = "front.";
+    public const string ColumnPrefix = "column.";
+
+    // The sources naming one thing each, so the two prefixed families are tested separately.
+    public static readonly IReadOnlyList<string> Fixed =
+    [
+        PartId, PartKey, PartText, PartLead, PartAside, PartLevel, PartSeeAlso, PartAnchor,
+        RecordId, RecordType, RecordPath
+    ];
+
+    // The name a prefixed source carries, or null where the source is not of that family. Empty after
+    // the prefix returns an empty string, which is a name the caller reports rather than one it resolves.
+    public static string? Argument(string source, string prefix) =>
+        source.StartsWith(prefix, StringComparison.Ordinal) ? source[prefix.Length..] : null;
 }
 
 // A field's `required-when:` names the condition under which an otherwise optional field must be
@@ -618,8 +684,10 @@ public sealed partial class Schema
         // The section names under `export.sections:` are headings rather than schema keys, so the
         // mapping holding them is read directly and never opened as a level. A heading is not a key the
         // loader could have been expected to ask for, and reporting one as unread would make selecting
-        // by key impossible.
+        // by key impossible. The keys under `export.parts.line:` are the type's own for the same reason.
         var export = keys.At(root.Get("export"), "the 'export' block");
+        var exportPartsNode = export.Get("parts");
+        var exportParts = keys.At(exportPartsNode, "the 'export.parts' block");
 
         // All three read whether or not the block is there, so that a lineage missing only its `prior-art:`
         // is reported as the shape problem it is rather than as two keys the loader never asked for.
@@ -679,13 +747,20 @@ public sealed partial class Schema
             Export = export.Present
                 ? new ExportSpec
                 {
+                    Version = Yaml.Int(export.Get("version"), 0),
                     Fields = Yaml.StrList(export.Get("fields")),
                     Sections =
                     [
                         .. Yaml.Map(export.Get("sections"))
                             .Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))
                     ],
-                    Parts = Yaml.Str(export.Get("parts")) ?? ""
+                    Parts = Yaml.Str(exportParts.Get("fidelity")) ?? "",
+                    PartsDeclared = exportPartsNode is not null,
+                    Line =
+                    [
+                        .. Yaml.Map(exportParts.Get("line"))
+                            .Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))
+                    ]
                 }
                 : null,
 

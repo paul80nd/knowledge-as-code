@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 26,
+    "errors": 27,
     "warnings": 0
   },
   "findings": [
@@ -69,6 +69,13 @@
       "severity": "error",
       "check": "schema-shape",
       "message": "type 'widgets' declares 'export.fields: colour', and neither the type nor '_universal.yaml' declares such a field. Name a field a record carries, or 'title', which is a record's heading rather than its frontmatter."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' declares an 'export:' block and no 'version:' above 0. A consumer reads these files against that number, and moving it by hand is what says a reader written against the shape before it would now be wrong."
     },
     {
       "file": ".schema/widgets.yaml",

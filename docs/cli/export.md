@@ -214,36 +214,56 @@ given and null templates beside it, so a consumer sees the absence stated. The r
 it. A term line is unaffected: `path` and `anchor` are facts about the corpus rather than about where it is published,
 and they travel either way.
 
-### Two versions, and they are independent
+### Three versions, and none implies another
 
-`formatVersion` in the manifest is the shape of the output. `contentVersion` is
-`content-version` from `.corpus.yaml`. It states what the corpus knows, semantically versioned and bumped by hand, with
-major, minor and patch defined in that file beside the key. Neither implies the other: a corpus can rewrite every
-definition without `formatVersion` moving, and `formatVersion` can move over a corpus nobody has edited.
+`formatVersion` is the envelope: the keys the manifest carries, the layout of the tree, and how a link template is
+built. Each entry under `types` states its own `shapeVersion` beside it, which is what that one type's files look like.
+`contentVersion` is `content-version` from `.corpus.yaml`, semantically versioned and bumped by hand, and states what
+the corpus knows.
 
-**`bundle` is what reads `formatVersion`.** It refuses an export whose number is not the one this build of the tool
-writes. It names both: the number the export declares and the number the tool reads. `.dist/export/` is untracked and
-outlives the run that wrote it. So a bundle built after a pull is the ordinary way to meet an export this tool did not
-ship beside.
+A corpus can rewrite every definition and move none of the three. Each answers for its own thing.
 
-What the refusal prevents is a plugin assembled around a manifest whose keys have moved. Its breadcrumb would state
-nothing and its skill would find nothing. A lookup that silently returns nothing is indistinguishable from a term the
-corpus does not define.
+#### A type owns the shape of its own files
 
-**What moves `formatVersion`.** It moves when a reader written against the shape before it would now be wrong. Adding a
+A glossary and a policy serve different consumers. A term carries a definition and the line saying what it is confused
+with. A clause carries a modal, its words and the framework reference beside it. So the type declares the keys of its
+own line, in the `export:` block of `.schema/<type>.yaml`, and states the number a consumer reads them against.
+
+One number across every type would refuse a bundle over a change nobody's consumer reads. A skill that only looks terms
+up would stop installing on the day a policy clause gained a key.
+
+#### What moves `formatVersion` or a `shapeVersion`
+
+One test decides both. The number moves when a reader written against the shape before it would now be wrong. Adding a
 key to a file, or a file to a type's directory, leaves that reader correct and moves nothing. Renaming a key, dropping
 one, changing the type of a value, or changing what a key means: each turns a correct read into a wrong one, and each
-moves the number. Reordering the keys within a line does not, because every key is addressed by name. Reordering the
-records in a flat file does, because that order carries meaning within a chain. It went from 1 to 2 when a term line's
-two resolved URLs became a `path` and an `anchor`. Dropping those keys is the breaking side of that boundary.
+moves the number.
+
+Reordering the keys within a line does not, because every key is addressed by name. Reordering the records in a flat
+file does, because that order carries meaning within a chain.
+
+Which number depends on which files moved. `formatVersion` went from 1 to 2 when a term line's two resolved URLs became
+a `path` and an `anchor`. The same edit today moves the glossary's `shapeVersion`, because a term line is a glossary's
+file and no consumer of another type reads it.
+
+#### `bundle` reads both
+
+`bundle` refuses an export whose `formatVersion` is not the one this build of the tool writes, and it refuses a
+component reading a type at a shape the export does not carry. Each refusal names both numbers. `.dist/export/` is
+untracked and outlives the run that wrote it, so a bundle built after a pull is the ordinary way to meet an export this
+tool did not ship beside.
+
+A component says which shape it reads in its `requires` entry, as `glossary@1`. A bare `glossary` needs the type present
+and opens none of its files, which is what the breadcrumb hook does, and no shape refuses it.
+[`bundle`](bundle.md) is the page for what each refusal prevents.
 
 ## Known limits
 
-**A term line's `anchor` is the part id, whatever the type sourced its parts from.** The exporter writes both keys from
-one value. That is correct for a heading-sourced type, where a heading's slug is its id and its anchor alike. It is
-wrong for a table-sourced one, whose part id is authored. A policy clause id is `TIMEBOX`, and no fragment resolves to
-it. Deriving the anchor from the part source is what would fix it. No table-sourced type declares an `export:` block
-today, so the path is unexercised and no fixture covers it.
+**A part's `anchor` is its id, whatever the type sourced its parts from.** A type asking for `part.anchor` gets the
+part id. That is correct for a heading-sourced type, where a heading's slug is its id and its anchor alike. It is wrong
+for a table-sourced one, whose part id is authored. A policy clause id is `TIMEBOX`, and no fragment resolves to it.
+Deriving the anchor from the part source is what would fix it. No type in `.schema/` sources its parts from a table and
+declares an `export:` block, so no fixture covers the path and the unit tests carry it instead.
 
 **One fidelity of three is carried.** A type may declare `full`, `summary` or `reference` against each piece its
 `export:` block selects, and the exporter carries `full`. A type declaring either of the others is reported as declaring

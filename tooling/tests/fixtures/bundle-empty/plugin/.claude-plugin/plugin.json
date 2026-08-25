@@ -12,7 +12,7 @@
       {
         "path": "skills/glossary-lookup",
         "requires": [
-          "glossary"
+          "glossary@1"
         ]
       },
       {
