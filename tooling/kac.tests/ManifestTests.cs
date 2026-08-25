@@ -30,8 +30,7 @@ public class ManifestTests
         Assert.Null(m.Resolve("adrs/0001-x.md"));
     }
 
-    // A rule naming no destination leaves the path alone, which is every rule of the portability
-    // manifest and most of the template's.
+    // Every rule of the portability manifest names no destination, and most of the template's.
     [Fact]
     public void A_rule_with_no_destination_lands_a_file_where_it_was_read()
     {
@@ -42,9 +41,8 @@ public class ManifestTests
             m.Place("knowledge-as-code/taxonomy.md"));
     }
 
-    // `to:` replaces the pattern's directory prefix, so a whole folder relocates and the shape inside it
-    // survives. This is what lets a template be authored in a subdirectory of the repository serving it.
-    // A single-file pattern is rewritten by its folder too, so several of them relocate under one `to:`.
+    // Rewriting the prefix lets a template be authored in a subdirectory of the repository serving it. A
+    // single-file pattern is rewritten by its folder too, so several relocate under one `to:`.
     [Theory]
     [InlineData("template/knowledge-as-code/**", "knowledge-as-code/", "template/knowledge-as-code/taxonomy.md",
         "knowledge-as-code/taxonomy.md")]
@@ -61,8 +59,7 @@ public class ManifestTests
         Assert.Equal(new Placement(Manifest.Seed, lands), m.Place(read));
     }
 
-    // A rule's destination patterns are its own with the same rewrite applied, which is how a check
-    // reading the corpus side knows what a corpus may hold there.
+    // The rewrite is how a check reading the corpus side knows what a corpus may hold there.
     [Theory]
     [InlineData("template/knowledge-as-code/**", "knowledge-as-code/", "knowledge-as-code/**")]
     [InlineData("template/*.md", "", "*.md")]
@@ -74,9 +71,8 @@ public class ManifestTests
         Assert.Equal([destination], Manifest.Destinations(rule));
     }
 
-    // A pattern opening on `**/` matches at any depth, so it names no one folder to rewrite. The
-    // destination is then `to:` itself, and a rule wanting a tail carried has to name the folder it
-    // starts from.
+    // A pattern opening on `**/` matches at any depth, so it names no one folder to rewrite. A rule
+    // wanting a tail carried has to name the folder it starts from.
     [Fact]
     public void A_rule_matching_at_any_depth_lands_everything_it_matches_on_one_path()
     {
@@ -85,8 +81,7 @@ public class ManifestTests
         Assert.Equal("notes.md", m.Place("deeply/nested/notes.md")?.Path);
     }
 
-    // A tombstone is a layer like any other to the reader. What deletes the file is `update`, and what
-    // matters here is that the layer survives being read.
+    // A tombstone is a layer like any other to the reader. What deletes the file is `update`.
     [Fact]
     public void A_tombstone_resolves_to_the_removed_layer()
     {
@@ -100,8 +95,8 @@ public class ManifestTests
             m.Place("template/knowledge-as-code/style.md"));
     }
 
-    // The two answers are different states, not the same one written two ways. A descriptor that says
-    // nothing leaves adoption to the filesystem, so nothing it holds can be surplus to what it declared.
+    // A descriptor that says nothing leaves adoption to the filesystem, so nothing it holds can be
+    // surplus to what it declared.
     [Fact]
     public void A_descriptor_declaring_no_types_adopts_everything()
     {
@@ -122,8 +117,7 @@ public class ManifestTests
         Assert.True(Declines(".schema/runbooks.yaml"));
     }
 
-    // Everything else under `.schema/` belongs to no type and is shared whatever a corpus adopted, so a
-    // corpus is never let off holding it.
+    // Everything else under `.schema/` belongs to no type and is shared whatever a corpus adopted.
     [Theory]
     [InlineData(".schema/_universal.yaml")]
     [InlineData(".schema/_tiers.yaml")]
@@ -144,8 +138,8 @@ public class ManifestTests
         Assert.Equal(["adrs", "policies"], CorpusDescriptor.Load(dir).Types);
     }
 
-    // Two names for one corpus, answering two questions: what it calls itself, and what a citation from
-    // another corpus writes before the colon.
+    // The two names answer two questions: what the corpus calls itself, and what a citation from another
+    // corpus writes before the colon.
     [Fact]
     public void A_descriptor_reads_both_of_the_names_a_corpus_has()
     {
@@ -158,8 +152,8 @@ public class ManifestTests
         Assert.Equal("smp", descriptor.Shortcode);
     }
 
-    // A corpus nothing cites has none, and the key `kac new` writes is bare. Both have to reach the
-    // validator as absent: an empty string there would be reported as a shortcode that is too short.
+    // The key `kac new` writes is bare, and it has to reach the validator as absent: an empty string
+    // there would be reported as a shortcode that is too short.
     [Theory]
     [InlineData("corpus: sample\n")]
     [InlineData("corpus: sample\nshortcode:\n")]
@@ -171,7 +165,6 @@ public class ManifestTests
         Assert.Null(CorpusDescriptor.Load(dir).Shortcode);
     }
 
-    // Each key answers a different question, and the descriptor is read for all three at once.
     [Fact]
     public void The_three_versions_are_read_from_the_descriptor()
     {
@@ -190,7 +183,7 @@ public class ManifestTests
         Assert.Equal("2026-08-20", descriptor.TakenOn);
     }
 
-    // A descriptor saying nothing about a version is not one saying zero. The check names the silence.
+    // A descriptor saying nothing about a version is not one saying zero.
     [Fact]
     public void A_descriptor_stating_no_versions_reads_as_silent()
     {
@@ -204,8 +197,8 @@ public class ManifestTests
         Assert.Null(descriptor.TemplateVersion);
     }
 
-    // The default is the cautious one, so a corpus that never chose is never handed three dozen rewritten
-    // seed files by an update it did not ask for.
+    // A corpus that never chose is never handed three dozen rewritten seed files by an update it did not
+    // ask for.
     [Fact]
     public void A_descriptor_naming_no_update_policy_is_cautious()
     {
@@ -243,8 +236,7 @@ public class ManifestTests
         Assert.Contains(Path.Combine(dir, ".corpus.yaml"), message);
     }
 
-    // A key nested in a block is found where it lives, and one that was dropped rather than renamed says
-    // so instead of naming a replacement that does not exist.
+    // A key nested in a block is found where it lives.
     [Theory]
     [InlineData("upstream:\n  mechanism-version: 3\n", "`upstream.mechanism-version:`", "`template-version:`")]
     [InlineData("upstream:\n  synced-on: \"2026-01-01\"\n", "`upstream.synced-on:`", "`taken-on:`")]
@@ -261,7 +253,7 @@ public class ManifestTests
         Assert.Contains(becomes, message);
     }
 
-    // A dropped key is named beside what took over from it, so the fix is one edit rather than a search.
+    // Naming what took over makes the fix one edit rather than a search.
     [Theory]
     [InlineData("upstream:\n  synced-from: ../src\n", "`upstream.synced-from:`", "upstream.url")]
     [InlineData("role: consumer\n", "`role:`", "prove the tool")]
@@ -289,8 +281,7 @@ public class ManifestTests
         Assert.Null(CorpusDescriptor.RenamedKeyInUse(dir));
     }
 
-    // A corpus with no descriptor at all has no key to rename, and `update` has its own answer for what is
-    // missing.
+    // `update` has its own answer for a missing descriptor.
     [Fact]
     public void A_corpus_with_no_descriptor_has_nothing_to_rename()
         => Assert.Null(CorpusDescriptor.RenamedKeyInUse(Directory.CreateTempSubdirectory().FullName));
@@ -331,8 +322,7 @@ public class ManifestTests
         Assert.Contains("  commit:            5fa039b0\n", File.ReadAllText(path));
     }
 
-    // The tool owns the file's format, so a descriptor that never stated one is given it, below whatever
-    // header comment opens the file and above the first key.
+    // The tool owns the file's format.
     [Fact]
     public void Stamping_a_descriptor_stating_no_format_writes_one_above_its_first_key()
     {
@@ -347,8 +337,7 @@ public class ManifestTests
             File.ReadAllText(path));
     }
 
-    // A descriptor that has never taken a framework has no block to rewrite, so the first update opens
-    // one. That is the corpus recording where it takes from for the first time.
+    // The first update is the corpus recording where it takes from for the first time.
     [Fact]
     public void Stamping_a_descriptor_with_no_upstream_block_writes_one()
     {

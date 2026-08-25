@@ -28,8 +28,8 @@ public class PublishingTests
         Assert.Equal(Sha, publishing.Ref);
     }
 
-    // Four ways of being unable to write a link, and one answer to all of them: the caller's question is
-    // whether it can write one, and a null says no without asking it to tell the four apart.
+    // The caller's question is whether it can write a link, and a null says no without asking it to tell
+    // the four cases apart.
     [Theory]
     [InlineData(Publishing.None, Human, Raw, Sha)]    // publishes nowhere
     [InlineData(Publishing.MkDocs, Human, Raw, Sha)]  // a target nothing addresses yet
@@ -56,8 +56,8 @@ public class PublishingTests
         Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
     }
 
-    // The anchor lands a person on the part. The raw link takes none: raw source is text and offers
-    // nowhere to land, so a fragment there would look like an address and be none.
+    // Raw source is text and offers nowhere to land, so a fragment there would look like an address and
+    // be none.
     [Fact]
     public void A_part_anchors_the_human_link_and_leaves_the_raw_one_alone()
     {
@@ -67,7 +67,7 @@ public class PublishingTests
         Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
     }
 
-    // Every link names the commit rather than a branch, so a citation says what the agent read.
+    // A citation says what the agent read.
     [Fact]
     public void Both_links_resolve_against_the_ref_and_not_against_a_branch()
     {
@@ -78,8 +78,7 @@ public class PublishingTests
         Assert.DoesNotContain("/main/", links.Human);
     }
 
-    // A base written with a trailing slash is the same base, and a corpus should not have to know that
-    // the mechanism is about to append one.
+    // A corpus should not have to know that the mechanism is about to append a slash.
     [Fact]
     public void A_trailing_slash_on_a_base_does_not_double()
     {
@@ -90,8 +89,7 @@ public class PublishingTests
         Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
     }
 
-    // The prefix lands between the commit and the record, which is the one place it can go: a corpus in
-    // a subdirectory is addressed at that commit, under that folder.
+    // The prefix lands between the commit and the record, which is the one place it can go.
     [Fact]
     public void A_corpus_in_a_subdirectory_is_addressed_under_it()
     {
@@ -101,8 +99,7 @@ public class PublishingTests
         Assert.Equal($"{Raw}/{Sha}/example/glossary/search.md", links.Raw);
     }
 
-    // Whether the descriptor wrote the prefix with slashes says nothing about where the corpus sits, so
-    // three spellings of one folder build one link.
+    // Whether the descriptor wrote the prefix with slashes says nothing about where the corpus sits.
     [Theory]
     [InlineData("example")]
     [InlineData("/example")]
@@ -114,7 +111,7 @@ public class PublishingTests
         Assert.Equal($"{Raw}/{Sha}/example/glossary/search.md", links.Raw);
     }
 
-    // A corpus that is the repository states no prefix, and its links carry no empty segment.
+    // The links carry no empty segment where a prefix would sit.
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -137,9 +134,8 @@ public class PublishingTests
         Assert.Equal(Md.Slug("Identity line"), Publishing.Anchor("Identity line"));
     }
 
-    // A template leaves the path and the anchor to its reader, and settles everything else. What is
-    // settled includes the commit: a ref a reader has to copy is forty characters that can be mistyped
-    // into a plausible 404, and the wrong one answers as confidently as the right one.
+    // The commit is settled too: a ref a reader has to copy is forty characters that can be mistyped
+    // into a plausible 404. The wrong one answers as confidently as the right one.
     [Fact]
     public void A_template_leaves_the_path_and_the_anchor_and_settles_the_rest()
     {
@@ -149,8 +145,8 @@ public class PublishingTests
         Assert.Equal($"{Raw}/{Sha}/{{path}}", templates.Raw);
     }
 
-    // The prefix is settled in the template alongside the commit. A reader holding a record's path
-    // supplies that alone, and cannot join the two in the wrong order.
+    // A reader holding a record's path supplies the path alone, and cannot join it to the prefix in the
+    // wrong order.
     [Fact]
     public void A_template_settles_the_subdirectory_too()
     {
@@ -160,8 +156,7 @@ public class PublishingTests
         Assert.Equal($"{Raw}/{Sha}/example/{{path}}", templates.Raw);
     }
 
-    // The asymmetry lives in the templates rather than in the reader. Raw source has no fragment to
-    // honour, so the raw template offers nowhere to put one and nobody has to remember why.
+    // The asymmetry lives in the templates rather than in the reader, so nobody has to remember why.
     [Fact]
     public void Only_the_template_a_person_follows_takes_an_anchor()
     {
@@ -171,8 +166,7 @@ public class PublishingTests
         Assert.DoesNotContain(Publishing.AnchorToken, templates.Raw, StringComparison.Ordinal);
     }
 
-    // A link resolved here and a link a consumer substitutes for itself are the same string. They are
-    // built from one rule, so a corpus reading the export cannot be handed two addresses for one part.
+    // One rule builds both, so a corpus reading the export cannot be handed two addresses for one part.
     [Theory]
     [InlineData("query")]
     [InlineData(null)]

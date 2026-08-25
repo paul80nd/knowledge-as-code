@@ -30,9 +30,8 @@ public class RuleExprTests
         Assert.True(Eval("present('owner')", "id: adr-0001\nowner: alex.doe"));
     }
 
-    // A rule guards on the field rather than on the shape its type declared, so a list answers the same
-    // question a scalar does. `provenance-required` is the rule this exists for: both fields it names are
-    // lists, and a reading that saw only scalars would make every standard fail it however it was written.
+    // `provenance-required` is the rule the list reading exists for: both fields it names are lists, and
+    // a reading that saw only scalars would make every standard fail it however it was written.
     [Fact]
     public void Present_reads_a_list_as_well_as_a_scalar()
     {
@@ -53,8 +52,8 @@ public class RuleExprTests
     }
 
     // `section()` asks whether a document has one. `section_count()` asks whether it has more than one,
-    // which is a different fault. Matched without case, as `section()` is: a heading is prose someone
-    // wrote, and `## symptom` is the section the schema means however it was capitalised.
+    // which is a different fault. A heading is prose someone wrote, so `## symptom` is the section the
+    // schema means however it was capitalised.
     [Fact]
     public void Section_count_counts_the_heading_and_ignores_its_casing()
     {
@@ -64,8 +63,8 @@ public class RuleExprTests
     }
 
     // The body pattern facts cannot see frontmatter, because a field is judged against what its own
-    // declaration says. `field_matches` is how a rule asks about the value rather than the shape, and it
-    // is false for an absent field. Whether the field ought to be there is `required-field`'s question.
+    // declaration says. `field_matches` is false for an absent field, because whether the field ought to
+    // be there is `required-field`'s question.
     [Fact]
     public void Field_matches_reads_the_frontmatter_that_matches_cannot()
     {
@@ -84,10 +83,8 @@ public class RuleExprTests
     public void Links_counts_the_links_the_body_carries()
         => Assert.True(Eval("links() == 2", body: "See [a](/a.md) and [b](/b.md)."));
 
-    //
-    // A comparison where either side is absent is false, and `!=` is its negation, so it is true. The
-    // point of the rule is that it is one rule: a schema author guards with `present(…) implies …`
-    // rather than working out which way silence falls for each operator.
+    // One rule covers every operator: a schema author guards with `present(…) implies …` rather than
+    // working out which way silence falls for each.
 
     [Theory]
     [InlineData("field('nope') == 'x'", false)]
@@ -99,8 +96,7 @@ public class RuleExprTests
     public void A_comparison_against_an_absent_field_is_false_and_its_negation_true(string expr, bool expected)
         => Assert.Equal(expected, Eval(expr));
 
-    // The idiom that follows from it: a rule about a field that may be missing says so, and stays quiet
-    // rather than reporting a fault that required-field has already reported.
+    // A guarded rule stays quiet rather than reporting a fault that required-field has already reported.
     [Fact]
     public void A_guarded_rule_is_satisfied_when_the_field_it_guards_is_absent()
     {
@@ -132,9 +128,7 @@ public class RuleExprTests
     public void The_grammar_evaluates_as_declared(string expr, bool expected)
         => Assert.Equal(expected, Eval(expr, body: "One [link](/a.md)."));
 
-    //
-    // Every one of these is a schema defect that would otherwise become a check that silently never
-    // fires, so each is a load-time failure rather than a quiet false.
+    // Each of these would otherwise become a check that silently never fires.
 
     [Theory]
     [InlineData("field('status')", "yes/no")] // not a question
@@ -156,8 +150,7 @@ public class RuleExprTests
         Assert.Contains(expectedInMessage, ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-    // A chained comparison is a sentence rather than a condition, and the grammar declines it rather
-    // than picking an associativity the author did not choose.
+    // Parsing a chain would need the grammar to pick an associativity the author did not choose.
     [Fact]
     public void A_chained_comparison_does_not_parse()
         => Assert.Throws<RuleExprException>(() => RuleExpr.Compile("1 < words() < 40"));
@@ -167,16 +160,15 @@ public class RuleExprTests
         => Assert.True(Eval("matches('AKIA[0-9A-Z]{6}')",
             body: "Configure it:\n\n```\nAWS_KEY=AKIA123456\n```\n"));
 
-    // The flattened text a word count walks carries no fenced code at all, so the two facts genuinely
-    // see different documents. Pinned, so that folding one onto the other fails here rather than in a
-    // corpus with a credential in it.
+    // The flattened text a word count walks carries no fenced code at all, so folding one fact onto the
+    // other fails here rather than in a corpus with a credential in it.
     [Fact]
     public void Words_does_not_see_what_matches_does()
         => Assert.True(Eval("words() == 4 and matches('secret')",
             body: "Configure it:\n\n```\nTOKEN=secret\n```\n"));
 
-    // Markdown syntax is in scope, which is what lets a rule find a bold modal: the emphasis markers
-    // are gone by the time the text is flattened.
+    // The emphasis markers are gone by the time the text is flattened, so a rule looking for a bold modal
+    // has nowhere else to find one.
     [Fact]
     public void Matches_sees_markdown_syntax()
     {
@@ -184,8 +176,8 @@ public class RuleExprTests
         Assert.False(Eval(@"matches('\*\*MUST\*\*')", body: "You MUST do this."));
     }
 
-    // Frontmatter is not body. It is checked field by field against patterns its own fields declare, and
-    // a rule sweeping the prose should not trip over the metadata above it.
+    // Frontmatter is checked field by field against patterns its own fields declare, and a rule sweeping
+    // the prose should not trip over the metadata above it.
     [Fact]
     public void Matches_does_not_see_the_frontmatter()
         => Assert.False(Eval("matches('alex.doe')", "id: adr-0001\nowner: alex.doe", "Prose with no name in it."));
@@ -198,7 +190,6 @@ public class RuleExprTests
         Assert.True(Eval("section_matches('Verification', 'Typically')", body: body));
     }
 
-    // A section the document does not have answers false rather than throwing.
     [Fact]
     public void Section_matches_is_false_where_the_section_is_absent()
         => Assert.False(Eval("section_matches('Nowhere', 'anything')", body: "## Steps\n\nDo the thing."));

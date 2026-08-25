@@ -31,8 +31,8 @@ public class PageCheckTests
         => Assert.Equal("link-resolves",
             Assert.Single(Page("# ADRs\n\nThe [missing](/adrs/0099-gone.md).\n")).Check.Value);
 
-    // A page the corpus does not hold is not read at all. Its absence is `type-setup`'s to report, and one
-    // fault should not be reported by two passes.
+    // The absence of a page is `type-setup`'s to report, and one fault should not be reported by two
+    // passes.
     [Fact]
     public void A_page_the_corpus_does_not_hold_is_left_to_type_setup()
         => Assert.Empty(Page("---\nid: adr-0001\n---\n\n# ADRs\n\n[gone](/adrs/0099-gone.md)\n", tracked: false));

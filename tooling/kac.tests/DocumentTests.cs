@@ -32,8 +32,8 @@ public class DocumentTests
     public void Doc_Parse_returns_null_without_frontmatter()
         => Assert.Null(Doc.Parse("notes.md", "# Just a heading, no frontmatter\n", new Schema()));
 
-    // A key that is itself a sequence is legal YAML and names no field. It arrives as the empty key,
-    // which the validator reports, rather than stopping the parse.
+    // A key that is itself a sequence is legal YAML and names no field. The validator reports it as the
+    // empty key, rather than the parse stopping.
     [Fact]
     public void Doc_Parse_reads_a_complex_frontmatter_key_as_the_empty_key()
     {
@@ -45,8 +45,8 @@ public class DocumentTests
         Assert.Equal(["id", ""], doc.FrontKeys);
     }
 
-    // Only a document YAML cannot read leaves `Front` null. The parse still runs, so the document is
-    // asked about its prose and `frontmatter-parses` is what reports the frontmatter.
+    // The parse still runs, so the document is asked about its prose. `frontmatter-parses` is what
+    // reports the frontmatter.
     [Fact]
     public void Doc_Parse_leaves_frontmatter_null_where_the_yaml_will_not_read()
     {
@@ -58,9 +58,8 @@ public class DocumentTests
         Assert.Equal("A title", doc.H1);
     }
 
-    // The identity line's code spans are handed to the validator raw and in order. The parser makes
-    // no judgement about how many there should be or what they should say, so a malformed line still
-    // arrives as data the validator can quote back.
+    // The parser makes no judgement about how many spans there should be or what they should say, so a
+    // malformed line still arrives as data the validator can quote back.
     [Theory]
     [InlineData("`Policy: pol-SCRT` `DRAFT`", new[] { "Policy: pol-SCRT", "DRAFT" })]
     [InlineData("`pol-SCRT` `DRAFT`", new[] { "pol-SCRT", "DRAFT" })]
@@ -76,9 +75,8 @@ public class DocumentTests
         Assert.Equal(7, doc.IdentityLine);
     }
 
-    // Anchored on the block directly after the H1, not on the first paragraph of code spans anywhere.
-    // Without that anchor a document that opened with prose would borrow an identity line from further
-    // down the page and the missing-line check could never fire.
+    // Without an anchor on the block directly after the H1, a document opening with prose would borrow
+    // an identity line from further down the page. The missing-line check could then never fire.
     [Theory]
     [InlineData("## Purpose\n")]                                        // straight into a section
     [InlineData("Some opening prose.\n\n`Policy: pol-SCRT` `DRAFT`\n")] // line, but not first
@@ -93,8 +91,8 @@ public class DocumentTests
         Assert.Null(doc.IdentitySpans);
     }
 
-    // A section runs to the next heading at its own level or above, so a sub-heading and everything
-    // under it belong to the section above them, and a second H1 ends the section it follows.
+    // A sub-heading and everything under it belong to the section above them, and a second H1 ends the
+    // section it follows.
     [Theory]
     [InlineData("## Context\n\nWhy.\n", "Why.")]
     [InlineData("## Context\n\n### A sub-heading\n\nWhy.\n", "### A sub-heading\n\nWhy.")]
@@ -112,8 +110,7 @@ public class DocumentTests
         Assert.Equal(expected, doc.Text[section.BodyStart..section.BodyEnd].Trim());
     }
 
-    // Every H2 in document order, each carrying the line it sits on, so a check reporting one can point
-    // at the heading rather than at the document.
+    // A check reporting a section can point at the heading rather than at the document.
     [Fact]
     public void Sections_are_read_in_order_with_their_lines()
     {
@@ -141,8 +138,7 @@ public class DocumentTests
         => Assert.Equal(expected, Md.HasContent(text));
 
     // What the bracket scan hands the validator to report as `bracket-literal` or `undefined-label`.
-    // Position decides a checkbox: `[ ]` opening a list item is a marker, and the same brackets in
-    // the middle of a sentence are a candidate reference like any other.
+    // Position, not the brackets, is what decides a checkbox.
     [Fact]
     public void A_checkbox_is_read_as_a_marker_and_a_bracket_in_prose_as_a_candidate_reference()
     {
@@ -187,10 +183,8 @@ public class DocumentTests
         Doc.Parse("policies/scrt-a-title.md",
             $"---\nid: pol-SCRT\n---\n\n# Secrets are managed\n\n{body}", WithClauses());
 
-    // Rows arrive as written, not as they should be: an id that is not a single code span reports no
-    // span but keeps its text, and a clause that opens with no bold run reports no lead. Every one of
-    // those is a finding the validator words, and it can only word them if the parser declines to fix
-    // them on the way past.
+    // A malformed row is a finding the validator words, and it can only word it if the parser declines
+    // to fix the row on the way past.
     [Fact]
     public void Clause_rows_are_read_as_written()
     {
@@ -232,8 +226,7 @@ public class DocumentTests
         Assert.Empty(doc.Parts);
     }
 
-    // A table under some other heading is not the clause table, however much it looks like one. The
-    // section the schema names is what makes it one.
+    // The section the schema names is what makes a table the clause table.
     [Fact]
     public void A_table_outside_the_clause_section_is_not_read_as_clauses()
     {
@@ -249,9 +242,8 @@ public class DocumentTests
         Assert.Null(doc.PartTableHeaders);
     }
 
-    // Citations are collected from code spans anywhere in the document, and left unjudged: case and
-    // width are the validator's to rule on, so a mis-cased citation is one it can report as unresolved
-    // rather than one the parser silently never saw.
+    // Case and width are the validator's to rule on, so a mis-cased citation is one it can report as
+    // unresolved rather than one the parser silently never saw.
     [Fact]
     public void Part_citations_are_collected_from_code_spans()
     {
@@ -261,9 +253,8 @@ public class DocumentTests
         Assert.Equal(["pol-VURM.TIMEBOX", "pol-vurm.lower"], doc.PartRefs.Select(r => r.Ref));
     }
 
-    // A record named by a slug carries hyphens on both sides of the dot, and a filename written as a
-    // code span has every feature of that shape. The prefix is what tells them apart: `pol` is a type's
-    // and `vurm` is not, so the filename is passed over and never reported as a citation of nothing.
+    // The prefix tells a citation from a filename: `pol` is a type's and `vurm` is not, so the filename
+    // is passed over and never reported as a citation of nothing.
     [Fact]
     public void A_filename_shaped_like_a_citation_is_not_one()
     {
@@ -293,8 +284,6 @@ public class DocumentTests
         Doc.Parse("services/catalogue-web.md",
             $"---\nid: svc-catalogue-web\n---\n\n# The catalogue site\n\n{body}", WithMirrors(sections));
 
-    // Each field's own section, gathered in the one walk. A field mirroring `Dependencies` sees the
-    // links under `## Dependencies` and nothing from the section beside it.
     [Fact]
     public void Links_are_collected_under_each_mirrored_section()
     {
@@ -318,10 +307,9 @@ public class DocumentTests
         Assert.Equal(["../data/catalogue.md"], doc.MirroredSectionLinks["Data"].Select(l => l.Target));
     }
 
-    // A link in a paragraph is a link. Inlines hang off leaf blocks, so a walk that descends from the
-    // top-level block finds the ones in a list and silently misses the ones in prose. It is the same
-    // link to whoever wrote it, and the difference between a section that reconciles and one that
-    // seems to.
+    // Inlines hang off leaf blocks, so a walk that descends from the top-level block finds the ones in
+    // a list and silently misses the ones in prose. A link in prose is the same link to whoever wrote
+    // it, and the difference between a section that reconciles and one that seems to.
     [Fact]
     public void Links_written_as_prose_are_collected_as_readily_as_bullets()
     {
@@ -335,8 +323,7 @@ public class DocumentTests
         Assert.Equal(["search.md"], doc.MirroredSectionLinks["Dependencies"].Select(l => l.Target));
     }
 
-    // A section the document does not carry is an empty list rather than an absent key, so the
-    // validator reports every id in the field as missing from it rather than skipping the field.
+    // The validator reports every id in the field as missing rather than skipping the field.
     [Fact]
     public void A_mirrored_section_the_document_lacks_is_collected_as_empty()
     {

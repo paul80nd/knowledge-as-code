@@ -103,8 +103,7 @@ public class AskingTests
     public void All_names_every_type_the_template_declares()
         => Assert.Equal(Declared, Resolve(Flagged()).Answers!.Types);
 
-    // Kept in the order the schema declares them, whatever order the flag named them in, so two corpora
-    // adopting the same types write the same descriptor.
+    // Two corpora adopting the same types write the same descriptor.
     [Fact]
     public void A_named_subset_is_kept_in_the_order_the_schema_declares()
         => Assert.Equal(["adrs", "policies"],

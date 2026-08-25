@@ -32,8 +32,8 @@ public class TemplateCheckTests
         => Assert.Contains("would fail unknown-key",
             Assert.Single(Fields(Template("id: \"adr-{{slug}}\"\nstatus: draft\nowner: someone"))).Message);
 
-    // The payoff of asking for the template with `OnDisk`: the file a contributor is about to copy is read
-    // whether or not it has been added, so they meet its defects while they are looking at it.
+    // The payoff of asking for the template with `OnDisk`: a contributor meets its defects while they are
+    // looking at it.
     [Fact]
     public void A_template_the_corpus_does_not_yet_hold_is_still_read()
         => Assert.Contains("would fail required-field",

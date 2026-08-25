@@ -230,7 +230,6 @@ public static class RuleExpr
         _ => "a yes/no answer"
     };
 
-    //
     // Recursive descent over the frozen grammar, loosest binding first:
     //   implies → or → and → comparison → + - → * / → not → primary
 

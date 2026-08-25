@@ -54,14 +54,13 @@ public class ShortcodeTests
     public void A_shortcode_a_type_uses_as_its_id_prefix_names_the_type()
         => Assert.Contains("is the id prefix of 'standards'", Assert.Single(Shortcode("std")).Message);
 
-    // A type the schema does not declare has no prefix to collide with, so the spelling is free. The
-    // prefixes are read from the schema for exactly this reason.
+    // The prefixes are read from the schema, so a spelling no declared type uses is free.
     [Fact]
     public void A_shortcode_no_type_uses_is_left_alone()
         => Assert.Empty(Shortcode("adr2"));
 
-    // Both faults at once, which is what the prefix comparison ignores case for. Correcting the casing
-    // alone would leave the second refusal waiting on the next run.
+    // The prefix comparison ignores case, so correcting the casing alone does not leave the second
+    // refusal waiting on the next run.
     [Fact]
     public void A_miscased_type_prefix_is_reported_as_both()
     {

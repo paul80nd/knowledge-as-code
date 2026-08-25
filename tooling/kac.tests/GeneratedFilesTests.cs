@@ -38,7 +38,7 @@ public class GeneratedFilesTests
     }
 
     // The framework's own pages are the corpus's however few types it took, so their blocks are named
-    // whether or not anything is generated into them. A corpus that adopted nothing still holds the files.
+    // whether or not anything is generated into them.
     [Fact]
     public void The_framework_pages_are_named_for_a_corpus_that_adopted_no_types()
     {
@@ -52,8 +52,7 @@ public class GeneratedFilesTests
             files.Select(f => f.Path));
     }
 
-    // A type with no page of its own carries no blocks: the two it would have are written into the page,
-    // and there is nowhere to put them.
+    // Both blocks a type carries are written into its page, and there is nowhere else to put them.
     [Fact]
     public void A_type_without_a_page_names_no_blocks()
     {
@@ -62,8 +61,8 @@ public class GeneratedFilesTests
         Assert.DoesNotContain(files, f => f.Blocks.Any(b => b.StartsWith("schema-glossary")));
     }
 
-    // `README.md` belongs to the corpus, which decides whether it wants the block at all. Everything else
-    // arrives from the framework with its markers, so a marker that has gone is a fault.
+    // `README.md` belongs to the corpus. Everything else arrives from the framework with its markers, so a
+    // marker that has gone is a fault.
     [Fact]
     public void Only_the_corpus_readme_may_decline_its_block()
     {
@@ -133,7 +132,7 @@ public class GeneratedFilePlanTests
         Assert.DoesNotContain(plan, f => f.Path.StartsWith("adrs"));
     }
 
-    // An index is written whether or not one is there, because the type page links to it.
+    // The type page links to the index.
     [Fact]
     public void An_index_the_corpus_does_not_hold_yet_is_written_rather_than_skipped()
     {
@@ -144,7 +143,7 @@ public class GeneratedFilePlanTests
         Assert.True(file.Stale);
     }
 
-    // A page is not: the generator populates structure the corpus declared and never invents it.
+    // The generator populates structure the corpus declared and never invents it.
     [Fact]
     public void A_block_carrying_file_the_corpus_does_not_hold_is_skipped()
     {
@@ -213,8 +212,8 @@ public class GeneratedBlockCheckTests
         Assert.Contains(expected, finding.Message);
     }
 
-    // The quieter fault, and the reason the check reads a declared list rather than the file: a block
-    // deleted outright leaves nothing behind to notice it has gone.
+    // The check reads a declared list rather than the file, because a block deleted outright leaves nothing
+    // behind to notice it has gone.
     [Fact]
     public void A_block_that_lost_both_markers_is_still_reported()
     {

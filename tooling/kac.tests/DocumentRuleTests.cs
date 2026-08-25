@@ -17,7 +17,7 @@ public class DocumentRuleTests
         Assert.All(DocumentRules.All, r => Assert.NotEmpty(r.Emits));
     }
 
-    // What each emitted id *means* is `_checks.yaml`'s to say. Here the ids only have to be ids.
+    // What each emitted id *means* is `_checks.yaml`'s to say.
     [Fact]
     public void Every_emitted_id_is_a_usable_check_id()
     {
@@ -65,8 +65,8 @@ public class DocumentRuleTests
         Assert.Contains("keep it under 20.", Single(found).Message);
     }
 
-    // The ceiling comes from the schema so that a corpus can tune it without a release; the default is
-    // only what applies when the schema declares none.
+    // A corpus can tune the ceiling without a release, and the default applies only where the schema
+    // declares none.
     [Fact]
     public void The_ceiling_is_the_schemas_and_a_Y_statement_within_it_is_silent()
     {
@@ -101,7 +101,7 @@ public class DocumentRuleTests
         Assert.Contains("A message queue", Single(found).Message);
     }
 
-    // The bullets are found by heading, so a list under any other heading is not this rule's business.
+    // The bullets are found by heading.
     [Fact]
     public void Bullets_outside_the_section_are_left_alone()
         => Assert.Empty(Run(new AlternativesHaveVerdicts(),
@@ -119,7 +119,6 @@ public class DocumentRuleTests
         => Assert.Empty(Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### Borrower\n\nOne.\n\n### Item\n\nTwo.\n\n### Title\n\nThree.")));
 
-    // The message names the entry that moved and the one it belongs before.
     [Fact]
     public void An_entry_out_of_place_names_itself_and_where_it_belongs()
     {
@@ -137,8 +136,7 @@ public class DocumentRuleTests
         => Assert.Empty(Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### ADR\n\nOne.\n\n### Borrower\n\nTwo.\n\n### corpus\n\nThree.")));
 
-    // Each entry is judged against the one before it, so a file with two words in the wrong place
-    // reports both rather than stopping at the first.
+    // Each entry is judged against the one before it.
     [Fact]
     public void Every_entry_out_of_place_is_reported()
         => Assert.Equal(2, Run(new TermsAreAlphabetical(),

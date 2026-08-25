@@ -75,8 +75,8 @@ public class PartCheckTests
         Assert.Contains("Write it plain", Assert.Single(found).Message);
     }
 
-    // Longest first, or "MUST NOT" would be read as the "MUST" that prefixes it and then reported as a
-    // compound clause carrying a second modal.
+    // "MUST NOT" matched as the "MUST" that prefixes it would be reported as a compound clause carrying
+    // a second modal.
     [Fact]
     public void A_longer_modal_is_recognised_before_the_one_that_prefixes_it()
         => Assert.Empty(Run(Header + "| `LOGS` | **MUST NOT** leave the tenancy. |\n"));
@@ -97,7 +97,6 @@ public class PartCheckTests
         Assert.Contains("Write it as `LOGS`", Assert.Single(found).Message);
     }
 
-    // The pattern is the type's, so this is what shows it is read rather than assumed.
     [Fact]
     public void An_id_outside_the_types_pattern_names_the_pattern()
     {
@@ -166,8 +165,7 @@ public class PartCheckTests
         Assert.Empty(Notation($"Written as `{span}` here.\n"));
     }
 
-    // The check reads no table, so it runs on a type that offers no parts. That is every type a
-    // citation is actually written in.
+    // A citation is written in the types that offer no parts.
     [Fact]
     public void The_notation_is_checked_where_no_parts_are_declared()
     {
@@ -176,15 +174,13 @@ public class PartCheckTests
 
     private const string Terms = "## Terms\n\n";
 
-    // The heading is the address, so the checks a table needs have nothing to ask here. A glossary's
-    // entries are its parts and none of the table's shape applies to them.
+    // The heading is the address, so the checks a table needs have nothing to ask here.
     [Fact]
     public void Headings_under_the_section_are_parts_and_nothing_else_is_asked()
         => Assert.Empty(Run(Terms + "### Corpus\n\nA body of records.\n\n### Drift\n\nCopies parting.\n",
             Headings(), "glossary"));
 
-    // The id a heading offers is the anchor a link to it would use, which is what makes a citation and a
-    // link name the same thing.
+    // A citation and a link to a heading name the same thing.
     [Fact]
     public void A_headings_address_is_the_anchor_it_slugs_to()
     {
@@ -196,8 +192,7 @@ public class PartCheckTests
         Assert.Equal("Identity line", part.Text);
     }
 
-    // Two entries slugging to one address is the glossary's version of a repeated clause id, and the
-    // message uses the word the type's own readers do.
+    // The message uses the word the type's own readers do.
     [Fact]
     public void Two_headings_slugging_alike_collide()
     {
@@ -209,7 +204,6 @@ public class PartCheckTests
         Assert.Contains("two terms here address as 'identity-line'", one.Message);
     }
 
-    // A heading below the declared level is prose inside an entry rather than an entry of its own.
     [Fact]
     public void A_heading_at_another_level_is_not_a_part()
     {
@@ -219,8 +213,7 @@ public class PartCheckTests
         Assert.Equal(["corpus"], doc.Parts.Select(p => p.Id));
     }
 
-    // The section bounds the parts: an entry filed outside it offers no address, because a citation
-    // resolves against what the type said it would find and nothing else.
+    // A citation resolves against what the type said it would find, and nothing else.
     [Fact]
     public void A_heading_outside_the_section_is_not_a_part()
     {
@@ -241,8 +234,7 @@ public class PartCheckTests
         Assert.Contains("the '## Terms' section holds no terms. Write each one as an H3 heading.", one.Message);
     }
 
-    // A heading at the wrong level is prose rather than a part, so a section holding only those holds no
-    // parts and is told so.
+    // A heading at the wrong level is prose rather than a part.
     [Fact]
     public void A_section_holding_only_headings_at_another_level_holds_no_parts()
     {
@@ -262,7 +254,6 @@ public class PartCheckTests
     public void An_empty_table_is_not_also_reported_as_a_section_holding_nothing()
         => Assert.DoesNotContain(Run(Header), f => f.Check.Value == "part-none");
 
-    // Two sound entries stand either side of the empty one, so the message has to say which failed.
     [Fact]
     public void A_heading_with_nothing_under_it_names_the_entry()
     {
@@ -294,7 +285,7 @@ public class PartCheckTests
         Assert.Equal("part-empty", Assert.Single(found).Check.Value);
     }
 
-    // The other half of the guard above: the heading question is never put to a row.
+    // A row is its own body, so `part-empty` is a question only a heading-sourced part is asked.
     [Fact]
     public void A_table_row_is_not_asked_whether_a_heading_holds_anything()
         => Assert.DoesNotContain(Run(Header + "| `LOGS` | **MUST** be retained. |\n"),

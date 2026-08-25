@@ -17,8 +17,7 @@ public class TypeSetupTests
     public void A_type_with_a_page_a_folder_and_a_template_is_silent()
         => Assert.Empty(Setup(Holding("adrs.md", "adrs/0001-a.md", "adrs/_template.md")));
 
-    // A type the schema declares and the corpus has not built is a valid, quiet state: a corpus grows into
-    // the framework it took.
+    // A corpus grows into the framework it took.
     [Fact]
     public void A_type_the_corpus_has_not_built_is_not_reported()
         => Assert.Empty(Setup(Holding("README.md")));
@@ -57,8 +56,7 @@ public class TypeSetupTests
             Assert.Single(Setup(Holding("README.md"), "adrs")).Message);
 
     // Asked only of a corpus that declares a `types:` block at all: one that declares none has adoption
-    // read off its folders, where the question answers itself. So this corpus adopts the other type and
-    // holds both.
+    // read off its folders, where the question answers itself.
     [Fact]
     public void A_type_stood_up_and_not_adopted_is_reported_as_a_contradiction()
         => Assert.Contains("is not in 'types:'",

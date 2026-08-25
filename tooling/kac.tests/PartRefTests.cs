@@ -20,8 +20,7 @@ public class PartRefTests
     public void A_citation_of_a_term_the_glossary_carries_passes()
         => Assert.Empty(Cite("gls-house-words.identity-line"));
 
-    // The first way: nothing answers to the half before the dot. Said without naming a part, because
-    // there is no document to have been looking in.
+    // The message names no part, because there is no document to have been looking in.
     [Fact]
     public void A_citation_of_a_document_that_does_not_exist_names_the_document()
     {
@@ -31,9 +30,7 @@ public class PartRefTests
         Assert.Equal("'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist.", found.Message);
     }
 
-    // The second: the document is real and its type keeps no parts, so there was never a child to reach.
-    // Worth its own wording: the author is otherwise sent looking through a document for a heading it
-    // was never going to carry.
+    // A general wording would send the author looking through a document for a heading it was never going to carry.
     [Fact]
     public void A_citation_into_a_type_that_keeps_no_parts_says_so()
     {
@@ -44,8 +41,7 @@ public class PartRefTests
                      + "Cite the document as 'adr-0002'.", found.Message);
     }
 
-    // The third: the document is real, its type keeps parts, and this is not one of them. The type's own
-    // noun is used, so a glossary is told about a term and a policy about a clause.
+    // The type's own noun is used, so a glossary is told about a term and a policy about a clause.
     [Theory]
     [InlineData("pol-VURM.MISSING", "cites a clause 'MISSING' that policies/vurm-remediation.md does not carry.")]
     [InlineData("gls-house-words.missing", "cites a term 'missing' that glossary/house-words.md does not carry.")]
@@ -58,8 +54,8 @@ public class PartRefTests
         Assert.Equal($"'{citation}' {tail}", found.Message);
     }
 
-    // Ordinal, at both ends. A citation differing from the part only in case reaches nothing, and is
-    // reported rather than quietly resolved to the entry the author probably meant.
+    // Ordinal, at both ends: a miscased citation is reported rather than quietly resolved to the entry the
+    // author probably meant.
     [Theory]
     [InlineData("pol-VURM.timebox")]
     [InlineData("gls-house-words.Identity-Line")]

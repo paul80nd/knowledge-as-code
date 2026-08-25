@@ -72,8 +72,8 @@ public partial class CliReferenceTests
         }
     }
 
-    // The overview indexes every page of the reference, and takes each row's wording from that page's own heading. So
-    // a command whose page is added, renamed or retitled drops out of step here rather than quietly out of the list.
+    // Each row's wording comes from the page it indexes, so a command whose page is added, renamed or
+    // retitled drops out of step here rather than quietly out of the list.
     [Fact]
     public void The_overview_indexes_every_page()
     {

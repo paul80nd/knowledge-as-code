@@ -33,8 +33,8 @@ public class BundlerTests
                 plugin: [(Bundler.ManifestFile, """{"metadata":{"corpusRoot":"corpus"}}""")],
                 export: [Manifest()]).Problems));
 
-    // The export is copied under `corpusRoot`, so a plugin tree already holding that directory is
-    // refused rather than merged.
+    // The export is copied under `corpusRoot`, so the only other answer is to merge it into the plugin
+    // tree.
     [Fact]
     public void A_corpus_root_the_plugin_tree_already_uses_is_refused()
         => Assert.Contains("would overwrite the other",
@@ -61,8 +61,7 @@ public class BundlerTests
     public void A_refused_plan_names_no_files()
         => Assert.Empty(Plan(plugin: [("README.md", "# nothing")], export: [Manifest()]).Files);
 
-    // The number the export declares against the number this build reads. Both are named, because the
-    // reader's next move differs.
+    // Both numbers are named, because the reader's next move differs.
     [Fact]
     public void An_export_whose_format_version_this_tool_does_not_read_is_refused()
     {
@@ -74,8 +73,7 @@ public class BundlerTests
         Assert.Contains(Exporter.FormatVersion.ToString(), problem);
     }
 
-    // An export stating no format version at all is refused with the same sentence rather than assumed
-    // current. A document that does not say which contract it is written to is not one to guess about.
+    // A document that does not say which contract it is written to is not one to guess about.
     [Fact]
     public void An_export_declaring_no_format_version_is_refused()
         => Assert.Contains("format version none",
@@ -83,8 +81,7 @@ public class BundlerTests
                 plugin: [(Bundler.ManifestFile, Source())],
                 export: [(Exporter.ManifestFile, """{"corpus":"c","types":[]}""")]).Problems));
 
-    // It is rendered beside the hook that prints it, so the hook is one `cat` and the consumer's shell
-    // is asked for nothing else.
+    // The hook is one `cat`, and the consumer's shell is asked for nothing else.
     [Fact]
     public void The_breadcrumb_travels_beside_the_hook_that_prints_it()
         => Assert.Contains("example-libraries", Text(Plan(
@@ -95,8 +92,7 @@ public class BundlerTests
             ],
             export: [Manifest("glossary")]), Breadcrumb.RenderedFile));
 
-    // A corpus shipping no hook has nothing to read a breadcrumb, and gets none. The file exists to be
-    // printed, and one nothing prints is weight in an artefact nobody reviews.
+    // The file exists to be printed, and one nothing prints is weight in an artefact nobody reviews.
     [Fact]
     public void A_plugin_with_no_hook_carries_no_breadcrumb()
         => Assert.DoesNotContain(
@@ -104,8 +100,7 @@ public class BundlerTests
             Plan(plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary")))],
                 export: [Manifest("glossary")]).Files.Select(f => f.Path));
 
-    // The criterion the trim exists for: a corpus whose export cannot support the hook ships neither the
-    // hook nor a breadcrumb, rather than a hook printing a file that says the corpus knows nothing.
+    // The other answer is a hook printing a file that says the corpus knows nothing.
     [Fact]
     public void A_trimmed_hook_takes_the_breadcrumb_with_it()
     {
@@ -143,8 +138,7 @@ public class BundlerTests
         Assert.Equal("the export carries no adrs", trimmed.Reason);
     }
 
-    // A component requiring two types where the export carries one is trimmed, and the reason names the
-    // half that was missing rather than both. The author's next move is to export the type it named.
+    // The author's next move is to export the type the reason names.
     [Fact]
     public void A_component_needing_two_types_is_trimmed_on_the_one_that_is_missing()
         => Assert.Equal("the export carries no adrs",
@@ -175,15 +169,13 @@ public class BundlerTests
         Assert.Contains("carries version 1", problem);
     }
 
-    // A bare name needs the type present and opens none of its files, which is what a breadcrumb hook
-    // does. A shape it never reads must not refuse it.
+    // A bare name needs the type present and opens none of its files, which is what a breadcrumb hook does.
     [Fact]
     public void A_component_naming_no_shape_is_untouched_by_one()
         => Assert.Empty(Plan(
             plugin: [(Bundler.ManifestFile, Source(Component("hooks", "glossary")))],
             export: [Manifest("glossary")]).Problems);
 
-    // The type is absent, so the component is trimmed and the shape it would have read never arises.
     // A plugin that does less is the answer here, and refusing the run would be the wrong one.
     [Fact]
     public void A_component_reading_a_shape_of_a_type_the_export_omits_is_trimmed()
@@ -201,9 +193,8 @@ public class BundlerTests
             plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary@one")))],
             export: [Manifest("glossary")]).Problems));
 
-    // A component naming no type reads nothing the corpus decides, so nothing decides whether it
-    // travels. `bundle.json` still records it, because a reader asking what is in the plugin wants it
-    // listed beside the ones that had to earn their place.
+    // `bundle.json` still records a component requiring nothing, because a reader asking what is in the
+    // plugin wants it listed beside the ones that had to earn their place.
     [Fact]
     public void A_component_requiring_nothing_always_travels()
     {
@@ -227,8 +218,7 @@ public class BundlerTests
         Assert.DoesNotContain(plan.Files, f => f.Path.EndsWith("hooks/hooks.json", StringComparison.Ordinal));
     }
 
-    // A path beginning with a component's name but not beneath it is a different component. `skills/a`
-    // must not take `skills/ab` with it.
+    // A path beginning with a component's name but not beneath it is a different component.
     [Fact]
     public void Trimming_a_component_leaves_a_sibling_whose_name_starts_the_same_way()
     {
@@ -253,8 +243,7 @@ public class BundlerTests
         Assert.Contains(plan.Files, f => f.Path.EndsWith(Bundler.ManifestFile, StringComparison.Ordinal));
     }
 
-    // A plugin declaring none is equally useless and equally worth saying so, in different words: there
-    // is nothing to blame the corpus for.
+    // A plugin declaring none is equally useless, and there is nothing to blame the corpus for.
     [Fact]
     public void A_plugin_declaring_no_component_warns_in_its_own_words()
         => Assert.Contains("declares no components",
@@ -267,8 +256,7 @@ public class BundlerTests
             plugin: [(Bundler.ManifestFile, Source())],
             export: [Versioned("2.3.4")]), Bundler.ManifestFile).GetProperty("version").GetString());
 
-    // The export format version is the shape of the data and the content version is what the corpus
-    // knows. Stamping the first onto the plugin would tell a reader which parser to use, over data
+    // Stamping the format version onto the plugin would tell a reader which parser to use, over data
     // whose meaning had changed underneath it.
     [Fact]
     public void The_export_format_version_is_not_the_plugin_version()
@@ -348,10 +336,9 @@ public class BundlerTests
         Assert.DoesNotContain("..", source);
     }
 
-    // The marketplace and the plugin it offers are the two words a reader types to install, and the
-    // marketplace takes the plugin's own name for both of them. Nothing in the name says where this
-    // copy sits: the same file is what gets published, so a name qualified by the path it was built
-    // at would be wrong the moment it moved.
+    // The marketplace and the plugin it offers are the two words a reader types to install. Nothing in
+    // the name says where this copy sits: the same file is what gets published, so a name qualified by
+    // the path it was built at would be wrong the moment it moved.
     [Fact]
     public void The_marketplace_takes_the_name_of_the_plugin_it_offers()
     {

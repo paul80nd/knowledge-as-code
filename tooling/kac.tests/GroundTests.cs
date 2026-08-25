@@ -90,8 +90,7 @@ public class GroundTests : IDisposable
         Assert.Equal(["LICENCE", "notes.md", "src"], New.Survey(dir).Holds);
     }
 
-    // A repository with no other content is an empty folder as far as the warning goes: `.git` is what
-    // the run is about to write into, and not something a creation is mixed in with.
+    // `.git` is what the run is about to write into, and not something a creation is mixed in with.
     [Fact]
     public void A_repository_holding_nothing_else_still_holds_nothing()
     {

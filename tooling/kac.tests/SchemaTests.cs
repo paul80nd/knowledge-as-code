@@ -46,8 +46,8 @@ public class SchemaTests
         Assert.Equal(["date", "id", "status", "title"], keys.Order(StringComparer.Ordinal));
     }
 
-    // Pairs span the whole chain rather than neighbouring keys, so a document that omits an intermediate
-    // key still has the keys either side of it constrained against one another.
+    // A document that omits an intermediate key still has the keys either side of it constrained against
+    // one another.
     [Fact]
     public void KeyOrderEdges_are_every_pair_within_a_chain_not_only_neighbours()
     {
@@ -60,9 +60,8 @@ public class SchemaTests
         Assert.Equal(3, edges.Count);
     }
 
-    // Each chain constrains only its own keys. Nothing invents an order between a universal key and a
-    // type key that no single chain places together, which is what lets the two files be written
-    // independently of one another.
+    // Nothing invents an order between a universal key and a type key, which is what lets the two files be
+    // written independently of one another.
     [Fact]
     public void KeyOrderEdges_do_not_cross_between_the_two_chains()
     {
@@ -74,10 +73,9 @@ public class SchemaTests
         Assert.Equal(2, edges.Count);
     }
 
-    //
-    // The vocabulary is closed on purpose, and a form outside it stops the load. A form that parsed to
-    // nothing would be a condition that never holds, leaving the field it guards quietly unrequired
-    // while the schema goes on claiming it is. That is the failure these cases exist to prevent.
+    // A form that parsed to nothing would be a condition that never holds, leaving the field it guards
+    // quietly unrequired while the schema goes on claiming it. So the vocabulary is closed and a form
+    // outside it stops the load.
 
     [Theory]
     [InlineData("status == accepted", "accepted", true)]
@@ -90,9 +88,8 @@ public class SchemaTests
     public void RequiredWhen_reads_every_form_the_schema_uses(string condition, string actual, bool expected)
         => Assert.Equal(expected, Schema.ParseRequiredWhen("f", condition)!.Holds(actual));
 
-    // Including for `!=`, where "not equal to anything" is tempting but wrong: the field the condition
-    // names is missing, `required-field` is already saying so, and a second finding would report one
-    // omission as two.
+    // Including for `!=`, where "not equal to anything" is tempting but wrong: `required-field` is already
+    // reporting the absent field, and a second finding would report one omission as two.
     [Theory]
     [InlineData("status == accepted")]
     [InlineData("mechanism != not-enforced")]
