@@ -14,6 +14,24 @@ surface may still change shape.
 A push to `main` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and that publish tags
 the commit and opens a release carrying the section for that version.
 
+## 0.10.0 - 2026-08-25
+
+### Added
+
+- **A section can travel cut down.** `export.sections:` in `.schema/<type>.yaml` takes `summary` and `reference`
+  alongside `full`. `summary` carries the section's opening paragraph. `reference` carries the key with no words under
+  it, leaving a consumer the record's own `path` and `links` to follow. `kac validate` no longer refuses either.
+
+- **The export manifest states the fidelity each section travelled at.** Every entry under `types` carries a
+  `sections` object naming its sections and how much of each one travels, so a consumer can tell a cut section from a
+  whole one.
+
+### Changed
+
+- **`kac validate` reports a reduced fidelity against `export.parts:` alone.** A part line carries `full`, because
+  `line:` already names key by key what of a part travels. A type declaring `summary` or `reference` there is still
+  reported as declaring a fidelity nothing carries.
+
 ## 0.9.0 - 2026-08-25
 
 ### Added

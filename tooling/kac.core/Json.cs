@@ -71,20 +71,25 @@ public record ExportPublishing(string Target, string? HumanTemplate, string? Raw
 // `ShapeVersion` is what this type's files are shaped like, and it moves alone. A consumer reading the
 // glossary is refused a bundle only where the glossary's own shape moved past what it knows, so a policy
 // gaining a key leaves it alone. `docs/cli/export.md` sets the three versions out and what moves each.
+//
+// `Sections` is the fidelity each section travelled at. It belongs to the type rather than to any one
+// record, so it is stated here instead of onto every record the type wrote.
 public record ExportedType(
-    string Type, int ShapeVersion, int Records, int Parts, string Dir, string? PartsFile);
+    string Type, int ShapeVersion, int Records, int Parts, string Dir, string? PartsFile,
+    IReadOnlyDictionary<string, string> Sections);
 
 // One record, carrying what its type's `export:` block declares and nothing else. `Fields` and
 // `Sections` are keyed by what the schema named, so a consumer reading a corpus with a type it does not
 // know still gets a document it can walk.
 //
 // Absent is `null` throughout, here and on every line of the flat file. `Exporter.Absent` is where that
-// is decided.
+// is decided. A section carried at `reference` is `null` for that reason, and a section the record never
+// wrote is absent from the map instead: two absences answering different questions about the record.
 public record ExportRecord(
     string Type,
     string Path,
     IReadOnlyDictionary<string, string?> Fields,
-    IReadOnlyDictionary<string, string> Sections,
+    IReadOnlyDictionary<string, string?> Sections,
     ExportLinks? Links);
 
 public record ExportLinks(string Human, string Raw);

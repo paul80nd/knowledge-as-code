@@ -178,17 +178,16 @@ public sealed class ExportSpec
     // vocabulary the source is drawn from.
     public IReadOnlyList<(string Key, string Source)> Line { get; init; } = [];
 
-    // Carried whole: the record's own words reach the consumer unchanged.
+    // How much of a piece travels. `docs/cli/export.md` says what each one promises a consumer.
     public const string Full = "full";
-
-    // Named, and refused. `Carried` below is what a type may declare, and `schema-dispatch` reports a
-    // type reaching for either of these rather than exporting silence under it.
     public const string Summary = "summary";
     public const string Reference = "reference";
 
-    // The fidelities an export writes. Read by `schema-dispatch` from here, so a type declaring one of
-    // the others is told so rather than exporting silence under it.
-    public static readonly IReadOnlyList<string> Carried = [Full];
+    // What a section may travel at, and what a part line may. Both are read by `schema-dispatch` from
+    // here, so a type reaching for one nothing carries is told rather than handed silence under it. A
+    // line is already a reduction: `Line` above names key by key what of a part travels.
+    public static readonly IReadOnlyList<string> Carried = [Full, Summary, Reference];
+    public static readonly IReadOnlyList<string> CarriedByParts = [Full];
 }
 
 // Where one key of a part line takes its value from. Read by `schema-dispatch` from here, so a type

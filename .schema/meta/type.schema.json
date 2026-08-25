@@ -390,7 +390,7 @@
               "$ref": "#/$defs/notes"
             },
             "fidelity": {
-              "description": "How much of each part travels.",
+              "description": "How much of each part travels. A line is already a reduction: `line:` below says key by key what of a part reaches a consumer.",
               "$ref": "#/$defs/fidelity"
             },
             "line": {
@@ -436,7 +436,7 @@
       }
     },
     "fidelity": {
-      "description": "How much of one piece travels into an export. `full` carries it whole, `summary` reduces it to a line, and `reference` leaves a breadcrumb back to the record. Written against every entry and defaulted nowhere: which of the three a consumer gets is the whole of what an export declares. `kac` carries `full`, and reports either of the others as a fidelity nothing carries.",
+      "description": "How much of one piece travels into an export. `full` carries it whole, `summary` cuts it to its opening block, and `reference` carries the key and none of its words. Written against every entry and defaulted nowhere: which of the three a consumer gets is the whole of what an export declares.",
       "enum": [
         "full",
         "summary",

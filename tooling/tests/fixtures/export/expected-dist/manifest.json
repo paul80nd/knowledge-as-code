@@ -20,7 +20,10 @@
       "records": 3,
       "parts": 5,
       "dir": "glossary",
-      "partsFile": "glossary/terms.jsonl"
+      "partsFile": "glossary/terms.jsonl",
+      "sections": {
+        "Scope": "full"
+      }
     }
   ]
 }

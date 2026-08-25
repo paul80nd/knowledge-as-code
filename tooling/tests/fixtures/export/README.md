@@ -39,9 +39,10 @@ fixture can reach. The link forms belong to `PublishingTests`, which supplies a 
 something a person can see. [The suite README](../../README.md) describes the diff and what it normalises away.
 
 **A diff under `expected-dist/` is a change to a published contract.** Regenerate it deliberately with
-`dotnet run tooling/kac-tests.cs -- --update export`, read what moved, and say in the commit message why it moved. A
-key added, renamed or dropped also moves `Exporter.FormatVersion`, which is what a consumer reads to know whether it can
-still parse what it was handed.
+`dotnet run tooling/kac-tests.cs -- --update export`, read what moved, and say in the commit message why it moved. A key
+renamed or dropped also moves `Exporter.FormatVersion`, which is what a consumer reads to know whether it can still
+parse what it was handed. A key added leaves that consumer correct and moves nothing; `docs/cli/export.md` carries the
+test both readings answer to.
 
 The other three files carry what a whole-file diff cannot, and none of them lists the export again.
 `expected-export.txt` holds lines the run must print — an export says what it could not carry, and none of that reaches

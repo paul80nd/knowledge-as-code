@@ -67,7 +67,7 @@ sections:
 export:
   fields: [colour]
   sections:
-    Summary: summary
+    Summary: gist
     Provenance: full
   parts: full
 

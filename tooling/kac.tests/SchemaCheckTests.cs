@@ -469,17 +469,36 @@ public class SchemaCheckTests
         Assert.Contains("'export.sections: Provenance'", found.Message);
     }
 
-    // Neither `summary` nor `reference` is carried yet. A type reaching for one is told so, rather than
-    // exporting silence under it.
+    // The message names the three that work, since the author is often one letter from one of them.
     [Fact]
     public void An_exported_fidelity_nothing_carries_names_the_ones_that_are_written()
     {
-        var export = new ExportSpec { Version = 1, Sections = [("Scope", ExportSpec.Summary)] };
+        var export = new ExportSpec { Version = 1, Sections = [("Scope", "gist")] };
         var found = Assert.Single(Check(Widgets(sections: ["Scope"], export: export)));
 
         Assert.Equal("schema-dispatch", found.Check.Value);
-        Assert.Contains("at fidelity 'summary', which nothing carries", found.Message);
-        Assert.Contains("'full'", found.Message);
+        Assert.Contains("at fidelity 'gist', which nothing carries there", found.Message);
+        Assert.Contains("'full', 'reference', 'summary'", found.Message);
+    }
+
+    // The two vocabularies are separate, so a fidelity sound against a section is reported against a line.
+    [Fact]
+    public void A_part_line_reaching_for_a_reduced_fidelity_is_reported()
+    {
+        var export = new ExportSpec
+        {
+            Version = 1,
+            Parts = ExportSpec.Summary,
+            PartsDeclared = true,
+            Line = [("id", PartLineSource.PartId)]
+        };
+
+        var found = Assert.Single(Check(Widgets(sections: ["Terms"], export: export,
+            parts: new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" })));
+
+        Assert.Equal("schema-dispatch", found.Check.Value);
+        Assert.Contains("'export.parts.fidelity:' at fidelity 'summary'", found.Message);
+        Assert.Contains("An export carries 'full'.", found.Message);
     }
 
     // Fidelity is what a consumer reads the export for, so an entry naming none is a declaration with
