@@ -1,7 +1,7 @@
-# The gate on a pull request: kac run over the corpus at example/ and the one at template/, a corpus
-# stood up from nothing by the packed tool, the plugin example/ builds, and the tool's own three test
-# layers. The example/ half mirrors example/azure-pipelines.yml, which is a corpus's own pipeline and
-# therefore reads no template/.
+# The gate on a pull request: kac run over each corpus under examples/ and over the one at template/,
+# a corpus stood up from nothing by the packed tool, the plugin each corpus builds, and the tool's own
+# three test layers. The corpus half mirrors examples/library/azure-pipelines.yml, which is a corpus's
+# own pipeline and therefore reads no template/.
 #
 # Nothing CI produces is written back over a file a human edits, and read-only permission is what
 # keeps it that way. `generate --check` only reports staleness, naming the command to run locally.
@@ -21,8 +21,23 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 
 jobs:
-  validate:
+  # Every corpus, in parallel. Each declares a different `types:`, so running all three is what proves
+  # the framework holds for a corpus that adopted a subset and not only for one that adopted the lot.
+  # Each writes its own .dist/ under its own root, so the three never collide.
+  corpora:
+    strategy:
+      fail-fast: false
+      matrix:
+        corpus:
+          - library
+          - engineering
+          - payments
     runs-on: ubuntu-latest
+    # kac takes the first ancestor holding a .corpus.yaml as the corpus, so the working directory is
+    # what selects one. There is no flag that names a corpus.
+    defaults:
+      run:
+        working-directory: examples/${{ matrix.corpus }}
     steps:
       # Pinned to a commit because a tag is mutable. Dependabot moves the pins.
       - name: Check out the repository
@@ -33,39 +48,22 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # Each runs from a corpus directory, because kac takes the first ancestor holding a .corpus.yaml as one.
       - name: Validate frontmatter, links and structure
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- validate
+        run: dotnet run --project ../../tooling/kac -- validate
 
       - name: Check generated output is fresh
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- generate --check
+        run: dotnet run --project ../../tooling/kac -- generate --check
 
-      # The worked corpus holds a materialised copy of what the template sends, so this is what keeps
-      # the two trees equal in both directions.
+      # Each corpus holds a materialised copy of what the template sends, so this is what keeps every
+      # tree equal to the template in both directions.
       - name: Check the corpus is in step with the template
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- update --check --from ../
-
-      # `generate --check` is askable only here. The corpus the installed tool stands up further down
-      # is generated as it is created, so nothing there holds these committed copies fresh.
-      # example/azure-pipelines.yml stays corpus-only: a corpus has no template/ to look at.
-      - name: Validate the template where it is authored
-        working-directory: template
-        run: dotnet run --project ../tooling/kac -- validate
-
-      - name: Check the template's generated output is fresh
-        working-directory: template
-        run: dotnet run --project ../tooling/kac -- generate --check
+        run: dotnet run --project ../../tooling/kac -- update --check --from ../../
 
       - name: Build the export
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- export
+        run: dotnet run --project ../../tooling/kac -- export
 
       - name: Assemble the plugin bundle
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- bundle
+        run: dotnet run --project ../../tooling/kac -- bundle
 
       # Unpinned on purpose: the bundle has to be valid against the CLI a reader actually runs, and
       # nothing in dependabot.yml would move an npm pin.
@@ -81,7 +79,6 @@ jobs:
       # and older macOS bash agree on, with no `$(...)` for an Azure pipeline to read as its macro.
       - name: Validate the assembled plugin and its marketplace
         shell: sh
-        working-directory: example
         env:
           TEMPDIR: ${{ runner.temp }}
         run: |
@@ -108,16 +105,43 @@ jobs:
             exit 1
           fi
 
+  # The template, the tool and a corpus stood up from nothing. None of it is per-corpus, so it runs
+  # once beside the matrix above.
+  tool:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      # `generate --check` is askable only here. The corpus the installed tool stands up further down
+      # is generated as it is created, so nothing there holds these committed copies fresh.
+      # A corpus's own azure-pipelines.yml reads no template/, because a corpus has none to look at.
+      - name: Validate the template where it is authored
+        working-directory: template
+        run: dotnet run --project ../tooling/kac -- validate
+
+      - name: Check the template's generated output is fresh
+        working-directory: template
+        run: dotnet run --project ../tooling/kac -- generate --check
+
+      - name: Install the Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code@latest
+
       # `bundle-empty` in the golden suite pins what an emptied plugin holds. What it cannot say is
       # whether that plugin is still valid to install, which is what this asks.
       - name: Bundle a corpus that adopted no type, and validate what it produced
         shell: sh
-        working-directory: example
+        working-directory: examples/library
         env:
           TEMPDIR: ${{ runner.temp }}
         run: |
           mkdir -p "$TEMPDIR/no-types"
-          cp -R ../.schema "$TEMPDIR/no-types/.schema"
+          cp -R ../../.schema "$TEMPDIR/no-types/.schema"
           cp -R .plugin "$TEMPDIR/no-types/.plugin"
 
           # kac reads a folder as a corpus by this file, and a corpus adopting no type declares nothing.
@@ -195,6 +219,9 @@ jobs:
   # Installs what was assembled and asks it the questions its skill describes. On both platforms
   # because development happens on macOS and the first audience is on Windows.
   #
+  # Only the library corpus, because it is the one this repository publishes and the only one whose
+  # glossary holds terms to ask about.
+  #
   # A job of its own because it needs a different checkout. The export stamps whatever commit HEAD
   # stands on into every link, and a pull_request run checks out a merge commit the raw host does
   # not serve, so the fetch would fail over the checkout rather than over the template.
@@ -206,6 +233,9 @@ jobs:
           - ubuntu-latest
           - windows-latest
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: examples/library
     steps:
       - name: Check out the commit the export will name
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -218,17 +248,14 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build the export
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- export
+        run: dotnet run --project ../../tooling/kac -- export
 
       - name: Assemble the plugin bundle
-        working-directory: example
-        run: dotnet run --project ../tooling/kac -- bundle
+        run: dotnet run --project ../../tooling/kac -- bundle
 
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest
 
       - name: Install the plugin and ask it what its skill describes
         shell: bash
-        working-directory: example
-        run: sh ../tooling/tests/round-trip.sh
+        run: sh ../../tooling/tests/round-trip.sh

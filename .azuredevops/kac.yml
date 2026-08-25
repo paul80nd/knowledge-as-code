@@ -1,12 +1,13 @@
 # The gate on a pull request for a copy of this whole repository, on Azure DevOps.
 #
-# It is for somebody building or customising the framework itself, so it runs both corpora, the
-# plugin example/ builds, and the tool's own three test layers. It mirrors
-# ../.github/workflows/kac.yml step for step.
+# It is for somebody building or customising the framework itself, so it runs every corpus under
+# examples/, the template, the plugin each corpus builds, and the tool's own three test layers. It
+# covers the same ground as ../.github/workflows/kac.yml, which splits those steps across jobs it can
+# run in parallel. A flat step list cannot, so the corpus steps are looped here instead.
 #
-# example/azure-pipelines.yml is a different file for a different reader: a corpus's own pipeline,
-# forked by each corpus, running kac over that corpus and nothing else. A corpus holds no template/
-# and no tests, so it has no use for this one.
+# examples/library/azure-pipelines.yml is a different file for a different reader: a corpus's own
+# pipeline, forked by each corpus, running kac over that corpus and nothing else. A corpus holds no
+# template/ and no tests, so it has no use for this one.
 #
 # Azure Pipelines finds no YAML by itself. Point the pipeline at this path when you create it:
 #   Pipelines -> New pipeline -> Azure Repos Git -> your repo -> Existing Azure Pipelines YAML file
@@ -32,6 +33,16 @@ pr:
     include:
       - main
 
+parameters:
+  # The corpora this repository holds, expanded into steps when the pipeline compiles. Narrow it on a
+  # manual run to gate one corpus while working on it.
+  - name: corpora
+    type: object
+    default:
+      - library
+      - engineering
+      - payments
+
 pool:
   vmImage: ubuntu-latest
 
@@ -51,19 +62,31 @@ steps:
   #
   # Each runs from a corpus directory, because kac takes the first ancestor holding a .corpus.yaml as
   # one. The tool is the one this repository builds rather than one installed on the agent.
-  - script: dotnet run --project ../tooling/kac -- validate
-    displayName: Validate frontmatter, links and structure
-    workingDirectory: $(Build.SourcesDirectory)/example
+  #
+  # Every corpus declares a different `types:`, so running all of them is what proves the framework
+  # holds for a corpus that adopted a subset and not only for one that adopted the lot.
+  - ${{ each corpus in parameters.corpora }}:
+      - script: dotnet run --project ../../tooling/kac -- validate
+        displayName: Validate frontmatter, links and structure (${{ corpus }})
+        workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
 
-  - script: dotnet run --project ../tooling/kac -- generate --check
-    displayName: Check generated output is fresh
-    workingDirectory: $(Build.SourcesDirectory)/example
+      - script: dotnet run --project ../../tooling/kac -- generate --check
+        displayName: Check generated output is fresh (${{ corpus }})
+        workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
 
-  # The worked corpus holds a materialised copy of what the template sends, so this is what keeps the
-  # two trees equal in both directions.
-  - script: dotnet run --project ../tooling/kac -- update --check --from ../
-    displayName: Check the corpus is in step with the template
-    workingDirectory: $(Build.SourcesDirectory)/example
+      # Each corpus holds a materialised copy of what the template sends, so this is what keeps every
+      # tree equal to the template in both directions.
+      - script: dotnet run --project ../../tooling/kac -- update --check --from ../../
+        displayName: Check the corpus is in step with the template (${{ corpus }})
+        workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
+
+      - script: dotnet run --project ../../tooling/kac -- export
+        displayName: Build the export (${{ corpus }})
+        workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
+
+      - script: dotnet run --project ../../tooling/kac -- bundle
+        displayName: Assemble the plugin bundle (${{ corpus }})
+        workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
 
   # `generate --check` is askable only here. The corpus the installed tool stands up further down is
   # generated as it is created, so nothing there holds these committed copies fresh.
@@ -74,14 +97,6 @@ steps:
   - script: dotnet run --project ../tooling/kac -- generate --check
     displayName: Check the template's generated output is fresh
     workingDirectory: $(Build.SourcesDirectory)/template
-
-  - script: dotnet run --project ../tooling/kac -- export
-    displayName: Build the export
-    workingDirectory: $(Build.SourcesDirectory)/example
-
-  - script: dotnet run --project ../tooling/kac -- bundle
-    displayName: Assemble the plugin bundle
-    workingDirectory: $(Build.SourcesDirectory)/example
 
   # Taken at `latest` rather than pinned, because the bundle has to be valid against the CLI a
   # reader actually runs.
@@ -96,39 +111,43 @@ steps:
   # Word for word the script in ../.github/workflows/kac.yml, so it is held to the POSIX subset Git
   # Bash and older macOS bash agree on, with no command substitution, whose `$(...)` an Azure
   # pipeline reads as its own macro before the shell sees it.
-  - script: |
-      claude plugin validate ./.dist/plugin --strict
-      claude plugin validate ./.dist --strict
+  #
+  # It follows the CLI install rather than the bundle it checks, because the install happens once and
+  # a flat step list cannot interleave it with the loop above.
+  - ${{ each corpus in parameters.corpora }}:
+      - script: |
+          claude plugin validate ./.dist/plugin --strict
+          claude plugin validate ./.dist --strict
 
-      jq -r '.included[].path' .dist/plugin/bundle.json > "$TEMPDIR/included.txt"
+          jq -r '.included[].path' .dist/plugin/bundle.json > "$TEMPDIR/included.txt"
 
-      missing=''
-      while read -r component; do
-        [ -d ".dist/plugin/$component" ] || missing="$missing $component"
-      done < "$TEMPDIR/included.txt"
+          missing=''
+          while read -r component; do
+            [ -d ".dist/plugin/$component" ] || missing="$missing $component"
+          done < "$TEMPDIR/included.txt"
 
-      if [ -n "$missing" ]; then
-        echo "bundle.json includes components the assembled plugin does not hold:$missing"
-        exit 1
-      fi
+          if [ -n "$missing" ]; then
+            echo "bundle.json includes components the assembled plugin does not hold:$missing"
+            exit 1
+          fi
 
-      find .dist/plugin/.claude-plugin -mindepth 1 -maxdepth 1 ! -name plugin.json > "$TEMPDIR/stray.txt"
+          find .dist/plugin/.claude-plugin -mindepth 1 -maxdepth 1 ! -name plugin.json > "$TEMPDIR/stray.txt"
 
-      if [ -s "$TEMPDIR/stray.txt" ]; then
-        echo "filed inside .claude-plugin/, where nothing loads it:"
-        cat "$TEMPDIR/stray.txt"
-        exit 1
-      fi
-    displayName: Validate the assembled plugin and its marketplace
-    workingDirectory: $(Build.SourcesDirectory)/example
-    env:
-      TEMPDIR: $(Agent.TempDirectory)
+          if [ -s "$TEMPDIR/stray.txt" ]; then
+            echo "filed inside .claude-plugin/, where nothing loads it:"
+            cat "$TEMPDIR/stray.txt"
+            exit 1
+          fi
+        displayName: Validate the assembled plugin and its marketplace (${{ corpus }})
+        workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
+        env:
+          TEMPDIR: $(Agent.TempDirectory)
 
   # `bundle-empty` in the golden suite pins what an emptied plugin holds. What it cannot say is
   # whether that plugin is still valid to install, which is what this asks.
   - script: |
       mkdir -p "$TEMPDIR/no-types"
-      cp -R ../.schema "$TEMPDIR/no-types/.schema"
+      cp -R ../../.schema "$TEMPDIR/no-types/.schema"
       cp -R .plugin "$TEMPDIR/no-types/.plugin"
 
       # kac reads a folder as a corpus by this file, and a corpus adopting no type declares nothing.
@@ -146,7 +165,7 @@ steps:
         exit 1
       fi
     displayName: Bundle a corpus that adopted no type, and validate what it produced
-    workingDirectory: $(Build.SourcesDirectory)/example
+    workingDirectory: $(Build.SourcesDirectory)/examples/library
     env:
       TEMPDIR: $(Agent.TempDirectory)
       SOURCES: $(Build.SourcesDirectory)
