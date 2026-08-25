@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace kac.core;
@@ -47,7 +48,10 @@ public static class Git
             p.WaitForExit();
             return new GitRun(p.ExitCode, stdout.Result, stderr.Result);
         }
-        catch
+        // What a machine with no git on it throws, which is the absence this answers null for. A read
+        // of what git said that fails is a different thing, and stopping is better than reporting it as
+        // a git nobody has installed.
+        catch (Win32Exception)
         {
             return null;
         }

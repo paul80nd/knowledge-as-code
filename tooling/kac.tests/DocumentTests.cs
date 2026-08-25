@@ -45,6 +45,19 @@ public class DocumentTests
         Assert.Equal(["id", ""], doc.FrontKeys);
     }
 
+    // Only a document YAML cannot read leaves `Front` null. The parse still runs, so the document is
+    // asked about its prose and `frontmatter-parses` is what reports the frontmatter.
+    [Fact]
+    public void Doc_Parse_leaves_frontmatter_null_where_the_yaml_will_not_read()
+    {
+        const string text = "---\nid: \"unterminated\nstatus: accepted\n---\n\n# A title\n";
+        var doc = Doc.Parse("adrs/0001-a-title.md", text, new Schema());
+
+        Assert.NotNull(doc);
+        Assert.Null(doc.Front);
+        Assert.Equal("A title", doc.H1);
+    }
+
     // The identity line's code spans are handed to the validator raw and in order. The parser makes
     // no judgement about how many there should be or what they should say, so a malformed line still
     // arrives as data the validator can quote back.

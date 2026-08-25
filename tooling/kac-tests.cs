@@ -1032,7 +1032,10 @@ static void CopyTree(string src, string dst)
 static void TryDelete(string dir)
 {
     try { if (Directory.Exists(dir)) Directory.Delete(dir, recursive: true); }
-    catch { /* best effort: it is under the system temp dir */ }
+    // A file still open leaves the tree under the system temp directory, which the machine clears.
+    catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+    {
+    }
 }
 
 static string Rel(string root, string path) => Path.GetRelativePath(root, path).Replace('\\', '/');

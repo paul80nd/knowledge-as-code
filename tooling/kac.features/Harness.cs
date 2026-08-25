@@ -36,9 +36,10 @@ public static class Harness
         finally
         {
             try { Directory.Delete(temp, recursive: true); }
-            catch
+            // A file still open leaves the tree under the system temp directory, which the machine
+            // clears. Failing the spec here would report the cleanup as a fault in the corpus.
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
             {
-                /* best-effort cleanup */
             }
         }
     }

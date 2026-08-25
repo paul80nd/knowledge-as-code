@@ -3,6 +3,7 @@ using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
@@ -176,10 +177,13 @@ public partial class Doc
                         doc.FrontKeys.Add((kv.Key as YamlScalarNode)?.Value ?? "");
                 }
             }
-            catch
+            // What a document YAML cannot read throws, and nothing else. Anything else is a defect in
+            // this parser, and catching it here would tell an author their frontmatter is at fault.
+            // `frontmatter-parses` reports what this catches.
+            catch (YamlException)
             {
                 doc.Front = null;
-            } // `frontmatter-parses` reports it downstream
+            }
         }
 
         // H1 and H2 in one walk, over the headings that divide the document: an H2's body ends at the
