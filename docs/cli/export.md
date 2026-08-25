@@ -216,21 +216,19 @@ and they travel either way.
 
 ### Three versions, and none implies another
 
-`formatVersion` is the envelope: the keys the manifest carries, the layout of the tree, and how a link template is
-built. Each entry under `types` states its own `shapeVersion` beside it, which is what that one type's files look like.
-`contentVersion` is `content-version` from `.corpus.yaml`, semantically versioned and bumped by hand, and states what
-the corpus knows.
+`formatVersion` covers the envelope: the keys the manifest carries, the layout of the tree, and how a link template is
+built. Each entry under `types` carries a `shapeVersion` covering that one type's files. `contentVersion` is
+`content-version` from `.corpus.yaml`, semantically versioned and bumped by hand, and states what the corpus knows. A
+corpus can rewrite every definition and move none of the three.
 
-A corpus can rewrite every definition and move none of the three. Each answers for its own thing.
+#### Each type is versioned where its keys are declared
 
-#### A type owns the shape of its own files
+A type declares the keys of its own part line in `export.parts.line:`, so two types exporting parts write different
+files. The glossary's terms carry a `definition` and the `not` line beneath them, both read from a term's body. A type
+whose parts are table rows has no such body, and names its columns instead.
 
-A glossary and a policy serve different consumers. A term carries a definition and the line saying what it is confused
-with. A clause carries a modal, its words and the framework reference beside it. So the type declares the keys of its
-own line, in the `export:` block of `.schema/<type>.yaml`, and states the number a consumer reads them against.
-
-One number across every type would refuse a bundle over a change nobody's consumer reads. A skill that only looks terms
-up would stop installing on the day a policy clause gained a key.
+That is why the number sits beside the keys. One number across every type would refuse a bundle over a change nobody's
+consumer reads. A plugin whose only skill looks terms up would be refused on the day some other type gained a key.
 
 #### What moves `formatVersion` or a `shapeVersion`
 
@@ -242,20 +240,16 @@ moves the number.
 Reordering the keys within a line does not, because every key is addressed by name. Reordering the records in a flat
 file does, because that order carries meaning within a chain.
 
-Which number depends on which files moved. `formatVersion` went from 1 to 2 when a term line's two resolved URLs became
-a `path` and an `anchor`. The same edit today moves the glossary's `shapeVersion`, because a term line is a glossary's
-file and no consumer of another type reads it.
+Which of the two moves follows from which files moved. `formatVersion` went from 1 to 2 when a term line's two resolved
+URLs became a `path` and an `anchor`. The same edit today moves the glossary's `shapeVersion`, because a term line is a
+glossary's file and no consumer of another type reads it.
 
-#### `bundle` reads both
+#### `bundle` is what reads them
 
-`bundle` refuses an export whose `formatVersion` is not the one this build of the tool writes, and it refuses a
-component reading a type at a shape the export does not carry. Each refusal names both numbers. `.dist/export/` is
-untracked and outlives the run that wrote it, so a bundle built after a pull is the ordinary way to meet an export this
-tool did not ship beside.
-
-A component says which shape it reads in its `requires` entry, as `glossary@1`. A bare `glossary` needs the type present
-and opens none of its files, which is what the breadcrumb hook does, and no shape refuses it.
-[`bundle`](bundle.md) is the page for what each refusal prevents.
+`bundle` refuses an export whose `formatVersion` this build does not write, and a component reading a type at a
+`shapeVersion` the export does not carry. `.dist/export/` is untracked and outlives the run that wrote it, so a bundle
+built after a pull is the ordinary way to meet an export this tool did not ship beside.
+[`bundle`](bundle.md) says what each refusal prevents and how a component names the shape it reads.
 
 ## Known limits
 

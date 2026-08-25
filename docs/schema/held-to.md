@@ -30,7 +30,7 @@ them, and every finding names the file and the key.
 | A `mirrors-section:` at a section the type's `sections:` block does not declare          | `schema-shape`       |
 | An `export.sections:` key at a section the type's `sections:` block does not declare     | `schema-shape`       |
 | An `export.fields:` entry naming a field neither the type nor `_universal.yaml` declares | `schema-shape`       |
-| An `export:` block declaring no `version:` for a consumer to read its files against      | `schema-shape`       |
+| An `export:` block declaring no `version:`, which a consumer reads its files at          | `schema-shape`       |
 | An `export.parts:` on a type carrying no `parts:` block                                  | `schema-shape`       |
 | An `export.parts:` with no `line:` beneath it, or a `line:` key naming no source         | `schema-shape`       |
 | A `line:` source outside the vocabulary the exporter fills                               | `schema-dispatch`    |

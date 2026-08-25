@@ -19,27 +19,28 @@ the commit and opens a release carrying the section for that version.
 ### Added
 
 - **A type declares the keys of its own export line.** `export.parts.line:` in `.schema/<type>.yaml` names the keys one
-  part writes and where each takes its value from, so a policy clause carries its modal and its `Alignment` cell where
-  a glossary term carries a definition. `kac export` reads that declaration and names no key of its own. The glossary's
-  line is unchanged: `terms.jsonl` comes out byte for byte as it did.
+  part writes and the source filling each, drawn from a closed vocabulary covering a part's text, its body, its modal,
+  a frontmatter field and a table column. `kac export` reads that declaration and names no key itself, so a second type
+  exporting parts costs no code. Glossary is the type that declares one, and its `terms.jsonl` is byte for byte what it
+  was.
 
 - **Each type states its own shape version in the export manifest.** `export.version:` in the schema reaches the
-  manifest as `shapeVersion` on the type's entry. `formatVersion` now describes the envelope alone, so adding a key to
-  one type's line cannot refuse a consumer that reads another.
+  manifest as `shapeVersion` on that type's entry. `formatVersion` covers the envelope alone, so a key added to one
+  type's line cannot refuse a consumer reading another.
 
 - **`kac bundle` refuses a component reading a type at a shape the export does not carry.** A `requires` entry may name
-  the shape it reads, as `glossary@1`. A bare `glossary` needs the type present and opens none of its files, and no
-  shape refuses it. A type the export omits still trims the component, as it did.
+  the shape, as `glossary@1`. A bare `glossary` asks for the type and opens none of its files. Either is trimmed, as
+  before, where the export carries no such type at all.
 
-- **`kac validate` reports an `export:` block that would carry nothing.** A block with no `version:`, an
-  `export.parts:` with no `line:`, a line key with no source, a source nothing fills, a `front.` naming a field no
-  record carries, and a `column.` naming a header the type does not declare are each an error.
+- **`kac validate` reports a `line:` that would export nothing.** A key with no source, a source nothing fills, a
+  `front.` naming a field no record carries, a `column.` naming a header the type does not declare, and a `part.lead`
+  or `part.aside` against a table row are each an error. So is an `export:` block with no `version:`.
 
 ### Changed
 
-- **`export.parts:` in a type's schema is a block rather than a fidelity.** The fidelity moves to
-  `export.parts.fidelity:`, and `export.parts.line:` joins it. A type file still carrying the older form exports no
-  parts, and `kac validate` reports the `version:` it also lacks.
+- **`export.parts:` in a type's schema is a block, and the fidelity moves inside it.** `export.parts: full` becomes
+  `export.parts.fidelity: full` with `line:` beside it. `kac validate` reports a type file still carrying the older
+  form, naming the fidelity, the `line:` and the `version:` it lacks.
 
 ## 0.8.0 - 2026-08-25
 

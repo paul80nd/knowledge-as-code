@@ -60,18 +60,9 @@ because the reader's next move differs. An export behind the tool is rebuilt, an
 the stale half. `.dist/export/` is untracked and outlives the run that wrote it, so a bundle built after a pull is the
 ordinary way to meet an export this tool did not ship beside. That case is what the field exists for.
 
-#### A shape refusal is not a trim
-
-A component names the types it reads under `metadata.components[].requires`. An entry may name a shape as well:
-`glossary@1` reads the keys of a term line, and a bare `glossary` needs the type present and opens none of its files.
-The breadcrumb hook is the second kind.
-
-A type the export left out **trims** the component, and the plugin installs doing less. A type the export carries at
-another shape **stops** the run. The difference is what the plugin would do if it shipped. A trimmed skill is absent and
-`bundle.json` says why. A skill reading keys that moved installs, runs, and returns nothing, which reads exactly like a
-term the corpus does not define.
-
-[`export`](export.md) is the page for what a shape version covers and what moves it.
+A shape mismatch stops the run for a different reason. The type is there and its files have moved, so the component
+would ship, install, and read keys that are no longer there. Trimming would hide that behind a plugin doing less.
+[`export`](export.md) says what a shape version covers and what moves it.
 
 ### Two directories under one root, and each command replaces its own whole
 
@@ -95,6 +86,9 @@ a defect, and the golden fixture asserts their equality directly.
 A component declares under `metadata.components` which record types it reads, and it travels only where the export
 carries every one of them. What that catches is the skill that finds nothing. To whoever asked it a question, that skill
 reads exactly like a corpus that does not define the term.
+
+An entry may name the shape it reads the type at, as `glossary@1`. A bare `glossary` asks for the type and opens none of
+its files, which is what the breadcrumb hook does. Both trim the same way where the export carries no glossary at all.
 
 Reading the export is what makes the criterion the same in both states `.corpus.yaml` can be in. A corpus that declared
 `types:` and one whose adoption is inferred from its folders both reach the export through `Corpus.Adopted`. And a type
