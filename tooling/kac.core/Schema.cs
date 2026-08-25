@@ -91,8 +91,7 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
 
     // The label a part's optional second block opens with, written bold: `Not` on a glossary term. Empty
     // where a type's parts carry no such block, and the whole of what makes one legible to anything but
-    // a reader. `.schema/README.md` says why the label is declared here rather than in the code that
-    // reads it.
+    // a reader. Declared on the type because it is a fact about how that type writes its parts.
     public string Aside { get; init; } = "";
 
     // The heading level a part is written at, for the heading source. H3 throughout the corpus: an H1 is
