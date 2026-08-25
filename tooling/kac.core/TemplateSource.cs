@@ -1,6 +1,6 @@
 namespace kac.core;
 
-// Where `new` reads a template from.
+// Where `new` and `update` read a template from.
 //
 // The template is fetched rather than carried inside the package, so the tool and the framework version
 // apart. `docs/cli/new.md` argues that, and argues the clone over an HTTP fetch: an Azure DevOps
@@ -53,8 +53,9 @@ public sealed class TemplateSource : IDisposable
     // tests read. Everything else is cloned shallow at `gitRef`, into a folder of its own under `into`.
     //
     // `prompt` says whether git may ask for a credential. False where nobody is watching, so a clone that
-    // needs a password fails rather than waiting for one nobody can type.
-    public static Fetch Read(string from, string? gitRef, string? path, string into, bool prompt)
+    // needs a password fails rather than waiting for one nobody can type. `verb` opens each problem, so a
+    // reader meets the message as the tail of the command they ran.
+    public static Fetch Read(string verb, string from, string? gitRef, string? path, string into, bool prompt)
     {
         if (Directory.Exists(from))
             return new Fetch(new TemplateSource { Root = Below(from, path) }, null);
@@ -71,7 +72,7 @@ public sealed class TemplateSource : IDisposable
         if (run is null)
         {
             Discard(clone);
-            return new Fetch(null, "new: could not run git. the template is cloned rather than carried, "
+            return new Fetch(null, $"{verb}: could not run git. the template is cloned rather than carried, "
                                    + "and a corpus is a git repository, so git has to be on the path.");
         }
 
@@ -79,14 +80,14 @@ public sealed class TemplateSource : IDisposable
         {
             Discard(clone);
             var at = gitRef is { Length: > 0 } named ? $" at '{named}'" : "";
-            return new Fetch(null, $"new: could not clone {from}{at}. git said:\n{Indent(run.Error)}");
+            return new Fetch(null, $"{verb}: could not clone {from}{at}. git said:\n{Indent(run.Error)}");
         }
 
         var root = Below(clone, path);
         if (!Directory.Exists(root))
         {
             Discard(clone);
-            return new Fetch(null, $"new: {from} holds no '{path}' folder, so there is no manifest to "
+            return new Fetch(null, $"{verb}: {from} holds no '{path}' folder, so there is no manifest to "
                                    + "read the template from.");
         }
 

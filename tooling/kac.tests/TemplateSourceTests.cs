@@ -34,7 +34,7 @@ public class TemplateSourceTests : IDisposable
         var from = Dir("template");
         Write(from, "manifest.yaml");
 
-        var fetch = TemplateSource.Read(from, null, null, _temp.FullName, prompt: false);
+        var fetch = TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false);
 
         Assert.Null(fetch.Problem);
         Assert.Equal(from, fetch.Source!.Root);
@@ -47,7 +47,7 @@ public class TemplateSourceTests : IDisposable
         var from = Dir("template");
         Write(from, "manifest.yaml");
 
-        TemplateSource.Read(from, null, null, _temp.FullName, prompt: false).Source!.Dispose();
+        TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Source!.Dispose();
 
         Assert.True(Directory.Exists(from));
     }
@@ -58,7 +58,7 @@ public class TemplateSourceTests : IDisposable
         var from = Dir("repo");
         Write(from, "framework/manifest.yaml");
 
-        var fetch = TemplateSource.Read(from, null, "framework", _temp.FullName, prompt: false);
+        var fetch = TemplateSource.Read("new", from, null, "framework", _temp.FullName, prompt: false);
 
         Assert.Equal(Path.Combine(from, "framework"), fetch.Source!.Root);
     }
@@ -74,7 +74,7 @@ public class TemplateSourceTests : IDisposable
         Write(from, "bin/kac.dll");
         if (!GitCli.Repository(from)) return;
 
-        var files = TemplateSource.Read(from, null, null, _temp.FullName, prompt: false).Source!.Files();
+        var files = TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Source!.Files();
 
         Assert.Contains("manifest.yaml", files);
         Assert.DoesNotContain("bin/kac.dll", files);
@@ -87,7 +87,7 @@ public class TemplateSourceTests : IDisposable
         Write(from, "manifest.yaml");
         Write(from, "template/CLAUDE.md");
 
-        var files = TemplateSource.Read(from, null, null, _temp.FullName, prompt: false).Source!.Files();
+        var files = TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Source!.Files();
 
         Assert.Equal(["manifest.yaml", "template/CLAUDE.md"], files.OrderBy(f => f, StringComparer.Ordinal));
     }
@@ -101,7 +101,7 @@ public class TemplateSourceTests : IDisposable
         Write(origin, "manifest.yaml", "version: 4\n");
         if (!GitCli.Repository(origin)) return;
 
-        var read = TemplateSource.Read(Url(origin), GitCli.Branch, null, _temp.FullName, prompt: false);
+        var read = TemplateSource.Read("new", Url(origin), GitCli.Branch, null, _temp.FullName, prompt: false);
 
         Assert.Null(read.Problem);
         using var fetch = read.Source!;
@@ -117,7 +117,7 @@ public class TemplateSourceTests : IDisposable
         Write(origin, "manifest.yaml");
         if (!GitCli.Repository(origin)) return;
 
-        var fetch = TemplateSource.Read(Url(origin), null, null, _temp.FullName, prompt: false);
+        var fetch = TemplateSource.Read("new", Url(origin), null, null, _temp.FullName, prompt: false);
         Assert.Null(fetch.Problem);
 
         var clone = fetch.Source!.Root;
@@ -129,7 +129,7 @@ public class TemplateSourceTests : IDisposable
     [Fact]
     public void A_clone_that_failed_carries_what_git_said()
     {
-        var fetch = TemplateSource.Read(Url(Path.Combine(_temp.FullName, "absent")), "main", null,
+        var fetch = TemplateSource.Read("new", Url(Path.Combine(_temp.FullName, "absent")), "main", null,
             _temp.FullName, prompt: false);
 
         Assert.Null(fetch.Source);
@@ -145,7 +145,7 @@ public class TemplateSourceTests : IDisposable
         Write(origin, "manifest.yaml");
         if (!GitCli.Repository(origin)) return;
 
-        var fetch = TemplateSource.Read(Url(origin), null, "framework", _temp.FullName, prompt: false);
+        var fetch = TemplateSource.Read("new", Url(origin), null, "framework", _temp.FullName, prompt: false);
 
         Assert.Null(fetch.Source);
         Assert.Contains("holds no 'framework' folder", fetch.Problem);
@@ -155,7 +155,7 @@ public class TemplateSourceTests : IDisposable
     public void A_failed_clone_leaves_no_folder_behind()
     {
         var into = Dir("into");
-        TemplateSource.Read(Url(Path.Combine(_temp.FullName, "absent")), null, null, into, prompt: false);
+        TemplateSource.Read("new", Url(Path.Combine(_temp.FullName, "absent")), null, null, into, prompt: false);
 
         Assert.Empty(Directory.EnumerateFileSystemEntries(into));
     }

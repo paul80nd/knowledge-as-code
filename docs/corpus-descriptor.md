@@ -4,11 +4,11 @@
 
 `.corpus.yaml` sits at the root of a corpus and says what that corpus is, and where it stands against the shared
 framework. Everything else a corpus holds arrives from a template and can be taken again. This file is the corpus's own,
-so nothing syncs it and nothing reconciles it.
+and no update writes over it.
 
 [`new`](cli/new.md) writes it when the corpus is created, from what that invocation was told, and it arrives commented
-key by key. After that it is yours: you edit it by hand, and [`mechanism --sync`](cli/mechanism.md) stamps three of its
-keys. The longer worked copy is
+key by key. After that it is yours: you edit it by hand, and [`update`](cli/update.md) stamps four of its keys. The
+longer worked copy is
 [`example/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/example/.corpus.yaml), commented
 throughout, and it is the one to read while changing yours.
 
@@ -17,18 +17,18 @@ throughout, and it is the one to read while changing yours.
 **It is not the schema.** `.schema/` says what a record of each type must carry. This file says which of those types the
 corpus adopted, and says nothing about their shape.
 
-**It is not configuration for a run.** It records decisions, and a command reads them. `--against` is the one flag that
-replaces a value here, and only for the run it is passed to.
+**It is not configuration for a run.** It records decisions, and a command reads them. `--from`, `--ref`, `--path` and
+`--policy` each replace a value here, and only for the run they are passed to.
 
 ## Three versions live here
 
 None of them is called `version` alone, because each answers a different question.
 
-| Key                         | Answers                                 | Written by | Moved by           |
-|-----------------------------|-----------------------------------------|------------|--------------------|
-| `descriptor-version`        | the format of this file                 | `new`      | `mechanism --sync` |
-| `content-version`           | the version of what this corpus *knows* | `new`      | by hand            |
-| `upstream.template-version` | the template shape this corpus took     | `new`      | `mechanism --sync` |
+| Key                         | Answers                                 | Written by | Moved by |
+|-----------------------------|-----------------------------------------|------------|----------|
+| `descriptor-version`        | the format of this file                 | `new`      | `update` |
+| `content-version`           | the version of what this corpus *knows* | `new`      | by hand  |
+| `upstream.template-version` | the template shape this corpus took     | `new`      | `update` |
 
 `content-version` is semantically versioned: major where a meaning changed or a published URL broke, minor for
 additions, patch for wording. Quote it when one corpus tells another which version of the content it holds. Nothing
@@ -39,23 +39,10 @@ refuses to load because the number moved. It is a notification.
 ```yaml
 corpus: knowledge-as-code
 content-version: "0.1.0"
-role: source
 ```
 
-`role` is `source` or `consumer`.
-
-A **source** answers for the framework. Changes are introduced, verified or reconciled there, and then shared with the
-corpora that took a copy. A source carries the verification layer: the tests, the fixtures they read, and the guidance
-for changing the tool.
-
-A **consumer** takes framework content from a source. It carries the tool and uses it. It holds none of the machinery
-that proves the tool, because the tool reaches it already proven.
-
-Any corpus may author a change. Real content is the only thing that reveals a schema is wrong, so the corpus that found
-the problem is often the one best placed to fix it. A change is settled once a source accepts it.
-
-The role says what part a corpus plays. It does not set the direction of travel, and a source may itself sync from
-another source further upstream.
+`corpus` is what this corpus calls itself. An export states it, so a consumer holding several exports can tell whose
+vocabulary it is reading. The folder it vendored the files into may not say.
 
 ## Publishing
 
@@ -96,13 +83,12 @@ upstream:
   path: template
   ref: main
   commit: 5fa039b03c1e4d7a
-  template-version: 6
+  template-version: 4
   taken-on: "2026-08-08"
 ```
 
-Where this corpus takes the framework from, if anywhere. `url` says it takes from an upstream at all, and
-`mechanism --check` uses it as the default for `--against`. A `--sync` refuses to run without it. The corpus at the head
-of the chain names none, so a sync there would have nowhere to run from.
+Where this corpus takes the framework from. `url` is what [`update`](cli/update.md) reads when no `--from` is passed,
+and a run with neither has nothing to take.
 
 `path` is the folder inside that repository holding `manifest.yaml`. Leave it out where the manifest sits at the
 repository root, which is where this project keeps it.
@@ -110,12 +96,16 @@ repository root, which is where this project keeps it.
 `ref` is the branch or tag to take from, and it is followed. `commit` is what the last take resolved to, recorded and
 never read back. Together they say that a corpus tracks a moving line, and that you can still see exactly what arrived.
 
-`taken-on` is the day the framework last came down. `--sync` writes it beside `template-version`, so leave both to it.
-It leaves `commit` alone, because a sync reads a directory rather than a git ref and has no commit to record.
+`taken-on` is the day the framework last came down. `update` writes it beside `commit` and `template-version`, so leave
+all three to it. A template read from a folder resolves no commit, and `commit` is then left as it stands.
 
 [`new`](cli/new.md) writes the whole block when the corpus is created, from the flags it was given and the clone it
 made. A `new` that read a folder rather than a repository leaves `ref` and `commit` bare, because a folder has no ref to
 follow and no commit to resolve.
+
+Taking from a template does not make a corpus a lesser one. Real content is the only thing that reveals a schema is
+wrong, so the corpus that found the problem is often the one best placed to fix it. A change is settled once the
+repository serving the template accepts it.
 
 ## How far an update goes
 
@@ -139,19 +129,23 @@ types:
   - policies
 ```
 
-Index generation covers the types listed here and no others. [`new`](cli/new.md) writes the list, because a corpus
-created by it has already been asked. Omit the key and you have not declared yet, so the tool reads adoption off the
-folders it finds. A type counts where both halves are there, meaning the page and the folder.
+Validation, index generation and what an update writes all cover the types listed here and no others.
+[`new`](cli/new.md) writes the list, because a corpus created by it has already been asked. Omit the key and you have
+not declared yet, so the tool reads adoption off the folders it finds. A type counts where both halves are there,
+meaning the page and the folder.
 
 Declaring turns "these folders happen to be here" into "these are the types this corpus chose", and validation can then
 hold the corpus to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared,
 standing a type up without adopting it is a defect [`validate`](cli/validate.md) reports.
 
+`kac update --add-type` and `--drop-type` are what change the list, so the name and the type's files move together.
+Editing it by hand leaves the corpus holding a type it does not claim, or claiming one it does not hold.
+
 ## What an export leaves behind
 
 ```yaml
 export:
-  exclude: []
+  exclude: [ ]
 ```
 
 Empty by default, and that is the important part. A record still in draft travels, and so does one whose review date has
@@ -173,9 +167,8 @@ skip:
 ```
 
 Each entry names a file and says why. A path listed here is neither read nor written, in either direction, so this is
-the one way to say "I own this and I mean it" about a file the framework would otherwise reclaim on every run.
-`mechanism --check` reports these as accepted instead of failing on them, and `--sync` steps over them. Delete an entry
-once the file matches upstream again.
+the one way to say "I own this and I mean it" about a file the framework would otherwise reclaim on every run. `update`
+steps over them and reports what it stepped over. Delete an entry once the file matches the framework again.
 
 The reason is for whoever opens the file next, and it is the only thing standing between a deliberate divergence and one
 nobody remembers making.

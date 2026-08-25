@@ -25,9 +25,9 @@ between each pair of markers is rewritten, so the words around a generated block
 **It is not `export`.** `generate` writes Markdown into the corpus for a person to read. `export` writes JSON outside it
 for an agent. Both are built from the same frontmatter, and a change to one implies nothing about the other.
 
-**`generate --check` is not `mechanism --check`.** This one recomputes a corpus's generated content from that corpus's
-own records and compares. The other compares a corpus's authored files against an upstream copy. A file can be fresh and
-drifted, or in step and stale.
+**`generate --check` is not `update --check`.** This one recomputes a corpus's generated content from that corpus's own
+records and compares. The other compares a corpus's authored files against the template it took them from. A file can be
+fresh and behind, or in step and stale.
 
 **It does not stand a type up.** Generation covers what the corpus adopted, so a folder appearing without its type
 declared is not something `generate` fills in. `validate` reports it.

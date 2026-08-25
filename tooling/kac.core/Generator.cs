@@ -661,11 +661,11 @@ public static class Generator
 
     // A page with its generated blocks emptied, leaving the markers and everything a person wrote.
     //
-    // `mechanism --check` compares this, so a shared page may carry a block derived from the corpus holding
-    // it. Two corpora running the same framework hold the same prose and a different table beneath it, and
-    // both are correct. The division is exact: `generate --check` answers for the generated half against
-    // the local schema, and `mechanism --check` answers for the authored half against the reference.
-    // Neither has an opinion about the other's half.
+    // `update` compares this, so an overlay page may carry a block derived from the corpus holding it. Two
+    // corpora running the same framework hold the same prose and a different table beneath it, and both are
+    // correct. The division is exact: `generate --check` answers for the generated half against the local
+    // schema, and `update --check` answers for the authored half against the template. Neither has an
+    // opinion about the other's half.
     //
     // The markers stay, so deleting a block, rather than regenerating it, is still drift. An unclosed
     // marker leaves the rest of the page compared as written, which is the honest reading of a file whose

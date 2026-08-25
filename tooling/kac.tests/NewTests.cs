@@ -208,7 +208,7 @@ public class NewTests
         Assert.Contains("corpus: acme-corpus\n", yaml);
         Assert.Contains("types:\n  - adrs\n  - glossary\n", yaml);
         Assert.Contains($"descriptor-version: {CorpusDescriptor.Format}\n", yaml);
-        Assert.Contains($"role: {CorpusDescriptor.Consumer}\n", yaml);
+        Assert.Contains($"update-policy: {CorpusDescriptor.Cautious}\n", yaml);
     }
 
     [Fact]
@@ -303,12 +303,12 @@ public class NewTests
     [InlineData(null, "0.1.0")]           // a template asking for nothing
     [InlineData("", "0.1.0")]
     public void A_tool_new_enough_for_the_template_is_not_stopped(string? minimum, string tool)
-        => Assert.Null(New.TooOldFor(minimum, tool));
+        => Assert.Null(New.TooOldFor(minimum, tool, "new"));
 
     [Fact]
     public void A_tool_older_than_the_template_is_told_which_version_to_get()
     {
-        var problem = New.TooOldFor("0.6.0", "0.5.0");
+        var problem = New.TooOldFor("0.6.0", "0.5.0", "new");
 
         Assert.Contains("needs kac 0.6.0 or newer", problem);
         Assert.Contains("this is 0.5.0", problem);
@@ -316,11 +316,11 @@ public class NewTests
 
     [Fact]
     public void A_minimum_that_is_not_a_version_is_reported_as_one()
-        => Assert.Contains("which is not a version", New.TooOldFor("latest", "0.6.0"));
+        => Assert.Contains("which is not a version", New.TooOldFor("latest", "0.6.0", "new"));
 
     [Fact]
     public void A_tool_version_nothing_can_parse_stops_nothing()
-        => Assert.Null(New.TooOldFor("0.6.0", "dev"));
+        => Assert.Null(New.TooOldFor("0.6.0", "dev", "new"));
 
     // The manifest this repository ships, which is the one thing here read from disk. A rule naming a
     // system the tool cannot offer withholds its files from every corpus, and the fault is easiest to

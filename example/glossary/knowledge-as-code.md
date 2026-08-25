@@ -38,15 +38,10 @@ An addressable row in a policy or standard, carrying one obligation and an id so
 
 **Not:** a section. A clause sits in one, and its id lets an auditor quote the obligation on its own.
 
-### Consumer
-
-A corpus that takes the framework from somewhere else, holding the tool without the tests that prove it.
-
-**Not:** a lesser corpus. Any corpus may author a change, and only real content reveals that a schema is wrong.
-
 ### Corpus
 
-One repository of knowledge records, with the schema and tooling it runs and a descriptor saying which part it plays.
+One repository of knowledge records, with the schema and tooling it runs and a descriptor saying what it is and where it
+takes the framework from.
 
 **Not:** the wiki, which is how a corpus is published and read.
 
@@ -58,14 +53,10 @@ The loose word for anything written down here; the tool's summary line uses it t
 
 ### Drift
 
-A local edit to a file the framework owns, which the mechanism check reports as a defect.
+A local edit to a file the framework owns, which `kac update --check` reports and the next update takes back.
 
-**Not:** a change to a forked file. A fork is a corpus's to change, and nothing compares it against upstream.
-
-### Forked
-
-A file the framework provides as a starting point and the corpus then owns, so a difference from upstream is a decision
-rather than a defect.
+**Not:** a change to a seed file. A seed is the corpus's own from the moment it lands, and nothing holds it to the
+template.
 
 ### Framework
 
@@ -87,8 +78,8 @@ Knowledge as Code, written short: the framework itself, and what the tool `kac` 
 
 ### Layer
 
-Which kind of file this is: synced, forked, generated, local, verification or ignored. The portability manifest declares
-it once, and the mechanism check reads it to decide what a difference from upstream means.
+What a corpus receives of a file, and what happens to it next: overlay, seed, removed or withheld. The template manifest
+declares it once, and `kac update` reads it file by file.
 
 ### Lifecycle
 
@@ -100,7 +91,12 @@ Whether a type's records stay current or become immutable once accepted, fixed b
 
 The framework's files as they sit in one corpus: the half that travels.
 
-**Not:** the knowledge. `kac mechanism` compares that half against an upstream corpus and reads no record.
+**Not:** the knowledge. `kac update` takes that half from a template again and reads no record.
+
+### Overlay
+
+A file identical in every corpus running the framework, and the framework's rather than the corpus's. An edit to one is
+drift, and the next update takes it back.
 
 ### Page
 
@@ -121,17 +117,10 @@ A behaviour a type declares in its schema, which either dispatches to a check or
 **Not:** a check. A check runs; a rule may be a statement of intent, and the type's page says which under *Declared, not
 yet enforced*.
 
-### Source
+### Seed
 
-A corpus that answers for the framework, carrying the tests and fixtures that prove the tool.
-
-**Not:** upstream. The role says what part a corpus plays rather than which way content travels. A source may itself
-sync from a source further upstream.
-
-### Synced
-
-A file identical in every corpus running the framework. A local edit to one is drift: change it upstream and sync it
-down.
+A file the framework provides as a starting point and the corpus then owns, so a difference from the template is a
+decision rather than a defect.
 
 ### Template
 
@@ -153,4 +142,4 @@ file.
 
 ### Upstream
 
-The corpus this one takes the framework from, named in the descriptor at the root.
+The repository this corpus takes the framework from, named in the descriptor at the root.

@@ -92,7 +92,7 @@ public static class GeneratedFiles
     // what it should is left alone, so a regeneration that changes nothing touches nothing and says so.
     // The plan decided all of it, so this asks the disk nothing.
     //
-    // `generate` and `mechanism --sync` both end here, so a sync writes what a generation would write and
+    // `generate` and `update` both end here, so an update writes what a generation would write and
     // the two cannot come to different files.
     public static List<string> Write(string corpusRoot, IEnumerable<GeneratedFile> plan)
     {

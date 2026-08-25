@@ -10,8 +10,8 @@ Run at the end of every other playbook. A push to `main` is rejected, so this is
    whenever [`kac.csproj`](../../../../tooling/kac/kac.csproj) names a version nuget.org does not hold, and the release
    carries the matching section from [`CHANGELOG.md`](../../../../tooling/kac/CHANGELOG.md). A section written after the
    merge reaches nobody, and `ChangelogTests` fails a version with none.
-3. **Check the trees still match.** `TemplateTests` holds the overlay files byte-equal, and a `seed` file is yours to
-   copy across.
+3. **Check the trees still match.** Run `kac update --check --from ../` inside `example/`, which holds the overlay
+   files equal in both directions. A `seed` file is yours to copy across, and nothing catches it.
 4. **Run the layers your change touches**, one `kac` invocation at a time. Where you are unsure, run all four.
 5. **Write the commit message to `technical-writing`.** The subject says what changed, imperative and without a full
    stop. The body says why, and it is the one place describing what used to be true is correct.

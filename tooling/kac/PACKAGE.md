@@ -18,8 +18,8 @@ dotnet tool install --global KnowledgeAsCode.Tool
 
 ## Start a corpus
 
-`kac new` turns the folder you are standing in into one. It takes the framework from the repository below, writes what
-a corpus is made of, and stops short of committing so you can read what it staged.
+`kac new` turns the folder you are standing in into one. It takes the framework from the repository below, writes what a
+corpus is made of, and stops short of committing so you can read what it staged.
 
 ```bash
 mkdir my-corpus && cd my-corpus
@@ -34,10 +34,14 @@ run it from anywhere inside one.
 ```bash
 kac validate     # frontmatter, links, structure, clauses and the graph
 kac generate     # regenerate the indexes and the generated blocks in each type page
+kac update       # take a newer framework from the template this corpus was made from
 kac export       # write the corpus to .dist/export/ as data a consumer reads instead of cloning
 kac bundle       # assemble that export and .plugin/ into an installable plugin
 kac checks       # list every check the validator implements
 ```
+
+`kac update` writes into the working tree and commits nothing, so `git diff` is where you read what arrived.
+`kac update --check` reports the same and writes nothing, which is the form a pipeline runs.
 
 `kac --help` lists them, and every command carries its own `--help`.
 

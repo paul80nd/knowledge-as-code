@@ -1,24 +1,24 @@
-# knowledge-as-code — corpus descriptor
+# knowledge-as-code: corpus descriptor
 #
-# Says what this corpus is and where it stands against the shared framework.
+# Says what this corpus is and where it stands against the framework it took.
 #
-# The portability manifest (`tooling/manifest.yaml`) defines what is shared
-# between corpora. This file records:
-# - the part this corpus plays in the framework, and where it publishes
+# The template manifest (`manifest.yaml`, at this repository's root) says which files a corpus is made
+# of. This file records:
+# - what this corpus is called, and where it publishes
 # - which version of its own content this corpus is on
 # - which template version it runs, and where it takes that from
 # - which record types it has adopted
-# - any accepted differences from the shared baseline
+# - any file it holds differently on purpose
 #
 # Three versions live here, so none of them is called `version` alone.
 #
-# The file is this corpus's own: never synced, never reconciled. It sits at the
-# repository root rather than with the shared mechanism.
+# The file is this corpus's own: never overlaid, never reconciled. It sits at the repository root rather
+# than with the framework's files.
 #
-# Written by `kac mechanism --sync`. Read by `kac mechanism --check`.
+# https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key here means.
 
-# The version of this file's own format. Stamped by `kac mechanism --sync`,
-# because the shape of the file arrives with the mechanism, not with the corpus.
+# The version of this file's own format. Stamped by `kac update`, because the
+# shape of the file is the tool's rather than the corpus's.
 descriptor-version: 1
 
 # The name of this corpus.
@@ -36,35 +36,13 @@ corpus: knowledge-as-code
 # - patch, for wording
 #
 # The number is a notification and nothing refuses to load because it moved.
-# Bumped by hand, and `kac mechanism --check` reports what it finds here.
+# Bumped by hand, and nothing but a person writes it.
 content-version: "0.1.0"
-
-# The role of this corpus. One of: source | consumer.
-role: source
-
-# source
-#   A corpus that answers for the framework. We introduce, verify or reconcile
-#   framework changes here, then share them with the corpora that took a copy.
-#
-#   A source carries the verification layer: the tests, the fixtures they read
-#   and the guidance for changing the tool.
-#
-# consumer
-#   A corpus that takes framework content from a source. It carries the tool and
-#   uses it, and holds none of the machinery that proves the tool, because the
-#   tool reaches it already proven.
-#
-# Any corpus may author a change, and real content is the only thing that reveals
-# a schema is wrong. A change is not settled until a source accepts it.
-#
-# The role says what part a corpus plays. It does not set the direction of travel:
-# a source may itself sync from another source further upstream.
 
 # How this corpus is published. One of: azure-devops-wiki | github | mkdocs | none.
 publishing-target: github
 
-# Recorded rather than inferred, so `kac mechanism --check` can name the publishing
-# file this corpus is missing, and so `kac export` can build links that a reader and
+# Recorded rather than inferred, so `kac export` can build links that a reader and
 # an agent can each follow.
 #
 # `github` says the repository is itself the published form: a record is read rendered
@@ -78,7 +56,7 @@ publishing-target: github
 # Where the published form of this corpus is served from.
 #
 # Only where it is served from lives here. How a record's path and a term's anchor join a
-# base is a property of `publishing-target` and lives in the mechanism, so every corpus on
+# base is a property of `publishing-target` and lives in the tool, so every corpus on
 # one target builds the same link and none of them writes the rule down a second time.
 #
 # Absent where `publishing-target: none`, which is the one value that needs no base.
@@ -97,10 +75,13 @@ publishing:
   # Absent where the corpus is the repository, which is the ordinary case.
   path-prefix: example
 
-# Where this corpus takes the framework from, if anywhere.
+# Where this corpus takes the framework from.
+#
+# This corpus sits inside the repository that serves the template, so it takes from the folder above it
+# rather than over the network. `kac update --check --from ../` is what holds it to that template.
 upstream:
   # URL of the repository serving the template.
-  url: # unset — this corpus is the source
+  url: ../
 
   # The folder inside that repository holding `manifest.yaml`. Absent means its root, which is where
   # this repository keeps it.
@@ -114,11 +95,11 @@ upstream:
   # arrived without the corpus being pinned to it.
   commit:
 
-  # The version of the template's shape this corpus is on. Stamped by `kac mechanism --sync`.
-  template-version: 6
+  # The version of the template's shape this corpus is on. Stamped by `kac update`.
+  template-version: 4
 
   # The day the framework last arrived.
-  taken-on: "2026-08-08"
+  taken-on: "2026-08-24"
 
 # How far an update goes. One of: cautious | full.
 #
@@ -130,7 +111,7 @@ upstream:
 update-policy: cautious
 
 # The record types this corpus has adopted.
-# Validation and index generation cover the types listed here.
+# Validation, index generation and what an update writes all cover the types listed here.
 #
 # A corpus that omits the key has not declared yet, and the tool reads adoption
 # off the folders it finds instead. Declaring turns "these folders happen to be
@@ -157,10 +138,9 @@ export:
 
 # Files this corpus deliberately holds differently from the framework.
 #
-# Each entry names the file and says why. Neither is read nor written, in either direction: this is the
-# one way to say "I own this" about a file the overlay would otherwise reclaim on every run.
-# `kac mechanism --check` reports these as accepted rather than as errors, and `--sync` steps over them.
-# Delete an entry once the file matches upstream again.
+# Each entry names the file and says why. `kac update` reads and writes neither, in either direction, so
+# this is the one way to say "I own this" about a file the overlay would otherwise reclaim on every run.
+# Delete an entry once the file matches the framework again.
 #
 # Example:
 #

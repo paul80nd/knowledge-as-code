@@ -18,8 +18,7 @@ public record Placement(string Layer, string Path, string? Ci = null);
 
 public class Manifest
 {
-    // The layers a template manifest sorts its files into. The portability manifest names four of its
-    // own, so this is the template's vocabulary rather than every manifest's.
+    // The layers a manifest sorts its files into, and the whole of what a rule may declare.
     public const string Overlay = "overlay";
     public const string Seed = "seed";
     public const string Withheld = "withheld";
@@ -27,8 +26,8 @@ public class Manifest
 
     public List<ManifestRule> Rules = [];
 
-    // The mechanism's version, which a sync stamps into the receiving corpus's descriptor. Read from the
-    // reference rather than assumed, so a corpus taking from an older upstream records what it took.
+    // The template's version, which an update stamps into the receiving corpus's descriptor. Read from
+    // the template rather than assumed, so a corpus taking from an older upstream records what it took.
     public int Version;
 
     // The oldest `kac` that can read this template, or null where the manifest names none. The template
@@ -39,13 +38,8 @@ public class Manifest
     // What a template's manifest is called, wherever the repository serving it keeps the file.
     public const string FileName = "manifest.yaml";
 
-    public static Manifest Load(string corpusRoot) =>
-        LoadFrom(Path.Combine(corpusRoot, "tooling", FileName));
-
-    // Two manifests are written in this shape and neither is the other's business: the portability
-    // manifest says which of a corpus's files are shared with the framework, and the template manifest
-    // says which files a corpus is made of. What they share is the grammar (ordered rules of globs,
-    // first match winning), so the reader takes a path rather than assuming one.
+    // Read from a path rather than from a corpus root. The manifest is the template's, and a template
+    // repository keeps it wherever it likes: at the root, or in the folder `upstream.path` names.
     public static Manifest LoadFrom(string manifestFile)
     {
         var m = new Manifest();
@@ -122,7 +116,7 @@ public record SkippedFile(string Path, string? Reason);
 public class CorpusDescriptor
 {
     // The format `.corpus.yaml` is written in. The tool's own number: a corpus cannot know the shape a
-    // newer mechanism writes, so a sync stamps this alongside what it took.
+    // newer tool writes, so an update stamps this alongside what it took.
     public const int Format = 1;
 
     // Keys the descriptor once used, beside what each is called now. `version:` alone said the file's own
@@ -133,21 +127,19 @@ public class CorpusDescriptor
     // that has taken a copy is a repository someone owns, so the tool names the old key, the new one and
     // the file, and stops. Rewriting it would save a single edit and break the file's own promise.
     // A key is named by the block it sits in, so `upstream.mechanism-version` is found where it lives
-    // rather than at the root. `New` is null where the key was dropped and nothing replaced it.
-    private static readonly (string Section, string Old, string? New)[] Renamed =
+    // rather than at the root. `New` is null where the key was dropped, and `Gone` is then what to say
+    // instead of naming a replacement.
+    private static readonly (string Section, string Old, string? New, string Gone)[] Renamed =
     [
-        ("", "version", "descriptor-version"),
-        ("", "accepted-divergences", "skip"),
-        ("upstream", "mechanism-version", "template-version"),
-        ("upstream", "synced-on", "taken-on"),
-        ("upstream", "synced-from", null)
+        ("", "version", "descriptor-version", ""),
+        ("", "accepted-divergences", "skip", ""),
+        ("", "role", null,
+            "it said whether a corpus carried the tests that prove the tool, which no corpus does."),
+        ("upstream", "mechanism-version", "template-version", ""),
+        ("upstream", "synced-on", "taken-on", ""),
+        ("upstream", "synced-from", null,
+            "where the framework is taken from is `upstream.url`, and what was taken is `upstream.commit`.")
     ];
-
-    // The part a corpus plays. A source answers for the framework and carries the layer that proves the
-    // tool; a consumer takes both already proven. `docs/corpus-descriptor.md` argues the pair.
-    public const string Source = "source";
-    public const string Consumer = "consumer";
-    public string Role = "";
 
     // Where the framework comes from, and what was last taken from it. `Path` is null where the manifest
     // sits at the upstream repository's root. `docs/corpus-descriptor.md` covers the rest of the block.
@@ -206,8 +198,8 @@ public class CorpusDescriptor
     // records mean, semantically versioned, bumped by hand and read by whatever publishes an export. It
     // stays a string because it is a version and not a count, and nothing but a person writes it.
     //
-    // Each is null where the descriptor has not stated one, and `mechanism --check` reports that as not
-    // declared. Only the corpus can say what it knows, so the tool never supplies a number here.
+    // Each is null where the descriptor has not stated one. Only the corpus can say what it knows, so the
+    // tool never supplies `ContentVersion`, and an update stamps the other two.
     public int? DescriptorVersion;
     public string? ContentVersion;
     public int? TemplateVersion;
@@ -226,12 +218,6 @@ public class CorpusDescriptor
     // question to the filesystem; the callers that ask are the ones that already know what is on disk.
     public bool Adopted(string type) => Types is null || Types.Contains(type, StringComparer.Ordinal);
 
-    // Whether this corpus carries the layer that proves the mechanism. A consumer takes a tool already
-    // proven upstream, so a fixture tree it will never run sits between its readers and the code they
-    // came for. Every other role answers for the tool and holds the tests that prove it. A descriptor
-    // naming no role answers yes, as `Adopted` does: a corpus that has said nothing is held to everything.
-    public bool Verifies => !Role.Equals(Consumer, StringComparison.Ordinal);
-
     public static CorpusDescriptor Load(string corpusRoot)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
@@ -239,7 +225,6 @@ public class CorpusDescriptor
         if (!File.Exists(path)) return descriptor;
 
         var root = Yaml.LoadFile(path);
-        descriptor.Role = Yaml.Str(Yaml.Get(root, "role")) ?? "";
 
         var upstream = Yaml.Get(root, "upstream");
         var url = Yaml.Str(Yaml.Get(upstream, "url"));
@@ -279,26 +264,25 @@ public class CorpusDescriptor
 
     // What to tell an author whose descriptor still uses a renamed key, or null where none is in use.
     //
-    // Both halves of `mechanism` stop on this. A check would otherwise report on a file it has misread,
-    // and a sync would write a stamp beside a key it does not read. The message carries the old key, the
-    // new one and the path, so the fix is mechanical.
+    // `update` stops on this. It would otherwise report on a file it has misread, and write a stamp
+    // beside a key it does not read. The message carries the old key, the new one and the path, so the
+    // fix is mechanical.
     public static string? RenamedKeyInUse(string corpusRoot)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
         if (!File.Exists(path)) return null;
 
         var root = Yaml.LoadFile(path);
-        foreach (var (section, old, replacement) in Renamed)
+        foreach (var (section, old, replacement, gone) in Renamed)
         {
             var at = section.Length == 0 ? root : Yaml.Get(root, section);
             if (Yaml.Get(at, old) is null) continue;
 
             var name = section.Length == 0 ? old : $"{section}.{old}";
             return replacement is null
-                ? $"mechanism: {path} still says `{name}:`, which nothing reads. Delete it. Where the "
-                  + "framework was taken from is `upstream.url`, and what was taken is `upstream.commit`."
-                : $"mechanism: {path} still says `{name}:`. Rename it to `{replacement}:`, which says what "
-                  + "the value is about. This corpus states three versions: `descriptor-version` for the "
+                ? $"update: {path} still says `{name}:`, which nothing reads. delete it: {gone}"
+                : $"update: {path} still says `{name}:`. rename it to `{replacement}:`, which says what "
+                  + "the value is about. this corpus states three versions: `descriptor-version` for the "
                   + "file's own format, `content-version` for what the corpus knows, and "
                   + "`upstream.template-version` for the template it took.";
         }
@@ -306,18 +290,44 @@ public class CorpusDescriptor
         return null;
     }
 
-    // Record what a sync took: the format this tool writes, the template's version, and the day it
-    // arrived. The corpus's own `content-version` is untouched, because what the corpus knows is not
-    // something an upstream can tell it.
+    // Rewrite the `types:` block, which is what `--add-type` and `--drop-type` come to in the descriptor.
     //
-    // `upstream.commit` is left alone. A sync reads a directory rather than a git ref, so it has no
-    // commit to record, and writing one it guessed at would be worse than the key staying empty.
+    // The items are replaced whole, because the list is the value, and everything around them is left as
+    // it stands. Line-oriented for the reason `Stamp` is: most of this file is commentary, and a YAML
+    // round-trip would throw all of it away.
     //
-    // This rewrites three lines rather than re-serialising the file, because the descriptor is mostly
-    // commentary. Someone opens it to read what each key means and when a divergence is worth accepting,
+    // A descriptor stating no `types:` is left alone. That corpus has not declared, and opening the block
+    // here would turn "these folders happen to be here" into a decision nobody made.
+    public static void SetTypes(string corpusRoot, IReadOnlyList<string> types)
+    {
+        var path = Path.Combine(corpusRoot, ".corpus.yaml");
+        if (!File.Exists(path)) return;
+
+        var lines = new List<string>(Files.ReadLf(path).Split('\n'));
+        var start = lines.FindIndex(l => l.StartsWith("types:", StringComparison.Ordinal));
+        if (start < 0) return;
+
+        var end = start + 1;
+        while (end < lines.Count && lines[end].TrimStart().StartsWith("- ", StringComparison.Ordinal)) end++;
+
+        lines.RemoveRange(start + 1, end - start - 1);
+        lines.InsertRange(start + 1, types.Select(t => $"  - {t}"));
+
+        File.WriteAllText(path, string.Join('\n', lines).TrimEnd('\n') + "\n");
+    }
+
+    // Record what an update took: the format this tool writes, the commit it resolved, the template's
+    // version, and the day it arrived. The corpus's own `content-version` is untouched, because what the
+    // corpus knows is not something an upstream can tell it.
+    //
+    // `commit` is null where the template was read from a folder. A folder has no ref to follow, so the
+    // key is left as it stands rather than filled with a commit nobody resolved.
+    //
+    // This rewrites lines rather than re-serialising the file, because the descriptor is mostly
+    // commentary. Someone opens it to read what each key means and when owning a file is worth declaring,
     // and a YAML round-trip would throw all of that away. Rewriting a line does drop any trailing comment
-    // on it, which is right: that comment described the value the sync just replaced.
-    public static void Stamp(string corpusRoot, int templateVersion, string takenOn)
+    // on it, which is right: that comment described the value the update just replaced.
+    public static void Stamp(string corpusRoot, int templateVersion, string takenOn, string? commit = null)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
         var lines = File.Exists(path)
@@ -345,9 +355,10 @@ public class CorpusDescriptor
             start = lines.Count - 1;
         }
 
+        var stamped = Stamped(templateVersion, takenOn, commit);
         var written = new HashSet<string>(StringComparer.Ordinal);
         for (var i = start + 1; i < lines.Count && !IsTopLevelKey(lines[i]); i++)
-            foreach (var (key, value) in Stamped(templateVersion, takenOn))
+            foreach (var (key, value) in stamped)
                 if (lines[i].TrimStart().StartsWith(key + ":", StringComparison.Ordinal))
                 {
                     lines[i] = Line(key, value);
@@ -355,7 +366,7 @@ public class CorpusDescriptor
                 }
 
         // Keys the block never held go in at its head, where they read as part of it.
-        lines.InsertRange(start + 1, Stamped(templateVersion, takenOn)
+        lines.InsertRange(start + 1, stamped
             .Where(s => !written.Contains(s.key))
             .Select(s => Line(s.key, s.value)));
 
@@ -364,8 +375,14 @@ public class CorpusDescriptor
 
         static string Line(string key, string value) => $"  {key + ":",-18} {value}";
 
-        static (string key, string value)[] Stamped(int version, string on) =>
-            [("template-version", version.ToString()), ("taken-on", $"\"{on}\"")];
+        static (string key, string value)[] Stamped(int version, string on, string? head)
+        {
+            var keys = new List<(string, string)>();
+            if (head is { Length: > 0 }) keys.Add(("commit", head));
+            keys.Add(("template-version", version.ToString()));
+            keys.Add(("taken-on", $"\"{on}\""));
+            return [.. keys];
+        }
 
         static bool IsTopLevelKey(string line) => line.Length > 0 && !char.IsWhiteSpace(line[0]) && line[0] != '#';
     }

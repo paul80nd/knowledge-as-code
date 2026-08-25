@@ -115,7 +115,6 @@ public class ManifestTests
 
         Assert.Null(descriptor.Types);
         Assert.True(descriptor.Adopted("adrs"));
-        Assert.False(MechanismCheck.Declined(".schema/adrs.yaml", "synced", descriptor));
     }
 
     [Fact]
@@ -125,8 +124,8 @@ public class ManifestTests
 
         Assert.True(descriptor.Adopted("adrs"));
         Assert.False(descriptor.Adopted("runbooks"));
-        Assert.False(MechanismCheck.Declined(".schema/adrs.yaml", "synced", descriptor));
-        Assert.True(MechanismCheck.Declined(".schema/runbooks.yaml", "synced", descriptor));
+        Assert.False(Declines(".schema/adrs.yaml"));
+        Assert.True(Declines(".schema/runbooks.yaml"));
     }
 
     // Everything else under `.schema/` belongs to no type and is shared whatever a corpus adopted, so a
@@ -135,36 +134,20 @@ public class ManifestTests
     [InlineData(".schema/_universal.yaml")]
     [InlineData(".schema/_tiers.yaml")]
     [InlineData(".schema/README.md")]
-    [InlineData("tooling/kac/Program.cs")]
-    [InlineData("runbooks.md")]
-    public void Nothing_but_a_type_file_is_ever_declined(string path)
-        => Assert.False(MechanismCheck.Declined(path, "synced", new CorpusDescriptor { Types = ["adrs"] }));
+    [InlineData("README.md")]
+    public void Nothing_but_a_type_file_is_ever_declined(string path) => Assert.False(Declines(path));
+
+    // The one predicate deciding what a declined type takes with it, read against the real schema so a
+    // type folder renamed there reaches this test.
+    private static bool Declines(string path) => New.DeclinesTypes(Schema.Load(Repo.Root), ["adrs"])(path);
 
     [Fact]
     public void Types_are_read_from_the_descriptor()
     {
         var dir = Directory.CreateTempSubdirectory().FullName;
-        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"),
-            "role: consumer\ntypes:\n  - adrs\n  - policies\n");
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "types:\n  - adrs\n  - policies\n");
 
         Assert.Equal(["adrs", "policies"], CorpusDescriptor.Load(dir).Types);
-    }
-
-    // -- the layer a corpus's role declines --
-
-    // The same decision as declining a type, taken about the tests rather than about the schema. A
-    // consumer runs a tool proven upstream, so a fixture it does not hold is neither missing nor drifted.
-    [Theory]
-    [InlineData("consumer", true)]
-    [InlineData("source", false)]
-    [InlineData("", false)] // a descriptor that has said nothing is held to everything, as with types
-    public void A_consumer_declines_the_verification_layer(string role, bool declined)
-    {
-        var descriptor = new CorpusDescriptor { Role = role };
-
-        Assert.Equal(!declined, descriptor.Verifies);
-        Assert.Equal(declined, MechanismCheck.Declined("tooling/kac.tests/GlobTests.cs", "verification", descriptor));
-        Assert.False(MechanismCheck.Declined("tooling/kac/Program.cs", "synced", descriptor));
     }
 
     // -- the three versions --
@@ -259,17 +242,21 @@ public class ManifestTests
         Assert.Contains(becomes, message);
     }
 
-    [Fact]
-    public void A_descriptor_on_a_dropped_key_is_told_to_delete_it()
+    // A dropped key is named beside what took over from it, so the fix is one edit rather than a search.
+    [Theory]
+    [InlineData("upstream:\n  synced-from: ../src\n", "`upstream.synced-from:`", "upstream.url")]
+    [InlineData("role: consumer\n", "`role:`", "prove the tool")]
+    public void A_descriptor_on_a_dropped_key_is_told_to_delete_it(string yaml, string names, string because)
     {
         var dir = Directory.CreateTempSubdirectory().FullName;
-        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "upstream:\n  synced-from: ../src\n");
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), yaml);
 
         var message = CorpusDescriptor.RenamedKeyInUse(dir);
 
         Assert.NotNull(message);
-        Assert.Contains("`upstream.synced-from:`", message);
-        Assert.Contains("Delete it.", message);
+        Assert.Contains(names, message);
+        Assert.Contains("delete it", message);
+        Assert.Contains(because, message);
     }
 
     [Theory]
@@ -283,13 +270,13 @@ public class ManifestTests
         Assert.Null(CorpusDescriptor.RenamedKeyInUse(dir));
     }
 
-    // A corpus with no descriptor at all has no key to rename, and the mechanism command has its own
-    // answer for what is missing.
+    // A corpus with no descriptor at all has no key to rename, and `update` has its own answer for what is
+    // missing.
     [Fact]
     public void A_corpus_with_no_descriptor_has_nothing_to_rename()
         => Assert.Null(CorpusDescriptor.RenamedKeyInUse(Directory.CreateTempSubdirectory().FullName));
 
-    // -- what a sync records --
+    // -- what an update records --
 
     [Fact]
     public void Stamping_rewrites_the_upstream_block_and_leaves_the_commentary()
@@ -297,20 +284,34 @@ public class ManifestTests
         var dir = Directory.CreateTempSubdirectory().FullName;
         var path = Path.Combine(dir, ".corpus.yaml");
         File.WriteAllText(path,
-            "descriptor-version: 0\ncontent-version: \"2.1.0\"\nrole: consumer\n\nupstream:\n  url:               ../src\n"
+            "descriptor-version: 0\ncontent-version: \"2.1.0\"\n\nupstream:\n  url:               ../src\n"
             + "  template-version:  1\n  commit:            5fa039b0\n  taken-on:          \"2026-01-01\"\n\n"
-            + "# Why a divergence is worth accepting.\nskip: []\n");
+            + "# Why owning a file is worth declaring.\nskip: []\n");
 
-        CorpusDescriptor.Stamp(dir, 3, "2026-08-11");
+        CorpusDescriptor.Stamp(dir, 3, "2026-08-11", "9c4e1d2a");
 
         var after = File.ReadAllText(path);
         Assert.Contains($"descriptor-version: {CorpusDescriptor.Format}\n", after);
         Assert.Contains("  template-version:  3\n", after);
         Assert.Contains("  taken-on:          \"2026-08-11\"\n", after);
-        Assert.Contains("  url:               ../src\n", after);   // untouched: the sync does not own it
-        Assert.Contains("  commit:            5fa039b0\n", after); // untouched: a sync resolves no commit
+        Assert.Contains("  commit:            9c4e1d2a\n", after);
+        Assert.Contains("  url:               ../src\n", after);   // untouched: the update does not own it
         Assert.Contains("content-version: \"2.1.0\"\n", after);    // untouched: only the corpus knows this one
-        Assert.Contains("# Why a divergence is worth accepting.", after);
+        Assert.Contains("# Why owning a file is worth declaring.", after);
+    }
+
+    // A template read from a folder resolves no commit, and a key filled with one nobody resolved is
+    // worse than a key left as it stands.
+    [Fact]
+    public void Stamping_without_a_commit_leaves_the_one_already_recorded()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path, "upstream:\n  commit:            5fa039b0\n  template-version:  1\n");
+
+        CorpusDescriptor.Stamp(dir, 3, "2026-08-11");
+
+        Assert.Contains("  commit:            5fa039b0\n", File.ReadAllText(path));
     }
 
     // The tool owns the file's format, so a descriptor that never stated one is given it, below whatever
@@ -320,7 +321,7 @@ public class ManifestTests
     {
         var dir = Directory.CreateTempSubdirectory().FullName;
         var path = Path.Combine(dir, ".corpus.yaml");
-        File.WriteAllText(path, "# What this corpus is.\ncorpus: sample\nrole: consumer\n");
+        File.WriteAllText(path, "# What this corpus is.\ncorpus: sample\n");
 
         CorpusDescriptor.Stamp(dir, 3, "2026-08-11");
 
@@ -329,17 +330,19 @@ public class ManifestTests
             File.ReadAllText(path));
     }
 
-    // A descriptor that has never been synced has no block to rewrite, so the first sync opens one.
+    // A descriptor that has never taken a framework has no block to rewrite, so the first update opens
+    // one. That is the corpus recording where it takes from for the first time.
     [Fact]
     public void Stamping_a_descriptor_with_no_upstream_block_writes_one()
     {
         var dir = Directory.CreateTempSubdirectory().FullName;
-        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "role: consumer\n");
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "corpus: sample\n");
 
         CorpusDescriptor.Stamp(dir, 3, "2026-08-11");
 
         var reloaded = CorpusDescriptor.Load(dir);
-        Assert.Equal("consumer", reloaded.Role);
+        Assert.Equal("sample", reloaded.Name);
+        Assert.Equal(3, reloaded.TemplateVersion);
         Assert.Contains("upstream:", File.ReadAllText(Path.Combine(dir, ".corpus.yaml")));
     }
 }

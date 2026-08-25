@@ -28,20 +28,9 @@ public partial class CliReferenceTests
         var pages = Directory.EnumerateFiles(CliReference.Cli, "*.md")
             .Select(Path.GetFileNameWithoutExtension)
             .Where(name => name is not "index")
-            .Where(name => !CliReference.Unbuilt.Contains(name, StringComparer.Ordinal))
             .ToHashSet(StringComparer.Ordinal);
 
         Assert.Equal(declared.Order(StringComparer.Ordinal), pages.Order(StringComparer.Ordinal));
-    }
-
-    [Fact]
-    public void A_page_without_a_command_says_it_is_a_specification()
-    {
-        foreach (var name in CliReference.Unbuilt)
-        {
-            var page = File.ReadAllText(Path.Combine(CliReference.Cli, name + ".md"));
-            Assert.Contains("!!! warning \"Draft, pending implementation\"", page, StringComparison.Ordinal);
-        }
     }
 
     [Fact]

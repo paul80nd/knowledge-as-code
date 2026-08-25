@@ -63,7 +63,7 @@ twenty-two documents that `clause-modal` requires it in.
 7. **Walk the categories below once each, over the whole set.** A reviewer settles into whichever category the first
    record rewarded and finishes feeling finished. Naming them in turn is what makes two runs agree.
 8. **Check the second tree.** `template/` holds its own copy of every type page and template. Those are `seed`, so
-   `TemplateTests` does not hold them equal and nothing catches drift. A record under `example/` has no twin.
+   `kac update --check` does not hold them equal and nothing catches drift. A record under `example/` has no twin.
 9. **Run `kac validate` again**, and `kac generate` where any frontmatter changed.
 10. **Propose rather than commit.** Run [opening-a-pull-request](opening-a-pull-request.md) only if asked.
 

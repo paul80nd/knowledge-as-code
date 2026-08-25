@@ -30,9 +30,9 @@ apart.
 `validate` holds a file to still carrying the markers of every block the generator writes into it, and freshness is
 `generate --check`'s one question.
 
-**It is not `mechanism --check`.** That asks whether this corpus's copy of the framework has drifted from upstream.
-`validate` asks whether this corpus's own records are correct, and a corpus that has drifted badly can still be entirely
-valid.
+**It is not `update --check`.** That asks whether this corpus's copy of the framework has fallen behind the template it
+took. `validate` asks whether this corpus's own records are correct, and a corpus a long way behind can still be
+entirely valid.
 
 ## How it works
 

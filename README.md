@@ -155,10 +155,10 @@ already carries.
 **Read [`example/`](example/) rather than copying it.** It is a worked corpus with a fictional library consortium in it,
 kept to show what real records look like. `new` never sends you any of it.
 
-**What a corpus cannot yet do is take a newer framework.** `kac mechanism` wants a reference corpus, through `--against`
-or an `upstream.url`. Past that it reads a manifest at `tooling/manifest.yaml` that no corpus holds. A command that
-updates the schema beneath a corpus sits in the
-[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues), and is not described here.
+**A corpus takes a newer framework with [`kac update`](https://paul80nd.github.io/knowledge-as-code/cli/update/).** It
+fetches the template `.corpus.yaml` points at, decides file by file what the corpus receives, and leaves every change in
+the working tree. Nothing is committed, so `git diff` is the review step. `kac update --check` reports what would change
+and writes nothing, which is the form for a pipeline.
 
 ## Maturity
 

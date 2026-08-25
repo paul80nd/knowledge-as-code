@@ -16,6 +16,41 @@ the commit and opens a release carrying the section for that version.
 
 ## Unreleased
 
+## 0.7.0 - 2026-08-24
+
+### Added
+
+- **`kac update` takes a newer framework into a corpus that already has one.** It fetches the template `.corpus.yaml`
+  points at, decides file by file what the corpus receives, writes it, and records what it took. Everything it writes
+  stays in the working tree and nothing is committed, so `git diff` is the review step.
+  [`update`](https://paul80nd.github.io/knowledge-as-code/cli/update/) covers the layers, the flags and what each
+  refuses.
+- **`kac update --check` reports what would change and writes nothing**, exiting non-zero where anything would. It
+  answers in both directions: a framework file the corpus holds differently, and a file the corpus keeps where the
+  framework's rules apply that the template sends nothing to.
+- **`kac update --add-type` adopts a type, and `--drop-type` gives one up.** Adopting writes the type's schema, root
+  page and template, and adds the name to `types:`. Giving one up refuses where the folder still holds records, naming
+  the count.
+- **`kac update --policy cautious|full` overrides `update-policy:` for one run.** `cautious` writes a seed only where
+  the corpus has none. `full` holds every seed to the template and hands the reconciliation to the diff.
+- **`update` stamps `upstream.commit` alongside the template version and the date.** A template read from a folder
+  resolves no commit, and the key is then left as it stands.
+
+### Removed
+
+- **`kac mechanism` is gone**, and `kac update` replaces both its halves. It compared two corpora on identical paths and
+  read a manifest at `tooling/manifest.yaml` that no corpus held, so no corpus could run it against the framework it
+  actually took.
+- **`role:` in `.corpus.yaml` is no longer written or read.** It said whether a corpus carried the tests that prove the
+  tool, and no corpus does. `new` stops writing it, and an `update` over a descriptor still carrying it names the key
+  and stops, as it does for any retired key.
+
+### Changed
+
+- **A continuous integration starter is refreshed and never introduced.** `new` writes the starter for the system
+  `--ci` named, and an update leaves a starter the corpus does not hold where it is. Which system builds a repository is
+  that repository's own answer.
+
 ## 0.6.0 - 2026-08-24
 
 ### Added

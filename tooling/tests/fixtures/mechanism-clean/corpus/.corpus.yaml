@@ -1,6 +1,0 @@
-descriptor-version: 1
-corpus: test-source
-role: source
-upstream:
-  url:
-skip: []

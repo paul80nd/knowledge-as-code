@@ -79,5 +79,5 @@ problem, and the next author is the one who finds it.
 ## What the corpus decides
 
 `types:` in [`.corpus.yaml`](../corpus-descriptor.md) names the knowledge types a corpus has adopted, and bounds both
-validation and generation. `role:` says whether the corpus answers for the framework or only runs it.
-[`mechanism`](../cli/mechanism.md) reads both, and is what holds a copy of the framework answerable to its declaration.
+validation and generation. `skip:` names each file the corpus holds differently on purpose.
+[`update`](../cli/update.md) reads both, and is what holds a copy of the framework answerable to its declaration.

@@ -42,6 +42,12 @@ jobs:
         working-directory: example
         run: dotnet run --project ../tooling/kac -- generate --check
 
+      # The worked corpus holds a materialised copy of what the template sends, so this is what keeps
+      # the two trees equal in both directions.
+      - name: Check the corpus is in step with the template
+        working-directory: example
+        run: dotnet run --project ../tooling/kac -- update --check --from ../
+
       # `generate --check` is askable only here. The corpus the installed tool stands up further down
       # is generated as it is created, so nothing there holds these committed copies fresh.
       # example/azure-pipelines.yml stays corpus-only: a corpus has no template/ to look at.

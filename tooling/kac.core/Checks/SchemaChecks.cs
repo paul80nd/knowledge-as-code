@@ -14,7 +14,7 @@ namespace kac.core;
 // restated.
 //
 // Findings land against `.schema/<file>.yaml`, because that is the file a corpus owner edits and the
-// one the mechanism sync will carry. A rule or field the loader could not read at all carries its own
+// one an update writes. A rule or field the loader could not read at all carries its own
 // account of why, recorded where it was parsed, and is reported here alongside the rest so that a
 // schema defect is a finding like any other rather than a stack trace on the way to one.
 public static class SchemaChecks

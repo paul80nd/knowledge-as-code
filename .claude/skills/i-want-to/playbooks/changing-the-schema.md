@@ -24,8 +24,9 @@
    coverage gate builds its catalogue from `kac checks` and fails a rule nothing exercises.
 8. **Run the golden suite.** The fixtures validate against the real `.schema/`, so this edit can also move expectations
    already committed there. Regenerate with `--update` only after reading the diff.
-9. **Copy the file across by hand.** `.schema/` is held byte-equal between `template/` and `example/` by
-   `TemplateTests`, and `kac mechanism --sync` cannot do it here.
+9. **Nothing to copy.** `.schema/` is authored once at this root and read from there by both corpora, so a schema
+   change lands in one place. A type page or a `_template.md` you also touched does live in both trees, and
+   `kac update --check --from ../` inside `example/` is what proves the copies match.
 10. Run **[opening-a-pull-request](opening-a-pull-request.md)**.
 
 **Reply:** what the schema now declares, which pass would catch it being wrong, and any golden expectation that moved.

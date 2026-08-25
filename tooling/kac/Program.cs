@@ -44,9 +44,8 @@ app.Configure(config =>
         .WithDescription("Assemble the export and .plugin/ into a plugin under .dist/plugin/.");
     config.AddCommand<ChecksCommand>("checks")
         .WithDescription("List every check the validator implements.");
-    config.AddCommand<MechanismCommand>("mechanism")
-        .WithDescription(
-            "Enforce the portability manifest: compare the shared layers against a reference, or take them from one.");
+    config.AddCommand<UpdateCommand>("update")
+        .WithDescription("Take a newer framework into this corpus, or adopt a type.");
 });
 
 // A bare `kac` names no verb, which is a usage error rather than a request for help. Spectre prints
@@ -250,27 +249,59 @@ internal sealed class ChecksCommand : Command<ChecksSettings>
         Cli.InCorpus(settings, corpus => Commands.Checks(corpus, settings.Json));
 }
 
-// mechanism: enforce the portability manifest. `--check` compares this corpus's shared layers
-// against a reference copy and reports drift, following the same discipline as `generate --check`:
-// recompute, compare, name what is stale, exit non-zero, never write. `--sync` is the write half:
-// it takes those layers from the reference, records what it took, and regenerates.
-internal sealed class MechanismSettings : KacSettings
+// `update` takes a newer framework into a corpus that already has one, and is where a corpus adopts a
+// type or gives one up. Everything it writes stays in the working tree and nothing is committed, which is
+// what lets it be liberal where a tool without that safety net would have to be timid.
+//
+// It asks nothing, because an update runs in a pipeline as often as it runs under somebody watching.
+// `docs/cli/update.md` carries the defaults and what each layer means.
+internal sealed class UpdateSettings : KacSettings
 {
+    [CommandOption("--from <URL|PATH>")]
+    [Description("The repository or folder serving the template. Defaults to upstream.url in .corpus.yaml.")]
+    public string? From { get; init; }
+
+    [CommandOption("--ref <REF>")]
+    [Description("The branch or tag to take the template from. Defaults to upstream.ref.")]
+    public string? Ref { get; init; }
+
+    [CommandOption("--path <PATH>")]
+    [Description("The folder inside that repository holding manifest.yaml. Defaults to upstream.path.")]
+    public string? Path { get; init; }
+
     [CommandOption("--check")]
-    [Description("Compare the shared layers against a reference and report drift. Never writes.")]
+    [Description("Report what would change and write nothing. Fails where anything would.")]
     public bool Check { get; init; }
 
-    [CommandOption("--sync")]
-    [Description("Take the shared layers from the reference, then record what it took in .corpus.yaml.")]
-    public bool Sync { get; init; }
+    [CommandOption("--policy <POLICY>")]
+    [Description("How far this run goes: cautious or full. Defaults to update-policy in .corpus.yaml.")]
+    public string? Policy { get; init; }
 
-    [CommandOption("--against <PATH>")]
-    [Description("Name the reference corpus by path. Defaults to upstream.url in .corpus.yaml.")]
-    public string? Against { get; init; }
+    [CommandOption("--add-type <TYPE>")]
+    [Description("Adopt a type the template declares, and write its schema, root page and template.")]
+    public string? AddType { get; init; }
+
+    [CommandOption("--drop-type <TYPE>")]
+    [Description("Give up a type. Refused where its folder still holds records.")]
+    public string? DropType { get; init; }
+
+    [CommandOption("--yes")]
+    [Description("Never wait on a credential prompt, for a run with nobody at the keyboard.")]
+    public bool Yes { get; init; }
 }
 
-internal sealed class MechanismCommand : Command<MechanismSettings>
+internal sealed class UpdateCommand : Command<UpdateSettings>
 {
-    protected override int Execute(CommandContext context, MechanismSettings settings, CancellationToken token) =>
-        Cli.InCorpus(settings, corpus => Commands.Mechanism(corpus, settings.Check, settings.Sync, settings.Against));
+    protected override int Execute(CommandContext context, UpdateSettings settings, CancellationToken token) =>
+        Cli.InCorpus(settings, corpus => Commands.Update(corpus, new UpdateRequest
+        {
+            From = settings.From,
+            Ref = settings.Ref,
+            Path = settings.Path,
+            Check = settings.Check,
+            Policy = settings.Policy,
+            AddType = settings.AddType,
+            DropType = settings.DropType,
+            Yes = settings.Yes
+        }, Cli.Version, DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd")));
 }
