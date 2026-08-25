@@ -75,3 +75,24 @@ contend over its output.
 * **Never write a path into a file a corpus keeps.** The generated banner and the stale-index message both name the tool
   instead. A corpus is read from wherever it was installed, so a path written into its content is a fact about somebody
   else's machine.
+
+## Agent skills
+
+The engineering skills read three files from [`.claude/agents-config/`](.claude/agents-config/), rather than the
+`docs/agents/` their author assumes. `docs/` here is the published site, and `NavigationTests` fails a page the nav does
+not list.
+
+### Issue tracker
+
+Issues live as GitHub issues on `paul80nd/knowledge-as-code`, reached with the `gh` CLI. See
+[`.claude/agents-config/issue-tracker.md`](.claude/agents-config/issue-tracker.md).
+
+### Triage labels
+
+The five canonical roles, each label string equal to its name. See
+[`.claude/agents-config/triage-labels.md`](.claude/agents-config/triage-labels.md).
+
+### Domain docs
+
+Single-context, and the domain is described by the four `CLAUDE.md` files rather than by a `CONTEXT.md`. See
+[`.claude/agents-config/domain.md`](.claude/agents-config/domain.md).
