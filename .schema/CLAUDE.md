@@ -1,7 +1,7 @@
 # Changing the schema
 
-[`meta/type.schema.json`](meta/type.schema.json) is the reference for the keys and [`README.md`](README.md) is the
-reasoning behind them. This is what will bite you.
+[`meta/type.schema.json`](meta/type.schema.json) is the reference for the keys, and describes each one on hover.
+[`README.md`](README.md) says what this folder holds and where the rest is written down. This is what will bite you.
 
 In a corpus created from a template, these files arrive with it, so a local edit is drift. Make the change in the
 template and take it down with `kac update`. Where a line below names a C# file it is naming that same repository,
@@ -44,6 +44,11 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
   one other, and lives on the field. A condition needing more than that is a rule with an `expr:`. It also produces an
   *error* at the moment its condition holds, where a rule chooses its own severity. So a fill-this-in-or-else obligation
   is `required-when`, and a should-have-done-this is a rule.
+
+* **The grammar an `expr:` is written in is frozen.**
+  <https://paul80nd.github.io/knowledge-as-code/schema/expressions/> is the reference for it: what the grammar allows,
+  the facts a rule may call, and the guard a field that may be absent needs. A rule that will not fit wants a new fact
+  rather than a wider grammar.
 
 * **Thresholds are judgements**, and each is pinned by a fixture so moving one is visible.
   <https://paul80nd.github.io/knowledge-as-code/checks/> says where the numbers came from. A ratio like

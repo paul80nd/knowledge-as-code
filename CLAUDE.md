@@ -44,8 +44,9 @@ written after the merge reaches nobody, and `ChangelogTests` fails a version tha
 
 **Ask which pages your change makes wrong.** Nothing in CI reads prose for meaning, so this is yours to do. A change to
 a command reaches [`docs/`](docs/) and often [`tooling/README.md`](tooling/README.md); a change to what the tool is for
-reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md); a change to the schema
-reaches [`.schema/README.md`](.schema/README.md).
+reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md); a change to the schema reaches
+[`.schema/README.md`](.schema/README.md), [`.schema/meta/type.schema.json`](.schema/meta/type.schema.json) and
+[`docs/schema/`](docs/schema/).
 
 **Run the layers your change touches.** [`example/CLAUDE.md`](example/CLAUDE.md) carries the commands. Run one `kac`
 invocation at a time: concurrent runs build the same project and contend over its output.

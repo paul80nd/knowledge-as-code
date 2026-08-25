@@ -4,14 +4,14 @@ Run at the end of every other playbook. A push to `main` is rejected, so this is
 
 1. **Ask which pages your change made wrong.** Nothing in CI reads prose for meaning, so this is yours. A change to a
    command reaches [`docs/`](../../../../docs/) and often `tooling/README.md`. A change to what the tool is for reaches
-   the root `README.md` and `PACKAGE.md`. A change to the schema reaches the `.schema/README.md`
-   in both trees.
+   the root `README.md` and `PACKAGE.md`. A change to the schema reaches `.schema/README.md`,
+   `.schema/meta/type.schema.json` and `docs/schema/`, all three authored once at the root.
 2. **Move `<Version>` and write the changelog section together**, where the tool changed. A push to `main` publishes
    whenever [`kac.csproj`](../../../../tooling/kac/kac.csproj) names a version nuget.org does not hold, and the release
    carries the matching section from [`CHANGELOG.md`](../../../../tooling/kac/CHANGELOG.md). A section written after the
    merge reaches nobody, and `ChangelogTests` fails a version with none.
-3. **Check the trees still match.** Run `kac update --check --from ../` inside `example/`, which holds the overlay
-   files equal in both directions. A `seed` file is yours to copy across, and nothing catches it.
+3. **Check the trees still match.** Run `kac update --check --from ../` inside `example/`, which holds the overlay files
+   equal in both directions. A `seed` file is yours to copy across, and nothing catches it.
 4. **Run the layers your change touches**, one `kac` invocation at a time. Where you are unsure, run all four.
 5. **Write the commit message to `technical-writing`.** The subject says what changed, imperative and without a full
    stop. The body says why, and it is the one place describing what used to be true is correct.
