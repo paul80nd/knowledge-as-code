@@ -73,8 +73,6 @@ public class RefCheckTests
     public void A_target_of_the_right_type_is_still_held_to_pointing_back()
         => Assert.Equal("reciprocal", Assert.Single(Refs(Reciprocating("supersedes", "adrs"), "adr-0002")).Check.Value);
 
-    // -- driving the check --
-
     private static FieldSpec Field(string name, params string[] refs) =>
         new() { Name = name, Type = "id", Refs = refs };
 

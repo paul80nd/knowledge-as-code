@@ -10,15 +10,12 @@ namespace kac.tests;
 
 public class ShortcodeTests
 {
-    // -- a corpus that has not declared one --
 
     // A key written with no value never reaches here: the loader reads an empty scalar as absent, which
     // `ManifestTests` holds it to.
     [Fact]
     public void A_corpus_declaring_no_shortcode_is_not_asked_anything()
         => Assert.Empty(Shortcode(null));
-
-    // -- the spellings a citation can carry --
 
     [Theory]
     [InlineData("eng")]
@@ -27,8 +24,6 @@ public class ShortcodeTests
     [InlineData("acme2026")]
     public void A_lower_case_shortcode_of_letters_and_digits_is_silent(string shortcode)
         => Assert.Empty(Shortcode(shortcode));
-
-    // -- and the ones it cannot --
 
     [Fact]
     public void A_shortcode_of_one_character_is_too_short()
@@ -55,8 +50,6 @@ public class ShortcodeTests
     public void A_shortcode_carrying_anything_but_a_lower_case_letter_or_a_digit_is_refused(string shortcode)
         => Assert.Contains("carries something other than", Assert.Single(Shortcode(shortcode)).Message);
 
-    // -- and the one a type has taken --
-
     [Fact]
     public void A_shortcode_a_type_uses_as_its_id_prefix_names_the_type()
         => Assert.Contains("is the id prefix of 'standards'", Assert.Single(Shortcode("std")).Message);
@@ -78,8 +71,6 @@ public class ShortcodeTests
         Assert.Contains(findings, f => f.Message.Contains("does not open on a lower-case letter"));
         Assert.Contains(findings, f => f.Message.Contains("is the id prefix of 'standards'"));
     }
-
-    // -- the corpus these are asked against --
 
     // Two types, so that one spelling is taken and the rest are free. Nothing here is stood up: the pass
     // reads the descriptor and never the listing.

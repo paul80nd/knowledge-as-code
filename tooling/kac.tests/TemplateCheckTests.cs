@@ -39,8 +39,6 @@ public class TemplateCheckTests
         => Assert.Contains("would fail required-field",
             Assert.Single(Fields(Template("id: \"adr-{{slug}}\""), tracked: false)).Message);
 
-    // -- the corpus these are asked against --
-
     private static string Template(string frontmatter) =>
         $"---\n{frontmatter}\n---\n\n# {{{{Title}}}}\n";
 

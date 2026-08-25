@@ -25,8 +25,6 @@ public class TreeTests
         },
         rel => $"the text of {rel}");
 
-    // -- presence --
-
     [Fact]
     public void The_listing_is_what_the_corpus_holds()
     {
@@ -66,8 +64,6 @@ public class TreeTests
         Assert.False(Corpus().HasFolder("policies"));
     }
 
-    // -- naming a set --
-
     // `*` stops at a slash, so a pattern names the markdown directly inside a folder. This is the
     // framework's own documentation, which is read as a set and reported against file by file.
     [Fact]
@@ -92,8 +88,6 @@ public class TreeTests
     [Fact]
     public void A_glob_matching_nothing_names_nothing()
         => Assert.Empty(Corpus().Match("policies/*.md"));
-
-    // -- reading --
 
     // A path is normalised before it is looked up or read, so a caller that built one with the platform's
     // separator asks the same question as one that wrote it with a slash.

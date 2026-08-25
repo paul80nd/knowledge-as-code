@@ -55,8 +55,6 @@ public class PlaceholderTests
         Assert.Equal("adr-{{a}}", ((YamlDotNet.RepresentationModel.YamlScalarNode)seq.Children[0]).Value);
     }
 
-    // -- what a record is scanned for, and what it is not --
-
     // The four places a half-filled copy keeps one, none of which is ordinary prose alone. The
     // identity line matters most and is the easiest to miss: it is written in code spans, so a scan
     // that skipped code to protect fenced examples would skip the repeated id along with them.

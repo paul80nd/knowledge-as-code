@@ -317,8 +317,6 @@ public class GeneratorTests
         Assert.Contains("reciprocal", table);
     }
 
-    // -- the tables of types --
-
     private static TypeSchema Type(string label, string plural, string tier, string page, string goesHere,
         params (string Other, string Text)[] versus) => new()
     {
@@ -388,8 +386,6 @@ public class GeneratorTests
                     < index.IndexOf("[taxonomy]", StringComparison.Ordinal));
         Assert.All(index.Split('\n').Where(l => !l.StartsWith('|')), l => Assert.True(l.Length <= 120));
     }
-
-    // -- the types at length --
 
     // Tier order comes from the schema, not the alphabet: Decided leads and Observed closes.
     [Fact]
@@ -466,8 +462,6 @@ public class GeneratorTests
         Assert.Contains(long_, Generator.TypeCatalogue(Tiers, [t], "../"));
     }
 
-    // -- the calls that are genuinely close --
-
     private static TypeSchema[] Pair(params (string Other, string Text)[] versus) =>
     [
         Type("ADR", "ADRs", "decided", "adrs.md", "A decision", versus),
@@ -502,8 +496,6 @@ public class GeneratorTests
         Assert.DoesNotContain("Never rendered", text);
     }
 
-    // -- the way on to each type's own fields --
-
     [Fact]
     public void The_metadata_strip_links_each_type_at_the_heading_its_field_table_sits_under()
     {
@@ -516,8 +508,6 @@ public class GeneratorTests
     [Fact]
     public void The_metadata_strip_wraps_at_the_corpus_margin()
         => Assert.All(Generator.MetadataStrip(Four(), "../").Split('\n'), l => Assert.True(l.Length <= 120));
-
-    // -- where the names came from --
 
     private static TypeSchema Ancestor(string label, string key, LineageSpec? lineage) => new()
     {
@@ -553,8 +543,6 @@ public class GeneratorTests
     [Fact]
     public void A_type_that_declares_no_lineage_is_left_out_of_the_table()
         => Assert.DoesNotContain("Widget", Generator.LineageTable([Ancestor("Widget", "widgets", null)], "../"));
-
-    // -- words a reader arrives already holding --
 
     private static TypeSchema Colliding(string label, string key, string collision) => new()
     {
@@ -603,8 +591,6 @@ public class GeneratorTests
         Assert.All(Generator.Collisions([Colliding("Control", "controls", para)]).Split('\n'),
             l => Assert.True(l.Length <= 120));
     }
-
-    // -- how the types relate --
 
     private static TypeSchema Linked(string label, string key, params (string Field, string[] Refs, string? Back)[] fs)
     {

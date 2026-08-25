@@ -13,7 +13,6 @@ namespace kac.tests;
 
 public class LinkCheckTests
 {
-    // -- does this target resolve? --
 
     [Fact]
     public void A_target_resolves_absolute_from_the_root_or_relative_to_the_document()
@@ -66,8 +65,6 @@ public class LinkCheckTests
     [InlineData("/adrs/0002-b.md", false)]
     public void An_external_target_is_left_alone(string target, bool external)
         => Assert.Equal(external, LinkChecks.IsExternal(target));
-
-    // -- the corpus these are asked against --
 
     private static List<string> Unresolved(string fromRel, string markdown) =>
     [

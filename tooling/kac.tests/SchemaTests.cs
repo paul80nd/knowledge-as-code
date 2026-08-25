@@ -74,7 +74,6 @@ public class SchemaTests
         Assert.Equal(2, edges.Count);
     }
 
-    // -- required-when --
     //
     // The vocabulary is closed on purpose, and a form outside it stops the load. A form that parsed to
     // nothing would be a condition that never holds, leaving the field it guards quietly unrequired

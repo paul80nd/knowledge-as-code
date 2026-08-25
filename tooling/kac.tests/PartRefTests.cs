@@ -66,8 +66,6 @@ public class PartRefTests
     public void A_citation_in_the_wrong_case_reaches_nothing(string citation)
         => Assert.Equal("part-ref", Assert.Single(Cite(citation)).Check.Value);
 
-    // -- driving the check --
-
     // Three types: a policy keeping its parts in a table, a glossary keeping its as headings, and an ADR
     // keeping none. One record of each, and the citation under test is written into a fourth document
     // whose own type keeps nothing. That is where a citation is usually written.

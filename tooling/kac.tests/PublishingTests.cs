@@ -18,8 +18,6 @@ public class PublishingTests
         string? target = Publishing.GitHub, string? human = Human, string? raw = Raw, string? prefix = null) =>
         new() { PublishingTarget = target, HumanBase = human, RawBase = raw, PathPrefix = prefix };
 
-    // -- when a corpus can be addressed at all --
-
     [Fact]
     public void A_github_corpus_with_both_bases_and_a_ref_is_addressable()
     {
@@ -48,8 +46,6 @@ public class PublishingTests
     {
         Assert.Null(Publishing.For(Descriptor(target: null), Sha));
     }
-
-    // -- the links themselves --
 
     [Fact]
     public void A_record_is_read_at_one_address_and_fetched_at_another()
@@ -93,8 +89,6 @@ public class PublishingTests
         Assert.Equal($"{Human}/{Sha}/glossary/search.md", links.Human);
         Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
     }
-
-    // -- a corpus that is not the repository --
 
     // The prefix lands between the commit and the record, which is the one place it can go: a corpus in
     // a subdirectory is addressed at that commit, under that folder.
@@ -142,8 +136,6 @@ public class PublishingTests
         Assert.Equal("identity-line", Publishing.Anchor("Identity line"));
         Assert.Equal(Md.Slug("Identity line"), Publishing.Anchor("Identity line"));
     }
-
-    // -- the templates --
 
     // A template leaves the path and the anchor to its reader, and settles everything else. What is
     // settled includes the commit: a ref a reader has to copy is forty characters that can be mistyped

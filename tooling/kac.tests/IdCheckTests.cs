@@ -32,16 +32,12 @@ public class IdCheckTests
         Parts = new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms", Level = 3 }
     };
 
-    // -- the prefix, which is the type --
-
     [Fact]
     public void An_id_under_the_wrong_prefix_is_reported_and_stops()
     {
         var found = Run("xyz-0006", "adrs/0006-a.md", Numbered());
         Assert.Equal("id-prefix", Assert.Single(found).Check.Value);
     }
-
-    // -- the shape of the discriminator, style by style --
 
     [Theory]
     [InlineData("adr-7")]     // too few digits
@@ -69,8 +65,6 @@ public class IdCheckTests
     [Fact]
     public void A_malformed_id_is_not_also_held_to_the_filename()
         => Assert.Equal("id-format", Assert.Single(Run("adr-7", "adrs/0004-a.md", Numbered())).Check.Value);
-
-    // -- agreement with the filename --
 
     [Theory]
     [InlineData("adr-0009", "adrs/0004-missing.md")]
@@ -102,8 +96,6 @@ public class IdCheckTests
     public void A_filename_that_carries_no_discriminator_is_left_to_filename_pattern(string id, string rel)
         => Assert.Empty(Run(id, rel, TypeFor(rel)));
 
-    // -- what slug-max measures --
-
     private const string TooLong = "slug-that-is-definitely-way-too-long";
 
     // The same stem under two styles. A numbered type's `0003-` is a discriminator the author did not
@@ -127,8 +119,6 @@ public class IdCheckTests
     [Fact]
     public void A_slug_within_the_limit_is_silent()
         => Assert.Empty(Filename("tools/ripgrep.md", Slug()));
-
-    // -- is this label an id? --
 
     // `label-canonical` is the difference between a label and the id as a document carries it.
     [Theory]
@@ -156,8 +146,6 @@ public class IdCheckTests
     public void Anything_else_is_prose_in_brackets(string label)
         => Assert.False(IdChecks.TryCanonicalId(label, SchemaWith(Numbered(), Mnemonic(), Slug()), out _));
 
-    // -- and is it a part of one? --
-
     // A part is addressed as `<record>.<part>`, which is the form a citation uses and now the form a link
     // to a part uses. The record half canonicalises as any id does; the part half is judged against the
     // type's own `parts:` block, because only that says what a part id looks like.
@@ -182,8 +170,6 @@ public class IdCheckTests
     [InlineData(".TIMEBOX")]         // nothing before it
     public void A_part_that_does_not_fit_its_type_s_declaration_is_prose(string label)
         => Assert.False(IdChecks.TryCanonicalId(label, SchemaWith(Clauses(), Terms(), Numbered()), out _));
-
-    // -- which id does a link cite? --
 
     [Theory]
     [InlineData("0007-a-decision.md", "adr-0007")] // relative, from a document in the folder
@@ -224,8 +210,6 @@ public class IdCheckTests
     [InlineData("#a-heading-here")] // a fragment addressing this document
     public void A_link_to_anything_else_cites_no_id(string target)
         => Assert.Null(Cite(target, "adrs/0001-first.md", Numbered()));
-
-    // -- driving the checks --
 
     private static Schema SchemaWith(params TypeSchema[] types) =>
         new() { ByFolder = types.ToDictionary(t => t.Folder) };

@@ -71,8 +71,6 @@ public class SchemaLoadTests
         Assert.Equal(["adrs", "policies", "tools"], Schema.Load(files).ByFolder.Keys);
     }
 
-    // -- enums --
-
     [Fact]
     public void A_field_drawing_on_a_declared_enum_takes_its_values()
     {
@@ -128,8 +126,6 @@ public class SchemaLoadTests
 
         Assert.Contains("declares no 'status'", Schema.Load(files).Universal["status"].Problem!);
     }
-
-    // -- rules --
 
     private static RuleSpec OnlyRule(string typeYaml)
     {
@@ -212,8 +208,6 @@ public class SchemaLoadTests
         Assert.Null(rule.Compiled);
     }
 
-    // -- what the loader never asked for --
-
     // A key nothing reads is a declaration in a file documented as the contract the tool enforces.
     [Fact]
     public void A_key_the_loader_never_asks_for_is_named_with_its_file_and_its_level()
@@ -248,8 +242,6 @@ public class SchemaLoadTests
 
         Assert.Empty(Schema.Load(files).UnreadKeys);
     }
-
-    // -- the shapes a declaration may take --
 
     // `Yaml.Str` answers null for a sequence, so a key the schema may write either way has to arrive as
     // a list. Read as a scalar, every declaration using the list form would look like an absent key.

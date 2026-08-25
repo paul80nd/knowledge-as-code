@@ -669,8 +669,6 @@ public static class Validator
         }
     }
 
-    // -- helpers for individual checks --
-
     // The template's frontmatter against the type's fields, in both directions. Read as one question:
     // would a document copied from this file pass its own frontmatter checks? It is one question because
     // the two answers have the same cause, a schema that moved and a template that did not, and the same
@@ -857,8 +855,6 @@ public static class Validator
                 implementation.Check(new RuleContext(d, t, rule, report));
         }
     }
-
-    // -- small utilities --
 
     private static bool RequiredWhenHolds(RequiredWhen? condition, Dictionary<string, YamlNode> present)
         => condition is not null

@@ -13,7 +13,6 @@ namespace kac.tests;
 
 public class BundlerTests
 {
-    // -- what stops a run --
 
     [Fact]
     public void A_plugin_tree_with_no_manifest_is_refused()
@@ -84,8 +83,6 @@ public class BundlerTests
                 plugin: [(Bundler.ManifestFile, Source())],
                 export: [(Exporter.ManifestFile, """{"corpus":"c","types":[]}""")]).Problems));
 
-    // -- the breadcrumb --
-
     // It is rendered beside the hook that prints it, so the hook is one `cat` and the consumer's shell
     // is asked for nothing else.
     [Fact]
@@ -125,8 +122,6 @@ public class BundlerTests
         Assert.DoesNotContain($"{Dist.PluginDir}/hooks/hooks.json", plan.Files.Select(f => f.Path));
     }
 
-    // -- trimming --
-
     [Fact]
     public void A_component_whose_types_the_export_carries_is_included()
     {
@@ -156,8 +151,6 @@ public class BundlerTests
             Assert.Single(Plan(
                 plugin: [(Bundler.ManifestFile, Source(Component("skills/both", "glossary", "adrs")))],
                 export: [Manifest("glossary")]).Trimmed).Reason);
-
-    // -- the shape a component reads a type at --
 
     [Fact]
     public void A_component_reading_the_shape_the_export_carries_is_included()
@@ -268,8 +261,6 @@ public class BundlerTests
             Assert.Single(Plan(plugin: [(Bundler.ManifestFile, Source())],
                 export: [Versioned("2.3.4", "glossary")]).Warnings));
 
-    // -- the manifest that travels --
-
     [Fact]
     public void The_version_is_the_corpus_content_version()
         => Assert.Equal("2.3.4", Written(Plan(
@@ -324,8 +315,6 @@ public class BundlerTests
         Assert.Equal(0, components.GetArrayLength());
     }
 
-    // -- the export inside the plugin --
-
     [Fact]
     public void The_export_is_copied_under_the_corpus_root_the_manifest_names()
         => Assert.Contains(
@@ -346,8 +335,6 @@ public class BundlerTests
 
         Assert.Equal(line, Encoding.UTF8.GetString(copied.Content));
     }
-
-    // -- the marketplace --
 
     // A marketplace refuses a source path containing `..`. `Dist.Root` says what follows from that.
     [Fact]
@@ -374,8 +361,6 @@ public class BundlerTests
         Assert.Equal("example-libraries", marketplace.GetProperty("name").GetString());
         Assert.Equal("example-libraries", marketplace.GetProperty("plugins")[0].GetProperty("name").GetString());
     }
-
-    // -- what the bundle records about itself --
 
     [Fact]
     public void The_record_names_what_was_included_and_what_was_trimmed()
@@ -404,8 +389,6 @@ public class BundlerTests
         Assert.False(record.TryGetProperty("generatedAt", out _));
         Assert.False(record.TryGetProperty("commit", out _));
     }
-
-    // -- helpers --
 
     private static BundlePlan Plan(
         (string Path, string Content)[] plugin,

@@ -74,8 +74,6 @@ public class SchemaCheckTests
         return findings;
     }
 
-    // -- the checks the schema declares --
-
     // The direction a load can decide: the registry names what a rule class reports under, so an id
     // missing from the file is a check a reader would meet with no entry behind it.
     [Fact]
@@ -89,8 +87,6 @@ public class SchemaCheckTests
         Assert.Equal(".schema/_checks.yaml", finding.File);
         Assert.Contains(CheckCatalogue.EmittedByRules()[0].Value, finding.Message);
     }
-
-    // -- rules --
 
     // The arrangement that reads as enforced from every angle and is not.
     [Fact]
@@ -125,8 +121,6 @@ public class SchemaCheckTests
         Assert.Equal(".schema/widgets.yaml", finding.File);
         Assert.Contains("unknown fact", finding.Message);
     }
-
-    // -- fields --
 
     [Fact]
     public void A_ref_naming_a_folder_no_schema_covers_is_reported()
@@ -250,8 +244,6 @@ public class SchemaCheckTests
         Assert.Equal(".schema/_universal.yaml", Assert.Single(Check(schema)).File);
     }
 
-    // -- type shape --
-
     [Fact]
     public void An_id_style_with_no_branch_behind_it_is_reported()
     {
@@ -279,8 +271,6 @@ public class SchemaCheckTests
         Assert.Contains("no 'folder:'", finding.Message);
     }
 
-    // -- what a type says about itself --
-
     [Theory]
     [InlineData("decided")]
     [InlineData("normative")]
@@ -299,8 +289,6 @@ public class SchemaCheckTests
         Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("experimental", finding.Message);
     }
-
-    // -- the two files that between them define a tier --
 
     [Fact]
     public void A_tier_the_field_admits_and_no_file_names_is_reported()
@@ -406,8 +394,6 @@ public class SchemaCheckTests
     public void A_prior_art_of_none_with_nothing_beside_it_passes()
         => Assert.Empty(Check(Widgets()));
 
-    // -- where a type keeps its parts --
-
     // A type declaring `parts:` is the only reason a citation into its records resolves, so every way of
     // getting the block wrong ends with the type silently offering none.
     [Fact]
@@ -454,8 +440,6 @@ public class SchemaCheckTests
     [Fact]
     public void A_type_declaring_no_parts_is_asked_nothing_about_them()
         => Assert.Empty(Check(Widgets()));
-
-    // -- what a type contributes to an export --
 
     // Selection is by key, and this is where the key is resolved. A section named here and absent from
     // the type's own `sections:` block is a projection promising words no record carries.

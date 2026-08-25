@@ -110,8 +110,6 @@ public class BreadcrumbTests
         => Assert.Contains("Context1, Context2, Context3, Context4, Context5 and 2 more.",
             Render(Manifest("c", "1.0.0", Type("glossary", records: 7, parts: 35)), Contexts(7)));
 
-    // -- helpers --
-
     private static string Render(
         string manifest,
         params (string Path, string Content)[] exportFiles) =>

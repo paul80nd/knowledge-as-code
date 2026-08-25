@@ -9,7 +9,6 @@ namespace kac.tests;
 
 public class DocumentRuleTests
 {
-    // -- the registry --
 
     [Fact]
     public void Every_registered_rule_has_a_distinct_id_and_reports_something()
@@ -24,8 +23,6 @@ public class DocumentRuleTests
     {
         Assert.All(DocumentRules.All.SelectMany(r => r.Emits), e => Assert.NotEmpty(e.Value));
     }
-
-    // -- y-statement-present: three ways to fail, one check id --
 
     [Fact]
     public void A_document_with_no_block_quote_is_told_the_Y_statement_is_absent()
@@ -92,8 +89,6 @@ public class DocumentRuleTests
     public void Moves_are_matched_as_whole_words_and_without_case(string text, int missing)
         => Assert.Equal(missing, YStatementPresent.MissingMoves(text).Count);
 
-    // -- alternatives-have-verdicts: one finding per open bullet, quoting it --
-
     [Fact]
     public void An_alternative_left_open_is_quoted_back_and_a_settled_one_is_not()
     {
@@ -118,8 +113,6 @@ public class DocumentRuleTests
     [InlineData("**Kafka** — we might explore this later.", false)]
     public void A_verdict_is_an_outcome_word_or_a_contrastive_cue(string bullet, bool settled)
         => Assert.Equal(settled, AlternativesHaveVerdicts.HasVerdict(bullet));
-
-    // -- terms-are-alphabetical --
 
     [Fact]
     public void Entries_in_order_are_left_alone()
@@ -150,8 +143,6 @@ public class DocumentRuleTests
     public void Every_entry_out_of_place_is_reported()
         => Assert.Equal(2, Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### Item\n\nOne.\n\n### Borrower\n\nTwo.\n\n### Adr\n\nThree.")).Count);
-
-    // -- driving a rule --
 
     private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null)
     {

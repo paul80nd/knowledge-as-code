@@ -18,8 +18,6 @@ public class PartCheckTests
 
     private const string Header = "## Clauses\n\n| Id | Clause |\n|----|--------|\n";
 
-    // -- the table itself, and why a broken one stops the pass --
-
     [Fact]
     public void A_section_with_no_table_says_what_to_write()
     {
@@ -52,8 +50,6 @@ public class PartCheckTests
     [Fact]
     public void A_type_declaring_no_parts_is_not_asked_about_them()
         => Assert.Empty(Run(Header + "| `LOGS` | **MUST** be retained. |\n", null, "policies"));
-
-    // -- the modal, which is the binding level --
 
     [Fact]
     public void A_row_that_opens_with_no_modal_is_not_an_obligation()
@@ -93,8 +89,6 @@ public class PartCheckTests
         Assert.Contains("carries a second 'SHOULD'", Assert.Single(found).Message);
     }
 
-    // -- the id, which is what makes a clause citable --
-
     [Fact]
     public void An_id_that_is_not_a_code_span_is_a_word_rather_than_a_handle()
     {
@@ -124,8 +118,6 @@ public class PartCheckTests
         Assert.Contains("two clauses here address as 'LOGS'", one.Message);
     }
 
-    // -- the ordering, reported once --
-
     [Fact]
     public void A_table_out_of_order_is_reported_against_the_first_row_that_breaks_it()
     {
@@ -146,8 +138,6 @@ public class PartCheckTests
                             + "| `AAA` | **MUST** be retained. |\n"
                             + "| `BBB` | **MUST NOT** leave the tenancy. |\n"
                             + "| `CCC` | SHOULD be indexed. |\n"));
-
-    // -- the notation a citation is written in --
 
     [Fact]
     public void A_colon_separated_citation_names_the_form_to_write()
@@ -183,8 +173,6 @@ public class PartCheckTests
     {
         Assert.Single(Notation("Answering `pol-VURM:TIMEBOX` in full.\n", null));
     }
-
-    // -- parts written as headings --
 
     private const string Terms = "## Terms\n\n";
 
@@ -311,8 +299,6 @@ public class PartCheckTests
     public void A_table_row_is_not_asked_whether_a_heading_holds_anything()
         => Assert.DoesNotContain(Run(Header + "| `LOGS` | **MUST** be retained. |\n"),
             f => f.Check.Value == "part-empty");
-
-    // -- driving the checks --
 
     private static List<Finding> Run(string body) => Run(body, Table(), "policies");
 

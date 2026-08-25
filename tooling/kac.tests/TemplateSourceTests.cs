@@ -26,8 +26,6 @@ public class TemplateSourceTests : IDisposable
         File.WriteAllText(path, text);
     }
 
-    // -- a folder on this machine --
-
     [Fact]
     public void A_folder_is_read_where_it_sits()
     {
@@ -63,8 +61,6 @@ public class TemplateSourceTests : IDisposable
         Assert.Equal(Path.Combine(from, "framework"), fetch.Source!.Root);
     }
 
-    // -- the listing --
-
     [Fact]
     public void A_repository_is_listed_by_git_so_what_it_ignores_is_never_read()
     {
@@ -91,8 +87,6 @@ public class TemplateSourceTests : IDisposable
 
         Assert.Equal(["manifest.yaml", "template/CLAUDE.md"], files.OrderBy(f => f, StringComparer.Ordinal));
     }
-
-    // -- the clone --
 
     [Fact]
     public void A_repository_is_cloned_and_the_ref_resolves_to_a_commit()

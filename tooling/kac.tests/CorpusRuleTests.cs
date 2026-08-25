@@ -9,7 +9,6 @@ namespace kac.tests;
 
 public class CorpusRuleTests
 {
-    // -- the registry --
 
     [Fact]
     public void Every_registered_rule_has_a_distinct_id_and_reports_something()
@@ -24,8 +23,6 @@ public class CorpusRuleTests
     {
         Assert.All(CorpusRules.All.SelectMany(r => r.Emits), e => Assert.NotEmpty(e.Value));
     }
-
-    // -- no-dependency-cycles --
 
     [Fact]
     public void A_graph_with_no_loop_is_left_alone()
@@ -108,8 +105,6 @@ public class CorpusRuleTests
 
         Assert.Empty(Cycles(Type(stores), ("svc-a", ["svc-b"]), ("svc-b", ["svc-a"])));
     }
-
-    // -- driving the rule --
 
     private static readonly FieldSpec DependsOn = new()
         { Name = "depends-on", Type = "list", Of = "id", Refs = ["services"] };

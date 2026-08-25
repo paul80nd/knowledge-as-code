@@ -39,8 +39,6 @@ public class ValueCheckTests
 
     private static string[] Ids(List<Finding> f) => [.. f.Select(x => x.Check.Value)];
 
-    // -- dates: the shape and the calendar are two faults under one id --
-
     [Fact]
     public void A_quoted_iso_date_passes()
     {
@@ -73,8 +71,6 @@ public class ValueCheckTests
         Assert.Contains("not a date on the calendar", date.Message);
     }
 
-    // -- enums: membership and casing are separate, and one value can fail both --
-
     [Fact]
     public void An_out_of_range_enum_lists_what_was_allowed()
     {
@@ -99,8 +95,6 @@ public class ValueCheckTests
         Assert.Equal("enum", found.Check.Value);
         Assert.Contains("must be a scalar", found.Message);
     }
-
-    // -- lists --
 
     [Fact]
     public void A_scalar_where_a_list_is_declared_is_reported_once()
@@ -176,8 +170,6 @@ public class ValueCheckTests
         Assert.Equal("id-format", Assert.Single(Run($"field: [ {id} ]\n", spec)).Check.Value);
     }
 
-    // -- patterns: the same declaration reads differently for a scalar and for a list --
-
     [Fact]
     public void A_pattern_on_a_scalar_field_calls_it_a_value()
     {
@@ -202,8 +194,6 @@ public class ValueCheckTests
         Assert.Contains("entry 'Nope1'", found.Message);
     }
 
-    // -- absence, and the one shape of it that is correct --
-
     [Fact]
     public void A_bare_key_is_how_absence_is_written()
     {
@@ -227,8 +217,6 @@ public class ValueCheckTests
         Assert.Equal("bare-key", Assert.Single(Run("field: []\n", Field("list"))).Check.Value);
     }
 
-    // -- literals: a word the field admits beside its declared type --
-
     [Fact]
     public void A_literal_short_circuits_a_scalar_field()
     {
@@ -245,8 +233,6 @@ public class ValueCheckTests
         Assert.Equal("id-format", found.Check.Value);
         Assert.Contains("'NotAnId'", found.Message);
     }
-
-    // -- a template answers for the documents copied from it, not for itself --
 
     [Fact]
     public void A_placeholder_in_a_template_is_read_as_absent()
@@ -279,8 +265,6 @@ public class ValueCheckTests
         Assert.Contains("read as a YAML mapping", found.Message);
     }
 
-    // -- where a finding lands --
-
     // The parser reads a frontmatter block on its own, so its line 1 is the block's first key. A finding
     // has to name the line in the document, which is what `frontStart` turns it into.
     [Fact]
@@ -293,8 +277,6 @@ public class ValueCheckTests
 
         Assert.Equal(FrontStart + 1, Assert.Single(findings).Line);
     }
-
-    // -- the reading of "absent" that the required-field pass shares --
 
     [Theory]
     [InlineData("field:\n", true)]

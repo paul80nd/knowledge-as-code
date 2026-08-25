@@ -20,8 +20,6 @@ public class RuleExprTests
     private static bool Eval(string expr, string frontmatter = "id: adr-0001", string body = "Some prose.") =>
         RuleExpr.Eval(RuleExpr.Compile(expr), FactsFor(frontmatter, body));
 
-    // -- the facts --
-
     [Fact]
     public void Field_reads_a_frontmatter_scalar()
         => Assert.True(Eval("field('status') == 'deprecated'", "id: adr-0001\nstatus: deprecated"));
@@ -88,7 +86,6 @@ public class RuleExprTests
     public void Links_counts_the_links_the_body_carries()
         => Assert.True(Eval("links() == 2", body: "See [a](/a.md) and [b](/b.md)."));
 
-    // -- absence --
     //
     // A comparison where either side is absent is false, and `!=` is its negation, so it is true. The
     // point of the rule is that it is one rule: a schema author guards with `present(…) implies …`
@@ -122,8 +119,6 @@ public class RuleExprTests
     public void Iso_dates_order_as_text()
         => Assert.True(Eval("field('a') < field('b')", "id: adr-0001\na: \"2026-01-09\"\nb: \"2026-01-10\""));
 
-    // -- the grammar --
-
     // There are no `true`/`false` literals: every condition starts from something the document says.
     // `not present('nope')` is how a rule writes a constant, and nothing needs one.
     [Theory]
@@ -139,7 +134,6 @@ public class RuleExprTests
     public void The_grammar_evaluates_as_declared(string expr, bool expected)
         => Assert.Equal(expected, Eval(expr, body: "One [link](/a.md)."));
 
-    // -- what will not compile --
     //
     // Every one of these is a schema defect that would otherwise become a check that silently never
     // fires, so each is a load-time failure rather than a quiet false.
@@ -169,8 +163,6 @@ public class RuleExprTests
     [Fact]
     public void A_chained_comparison_does_not_parse()
         => Assert.Throws<RuleExprException>(() => RuleExpr.Compile("1 < words() < 40"));
-
-    // -- the text probe --
 
     [Fact]
     public void Matches_sees_inside_a_fenced_code_block()

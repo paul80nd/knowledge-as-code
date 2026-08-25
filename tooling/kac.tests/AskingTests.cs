@@ -52,8 +52,6 @@ public class AskingTests
         Name = "acme", Types = Asking.AllTypes, Publishing = Publishing.None, Ci = CiSystem.None
     };
 
-    // -- what settles an answer --
-
     [Fact]
     public void A_flag_given_is_never_asked_for()
     {
@@ -103,8 +101,6 @@ public class AskingTests
     public void A_corpus_needs_a_name()
         => Assert.Contains("a corpus needs a name", Resolve(Flagged() with { Name = "  " }).Problem);
 
-    // -- types --
-
     [Fact]
     public void All_names_every_type_the_template_declares()
         => Assert.Equal(Declared, Resolve(Flagged()).Answers!.Types);
@@ -129,8 +125,6 @@ public class AskingTests
     public void A_corpus_may_adopt_no_type_at_all()
         => Assert.Empty(Resolve(new NewRequest(), new Scripted(many: [])).Answers!.Types);
 
-    // -- the two vocabularies --
-
     [Fact]
     public void A_publishing_target_the_tool_cannot_act_on_is_refused()
     {
@@ -143,8 +137,6 @@ public class AskingTests
     [Fact]
     public void A_ci_system_the_tool_does_not_offer_is_refused()
         => Assert.Contains("'jenkins' is not a system", Resolve(Flagged() with { Ci = "jenkins" }).Problem);
-
-    // -- the publishing bases --
 
     [Fact]
     public void A_corpus_publishing_nowhere_is_asked_for_no_bases()

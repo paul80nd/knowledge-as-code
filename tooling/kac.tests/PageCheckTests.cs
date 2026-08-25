@@ -37,8 +37,6 @@ public class PageCheckTests
     public void A_page_the_corpus_does_not_hold_is_left_to_type_setup()
         => Assert.Empty(Page("---\nid: adr-0001\n---\n\n# ADRs\n\n[gone](/adrs/0099-gone.md)\n", tracked: false));
 
-    // -- the corpus these are asked against --
-
     private static readonly TypeSchema Adrs = new()
     {
         Key = "adrs",

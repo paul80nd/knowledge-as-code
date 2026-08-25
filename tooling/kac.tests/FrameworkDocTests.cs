@@ -40,8 +40,6 @@ public class FrameworkDocTests
             "# The framework\n\n<!-- BEGIN GENERATED: types-index -->\n[ADRs](/adrs)\n"
             + "<!-- END GENERATED: types-index -->\n")));
 
-    // -- which files are read --
-
     // The glob is what finds these, so a document inside the framework's folder is read as the root one is.
     [Fact]
     public void A_document_inside_the_framework_s_folder_is_read()
@@ -63,8 +61,6 @@ public class FrameworkDocTests
     public void A_document_the_corpus_does_not_hold_is_not_read()
         => Assert.Empty(Framework(
             ("knowledge-as-code/draft.md", "# Draft\n\nSee the [ADRs](/adrs).\n"), tracked: false));
-
-    // -- the corpus these are asked against --
 
     // Two types, so that a link can name one: `adrs` is what the documents above link to, and `glossary` is
     // where the framework's own shared glossary is filed.

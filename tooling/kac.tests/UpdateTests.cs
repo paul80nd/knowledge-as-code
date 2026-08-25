@@ -38,8 +38,6 @@ public class UpdateTests
         Update.Plan(template, corpus, Rules(), descriptor ?? new CorpusDescriptor(),
             types ?? Everything(), policy, readInPlace, _ => same);
 
-    // -- the overlay layer --
-
     [Fact]
     public void An_overlay_file_whose_copies_differ_is_written()
     {
@@ -78,8 +76,6 @@ public class UpdateTests
         Assert.Equal("pages/taxonomy.md", file.To);
     }
 
-    // -- the seed layer --
-
     [Fact]
     public void A_seed_the_corpus_holds_is_left_alone_under_cautious()
     {
@@ -116,8 +112,6 @@ public class UpdateTests
         Assert.Equal(1, plan.InStep);
     }
 
-    // -- the removed layer --
-
     // The template no longer holds the file a tombstone names, so nothing but the corpus-side pass
     // reaches one.
     [Fact]
@@ -137,8 +131,6 @@ public class UpdateTests
         Assert.Empty(plan.Deleted);
     }
 
-    // -- the withheld layer --
-
     [Fact]
     public void A_withheld_file_reaches_no_corpus()
     {
@@ -148,8 +140,6 @@ public class UpdateTests
         Assert.Empty(plan.Seeded);
         Assert.False(plan.Changes);
     }
-
-    // -- what the corpus takes back --
 
     [Fact]
     public void A_skipped_path_is_neither_read_nor_written()
@@ -175,8 +165,6 @@ public class UpdateTests
         Assert.Empty(plan.Deleted);
         Assert.Single(plan.Skipped);
     }
-
-    // -- a type the corpus did not adopt --
 
     [Fact]
     public void A_declined_types_files_are_withheld_and_counted()
@@ -205,8 +193,6 @@ public class UpdateTests
 
         Assert.Empty(Plan(Files(), Files(), types: types).Offered);
     }
-
-    // -- a starter for a continuous integration system --
 
     [Fact]
     public void A_ci_starter_the_corpus_does_not_hold_is_never_introduced()
@@ -242,8 +228,6 @@ public class UpdateTests
         Assert.True(plan.TemplateIsUnsound);
     }
 
-    // -- a template this tool cannot read --
-
     [Fact]
     public void A_file_the_manifest_cannot_place_stops_the_run()
     {
@@ -255,8 +239,6 @@ public class UpdateTests
         Assert.Equal(["stray.txt"], plan.Unclassified);
         Assert.True(plan.TemplateIsUnsound);
     }
-
-    // -- the other direction --
 
     [Fact]
     public void An_overlay_file_the_template_does_not_send_is_reported()
@@ -278,8 +260,6 @@ public class UpdateTests
         Assert.False(plan.Changes);
     }
 
-    // -- a corpus inside the repository serving its template --
-
     [Fact]
     public void A_file_whose_destination_is_its_source_is_shared_rather_than_copied()
     {
@@ -296,8 +276,6 @@ public class UpdateTests
 
         Assert.Equal([".schema/adrs.yaml"], plan.Written.Select(f => f.To));
     }
-
-    // -- where the template is read from --
 
     [Fact]
     public void A_relative_template_path_is_resolved_against_the_corpus_and_not_the_working_directory()
@@ -327,8 +305,6 @@ public class UpdateTests
         Assert.Equal(inside, Update.ReadInPlace(
             template.Replace('/', separator), corpus.Replace('/', separator)));
     }
-
-    // -- adopting and giving up a type --
 
     private static Schema TypeSchema() => Schema.Load(Repo.Root);
 
@@ -399,8 +375,6 @@ public class UpdateTests
         Assert.Equal(["adrs"], adoption.Types);
         Assert.Null(adoption.Account);
     }
-
-    // -- what a type folder counts as a record --
 
     [Fact]
     public void The_two_files_a_type_folder_holds_that_are_not_records_are_not_counted()

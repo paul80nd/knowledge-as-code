@@ -26,8 +26,6 @@ public class IdentityLineTests
         => Assert.Equal("identity line says 'Standard', but this is Data.",
             IdentityType(Type("data", "Data", "Data"), "dat-borrowers"));
 
-    // -- driving the check --
-
     private static TypeSchema Type(string key, string label, string plural) =>
         new() { Key = key, Folder = key, Label = label, LabelPlural = plural };
 

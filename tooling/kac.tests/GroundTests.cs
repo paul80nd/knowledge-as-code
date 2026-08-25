@@ -18,8 +18,6 @@ public class GroundTests : IDisposable
         return path;
     }
 
-    // -- a corpus already here --
-
     [Fact]
     public void A_folder_with_no_descriptor_above_it_is_no_corpus()
         => Assert.Null(New.Survey(Dir("empty")).Corpus);
@@ -43,8 +41,6 @@ public class GroundTests : IDisposable
 
         Assert.Equal(above, New.Survey(below).Corpus);
     }
-
-    // -- git --
 
     [Fact]
     public void A_folder_that_is_no_repository_says_so_and_reports_no_state()
@@ -78,8 +74,6 @@ public class GroundTests : IDisposable
 
         Assert.True(New.Survey(dir).Dirty);
     }
-
-    // -- what the folder holds --
 
     [Fact]
     public void An_empty_folder_holds_nothing()

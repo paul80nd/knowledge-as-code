@@ -32,8 +32,6 @@ public class ManifestTests
         Assert.Null(m.Resolve("adrs/0001-x.md"));
     }
 
-    // -- where a file lands --
-
     // A rule naming no destination leaves the path alone, which is every rule of the portability
     // manifest and most of the template's.
     [Fact]
@@ -104,8 +102,6 @@ public class ManifestTests
             m.Place("template/knowledge-as-code/style.md"));
     }
 
-    // -- the types a corpus has adopted --
-
     // The two answers are different states, not the same one written two ways. A descriptor that says
     // nothing leaves adoption to the filesystem, so nothing it holds can be surplus to what it declared.
     [Fact]
@@ -150,8 +146,6 @@ public class ManifestTests
         Assert.Equal(["adrs", "policies"], CorpusDescriptor.Load(dir).Types);
     }
 
-    // -- what the corpus calls itself --
-
     // Two names for one corpus, answering two questions: what it calls itself, and what a citation from
     // another corpus writes before the colon.
     [Fact]
@@ -178,8 +172,6 @@ public class ManifestTests
 
         Assert.Null(CorpusDescriptor.Load(dir).Shortcode);
     }
-
-    // -- the three versions --
 
     // Each key answers a different question, and the descriptor is read for all three at once.
     [Fact]
@@ -304,8 +296,6 @@ public class ManifestTests
     [Fact]
     public void A_corpus_with_no_descriptor_has_nothing_to_rename()
         => Assert.Null(CorpusDescriptor.RenamedKeyInUse(Directory.CreateTempSubdirectory().FullName));
-
-    // -- what an update records --
 
     [Fact]
     public void Stamping_rewrites_the_upstream_block_and_leaves_the_commentary()

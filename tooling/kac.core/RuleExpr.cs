@@ -85,8 +85,6 @@ public static class RuleExpr
     // expression reads as the condition that ought to hold rather than as the fault.
     public static bool Eval(Expr expr, Facts facts) => Value(expr, facts) is true;
 
-    // -- evaluation --
-
     private static object? Value(Expr expr, Facts f) =>
         expr switch
         {
@@ -161,8 +159,6 @@ public static class RuleExpr
             _ => null
         };
     }
-
-    // -- type checking --
 
     private static ValueType TypeOf(Expr expr, string source)
     {
@@ -239,7 +235,6 @@ public static class RuleExpr
         _ => "a yes/no answer"
     };
 
-    // -- parsing --
     //
     // Recursive descent over the frozen grammar, loosest binding first:
     //   implies → or → and → comparison → + - → * / → not → primary

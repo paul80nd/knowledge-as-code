@@ -53,8 +53,6 @@ public class ExporterTests
         }
     };
 
-    // -- ordering: roots by id, each root's chain beneath it, and what that does and does not mean --
-
     // `narrows` orders a chain and nothing orders one chain against another, so the roots sort by id and
     // each root's chain follows it. A grep meeting a redefined term therefore meets the general one
     // first, whichever root it belongs under.
@@ -138,8 +136,6 @@ public class ExporterTests
         Assert.Equal(["gls-one.one", "gls-two.two"], lines.Select(l => l.GetProperty("id").GetString()));
     }
 
-    // -- a term, split as the type writes one --
-
     [Fact]
     public void A_term_carries_its_definition_and_the_labelled_line_beneath_it_apart()
     {
@@ -173,8 +169,6 @@ public class ExporterTests
         foreach (var line in lines)
             Assert.Equal("gls-one", JsonDocument.Parse(line).RootElement.GetProperty("record").GetString());
     }
-
-    // -- the wrap column, taken back out --
 
     // The corpus wraps at 120 columns. Those breaks are a fact about the file, and carried into the
     // export they defeat the one thing the flat file is for: a grep for a phrase straddling the wrap
@@ -224,8 +218,6 @@ public class ExporterTests
         Assert.Equal("What this admits:\n\n- one thing\n- another thing",
             record.GetProperty("sections").GetProperty("Scope").GetString());
     }
-
-    // -- cross-references --
 
     // A link's target is stripped out of the prose, so an agent reading `see [gls-two]` in the text
     // alone is handed a bracket it cannot follow. The ids are carried beside the words.
@@ -288,8 +280,6 @@ public class ExporterTests
         Assert.Empty(Plan(corpus).Unread);
     }
 
-    // -- the trust marker --
-
     // `terms.jsonl` is what gets grepped, and a consumer that grepped it has not opened the record. A
     // hit carrying no state is a definition with nothing saying its glossary is still settling.
     [Fact]
@@ -302,8 +292,6 @@ public class ExporterTests
         Assert.Equal("2020-01-01", line.GetProperty("reviewBy").GetString());
     }
 
-    // -- one spelling of absent --
-
     // `""` here beside `null` there would make the spelling of absent a property of which file was
     // opened.
     [Fact]
@@ -315,8 +303,6 @@ public class ExporterTests
 
         Assert.Equal(JsonValueKind.Null, record.GetProperty("fields").GetProperty("narrows").ValueKind);
     }
-
-    // -- the record --
 
     [Fact]
     public void A_record_carries_the_fields_and_sections_its_type_declares_and_no_others()
@@ -348,8 +334,6 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, publishing.GetProperty("humanTemplate").ValueKind);
         Assert.Equal(JsonValueKind.Null, publishing.GetProperty("rawTemplate").ValueKind);
     }
-
-    // -- how much of a section travels --
 
     [Fact]
     public void A_section_carried_at_summary_keeps_its_opening_block_and_drops_the_rest()
@@ -403,8 +387,6 @@ public class ExporterTests
         Assert.Equal("summary", declared.GetProperty("Scope").GetString());
     }
 
-    // -- the address a line carries --
-
     // A line names what varies and nothing else. The host, the path prefix and the commit are in the
     // manifest's templates, said once for the whole export rather than sixty times over thirty terms.
     [Fact]
@@ -443,8 +425,6 @@ public class ExporterTests
                 .Replace(Publishing.PathToken, path)
                 .Replace(Publishing.AnchorToken, anchor));
     }
-
-    // -- the manifest --
 
     // "Nothing" is a valid statement of what a corpus has. A corpus that adopted no exporting type still
     // produces a manifest, so a consumer reads an answer rather than meeting an empty directory.
@@ -538,8 +518,6 @@ public class ExporterTests
             Single(later, Exporter.ManifestFile).Content);
     }
 
-    // -- what a corpus may leave behind --
-
     // The default, and the one that matters: a draft glossary and one long past its review date both
     // travel, carrying the state that lets a consumer decide.
     [Fact]
@@ -579,8 +557,6 @@ public class ExporterTests
         Assert.Empty(Exporter.Plan(corpus, null, null, Run).Withheld);
     }
 
-    // -- narrowing what is written --
-
     [Fact]
     public void Naming_a_type_narrows_what_is_written_and_leaves_the_rest_out()
     {
@@ -588,8 +564,6 @@ public class ExporterTests
 
         Assert.Equal([Exporter.ManifestFile], plan.Files.Select(f => f.Path));
     }
-
-    // -- helpers --
 
     private static ExportPlan Plan(LoadedCorpus corpus) => Exporter.Plan(corpus, null, null, Run);
 
@@ -613,8 +587,6 @@ public class ExporterTests
                 Single(Plan(Corpus(type, ("gls-one", Glossary("gls-one", null, "### Alpha\n\nA.\n", scope: scope)))),
                     "glossary/gls-one.json").Content)
             .RootElement.GetProperty("sections");
-
-    // -- a type whose parts are rows, and whose line says so --
 
     // A clause carries its modal and the type's own third column, and carries none of a glossary's
     // words. This is what a type declaring its own line buys: two types export parts through one
