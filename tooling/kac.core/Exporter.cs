@@ -82,6 +82,7 @@ public static class Exporter
             Serialize(new ExportManifest(
                 FormatVersion,
                 corpus.Descriptor.Name,
+                corpus.Descriptor.Shortcode,
                 corpus.Descriptor.ContentVersion,
 
                 // The descriptor calls this `upstream.template-version`. Renaming the published name is

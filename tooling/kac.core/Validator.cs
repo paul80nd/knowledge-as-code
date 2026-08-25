@@ -89,6 +89,7 @@ public static class Validator
         CheckCorpusRules(schema, corpus.Docs, byId, findings);
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
+        CheckShortcode(schema, corpus.Descriptor, findings);
 
         return findings;
     }
@@ -346,6 +347,50 @@ public static class Validator
                     $"type '{key}' is stood up here and is not in 'types:'. Every generated list leaves it out while "
                     + "the corpus holds it. Adopt it, or delete what was built."));
         }
+    }
+
+    // The shorthand another corpus cites this one by, held to a spelling a citation can carry.
+    // `.schema/_checks.yaml` argues each part of that spelling under `shortcode`.
+    //
+    // A corpus declaring none is silent. It is cited by nothing, and the value is immutable once written,
+    // so there is nothing to be gained by holding a corpus to a value it has no use for yet.
+    //
+    // Both faults are reported at once, because correcting one leaves the other standing. That is what
+    // the prefix comparison ignores case for: `STD` is misspelled and is still the standards prefix, and
+    // an author told only about the casing would fix it and meet the second refusal on the next run.
+    private static void CheckShortcode(Schema schema, CorpusDescriptor descriptor, List<Finding> f)
+    {
+        if (descriptor.Shortcode is not { } shortcode) return;
+
+        const string at = ".corpus.yaml";
+
+        if (Misspelled(shortcode) is { } fault)
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("shortcode"),
+                $"shortcode '{shortcode}' {fault}. A shortcode is "
+                + $"{CorpusDescriptor.ShortcodeMin} to {CorpusDescriptor.ShortcodeMax} characters, opens on a "
+                + "lower-case letter, and carries lower-case letters and digits after it."));
+
+        // Asked of the schema rather than of a list here, so adopting a type shuts its prefix off and
+        // declining one leaves it free. A type declaring no prefix takes no spelling with it, which
+        // `Schema.IdPrefixes` skips for the same reason.
+        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+            if (t.IdPrefix.Length > 0 && string.Equals(shortcode, t.IdPrefix, StringComparison.OrdinalIgnoreCase))
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("shortcode"),
+                    $"shortcode '{shortcode}' is the id prefix of '{key}'. A citation opening '{t.IdPrefix}:' "
+                    + "reads as that type rather than as this corpus. Pick a shorthand no type has taken."));
+    }
+
+    // How a shortcode is spelled wrong, or null where it is spelled correctly. The wording completes
+    // "shortcode 'x' ...", and names the first fault alone: an author fixing it re-runs the check.
+    private static string? Misspelled(string shortcode)
+    {
+        if (shortcode.Length < CorpusDescriptor.ShortcodeMin) return "is too short";
+        if (shortcode.Length > CorpusDescriptor.ShortcodeMax) return "is too long";
+        if (!char.IsAsciiLetterLower(shortcode[0])) return "does not open on a lower-case letter";
+
+        return shortcode.Any(c => !char.IsAsciiLetterLower(c) && !char.IsAsciiDigit(c))
+            ? "carries something other than a lower-case letter or a digit"
+            : null;
     }
 
     // The documents describing the framework itself, wherever a corpus keeps them, as globs the listing

@@ -421,6 +421,31 @@ public class ExporterTests
         Assert.Equal(Run.GeneratedAt, manifest.GetProperty("generatedAt").GetString());
     }
 
+    // Two names for one corpus, and the manifest carries both. `corpus` tells one export from another,
+    // and `shortcode` is what a citation writes before the colon, so a consumer resolving `eng:pol-VURM`
+    // knows which of the exports it holds answers it.
+    [Fact]
+    public void The_manifest_carries_the_shortcode_a_citation_scopes_by()
+    {
+        var corpus = Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"));
+        corpus.Descriptor.Shortcode = "tst";
+
+        var manifest = JsonDocument.Parse(Single(Plan(corpus), Exporter.ManifestFile).Content).RootElement;
+
+        Assert.Equal("test-corpus", manifest.GetProperty("corpus").GetString());
+        Assert.Equal("tst", manifest.GetProperty("shortcode").GetString());
+    }
+
+    // A corpus nothing cites has declared none, and the manifest states the absence rather than dropping
+    // the key. A consumer then reads one shape either way.
+    [Fact]
+    public void A_corpus_declaring_no_shortcode_states_the_absence()
+        => Assert.Equal(JsonValueKind.Null,
+            JsonDocument.Parse(
+                    Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"))), Exporter.ManifestFile)
+                        .Content)
+                .RootElement.GetProperty("shortcode").ValueKind);
+
     // Two runs over one commit differ in the timestamp and nowhere else, which is what makes an export
     // something a consumer can diff to see whether the corpus moved.
     [Fact]

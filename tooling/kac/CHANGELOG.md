@@ -14,7 +14,16 @@ surface may still change shape.
 A push to `main` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and that publish tags
 the commit and opens a release carrying the section for that version.
 
-## Unreleased
+## 0.8.0 - 2026-08-25
+
+### Added
+
+- **A corpus declares the shorthand another corpus cites it by.** `.corpus.yaml` carries a top-level
+  `shortcode:`, which is the `eng` in `eng:pol-VURM.TIMEBOX`. `kac validate` refuses a spelling a
+  citation cannot carry, and one a type has already taken as its id prefix. `kac export` states the
+  declared shortcode in its manifest, so a consumer holding several exports knows which one answers a
+  scoped citation. `kac new` writes the key with no value: a shortcode cannot be changed once another
+  corpus has cited it, so it is filled in when one is about to.
 
 ### Fixed
 

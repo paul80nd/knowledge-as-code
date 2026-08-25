@@ -1,0 +1,25 @@
+{
+  "summary": {
+    "validated": 0,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 2,
+    "warnings": 0
+  },
+  "findings": [
+    {
+      "file": ".corpus.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "shortcode",
+      "message": "shortcode 'STD' does not open on a lower-case letter. A shortcode is 2 to 8 characters, opens on a lower-case letter, and carries lower-case letters and digits after it."
+    },
+    {
+      "file": ".corpus.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "shortcode",
+      "message": "shortcode 'STD' is the id prefix of 'standards'. A citation opening 'std:' reads as that type rather than as this corpus. Pick a shorthand no type has taken."
+    }
+  ]
+}

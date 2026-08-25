@@ -1,0 +1,9 @@
+descriptor-version: 1
+corpus: test-shortcode
+
+# Miscased, and the standards prefix underneath the miscasing.
+shortcode: STD
+
+upstream:
+  url:
+skip: []

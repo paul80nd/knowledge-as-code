@@ -99,6 +99,11 @@ first, so a reader can choose.
 parts. For a glossary the two differ by an order of magnitude. A reader sizing the vocabulary wants the parts. A reader
 asking how many files it was handed wants the records. One number would be read as either.
 
+**The manifest carries both of the corpus's names.** `corpus` is what the corpus calls itself, which tells one export
+from another. `shortcode` is what a citation writes before the colon, so a consumer resolving `eng:pol-VURM` knows which
+of the exports it holds answers it. It is `null` where the corpus declares none, and
+[`.corpus.yaml`](../corpus-descriptor.md#identity) is where a corpus declares one.
+
 ### The flat file is JSONL because it exists to be grepped
 
 A hit has to hand back something parseable on its own. A matching line of an indented document is a fragment, and the
