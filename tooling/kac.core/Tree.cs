@@ -7,10 +7,10 @@ namespace kac.core;
 // file. Ask the filesystem instead and a check passes for whoever wrote it and fails in CI, by which
 // time they have stopped looking.
 //
-// Reading is a `Func` rather than a root path, so the whole of it is decidable from values as
-// `Mechanism.Classify` and `MechanismSync.Plan` already are. A test builds one over a dictionary; the
-// tool builds one over the working tree. Every pass that reads the corpus comes through here, which is
-// what lets a check be written against a corpus nobody wrote to disk.
+// Reading is a `Func` rather than a root path, so the whole of it is decidable from values as `New.Plan`
+// and `Update.Plan` already are. A test builds one over a dictionary; the tool builds one over the
+// working tree. Every pass that reads the corpus comes through here, which is what lets a check be
+// written against a corpus nobody wrote to disk.
 public sealed class Tree(IReadOnlySet<string> paths, Func<string, string> read, Func<string, bool>? onDisk = null)
 {
     public bool Exists(string rel) => paths.Contains(Normalise(rel));
