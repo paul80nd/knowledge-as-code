@@ -294,6 +294,112 @@ public class DocumentTests
         Assert.Equal(["pol-VURM.TIMEBOX"], doc.PartRefs.Select(r => r.Ref));
     }
 
+    // Two clauses of one policy, cited off one definition, which is what this form is for.
+    [Fact]
+    public void A_part_id_hard_against_a_link_is_read_as_a_citation()
+    {
+        var doc = ParseWithClauses("""
+                                   See [pol-VURM].TIMEBOX and [pol-VURM].WINDOW.
+
+                                   [pol-VURM]: vurm-a-title.md
+                                   """);
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX", "pol-VURM.WINDOW"], doc.PartRefs.Select(r => r.Ref));
+    }
+
+    // An inline link ends on its target, so the part id follows the parenthesis rather than a bracket.
+    [Fact]
+    public void A_part_id_hard_against_an_inline_link_is_read_as_a_citation()
+    {
+        var doc = ParseWithClauses("See [pol-VURM](vurm-a-title.md).TIMEBOX for the window.\n");
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX"], doc.PartRefs.Select(r => r.Ref));
+    }
+
+    // A clause table is where a cross-reference is written, and a pipe table re-parses its cells. The
+    // part id is found by its offset in the document, so a cell whose spans did not survive that
+    // re-parse would read the wrong character.
+    [Fact]
+    public void A_part_id_hard_against_a_link_in_a_table_cell_is_read_as_a_citation()
+    {
+        var doc = ParseWithClauses("""
+                                   ## Clauses
+
+                                   | Id      | Clause                                    |
+                                   |---------|-------------------------------------------|
+                                   | `STORE` | **MUST** hold secrets. See [pol-VURM].TIMEBOX |
+
+                                   [pol-VURM]: vurm-a-title.md
+                                   """);
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX"], doc.PartRefs.Select(r => r.Ref));
+    }
+
+    // The separator is asked of this form as of the others, so a colon is named rather than passed over.
+    [Fact]
+    public void A_colon_hard_against_a_link_is_collected_as_a_colon_citation()
+    {
+        var doc = ParseWithClauses("""
+                                   See [pol-VURM]:TIMEBOX.
+
+                                   [pol-VURM]: vurm-a-title.md
+                                   """);
+
+        Assert.NotNull(doc);
+        Assert.Empty(doc.PartRefs);
+        Assert.Equal(["pol-VURM:TIMEBOX"], doc.ColonCitations.Select(r => r.Ref));
+    }
+
+    // A label already carrying the whole citation ends it, so whatever follows the bracket is prose.
+    // Reading a second part id onto it would build `pol-VURM.TIMEBOX.Also`, which matches no citation
+    // form and would drop a citation the parser collects today.
+    [Fact]
+    public void A_label_that_already_carries_the_citation_takes_nothing_after_the_bracket()
+    {
+        var doc = ParseWithClauses("""
+                                   See [pol-VURM.TIMEBOX].Also read the rest.
+
+                                   [pol-VURM.TIMEBOX]: vurm-a-title.md#clauses
+                                   """);
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX"], doc.PartRefs.Select(r => r.Ref));
+    }
+
+    // A sentence ending on a link is ordinary prose, and reading its full stop as a separator would
+    // report a part called 'The'.
+    [Theory]
+    [InlineData("See [pol-VURM]. The policy times it out.")]
+    [InlineData("See [pol-VURM].")]
+    [InlineData("See [pol-VURM], which times it out.")]
+    public void A_full_stop_ending_a_sentence_is_not_a_citation(string prose)
+    {
+        var doc = ParseWithClauses($"{prose}\n\n[pol-VURM]: vurm-a-title.md\n");
+
+        Assert.NotNull(doc);
+        Assert.Empty(doc.PartRefs);
+        Assert.Empty(doc.ColonCitations);
+    }
+
+    // A label with no type prefix is external, and the half after the dot answers to nothing here. This
+    // is the Alignment column's form, and it stays as it was.
+    [Fact]
+    public void A_part_id_after_an_external_label_is_passed_over()
+    {
+        var doc = ParseWithClauses("""
+                                   Aligns with [ISO 27001:2022].A.8.24.
+
+                                   [ISO 27001:2022]: https://www.iso.org/standard/27001
+                                   """);
+
+        Assert.NotNull(doc);
+        Assert.Empty(doc.PartRefs);
+        Assert.Empty(doc.ColonCitations);
+    }
+
     // The prefix tells a citation from a filename: `pol` is a type's and `vurm` is not, so the filename
     // is passed over and never reported as a citation of nothing.
     [Fact]

@@ -70,6 +70,12 @@ Scenario: A citation is held to the clause it names, and to the document that ca
     | line | check    | message                                                |
     |   16 | part-ref | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist. |
 
+Scenario: A part id written beside a link is resolved as a citation
+  When I validate the corpus
+  Then the findings for "policies/link-clause-after-link.md" are exactly:
+    | line | check    | message                                                                                          |
+    |   17 | part-ref | 'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry. |
+
 Scenario: A citation separated by a colon is told the form to write
   When I validate the corpus
   Then the findings for "policies/coln-colon-separator.md" are exactly:
@@ -100,7 +106,7 @@ Scenario: A parts section holding no headings is told what belongs there
 
 Scenario: The whole corpus produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 18 documents and 0 skipped
+  Then validation reports 19 documents and 0 skipped
   And the findings are exactly:
     | file                                  | severity | line | check            | message                                                                                                                        |
     | glossary/dupe-two-terms-alike.md      | error    |   26 | part-id-unique   | two terms here address as 'identity-line': a citation of it names both and reaches neither.                                    |
@@ -117,6 +123,7 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | policies/dupe-repeated-id.md          | error    |   28 | part-id-unique   | two clauses here address as 'SAME': a citation of it names both and reaches neither.                                           |
     | policies/empt-no-rows.md              | error    |   25 | clause-table     | the clause table has no rows: a record that binds nothing binds nobody.                                                        |
     | policies/head-wrong-headers.md        | error    |   26 | clause-table     | the clause table is headed 'Ref \| Obligation'. It must be headed 'Id \| Clause \| Alignment'.                                 |
+    | policies/link-clause-after-link.md    | error    |   17 | part-ref         | 'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry.                               |
     | policies/moda-no-modal.md             | error    |   28 | clause-modal     | clause 'We will trigger clause-modal and nothing else' does not open with a modal. Write one of MUST, MUST NOT, SHOULD, COULD. |
     | policies/nota-clauses-as-bullets.md   | error    |   24 | clause-table     | the '## Clauses' section holds no table. Write one row per obligation, headed 'Id \| Clause \| Alignment'.                     |
     | policies/ordr-out-of-order.md         | warning  |   28 | clause-order     | clause 'SECND' is a 'MUST' but follows a 'MUST NOT'. Group the table MUST, MUST NOT, SHOULD, COULD.                            |

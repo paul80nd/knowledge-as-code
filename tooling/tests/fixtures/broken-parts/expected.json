@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 18,
+    "validated": 19,
     "templates": 2,
     "skipped": 0,
-    "errors": 17,
+    "errors": 18,
     "warnings": 2
   },
   "findings": [
@@ -104,6 +104,13 @@
       "severity": "error",
       "check": "clause-table",
       "message": "the clause table is headed 'Ref | Obligation'. It must be headed 'Id | Clause | Alignment'."
+    },
+    {
+      "file": "policies/link-clause-after-link.md",
+      "line": 17,
+      "severity": "error",
+      "check": "part-ref",
+      "message": "'pol-CREF.MISSING' cites a clause 'MISSING' that policies/cref-unknown-clause.md does not carry."
     },
     {
       "file": "policies/moda-no-modal.md",

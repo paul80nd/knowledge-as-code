@@ -96,8 +96,22 @@ Two separators reach past an id, each with one job.
 `gls-knowledge-as-code.corpus` names the glossary, then the term. Each citation resolves against the record it names, so
 a reference to a part that does not exist fails the build. So does a reference into a type that keeps no parts.
 
-A citation takes two forms, and `kac validate` resolves both. Write a code span where the citation is the point. Write
-a link where the reader should land on the part, with the citation as the link's text or as its label.
+A citation takes three forms, and `kac validate` resolves each. A code span states the reference. A link carrying the
+whole citation takes the reader to it. A link naming the record, with the part id written after the closing bracket,
+does the same and reuses one definition:
+
+```markdown
+The clause is `pol-VURM.TIMEBOX`.
+The default branch is protected. See [pol-VURM.TIMEBOX].
+The default branch is protected. See [pol-VURM].TIMEBOX, and the window in [pol-VURM].WINDOW.
+
+[pol-VURM.TIMEBOX]: vurm-a-title.md#clauses
+[pol-VURM]: vurm-a-title.md#clauses
+```
+
+The third form is the cheapest. It needs one link definition however many clauses of that policy the document goes on
+to cite. Where the reader lands is the definition's to decide, so point it at the section holding the parts. The part
+id has to touch the bracket, so `See [pol-VURM]. The policy...` stays a full stop and a sentence.
 
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, record, part. A
 record the reading corpus holds is cited bare, and qualifying one is an error, because two spellings of a single
