@@ -12,7 +12,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Ver
 surface may still change shape.
 
 A push to `main` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and that publish tags
-the commit and opens a release carrying the section for that version.
+the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
+first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
 ## 0.12.0 - 2026-08-26
 
