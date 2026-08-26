@@ -114,8 +114,9 @@ installed nothing. Edit one and copy the change across, because nothing in CI ho
 and a section assumes nothing from the section above it.
 
 **Count the words between headings.** Most pages here sit near 80 words. Past about 120 a reader has to read a section
-to find out whether it answers them, and `export` at 173 and `bundle` at 143 are the two that have not yet had that cut.
-The count is a prompt to look, never the diagnosis.
+to find out whether it answers them. The count is a prompt to look, never the diagnosis, and what it finds is one of
+two things. A section of bulleted rules or bold lead-ins scans however long it runs, so leave it. A run of paragraphs
+under one heading does not, and the repair is a heading each rather than fewer words.
 
 **A command page carries five fixed sections, and grows deeper rather than wider.**
 [`tooling/README.md`](../../../tooling/README.md#the-documentation-site) is the reference for that set and for the
