@@ -2,4 +2,9 @@
 
 # Standard Index (STD)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID       | Title                                                                                        | Axis   | Status | Derived from | Review by  |
+|----------|----------------------------------------------------------------------------------------------|--------|--------|--------------|------------|
+| std-0001 | [Everything a service needs is committed to its repository](common/version-control.md)       | common | draft  |              | 2027-08-26 |
+| std-0002 | [A pull request carries its reasoning and one accountable approval](common/pull-requests.md) | common | draft  |              | 2027-08-26 |
+| std-0003 | [A secret is read from the store at run time](common/secret-handling.md)                     | common | draft  |              | 2027-08-26 |
+| std-0004 | [A failing check blocks the merge](common/build-gates.md)                                    | common | draft  |              | 2027-08-26 |
