@@ -28,7 +28,7 @@ public static class Generator
                 [.. t.IndexColumns.Select(Humanize)],
                 [
                     .. Sorted(t, docs)
-                        .Select(d => t.IndexColumns.Select(c => Cell(d, c, t.Folder)).ToList())
+                        .Select(d => t.IndexColumns.Select(c => Cell(d, c)).ToList())
                 ]);
 
         return $"{Banner}\n\n# {title}\n\n{body}\n";
@@ -329,16 +329,15 @@ public static class Generator
             : acc.ThenBy(d => d.FrontScalar(key) ?? "", StringComparer.Ordinal));
     }
 
-    private static string Cell(Doc d, string col, string folder)
+    private static string Cell(Doc d, string col)
     {
         if (col == Title)
         {
             // The index sits in the type's own folder, so a record filed under a category below it is
-            // reached through that category. A record sitting flat is left as its filename, and so is
-            // one the folder does not account for.
-            var prefix = folder + "/";
-            var file = folder.Length > 0 && d.Rel.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-                ? d.Rel[prefix.Length..]
+            // reached through that category. `Folder` is the first segment of `Rel`, so what remains
+            // after it is the link, and a record sitting flat is left with its filename.
+            var file = d.Folder.Length > 0 && d.Rel.Length > d.Folder.Length
+                ? d.Rel[(d.Folder.Length + 1)..]
                 : Path.GetFileName(d.Rel);
             return $"[{Escape(d.H1 ?? "")}]({file})";
         }

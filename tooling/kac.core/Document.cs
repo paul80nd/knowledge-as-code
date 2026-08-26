@@ -243,14 +243,18 @@ public partial class Doc
         {
             if (link.IsImage) continue;
 
-            // A citation written as a reference link, where the label is the part id and the definition
-            // lands the reader on it. Collected beside the code spans so both forms answer to `part-ref`.
-            // Nothing else asks what the label claims: the definition points at a page, and the page
-            // resolves whichever part was named. Once per label, because the label is defined once
-            // however many times the prose reaches for it.
-            if (link.Reference?.Label is { } label && NamesARecord(label, schema)
-                && PartCitationRegex().IsMatch(label) && citedLabels.Add(label))
-                doc.PartRefs.Add((label, link.Line + 1));
+            // The other place a citation is written: the label of a reference link, or the text of an
+            // inline one. Collected beside the code spans so every form a citation takes answers to the
+            // same pass. See `part-ref` in .schema/_checks.yaml.
+            //
+            // Once per spelling, unlike a code span, because a reference is defined once however often
+            // the prose reaches for it and the definition is the line an author would fix.
+            var cited = link.Reference?.Label ?? (link.FirstChild as LiteralInline)?.Content.ToString();
+            if (cited is not null && NamesARecord(cited, schema) && citedLabels.Add(cited))
+            {
+                if (PartCitationRegex().IsMatch(cited)) doc.PartRefs.Add((cited, link.Line + 1));
+                else if (ColonCitationRegex().IsMatch(cited)) doc.ColonCitations.Add((cited, link.Line + 1));
+            }
 
             doc.Links.Add(new LinkRef
             {

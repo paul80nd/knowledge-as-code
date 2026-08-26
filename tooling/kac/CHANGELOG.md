@@ -18,11 +18,11 @@ the commit and opens a release carrying the section for that version.
 
 ### Fixed
 
-- **`part-ref` reads a citation written as a reference link.** A corpus cites a part two ways: as a code span, and as
-  the label of a reference link that lands the reader on it. Only the code span was resolved. A label naming a clause
-  or a term that does not exist passed `kac validate`, because its definition points at a page and the page resolves
-  whichever part the label claimed. Both forms now report under `part-ref`, so a corpus using the link form may see
-  errors it did not before.
+- **`part-ref` reads a citation written as a link.** A corpus cites a part as a code span, and as a link carrying the
+  citation as its text or as its label. Only the code span was resolved. A link naming a clause or a term that does
+  not exist passed `kac validate`, because a link resolves against a page and the page carries whichever part the
+  citation claimed. Every form now reports under `part-ref`, and a link spelling the separator as a colon is reported
+  as one, so a corpus using the link form may see errors it did not before.
 
 - **A type index links a record through the category folder holding it.** `kac generate` wrote the filename alone, so
   a record filed under a category below the type's folder was linked as though it sat beside the index. Standards are

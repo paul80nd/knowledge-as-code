@@ -49,8 +49,8 @@ Avoid
   ENV DATABASE_PASSWORD=$(DB_PASSWORD)       baked into the image at build time
 ```
 
-The first avoided form is in the repository, so rotating it is a commit. The second leaves the store but ends up inside
-the artefact, so rotating it is a rebuild and a redeploy.
+The first avoided form sits in the repository, so rotating it costs a commit. The second reads from the store and then
+writes the value into the image, so rotating it costs a rebuild and a redeploy.
 
 ## Conformance checklist
 

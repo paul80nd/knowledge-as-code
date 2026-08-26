@@ -80,7 +80,7 @@ public class GeneratorTests
     [Fact]
     public void IndexPage_links_a_record_through_the_category_folder_holding_it()
     {
-        var t = new TypeSchema { Label = "Standard", Folder = "standards", IdPrefix = "std", IndexColumns = ["title"] };
+        var t = new TypeSchema { Label = "Standard", IdPrefix = "std", IndexColumns = ["title"] };
         var doc = Doc.Parse("standards/common/build-gates.md",
             "---\nid: std-0004\n---\n\n# A failing check blocks the merge\n", new Schema())!;
 

@@ -31,8 +31,8 @@ deviation with a named owner.
 - A fix for a defect **MUST** arrive with a test that fails without it ([pol-AUTV.REGRESS]).
 - A team **MUST NOT** merge over a failing check without a recorded deviation ([pol-AUTV.BYPASS]).
 - A team **MUST NOT** skip, silence or suppress a check without a recorded deviation ([pol-AUTV.DISABLE]).
-- A deviation covering a suppressed check **MUST** name the individual accepting the risk and a review date
-  ([pol-DEVI.RECORD]).
+- A deviation covering a suppressed check **MUST** name the individual who accepts the risk ([pol-DEVI.OWNER]).
+- That deviation **MUST** carry a review date ([pol-DEVI.EXPIRY]).
 
 ## Examples
 
@@ -45,8 +45,8 @@ Avoid
   test.skip("retries on 503")
 ```
 
-Both stop the test running. The first leaves a name, a reason and a date, so somebody comes back to it. The second is
-found by whoever next wonders why the retry path broke.
+Both stop the test running. The first leaves a name, a reason and a date, so somebody comes back to it. Nobody comes
+back to the second until the retry path breaks in production.
 
 ## Conformance checklist
 
@@ -73,4 +73,5 @@ visible and gives it an end date.
 [pol-AUTV.MACHINE]: ../../policies/autv-automated-verification.md#clauses
 [pol-AUTV.REGRESS]: ../../policies/autv-automated-verification.md#clauses
 [pol-DEVI]: ../../policies/devi-deviations-are-recorded.md
-[pol-DEVI.RECORD]: ../../policies/devi-deviations-are-recorded.md#clauses
+[pol-DEVI.EXPIRY]: ../../policies/devi-deviations-are-recorded.md#clauses
+[pol-DEVI.OWNER]: ../../policies/devi-deviations-are-recorded.md#clauses

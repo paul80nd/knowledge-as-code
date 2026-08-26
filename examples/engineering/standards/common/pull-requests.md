@@ -29,7 +29,8 @@ than the author approves it before it merges.
 - A pull request description **MUST** link the work item that asked for the change ([pol-EVER.INTENT]).
 - A pull request **MUST** carry at least one approval from somebody other than the author before it merges
   ([pol-SECD.CODEREV]).
-- A reviewer **MUST** read the change for security as well as for correctness ([pol-SECD.CODEREV]).
+- A reviewer **MUST** check the change against the standards on this axis, and not read for style alone
+  ([pol-SECD.CODEREV]).
 - A reviewer **MUST** state what they checked when they approve ([pol-SECD.CODEREV]).
 - A pull request holding agent-produced work **MUST** name the agent, the model and the prompt or task that produced
   it ([pol-AGNT.PROV]).
@@ -37,7 +38,8 @@ than the author approves it before it merges.
   ([pol-AGNT.ACCEPT]).
 - A reviewer **MUST NOT** accept an agent's own summary of a change as evidence that the change is correct
   ([pol-AGNT.SELFVER]).
-- Agent-produced work **MUST** pass every gate a person's change passes ([pol-AGNT.EQUAL]).
+- Branch policy **MUST** apply to agent-produced work unchanged, with no exemption and no second route in
+  ([pol-AGNT.EQUAL]).
 
 ## Examples
 

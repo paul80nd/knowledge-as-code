@@ -268,6 +268,32 @@ public class DocumentTests
         Assert.Equal(["pol-VURM.TIMEBOX"], doc.PartRefs.Select(r => r.Ref));
     }
 
+    // The colon form reaches no part, so it has to be seen where it is written. A label carries it as
+    // readily as a code span does.
+    [Fact]
+    public void A_colon_citation_in_a_link_label_is_collected_as_one()
+    {
+        var doc = ParseWithClauses("""
+                                   See [pol-VURM:TIMEBOX].
+
+                                   [pol-VURM:TIMEBOX]: vurm-a-title.md#clauses
+                                   """);
+
+        Assert.NotNull(doc);
+        Assert.Empty(doc.PartRefs);
+        Assert.Equal(["pol-VURM:TIMEBOX"], doc.ColonCitations.Select(r => r.Ref));
+    }
+
+    // An inline link carries its citation as text, where a reference carries it as a label.
+    [Fact]
+    public void Part_citations_are_collected_from_inline_link_text()
+    {
+        var doc = ParseWithClauses("See [pol-VURM.TIMEBOX](vurm-a-title.md#clauses) and [the table](vurm-a-title.md).\n");
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX"], doc.PartRefs.Select(r => r.Ref));
+    }
+
     // The prefix tells a citation from a filename: `pol` is a type's and `vurm` is not, so the filename
     // is passed over and never reported as a citation of nothing.
     [Fact]

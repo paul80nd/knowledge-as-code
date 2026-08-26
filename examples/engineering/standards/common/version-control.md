@@ -30,8 +30,8 @@ reviewed merge from an identified author.
 - Infrastructure, schema and configuration changes **MUST** go through the same review as application code
   ([pol-EVER.PARITY]).
 - A commit subject **MUST** name the work item that asked for the change, written as `#<id>` ([pol-EVER.INTENT]).
-- A commit **MUST** carry the author's own verified identity, and never a shared or generic account
-  ([pol-EVER.HISTORY]).
+- A commit **MUST** carry the author's own verified identity ([pol-EVER.HISTORY]).
+- A commit **MUST NOT** be authored by a shared or generic account ([pol-EVER.SHARED]).
 - The default branch **MUST** refuse a direct push, so that every change arrives as a merge ([pol-EVER.BRANCH]).
 
 ## Examples
@@ -67,8 +67,8 @@ The second cannot be rebuilt from the repository, so the recovery path runs thro
 
 ## Rationale and provenance
 
-Recovery is a procedure when the whole service rebuilds from source. We cannot ask an author about a change a year
-later if we cannot tell who made it.
+A team that can rebuild a service from source follows a recovery procedure. A team missing one asset investigates
+instead. We also cannot ask an author about a change a year later if we cannot tell who made it.
 
 - [pol-EVER] commits us to holding everything in version control, with a history that attributes each change.
 
@@ -79,3 +79,4 @@ later if we cannot tell who made it.
 [pol-EVER.INTENT]: ../../policies/ever-everything-in-version-control.md#clauses
 [pol-EVER.ORPHAN]: ../../policies/ever-everything-in-version-control.md#clauses
 [pol-EVER.PARITY]: ../../policies/ever-everything-in-version-control.md#clauses
+[pol-EVER.SHARED]: ../../policies/ever-everything-in-version-control.md#clauses
