@@ -527,6 +527,22 @@ checks:
       Heuristic: an explicit verdict word, or a contrastive or negative-outcome cue. An option listed
       only to be dismissed in a clause was not genuinely considered.
 
+  entry-shape:
+    severity: error
+    description: Each entry of a list whose entries are objects is a mapping.
+    notes: >
+      The field's `entry:` block says what one holds, and a scalar written where a mapping belongs
+      carries none of it. Reported against the entry, so a list with one bad line among ten names the
+      line.
+
+  entry-key:
+    severity: error
+    description: An object entry carries the keys its field declares, and every key it declares as required.
+    notes: >
+      Both faults under one id, because they are the same mistake read from either end: a key the shape
+      does not declare, and a required key the entry omits. The message quotes the entry by whatever its
+      naming key holds, and falls back to the line where that key is the one missing.
+
   terms-alphabetical:
     severity: warning
     description: A glossary's entries read in alphabetical order.

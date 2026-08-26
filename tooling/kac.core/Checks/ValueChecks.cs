@@ -61,7 +61,7 @@ public static class ValueChecks
         {
             case "date": Date(name, node, frontStart, report); break;
             case "enum": Enumerated(name, node, spec, frontStart, report); break;
-            case "list": Sequence(name, node, spec, frontStart, report); break;
+            case "list": Sequence(name, node, spec, kind, frontStart, report); break;
         }
 
         // A declared `pattern:` applies to a scalar field's value; for a list it applies to each entry,
@@ -145,7 +145,8 @@ public static class ValueChecks
                 Yaml.LineOf(node, frontStart));
     }
 
-    private static void Sequence(string name, YamlNode node, FieldSpec spec, int frontStart, Report report)
+    private static void Sequence(string name, YamlNode node, FieldSpec spec, DocKind kind, int frontStart,
+        Report report)
     {
         if (node is not YamlSequenceNode seq)
         {
@@ -163,6 +164,12 @@ public static class ValueChecks
 
         foreach (var item in seq.Children)
         {
+            if (spec.Of == "object")
+            {
+                Entry(name, item, spec, kind, frontStart, report);
+                continue;
+            }
+
             var v = Yaml.Raw(item);
             if (spec.IsLiteral(v)) continue; // a word the field admits beside its ids: `applies-to: [all]`
             if (spec.Of == "id" && v is not null && !LooksLikeId(v))
@@ -176,7 +183,8 @@ public static class ValueChecks
         // the first pair out of order is reported. The rest are noise once the author re-sorts the field.
         for (var i = 1; i < seq.Children.Count; i++)
         {
-            if (Yaml.Raw(seq.Children[i - 1]) is not { } prev || Yaml.Raw(seq.Children[i]) is not { } cur) continue;
+            if (SortKey(seq.Children[i - 1], spec) is not { } prev
+                || SortKey(seq.Children[i], spec) is not { } cur) continue;
             if (Natural.Compare(prev, cur) <= 0) continue;
             report.Warn(new CheckId("list-order"),
                 $"'{name}' is not in alphabetical order: '{cur}' should come before '{prev}'.",
@@ -184,6 +192,68 @@ public static class ValueChecks
             break;
         }
     }
+
+    // One entry of a list whose entries are objects, held to the shape the field declares for them.
+    //
+    // Three faults, and each is the entry's own rather than the field's: the entry is not a mapping at
+    // all, it carries a key the shape does not declare, or it omits one the shape requires. Every key it
+    // does declare goes back through `Check`, so a nested list is held to its own order and a nested
+    // scalar to its own pattern without a second reading of either.
+    private static void Entry(string name, YamlNode item, FieldSpec spec, DocKind kind, int frontStart,
+        Report report)
+    {
+        if (item is not YamlMappingNode map)
+        {
+            report.Err(new CheckId("entry-shape"),
+                $"'{name}' entry must be a mapping, with the keys {Keys(spec)}.",
+                Yaml.LineOf(item, frontStart));
+            return;
+        }
+
+        var present = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var (key, value) in Yaml.Map(map))
+        {
+            present.Add(key);
+            if (spec.EntryKey(key) is not { } inner)
+            {
+                report.Err(new CheckId("entry-key"),
+                    $"'{name}' entry carries '{key}', and the schema declares {Keys(spec)}.",
+                    Yaml.LineOf(value, frontStart));
+                continue;
+            }
+
+            Check($"{name}.{key}", value, inner, kind, frontStart, report);
+        }
+
+        // Named against the entry rather than the field, using whatever the entry does carry to say
+        // which of several it is. An entry missing the very key that names it has nothing to be quoted
+        // by, and the line is what locates it instead.
+        foreach (var missing in spec.Entry!.Where(k => k.Required && !present.Contains(k.Name)))
+            report.Err(new CheckId("entry-key"),
+                $"'{name}' entry {Names(map, spec)} is missing '{missing.Name}'.",
+                Yaml.LineOf(map, frontStart));
+    }
+
+    // The entry keys a field declares, in declared order, for a message that has to list them.
+    private static string Keys(FieldSpec spec) =>
+        string.Join(", ", (spec.Entry ?? []).Select(k => $"'{k.Name}'"));
+
+    // How a message points at one entry among several: by what its naming key holds, and by nothing
+    // where that key is the one absent.
+    private static string Names(YamlMappingNode map, FieldSpec spec) =>
+        spec.Entry is [{ } first, ..] && Yaml.Get(map, first.Name) is { } named
+        && Yaml.Raw(named) is { Length: > 0 } value
+            ? $"'{value}'"
+            : "here";
+
+    // What an entry sorts on. A scalar sorts on itself; an object sorts on the first key its shape
+    // declares, which is the one naming it. An entry with nothing readable there is skipped rather than
+    // sorted as an empty string, because `entry-key` above has already reported it and a second finding
+    // about its position would be about the first fault.
+    private static string? SortKey(YamlNode item, FieldSpec spec) =>
+        spec.Of == "object"
+            ? spec.Entry is [{ } first, ..] && Yaml.Get(item, first.Name) is { } named ? Yaml.Raw(named) : null
+            : Yaml.Raw(item);
 
     // Whether an entry is shaped like an id at all: a lower-case type prefix, a hyphen, then a
     // discriminator. The prefix names a type and is lower-case in every style. The discriminator is

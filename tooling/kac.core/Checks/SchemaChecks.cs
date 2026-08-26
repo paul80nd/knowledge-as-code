@@ -421,6 +421,19 @@ public static class SchemaChecks
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-records:', which is read "
                          + "against the entries of a list. Declare it 'type: list', or drop the floor.", f);
 
+        // The two halves of an object list are declared apart and neither reads without the other. A shape
+        // with nothing sourcing it would hold no entry to anything; a list of scalars carrying a shape
+        // states one the entries can never take. Both read as enforced from the file and are not.
+        if (spec.Of == "object" && spec.Entry is null or { Count: 0 })
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"field '{name}' declares 'of: object' and no 'entry:' block, so nothing says what an "
+                + "entry holds. Declare the entry's keys, or give the list a scalar 'of:'."));
+
+        if (spec.Entry is { Count: > 0 } && spec.Of != "object")
+            Dispatch(at, $"field '{name}' declares an 'entry:' block and 'of: {spec.Of ?? "string"}', and "
+                         + "an entry's shape is read only where the entries are objects. Declare "
+                         + "'of: object', or drop the block.", f);
+
         // Any section reconciles, so this is not a vocabulary the tool holds. That is why nothing else
         // would catch a section the type never offers. The reconciliation would run against a heading
         // no record may carry and report every id in the field as missing from it.

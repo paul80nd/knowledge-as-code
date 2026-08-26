@@ -19,10 +19,21 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A list field's entries can be objects.** A field declaring `of: object` names its entry's keys in an `entry:` block,
+  written with the vocabulary a field is written with. Each key is held to its own `type:`, `pattern:` and `required:`.
+  `entry-shape` reports an entry that is not a mapping, and `entry-key` an entry carrying a key the field does not
+  declare or missing one it requires.
+
 - **`part-ref` reads a part id written beside a link.** `[pol-EVER].BRANCH` cites `pol-EVER.BRANCH`, so a document
   citing six clauses of one policy carries one link definition rather than six. The part id has to sit against the
   closing bracket, so a full stop closing a sentence after a link is still a full stop. A corpus already writing this
   form may see errors it did not before.
+
+### Changed
+
+- **An index column holding a list renders its entries.** A column naming a list field read the value as a scalar and
+  wrote an empty cell, so `aligns-with` on a policy index had been blank since the column was added. A column naming a
+  list of objects renders what names each entry, which for `aligns-with` is the framework.
 
 ## 0.12.0 - 2026-08-26
 

@@ -332,6 +332,37 @@ public partial class Doc
         return values;
     }
 
+    // What a field holds, read for display rather than for checking. A scalar entry reads as itself; a
+    // mapping entry reads as the key that names it, which the caller supplies because which key that is
+    // belongs to the schema and not to the document.
+    //
+    // Beside `FrontList`, which answers the same question about the values a check walks. The two part
+    // company on a mapping: a check has the whole entry to judge, and a table cell has one column.
+    public List<string> FrontEntries(string key, string? naming)
+    {
+        var values = new List<string>();
+        if (Front is null) return values;
+
+        foreach (var kv in Front.Children)
+        {
+            if (((YamlScalarNode)kv.Key).Value != key) continue;
+            if (kv.Value is not YamlSequenceNode seq) continue;
+
+            foreach (var item in seq.Children)
+                switch (item)
+                {
+                    case YamlScalarNode { Value: { Length: > 0 } v }: values.Add(v); break;
+                    case YamlMappingNode map when naming is not null
+                                                  && Yaml.Get(map, naming) is YamlScalarNode
+                                                      { Value: { Length: > 0 } named }:
+                        values.Add(named);
+                        break;
+                }
+        }
+
+        return values;
+    }
+
     // Walk the top-level blocks to the H1, then look at the one after it. A paragraph whose first
     // inline is a code span is taken as an attempted identity line, and its code spans are collected.
     // Attempted rather than correct: a line with the wrong number of spans is reported as a malformed
@@ -518,7 +549,8 @@ public partial class Doc
                 byHeader.TryAdd(headers![i], Md.PlainText(row[i]));
             return byHeader;
         }
-    }
+
+   }
 
     private static string StripFences(string text, YamlFrontMatterBlock block)
     {
