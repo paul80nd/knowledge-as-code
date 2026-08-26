@@ -124,7 +124,7 @@ can still see exactly what arrived. A template read from a folder resolves no co
 made. A `new` that read a folder rather than a repository leaves `ref` and `commit` bare, because a folder has no ref
 to follow and no commit to resolve.
 
-### Taking from a template does not make a corpus a lesser one
+### A corpus is where a schema defect gets found
 
 Real content is the only thing that reveals a schema is wrong, so the corpus that found the problem is often the one
 best placed to fix it. A change is settled once the repository serving the template accepts it.
@@ -156,7 +156,7 @@ Validation, index generation and what an update writes all cover the types liste
 not declared yet, so the tool reads adoption off the folders it finds. A type counts where both halves are there,
 meaning the page and the folder.
 
-### Declaring turns a habit into a decision
+### `validate` holds the corpus to the list it declared
 
 "These folders happen to be here" becomes "these are the types this corpus chose", and validation can hold the corpus
 to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared, standing a type up

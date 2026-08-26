@@ -72,7 +72,7 @@ charge the second reader the first one's cost. The manifest is what lets a reade
 One is how many records it holds and the other how many parts. For a glossary the two differ by an order of magnitude. A
 reader sizing the vocabulary wants the parts, and a reader asking how many files it was handed wants the records.
 
-### It states the fidelity each section travelled at
+### Each type states the fidelity its sections travelled at
 
 Without that, a summary reaches a consumer looking exactly like a whole section. Fidelity belongs to the type, so each
 entry under `types` carries it once.
@@ -81,7 +81,7 @@ entry under `types` carries it once.
 "sections": { "Purpose": "summary", "Scope": "full", "Exceptions": "full" }
 ```
 
-### It carries both of the corpus's names
+### `corpus` names the corpus and `shortcode` cites it
 
 `corpus` is what the corpus calls itself, which tells one export from another. `shortcode` is what a citation writes
 before the colon, so a consumer resolving `eng:pol-VURM` knows which of the exports it holds answers it. It is `null`

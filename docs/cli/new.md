@@ -84,7 +84,7 @@ Publishing and CI are asked separately because they are separate facts: a corpus
 another. Where a publishing target needs base URLs, the question arrives already filled in from
 `git remote get-url origin`.
 
-#### Two answers narrow what lands
+#### The types and the CI system narrow what lands
 
 Types are asked as a multi-select with everything ticked, because declining is the exception. A declined type's schema
 file is never written, and `types:` in `.corpus.yaml` records the decision so validation can hold the corpus to it.
@@ -114,16 +114,17 @@ One key arrives bare. `new` neither asks for `shortcode` nor invents one, becaus
 another corpus has cited it. Fill it in when one is about to, and
 [`.corpus.yaml`](../corpus-descriptor.md#identity) says what a legal one looks like.
 
-#### `README.md` is written too, and for the same reason The template's own is `withheld`, because it describes the
-template and not a corpus, so a corpus that copied everything would arrive with no README at all. What `new` writes is
-short: the corpus's name, what it holds, and how to run the tool against it. The corpus owns it from the moment it
-lands.
+#### `README.md` is written, because the template's own is withheld
+
+The template's README describes the template and not a corpus, so a corpus that copied everything would arrive with no
+README at all. What `new` writes is short: the corpus's name, what it holds, and how to run the tool against it. The
+corpus owns it from the moment it lands.
 
 The README arrives carrying the markers for the block it may hold, and a line saying so. It is the one page a corpus
 may decline a block on, by deleting the pair of markers around it. A README written without them would decline on every
 new corpus's behalf, and nobody would have chosen that.
 
-#### One file needs more than its bytes
+#### The breadcrumb hook arrives with its execute bit
 
 `.plugin/hooks/breadcrumb` is executable, and a hook that arrives without its mode bit fails silently on Unix.
 

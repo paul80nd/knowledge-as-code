@@ -77,7 +77,7 @@ An export behind the tool is rebuilt. An export ahead of it says the tool is the
 untracked and outlives the run that wrote it, so a bundle built after a pull is the ordinary way to meet an export this
 tool did not ship beside.
 
-#### A shape mismatch stops for a different reason
+#### A shape mismatch means the component's keys have moved
 
 The type is there and its files have moved, so the component would ship, install, and read keys that are gone.
 Trimming would hide that behind a plugin doing less. [The export format](../export-format.md) says what a shape version
@@ -133,7 +133,7 @@ holds, which records cover them, and which skill to ask. That is the whole of it
 glossary, because it does not know a word is ambiguous, so the breadcrumb exists to create the question rather than to
 answer it. A longer one would be paid for by every session that had none to ask.
 
-#### It names the skills their component asked it to
+#### A component says whether the breadcrumb names it
 
 A component is named in that last line where its manifest entry says `"announce": true`, and left out otherwise. The
 default is out, because most skills need no introduction: somebody asking what a policy commits them to already knows

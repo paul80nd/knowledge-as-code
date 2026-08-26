@@ -113,6 +113,12 @@ installed nothing. Edit one and copy the change across, because nothing in CI ho
 **A reader arrives at a heading from search**, rather than at the top of the page. So a heading says what is under it,
 and a section assumes nothing from the section above it.
 
+**A heading names its subject, and a slogan does not.** The floor says to make a heading carry the point, and the way
+that goes wrong here is a line that sounds like a point and names nothing. Test it cold: a reader who has read no other
+heading on the page has to be able to say whether their answer is underneath. "Declaring turns a habit into a decision"
+fails, and "`validate` holds the corpus to the list it declared" passes, over the same paragraph. Reach for the symbol,
+the command or the key the section is about, because that is also the word the reader searched for.
+
 **Count the words between headings.** Most pages here sit near 80 words. Past about 120 a reader has to read a section
 to find out whether it answers them. The count is a prompt to look, never the diagnosis, and what it finds is one of
 two things. A section of bulleted rules or bold lead-ins scans however long it runs, so leave it. A run of paragraphs
