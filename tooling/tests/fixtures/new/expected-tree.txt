@@ -11,6 +11,7 @@
 .plugin/hooks/breadcrumb.cmd
 .plugin/hooks/hooks.json
 .plugin/skills/glossary-lookup/SKILL.md
+.plugin/skills/policy-lookup/SKILL.md
 .schema/CLAUDE.md
 .schema/README.md
 .schema/_checks.yaml

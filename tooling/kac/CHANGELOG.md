@@ -15,6 +15,27 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **A `policy-lookup` skill travels in the plugin.** `kac bundle` ships it beside `glossary-lookup`, and a corpus
+  carrying no policies has it trimmed. It reads `policies/clauses.jsonl`, answers from a clause's `level` rather than
+  from the modal in its wording, and says which of the four levels it found. What an external framework obliges stayed
+  behind with the register that explains it, so the skill names that gap rather than filling it.
+
+- **A corpus created before this declares no component for the new skill.** `kac update` writes the skill, and leaves
+  `.plugin/.claude-plugin/plugin.json` alone because the manifest is the corpus's own. A path no component owns ships
+  unconditionally, so add the component yourself to have it trimmed where the type is not adopted:
+
+  ```json
+  {
+    "path": "skills/policy-lookup",
+    "requires": [ "policies@2" ],
+    "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
+  }
+  ```
+
 ## 0.13.0 - 2026-08-26
 
 ### Added
