@@ -419,6 +419,42 @@ public class BundlerTests
     private static string Entries(string[] types) =>
         string.Join(",", types.Select(t => $$"""{"type":"{{t}}","shapeVersion":1,"records":1}"""));
 
+    // Several corpora in one repository share a plugin tree, and each may still write a component of
+    // its own. The corpus's copy is the one that travels.
+    [Fact]
+    public void A_file_the_corpus_holds_wins_over_the_shared_tree()
+    {
+        var merged = Bundler.Merge(
+            [File("skills/glossary-lookup/SKILL.md", "shared"), File("hooks/hooks.json", "{}")],
+            [File("skills/glossary-lookup/SKILL.md", "ours")]);
+
+        Assert.Equal(["hooks/hooks.json", "skills/glossary-lookup/SKILL.md"], merged.Select(f => f.Path));
+        Assert.Equal("ours", Encoding.UTF8.GetString(merged.Single(f => f.Path.EndsWith("SKILL.md")).Content));
+    }
+
+    // The manifest carries the name a plugin installs under, so two corpora sharing a tree would ship
+    // one name between them. A corpus that wrote none of its own is refused by `Plan` instead.
+    [Fact]
+    public void The_shared_tree_s_manifest_is_left_behind()
+    {
+        var merged = Bundler.Merge(
+            [File(Bundler.ManifestFile, """{"name":"theirs"}"""), File("hooks/hooks.json", "{}")],
+            [File(Bundler.ManifestFile, """{"name":"ours"}""")]);
+
+        Assert.Equal("""{"name":"ours"}""",
+            Encoding.UTF8.GetString(merged.Single(f => f.Path == Bundler.ManifestFile).Content));
+    }
+
+    // A corpus taking the whole of a shared tree writes nothing of its own bar the manifest, so the
+    // merge has to stand up to an empty second tree.
+    [Fact]
+    public void A_corpus_holding_nothing_takes_the_shared_tree_whole()
+        => Assert.Equal(["hooks/hooks.json"],
+            Bundler.Merge([File("hooks/hooks.json", "{}")], []).Select(f => f.Path));
+
+    private static BundleFile File(string path, string content) =>
+        new(path, Encoding.UTF8.GetBytes(content));
+
     // One file the plan would write, as text. The breadcrumb is prose rather than a document, so it is
     // read whole rather than picked apart.
     private static string Text(BundlePlan plan, string path)

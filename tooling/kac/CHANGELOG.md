@@ -15,6 +15,40 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **A `policy-lookup` skill travels in the plugin.** `kac bundle` ships it beside `glossary-lookup`, and a corpus
+  carrying no policies has it trimmed. It reads `policies/clauses.jsonl`, answers from a clause's `level` rather than
+  from the modal in its wording, and says which of the four levels it found. What an external framework obliges stayed
+  behind with the register that explains it, so the skill names that gap rather than filling it.
+
+- **A component says whether the breadcrumb names it.** `"announce": true` on a manifest entry puts that skill in the
+  breadcrumb's last line, and the default leaves it out. The line exists to create a question a session would not
+  think to put, so a skill somebody asks for by name does not earn it. A corpus adding a second skill sets `announce`
+  on the one worth introducing.
+
+- **`plugin.from` in `.corpus.yaml` reads the plugin tree from one shared folder.** Several corpora in a repository
+  keep one copy of the skills and hooks between them instead of a copy each. `kac bundle` merges that tree with the
+  corpus's own `.plugin/`, where a file the corpus holds wins, and `kac update` withholds the shared half rather than
+  writing it back. The manifest is never taken from the shared tree: it names the plugin, so it stays at
+  `.plugin/.claude-plugin/plugin.json` in each corpus. Omit the key and nothing changes. A corpus adopting the key
+  with the old copies still on disk has each one reported as a file the template sends nothing to, because a corpus's
+  own file wins the merge and a leftover would go on shipping after every upstream change.
+
+- **A corpus created before this declares no component for the new skill.** `kac update` writes the skill, and leaves
+  `.plugin/.claude-plugin/plugin.json` alone because the manifest is the corpus's own. A path no component owns ships
+  unconditionally, so add the component yourself to have it trimmed where the type is not adopted:
+
+  ```json
+  {
+    "path": "skills/policy-lookup",
+    "requires": [ "policies@2" ],
+    "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
+  }
+  ```
+
 ## 0.13.0 - 2026-08-26
 
 ### Added

@@ -64,25 +64,30 @@ publishing:
 ```
 
 `publishing-target` is one of `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather than leave it to be
-guessed. It is recorded rather than inferred, so `export` knows whether it can build a link at all. And
-[`export`](cli/export.md)
-knows whether it can write a link that a reader and an agent could each follow.
+guessed, so `export` knows whether it can build a link at all and which form to build.
+[The export format](export-format.md#the-two-links) sets out the two an export carries.
+
+### What each target says
 
 `github` says the repository is itself the published form. A person reads a record rendered on github.com, and an agent
-fetches its source from raw.githubusercontent.com. It is the only target that builds a link today. A descriptor may
-carry `azure-devops-wiki` or `mkdocs`, and nothing yet addresses either, so an export from a corpus on one of those
-carries no links. No link is better than a link built on a convention nobody has settled.
+fetches its source from raw.githubusercontent.com. It is the only target that builds a link today.
+
+A descriptor may carry `azure-devops-wiki` or `mkdocs`, and nothing yet addresses either, so an export from a corpus on
+one of those carries no links. No link is better than a link built on a convention nobody has settled.
 
 `none` says a corpus is not published. Its export carries no links and says so in its manifest, so a reader is never
 handed an address that resolves nowhere. It is the one value that needs no `publishing:` block.
 
-Only *where* the corpus is served from lives here. How a record's path and a term's anchor join a base is a property of
-the target, and it lives in the mechanism. Every corpus on one target then builds the same link, and none of them writes
-the rule down a second time.
+### Only *where* the corpus is served from lives here
 
-`path-prefix` is for a repository holding more than the corpus. You might expect to fold that folder into the two bases
-above. The commit a link resolves against sits between a base and the record's path, so there is nowhere to put it.
-Leave the key out where the corpus is the repository, which is the ordinary case.
+How a record's path and a term's anchor join a base is a property of the target, and it lives in the mechanism. Every
+corpus on one target then builds the same link, and none of them writes the rule down a second time.
+
+### `path-prefix` is for a repository holding more than the corpus
+
+You might expect to fold that folder into the two bases above. The commit a link resolves against sits between a base
+and the record's path, so there is nowhere to put it. Leave the key out where the corpus is the repository, which is
+the ordinary case.
 
 ## Upstream
 
@@ -96,25 +101,33 @@ upstream:
   taken-on: "2026-08-08"
 ```
 
-Where this corpus takes the framework from. `url` is what [`update`](cli/update.md) reads when no `--from` is passed,
-and a run with neither has nothing to take.
+Where this corpus takes the framework from. The first three keys are yours, and `update` writes the last three.
 
-`path` is the folder inside that repository holding `manifest.yaml`. Leave it out where the manifest sits at the
-repository root, which is where this project keeps it.
+| Key                | What it holds                                            | Written by |
+|--------------------|----------------------------------------------------------|------------|
+| `url`              | the repository or folder serving the template            | you        |
+| `path`             | the folder inside it holding `manifest.yaml`             | you        |
+| `ref`              | the branch or tag to take from, followed on every update | you        |
+| `commit`           | what the last take resolved to                           | `update`   |
+| `template-version` | the template shape that take was on                      | `update`   |
+| `taken-on`         | the day the framework last came down                     | `update`   |
 
-`ref` is the branch or tag to take from, and it is followed. `commit` is what the last take resolved to, recorded and
-never read back. Together they say that a corpus tracks a moving line, and that you can still see exactly what arrived.
+`url` is what [`update`](cli/update.md) reads when no `--from` is passed, and a run with neither has nothing to take.
+Leave `path` out where the manifest sits at the repository root, which is where this project keeps it.
 
-`taken-on` is the day the framework last came down. `update` writes it beside `commit` and `template-version`, so leave
-all three to it. A template read from a folder resolves no commit, and `commit` is then left as it stands.
+`ref` is followed and `commit` is never read back. Together they say that a corpus tracks a moving line, and that you
+can still see exactly what arrived. A template read from a folder resolves no commit, so `commit` is left as it stands.
+
+### What `new` writes, and what it leaves bare
 
 [`new`](cli/new.md) writes the whole block when the corpus is created, from the flags it was given and the clone it
-made. A `new` that read a folder rather than a repository leaves `ref` and `commit` bare, because a folder has no ref to
-follow and no commit to resolve.
+made. A `new` that read a folder rather than a repository leaves `ref` and `commit` bare, because a folder has no ref
+to follow and no commit to resolve.
 
-Taking from a template does not make a corpus a lesser one. Real content is the only thing that reveals a schema is
-wrong, so the corpus that found the problem is often the one best placed to fix it. A change is settled once the
-repository serving the template accepts it.
+### A corpus is where a schema defect gets found
+
+Real content is the only thing that reveals a schema is wrong, so the corpus that found the problem is often the one
+best placed to fix it. A change is settled once the repository serving the template accepts it.
 
 ## How far an update goes
 
@@ -143,12 +156,16 @@ Validation, index generation and what an update writes all cover the types liste
 not declared yet, so the tool reads adoption off the folders it finds. A type counts where both halves are there,
 meaning the page and the folder.
 
-Declaring turns "these folders happen to be here" into "these are the types this corpus chose", and validation can then
-hold the corpus to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared,
-standing a type up without adopting it is a defect [`validate`](cli/validate.md) reports.
+### `validate` holds the corpus to the list it declared
 
-`kac update --add-type` and `--drop-type` are what change the list, so the name and the type's files move together.
-Editing it by hand leaves the corpus holding a type it does not claim, or claiming one it does not hold.
+"These folders happen to be here" becomes "these are the types this corpus chose", and validation can hold the corpus
+to it. A type you declined is left alone, whatever `.schema/` says about it. Once you have declared, standing a type up
+without adopting it is a defect [`validate`](cli/validate.md) reports.
+
+### `--add-type` and `--drop-type` are what change the list
+
+They move the name and the type's files together. Editing the list by hand leaves the corpus holding a type it does not
+claim, or claiming one it does not hold.
 
 ## What an export leaves behind
 
@@ -167,6 +184,23 @@ and no sign that anything was withheld. The option is there for a corpus publish
 Two values are accepted. `draft` drops a record whose status says so, and `overdue` drops one whose `review-by` is in
 the past.
 
+## Where the plugin tree comes from
+
+```yaml
+plugin:
+  from: ../../shared/.plugin
+```
+
+`kac bundle` reads the plugin tree, meaning the skills and hooks an agent installs, from `.plugin/` at the corpus root.
+Say `plugin.from` and it reads them from one tree elsewhere instead, resolved against the corpus root. Several corpora
+in a repository then share one copy, and `update` withholds the shared half rather than writing it here.
+
+The manifest is never read from the shared tree. It carries the name the plugin installs under, so it stays at
+`.plugin/.claude-plugin/plugin.json` in each corpus, along with the components that corpus declares. A file a corpus
+writes beside it wins over the shared tree's copy of the same path, so one skill can be overridden.
+
+Omit the key and the corpus keeps its own tree, which is what [`new`](cli/new.md) creates.
+
 ## Files you hold differently
 
 ```yaml
@@ -181,3 +215,6 @@ steps over them and reports what it stepped over. Delete an entry once the file 
 
 The reason is for whoever opens the file next, and it is the only thing standing between a deliberate divergence and one
 nobody remembers making.
+
+[The export format](export-format.md) is this page's other half: here is what a corpus writes about itself, and there
+is what a consumer reads out of it.

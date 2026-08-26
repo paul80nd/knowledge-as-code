@@ -109,6 +109,8 @@ nav:
       - schema/index.md
       - Rule expressions: schema/expressions.md
       - What the schema is held to: schema/held-to.md
-  - The corpus descriptor: corpus-descriptor.md
+  - Configuration:
+      - The corpus descriptor: corpus-descriptor.md
+      - The export format: export-format.md
   - Checks: checks.md
   - Changelog: changelog.md

@@ -22,6 +22,9 @@ public class UpdateTests
             new ManifestRule(["template/*.md"], Manifest.Seed, ""),
             new ManifestRule(["template/ci.yml"], Manifest.Seed, "", "github"),
             new ManifestRule(["old/**"], Manifest.Removed, "legacy/"),
+            new ManifestRule(["template/.plugin/.claude-plugin/plugin.json"], Manifest.Seed,
+                ".plugin/.claude-plugin/"),
+            new ManifestRule(["template/.plugin/**"], Manifest.Overlay, ".plugin/"),
             new ManifestRule(["**"], Manifest.Withheld)
         ]
     };
@@ -37,6 +40,60 @@ public class UpdateTests
         string policy = CorpusDescriptor.Cautious, bool readInPlace = false, bool same = false) =>
         Update.Plan(template, corpus, Rules(), descriptor ?? new CorpusDescriptor(),
             types ?? Everything(), policy, readInPlace, _ => same);
+
+    // A corpus sharing one plugin tree with its siblings holds none of the shared half, so an update
+    // that wrote a copy here would put the tree back the moment it was taken away.
+    [Fact]
+    public void A_corpus_reading_the_plugin_tree_elsewhere_receives_none_of_it()
+    {
+        var plan = Plan(
+            Files("template/.plugin/skills/glossary-lookup/SKILL.md", "template/.plugin/hooks/hooks.json"),
+            Files(),
+            descriptor: new CorpusDescriptor { PluginFrom = "../../template/.plugin" });
+
+        Assert.Empty(plan.Copies);
+        Assert.Equal(2, plan.DeclinedPlugin);
+        Assert.False(plan.Changes);
+    }
+
+    // The manifest names the plugin and lists the components this corpus declares, so it is a seed and
+    // arrives whatever the descriptor says about the rest of the tree.
+    [Fact]
+    public void Its_own_plugin_manifest_arrives_all_the_same()
+    {
+        var plan = Plan(
+            Files("template/.plugin/.claude-plugin/plugin.json", "template/.plugin/hooks/hooks.json"),
+            Files(),
+            descriptor: new CorpusDescriptor { PluginFrom = "../../template/.plugin" });
+
+        Assert.Equal([".plugin/.claude-plugin/plugin.json"], plan.Seeded.Select(f => f.To));
+        Assert.Equal(1, plan.DeclinedPlugin);
+    }
+
+    // A corpus that adopted `plugin.from` with the old copies still on disk. `Merge` gives its own file
+    // priority, so a leftover would win over the shared tree for good and no upstream change would reach
+    // it. Reported as a file nothing sends to, which is what it now is.
+    [Fact]
+    public void A_copy_left_behind_by_adopting_the_key_is_reported()
+    {
+        var plan = Plan(
+            Files("template/.plugin/skills/glossary-lookup/SKILL.md"),
+            Files(".plugin/skills/glossary-lookup/SKILL.md"),
+            descriptor: new CorpusDescriptor { PluginFrom = "../../template/.plugin" });
+
+        Assert.Equal([".plugin/skills/glossary-lookup/SKILL.md"], plan.Unshared);
+        Assert.True(plan.Changes);
+    }
+
+    // The ordinary case, and the one a corpus standing on its own is always in.
+    [Fact]
+    public void A_corpus_saying_nothing_receives_the_plugin_tree()
+    {
+        var plan = Plan(Files("template/.plugin/hooks/hooks.json"), Files());
+
+        Assert.Equal([".plugin/hooks/hooks.json"], plan.Written.Select(f => f.To));
+        Assert.Equal(0, plan.DeclinedPlugin);
+    }
 
     [Fact]
     public void An_overlay_file_whose_copies_differ_is_written()

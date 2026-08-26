@@ -15,8 +15,8 @@ kac checks [--json] [--no-color]
 
 ## What it is for
 
-`checks` prints every check the validator can emit against the corpus it is run in, read from that corpus's own
-`.schema/`. There is no second list to keep in step.
+`checks` prints every check the validator can emit against a corpus, meaning one repository of knowledge records.
+The list is read from that corpus's own `.schema/`, so there is no second list to keep in step.
 
 `--json` gives you the same catalogue as data. The test suite reads that form, and holds every reachable check to having
 a fixture that trips it.

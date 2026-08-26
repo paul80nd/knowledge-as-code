@@ -38,7 +38,19 @@ public class BreadcrumbTests
     public void It_names_the_skills_that_survived_the_trim()
         => Assert.Contains("Ask the glossary-lookup skill",
             Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)),
-                included: [new PluginComponent("skills/glossary-lookup", ["glossary"], null)]));
+                included: [new PluginComponent("skills/glossary-lookup", ["glossary"], null, Announce: true)]));
+
+    // A skill somebody asks for by name already has its question, so it is not worth a line every
+    // session pays for. `announce` on the manifest entry is what separates the two.
+    [Fact]
+    public void A_skill_that_does_not_announce_is_left_out()
+        => Assert.DoesNotContain("policy-lookup",
+            Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)),
+                included:
+                [
+                    new PluginComponent("skills/glossary-lookup", ["glossary"], null, Announce: true),
+                    new PluginComponent("skills/policy-lookup", ["policies"], null)
+                ]));
 
     // No skill name is written here to fall back on.
     [Fact]

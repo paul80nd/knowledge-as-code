@@ -19,7 +19,13 @@ public sealed record BundleFile(string Path, byte[] Content, bool Executable = f
 // types the component reads, each optionally with the shape version it reads that type at, as
 // `glossary@1`. Held as the manifest wrote them, because `bundle.json` reports them back. A component
 // naming no type is unconditional and always travels.
-public sealed record PluginComponent(string Path, IReadOnlyList<string> Requires, string? Note);
+//
+// `Announce` is whether the breadcrumb names this component at the start of a session. False by
+// default, because a skill somebody asks for by name costs nothing to leave unannounced and the
+// breadcrumb is read at every start, resume, clear and compact. `docs/cli/bundle.md` says which
+// skills earn the line.
+public sealed record PluginComponent(
+    string Path, IReadOnlyList<string> Requires, string? Note, bool Announce = false);
 
 // A component left out, and the type whose absence left it out. The reason is carried, because it is
 // the one thing the assembled plugin cannot say about itself.
@@ -69,6 +75,32 @@ public static class Bundler
     // What the bundle records about itself, at the plugin root rather than inside `.claude-plugin/`,
     // which holds the manifest and nothing else.
     public const string RecordFile = "bundle.json";
+
+    // Whether a corpus path sits in the plugin tree. `Update` asks it, to withhold the shared half of
+    // that tree from a corpus reading it from somewhere else.
+    public static bool InSourceTree(string rel) =>
+        rel.Equals(SourceDir, StringComparison.Ordinal)
+        || rel.StartsWith(SourceDir + "/", StringComparison.Ordinal);
+
+    // A shared tree and the corpus's own, read as one. A file the corpus holds wins, so a corpus taking
+    // the shared tree may still write one component of its own at home and have that one travel.
+    //
+    // The manifest is never taken from the shared tree. It carries the name a plugin installs under, so
+    // two corpora sharing a tree would otherwise ship one name between them. A corpus that wrote none of
+    // its own is told by `Plan`, which refuses a tree holding no manifest at all.
+    public static IReadOnlyList<BundleFile> Merge(
+        IReadOnlyList<BundleFile> shared, IReadOnlyList<BundleFile> own)
+    {
+        var byPath = new Dictionary<string, BundleFile>(StringComparer.Ordinal);
+
+        foreach (var file in shared)
+            if (!file.Path.Equals(ManifestFile, StringComparison.Ordinal))
+                byPath[file.Path] = file;
+
+        foreach (var file in own) byPath[file.Path] = file;
+
+        return [.. byPath.Values.OrderBy(f => f.Path, StringComparer.Ordinal)];
+    }
 
     public static BundlePlan Plan(BundleSource source)
     {
@@ -382,7 +414,8 @@ public static class Bundler
                 ? r.Select(JsonRead.Str).OfType<string>().ToList()
                 : [];
 
-            components.Add(new PluginComponent(path, requires, JsonRead.Str(component["note"])));
+            components.Add(new PluginComponent(path, requires, JsonRead.Str(component["note"]),
+                JsonRead.Bool(component["announce"])));
         }
 
         return components;

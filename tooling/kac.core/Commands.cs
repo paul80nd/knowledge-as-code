@@ -255,11 +255,43 @@ public static class Commands
     // The commit a take resolved to, short, or nothing where the template was read from a folder.
     private static string At(string? commit) => commit is { Length: >= 7 } c ? $" at {c[..7]}" : "";
 
+    // A path the descriptor states, resolved against the corpus root. Every verb answers the same wherever
+    // inside a corpus it is run, and a path resolved against the working directory would not: it would find
+    // one folder from the root and another from a folder below it.
+    //
+    // A path the platform cannot parse comes back as it was given. The caller reads that as a folder that is
+    // not there, which is the message it was going to print anyway.
+    private static string Rooted(string corpusRoot, string path)
+    {
+        try { return Path.GetFullPath(path, corpusRoot); }
+        catch (ArgumentException) { return path; }
+    }
+
     // Assemble the plugin from the export and the `.plugin/` tree. Two trees in, one directory out, and
-    // the corpus is never loaded: what a bundle has to decide is a fact about the export it was handed.
+    // the corpus is never loaded bar its descriptor, which says where the plugin tree is read from: what
+    // a bundle has to decide beyond that is a fact about the export it was handed.
     public static int Bundle(string corpusRoot)
     {
-        var pluginTree = Bundler.Read(Path.Combine(corpusRoot, Bundler.SourceDir));
+        var descriptor = CorpusDescriptor.Load(corpusRoot);
+        var own = Bundler.Read(Path.Combine(corpusRoot, Bundler.SourceDir));
+        var pluginTree = own;
+
+        if (descriptor.PluginFrom is { } from)
+        {
+            // Resolved against the corpus root and never against the working directory, so `bundle`
+            // assembles the same plugin wherever inside the corpus it is run. `Update.TemplatePath`
+            // is the wrong resolver here: it hands back a path it cannot resolve, which is right for
+            // a `--from` that may be a URL and would leave this one reading a folder beside the caller.
+            var shared = Bundler.Read(Rooted(corpusRoot, from));
+            if (shared is null)
+                return Fail($"bundle: .corpus.yaml reads the plugin tree from {from}, and there is no folder "
+                            + "there. The path is relative to this corpus's root.");
+
+            pluginTree = Bundler.Merge(shared, own ?? []);
+            Note($"bundle: read the plugin tree from {from}, less the manifest, which names this plugin "
+                 + $"and is {Bundler.SourceDir}/{Bundler.ManifestFile} here.");
+        }
+
         if (pluginTree is null)
             return Fail($"bundle: no plugin tree at {Bundler.SourceDir}/. It is the source a plugin is built from, "
                         + "and it arrives with the mechanism.");
@@ -647,7 +679,8 @@ public static class Commands
             plan.Unshared);
         Out.ErrLine(plan.Unshared.Count > 0 && !HasWrites(plan)
             ? "an unshared file is a framework change made in the wrong tree. move it upstream, or say "
-              + "the corpus owns it with a skip: entry."
+              + "the corpus owns it with a skip: entry. one under .plugin/ is a copy left behind by "
+              + "adopting plugin.from, and it wins over the shared tree until it is deleted."
             : "run:  kac update");
         return 1;
 
@@ -714,6 +747,10 @@ public static class Commands
         if (plan.DeclinedCi > 0)
             Account($"update: withheld {plan.DeclinedCi} continuous integration starter(s) this corpus "
                     + "does not hold. which system builds it is not an update's to decide.");
+
+        if (plan.DeclinedPlugin > 0)
+            Account($"update: withheld {plan.DeclinedPlugin} plugin file(s) this corpus reads from "
+                    + "elsewhere. .corpus.yaml says where under plugin.from.");
 
         var offered = plan.Offered.Where(t => !t.Equals(dropped, StringComparison.Ordinal)).ToList();
         if (offered.Count > 0)

@@ -3,7 +3,7 @@
   "name": "example-engineering",
   "displayName": "Example Engineering",
   "version": "0.1.0",
-  "description": "Answers questions about the Example Engineering corpus from the glossary exported beside it.",
+  "description": "Answers questions about the Example Engineering corpus from the export beside it.",
   "author": {
     "name": "Paul Law",
     "url": "https://github.com/paul80nd"
@@ -13,7 +13,8 @@
   "license": "MIT",
   "keywords": [
     "knowledge-as-code",
-    "glossary"
+    "glossary",
+    "policies"
   ],
   "metadata": {
     "corpusRoot": "corpus",
@@ -23,7 +24,15 @@
         "requires": [
           "glossary@1"
         ],
+        "announce": true,
         "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
+      },
+      {
+        "path": "skills/policy-lookup",
+        "requires": [
+          "policies@2"
+        ],
+        "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
       },
       {
         "path": "hooks",

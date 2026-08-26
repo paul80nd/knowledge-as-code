@@ -22,7 +22,7 @@
 
 # The version of the template's shape. Increment when a corpus has to respond to the change: a file
 # added or removed, a file renamed, or a file moving between layers.
-version: 4
+version: 5
 
 # The oldest `kac` that can read this manifest. The template is fetched rather than shipped inside the
 # package, so the two version independently. An older tool meeting a newer template stops on this and
@@ -139,7 +139,9 @@ rules:
     note: >
       The tree a plugin is built from. Its skills and hooks serve an agent working in a repository that
       consumes a corpus rather than one working in the corpus itself, and they read the export through
-      `${CLAUDE_PLUGIN_ROOT}` rather than opening the tree, so every corpus ships the same words.
+      `${CLAUDE_PLUGIN_ROOT}` rather than opening the tree, so every corpus ships the same words. A
+      corpus naming `plugin.from` in its descriptor reads them from that one tree instead, and receives
+      none of these.
 
   # ── seed ───────────────────────────────────────────────────────────────────
 

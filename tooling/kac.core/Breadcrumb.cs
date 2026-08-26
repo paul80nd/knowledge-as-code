@@ -35,7 +35,12 @@ public static class Breadcrumb
 
         // What to ask, named from the components that actually survived the trim rather than from a
         // name written here. A plugin carrying no skill has nothing to point at, and says nothing.
+        //
+        // Only the components whose manifest entry says `announce`. The line exists to create a
+        // question a session would not otherwise think to ask, and a skill somebody asks for by name
+        // already has its question. `docs/cli/bundle.md` argues the split.
         var skills = included
+            .Where(c => c.Announce)
             .Where(c => c.Path.StartsWith("skills/", StringComparison.Ordinal))
             .Select(c => c.Path["skills/".Length..])
             .Where(name => name.Length > 0 && !name.Contains('/', StringComparison.Ordinal))

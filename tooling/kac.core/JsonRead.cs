@@ -39,4 +39,9 @@ public static class JsonRead
 
     public static int? Int(JsonNode? node) =>
         node is JsonValue value && value.TryGetValue<int>(out var i) ? i : null;
+
+    // A value read as a boolean. A key that is absent, or holds anything else, is false: every caller
+    // reads an option a document may simply not state.
+    public static bool Bool(JsonNode? node) =>
+        node is JsonValue value && value.TryGetValue<bool>(out var b) && b;
 }
