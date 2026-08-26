@@ -27,27 +27,27 @@ than the author approves it before it merges.
 
 ### A change arrives as a pull request
 
-- A pull request **MUST** merge into the default branch rather than reaching it by direct push ([pol-EVER.BRANCH]).
-- A pull request description **MUST** link the work item that asked for the change ([pol-EVER.INTENT]).
+- A pull request **MUST** merge into the default branch rather than reaching it by direct push ([pol-EVER].BRANCH).
+- A pull request description **MUST** link the work item that asked for the change ([pol-EVER].INTENT).
 
 ### Somebody other than the author approves it
 
 - A pull request **MUST** carry at least one approval from somebody other than the author before it merges
-  ([pol-SECD.CODEREV]).
+  ([pol-SECD].CODEREV).
 - A reviewer **MUST** check the change against the standards on this axis, and not read for style alone
-  ([pol-SECD.CODEREV]).
-- A reviewer **MUST** state what they checked when they approve ([pol-SECD.CODEREV]).
+  ([pol-SECD].CODEREV).
+- A reviewer **MUST** state what they checked when they approve ([pol-SECD].CODEREV).
 
 ### Agent-produced work says what produced it
 
 - A pull request holding agent-produced work **MUST** name the agent, the model and the prompt or task that produced
-  it ([pol-AGNT.PROV]).
+  it ([pol-AGNT].PROV).
 - Agent-produced work **MUST** carry the approval of a named person, who owns the change afterwards
-  ([pol-AGNT.ACCEPT]).
+  ([pol-AGNT].ACCEPT).
 - A reviewer **MUST NOT** accept an agent's own summary of a change as evidence that the change is correct
-  ([pol-AGNT.SELFVER]).
+  ([pol-AGNT].SELFVER).
 - Branch policy **MUST** apply to agent-produced work unchanged, with no exemption and no second route in
-  ([pol-AGNT.EQUAL]).
+  ([pol-AGNT].EQUAL).
 
 ## Examples
 
@@ -91,13 +91,6 @@ faster than it can be checked, so the record of what produced it is what a revie
 - [pol-EVER] requires that a change reaches the default branch by reviewed merge.
 - [pol-SECD] requires that review covers security and correctness.
 
-[pol-AGNT]: ../../policies/agnt-agents-propose-people-decide.md
-[pol-AGNT.ACCEPT]: ../../policies/agnt-agents-propose-people-decide.md#clauses
-[pol-AGNT.EQUAL]: ../../policies/agnt-agents-propose-people-decide.md#clauses
-[pol-AGNT.PROV]: ../../policies/agnt-agents-propose-people-decide.md#clauses
-[pol-AGNT.SELFVER]: ../../policies/agnt-agents-propose-people-decide.md#clauses
-[pol-EVER]: ../../policies/ever-everything-in-version-control.md
-[pol-EVER.BRANCH]: ../../policies/ever-everything-in-version-control.md#clauses
-[pol-EVER.INTENT]: ../../policies/ever-everything-in-version-control.md#clauses
-[pol-SECD]: ../../policies/secd-security-by-design.md
-[pol-SECD.CODEREV]: ../../policies/secd-security-by-design.md#clauses
+[pol-AGNT]: ../../policies/agnt-agents-propose-people-decide.md#clauses
+[pol-EVER]: ../../policies/ever-everything-in-version-control.md#clauses
+[pol-SECD]: ../../policies/secd-security-by-design.md#clauses

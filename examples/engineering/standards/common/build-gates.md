@@ -26,18 +26,18 @@ deviation with a named owner.
 
 ### Every change is built and tested automatically
 
-- A push to any branch **MUST** trigger a build and the test suite, without anyone asking for it ([pol-AUTV.INTEG]).
+- A push to any branch **MUST** trigger a build and the test suite, without anyone asking for it ([pol-AUTV].INTEG).
 - The build **MUST** run from a clean checkout, on an agent provisioned from a definition in the repository
-  ([pol-AUTV.MACHINE]).
-- A fix for a defect **MUST** arrive with a test that fails without it ([pol-AUTV.REGRESS]).
+  ([pol-AUTV].MACHINE).
+- A fix for a defect **MUST** arrive with a test that fails without it ([pol-AUTV].REGRESS).
 
 ### A failing check stops the change
 
-- Branch policy **MUST** block a merge while any required check is failing ([pol-AUTV.BLOCK]).
-- A team **MUST NOT** merge over a failing check without a recorded deviation ([pol-AUTV.BYPASS]).
-- A team **MUST NOT** skip, silence or suppress a check without a recorded deviation ([pol-AUTV.DISABLE]).
-- A deviation covering a suppressed check **MUST** name the individual who accepts the risk ([pol-DEVI.OWNER]).
-- That deviation **MUST** carry a review date ([pol-DEVI.EXPIRY]).
+- Branch policy **MUST** block a merge while any required check is failing ([pol-AUTV].BLOCK).
+- A team **MUST NOT** merge over a failing check without a recorded deviation ([pol-AUTV].BYPASS).
+- A team **MUST NOT** skip, silence or suppress a check without a recorded deviation ([pol-AUTV].DISABLE).
+- A deviation covering a suppressed check **MUST** name the individual who accepts the risk ([pol-DEVI].OWNER).
+- That deviation **MUST** carry a review date ([pol-DEVI].EXPIRY).
 
 ## Examples
 
@@ -70,13 +70,5 @@ visible and gives it an end date.
 - [pol-AUTV] commits us to verifying every change automatically and treating a failure as blocking.
 - [pol-DEVI] sets what a recorded deviation has to carry.
 
-[pol-AUTV]: ../../policies/autv-automated-verification.md
-[pol-AUTV.BLOCK]: ../../policies/autv-automated-verification.md#clauses
-[pol-AUTV.BYPASS]: ../../policies/autv-automated-verification.md#clauses
-[pol-AUTV.DISABLE]: ../../policies/autv-automated-verification.md#clauses
-[pol-AUTV.INTEG]: ../../policies/autv-automated-verification.md#clauses
-[pol-AUTV.MACHINE]: ../../policies/autv-automated-verification.md#clauses
-[pol-AUTV.REGRESS]: ../../policies/autv-automated-verification.md#clauses
-[pol-DEVI]: ../../policies/devi-deviations-are-recorded.md
-[pol-DEVI.EXPIRY]: ../../policies/devi-deviations-are-recorded.md#clauses
-[pol-DEVI.OWNER]: ../../policies/devi-deviations-are-recorded.md#clauses
+[pol-AUTV]: ../../policies/autv-automated-verification.md#clauses
+[pol-DEVI]: ../../policies/devi-deviations-are-recorded.md#clauses

@@ -26,18 +26,18 @@ reviewed merge from an identified author.
 ### The repository holds everything the service needs
 
 - A repository **MUST** hold the source, the build definition, the infrastructure definition, the configuration
-  templates and the recovery scripts for the services it owns ([pol-EVER.ASSETS]).
+  templates and the recovery scripts for the services it owns ([pol-EVER].ASSETS).
 - A repository **MUST NOT** depend on an asset held only on a workstation, in a cloud portal or in an unversioned
-  share ([pol-EVER.ORPHAN]).
+  share ([pol-EVER].ORPHAN).
 - Infrastructure, schema and configuration changes **MUST** go through the same review as application code
-  ([pol-EVER.PARITY]).
+  ([pol-EVER].PARITY).
 
 ### Every change is attributable and reviewed
 
-- The default branch **MUST** refuse a direct push, so that every change arrives as a merge ([pol-EVER.BRANCH]).
-- A commit subject **MUST** name the work item that asked for the change, written as `#<id>` ([pol-EVER.INTENT]).
-- A commit **MUST** carry the author's own verified identity ([pol-EVER.HISTORY]).
-- A commit **MUST NOT** be authored by a shared or generic account ([pol-EVER.SHARED]).
+- The default branch **MUST** refuse a direct push, so that every change arrives as a merge ([pol-EVER].BRANCH).
+- A commit subject **MUST** name the work item that asked for the change, written as `#<id>` ([pol-EVER].INTENT).
+- A commit **MUST** carry the author's own verified identity ([pol-EVER].HISTORY).
+- A commit **MUST NOT** be authored by a shared or generic account ([pol-EVER].SHARED).
 
 ## Examples
 
@@ -77,11 +77,4 @@ instead. We also cannot ask an author about a change a year later if we cannot t
 
 - [pol-EVER] commits us to holding everything in version control, with a history that attributes each change.
 
-[pol-EVER]: ../../policies/ever-everything-in-version-control.md
-[pol-EVER.ASSETS]: ../../policies/ever-everything-in-version-control.md#clauses
-[pol-EVER.BRANCH]: ../../policies/ever-everything-in-version-control.md#clauses
-[pol-EVER.HISTORY]: ../../policies/ever-everything-in-version-control.md#clauses
-[pol-EVER.INTENT]: ../../policies/ever-everything-in-version-control.md#clauses
-[pol-EVER.ORPHAN]: ../../policies/ever-everything-in-version-control.md#clauses
-[pol-EVER.PARITY]: ../../policies/ever-everything-in-version-control.md#clauses
-[pol-EVER.SHARED]: ../../policies/ever-everything-in-version-control.md#clauses
+[pol-EVER]: ../../policies/ever-everything-in-version-control.md#clauses
