@@ -19,7 +19,13 @@ public sealed record BundleFile(string Path, byte[] Content, bool Executable = f
 // types the component reads, each optionally with the shape version it reads that type at, as
 // `glossary@1`. Held as the manifest wrote them, because `bundle.json` reports them back. A component
 // naming no type is unconditional and always travels.
-public sealed record PluginComponent(string Path, IReadOnlyList<string> Requires, string? Note);
+//
+// `Announce` is whether the breadcrumb names this component at the start of a session. False by
+// default, because a skill somebody asks for by name costs nothing to leave unannounced and the
+// breadcrumb is read at every start, resume, clear and compact. `docs/cli/bundle.md` says which
+// skills earn the line.
+public sealed record PluginComponent(
+    string Path, IReadOnlyList<string> Requires, string? Note, bool Announce = false);
 
 // A component left out, and the type whose absence left it out. The reason is carried, because it is
 // the one thing the assembled plugin cannot say about itself.
@@ -408,7 +414,8 @@ public static class Bundler
                 ? r.Select(JsonRead.Str).OfType<string>().ToList()
                 : [];
 
-            components.Add(new PluginComponent(path, requires, JsonRead.Str(component["note"])));
+            components.Add(new PluginComponent(path, requires, JsonRead.Str(component["note"]),
+                JsonRead.Bool(component["announce"])));
         }
 
         return components;

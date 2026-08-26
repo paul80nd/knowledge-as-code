@@ -24,6 +24,7 @@
         "requires": [
           "glossary@1"
         ],
+        "announce": true,
         "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
       },
       {

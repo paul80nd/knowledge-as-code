@@ -24,6 +24,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   from the modal in its wording, and says which of the four levels it found. What an external framework obliges stayed
   behind with the register that explains it, so the skill names that gap rather than filling it.
 
+- **A component says whether the breadcrumb names it.** `"announce": true` on a manifest entry puts that skill in the
+  breadcrumb's last line, and the default leaves it out. The line exists to create a question a session would not
+  think to put, so a skill somebody asks for by name does not earn it. A corpus adding a second skill sets `announce`
+  on the one worth introducing.
+
 - **`plugin.from` in `.corpus.yaml` reads the plugin tree from one shared folder.** Several corpora in a repository
   keep one copy of the skills and hooks between them instead of a copy each. `kac bundle` merges that tree with the
   corpus's own `.plugin/`, where a file the corpus holds wins, and `kac update` withholds the shared half rather than

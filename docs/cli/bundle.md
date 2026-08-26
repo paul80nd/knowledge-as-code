@@ -127,6 +127,13 @@ holds, which records cover them, and which skill to ask. That is the whole of it
 glossary, because it does not know a word is ambiguous, so the breadcrumb exists to create the question rather than to
 answer it. A longer one would be paid for by every session that had none to ask.
 
+#### It names the skills their component asked it to
+
+A component is named in that last line where its manifest entry says `"announce": true`, and left out otherwise. The
+default is out, because most skills need no introduction: somebody asking what a policy commits them to already knows
+to ask, and a line naming that skill is paid for by every session that had no such question. What earns the line is a
+skill whose question a session would never think to put.
+
 #### It is rendered here, and not computed at runtime
 
 Everything it states is a fact about the export sitting inside the plugin, and an installed plugin's export does not
