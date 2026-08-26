@@ -3,9 +3,9 @@ name: policy-lookup
 description: Find what this estate is committed to, in the policy clauses that travel with this plugin. Use when
   someone asks whether something is allowed here — "do we have a policy on X", "what does our policy say about X",
   "are we allowed to X", "is X against policy", "what are we on the hook for". Use it as well, unprompted, before you
-  propose a design or a change touching what an estate usually binds: secrets, access, retention, backups, logging,
-  accessibility, third-party components, or what reaches production. Read the clause before you assume nothing
-  governs the thing you are about to do.
+  propose a design or a change touching secrets, access, retention, backups, logging, accessibility, third-party
+  components, or what reaches production. Read the clause before you assume nothing governs the thing you are about
+  to do.
 ---
 
 # Looking a clause up in the policies
