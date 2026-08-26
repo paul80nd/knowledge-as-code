@@ -73,8 +73,8 @@ git commit -m "Start a corpus"
 
 !!! note "Look at `.corpus.yaml` before you commit"
 
-`new` writes it from your answers. [The corpus descriptor](corpus-descriptor.md) says what every key in it means, and
-which ones you move by hand afterwards.
+    `new` writes it from your answers. [The corpus descriptor](corpus-descriptor.md) says what every key in it means,
+    and which ones you move by hand afterwards.
 
 You arrive with ignore rules, editor conventions and a wiki ordering. Name a CI system and its starter pipeline comes
 too. `new` writes that one system's and no other, so a corpus is never handed a workflow for a host it does not build

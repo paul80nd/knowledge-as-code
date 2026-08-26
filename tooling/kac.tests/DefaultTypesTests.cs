@@ -31,7 +31,6 @@ public partial class DefaultTypesTests
                 .OrderBy(x => x, Comparer<(string, string)>.Default),
             Listed().OrderBy(x => x, Comparer<(string, string)>.Default));
 
-    // Every (tier, folder) pair the page states, read off the heading each table sits under.
     // The count the page opens on, spelled as prose spells it. A type added moves this, and nothing else on the
     // site may state it: `framework/index.md` and `getting-started.md` both carried a copy, and a copy is what
     // goes stale on the day somebody adds the eighteenth.
@@ -72,6 +71,7 @@ public partial class DefaultTypesTests
         ? Numbers[count]
         : throw new InvalidOperationException($"kac.tests: no word for {count} types. Extend Numbers.");
 
+    // Every (tier, folder) pair the page states, read off the heading each table sits under.
     private static List<(string Tier, string Folder)> Listed()
     {
         var headings = TierHeading().Matches(Page);
