@@ -15,7 +15,7 @@ dotnet tool install --global KnowledgeAsCode.Tool
 kac --version
 ```
 
-A global install puts `kac` in `~/.dotnet/tools`, which your shell has to know about. Where the install worked and the
+A global install puts `kac` in `~/.dotnet/tools`, which your shell has to know about. If the install worked and the
 command still does not, add that folder to `PATH` and open a new shell.
 
 Inside a repository pinning the tool, run it through the manifest instead:
@@ -34,7 +34,7 @@ kac: could not locate a corpus (no .corpus.yaml above the cwd).
 Every command but `new` answers a question about a corpus, and finds one by walking up from the working directory.
 You are outside one. The exit code is `2`, which means no corpus rather than a fault in one.
 
-`cd` into your corpus and run it again. Where you meant to create a corpus, [`new`](cli/new.md) is the command.
+`cd` into your corpus and run it again. If you meant to create a corpus, [`new`](cli/new.md) is the command.
 
 ## `is already a corpus, so there is nothing here to create`
 
@@ -57,8 +57,7 @@ run:  kac generate
 An index or a generated table no longer matches the records it was built from. Run `kac generate` on your own machine
 and commit what it writes. CI never commits, so this is always yours to fix locally.
 
-Where an index looks wrong after that, the frontmatter it was built from is wrong. Nobody edits generated content by
-hand.
+Where an index still looks wrong, the frontmatter it was built from is wrong.
 
 ## `this repository holds uncommitted changes`
 
@@ -165,6 +164,6 @@ The exit code narrows it:
 | `1`  | A corpus error, or a bad invocation.                        |
 | `2`  | No corpus found.                                            |
 
-Where the tool is wrong rather than your corpus, the
+If the tool is wrong rather than your corpus, the
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) is where to say so. `kac --version` names the
 release and the commit it was built from, which is the first thing worth putting in the report.

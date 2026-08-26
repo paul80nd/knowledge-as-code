@@ -42,7 +42,7 @@ validate run has either not been declared or not been tripped, and `checks` is w
 
 ## Where a command runs
 
-Every command but `new` answers a question about a corpus, meaning one repository of knowledge documents kept in git.
+Every command but `new` answers a question about a **corpus**, meaning one repository of knowledge records kept in git.
 Each finds that corpus by walking up from the working directory for a `.corpus.yaml`, the descriptor naming the corpus.
 It then walks up again from there for the `.schema/` that says what a record of each type carries, so one schema can
 serve several corpora in one repository. Where the tool's own files sit says nothing about which corpus it reads.

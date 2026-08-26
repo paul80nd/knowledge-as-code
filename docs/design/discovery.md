@@ -26,17 +26,17 @@ Five rules narrow that listing, and a file matching any of them is not a record.
   discovered as no record and is still checked, under `template-fields`.
 * **`knowledge-as-code/`**, which holds the framework's own documentation. It is excluded as a *record* only, and the
   pass below still reads it.
-* **`.git/`, `.idea/` and `.claude/` at the corpus root.** Nothing reads these at all. The rule tests the first
-  segment of the path, so a `.claude/` nested inside a type folder is not caught by it.
+* **`.git/`, `.idea/` and `.claude/` at the corpus root.** Nothing reads these at all. The rule tests the first segment
+  of the path, so a `.claude/` nested inside a type folder is not caught by it.
 * **A root `README.md` and a root `CLAUDE.md`.** Both are orientation pages.
-* **Anything outside a folder that maps to a type.** A record lives in its type's folder, so those folders are the
-  whole of what is read.
+* **Anything outside a folder that maps to a type.** A record lives in its type's folder, so those folders are the whole
+  of what is read.
 
 [Automation](../framework/automation.md#what-is-not-a-record) says why each path is named rather than globbed.
 
 ## Frontmatter is how a document opts in
 
-A document is validated **only if it carries a YAML frontmatter block**. A file sitting in a type folder without one is
+A document is validated only if it carries a YAML frontmatter block. A file sitting in a type folder without one is
 counted in the summary as skipped without frontmatter, and does not fail the run.
 
 ## The framework's own documentation gets a pass of its own

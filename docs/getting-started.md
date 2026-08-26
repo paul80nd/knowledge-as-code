@@ -14,7 +14,7 @@ You want a line opening `10.`:
 10.0.300 [/usr/local/share/dotnet/sdk]
 ```
 
-Where there is none, install it from
+If there is none, install it from
 [dotnet.microsoft.com/download/dotnet/10.0](https://dotnet.microsoft.com/download/dotnet/10.0). An older SDK beside it
 is fine, and nothing here removes one.
 
@@ -36,13 +36,13 @@ kac --version
 0.13.0+c622cab6719a1880656c68171d9fb420dc91f724
 ```
 
-Where the shell cannot find `kac` after a global install, add `~/.dotnet/tools` to your `PATH` and open a new shell.
+If the shell cannot find `kac` after a global install, add `~/.dotnet/tools` to your `PATH` and open a new shell.
 [Troubleshooting](troubleshooting.md) covers that and the other first-run faults.
 
 ## Start a corpus
 
-`kac new` turns the folder you are standing in into a corpus, meaning one repository of knowledge records kept in git.
-It takes the framework from the knowledge-as-code repository, writes the files that framework says a corpus receives,
+`kac new` turns the folder you are standing in into a **corpus**: one repository of knowledge records kept in git. It
+takes the framework from the knowledge-as-code repository, writes the files that framework says a corpus receives,
 and writes the two no template can supply: `.corpus.yaml`, which names your corpus, and a `README.md` to rewrite.
 
 ```bash
@@ -52,8 +52,8 @@ kac new
 
 It asks what the corpus is called, which types it adopts, where it publishes and what builds it, with a default for
 each. Name a publishing target and it asks two more: where a person reads a record, and where an agent fetches one.
-Answer nothing at all and you still end with a corpus that validates, holding every type the framework declares. `--yes` takes every
-default and asks nothing, which is what a pipeline runs.
+Answer nothing at all and you still end with a corpus that validates, holding every type the framework declares. `--yes`
+takes every default and asks nothing, which is what a pipeline runs.
 
 The folder does not have to be a repository yet. `new` offers to run `git init` where there is none. It finishes by
 running `generate`, then `validate`, then `git add -A`:
@@ -73,14 +73,14 @@ git commit -m "Start a corpus"
 
 !!! note "Look at `.corpus.yaml` before you commit"
 
-    `new` writes it from your answers. [The corpus descriptor](corpus-descriptor.md) says what every key in it means,
-    and which ones you move by hand afterwards.
+`new` writes it from your answers. [The corpus descriptor](corpus-descriptor.md) says what every key in it means, and
+which ones you move by hand afterwards.
 
 You arrive with ignore rules, editor conventions and a wiki ordering. Name a CI system and its starter pipeline comes
 too. `new` writes that one system's and no other, so a corpus is never handed a workflow for a host it does not build
 on. [`new`](cli/new.md) covers every flag, the order it asks in, and what stops it.
 
-Where you declined some types, the run ends by naming links the type pages carry to types you did not take. Those pages
+If you declined some types, the run ends by naming links the type pages carry to types you did not take. Those pages
 are yours from here, so edit the links out.
 
 ## Run the tool against your corpus
@@ -93,8 +93,6 @@ cd path/to/your/corpus
 
 kac validate            # frontmatter, links, structure, clauses and the graph
 kac generate            # rewrite the indexes and the tables inside the markers
-kac export              # write what the corpus knows to .dist/export/, as data
-kac bundle              # assemble that export and .plugin/ into a plugin under .dist/
 ```
 
 A clean `validate` names the counts and exits `0`:
@@ -111,6 +109,9 @@ generated files already up to date; nothing written.
 
 Anything else is a finding naming the file, the check and the line. [Troubleshooting](troubleshooting.md) covers the
 ones you meet first.
+
+Two more commands write your corpus out for an agent to read: `kac export` and `kac bundle`.
+[Building the plugin](ci.md#building-the-plugin) is where those belong once a record of yours passes.
 
 Every command takes the same few options, and each answers with one of three exit codes.
 [The CLI reference](cli/index.md) covers both, and gives a page to every command.

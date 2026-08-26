@@ -91,9 +91,9 @@ staleness rather than a formatting wobble.
 
 ## A pipeline never commits
 
-Where generated content is stale the build fails and names the command to run locally. A pipeline that pushed fixes
-into the branch would produce bot commits, re-trigger itself, and make "who changed this" unanswerable.
-[Contributing](../framework/contributing.md#what-a-pipeline-will-not-do) says what that trade buys.
+Where generated content is stale the build fails and names the command to run locally.
+[Contributing](../framework/contributing.md#what-a-pipeline-will-not-do) says what a pipeline that pushed fixes would
+cost instead.
 
 ## Where to go next
 

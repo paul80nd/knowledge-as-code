@@ -22,10 +22,9 @@ kac new [--ci <SYSTEM>] [--from <URL|PATH>] [--name <NAME>] [--no-color] [--path
 
 ## What it does
 
-`new` turns the folder you are standing in into a corpus, meaning one repository of knowledge records kept in git. It
-fetches the framework from a template repository at a ref, writes the files that template says a corpus receives, and
-writes what no template can supply: `.corpus.yaml`, which names your corpus, and a `README.md` to rewrite where the
-template sends none of its own.
+`new` turns the folder you are standing in into a corpus. It fetches the framework from a template repository at a ref,
+writes the files that template says a corpus receives, and writes what no template can supply: `.corpus.yaml`, which
+names your corpus, and a `README.md` to rewrite where the template sends none of its own.
 
 It asks what the corpus is called, which types it adopts, where it publishes and what builds it, with a default for
 each. Answer nothing at all and you still end with a corpus that validates, holding every type the template declares.
@@ -105,7 +104,7 @@ new: the corpus this created does not validate. a page it received links to a ty
 are yours from here, so edit the links out. the files are written and staged.
 ```
 
-Those pages are seeds: yours from the moment they land, and yours to edit.
+
 
 **It needs a network and a git client**, unless you pass a local `--from`. The template is fetched at run time.
 

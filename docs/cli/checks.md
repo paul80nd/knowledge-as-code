@@ -15,9 +15,8 @@ kac checks [--json] [--no-color]
 
 ## What it does
 
-`checks` prints every check the validator can report against a corpus, meaning one repository of knowledge records
-kept in git. Use it to see what CI will hold your corpus to, and to find out whether the check you were about to add
-already exists.
+`checks` prints every check the validator can report against your corpus. Use it to see what CI will hold that corpus
+to, and to find out whether the check you were about to add already exists.
 
 The list is read from that corpus's own `.schema/`, so there is no second catalogue to keep in step. A corpus that
 declares a type of its own sees that type's checks here without the tool changing.

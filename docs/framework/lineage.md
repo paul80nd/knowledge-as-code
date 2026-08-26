@@ -11,8 +11,8 @@ else to a reader with a governance or agile background, which is a defect the re
 **This is alignment, not compliance.** Naming a framework in a lineage row says the thinking is near theirs. It does not
 claim conformance, certification, or that a record would satisfy an assessment against theirs. Where a corpus has a
 *standing* against an external framework, meaning obligations it accepts and is measured on, that corpus records it in
-its own `frameworks.md` and nowhere else. The two registers are kept apart deliberately. Lineage is the framework's own
-intellectual debt. Standing belongs wholly to the corpus holding it.
+its own `frameworks.md` and nowhere else. The two registers are kept apart deliberately. Standing belongs wholly to the
+corpus holding it.
 
 ## What a row says
 

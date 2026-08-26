@@ -15,8 +15,8 @@ kac generate [--check] [--no-color]
 
 ## What it does
 
-`generate` rewrites the parts of a corpus, meaning one repository of knowledge records kept in git, that are derived
-from frontmatter and the schema rather than written by hand. Each type's index page, the frontmatter reference and
+`generate` rewrites the parts of your corpus that are derived from frontmatter and the schema rather than written by
+hand. Each type's index page, the frontmatter reference and
 checks table on each type page, and the taxonomy's own tables are all written from what the corpus holds now.
 
 A generated block is rewritten between its markers, so the words around it stay yours. Each type's `_index.md` is

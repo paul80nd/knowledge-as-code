@@ -4,7 +4,7 @@ Seventeen knowledge types ship with the framework. A corpus adopts the ones it n
 [`.corpus.yaml`](../corpus-descriptor.md), and a declined type's schema file is never written, so nothing arrives to be
 ignored.
 
-Nothing here is a floor. A corpus running one product might stand up four of these and never want the rest, and a corpus
+ A corpus running one product might stand up four of these and never want the rest, and a corpus
 can declare a type of its own that the framework has never heard of. What follows is what you get without deciding
 anything.
 

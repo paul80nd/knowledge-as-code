@@ -1,8 +1,8 @@
 # Running it in CI
 
 Two commands hold a corpus to its schema on every pull request, so a broken cross-reference fails CI. A corpus is one
-repository of knowledge documents kept in git, and a record is one document in it filed under a type. Both commands run
-from inside the corpus.
+repository of knowledge records kept in git, and a record is one Markdown document in it, filed under a type. Both
+commands run from inside the corpus.
 
 | Command                | Fails when                                                                  |
 |------------------------|-----------------------------------------------------------------------------|
@@ -34,7 +34,7 @@ dotnet tool run kac validate
 ## CI never commits, and checks out with git
 
 **CI never commits.** `generate --check` recomputes every generated file, names the ones that differ, and exits `1`. It
-writes nothing. Give the job read-only permission, and let whoever broke it run `kac generate` on their own machine.
+writes nothing. Give the job read-only permission. Run `kac generate` on your own machine and commit what it writes.
 
 ```text
 generated files are stale. These differ from the schema/frontmatter:
@@ -86,7 +86,7 @@ pin that way and let Dependabot move them.
 ## Azure Pipelines
 
 ```yaml
-trigger: none      # PR validation comes from a branch policy, see below
+trigger: none      # PR validation comes from an Azure Repos branch policy
 
 pr:
   branches:
@@ -113,12 +113,12 @@ steps:
     displayName: Check generated output is fresh
 ```
 
-!!! warning "Azure Repos ignores the `pr:` trigger above"
+!!! warning "Azure Repos ignores the `pr:` trigger in this file"
 
-    Wire the pipeline up as a branch policy, or it never runs on a pull request and nothing says so.
+Wire the pipeline up as a branch policy, or it never runs on a pull request and nothing says so.
 
-    Project settings, then Repositories, then your repository, then Policies, then Branch Policies, then `main`, then
-    Build Validation, then **+**. Select this pipeline and mark it Required.
+Project settings, then Repositories, then your repository, then Policies, then Branch Policies, then `main`, then Build
+Validation, then **+**. Select this pipeline and mark it Required.
 
 The `pr:` block states the intent, and it works as written if the repository is ever mirrored to GitHub.
 

@@ -22,8 +22,8 @@ kac update [--add-type <TYPE>] [--check] [--drop-type <TYPE>] [--from <URL|PATH>
 
 ## What it does
 
-`update` takes a newer framework into a corpus, meaning one repository of knowledge records kept in git, that already
-has one. It is also where a corpus adopts a type or gives one up.
+`update` takes a newer framework into a corpus that already has one. It is also where a corpus adopts a type or gives
+one up.
 
 It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file what
 the corpus receives, writes it, and records what it took. **It leaves every change in the working tree and commits
@@ -109,7 +109,7 @@ it. It cannot tell a type the framework has just added from one declined at crea
 decide.
 
 **The descriptor's own shape is stamped, not migrated.** Where `descriptor-version` has moved, the keys the tool owns
-are rewritten and anything new or missing is reported for a person to settle.
+are rewritten and anything new or missing is reported for you to settle.
 
 **The template has no changelog.** What changed in a framework is read from the diff `update` leaves behind.
 

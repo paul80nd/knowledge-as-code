@@ -15,8 +15,8 @@ kac export [--no-color] [--type <TYPE>]
 
 ## What it does
 
-A consumer of a corpus, meaning one repository of knowledge records kept in git, should not have to clone it. `export`
-writes what the corpus knows into `.dist/export/` as data built for an agent to read.
+A consumer of your corpus should not have to clone it. `export` writes what the corpus knows into `.dist/export/` as
+data built for an agent to read.
 
 It writes three kinds of file: a manifest saying what the export is, one file per record for a reader wanting a whole
 record, and a flat file cheap to grep for a reader holding only a word. What travels is each type's own decision,

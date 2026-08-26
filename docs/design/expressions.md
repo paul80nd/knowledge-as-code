@@ -85,7 +85,7 @@ silence should fall, which trades one visible guard for a table of special cases
 the rule. That covers a syntax error, an unknown fact and the wrong number of arguments. It also covers a comparison
 between a number and text, arithmetic on text, and a whole expression that is not a yes/no question.
 
-This matters more than it looks. Without it, `words() == 'three'` compiles and then evaluates false for the life of the
+ Without it, `words() == 'three'` compiles and then evaluates false for the life of the
 schema. That is a check which appears wired up and never fires, the exact failure this layer exists to end.
 
 ## The facts an expression can ask for

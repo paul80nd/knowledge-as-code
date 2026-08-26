@@ -22,8 +22,7 @@ Three keys select what a record sends:
 
 Neither `sections:` nor `parts:` falls back to a default. A type states the fidelity or the schema pass fails.
 
-A corpus that adopted no exporting type still writes a manifest, with an empty type list. "Nothing" is a valid
-statement of what a corpus has.
+A corpus that adopted no exporting type still writes a manifest, with an empty type list.
 
 ### What each fidelity carries
 
@@ -199,15 +198,15 @@ The templates are `https://…/blob/<sha>/{path}#{anchor}` and `https://raw…/<
 `path` and `anchor` a line carries. Four things follow from writing them this way:
 
 * **The ref is inside the template.** A ref left as a placeholder is forty hex characters copied by an agent, and a
-  one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a
-  substitution can produce is a wrong path, which the reader can see and correct.
+  one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a substitution
+  can produce is a wrong path, which the reader can see and correct.
 * **Only the human template takes an anchor.** Raw source has no fragment to honour, so the asymmetry is a property of
   the templates rather than a rule each reader has to remember.
-* **The bases are not carried beside them.** They are in the templates already, and a manifest stating one address
-  twice is a manifest that can state it two ways.
-* **A corpus that is not its repository names the folder it sits in.** `publishing.path-prefix` lands between the
-  commit and the record's path, which is the only place it can go. What a reader supplies is the path alone, so the two
-  cannot be joined in the wrong order.
+* **The bases are not carried beside them.** They are in the templates already, and a manifest stating one address twice
+  is a manifest that can state it two ways.
+* **A corpus that is not its repository names the folder it sits in.** `publishing.path-prefix` lands between the commit
+  and the record's path, which is the only place it can go. What a reader supplies is the path alone, so the two cannot
+  be joined in the wrong order.
 
 ### A per-record file resolves its links
 

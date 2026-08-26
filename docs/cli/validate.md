@@ -15,8 +15,8 @@ kac validate [--json] [--no-color]
 
 ## What it does
 
-`validate` holds every record in a corpus, meaning one repository of knowledge records kept in git, to the schema its
-type declares. CI runs it on every pull request, and you run it before you push.
+`validate` holds every record in your corpus to the schema its type declares. CI runs it on every pull request, and
+you run it before you push.
 
 It decides which files count as records, applies the checks the schema declares, and reports each fault against the
 file that caused it. [Discovery](../design/discovery.md) is the pass deciding what it reads.
@@ -62,7 +62,7 @@ kac validate --json
 
 Use this to feed a script or a reviewer bot. The summary comes first, then one object per finding:
 
-```text
+```json
 {
   "summary": {
     "validated": 13,

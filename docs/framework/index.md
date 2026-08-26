@@ -4,7 +4,7 @@ Knowledge as Code is a way of holding engineering knowledge: plain Markdown in g
 and every type declares a schema. `kac` is the tool that holds a corpus to that schema. This section is the framework
 itself, meaning the ideas the tool serves rather than the commands that serve them.
 
-A **corpus** is one repository of knowledge documents, with the schema it runs. Every corpus takes the same framework
+A **corpus** is one repository of knowledge records, with the schema it runs. Every corpus takes the same framework
 and fills it with its own knowledge.
 
 ## The pages here

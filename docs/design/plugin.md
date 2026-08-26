@@ -7,7 +7,7 @@ A **corpus** is one repository of knowledge records kept in git. An **export** i
 [`export`](../cli/export.md) writes into `.dist/export/`, as data an agent reads. A **plugin tree** is the skills and
 hooks a corpus keeps beside its records, at `.plugin/`. A **component** is one skill or hook inside that tree.
 
-## `bundle` never reads the corpus
+## `bundle` never loads the corpus
 
 `Corpus.Load` is never called. A run reads one key out of `.corpus.yaml`, saying where the plugin tree is. Everything
 else a bundle decides is a fact about the export it was handed.
@@ -38,8 +38,8 @@ Each of these ends the run with the reason and nothing written:
 * an export whose `formatVersion` is not the one this build reads
 * a component reading a type at a shape version the export does not carry
 
-Stopping is the point in every one of them. The alternative is a plugin assembled around a missing answer, which
-installs and fails later somewhere less obvious.
+The alternative to stopping is a plugin assembled around a missing answer, which installs and fails later somewhere
+less obvious.
 
 ### A `corpusRoot` collision loses a file in silence
 
@@ -58,7 +58,7 @@ The type is there and its files have moved, so the component would ship, install
 would hide that behind a plugin doing less. [The export format](export.md) says what a shape version covers and what
 moves it.
 
-## Trimming reads the export, not the corpus
+## A component travels only where the export carries its types
 
 A component declares under `metadata.components` which record types it reads, and it travels only where the export
 carries every one of them. What that catches is the skill that finds nothing. To whoever asked it a question, such a
@@ -88,48 +88,43 @@ nobody reviews must not keep a file that nothing backs any more. That rule stays
 deletes the other's tree, which is why the export is a named subtree and not the root. `Dist` is the one statement of
 the layout.
 
-### The export is copied in, and therefore exists twice
+The export is copied in, and therefore exists twice. Once at `.dist/export/` as `export` wrote it, and once inside the
+plugin under the directory `metadata.corpusRoot` names. That duplication is intended. An installed plugin is copied into
+a cache of its own, so a path outside the plugin root resolves nowhere at runtime, and `export` has to stay runnable and
+proved without `bundle` having run. The copy is what keeps them independent.
 
-Once at `.dist/export/` as `export` wrote it, and once inside the plugin under the directory `metadata.corpusRoot`
-names. That duplication is intended. An installed plugin is copied into a cache of its own, so a path outside the
-plugin root resolves nowhere at runtime, and `export` has to stay runnable and proved without `bundle` having run. The
-copy is the seam between the two commands.
-
-### `bundle` never edits what it copies
-
-The export travels byte for byte. The plan carries bytes rather than text, so a copy cannot acquire an opinion about
-encoding or line endings on the way through. A difference between the two copies is a defect, and the golden fixture
-asserts their equality directly.
+`bundle` never edits what it copies. The export travels byte for byte. The plan carries bytes rather than text, so a
+copy cannot acquire an opinion about encoding or line endings on the way through. A difference between the two copies is
+a defect, and the golden fixture asserts their equality directly.
 
 ## The breadcrumb
 
-### What it says, and why it stops there
+### What the breadcrumb says, and why it stops there
 
 A `SessionStart` hook injects a few lines into every session. They say which corpus is installed, how many entries it
 holds, which records cover them, and which skill to ask. That is the whole of its job.
 
-An agent never asks for a glossary, because it does not know a word is ambiguous. So the breadcrumb exists to create
-the question rather than to answer it. A longer one would be paid for by every session that had none to ask.
+An agent never asks for a glossary, because it does not know a word is ambiguous. So the breadcrumb exists to create the
+question rather than to answer it. A longer one would be paid for by every session that had none to ask. That is also
+why a line names at most six things: the renderer holds the bound itself, so a corpus keeping three hundred records pays
+what one keeping three pays. A type over the bound has its first names carried and the rest given as a count, because a
+list cut short in silence would read as the whole of what the type covers.
 
-### A component says whether the breadcrumb names it
+A component is named in the last line where its manifest entry says `"announce": true`, and left out otherwise. The
+default is out, because most skills need no introduction: you already know to ask what a policy commits you to. What
+earns the line is a skill whose question a session would never think to put.
 
-A component is named in that last line where its manifest entry says `"announce": true`, and left out otherwise. The
-default is out, because most skills need no introduction: somebody asking what a policy commits them to already knows
-to ask. What earns the line is a skill whose question a session would never think to put.
-
-### It is rendered at build time
+### The breadcrumb is rendered at build time
 
 Everything it states is a fact about the export sitting inside the plugin, and an installed plugin's export does not
 change between builds. So `bundle` writes the text once and the hook is one `cat`. Nothing on the consumer's machine is
 asked for a JSON parser, an interpreter or a runtime.
 
-### It travels with the hook that prints it
-
 The rendered file travels with the directory that prints it and nowhere else. A corpus shipping no hook has nothing to
 read it, and a corpus whose hook was trimmed would otherwise keep a file describing a component that left. Both fall
 out of asking which files survived, so no corpus has to declare that a generated file belongs to a component.
 
-### Nothing in the render names a record type
+### The render names no record type
 
 The counts, the record names and the skill to ask are read off the export and off the surviving components. So a corpus
 adopting a type this tool has never heard of gets a breadcrumb about it with no line changing.
@@ -137,13 +132,7 @@ adopting a type this tool has never heard of gets a breadcrumb about it with no 
 The record names do a job a count alone cannot. A corpus keeps one glossary per bounded context, so three names say
 which contexts are covered where the number three says only that there are some.
 
-### A line names at most six things
 
-The length of the breadcrumb is what every session pays at start, resume, clear and compact. So the renderer holds the
-bound itself, and a corpus keeping three hundred records pays the same as one keeping three.
-
-A type over the bound has its first names carried and the rest given as a count, which is the last of the six. A list
-cut short in silence would read as the whole of what the type covers.
 
 ## A hook is copied with its permission bit
 
@@ -175,7 +164,7 @@ included and every one trimmed with the reason.
 
 Two corpora running one plugin name may ship different component sets. That is correct, and it makes "does this plugin
 do X" unanswerable from outside unless the plugin says. `bundle.json` carries no timestamp and no commit: the export
-inside the plugin states both, and a second clock would be a second answer to one question.
+inside the plugin states both.
 
 ## `.dist/` is the marketplace
 
@@ -183,7 +172,7 @@ A marketplace is a directory holding `.claude-plugin/marketplace.json`, and it r
 that directory. A source containing `..` is refused. So a marketplace cannot sit beside the plugin and point sideways
 at it, and the root is where it goes.
 
-## Two decisions behind the shape
+## Why the output is a directory, and why `corpusRoot` is read
 
 **The output is a directory rather than an archive.** A marketplace can point at a path, so there is nothing to unpack
 between building and asking the plugin a question.

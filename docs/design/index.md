@@ -15,16 +15,16 @@ These pages are the specification `kac` is built to. Where a page and the tool d
   something narrower.
 * **[Checks](checks.md)** says where a check comes from, what the schema pass refuses, and why a rule is data wherever
   it can be.
-* **[Rule expressions](expressions.md)** is the reference for the one-line conditions a type declares, and the facts
-  one may ask about a record.
+* **[Rule expressions](expressions.md)** is the reference for the one-line conditions a type declares, and the facts one
+  may ask about a record.
 * **[What the schema is held to](held-to.md)** says what `kac` refuses when it loads the schema, and why a declaration
   the tool ignores counts as a defect.
 * **[Generation](generation.md)** says what a corpus derives from its own records, where each derived thing lands, and
   why generation writes into hand-written files.
 * **[The export format](export.md)** is the contract an export answers to: what each file holds, what a type decides
   about its own records, and which version number moves when either changes.
-* **[The plugin bundle](plugin.md)** says how an export becomes something a consumer can install, and what decides
-  which parts of it ship.
+* **[The plugin bundle](plugin.md)** says how an export becomes something a consumer can install, and what decides which
+  parts of it ship.
 * **[Layers](layers.md)** says which files in a corpus belong to the framework, which belong to the corpus, and what
   happens to each when a newer framework arrives.
 
@@ -52,7 +52,7 @@ describes each one on hover, and marks a wrong one as you type:
 No build reads that file. It advises an author and gates nothing, and a type file written outside an editor meets the
 same checks as one written in it.
 
-### The folder itself
+### What each file in `.schema/` holds
 
 Which file holds what, and what the generator writes from each, is
 [`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md). It travels with the
