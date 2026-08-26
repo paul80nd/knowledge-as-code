@@ -95,6 +95,11 @@ skip:
     reason: Patched for our proxy.
 ```
 
+**A shared plugin tree is withheld.** `plugin.from` in `.corpus.yaml` sends `bundle` to one tree elsewhere, so a corpus
+naming it holds none of that tree and an update writes none of it here. Its own `.plugin/.claude-plugin/plugin.json` is
+a seed and arrives all the same: the manifest names the plugin and lists the components that corpus declares.
+[The corpus descriptor](../corpus-descriptor.md) says how the two trees are merged.
+
 **A continuous integration starter is refreshed and never introduced.** A manifest rule may declare `ci:`, naming the
 system its files serve, and `new` writes the matching starter alone. Which system builds a repository is that
 repository's own answer, so an update leaves a starter the corpus does not hold where it is. A corpus that wants one

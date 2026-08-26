@@ -24,6 +24,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   from the modal in its wording, and says which of the four levels it found. What an external framework obliges stayed
   behind with the register that explains it, so the skill names that gap rather than filling it.
 
+- **`plugin.from` in `.corpus.yaml` reads the plugin tree from one shared folder.** Several corpora in a repository
+  keep one copy of the skills and hooks between them instead of a copy each. `kac bundle` merges that tree with the
+  corpus's own `.plugin/`, where a file the corpus holds wins, and `kac update` withholds the shared half rather than
+  writing it back. The manifest is never taken from the shared tree: it names the plugin, so it stays at
+  `.plugin/.claude-plugin/plugin.json` in each corpus. Omit the key and nothing changes.
+
 - **A corpus created before this declares no component for the new skill.** `kac update` writes the skill, and leaves
   `.plugin/.claude-plugin/plugin.json` alone because the manifest is the corpus's own. A path no component owns ships
   unconditionally, so add the component yourself to have it trimmed where the type is not adopted:

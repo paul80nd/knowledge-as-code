@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-# breadcrumb — the SessionStart hook, Linux/macOS half. Prints the file `kac bundle` rendered beside it
-# and does nothing else: everything the breadcrumb states was settled when the plugin was assembled and
-# cannot have changed since, so there is nothing here to compute and no JSON to parse in a shell.
-# The file is addressed from this script's own directory, which asks the machine for nothing. The
-# Windows twin is breadcrumb.cmd, and hooks/hooks.json is what reaches either.
-cat "$(dirname "$0")/breadcrumb.txt"

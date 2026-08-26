@@ -256,10 +256,26 @@ public static class Commands
     private static string At(string? commit) => commit is { Length: >= 7 } c ? $" at {c[..7]}" : "";
 
     // Assemble the plugin from the export and the `.plugin/` tree. Two trees in, one directory out, and
-    // the corpus is never loaded: what a bundle has to decide is a fact about the export it was handed.
+    // the corpus is never loaded bar its descriptor, which says where the plugin tree is read from: what
+    // a bundle has to decide beyond that is a fact about the export it was handed.
     public static int Bundle(string corpusRoot)
     {
-        var pluginTree = Bundler.Read(Path.Combine(corpusRoot, Bundler.SourceDir));
+        var descriptor = CorpusDescriptor.Load(corpusRoot);
+        var own = Bundler.Read(Path.Combine(corpusRoot, Bundler.SourceDir));
+        var pluginTree = own;
+
+        if (descriptor.PluginFrom is { } from)
+        {
+            var shared = Bundler.Read(kac.core.Update.TemplatePath(from, corpusRoot));
+            if (shared is null)
+                return Fail($"bundle: .corpus.yaml reads the plugin tree from {from}, and there is no folder "
+                            + "there. The path is relative to this corpus's root.");
+
+            pluginTree = Bundler.Merge(shared, own ?? []);
+            Note($"bundle: read the plugin tree from {from}, less the manifest, which names this plugin "
+                 + $"and is {Bundler.SourceDir}/{Bundler.ManifestFile} here.");
+        }
+
         if (pluginTree is null)
             return Fail($"bundle: no plugin tree at {Bundler.SourceDir}/. It is the source a plugin is built from, "
                         + "and it arrives with the mechanism.");
@@ -714,6 +730,10 @@ public static class Commands
         if (plan.DeclinedCi > 0)
             Account($"update: withheld {plan.DeclinedCi} continuous integration starter(s) this corpus "
                     + "does not hold. which system builds it is not an update's to decide.");
+
+        if (plan.DeclinedPlugin > 0)
+            Account($"update: withheld {plan.DeclinedPlugin} plugin file(s) this corpus reads from "
+                    + "elsewhere. .corpus.yaml says where under plugin.from.");
 
         var offered = plan.Offered.Where(t => !t.Equals(dropped, StringComparison.Ordinal)).ToList();
         if (offered.Count > 0)

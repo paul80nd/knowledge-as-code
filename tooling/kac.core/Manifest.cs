@@ -154,6 +154,14 @@ public class CorpusDescriptor
     // `docs/cli/update.md` says what that buys a corpus.
     public readonly List<SkippedFile> Skipped = [];
 
+    // Where `kac bundle` reads the plugin tree from, relative to this corpus's root.
+    //
+    // Null where the corpus keeps its own `.plugin/`, which is the ordinary case and the only one a
+    // corpus standing alone has. A value shares one tree between several corpora in a repository, and
+    // `update` then withholds the shared half rather than writing a copy of it here.
+    // `docs/cli/bundle.md` says how the shared tree and this corpus's own are merged.
+    public string? PluginFrom;
+
     // What this corpus calls itself. An export states it so that a consumer holding several exports can
     // tell whose vocabulary it is reading, which the folder it vendored the files into may not say.
     public string? Name;
@@ -256,6 +264,7 @@ public class CorpusDescriptor
         descriptor.RawBase = Yaml.Str(Yaml.Get(publishing, "raw-base"));
         descriptor.PathPrefix = Yaml.Str(Yaml.Get(publishing, "path-prefix"));
         descriptor.ExportExclude.AddRange(Yaml.StrList(Yaml.Get(Yaml.Get(root, "export"), "exclude")));
+        descriptor.PluginFrom = Blank(Yaml.Str(Yaml.Get(Yaml.Get(root, "plugin"), "from")));
 
         if (Yaml.Get(root, "types") is YamlSequenceNode types)
             descriptor.Types = [.. types.Children.Select(Yaml.Str).OfType<string>()];

@@ -31,19 +31,32 @@ is CI's job (on GitHub, `publish-plugin.yml`), and so is running `claude plugin 
 division buys is a command a reader runs on a laptop, without credentials and without a branch to write to. It produces
 there exactly what CI publishes.
 
-**It does not read the corpus.** `Corpus.Load` is never called. Everything a bundle decides is a fact about the export
-it was handed, and the export is the only thing that travels.
+**It does not read the corpus.** `Corpus.Load` is never called. A run reads one key out of `.corpus.yaml`, saying where
+the plugin tree is. Everything else a bundle decides is a fact about the export it was handed, and the export is the
+only thing that travels.
 
 ## How it works
 
 A run reads the export `export` wrote and the corpus's own `.plugin/` tree. It decides which components that export can
 support, copies what survives into `.dist/plugin/`, renders the breadcrumb, and writes a manifest naming what shipped.
 
+### Where the plugin tree is read from
+
+`.plugin/` at the corpus root, unless `plugin.from` in `.corpus.yaml` names another folder. Several corpora in one
+repository can then share a single tree instead of holding a copy each, and `update` withholds the shared half from
+every corpus that says so.
+
+The manifest is the exception. It carries the name the plugin installs under, so it is read from the corpus and never
+from the shared tree, and a corpus holding none is refused. A file the corpus writes beside it wins over the shared
+tree's copy of the same path, which is how one skill is overridden without giving up the rest.
+[The corpus descriptor](../corpus-descriptor.md) is the reference for the key.
+
 ### What stops a run before it writes
 
 Each of these ends the run with the reason and nothing written:
 
 * a plugin tree with no manifest
+* a `plugin.from` naming a folder that is not there
 * a manifest that is not JSON, or that states no name, or no `corpusRoot`, or a `corpusRoot` the plugin tree already
   uses
 * an export with no manifest

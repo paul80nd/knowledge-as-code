@@ -96,7 +96,7 @@ upstream:
   commit:
 
   # The version of the template's shape this corpus is on. Stamped by `kac update`.
-  template-version: 4
+  template-version: 5
 
   # The day the framework last arrived.
   taken-on: "2026-08-24"
@@ -141,6 +141,20 @@ types:
 # whose `review-by` is in the past.
 export:
   exclude: []
+
+# Where `kac bundle` reads the plugin tree from.
+#
+# Absent means `.plugin/` at this corpus's root, which is what a corpus standing on its own holds and
+# what `kac new` creates. This corpus sits inside the repository serving the template, so it reads the
+# skills and hooks from the one tree there and keeps no copy of its own.
+#
+# Relative to this corpus's root, as `upstream.url` is.
+#
+# The manifest is never read from the shared tree. It carries the name this plugin installs under, so it
+# stays at `.plugin/.claude-plugin/plugin.json` here, along with the components this corpus declares. A
+# file this corpus writes beside it wins over the shared tree's copy of the same path.
+plugin:
+  from: ../../template/.plugin
 
 # Files this corpus deliberately holds differently from the framework.
 #

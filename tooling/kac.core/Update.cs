@@ -69,7 +69,8 @@ public sealed record UpdatePlan(
     IReadOnlyList<string> UnknownCi,
     int InStep,
     int Declined,          // withheld for a type this corpus has not adopted
-    int DeclinedCi)        // a starter for a system that does not build this corpus
+    int DeclinedCi,        // a starter for a system that does not build this corpus
+    int DeclinedPlugin)    // the shared half of a plugin tree this corpus reads from elsewhere
 {
     public IEnumerable<PlannedFile> Copies => Written.Concat(Seeded);
 
@@ -94,6 +95,10 @@ public static class Update
     // `policy` is `cautious` or `full`, already resolved between the descriptor and `--policy`. `same`
     // answers whether two copies of a file say the same thing, and `Same` below is what a command passes.
     //
+    // A corpus naming `plugin.from` in its descriptor reads the plugin tree from somewhere else, so the
+    // shared half of that tree is withheld rather than copied in. Its own manifest is a seed and still
+    // arrives: the manifest names the plugin and is the corpus's to write.
+    //
     // `readInPlace` is true where the corpus sits inside the repository serving its template. A file
     // whose destination is its source is then shared with that corpus rather than copied into it, which
     // is the arrangement `.schema/` and the travelling skills are in: the tool walks up for them, so the
@@ -114,6 +119,7 @@ public static class Update
         var inStep = 0;
         var declined = 0;
         var declinedCi = 0;
+        var declinedPlugin = 0;
 
         foreach (var from in templateFiles.OrderBy(f => f, StringComparer.Ordinal))
         {
@@ -129,6 +135,14 @@ public static class Update
 
             sent.Add(placement.Path);
             if (readInPlace && placement.Path.Equals(from, StringComparison.Ordinal)) continue;
+
+            if (descriptor.PluginFrom is not null
+                && placement.Layer == Manifest.Overlay
+                && Bundler.InSourceTree(placement.Path))
+            {
+                declinedPlugin++;
+                continue;
+            }
 
             if (types.Declines(placement.Path))
             {
@@ -202,7 +216,7 @@ public static class Update
         skipped.Sort(StringComparer.Ordinal);
         unknownCi.Sort(StringComparer.Ordinal);
         return new UpdatePlan(written, seeded, deleted, skipped, unshared, types.Offered, unclassified,
-            unknownCi, inStep, declined, declinedCi);
+            unknownCi, inStep, declined, declinedCi, declinedPlugin);
     }
 
     // The same rules read from the corpus's side: each rule's patterns rewritten to where its files land,

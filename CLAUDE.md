@@ -25,9 +25,11 @@ here to ask.
 ## Four trees hold the same file
 
 `.schema/` is not one of them. It is authored once at this root and read from there by every corpus, which is what the
-tool's second walk-up is for. Everything else the overlay layer names does live once in `template/` and again in each
-corpus under `examples/`. Copy the file across by hand, in whichever direction the change came from, then run the check
-that proves you did, once per corpus:
+tool's second walk-up is for. Neither is `.plugin/` bar its manifest: each corpus here names `plugin.from` in its
+descriptor, so the skills and hooks are authored once under `template/` and `kac bundle` reads them from there.
+Everything else the overlay layer names does live once in `template/` and again in each corpus under `examples/`. Copy
+the file across by hand, in whichever direction the change came from, then run the check that proves you did, once per
+corpus:
 
 ```sh
 cd examples/library && dotnet run --project ../../tooling/kac -- update --check --from ../../

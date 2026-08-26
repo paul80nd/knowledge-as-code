@@ -167,6 +167,24 @@ and no sign that anything was withheld. The option is there for a corpus publish
 Two values are accepted. `draft` drops a record whose status says so, and `overdue` drops one whose `review-by` is in
 the past.
 
+## Where the plugin tree comes from
+
+```yaml
+plugin:
+  from: ../../shared/.plugin
+```
+
+`kac bundle` reads the plugin tree, meaning the skills and hooks an agent installs, from `.plugin/` at the corpus root.
+Say `plugin.from` and it reads them from one tree elsewhere instead, resolved against the corpus root. Several corpora
+in a repository then share one copy, and `update` withholds the shared half rather than writing it here.
+
+The manifest is never read from the shared tree. It carries the name the plugin installs under, so it stays at
+`.plugin/.claude-plugin/plugin.json` in each corpus, along with the components that corpus declares. A file a corpus
+writes beside it wins over the shared tree's copy of the same path, so one skill can be overridden without giving up
+the rest.
+
+Omit the key and the corpus keeps its own tree, which is what `kac new` creates and what a corpus standing alone holds.
+
 ## Files you hold differently
 
 ```yaml
