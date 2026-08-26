@@ -86,11 +86,11 @@ The names are read from the schema. A type's directory is its own key, and its f
 calls one of its parts: `terms.jsonl`, because a glossary's `parts:` block says `noun: term`. Both are fixed once the
 type has declared them, because a skill addresses them by name.
 
-## The manifest
+## The manifest lets a reader choose which file to open
 
 A flat file is read whole and grepped, because a lookup does not know which record holds the term it wants. A record
 file is read one at a time, because a reader that has a hit wants the single file behind it. One large file would
-charge the second reader the first one's cost. The manifest is what lets a reader choose.
+charge the second reader the first one's cost.
 
 ### Each type carries two counts, named apart
 
@@ -210,7 +210,8 @@ The templates are `https://…/blob/<sha>/{path}#{anchor}` and `https://raw…/<
 
 ### A per-record file resolves its links
 
-The commit therefore sits inside them, and the file rewrites on every export from a new commit whatever its content did.
+A per-record file carries its links already resolved, rather than a template and a substitution rule. The commit sits
+inside them, so the file rewrites on every export from a new commit whatever its content did.
 That churn is bought deliberately: a reader that has already dereferenced one record wants a URL in its hand rather than
 a template and a substitution rule.
 

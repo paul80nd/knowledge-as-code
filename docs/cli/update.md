@@ -83,8 +83,8 @@ Adopting writes the type's schema, its root page and its template, and adds the 
 asymmetric half, and it refuses while the folder still holds records:
 
 ```text
-update: glossary/ holds 3 record(s), and deleting a record is deleting knowledge. delete them yourself and run this
-again, or leave 'glossary' adopted.
+update: tools/ holds 3 record(s), and deleting a record is deleting knowledge. delete them yourself and run this
+again, or leave 'tools' adopted.
 ```
 
 The message names the count and the two ways forward. Deleting records is yours to do deliberately.
@@ -95,9 +95,8 @@ The message names the count and the two ways forward. Deleting records is yours 
 kac update --policy full
 ```
 
-A type's root page and its `_template.md` arrive carrying the framework's wording and are rewritten in your own domain,
-so `update-policy: cautious` is the default and leaves them alone. `full` refreshes them and hands the reconciliation to
-the diff.
+`cautious` is the default and writes a seed file only where the corpus has none. `full` writes them all.
+[Layers](../design/layers.md#a-seed-is-the-corpuss-own-words) says why a seed is left alone by default.
 
 ## Known limits
 

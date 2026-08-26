@@ -139,8 +139,9 @@ which contexts are covered where the number three says only that there are some.
 One file in the plugin tree is run rather than read. A command copied without that bit is a plugin that installs and
 then fails at the first session, with a message about permissions rather than about the corpus.
 
-The bit does not exist on Windows and is not asked for there. A hook ships as a POSIX script and a `.cmd` twin, so one
-plugin serves a session on either platform.
+The bit does not exist on Windows and is not asked for there. A hook ships as a POSIX script and a `.cmd` twin, so a
+Windows shell has something to reach. [`bundle`](../cli/bundle.md#known-limits) carries what is still unproved about
+that half.
 
 ## The plugin's version is the corpus content version
 

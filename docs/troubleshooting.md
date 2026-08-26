@@ -1,7 +1,7 @@
 # Troubleshooting
 
-What `kac` prints when something is wrong, and what to do about it. Each heading is the message you saw, so search this
-page for the words on your screen.
+What `kac` prints when something is wrong, and what to do about it. Most headings below are the message itself, so
+search this page for the words on your screen. The rest name the situation you are in.
 
 A **corpus** is one repository of knowledge records kept in git. A **record** is one Markdown document in it, filed
 under a type and carrying YAML frontmatter above its prose.

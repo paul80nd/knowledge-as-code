@@ -46,8 +46,8 @@ condition the schema states and the tool evaluates, reports under its own id. Ad
 editing this tool, and [Rule expressions](expressions.md) is the reference for what one may say.
 
 A question the grammar cannot ask needs a rule written in C# instead, and that rule names the check id it reports under:
-`no-dependency-cycles` reports as `dependency-cycle`. Many of the rules declared in the schema run nothing yet, and
-`kac checks` prints the ones that report. The paragraph below says how an unbuilt one is written.
+`no-dependency-cycles` reports as `dependency-cycle`. Many of the rules declared in the schema run nothing yet, and `kac
+checks` prints the ones that report.
 
 Two rules read every record at once. `dependency-cycle` reports a loop once, against the lowest id on that loop, and
 `alignment-rollup` reads the framework register beside the records.

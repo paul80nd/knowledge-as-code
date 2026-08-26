@@ -58,8 +58,8 @@ fails the build.
 Every record has exactly one home. Where two places need the same knowledge, the second links to the first rather than
 copying it.
 
- Someone updates one copy and not the other, and afterwards nobody can tell which
-is current, so a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none,
+A copy does not stay in step. Someone updates one and not the other, and afterwards nobody can tell which is current,
+so a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none,
 because a gap is visible and a contradiction is not.
 
 ## Cheap capture, deliberate promotion
@@ -113,4 +113,4 @@ Most of this page rests on that boundary. The validator fails a one-sided link b
 owner is authoritative because there is a single place the record could be. A session clones the repository and has the
 whole graph, with nobody to ask for the rest of it.
 
-
+A corpus that needs nothing outside itself is one a session can clone and read whole.
