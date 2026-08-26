@@ -25,13 +25,21 @@ than the author approves it before it merges.
 
 ## Rules
 
+### A change arrives as a pull request
+
 - A pull request **MUST** merge into the default branch rather than reaching it by direct push ([pol-EVER.BRANCH]).
 - A pull request description **MUST** link the work item that asked for the change ([pol-EVER.INTENT]).
+
+### Somebody other than the author approves it
+
 - A pull request **MUST** carry at least one approval from somebody other than the author before it merges
   ([pol-SECD.CODEREV]).
 - A reviewer **MUST** check the change against the standards on this axis, and not read for style alone
   ([pol-SECD.CODEREV]).
 - A reviewer **MUST** state what they checked when they approve ([pol-SECD.CODEREV]).
+
+### Agent-produced work says what produced it
+
 - A pull request holding agent-produced work **MUST** name the agent, the model and the prompt or task that produced
   it ([pol-AGNT.PROV]).
 - Agent-produced work **MUST** carry the approval of a named person, who owns the change afterwards

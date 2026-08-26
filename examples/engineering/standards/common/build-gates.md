@@ -24,11 +24,16 @@ deviation with a named owner.
 
 ## Rules
 
+### Every change is built and tested automatically
+
 - A push to any branch **MUST** trigger a build and the test suite, without anyone asking for it ([pol-AUTV.INTEG]).
-- Branch policy **MUST** block a merge while any required check is failing ([pol-AUTV.BLOCK]).
 - The build **MUST** run from a clean checkout, on an agent provisioned from a definition in the repository
   ([pol-AUTV.MACHINE]).
 - A fix for a defect **MUST** arrive with a test that fails without it ([pol-AUTV.REGRESS]).
+
+### A failing check stops the change
+
+- Branch policy **MUST** block a merge while any required check is failing ([pol-AUTV.BLOCK]).
 - A team **MUST NOT** merge over a failing check without a recorded deviation ([pol-AUTV.BYPASS]).
 - A team **MUST NOT** skip, silence or suppress a check without a recorded deviation ([pol-AUTV.DISABLE]).
 - A deviation covering a suppressed check **MUST** name the individual who accepts the risk ([pol-DEVI.OWNER]).

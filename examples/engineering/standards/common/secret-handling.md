@@ -24,18 +24,26 @@ that service in that environment. Nothing else holds a secret.
 
 ## Rules
 
+### A secret comes from the store
+
 - A service **MUST** read every secret from the managed store, through an identity granted to the workload
   ([pol-SCRT.STORE]).
+- An environment below production **MUST** hold its own secrets, distinct from production's ([pol-ENVS.REUSE]).
+
+### Nowhere else holds a secret
+
 - A repository **MUST NOT** contain a secret, in source, in a configuration file, in a pipeline definition or in a test
   fixture ([pol-SCRT.EMBED]).
 - A build **MUST NOT** bake a secret into an artefact or an image ([pol-SCRT.EMBED]).
-- A secret **MUST** be replaceable in the store without a code change or a rebuild ([pol-SCRT.ROTATE]).
-- Every secret **MUST** rotate on a period recorded against it in the store ([pol-SCRT.ROTATE]).
-- A pipeline **MUST** run a secret scanner over the repository and its history, and fail on a finding
-  ([pol-SCRT.LEAKED]).
 - A service **MUST NOT** write a secret to a log, to a console, to an error message or to a support ticket
   ([pol-SCRT.LOGS]).
-- An environment below production **MUST** hold its own secrets, distinct from production's ([pol-ENVS.REUSE]).
+- A pipeline **MUST** run a secret scanner over the repository and its history, and fail on a finding
+  ([pol-SCRT.LEAKED]).
+
+### Every secret rotates
+
+- A secret **MUST** be replaceable in the store without a code change or a rebuild ([pol-SCRT.ROTATE]).
+- Every secret **MUST** rotate on a period recorded against it in the store ([pol-SCRT.ROTATE]).
 
 ## Examples
 
