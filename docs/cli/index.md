@@ -1,8 +1,10 @@
 # CLI reference
 
-One page per command. Each opens with the usage the parser accepts, generated from `kac` itself, and then says what the
-command is for, what it is not, and how it works. Two more sections appear where a command has them: the decisions
-behind it, and its known limits.
+One page per command. Each opens with the usage the parser accepts, generated from `kac` itself, then says what the
+command does, works through examples with the output they print, and names its known limits.
+
+Why a command works the way it does is not on these pages. [Design](../design/index.md) carries that, and each page
+links the part of it that explains the command.
 
 ## The commands
 
@@ -19,6 +21,24 @@ behind it, and its known limits.
 | [`update`](update.md)     | Take a newer framework into a corpus.                   |
 
 <!-- END GENERATED: command-table -->
+
+## Which command answers which question
+
+Four commands answer about a corpus and three of them take a `--check`. They ask different questions, and a corpus can
+fail one while passing the others.
+
+| You want to know                                     | Run                    |
+|-------------------------------------------------------|------------------------|
+| are the records correct against the schema           | `kac validate`         |
+| is the derived content in step with the records      | `kac generate --check` |
+| has this corpus fallen behind its framework          | `kac update --check`   |
+| what could CI report against this corpus at all      | `kac checks`           |
+
+A corpus can be fresh and behind, or in step and stale. `validate` asks whether your records are correct, and a corpus
+a long way behind its framework can still be entirely valid.
+
+`checks` reads the schema and prints what *could* fire. `validate` fires it against documents. A check absent from a
+validate run has either not been declared or not been tripped, and `checks` is what tells those two apart.
 
 ## Where a command runs
 

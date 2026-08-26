@@ -13,64 +13,65 @@ kac export [--no-color] [--type <TYPE>]
 
 <!-- END GENERATED: usage-export -->
 
-## What it is for
+## What it does
 
-A consumer of a corpus, meaning one repository of knowledge records, should not clone it. `export` writes what the
-corpus knows into `.dist/export/` as data built for an agent to read.
+A consumer of a corpus, meaning one repository of knowledge records kept in git, should not have to clone it. `export`
+writes what the corpus knows into `.dist/export/` as data built for an agent to read.
 
-It writes three kinds of file: a manifest saying what the export is, one file per record for a reader that wants a
-whole record, and a flat file cheap to grep for a reader holding only a word. What travels is each type's own decision,
+It writes three kinds of file: a manifest saying what the export is, one file per record for a reader wanting a whole
+record, and a flat file cheap to grep for a reader holding only a word. What travels is each type's own decision,
 declared beside the type, so a corpus adopting a new type exports it without the tool changing.
-[The export format](../design/export.md) is the contract those files answer to.
 
-## What it is not
+[The export format](../design/export.md) is the contract those files answer to. Run `export` before
+[`bundle`](bundle.md), which reads what this writes.
 
-**It is not [`bundle`](bundle.md).** `export` produces data. `bundle` assembles that data and the `.plugin/` tree into
-something a consumer can install. Nothing here trims components, packages a plugin or publishes anything, and nothing
-here knows a bundle exists.
+## Examples
 
-**It is not [`generate`](generate.md).** `generate` writes into the corpus, for a person reading the corpus. `export`
-writes outside it, for something that will never open the Markdown. Both are built from the same frontmatter, and
-neither is derivable from the other, because they answer to different readers.
+### Write the whole corpus out
 
-**It is not a backup.** A record travels as the fields and sections its type declared, so a corpus cannot be rebuilt
-from an export of it. The direction is one way: `.dist/export/` is rebuilt whole from the corpus.
+```bash
+kac export
+```
 
-## How it works
+Each file is named as it is written, and the run closes with a count per type:
 
-A run loads the corpus whole, then decides which records travel and what of each one goes with them. It deletes
-`.dist/export/` and writes it again: a manifest, one file per record, and one flat file per type. Every link it writes
-resolves against the commit it was built from.
+```text
+wrote .dist/export/glossary/gls-example-libraries.json
+wrote .dist/export/glossary/gls-knowledge-as-code.json
+wrote .dist/export/glossary/gls-search.json
+wrote .dist/export/glossary/terms.jsonl
+wrote .dist/export/manifest.json
+export: wrote 5 file(s) for glossary.
+```
 
-### `--type` narrows what is written and never what is read
+### Export one type
 
-The corpus is loaded whole whatever the flag says, so ids resolve against every record. A narrowed run would otherwise
-resolve them against the handful it happened to want, and a question about a set answered from some of its members is
-answered wrongly. A type the corpus has not adopted is refused by name.
+```bash
+kac export --type glossary
+```
 
-### An unsettled record travels by default
+The corpus is still loaded whole, so every id resolves. A type your corpus has not adopted is refused by name.
 
-A draft glossary, and one whose `review-by` has passed, are both exported carrying their own state. Filtering them
-would make the corpus's own condition invisible downstream.
+### Notice a dirty tree
 
-A corpus may exclude either with `export.exclude:` in [`.corpus.yaml`](../corpus-descriptor.md). Where it does, the run
-names every record it withheld, because a record left out of the output cannot be seen there.
+An export names the commit it was built from. Where the tree has uncommitted changes, the run says so and the manifest
+records it:
 
-### The export is untracked
+```text
+export: built from a dirty working tree, and the manifest says so. The commit it names does not reproduce it.
+```
 
-`.dist/` is gitignored and the export inside it is rebuilt whole, so it is never something to review. A tracked export
-would put a diff nobody reads on every change to the words.
-
-Two things follow. The overwrite is delete-then-write, because a record deleted from the corpus must not leave an entry
-behind and no diff would show the orphan. And the manifest has to describe itself, since git can say nothing about an
-export once it has left: it carries the commit it was built from, and a dirty flag beside it. A commit on its own would
-describe a dirty tree as reproducible.
-
-What holds the shape steady in place of a diff is a committed fixture in the framework's own test suite. It exports a
-corpus and compares the whole tree file by file, so a corpus that runs the tool without the tests receives a format
-already proved.
+Commit first where you are about to publish the result.
 
 ## Known limits
 
-**A record's exported field is a scalar**, and three more limits belong to a type's declaration rather than to this
-command. [The export format](../design/export.md) states each one and what it costs a consumer.
+**It is not a backup.** A record travels as the fields and sections its type declared, so a corpus cannot be rebuilt
+from an export of it. `.dist/export/` is rebuilt whole from the corpus, and never the other way.
+
+**An exported field is a scalar.** A field the record writes as a list arrives as `null`. A policy's `aligns-with` is
+that case, and stays out of the block for that reason.
+
+**Three more limits belong to a type's declaration rather than to this command.**
+[The export format](../design/export.md#what-a-type-cannot-say) states each one and what it costs a consumer.
+
+[`bundle`](bundle.md) assembles what this writes into something a consumer can install.

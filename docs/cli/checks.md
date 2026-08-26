@@ -13,28 +13,65 @@ kac checks [--json] [--no-color]
 
 <!-- END GENERATED: usage-checks -->
 
-## What it is for
+## What it does
 
-`checks` prints every check the validator can emit against a corpus, meaning one repository of knowledge records.
-The list is read from that corpus's own `.schema/`, so there is no second list to keep in step.
+`checks` prints every check the validator can report against a corpus, meaning one repository of knowledge records
+kept in git. Use it to see what CI will hold your corpus to, and to find out whether the check you were about to add
+already exists.
 
-`--json` gives you the same catalogue as data. The test suite reads that form, and holds every reachable check to having
-a fixture that trips it.
+The list is read from that corpus's own `.schema/`, so there is no second catalogue to keep in step. A corpus that
+declares a type of its own sees that type's checks here without the tool changing.
+[Checks](../design/checks.md) says where a check comes from.
 
-## What it is not
+`checks` opens no record and reports no fault in one. [`validate`](validate.md) is what fires these against documents.
 
-**It is not [`validate`](validate.md).** `checks` opens no record and reports no fault in one.
+## Examples
 
-## How it works
+### List what CI will hold your corpus to
 
-A run loads that `.schema/` and builds the catalogue from it: every check the schema declares, with the severity it
-reports at and what it proves. The list prints one check to a line, and a tally at the foot splits them by severity.
+```bash
+kac checks
+```
 
-`--json` writes that same catalogue as data, one object per check, and prints nothing else.
+One check to a line, with the severity it reports at and what it proves, and a tally at the foot:
 
-Either way the run then compares the catalogue against the reader-facing checks table generated onto each type page. A
-check the catalogue declares and no row covers, or a row naming a check that no longer exists, is named on stderr and
-exits `1`. That comparison happens whether or not `--json` was asked for.
+```text
+  error    schema-unknown-key             Every key in these files is one the loader reads.
+  error    frontmatter-parses             The frontmatter block is present and is a valid YAML mapping.
+  error    unknown-key                    Every frontmatter key is a universal field, a type field, or a reserved ADO key.
+  warning  deprecated-has-successor       A deprecated tool names what replaces it, or the entry is just a complaint.
 
-[Checks](../design/checks.md) is the page for adding a check, or for deciding whether the one you want already exists. It says
-where a check comes from, what the schema pass refuses, and why a rule is data wherever it can be.
+83 checks: 61 error(s), 22 warning(s).
+```
+
+A **warning** is printed and never fails the build.
+
+### Read the catalogue as data
+
+```bash
+kac checks --json
+```
+
+One object per check, and nothing else on stdout. The tool's own test suite reads this form, and holds every reachable
+check to having a fixture that trips it.
+
+### Find out whether a check already exists
+
+```bash
+kac checks | grep -i expiry
+```
+
+The catalogue is flat and keyed by id, so a grep over it answers faster than reading `.schema/`.
+
+## Known limits
+
+**A run also compares the catalogue against the checks table on each type page**, and a table that has drifted is
+named on stderr and exits `1`. That happens whether or not you asked for `--json`, so a drifted table makes this
+command fail even though nothing is wrong with the catalogue itself. The table is hand-worded for whoever writes a
+record, and several catalogue ids fold into one row of it, so the two are compared rather than generated from each
+other.
+
+**A check the schema declares with no severity does not appear.** It is an intention, and the type page renders it
+under *Declared, not yet enforced*.
+
+[Checks](../design/checks.md) is the page for adding a check, and says why a rule is data wherever it can be.

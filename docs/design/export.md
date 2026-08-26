@@ -44,6 +44,32 @@ absent key says nobody wrote the section.
 **A `parts:` entry carries `full` alone.** A part line is already a reduction: `line:` names key by key what of a part
 travels, so a type wanting a thinner line drops a key from it.
 
+## How a run writes it
+
+A run loads the corpus whole, decides which records travel and what of each one goes with them, then deletes
+`.dist/export/` and writes it again.
+
+**The corpus is loaded whole whatever `--type` says.** A narrowed run still resolves ids against every record, because
+a question about a set answered from some of its members is answered wrongly. The flag narrows what is written and
+never what is read. A type the corpus has not adopted is refused by name.
+
+**An unsettled record travels by default.** A draft record, and one whose `review-by` has passed, are both exported
+carrying their own state, so a consumer reads what the corpus actually holds and decides for itself how far to trust
+it. Filtering them would make the corpus's own condition invisible downstream.
+
+A corpus may exclude either with `export.exclude:` in [`.corpus.yaml`](../corpus-descriptor.md). Where it does, the run
+names every record it withheld, because a record left out of the output cannot be seen there.
+
+**The export is untracked, and rebuilt whole.** `.dist/` is gitignored, so the export is never something to review, and
+a tracked one would put a diff nobody reads on every change to the words. Two things follow. The overwrite is
+delete-then-write, because a record deleted from the corpus must not leave an entry behind and no diff would show the
+orphan. And the manifest describes itself, carrying the commit it was built from and a dirty flag beside it, since git
+can say nothing about an export once it has left. A commit on its own would describe a dirty tree as reproducible.
+
+What holds the shape steady in place of a diff is a committed fixture in the tool's own test suite. It exports a corpus
+and compares the whole tree file by file, so a corpus running the tool without the tests receives a format already
+proved.
+
 ## The tree
 
 ```text

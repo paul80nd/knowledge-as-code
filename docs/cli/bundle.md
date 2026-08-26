@@ -12,229 +12,78 @@ kac bundle [--no-color]
 
 <!-- END GENERATED: usage-bundle -->
 
-## What it is for
+## What it does
 
-An export is data, and data has to be handed to something. `bundle` assembles what `export` wrote, plus the `.plugin/`
-tree a corpus keeps beside its records, into a Claude Code plugin directory under `.dist/plugin/`. It writes the
-marketplace that offers it into `.dist/` above, so the result can be installed. What ends up in the plugin is a function
-of what the export carried: a corpus that ships no glossary ships no glossary skill either.
+`bundle` assembles what [`export`](export.md) wrote, plus the `.plugin/` tree your corpus keeps beside its records,
+into a Claude Code plugin directory under `.dist/plugin/`. It writes the marketplace that offers it into `.dist/`
+above, so the result can be installed.
 
-## What it is not
+What ends up in the plugin is a function of what the export carried: a corpus shipping no glossary ships no glossary
+skill either. [The plugin bundle](../design/plugin.md) says what decides that, and what stops a run.
 
-**It is not [`export`](export.md).** `export` reads the corpus and writes data. `bundle` reads that data and writes a
-package. They are two commands because they fail differently: an export is wrong about the corpus, and a bundle is wrong
-about what it shipped. They are proved differently too. The export has a committed golden of its output, and the bundle
-has an assertion that it did not touch that output.
+Run `export` first. `bundle` reads that output and never the corpus.
 
-**It does not publish.** It writes a directory and a marketplace that names it, both untracked. Pushing either anywhere
-is CI's job (on GitHub, `publish-plugin.yml`), and so is running `claude plugin validate` over the result. What that
-division buys is a command a reader runs on a laptop, without credentials and without a branch to write to. It produces
-there exactly what CI publishes.
+## Examples
 
-**It does not read the corpus.** `Corpus.Load` is never called. A run reads one key out of `.corpus.yaml`, saying where
-the plugin tree is. Everything else a bundle decides is a fact about the export it was handed, and the export is the
-only thing that travels.
+### Build the plugin
 
-## How it works
+```bash
+kac export
+kac bundle
+```
 
-A run reads the export `export` wrote and the corpus's own `.plugin/` tree. It decides which components that export can
-support, copies what survives into `.dist/plugin/`, renders the breadcrumb, and writes a manifest naming what shipped.
+Each file is named as it is written. The run closes with what shipped, what was trimmed and why, and how to install it:
 
-### Where the plugin tree is read from
+```text
+wrote .dist/plugin/corpus/glossary/terms.jsonl
+wrote .dist/plugin/corpus/manifest.json
+wrote .dist/plugin/hooks/breadcrumb
+wrote .dist/plugin/skills/glossary-lookup/SKILL.md
+bundle: trimmed skills/policy-lookup: the export carries no policies.
+bundle: wrote 13 file(s) to .dist/plugin/ as example-libraries 0.1.0. 2 component(s) included, 1 trimmed.
+bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
+```
 
-`.plugin/` at the corpus root, unless `plugin.from` in `.corpus.yaml` names another folder. Several corpora in one
-repository can then share a single tree instead of holding a copy each, and `update` withholds the shared half from
-every corpus that says so.
+A trimmed component is not an error. It is a skill whose record type this corpus does not export.
 
-The manifest is the exception. It carries the name the plugin installs under, so it is read from the corpus and never
-from the shared tree, and a corpus holding none is refused. A file the corpus writes beside it wins over the shared
-tree's copy of the same path, which is how one skill is overridden without giving up the rest.
-[The corpus descriptor](../corpus-descriptor.md) is the reference for the key.
+### Install what you just built
 
-### What stops a run before it writes
+```bash
+claude plugin marketplace add ./.dist
+```
 
-Each of these ends the run with the reason and nothing written:
+Both directories are untracked, so nothing here needs a branch or a credential. What you get on a laptop is exactly
+what CI publishes.
 
-* a plugin tree with no manifest
-* a `plugin.from` naming a folder that is not there
-* a manifest that is not JSON, or that states no name, or no `corpusRoot`, or a `corpusRoot` the plugin tree already
-  uses
-* an export with no manifest
-* an export whose `formatVersion` is not the one this build reads
-* a component reading a type at a shape version the export does not carry
+### Validate it in a pipeline
 
-Stopping is the point in every one of them. The alternative is a plugin assembled around a missing answer, which
-installs and fails later somewhere less obvious.
+```bash
+npm install -g @anthropic-ai/claude-code
+claude plugin validate ./.dist/plugin --strict
+claude plugin validate ./.dist --strict
+```
 
-#### A `corpusRoot` collision loses a file in silence
-
-The export lands under that directory inside the plugin, so a clash has one side overwrite the other. Whichever won,
-the loser would be missing from an artefact nobody reviews.
-
-#### Both format versions are named, because the next move differs
-
-An export behind the tool is rebuilt. An export ahead of it says the tool is the stale half. `.dist/export/` is
-untracked and outlives the run that wrote it, so a bundle built after a pull is the ordinary way to meet an export this
-tool did not ship beside.
-
-#### A shape mismatch means the component's keys have moved
-
-The type is there and its files have moved, so the component would ship, install, and read keys that are gone.
-Trimming would hide that behind a plugin doing less. [The export format](../design/export.md) says what a shape version
-covers and what moves it.
-
-### Each command replaces its own directory whole
-
-`export` owns `.dist/export/` and `bundle` owns `.dist/plugin/`. Both delete before they write: an artefact nobody
-reviews must not keep a file that nothing backs any more. That rule stays local only while neither command deletes the
-other's tree, which is why the export is a named subtree and not the root. `Dist` is the one statement of the layout.
-
-#### The export is copied in, and therefore exists twice
-
-Once at `.dist/export/` as `export` wrote it, and once inside the plugin under the directory `metadata.corpusRoot`
-names. That duplication is intended. An installed plugin is copied into a cache of its own, so a path outside the
-plugin root resolves nowhere at runtime, and `export` has to stay runnable and proved without `bundle` having run. The
-copy is the seam between the two commands.
-
-#### `bundle` never edits what it copies
-
-The export travels byte for byte. The plan carries bytes rather than text, so a copy cannot acquire an opinion about
-encoding or line endings on the way through. A difference between the two copies is a defect, and the golden fixture
-asserts their equality directly.
-
-### Trimming reads the export, not the corpus
-
-A component declares under `metadata.components` which record types it reads, and it travels only where the export
-carries every one of them. What that catches is the skill that finds nothing. To whoever asked it a question, that skill
-reads exactly like a corpus that does not define the term.
-
-An entry may name the shape it reads the type at, as `glossary@1`. A bare `glossary` asks for the type and opens none of
-its files, which is what the breadcrumb hook does. Both trim the same way where the export carries no glossary at all.
-
-#### What a trim takes with it
-
-A trimmed component's files leave with it. A path under no component's is unconditional and travels whatever the corpus
-adopted, so a README or a licence in the plugin tree needs no declaration. A component may be a directory or a single
-file, so the trim matches the declared path itself as well as anything beneath it, on whole segments: `skills/a` does
-not take `skills/ab` with it.
-
-#### Trimming everything warns and still builds
-
-Refusing would leave a corpus unable to produce the thing that would have told it why. The empty plugin is itself the
-report: it installs, does nothing, and `bundle.json` beside it names each component that was dropped and the type it
-needed.
-
-### The breadcrumb
-
-#### What it says, and why it stops there
-
-A `SessionStart` hook injects a few lines into every session. They say which corpus is installed, how many entries it
-holds, which records cover them, and which skill to ask. That is the whole of its job. An agent never asks for a
-glossary, because it does not know a word is ambiguous, so the breadcrumb exists to create the question rather than to
-answer it. A longer one would be paid for by every session that had none to ask.
-
-#### A component says whether the breadcrumb names it
-
-A component is named in that last line where its manifest entry says `"announce": true`, and left out otherwise. The
-default is out, because most skills need no introduction: somebody asking what a policy commits them to already knows
-to ask, and a line naming that skill is paid for by every session that had no such question. What earns the line is a
-skill whose question a session would never think to put.
-
-#### It is rendered here, and not computed at runtime
-
-Everything it states is a fact about the export sitting inside the plugin, and an installed plugin's export does not
-change between builds. So `bundle` writes the text once and the hook is one `cat`. Nothing on the consumer's machine is
-asked for a JSON parser, an interpreter or a runtime. The corpus takes the same position about every other generated
-projection: compute it once into an artefact, and let every reader read that one answer.
-
-#### It travels with the hook that prints it
-
-The rendered file travels with the directory that prints it and nowhere else. A corpus shipping no hook has nothing to
-read it, and a corpus whose hook was trimmed would otherwise keep a file describing a component that left. Both fall
-out of asking which files survived, so no corpus has to declare that a generated file belongs to a component.
-
-#### Nothing in the render names a record type
-
-The counts, the record names and the skill to ask are read off the export and off the surviving components. So a corpus
-adopting a type this tool has never heard of gets a breadcrumb about it with no line changing.
-
-The record names are the point of the line a count alone cannot make. A corpus keeps one glossary per bounded context.
-Three names say which contexts are covered, where the number three says only that there are some.
-
-#### A line names at most six things
-
-The names do a job that stops at a handful, and the length of the breadcrumb is what every session pays at start,
-resume, clear and compact. So the renderer holds the bound itself, and a corpus keeping three hundred records pays the
-same as one keeping three.
-
-A type over the bound has its first names carried and the rest given as a count, which is the last of the six. A list
-cut short in silence would read as the whole of what the type covers, and the count is what the line was for.
-
-### A hook is copied with its permission bit
-
-One file in the plugin tree is run rather than read. A command copied without that bit is a plugin that installs and
-then fails at the first session, with a message about permissions rather than about the corpus.
-
-The bit does not exist on Windows and is not asked for there. A hook ships as a POSIX script and a `.cmd` twin, so one
-plugin serves a session on either platform.
-
-### The plugin's version is the corpus content version
-
-It is read off the export's manifest rather than out of
-`.corpus.yaml`, so the number on the plugin is the number of the data inside it. The export **format** version stays
-where it is, inside the export's own manifest. One says what the corpus knows and the other says which parser will read
-it, so stamping the second onto the plugin would describe the wrong thing confidently. A corpus stating no content
-version keeps the version its plugin manifest carried, and the run says so.
-
-### The plugin manifest is edited, not rebuilt
-
-`plugin.json` is forked in the portability manifest, so each corpus owns its own. `bundle` reads it as a DOM. It gives
-the manifest a new version and the surviving components, then writes it back with every other key exactly as the corpus
-wrote it. Mapping it onto a shape known here would delete whatever the corpus had added, without a word.
-
-### The bundle records what it shipped
-
-`bundle.json` at the plugin root carries the plugin, its version, the export it was built around, every component
-included and every one trimmed with the reason. Two corpora running one plugin name may ship different component sets.
-That is correct, and it makes "does this plugin do X" unanswerable from outside unless the plugin says. `bundle.json`
-carries no timestamp and no commit: the export inside the plugin states both, and a second clock would be a second
-answer to one question.
-
-### `.dist/` is the marketplace
-
-A marketplace is a directory holding `.claude-plugin/marketplace.json`, and it resolves each plugin's source against
-that directory. A source containing `..` is refused. So a marketplace cannot sit beside the plugin and point sideways at
-it, and the root is where it goes. `claude plugin marketplace add ./.dist` installs what was just built.
-
-## Decisions
-
-**The output is a directory rather than an archive.** A marketplace can point at a path. There is nothing to unpack
-between building and asking the plugin a question.
-
-**`corpusRoot` is read rather than defaulted.** The plugin's skills address the export as
-`${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that name. A default here would be the tool quietly disagreeing with words the
-corpus wrote in its own skill. The disagreement would surface only when someone asked the installed plugin a question.
+`bundle` validates nothing it assembles, so this is the layer that does.
 
 ## Known limits
 
-**This command validates nothing it assembles.** `claude plugin validate` runs in CI, one layer out, so a component
-misplaced inside `.claude-plugin/` leaves here unreported. That is the same division as publishing: the build stays
-runnable without the CLI installed.
+**This command validates nothing it assembles.** A component misplaced inside `.claude-plugin/` leaves here
+unreported. `claude plugin validate` runs one layer out, which keeps the build runnable without the Claude Code CLI
+installed.
 
-**The hook has been proved on macOS only.** The assembled plugin installs from the marketplace beside it. Its
-`SessionStart` command reaches the breadcrumb through `${CLAUDE_PLUGIN_ROOT}`, and lands it in a session opened in an
-unrelated directory.
+**It does not publish.** Pushing the result anywhere is a separate job, and one needing credentials this one should not
+have.
 
-What no run yet says is which shell Claude Code reaches a hook command with on Windows. So nothing yet says whether the
-`.cmd` half of the pair is ever the one that runs. The round-trip installs the plugin on a Windows runner but opens no
-session, so it cannot answer this.
+**The hook has been proved on macOS only.** Nothing yet says which shell Claude Code reaches a hook command with on
+Windows, so nothing yet says whether the `.cmd` half of the pair is ever the one that runs. The round-trip test
+installs the plugin on a Windows runner but opens no session, so it cannot answer this.
 
 **A component's `requires` is not held against the schema.** A component naming a type no schema declares is trimmed
-with the same message as one naming a type this corpus declined. The two mean different things: one is a typo and the
-other is a decision. Nothing reports the first.
+with the same message as one naming a type this corpus declined. One is a typo and the other is a decision, and nothing
+reports the first.
 
-**The export is copied whole.** A component surviving trimming pulls in the entire export, including types no surviving
-component names. That costs nothing today, because the trim and the export are driven by the same adoption. It is worth
+**The export is copied whole.** A component surviving the trim pulls in the entire export, including types no surviving
+component names. That costs nothing while the trim and the export are driven by the same adoption, and is worth
 reopening for a corpus exporting many types where a plugin reads one.
 
 [`export`](export.md) is what writes the data this assembles.

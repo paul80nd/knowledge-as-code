@@ -6,9 +6,8 @@ the mechanics. It packs as the dotnet tool `KnowledgeAsCode.Tool`, which install
 install and pin a version instead of carrying a copy. The schema is the source of truth: `kac` reads it and enforces it,
 so **adding a knowledge type is adding a YAML file, not editing this tool**.
 
-[`manifest.yaml`](manifest.yaml) sits here too, and says which files a corpus shares with the framework.
-[`../manifest.yaml`](../manifest.yaml) is the other one, at the repository root, and says which files a corpus is made
-of in the first place. Each corpus's own `.corpus.yaml`, at the corpus root, says what that corpus is.
+[`../manifest.yaml`](../manifest.yaml), at the repository root, says which files a corpus is made of and which
+layer each one falls in. Each corpus's own `.corpus.yaml`, at the corpus root, says what that corpus is.
 
 Writing records rather than changing the tool?
 [`../template/knowledge-as-code.md`](../template/knowledge-as-code.md) is the document for that: the taxonomy, the style
@@ -91,15 +90,20 @@ to matching. A command that grows an option gets its page back in step with
 `KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests`. Read the diff afterwards, because the update blesses a regression as
 happily as a fix.
 
-Beneath that block, each page follows the same sections in this order: **What it is for**, **What it is not**, **How it
-works**, **Decisions**, **Known limits**. That set is fixed, and it is what lets a reader ask the same question of any
-command and find the answer in the same place. Deeper structure goes under those headings rather than beside them, so a
-command with two halves keeps them at `###` and subsections them at `####`. `update` is the page that does this, and
-`CliReferenceTests` holds every page to the five.
+Beneath that block, each page follows the same sections in this order: **What it does**, **Examples**, **Known
+limits**. That set is fixed, and it is what lets a reader ask the same question of any command and find the answer in
+the same place. Deeper structure goes under those headings rather than beside them, so a command with several worked
+examples keeps each at `###`. `CliReferenceTests` holds every page to the three, and to the first two being there.
 
-It is prose throughout and not a form. A heading with nothing true to say is left out, because filler reads as an answer
-where an absence reads as work not yet done. Reasons stay inline in **How it works**, beside whatever they explain.
-**Decisions** takes only the ones belonging to a command as a whole.
+**Examples carry the output the command prints**, taken from a real run rather than written by hand. A reader deciding
+whether they have a clean run needs to see one.
+
+Why a command works the way it does belongs under [`../docs/design/`](../docs/design/), one page per feature area,
+which each command page links. That split is what keeps a command page the length somebody reads while running it, and
+it gives the reasoning one home instead of scattering it over seven verbs.
+
+It is prose throughout and not a form. **Known limits** is left out where a command has none, because filler reads as
+an answer where an absence reads as work not yet done.
 
 [`CLAUDE.md`](CLAUDE.md) is what will bite you while changing any of it.
 

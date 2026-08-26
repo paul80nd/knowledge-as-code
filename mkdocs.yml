@@ -107,9 +107,13 @@ nav:
       - update: cli/update.md
   - Design:
       - design/index.md
+      - Discovery: design/discovery.md
       - Checks: design/checks.md
       - Rule expressions: design/expressions.md
       - What the schema is held to: design/held-to.md
+      - Generation: design/generation.md
       - The export format: design/export.md
+      - The plugin bundle: design/plugin.md
+      - Layers: design/layers.md
   - The corpus descriptor: corpus-descriptor.md
   - Changelog: changelog.md

@@ -24,6 +24,10 @@ public partial class DocumentationCitationTests
     [GeneratedRegex(@"\bkac (?<verb>[a-z][a-z-]*)")]
     private static partial Regex Invocation();
 
+    // A markdown link's target.
+    [GeneratedRegex(@"\]\((?<target>[^)\s]+)\)")]
+    private static partial Regex Link();
+
     // A fenced block, and a code span outside one. A verb is only ever typed in either, so the prose around them
     // is dropped rather than made to explain itself.
     [GeneratedRegex(@"```.*?```|`[^`\n]+`", RegexOptions.Singleline)]
@@ -77,6 +81,30 @@ public partial class DocumentationCitationTests
             "a page cites a symbol the tool does not declare:\n  " + string.Join("\n  ", unresolved));
     }
 
+    // `mkdocs build --strict` resolves the links under `docs/`, and nothing resolves the ones beside the tool.
+    // `tooling/README.md` linked a `manifest.yaml` in its own folder for the life of a release after that file
+    // moved to the repository root.
+    [Fact]
+    public void Every_file_a_page_links_is_a_file_the_repository_holds()
+    {
+        var dead = new List<string>();
+
+        foreach (var (page, line, text) in Lines())
+        foreach (Match m in Link().Matches(text))
+        {
+            var target = m.Groups["target"].Value.Split('#')[0];
+            if (target.Length == 0 || target.StartsWith("http", StringComparison.Ordinal)
+                                   || target.StartsWith("mailto:", StringComparison.Ordinal)) continue;
+
+            var from = Path.GetDirectoryName(Path.Combine(Repo.Root, page))!;
+            if (File.Exists(Path.Combine(from, target)) || Directory.Exists(Path.Combine(from, target))) continue;
+
+            dead.Add($"{page}:{line} links {target}, which nothing answers to");
+        }
+
+        Assert.True(dead.Count == 0, "a page links a file the repository does not hold:\n  " + string.Join("\n  ", dead));
+    }
+
     [Fact]
     public void Every_command_a_page_types_is_one_the_parser_accepts()
     {
@@ -121,6 +149,7 @@ public partial class DocumentationCitationTests
             .Concat(Directory.EnumerateFiles(Path.Combine(Repo.Root, "tooling"), "*.md", SearchOption.AllDirectories))
             .Append(Path.Combine(Repo.Root, "README.md"))
             .Where(f => Path.GetFileName(f) != "CHANGELOG.md")
+            .Where(f => !f.Contains(Path.Combine("tests", "fixtures"), StringComparison.Ordinal))
             .Where(NotBuildOutput);
 
     private static IEnumerable<string> Sources() =>
