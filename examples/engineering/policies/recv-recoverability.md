@@ -4,10 +4,8 @@ tier: normative
 category: operations
 status: draft
 aligns-with:
-  - ISO27001:2022 A.5.29
-  - ISO27001:2022 A.5.30
-  - ISO27001:2022 A.8.13
-  - ISO27001:2022 A.8.14
+  - framework: ISO 27001:2022
+    clauses: [ A.5.29, A.5.30, A.8.13, A.8.14 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ backup, continuity, recovery, resilience ]

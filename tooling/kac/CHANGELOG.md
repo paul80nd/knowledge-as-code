@@ -15,14 +15,46 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.13.0 - 2026-08-26
 
 ### Added
+
+- **A list field's entries can be objects.** A field declaring `of: object` names its entry's keys in an `entry:` block,
+  written with the vocabulary a field is written with. Each key is held to its own `type:`, `pattern:` and `required:`.
+  `entry-shape` reports an entry that is not a mapping, and `entry-key` an entry carrying a key the field does not
+  declare or missing one it requires.
+
+- **`alignment-rollup` holds a policy's `aligns-with` to its clause table.** Both directions: a binding framework
+  reference in an `Alignment` cell and not in the roll-up, and one in the roll-up that no clause cites. The message
+  names the reference and the side it is missing from.
+
+- **The roll-up carries the frameworks that bind.** A rule declares `postures:`, naming the standings that oblige a
+  summary as the corpus's framework register heads them. A clause may cite a framework filed under any other standing,
+  for provenance, and the roll-up leaves it behind. `framework-posture` reports a clause citing a framework the
+  register does not place at all, once per framework rather than once per clause.
+
+- **A corpus rule can read the corpus's files.** `CorpusRuleContext` carries the tree, for the rule whose question is
+  answered by a page no record links into the graph. A framework register is that case: it holds no frontmatter, so it
+  is no record, and it is the only place a standing is written down.
 
 - **`part-ref` reads a part id written beside a link.** `[pol-EVER].BRANCH` cites `pol-EVER.BRANCH`, so a document
   citing six clauses of one policy carries one link definition rather than six. The part id has to sit against the
   closing bracket, so a full stop closing a sentence after a link is still a full stop. A corpus already writing this
   form may see errors it did not before.
+
+### Changed
+
+- **An index column holding a list renders its entries.** A column naming a list field read the value as a scalar and
+  wrote an empty cell, so `aligns-with` on a policy index had been blank since the column was added. A column naming a
+  list of objects renders what names each entry, which for `aligns-with` is the framework.
+
+- **A policy's `aligns-with` is grouped by framework.** It was a flat list of strings held to an ISO 27001 pattern,
+  which is why no other framework could appear in it. Each entry now carries a `framework:` and the `clauses:` reached
+  inside it, and any framework may. A corpus holding policies rewrites the field.
+
+- **A clause line carries no `alignment`.** `policies` moves to `export.version: 2`. A framework reference resolves
+  through the corpus's own `frameworks.md`, which no consumer receives, so the mapping reached one without what says
+  what it is worth.
 
 ## 0.12.0 - 2026-08-26
 

@@ -527,6 +527,46 @@ checks:
       Heuristic: an explicit verdict word, or a contrastive or negative-outcome cue. An option listed
       only to be dismissed in a clause was not genuinely considered.
 
+  entry-shape:
+    severity: error
+    description: Each entry of a list whose entries are objects is a mapping.
+    notes: >
+      The field's `entry:` block says what one holds, and a scalar written where a mapping belongs
+      carries none of it. Reported against the entry, so a list with one bad line among ten names the
+      line.
+
+  entry-key:
+    severity: error
+    description: An object entry carries the keys its field declares, and every key it declares as required.
+    notes: >
+      Both faults under one id, because they are the same mistake read from either end: a key the shape
+      does not declare, and a required key the entry omits. The message quotes the entry by whatever its
+      naming key holds, and falls back to the line where that key is the one missing.
+
+  alignment-rollup:
+    severity: error
+    description: A policy's `aligns-with` and its `Alignment` column carry the same framework references.
+    notes: >
+      Both directions, and the message names the reference and the side it is missing from. A reference
+      in a cell and not in the roll-up leaves the generated index under-reporting what the policy
+      covers. A reference in the roll-up and not in any cell is a claim of coverage no clause can show,
+      which is the worse of the two because it reads as evidence.
+
+      A framework cited with no reference into it compares as the framework alone, so `[WCAG 2.2 AA]` in
+      a cell answers an `aligns-with` entry carrying no `clauses:`.
+
+  framework-posture:
+    severity: error
+    description: A framework a clause cites is placed on the corpus's framework register.
+    notes: >
+      The register says whether we are obliged to a framework, self-obligated to it, or borrowing from
+      it, and `alignment-rollup` reads that to decide which references its roll-up carries. A framework
+      the register does not place has no standing to read, so the roll-up would silently leave it out
+      and the index would under-report coverage with nothing saying so.
+
+      Reported once per framework rather than once per clause citing it. The fix is one entry on the
+      register, and a policy citing the same framework six times has one fault.
+
   terms-alphabetical:
     severity: warning
     description: A glossary's entries read in alphabetical order.

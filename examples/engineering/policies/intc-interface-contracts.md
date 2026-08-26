@@ -4,8 +4,8 @@ tier: normative
 category: delivery
 status: draft
 aligns-with:
-  - ISO27001:2022 A.8.26
-  - ISO27001:2022 A.8.27
+  - framework: ISO 27001:2022
+    clauses: [ A.8.26, A.8.27 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ api, contracts, interoperability, versioning ]

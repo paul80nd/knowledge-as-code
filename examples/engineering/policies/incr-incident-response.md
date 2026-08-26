@@ -4,14 +4,10 @@ tier: normative
 category: operations
 status: draft
 aligns-with:
-  - ISO27001:2022 A.5.5
-  - ISO27001:2022 A.5.24
-  - ISO27001:2022 A.5.25
-  - ISO27001:2022 A.5.26
-  - ISO27001:2022 A.5.27
-  - ISO27001:2022 A.5.28
-  - ISO27001:2022 A.5.29
-  - ISO27001:2022 A.6.8
+  - framework: ISO 27001:2022
+    clauses: [ A.5.5, A.5.24, A.5.25, A.5.26, A.5.27, A.5.28, A.5.29, A.6.8 ]
+  - framework: UK GDPR
+    clauses: [ Art.33, Art.33(5), Art.34 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ incident-response, learning, postmortem ]

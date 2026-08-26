@@ -4,8 +4,8 @@ tier: normative
 category: security
 status: draft
 aligns-with:
-  - ISO27001:2022 A.5.17
-  - ISO27001:2022 A.8.24
+  - framework: ISO 27001:2022
+    clauses: [ A.5.17, A.8.24 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ credentials, key-management, secrets ]

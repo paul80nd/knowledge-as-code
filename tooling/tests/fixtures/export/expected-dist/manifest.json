@@ -27,7 +27,7 @@
     },
     {
       "type": "policies",
-      "shapeVersion": 1,
+      "shapeVersion": 2,
       "records": 1,
       "parts": 3,
       "dir": "policies",

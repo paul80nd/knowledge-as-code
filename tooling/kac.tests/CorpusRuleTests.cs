@@ -134,7 +134,7 @@ public class CorpusRuleTests
 
         var found = new List<Finding>();
 
-        new NoDependencyCycles().Check(new CorpusRuleContext(docs, byId, type,
+        new NoDependencyCycles().Check(new CorpusRuleContext(docs, byId, Empty, type,
             new RuleSpec { Id = new RuleId("no-dependency-cycles") },
             (at, c, m, l) => Report(Sev.Error, at, c, m, l),
             (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
@@ -143,6 +143,10 @@ public class CorpusRuleTests
         void Report(Sev severity, Doc at, CheckId check, string message, int? line)
             => found.Add(new Finding(at.Rel, line, severity, check, message));
     }
+
+    // `no-dependency-cycles` reads the records and never the tree, so an empty corpus of files is the
+    // honest thing to hand it.
+    private static readonly Tree Empty = new(new HashSet<string>(StringComparer.Ordinal), _ => "");
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);
 }

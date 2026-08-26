@@ -4,8 +4,6 @@ tier: normative
 category: governance
 status: draft
 aligns-with:
-  - ISO27001:2022 A.5.33
-  - ISO27001:2022 A.5.34
 review-by: "2030-01-01"
 owner: mira.okonjo
 tags: [ retention ]

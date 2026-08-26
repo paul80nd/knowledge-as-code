@@ -54,7 +54,7 @@
       "line": 7,
       "severity": "warning",
       "check": "list-order",
-      "message": "'aligns-with' is not in alphabetical order: 'ISO27001:2022 A.8.7' should come before 'ISO27001:2022 A.8.29'."
+      "message": "'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'."
     }
   ]
 }

@@ -514,14 +514,23 @@
           ]
         },
         "of": {
-          "description": "What each entry of a list is.",
+          "description": "What each entry of a list is. `object` makes them mappings, and `entry:` then declares the keys one holds.",
           "enum": [
             "string",
             "date",
             "id",
             "bool",
-            "int"
+            "int",
+            "object"
           ]
+        },
+        "entry": {
+          "description": "The keys one entry of the list holds, where `of: object` makes its entries mappings. Declared with the vocabulary a field is declared with, so a key is held to its own `type:`, `pattern:` and `required:`. Order is load-bearing: the first key declared is the one naming the entry, which is what the entries are sorted on and what an index column renders.",
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/field"
+          }
         },
         "values": {
           "description": "An enum's range: written inline, or drawn from `_enums.yaml` as `$enums.<name>`.",
@@ -704,6 +713,15 @@
           "description": "What the author is told when the expression fails, a diagnosis where `description:` is a definition.",
           "type": "string",
           "minLength": 1
+        },
+        "postures": {
+          "description": "The framework standings a roll-up rule holds a policy's `aligns-with` to, written as the corpus's own framework register heads them. A framework filed under any other standing may be cited by a clause and stays out of the roll-up.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "max-words": {
           "description": "The ceiling a Y-statement is held to.",

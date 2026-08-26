@@ -84,7 +84,7 @@ public static class Validator
         // one would be free to answer differently.
         var byId = CheckCorpus(schema, corpus.Docs, findings);
 
-        CheckCorpusRules(schema, corpus.Docs, byId, findings);
+        CheckCorpusRules(schema, corpus.Docs, byId, tree, findings);
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
@@ -614,12 +614,12 @@ public static class Validator
     // against where a document rule is handed the `Report` for the one it is reading. Everything else is
     // the same dispatch: found by the id the schema declares, and silent where nothing implements it.
     private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
-        List<Finding> f)
+        Tree tree, List<Finding> f)
     {
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         foreach (var rule in t.Rules)
             if (CorpusRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
-                implementation.Check(new CorpusRuleContext(docs, byId, t, rule,
+                implementation.Check(new CorpusRuleContext(docs, byId, tree, t, rule,
                     (at, c, m, l) => Report(Sev.Error, at, c, m, l),
                     (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
         return;

@@ -4,8 +4,6 @@ tier: normative
 category: governance
 status: draft
 aligns-with:
-  - ISO27001:2022 A.5.4
-  - ISO27001:2022 A.5.36
 review-by: "2027-08-23"
 owner: {{owner}}
 tags: [ exceptions, governance, risk-acceptance ]

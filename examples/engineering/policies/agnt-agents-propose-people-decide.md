@@ -4,8 +4,8 @@ tier: normative
 category: governance
 status: draft
 aligns-with:
-  - ISO27001:2022 A.8.25
-  - ISO27001:2022 A.8.30
+  - framework: ISO 27001:2022
+    clauses: [ A.8.25, A.8.30 ]
 review-by: "2027-08-05"
 owner: paul.law
 tags: [ ai-agents, knowledge-management, provenance ]

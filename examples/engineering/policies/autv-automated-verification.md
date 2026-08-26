@@ -4,9 +4,8 @@ tier: normative
 category: delivery
 status: draft
 aligns-with:
-  - ISO27001:2022 A.8.25
-  - ISO27001:2022 A.8.28
-  - ISO27001:2022 A.8.29
+  - framework: ISO 27001:2022
+    clauses: [ A.8.25, A.8.28, A.8.29 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ continuous-integration, quality-gates, testing ]

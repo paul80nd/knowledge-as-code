@@ -293,7 +293,11 @@ built after a pull is the ordinary way to meet an export this tool did not ship 
 
 **A record's exported field is a scalar.** `export.fields:` reads each name as one value, so a field the record writes
 as a list arrives as `null`. A policy's `aligns-with` is that case, and it stays out of the block for that reason.
-Nothing is lost: the roll-up summarises the `Alignment` cells, and every clause line carries its own.
+
+**A clause carries no framework alignment.** A policy states one in the `Alignment` cell of the clause it qualifies, and
+that reference resolves through the corpus's own `frameworks.md`, which says whether the corpus is obliged to the
+framework, self-obligated to it, or borrowing from it. No consumer receives that page. So a mapping carried without it
+would say a clause touches `A.8.24` and leave the reader to work out what touching it commits anyone to.
 
 **A clause line carries no `seeAlso`.** A cross-reference is read from the body beneath a part, and a table row has
 none. So a clause pointing at another policy reaches a consumer as the id inside its words, and the run does not name

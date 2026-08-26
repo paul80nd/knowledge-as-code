@@ -22,6 +22,8 @@ them, and every finding names the file and the key.
 | A `versus:` entry naming a folder no schema covers                                       | `schema-dispatch`    |
 | `values:` on any field that is not an `enum`                                             | `schema-dispatch`    |
 | `min-items:` or `min-records:` on any field that is not a `list`                         | `schema-dispatch`    |
+| An `entry:` block on a list whose `of:` is not `object`                                  | `schema-dispatch`    |
+| `of: object` with no `entry:` block saying what an entry holds                           | `schema-shape`       |
 | An `index.order:` that is neither `ascending` nor `descending`                           | `schema-dispatch`    |
 | A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows           | `schema-shape`       |
 | A tier declaring no `label:` or no `behaviour:` (both head its section in the taxonomy)  | `schema-shape`       |

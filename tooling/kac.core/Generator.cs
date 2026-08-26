@@ -28,7 +28,7 @@ public static class Generator
                 [.. t.IndexColumns.Select(Humanize)],
                 [
                     .. Sorted(t, docs)
-                        .Select(d => t.IndexColumns.Select(c => Cell(d, c)).ToList())
+                        .Select(d => t.IndexColumns.Select(c => Cell(d, c, t)).ToList())
                 ]);
 
         return $"{Banner}\n\n# {title}\n\n{body}\n";
@@ -329,7 +329,15 @@ public static class Generator
             : acc.ThenBy(d => d.FrontScalar(key) ?? "", StringComparer.Ordinal));
     }
 
-    private static string Cell(Doc d, string col)
+    // One cell of an index row. A column names a frontmatter field, and how its value reads across a
+    // table is the field's shape rather than the column's: a scalar is itself, a list of scalars is its
+    // entries, and a list of objects is what names each entry.
+    //
+    // That last reading is what an index is for. `aligns-with` groups a framework with the clauses of it
+    // a policy maps to, and an index carrying every clause of every framework would be a column wider
+    // than the rest of the table put together. The framework names answer what a reader scans an index
+    // to ask, which is who a policy touches, and the record answers where.
+    private static string Cell(Doc d, string col, TypeSchema t)
     {
         if (col == Title)
         {
@@ -342,7 +350,11 @@ public static class Generator
             return $"[{Escape(d.H1 ?? "")}]({file})";
         }
 
-        return Escape(d.FrontScalar(col) ?? "");
+        if (d.FrontScalar(col) is { Length: > 0 } scalar) return Escape(scalar);
+
+        var spec = t.Fields.GetValueOrDefault(col);
+        var naming = spec?.Of == "object" && spec.Entry is [{ } first, ..] ? first.Name : null;
+        return Escape(string.Join(", ", d.FrontEntries(col, naming)));
     }
 
     // The frontmatter reference on a type page: every field a document of that type carries, universal
@@ -472,6 +484,9 @@ public static class Generator
             t => t.AnyField(f => f.MinItems is not null)),
         ("list-order", [new("list-order")],
             "List entries read in alphabetical order, with numbers compared as numbers.", null),
+        ("entry-shape / entry-key", [new("entry-shape"), new("entry-key")],
+            "Each entry of an object list is a mapping, carrying the keys the field declares and no others.",
+            t => t.AnyField(f => f.Of == "object")),
         ("min-records", [new("min-records")],
             "A value in a grouping field is carried by at least as many records as the schema asks for.",
             t => t.AnyField(f => f.MinRecords is not null)),
@@ -531,6 +546,10 @@ public static class Generator
             null),
         ("alternatives-verdict", [new("alternatives-verdict")], "Each Alternatives Considered bullet states a verdict.",
             null),
+        ("alignment-rollup / framework-posture", [new("alignment-rollup"), new("framework-posture")],
+            "`aligns-with` carries every binding reference the `Alignment` column cites, and the register "
+            + "places each framework.",
+            t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
         ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
         ("dependency-cycle", [new("dependency-cycle")],
             "A cycle in the dependency graph these records form, naming every record the loop runs through.", null)

@@ -4,10 +4,8 @@ tier: normative
 category: security
 status: draft
 aligns-with:
-  - ISO27001:2022 A.8.20
-  - ISO27001:2022 A.8.21
-  - ISO27001:2022 A.8.22
-  - ISO27001:2022 A.8.24
+  - framework: ISO 27001:2022
+    clauses: [ A.8.20, A.8.21, A.8.22, A.8.24 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ exposure, network-security, segmentation ]

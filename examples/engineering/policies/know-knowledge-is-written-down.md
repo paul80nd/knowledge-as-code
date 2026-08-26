@@ -4,7 +4,8 @@ tier: normative
 category: governance
 status: draft
 aligns-with:
-  - ISO27001:2022 A.5.37
+  - framework: ISO 27001:2022
+    clauses: [ A.5.37 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ documentation, knowledge-management ]

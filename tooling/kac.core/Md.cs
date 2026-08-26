@@ -44,6 +44,15 @@ public static class Md
     // the rest of the message.
     public static string Snippet(string s, int max = 60) => s.Length > max ? s[..(max - 3)] + "…" : s;
 
+    // Every heading in a document, in the order it is written, with the level it is written at.
+    //
+    // Beside `Anchors`, which answers what a link may reach. This answers how the headings nest, which
+    // is what a reader takes from a page grouping its subject under `##` and naming each one under
+    // `###`.
+    public static IEnumerable<(int Level, string Text)> Headings(string markdown) =>
+        Markdown.Parse(markdown).Descendants<HeadingBlock>()
+            .Select(h => (h.Level, PlainText(h.Inline)));
+
     // The anchors a document offers a link: one per heading, at every level.
     public static HashSet<string> Anchors(string markdown)
     {

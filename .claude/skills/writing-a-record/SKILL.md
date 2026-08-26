@@ -109,13 +109,27 @@ shift. `"2026-06-12"` renders as written.
 **Enum values are lower-case and hyphenated.** They are grep targets first and prose second.
 
 **A list is a block sequence, one entry per line.** An entry stays individually reviewable in a diff, and a finding can
-point at the entry that caused it rather than at the field. `tags:` is the exception and takes the compact flow form,
-`tags: [ a, b ]`, because it says how a record is found rather than what it says, and a block list would give the least
-interesting field in the block the most lines.
+point at the entry that caused it rather than at the field. Two fields take the compact flow form instead, and each
+earns it the same way: the entries are short, there are many of them, and no reader stops on one. `tags: [ a, b ]` says
+how a record is found rather than what it says. The `clauses:` inside a policy's `aligns-with` entry is a run of
+framework references under a framework already named on the line above.
+
+**A list of objects names each entry on its first key.** `aligns-with` writes the framework, then the references reached
+inside it. The naming key comes first because the tool sorts on it and an index column renders it.
+
+```yaml
+aligns-with:
+  - framework: ISO 27001:2022
+    clauses: [ A.5.17, A.8.24 ]
+```
+
+It carries the frameworks that bind, which `frameworks.md` files under **Obliged** or **Self-obligated**. A clause may
+cite a framework filed under **Inspiration** to say where an idea came from, and that citation stays out of the
+roll-up: the generated index is read as a coverage table, and a framework binding nothing dilutes it.
 
 **A list reads alphabetically.** No list field's sequence carries meaning, so alphabetical is the order that scan-reads
-and the one two authors agree on without discussion. Numbers inside an entry compare as numbers, so
-`ISO27001:2022 A.8.7` comes before `ISO27001:2022 A.8.29`.
+and the one two authors agree on without discussion. Numbers inside an entry compare as numbers, so `A.8.7` comes
+before `A.8.29`.
 
 **A tag is an entry point, and never a grouping.** It is the word a reader arrives with, on a record that does not use
 it. One record may be the only one carrying a tag, and often is. A tag must never restate another field, since the two

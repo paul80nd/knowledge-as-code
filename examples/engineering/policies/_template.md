@@ -26,8 +26,24 @@ and how it is reviewed. What is below is only what a policy adds to that.
 * **`category`**: `security` · `delivery` · `operations` · `governance`. The broad area the commitment belongs to, which
   is a different question from the topics `tags` records.
 * **`status`**: `draft` · `active` · `retired`.
-* **`aligns-with`**: ISO/IEC 27001:2022 Annex A references, such as `ISO27001:2022 A.8.25`. These capture alignment
-  rather than compliance or certification, and the wording matters if this is ever read externally.
+* **`aligns-with`**: every **binding** framework the clause table cites, each with the references reached inside it.
+  These capture alignment rather than compliance or certification, and the wording matters if this is ever read
+  externally. Leave the key bare where the policy cites nothing that binds.
+
+  ```yaml
+  aligns-with:
+    - framework: ISO 27001:2022
+      clauses: [ A.5.17, A.8.24 ]
+    - framework: WCAG 2.2 AA
+  ```
+
+  The framework is the link label its `Alignment` cells carry, version included. A framework a clause cites whole
+  carries no `clauses:`, as `WCAG 2.2 AA` does above. `alignment-rollup` reconciles this against the table in both
+  directions, so a binding reference reaches one of them only by reaching the other.
+
+  Binding means the framework register files it under **Obliged** or **Self-obligated**. A clause may cite a framework
+  filed under **Inspiration**, and that citation is provenance rather than obligation, so it stays out of the roll-up.
+  `framework-posture` reports a clause citing a framework the register does not place at all.
 * **`review-by`**: a quoted date. Annual is usually right for a policy.
 
 A policy names no implementers. A standard points up at the policy it puts into practice, and a downstream corpus
@@ -99,7 +115,8 @@ during design" passes. The question itself is not published. Controls carry the 
 **Alignment.** Per clause, and only where a genuine mapping exists: an invented mapping is worse than none, and an empty
 cell is honest. Reference-style links resolve into `/frameworks`, where the anchor is the framework's name with no
 version and no punctuation (`iso-27001`). The label carries the version (`[ISO 27001:2022]`). A clause reference within
-a framework uses `.`.
+a framework uses `.`. Roll every **binding** reference up into `aligns-with`, which `alignment-rollup` holds to this
+table. Cite a framework the register files under **Inspiration** freely; the roll-up leaves it behind.
 
 ## Exceptions
 

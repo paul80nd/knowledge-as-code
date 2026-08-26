@@ -19,6 +19,19 @@ public sealed class FieldSpec
     public string? Of { get; init; }                          // element type when Type == list
     public IReadOnlyList<string>? Values { get; init; }       // enum values, resolved
 
+    // The shape of one entry, where a list's entries are objects rather than scalars. Declared with the
+    // vocabulary a field is declared with, so an entry's key is held to its own `type:`, `pattern:` and
+    // `required:` by the code that already reads a field, and nothing here is a second language.
+    //
+    // A list rather than a map, because the order is load-bearing twice: the first key declared is the
+    // one naming the entry, which is what `list-order` sorts the entries on and what a message quotes to
+    // say which entry it means.
+    public IReadOnlyList<FieldSpec>? Entry { get; init; }
+
+    // The entry key of the given name, or null where the shape declares none.
+    public FieldSpec? EntryKey(string name) =>
+        Entry?.FirstOrDefault(k => string.Equals(k.Name, name, StringComparison.Ordinal));
+
     // The folders an id in this field may belong to. A list, because several fields point at more than
     // one type: a discovery is promoted to a FAQ or a standard. A scalar `ref:` is the one-entry case
     // rather than a separate shape.
@@ -278,6 +291,11 @@ public sealed record RuleSpec
     // What the author is told when the expression fails. Distinct from Description, which says what the
     // rule means to someone reading the type page: one is a diagnosis, the other is a definition.
     public string? Message { get; init; }
+
+    // The framework standings `alignment-rollup` holds a policy's roll-up to, named as the corpus's own
+    // register writes them. It sits in the schema for the reason every threshold does: which standings
+    // oblige a summary is a judgement a corpus makes, and remaking it should not be a release.
+    public IReadOnlyList<string> Postures { get; init; } = [];
 
     // The ceiling `y-statement-present` holds a Y-statement to. It sits in the schema for the reason
     // every threshold does: a number chosen rather than measured is one a corpus tunes, and tuning it
@@ -629,7 +647,7 @@ public sealed partial class Schema
         foreach (var (name, node) in Yaml.Map(uni.Get("fields")))
         {
             universalOrder.Add(name);
-            universal[name] = ParseField(universalKeys.At(node, $"field '{name}'"), name, enums);
+            universal[name] = ParseField(universalKeys, universalKeys.At(node, $"field '{name}'"), name, enums);
         }
 
         var layer = new UniversalLayer(universalOrder, universal, Yaml.StrList(uni.Get("reserved")), enums);
@@ -676,7 +694,7 @@ public sealed partial class Schema
         foreach (var (name, node) in Yaml.Map(root.Get("fields")))
         {
             fieldOrder.Add(name);
-            fields[name] = ParseField(keys.At(node, $"field '{name}'"), name, layer.Enums);
+            fields[name] = ParseField(keys, keys.At(node, $"field '{name}'"), name, layer.Enums);
         }
 
         var rules = root.Get("rules") is YamlSequenceNode ruleNodes
@@ -792,7 +810,7 @@ public sealed partial class Schema
             .OfType<FieldSpec>()
     ];
 
-    private static FieldSpec ParseField(Level node, string name,
+    private static FieldSpec ParseField(KeyReader keys, Level node, string name,
         IReadOnlyDictionary<string, IReadOnlyList<string>> enums)
     {
         var pattern = Yaml.Str(node.Get("pattern"));
@@ -833,6 +851,16 @@ public sealed partial class Schema
             problem ??= ex.Message;
         }
 
+        // An entry's shape is read through the same parser, so a key inside one is declared and judged
+        // exactly as a field is. The recursion is one level deep in practice and bounded by the schema
+        // rather than by a guard: a key declaring its own `entry:` would simply nest again.
+        List<FieldSpec>? entry = null;
+        foreach (var (key, decl) in Yaml.Map(node.Get("entry")))
+        {
+            entry ??= [];
+            entry.Add(ParseField(keys, keys.At(decl, $"field '{name}' entry key '{key}'"), key, enums));
+        }
+
         return new FieldSpec
         {
             Name = name,
@@ -841,6 +869,7 @@ public sealed partial class Schema
             RequiredWhenCondition = condition,
             Type = Yaml.Str(node.Get("type")) ?? "string",
             Of = Yaml.Str(node.Get("of")),
+            Entry = entry,
             Values = values,
             Refs = refs,
             Reciprocal = Yaml.Str(node.Get("reciprocal")),
@@ -910,6 +939,7 @@ public sealed partial class Schema
             Compiled = compiled,
             Message = message,
             Problem = problem,
+            Postures = Yaml.StrList(rule.Get("postures")),
             MaxWords = rule.Get("max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
                 ? words
                 : null
