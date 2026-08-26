@@ -22,9 +22,9 @@ kac update [--add-type <TYPE>] [--check] [--drop-type <TYPE>] [--from <URL|PATH>
 
 ## What it is for
 
-`update` takes a newer framework into a corpus that already has one, and is where a corpus adopts a type or gives one
-up. It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file what
-the corpus receives, writes it, and records what it took.
+`update` takes a newer framework into a corpus, meaning one repository of knowledge records, that already has one. It is
+also where a corpus adopts a type or gives one up. It reads where the corpus took its framework from, fetches that
+template again at its ref, decides file by file what the corpus receives, writes it, and records what it took.
 
 Its reader is whoever maintains a corpus. The command's promise is narrow and worth stating plainly: **it leaves every
 change in the working tree and commits nothing.** Git is the review step, so `update` can be liberal where a tool
@@ -45,11 +45,11 @@ reverse, and neither is a fault on its own. The template's manifest names the ol
 file, or a `skip:` entry saying the corpus owns it. Nothing here resolves a conflict, because a clean tree means there
 are none.
 
-**It is not `validate`.** Whether a corpus's records are correct is a separate question with a separate answer, and a
-corpus can be perfectly in step with its framework and full of bad records.
+**It is not [`validate`](validate.md).** Whether a corpus's records are correct is a separate question with a separate
+answer, and a corpus can be perfectly in step with its framework and full of bad records.
 
-**It is not `generate`.** That recomputes what a corpus derives from its own frontmatter. This one brings in what the
-corpus derives from somebody else's framework. A corpus can be fresh and behind, or in step and stale.
+**It is not [`generate`](generate.md).** That recomputes what a corpus derives from its own frontmatter. This one brings
+in what the corpus derives from somebody else's framework. A corpus can be fresh and behind, or in step and stale.
 
 ## How it works
 
@@ -156,3 +156,5 @@ a second version needing it.
 
 **The template has no changelog.** What changed in a framework is read from the diff `update` leaves behind, which is
 the same place every other answer here is read from. A second corpus is the point at which that stops being enough.
+
+[The corpus descriptor](../corpus-descriptor.md) is the reference for every key this command reads and writes.

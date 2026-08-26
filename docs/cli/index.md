@@ -51,3 +51,5 @@ it was built from.
 | `2`  | A command found no corpus. `new`, `--version` and `--help` need none and answer anyway. |
 
 Warnings never change the exit code.
+
+[Getting started](../getting-started.md) runs the first of these commands on a machine with nothing installed.

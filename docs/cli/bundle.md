@@ -15,9 +15,9 @@ kac bundle [--no-color]
 ## What it is for
 
 An export is data, and data has to be handed to something. `bundle` assembles what `export` wrote, plus the `.plugin/`
-tree, into a Claude Code plugin directory under `.dist/plugin/`. It writes the marketplace that offers it into `.dist/`
-above, so the result can be installed. What ends up in the plugin is a function of what the export carried: a corpus
-that ships no glossary ships no glossary skill either.
+tree a corpus keeps beside its records, into a Claude Code plugin directory under `.dist/plugin/`. It writes the
+marketplace that offers it into `.dist/` above, so the result can be installed. What ends up in the plugin is a function
+of what the export carried: a corpus that ships no glossary ships no glossary skill either.
 
 ## What it is not
 
@@ -231,3 +231,5 @@ other is a decision. Nothing reports the first.
 **The export is copied whole.** A component surviving trimming pulls in the entire export, including types no surviving
 component names. That costs nothing today, because the trim and the export are driven by the same adoption. It is worth
 reopening for a corpus exporting many types where a plugin reads one.
+
+[`export`](export.md) is what writes the data this assembles.

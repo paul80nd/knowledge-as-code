@@ -15,24 +15,25 @@ kac validate [--json] [--no-color]
 
 ## What it is for
 
-`validate` is the command CI runs over a corpus, and the one an author runs before pushing. It decides which files are
+`validate` is the command CI runs over a corpus, meaning one repository of knowledge records, and the one an author
+runs before pushing. It decides which files are
 records and applies the checks the schema declares. It reports each fault against the file that caused it, with a line
 where it has one. Its reader is whoever writes a record, so a finding has to name the fault precisely enough to be fixed
 without opening this tool. Where each check comes from, and what it proves, is [Checks](../checks.md).
 
 ## What it is not
 
-**It is not `checks`.** `kac checks` prints what could fire, read from the schema. `validate` fires it against
-documents. A check absent from a validate run is either undeclared or untripped, and only `checks` tells those two
-apart.
+**It is not [`checks`](checks.md).** `kac checks` prints what could fire, read from the schema. `validate` fires it
+against documents. A check absent from a validate run is either undeclared or untripped, and only `checks` tells those
+two apart.
 
-**It is not `generate --check`.** What sits between a generated block's markers is not `validate`'s to judge.
-`validate` holds a file to still carrying the markers of every block the generator writes into it, and freshness is
-`generate --check`'s one question.
+**It is not [`generate --check`](generate.md).** What sits between a generated block's markers is not `validate`'s to
+judge. `validate` holds a file to still carrying the markers of every block the generator writes into it, and freshness
+is `generate --check`'s one question.
 
-**It is not `update --check`.** That asks whether this corpus's copy of the framework has fallen behind the template it
-took. `validate` asks whether this corpus's own records are correct, and a corpus a long way behind can still be
-entirely valid.
+**It is not [`update --check`](update.md).** That asks whether this corpus's copy of the framework has fallen behind the
+template it took. `validate` asks whether this corpus's own records are correct, and a corpus a long way behind can
+still be entirely valid.
 
 ## How it works
 
@@ -95,3 +96,5 @@ walked for `*.md` instead. That walk skips `.git`, `.idea` and `.claude` by name
 The taxonomy exclusions still apply, so what changes is narrow: a Markdown file the corpus had ignored is discovered and
 validated. The test harness assembles such a tree deliberately. A corpus outside version control would meet it without
 asking.
+
+[`generate`](generate.md) writes the blocks this command holds a file to still carrying.
