@@ -46,17 +46,17 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
   is `required-when`, and a should-have-done-this is a rule.
 
 * **The grammar an `expr:` is written in is frozen.**
-  <https://paul80nd.github.io/knowledge-as-code/schema/expressions/> is the reference for it: what the grammar allows,
+  <https://paul80nd.github.io/knowledge-as-code/design/expressions/> is the reference for it: what the grammar allows,
   the facts a rule may call, and the guard a field that may be absent needs. A rule that will not fit wants a new fact
   rather than a wider grammar.
 
 * **Thresholds are judgements**, and each is pinned by a fixture so moving one is visible.
-  <https://paul80nd.github.io/knowledge-as-code/checks/> says where the numbers came from. A ratio like
+  <https://paul80nd.github.io/knowledge-as-code/design/checks/> says where the numbers came from. A ratio like
   `words() <= links() * 40` fails a document linking to nothing at any length. For a capability or an explanation, that
   is the intended reading.
 
 * **The text rules are heuristics** and will be tuned wrong first. Their patterns belong here rather than in C# for that
-  reason, argued at <https://paul80nd.github.io/knowledge-as-code/checks/>.
+  reason, argued at <https://paul80nd.github.io/knowledge-as-code/design/checks/>.
 
 * **A rule reporting several faults under one id needs a fixture for each**, because one fixture turns the whole id
   green.

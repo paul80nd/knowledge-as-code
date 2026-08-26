@@ -21,7 +21,7 @@ corpus knows into `.dist/export/` as data built for an agent to read.
 It writes three kinds of file: a manifest saying what the export is, one file per record for a reader that wants a
 whole record, and a flat file cheap to grep for a reader holding only a word. What travels is each type's own decision,
 declared beside the type, so a corpus adopting a new type exports it without the tool changing.
-[The export format](../export-format.md) is the contract those files answer to.
+[The export format](../design/export.md) is the contract those files answer to.
 
 ## What it is not
 
@@ -73,4 +73,4 @@ already proved.
 ## Known limits
 
 **A record's exported field is a scalar**, and three more limits belong to a type's declaration rather than to this
-command. [The export format](../export-format.md) states each one and what it costs a consumer.
+command. [The export format](../design/export.md) states each one and what it costs a consumer.

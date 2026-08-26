@@ -88,4 +88,4 @@ and not be, so the load fails on it.
 
 ## Where to go next
 
-[Checks](../checks.md) is the page for adding a check, or for deciding whether the one you want already exists.
+[Checks](checks.md) is the page for adding a check, or for deciding whether the one you want already exists.

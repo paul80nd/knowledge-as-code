@@ -65,7 +65,7 @@ publishing:
 
 `publishing-target` is one of `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather than leave it to be
 guessed, so `export` knows whether it can build a link at all and which form to build.
-[The export format](export-format.md#the-two-links) sets out the two an export carries.
+[The export format](design/export.md#the-two-links) sets out the two an export carries.
 
 ### What each target says
 
@@ -216,5 +216,5 @@ steps over them and reports what it stepped over. Delete an entry once the file 
 The reason is for whoever opens the file next, and it is the only thing standing between a deliberate divergence and one
 nobody remembers making.
 
-[The export format](export-format.md) is this page's other half: here is what a corpus writes about itself, and there
+[The export format](design/export.md) is this page's other half: here is what a corpus writes about itself, and there
 is what a consumer reads out of it.

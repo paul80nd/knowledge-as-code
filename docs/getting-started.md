@@ -66,7 +66,7 @@ shape, and yours go beside them. The glossary under `glossary/` is the framework
 word: write your own glossaries beside it and leave that one as it is.
 
 1. **Pick the type.** `knowledge-as-code/taxonomy.md` in your own corpus has a decision table saying where a record
-   goes, covering the types that corpus adopted. [The default types](framework/types.md) introduces all seventeen.
+   goes, covering the types that corpus adopted. [The default types](framework/types.md) introduces every one of them.
 2. **Copy that type's `_template.md`** to a new file in the same folder. It marks what you supply as `{{placeholder}}`
    and fences its own guidance between `DELETE FROM HERE` and `DELETE TO HERE` comments. A finished record has neither
    left in it.

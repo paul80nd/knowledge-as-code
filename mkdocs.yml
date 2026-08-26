@@ -105,12 +105,11 @@ nav:
       - bundle: cli/bundle.md
       - checks: cli/checks.md
       - update: cli/update.md
-  - Schema reference:
-      - schema/index.md
-      - Rule expressions: schema/expressions.md
-      - What the schema is held to: schema/held-to.md
-  - Configuration:
-      - The corpus descriptor: corpus-descriptor.md
-      - The export format: export-format.md
-  - Checks: checks.md
+  - Design:
+      - design/index.md
+      - Checks: design/checks.md
+      - Rule expressions: design/expressions.md
+      - What the schema is held to: design/held-to.md
+      - The export format: design/export.md
+  - The corpus descriptor: corpus-descriptor.md
   - Changelog: changelog.md

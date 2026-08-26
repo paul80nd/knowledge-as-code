@@ -27,7 +27,7 @@ corpus is that a reader can believe it.
 ## What validation asks
 
 Four questions. The grouping is this page's, and no file carries it. `kac checks` prints the checks themselves, and
-[Checks](../checks.md) says where each one comes from.
+[Checks](../design/checks.md) says where each one comes from.
 
 **Does the record parse and declare itself?** Frontmatter is YAML, required fields are present, enum values are ones the
 type declares, and dates are quoted. An `id` is unique across the corpus and agrees with both its type's prefix and the

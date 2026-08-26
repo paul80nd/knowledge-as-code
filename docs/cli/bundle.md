@@ -80,7 +80,7 @@ tool did not ship beside.
 #### A shape mismatch means the component's keys have moved
 
 The type is there and its files have moved, so the component would ship, install, and read keys that are gone.
-Trimming would hide that behind a plugin doing less. [The export format](../export-format.md) says what a shape version
+Trimming would hide that behind a plugin doing less. [The export format](../design/export.md) says what a shape version
 covers and what moves it.
 
 ### Each command replaces its own directory whole

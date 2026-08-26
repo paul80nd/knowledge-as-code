@@ -170,7 +170,7 @@ public sealed class ExportSpec
 {
     // The shape a consumer holds this type's export to, moved by hand when a reader written against the
     // shape before it would now be wrong. It sits beside the declaration it describes, so a change to a
-    // policy's line and a glossary consumer's bundle never meet. `docs/export-format.md` says what moves it.
+    // policy's line and a glossary consumer's bundle never meet. `docs/design/export.md` says what moves it.
     public int Version { get; init; }
 
     // The frontmatter a record contributes, in the order an export writes it. Each names a field the
@@ -197,7 +197,7 @@ public sealed class ExportSpec
     // vocabulary the source is drawn from.
     public IReadOnlyList<(string Key, string Source)> Line { get; init; } = [];
 
-    // How much of a piece travels. `docs/export-format.md` says what each one promises a consumer.
+    // How much of a piece travels. `docs/design/export.md` says what each one promises a consumer.
     public const string Full = "full";
     public const string Summary = "summary";
     public const string Reference = "reference";

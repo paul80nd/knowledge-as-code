@@ -36,5 +36,5 @@ Either way the run then compares the catalogue against the reader-facing checks 
 check the catalogue declares and no row covers, or a row naming a check that no longer exists, is named on stderr and
 exits `1`. That comparison happens whether or not `--json` was asked for.
 
-[Checks](../checks.md) is the page for adding a check, or for deciding whether the one you want already exists. It says
+[Checks](../design/checks.md) is the page for adding a check, or for deciding whether the one you want already exists. It says
 where a check comes from, what the schema pass refuses, and why a rule is data wherever it can be.

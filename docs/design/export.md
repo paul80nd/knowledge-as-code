@@ -6,7 +6,7 @@ changes.
 
 Two readers need it. One declares the `export:` block of a type, meaning one kind of knowledge record, and wants to
 know what each key produces. The other writes a consumer against the output and wants to know what it may rely on.
-[`export`](cli/export.md) is the page for running the command.
+[`export`](../cli/export.md) is the page for running the command.
 
 ## What a type declares
 
@@ -85,7 +85,7 @@ entry under `types` carries it once.
 
 `corpus` is what the corpus calls itself, which tells one export from another. `shortcode` is what a citation writes
 before the colon, so a consumer resolving `eng:pol-VURM` knows which of the exports it holds answers it. It is `null`
-where the corpus declares none, and [`.corpus.yaml`](corpus-descriptor.md#identity) is where a corpus declares one.
+where the corpus declares none, and [`.corpus.yaml`](../corpus-descriptor.md#identity) is where a corpus declares one.
 
 ## The flat file is JSONL
 
@@ -163,7 +163,7 @@ sorts case-insensitively on the term. Two runs from one commit produce identical
 ## The two links
 
 A person follows one form and an agent fetches the other. The rules joining a base to a path, and the anchor rule for a
-part, belong to `publishing-target`. [`.corpus.yaml`](corpus-descriptor.md#publishing) supplies where the corpus is
+part, belong to `publishing-target`. [`.corpus.yaml`](../corpus-descriptor.md#publishing) supplies where the corpus is
 served from and nothing else. Every link resolves against the commit the export was built from, so a citation names the
 version the agent read rather than whatever the branch holds later.
 
@@ -205,7 +205,7 @@ they travel either way.
 
 `formatVersion` covers the envelope: the keys the manifest carries, the layout of the tree, and how a link template is
 built. Each entry under `types` carries a `shapeVersion` covering that one type's files. `contentVersion` is
-`content-version` from [`.corpus.yaml`](corpus-descriptor.md), semantically versioned and bumped by hand, and states
+`content-version` from [`.corpus.yaml`](../corpus-descriptor.md), semantically versioned and bumped by hand, and states
 what the corpus knows. A corpus can rewrite every definition and move none of the three.
 
 ### Each type is versioned where its keys are declared
@@ -249,4 +249,4 @@ as unread. A glossary term is unaffected: its body is everything under the headi
 is the safe way round: the alternative is an export quietly thinner than the type asked for. The value stays
 three-valued so that the first type wanting a shorter line does not force it to be rebuilt.
 
-[`bundle`](cli/bundle.md) is what reads `formatVersion` and each `shapeVersion`, and refuses an export it cannot read.
+[`bundle`](../cli/bundle.md) is what reads `formatVersion` and each `shapeVersion`, and refuses an export it cannot read.

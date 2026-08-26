@@ -70,7 +70,7 @@ public record ExportPublishing(string Target, string? HumanTemplate, string? Raw
 //
 // `ShapeVersion` is what this type's files are shaped like, and it moves alone. A consumer reading the
 // glossary is refused a bundle only where the glossary's own shape moved past what it knows, so a policy
-// gaining a key leaves it alone. `docs/export-format.md` sets the three versions out and what moves each.
+// gaining a key leaves it alone. `docs/design/export.md` sets the three versions out and what moves each.
 //
 // `Sections` is the fidelity each section travelled at. It belongs to the type rather than to any one
 // record, so it is stated here instead of onto every record the type wrote.
@@ -98,7 +98,7 @@ public record ExportLinks(string Human, string Raw);
 // its own `export.parts.line:` block, and `Exporter.Value` fills each from the source named beside it.
 // A fixed record would spell one type's words onto every other type's parts.
 //
-// `docs/export-format.md` says what a self-contained line costs and buys, and why a line carries a `path`
+// `docs/design/export.md` says what a self-contained line costs and buys, and why a line carries a `path`
 // and an `anchor` rather than the two resolved links the manifest's templates build from them.
 
 // Bundle documents

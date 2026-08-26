@@ -9,7 +9,7 @@ from inside the corpus.
 | `kac validate`         | a record breaks a check the schema declares                                 |
 | `kac generate --check` | a generated file no longer matches the records and schema it was built from |
 
-[Checks](checks.md) is the page for adding a check. A corpus that ships an agent plugin adds
+[Checks](design/checks.md) is the page for adding a check. A corpus that ships an agent plugin adds
 [`export`](cli/export.md) and [`bundle`](cli/bundle.md) beside the two, so a change that breaks the export or the bundle
 fails the pull request. [Automation](framework/automation.md) says what the checks are for.
 

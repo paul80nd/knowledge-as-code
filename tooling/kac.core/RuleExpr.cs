@@ -1,5 +1,5 @@
 // A hand-rolled lexer, parser, type checker and evaluator, taking no dependency.
-// `docs/schema/expressions.md` is the reference for what an expression may say.
+// `docs/design/expressions.md` is the reference for what an expression may say.
 //
 // The grammar is frozen, and that is the property being bought rather than a shortfall. A rule that will
 // not fit wants a new fact: one method on `Facts`, one row in `Functions` below. One that genuinely needs
@@ -59,7 +59,7 @@ public static class RuleExpr
         };
 
     // The callable surface by name, for the meta-test holding the reference table in
-    // `docs/schema/expressions.md` against it. Exposed for the reason `IdChecks.IdStyles` is: a reader learns
+    // `docs/design/expressions.md` against it. Exposed for the reason `IdChecks.IdStyles` is: a reader learns
     // what an expression may call from a page, and the page has to be a list of what runs rather than
     // a list of what is spelled correctly.
     public static IReadOnlyCollection<string> FunctionNames => Functions.Keys;

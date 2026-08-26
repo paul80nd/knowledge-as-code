@@ -29,12 +29,12 @@ public sealed record ExportRun(string GeneratedAt, DateOnly Today, string? Commi
 // The corpus projected as data, for a consumer that reads it rather than cloning it.
 //
 // This reads each type's `export:` block and holds no list of its own, so a new type needs no line here.
-// `docs/export-format.md` says what it all comes to, and why.
+// `docs/design/export.md` says what it all comes to, and why.
 public static class Exporter
 {
     // The shape of the output, versioned independently of anything the corpus says about itself.
     // `Bundler` refuses an export built to another shape, so moving this number means rebuilding every
-    // export on disk. `docs/export-format.md` says what moves it.
+    // export on disk. `docs/design/export.md` says what moves it.
     public const int FormatVersion = 2;
 
     public const string ManifestFile = "manifest.json";
@@ -151,7 +151,7 @@ public static class Exporter
     // nothing here to sit beneath. A type whose records narrow nothing at all sorts by id throughout,
     // which is the same rule with every record a root.
     //
-    // What a reader may take from that order, and what they may not, is in `docs/export-format.md`.
+    // What a reader may take from that order, and what they may not, is in `docs/design/export.md`.
     // The short of it: generality holds within a chain and says nothing across roots.
     //
     // Two records sharing an id would share an output filename, and the `TryAdd` below keeps the first.
@@ -242,7 +242,7 @@ public static class Exporter
         return kept.Append(doc.Text[at..section.BodyEnd]).ToString();
     }
 
-    // One section, cut to the fidelity its type declared. `docs/export-format.md` says what each promises.
+    // One section, cut to the fidelity its type declared. `docs/design/export.md` says what each promises.
     //
     // The unwrap comes first, so a summary is the paragraph the author wrote rather than the line the
     // wrap column happened to end.
@@ -260,11 +260,11 @@ public static class Exporter
 
     // Every absent value an export writes, spelled one way. A corpus writing `narrows:` with nothing
     // after it has not narrowed anything, so blank and missing arrive as the same `null`. What that buys
-    // a consumer is in `docs/export-format.md`.
+    // a consumer is in `docs/design/export.md`.
     private static string? Absent(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
     // The source's wrap column, taken back out. Blank lines are the author's and stay. A block a joiner
-    // would mangle is left as written. `docs/export-format.md` says why the export does this at
+    // would mangle is left as written. `docs/design/export.md` says why the export does this at
     // all, and why the doubtful cases go the way they do.
     private static string Unwrap(string text)
     {
@@ -306,7 +306,7 @@ public static class Exporter
 
     // The flat file of every addressable part of a type, one part to a line. JSONL rather than pretty
     // JSON, and each line repeats what a reader would otherwise have to look up.
-    // `docs/export-format.md` says what that costs and what it buys.
+    // `docs/design/export.md` says what that costs and what it buys.
     //
     // What a line holds is the type's to declare. Nothing here names a key, so a second type exporting
     // parts costs an `export.parts.line:` block and no line of C#.
@@ -347,7 +347,7 @@ public static class Exporter
     // the record would find it. A table's rows are ordered by their author, and that order carries the
     // binding levels: sorting them here would leave the export and the rendered page disagreeing about
     // which obligations come first, and the page is where a person reads the policy. `clause-order`
-    // holds the author to the grouping instead. `docs/export-format.md` states both rules.
+    // holds the author to the grouping instead. `docs/design/export.md` states both rules.
     private static IEnumerable<PartRow> Ordered(IEnumerable<PartRow> parts, PartSpec spec) =>
         spec.Source == PartSpec.Table
             ? parts
@@ -401,7 +401,7 @@ public static class Exporter
     // Every id here is read, and none is inferred. These references are the `redefinitions-are-reciprocal`
     // rule showing through, and that rule is about a term and its counterpart. The link has to name the
     // counterpart, and the anchor is where it names it. A link naming a record and no term inside it
-    // resolves to nothing, and `Unread` below reports it. `docs/export-format.md` sets out why the
+    // resolves to nothing, and `Unread` below reports it. `docs/design/export.md` sets out why the
     // guess that suggests itself is refused.
     private static IReadOnlyList<string>? SeeAlso(Doc doc, PartRow part, Dictionary<string, Doc> byPath, Tree tree)
     {

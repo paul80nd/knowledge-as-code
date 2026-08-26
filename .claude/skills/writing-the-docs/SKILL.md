@@ -76,6 +76,25 @@ inventing. A rewrite drops a fact more easily than it drops a word, and the repl
 "the corpus's own `.schema/` holds one file per type."
 Not: "each type declares its fields and rules in a YAML file beside them."
 
+**A claim about the current state needs something that fails when the state moves.** *Not yet built*, *the only one
+today*, *no corpus has yet* and any count all read as settled facts. `docs/index.md` called `new` and `update`
+specifications written before their commands, and went on saying it after both shipped, because nothing broke on the
+day they did.
+
+Three ways to write such a claim safely, in the order to reach for them.
+
+1. **Let the generator write it.** The command table on [`cli/index.md`](../../../docs/cli/index.md) and the usage
+   block at the head of each command page are built from the parser itself.
+2. **Let a test hold it.** `DocumentationCitationTests` resolves every symbol and every verb a page names.
+   `DefaultTypesTests` holds the count of types that ship.
+3. **Name the command that answers.** `kac checks` prints the checks and `kac --version` prints the release. A reader
+   who can run one line needs no number from you.
+
+Where none of the three reaches it, the claim is one to leave out.
+
+**Write a count once, and cite it from everywhere else.** Two pages carrying one number is one page that will be wrong.
+The floor already says to cite rather than restate, and a count is where that rule earns its keep.
+
 ## Choose the page by its reader
 
 `README.md` and `PACKAGE.md` are one page each, so a fact either belongs there or it does not. The site adds the
@@ -87,8 +106,8 @@ beside whatever it explains. A command page argues its case under *How it works*
 `--check`.
 
 **A second page is earned by a second reader.** [`cli/checks.md`](../../../docs/cli/checks.md) is for somebody running
-the command. [`checks.md`](../../../docs/checks.md) is for somebody adding one. Two readers, so two pages. One reader
-who wants more detail is a `####` under the heading they are already on.
+the command. [`design/checks.md`](../../../docs/design/checks.md) is for somebody adding one. Two readers, so two
+pages. One reader who wants more detail is a `####` under the heading they are already on.
 
 **Where two pages share a subject, neither argues the other's case.** The command page says what running the command
 does and cites the other for why. A claim written on both goes out of step on the day one is edited.
@@ -151,8 +170,8 @@ nav does not list is a separate fault, caught by `NavigationTests`, because the 
 ## Leave the reader somewhere to go
 
 **A page names what to read next.** One link, chosen for where the reader now is. A list of everything is the same as no
-link at all. Write: "[Checks](../checks.md) is the page for adding a check, or for deciding whether the one you want
+link at all. Write: "[Checks](../design/checks.md) is the page for adding a check, or for deciding whether the one you want
 already exists."
-Not: "[Checks](../checks.md) says where a check comes from, what the schema pass refuses, and why a rule is data."
+Not: "[Checks](../design/checks.md) says where a check comes from, what the schema pass refuses, and why a rule is data."
 
 **No page assumes another was read first**, unless it links that page in the sentence that needs it.
