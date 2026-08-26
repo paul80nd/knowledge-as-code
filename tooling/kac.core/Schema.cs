@@ -292,6 +292,11 @@ public sealed record RuleSpec
     // rule means to someone reading the type page: one is a diagnosis, the other is a definition.
     public string? Message { get; init; }
 
+    // The framework standings `alignment-rollup` holds a policy's roll-up to, named as the corpus's own
+    // register writes them. It sits in the schema for the reason every threshold does: which standings
+    // oblige a summary is a judgement a corpus makes, and remaking it should not be a release.
+    public IReadOnlyList<string> Postures { get; init; } = [];
+
     // The ceiling `y-statement-present` holds a Y-statement to. It sits in the schema for the reason
     // every threshold does: a number chosen rather than measured is one a corpus tunes, and tuning it
     // should not be a release. It sits on the rule rather than on a field because no field carries it.
@@ -934,6 +939,7 @@ public sealed partial class Schema
             Compiled = compiled,
             Message = message,
             Problem = problem,
+            Postures = Yaml.StrList(rule.Get("postures")),
             MaxWords = rule.Get("max-words") is YamlScalarNode { Value: { } mw } && int.TryParse(mw, out var words)
                 ? words
                 : null

@@ -555,6 +555,18 @@ checks:
       A framework cited with no reference into it compares as the framework alone, so `[WCAG 2.2 AA]` in
       a cell answers an `aligns-with` entry carrying no `clauses:`.
 
+  framework-posture:
+    severity: error
+    description: A framework a clause cites is placed on the corpus's framework register.
+    notes: >
+      The register says whether we are obliged to a framework, self-obligated to it, or borrowing from
+      it, and `alignment-rollup` reads that to decide which references its roll-up carries. A framework
+      the register does not place has no standing to read, so the roll-up would silently leave it out
+      and the index would under-report coverage with nothing saying so.
+
+      Reported once per framework rather than once per clause citing it. The fix is one entry on the
+      register, and a policy citing the same framework six times has one fault.
+
   terms-alphabetical:
     severity: warning
     description: A glossary's entries read in alphabetical order.

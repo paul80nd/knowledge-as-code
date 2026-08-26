@@ -6,10 +6,6 @@ status: draft
 aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.8, A.8.25, A.8.26, A.8.27, A.8.28 ]
-  - framework: NIST SSDF 1.1
-    clauses: [ PO.1, PW.1, PW.5 ]
-  - framework: OWASP ASVS 4.0
-    clauses: [ V1, V5 ]
   - framework: UK GDPR
     clauses: [ Art.35 ]
 review-by: "2027-08-04"

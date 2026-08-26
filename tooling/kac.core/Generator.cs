@@ -546,8 +546,9 @@ public static class Generator
             null),
         ("alternatives-verdict", [new("alternatives-verdict")], "Each Alternatives Considered bullet states a verdict.",
             null),
-        ("alignment-rollup", [new("alignment-rollup")],
-            "The framework references in `aligns-with` and in the `Alignment` column are the same set.",
+        ("alignment-rollup / framework-posture", [new("alignment-rollup"), new("framework-posture")],
+            "`aligns-with` carries every binding reference the `Alignment` column cites, and the register "
+            + "places each framework.",
             t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
         ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
         ("dependency-cycle", [new("dependency-cycle")],

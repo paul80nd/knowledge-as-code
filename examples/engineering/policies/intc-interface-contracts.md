@@ -6,8 +6,6 @@ status: draft
 aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.8.26, A.8.27 ]
-  - framework: OWASP ASVS 4.0
-    clauses: [ V4, V13 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ api, contracts, interoperability, versioning ]

@@ -25,9 +25,14 @@ public interface ICorpusRule
 //
 // Reporting takes the document to report against, which is the difference from `RuleContext`: a rule
 // spanning documents chooses which of them a finding belongs to, and it is rarely the whole set.
+//
+// `Tree` is the corpus's files, for the rule whose question is answered by a page no record links into
+// the graph. A framework register is that case: it carries no frontmatter and no id, so it is absent
+// from `Docs` while being the only place the corpus says what a framework standing is.
 public sealed record CorpusRuleContext(
     IReadOnlyList<Doc> Docs,
     IReadOnlyDictionary<string, Doc> ById,
+    Tree Tree,
     TypeSchema Type,
     RuleSpec Spec,
     Action<Doc, CheckId, string, int?> Err,

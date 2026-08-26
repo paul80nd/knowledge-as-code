@@ -6,8 +6,6 @@ status: draft
 aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.8.3, A.8.9, A.8.31, A.8.33 ]
-  - framework: NIST SSDF 1.1
-    clauses: [ PO.5 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ environments, production-data, separation ]

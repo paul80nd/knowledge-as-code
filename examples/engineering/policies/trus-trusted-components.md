@@ -6,8 +6,6 @@ status: draft
 aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.19, A.5.21, A.5.22, A.5.23, A.5.32, A.8.7, A.8.19 ]
-  - framework: NIST SSDF 1.1
-    clauses: [ PS.2, PS.3, PW.4 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ dependencies, provenance, supply-chain ]

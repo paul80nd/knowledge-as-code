@@ -4,12 +4,8 @@ tier: normative
 category: delivery
 status: draft
 aligns-with:
-  - framework: DORA metrics
-    clauses: [ deploy-frequency, recovery-time ]
   - framework: ISO 27001:2022
     clauses: [ A.8.9, A.8.19, A.8.32 ]
-  - framework: NIST SSDF 1.1
-    clauses: [ PO.3, PO.4, PS.2 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ change-management, deployment, release-management ]

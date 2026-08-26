@@ -4,8 +4,6 @@ tier: normative
 category: delivery
 status: draft
 aligns-with:
-  - framework: Azure WAF
-    clauses: [ performance-efficiency ]
   - framework: ISO 27001:2022
     clauses: [ A.8.6 ]
 review-by: "2027-08-04"

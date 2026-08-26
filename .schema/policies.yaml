@@ -82,12 +82,17 @@ fields:
         type: list
         of: string
         description: The references inside that framework this policy's clauses map to.
-    description: The frameworks this policy's clauses map to, each with the references they reach.
+    description: The binding frameworks this policy's clauses map to, with the references they reach.
     notes: >
-      Every reference the document's clauses carry, grouped under the framework supplying it, so the
-      generated index reads as a coverage table. The clause table is where a mapping is stated and this is
-      a summary of it, so a reference here that no clause carries is a claim of coverage the document
-      cannot show. `alignment-rollup` holds the two together in both directions.
+      Every binding reference the document's clauses carry, grouped under the framework supplying it, so
+      the generated index reads as a coverage table. The clause table is where a mapping is stated and
+      this is a summary of it, so a reference here that no clause carries is a claim of coverage the
+      document cannot show. `alignment-rollup` holds the two together in both directions.
+
+      Binding is the word doing the work. A clause may cite a framework we took ideas from, and that
+      citation is provenance rather than obligation. The roll-up carries the frameworks `frameworks.md`
+      files as obliged or self-obligated, so an index read as a coverage table answers what we are on
+      the hook for rather than what we have read.
 
       Grouped rather than flat because the number of frameworks a policy touches stays small while the
       number of references does not. A data protection policy maps to two frameworks and twenty of their
@@ -192,12 +197,18 @@ index:
 rules:
   - id: alignment-rollup
     description: >
-      `aligns-with` and the `Alignment` column carry the same references, grouped by framework.
+      `aligns-with` carries every binding reference the `Alignment` column cites, and no others.
     severity: error
+    postures: [Obliged, Self-obligated]
     # Both directions, because either half going stale is the same defect wearing a different face. A
     # reference in the table and not in the roll-up leaves the index under-reporting coverage, and one in
     # the roll-up and not in the table is a claim of coverage no clause can show. The second is the worse
     # of the two: it reads as evidence.
+    #
+    # `postures:` names the standings that oblige a summary, as `frameworks.md` heads them. A clause may
+    # cite a framework we took ideas from, and the roll-up leaves it: the generated index is read as a
+    # coverage table, so a framework binding nothing dilutes the only question that table answers. The
+    # standings are the corpus's judgement rather than the tool's, which is why they are declared here.
     #
     # An error rather than a warning, unlike the other checks over this table. The rest report how a
     # clause is written, where an author's judgement is the thing being questioned. This one reports two

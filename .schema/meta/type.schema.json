@@ -714,6 +714,15 @@
           "type": "string",
           "minLength": 1
         },
+        "postures": {
+          "description": "The framework standings a roll-up rule holds a policy's `aligns-with` to, written as the corpus's own framework register heads them. A framework filed under any other standing may be cited by a clause and stays out of the roll-up.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
         "max-words": {
           "description": "The ceiling a Y-statement is held to.",
           "type": "integer",

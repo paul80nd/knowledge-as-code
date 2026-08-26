@@ -4,12 +4,8 @@ tier: normative
 category: delivery
 status: draft
 aligns-with:
-  - framework: DORA metrics
-    clauses: [ change-failure-rate, lead-time ]
   - framework: ISO 27001:2022
     clauses: [ A.8.25, A.8.28, A.8.29 ]
-  - framework: NIST SSDF 1.1
-    clauses: [ PO.3, PO.4, PW.6, PW.8 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ continuous-integration, quality-gates, testing ]

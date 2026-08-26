@@ -123,6 +123,10 @@ aligns-with:
     clauses: [ A.5.17, A.8.24 ]
 ```
 
+It carries the frameworks that bind, which `frameworks.md` files under **Obliged** or **Self-obligated**. A clause may
+cite a framework filed under **Inspiration** to say where an idea came from, and that citation stays out of the
+roll-up: the generated index is read as a coverage table, and a framework binding nothing dilutes it.
+
 **A list reads alphabetically.** No list field's sequence carries meaning, so alphabetical is the order that scan-reads
 and the one two authors agree on without discussion. Numbers inside an entry compare as numbers, so `A.8.7` comes
 before `A.8.29`.

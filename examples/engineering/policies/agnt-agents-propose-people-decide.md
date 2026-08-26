@@ -6,8 +6,6 @@ status: draft
 aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.8.25, A.8.30 ]
-  - framework: NIST AI RMF 1.0
-    clauses: [ GOVERN, MANAGE, MAP, MEASURE ]
 review-by: "2027-08-05"
 owner: paul.law
 tags: [ ai-agents, knowledge-management, provenance ]
