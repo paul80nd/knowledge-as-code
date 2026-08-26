@@ -370,7 +370,10 @@ checks:
     description: A part reference names a document that exists and carries that part.
     notes: >
       Written `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`, and checked wherever it appears,
-      since any type may cite a part. Three ways it fails, and each is reported in the words that fit:
+      since any type may cite a part. Both forms the corpus writes are read: a code span, and the label
+      of a reference link whose definition lands the reader on the part. The label needs asking about
+      most, because a definition points at a page and a page resolves whichever part the label claimed.
+      Three ways it fails, and each is reported in the words that fit:
       the document does not exist, the document's type keeps no parts at all, or the part is not one
       that document carries. A colon where the dot belongs is reported here too, naming the form to
       write: the parser reads a citation by its separator, so one spelled with a colon would otherwise

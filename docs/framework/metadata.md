@@ -96,6 +96,10 @@ Two separators reach past an id, each with one job.
 `gls-knowledge-as-code.corpus` names the glossary, then the term. Each citation resolves against the record it names, so
 a reference to a part that does not exist fails the build. So does a reference into a type that keeps no parts.
 
+Write it as a code span where the citation is the point, or as the label of a reference link where the reader should
+land on the part: `` `pol-VURM.TIMEBOX` `` and `[pol-VURM.TIMEBOX]` are the same citation, and `kac validate` resolves
+both.
+
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, record, part. A
 record the reading corpus holds is cited bare, and qualifying one is an error, because two spellings of a single
 obligation defeat search. Nothing yet resolves a scoped reference, since no corpus imports another.

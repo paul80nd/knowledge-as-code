@@ -238,9 +238,20 @@ public partial class Doc
 
         // Every link, written inline or resolved from a reference or a shortcut. Iterating LinkInline
         // leaves code out: a code span carries no LinkInline, and neither does a fenced or indented block.
+        var citedLabels = new HashSet<string>(StringComparer.Ordinal);
         foreach (var link in ast.Descendants<LinkInline>())
         {
             if (link.IsImage) continue;
+
+            // A citation written as a reference link, where the label is the part id and the definition
+            // lands the reader on it. Collected beside the code spans so both forms answer to `part-ref`.
+            // Nothing else asks what the label claims: the definition points at a page, and the page
+            // resolves whichever part was named. Once per label, because the label is defined once
+            // however many times the prose reaches for it.
+            if (link.Reference?.Label is { } label && NamesARecord(label, schema)
+                && PartCitationRegex().IsMatch(label) && citedLabels.Add(label))
+                doc.PartRefs.Add((label, link.Line + 1));
+
             doc.Links.Add(new LinkRef
             {
                 Target = link.Url ?? "",

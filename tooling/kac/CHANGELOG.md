@@ -14,6 +14,20 @@ surface may still change shape.
 A push to `main` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and that publish tags
 the commit and opens a release carrying the section for that version.
 
+## 0.12.0 - 2026-08-26
+
+### Fixed
+
+- **`part-ref` reads a citation written as a reference link.** A corpus cites a part two ways: as a code span, and as
+  the label of a reference link that lands the reader on it. Only the code span was resolved. A label naming a clause
+  or a term that does not exist passed `kac validate`, because its definition points at a page and the page resolves
+  whichever part the label claimed. Both forms now report under `part-ref`, so a corpus using the link form may see
+  errors it did not before.
+
+- **A type index links a record through the category folder holding it.** `kac generate` wrote the filename alone, so
+  a record filed under a category below the type's folder was linked as though it sat beside the index. Standards are
+  filed that way by declaration, and every link to one was dead.
+
 ## 0.11.0 - 2026-08-25
 
 ### Added
