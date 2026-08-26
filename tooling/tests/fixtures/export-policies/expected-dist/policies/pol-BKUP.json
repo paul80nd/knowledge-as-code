@@ -1,0 +1,17 @@
+{
+  "type": "policies",
+  "path": "policies/bkup-recoverability.md",
+  "fields": {
+    "id": "pol-BKUP",
+    "title": "Every store we run can be brought back",
+    "category": "operations",
+    "status": "active",
+    "review-by": "2030-06-01"
+  },
+  "sections": {
+    "Purpose": "A store we cannot restore is a store we have already lost. We hold a copy of each one away from what it serves, and we prove the copy reads back before the day we need it to.",
+    "Scope": "Every store we operate, in every environment.",
+    "Exceptions": "A store we can rebuild from another store carries no copy of its own. We record what rebuilds it, and the clauses above bind whatever we rebuild it from."
+  },
+  "links": null
+}

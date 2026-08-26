@@ -1,0 +1,31 @@
+{
+  "formatVersion": 2,
+  "corpus": null,
+  "shortcode": null,
+  "contentVersion": null,
+  "mechanismVersion": null,
+  "commit": "<commit>",
+  "dirty": null,
+  "generatedAt": "<generatedAt>",
+  "publishing": {
+    "target": "none",
+    "humanTemplate": null,
+    "rawTemplate": null,
+    "ref": null
+  },
+  "types": [
+    {
+      "type": "policies",
+      "shapeVersion": 2,
+      "records": 1,
+      "parts": 5,
+      "dir": "policies",
+      "partsFile": "policies/clauses.jsonl",
+      "sections": {
+        "Purpose": "summary",
+        "Scope": "full",
+        "Exceptions": "full"
+      }
+    }
+  ]
+}
