@@ -9,8 +9,11 @@ runbook, declared in the corpus's own `.schema/`.
 
 ## `git ls-files` decides what exists
 
-`kac` lists a corpus's Markdown with `git ls-files`, so **`.gitignore`, `.git/info/exclude` and your global excludes
-all count**. `.git/` is never walked. A file git does not list is a file no command sees.
+`kac` lists a corpus with `git ls-files --cached --others --exclude-standard`, so `.gitignore`, `.git/info/exclude`
+and your global excludes all count. `.git/` is never walked. A file git does not list is a file no command sees.
+
+The listing carries every file, not only the Markdown. Records are the Markdown in it, and the rest is what a link
+resolves against.
 
 This is why [Running it in CI](../ci.md) asks you to check the repository out with git rather than download an archive.
 
@@ -23,7 +26,8 @@ Five rules narrow that listing, and a file matching any of them is not a record.
   discovered as no record and is still checked, under `template-fields`.
 * **`knowledge-as-code/`**, which holds the framework's own documentation. It is excluded as a *record* only, and the
   pass below still reads it.
-* **`.git/`, `.idea/` and `.claude/`.** Nothing reads these at all.
+* **`.git/`, `.idea/` and `.claude/` at the corpus root.** Nothing reads these at all. The rule tests the first
+  segment of the path, so a `.claude/` nested inside a type folder is not caught by it.
 * **A root `README.md` and a root `CLAUDE.md`.** Both are orientation pages.
 * **Anything outside a folder that maps to a type.** A record lives in its type's folder, so those folders are the
   whole of what is read.
@@ -63,11 +67,14 @@ in is that file as it stands. [Generation](generation.md) says what each block i
 ## The fallback walk honours nothing
 
 A tree that is not a repository, or one where git cannot be run, is walked for `*.md` instead. That walk skips `.git`,
-`.idea` and `.claude` by name and honours no exclude file.
+`.idea` and `.claude` at the root and honours no exclude file.
 
-The five rules above still apply, so what changes is narrow: a Markdown file the corpus had ignored is discovered and
-validated. The tool's own test harness assembles such a tree deliberately, and a corpus outside version control meets
-it without asking.
+Two things change, and the second is the one that bites. A Markdown file the corpus had ignored is discovered and
+validated. And the walk lists Markdown alone where `git ls-files` lists everything, so a link to an image or a YAML
+file resolves against nothing and fails `link-resolves`.
+
+The tool's own test harness assembles such a tree deliberately. A corpus outside version control meets it without
+asking, which is why nothing is proved on this path.
 
 ## Where to go next
 

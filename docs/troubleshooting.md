@@ -79,7 +79,7 @@ and runs over a tree in any state.
 bundle: no export at .dist/export/. Run it first: kac export
 ```
 
-`bundle` reads what `export` wrote and never reads the corpus. Run the two in order:
+`bundle` reads what `export` wrote, and never loads the corpus itself. Run the two in order:
 
 ```bash
 kac export
@@ -117,7 +117,7 @@ The five you are most likely to meet:
 |------------------|---------------------------------------------------------------------|
 | `required-field` | The type's schema declares a field this record does not carry.      |
 | `id-format`      | The id does not match the style its type declares.                  |
-| `link-resolves`  | A relative link points at a file that is not there.                 |
+| `link-resolves`  | An internal link points at a file that is not there.                |
 | `identity-id`    | The id in the identity line disagrees with the one in frontmatter.  |
 | `unknown-key`    | A frontmatter key is not one the schema declares.                   |
 

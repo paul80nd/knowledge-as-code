@@ -40,6 +40,9 @@ them, and every finding names the file and the key.
 | A `column.<Header>` at a header the type's `parts.columns:` does not declare             | `schema-shape`       |
 | A `part.lead` or `part.aside` on a type sourcing its parts from a table                  | `schema-shape`       |
 | A `part.level` on a type declaring no binding or advisory modals                         | `schema-shape`       |
+| A `parts.source:` outside the sources the tool extracts                                  | `schema-dispatch`    |
+| A `parts.section:` at a section the type's `sections:` block does not declare            | `schema-shape`       |
+| A table-sourced `parts:` block declaring no `binding:`                                   | `schema-shape`       |
 | An export entry declaring no fidelity at all                                             | `schema-shape`       |
 | A fidelity no export carries                                                             | `schema-dispatch`    |
 | A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:`   | `schema-shape`       |

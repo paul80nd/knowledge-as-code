@@ -24,18 +24,18 @@ links the part of it that explains the command.
 
 ## Which command answers which question
 
-Four commands answer about a corpus and three of them take a `--check`. They ask different questions, and a corpus can
-fail one while passing the others.
+Four questions get asked about a corpus, and one command answers each. Two of them take a `--check`. A corpus can fail
+one question while passing the others.
 
-| You want to know                                     | Run                    |
-|-------------------------------------------------------|------------------------|
-| are the records correct against the schema           | `kac validate`         |
-| is the derived content in step with the records      | `kac generate --check` |
-| has this corpus fallen behind its framework          | `kac update --check`   |
-| what could CI report against this corpus at all      | `kac checks`           |
+| You want to know                                | Run                    |
+|-------------------------------------------------|------------------------|
+| are the records correct against the schema      | `kac validate`         |
+| is the derived content in step with the records | `kac generate --check` |
+| has this corpus fallen behind its framework     | `kac update --check`   |
+| what could CI report against this corpus at all | `kac checks`           |
 
-A corpus can be fresh and behind, or in step and stale. `validate` asks whether your records are correct, and a corpus
-a long way behind its framework can still be entirely valid.
+A corpus can be fresh and behind, or in step and stale. `validate` asks whether your records are correct, and a corpus a
+long way behind its framework can still be entirely valid.
 
 `checks` reads the schema and prints what *could* fire. `validate` fires it against documents. A check absent from a
 validate run has either not been declared or not been tripped, and `checks` is what tells those two apart.
@@ -59,8 +59,8 @@ A redirected stream carries no colour on its own. An environment naming a runner
 it back on, and GitHub Actions is one such runner. Set `NO_COLOR` wherever the bytes have to be the same everywhere.
 
 `--help` and `--version` belong to the parser rather than to any one command. `kac --help` lists the commands, and
-`kac <command> --help` prints the same usage that command's page carries. `--version` names the release and the commit
-it was built from.
+`kac <command> --help` prints that command's options. Each page's usage block is generated from the same command model.
+`--version` names the release and the commit it was built from.
 
 ## Exit codes
 

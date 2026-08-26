@@ -50,17 +50,18 @@ mkdir my-corpus && cd my-corpus
 kac new
 ```
 
-It asks four things and has a default for each: what the corpus is called, which types it adopts, where it publishes,
-and what builds it. Answer nothing at all and you still end with a corpus that validates. `--yes` takes every default
-and asks nothing, which is what a pipeline runs.
+It asks what the corpus is called, which types it adopts, where it publishes and what builds it, with a default for
+each. Name a publishing target and it asks two more: where a person reads a record, and where an agent fetches one.
+Answer nothing at all and you still end with a corpus that validates, holding every type the framework declares. `--yes` takes every
+default and asks nothing, which is what a pipeline runs.
 
 The folder does not have to be a repository yet. `new` offers to run `git init` where there is none. It finishes by
 running `generate`, then `validate`, then `git add -A`:
 
 ```text
-new: wrote 40 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code.
-updated 4 of 8 generated file(s).
-validated 2 document(s) and 2 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+new: wrote 100 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at 3b812bb.
+updated 1 of 38 generated file(s).
+validated 3 document(s) and 17 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
 ```
 

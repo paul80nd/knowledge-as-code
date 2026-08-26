@@ -46,11 +46,11 @@ condition the schema states and the tool evaluates, reports under its own id. Ad
 editing this tool, and [Rule expressions](expressions.md) is the reference for what one may say.
 
 A question the grammar cannot ask needs a rule written in C# instead, and that rule names the check id it reports under:
-`no-dependency-cycles` reports as `dependency-cycle`. More than half the rules declared today run nothing yet, and the
-paragraph below says how that is written.
+`no-dependency-cycles` reports as `dependency-cycle`. Many of the rules declared in the schema run nothing yet, and
+`kac checks` prints the ones that report. The paragraph below says how an unbuilt one is written.
 
-`dependency-cycle` is the one rule that reads every record at once. It reports a loop once, against the lowest id on
-that loop.
+Two rules read every record at once. `dependency-cycle` reports a loop once, against the lowest id on that loop, and
+`alignment-rollup` reads the framework register beside the records.
 
 The schema also declares rules that do not run. Each is an intention, carrying a `description:` and no `severity:`, and
 rendered on its type page under *Declared, not yet enforced*. Naming a severity without running is the one arrangement

@@ -24,9 +24,11 @@ kac new [--ci <SYSTEM>] [--from <URL|PATH>] [--name <NAME>] [--no-color] [--path
 
 `new` turns the folder you are standing in into a corpus, meaning one repository of knowledge records kept in git. It
 fetches the framework from a template repository at a ref, writes the files that template says a corpus receives, and
-writes the two no template can supply: `.corpus.yaml`, which names your corpus, and a `README.md` to rewrite.
+writes what no template can supply: `.corpus.yaml`, which names your corpus, and a `README.md` to rewrite where the
+template sends none of its own.
 
-It asks four things and has a default for each. Answer nothing at all and you still end with a corpus that validates.
+It asks what the corpus is called, which types it adopts, where it publishes and what builds it, with a default for
+each. Answer nothing at all and you still end with a corpus that validates, holding every type the template declares.
 [Layers](../design/layers.md) says which files it writes and who owns each one afterwards.
 
 Use it once, on an empty or nearly empty folder. Taking a newer framework into a corpus that already exists is
@@ -42,7 +44,8 @@ kac new
 ```
 
 It asks for the corpus's name, which types to adopt, where it publishes and which CI system builds it. Each has a
-default, and each has a flag so nothing is reachable only by typing.
+default and each has a flag. Name a publishing target and it asks two more, for where a person reads a record and
+where an agent fetches one, and those two have no flag.
 
 | Asked              | Default                          | Flag           |
 |--------------------|----------------------------------|----------------|
@@ -54,21 +57,23 @@ default, and each has a flag so nothing is reachable only by typing.
 ### Create one without being asked anything
 
 ```bash
-kac new --yes --name my-corpus --types adrs,glossary --ci github
+kac new --yes --name my-corpus --ci github
 ```
 
 `--yes` takes the default for every answer not given, which is what a pipeline runs. A run with no terminal and a
 missing answer exits rather than waiting, because a hung pipeline is worse than a failed one.
 
-The run names each file, says what it withheld, then generates, validates and stages:
+It names each file as it writes it, then generates, validates and stages. The tail of a default run:
 
 ```text
-new: 61 file(s) withheld for the types this corpus declined.
 new: did not write azure-pipelines.yml: this corpus is built by github.
-new: wrote 40 file(s) for demo-corpus, taken from /path/to/template.
-updated 4 of 8 generated file(s).
+new: wrote 101 file(s) for my-corpus, taken from /path/to/template.
+updated 1 of 38 generated file(s).
+validated 3 document(s) and 17 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
 ```
+
+Taking the framework from a URL rather than a folder adds the commit it resolved, as `…knowledge-as-code at 3b812bb.`
 
 It stops short of committing. Read what is staged, then:
 
@@ -94,6 +99,8 @@ fault for what it is:
 glossary.md
   error  [link-resolves]  link target 'services.md' does not resolve.  (glossary.md:36)
 
+validated 2 document(s) and 2 template(s), skipped 0 without frontmatter. 6 error(s), 0 warning(s)
+new: staged. `git status` shows everything this wrote, and the first commit is yours.
 new: the corpus this created does not validate. a page it received links to a type this corpus declined. those pages
 are yours from here, so edit the links out. the files are written and staged.
 ```

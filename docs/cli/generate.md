@@ -19,8 +19,9 @@ kac generate [--check] [--no-color]
 from frontmatter and the schema rather than written by hand. Each type's index page, the frontmatter reference and
 checks table on each type page, and the taxonomy's own tables are all written from what the corpus holds now.
 
-Only the region between each pair of markers is rewritten, so the words around a generated block stay yours.
-[Generation](../design/generation.md) says what every block is built from.
+A generated block is rewritten between its markers, so the words around it stay yours. Each type's `_index.md` is
+written whole instead, and carries no markers. [Generation](../design/generation.md) says what each one is built
+from.
 
 Run it after you add or edit a record, and before you commit. Run `--check` in CI, which writes nothing.
 

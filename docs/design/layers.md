@@ -20,9 +20,9 @@ be worse.
 
 ## Every file resolves to exactly one layer
 
-The template's `manifest.yaml` declares the rules, and the first matching rule wins. `to:` sends a file somewhere other
-than where it sat upstream, which is how a template serving its schema from a repository root places it at a corpus's
-own root.
+The template's `manifest.yaml` declares the rules, and the first matching rule wins. A rule with no `to:` lands its
+file on the path it was read from, which is how `.schema/` reaches a corpus root. `to:` sends a file somewhere else,
+which is how `template/knowledge-as-code/` lands at a corpus's own `knowledge-as-code/`.
 
 | Layer      | What happens                                                                                   |
 |------------|------------------------------------------------------------------------------------------------|
@@ -91,8 +91,9 @@ in it. So `new` builds the file from the answers it was given and stamps it with
 path within it, the ref followed, the commit resolved, the template's version and the date. That block is what `update`
 reads later.
 
-One key arrives bare. `new` neither asks for `shortcode` nor invents one, because a shortcode cannot be changed once
-another corpus has cited it.
+`shortcode:` always arrives bare. `new` neither asks for it nor invents one, because a shortcode cannot be changed
+once another corpus has cited it. `path:`, `ref:` and `commit:` arrive bare too wherever the take could not answer
+them, which is every `--from` naming a folder, since a folder resolves no commit.
 
 **`README.md` is written, because the template's own is withheld.** The template's README describes the template rather
 than a corpus, so a corpus that copied everything would arrive with no README at all. What `new` writes is short: the
@@ -115,8 +116,8 @@ as though anything is missing, so the check is the only place it surfaces. Move 
 entry.
 
 This is what proves the framework's own repository, where each corpus under `examples/` holds a materialised copy of
-what the template sends. A file whose destination is where it was already read from is shared with every corpus there,
-and `.schema/` is the file in that position.
+what the template sends. A file whose destination is where it was already read from is shared with every corpus there
+rather than copied into each. `.schema/` and the two writing skills are the rules in that position.
 
 ## Where to go next
 

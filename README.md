@@ -106,7 +106,7 @@ kac validate
 ```
 
 Install it into a [tool manifest](https://learn.microsoft.com/dotnet/core/tools/local-tools-how-to-use) instead to pin
-it, which is what a corpus with CI of its own wants. The version lands in `dotnet-tools.json` at the repository root and
+it, which is what a corpus with CI of its own wants. The version lands in `.config/dotnet-tools.json` and
 travels with it. Every machine and every build then runs the version the corpus was written against.
 
 ```bash

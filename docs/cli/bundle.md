@@ -21,7 +21,8 @@ above, so the result can be installed.
 What ends up in the plugin is a function of what the export carried: a corpus shipping no glossary ships no glossary
 skill either. [The plugin bundle](../design/plugin.md) says what decides that, and what stops a run.
 
-Run `export` first. `bundle` reads that output and never the corpus.
+Run `export` first. `bundle` reads that output, plus the plugin tree and one key of `.corpus.yaml`. It never loads the
+corpus itself.
 
 ## Examples
 

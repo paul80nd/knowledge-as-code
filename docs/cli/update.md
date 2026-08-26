@@ -55,9 +55,9 @@ It computes the plan, prints it, and exits non-zero if anything would change. `-
 a tree in any state:
 
 ```text
-update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code.
+update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 3b812bb.
 update: withheld 61 file(s) for types this corpus has not adopted.
-update: withheld 1 continuous integration starter(s) this corpus does not hold.
+update: withheld 1 continuous integration starter(s) this corpus does not hold. which system builds it is not an update's to decide.
 this corpus is behind its framework. these would change:
 WRITE, framework files this corpus holds differently:
   .schema/adrs.yaml
@@ -80,10 +80,14 @@ kac update --drop-type tools
 ```
 
 Adopting writes the type's schema, its root page and its template, and adds the name to `types:`. Dropping is the
-asymmetric half, and it refuses where the folder still holds records:
+asymmetric half, and it refuses while the folder still holds records:
 
-Deleting records is deleting knowledge. The message names the count and offers the two honest ways forward: delete them
-deliberately, or leave the type adopted.
+```text
+update: glossary/ holds 3 record(s), and deleting a record is deleting knowledge. delete them yourself and run this
+again, or leave 'glossary' adopted.
+```
+
+The message names the count and the two ways forward. Deleting records is yours to do deliberately.
 
 ### Refresh the seed files too
 

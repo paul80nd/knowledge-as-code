@@ -23,7 +23,7 @@ dotnet new tool-manifest
 dotnet tool install KnowledgeAsCode.Tool
 ```
 
-That writes `dotnet-tools.json` at the repository root and names the version in it. CI restores from that file, so every
+That writes `.config/dotnet-tools.json` and names the version in it. CI restores from that file, so every
 machine runs the same `kac`.
 
 ```bash

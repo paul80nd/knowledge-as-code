@@ -65,13 +65,13 @@ The catalogue is flat and keyed by id, so a grep over it answers faster than rea
 
 ## Known limits
 
-**A run also compares the catalogue against the checks table on each type page**, and a table that has drifted is
-named on stderr and exits `1`. That happens whether or not you asked for `--json`, so a drifted table makes this
-command fail even though nothing is wrong with the catalogue itself. The table is hand-worded for whoever writes a
-record, and several catalogue ids fold into one row of it, so the two are compared rather than generated from each
-other.
+**A run also compares the catalogue against the rows the generator would write onto a type page**, and a mismatch is
+named on stderr and exits `1`. That happens whether or not you asked for `--json`, so a drift there fails this command
+even though nothing is wrong with the catalogue itself. Those rows are hand-worded for whoever writes a record, and
+several catalogue ids fold into one of them, so the two lists are compared and neither is built from the other.
 
-**A check the schema declares with no severity does not appear.** It is an intention, and the type page renders it
-under *Declared, not yet enforced*.
+**A rule with no compiled `expr:` does not appear under its own rule id.** A rule with no severity is an intention, and
+the type page renders it under *Declared, not yet enforced*. A rule implemented in C# reports under the check id it
+emits instead, which the catalogue does carry.
 
 [Checks](../design/checks.md) is the page for adding a check, and says why a rule is data wherever it can be.

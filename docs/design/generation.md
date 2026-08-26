@@ -31,11 +31,13 @@ with no folder gets no index at all.
 **The frontmatter reference lists the universal fields first, marked `†`, then the type's own.** Each row renders that
 field's `description`, falling back to `notes` where the schema declares none.
 
-**The checks table omits the rows a type cannot trip.** A rule it does not declare, and a reciprocal or
-mirrors-section field it does not have, are left out, so each page lists only its own checks.
+**The checks table omits the rows a type cannot trip.** Each row carries a predicate over the type's own declaration,
+so a rule it does not declare, a field shape it does not use and a parts source it does not have are all left out. Each
+page lists only its own checks.
 
-**The universal field reference is documented once for the whole taxonomy**, in
-`knowledge-as-code/metadata.md`, so a type page carries only the fields its own type declares.
+**`schema-universal` documents the universal fields once for the whole taxonomy**, in
+`knowledge-as-code/metadata.md`, as the schema declares them. A type page lists them again under `†`, narrowed to
+whatever that type made of them.
 
 **The taxonomy's five blocks** are `types-placement` for the decision table, `types-detail` for the catalogue by tier,
 `types-versus` for the disambiguations, and `types-graph` and `types-edges` for the relation diagram and its edges.
@@ -62,7 +64,9 @@ A block whose markers have gone is written by nothing.
 
 ## Only adopted types are generated
 
-Generation covers the types named in `types:` in [`.corpus.yaml`](../corpus-descriptor.md) and no others.
+Generation covers the types named in `types:` in [`.corpus.yaml`](../corpus-descriptor.md) and no others. A corpus
+that has not declared the key yet has its adoption read off the folders instead, and a type counts there only where
+both its page and its folder are present.
 
 A type the corpus declined is left alone whatever `.schema/` says about it, down to the hand-written text between the
 markers on a page left behind. Writing there would create an artefact no generated list of this corpus's types names,
