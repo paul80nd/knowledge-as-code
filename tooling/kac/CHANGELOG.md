@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **`part-ref` reads a part id written beside a link.** `[pol-EVER].BRANCH` cites `pol-EVER.BRANCH`, so a document
+  citing six clauses of one policy carries one link definition rather than six. The part id has to sit against the
+  closing bracket, so a full stop closing a sentence after a link is still a full stop. A corpus already writing this
+  form may see errors it did not before.
+
 ## 0.12.0 - 2026-08-26
 
 ### Fixed

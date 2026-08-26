@@ -27,23 +27,23 @@ that service in that environment. Nothing else holds a secret.
 ### A secret comes from the store
 
 - A service **MUST** read every secret from the managed store, through an identity granted to the workload
-  ([pol-SCRT.STORE]).
-- An environment below production **MUST** hold its own secrets, distinct from production's ([pol-ENVS.REUSE]).
+  ([pol-SCRT].STORE).
+- An environment below production **MUST** hold its own secrets, distinct from production's ([pol-ENVS].REUSE).
 
 ### Nowhere else holds a secret
 
 - A repository **MUST NOT** contain a secret, in source, in a configuration file, in a pipeline definition or in a test
-  fixture ([pol-SCRT.EMBED]).
-- A build **MUST NOT** bake a secret into an artefact or an image ([pol-SCRT.EMBED]).
+  fixture ([pol-SCRT].EMBED).
+- A build **MUST NOT** bake a secret into an artefact or an image ([pol-SCRT].EMBED).
 - A service **MUST NOT** write a secret to a log, to a console, to an error message or to a support ticket
-  ([pol-SCRT.LOGS]).
+  ([pol-SCRT].LOGS).
 - A pipeline **MUST** run a secret scanner over the repository and its history, and fail on a finding
-  ([pol-SCRT.LEAKED]).
+  ([pol-SCRT].LEAKED).
 
 ### Every secret rotates
 
-- A secret **MUST** be replaceable in the store without a code change or a rebuild ([pol-SCRT.ROTATE]).
-- Every secret **MUST** rotate on a period recorded against it in the store ([pol-SCRT.ROTATE]).
+- A secret **MUST** be replaceable in the store without a code change or a rebuild ([pol-SCRT].ROTATE).
+- Every secret **MUST** rotate on a period recorded against it in the store ([pol-SCRT].ROTATE).
 
 ## Examples
 
@@ -77,11 +77,5 @@ does not reach any of them. Reading from the store at run time keeps rotation to
 - [pol-ENVS] keeps production credentials unreachable from a lower environment.
 - [pol-SCRT] commits us to holding secrets in a controlled store and never embedding one.
 
-[pol-ENVS]: ../../policies/envs-environment-separation.md
-[pol-ENVS.REUSE]: ../../policies/envs-environment-separation.md#clauses
-[pol-SCRT]: ../../policies/scrt-secrets-are-never-embedded.md
-[pol-SCRT.EMBED]: ../../policies/scrt-secrets-are-never-embedded.md#clauses
-[pol-SCRT.LEAKED]: ../../policies/scrt-secrets-are-never-embedded.md#clauses
-[pol-SCRT.LOGS]: ../../policies/scrt-secrets-are-never-embedded.md#clauses
-[pol-SCRT.ROTATE]: ../../policies/scrt-secrets-are-never-embedded.md#clauses
-[pol-SCRT.STORE]: ../../policies/scrt-secrets-are-never-embedded.md#clauses
+[pol-ENVS]: ../../policies/envs-environment-separation.md#clauses
+[pol-SCRT]: ../../policies/scrt-secrets-are-never-embedded.md#clauses

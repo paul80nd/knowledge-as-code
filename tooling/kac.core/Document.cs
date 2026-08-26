@@ -109,7 +109,8 @@ public partial class Doc
     // rows of a table, or the headings a section is written as. `PartTableHeaders` belongs to the table
     // source alone and is null where the named section holds no table: the section being absent and the
     // section holding prose are different faults, and only the parser can tell them apart. `PartRefs`
-    // collects every code span shaped like a citation of a part, from anywhere in the document.
+    // collects every citation of a part, in each form the corpus writes one, from anywhere in the
+    // document.
     public List<string>? PartTableHeaders;
     public readonly List<PartRow> Parts = [];
     public int PartSectionLine;
@@ -238,22 +239,36 @@ public partial class Doc
 
         // Every link, written inline or resolved from a reference or a shortcut. Iterating LinkInline
         // leaves code out: a code span carries no LinkInline, and neither does a fenced or indented block.
-        var citedLabels = new HashSet<string>(StringComparer.Ordinal);
+        var citations = new HashSet<string>(StringComparer.Ordinal);
         foreach (var link in ast.Descendants<LinkInline>())
         {
             if (link.IsImage) continue;
 
-            // The other place a citation is written: the label of a reference link, or the text of an
-            // inline one. Collected beside the code spans so every form a citation takes answers to the
-            // same pass. See `part-ref` in .schema/_checks.yaml.
-            //
-            // Once per spelling, unlike a code span, because a reference is defined once however often
-            // the prose reaches for it and the definition is the line an author would fix.
+            // The other places a citation is written: the label of a reference link, the text of an
+            // inline one, and a part id following either. Collected beside the code spans so every form
+            // a citation takes answers to the same pass. See `part-ref` in .schema/_checks.yaml.
             var cited = link.Reference?.Label ?? (link.FirstChild as LiteralInline)?.Content.ToString();
-            if (cited is not null && NamesARecord(cited, schema) && citedLabels.Add(cited))
+            if (cited is not null && NamesARecord(cited, schema))
             {
-                if (PartCitationRegex().IsMatch(cited)) doc.PartRefs.Add((cited, link.Line + 1));
-                else if (ColonCitationRegex().IsMatch(cited)) doc.ColonCitations.Add((cited, link.Line + 1));
+                // The cheapest form: the label names the record and the part id follows the closing
+                // bracket as text, so a document citing six clauses of one policy defines it once.
+                // A label already carrying the whole citation ends it, and reading a second part id
+                // onto it would build `pol-VURM.TIMEBOX.Also` and match nothing.
+                var citation = PartCitationRegex().IsMatch(cited)
+                    ? cited
+                    : cited + PartSuffix(text, link.Span.End + 1);
+
+                // Once per citation, where a code span is collected every time it appears: a
+                // reference is defined once however often the prose reaches for it, and the definition
+                // is the line an author would fix. The whole citation is the key rather than the
+                // label, because several parts of one record share a definition and keying the label
+                // would collect the first of them and drop the rest.
+                if (citations.Add(citation))
+                {
+                    if (PartCitationRegex().IsMatch(citation)) doc.PartRefs.Add((citation, link.Line + 1));
+                    else if (ColonCitationRegex().IsMatch(citation))
+                        doc.ColonCitations.Add((citation, link.Line + 1));
+                }
             }
 
             doc.Links.Add(new LinkRef
@@ -343,6 +358,29 @@ public partial class Doc
     // held to lowercase and to four characters, so a citation that mis-cases it is not seen here at all.
     [System.Text.RegularExpressions.GeneratedRegex(@"^[a-z]{2,4}-[A-Za-z0-9][A-Za-z0-9-]*\.[A-Za-z0-9][A-Za-z0-9_-]*$")]
     private static partial System.Text.RegularExpressions.Regex PartCitationRegex();
+
+    // What a link carries as a citation beyond its label: a separator against the closing bracket and a
+    // part id against that, as the `.TIMEBOX` in `[pol-VURM].TIMEBOX`. Empty where the link ends the
+    // citation, which leaves the label to answer for itself.
+    //
+    // Nothing may stand between the separator and the id. A sentence ending on a link is ordinary
+    // prose, and its full stop is followed by a space, so `See [pol-VURM]. The policy` reaches no part
+    // called `The`. A digit opens a part id, since a heading slugs to one, so `[pol-VURM].2024` is read
+    // as a citation and reported as unresolved. Nothing here can tell that from a part genuinely
+    // numbered.
+    //
+    // A colon is collected here too, for `ColonCitationRegex` to word: a citation spelled with one
+    // should be told the form to write, as it is in a code span. A link reference definition writes a
+    // colon in the same place and is a block, so it never reaches this.
+    private static string PartSuffix(string text, int at)
+    {
+        if (at + 1 >= text.Length) return "";
+        if (text[at] is not ('.' or ':') || !char.IsAsciiLetterOrDigit(text[at + 1])) return "";
+
+        var end = at + 1;
+        while (end < text.Length && (char.IsAsciiLetterOrDigit(text[end]) || text[end] is '_' or '-')) end++;
+        return text[at..end];
+    }
 
     // Whether the half before the dot opens with a prefix some type declares. The shape alone cannot
     // tell a citation from a filename written as a code span: `vurm-vulnerability-remediation.md` has

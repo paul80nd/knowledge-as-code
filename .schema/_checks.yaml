@@ -370,8 +370,11 @@ checks:
     description: A part reference names a document that exists and carries that part.
     notes: >
       Written `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`, and checked wherever it appears,
-      since any type may cite a part. Every form the corpus writes is read: a code span, and a link
-      carrying the citation as its text or as its label. A link needs asking about most, because it
+      since any type may cite a part. Every form the corpus writes is read: a code span, a link
+      carrying the citation as its text or as its label, and a link naming the record with the part id
+      against its closing bracket, as `[pol-VURM].TIMEBOX`. That third form needs one link
+      definition however many parts of the record a document cites. The id has to touch the bracket, so
+      a full stop closing a sentence after a link stays a full stop. A link needs asking about most, because it
       resolves against a page rather than against the part, so the half after the dot reaches nothing
       that would judge it. Three ways it fails, and each is reported in the words that fit:
       the document does not exist, the document's type keeps no parts at all, or the part is not one
