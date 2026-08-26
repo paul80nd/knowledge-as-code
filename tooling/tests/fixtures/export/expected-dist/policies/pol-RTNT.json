@@ -1,0 +1,17 @@
+{
+  "type": "policies",
+  "path": "policies/rtnt-retention.md",
+  "fields": {
+    "id": "pol-RTNT",
+    "title": "Data is kept for as long as somebody needs it",
+    "category": "governance",
+    "status": "draft",
+    "review-by": "2030-01-01"
+  },
+  "sections": {
+    "Purpose": "We keep a record for as long as somebody needs it, and we delete it once nobody does. A store nobody prunes grows into a liability at the same rate it grows in size.",
+    "Scope": "Every store we operate, whatever holds it.",
+    "Exceptions": "A store under a legal hold outlives its retention period. We record the hold against the store, and the period resumes on the day the hold lifts."
+  },
+  "links": null
+}

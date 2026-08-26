@@ -1,7 +1,8 @@
 # `bundle`
 
-What `kac bundle` assembles, asserted through the CLI. The corpus is the export fixture's, because a bundle is built
-from an export and rebuilding a different one here would leave two accounts of what an export contains.
+What `kac bundle` assembles, asserted through the CLI. The corpus holds the same three glossaries the export fixture
+does, because a bundle is built from an export and a second shape of export here would leave two accounts of what one
+contains. `export-type` narrows the run to `glossary`, which is also where the suite pins `--type`.
 
 ## What the fixture is shaped to reach
 

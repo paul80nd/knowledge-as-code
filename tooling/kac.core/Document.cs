@@ -124,6 +124,12 @@ public partial class Doc
     public readonly List<Section> Sections = [];
     public readonly List<LinkRef> Links = [];
     public readonly List<string> DefinedLabels = [];
+
+    // Where each link reference definition sits in the document's text. A definition renders as nothing,
+    // and this corpus writes them in a block at the foot, which puts them inside whichever section is
+    // written last. Held as spans because the export carries a section as its author's prose, and a
+    // reader of that prose would otherwise meet a run of paths nobody sees on the page.
+    public readonly List<(int Start, int End)> DefinitionSpans = [];
     public readonly HashSet<string> UsedLabels = new(StringComparer.OrdinalIgnoreCase);
     public readonly List<(string inner, int line)> BareBracketTokens = [];
     public QuoteBlock? YStatement;
@@ -247,8 +253,10 @@ public partial class Doc
         }
 
         foreach (var def in ast.Descendants<LinkReferenceDefinition>())
-            if (def.Label is not null)
-                doc.DefinedLabels.Add(def.Label);
+        {
+            if (def.Label is not null) doc.DefinedLabels.Add(def.Label);
+            doc.DefinitionSpans.Add((def.Span.Start, def.Span.End + 1));
+        }
 
         // Bare [bracket] tokens left in prose. An undefined shortcut reference such as [ADR-0099]
         // renders as literal text. Markdig emits a failed link opener '[' as its own literal inline and

@@ -121,10 +121,16 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
         [.. binding.Concat(advisory).OrderByDescending(m => m.Length)];
 
     // The modal a part opens with, or null where it opens with none. Held here rather than at either
-    // caller, because `part-level-order` reports the order rows appear in and the exporter writes the
+    // caller, because `clause-order` reports the order rows appear in and the exporter writes the
     // level onto a line: two readings free to disagree would rank a clause the export calls advisory.
     public string? Modal(string text) =>
         ModalsLongestFirst.FirstOrDefault(m => text.StartsWith(m, StringComparison.Ordinal));
+
+    // The fragment a link into a part has to carry, which is the part's id for one source only. A
+    // heading is its own address, so its slug answers as the id and as the anchor alike. A table row
+    // has no fragment: no renderer emits one for a row, and the id beside it is authored. So a link
+    // into a clause lands on the section holding the table, which is as close as a renderer allows.
+    public string Anchor(string partId) => Source == Table ? Publishing.Anchor(Section) : partId;
 
     // The sources an extractor exists for. Read by `schema-dispatch` from here, so a type naming a source
     // nothing reads is reported instead of quietly offering no parts.

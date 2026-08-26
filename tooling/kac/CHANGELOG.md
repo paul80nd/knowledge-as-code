@@ -14,6 +14,31 @@ surface may still change shape.
 A push to `main` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and that publish tags
 the commit and opens a release carrying the section for that version.
 
+## 0.11.0 - 2026-08-25
+
+### Added
+
+- **A policy's clauses travel in an export.** `.schema/policies.yaml` declares an `export:` block, so `kac export`
+  writes `policies/clauses.jsonl` and one file per policy beside the glossary's. Each clause line carries `level`,
+  holding the modal the clause opens with, so a consumer tells a `MUST` from a `COULD` without parsing the words.
+  `Purpose` travels as its opening paragraph, and `Scope` and `Exceptions` travel whole.
+
+### Fixed
+
+- **A part's `anchor` is read from where its type takes its parts.** A heading-sourced type carries the part id, which
+  is a heading's slug and its anchor alike. A table-sourced type carried that id too, and no fragment resolves to an
+  authored clause id. It now carries the slug of the section holding the table, so a link built from a clause line
+  lands on the table.
+
+- **A carried section leaves the link reference definitions behind.** They sit in a block at the foot of a record,
+  which puts them inside whichever section is written last, so `kac export` joined them onto the end of that section's
+  prose. A consumer read a run of paths that nobody sees on the page. A glossary's export is unchanged, because `Scope`
+  is never a glossary's last section.
+
+- **`kac export` leaves a clause table in the order its author wrote it.** Every type's parts were sorted on their
+  text, which is right for a glossary and wrong for a table grouped by binding level: an advisory clause could reach a
+  consumer ahead of the obligations. A heading-sourced type's parts still sort alphabetically.
+
 ## 0.10.0 - 2026-08-25
 
 ### Added

@@ -58,3 +58,30 @@
 # defining `record` — the order is stable and claims nothing, so nothing here asserts it does.
 .dist/export/glossary/terms.jsonl :: "record":"gls-estate","part":"record"
 .dist/export/glossary/terms.jsonl :: "record":"gls-framework","part":"record"
+
+# A clause line and a term line share no key beyond the ones every line carries. Each type declares its
+# own, so a policy's `level` and a glossary's `definition` stay in their own files.
+.dist/export/policies/clauses.jsonl :: "level":"MUST"
+.dist/export/policies/clauses.jsonl :: !"definition"
+.dist/export/glossary/terms.jsonl :: !"level"
+
+# A table row is not an address a renderer emits, so the two halves of a clause's address differ: `part`
+# names the clause and `anchor` names the section holding the table. A term line carries them equal.
+.dist/export/policies/clauses.jsonl :: "part":"TIMEBOX","status":"draft","reviewBy":"2030-01-01","path":"policies/rtnt-retention.md","anchor":"clauses"
+
+# A cell the row leaves empty is absent the way every other absence is.
+.dist/export/policies/clauses.jsonl :: "level":"SHOULD","alignment":null
+
+# One manifest entry per exporting type, each carrying its own shape version and its own fidelities.
+.dist/export/manifest.json :: "type": "policies"
+.dist/export/manifest.json :: "partsFile": "policies/clauses.jsonl"
+.dist/export/manifest.json :: "Purpose": "summary"
+
+# The definitions sit in a block at the foot of the record, which is inside whichever section is written
+# last. They render as nothing, so the section a consumer reads as prose ends on the author's words.
+.dist/export/policies/pol-RTNT.json :: "Exceptions": "A store under a legal hold outlives its retention period. We record the hold against the store, and the period resumes on the day the hold lifts."
+.dist/export/policies/pol-RTNT.json :: !gls-estate
+
+# A clause's cross-reference has no body to be read from, so the id it names stays inside the words.
+.dist/export/policies/clauses.jsonl :: "clause":"MUST record a legal hold against whatever gls-estate calls a store"
+.dist/export/policies/clauses.jsonl :: !"seeAlso"

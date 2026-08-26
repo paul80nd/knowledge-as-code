@@ -24,6 +24,19 @@
       "sections": {
         "Scope": "full"
       }
+    },
+    {
+      "type": "policies",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 3,
+      "dir": "policies",
+      "partsFile": "policies/clauses.jsonl",
+      "sections": {
+        "Purpose": "summary",
+        "Scope": "full",
+        "Exceptions": "full"
+      }
     }
   ]
 }

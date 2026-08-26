@@ -33,6 +33,21 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
+        policies@1
+          fields: id, title, category, status, review-by
+          sections: Purpose=summary, Scope=full, Exceptions=full
+          parts: full
+            id: part.id
+            clause: part.text
+            level: part.level
+            alignment: column.Alignment
+            type: record.type
+            record: record.id
+            part: part.key
+            status: front.status
+            reviewBy: front.review-by
+            path: record.path
+            anchor: part.anchor
         """;
 
     [Fact]

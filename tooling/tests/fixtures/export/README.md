@@ -1,8 +1,8 @@
 # `export`
 
-What `kac export` writes, asserted through the CLI. The corpus reads as three ordinary glossaries, and each thing it
-pins is a property of that content rather than a note left inside it — a fixture whose prose describes the test is a
-fixture nobody can read as an example.
+What `kac export` writes, asserted through the CLI. The corpus reads as three ordinary glossaries and a policy, and
+each thing it pins is a property of that content rather than a note left inside it. A fixture whose prose describes the
+test is a fixture nobody can read as an example.
 
 ## What the corpus is shaped to reach
 
@@ -27,6 +27,19 @@ refused.
 
 **Wrapped prose and a paragraph break.** `gls-estate` carries a `**Not:**` line wrapped across two source lines, and a
 `Scope` of two paragraphs. The export joins the first and keeps the second, which is the whole of the unwrap rule.
+
+**A second type, taking its parts from a table.** `pol-RTNT` is an ordinary policy: three clauses under `Clauses`, the
+binding two bold and the advisory one plain. It is here because a glossary cannot show what a table source does
+differently.
+
+* Its rows travel in the order the author wrote them. `TIMEBOX` precedes `HOLD` on the page, and sorting the two on
+  their words would swap them.
+* Its `part` and its `anchor` differ. A clause id is authored and no renderer emits a fragment for a table row, so a
+  link into a clause lands on the section holding the table.
+* Its line carries `level` and `alignment`, and a term line has no keys for either.
+
+The run exports both types, so the manifest holds an entry apiece. A run narrowed with `--type` belongs to the
+[`bundle` fixture](../bundle/README.md).
 
 **No git repository.** The runner assembles the corpus in a temp directory and never initialises one, so no ref
 resolves and no link is written. That is the corpus-publishes-nowhere path, and it is the only publishing state a
