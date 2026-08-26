@@ -9,7 +9,8 @@ public static class DocumentRules
     [
         new YStatementPresent(),
         new AlternativesHaveVerdicts(),
-        new TermsAreAlphabetical()
+        new TermsAreAlphabetical(),
+        new AlignmentRollup()
     ];
 
     public static readonly IReadOnlyDictionary<RuleId, IDocumentRule> ByRuleId =

@@ -4,6 +4,8 @@ tier: normative
 category: delivery
 status: draft
 aligns-with:
+  - framework: Azure WAF
+    clauses: [ cost-optimization ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ cost, efficiency, non-functional-requirements ]

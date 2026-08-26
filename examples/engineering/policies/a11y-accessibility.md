@@ -4,6 +4,11 @@ tier: normative
 category: governance
 status: draft
 aligns-with:
+  - framework: EN 301 549
+    clauses: [ §9 ]
+  - framework: PSBAR 2018
+    clauses: [ reg.8 ]
+  - framework: WCAG 2.2 AA
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ accessibility, inclusive-design, legal-obligation ]

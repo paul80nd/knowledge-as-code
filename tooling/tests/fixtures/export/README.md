@@ -36,7 +36,8 @@ differently.
   their words would swap them.
 * Its `part` and its `anchor` differ. A clause id is authored and no renderer emits a fragment for a table row, so a
   link into a clause lands on the section holding the table.
-* Its line carries `level` and `alignment`, and a term line has no keys for either.
+* Its line carries `level`, and a term line has no key for it. Alignment stays behind: a reference resolves through
+  `frameworks.md`, and no consumer receives that page.
 
 The run exports both types, so the manifest holds an entry apiece. A run narrowed with `--type` belongs to the
 [`bundle` fixture](../bundle/README.md).

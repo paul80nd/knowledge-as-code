@@ -4,6 +4,10 @@ tier: normative
 category: delivery
 status: draft
 aligns-with:
+  - framework: Azure WAF
+    clauses: [ operational-excellence, reliability ]
+  - framework: UK GDPR
+    clauses: [ Art.5(1)(d) ]
 review-by: "2027-08-09"
 owner: paul.law
 tags: [ data-quality, integrity, provenance ]

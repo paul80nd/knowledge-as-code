@@ -4,14 +4,11 @@ tier: normative
 category: security
 status: draft
 aligns-with:
-  - ISO27001:2022 A.5.9
-  - ISO27001:2022 A.5.12
-  - ISO27001:2022 A.5.14
-  - ISO27001:2022 A.5.34
-  - ISO27001:2022 A.8.10
-  - ISO27001:2022 A.8.11
-  - ISO27001:2022 A.8.12
-  - ISO27001:2022 A.8.24
+  - framework: ISO 27001:2022
+    clauses: [ A.5.9, A.5.12, A.5.14, A.5.34, A.8.10, A.8.11, A.8.12, A.8.24 ]
+  - framework: UK GDPR
+    clauses: [ Art.5(1)(c), Art.5(1)(e), Art.5(1)(f), Art.6, Art.17, Art.25, Art.28, Art.30, Art.32, Art.32(1)(a),
+               Art.44, Ch.III ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ classification, data-protection, encryption, privacy ]

@@ -45,6 +45,13 @@ public class PartRow
     // export line draws on one through `column.<Header>`.
     public IReadOnlyDictionary<string, string>? Cells;
 
+    // The link labels each cell carries, in the order it writes them, keyed the way `Cells` is.
+    //
+    // Flattening a cell drops the link and keeps only what it displayed, so `[ISO 27001:2022].A.8.24`
+    // arrives in `Cells` as `ISO 27001:2022.A.8.24` with nothing marking where the label ended. A rule
+    // reading a reference out of a cell needs that boundary back, and the label is it.
+    public IReadOnlyDictionary<string, IReadOnlyList<string>>? CellLinks;
+
     // Where the part's body begins and ends in the document's text, for a part written as a heading:
     // everything beneath it, up to the next part, the end of the section holding it, or the end of the
     // document. Both zero for a part written as a table row, whose body is the row.
@@ -531,7 +538,8 @@ public partial class Doc
                     ? Md.PlainText(bold)
                     : null,
                 Line = row.Line + 1,
-                Cells = Cells(doc.PartTableHeaders, cells)
+                Cells = Cells(doc.PartTableHeaders, cells),
+                CellLinks = Links(doc.PartTableHeaders, cells)
             });
         }
 
@@ -550,7 +558,19 @@ public partial class Doc
             return byHeader;
         }
 
-   }
+        // The same pairing, for the labels rather than the text. A link written inline carries no label,
+        // so its display text stands in: what a reader sees is what the flattened cell holds either way.
+        static Dictionary<string, IReadOnlyList<string>> Links(IReadOnlyList<string>? headers,
+            List<ContainerInline?> row)
+        {
+            var byHeader = new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase);
+            for (var i = 0; i < Math.Min(headers?.Count ?? 0, row.Count); i++)
+                byHeader.TryAdd(headers![i], row[i] is { } inline
+                    ? [.. inline.Descendants<LinkInline>().Select(l => l.Label ?? Md.PlainText(l))]
+                    : []);
+            return byHeader;
+        }
+    }
 
     private static string StripFences(string text, YamlFrontMatterBlock block)
     {

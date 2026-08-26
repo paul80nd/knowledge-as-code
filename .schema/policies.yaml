@@ -71,14 +71,36 @@ fields:
   aligns-with:
     required: false
     type: list
-    of: string
-    pattern: '^ISO27001:2022 A\.\d+\.\d+$'
-    description: 'e.g. `ISO27001:2022 A.8.25`. The document-level roll-up of what its clauses map to.'
+    of: object
+    entry:
+      framework:
+        required: true
+        type: string
+        description: The framework's link label, as the `Alignment` cell writes it, version included.
+      clauses:
+        required: false
+        type: list
+        of: string
+        description: The references inside that framework this policy's clauses map to.
+    description: The frameworks this policy's clauses map to, each with the references they reach.
     notes: >
-      Every Annex A reference the document's clauses carry, collected here so the generated index can be
-      read as a coverage table. The clause table is where a mapping is stated and this is a summary of it,
-      so a reference here that no clause carries is a claim of coverage the document cannot show. What our
-      standing against a framework is, whether obliged, self-obligated or inspiration, is stated
+      Every reference the document's clauses carry, grouped under the framework supplying it, so the
+      generated index reads as a coverage table. The clause table is where a mapping is stated and this is
+      a summary of it, so a reference here that no clause carries is a claim of coverage the document
+      cannot show. `alignment-rollup` holds the two together in both directions.
+
+      Grouped rather than flat because the number of frameworks a policy touches stays small while the
+      number of references does not. A data protection policy maps to two frameworks and twenty of their
+      references, and a flat list would give the frontmatter twenty lines saying which two.
+
+      The framework is named by the label its `Alignment` cell carries, so `[ISO 27001:2022].A.8.24` in
+      the table is `ISO 27001:2022` here. Naming it by the `frameworks.md` anchor instead would drop the
+      version, which is the half a coverage claim turns on.
+
+      A framework a policy cites with no reference into it carries no `clauses:`. `[WCAG 2.2 AA]` is the
+      whole citation, because what the clause aligns with is the standard entire.
+
+      What our standing against a framework is, whether obliged, self-obligated or inspiration, is stated
       once in `frameworks.md` and never in a policy.
 
   review-by:
@@ -125,7 +147,7 @@ parts:
   advisory: [SHOULD, COULD]
 
 export:
-  version: 1
+  version: 2
   fields: [id, title, category, status, review-by]
   sections:
     Purpose: summary
@@ -137,7 +159,6 @@ export:
       id: part.id
       clause: part.text
       level: part.level
-      alignment: column.Alignment
       type: record.type
       record: record.id
       part: part.key
@@ -155,9 +176,11 @@ export:
     holding a clause without them reads a stricter policy than the one we wrote. `Purpose` travels as
     its opening paragraph, which is where a policy states its position.
 
-    `alignment` is the clause's own cell, so a mapping reaches a consumer against the obligation
-    carrying it. The document's `aligns-with` roll-up stays behind: it summarises those cells, and a
-    consumer reading both would hold two accounts of one fact.
+    Alignment stays behind entire, cell and roll-up alike. A reference resolves through
+    `frameworks.md`, which says whether we are obliged, self-obligated or merely borrowing, and no
+    consumer receives that page. A mapping carried without it says a policy touches A.8.24 and leaves
+    the reader to guess what touching it commits us to. Nothing asks for the mapping today, so it is
+    the export's to add back once something does.
 
     A clause carries no `seeAlso`: a cross-reference is read from the body beneath a part, and a table
     row has none. A clause pointing at another policy reaches a consumer as the id inside its words.
@@ -167,6 +190,19 @@ index:
   sort: id
 
 rules:
+  - id: alignment-rollup
+    description: >
+      `aligns-with` and the `Alignment` column carry the same references, grouped by framework.
+    severity: error
+    # Both directions, because either half going stale is the same defect wearing a different face. A
+    # reference in the table and not in the roll-up leaves the index under-reporting coverage, and one in
+    # the roll-up and not in the table is a claim of coverage no clause can show. The second is the worse
+    # of the two: it reads as evidence.
+    #
+    # An error rather than a warning, unlike the other checks over this table. The rest report how a
+    # clause is written, where an author's judgement is the thing being questioned. This one reports two
+    # copies of one fact disagreeing, and there is no reading of that a policy meant.
+
   - id: posture-belongs-to-frameworks
     description: '"compliant", "certified" or "registered" near a framework reference. Standing belongs in `frameworks.md`.'
     severity: warning

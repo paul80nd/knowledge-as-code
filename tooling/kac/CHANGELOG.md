@@ -24,6 +24,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `entry-shape` reports an entry that is not a mapping, and `entry-key` an entry carrying a key the field does not
   declare or missing one it requires.
 
+- **`alignment-rollup` holds a policy's `aligns-with` to its clause table.** Both directions: a framework reference in
+  an `Alignment` cell and not in the roll-up, and one in the roll-up that no clause cites. The message names the
+  reference and the side it is missing from.
+
 - **`part-ref` reads a part id written beside a link.** `[pol-EVER].BRANCH` cites `pol-EVER.BRANCH`, so a document
   citing six clauses of one policy carries one link definition rather than six. The part id has to sit against the
   closing bracket, so a full stop closing a sentence after a link is still a full stop. A corpus already writing this
@@ -34,6 +38,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **An index column holding a list renders its entries.** A column naming a list field read the value as a scalar and
   wrote an empty cell, so `aligns-with` on a policy index had been blank since the column was added. A column naming a
   list of objects renders what names each entry, which for `aligns-with` is the framework.
+
+- **A policy's `aligns-with` is grouped by framework.** It was a flat list of strings held to an ISO 27001 pattern,
+  which is why no other framework could appear in it. Each entry now carries a `framework:` and the `clauses:` reached
+  inside it, and any framework may. A corpus holding policies rewrites the field.
+
+- **A clause line carries no `alignment`.** `policies` moves to `export.version: 2`. A framework reference resolves
+  through the corpus's own `frameworks.md`, which no consumer receives, so the mapping reached one without what says
+  what it is worth.
 
 ## 0.12.0 - 2026-08-26
 

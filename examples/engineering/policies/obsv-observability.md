@@ -4,9 +4,10 @@ tier: normative
 category: operations
 status: draft
 aligns-with:
-  - ISO27001:2022 A.8.15
-  - ISO27001:2022 A.8.16
-  - ISO27001:2022 A.8.17
+  - framework: Azure WAF
+    clauses: [ operational-excellence, reliability ]
+  - framework: ISO 27001:2022
+    clauses: [ A.8.15, A.8.16, A.8.17 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ alerting, logging, monitoring, observability ]

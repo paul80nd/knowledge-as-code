@@ -2,6 +2,6 @@
 
 # Policy Index (POL)
 
-| ID       | Title                                                                            | Category   | Status | Aligns with | Review by  |
-|----------|----------------------------------------------------------------------------------|------------|--------|-------------|------------|
-| pol-DEVI | [Deviations are recorded, owned and time-bound](devi-deviations-are-recorded.md) | governance | draft  |             | 2027-08-23 |
+| ID       | Title                                                                            | Category   | Status | Aligns with    | Review by  |
+|----------|----------------------------------------------------------------------------------|------------|--------|----------------|------------|
+| pol-DEVI | [Deviations are recorded, owned and time-bound](devi-deviations-are-recorded.md) | governance | draft  | ISO 27001:2022 | 2027-08-23 |

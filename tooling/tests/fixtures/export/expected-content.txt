@@ -69,8 +69,9 @@
 # names the clause and `anchor` names the section holding the table. A term line carries them equal.
 .dist/export/policies/clauses.jsonl :: "part":"TIMEBOX","status":"draft","reviewBy":"2030-01-01","path":"policies/rtnt-retention.md","anchor":"clauses"
 
-# A cell the row leaves empty is absent the way every other absence is.
-.dist/export/policies/clauses.jsonl :: "level":"SHOULD","alignment":null
+# An advisory clause carries its level like any other, so a consumer filtering on obligation drops it
+# without reading the words.
+.dist/export/policies/clauses.jsonl :: "level":"SHOULD"
 
 # One manifest entry per exporting type, each carrying its own shape version and its own fidelities.
 .dist/export/manifest.json :: "type": "policies"

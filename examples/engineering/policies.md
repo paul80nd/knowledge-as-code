@@ -69,7 +69,7 @@ under governance is the clearest of them.
 | `owner` *†    | string                                          | A named person, never a team alias.                                                 |
 | `tags` †      | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `category` *  | `security` `delivery` `operations` `governance` | The broad area the commitment belongs to. Controlled, and deliberately few.         |
-| `aligns-with` | list                                            | e.g. `ISO27001:2022 A.8.25`. The document-level roll-up of what its clauses map to. |
+| `aligns-with` | list                                            | The frameworks this policy's clauses map to, each with the references they reach.   |
 | `review-by` * | date                                            | Quoted. Annual is usually right for a policy.                                       |
 
 \* Field is required  
@@ -132,6 +132,7 @@ under governance is the clearest of them.
 | `enum`                           | error   | Enum values are in range and lowercase.                                                                           |
 | `field-pattern`                  | error   | Values match the pattern their field declares (e.g. `tags`).                                                      |
 | `list-order`                     | warning | List entries read in alphabetical order, with numbers compared as numbers.                                        |
+| `entry-shape / entry-key`        | error   | Each entry of an object list is a mapping, carrying the keys the field declares and no others.                    |
 | `tier-matches-type`              | error   | `tier` matches the tier the type declares.                                                                        |
 | `id`                             | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename.   |
 | `id-unique`                      | error   | `id` is unique across the whole corpus.                                                                           |
@@ -147,6 +148,7 @@ under governance is the clearest of them.
 | `undefined-label`                | error   | Every shortcut reference has a link definition.                                                                   |
 | `label-canonical`                | error   | A shortcut label that names a document is written as that document's id.                                          |
 | `unused-definition`              | warning | A link definition that nothing references.                                                                        |
+| `alignment-rollup`               | error   | The framework references in `aligns-with` and in the `Alignment` column are the same set.                         |
 | `posture-belongs-to-frameworks`  | warning | "compliant", "certified" or "registered" near a framework reference. Standing belongs in `frameworks.md`.         |
 
 <!-- END GENERATED: checks-policies -->
