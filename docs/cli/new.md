@@ -64,8 +64,8 @@ questions below and is then told the URL was unreachable:
    nothing to tell your files from the ones about to arrive.
 4. **The template**, cloned shallow at its ref into a temporary folder. A failure here is a URL, a ref or a credential.
    Only git can tell those apart, so the message quotes what git wrote.
-5. **The tool.** The template's manifest declares `minimum-tool`. An older tool stops rather than half-reading a
-   template it cannot understand.
+5. **The tool.** The template's manifest declares `minimum-tool`, and an older tool stops there. Half-reading a
+   template it cannot understand would be worse.
 
 ### What it asks
 
@@ -82,47 +82,50 @@ pipeline is worse than a failed one.
 
 Publishing and CI are asked separately because they are separate facts: a corpus can be built by one system and read on
 another. Where a publishing target needs base URLs, the question arrives already filled in from
-`git remote get-url origin`. A URL nobody can recall is a URL nobody should be made to type.
+`git remote get-url origin`.
+
+#### Two answers narrow what lands
 
 Types are asked as a multi-select with everything ticked, because declining is the exception. A declined type's schema
-file is not written, rather than written and then ignored, and `types:` in `.corpus.yaml` records the decision so that
-validation can hold the corpus to it.
+file is never written, and `types:` in `.corpus.yaml` records the decision so validation can hold the corpus to it.
 
-The CI answer narrows what lands in the same way. A corpus runs on one system, and the starter for another is a file its
-owner would delete unread. A GitHub Actions workflow reaching a corpus built elsewhere is worse than unread: on
-github.com it runs uninvited. The manifest names the system each starter serves, which is where a fork laying its
-repository out differently declares its own.
+The CI answer narrows the same way. A corpus runs on one system, and the starter for another is a file its owner would
+delete unread. A GitHub Actions workflow reaching a corpus built elsewhere is worse than unread: on github.com it runs
+uninvited. The manifest names the system each starter serves.
 
 ### What it writes
 
-**The manifest decides, and `new` writes both of its layers.** `layer: withheld` is the template's own machinery and
-reaches no corpus. Where a rule declares `to:`, the file lands there rather than where it sat upstream, which is how a
-template serving its schema from a repository root places it at a corpus's own root.
+#### The manifest decides, and `new` writes both of its layers
+
+`layer: withheld` is the template's own machinery and reaches no corpus. Where a rule declares `to:`, the file lands
+there instead, which is how a template serving its schema from a repository root places it at a corpus's own root.
 
 Two answers narrow that set and nothing else does: the types the corpus adopted, and the system it is built by. A
-template naming a CI system this tool cannot offer stops the run. Dropping those files in silence would withhold a
-starter somebody meant to send.
+template naming a CI system this tool cannot offer stops the run, because dropping those files in silence would
+withhold a starter somebody meant to send.
 
-**`.corpus.yaml` is written rather than copied.** No template can carry a descriptor without carrying somebody else's
-name in it, so the file is composed from the answers above and stamped with the `upstream:` block: the URL, the path
-within it, the ref followed, the commit resolved, the template's version and the date. That block is what `update`
-reads later.
+#### `.corpus.yaml` is composed, never copied
 
-**One key arrives bare: `shortcode`.** `new` neither asks for it nor invents one, because a shortcode cannot be changed
-once another corpus has cited it. Fill it in when one is about to.
-[`.corpus.yaml`](../corpus-descriptor.md#identity) says what a legal shortcode looks like.
+No template can carry a descriptor without carrying somebody else's name in it. So the file is built from the answers
+above and stamped with the `upstream:` block: the URL, the path within it, the ref followed, the commit resolved, the
+template's version and the date. That block is what `update` reads later.
 
-**`README.md` is written too, and for the same reason.** The template's own is `withheld`, because it describes the
-template rather than a corpus. A corpus that copied everything would therefore arrive with no README at all. What
-`new` writes is short: the corpus's name, what it holds, and how to run the tool against it. It is a starting point, not
-a document, and the corpus owns it from the moment it lands.
+One key arrives bare. `new` neither asks for `shortcode` nor invents one, because a shortcode cannot be changed once
+another corpus has cited it. Fill it in when one is about to, and
+[`.corpus.yaml`](../corpus-descriptor.md#identity) says what a legal one looks like.
 
-**The README arrives carrying the markers for the block it may hold**, and a line saying so. `README.md` is the one page
-a corpus may decline a block on, by deleting the pair of markers around it. A README written without them would decline
-on every new corpus's behalf, and nobody would have chosen that.
+#### `README.md` is written too, and for the same reason The template's own is `withheld`, because it describes the
+template and not a corpus, so a corpus that copied everything would arrive with no README at all. What `new` writes is
+short: the corpus's name, what it holds, and how to run the tool against it. The corpus owns it from the moment it
+lands.
 
-**One file needs more than its bytes.** `.plugin/hooks/breadcrumb` is executable, and a hook that arrives without its
-mode bit fails silently on Unix.
+The README arrives carrying the markers for the block it may hold, and a line saying so. It is the one page a corpus
+may decline a block on, by deleting the pair of markers around it. A README written without them would decline on every
+new corpus's behalf, and nobody would have chosen that.
+
+#### One file needs more than its bytes
+
+`.plugin/hooks/breadcrumb` is executable, and a hook that arrives without its mode bit fails silently on Unix.
 
 ### What it does last
 
@@ -139,7 +142,7 @@ It stops short of committing. A first commit is a person's own act, and staging 
 
 ## Known limits
 
-**It needs a network and a git client.** The template is fetched rather than carried, so a machine that cannot reach the
+**It needs a network and a git client.** The template is fetched at run time, so a machine that cannot reach the
 template repository cannot create a corpus. `--from` accepts a local path as well as a URL, which is the offline escape
 hatch and is also what the tool's own tests use.
 
