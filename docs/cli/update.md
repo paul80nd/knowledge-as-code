@@ -100,6 +100,10 @@ naming it holds none of that tree and an update writes none of it here. Its own 
 a seed and arrives all the same: the manifest names the plugin and lists the components that corpus declares.
 [The corpus descriptor](../corpus-descriptor.md) says how the two trees are merged.
 
+A corpus adopting the key with the old copies still on disk is told. Each one is reported as a file the template sends
+nothing to, and `--check` fails on it, because a corpus's own file wins the merge and a leftover would go on shipping
+after every upstream change. Delete the tree bar its manifest.
+
 **A continuous integration starter is refreshed and never introduced.** A manifest rule may declare `ci:`, naming the
 system its files serve, and `new` writes the matching starter alone. Which system builds a repository is that
 repository's own answer, so an update leaves a starter the corpus does not hold where it is. A corpus that wants one

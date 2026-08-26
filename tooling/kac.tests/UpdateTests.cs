@@ -70,6 +70,21 @@ public class UpdateTests
         Assert.Equal(1, plan.DeclinedPlugin);
     }
 
+    // A corpus that adopted `plugin.from` with the old copies still on disk. `Merge` gives its own file
+    // priority, so a leftover would win over the shared tree for good and no upstream change would reach
+    // it. Reported as a file nothing sends to, which is what it now is.
+    [Fact]
+    public void A_copy_left_behind_by_adopting_the_key_is_reported()
+    {
+        var plan = Plan(
+            Files("template/.plugin/skills/glossary-lookup/SKILL.md"),
+            Files(".plugin/skills/glossary-lookup/SKILL.md"),
+            descriptor: new CorpusDescriptor { PluginFrom = "../../template/.plugin" });
+
+        Assert.Equal([".plugin/skills/glossary-lookup/SKILL.md"], plan.Unshared);
+        Assert.True(plan.Changes);
+    }
+
     // The ordinary case, and the one a corpus standing on its own is always in.
     [Fact]
     public void A_corpus_saying_nothing_receives_the_plugin_tree()

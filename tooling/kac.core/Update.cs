@@ -133,9 +133,11 @@ public static class Update
             // one. The corpus-side loop below is what acts on `removed`.
             if (placement.Layer is Manifest.Withheld or Manifest.Removed) continue;
 
-            sent.Add(placement.Path);
-            if (readInPlace && placement.Path.Equals(from, StringComparison.Ordinal)) continue;
-
+            // Ahead of `sent`, and deliberately. A corpus that adopted `plugin.from` while still holding
+            // the copies it used to keep would otherwise carry them forever: `Merge` gives a corpus's own
+            // file priority, so the leftovers win over the shared tree and no later change upstream ever
+            // reaches that corpus's bundle. Left out of `sent`, each one surfaces below as a file the
+            // corpus holds that nothing sends to.
             if (descriptor.PluginFrom is not null
                 && placement.Layer == Manifest.Overlay
                 && Bundler.InSourceTree(placement.Path))
@@ -143,6 +145,9 @@ public static class Update
                 declinedPlugin++;
                 continue;
             }
+
+            sent.Add(placement.Path);
+            if (readInPlace && placement.Path.Equals(from, StringComparison.Ordinal)) continue;
 
             if (types.Declines(placement.Path))
             {

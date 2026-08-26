@@ -33,7 +33,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   keep one copy of the skills and hooks between them instead of a copy each. `kac bundle` merges that tree with the
   corpus's own `.plugin/`, where a file the corpus holds wins, and `kac update` withholds the shared half rather than
   writing it back. The manifest is never taken from the shared tree: it names the plugin, so it stays at
-  `.plugin/.claude-plugin/plugin.json` in each corpus. Omit the key and nothing changes.
+  `.plugin/.claude-plugin/plugin.json` in each corpus. Omit the key and nothing changes. A corpus adopting the key
+  with the old copies still on disk has each one reported as a file the template sends nothing to, because a corpus's
+  own file wins the merge and a leftover would go on shipping after every upstream change.
 
 - **A corpus created before this declares no component for the new skill.** `kac update` writes the skill, and leaves
   `.plugin/.claude-plugin/plugin.json` alone because the manifest is the corpus's own. A path no component owns ships
