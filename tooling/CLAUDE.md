@@ -219,10 +219,13 @@ from the framework carrying them, and one that has gone is a block that stopped 
   and `new` modes do not, so a new check cannot affect them directly. `update`, `export`, `bundle` and `new` are the
   modes that write. Each asserts the tree the command left rather than only what the command printed, so its
   expectations name files and their content instead of a findings golden.
-* **The `export` fixture commits the export itself**, under `expected-dist/`, and a diff there is a change to what a
-  consumer reads. Its [README](tests/fixtures/export/README.md) says what that asks of you. Nothing else in the suite
-  holds a tracked copy of an untracked artefact. The `bundle` fixtures deliberately do not, because most of a bundle is
-  that same export and a second copy would be a second thing to keep in step.
+* **The two export fixtures commit the export itself**, under `expected-dist/`, and a diff there is a change to what a
+  consumer reads. `export` runs both declared shapes together and `export-policies` runs one alone, so a manifest entry
+  or a directory written for a type the corpus never adopted fails in the second. Their READMEs say what a diff asks of
+  you: see
+  [`export`](tests/fixtures/export/README.md) and [`export-policies`](tests/fixtures/export-policies/README.md).
+  Nothing else in the suite holds a tracked copy of an untracked artefact. The `bundle` fixtures deliberately do not,
+  because most of a bundle is that same export and a second copy would be a second thing to keep in step.
 * Regenerate with `dotnet run tooling/kac-tests.cs -- --update [name]`, then **read the diff**. The command rewrites
   expectations to whatever the tool now produces, so it will happily bless a regression.
 

@@ -1,0 +1,8 @@
+# One type adopted, so the count covers that type alone and the run names it alone. The combined case,
+# where two declared shapes travel together, is the `export` fixture's.
+wrote .dist/export/manifest.json
+wrote .dist/export/policies/clauses.jsonl
+export: wrote 3 file(s) for policies.
+
+# The temp root is not a git repository, so no ref resolves and no link can be built.
+export: no published links

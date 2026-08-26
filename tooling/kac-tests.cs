@@ -435,7 +435,7 @@ void RunExportScenario(string name, string scenario, string corpusDir)
         problems.AddRange(ReadLines(Path.Combine(scenario, "expected-export.txt"))
             .Where(l => !output.Contains(l)).Select(l => $"not reported: {l}"));
 
-        problems.AddRange(CheckGoldenExport(dist, golden));
+        problems.AddRange(CheckGoldenExport(name, dist, golden));
 
         // A file no record backs, left in the output before the second run. An export nobody reviews
         // would otherwise carry a deleted record's entry indefinitely.
@@ -446,6 +446,11 @@ void RunExportScenario(string name, string scenario, string corpusDir)
         var (_, _, second) = Run(temp, "dotnet", argv);
         if (second != 0) problems.Add($"expected a clean second export (exit 0), got exit {second}");
         if (File.Exists(orphan)) problems.Add("a file no record backs survived a second export");
+
+        // The same golden again, over the second run's output. Two exports from one commit differ only
+        // in the manifest fields the comparison already replaces, so a value that varies between runs
+        // fails here rather than reaching a consumer as churn nobody can account for.
+        problems.AddRange(CheckGoldenExport(name, dist, golden).Select(p => $"second run: {p}"));
 
         problems.AddRange(CheckTree(temp, scenario));
 
@@ -615,11 +620,11 @@ static List<string> CheckTree(string root, string scenario)
 //
 // A difference here is a change to a published contract, and each message says so. The reflex on a red
 // golden is to regenerate it, and this is the one golden where that reflex is expensive.
-static List<string> CheckGoldenExport(string dist, string golden)
+static List<string> CheckGoldenExport(string name, string dist, string golden)
 {
     if (!Directory.Exists(golden))
         return [$"no committed export at {Path.GetFileName(golden)}/. "
-                + "Run: dotnet run tooling/kac-tests.cs -- --update export"];
+                + $"Run: dotnet run tooling/kac-tests.cs -- --update {name}"];
 
     var actual = ExportTree(dist);
     var expected = ExportTree(golden);

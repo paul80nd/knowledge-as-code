@@ -1,0 +1,3 @@
+# `expected-dist/` holds what the export wrote, file for file, so nothing here lists it a second time.
+# This is the one thing that tree cannot say: the corpus itself is untouched.
+policies/bkup-recoverability.md

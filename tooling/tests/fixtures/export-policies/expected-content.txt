@@ -1,0 +1,56 @@
+# The two fields that differ between two runs over one tree, which the golden comparison replaces on
+# both sides. Nothing else in this fixture observes them, so this is where they are read.
+.dist/export/manifest.json :: "commit": null
+.dist/export/manifest.json :: "generatedAt":
+
+# The manifest holds one entry, because the corpus holds one exporting type. A key belonging to the
+# glossary's shape is the leak this fixture exists to catch, so it is named here as an absence.
+.dist/export/manifest.json :: "type": "policies"
+.dist/export/manifest.json :: "shapeVersion": 2
+.dist/export/manifest.json :: "records": 1
+.dist/export/manifest.json :: "parts": 5
+.dist/export/manifest.json :: !"glossary"
+
+# The four levels a policy declares, each written onto the line of the clause carrying it. `MUST NOT`
+# is the one worth pinning: the `MUST` it opens with is a level of its own, and a reader matching the
+# shorter modal first would file a prohibition as an obligation.
+.dist/export/policies/clauses.jsonl :: "level":"MUST"
+.dist/export/policies/clauses.jsonl :: "level":"MUST NOT"
+.dist/export/policies/clauses.jsonl :: "level":"SHOULD"
+.dist/export/policies/clauses.jsonl :: "level":"COULD"
+
+# Rows travel in the order the author wrote them, which is the grouping `clause-order` holds the table
+# to. Sorting the five on their ids would open on `COPY` and put `DRILL` second.
+.dist/export/policies/clauses.jsonl :: {"id":"pol-BKUP.COPY","clause":"MUST hold a copy of every store away from what the store itself runs on","level":"MUST"
+.dist/export/policies/clauses.jsonl :: {"id":"pol-BKUP.MEASURE","clause":"COULD publish how long each restore took, so a target can be set against it","level":"COULD"
+
+# A clause citing another clause has no body to be read from, so the id stays inside its words and the
+# line carries no `seeAlso` to look it up by. A term line carries the opposite.
+.dist/export/policies/clauses.jsonl :: "clause":"MUST prove a restore of what pol-BKUP.COPY covers, once a quarter"
+.dist/export/policies/clauses.jsonl :: !"seeAlso"
+
+# An id at the pattern's seven-character limit travels as written. Nothing shortens a clause id, and a
+# citation is only as good as the half naming the part.
+.dist/export/policies/clauses.jsonl :: "part":"RESTORE"
+.dist/export/policies/clauses.jsonl :: "part":"MEASURE"
+
+# The record's own status, on the record and on every clause it holds. `pol-RTNT` in the `export`
+# fixture is a draft, so a status written as a constant would pass one of the two.
+.dist/export/policies/pol-BKUP.json :: "status": "active"
+.dist/export/policies/clauses.jsonl :: "status":"active","reviewBy":"2030-06-01"
+
+# One record showing both fidelities. `Purpose` travels as its opening paragraph, which is where a
+# policy states its position, and the paragraph beneath it stays behind. `Scope` and `Exceptions`
+# travel whole, because each bounds the clauses between them.
+.dist/export/policies/pol-BKUP.json :: "Purpose": "A store we cannot restore is a store we have already lost. We hold a copy of each one away from what it serves, and we prove the copy reads back before the day we need it to."
+.dist/export/policies/pol-BKUP.json :: !A copy nobody has read is a guess.
+.dist/export/policies/pol-BKUP.json :: "Exceptions": "A store we can rebuild from another store carries no copy of its own. We record what rebuilds it, and the clauses above bind whatever we rebuild it from."
+
+# Alignment stays behind entire, cell and roll-up alike. A reference resolves through `frameworks.md`,
+# which says what our standing against the framework is, and no consumer receives that page. `pol-BKUP`
+# is the one record either export fixture holds whose `aligns-with` is populated, so these lines are
+# the only place the roll-up's absence means anything. The link definition carrying the reference is inside
+# `Exceptions`, which travels whole, so the last line reads that section too.
+.dist/export/policies/clauses.jsonl :: !ISO 27001
+.dist/export/policies/pol-BKUP.json :: !aligns-with
+.dist/export/policies/pol-BKUP.json :: !ISO 27001
