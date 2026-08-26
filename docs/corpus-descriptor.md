@@ -64,9 +64,8 @@ publishing:
 ```
 
 `publishing-target` is one of `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather than leave it to be
-guessed. It is recorded rather than inferred, so `export` knows whether it can build a link at all. And
-[`export`](cli/export.md)
-knows whether it can write a link that a reader and an agent could each follow.
+guessed. It is recorded rather than inferred, so `export` knows whether it can build a link at all, and which form to
+build. [The export format](export-format.md#the-two-links) sets out the two an export carries.
 
 `github` says the repository is itself the published form. A person reads a record rendered on github.com, and an agent
 fetches its source from raw.githubusercontent.com. It is the only target that builds a link today. A descriptor may
@@ -199,3 +198,5 @@ steps over them and reports what it stepped over. Delete an entry once the file 
 
 The reason is for whoever opens the file next, and it is the only thing standing between a deliberate divergence and one
 nobody remembers making.
+
+[The export format](export-format.md) is the other file a corpus is read through, and the one a consumer reads.

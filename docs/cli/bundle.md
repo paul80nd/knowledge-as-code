@@ -75,7 +75,7 @@ ordinary way to meet an export this tool did not ship beside. That case is what 
 
 A shape mismatch stops the run for a different reason. The type is there and its files have moved, so the component
 would ship, install, and read keys that are no longer there. Trimming would hide that behind a plugin doing less.
-[`export`](export.md) says what a shape version covers and what moves it.
+[The export format](../export-format.md) says what a shape version covers and what moves it.
 
 ### Two directories under one root, and each command replaces its own whole
 

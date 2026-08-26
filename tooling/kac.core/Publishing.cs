@@ -110,7 +110,7 @@ public sealed class Publishing
     // a line carries only what varies: the record's path, and the anchor of the part inside it.
     //
     // The ref is baked in rather than left as a placeholder, and only the human template takes an
-    // anchor. `docs/cli/export.md` argues both, and the templates carry the asymmetry so no
+    // anchor. `docs/export-format.md` argues both, and the templates carry the asymmetry so no
     // reader has to remember it.
     //
     // **The path prefix is baked in for the same reason the ref is.** It is a property of where the
