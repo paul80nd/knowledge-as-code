@@ -47,6 +47,21 @@ public partial class ChangelogTests
             $"'{Opening(version)}…' in CHANGELOG.md is empty, and its text is the body of the release.");
     }
 
+    // docs/index.md tells a reader the tool is early because it has not reached 1.0.0. That sentence stops being
+    // true on the day it does, and nothing else would say so.
+    [Fact]
+    public void The_site_says_the_tool_is_below_one_while_it_is()
+    {
+        var index = File.ReadAllText(Path.Combine(Repo.Root, "docs", "index.md"));
+        var below = Version().StartsWith("0.", StringComparison.Ordinal);
+
+        Assert.True(below == index.Contains("sits below `1.0.0`", StringComparison.Ordinal),
+            below
+                ? "kac.csproj publishes a 0.x, and docs/index.md no longer says the version sits below 1.0.0."
+                : $"kac.csproj publishes {Version()}, and docs/index.md still says the version sits below 1.0.0. "
+                  + "Rewrite the Maturity section for a released tool.");
+    }
+
     private static string Version()
     {
         var match = ProjectVersion().Match(Project);

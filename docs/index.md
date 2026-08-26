@@ -31,6 +31,8 @@ The reference for KaC: what a corpus holds, and what `kac` does to one.
   or Azure Pipelines.
 * **[CLI reference](cli/index.md)** gives a page to each command, saying what it does, what it refuses and what it
   leaves alone. The overview carries the exit codes and the options every command takes.
+* **[Troubleshooting](troubleshooting.md)** is what `kac` prints when something is wrong, and what to do about
+  each one.
 * **[The corpus descriptor](corpus-descriptor.md)** covers `.corpus.yaml`, the one file a corpus writes for itself.
 * **[Design](design/index.md)** is why `kac` works the way it does: where a check comes from, what a rule
   expression may say, what the schema itself is held to, and the contract an export answers to.

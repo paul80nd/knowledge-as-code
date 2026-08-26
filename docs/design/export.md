@@ -275,4 +275,4 @@ as unread. A glossary term is unaffected: its body is everything under the headi
 is the safe way round: the alternative is an export quietly thinner than the type asked for. The value stays
 three-valued so that the first type wanting a shorter line does not force it to be rebuilt.
 
-[`bundle`](../cli/bundle.md) is what reads `formatVersion` and each `shapeVersion`, and refuses an export it cannot read.
+[`bundle`](../cli/bundle.md) reads `formatVersion` and each `shapeVersion`, and refuses an export it cannot read.

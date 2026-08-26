@@ -87,6 +87,7 @@ nav:
   - Introduction: index.md
   - Getting started: getting-started.md
   - Running it in CI: ci.md
+  - Troubleshooting: troubleshooting.md
   - The framework:
       - framework/index.md
       - Principles: framework/principles.md

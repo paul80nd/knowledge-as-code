@@ -33,8 +33,8 @@ own root.
 
 **Drift** is a file in the overlay layer that no longer matches the upstream it came from. A manifest and a descriptor
 answer it, so a necessary deviation does not look like an accident.
-[The mechanism is separable from the knowledge](../framework/principles.md#the-mechanism-is-separable-from-the-knowledge)
-argues why the split is worth carrying.
+[The mechanism is separable](../framework/principles.md#the-mechanism-is-separable-from-the-knowledge) argues why the
+split is worth carrying.
 
 ## A seed is the corpus's own words
 

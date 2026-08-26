@@ -57,8 +57,8 @@ your prose and the generator keeps the tables current. The rest of the file is b
 Every adopted type is regenerated whether or not it holds records, because the blocks derive from the schema alone. An
 index is written for an empty type too, since every type page links to one and a withheld file would leave a dead link.
 
-A block whose markers have gone is written by nothing. [Discovery](discovery.md#a-generated-block-is-held-to-its-markers)
-is the pass that catches it.
+A block whose markers have gone is written by nothing.
+[Discovery](discovery.md#a-generated-block-is-held-to-its-markers) is the pass that catches it.
 
 ## Only adopted types are generated
 

@@ -52,6 +52,7 @@ validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 4 err
 ```
 
 The name in brackets is a check id, and [`checks`](checks.md) prints what every one of them proves.
+[Troubleshooting](../troubleshooting.md) covers the findings you meet first.
 
 ### Emit the findings as JSON
 
