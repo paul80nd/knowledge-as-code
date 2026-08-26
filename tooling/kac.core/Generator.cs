@@ -333,7 +333,12 @@ public static class Generator
     {
         if (col == Title)
         {
-            var file = Path.GetFileName(d.Rel);
+            // The index sits in the type's own folder, so a record filed under a category below it is
+            // reached through that category. `Folder` is the first segment of `Rel`, so what remains
+            // after it is the link, and a record sitting flat is left with its filename.
+            var file = d.Folder.Length > 0 && d.Rel.Length > d.Folder.Length
+                ? d.Rel[(d.Folder.Length + 1)..]
+                : Path.GetFileName(d.Rel);
             return $"[{Escape(d.H1 ?? "")}]({file})";
         }
 

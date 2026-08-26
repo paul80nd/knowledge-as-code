@@ -55,6 +55,9 @@ keywords (**MUST**, **MUST NOT**, **SHOULD**, **MAY**) so compliance levels are 
 Keep each rule testable. If a rule can't be checked against a concrete artefact, it's guidance, not a standard. Either
 sharpen it or move it to the Rationale section.
 
+Where the section runs past about six rules, group them under `###` headings. A heading says what the rules beneath it
+hold a reader to, so somebody hunting one rule finds the group before the bullet.
+
 ## Examples
 
 A canonical good/bad pair. Examples carry more weight than prose for both human readers and AI sessions. Make them

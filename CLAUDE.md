@@ -38,10 +38,18 @@ It answers in both directions: a copy that differs, and a file the corpus holds 
 
 ## Before you raise a pull request
 
-**Move `<Version>` and write the changelog section together.** A push to `main` publishes `kac` whenever
-[`tooling/kac/kac.csproj`](tooling/kac/kac.csproj) names a version nuget.org does not already hold, and the release that
-publish opens carries the matching section from [`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md). A section
-written after the merge reaches nobody, and `ChangelogTests` fails a version that has none.
+**Write the changelog entry always. Ask before you move `<Version>`.** A tool change somebody running `kac` can
+observe gets a line under `## Unreleased` in [`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md), on the branch that
+makes it. An entry written after the merge reaches nobody.
+
+Whether that entry ships is a separate question, and it belongs to whoever owns the branch. A push to `main` publishes
+`kac` whenever [`tooling/kac/kac.csproj`](tooling/kac/kac.csproj) names a version nuget.org does not already hold, so
+moving `<Version>` **is** the release, and the release that publish opens carries that version's section. Put the call
+to them before you open the pull request, with a recommendation: release where the change stands on its own, and hold
+where it is one part of a group that is no use apart. Where the tool did not change there is nothing to ask.
+
+Releasing renames `## Unreleased` to `## <version> - <date>` and moves `<Version>` in the same commit.
+`ChangelogTests` fails a version that has no section.
 
 **Ask which pages your change makes wrong.** Nothing in CI reads prose for meaning, so this is yours to do. A change to
 a command reaches [`docs/`](docs/) and often [`tooling/README.md`](tooling/README.md); a change to what the tool is for

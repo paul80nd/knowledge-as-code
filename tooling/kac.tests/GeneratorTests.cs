@@ -76,6 +76,19 @@ public class GeneratorTests
             $"---\nid: {r.Id}\nseverity: {r.Severity}\n---\n\n# {r.Id}\n", new Schema())!)
     ];
 
+    // A link naming the file alone would land beside the index rather than on the record.
+    [Fact]
+    public void IndexPage_links_a_record_through_the_category_folder_holding_it()
+    {
+        var t = new TypeSchema { Label = "Standard", IdPrefix = "std", IndexColumns = ["title"] };
+        var doc = Doc.Parse("standards/common/build-gates.md",
+            "---\nid: std-0004\n---\n\n# A failing check blocks the merge\n", new Schema())!;
+
+        var page = Generator.IndexPage(t, [doc]);
+
+        Assert.Contains("(common/build-gates.md)", page);
+    }
+
     [Fact]
     public void IndexPage_sorts_by_id_where_the_type_declares_no_sort()
     {

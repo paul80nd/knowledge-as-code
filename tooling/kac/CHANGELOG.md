@@ -12,7 +12,22 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Ver
 surface may still change shape.
 
 A push to `main` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and that publish tags
-the commit and opens a release carrying the section for that version.
+the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
+first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
+
+## 0.12.0 - 2026-08-26
+
+### Fixed
+
+- **`part-ref` reads a citation written as a link.** A corpus cites a part as a code span, and as a link carrying the
+  citation as its text or as its label. Only the code span was resolved. A link naming a clause or a term that does
+  not exist passed `kac validate`, because a link resolves against a page and the page carries whichever part the
+  citation claimed. Every form now reports under `part-ref`, and a link spelling the separator as a colon is reported
+  as one, so a corpus using the link form may see errors it did not before.
+
+- **A type index links a record through the category folder holding it.** `kac generate` wrote the filename alone, so
+  a record filed under a category below the type's folder was linked as though it sat beside the index. Standards are
+  filed that way by declaration, and every link to one was dead.
 
 ## 0.11.0 - 2026-08-25
 

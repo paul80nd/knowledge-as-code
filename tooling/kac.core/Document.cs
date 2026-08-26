@@ -238,9 +238,24 @@ public partial class Doc
 
         // Every link, written inline or resolved from a reference or a shortcut. Iterating LinkInline
         // leaves code out: a code span carries no LinkInline, and neither does a fenced or indented block.
+        var citedLabels = new HashSet<string>(StringComparer.Ordinal);
         foreach (var link in ast.Descendants<LinkInline>())
         {
             if (link.IsImage) continue;
+
+            // The other place a citation is written: the label of a reference link, or the text of an
+            // inline one. Collected beside the code spans so every form a citation takes answers to the
+            // same pass. See `part-ref` in .schema/_checks.yaml.
+            //
+            // Once per spelling, unlike a code span, because a reference is defined once however often
+            // the prose reaches for it and the definition is the line an author would fix.
+            var cited = link.Reference?.Label ?? (link.FirstChild as LiteralInline)?.Content.ToString();
+            if (cited is not null && NamesARecord(cited, schema) && citedLabels.Add(cited))
+            {
+                if (PartCitationRegex().IsMatch(cited)) doc.PartRefs.Add((cited, link.Line + 1));
+                else if (ColonCitationRegex().IsMatch(cited)) doc.ColonCitations.Add((cited, link.Line + 1));
+            }
+
             doc.Links.Add(new LinkRef
             {
                 Target = link.Url ?? "",
