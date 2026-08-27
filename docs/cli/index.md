@@ -1,8 +1,10 @@
 # CLI reference
 
-One page per command. Each opens with the usage the parser accepts, generated from `kac` itself, and then says what the
-command is for, what it is not, and how it works. Two more sections appear where a command has them: the decisions
-behind it, and its known limits.
+One page per command. Each opens with the usage the parser accepts, generated from `kac` itself, then says what the
+command does, works through examples with the output they print, and names its known limits.
+
+Why a command works the way it does is not on these pages. [Design](../design/index.md) carries that, and each page
+links the part of it that explains the command.
 
 ## The commands
 
@@ -20,9 +22,27 @@ behind it, and its known limits.
 
 <!-- END GENERATED: command-table -->
 
+## Which command answers which question
+
+Four questions get asked about a corpus, and one command answers each. Two of them take a `--check`. A corpus can fail
+one question while passing the others.
+
+| You want to know                                | Run                    |
+|-------------------------------------------------|------------------------|
+| are the records correct against the schema      | `kac validate`         |
+| is the derived content in step with the records | `kac generate --check` |
+| has this corpus fallen behind its framework     | `kac update --check`   |
+| what could CI report against this corpus at all | `kac checks`           |
+
+A corpus can be fresh and behind, or in step and stale. `validate` asks whether your records are correct, and a corpus a
+long way behind its framework can still be entirely valid.
+
+`checks` reads the schema and prints what *could* fire. `validate` fires it against documents. A check absent from a
+validate run has either not been declared or not been tripped, and `checks` is what tells those two apart.
+
 ## Where a command runs
 
-Every command but `new` answers a question about a corpus, meaning one repository of knowledge documents kept in git.
+Every command but `new` answers a question about a **corpus**, meaning one repository of knowledge records kept in git.
 Each finds that corpus by walking up from the working directory for a `.corpus.yaml`, the descriptor naming the corpus.
 It then walks up again from there for the `.schema/` that says what a record of each type carries, so one schema can
 serve several corpora in one repository. Where the tool's own files sit says nothing about which corpus it reads.
@@ -39,8 +59,8 @@ A redirected stream carries no colour on its own. An environment naming a runner
 it back on, and GitHub Actions is one such runner. Set `NO_COLOR` wherever the bytes have to be the same everywhere.
 
 `--help` and `--version` belong to the parser rather than to any one command. `kac --help` lists the commands, and
-`kac <command> --help` prints the same usage that command's page carries. `--version` names the release and the commit
-it was built from.
+`kac <command> --help` prints that command's options. Each page's usage block is generated from the same command model.
+`--version` names the release and the commit it was built from.
 
 ## Exit codes
 

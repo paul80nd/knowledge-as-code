@@ -59,13 +59,13 @@ a type folder, and the scaffolding directories alongside them. The tool reads th
 anything under it is excluded from discovery and never validated as a record. A record must therefore not take it.
 
 The prefix also sorts ahead of letters, whether or not a listing folds case. That keeps the framework's files together
-at the top of a folder somebody is scanning for content.
+at the top of a folder you are scanning for content.
 
 Alongside the types sit the corpus's own root files. A README and agent guidance. The register of external frameworks it
 stands against. The framework's own documentation, and the machine-readable schema in `.schema/`. And
 `.corpus.yaml`, which says what this corpus is and where it takes the framework from.
 
-## The call that has only one side
+## A capability lives in the corpus, a spec lives with the code
 
 A **capability** is the product surface (Billing, Search, Notifications), described once, above the epic layer, as a hub
 of links. A **spec** is the per-feature application of standards to a concrete contract. It belongs in the repository

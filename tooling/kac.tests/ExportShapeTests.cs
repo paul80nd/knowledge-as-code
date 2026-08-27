@@ -8,7 +8,7 @@ using kac.core;
 //
 // Whether a shape is the right one is not the question here. What this catches is a shape changing
 // quietly: edit a `line:`, a `fields:` or a fidelity and this fails, which is where the version beside
-// it gets moved. Update the block below in the same commit. `docs/export-format.md` says which edits
+// it gets moved. Update the block below in the same commit. `docs/design/export.md` says which edits
 // oblige the number to move and which leave it where it is.
 
 namespace kac.tests;

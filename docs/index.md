@@ -31,8 +31,10 @@ The reference for KaC: what a corpus holds, and what `kac` does to one.
   or Azure Pipelines.
 * **[CLI reference](cli/index.md)** gives a page to each command, saying what it does, what it refuses and what it
   leaves alone. The overview carries the exit codes and the options every command takes.
+* **[Troubleshooting](troubleshooting.md)** is what `kac` prints when something is wrong, and what to do about it.
 * **[The corpus descriptor](corpus-descriptor.md)** covers `.corpus.yaml`, the one file a corpus writes for itself.
-* **[Checks](checks.md)** is the page for adding a check, or for deciding whether the one you want already exists.
+* **[Design](design/index.md)** is why `kac` works the way it does: where a check comes from, what a rule expression may
+  say, what the schema itself is held to, and the contract an export answers to.
 
 ## What lives elsewhere
 
@@ -43,9 +45,6 @@ is its way in to everything here.
 **How to change the tool** is
 [`tooling/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/README.md), beside the code. It
 covers building `kac`, its three test layers, and what bites you while editing any of it.
-
-**How to author a schema** is the [Schema reference](schema/index.md). It covers the rules a type may declare and what
-`kac` refuses when it loads one.
 
 ## Maturity
 
@@ -59,5 +58,3 @@ the site is ahead.
 
 Every page here describes what exists today. The
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds what has been considered and not yet built.
-Two pages break that rule and say so at their head: [`new`](cli/new.md) and [`update`](cli/update.md) are
-specifications, written before their commands.

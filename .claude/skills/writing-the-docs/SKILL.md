@@ -76,19 +76,41 @@ inventing. A rewrite drops a fact more easily than it drops a word, and the repl
 "the corpus's own `.schema/` holds one file per type."
 Not: "each type declares its fields and rules in a YAML file beside them."
 
+**A claim about the current state needs something that fails when the state moves.** *Not yet built*, *the only one
+today*, *no corpus has yet* and any count all read as settled facts. `docs/index.md` called `new` and `update`
+specifications written before their commands, and went on saying it after both shipped, because nothing broke on the
+day they did.
+
+Three ways to write such a claim safely, in the order to reach for them.
+
+1. **Let the generator write it.** The command table on [`cli/index.md`](../../../docs/cli/index.md) and the usage
+   block at the head of each command page are built from the parser itself.
+2. **Let a test hold it.** `DocumentationCitationTests` resolves every symbol and every verb a page names.
+   `DefaultTypesTests` holds the count of types that ship.
+3. **Name the command that answers.** `kac checks` prints the checks and `kac --version` prints the release. A reader
+   who can run one line needs no number from you.
+
+Where none of the three reaches it, the claim is one to leave out.
+
+**Write a count once, and cite it from everywhere else.** Two pages carrying one number is one page that will be wrong.
+The floor already says to cite rather than restate, and a count is where that rule earns its keep.
+
 ## Choose the page by its reader
 
 `README.md` and `PACKAGE.md` are one page each, so a fact either belongs there or it does not. The site adds the
 question neither of them asks: which of its pages carries this one.
 
-**Diátaxis is the map, and this site departs from it in one place.** Diátaxis splits documentation four ways, into a
-tutorial, a how-to, a reference and an explanation, and puts each in its own page. Here the reasoning stays inline,
-beside whatever it explains. A command page argues its case under *How it works*, and `--check`'s reason sits under
-`--check`.
+**Diátaxis is the map.** It splits documentation four ways, into a tutorial, a how-to, a reference and an
+explanation, and puts each in its own page. This site follows that split:
+[`getting-started.md`](../../../docs/getting-started.md) is the tutorial, [`ci.md`](../../../docs/ci.md) is a how-to,
+[`docs/cli/`](../../../docs/cli/) is the reference and [`docs/design/`](../../../docs/design/) is the explanation.
+
+Where it departs is inside a design page. The reasoning stays beside whatever it explains rather than splitting
+further, so `--check`'s reason sits under `--check`.
 
 **A second page is earned by a second reader.** [`cli/checks.md`](../../../docs/cli/checks.md) is for somebody running
-the command. [`checks.md`](../../../docs/checks.md) is for somebody adding one. Two readers, so two pages. One reader
-who wants more detail is a `####` under the heading they are already on.
+the command. [`design/checks.md`](../../../docs/design/checks.md) is for somebody adding one. Two readers, so two
+pages. One reader who wants more detail is a `####` under the heading they are already on.
 
 **Where two pages share a subject, neither argues the other's case.** The command page says what running the command
 does and cites the other for why. A claim written on both goes out of step on the day one is edited.
@@ -124,9 +146,12 @@ to find out whether it answers them. The count is a prompt to look, never the di
 two things. A section of bulleted rules or bold lead-ins scans however long it runs, so leave it. A run of paragraphs
 under one heading does not, and the repair is a heading each rather than fewer words.
 
-**A command page carries five fixed sections, and grows deeper rather than wider.**
+**A command page carries three fixed sections, and grows deeper rather than wider.**
 [`tooling/README.md`](../../../tooling/README.md#the-documentation-site) is the reference for that set and for the
-generated usage block above it. A command with two halves keeps each half at `###` and steps it at `####`.
+generated usage block above it. A page with several worked examples keeps each at `###`.
+
+**An example on a command page carries the output the command prints**, taken from a run rather than written by hand.
+A reader deciding whether they have a clean run needs to see one.
 
 **A command page opens on its verb and what running it does, with no colon between them.** `CliReference.cs` parses that
 heading to build the overview's table, so a form it cannot read fails `CliReferenceTests`. Write:
@@ -151,8 +176,9 @@ nav does not list is a separate fault, caught by `NavigationTests`, because the 
 ## Leave the reader somewhere to go
 
 **A page names what to read next.** One link, chosen for where the reader now is. A list of everything is the same as no
-link at all. Write: "[Checks](../checks.md) is the page for adding a check, or for deciding whether the one you want
-already exists."
-Not: "[Checks](../checks.md) says where a check comes from, what the schema pass refuses, and why a rule is data."
+link at all. Write: "[Checks](../design/checks.md) is the page for adding a check, or for deciding whether the one
+you want already exists."
+Not: "[Checks](../design/checks.md) says where a check comes from, what the schema pass refuses, and why a rule is
+data."
 
 **No page assumes another was read first**, unless it links that page in the sentence that needs it.

@@ -6,7 +6,7 @@ changes.
 
 Two readers need it. One declares the `export:` block of a type, meaning one kind of knowledge record, and wants to
 know what each key produces. The other writes a consumer against the output and wants to know what it may rely on.
-[`export`](cli/export.md) is the page for running the command.
+[`export`](../cli/export.md) is the page for running the command.
 
 ## What a type declares
 
@@ -22,8 +22,7 @@ Three keys select what a record sends:
 
 Neither `sections:` nor `parts:` falls back to a default. A type states the fidelity or the schema pass fails.
 
-A corpus that adopted no exporting type still writes a manifest, with an empty type list. "Nothing" is a valid
-statement of what a corpus has.
+A corpus that adopted no exporting type still writes a manifest, with an empty type list.
 
 ### What each fidelity carries
 
@@ -44,6 +43,32 @@ absent key says nobody wrote the section.
 **A `parts:` entry carries `full` alone.** A part line is already a reduction: `line:` names key by key what of a part
 travels, so a type wanting a thinner line drops a key from it.
 
+## How a run writes it
+
+A run loads the corpus whole, decides which records travel and what of each one goes with them, then deletes
+`.dist/export/` and writes it again.
+
+**The corpus is loaded whole whatever `--type` says.** A narrowed run still resolves ids against every record, because
+a question about a set answered from some of its members is answered wrongly. The flag narrows what is written and
+never what is read. A type the corpus has not adopted is refused by name.
+
+**An unsettled record travels by default.** A draft record, and one whose `review-by` has passed, are both exported
+carrying their own state, so a consumer reads what the corpus actually holds and decides for itself how far to trust
+it. Filtering them would make the corpus's own condition invisible downstream.
+
+A corpus may exclude either with `export.exclude:` in [`.corpus.yaml`](../corpus-descriptor.md). Where it does, the run
+names every record it withheld, because a record left out of the output cannot be seen there.
+
+**The export is untracked, and rebuilt whole.** `.dist/` is gitignored, so the export is never something to review, and
+a tracked one would put a diff nobody reads on every change to the words. Two things follow. The overwrite is
+delete-then-write, because a record deleted from the corpus must not leave an entry behind and no diff would show the
+orphan. And the manifest describes itself, carrying the commit it was built from and a dirty flag beside it, since git
+can say nothing about an export once it has left. A commit on its own would describe a dirty tree as reproducible.
+
+What holds the shape steady in place of a diff is a committed fixture in the tool's own test suite. It exports a corpus
+and compares the whole tree file by file, so a corpus running the tool without the tests receives a format already
+proved.
+
 ## The tree
 
 ```text
@@ -61,11 +86,11 @@ The names are read from the schema. A type's directory is its own key, and its f
 calls one of its parts: `terms.jsonl`, because a glossary's `parts:` block says `noun: term`. Both are fixed once the
 type has declared them, because a skill addresses them by name.
 
-## The manifest
+## The manifest lets a reader choose which file to open
 
 A flat file is read whole and grepped, because a lookup does not know which record holds the term it wants. A record
 file is read one at a time, because a reader that has a hit wants the single file behind it. One large file would
-charge the second reader the first one's cost. The manifest is what lets a reader choose.
+charge the second reader the first one's cost.
 
 ### Each type carries two counts, named apart
 
@@ -85,7 +110,7 @@ entry under `types` carries it once.
 
 `corpus` is what the corpus calls itself, which tells one export from another. `shortcode` is what a citation writes
 before the colon, so a consumer resolving `eng:pol-VURM` knows which of the exports it holds answers it. It is `null`
-where the corpus declares none, and [`.corpus.yaml`](corpus-descriptor.md#identity) is where a corpus declares one.
+where the corpus declares none, and [`.corpus.yaml`](../corpus-descriptor.md#identity) is where a corpus declares one.
 
 ## The flat file is JSONL
 
@@ -163,7 +188,7 @@ sorts case-insensitively on the term. Two runs from one commit produce identical
 ## The two links
 
 A person follows one form and an agent fetches the other. The rules joining a base to a path, and the anchor rule for a
-part, belong to `publishing-target`. [`.corpus.yaml`](corpus-descriptor.md#publishing) supplies where the corpus is
+part, belong to `publishing-target`. [`.corpus.yaml`](../corpus-descriptor.md#publishing) supplies where the corpus is
 served from and nothing else. Every link resolves against the commit the export was built from, so a citation names the
 version the agent read rather than whatever the branch holds later.
 
@@ -173,19 +198,20 @@ The templates are `https://…/blob/<sha>/{path}#{anchor}` and `https://raw…/<
 `path` and `anchor` a line carries. Four things follow from writing them this way:
 
 * **The ref is inside the template.** A ref left as a placeholder is forty hex characters copied by an agent, and a
-  one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a
-  substitution can produce is a wrong path, which the reader can see and correct.
+  one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a substitution
+  can produce is a wrong path, which the reader can see and correct.
 * **Only the human template takes an anchor.** Raw source has no fragment to honour, so the asymmetry is a property of
   the templates rather than a rule each reader has to remember.
-* **The bases are not carried beside them.** They are in the templates already, and a manifest stating one address
-  twice is a manifest that can state it two ways.
-* **A corpus that is not its repository names the folder it sits in.** `publishing.path-prefix` lands between the
-  commit and the record's path, which is the only place it can go. What a reader supplies is the path alone, so the two
-  cannot be joined in the wrong order.
+* **The bases are not carried beside them.** They are in the templates already, and a manifest stating one address twice
+  is a manifest that can state it two ways.
+* **A corpus that is not its repository names the folder it sits in.** `publishing.path-prefix` lands between the commit
+  and the record's path, which is the only place it can go. What a reader supplies is the path alone, so the two cannot
+  be joined in the wrong order.
 
 ### A per-record file resolves its links
 
-The commit therefore sits inside them, and the file rewrites on every export from a new commit whatever its content did.
+A per-record file carries its links already resolved, rather than a template and a substitution rule. The commit sits
+inside them, so the file rewrites on every export from a new commit whatever its content did.
 That churn is bought deliberately: a reader that has already dereferenced one record wants a URL in its hand rather than
 a template and a substitution rule.
 
@@ -205,7 +231,7 @@ they travel either way.
 
 `formatVersion` covers the envelope: the keys the manifest carries, the layout of the tree, and how a link template is
 built. Each entry under `types` carries a `shapeVersion` covering that one type's files. `contentVersion` is
-`content-version` from [`.corpus.yaml`](corpus-descriptor.md), semantically versioned and bumped by hand, and states
+`content-version` from [`.corpus.yaml`](../corpus-descriptor.md), semantically versioned and bumped by hand, and states
 what the corpus knows. A corpus can rewrite every definition and move none of the three.
 
 ### Each type is versioned where its keys are declared
@@ -249,4 +275,4 @@ as unread. A glossary term is unaffected: its body is everything under the headi
 is the safe way round: the alternative is an export quietly thinner than the type asked for. The value stays
 three-valued so that the first type wanting a shorter line does not force it to be rebuilt.
 
-[`bundle`](cli/bundle.md) is what reads `formatVersion` and each `shapeVersion`, and refuses an export it cannot read.
+[`bundle`](../cli/bundle.md) reads `formatVersion` and each `shapeVersion`, and refuses an export it cannot read.

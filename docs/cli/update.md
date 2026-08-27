@@ -20,150 +20,98 @@ kac update [--add-type <TYPE>] [--check] [--drop-type <TYPE>] [--from <URL|PATH>
 
 <!-- END GENERATED: usage-update -->
 
-## What it is for
+## What it does
 
-`update` takes a newer framework into a corpus, meaning one repository of knowledge records, that already has one. It is
-also where a corpus adopts a type or gives one up. It reads where the corpus took its framework from, fetches that
-template again at its ref, decides file by file what the corpus receives, writes it, and records what it took.
+`update` takes a newer framework into a corpus that already has one. It is also where a corpus adopts a type or gives
+one up.
 
-Its reader is whoever maintains a corpus. The command's promise is narrow and worth stating plainly: **it leaves every
-change in the working tree and commits nothing.** Git is the review step, so `update` can be liberal where a tool
-without that safety net would have to be timid.
+It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file what
+the corpus receives, writes it, and records what it took. **It leaves every change in the working tree and commits
+nothing.** Git is the review step, so run it on a clean tree and read the diff.
 
-## What it is not
+[Layers](../design/layers.md) says how each file is decided. It is not a merge tool: where the result is wrong, the
+answer is `git checkout` on the file, or a `skip:` entry saying the corpus owns it.
 
-**It is not how the tool is updated.** The framework is the schema, the tooling and the documentation that travel
-between corpora. Its two halves reach a corpus by different routes. `kac` itself comes from nuget.org, and
-`dotnet tool update KnowledgeAsCode.Tool` is what moves it. Everything else comes from the template `.corpus.yaml`
-points at, and `update` is what moves that.
+`update` moves the framework's files. `dotnet tool update KnowledgeAsCode.Tool` moves `kac` itself. The two halves move
+independently.
 
-The two halves move independently. A corpus can run a new tool over an old copy of the framework's files, or the
-reverse, and neither is a fault on its own. The template's manifest names the oldest tool that can read it in
-`minimum-tool`, which is the one place the two are held together.
+## Examples
 
-**It is not a merge tool.** It writes files and stops. Where the result is wrong, the answer is `git checkout` on the
-file, or a `skip:` entry saying the corpus owns it. Nothing here resolves a conflict, because a clean tree means there
-are none.
+### Take the newer framework
 
-**It is not [`validate`](validate.md).** Whether a corpus's records are correct is a separate question with a separate
-answer, and a corpus can be perfectly in step with its framework and full of bad records.
-
-**It is not [`generate`](generate.md).** That recomputes what a corpus derives from its own frontmatter. This one brings
-in what the corpus derives from somebody else's framework. A corpus can be fresh and behind, or in step and stale.
-
-## How it works
-
-### Preconditions
-
-1. **A corpus.** A `.corpus.yaml` at or above the working directory. Standing one up where there is none is
-   [`new`](new.md).
-2. **A clean tree.** This is the whole safety model: everything the command writes has to be distinguishable from
-   everything the person wrote, and only a clean tree makes that true. `--check` writes nothing, so it runs over a tree
-   in any state.
-3. **The template**, cloned shallow at the ref `.corpus.yaml` records, or at `--ref` for a single run.
-4. **The tool**, checked against the template's `minimum-tool`.
-
-### The plan
-
-Every file the template names resolves to exactly one layer, and the first matching rule wins. `to:` sends a file
-somewhere other than where it sat upstream. The manifest deciding all of this sits at the upstream repository's root, or
-in the folder `upstream.path` names.
-
-| Layer      | What happens                                                                                   |
-|------------|------------------------------------------------------------------------------------------------|
-| `overlay`  | Written wherever the two copies differ. This is framework property and an edit to it is drift. |
-| `seed`     | Written when absent. Written again only under `update-policy: full`.                           |
-| `removed`  | Deleted. A tombstone in the manifest, so a removal is stated rather than inferred.             |
-| `withheld` | Never written. The template's own machinery.                                                   |
-
-#### Seed files are the corpus's own words
-
-A type's root page and its `_template.md` arrive carrying the framework's wording and are rewritten in the corpus's
-domain. Refreshing them on every run would open each update with three dozen files to revert by hand.
-
-`update-policy: cautious` in `.corpus.yaml` is the default. `full` refreshes them and hands the reconciliation to the
-diff, and `--policy` overrides either for one run.
-
-#### A deletion is declared, never guessed
-
-A file missing from the template is not evidence it was dropped. It is as likely to be evidence of a mistake upstream.
-Only `layer: removed` deletes, and it deletes exactly what it names. A seed belongs to the corpus once written, so
-retiring one is the corpus's own call.
-
-#### `skip:` is how a corpus takes a file back
-
-A path listed there is neither read nor written, in either direction. It is the one way to say "I own this and I mean
-it" about a file the overlay would otherwise reclaim on every run:
-
-```yaml
-skip:
-  - path: .plugin/hooks/breadcrumb
-    reason: Patched for our proxy.
+```bash
+kac update
 ```
 
-#### A shared plugin tree is withheld
+Run it on a clean tree. Everything it writes then shows up in `git status` as its own diff.
 
-`plugin.from` in `.corpus.yaml` sends `bundle` to one tree elsewhere, so a corpus naming it holds none of that tree and
-an update writes none of it here. Its own `.plugin/.claude-plugin/plugin.json` is
-a seed and arrives all the same: the manifest names the plugin and lists the components that corpus declares.
-[The corpus descriptor](../corpus-descriptor.md) says how the two trees are merged.
+### Ask what would change, and write nothing
 
-A corpus adopting the key with the old copies still on disk is told. Each one is reported as a file the template sends
-nothing to, and `--check` fails on it, because a corpus's own file wins the merge and a leftover would go on shipping
-after every upstream change. Delete the tree bar its manifest.
+```bash
+kac update --check
+```
 
-#### A continuous integration starter is refreshed and never introduced
+It computes the plan, prints it, and exits non-zero if anything would change. `--check` writes nothing, so it runs over
+a tree in any state:
 
-A manifest rule may declare `ci:`, naming the system its files serve, and `new` writes the matching starter alone.
-Which system builds a repository is that repository's own answer, so an update leaves a starter the corpus does not
-hold where it is. A corpus that wants one copies it across by hand.
+```text
+update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 3b812bb.
+update: withheld 61 file(s) for types this corpus has not adopted.
+update: withheld 1 continuous integration starter(s) this corpus does not hold. which system builds it is not an update's to decide.
+this corpus is behind its framework. these would change:
+WRITE, framework files this corpus holds differently:
+  .schema/adrs.yaml
+run:  kac update
+```
 
-### Adopting and giving up a type
+A corpus already in step says so and exits `0`:
 
-`--add-type` writes the type's schema, its root page and its template, and adds the name to `types:`. It is the same
-machinery as any other write, pointed at one type's files.
+```text
+update: in step, 40 file(s) compared.
+```
 
-`--drop-type` is the asymmetric half, and it refuses where the folder holds records. Deleting records is deleting
-knowledge, and everything else in a corpus exists to serve them. The message names the count and offers the two honest
-ways forward: delete them deliberately, or leave the type adopted.
+Run this in CI to find out that a corpus has fallen behind. It never pushes.
 
-With no record to lose, a drop is the inverse of an adoption. The type's schema file, its root page and its folder all
-go, and `types:` stops naming it. Nothing else in the corpus belonged to that type.
+### Adopt a type, or give one up
 
-### `--check`
+```bash
+kac update --add-type policies
+kac update --drop-type tools
+```
 
-Compute the plan, print what would change, write nothing, and exit non-zero if anything would. The same discipline as
-`generate --check`, and for the same reason: a pipeline says whether a corpus has fallen behind, and never pushes.
+Adopting writes the type's schema, its root page and its template, and adds the name to `types:`. Dropping is the
+asymmetric half, and it refuses while the folder still holds records:
 
-It answers in the other direction too. A file the corpus keeps where the rules call the area `overlay`, that the
-template sends nothing to, is a framework change made in the wrong tree. It would reach no other corpus, and nothing in
-this one reads as though anything is missing, so the check is the only place it surfaces. Move it upstream, or claim it
-with a `skip:` entry.
+```text
+update: tools/ holds 3 record(s), and deleting a record is deleting knowledge. delete them yourself and run this
+again, or leave 'tools' adopted.
+```
 
-This is what proves the framework's own repository, where each corpus under `examples/` holds a materialised copy of
-what the template sends. A file whose destination is where it was already read from is shared with every corpus there,
-and `.schema/` is the file in that position.
+The message names the count and the two ways forward. Deleting records is yours to do deliberately.
 
-### What it records
+### Refresh the seed files too
 
-Four keys are rewritten: `descriptor-version`, and `upstream.commit`, `upstream.template-version` and
-`upstream.taken-on`. The ref is followed, not pinned: the commit is written down as what was taken, and nothing reads it
-back. A template read from a folder resolves no commit, so that key is left as it stands. The file is rewritten one line
-at a time, because most of its value is the commentary explaining what each key means.
+```bash
+kac update --policy full
+```
 
-`--add-type` and `--drop-type` rewrite `types:` as well, and a run passing neither leaves the list alone.
+`cautious` is the default and writes a seed file only where the corpus has none. `full` writes them all.
+[Layers](../design/layers.md#a-seed-is-the-corpuss-own-words) says why a seed is left alone by default.
 
 ## Known limits
 
-**A type this corpus has not adopted is reported, not adopted.** Silence would hide it and adoption would put folders in
-a corpus nobody asked for, so the run names it and the `--add-type` that would take it. It cannot tell a type the
-framework has just added from one declined at creation, so it names both and lets you decide.
+**It needs a clean tree.** This is the whole safety model: everything the command writes has to be distinguishable from
+everything you wrote. `--check` is the exception and runs over a tree in any state.
+
+**A type this corpus has not adopted is reported, not adopted.** The run names it and the `--add-type` that would take
+it. It cannot tell a type the framework has just added from one declined at creation, so it names both and lets you
+decide.
 
 **The descriptor's own shape is stamped, not migrated.** Where `descriptor-version` has moved, the keys the tool owns
-are rewritten and anything new or missing is reported for a person to settle. Migration code is infrastructure ahead of
-a second version needing it.
+are rewritten and anything new or missing is reported for you to settle.
 
-**The template has no changelog.** What changed in a framework is read from the diff `update` leaves behind, which is
-the same place every other answer here is read from. A second corpus is the point at which that stops being enough.
+**The template has no changelog.** What changed in a framework is read from the diff `update` leaves behind.
+
+**It is not [`validate`](validate.md).** A corpus can be perfectly in step with its framework and full of bad records.
 
 [The corpus descriptor](../corpus-descriptor.md) is the reference for every key this command reads and writes.

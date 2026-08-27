@@ -12,10 +12,10 @@ namespace kac.tests;
 
 public partial class DocumentationTests
 {
-    // The two pages of the site's schema reference. They document the schema without travelling with
-    // it, so a corpus that took a copy reads them at the published URL.
+    // The two schema pages of the site's design reference. They document the schema without travelling
+    // with it, so a corpus that took a copy reads them at the published URL.
     private static string Page(string name) =>
-        File.ReadAllText(Path.Combine(Repo.Root, "docs", "schema", name));
+        File.ReadAllText(Path.Combine(Repo.Root, "docs", "design", name));
 
     // A row of the fact table opens with the call it documents: `| \`section_count('Title')\` | int |`.
     [GeneratedRegex(@"^\| `([a-z_]+)\(", RegexOptions.Multiline)]

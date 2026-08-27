@@ -24,7 +24,7 @@ A corpus has two halves. The **mechanism** is the schema, the validator, the gen
 identical everywhere. The **knowledge** is the organisation's, and it is shared with nobody.
 
 That split lets the mechanism improve without touching anyone's content, and lets an organisation take a copy without
-inheriting someone else's opinions about accessibility. It also turns *which of these files are mine?* into a question
+inheriting someone else's retention policy. It also turns *which of these files are mine?* into a question
 [`kac update --check`](../cli/update.md) answers.
 
 The framework's own `manifest.yaml` declares which files fall on which side, so no prose has to assert it. Every file
@@ -58,8 +58,8 @@ fails the build.
 Every record has exactly one home. Where two places need the same knowledge, the second links to the first rather than
 copying it.
 
-Duplication does not stay duplicated. Someone updates one copy and not the other, and afterwards nobody can tell which
-is current, so a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none,
+A copy does not stay in step. Someone updates one and not the other, and afterwards nobody can tell which is current,
+so a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none,
 because a gap is visible and a contradiction is not.
 
 ## Cheap capture, deliberate promotion
@@ -71,7 +71,7 @@ if nothing promotes it.
 The rigour lives at promotion. A discovery becomes an FAQ when a human confirms it, and the FAQ carries provenance back
 to the observation. That gradient lets a corpus grow without its average trustworthiness falling.
 
-## Trust before coverage
+## Trust is what a corpus is for
 
 The failure mode of a wiki is not too little content. It is content nobody believes.
 
@@ -102,16 +102,15 @@ guesses placement correctly, and an agent needs a decision table. A human reads 
 needs it in a field. Almost every design choice here answers at least partly to that: typed documents, explicit tiers, a
 glossary treated as load-bearing, and validation that fails rather than warns.
 
-None of it replaces human ownership. Humans and agents work against one model.
+None of it replaces human ownership.
 
 ## One corpus, one bounded context
 
 A corpus is one repository holding everything: policies, standards, services, runbooks and the rest, with the mechanism
-alongside. One product, one estate, one governance conversation.
+alongside.
 
 Most of this page rests on that boundary. The validator fails a one-sided link because it can see both ends of it. An
 owner is authoritative because there is a single place the record could be. A session clones the repository and has the
 whole graph, with nobody to ask for the rest of it.
 
-Nothing here asks a corpus to reach outside itself. An organisation running one bounded context needs the mechanism in
-this repository and nothing beyond it.
+A corpus that needs nothing outside itself is one a session can clone and read whole.

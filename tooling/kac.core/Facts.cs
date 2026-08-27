@@ -43,7 +43,7 @@ public sealed class Facts(Doc doc)
     public int Links() => doc.Links.Count;
 
     // Whether the body matches a pattern the schema supplies. Read as written, so code fences, link
-    // targets and the markdown syntax itself are all in scope; `docs/checks.md` says which
+    // targets and the markdown syntax itself are all in scope; `docs/design/checks.md` says which
     // rules need that. It is also what lets `\*\*MUST\*\*` find a bold modal that the rendered text
     // would have flattened away.
     //

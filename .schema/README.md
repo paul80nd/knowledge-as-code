@@ -58,8 +58,8 @@ meets the same gate as one written in it, and neither is admitted by the JSON al
 It answers shape and vocabulary. What it cannot answer is anything spanning two files or reading the code, and those two
 questions are documented on the site:
 
-* <https://paul80nd.github.io/knowledge-as-code/schema/expressions/> is what a rule's `expr:` may say.
-* <https://paul80nd.github.io/knowledge-as-code/schema/held-to/> is what `kac` refuses when it loads these files, and
+* <https://paul80nd.github.io/knowledge-as-code/design/expressions/> is what a rule's `expr:` may say.
+* <https://paul80nd.github.io/knowledge-as-code/design/held-to/> is what `kac` refuses when it loads these files, and
   why a declaration the tool ignores counts as a defect.
 
 ## Open question

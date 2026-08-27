@@ -55,11 +55,11 @@ from.
 | **Decided**     | Two reviewers                      | Alternatives genuinely weighed. Consequences stated including the unwelcome ones |
 | **Normative**   | The record's owner                 | Rules are testable. RFC 2119 keywords used correctly. Changelog updated          |
 | **Descriptive** | One reviewer                       | Cross-references resolve. Content matches the estate as it actually is           |
-| **Procedural**  | One reviewer who has done the task | Steps are followable by someone who hasn't. Rollback stated                      |
+| **Procedural**  | One reviewer who has done the task | Someone who has never done it can follow the steps. Rollback stated                      |
 | **Observed**    | None                               | Merges on CI passing. Authority comes at promotion, not capture                  |
 
 **Observed content is unreviewed by design.** A discovery is cheap because nobody gates it, and a capture step with a
-review attached is a capture step that does not happen. The tier's low authority is what makes the low bar safe.
+review attached is a capture step that does not happen.
 
 **Decided content is immutable after merge.** Corrections are limited to typos and status transitions. To change a
 decision, write a new one that supersedes it.
@@ -71,13 +71,13 @@ them. A human accepts what it proposes, and a branch policy enforces that so nob
 
 What an agent may write follows from that. It captures a discovery rather than an FAQ, because it cannot confirm its own
 observations. It proposes a superseding record rather than editing a Decided one. It asks where a record goes rather
-than guessing, because a well-written record in the wrong folder is a cost.
+than guessing, because a record in the wrong folder is never found by the search that needed it.
 
 ## What a pipeline will not do
 
 **CI does not commit.** Where generated content is stale the build fails and names the command to run locally. A
 pipeline that pushed fixes into the branch would produce bot commits, re-trigger itself, and make "who changed this"
-unanswerable. That is a bad trade for a repository whose value is a trustworthy history.
+unanswerable.
 
 ## What does not belong in a corpus
 

@@ -50,12 +50,14 @@ public partial class CliReferenceTests
             + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
     }
 
-    // The five headings a command page may carry, in the order it carries them. The set is fixed so that a reader can
-    // ask the same question of any command and find the answer in the same place. `Decisions` and `Known limits` are
-    // left out where a command has none, and nothing else may be added or reordered: deeper structure goes underneath
-    // one of these rather than beside it, which is what keeps a command with two halves from growing a sixth section.
-    private static readonly string[] Sections =
-        ["What it is for", "What it is not", "How it works", "Decisions", "Known limits"];
+    // The three headings a command page may carry, in the order it carries them. The set is fixed so that a reader can
+    // ask the same question of any command and find the answer in the same place. `Known limits` is left out where a
+    // command has none, and nothing else may be added or reordered: deeper structure goes underneath one of these
+    // rather than beside it, which is what keeps a page with several worked examples from growing a fourth section.
+    //
+    // Why a command works the way it does is not on these pages. It is under docs/design/, which each one links, so
+    // what a reader meets here is what they need to type the command and read what it printed.
+    private static readonly string[] Sections = ["What it does", "Examples", "Known limits"];
 
     [Fact]
     public void Every_command_page_carries_the_same_sections()
@@ -68,7 +70,7 @@ public partial class CliReferenceTests
                 .ToList();
 
             Assert.Equal(Sections.Where(s => carried.Contains(s, StringComparer.Ordinal)), carried);
-            Assert.Equal(Sections[..3], carried.Take(3));
+            Assert.Equal(Sections[..2], carried.Take(2));
         }
     }
 

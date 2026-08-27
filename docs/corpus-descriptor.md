@@ -65,7 +65,7 @@ publishing:
 
 `publishing-target` is one of `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather than leave it to be
 guessed, so `export` knows whether it can build a link at all and which form to build.
-[The export format](export-format.md#the-two-links) sets out the two an export carries.
+[The export format](design/export.md#the-two-links) sets out the two an export carries.
 
 ### What each target says
 
@@ -124,12 +124,12 @@ can still see exactly what arrived. A template read from a folder resolves no co
 made. A `new` that read a folder rather than a repository leaves `ref` and `commit` bare, because a folder has no ref
 to follow and no commit to resolve.
 
-### A corpus is where a schema defect gets found
+### Where a schema change goes back
 
 Real content is the only thing that reveals a schema is wrong, so the corpus that found the problem is often the one
 best placed to fix it. A change is settled once the repository serving the template accepts it.
 
-## How far an update goes
+## `update-policy:` sets how far an update goes
 
 ```yaml
 update-policy: cautious
@@ -167,7 +167,7 @@ without adopting it is a defect [`validate`](cli/validate.md) reports.
 They move the name and the type's files together. Editing the list by hand leaves the corpus holding a type it does not
 claim, or claiming one it does not hold.
 
-## What an export leaves behind
+## `export.exclude:` drops a record from the output
 
 ```yaml
 export:
@@ -201,7 +201,7 @@ writes beside it wins over the shared tree's copy of the same path, so one skill
 
 Omit the key and the corpus keeps its own tree, which is what [`new`](cli/new.md) creates.
 
-## Files you hold differently
+## `skip:` is how a corpus takes a file back
 
 ```yaml
 skip:
@@ -213,8 +213,8 @@ Each entry names a file and says why. A path listed here is neither read nor wri
 the one way to say "I own this and I mean it" about a file the framework would otherwise reclaim on every run. `update`
 steps over them and reports what it stepped over. Delete an entry once the file matches the framework again.
 
-The reason is for whoever opens the file next, and it is the only thing standing between a deliberate divergence and one
-nobody remembers making.
+The reason is for whoever opens the file next.
+[Layers](design/layers.md#skip-is-how-a-corpus-takes-a-file-back) says what it separates.
 
-[The export format](export-format.md) is this page's other half: here is what a corpus writes about itself, and there
+[The export format](design/export.md) is this page's other half: here is what a corpus writes about itself, and there
 is what a consumer reads out of it.

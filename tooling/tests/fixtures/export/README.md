@@ -57,7 +57,7 @@ something a person can see. [The suite README](../../README.md) describes the di
 filter is matched as a substring, so that command rebuilds [`export-policies`](../export-policies/README.md) beside this
 fixture. Read both diffs. A key renamed or dropped also moves `Exporter.FormatVersion`, which is what a consumer reads
 to know whether it can still parse what it was handed. A key added leaves that consumer correct and moves nothing;
-`docs/export-format.md` carries the test both readings answer to.
+`docs/design/export.md` carries the test both readings answer to.
 
 The other three files carry what a whole-file diff cannot, and none of them lists the export again.
 `expected-export.txt` holds lines the run must print — an export says what it could not carry, and none of that reaches

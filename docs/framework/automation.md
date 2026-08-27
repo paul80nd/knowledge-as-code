@@ -27,7 +27,7 @@ corpus is that a reader can believe it.
 ## What validation asks
 
 Four questions. The grouping is this page's, and no file carries it. `kac checks` prints the checks themselves, and
-[Checks](../checks.md) says where each one comes from.
+[Checks](../design/checks.md) says where each one comes from.
 
 **Does the record parse and declare itself?** Frontmatter is YAML, required fields are present, enum values are ones the
 type declares, and dates are quoted. An `id` is unique across the corpus and agrees with both its type's prefix and the
@@ -48,15 +48,14 @@ is declared on the types where the risk actually lives, which today means integr
 ### Rules the schema declares and nothing runs
 
 A type may declare a rule with a description and no severity. `validate` skips it, and the type's own page renders it
-under *Declared, not yet enforced*, so a reader meets the gap on the page they were already reading. An intention
-recorded is worth more than an intention remembered. What the schema refuses is a severity with nothing behind it, so a
-rule cannot claim to run and then not.
+under *Declared, not yet enforced*, so a reader meets the gap on the page they were already reading. What the schema
+refuses is a severity with nothing behind it, so a rule cannot claim to run and then not.
 
 ## What generation protects
 
-Generated content sits between markers inside otherwise hand-written files, so one file serves one purpose: the author
-keeps their prose and the generator keeps the tables current. A block whose markers have gone is written by nothing, so
-their presence is itself checked.
+Generated content sits between markers inside otherwise hand-written files, so one file serves one purpose.
+[Generation](../design/generation.md#only-the-region-between-the-markers-is-rewritten) says what that buys. A block
+whose markers have gone is written by nothing, so their presence is itself checked.
 
 Only the types a corpus adopted are generated, so every generated list names pages that corpus actually holds.
 [`generate`](../cli/generate.md) says which blocks exist and what each is built from.

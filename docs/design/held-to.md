@@ -5,8 +5,8 @@ harmlessly inert: `rules:` reads as behaviour the validator applies, and a `ref:
 Either one can sit in a file for a year while nobody notices it does nothing.
 
 This matters most in a corpus that copied the framework from somewhere else. A **corpus** is one repository of knowledge
-records kept in git, and whoever holds a copied `.schema/` cannot ask what a key was meant to do. The pass answers for
-them, and every finding names the file and the key.
+records kept in git, and if you hold a copied `.schema/` you cannot ask what a key was meant to do. The pass answers for
+you, and every finding names the file and the key.
 
 ## What the pass reports
 
@@ -40,6 +40,9 @@ them, and every finding names the file and the key.
 | A `column.<Header>` at a header the type's `parts.columns:` does not declare             | `schema-shape`       |
 | A `part.lead` or `part.aside` on a type sourcing its parts from a table                  | `schema-shape`       |
 | A `part.level` on a type declaring no binding or advisory modals                         | `schema-shape`       |
+| A `parts.source:` outside the sources the tool extracts                                  | `schema-dispatch`    |
+| A `parts.section:` at a section the type's `sections:` block does not declare            | `schema-shape`       |
+| A table-sourced `parts:` block declaring no `binding:`                                   | `schema-shape`       |
 | An export entry declaring no fidelity at all                                             | `schema-shape`       |
 | A fidelity no export carries                                                             | `schema-dispatch`    |
 | A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:`   | `schema-shape`       |
@@ -64,8 +67,7 @@ over is reported. So a key gains its meaning and its admission in the same edit,
 being admitted without anyone having to remember.
 
 [`meta/type.schema.json`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/meta/type.schema.json)
-holds a list and is the exception that proves the point. It can be behind, which is why it advises an author and gates
-nothing.
+holds a list, and that list can be behind, which is why it advises an author and gates nothing.
 
 ## What `schema-shape` asks instead
 
@@ -80,7 +82,7 @@ A `ref:` at a type the corpus never adopted is reported for the same reason as o
 folder was deleted locally or never existed upstream, the field claims a target nothing can resolve. Re-adopt the type
 file or drop the `ref:`. Those are two ways of settling one question about what this corpus holds.
 
-## Aspiration is allowed, silence is not
+## A rule may declare no `severity:`, but not one nothing answers
 
 A rule you have not built yet keeps its `description:`, drops its `severity:`, and renders on the type page under
 *Declared, not yet enforced*. A rule naming a severity that nothing dispatches would read as enforced from every angle
@@ -88,4 +90,4 @@ and not be, so the load fails on it.
 
 ## Where to go next
 
-[Checks](../checks.md) is the page for adding a check, or for deciding whether the one you want already exists.
+[Checks](checks.md) is the page for adding a check, or for deciding whether the one you want already exists.

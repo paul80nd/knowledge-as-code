@@ -1,15 +1,15 @@
 # Running it in CI
 
 Two commands hold a corpus to its schema on every pull request, so a broken cross-reference fails CI. A corpus is one
-repository of knowledge documents kept in git, and a record is one document in it filed under a type. Both commands run
-from inside the corpus.
+repository of knowledge records kept in git, and a record is one Markdown document in it, filed under a type. Both
+commands run from inside the corpus.
 
 | Command                | Fails when                                                                  |
 |------------------------|-----------------------------------------------------------------------------|
 | `kac validate`         | a record breaks a check the schema declares                                 |
 | `kac generate --check` | a generated file no longer matches the records and schema it was built from |
 
-[Checks](checks.md) is the page for adding a check. A corpus that ships an agent plugin adds
+[Checks](design/checks.md) is the page for adding a check. A corpus that ships an agent plugin adds
 [`export`](cli/export.md) and [`bundle`](cli/bundle.md) beside the two, so a change that breaks the export or the bundle
 fails the pull request. [Automation](framework/automation.md) says what the checks are for.
 
@@ -23,7 +23,7 @@ dotnet new tool-manifest
 dotnet tool install KnowledgeAsCode.Tool
 ```
 
-That writes `dotnet-tools.json` at the repository root and names the version in it. CI restores from that file, so every
+That writes `.config/dotnet-tools.json` and names the version in it. CI restores from that file, so every
 machine runs the same `kac`.
 
 ```bash
@@ -34,7 +34,7 @@ dotnet tool run kac validate
 ## CI never commits, and checks out with git
 
 **CI never commits.** `generate --check` recomputes every generated file, names the ones that differ, and exits `1`. It
-writes nothing. Give the job read-only permission, and let whoever broke it run `kac generate` on their own machine.
+writes nothing. Give the job read-only permission. Run `kac generate` on your own machine and commit what it writes.
 
 ```text
 generated files are stale. These differ from the schema/frontmatter:
@@ -86,7 +86,7 @@ pin that way and let Dependabot move them.
 ## Azure Pipelines
 
 ```yaml
-trigger: none      # PR validation comes from a branch policy, see below
+trigger: none      # PR validation comes from an Azure Repos branch policy
 
 pr:
   branches:
@@ -113,7 +113,7 @@ steps:
     displayName: Check generated output is fresh
 ```
 
-!!! warning "Azure Repos ignores the `pr:` trigger above"
+!!! warning "Azure Repos ignores the `pr:` trigger in this file"
 
     Wire the pipeline up as a branch policy, or it never runs on a pull request and nothing says so.
 
