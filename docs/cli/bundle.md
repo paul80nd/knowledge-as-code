@@ -56,6 +56,36 @@ claude plugin marketplace add ./.dist
 Both directories are untracked, so nothing here needs a branch or a credential. What you get on a laptop is exactly
 what CI publishes.
 
+### Read which components shipped
+
+A corpus adopting two record types ships two skills over one export. The closing line counts them:
+
+```text
+bundle: wrote 35 file(s) to .dist/plugin/ as example-engineering 0.1.0. 3 component(s) included, 0 trimmed.
+```
+
+`bundle.json` names them, and it travels inside the plugin:
+
+```bash
+jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bundle.json
+```
+
+```text
+{"kept":["skills/glossary-lookup","skills/policy-lookup","hooks"],"trimmed":[]}
+```
+
+Search the assembled skills for the file one type exports, to see which of them reads it:
+
+```bash
+grep -l clauses.jsonl .dist/plugin/skills/*/SKILL.md
+```
+
+```text
+.dist/plugin/skills/policy-lookup/SKILL.md
+```
+
+[The plugin bundle](../design/plugin.md) says what a component declares and what decides whether it travels.
+
 ### Validate it in a pipeline
 
 ```bash

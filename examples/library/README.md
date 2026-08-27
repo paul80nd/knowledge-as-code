@@ -67,8 +67,8 @@ comes from, and a service coupled to the whole estate with no dependency edges.
 ## Maturity
 
 **Services are the proven type here.** A consumer repository built a full catalogue against that schema and returned a
-run of findings, tracked as issues upstream. The other seven schemas have met little real content, and five of them
-hold none at all. That is the honest limit: a schema is wrong in ways only real content reveals.
+run of findings, tracked as issues upstream. The other seven schemas have met little real content, and five of them hold
+none at all. That is the honest limit: a schema is wrong in ways only real content reveals.
 
 ## What this corpus declares about itself
 
@@ -125,8 +125,9 @@ Claude Code holds, so a second build at the same `content-version` leaves the fi
 invisible.
 
 `sh ../../tooling/tests/round-trip.sh` walks the same path without a session, and without touching your own
-configuration. It installs into a config directory of its own, looks a term up, fetches a record through the raw link
-the export wrote, and says which step failed. CI runs it on Linux and Windows.
+configuration. It installs into a config directory of its own, checks that this corpus shipped the glossary skill and
+not the policy skill it has no records for, looks a term up, fetches a record through the raw link the export wrote, and
+says which step failed. CI runs it on Linux and Windows.
 
 ### What the plugin does not do yet
 

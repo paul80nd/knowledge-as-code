@@ -75,6 +75,13 @@ adopted, so a README or a licence in the plugin tree needs no declaration. A com
 file, so the trim matches the declared path itself as well as anything beneath it, on whole segments: `skills/a` does
 not take `skills/ab` with it.
 
+### Each component reads its own type's parts file
+
+A corpus adopting both glossary and policies ships both skills over one export. The export writes one parts file per
+type, and each skill addresses the one belonging to the type it declares in `requires`. A skill naming another type's
+answers from a table written for a different question, and whoever asked cannot tell. `bundle` does not read a
+component's files, so nothing here catches that. The round trip does, over the installed copy.
+
 ### Trimming everything warns and still builds
 
 Refusing would leave a corpus unable to produce the thing that would have told it why. The empty plugin is itself the

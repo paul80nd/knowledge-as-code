@@ -233,11 +233,14 @@ jobs:
       - name: Build the site
         run: mkdocs build
 
-  # Installs what was assembled and asks it the questions its skill describes. On both platforms
-  # because development happens on macOS and the first audience is on Windows.
+  # Installs what was assembled and asks each skill in it the questions that skill describes. On both
+  # platforms because development happens on macOS and the first audience is on Windows.
   #
-  # Only the library corpus, because it is the one this repository publishes and the only one whose
-  # glossary holds terms to ask about.
+  # Two corpora, because the trim reads in two directions and one corpus can only show one of them.
+  # `library` adopts glossary and not policies, so it proves that a skill whose type stayed behind is
+  # gone from the install. `engineering` adopts both, so it proves that two skills ship over one
+  # export and that neither names the other's file. `payments` adopts neither type and would prove
+  # only that a plugin with no skill installs, which `bundle-empty` already pins.
   #
   # A job of its own because it needs a different checkout. The export stamps whatever commit HEAD
   # stands on into every link, and a pull_request run checks out a merge commit the raw host does
@@ -249,10 +252,13 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
+        corpus:
+          - library
+          - engineering
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        working-directory: examples/library
+        working-directory: examples/${{ matrix.corpus }}
     steps:
       - name: Check out the commit the export will name
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -273,6 +279,6 @@ jobs:
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest
 
-      - name: Install the plugin and ask it what its skill describes
+      - name: Install the plugin and ask each skill what it describes
         shell: bash
         run: sh ../../tooling/tests/round-trip.sh
