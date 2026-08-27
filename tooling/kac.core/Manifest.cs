@@ -181,18 +181,21 @@ public class CorpusDescriptor
     public const int ShortcodeMax = 8;
 
     // How this corpus is published, and where the published form is served from. The target names a set
-    // of link-building rules and `Publishing` holds them; the two bases are the only part a corpus
-    // supplies, because they are the only part that differs between two corpora on one target.
+    // of link-building rules and `Publishing` holds them; the base is the only part a corpus supplies,
+    // because it is the only part that differs between two corpora on one target.
     //
-    // Each is null where the descriptor states none, and a corpus publishing nowhere states none of the
-    // three. An export from one carries no links rather than links built on an empty base.
+    // One base, and it is the URL a person opens to browse the corpus: the GitHub repository, the Azure
+    // Repos repository, or the Azure DevOps wiki. Where an agent reads a record's source from is derived
+    // from it rather than stated beside it, because only GitHub ever served that from a second host.
+    //
+    // Both are null where the descriptor states none, and a corpus publishing nowhere states neither. An
+    // export from one carries no links rather than links built on an empty base.
     public string? PublishingTarget;
-    public string? HumanBase;
-    public string? RawBase;
+    public string? Base;
 
     // Where the corpus root sits inside the published repository, where it is not the root itself.
     //
-    // A corpus kept in a subdirectory cannot say this through its bases. The commit the links resolve
+    // A corpus kept in a subdirectory cannot say this through its base. The commit the links resolve
     // against goes between the base and the record's path, so a prefix folded into the base would land
     // on the wrong side of it. Null where the corpus is the repository, which is the ordinary case.
     public string? PathPrefix;
@@ -260,8 +263,7 @@ public class CorpusDescriptor
         descriptor.Shortcode = Blank(Yaml.Str(Yaml.Get(root, "shortcode")));
         descriptor.PublishingTarget = Yaml.Str(Yaml.Get(root, "publishing-target"));
         var publishing = Yaml.Get(root, "publishing");
-        descriptor.HumanBase = Yaml.Str(Yaml.Get(publishing, "human-base"));
-        descriptor.RawBase = Yaml.Str(Yaml.Get(publishing, "raw-base"));
+        descriptor.Base = Yaml.Str(Yaml.Get(publishing, "base"));
         descriptor.PathPrefix = Yaml.Str(Yaml.Get(publishing, "path-prefix"));
         descriptor.ExportExclude.AddRange(Yaml.StrList(Yaml.Get(Yaml.Get(root, "export"), "exclude")));
         descriptor.PluginFrom = Blank(Yaml.Str(Yaml.Get(Yaml.Get(root, "plugin"), "from")));

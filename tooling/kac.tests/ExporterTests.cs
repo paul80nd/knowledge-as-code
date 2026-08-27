@@ -320,7 +320,8 @@ public class ExporterTests
             .GetProperty("publishing");
         Assert.Equal("none", publishing.GetProperty("target").GetString());
         Assert.Equal(JsonValueKind.Null, publishing.GetProperty("humanTemplate").ValueKind);
-        Assert.Equal(JsonValueKind.Null, publishing.GetProperty("rawTemplate").ValueKind);
+        Assert.Equal(JsonValueKind.Null, publishing.GetProperty("base").ValueKind);
+        Assert.Equal(JsonValueKind.Null, publishing.GetProperty("ref").ValueKind);
     }
 
     [Fact]
@@ -390,7 +391,7 @@ public class ExporterTests
     // A consumer that builds a link and one that reads a record's own are never handed two different
     // strings.
     [Fact]
-    public void Substituting_a_line_into_the_templates_gives_the_links_the_record_carries()
+    public void Substituting_a_line_into_the_template_gives_the_link_the_record_carries()
     {
         var plan = Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Published, null, Run);
 
@@ -403,9 +404,6 @@ public class ExporterTests
         var path = line.GetProperty("path").GetString()!;
         var anchor = line.GetProperty("anchor").GetString()!;
 
-        Assert.Equal(
-            links.GetProperty("raw").GetString(),
-            publishing.GetProperty("rawTemplate").GetString()!.Replace(Publishing.PathToken, path));
         Assert.Equal(
             $"{links.GetProperty("human").GetString()}#{anchor}",
             publishing.GetProperty("humanTemplate").GetString()!
@@ -549,14 +547,13 @@ public class ExporterTests
 
     private static ExportPlan Plan(LoadedCorpus corpus) => Exporter.Plan(corpus, null, null, Run);
 
-    // A corpus with an address, for the tests that read one. The bases and the ref are `PublishingTests`'
-    // business; what matters here is that an export handed one writes templates rather than links.
+    // A corpus with an address, for the tests that read one. The base and the ref are `PublishingTests`'
+    // business; what matters here is that an export handed one writes a template rather than a link.
     private static readonly Publishing? Published = Publishing.For(
         new CorpusDescriptor
         {
             PublishingTarget = Publishing.GitHub,
-            HumanBase = "https://github.com/example/corpus/blob",
-            RawBase = "https://raw.githubusercontent.com/example/corpus"
+            Base = "https://github.com/example/corpus"
         },
         "0123456789abcdef0123456789abcdef01234567");
 

@@ -56,11 +56,10 @@ public sealed record NewAnswers
     public required IReadOnlyList<string> Types { get; init; }
 
     // How the corpus is published, and where the published form is served from. `Publishing.Targets`
-    // names every target a descriptor may state. Both bases are null where the corpus publishes nowhere,
-    // which is the one target needing neither.
+    // names every target a descriptor may state. The base is null where the corpus publishes nowhere,
+    // which is the one target needing none.
     public string PublishingTarget { get; init; } = Publishing.None;
-    public string? HumanBase { get; init; }
-    public string? RawBase { get; init; }
+    public string? Base { get; init; }
 
     // Which continuous integration system the corpus is built by. Asked apart from publishing, because a
     // corpus can be built by one system and read on another.
@@ -322,13 +321,12 @@ public static class New
         sb.Append("# How this corpus is published. One of: "
                   + $"{string.Join(" | ", Publishing.Targets)}.\n");
         sb.Append($"publishing-target: {answers.PublishingTarget}\n");
-        if (answers.HumanBase is { Length: > 0 } human && answers.RawBase is { Length: > 0 } raw)
+        if (answers.Base is { Length: > 0 } published)
         {
-            sb.Append("\n# Where the published form is served from. A person follows the first, and an"
-                      + " agent fetches the second.\n");
+            sb.Append("\n# Where the published corpus is browsed. An agent reads a record's source from"
+                      + " the same place, through a client that authenticates.\n");
             sb.Append("publishing:\n");
-            sb.Append($"  human-base: {Scalar(human)}\n");
-            sb.Append($"  raw-base: {Scalar(raw)}\n");
+            sb.Append($"  base: {Scalar(published)}\n");
         }
 
         sb.Append("\n# Where this corpus takes the framework from, and what the last take resolved to.\n");

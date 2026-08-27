@@ -47,17 +47,26 @@ public record ExportManifest(
     ExportPublishing Publishing,
     IReadOnlyList<ExportedType> Types);
 
-// How a link into the published form is built, and the ref every one of them resolves against.
+// How a link into the published form is built, and what an agent needs to read a record's source.
 //
-// The two templates are the whole rule: a consumer substitutes the `path` and `anchor` a line carries
-// and edits nothing else. The commit is already inside each string, so a citation names the version the
-// agent read without a ref ever passing through the agent's hands.
+// `HumanTemplate` is the whole rule for the link a person follows: a consumer substitutes the `path` and
+// `anchor` a line carries and edits nothing else. The commit is already inside the string, so a citation
+// names the version the agent read without a ref ever passing through the agent's hands.
 //
-// The bases the templates were built from are not carried. They are inside the templates already.
+// The other three are ingredients rather than an address, and they are what replaced a second template.
+// Only GitHub ever served a corpus's raw source to an anonymous caller, and only for a public
+// repository, so a URL an agent could simply fetch was never a rule the other targets could follow.
+// `Base`, `PathPrefix` and `Ref` are instead what a client authenticating to `Target` needs to ask for
+// the file. `docs/design/export.md` sets out the exchange.
 //
-// Both templates are null where the corpus publishes nowhere or names a target nothing builds links for,
-// which is the same state the per-record files report by carrying no links.
-public record ExportPublishing(string Target, string? HumanTemplate, string? RawTemplate, string? Ref);
+// `Base` is the descriptor's own, carried through unresolved. `PathPrefix` is null where the corpus is
+// its repository, and is otherwise joined ahead of a record's `path` to reach the file.
+//
+// `HumanTemplate`, `Base` and `Ref` are null together, where the corpus publishes nowhere or names a
+// target nothing builds links for. That is the same state the per-record files report by carrying no
+// links.
+public record ExportPublishing(
+    string Target, string? HumanTemplate, string? Base, string? PathPrefix, string? Ref);
 
 // One type this export carries, how much of it there is, and where to find it.
 //
@@ -92,7 +101,9 @@ public record ExportRecord(
     IReadOnlyDictionary<string, string?> Sections,
     ExportLinks? Links);
 
-public record ExportLinks(string Human, string Raw);
+// Where a record is read, resolved. One address, and it is the rendered page: see `ExportPublishing`
+// for why an agent is handed ingredients rather than a second link.
+public record ExportLinks(string Human);
 
 // One part of the flat file is one line, and no record here describes it. The type declares its keys in
 // its own `export.parts.line:` block, and `Exporter.Value` fills each from the source named beside it.

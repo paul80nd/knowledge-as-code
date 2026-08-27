@@ -138,8 +138,9 @@ therefore ripples into every fixture in the same run, rather than into a copy so
 [`tests/round-trip.sh`](tests/round-trip.sh) is the layer above all three and the only test that leaves the repository.
 It installs the built plugin into a Claude config directory of its own, checks that the components `bundle.json` kept
 arrived and the ones it trimmed did not, asks a surviving skill for something only its own type can answer, and fetches
-a record through the raw link the export wrote. That fetch is the one assertion that cannot be faked from the working
-tree. Run it from a corpus, after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
+a record's source from the base, prefix and ref the export wrote. That fetch is the one assertion that cannot be faked
+from the working tree. Run it from a corpus, after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code
+CLI on the path:
 
 ```bash
 cd ../examples/library && sh ../../tooling/tests/round-trip.sh

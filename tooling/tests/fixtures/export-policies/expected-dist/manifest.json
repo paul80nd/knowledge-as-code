@@ -1,5 +1,5 @@
 {
-  "formatVersion": 2,
+  "formatVersion": 3,
   "corpus": null,
   "shortcode": null,
   "contentVersion": null,
@@ -10,7 +10,8 @@
   "publishing": {
     "target": "none",
     "humanTemplate": null,
-    "rawTemplate": null,
+    "base": null,
+    "pathPrefix": null,
     "ref": null
   },
   "types": [

@@ -228,19 +228,17 @@ public class NewTests
     }
 
     [Fact]
-    public void A_corpus_that_gave_bases_states_them()
+    public void A_corpus_that_gave_a_base_states_it()
     {
         var yaml = New.Descriptor(
             Answers() with
             {
                 PublishingTarget = Publishing.GitHub,
-                HumanBase = "https://github.com/acme/corpus/blob",
-                RawBase = "https://raw.githubusercontent.com/acme/corpus"
+                Base = "https://github.com/acme/corpus"
             },
             Taken());
 
-        Assert.Contains("publishing:\n  human-base: https://github.com/acme/corpus/blob\n", yaml);
-        Assert.Contains("  raw-base: https://raw.githubusercontent.com/acme/corpus\n", yaml);
+        Assert.Contains("publishing:\n  base: https://github.com/acme/corpus\n", yaml);
     }
 
     [Theory]

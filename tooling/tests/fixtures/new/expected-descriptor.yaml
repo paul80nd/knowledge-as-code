@@ -12,7 +12,7 @@ content-version: "0.1.0"
 # The shorthand another corpus cites this one by. Fill it in when one does, and never change it after.
 shortcode:
 
-# How this corpus is published. One of: azure-devops-wiki | github | mkdocs | none.
+# How this corpus is published. One of: azure-devops | azure-devops-wiki | github | mkdocs | none.
 publishing-target: none
 
 # Where this corpus takes the framework from, and what the last take resolved to.

@@ -35,7 +35,7 @@ public static class Exporter
     // The shape of the output, versioned independently of anything the corpus says about itself.
     // `Bundler` refuses an export built to another shape, so moving this number means rebuilding every
     // export on disk. `docs/design/export.md` says what moves it.
-    public const int FormatVersion = 2;
+    public const int FormatVersion = 3;
 
     public const string ManifestFile = "manifest.json";
 
@@ -205,7 +205,7 @@ public static class Exporter
     private static ExportRecord Record(Doc doc, TypeSchema t, Publishing? publishing)
     {
         var export = t.Export!;
-        var links = publishing?.Links(doc.Rel);
+        var link = publishing?.Link(doc.Rel);
 
         var fields = new Dictionary<string, string?>(StringComparer.Ordinal);
         foreach (var name in export.Fields)
@@ -217,7 +217,7 @@ public static class Exporter
                     string.Equals(s.Title, name, StringComparison.OrdinalIgnoreCase)) is { } section)
                 sections[name] = Carry(Body(doc, section), fidelity);
 
-        return new ExportRecord(t.Key, doc.Rel, fields, sections, Links(links));
+        return new ExportRecord(t.Key, doc.Rel, fields, sections, Links(link));
     }
 
     // A section's own words, with its link reference definitions taken out.
@@ -480,19 +480,21 @@ public static class Exporter
     private static int Lines(string content) =>
         content.Count(c => c == '\n');
 
-    // How this export's links are built, for the manifest: the two templates, or nulls where the corpus
-    // has no address the tool can build on. Stated once here and substituted by whoever reads a line,
-    // rather than resolved onto every line of the flat file.
+    // How this export's links are built, for the manifest: the template a person's link is substituted
+    // into, and the base, prefix and ref an agent fetches a record's source with. All null where the
+    // corpus has no address the tool can build on. Stated once here and substituted by whoever reads a
+    // line, rather than resolved onto every line of the flat file.
     private static ExportPublishing Addresses(CorpusDescriptor descriptor, Publishing? publishing)
     {
         var target = descriptor.PublishingTarget ?? Publishing.None;
-        var templates = publishing?.Templates();
 
-        return new ExportPublishing(target, templates?.Human, templates?.Raw, publishing?.Ref);
+        return new ExportPublishing(
+            target, publishing?.Template(), publishing is null ? null : descriptor.Base,
+            publishing?.PathPrefix, publishing?.Ref);
     }
 
-    private static ExportLinks? Links(PublishedLinks? links) =>
-        links is null ? null : new ExportLinks(links.Human, links.Raw);
+    private static ExportLinks? Links(string? link) =>
+        link is null ? null : new ExportLinks(link);
 
     private static string Id(Doc doc) => doc.FrontScalar("id") ?? doc.Rel;
 

@@ -93,23 +93,33 @@ The clause table is not among those sections. Its rows travelled as the lines in
 
 ## Build a link from a template
 
-**No line holds a URL.** `manifest.json` holds two templates under `publishing`, and each line holds the two values
-they take. Read the manifest once in a session and keep both strings; they are the same for every clause in the export.
+**No line holds a URL.** `manifest.json` holds one template under `publishing`, and each line holds the two values it
+takes. Read the manifest once in a session and keep the string; it is the same for every clause in the export.
 
 **Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
 else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
 right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the
 corpus nobody asked about.
 
+**One target spells `{path}` differently.** Where `target` is `azure-devops-wiki`, the template addresses a wiki page
+rather than a file, so substitute the line's `path` with `.md` removed and every `/` written as `%2F`. Every other
+target takes the `path` whole.
+
 **To send a reader to a policy, use `humanTemplate`.** Substitute `path` and `anchor`. Every clause of one policy
 carries the same anchor, because a table row is not a heading and no renderer gives it a fragment of its own. The link
 lands on the clause table, and the reader finds the row by the id you quoted.
 
-**To read a policy's source yourself, use `rawTemplate`.** Substitute `path` alone. There is no anchor to give it: raw
-source is text and has nowhere to land. Fetching the human URL instead hands you the markdown wrapped in someone else's
-HTML, and you will read the page furniture as though it were the record.
+**To read a policy's source yourself, fetch the file rather than the page.** `publishing` names the `target`, the
+`base`, the `pathPrefix` and the `ref`. Join `pathPrefix` ahead of the line's `path` to reach the file inside the
+repository, then ask the client that authenticates to that target for it at that `ref`. Fetching the human URL instead
+hands you the markdown wrapped in someone else's HTML, and you will read the page furniture as though it were the
+record.
 
-**Where either template is `null`**, the corpus publishes nowhere the export could address. Say so, and quote the
+**No unauthenticated host serves that source**, except GitHub's and only for a public repository. Where you have no
+client for the target, say so and quote the human link, rather than assembling a URL that will return a sign-in page you
+read as the record.
+
+**Where `humanTemplate` is `null`**, the corpus publishes nowhere the export could address. Say so, and quote the
 `path` as the policy's place in the repository. Do not assemble a URL of your own.
 
 ## Say what stayed behind

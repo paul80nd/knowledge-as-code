@@ -19,6 +19,19 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`azure-devops-wiki` and a new `azure-devops` target build links.** `kac export` addressed `github` alone. A corpus
+  publishing to an Azure DevOps wiki now gets a `?pagePath=` link per record, and one publishing to Azure Repos without
+  a wiki gets a `?path=&version=GC<sha>` link. `kac new --publishing azure-devops` accepts the new target and fills its
+  base in from a `dev.azure.com` remote, in either the SSH or the HTTPS spelling. A wiki base has to be typed in,
+  because a repository's remote says nothing about which wiki publishes it.
+
+  A wiki link is not pinned to a commit, because no `?pagePath=` URL takes one. An agent still reads the version the
+  export was built from. `docs/corpus-descriptor.md` sets out both targets.
+
+  The `azure-devops` link form and the anchor an Azure DevOps wiki resolves for a heading carrying punctuation are both
+  unconfirmed against a live organisation. The wiki's page path, its anchor parameter and its rejection of a base
+  carrying a page id are confirmed.
+
 - **`kac pack` seals an export into a versioned package.** It reads `.dist/export/` and writes one file to
   `.dist/package/`, named for the corpus and its `content-version`. The file is a `.nupkg`, which is a zip carrying a
   small XML manifest a registry reads to name and version it, and both GitHub Packages and Azure DevOps Artifacts
@@ -92,6 +105,23 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   form may see errors it did not before.
 
 ### Changed
+
+- **`.corpus.yaml` takes one `base` where it took `human-base` and `raw-base`.** Write the URL a person opens to browse
+  the corpus: the GitHub repository with no `/blob` on the end, the Azure Repos `_git` URL, or the wiki's own URL. A
+  raw-content host was a GitHub idea that no other target has, and it never served the human case. Edit the
+  `publishing:` block by hand: nothing migrates it, and a descriptor still carrying the old keys exports without links.
+
+- **An export's `publishing` block drops `rawTemplate` and carries `base` and `pathPrefix`.** `humanTemplate` stays. An
+  agent reading a record's source joins `pathPrefix` ahead of the record's `path` and asks a client that authenticates
+  to the target, rather than fetching a bare URL. Only GitHub ever served raw source anonymously, and only for a public
+  repository. `formatVersion` moves from 2 to 3, so `kac bundle` and `kac pack` refuse every export built before this.
+  Rebuild with `kac export`.
+
+  A record's `links` loses its `raw` half for the same reason. No type's `shapeVersion` moves: that object is written
+  for every type by the exporter rather than declared by any one type's `export:` block.
+
+  The `glossary-lookup` and `policy-lookup` skills both tell an agent to fetch the file rather than substitute into a
+  template, and to say so plainly where it holds no client for the target.
 
 - **An index column holding a list renders its entries.** A column naming a list field read the value as a scalar and
   wrote an empty cell, so `aligns-with` on a policy index had been blank since the column was added. A column naming a

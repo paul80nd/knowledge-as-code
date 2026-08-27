@@ -185,28 +185,48 @@ author's words and a consumer is never handed the paths.
 **Output is deterministic.** Ordering is `StringComparer.Ordinal` everywhere but a term line's own position, which
 sorts case-insensitively on the term. Two runs from one commit produce identical bytes but for `generatedAt`.
 
-## The two links
+## The link and the ingredients
 
-A person follows one form and an agent fetches the other. The rules joining a base to a path, and the anchor rule for a
-part, belong to `publishing-target`. [`.corpus.yaml`](../corpus-descriptor.md#publishing) supplies where the corpus is
-served from and nothing else. Every link resolves against the commit the export was built from, so a citation names the
-version the agent read rather than whatever the branch holds later.
+A person follows a link and an agent fetches a file, and only the first of those is an address the export can write. The
+rules joining the base to a path, and the anchor rule for a part, belong to `publishing-target`.
+[`.corpus.yaml`](../corpus-descriptor.md#publishing) supplies where the corpus is served from and nothing else.
 
-### The manifest states both forms as templates
+### An agent is handed ingredients rather than a second URL
 
-The templates are `https://…/blob/<sha>/{path}#{anchor}` and `https://raw…/<sha>/{path}`, and a consumer substitutes the
-`path` and `anchor` a line carries. Four things follow from writing them this way:
+An export used to carry a second template, pointing at raw source an agent could fetch without credentials. Only GitHub
+ever served that, and only for a public repository. A private GitHub repository never had such a host, and Azure DevOps
+has none at all, so the second template was a rule one target could follow and the rest could not.
+
+So the manifest carries `base`, `pathPrefix` and `ref` instead. An agent joins `pathPrefix` ahead of the record's `path`
+to reach the file inside the repository, then asks the client that authenticates to `target` for that file at that
+`ref`. `gh` does it for GitHub and `az rest` for both Azure DevOps targets. Where the agent has no such client, the
+honest answer is to quote the human link and say so, rather than to assemble a URL that returns a sign-in page it will
+read as the record.
+
+### The manifest states the human form as a template
+
+The template is `https://…/blob/<sha>/{path}#{anchor}` for GitHub, and its own shape for each other target. A consumer
+substitutes the `path` and `anchor` a line carries. Four things follow from writing it this way:
 
 * **The ref is inside the template.** A ref left as a placeholder is forty hex characters copied by an agent, and a
   one-digit slip there is a plausible 404 nobody checks. With the commit already in the string, the worst a substitution
   can produce is a wrong path, which the reader can see and correct.
-* **Only the human template takes an anchor.** Raw source has no fragment to honour, so the asymmetry is a property of
-  the templates rather than a rule each reader has to remember.
-* **The bases are not carried beside them.** They are in the templates already, and a manifest stating one address twice
-  is a manifest that can state it two ways.
+* **The base is carried beside it, for the fetch and not for the link.** Nobody substitutes into `base` to build an
+  address. It is there because a client authenticating to the target needs the organisation, the project and the
+  repository, and only the base names them.
 * **A corpus that is not its repository names the folder it sits in.** `publishing.path-prefix` lands between the commit
   and the record's path, which is the only place it can go. What a reader supplies is the path alone, so the two cannot
-  be joined in the wrong order.
+  be joined in the wrong order. It is carried out as `pathPrefix` as well, because an agent fetching a file joins it
+  itself.
+* **What `{path}` takes is the target's business.** GitHub and Azure Repos address a file and take the record's path
+  whole. An Azure DevOps wiki addresses a page, so it takes the same path with `.md` removed and its separators
+  percent-encoded.
+
+### One target cannot pin its link to a commit
+
+Every link resolves against the commit the export was built from, so a citation names the version the agent read rather
+than whatever the branch holds later. `azure-devops-wiki` is the exception it cannot help: no `?pagePath=` URL takes a
+commit. An agent reading that corpus still reads the pinned version, because `ref` reaches it through the manifest.
 
 ### A per-record file resolves its links
 
@@ -218,11 +238,11 @@ a template and a substitution rule.
 At a handful of records the cost is a few untracked files. It is worth reopening where a type exports records by the
 hundred, because the churn scales with the record count and what it buys does not.
 
-### Four kinds of corpus have no address
+### Five kinds of corpus have no address
 
-One publishing nowhere, one naming a target nothing builds links for, one stating a target but no bases, and one git
-cannot answer for. Each exports without links, and the manifest carries the target it was given with null templates
-beside it, so a consumer sees the absence stated. The run says which of the four caused it.
+One publishing nowhere, one naming a target nothing builds links for, one stating a target but no base, one whose base
+is not a URL that target can join to, and one git cannot answer for. Each exports without links, and the manifest
+carries the target it was given with nulls beside it, so a consumer sees the absence stated.
 
 A part line is unaffected. `path` and `anchor` are facts about the corpus rather than about where it is published, and
 they travel either way.
@@ -258,6 +278,10 @@ flat file moves the number, because that order carries meaning within a chain.
 Which of the two moves follows from which files moved. `formatVersion` went from 1 to 2 when a term line's two resolved
 URLs became a `path` and an `anchor`. The same edit today moves the glossary's `shapeVersion`, because a term line is a
 glossary's file and no consumer of another type reads it.
+
+It went from 2 to 3 when `rawTemplate` left the manifest and `base` and `pathPrefix` arrived. A record's `links` lost
+its `raw` half in the same edit and moved no `shapeVersion`, because that object is written for every type by the
+exporter rather than declared by any one type's `export:` block. How a link is built is the envelope's business.
 
 ## What a type cannot say
 

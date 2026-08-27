@@ -23,7 +23,7 @@
 # unparsed.
 #
 # Three prerequisites, all already on a GitHub runner: `jq` reads the manifests, `curl` fetches a
-# raw link, and the Claude Code CLI installs the plugin.
+# record's source, and the Claude Code CLI installs the plugin.
 
 set -e
 
@@ -189,17 +189,32 @@ done < "$WORK/skills.txt"
 # tells those apart, and comparing the response against the file in the working tree is what says the
 # template addressed this corpus at this commit.
 #
-# Written to outlive glossary. It takes the template and one record's `path` from each type the
-# export declares, so a corpus that adopts a second type brings its records under the same check
-# without a line changing here. An ADR needs this more than a term does: a term line carries its
-# whole content, and a broken raw link costs the reader nothing, where an ADR's raw link is the only
-# route an agent has to the text.
+# Written to outlive glossary. It takes one record's `path` from each type the export declares, so a
+# corpus that adopts a second type brings its records under the same check without a line changing
+# here. An ADR needs this more than a term does: a term line carries its whole content, and a broken
+# link costs the reader nothing, where an ADR's source is the only route an agent has to the text.
+#
+# The URL is assembled here rather than read from the manifest. An export carries the base, the path
+# prefix and the ref an agent fetches with, and no raw template, because only a public GitHub
+# repository can be fetched without credentials. Assembling it is therefore the same work a consumer
+# does, over the same three values, which is what makes the fetch worth running.
 
-RAW_TEMPLATE=$(jqr '.publishing.rawTemplate // empty' "$EXPORT_MANIFEST")
+PUB_TARGET=$(jqr '.publishing.target' "$EXPORT_MANIFEST")
+PUB_BASE=$(jqr '.publishing.base // empty' "$EXPORT_MANIFEST")
+PUB_PREFIX=$(jqr '.publishing.pathPrefix // empty' "$EXPORT_MANIFEST")
+PUB_REF=$(jqr '.publishing.ref // empty' "$EXPORT_MANIFEST")
 
-if [ -z "$RAW_TEMPLATE" ]; then
-  echo "round-trip: the export names no raw template — this corpus publishes nowhere, so no link is checked."
+if [ "$PUB_TARGET" != "github" ] || [ -z "$PUB_BASE" ] || [ -z "$PUB_REF" ]; then
+  echo "round-trip: '$PUB_TARGET' serves no source to an anonymous caller, so no fetch is checked."
 else
+  RAW_BASE=$(echo "$PUB_BASE" | sed 's|https://github.com/|https://raw.githubusercontent.com/|')
+  # An `&&` one-liner would be the shorter spelling and would end the run: `set -e` is on, so the
+  # test failing on an absent prefix is a non-zero status at the top level.
+  PREFIX_SEG=""
+  if [ -n "$PUB_PREFIX" ]; then
+    PREFIX_SEG="/$PUB_PREFIX"
+  fi
+
   jqr '.types[].dir' "$EXPORT_MANIFEST" > "$WORK/dirs.txt"
 
   while read -r dir; do
@@ -218,16 +233,16 @@ else
     [ -n "$RECORD" ] || fail "$dir declares $RECORDS record(s) and the installed plugin holds none."
 
     RECORD_PATH=$(jqr '.path' "$RECORD")
-    URL=$(echo "$RAW_TEMPLATE" | sed "s|{path}|$RECORD_PATH|")
+    URL="$RAW_BASE/$PUB_REF$PREFIX_SEG/$RECORD_PATH"
 
     echo "round-trip: fetching $URL"
     curl -sS --fail --location --output "$WORK/fetched.md" "$URL" \
-      || fail "the raw template built a link that does not fetch: $URL"
+      || fail "the base, prefix and ref built a URL that does not fetch: $URL"
 
     cmp -s "$WORK/fetched.md" "$REPO/$RECORD_PATH" \
-      || fail "the link fetched something other than $RECORD_PATH as this corpus holds it."
+      || fail "the URL fetched something other than $RECORD_PATH as this corpus holds it."
 
-    echo "round-trip: $dir — the raw link returned the record's own source."
+    echo "round-trip: $dir — the fetched source matched the record."
   done < "$WORK/dirs.txt"
 fi
 

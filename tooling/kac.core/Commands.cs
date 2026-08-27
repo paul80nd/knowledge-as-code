@@ -47,7 +47,7 @@ public static class Commands
         if (publishing is null)
             Note(
                 "export: no published links. This corpus states no publishing target the tool can address, "
-                + "or no bases for one. Records carry their paths and no URLs.");
+                + "or no base the target can join to. Records carry their paths and no URLs.");
         if (dirty is true)
             Note(
                 "export: built from a dirty working tree, and the manifest says so. The commit it names "
