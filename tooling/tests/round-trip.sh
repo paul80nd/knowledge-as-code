@@ -114,9 +114,18 @@ BUNDLE="$ROOT/bundle.json"
 jqr '.included[].path' "$BUNDLE" > "$WORK/included.txt"
 jqr '.trimmed[].path' "$BUNDLE" > "$WORK/trimmed.txt"
 
+# Two lists read as empty leave every assertion below true of nothing and still close on a pass. Two
+# ways to arrive there: jq fails, which `jqr` cannot report because POSIX sh has no `pipefail`, or a
+# key is renamed, which jq answers with `null` rather than an error. Asking for the type catches both,
+# because `select` on a false condition writes nothing at all.
+COMPONENTS=$(jqr 'select((.included | type) == "array" and (.trimmed | type) == "array")
+  | (.included | length) + (.trimmed | length)' "$BUNDLE")
+[ -n "$COMPONENTS" ] && [ "$COMPONENTS" -gt 0 ] \
+  || fail "bundle.json names no component under included and trimmed."
+
 while read -r component; do
   [ -n "$component" ] || continue
-  [ -d "$ROOT/$component" ] || fail "bundle.json kept $component and the installed plugin does not hold it."
+  [ -e "$ROOT/$component" ] || fail "bundle.json kept $component and the installed plugin does not hold it."
   echo "round-trip: $component installed."
 done < "$WORK/included.txt"
 
@@ -264,8 +273,9 @@ glossary_lookup() {
 
   echo "round-trip: $ID — definition and Not line both present."
 
-  # What the order of the file means, and what it does not. `ExporterTests` pins these rules over corpora it builds for the purpose. This asserts them over the
-  # corpus a reader actually receives, which is the only place the two could have come apart.
+  # What the order of the file means, and what it does not. `ExporterTests` pins these rules over
+  # corpora it builds for the purpose. This asserts them over the corpus a reader actually receives,
+  # which is the only place the two could have come apart.
 
   # The chain, which is the case the ordering exists for. `gls-search` narrows `gls-example-libraries`
   # and both define `title`, so a grep meets the general entry before the one refining it.
@@ -335,6 +345,9 @@ policy_lookup() {
   grep -E '"id": *"pol-VURM.SHIP"' "$CLAUSES" > "$WORK/prohibition.txt" \
     || fail "pol-VURM carries no SHIP clause."
 
+  HITS=$(wc -l < "$WORK/prohibition.txt" | tr -d ' ')
+  [ "$HITS" = "1" ] || fail "expected one line for pol-VURM.SHIP, found $HITS."
+
   LEVEL=$(jqr '.level // empty' "$WORK/prohibition.txt")
   [ "$LEVEL" = "MUST NOT" ] || fail "pol-VURM.SHIP came back at level '$LEVEL' rather than MUST NOT."
 
@@ -376,6 +389,15 @@ case "$CORPUS" in
     policy_lookup
     ;;
   *)
+    # A corpus exporting neither type has no lookup to perform. One exporting either and reaching
+    # here has been renamed out of the arms above, and would otherwise close on a pass having asked
+    # the skill nothing.
+    for parts in glossary/terms.jsonl policies/clauses.jsonl; do
+      if [ -f "$ROOT/$CORPUS_ROOT/$parts" ]; then
+        fail "$CORPUS exports $parts and no arm above reads it. Name this corpus in one of them."
+      fi
+    done
+
     echo "round-trip: no lookup is written for $CORPUS. The install, the components and the links are what it proves."
     ;;
 esac
