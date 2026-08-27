@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>example-libraries</id>
+    <version>2.3.4</version>
+    <authors>example-libraries</authors>
+    <description>The example-libraries knowledge corpus, exported as data. Cited as 'lib:'.</description>
+  </metadata>
+</package>

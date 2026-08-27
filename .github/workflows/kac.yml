@@ -65,6 +65,13 @@ jobs:
       - name: Assemble the plugin bundle
         run: dotnet run --project ../../tooling/kac -- bundle
 
+      # Only the corpus that publishes. A pack is refused without a shortcode, and engineering is the
+      # one corpus here declaring one: it is the governance layer the others would consume, and the
+      # only one publish-corpus.yml pushes. See docs/cli/pack.md.
+      - name: Seal the export into a package
+        if: matrix.corpus == 'engineering'
+        run: dotnet run --project ../../tooling/kac -- pack
+
       # Unpinned on purpose: the bundle has to be valid against the CLI a reader actually runs, and
       # nothing in dependabot.yml would move an npm pin.
       - name: Install the Claude Code CLI

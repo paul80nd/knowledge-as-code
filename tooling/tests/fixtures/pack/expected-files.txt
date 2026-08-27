@@ -1,0 +1,2 @@
+.dist/package/example-libraries.2.3.4.nupkg
+.dist/export/manifest.json

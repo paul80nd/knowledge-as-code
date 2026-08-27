@@ -104,6 +104,7 @@ nav:
       - generate: cli/generate.md
       - export: cli/export.md
       - bundle: cli/bundle.md
+      - pack: cli/pack.md
       - checks: cli/checks.md
       - update: cli/update.md
   - Design:

@@ -90,10 +90,10 @@ needed.
 
 ## Each command replaces its own directory whole
 
-`export` owns `.dist/export/` and `bundle` owns `.dist/plugin/`. Both delete before they write, because an artefact
-nobody reviews must not keep a file that nothing backs any more. That rule stays local only while neither command
-deletes the other's tree, which is why the export is a named subtree and not the root. `Dist` is the one statement of
-the layout.
+`export` owns `.dist/export/`, `bundle` owns `.dist/plugin/` and [`pack`](../cli/pack.md) owns `.dist/package/`. Each
+deletes before it writes, because an artefact nobody reviews must not keep a file that nothing backs any more. That
+rule stays local only while no command deletes another's tree, which is why the export is a named subtree and not the
+root. `Dist` is the one statement of the layout.
 
 The export is copied in, and therefore exists twice. Once at `.dist/export/` as `export` wrote it, and once inside the
 plugin under the directory `metadata.corpusRoot` names. That duplication is intended. An installed plugin is copied into

@@ -1,0 +1,8 @@
+# The fixture corpus's descriptor. Present for three keys, and a pack is refused without any of them:
+# `corpus` is the package id, `content-version` is the version a registry orders it by, and `shortcode`
+# is what a consumer will cite the import as.
+descriptor-version: 1
+corpus: example-libraries
+shortcode: lib
+content-version: "2.3.4"
+publishing-target: none

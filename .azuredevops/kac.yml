@@ -88,6 +88,13 @@ steps:
         displayName: Assemble the plugin bundle (${{ corpus }})
         workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
 
+      # Only the corpus that publishes. A pack is refused without a shortcode, and engineering is the
+      # one corpus here declaring one: it is the governance layer the others would consume.
+      - ${{ if eq(corpus, 'engineering') }}:
+          - script: dotnet run --project ../../tooling/kac -- pack
+            displayName: Seal the export into a package (${{ corpus }})
+            workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
+
   # `generate --check` is askable only here. The corpus the installed tool stands up further down is
   # generated as it is created, so nothing there holds these committed copies fresh.
   - script: dotnet run --project ../tooling/kac -- validate

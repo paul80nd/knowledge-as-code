@@ -10,6 +10,8 @@
 // copy, so a schema change that alters behaviour surfaces in this suite rather than after it.
 
 using System.Diagnostics;
+using System.IO.Compression;
+using System.Text;
 using System.Text.Json;
 
 var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
@@ -97,6 +99,9 @@ foreach (var scenario in scenarios)
                 break;
             case "bundle":
                 RunBundleScenario(name, scenario, corpusDir);
+                break;
+            case "pack":
+                RunPackScenario(name, scenario, corpusDir);
                 break;
             case "new":
                 RunNewScenario(name, scenario);
@@ -470,6 +475,170 @@ void RunExportScenario(string name, string scenario, string corpusDir)
     {
         TryDelete(temp);
     }
+}
+
+// pack, over the export beneath it. What a consumer receives is one archive, so the golden is that
+// archive read back: every entry named, and the envelope's own document committed whole.
+// `tooling/tests/README.md` says why the payload is asserted against the export rather than committed
+// a second time.
+void RunPackScenario(string name, string scenario, string corpusDir)
+{
+    var entriesPath = Path.Combine(scenario, "expected-entries.txt");
+    var nuspecPath = Path.Combine(scenario, "expected-nuspec.xml");
+    var temp = AssembleTemp(schemaDir, corpusDir);
+    try
+    {
+        var (_, exportErr, exportExit) = Run(temp, "dotnet", kac, "export");
+
+        var problems = new List<string>();
+        if (exportExit != 0) problems.Add($"the export the pack needs failed (exit {exportExit}): {exportErr}");
+
+        var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "pack");
+        var output = stderr + stdout;
+        var dir = Path.Combine(temp, ".dist", "package");
+
+        // A run that produced nothing has no archive to read, so the two goldens below would compare
+        // against an absence and a `--update` would bless it.
+        var built = Directory.Exists(dir) ? Directory.GetFiles(dir, "*.nupkg") : [];
+        if (exit != 0 || built.Length != 1)
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}");
+            Console.WriteLine($"         expected exit 0 and one .nupkg, got exit {exit} and {built.Length}");
+            foreach (var p in problems) Console.WriteLine($"         {p}");
+            foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"       | {l}");
+            return;
+        }
+
+        var archive = File.ReadAllBytes(built[0]);
+        var entries = ZipEntries(archive);
+
+        // Found by extension rather than built from the file name. A package id may carry a dot, so
+        // splitting the file name on one would name a part the archive does not hold and report the
+        // envelope as missing.
+        var nuspec = entries.Keys.FirstOrDefault(k => k.EndsWith(".nuspec", StringComparison.Ordinal));
+        if (nuspec is null)
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}");
+            Console.WriteLine("         the package holds no .nuspec, so a registry cannot name or version it");
+            return;
+        }
+
+        if (update)
+        {
+            File.WriteAllText(entriesPath, string.Join("\n", entries.Keys) + "\n");
+            File.WriteAllText(nuspecPath, Encoding.UTF8.GetString(entries[nuspec]));
+            Console.WriteLine(
+                $"UPDATE {name}  ({entries.Count} entries, read the diff: it is what a consumer imports)");
+            return;
+        }
+
+        // The whole entry list, both ways round, because an entry the pack stopped writing is as much a
+        // change to what a consumer imports as one it started writing.
+        var wanted = ReadLines(entriesPath).ToList();
+        problems.AddRange(wanted.Where(e => !entries.ContainsKey(e))
+            .Select(e => $"the package no longer holds {e}: what a consumer imports has changed"));
+        problems.AddRange(entries.Keys.Where(e => !wanted.Contains(e))
+            .Select(e => $"the package holds {e}, which the committed list does not: a new entry for a consumer"));
+
+        // The envelope committed whole. It is the one part of the archive the corpus did not author, so
+        // nothing else in the suite would show a change to it.
+        var got = Encoding.UTF8.GetString(entries[nuspec]);
+        var want = File.Exists(nuspecPath) ? File.ReadAllText(nuspecPath) : null;
+        if (want is null) problems.Add($"no committed envelope at {Path.GetFileName(nuspecPath)}");
+        else if (!string.Equals(Unix(want), Unix(got), StringComparison.Ordinal))
+            problems.Add($"{nuspec} differs from the committed envelope");
+
+        // The payload against the export it was sealed from. Committing the export a second time here
+        // would be a second thing to keep in step, and the property worth pinning is that the pack
+        // carried it unedited.
+        problems.AddRange(SamePayload(Path.Combine(temp, ".dist", "export"), entries));
+
+        // A file no run backs, left in the directory before the second run. `pack` replaces its own
+        // directory whole, so a version built and then bumped must not stay behind for a publish step
+        // to find beside the new one.
+        var orphan = Path.Combine(dir, "orphan.0.0.1.nupkg");
+        File.WriteAllBytes(orphan, [0]);
+
+        var (_, _, second) = Run(temp, "dotnet", kac, "pack");
+        if (second != 0) problems.Add($"expected a clean second pack (exit 0), got exit {second}");
+        if (File.Exists(orphan)) problems.Add("a package no run backs survived a second pack");
+
+        // Two packs of one export are the same bytes. A registry keeps a published version forever, so
+        // a byte that moved between runs is a byte nobody could account for afterwards.
+        if (!archive.SequenceEqual(File.ReadAllBytes(built[0])))
+            problems.Add("two packs of one export produced different archives");
+
+        problems.AddRange(ReadLines(Path.Combine(scenario, "expected-pack.txt"))
+            .Where(l => !output.Contains(l)).Select(l => $"not reported: {l}"));
+
+        problems.AddRange(CheckTree(temp, scenario));
+
+        if (problems.Count == 0)
+        {
+            Console.WriteLine($"ok     {name}  (packed)");
+        }
+        else
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}");
+            foreach (var p in problems) Console.WriteLine($"         {p}");
+            foreach (var l in output.Split('\n').Where(l => l.Trim().Length > 0)) Console.WriteLine($"       | {l}");
+        }
+    }
+    finally
+    {
+        TryDelete(temp);
+    }
+}
+
+// A committed document and a built one compared on their words rather than on the line endings a
+// checkout gave them. The envelope is written with `\n` whatever platform built it, and git is free to
+// hand the golden back with `\r\n`.
+static string Unix(string content) => content.Replace("\r\n", "\n");
+
+// The archive read back as the paths a consumer would address and the bytes behind each. Ordinal order,
+// so the committed list is stable whatever order the entries were written in.
+static SortedDictionary<string, byte[]> ZipEntries(byte[] archive)
+{
+    var entries = new SortedDictionary<string, byte[]>(StringComparer.Ordinal);
+    using var zip = new ZipArchive(new MemoryStream(archive), ZipArchiveMode.Read);
+
+    foreach (var entry in zip.Entries)
+    {
+        using var stream = entry.Open();
+        using var buffer = new MemoryStream();
+        stream.CopyTo(buffer);
+        entries[entry.FullName] = buffer.ToArray();
+    }
+
+    return entries;
+}
+
+// The export as written, held against the copy the package carries. Every file in either tree is named,
+// so a file the pack dropped fails as loudly as one it invented, and content is compared whole.
+static List<string> SamePayload(string exportDir, SortedDictionary<string, byte[]> entries)
+{
+    const string payload = "corpus/";
+    var problems = new List<string>();
+
+    var carried = entries.Where(e => e.Key.StartsWith(payload, StringComparison.Ordinal))
+        .ToDictionary(e => e.Key[payload.Length..], e => e.Value, StringComparer.Ordinal);
+
+    foreach (var file in Directory.EnumerateFiles(exportDir, "*", SearchOption.AllDirectories))
+    {
+        var rel = Path.GetRelativePath(exportDir, file).Replace('\\', '/');
+        if (!carried.TryGetValue(rel, out var got)) problems.Add($"the package carries no {rel}");
+        else if (!File.ReadAllBytes(file).SequenceEqual(got))
+            problems.Add($"the package's copy of {rel} differs from the export: pack edited it");
+    }
+
+    foreach (var rel in carried.Keys.Where(r =>
+                 !File.Exists(Path.Combine(exportDir, r.Replace('/', Path.DirectorySeparatorChar)))))
+        problems.Add($"the package carries {rel}, which the export does not");
+
+    return problems;
 }
 
 // bundle, over the plugin tree and the export beneath it. `tooling/tests/README.md` says what it asserts
