@@ -136,13 +136,18 @@ therefore ripples into every fixture in the same run, rather than into a copy so
 ### The round-trip
 
 [`tests/round-trip.sh`](tests/round-trip.sh) is the layer above all three and the only test that leaves the repository.
-It installs the built plugin into a Claude config directory of its own, looks a term up, and fetches a record through
-the raw link the export wrote. That fetch is the one assertion that cannot be faked from the working tree. Run it from a
-corpus, after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
+It installs the built plugin into a Claude config directory of its own, checks that the components `bundle.json` kept
+arrived and the ones it trimmed did not, asks a surviving skill for something only its own type can answer, and fetches
+a record through the raw link the export wrote. That fetch is the one assertion that cannot be faked from the working
+tree. Run it from a corpus, after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
 
 ```bash
 cd ../examples/library && sh ../../tooling/tests/round-trip.sh
 ```
 
-CI runs it on Linux and Windows, which is why it is a shell script held to the subset Git Bash and older macOS bash
-agree on.
+The corpus it runs in decides which skill it questions. `example-libraries` adopts glossary and not policies, so it
+proves the trim as well as the glossary skill. `example-engineering` adopts both, so it proves that two skills ship
+over one export and that neither names the other's file.
+
+CI runs it over both corpora on Linux and Windows, which is why it is a shell script held to the subset Git Bash and
+older macOS bash agree on.
