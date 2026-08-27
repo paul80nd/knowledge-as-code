@@ -23,6 +23,7 @@ public static class Dist
     // from these, so the directory is named once whether it is being written to or being deleted.
     public const string ExportDir = "export";
     public const string PluginDir = "plugin";
+    public const string PackageDir = "package";
     public const string MarketplaceDir = ".claude-plugin";
 
     // The local marketplace `bundle` writes beside the plugin, so the plugin can be installed from a
@@ -34,4 +35,9 @@ public static class Dist
 
     // What `kac bundle` writes: the plugin directory, rebuilt whole each run.
     public const string Plugin = Root + "/" + PluginDir;
+
+    // What `kac pack` writes: the package a registry is handed, rebuilt whole each run. A third named
+    // subtree for the reason the first two are named: the directory is deleted before it is written, so
+    // it must hold nothing another command owns.
+    public const string Package = Root + "/" + PackageDir;
 }

@@ -143,3 +143,34 @@ npm install -g @anthropic-ai/claude-code
 claude plugin validate ./.dist/plugin --strict
 claude plugin validate ./.dist --strict
 ```
+
+## Publishing the corpus as a package
+
+A corpus another corpus consumes runs one more command, and it reads the same export:
+
+```bash
+dotnet tool run kac pack       # the export, sealed into .dist/package/
+```
+
+[`pack`](cli/pack.md) writes a `.nupkg`, which is a zip a registry stores under the corpus name and
+`content-version`. Both GitHub Packages and Azure DevOps Artifacts take one. Nothing that reads the result needs a
+NuGet client.
+
+Run `pack` in the gate, where it proves the corpus can still be packaged. Push it from a separate job, because that
+job needs a credential the gate should not hold.
+
+Ask the registry what it already holds before you push. A published version is never replaced, so a run that would
+overwrite one has met a `content-version` somebody forgot to bump:
+
+```bash
+VERSION=$(jq -r '.contentVersion' .dist/export/manifest.json)
+ID=$(jq -r '.corpus' .dist/export/manifest.json)
+
+dotnet nuget push ".dist/package/$ID.$VERSION.nupkg" \
+  --source "https://nuget.pkg.github.com/OWNER/index.json" \
+  --api-key "$GITHUB_TOKEN"
+```
+
+The job needs `packages: write` in GitHub Actions.
+[`publish-corpus.yml`](https://github.com/paul80nd/knowledge-as-code/blob/main/.github/workflows/publish-corpus.yml)
+is the whole pipeline this repository publishes from, guard included.

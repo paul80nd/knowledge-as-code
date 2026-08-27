@@ -331,6 +331,37 @@ public static class Commands
         return 0;
     }
 
+    // Seal the export into one versioned file a registry can hold. The export is the only thing read:
+    // a package is what a consumer receives, and building it from the corpus would let the tree that was
+    // proved and the tree that was published come apart.
+    public static int Pack(string corpusRoot, string? repository)
+    {
+        var export = Bundler.Read(Path.Combine(corpusRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar)));
+        if (export is null)
+            return Fail($"pack: no export at {Dist.Export}/. Run it first: kac export");
+
+        var plan = Packer.Plan(export, repository);
+
+        if (plan.Problems.Count > 0)
+        {
+            foreach (var problem in plan.Problems) Stop($"pack: {problem}");
+            return 1;
+        }
+
+        var written = Packer.Write(corpusRoot, plan);
+        Out.Markup(Wrote(written));
+
+        Account($"pack: sealed {plan.Entries.Count} file(s) as {plan.Id} {plan.Version}, cited as "
+                + $"'{plan.Shortcode}:'.");
+
+        // Said here because the package cannot say it. Whether this version may be published is a question
+        // about somewhere else, and the answer arrives as a rejected push rather than as anything this run
+        // could have checked. What to do about it is in `docs/cli/pack.md`.
+        Note($"pack: {plan.Version} is content-version from .corpus.yaml. A registry never replaces a "
+             + "published version.");
+        return 0;
+    }
+
     public static int Generate(string corpusRoot, bool check)
     {
         var corpus = Corpus.Load(corpusRoot);

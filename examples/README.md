@@ -49,3 +49,7 @@ one corpus's export into another. The inheritance is a convention here rather th
 
 **Only `library/` publishes a plugin.** All three build one, because `kac bundle` runs over each of them in CI, but the
 [`marketplace`](https://github.com/paul80nd/knowledge-as-code/tree/marketplace) branch carries `library/` alone.
+
+**Only `engineering/` publishes a package.** It is the one corpus declaring a `shortcode`, which is the word a consumer
+cites an import by and which `kac pack` refuses a corpus without. So it is the only one the gate packs, and the only one
+`publish-corpus.yml` pushes to GitHub Packages.

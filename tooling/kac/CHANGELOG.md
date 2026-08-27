@@ -19,6 +19,21 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac pack` seals an export into a versioned package.** It reads `.dist/export/` and writes one file to
+  `.dist/package/`, named for the corpus and its `content-version`. The file is a `.nupkg`, which is a zip carrying a
+  small XML manifest a registry reads to name and version it, and both GitHub Packages and Azure DevOps Artifacts
+  store one. Everything under `corpus/` inside it is the export, byte for byte, so nothing reading the result needs a
+  NuGet client. Two runs over one export produce identical bytes.
+
+  The command refuses a corpus that has not declared `corpus:`, `content-version:` and `shortcode:` in `.corpus.yaml`,
+  naming the one that is missing. It publishes nothing: pushing the file is your pipeline's step, and `docs/cli/pack.md`
+  carries the command for it.
+
+- **`kac pack --repository <URL>` names where the corpus's source lives.** Some registries read that URL to decide
+  which repository a package belongs to, and GitHub Packages refuses a package naming none when the token pushing it
+  is scoped to a repository. The element is left out where the flag is not given, because the export states where a
+  record is published and that is a different address.
+
 - **A `policy-lookup` skill travels in the plugin.** `kac bundle` ships it beside `glossary-lookup`, and a corpus
   carrying no policies has it trimmed. It reads `policies/clauses.jsonl`, answers from a clause's `level` rather than
   from the modal in its wording, and says which of the four levels it found. What an external framework obliges stayed

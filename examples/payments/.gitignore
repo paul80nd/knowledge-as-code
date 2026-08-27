@@ -6,5 +6,5 @@
 _reports/
 
 # Generated — `export` rebuilds .dist/export/ whole, `bundle` rebuilds .dist/plugin/ and the
-# marketplace beside it. One rule covers both.
+# marketplace beside it, and `pack` rebuilds .dist/package/. One rule covers all three.
 .dist/

@@ -1,0 +1,158 @@
+# Publishes the governance corpus as a package a downstream corpus can import. On a push to main that
+# touched examples/engineering/, it rebuilds the export, seals it, and pushes it to GitHub Packages at
+# the version .corpus.yaml states.
+#
+# A content-version the registry already holds ends the job at exit 0, as publish-plugin.yml does for
+# the same reason. The path filter narrows the runs but cannot tell an edited record from an edited
+# CLAUDE.md, so failing there would turn an editorial change on main into a red build accusing its
+# author of forgetting a bump.
+#
+# Nothing here retries, skips a duplicate or forces. A registry keeps a published version forever, so a
+# correction is a new content-version and never a second push of this one.
+#
+# examples/engineering is the only corpus with a shortcode, and a pack is refused without one.
+# docs/cli/pack.md says why.
+
+name: publish-corpus
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'examples/engineering/**'
+
+permissions:
+  contents: read
+
+# Queued rather than cancelled, as publish-plugin.yml is: the loser still carries a version the winner
+# does not.
+concurrency:
+  group: publish-corpus
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  CORPUS: examples/engineering
+
+jobs:
+  # Everything that has to be true before anything is published, in a job that cannot publish.
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    steps:
+      # Pinned to a commit because a tag is mutable. Dependabot moves the pins.
+      - name: Check out the commit that merged
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      # The gate ran against the pull request's head, and main moved beneath it. A published version
+      # cannot be replaced, only followed, so it is asked again about the merge commit.
+      - name: Validate frontmatter, links and structure
+        working-directory: examples/engineering
+        run: dotnet run --project ../../tooling/kac -- validate
+
+      - name: Build the export
+        working-directory: examples/engineering
+        run: dotnet run --project ../../tooling/kac -- export
+
+      - name: Seal the export into a package
+        working-directory: examples/engineering
+        run: dotnet run --project ../../tooling/kac -- pack
+
+  # The only job granted write. It rebuilds rather than taking an artifact from `verify`, as
+  # publish-plugin.yml does: two packs of one export are identical bytes, so a hand-off would preserve
+  # nothing and add a second way for the two to disagree.
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out the commit that merged
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      # Every link the export writes names the commit HEAD stands on, which here is one the raw host
+      # serves.
+      - name: Build the export
+        working-directory: examples/engineering
+        run: dotnet run --project ../../tooling/kac -- export
+
+      # --repository, because GitHub Packages reads that URL to decide which repository a package
+      # belongs to, and github.token is scoped to one. A package naming none is refused.
+      - name: Seal the export into a package
+        working-directory: examples/engineering
+        run: >
+          dotnet run --project ../../tooling/kac -- pack
+          --repository ${{ github.server_url }}/${{ github.repository }}
+
+      # Read from the export rather than from .corpus.yaml, because the export is what was sealed and
+      # a second reading of the descriptor could disagree with it.
+      #
+      # The versions already published are asked of the registry's own flat container, over plain HTTP
+      # with no NuGet client. A request failing for any other reason reads as an empty list here, and
+      # the push below is then what reports it: this step decides whether to publish and never whether
+      # the registry is reachable.
+      - name: Decide whether this version is new
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FEED: https://nuget.pkg.github.com/${{ github.repository_owner }}
+        run: |
+          set -eo pipefail
+
+          MANIFEST="$CORPUS/.dist/export/manifest.json"
+          ID=$(jq -r '.corpus' "$MANIFEST")
+          VERSION=$(jq -r '.contentVersion' "$MANIFEST")
+
+          # A package id is compared without regard to case, and the flat container addresses it in
+          # lower case.
+          LOWER=$(echo "$ID" | tr '[:upper:]' '[:lower:]')
+
+          # 404 is the answer for a package nobody has published yet, which is the first run and not a
+          # failure. `-f` turns it into a non-zero exit, `pipefail` carries that out of the pipeline,
+          # and the `||` is what reads it as an empty list.
+          PUBLISHED=$(curl -sf -H "Authorization: Bearer $GH_TOKEN" \
+            "$FEED/download/$LOWER/index.json" | jq -r '.versions[]?' || echo '')
+
+          # -F, because a version carries dots and dashes and this is an exact comparison rather than
+          # a pattern match.
+          if echo "$PUBLISHED" | grep -Fqx "$VERSION"; then
+            echo "$ID $VERSION is already published. Nothing to publish."
+            echo "Bump content-version in $CORPUS/.corpus.yaml to release what changed since."
+            echo "NEW=" >> "$GITHUB_ENV"
+            exit 0
+          fi
+
+          echo "NEW=yes" >> "$GITHUB_ENV"
+          echo "ID=$ID" >> "$GITHUB_ENV"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      # No --skip-duplicate. The step above is what decides whether this version may be published, and
+      # a flag swallowing the registry's own refusal would leave a green run that published nothing.
+      - name: Publish to GitHub Packages
+        if: env.NEW == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FEED: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        run: |
+          set -e
+
+          dotnet nuget push "$CORPUS/.dist/package/$ID.$VERSION.nupkg" \
+            --source "$FEED" \
+            --api-key "$GH_TOKEN"
+
+          echo "published $ID $VERSION."

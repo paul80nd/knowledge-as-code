@@ -234,6 +234,9 @@ built. Each entry under `types` carries a `shapeVersion` covering that one type'
 `content-version` from [`.corpus.yaml`](../corpus-descriptor.md), semantically versioned and bumped by hand, and states
 what the corpus knows. A corpus can rewrite every definition and move none of the three.
 
+`contentVersion` is the one a consumer depends on by name. [`pack`](../cli/pack.md) publishes the export at that
+version, so a corpus that changes what it knows and leaves the number alone has nothing new to release.
+
 ### Each type is versioned where its keys are declared
 
 A type declares the keys of its own part line in `export.parts.line:`, so two types exporting parts write different

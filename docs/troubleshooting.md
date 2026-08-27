@@ -78,11 +78,12 @@ and runs over a tree in any state.
 bundle: no export at .dist/export/. Run it first: kac export
 ```
 
-`bundle` reads what `export` wrote, and never loads the corpus itself. Run the two in order:
+`bundle` and `pack` both read what `export` wrote, and neither loads the corpus itself. Run `export` first:
 
 ```bash
 kac export
-kac bundle
+kac bundle     # the plugin an agent installs
+kac pack       # the package another corpus imports
 ```
 
 ## `Unknown option` or `No such command`

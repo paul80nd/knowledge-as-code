@@ -31,6 +31,8 @@ app.Configure(config =>
         .WithDescription("Write the corpus to .dist/export/ as a versioned export.");
     config.AddCommand<BundleCommand>("bundle")
         .WithDescription("Assemble the export and .plugin/ into a plugin under .dist/plugin/.");
+    config.AddCommand<PackCommand>("pack")
+        .WithDescription("Seal the export into a versioned package under .dist/package/.");
     config.AddCommand<ChecksCommand>("checks")
         .WithDescription("List every check the validator implements.");
     config.AddCommand<UpdateCommand>("update")
@@ -221,6 +223,22 @@ internal sealed class BundleCommand : Command<CorpusSettings>
 {
     protected override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, Commands.Bundle);
+}
+
+// `pack` seals what `export` wrote into one versioned file a registry can hold. A third verb rather than
+// a flag on `export`, for the reason `bundle` is one: an export is wrong about the corpus, a bundle is
+// wrong about what it shipped, and a package is wrong about what somebody else will import.
+internal sealed class PackSettings : KacSettings
+{
+    [CommandOption("--repository <URL>")]
+    [Description("Where the corpus's source lives. Some registries refuse a package naming none.")]
+    public string? Repository { get; init; }
+}
+
+internal sealed class PackCommand : Command<PackSettings>
+{
+    protected override int Execute(CommandContext context, PackSettings settings, CancellationToken token) =>
+        Cli.InCorpus(settings, corpus => Commands.Pack(corpus, settings.Repository));
 }
 
 // `checks` is machinery before it is documentation: the test suite reads `checks --json` to assert

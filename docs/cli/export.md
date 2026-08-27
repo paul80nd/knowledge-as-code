@@ -23,7 +23,7 @@ record, and a flat file cheap to grep for a reader holding only a word. What tra
 declared beside the type, so a corpus adopting a new type exports it without the tool changing.
 
 [The export format](../design/export.md) is the contract those files answer to. Run `export` before
-[`bundle`](bundle.md), which reads what this writes.
+[`bundle`](bundle.md) or [`pack`](pack.md), each of which reads what this writes.
 
 ## Examples
 
@@ -74,4 +74,5 @@ that case, and stays out of the block for that reason.
 **Three more limits belong to a type's declaration rather than to this command.**
 [The export format](../design/export.md#what-a-type-cannot-say) states each one and what it costs a consumer.
 
-[`bundle`](bundle.md) assembles what this writes into something a consumer can install.
+Two commands read what this writes. [`bundle`](bundle.md) assembles it into a plugin an agent installs, and
+[`pack`](pack.md) seals it into a versioned package another corpus imports.
