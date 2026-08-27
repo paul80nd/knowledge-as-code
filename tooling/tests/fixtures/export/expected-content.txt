@@ -3,10 +3,11 @@
 .dist/export/manifest.json :: "commit": null
 
 # The manifest says what this export is, and what it could not resolve.
-.dist/export/manifest.json :: "formatVersion": 2
+.dist/export/manifest.json :: "formatVersion": 3
 .dist/export/manifest.json :: "target": "none"
 .dist/export/manifest.json :: "humanTemplate": null
-.dist/export/manifest.json :: "rawTemplate": null
+.dist/export/manifest.json :: "base": null
+.dist/export/manifest.json :: "pathPrefix": null
 .dist/export/manifest.json :: "type": "glossary"
 
 # Two counts, named apart: three records, five terms between them. One number would be read as either,
@@ -38,7 +39,7 @@
 # One term, one line, one whole object — carrying the definition and the labelled line apart, the state
 # of the glossary it came from, and the record it belongs to, because a grep hands back a line and
 # nothing around it. The address is the exception: a line carries the `path` and `anchor` that go into
-# the manifest's templates, and no URL, so one host and one commit are stated once for the whole export.
+# the manifest's template, and no URL, so one host and one commit are stated once for the whole export.
 .dist/export/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","not":"the request the service received. One request carries a query and its paging.","seeAlso":null,"type":"glossary","record":"gls-search","part":"query","status":"draft","reviewBy":"2030-01-01","path":"glossary/search.md","anchor":"query"}
 .dist/export/glossary/terms.jsonl :: !"links"
 

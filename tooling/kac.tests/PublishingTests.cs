@@ -10,16 +10,17 @@ namespace kac.tests;
 
 public class PublishingTests
 {
-    private const string Human = "https://github.com/example/corpus/blob";
-    private const string Raw = "https://raw.githubusercontent.com/example/corpus";
+    private const string GitHubBase = "https://github.com/example/corpus";
+    private const string WikiBase = "https://dev.azure.com/acme/Standards/_wiki/wikis/KaC";
+    private const string RepoBase = "https://dev.azure.com/acme/Standards/_git/corpus";
     private const string Sha = "0123456789abcdef0123456789abcdef01234567";
 
     private static CorpusDescriptor Descriptor(
-        string? target = Publishing.GitHub, string? human = Human, string? raw = Raw, string? prefix = null) =>
-        new() { PublishingTarget = target, HumanBase = human, RawBase = raw, PathPrefix = prefix };
+        string? target = Publishing.GitHub, string? published = GitHubBase, string? prefix = null) =>
+        new() { PublishingTarget = target, Base = published, PathPrefix = prefix };
 
     [Fact]
-    public void A_github_corpus_with_both_bases_and_a_ref_is_addressable()
+    public void A_github_corpus_with_a_base_and_a_ref_is_addressable()
     {
         var publishing = Publishing.For(Descriptor(), Sha);
 
@@ -28,17 +29,25 @@ public class PublishingTests
         Assert.Equal(Sha, publishing.Ref);
     }
 
-    // The caller's question is whether it can write a link, and a null says no without asking it to tell
-    // the four cases apart.
     [Theory]
-    [InlineData(Publishing.None, Human, Raw, Sha)]    // publishes nowhere
-    [InlineData(Publishing.MkDocs, Human, Raw, Sha)]  // a target nothing addresses yet
-    [InlineData(Publishing.GitHub, null, Raw, Sha)]   // a target, and no base to build on
-    [InlineData(Publishing.GitHub, Human, Raw, null)] // no ref, so no stable address
-    public void A_corpus_the_tool_cannot_address_resolves_to_nothing(
-        string? target, string? human, string? raw, string? gitRef)
+    [InlineData(Publishing.AzureDevOps, RepoBase)]
+    [InlineData(Publishing.AzureDevOpsWiki, WikiBase)]
+    public void Both_azure_devops_targets_are_addressable(string target, string published)
     {
-        Assert.Null(Publishing.For(Descriptor(target, human, raw), gitRef));
+        Assert.NotNull(Publishing.For(Descriptor(target, published), Sha));
+    }
+
+    // The caller's question is whether it can write a link, and a null says no without asking it to tell
+    // the cases apart.
+    [Theory]
+    [InlineData(Publishing.None, GitHubBase, Sha)]        // publishes nowhere
+    [InlineData(Publishing.MkDocs, GitHubBase, Sha)]      // a target nothing addresses yet
+    [InlineData(Publishing.GitHub, null, Sha)]            // a target, and no base to build on
+    [InlineData(Publishing.GitHub, GitHubBase, null)]     // no ref, so no stable address
+    public void A_corpus_the_tool_cannot_address_resolves_to_nothing(
+        string? target, string? published, string? gitRef)
+    {
+        Assert.Null(Publishing.For(Descriptor(target, published), gitRef));
     }
 
     [Fact]
@@ -47,56 +56,96 @@ public class PublishingTests
         Assert.Null(Publishing.For(Descriptor(target: null), Sha));
     }
 
-    [Fact]
-    public void A_record_is_read_at_one_address_and_fetched_at_another()
+    // Azure DevOps shows a page's numeric id in the address bar, and nothing derives the id of a second
+    // page from the id of the first. A base copied from there addresses one record and misaddresses
+    // every other, which is worse than addressing none.
+    [Theory]
+    [InlineData(WikiBase + "/880/Knowledge-as-code")]
+    [InlineData(WikiBase + "/880")]
+    [InlineData("https://dev.azure.com/acme/Standards/_git/corpus")]
+    public void A_wiki_base_naming_a_page_rather_than_the_wiki_resolves_to_nothing(string published)
     {
-        var links = Publishing.For(Descriptor(), Sha)!.Links("glossary/search.md");
-
-        Assert.Equal($"{Human}/{Sha}/glossary/search.md", links.Human);
-        Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
+        Assert.Null(Publishing.For(Descriptor(Publishing.AzureDevOpsWiki, published), Sha));
     }
 
-    // Raw source is text and offers nowhere to land, so a fragment there would look like an address and
-    // be none.
     [Fact]
-    public void A_part_anchors_the_human_link_and_leaves_the_raw_one_alone()
+    public void A_github_record_is_read_at_a_blob_url_under_the_commit()
     {
-        var links = Publishing.For(Descriptor(), Sha)!.Links("glossary/search.md", "query");
+        var link = Publishing.For(Descriptor(), Sha)!.Link("glossary/search.md");
 
-        Assert.Equal($"{Human}/{Sha}/glossary/search.md#query", links.Human);
-        Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
+        Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", link);
     }
 
-    // A citation says what the agent read.
+    // A wiki addresses a page rather than a file, so the extension goes and the separators are encoded.
     [Fact]
-    public void Both_links_resolve_against_the_ref_and_not_against_a_branch()
+    public void A_wiki_record_is_read_at_an_encoded_page_path()
     {
-        var links = Publishing.For(Descriptor(), Sha)!.Links("glossary/search.md");
+        var link = Publishing.For(Descriptor(Publishing.AzureDevOpsWiki, WikiBase), Sha)!
+            .Link("glossary/search.md");
 
-        Assert.Contains(Sha, links.Human);
-        Assert.Contains(Sha, links.Raw);
-        Assert.DoesNotContain("/main/", links.Human);
+        Assert.Equal($"{WikiBase}?pagePath=%2Fglossary%2Fsearch", link);
+    }
+
+    [Fact]
+    public void An_azure_repos_record_is_read_at_a_path_pinned_to_the_commit()
+    {
+        var link = Publishing.For(Descriptor(Publishing.AzureDevOps, RepoBase), Sha)!
+            .Link("glossary/search.md");
+
+        Assert.Equal($"{RepoBase}?path=/glossary/search.md&version=GC{Sha}", link);
+    }
+
+    // A wiki takes its anchor as a query parameter, because `?pagePath=` opened the query string first.
+    // A fragment there is discarded and the reader lands at the top of the page.
+    [Theory]
+    [InlineData(Publishing.GitHub, GitHubBase, "#query")]
+    [InlineData(Publishing.AzureDevOps, RepoBase, "#query")]
+    [InlineData(Publishing.AzureDevOpsWiki, WikiBase, "&anchor=query")]
+    public void A_cited_part_anchors_the_link_the_way_its_target_spells_an_anchor(
+        string target, string published, string expected)
+    {
+        var link = Publishing.For(Descriptor(target, published), Sha)!.Link("glossary/search.md", "query");
+
+        Assert.EndsWith(expected, link, StringComparison.Ordinal);
+    }
+
+    // A citation says what the agent read. A wiki is the one target that cannot keep this, because no
+    // `?pagePath=` URL takes a commit.
+    [Theory]
+    [InlineData(Publishing.GitHub, GitHubBase)]
+    [InlineData(Publishing.AzureDevOps, RepoBase)]
+    public void A_link_resolves_against_the_ref_and_not_against_a_branch(string target, string published)
+    {
+        var link = Publishing.For(Descriptor(target, published), Sha)!.Link("glossary/search.md");
+
+        Assert.Contains(Sha, link, StringComparison.Ordinal);
+        Assert.DoesNotContain("/main/", link, StringComparison.Ordinal);
     }
 
     // A corpus should not have to know that the mechanism is about to append a slash.
     [Fact]
     public void A_trailing_slash_on_a_base_does_not_double()
     {
-        var links = Publishing.For(Descriptor(human: Human + "/", raw: Raw + "/"), Sha)!
-            .Links("glossary/search.md");
+        var link = Publishing.For(Descriptor(published: GitHubBase + "/"), Sha)!.Link("glossary/search.md");
 
-        Assert.Equal($"{Human}/{Sha}/glossary/search.md", links.Human);
-        Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
+        Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", link);
     }
 
     // The prefix lands between the commit and the record, which is the one place it can go.
-    [Fact]
-    public void A_corpus_in_a_subdirectory_is_addressed_under_it()
+    [Theory]
+    [InlineData(Publishing.GitHub, GitHubBase,
+        GitHubBase + "/blob/" + Sha + "/example/glossary/search.md#query")]
+    [InlineData(Publishing.AzureDevOps, RepoBase,
+        RepoBase + "?path=/example/glossary/search.md&version=GC" + Sha + "#query")]
+    [InlineData(Publishing.AzureDevOpsWiki, WikiBase,
+        WikiBase + "?pagePath=%2Fexample%2Fglossary%2Fsearch&anchor=query")]
+    public void A_corpus_in_a_subdirectory_is_addressed_under_it(
+        string target, string published, string expected)
     {
-        var links = Publishing.For(Descriptor(prefix: "example"), Sha)!.Links("glossary/search.md", "query");
+        var link = Publishing.For(Descriptor(target, published, "example"), Sha)!
+            .Link("glossary/search.md", "query");
 
-        Assert.Equal($"{Human}/{Sha}/example/glossary/search.md#query", links.Human);
-        Assert.Equal($"{Raw}/{Sha}/example/glossary/search.md", links.Raw);
+        Assert.Equal(expected, link);
     }
 
     // Whether the descriptor wrote the prefix with slashes says nothing about where the corpus sits.
@@ -106,21 +155,25 @@ public class PublishingTests
     [InlineData("example/")]
     public void A_prefix_written_with_slashes_addresses_the_same_folder(string prefix)
     {
-        var links = Publishing.For(Descriptor(prefix: prefix), Sha)!.Links("glossary/search.md");
+        var publishing = Publishing.For(Descriptor(prefix: prefix), Sha)!;
 
-        Assert.Equal($"{Raw}/{Sha}/example/glossary/search.md", links.Raw);
+        Assert.Equal($"{GitHubBase}/blob/{Sha}/example/glossary/search.md",
+            publishing.Link("glossary/search.md"));
+        Assert.Equal("example", publishing.PathPrefix);
     }
 
-    // The links carry no empty segment where a prefix would sit.
+    // The link carries no empty segment where a prefix would sit, and the manifest states no prefix for
+    // an agent to join.
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("/")]
     public void A_corpus_that_is_the_repository_is_addressed_at_its_root(string? prefix)
     {
-        var links = Publishing.For(Descriptor(prefix: prefix), Sha)!.Links("glossary/search.md");
+        var publishing = Publishing.For(Descriptor(prefix: prefix), Sha)!;
 
-        Assert.Equal($"{Raw}/{Sha}/glossary/search.md", links.Raw);
+        Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", publishing.Link("glossary/search.md"));
+        Assert.Null(publishing.PathPrefix);
     }
 
     // The anchor rule is the target's, and GitHub's is the discarding form the corpus's own links
@@ -128,21 +181,20 @@ public class PublishingTests
     [Fact]
     public void The_anchor_is_the_form_the_corpus_already_links_with()
     {
-        var publishing = Publishing.For(Descriptor(), Sha)!;
-
         Assert.Equal("identity-line", Publishing.Anchor("Identity line"));
         Assert.Equal(Md.Slug("Identity line"), Publishing.Anchor("Identity line"));
     }
 
     // The commit is settled too: a ref a reader has to copy is forty characters that can be mistyped
     // into a plausible 404. The wrong one answers as confidently as the right one.
-    [Fact]
-    public void A_template_leaves_the_path_and_the_anchor_and_settles_the_rest()
+    [Theory]
+    [InlineData(Publishing.GitHub, GitHubBase, GitHubBase + "/blob/" + Sha + "/{path}#{anchor}")]
+    [InlineData(Publishing.AzureDevOps, RepoBase, RepoBase + "?path=/{path}&version=GC" + Sha + "#{anchor}")]
+    [InlineData(Publishing.AzureDevOpsWiki, WikiBase, WikiBase + "?pagePath=%2F{path}&anchor={anchor}")]
+    public void A_template_leaves_the_path_and_the_anchor_and_settles_the_rest(
+        string target, string published, string expected)
     {
-        var templates = Publishing.For(Descriptor(), Sha)!.Templates();
-
-        Assert.Equal($"{Human}/{Sha}/{{path}}#{{anchor}}", templates.Human);
-        Assert.Equal($"{Raw}/{Sha}/{{path}}", templates.Raw);
+        Assert.Equal(expected, Publishing.For(Descriptor(target, published), Sha)!.Template());
     }
 
     // A reader holding a record's path supplies the path alone, and cannot join it to the prefix in the
@@ -150,39 +202,32 @@ public class PublishingTests
     [Fact]
     public void A_template_settles_the_subdirectory_too()
     {
-        var templates = Publishing.For(Descriptor(prefix: "example"), Sha)!.Templates();
+        var template = Publishing.For(Descriptor(prefix: "example"), Sha)!.Template();
 
-        Assert.Equal($"{Human}/{Sha}/example/{{path}}#{{anchor}}", templates.Human);
-        Assert.Equal($"{Raw}/{Sha}/example/{{path}}", templates.Raw);
-    }
-
-    // The asymmetry lives in the templates rather than in the reader, so nobody has to remember why.
-    [Fact]
-    public void Only_the_template_a_person_follows_takes_an_anchor()
-    {
-        var templates = Publishing.For(Descriptor(), Sha)!.Templates();
-
-        Assert.Contains(Publishing.AnchorToken, templates.Human, StringComparison.Ordinal);
-        Assert.DoesNotContain(Publishing.AnchorToken, templates.Raw, StringComparison.Ordinal);
+        Assert.Equal($"{GitHubBase}/blob/{Sha}/example/{{path}}#{{anchor}}", template);
     }
 
     // One rule builds both, so a corpus reading the export cannot be handed two addresses for one part.
     [Theory]
-    [InlineData("query")]
-    [InlineData(null)]
-    public void A_substituted_template_is_the_link_this_class_resolves(string? anchor)
+    [InlineData(Publishing.GitHub, GitHubBase, "query")]
+    [InlineData(Publishing.GitHub, GitHubBase, null)]
+    [InlineData(Publishing.AzureDevOps, RepoBase, "query")]
+    [InlineData(Publishing.AzureDevOps, RepoBase, null)]
+    [InlineData(Publishing.AzureDevOpsWiki, WikiBase, "query")]
+    [InlineData(Publishing.AzureDevOpsWiki, WikiBase, null)]
+    public void A_substituted_template_is_the_link_this_class_resolves(
+        string target, string published, string? anchor)
     {
-        var publishing = Publishing.For(Descriptor(), Sha)!;
-        var templates = publishing.Templates();
-        var links = publishing.Links("glossary/search.md", anchor);
+        var publishing = Publishing.For(Descriptor(target, published), Sha)!;
+        var wiki = target == Publishing.AzureDevOpsWiki;
+        var mark = wiki ? "&anchor=" : "#";
+        var path = wiki ? "glossary%2Fsearch" : "glossary/search.md";
 
-        var human = templates.Human.Replace(Publishing.PathToken, "glossary/search.md", StringComparison.Ordinal);
+        var human = publishing.Template().Replace(Publishing.PathToken, path, StringComparison.Ordinal);
         human = anchor is null
-            ? human.Replace($"#{Publishing.AnchorToken}", "", StringComparison.Ordinal)
+            ? human.Replace($"{mark}{Publishing.AnchorToken}", "", StringComparison.Ordinal)
             : human.Replace(Publishing.AnchorToken, anchor, StringComparison.Ordinal);
 
-        Assert.Equal(links.Human, human);
-        Assert.Equal(links.Raw,
-            templates.Raw.Replace(Publishing.PathToken, "glossary/search.md", StringComparison.Ordinal));
+        Assert.Equal(publishing.Link("glossary/search.md", anchor), human);
     }
 }

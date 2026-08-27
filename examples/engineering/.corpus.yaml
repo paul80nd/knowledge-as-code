@@ -50,16 +50,16 @@ shortcode: eng
 # Bumped by hand, and nothing but a person writes it.
 content-version: "0.1.0"
 
-# How this corpus is published. One of: azure-devops-wiki | github | mkdocs | none.
+# How this corpus is published. One of: azure-devops | azure-devops-wiki | github | mkdocs | none.
 publishing-target: github
 
-# Recorded rather than inferred, so `kac export` can build links that a reader and
-# an agent can each follow.
+# Recorded rather than inferred, so `kac export` can build the link a reader follows
+# and name what an agent needs to fetch a record's source.
 #
-# `github` says the repository is itself the published form: a record is read rendered
-# on github.com and fetched unrendered from raw.githubusercontent.com. This repository
-# also carries `azure-pipelines.yml` and `.order`, which are seeds for a corpus
-# published to an Azure DevOps wiki rather than files this target uses.
+# `github` says the repository is itself the published form, and a record is read
+# rendered on github.com. This repository also carries `azure-pipelines.yml` and
+# `.order`, which are seeds for a corpus published to an Azure DevOps wiki rather than
+# files this target uses.
 #
 # `none` says a corpus is not published. An export from one carries no links, and says
 # so in its manifest rather than emitting a link that resolves nowhere.
@@ -72,16 +72,14 @@ publishing-target: github
 #
 # Absent where `publishing-target: none`, which is the one value that needs no base.
 publishing:
-  # Where a person reads a record, rendered.
-  human-base: https://github.com/paul80nd/knowledge-as-code/blob
-
-  # Where an agent fetches a record's source, unrendered.
-  raw-base: https://raw.githubusercontent.com/paul80nd/knowledge-as-code
+  # Where the published corpus is browsed. An agent reads a record's source from the
+  # same place, through a client that authenticates to the target.
+  base: https://github.com/paul80nd/knowledge-as-code
 
   # The folder the corpus sits in, where the repository holds more than the corpus.
   #
-  # The commit a link resolves against sits between a base and the record's path, so a
-  # corpus in a subdirectory cannot say this by writing the folder into its bases.
+  # The commit a link resolves against sits between the base and the record's path, so a
+  # corpus in a subdirectory cannot say this by writing the folder into its base.
   #
   # Absent where the corpus is the repository, which is the ordinary case.
   path-prefix: examples/engineering

@@ -136,32 +136,29 @@ public class AskingTests
         => Assert.Contains("'jenkins' is not a system", Resolve(Flagged() with { Ci = "jenkins" }).Problem);
 
     [Fact]
-    public void A_corpus_publishing_nowhere_is_asked_for_no_bases()
+    public void A_corpus_publishing_nowhere_is_asked_for_no_base()
     {
         var asker = new Scripted();
         var answers = Resolve(Flagged(), asker).Answers!;
 
-        Assert.Null(answers.HumanBase);
-        Assert.Null(answers.RawBase);
-        Assert.DoesNotContain(asker.Asked, q => q.Contains("read a record"));
+        Assert.Null(answers.Base);
+        Assert.DoesNotContain(asker.Asked, q => q.Contains("published corpus is browsed"));
     }
 
     [Fact]
-    public void The_bases_are_filled_in_from_the_repositorys_own_remote()
+    public void The_base_is_filled_in_from_the_repositorys_own_remote()
     {
         var answers = Resolve(Flagged() with { Publishing = Publishing.GitHub, Yes = true },
             origin: "git@github.com:acme/corpus.git").Answers!;
 
-        Assert.Equal("https://github.com/acme/corpus/blob", answers.HumanBase);
-        Assert.Equal("https://raw.githubusercontent.com/acme/corpus", answers.RawBase);
+        Assert.Equal("https://github.com/acme/corpus", answers.Base);
     }
 
     [Fact]
-    public void A_repository_with_no_remote_states_no_bases()
+    public void A_repository_with_no_remote_states_no_base()
     {
         var answers = Resolve(Flagged() with { Publishing = Publishing.GitHub, Yes = true }).Answers!;
 
-        Assert.Null(answers.HumanBase);
-        Assert.Null(answers.RawBase);
+        Assert.Null(answers.Base);
     }
 }

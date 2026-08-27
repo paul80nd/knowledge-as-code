@@ -93,7 +93,7 @@ public static class Asking
             return Problem($"new: --ci '{ci}' is not a system this tool offers. it is one of "
                            + $"{string.Join(", ", CiSystem.All)}.");
 
-        var (human, raw) = Bases(publishing, origin, asker);
+        var published = Base(publishing, origin, asker);
 
         return new Answered(
             new NewAnswers
@@ -101,8 +101,7 @@ public static class Asking
                 Name = name.Trim(),
                 Types = types,
                 PublishingTarget = publishing,
-                HumanBase = human,
-                RawBase = raw,
+                Base = published,
                 Ci = ci
             },
             null);
@@ -157,22 +156,19 @@ public static class Asking
                + $"it declares {string.Join(", ", declared)}.";
     }
 
-    // Where the published form is served from, offered already filled in by `Publishing.BasesFrom`. A
-    // target needing no bases is asked nothing, and a run with nobody to ask takes what the remote
+    // Where the published corpus is browsed, offered already filled in by `Publishing.BaseFrom`. A
+    // target needing no base is asked nothing, and a run with nobody to ask takes what the remote
     // implied or states none.
-    private static (string? Human, string? Raw) Bases(string target, string? origin, IAsker? asker)
+    private static string? Base(string target, string? origin, IAsker? asker)
     {
-        if (target.Equals(Publishing.None, StringComparison.Ordinal)) return (null, null);
+        if (target.Equals(Publishing.None, StringComparison.Ordinal)) return null;
 
-        var derived = Publishing.BasesFrom(target, origin);
-        if (asker is null) return (derived?.Human, derived?.Raw);
+        var derived = Publishing.BaseFrom(target, origin);
+        if (asker is null) return derived;
 
-        var human = asker.Text("Where does a person read a record?", derived?.Human ?? "");
-        var raw = asker.Text("Where does an agent fetch one?", derived?.Raw ?? "");
+        var answer = asker.Text("Where is the published corpus browsed?", derived ?? "");
 
-        return (Blank(human), Blank(raw));
-
-        static string? Blank(string value) => value.Trim() is { Length: > 0 } v ? v : null;
+        return answer.Trim() is { Length: > 0 } v ? v : null;
     }
 
     private static Answered Problem(string message) => new(null, message);

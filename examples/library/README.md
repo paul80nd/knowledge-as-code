@@ -126,8 +126,8 @@ invisible.
 
 `sh ../../tooling/tests/round-trip.sh` walks the same path without a session, and without touching your own
 configuration. It installs into a config directory of its own, checks that this corpus shipped the glossary skill and
-not the policy skill it has no records for, looks a term up, fetches a record through the raw link the export wrote, and
-says which step failed. CI runs it on Linux and Windows.
+not the policy skill it has no records for, looks a term up, fetches a record's source from the base, prefix and ref the
+export wrote, and says which step failed. CI runs it on Linux and Windows.
 
 ### What the plugin does not do yet
 

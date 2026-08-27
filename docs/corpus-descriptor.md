@@ -58,36 +58,56 @@ an export from a corpus that has not declared one states `null`.
 ```yaml
 publishing-target: github
 publishing:
-  human-base: https://github.com/paul80nd/knowledge-as-code/blob
-  raw-base: https://raw.githubusercontent.com/paul80nd/knowledge-as-code
+  base: https://github.com/paul80nd/knowledge-as-code
   path-prefix: examples/library
 ```
 
-`publishing-target` is one of `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather than leave it to be
-guessed, so `export` knows whether it can build a link at all and which form to build.
-[The export format](design/export.md#the-two-links) sets out the two an export carries.
+`publishing-target` is one of `azure-devops`, `azure-devops-wiki`, `github`, `mkdocs` or `none`. You state it rather
+than leave it to be guessed, so `export` knows whether it can build a link at all and which form to build.
+[The export format](design/export.md#the-link-and-the-ingredients) sets out what an export carries.
+
+`base` is the URL a person opens to browse the corpus. One base, whatever the target: an agent reads a record's source
+from the same place, through a client that authenticates.
 
 ### What each target says
 
-`github` says the repository is itself the published form. A person reads a record rendered on github.com, and an agent
-fetches its source from raw.githubusercontent.com. It is the only target that builds a link today.
+`github` says the repository is itself the published form, and a record is read rendered on github.com. Write the
+repository's own URL, with no `/blob` on the end. `export` adds that segment along with the commit.
 
-A descriptor may carry `azure-devops-wiki` or `mkdocs`, and nothing yet addresses either, so an export from a corpus on
-one of those carries no links. No link is better than a link built on a convention nobody has settled.
+`azure-devops` says the corpus lives in Azure Repos and no wiki publishes it. Write the repository's `_git` URL, as
+`https://dev.azure.com/{org}/{project}/_git/{repo}`.
+
+`azure-devops-wiki` says an Azure DevOps wiki publishes it. Write the wiki's own URL, as
+`https://dev.azure.com/{org}/{project}/_wiki/wikis/{wiki}`, and nothing after it. The address bar shows a numeric page
+id once you have navigated to a page, and a base carrying one addresses that page and misaddresses every other record,
+so `export` refuses it and builds no links at all.
+
+This is also the one target whose link is not pinned to a commit. No `?pagePath=` URL takes one, so a person following
+the link reads whatever the wiki holds now. An agent still reads the version the export was built from, because the
+commit reaches it through the manifest rather than through the link.
+
+A descriptor may carry `mkdocs`, and nothing yet addresses it, so an export from a corpus on it carries no links. No
+link is better than a link built on a convention nobody has settled.
 
 `none` says a corpus is not published. Its export carries no links and says so in its manifest, so a reader is never
 handed an address that resolves nowhere. It is the one value that needs no `publishing:` block.
 
+### A wiki spells a record's path its own way
+
+`export` writes one template, and `{path}` is substituted into it. What that placeholder takes is the target's business.
+`github` and `azure-devops` address a file, so they take the record's path whole, as `policies/rtnt-retention.md`. An
+Azure DevOps wiki addresses a page, so it takes the same path with `.md` removed and every `/` written as `%2F`.
+
 ### Only *where* the corpus is served from lives here
 
-How a record's path and a term's anchor join a base is a property of the target, and it lives in the mechanism. Every
+How a record's path and a term's anchor join the base is a property of the target, and it lives in the mechanism. Every
 corpus on one target then builds the same link, and none of them writes the rule down a second time.
 
 ### `path-prefix` is for a repository holding more than the corpus
 
-You might expect to fold that folder into the two bases above. The commit a link resolves against sits between a base
-and the record's path, so there is nowhere to put it. Leave the key out where the corpus is the repository, which is
-the ordinary case.
+You might expect to fold that folder into the base above. The commit a link resolves against sits between the base and
+the record's path, so there is nowhere to put it. Leave the key out where the corpus is the repository, which is the
+ordinary case.
 
 ## Upstream
 

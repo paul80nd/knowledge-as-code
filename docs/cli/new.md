@@ -6,17 +6,17 @@
 kac new [--ci <SYSTEM>] [--from <URL|PATH>] [--name <NAME>] [--no-color] [--path <PATH>] [--publishing <TARGET>] [--ref <REF>] [--types <TYPES>] [--yes]
 ```
 
-| Option                  | What it does                                                                          |
-|-------------------------|---------------------------------------------------------------------------------------|
-| `--ci <SYSTEM>`         | What builds the corpus: github, azure-devops or none.                                 |
-| `--from <URL\|PATH>`    | The repository or folder serving the template. Defaults to the framework's own.       |
-| `--name <NAME>`         | What the corpus is called. Defaults to the name of this folder.                       |
-| `--no-color`            | Turn colour off. NO_COLOR in the environment does the same.                           |
-| `--path <PATH>`         | The folder inside that repository holding manifest.yaml, where it is not at the root. |
-| `--publishing <TARGET>` | Where the corpus is published: github, azure-devops-wiki, mkdocs or none.             |
-| `--ref <REF>`           | The branch or tag to take the template from.                                          |
-| `--types <TYPES>`       | The types to adopt, comma-separated, or 'all'.                                        |
-| `--yes`                 | Take the default for every answer not given, and ask nothing.                         |
+| Option                  | What it does                                                                            |
+|-------------------------|-----------------------------------------------------------------------------------------|
+| `--ci <SYSTEM>`         | What builds the corpus: github, azure-devops or none.                                   |
+| `--from <URL\|PATH>`    | The repository or folder serving the template. Defaults to the framework's own.         |
+| `--name <NAME>`         | What the corpus is called. Defaults to the name of this folder.                         |
+| `--no-color`            | Turn colour off. NO_COLOR in the environment does the same.                             |
+| `--path <PATH>`         | The folder inside that repository holding manifest.yaml, where it is not at the root.   |
+| `--publishing <TARGET>` | Where the corpus is published: github, azure-devops, azure-devops-wiki, mkdocs or none. |
+| `--ref <REF>`           | The branch or tag to take the template from.                                            |
+| `--types <TYPES>`       | The types to adopt, comma-separated, or 'all'.                                          |
+| `--yes`                 | Take the default for every answer not given, and ask nothing.                           |
 
 <!-- END GENERATED: usage-new -->
 
@@ -43,8 +43,8 @@ kac new
 ```
 
 It asks for the corpus's name, which types to adopt, where it publishes and which CI system builds it. Each has a
-default and each has a flag. Name a publishing target and it asks two more, for where a person reads a record and
-where an agent fetches one, and those two have no flag.
+default and each has a flag. Name a publishing target and it asks one more, for the URL the published corpus is browsed
+at, and that one has no flag.
 
 | Asked              | Default                          | Flag           |
 |--------------------|----------------------------------|----------------|
