@@ -90,21 +90,23 @@ kac new --from ../knowledge-as-code
 
 ## Known limits
 
-**A corpus that declines types arrives with links to what it declined.** The type pages cross-reference each other, so
-`glossary.md` names `services.md` whether or not you adopted services. `new` validates before it finishes and names the
-fault for what it is:
+**A corpus that declines types arrives with a schema naming what it declined.** A type's own file points `ref:` and
+`versus:` at the types it sits beside, so `.schema/adrs.yaml` names standards whether or not you adopted standards.
+`new` validates before it finishes and names the fault for what it is:
 
 ```text
-glossary.md
-  error  [link-resolves]  link target 'services.md' does not resolve.  (glossary.md:36)
+.schema/adrs.yaml
+  error  [schema-dispatch]  type 'adrs' declares 'versus: standards', and no schema covers that
+                            folder. Either the type was never adopted here, or the name is wrong.
 
-validated 2 document(s) and 2 template(s), skipped 0 without frontmatter. 6 error(s), 0 warning(s)
+validated 2 document(s) and 2 template(s), skipped 0 without frontmatter. 1 error(s), 0 warning(s)
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
-new: the corpus this created does not validate. a page it received links to a type this corpus declined. those pages
-are yours from here, so edit the links out. the files are written and staged.
+new: the corpus this created does not validate. a schema file it received names a type this corpus
+declined. .schema/ is yours from here, so take those references out. the files are written and staged.
 ```
 
-
+The pages arrive clean. A type page links the other type pages, and `new` drops each link to a type this corpus
+declined, leaving the type's name standing in the sentence.
 
 **It needs a network and a git client**, unless you pass a local `--from`. The template is fetched at run time.
 

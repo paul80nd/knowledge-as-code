@@ -35,7 +35,7 @@ public class AskingTests
             return many ?? options;
         }
 
-        public bool Confirm(string question)
+        public bool Confirm(string question, bool fallback = true)
         {
             Asked.Add(question);
             return confirm;

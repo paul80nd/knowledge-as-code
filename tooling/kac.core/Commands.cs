@@ -168,7 +168,8 @@ public static class Commands
             kac.core.New.DeclinesTypes(schema, answers.Types));
         if (plan.TemplateIsUnsound) return Unsound(plan, request.From);
 
-        foreach (var path in kac.core.New.Apply(plan, template.Root, dir)) Out.Markup(Wrote(path));
+        var declined = SeedLinks.Declined(schema, answers.Types);
+        foreach (var path in kac.core.New.Apply(plan, template.Root, dir, declined)) Out.Markup(Wrote(path));
 
         // Named where a reader can act on it, counted where they cannot. A declined type is a decision
         // just made and needs no list; a starter withheld is one file, and which one is the whole fact.
@@ -191,12 +192,12 @@ public static class Commands
 
         // Two different faults end here, and the message has to say which. A corpus taking every type and
         // failing is a defect upstream, and the person who just ran the command should not be left
-        // thinking they caused it. A corpus that declined types is meeting the cross-references on the
-        // pages it did receive, and those pages are seeds it owns.
+        // thinking they caused it. A corpus that declined types is meeting its own schema: the file of a
+        // type it kept points `ref:` and `versus:` at types it did not.
         Stop(plan.DeclinedTypes.Count > 0
-            ? "new: the corpus this created does not validate. a page it received links to a type this "
-              + "corpus declined. those pages are yours from here, so edit the links out. the files are "
-              + "written and staged."
+            ? "new: the corpus this created does not validate. a schema file it received names a type "
+              + "this corpus declined. .schema/ is yours from here, so take those references out. the "
+              + "files are written and staged."
             : "new: the corpus this created does not validate. that is a defect in the template or in the "
               + "tool, and not in anything you answered. the files are written and staged.");
         return 1;
@@ -216,6 +217,34 @@ public static class Commands
         return Git.Run(dir, "init -q") is null
             ? Fail("new: `git init` failed. the tool reads the git listing to find what a corpus holds, "
                    + "so a corpus git cannot see is not one worth writing.")
+            : null;
+    }
+
+    // Put the cost of giving up a type to whoever asked for it, and answer with the refusal where there
+    // is one.
+    //
+    // Asked rather than refused. `Adopt` already refuses where the folder holds records, because that is
+    // a fact the listing settles. This one is a judgement: the pages naming the type are the corpus's own
+    // words by now, and the tool can see a link it can parse and nothing else. Somebody who has rewritten
+    // those pages knows what else points at the type, and is the only one who does.
+    //
+    // A no ends the whole run rather than the drop alone. The run was asked for a drop, and taking a newer
+    // framework while leaving the type in place is a third thing nobody asked for.
+    private static int? Relinquish(string dropping, UpdateRequest request)
+    {
+        var asker = request.Yes || !Out.Interactive ? null : new ConsoleAsker();
+
+        Note($"update: giving up {dropping} deletes its page. every page still linking to it is left "
+             + "holding a dead link, and `kac validate` reports the ones it can reach.");
+        Note("update: a reference it cannot parse is reported by nobody. search the corpus for the name "
+             + "as well, and fix what you find.");
+
+        if (asker is null && !request.Yes)
+            return Fail($"update: giving up {dropping} needs an answer, and there is no terminal to ask "
+                        + "on. pass --yes to give it up anyway.");
+
+        return asker is not null && !asker.Confirm($"Give up {dropping}?", fallback: false)
+            ? Cancelled()
             : null;
     }
 
@@ -647,9 +676,11 @@ public static class Commands
         var types = new UpdateTypes(declared, adoption.Types,
             kac.core.New.DeclinesTypes(schema, adoption.Types ?? declared));
 
+        var declined = SeedLinks.Declined(schema, adoption.Types ?? declared);
+
         var plan = kac.core.Update.Plan(template.Files(), corpusFiles, manifest, descriptor, types, policy,
             kac.core.Update.ReadInPlace(template.Root, corpusRoot),
-            file => kac.core.Update.Same(template.Root, corpusRoot, file));
+            file => kac.core.Update.Same(template.Root, corpusRoot, file, declined));
 
         // A type being given up takes its own files with it, and they are deletions like any other. So
         // they join the plan rather than being carried beside it, and `--check` reports them too.
@@ -666,7 +697,10 @@ public static class Commands
         var taken = from + At(template.Commit);
         if (request.Check) return ReportCheck(plan, taken, request.DropType);
 
-        kac.core.Update.Apply(plan, template.Root, corpusRoot);
+        if (request.DropType is { } dropping && Relinquish(dropping, request) is { } stopped)
+            return stopped;
+
+        kac.core.Update.Apply(plan, template.Root, corpusRoot, declined);
         CorpusDescriptor.Stamp(corpusRoot, manifest.Version, today, template.Commit);
 
         // Only where a flag asked for it. `types:` is the corpus's own list, and rewriting it on a run
@@ -674,7 +708,8 @@ public static class Commands
         if (adoption.Account is not null && adoption.Types is { } adopted)
             CorpusDescriptor.SetTypes(corpusRoot, adopted);
 
-        return ReportUpdate(plan, adoption, corpusRoot, taken, manifest.Version, today, request.DropType);
+        return ReportUpdate(plan, adoption, corpusRoot, taken, manifest.Version, today, request.DropType,
+            request.AddType);
     }
 
     // A template this tool cannot read the whole of, in either of the two ways. Each names what the
@@ -821,7 +856,7 @@ public static class Commands
 
     // What the update did. Every file it touched, then the tally and what the descriptor now records.
     private static int ReportUpdate(UpdatePlan plan, Adoption adoption, string corpusRoot, string taken,
-        int templateVersion, string today, string? dropped)
+        int templateVersion, string today, string? dropped, string? added)
     {
         Out.Line($"update: taking the framework from {taken}.");
         foreach (var file in plan.Written) Out.Markup(Wrote(file.To));
@@ -844,6 +879,13 @@ public static class Commands
                 + $"template version {templateVersion}, taken {today}.");
         Account("update: nothing is committed. `git diff` is the review step, and `git checkout` on a "
                 + "file is how to decline one.");
+
+        // A page is unlinked as it is written, and every page already here was written while this type
+        // was still declined. So the arriving page links out and none of the others link back. Said
+        // rather than repaired: those pages hold the corpus's own words now.
+        if (added is not null)
+            Note($"update: {added} arrives linking to the types this corpus holds. the pages already "
+                 + $"here name {added} without linking to it, and they are yours to change.");
 
         // Every overlay page may carry a generated block built from this corpus's own types, so the
         // copies above are only right once rebuilt against what this corpus holds. Regenerating here

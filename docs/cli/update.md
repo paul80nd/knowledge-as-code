@@ -79,8 +79,16 @@ kac update --add-type policies
 kac update --drop-type tools
 ```
 
-Adopting writes the type's schema, its root page and its template, and adds the name to `types:`. Dropping is the
-asymmetric half, and it refuses while the folder still holds records:
+Adopting writes the type's schema, its root page and its template, and adds the name to `types:`. The arriving page
+links to the types the corpus already holds. The pages already there name the new type without linking to it, because
+each was written while the type was still declined, and the run says so:
+
+```text
+update: policies arrives linking to the types this corpus holds. the pages already here name policies without linking
+to it, and they are yours to change.
+```
+
+Dropping is the asymmetric half, and it refuses while the folder still holds records:
 
 ```text
 update: tools/ holds 3 record(s), and deleting a record is deleting knowledge. delete them yourself and run this
@@ -88,6 +96,23 @@ again, or leave 'tools' adopted.
 ```
 
 The message names the count and the two ways forward. Deleting records is yours to do deliberately.
+
+Where the folder is empty, dropping asks first. The page is about to go, and every page still naming it keeps a link
+that no longer resolves:
+
+```text
+update: giving up tools deletes its page. every page still linking to it is left holding a dead link, and `kac
+validate` reports the ones it can reach.
+update: a reference it cannot parse is reported by nobody. search the corpus for the name as well, and fix what you
+find.
+```
+
+The question that follows takes no for an answer by default, because the run deletes files. Pass `--yes` to answer it
+in advance. A run with no terminal and no `--yes` refuses rather than guessing:
+
+```text
+update: giving up tools needs an answer, and there is no terminal to ask on. pass --yes to give it up anyway.
+```
 
 ### Refresh the seed files too
 

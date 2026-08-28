@@ -26,7 +26,8 @@ public sealed record UpdateRequest
     public string? AddType { get; init; }
     public string? DropType { get; init; }
 
-    // An update asks no question of its own, so this reaches the clone and nothing else.
+    // Reaches the clone, and the one question an update asks: giving up a type leaves the pages that
+    // name it holding a dead link, and `--drop-type` waits on an answer before it deletes anything.
     public bool Yes { get; init; }
 }
 
@@ -278,11 +279,12 @@ public static class Update
     private static string Owned(string rel, string? reason) => reason is null ? rel : $"{rel}  ({reason})";
 
     // Carry the plan out. The plan decided all of it, so this asks the template nothing beyond the bytes
-    // and the mode of each file it was told to copy, and it commits and stages nothing.
-    public static void Apply(UpdatePlan plan, string templateRoot, string corpusRoot)
+    // and the mode of each file it was told to copy, and it commits and stages nothing. `declined` reaches
+    // the seed pages alone, and `SeedLinks` says why.
+    public static void Apply(UpdatePlan plan, string templateRoot, string corpusRoot,
+        IReadOnlySet<string> declined)
     {
-        foreach (var file in plan.Copies)
-            Files.Copy(Path.Combine(templateRoot, file.From), Path.Combine(corpusRoot, file.To));
+        foreach (var file in plan.Copies) SeedLinks.Receive(file, templateRoot, corpusRoot, declined);
 
         foreach (var rel in plan.Deleted) File.Delete(Path.Combine(corpusRoot, rel));
     }
@@ -379,9 +381,19 @@ public static class Update
     // working copy checked out with CRLF never reads as drift, and compared on the authored half alone.
     // See `Generator.Authored` for why an overlay page may hold a different table in each corpus and
     // still be in step.
-    internal static bool Same(string templateRoot, string corpusRoot, PlannedFile file) =>
-        Generator.Authored(Files.ReadLf(Path.Combine(templateRoot, file.From)))
-        == Generator.Authored(Files.ReadLf(Path.Combine(corpusRoot, file.To)));
+    //
+    // The template's side is unlinked before the comparison, so what a corpus is held to under `full` is
+    // what `new` would have written. Compared against the template as authored, a corpus that declined
+    // types would read as behind on every seed page it holds, and a full update would put back the links
+    // its own `types:` says it cannot follow.
+    internal static bool Same(string templateRoot, string corpusRoot, PlannedFile file,
+        IReadOnlySet<string> declined)
+    {
+        var sent = Files.ReadLf(Path.Combine(templateRoot, file.From));
+        if (SeedLinks.Reaches(file)) sent = SeedLinks.Unlinked(sent, declined);
+        return Generator.Authored(sent)
+               == Generator.Authored(Files.ReadLf(Path.Combine(corpusRoot, file.To)));
+    }
 
     // Every tracked (and not-ignored) file a corpus holds, relative and forward-slashed. `GitFiles` falls
     // back to a walk where git cannot answer, which is a corpus outside version control.

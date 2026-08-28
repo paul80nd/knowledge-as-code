@@ -13,10 +13,22 @@ public static class Creation
     private static string NewEnough =>
         Manifest.LoadFrom(Path.Combine(RepoRoot, Manifest.FileName)).MinimumTool ?? "0.0.0";
 
-    public static int Create(string folder, string? from = null) =>
+    public static int Create(string folder, string? from = null, string? types = null) =>
         Commands.New(
             folder,
-            new NewRequest { From = from ?? RepoRoot, Yes = true, Ci = CiSystem.None },
+            new NewRequest { From = from ?? RepoRoot, Yes = true, Ci = CiSystem.None, Types = types },
+            NewEnough,
+            "2026-01-01");
+
+    // What a corpus is held to under `full`, asked without writing. `--check` reads a tree in any state,
+    // so nothing here has to be committed first.
+    public static int WouldChangeUnderFull(string folder) =>
+        Commands.Update(
+            folder,
+            new UpdateRequest
+            {
+                From = RepoRoot, Check = true, Policy = CorpusDescriptor.Full, Yes = true
+            },
             NewEnough,
             "2026-01-01");
 }
