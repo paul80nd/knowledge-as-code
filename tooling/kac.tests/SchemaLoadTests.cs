@@ -124,6 +124,31 @@ public class SchemaLoadTests
         Assert.Contains("declares no 'status'", Schema.Load(files).Universal["status"].Problem!);
     }
 
+    // A check's `notes:` carries its whitespace through untouched, where a rule's is collapsed at load.
+    private static string Notes(string block, string ending)
+    {
+        var files = Blocks();
+        files["_checks.yaml"] =
+            ("checks:\n  a-check:\n    description: What the check reports.\n" + block).Replace("\n", ending);
+        return Assert.Single(Schema.Load(files).Checks).Notes;
+    }
+
+    // Only a value holding a real line break can show a stray `\r`, and every other style folds its
+    // break into a space. So the cases are a literal block, and the folded block with a blank line that
+    // `.schema/_checks.yaml` writes a `notes:` of more than one paragraph as.
+    [Theory]
+    [InlineData("    notes: |-\n      First line\n      and a second.\n")]
+    [InlineData("    notes: >\n      First line.\n\n      A second paragraph.\n")]
+    public void A_multi_line_value_reads_the_same_however_the_file_ends_its_lines(string block)
+    {
+        var crlf = Notes(block, "\r\n");
+
+        // A case whose break folded away would pass the two below having exercised nothing.
+        Assert.Contains("\n", crlf, StringComparison.Ordinal);
+        Assert.Equal(Notes(block, "\n"), crlf);
+        Assert.DoesNotContain("\r", crlf, StringComparison.Ordinal);
+    }
+
     private static RuleSpec OnlyRule(string typeYaml)
     {
         var files = Blocks();
