@@ -37,7 +37,8 @@ branch.
 
 Each side keeps its own spelling. A record your corpus holds is cited bare and one it imported carries its producer's
 shortcode, so writing either the other way is refused: two spellings of one obligation defeat every search anybody runs
-for it.
+for it. [Imports](../design/imports.md) says why resolution works this way, and what a check may ask of an imported
+record.
 
 ## Examples
 

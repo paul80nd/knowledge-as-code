@@ -25,6 +25,8 @@ These pages are the specification `kac` is built to. Where a page and the tool d
   about its own records, and which version number moves when either changes.
 * **[The plugin bundle](plugin.md)** says how an export becomes something a consumer can install, and what decides which
   parts of it ship.
+* **[Imports](imports.md)** says how one corpus cites records another corpus published, what each step of the
+  round trip decides, and what a check may ask across the boundary.
 * **[Layers](layers.md)** says which files in a corpus belong to the framework, which belong to the corpus, and what
   happens to each when a newer framework arrives.
 

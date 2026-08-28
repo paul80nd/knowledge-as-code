@@ -20,7 +20,8 @@ in: it reads the `consumes:` block of [`.corpus.yaml`](../corpus-descriptor.md),
 the source it declares, and unpacks it under `.imports/<shortcode>/`.
 
 What it fetches is the package [`pack`](pack.md) seals, so a consumer takes a released version rather than cloning the
-producer and reading whatever is on their default branch this afternoon.
+producer and reading whatever is on their default branch this afternoon. [Imports](../design/imports.md) sets out the
+whole round trip, from the producer's export to the citation your build resolves.
 
 **`.imports/` is not committed.** It holds another corpus's whole content, and a copy in your history is a second place
 that content lives. The `.gitignore` a corpus arrives with already covers it, and CI restores before it validates,

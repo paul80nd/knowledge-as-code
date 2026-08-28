@@ -130,6 +130,7 @@ nav:
       - Generation: design/generation.md
       - The export format: design/export.md
       - The plugin bundle: design/plugin.md
+      - Imports: design/imports.md
       - Layers: design/layers.md
   - The corpus descriptor: corpus-descriptor.md
   - Changelog: changelog.md
