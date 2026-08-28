@@ -293,6 +293,19 @@ whose parts are table rows has no such body, and names its columns instead.
 One number across every type would refuse a bundle over a change nobody's consumer reads. A plugin whose only skill
 looks terms up would be refused on the day some other type gained a key.
 
+### A number a reader does not know obliges it to stop
+
+The section above says when the exporter moves a number. This is the other half of the same promise, and it is what a
+reader owes in return: meet a `formatVersion` above the one you were written against, and refuse the export rather
+than read the parts you recognise. A number moves exactly when a reader written against the shape before it would now
+be wrong, so reading on is reading something whose meaning has changed underneath you.
+
+A `shapeVersion` obliges less, and deliberately. It covers one type's files, so a reader that does not know a type's
+number leaves that type alone and reads the rest of the export. That is the whole reason the two numbers are separate:
+one number across every type would stop a reader over a change to a type it never opens.
+
+[`bundle`](../cli/bundle.md) is the worked case. It reads both and refuses what it cannot read.
+
 ### What moves either number
 
 One test decides both. The number moves when a reader written against the shape before it would now be wrong. Adding a
@@ -329,4 +342,4 @@ as unread. A glossary term is unaffected: its body is everything under the headi
 is the safe way round: the alternative is an export quietly thinner than the type asked for. The value stays
 three-valued so that the first type wanting a shorter line does not force it to be rebuilt.
 
-[`bundle`](../cli/bundle.md) reads `formatVersion` and each `shapeVersion`, and refuses an export it cannot read.
+[`export`](../cli/export.md) is the command that writes this, and [`pack`](../cli/pack.md) seals it for a consumer.
