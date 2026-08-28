@@ -27,6 +27,8 @@ app.Configure(config =>
         .WithDescription("Check the corpus against .schema/*.yaml.");
     config.AddCommand<GenerateCommand>("generate")
         .WithDescription("Regenerate _index.md and the generated blocks in <type>.md.");
+    config.AddCommand<RestoreCommand>("restore")
+        .WithDescription("Fetch the corpora this one consumes into .imports/.");
     config.AddCommand<ExportCommand>("export")
         .WithDescription("Write the corpus to .dist/export/ as a versioned export.");
     config.AddCommand<BundleCommand>("bundle")
@@ -198,6 +200,16 @@ internal sealed class GenerateCommand : Command<GenerateSettings>
 {
     protected override int Execute(CommandContext context, GenerateSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus => Commands.Generate(corpus, settings.Check));
+}
+
+// `restore` fetches what `consumes:` declares and unpacks each one under `.imports/`. It takes nothing:
+// what to fetch, at which version and from where are all in `.corpus.yaml`, so a restore run by hand and
+// one run by a pipeline read the same declaration. A token for a private feed comes from the
+// environment, which `docs/cli/restore.md` names.
+internal sealed class RestoreCommand : Command<CorpusSettings>
+{
+    protected override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
+        Cli.InCorpus(settings, Commands.Restore);
 }
 
 // `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`

@@ -35,6 +35,7 @@ run it from anywhere inside one.
 kac validate     # frontmatter, links, structure, clauses and the graph
 kac generate     # regenerate the indexes and the generated blocks in each type page
 kac update       # take a newer framework from the template this corpus was made from
+kac restore      # fetch the corpora this one consumes into .imports/
 kac export       # write the corpus to .dist/export/ as data a consumer reads instead of cloning
 kac bundle       # assemble that export and .plugin/ into an installable plugin
 kac pack         # seal that export into a versioned package a registry can hold

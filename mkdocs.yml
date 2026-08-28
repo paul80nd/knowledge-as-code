@@ -102,6 +102,7 @@ nav:
       - new: cli/new.md
       - validate: cli/validate.md
       - generate: cli/generate.md
+      - restore: cli/restore.md
       - export: cli/export.md
       - bundle: cli/bundle.md
       - pack: cli/pack.md

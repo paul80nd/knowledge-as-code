@@ -122,6 +122,23 @@ steps:
 
 The `pr:` block states the intent, and it works as written if the repository is ever mirrored to GitHub.
 
+## Restoring what a corpus consumes
+
+A corpus that reads another corpus's records declares them in `consumes:`, and fetches them before anything is
+validated:
+
+```bash
+dotnet tool run kac restore     # each consumed corpus, into .imports/<shortcode>/
+```
+
+`.imports/` is not committed, so a fresh checkout holds none of it. Run [`restore`](cli/restore.md) as the first step
+of the job, exactly as a build restores packages.
+
+A private feed needs a token, which the job reads from `KAC_REGISTRY_TOKEN`. In GitHub Actions the built-in
+`github.token` reaches GitHub Packages in the same organisation, and it needs `packages: read`.
+
+A corpus that consumes nothing skips this step. Standing alone is the ordinary case.
+
 ## Building the plugin
 
 A corpus that publishes an agent plugin runs two more commands, in this order:

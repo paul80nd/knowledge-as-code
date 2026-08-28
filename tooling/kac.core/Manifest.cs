@@ -113,6 +113,18 @@ public class Manifest
 // the descriptor next, and nothing in the tool reads it.
 public record SkippedFile(string Path, string? Reason);
 
+// One corpus this one consumes, as its entry in `consumes:` states it.
+//
+// `Version` is the range the corpus meant and `Resolved` is what the last restore actually took. Both
+// sit on this one entry rather than in a lock file beside the descriptor, so `.corpus.yaml` stays the
+// one description of what a corpus is.
+//
+// Every field is nullable because this is what the file said. An entry short of anything a restore
+// needs is refused by name in `Restore.Plan`, where the message can say which key is missing and
+// which entry it is missing from.
+public record Consumed(
+    string? Corpus, string? Shortcode, string? Version, string? Resolved, string? Source);
+
 public class CorpusDescriptor
 {
     // The format `.corpus.yaml` is written in. The tool's own number: a corpus cannot know the shape a
@@ -154,6 +166,14 @@ public class CorpusDescriptor
     // `docs/cli/update.md` says what that buys a corpus.
     public readonly List<SkippedFile> Skipped = [];
 
+    // The corpora this one consumes, in the order the descriptor lists them. Empty for a corpus standing
+    // on its own, which is the first-class case and the one that needs no restore at all.
+    //
+    // A different relationship from `upstream:` above, and deliberately a different key. `upstream:` is
+    // one framework flowing down as files this corpus receives; this is a graph of records this corpus
+    // reads and never holds. `docs/corpus-descriptor.md` sets the two side by side.
+    public readonly List<Consumed> Consumes = [];
+
     // Where `kac bundle` reads the plugin tree from, relative to this corpus's root.
     //
     // Null where the corpus keeps its own `.plugin/`, which is the ordinary case and the only one a
@@ -175,10 +195,27 @@ public class CorpusDescriptor
     // want back.
     public string? Shortcode;
 
-    // How long a shortcode may be. The rest of the spelling is `Validator.CheckShortcode`, and
-    // `.schema/_checks.yaml` argues each part of it.
+    // How long a shortcode may be. `.schema/_checks.yaml` argues each part of the spelling under
+    // `shortcode`.
     public const int ShortcodeMin = 2;
     public const int ShortcodeMax = 8;
+
+    // How a shortcode is spelled wrong, or null where it is spelled correctly. The wording completes
+    // "shortcode 'x' ...", and names the first fault alone: an author fixing it re-runs the check.
+    //
+    // Here rather than beside the check that reports it, because two things ask. `validate` holds a
+    // corpus to the shortcode it declares, and `restore` holds a consumer to the one it files an import
+    // under: a value that is not a shortcode is a folder name that is not one either.
+    public static string? ShortcodeFault(string shortcode)
+    {
+        if (shortcode.Length < ShortcodeMin) return "is too short";
+        if (shortcode.Length > ShortcodeMax) return "is too long";
+        if (!char.IsAsciiLetterLower(shortcode[0])) return "does not open on a lower-case letter";
+
+        return shortcode.Any(c => !char.IsAsciiLetterLower(c) && !char.IsAsciiDigit(c))
+            ? "carries something other than a lower-case letter or a digit"
+            : null;
+    }
 
     // How this corpus is published, and where the published form is served from. The target names a set
     // of link-building rules and `Publishing` holds them; the base is the only part a corpus supplies,
@@ -270,6 +307,15 @@ public class CorpusDescriptor
 
         if (Yaml.Get(root, "types") is YamlSequenceNode types)
             descriptor.Types = [.. types.Children.Select(Yaml.Str).OfType<string>()];
+
+        if (Yaml.Get(root, "consumes") is YamlSequenceNode consumes)
+            foreach (var item in consumes.Children)
+                descriptor.Consumes.Add(new Consumed(
+                    Blank(Yaml.Str(Yaml.Get(item, "corpus"))),
+                    Blank(Yaml.Str(Yaml.Get(item, "shortcode"))),
+                    Blank(Yaml.Str(Yaml.Get(item, "version"))),
+                    Blank(Yaml.Str(Yaml.Get(item, "resolved"))),
+                    Blank(Yaml.Str(Yaml.Get(item, "source")))));
 
         if (Yaml.Get(root, "skip") is YamlSequenceNode seq)
             foreach (var item in seq.Children)
@@ -405,6 +451,113 @@ public class CorpusDescriptor
             return [.. keys];
         }
 
-        static bool IsTopLevelKey(string line) => line.Length > 0 && !char.IsWhiteSpace(line[0]) && line[0] != '#';
     }
+
+    // Record what a restore resolved: the version each consumed corpus was taken at, written onto that
+    // corpus's own entry beside the range it resolved from. `versions` is keyed by the corpus name, and
+    // an entry the map does not name is left as it stands.
+    //
+    // Line-oriented for the reason `Stamp` is, and the reason is stronger here: an entry carries a range
+    // somebody chose and often a comment saying why, and a YAML round-trip would return the range without
+    // the argument for it.
+    //
+    // An entry already carrying `resolved:` has that line rewritten. One that does not takes a new line
+    // at the end of its own keys, so the lock reads as part of the entry it belongs to.
+    //
+    // Returns the corpora whose lock was written. Reading a file two ways is reading it two ways, and the
+    // YAML loader accepts shapes this pass does not: a flow-style sequence is one. So the caller is told
+    // what landed rather than left to say that everything did.
+    public static IReadOnlyList<string> SetResolved(
+        string corpusRoot, IReadOnlyDictionary<string, string> versions)
+    {
+        var written = new List<string>();
+        var path = Path.Combine(corpusRoot, ".corpus.yaml");
+        if (!File.Exists(path) || versions.Count == 0) return written;
+
+        var before = Files.ReadLf(path);
+        var lines = new List<string>(before.Split('\n'));
+        var start = lines.FindIndex(l => l.StartsWith("consumes:", StringComparison.Ordinal));
+        if (start < 0) return written;
+
+        // Walked from the end, so an insertion never moves a line this loop has yet to read.
+        var entries = Entries(lines, start);
+        for (var i = entries.Count - 1; i >= 0; i--)
+        {
+            var entry = entries[i];
+            if (entry.Corpus is not { } name || !versions.TryGetValue(name, out var version)) continue;
+
+            var line = $"{new string(' ', entry.Indent)}resolved: {Quoted(version)}";
+            if (entry.Resolved is { } at) lines[at] = line;
+            else lines.Insert(entry.End, line);
+            written.Add(name);
+        }
+
+        // Written only where a line changed. A restore that found every import current would otherwise
+        // rewrite the descriptor on every run, and a file nothing edited should not report as edited.
+        var after = string.Join('\n', lines).TrimEnd('\n') + "\n";
+        if (!after.Equals(before, StringComparison.Ordinal)) File.WriteAllText(path, after);
+
+        return written;
+    }
+
+    // Where each entry of the `consumes:` block sits: the corpus it names, the column its keys are
+    // written at, the line holding its `resolved:` if it has one, and the line after its last key.
+    private static List<(string? Corpus, int Indent, int? Resolved, int End)> Entries(
+        List<string> lines, int start)
+    {
+        var entries = new List<(string? Corpus, int Indent, int? Resolved, int End)>();
+        string? corpus = null;
+        var indent = 0;
+        int? resolved = null;
+        var end = start + 1;
+
+        for (var i = start + 1; i < lines.Count && !IsTopLevelKey(lines[i]); i++)
+        {
+            var trimmed = lines[i].TrimStart();
+            if (trimmed.Length == 0 || trimmed.StartsWith('#')) continue;
+
+            // A dash opens an entry, and usually carries that entry's first key, so the column after it
+            // is where every key of the entry is written. A dash standing alone opens one whose keys are
+            // on the lines below, and the column is the same either way.
+            if (trimmed.StartsWith("- ", StringComparison.Ordinal) || trimmed == "-")
+            {
+                if (indent > 0) entries.Add((corpus, indent, resolved, end));
+                corpus = null;
+                resolved = null;
+                indent = lines[i].Length - trimmed.Length + 2;
+                trimmed = trimmed.Length > 1 ? trimmed[2..] : "";
+            }
+            else if (indent == 0) continue;
+
+            if (Key(trimmed, "corpus") is { } named) corpus = named;
+            if (trimmed.StartsWith("resolved:", StringComparison.Ordinal)) resolved = i;
+            end = i + 1;
+        }
+
+        if (indent > 0) entries.Add((corpus, indent, resolved, end));
+        return entries;
+
+        // What a key on this line says, or null where the line says something else. The value is read as
+        // YAML would read it: a comment after it is dropped, and quotes around it come off, so a name
+        // this pass compares is the name the loader parsed.
+        static string? Key(string line, string key)
+        {
+            if (!line.StartsWith(key + ":", StringComparison.Ordinal)) return null;
+
+            var value = line[(key.Length + 1)..];
+
+            // A `#` opens a comment only where a space precedes it, which is what lets a value carry one.
+            var comment = value.IndexOf(" #", StringComparison.Ordinal);
+            if (comment >= 0) value = value[..comment];
+
+            return value.Trim().Trim('"', '\'') is { Length: > 0 } v ? v : null;
+        }
+    }
+
+    // A version written so YAML reads it as a string. `0.1.0` parses as one either way, and `1.0` does
+    // not, so the quotes are what stop a two-part version arriving back as a number.
+    private static string Quoted(string version) => $"\"{version}\"";
+
+    private static bool IsTopLevelKey(string line) =>
+        line.Length > 0 && !char.IsWhiteSpace(line[0]) && line[0] != '#';
 }

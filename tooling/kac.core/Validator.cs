@@ -362,7 +362,7 @@ public static class Validator
 
         const string at = ".corpus.yaml";
 
-        if (Misspelled(shortcode) is { } fault)
+        if (CorpusDescriptor.ShortcodeFault(shortcode) is { } fault)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("shortcode"),
                 $"shortcode '{shortcode}' {fault}. A shortcode is "
                 + $"{CorpusDescriptor.ShortcodeMin} to {CorpusDescriptor.ShortcodeMax} characters, opens on a "
@@ -376,19 +376,6 @@ public static class Validator
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("shortcode"),
                     $"shortcode '{shortcode}' is the id prefix of '{key}'. A citation opening '{t.IdPrefix}:' "
                     + "reads as that type rather than as this corpus. Pick a shorthand no type has taken."));
-    }
-
-    // How a shortcode is spelled wrong, or null where it is spelled correctly. The wording completes
-    // "shortcode 'x' ...", and names the first fault alone: an author fixing it re-runs the check.
-    private static string? Misspelled(string shortcode)
-    {
-        if (shortcode.Length < CorpusDescriptor.ShortcodeMin) return "is too short";
-        if (shortcode.Length > CorpusDescriptor.ShortcodeMax) return "is too long";
-        if (!char.IsAsciiLetterLower(shortcode[0])) return "does not open on a lower-case letter";
-
-        return shortcode.Any(c => !char.IsAsciiLetterLower(c) && !char.IsAsciiDigit(c))
-            ? "carries something other than a lower-case letter or a digit"
-            : null;
     }
 
     // The documents describing the framework itself, wherever a corpus keeps them, as globs the listing

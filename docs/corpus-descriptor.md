@@ -109,6 +109,39 @@ You might expect to fold that folder into the base above. The commit a link reso
 the record's path, so there is nowhere to put it. Leave the key out where the corpus is the repository, which is the
 ordinary case.
 
+## `consumes:` names the corpora this one reads
+
+```yaml
+consumes:
+  - corpus: example-engineering
+    shortcode: eng
+    version: ^0.1.0
+    source: https://nuget.pkg.github.com/OWNER/index.json
+    resolved: "0.1.0"
+```
+
+One organisation often keeps its policies in one corpus and its teams' knowledge in several others. A team's corpus
+cites those policies without holding them, and this block is where it says which corpus it takes them from.
+[`restore`](cli/restore.md) fetches each one and unpacks it under `.imports/<shortcode>/`, which is not committed.
+
+| Key         | What it holds                                              | Written by |
+|-------------|------------------------------------------------------------|------------|
+| `corpus`    | the name the producer publishes the package under          | you        |
+| `shortcode` | the word you cite it by, as the `eng` in `eng:pol-VURM`    | you        |
+| `version`   | the range you mean, as `0.1.0` or `^0.1.0`                 | you        |
+| `source`    | the registry's service index, where the package is fetched | you        |
+| `resolved`  | the version the last restore took                          | `restore`  |
+
+The range is what you meant and `resolved` is what your build used, so both sit on the entry rather than in a lock file
+beside this one. [`restore`](cli/restore.md) says how a range resolves and what a run refuses.
+
+Leave the key out entirely where this corpus stands on its own, which is the ordinary case.
+
+### `consumes:` and `upstream:` are different relationships
+
+`upstream:` below is one framework flowing down to this corpus as files it receives and holds. `consumes:` is a graph of
+records this corpus reads and never holds. A corpus has one upstream and any number of the other.
+
 ## Upstream
 
 ```yaml

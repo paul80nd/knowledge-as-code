@@ -351,4 +351,155 @@ public class ManifestTests
         Assert.Equal(3, reloaded.TemplateVersion);
         Assert.Contains("upstream:", File.ReadAllText(Path.Combine(dir, ".corpus.yaml")));
     }
+
+    // What a corpus consumes, read as the file states it. Every field is what was written, because an
+    // entry short of anything is refused by name where the message can say which key is missing.
+    [Fact]
+    public void The_consumes_block_is_read_entry_by_entry()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), Consumes);
+
+        Assert.Equal(
+            [
+                new Consumed("example-engineering", "eng", "^0.1.0", "0.1.0", "https://feed.example/index.json"),
+                new Consumed("example-security", "sec", "1.0.0", null, "https://feed.example/index.json")
+            ],
+            CorpusDescriptor.Load(dir).Consumes);
+    }
+
+    [Fact]
+    public void A_corpus_consuming_nothing_reads_as_consuming_nothing()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "corpus: sample\n");
+
+        Assert.Empty(CorpusDescriptor.Load(dir).Consumes);
+    }
+
+    // The lock lands on the entry it belongs to, whether or not that entry already carried one, and the
+    // range and the reason somebody wrote beside it are both still there afterwards.
+    [Fact]
+    public void Resolving_writes_the_version_onto_each_entry_and_leaves_the_commentary()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path, Consumes);
+
+        CorpusDescriptor.SetResolved(dir, new Dictionary<string, string>
+        {
+            ["example-engineering"] = "0.1.4",
+            ["example-security"] = "1.0.0"
+        });
+
+        var after = File.ReadAllText(path);
+        Assert.Contains("# Pinned while the vocabulary settles.", after);
+        Assert.Contains("    version: ^0.1.0\n    resolved: \"0.1.4\"\n", after);
+        Assert.Contains("    version: 1.0.0\n    source: https://feed.example/index.json\n"
+                        + "    resolved: \"1.0.0\"\n", after);
+
+        Assert.Equal(["0.1.4", "1.0.0"], CorpusDescriptor.Load(dir).Consumes.Select(c => c.Resolved));
+    }
+
+    // An entry the run did not resolve is left as it stands, so a refusal on one dependency never
+    // rewrites the lock of another.
+    [Fact]
+    public void An_entry_the_restore_did_not_resolve_keeps_the_lock_it_had()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path, Consumes);
+
+        CorpusDescriptor.SetResolved(dir,
+            new Dictionary<string, string> { ["example-security"] = "1.0.0" });
+
+        Assert.Equal(["0.1.0", "1.0.0"], CorpusDescriptor.Load(dir).Consumes.Select(c => c.Resolved));
+    }
+
+    // The two passes over one file have to agree on what an entry says. A YAML comment after a value is
+    // not part of it, and a writer reading it as one silently writes no lock at all.
+    [Fact]
+    public void A_comment_after_a_value_is_not_part_of_it()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path,
+            "consumes:\n  - corpus: example-engineering  # our policies live here\n"
+            + "    shortcode: eng\n    version: ^0.1.0\n");
+
+        var written = CorpusDescriptor.SetResolved(dir,
+            new Dictionary<string, string> { ["example-engineering"] = "0.1.4" });
+
+        Assert.Equal(["example-engineering"], written);
+        Assert.Equal("0.1.4", Assert.Single(CorpusDescriptor.Load(dir).Consumes).Resolved);
+    }
+
+    // A dash standing alone opens an entry whose keys are on the lines below it, which the loader reads
+    // and this pass has to read the same way.
+    [Fact]
+    public void A_dash_on_a_line_of_its_own_opens_an_entry()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path,
+            "consumes:\n  -\n    corpus: example-engineering\n    shortcode: eng\n    version: ^0.1.0\n");
+
+        CorpusDescriptor.SetResolved(dir,
+            new Dictionary<string, string> { ["example-engineering"] = "0.1.4" });
+
+        Assert.Equal("0.1.4", Assert.Single(CorpusDescriptor.Load(dir).Consumes).Resolved);
+    }
+
+    // A shape this pass cannot place is reported by its absence from the return, so a caller says what
+    // landed rather than saying everything did.
+    [Fact]
+    public void An_entry_this_pass_cannot_place_is_left_out_of_what_it_reports()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"),
+            "consumes: [{corpus: example-engineering, shortcode: eng, version: ^0.1.0}]\n");
+
+        Assert.Empty(CorpusDescriptor.SetResolved(dir,
+            new Dictionary<string, string> { ["example-engineering"] = "0.1.4" }));
+    }
+
+    // A run that resolved every entry to the lock it already carried has changed nothing, and a file
+    // nothing edited should not report as edited.
+    [Fact]
+    public void Resolving_to_the_lock_already_written_leaves_the_file_alone()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path, Consumes);
+        var written = File.GetLastWriteTimeUtc(path);
+
+        CorpusDescriptor.SetResolved(dir,
+            new Dictionary<string, string> { ["example-engineering"] = "0.1.0" });
+
+        Assert.Equal(Consumes, File.ReadAllText(path));
+        Assert.Equal(written, File.GetLastWriteTimeUtc(path));
+    }
+
+    // A `consumes:` block with two entries, one already locked and one not, and a comment inside it that
+    // a rewrite has to leave standing.
+    private const string Consumes =
+        """
+        corpus: sample
+
+        consumes:
+          # Pinned while the vocabulary settles.
+          - corpus: example-engineering
+            shortcode: eng
+            version: ^0.1.0
+            resolved: "0.1.0"
+            source: https://feed.example/index.json
+
+          - corpus: example-security
+            shortcode: sec
+            version: 1.0.0
+            source: https://feed.example/index.json
+
+        skip: []
+
+        """;
 }

@@ -15,6 +15,26 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **`kac restore` fetches the corpora a corpus declares it consumes.** A new `consumes:` block in `.corpus.yaml` names
+  each producing corpus, the shortcode it is cited by, the version range it is wanted at and the registry it is
+  published to. `restore` resolves each range, fetches the package `kac pack` sealed, and unpacks it under
+  `.imports/<shortcode>/`, which the template now gitignores. The version each range resolved to is written back onto
+  its own entry, so `.corpus.yaml` stays the one description of what a corpus is.
+
+  A range says `1.2.0` or `^1.2.0` and nothing else, and a caret never takes a prerelease. A lock the range still admits is taken without asking the
+  registry, so two restores of an unchanged descriptor write the same bytes. A run says what it fetched, at which
+  version, and which corpora were already current.
+
+  A shortcode two entries both claim is refused naming both, as is a corpus two entries both consume, as is a package
+  whose own manifest is cited by a different shortcode from the one declared. `KAC_REGISTRY_TOKEN` in the environment carries a bearer token for a
+  private feed. `docs/cli/restore.md` documents the verb, and `docs/corpus-descriptor.md` the block.
+
+  Nothing yet fails when a restore has not run. `kac validate` does not read `.imports/` at all.
+
 ## 0.14.0 - 2026-08-27
 
 ### Added
