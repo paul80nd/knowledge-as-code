@@ -10,6 +10,7 @@ using kac.core;
 
 namespace kac.tests;
 
+[Trait(Kind.Of, Kind.Repository)]
 public partial class DocumentationTests
 {
     // The two schema pages of the site's design reference. They document the schema without travelling

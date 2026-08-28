@@ -11,6 +11,7 @@ using kac.core;
 
 namespace kac.tests;
 
+[Trait(Kind.Of, Kind.Repository)]
 public partial class DefaultTypesTests
 {
     private static readonly string Page =

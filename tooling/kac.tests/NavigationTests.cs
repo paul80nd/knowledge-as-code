@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace kac.tests;
 
+[Trait(Kind.Of, Kind.Repository)]
 public partial class NavigationTests
 {
     private static readonly string[] Nav = File.ReadAllLines(Path.Combine(Repo.Root, "mkdocs.yml"));

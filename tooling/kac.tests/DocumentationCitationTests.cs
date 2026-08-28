@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace kac.tests;
 
+[Trait(Kind.Of, Kind.Repository)]
 public partial class DocumentationCitationTests
 {
     // A code span holding `Type.Member`, or a `File.ext`. Both open upper case, which is what tells them from

@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace kac.tests;
 
+[Trait(Kind.Of, Kind.Repository)]
 public partial class CliReferenceTests
 {
     private static bool Updating => Environment.GetEnvironmentVariable("KAC_UPDATE_DOCS") == "1";
