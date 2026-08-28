@@ -24,14 +24,16 @@ public class BundlerTests
         => Assert.Contains("not a JSON object",
             Assert.Single(Plan(plugin: [(Bundler.ManifestFile, "not json at all")], export: [Manifest()]).Problems));
 
-    // The name is what a marketplace installs by and what a user types for it afterwards. Inventing one
-    // here would produce a plugin that installs under a name nobody chose.
+    // The name is what a marketplace installs by and what a user types for it afterwards. It is the
+    // corpus's own name rather than a second one beside it, so an export naming no corpus has no plugin
+    // to build.
     [Fact]
-    public void A_manifest_with_no_name_is_refused()
-        => Assert.Contains("states no name",
+    public void An_export_naming_no_corpus_is_refused()
+        => Assert.Contains("names no corpus",
             Assert.Single(Plan(
-                plugin: [(Bundler.ManifestFile, """{"metadata":{"corpusRoot":"corpus"}}""")],
-                export: [Manifest()]).Problems));
+                plugin: [(Bundler.ManifestFile, Source())],
+                export: [(Exporter.ManifestFile,
+                    $$"""{"formatVersion": {{Exporter.FormatVersion}}, "types": []}""")]).Problems));
 
     // The export is copied under `corpusRoot`, so the only other answer is to merge it into the plugin
     // tree.
@@ -264,13 +266,76 @@ public class BundlerTests
             plugin: [(Bundler.ManifestFile, Source())],
             export: [Versioned("2.3.4")]), Bundler.ManifestFile).GetProperty("version").GetString());
 
+    // There is nothing to fall back to. The version is the corpus's `content-version` and no second copy
+    // of it exists, so a corpus that states none builds a manifest nothing will install, and is told.
     [Fact]
-    public void A_corpus_with_no_content_version_keeps_the_version_the_manifest_stated_and_says_so()
+    public void A_corpus_with_no_content_version_builds_a_manifest_with_none_and_says_so()
     {
         var plan = Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest()]);
 
-        Assert.Equal("0.0.1", Written(plan, Bundler.ManifestFile).GetProperty("version").GetString());
+        Assert.False(Written(plan, Bundler.ManifestFile).TryGetProperty("version", out _));
         Assert.Contains(plan.Warnings, w => w.Contains("no contentVersion"));
+    }
+
+    // The fault this generation exists to prevent. A corpus copies its manifest from a template, and a
+    // template naming an author hands every copy somebody else's identity to publish under.
+    [Fact]
+    public void An_identity_key_the_corpus_never_declared_is_removed_rather_than_inherited()
+    {
+        const string inherited = """
+                                 {
+                                   "name": "knowledge-as-code",
+                                   "author": { "name": "Somebody Else" },
+                                   "license": "MIT",
+                                   "keywords": [ "glossary" ],
+                                   "metadata": { "corpusRoot": "corpus", "components": [] }
+                                 }
+                                 """;
+
+        var written = Written(
+            Plan(plugin: [(Bundler.ManifestFile, inherited)], export: [Manifest()]), Bundler.ManifestFile);
+
+        Assert.Equal("example-libraries", written.GetProperty("name").GetString());
+        Assert.False(written.TryGetProperty("author", out _));
+        Assert.False(written.TryGetProperty("license", out _));
+        Assert.False(written.TryGetProperty("keywords", out _));
+    }
+
+    [Fact]
+    public void The_identity_the_corpus_declared_is_what_travels()
+    {
+        var written = Written(
+            Plan(plugin: [(Bundler.ManifestFile, Source())], export: [About()]), Bundler.ManifestFile);
+
+        Assert.Equal("Example Libraries", written.GetProperty("displayName").GetString());
+        Assert.Equal("A worked example.", written.GetProperty("description").GetString());
+        Assert.Equal("Paul Law", written.GetProperty("author").GetProperty("name").GetString());
+        Assert.Equal("MIT", written.GetProperty("license").GetString());
+        Assert.Equal("https://example.com/corpus", written.GetProperty("homepage").GetString());
+        Assert.Equal("https://example.com/corpus", written.GetProperty("repository").GetString());
+    }
+
+    // A plugin advertising a type its corpus declined sends a reader looking for records that are not
+    // in it, so the words come from what the export actually carried.
+    [Fact]
+    public void The_keywords_are_the_types_the_export_carried()
+        => Assert.Equal(["knowledge-as-code", "glossary", "policies"],
+            Written(Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest("glossary", "policies")]),
+                    Bundler.ManifestFile)
+                .GetProperty("keywords").EnumerateArray().Select(k => k.GetString()!).ToArray());
+
+    // A reader meets the plugin's identity before its declarations, whatever order the keys were added
+    // in. `metadata` is last of the ones named, and anything this tool never heard of follows it.
+    [Fact]
+    public void The_manifest_is_written_identity_first()
+    {
+        var written = Written(
+            Plan(plugin: [(Bundler.ManifestFile, Source())], export: [About()]), Bundler.ManifestFile);
+
+        Assert.Equal(
+            ["name", "displayName", "version", "description", "author", "homepage", "repository",
+             "license", "keywords", "metadata"],
+            written.EnumerateObject().Select(p => p.Name).ToArray());
     }
 
     // The manifest is the corpus's own file. Reading it into a shape known here and writing that back
@@ -385,14 +450,12 @@ public class BundlerTests
     private static BundleFile File((string Path, string Content) f) =>
         new(f.Path, Encoding.UTF8.GetBytes(f.Content));
 
-    // A plugin manifest as a corpus writes one: a name, a version to be replaced, the corpus root the
-    // skills address the export through, and whatever components the case needs.
+    // A plugin manifest as a corpus writes one: the corpus root the skills address the export through,
+    // and whatever components the case needs. Identity is generated from the export, so a corpus writes
+    // none of it and this carries none.
     private static string Source(params string[] components) =>
         $$"""
           {
-            "name": "example-libraries",
-            "version": "0.0.1",
-            "description": "A plugin.",
             "metadata": { "corpusRoot": "corpus", "components": [{{string.Join(",", components)}}] }
           }
           """;
@@ -402,6 +465,25 @@ public class BundlerTests
 
     // An export manifest as `kac export` writes one, carrying the four keys a bundle reads from it.
     private static (string, string) Manifest(params string[] types) => Versioned(null, types);
+
+    // An export from a corpus that said who it is, so the generated half has something to carry.
+    private static (string, string) About() =>
+        (Exporter.ManifestFile,
+            $$"""
+              {
+                "formatVersion": {{Exporter.FormatVersion}},
+                "corpus": "example-libraries",
+                "contentVersion": "1.2.3",
+                "about": {
+                  "displayName": "Example Libraries",
+                  "description": "A worked example.",
+                  "author": { "name": "Paul Law", "url": "https://example.com/paul" },
+                  "license": "MIT"
+                },
+                "publishing": { "base": "https://example.com/corpus" },
+                "types": [{"type":"glossary","shapeVersion":1,"records":1}]
+              }
+              """);
 
     private static (string, string) Versioned(string? contentVersion, params string[] types) =>
         (Exporter.ManifestFile,

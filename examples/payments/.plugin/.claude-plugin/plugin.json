@@ -1,21 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "example-payments",
-  "displayName": "Example Payments",
-  "version": "0.1.0",
-  "description": "Answers questions about the Example Payments corpus from the export beside it.",
-  "author": {
-    "name": "Paul Law",
-    "url": "https://github.com/paul80nd"
-  },
-  "homepage": "https://github.com/paul80nd/knowledge-as-code",
-  "repository": "https://github.com/paul80nd/knowledge-as-code",
-  "license": "MIT",
-  "keywords": [
-    "knowledge-as-code",
-    "glossary",
-    "policies"
-  ],
   "metadata": {
     "corpusRoot": "corpus",
     "components": [

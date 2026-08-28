@@ -1,0 +1,6 @@
+# The fixture corpus's descriptor. Present for one key: `corpus` is the name a plugin is installed by,
+# and the bundle takes it from here. No `content-version`, because this fixture pins what a bundle says
+# when the corpus states none.
+descriptor-version: 1
+corpus: example-empty
+publishing-target: none

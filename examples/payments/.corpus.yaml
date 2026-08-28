@@ -39,6 +39,21 @@ corpus: example-payments
 # Bumped by hand, and nothing but a person writes it.
 content-version: "0.2.0"
 
+# What this corpus is, for a reader who meets it as a package or an installed plugin rather than as a
+# repository. `kac export` carries all four, `kac pack` writes them into the package a registry lists,
+# and `kac bundle` writes them into the plugin manifest somebody installs.
+#
+# A key left bare is carried into neither. A licence nobody chose and an author nobody named are claims
+# about a person, so a corpus that has not said asserts nothing.
+display-name: Example Payments
+description: >
+  A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments
+  system and consuming Example Engineering. It binds nobody.
+license: MIT
+author:
+  name: Paul Law
+  url: https://github.com/paul80nd
+
 # How this corpus is published. One of: azure-devops | azure-devops-wiki | github | mkdocs | none.
 publishing-target: github
 

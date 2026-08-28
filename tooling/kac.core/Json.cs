@@ -35,6 +35,10 @@ public record CheckInfo(string Check, string Severity, string Summary);
 // corpus calls itself, for a consumer telling one export from another. The second is what a citation
 // writes before the colon, so a consumer resolving `eng:pol-VURM` knows which export answers it. It is
 // null where the corpus has not declared one.
+//
+// `About` is what the corpus says about itself, carried so that whatever seals or installs this export
+// can say it too. `kac pack` never loads the corpus, so the descriptor's own words reach a registry
+// through here or not at all.
 public record ExportManifest(
     int FormatVersion,
     string? Corpus,
@@ -44,8 +48,22 @@ public record ExportManifest(
     string? Commit,
     bool? Dirty,
     string GeneratedAt,
+    ExportAbout About,
     ExportPublishing Publishing,
     IReadOnlyList<ExportedType> Types);
+
+// What a corpus says about itself, for a reader who meets it as a package or as an installed plugin
+// rather than as a repository.
+//
+// Every field is null where the corpus has not said. Nothing here is invented from a neighbour's value:
+// a licence nobody chose and an author nobody named are assertions about a person, and the template that
+// once supplied them is how a corpus came to publish under somebody else's name.
+public record ExportAbout(
+    string? DisplayName, string? Description, ExportAuthor? Author, string? License);
+
+// Who publishes a corpus. An object rather than a string, because a plugin manifest carries both halves
+// and a package envelope carries the name alone, so splitting them here lets each take what it holds.
+public record ExportAuthor(string? Name, string? Url);
 
 // How a link into the published form is built, and what an agent needs to read a record's source.
 //

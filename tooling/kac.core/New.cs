@@ -318,6 +318,19 @@ public static class New
                   + " change it after.\n");
         sb.Append("shortcode:\n\n");
 
+        // Written bare for the same reason `shortcode` is: each is a claim about somebody, and a value
+        // supplied here would be inherited rather than chosen. A plugin built from a corpus that has
+        // stated none carries none, so the corpus asserts nothing it did not say.
+        sb.Append("# What this corpus is, for a reader who meets it as a package or an installed plugin\n");
+        sb.Append("# rather than as a repository. Each is carried into both, and a key left bare is"
+                  + " carried into neither.\n");
+        sb.Append("display-name:\n");
+        sb.Append("description:\n");
+        sb.Append("license:\n");
+        sb.Append("author:\n");
+        sb.Append("  name:\n");
+        sb.Append("  url:\n\n");
+
         sb.Append("# How this corpus is published. One of: "
                   + $"{string.Join(" | ", Publishing.Targets)}.\n");
         sb.Append($"publishing-target: {answers.PublishingTarget}\n");

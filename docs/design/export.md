@@ -120,6 +120,19 @@ A consumer assuming a spelling would read a producer's parts as empty wherever t
 every citation into them would fail for a reason nothing states. Both keys are absent where the type keeps no parts, as
 `partsFile` is.
 
+### `about` carries what the corpus says about itself
+
+`kac pack` never loads the corpus and a plugin is assembled from the export rather than from the tree, so the
+descriptor's own words reach a registry and a marketplace through the manifest or not at all.
+
+```json
+"about": { "displayName": "…", "description": "…", "author": { "name": "…", "url": "…" }, "license": "…" }
+```
+
+Every field is `null` where the corpus said nothing, and nothing is filled in from a neighbour's value. An author
+nobody named and a licence nobody chose are claims about a person, and a template supplying them is how a corpus comes
+to publish under somebody else's name.
+
 ### `corpus` names the corpus and `shortcode` cites it
 
 `corpus` is what the corpus calls itself, which tells one export from another. `shortcode` is what a citation writes

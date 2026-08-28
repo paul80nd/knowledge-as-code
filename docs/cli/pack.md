@@ -28,8 +28,13 @@ The version is `content-version` from [`.corpus.yaml`](../corpus-descriptor.md),
 its records change meaning. The package also has to name a `shortcode`, because that is the word a consuming corpus will
 cite it by.
 
+What a registry lists comes from the corpus too. `description` and `author` in
+[`.corpus.yaml`](../corpus-descriptor.md) open the package's description and name who publishes it, and `license` is
+stated where the corpus chose one. A corpus that has named nobody is filed under its own id rather than under whoever
+wrote the template it copied.
+
 Run [`export`](export.md) first. `pack` reads that output and never the corpus, so what gets published is the tree that
-was proved.
+was proved, and the four keys reach it through the export's own `about` block.
 
 ## Examples
 

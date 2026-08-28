@@ -96,6 +96,27 @@ claude plugin validate ./.dist --strict
 
 `bundle` validates nothing it assembles, so this is the layer that does.
 
+### The plugin's identity is generated, not copied
+
+`.plugin/.claude-plugin/plugin.json` is where a corpus declares what its plugin ships: `metadata.corpusRoot`, and the
+components under `metadata.components`. Who the plugin is comes from [`.corpus.yaml`](../corpus-descriptor.md) instead,
+through the export, and `bundle` writes it into the manifest that travels.
+
+| Manifest key                | Comes from                                      |
+|-----------------------------|-------------------------------------------------|
+| `name`                      | `corpus`                                        |
+| `version`                   | `content-version`                               |
+| `displayName`, `description`, `license`, `author` | the four keys beside them          |
+| `homepage`, `repository`    | `publishing.base`                               |
+| `keywords`                  | the types the export carried                    |
+
+**A key the corpus declared nothing for is removed rather than left standing.** A plugin manifest copied from a
+template names somebody, licenses something and points at a repository, and every corpus copying that file would
+publish under an identity it never chose. Removing the key is what makes a corpus that has said nothing assert nothing.
+
+Every other key survives untouched, including one this tool has never heard of. What a corpus adds to its own manifest
+is its own.
+
 ## Known limits
 
 **This command validates nothing it assembles.** A component misplaced inside `.claude-plugin/` leaves here
