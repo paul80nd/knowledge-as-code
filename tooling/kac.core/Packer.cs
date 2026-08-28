@@ -44,6 +44,7 @@ public static class Packer
     // than this tool's, so neither is stated in the schema. A corpus is held to them here, on the run
     // that builds the thing a registry has to file.
     private static readonly Regex IdShape = new(@"^\w+([_.-]\w+)*$", RegexOptions.Compiled);
+
     private static readonly Regex VersionShape =
         new(@"^\d+\.\d+\.\d+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$", RegexOptions.Compiled);
 

@@ -687,9 +687,12 @@ public static class Commands
         if (adoption.Deleted.Count > 0)
             plan = plan with
             {
-                Deleted = [.. plan.Deleted.Concat(adoption.Deleted)
-                    .Distinct(StringComparer.Ordinal)
-                    .Order(StringComparer.Ordinal)]
+                Deleted =
+                [
+                    .. plan.Deleted.Concat(adoption.Deleted)
+                        .Distinct(StringComparer.Ordinal)
+                        .Order(StringComparer.Ordinal)
+                ]
             };
 
         if (plan.TemplateIsUnsound) return Unsound(plan, from);

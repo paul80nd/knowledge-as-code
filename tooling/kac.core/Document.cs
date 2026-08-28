@@ -361,7 +361,9 @@ public partial class Doc
                     case YamlScalarNode { Value: { Length: > 0 } v }: values.Add(v); break;
                     case YamlMappingNode map when naming is not null
                                                   && Yaml.Get(map, naming) is YamlScalarNode
-                                                      { Value: { Length: > 0 } named }:
+                                                  {
+                                                      Value: { Length: > 0 } named
+                                                  }:
                         values.Add(named);
                         break;
                 }

@@ -375,7 +375,12 @@ public static class Exporter
     // One part, and everything a line about it is built from. Gathered once so each source below reads a
     // value rather than works one out, and so no source can reach past the part it is describing.
     private sealed record Part(
-        Doc Doc, PartRow Row, string Id, string Record, string? Lead, string? Aside,
+        Doc Doc,
+        PartRow Row,
+        string Id,
+        string Record,
+        string? Lead,
+        string? Aside,
         IReadOnlyList<string>? SeeAlso);
 
     // What one declared source comes to for one part. The vocabulary is `PartLineSource`, and

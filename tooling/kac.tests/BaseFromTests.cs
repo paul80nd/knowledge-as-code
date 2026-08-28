@@ -41,7 +41,7 @@ public class BaseFromTests
         => Assert.Null(Publishing.BaseFrom(target, "git@github.com:acme/corpus.git"));
 
     [Theory]
-    [InlineData(Publishing.GitHub, null)]                                  // no remote yet
+    [InlineData(Publishing.GitHub, null)] // no remote yet
     [InlineData(Publishing.GitHub, "")]
     [InlineData(Publishing.GitHub, "   ")]
     [InlineData(Publishing.GitHub, "git@gitlab.com:acme/corpus.git")]      // another host

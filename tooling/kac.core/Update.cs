@@ -44,8 +44,11 @@ public sealed record UpdateTypes(
     public IReadOnlyList<string> Offered =>
         Adopted is null
             ? []
-            : [.. Declared.Where(t => !Adopted.Contains(t, StringComparer.Ordinal))
-                .OrderBy(t => t, StringComparer.Ordinal)];
+            :
+            [
+                .. Declared.Where(t => !Adopted.Contains(t, StringComparer.Ordinal))
+                    .OrderBy(t => t, StringComparer.Ordinal)
+            ];
 }
 
 // What `--add-type` and `--drop-type` come to: the types this corpus holds afterwards, the files a drop
@@ -60,18 +63,18 @@ public sealed record Adoption(
 // What an update comes to. `Written` and `Seeded` are the files to copy, and are the only lists carrying
 // where each file is read from. Everything else names a path in the corpus.
 public sealed record UpdatePlan(
-    IReadOnlyList<PlannedFile> Written,  // overlay, whose authored halves differ
-    IReadOnlyList<PlannedFile> Seeded,   // seed, absent from this corpus, or refreshed under `full`
-    IReadOnlyList<string> Deleted,       // named by a tombstone, and still here
-    IReadOnlyList<string> Skipped,       // named in `skip:`, with the reason the corpus gave
-    IReadOnlyList<string> Unshared,      // sits where the rules call overlay, and the template sends no such file
-    IReadOnlyList<string> Offered,       // types the template declares and this corpus has not adopted
+    IReadOnlyList<PlannedFile> Written, // overlay, whose authored halves differ
+    IReadOnlyList<PlannedFile> Seeded,  // seed, absent from this corpus, or refreshed under `full`
+    IReadOnlyList<string> Deleted,      // named by a tombstone, and still here
+    IReadOnlyList<string> Skipped,      // named in `skip:`, with the reason the corpus gave
+    IReadOnlyList<string> Unshared,     // sits where the rules call overlay, and the template sends no such file
+    IReadOnlyList<string> Offered,      // types the template declares and this corpus has not adopted
     IReadOnlyList<string> Unclassified,
     IReadOnlyList<string> UnknownCi,
     int InStep,
-    int Declined,          // withheld for a type this corpus has not adopted
-    int DeclinedCi,        // a starter for a system that does not build this corpus
-    int DeclinedPlugin)    // the shared half of a plugin tree this corpus reads from elsewhere
+    int Declined,       // withheld for a type this corpus has not adopted
+    int DeclinedCi,     // a starter for a system that does not build this corpus
+    int DeclinedPlugin) // the shared half of a plugin tree this corpus reads from elsewhere
 {
     public IEnumerable<PlannedFile> Copies => Written.Concat(Seeded);
 

@@ -12,7 +12,6 @@ namespace kac.tests;
 
 public class TypeSetupTests
 {
-
     [Fact]
     public void A_type_with_a_page_a_folder_and_a_template_is_silent()
         => Assert.Empty(Setup(Holding("adrs.md", "adrs/0001-a.md", "adrs/_template.md")));

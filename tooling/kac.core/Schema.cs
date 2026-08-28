@@ -220,12 +220,12 @@ public sealed class ExportSpec
 // row is its own body, and `SchemaChecks` refuses either against a table-sourced type.
 public static class PartLineSource
 {
-    public const string PartId = "part.id";         // `<record-id>.<part-id>`, the whole address
-    public const string PartKey = "part.key";       // the part id alone
-    public const string PartText = "part.text";     // the heading as written, or the second cell flattened
-    public const string PartLead = "part.lead";     // the body's first block
-    public const string PartAside = "part.aside";   // the block `parts.aside:` labels, without its label
-    public const string PartLevel = "part.level";   // the modal the part opens with
+    public const string PartId = "part.id";       // `<record-id>.<part-id>`, the whole address
+    public const string PartKey = "part.key";     // the part id alone
+    public const string PartText = "part.text";   // the heading as written, or the second cell flattened
+    public const string PartLead = "part.lead";   // the body's first block
+    public const string PartAside = "part.aside"; // the block `parts.aside:` labels, without its label
+    public const string PartLevel = "part.level"; // the modal the part opens with
     public const string PartSeeAlso = "part.see-also";
     public const string PartAnchor = "part.anchor"; // the fragment the part resolves at
     public const string RecordId = "record.id";

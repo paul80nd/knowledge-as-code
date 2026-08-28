@@ -9,7 +9,6 @@ namespace kac.tests;
 
 public class DocumentRuleTests
 {
-
     [Fact]
     public void Every_registered_rule_has_a_distinct_id_and_reports_something()
     {

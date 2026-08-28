@@ -103,7 +103,8 @@ public partial class DocumentationCitationTests
             dead.Add($"{page}:{line} links {target}, which nothing answers to");
         }
 
-        Assert.True(dead.Count == 0, "a page links a file the repository does not hold:\n  " + string.Join("\n  ", dead));
+        Assert.True(dead.Count == 0,
+            "a page links a file the repository does not hold:\n  " + string.Join("\n  ", dead));
     }
 
     [Fact]

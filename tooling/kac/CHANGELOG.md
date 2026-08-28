@@ -20,13 +20,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Changed
 
 - **`kac new` no longer sends a corpus a link to a type it declined.** A type's root page and its `_template.md` name
-  the other types and link to them, which is what makes a full corpus navigable and what left a corpus adopting a
-  subset holding dead links. Each page is now unlinked as it is written: a reference to a declined type keeps its own
-  wording and loses its link, so `That is a [service](services.md).` arrives as `That is a service.`
+  the other types and link to them, which is what makes a full corpus navigable and what left a corpus adopting a subset
+  holding dead links. Each page is now unlinked as it is written: a reference to a declined type keeps its own wording
+  and loses its link, so `That is a [service](services.md).` arrives as `That is a service.`
 
   The same happens on `kac update --add-type`, for the page that arrives, and on `kac update --policy full`, which now
-  holds a seed to the template as this corpus would have received it rather than as it was authored. Without that a
-  full update wrote the links back.
+  holds a seed to the template as this corpus would have received it rather than as it was authored. Without that a full
+  update wrote the links back.
 
   This reaches the pages a corpus receives once and then owns. A framework document is shared word for word, and
   `framework-names-types` goes on holding it to naming a type rather than linking to one.
@@ -36,32 +36,32 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   and changing them is the corpus's own call.
 
 - **`kac update --drop-type` asks before it deletes.** Giving up a type deletes its page and leaves every page still
-  naming it holding a dead link. The run says so, says that `kac validate` reports the ones it can reach, and waits
-  for an answer. The question takes no by default. `--yes` answers it in advance, and a run with no terminal and no
+  naming it holding a dead link. The run says so, says that `kac validate` reports the ones it can reach, and waits for
+  an answer. The question takes no by default. `--yes` answers it in advance, and a run with no terminal and no
   `--yes` refuses rather than guessing.
 
 ## 0.15.0 - 2026-08-28
 
 ### Added
 
-- **`kac validate` says when an import has fallen behind what its source publishes.** `kac restore` keeps the version
-  a `consumes:` entry locked for as long as the range still admits it, which is what makes a restore reproducible and
-  is also how a corpus sits on a version nobody meant it to sit on. So `validate` asks each source what it holds now,
-  once per run, and reports three new checks against `.corpus.yaml`.
+- **`kac validate` says when an import has fallen behind what its source publishes.** `kac restore` keeps the version a
+  `consumes:` entry locked for as long as the range still admits it, which is what makes a restore reproducible and is
+  also how a corpus sits on a version nobody meant it to sit on. So `validate` asks each source what it holds now, once
+  per run, and reports three new checks against `.corpus.yaml`.
 
   `import-behind` is a **warning**: a newer version sits inside the declared range, and `kac restore` takes it.
-  `import-capped` is **information**: a newer version is published and the range holds it back, which is a decision
-  the corpus already made. `import-unreachable` is **information** too, for a source this run could not ask, so a lock
-  reads as unchecked rather than as current. None of the three fails the build, because failing on somebody else's
-  release would turn every downstream red the day a governance corpus ships.
+  `import-capped` is **information**: a newer version is published and the range holds it back, which is a decision the
+  corpus already made. `import-unreachable` is **information** too, for a source this run could not ask, so a lock reads
+  as unchecked rather than as current. None of the three fails the build, because failing on somebody else's release
+  would turn every downstream red the day a governance corpus ships.
 
-  A source answering with no versions at all reports as unreachable rather than as current, because a registry
-  answers a private feed's anonymous reader exactly as it answers a package nobody has published. A corpus with no
+  A source answering with no versions at all reports as unreachable rather than as current, because a registry answers a
+  private feed's anonymous reader exactly as it answers a package nobody has published. A corpus with no
   `consumes:` block reads no source and builds no client, and every other check still reads the working tree alone.
 
 - **A third severity, `info`.** `kac validate` counts it in its summary line and in `--json`, where
-  `summary.infos` is new, and `kac checks` tallies it apart from the warnings. Neither a warning nor an info changes
-  the exit code. A check declares `severity: info` in `.schema/_checks.yaml`. `docs/design/checks.md` covers it.
+  `summary.infos` is new, and `kac checks` tallies it apart from the warnings. Neither a warning nor an info changes the
+  exit code. A check declares `severity: info` in `.schema/_checks.yaml`. `docs/design/checks.md` covers it.
 
 - **A corpus says who it is, and `pack` and `bundle` stop inventing it.** Four new keys in `.corpus.yaml`:
   `display-name`, `description`, `license` and `author`. `kac export` carries them in a new `about` block, `kac pack`
@@ -72,17 +72,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `author`, `homepage`, `repository`, `license` and `keywords` are all written from the corpus, and a key the corpus
   declared nothing for is removed rather than left standing. `author` is the exception, filed under the corpus's own
   name where it named nobody, because the format asks for one and `claude plugin validate --strict` fails a manifest
-  carrying none. `.plugin/.claude-plugin/plugin.json` keeps only what the
-  corpus declares: `metadata.corpusRoot` and `metadata.components`, plus any key this tool has never heard of. A
-  manifest copied from a template no longer publishes under the template author's name, licence and repository.
+  carrying none. `.plugin/.claude-plugin/plugin.json` keeps only what the corpus declares: `metadata.corpusRoot` and
+  `metadata.components`, plus any key this tool has never heard of. A manifest copied from a template no longer
+  publishes under the template author's name, licence and repository.
 
   `keywords` are the types the export carried, so a plugin never advertises a type its corpus declined. `kac new`
   writes the four keys bare, because a value supplied there would be inherited rather than chosen.
 
 - **`kac export` names the two keys that address a part.** Each type's manifest entry gains `recordKey` and
-  `partKey`, naming which key of a part line says which record it belongs to and which part of that record it is. A
-  type names its own keys, so a consumer holding a corpus with a type it never adopted had no way to read them and had
-  to assume a spelling. Both are absent where the type keeps no parts, as `partsFile` is. `docs/design/export.md`
+  `partKey`, naming which key of a part line says which record it belongs to and which part of that record it is. A type
+  names its own keys, so a consumer holding a corpus with a type it never adopted had no way to read them and had to
+  assume a spelling. Both are absent where the type keeps no parts, as `partsFile` is. `docs/design/export.md`
   covers it.
 
 - **`kac validate` resolves a reference across a corpus boundary.** A citation carrying a producer's shortcode, as
@@ -108,9 +108,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   registry serves, so a corpus consuming a sibling in its own repository needs no registry, no token and no release. A
   path is relative to the corpus declaring it, as `upstream.url` is.
 
-  A range says `1.2.0` or `^1.2.0` and nothing else, and a caret never takes a prerelease. A lock the range still
-  admits is taken without asking the registry, so two restores of an unchanged descriptor write the same bytes. A run
-  says what it fetched, at which version, and which corpora were already current.
+  A range says `1.2.0` or `^1.2.0` and nothing else, and a caret never takes a prerelease. A lock the range still admits
+  is taken without asking the registry, so two restores of an unchanged descriptor write the same bytes. A run says what
+  it fetched, at which version, and which corpora were already current.
 
   A shortcode two entries both claim is refused naming both, as is a corpus two entries both consume, as is a package
   whose own manifest is cited by a different shortcode from the one declared. `KAC_REGISTRY_TOKEN` in the environment
@@ -136,18 +136,18 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **`kac pack` seals an export into a versioned package.** It reads `.dist/export/` and writes one file to
   `.dist/package/`, named for the corpus and its `content-version`. The file is a `.nupkg`, which is a zip carrying a
-  small XML manifest a registry reads to name and version it, and both GitHub Packages and Azure DevOps Artifacts
-  store one. Everything under `corpus/` inside it is the export, byte for byte, so nothing reading the result needs a
-  NuGet client. Two runs over one export produce identical bytes.
+  small XML manifest a registry reads to name and version it, and both GitHub Packages and Azure DevOps Artifacts store
+  one. Everything under `corpus/` inside it is the export, byte for byte, so nothing reading the result needs a NuGet
+  client. Two runs over one export produce identical bytes.
 
   The command refuses a corpus that has not declared `corpus:`, `content-version:` and `shortcode:` in `.corpus.yaml`,
   naming the one that is missing. It publishes nothing: pushing the file is your pipeline's step, and `docs/cli/pack.md`
   carries the command for it.
 
-- **`kac pack --repository <URL>` names where the corpus's source lives.** Some registries read that URL to decide
-  which repository a package belongs to, and GitHub Packages refuses a package naming none when the token pushing it
-  is scoped to a repository. The element is left out where the flag is not given, because the export states where a
-  record is published and that is a different address.
+- **`kac pack --repository <URL>` names where the corpus's source lives.** Some registries read that URL to decide which
+  repository a package belongs to, and GitHub Packages refuses a package naming none when the token pushing it is scoped
+  to a repository. The element is left out where the flag is not given, because the export states where a record is
+  published and that is a different address.
 
 - **A `policy-lookup` skill travels in the plugin.** `kac bundle` ships it beside `glossary-lookup`, and a corpus
   carrying no policies has it trimmed. It reads `policies/clauses.jsonl`, answers from a clause's `level` rather than
@@ -155,17 +155,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   behind with the register that explains it, so the skill names that gap rather than filling it.
 
 - **A component says whether the breadcrumb names it.** `"announce": true` on a manifest entry puts that skill in the
-  breadcrumb's last line, and the default leaves it out. The line exists to create a question a session would not
-  think to put, so a skill somebody asks for by name does not earn it. A corpus adding a second skill sets `announce`
+  breadcrumb's last line, and the default leaves it out. The line exists to create a question a session would not think
+  to put, so a skill somebody asks for by name does not earn it. A corpus adding a second skill sets `announce`
   on the one worth introducing.
 
-- **`plugin.from` in `.corpus.yaml` reads the plugin tree from one shared folder.** Several corpora in a repository
-  keep one copy of the skills and hooks between them instead of a copy each. `kac bundle` merges that tree with the
-  corpus's own `.plugin/`, where a file the corpus holds wins, and `kac update` withholds the shared half rather than
-  writing it back. The manifest is never taken from the shared tree: it names the plugin, so it stays at
-  `.plugin/.claude-plugin/plugin.json` in each corpus. Omit the key and nothing changes. A corpus adopting the key
-  with the old copies still on disk has each one reported as a file the template sends nothing to, because a corpus's
-  own file wins the merge and a leftover would go on shipping after every upstream change.
+- **`plugin.from` in `.corpus.yaml` reads the plugin tree from one shared folder.** Several corpora in a repository keep
+  one copy of the skills and hooks between them instead of a copy each. `kac bundle` merges that tree with the corpus's
+  own `.plugin/`, where a file the corpus holds wins, and `kac update` withholds the shared half rather than writing it
+  back. The manifest is never taken from the shared tree: it names the plugin, so it stays at
+  `.plugin/.claude-plugin/plugin.json` in each corpus. Omit the key and nothing changes. A corpus adopting the key with
+  the old copies still on disk has each one reported as a file the template sends nothing to, because a corpus's own
+  file wins the merge and a leftover would go on shipping after every upstream change.
 
 - **A corpus created before this declares no component for the new skill.** `kac update` writes the skill, and leaves
   `.plugin/.claude-plugin/plugin.json` alone because the manifest is the corpus's own. A path no component owns ships
@@ -194,8 +194,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **The roll-up carries the frameworks that bind.** A rule declares `postures:`, naming the standings that oblige a
   summary as the corpus's framework register heads them. A clause may cite a framework filed under any other standing,
-  for provenance, and the roll-up leaves it behind. `framework-posture` reports a clause citing a framework the
-  register does not place at all, once per framework rather than once per clause.
+  for provenance, and the roll-up leaves it behind. `framework-posture` reports a clause citing a framework the register
+  does not place at all, once per framework rather than once per clause.
 
 - **A corpus rule can read the corpus's files.** `CorpusRuleContext` carries the tree, for the rule whose question is
   answered by a page no record links into the graph. A framework register is that case: it holds no frontmatter, so it
@@ -242,13 +242,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Fixed
 
 - **`part-ref` reads a citation written as a link.** A corpus cites a part as a code span, and as a link carrying the
-  citation as its text or as its label. Only the code span was resolved. A link naming a clause or a term that does
-  not exist passed `kac validate`, because a link resolves against a page and the page carries whichever part the
-  citation claimed. Every form now reports under `part-ref`, and a link spelling the separator as a colon is reported
-  as one, so a corpus using the link form may see errors it did not before.
+  citation as its text or as its label. Only the code span was resolved. A link naming a clause or a term that does not
+  exist passed `kac validate`, because a link resolves against a page and the page carries whichever part the citation
+  claimed. Every form now reports under `part-ref`, and a link spelling the separator as a colon is reported as one, so
+  a corpus using the link form may see errors it did not before.
 
-- **A type index links a record through the category folder holding it.** `kac generate` wrote the filename alone, so
-  a record filed under a category below the type's folder was linked as though it sat beside the index. Standards are
+- **A type index links a record through the category folder holding it.** `kac generate` wrote the filename alone, so a
+  record filed under a category below the type's folder was linked as though it sat beside the index. Standards are
   filed that way by declaration, and every link to one was dead.
 
 ## 0.11.0 - 2026-08-25
@@ -264,16 +264,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A part's `anchor` is read from where its type takes its parts.** A heading-sourced type carries the part id, which
   is a heading's slug and its anchor alike. A table-sourced type carried that id too, and no fragment resolves to an
-  authored clause id. It now carries the slug of the section holding the table, so a link built from a clause line
-  lands on the table.
+  authored clause id. It now carries the slug of the section holding the table, so a link built from a clause line lands
+  on the table.
 
-- **A carried section leaves the link reference definitions behind.** They sit in a block at the foot of a record,
-  which puts them inside whichever section is written last, so `kac export` joined them onto the end of that section's
-  prose. A consumer read a run of paths that nobody sees on the page. A glossary's export is unchanged, because `Scope`
+- **A carried section leaves the link reference definitions behind.** They sit in a block at the foot of a record, which
+  puts them inside whichever section is written last, so `kac export` joined them onto the end of that section's prose.
+  A consumer read a run of paths that nobody sees on the page. A glossary's export is unchanged, because `Scope`
   is never a glossary's last section.
 
-- **`kac export` leaves a clause table in the order its author wrote it.** Every type's parts were sorted on their
-  text, which is right for a glossary and wrong for a table grouped by binding level: an advisory clause could reach a
+- **`kac export` leaves a clause table in the order its author wrote it.** Every type's parts were sorted on their text,
+  which is right for a glossary and wrong for a table grouped by binding level: an advisory clause could reach a
   consumer ahead of the obligations. A heading-sourced type's parts still sort alphabetically.
 
 ## 0.10.0 - 2026-08-25
@@ -299,8 +299,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **A type declares the keys of its own export line.** `export.parts.line:` in `.schema/<type>.yaml` names the keys one
-  part writes and the source filling each, drawn from a closed vocabulary covering a part's text, its body, its modal,
-  a frontmatter field and a table column. `kac export` reads that declaration and names no key itself, so a second type
+  part writes and the source filling each, drawn from a closed vocabulary covering a part's text, its body, its modal, a
+  frontmatter field and a table column. `kac export` reads that declaration and names no key itself, so a second type
   exporting parts costs no code. Glossary is the type that declares one, and its `terms.jsonl` is byte for byte what it
   was.
 
@@ -327,18 +327,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **A corpus declares the shorthand another corpus cites it by.** `.corpus.yaml` carries a top-level
-  `shortcode:`, which is the `eng` in `eng:pol-VURM.TIMEBOX`. `kac validate` refuses a spelling a
-  citation cannot carry, and one a type has already taken as its id prefix. `kac export` states the
-  declared shortcode in its manifest, so a consumer holding several exports knows which one answers a
-  scoped citation. `kac new` writes the key with no value: a shortcode cannot be changed once another
-  corpus has cited it, so it is filled in when one is about to.
+  `shortcode:`, which is the `eng` in `eng:pol-VURM.TIMEBOX`. `kac validate` refuses a spelling a citation cannot carry,
+  and one a type has already taken as its id prefix. `kac export` states the declared shortcode in its manifest, so a
+  consumer holding several exports knows which one answers a scoped citation. `kac new` writes the key with no value: a
+  shortcode cannot be changed once another corpus has cited it, so it is filled in when one is about to.
 
 ### Fixed
 
-- **`kac validate` reads a record whose frontmatter carries a complex key.** A key written as a sequence
-  or a mapping is legal YAML and names no field. It was reported as frontmatter that would not parse,
-  which named the wrong fault. It now arrives as an empty key, which `unknown-key` reports against the
-  document that wrote it.
+- **`kac validate` reads a record whose frontmatter carries a complex key.** A key written as a sequence or a mapping is
+  legal YAML and names no field. It was reported as frontmatter that would not parse, which named the wrong fault. It
+  now arrives as an empty key, which `unknown-key` reports against the document that wrote it.
 
 ## 0.7.0 - 2026-08-24
 

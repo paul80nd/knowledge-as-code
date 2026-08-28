@@ -49,7 +49,8 @@ public static class VersionRange
         string? best = null;
 
         foreach (var version in available.Where(v => Admits(range, v)))
-            if (best is null || Compare(Parsed(version)!.Value, Parsed(best)!.Value) > 0) best = version;
+            if (best is null || Compare(Parsed(version)!.Value, Parsed(best)!.Value) > 0)
+                best = version;
 
         return best;
     }

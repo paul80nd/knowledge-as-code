@@ -156,28 +156,28 @@ public class ImportsTests
         var files = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["eng/manifest.json"] = $$"""
-                {
-                  "formatVersion": 3,
-                  "corpus": "example-engineering",
-                  "shortcode": "eng",
-                  "contentVersion": "0.1.0",
-                  "publishing": { "humanTemplate": "https://example.com/eng/{path}#{anchor}" },
-                  "types": [
-                    {
-                      "type": "policies",
-                      "dir": "policies"
-                      {{(partsFile is null ? "" : $", \"partsFile\": \"{partsFile}\"")}}{{keys}}
-                    }
-                  ]
-                }
-                """,
+                                      {
+                                        "formatVersion": 3,
+                                        "corpus": "example-engineering",
+                                        "shortcode": "eng",
+                                        "contentVersion": "0.1.0",
+                                        "publishing": { "humanTemplate": "https://example.com/eng/{path}#{anchor}" },
+                                        "types": [
+                                          {
+                                            "type": "policies",
+                                            "dir": "policies"
+                                            {{(partsFile is null ? "" : $", \"partsFile\": \"{partsFile}\"")}}{{keys}}
+                                          }
+                                        ]
+                                      }
+                                      """,
             ["eng/policies/pol-SCRT.json"] = """
-                {
-                  "type": "policies",
-                  "path": "policies/scrt-secrets-are-never-embedded.md",
-                  "fields": { "id": "pol-SCRT" }
-                }
-                """
+                                             {
+                                               "type": "policies",
+                                               "path": "policies/scrt-secrets-are-never-embedded.md",
+                                               "fields": { "id": "pol-SCRT" }
+                                             }
+                                             """
         };
 
         if (partsFile is not null)

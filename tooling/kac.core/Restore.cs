@@ -10,7 +10,11 @@ namespace kac.core;
 // prefix already stripped. `Current` says the folder already holds this version, in which case `Files`
 // is empty and nothing was fetched.
 public sealed record RestoreStep(
-    string Corpus, string Shortcode, string Version, bool Current, IReadOnlyList<BundleFile> Files);
+    string Corpus,
+    string Shortcode,
+    string Version,
+    bool Current,
+    IReadOnlyList<BundleFile> Files);
 
 // What a whole restore comes to. `Problems` is what stops the run, and a plan carrying one writes
 // nothing at all: a corpus half-restored validates against a graph nobody declared.
@@ -324,11 +328,11 @@ public static class Restore
         // records it does not hold, and every later run would call it current and never repair it. The
         // order is the plan's rather than the writer's, so what a run does is decided in one place.
         return new Registry.Answer<IReadOnlyList<BundleFile>>(
-            [
-                .. files
-                    .OrderBy(f => f.Path.Equals(Exporter.ManifestFile, StringComparison.Ordinal))
-                    .ThenBy(f => f.Path, StringComparer.Ordinal)
-            ], null);
+        [
+            .. files
+                .OrderBy(f => f.Path.Equals(Exporter.ManifestFile, StringComparison.Ordinal))
+                .ThenBy(f => f.Path, StringComparer.Ordinal)
+        ], null);
     }
 
     // Whether a path stays inside the folder it is unpacked into: no root, no drive, and no segment
@@ -352,5 +356,9 @@ public static class Restore
     // file said and every field of it is nullable; this is what survived being read, so nothing below
     // re-asks whether a corpus stated its source.
     private sealed record Declaration(
-        string Corpus, string Shortcode, string Version, string? Resolved, string Source);
+        string Corpus,
+        string Shortcode,
+        string Version,
+        string? Resolved,
+        string Source);
 }

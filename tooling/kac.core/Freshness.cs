@@ -17,7 +17,12 @@ public enum Standing
 // `Available` is the version the reader would move to, and is null only where nothing could be asked.
 // `Problem` is the refusal in the source's own words, and is set exactly where `How` is `Unreachable`.
 public sealed record ImportStanding(
-    string Shortcode, string Range, string Locked, Standing How, string? Available, string? Problem);
+    string Shortcode,
+    string Range,
+    string Locked,
+    Standing How,
+    string? Available,
+    string? Problem);
 
 // What each import's source now publishes, against the version this corpus locked.
 //

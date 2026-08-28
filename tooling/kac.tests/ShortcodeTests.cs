@@ -10,7 +10,6 @@ namespace kac.tests;
 
 public class ShortcodeTests
 {
-
     // A key written with no value never reaches here: the loader reads an empty scalar as absent, which
     // `ManifestTests` holds it to.
     [Fact]

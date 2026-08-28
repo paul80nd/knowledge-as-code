@@ -11,14 +11,22 @@ namespace kac.core;
 // `Parts` is empty for a type keeping none, and `KeepsParts` is what tells that apart from a record that
 // happens to carry none.
 public sealed record ImportedRecord(
-    string Id, string Type, string Path, bool KeepsParts, IReadOnlyList<string> Parts);
+    string Id,
+    string Type,
+    string Path,
+    bool KeepsParts,
+    IReadOnlyList<string> Parts);
 
 // One corpus this one imported, unpacked under `.imports/<shortcode>/`.
 //
 // `Link` is the producer's own template for a published record, taken from their manifest. A consumer
 // building a link from its own publishing would address its own repository and resolve to nothing.
 public sealed record Import(
-    string Shortcode, string Corpus, string Version, string? Link, IReadOnlyList<ImportedRecord> Records);
+    string Shortcode,
+    string Corpus,
+    string Version,
+    string? Link,
+    IReadOnlyList<ImportedRecord> Records);
 
 // What `.imports/` answered for what `consumes:` declared, which `validate` reports rather than works
 // around.

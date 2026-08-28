@@ -352,7 +352,7 @@ public class UpdateTests
 
     [Theory]
     [InlineData("/repo", "/repo/example", true)]
-    [InlineData("/repo", "/repo", false)]   // the corpus is the repository
+    [InlineData("/repo", "/repo", false)] // the corpus is the repository
     [InlineData("/repo", "/other", false)]
     [InlineData("/repo", "/repo-two", false)] // a sibling whose name opens on the same characters
     public void A_corpus_is_inside_its_template_only_where_the_path_says_so(

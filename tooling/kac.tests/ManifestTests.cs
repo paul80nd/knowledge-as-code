@@ -303,8 +303,8 @@ public class ManifestTests
         Assert.Contains("  template-version:  3\n", after);
         Assert.Contains("  taken-on:          \"2026-08-11\"\n", after);
         Assert.Contains("  commit:            9c4e1d2a\n", after);
-        Assert.Contains("  url:               ../src\n", after);   // untouched: the update does not own it
-        Assert.Contains("content-version: \"2.1.0\"\n", after);    // untouched: only the corpus knows this one
+        Assert.Contains("  url:               ../src\n", after); // untouched: the update does not own it
+        Assert.Contains("content-version: \"2.1.0\"\n", after);  // untouched: only the corpus knows this one
         Assert.Contains("# Why owning a file is worth declaring.", after);
     }
 
