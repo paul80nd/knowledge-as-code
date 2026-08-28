@@ -1,5 +1,10 @@
 # Frameworks
 
+> **The postures recorded here are invented.** Example Engineering is a fictional organisation. It holds no
+> certification and answers to no regulator. Each framework below sits where an organisation of this shape would put
+> it, so the page shows a worked example rather than an empty one. Copy the three postures and not the filing: which
+> frameworks bind you is the question this page exists to ask.
+
 The external frameworks this corpus refers to, and what each one obliges us to.
 
 A [policy](policies.md) maps its clauses to a framework's controls in the `Alignment` column of its clause table, as

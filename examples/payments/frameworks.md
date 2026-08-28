@@ -1,8 +1,9 @@
 # Frameworks
 
 > **The standing recorded here is invented.** Example Payments is a fictional payments system. It holds no
-> certification and has signed no contract. PCI DSS is filed under **Obliged** because that is where a real payments
-> team would file it, so this page shows what a filled posture looks like rather than an empty one.
+> certification and has signed no contract. PCI DSS sits under **Obliged** because that is where a real payments team
+> would put it, so the page shows a worked example rather than an empty one. Copy the three postures and not the
+> filing: which frameworks bind you is the question this page exists to ask.
 
 The external frameworks this corpus refers to, and what each one obliges us to.
 
