@@ -32,13 +32,20 @@ policy, in prose and in a field declaring a `ref:` alike, and a clause that corp
 a local one would.
 
 **Run `restore` first.** A declared import that has not arrived is an error naming the command, rather than a citation
-quietly passed over. A local run that checks less than the pipeline does is how a broken reference reaches your default
-branch.
+quietly passed over.
 
 Each side keeps its own spelling. A record your corpus holds is cited bare and one it imported carries its producer's
-shortcode, so writing either the other way is refused: two spellings of one obligation defeat every search anybody runs
-for it. [Imports](../design/imports.md) says why resolution works this way, and what a check may ask of an imported
-record.
+shortcode, and writing either the other way is refused naming the spelling to write.
+[Imports](../design/imports.md) says why resolution works this way, and what a check may ask of an imported record.
+
+### An import that has fallen behind is reported
+
+`validate` asks each source your `consumes:` block names what it publishes now. A newer version inside your range is a
+**warning**, and `kac restore` takes it. A newer version your range holds back is **information**, and so is a source
+this run could not ask, which usually wants the token [`restore`](restore.md#reading-a-private-feed) names.
+
+None of the three changes the exit code, and a corpus with no `consumes:` block reads no source at all.
+[Imports](../design/imports.md#an-import-that-has-fallen-behind) says why being behind is never an error here.
 
 ## Examples
 
@@ -85,7 +92,8 @@ Use this to feed a script or a reviewer bot. The summary comes first, then one o
     "templates": 8,
     "skipped": 0,
     "errors": 4,
-    "warnings": 0
+    "warnings": 0,
+    "infos": 0
   },
   "findings": [
     {
@@ -106,7 +114,7 @@ dotnet tool restore
 dotnet tool run kac validate
 ```
 
-A warning is printed and never changes the exit code. [Exit codes](index.md#exit-codes) carries the three.
+Neither a warning nor an info changes the exit code. [Exit codes](index.md#exit-codes) carries the three.
 [Running it in CI](../ci.md) carries the whole workflow.
 
 ## Known limits
@@ -117,6 +125,10 @@ validates cleanly. A green run says the corpus is consistent rather than that it
 **Discovery falls back to a directory walk where git cannot answer.** A tree that is not a repository is walked for
 `*.md` instead, which honours no exclude file, so a Markdown file the corpus had ignored is discovered and validated.
 [Discovery](../design/discovery.md#the-fallback-walk-honours-nothing) says what that changes.
+
+**It reaches the network where your corpus consumes another.** Every other check reads your working tree, and this one
+asks each source in `consumes:` what it publishes. A source that does not answer within twenty seconds reports
+`import-unreachable` and the run carries on. A corpus with no `consumes:` block opens no connection at all.
 
 **`immutable-after-accepted` needs git history and does not run.** Whether the content of an accepted document changed
 is a question about a diff, and this command reads a working tree.

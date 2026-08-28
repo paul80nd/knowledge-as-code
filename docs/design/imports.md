@@ -68,6 +68,25 @@ none for each reference into it.
 A skip would be cheaper and worse. A local run that checks less than the pipeline does is how a broken reference
 reaches a default branch, by which time whoever wrote it has stopped looking.
 
+## An import that has fallen behind
+
+`restore` takes the locked version for as long as the range admits it and never asks the registry, so two restores of
+an unchanged descriptor write the same bytes. Reproducibility and drift are the same property read twice, so something
+else has to ask what the source publishes now. `validate` does, once per run.
+
+**A warning where a newer version sits inside the declared range.** The corpus said it would take that version and has
+not, and one command moves it.
+
+**Information where the newer version sits outside the range.** The corpus capped itself on purpose, and reporting a
+decision as a problem teaches a reader to skim the output the warnings travel through.
+
+**Never an error.** A version behind is not a broken corpus. Failing on somebody else's release would turn every
+downstream red the day the governance layer ships, which is how a build stops meaning anything.
+
+**A source that could not be asked reports too.** A run behind a firewall, or without the token a private feed wants,
+cannot tell a current lock from a stale one. Saying so is the alternative to reporting every import as current, which
+is the one answer that reads as an assurance.
+
 ## One resolution path serves local and imported ids
 
 `Resolver` indexes the records this corpus holds beside the records it imported, and every check walking a reference

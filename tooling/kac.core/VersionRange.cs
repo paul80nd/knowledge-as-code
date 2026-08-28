@@ -54,6 +54,26 @@ public static class VersionRange
         return best;
     }
 
+    // Whether `candidate` orders above `than`. False where either is a version this tool cannot order,
+    // which is the answer `Admits` gives the same string for the same reason.
+    public static bool Newer(string candidate, string than) =>
+        Parsed(candidate) is { } a && Parsed(than) is { } b && Compare(a, b) > 0;
+
+    // The highest release version a feed listed, or null where it listed none this tool can order.
+    //
+    // A prerelease is left out. Only an exact range reaches one, so naming it as available would offer a
+    // version no caret could ever take and no reader could act on without rewriting their range.
+    public static string? Newest(IEnumerable<string> available)
+    {
+        string? best = null;
+
+        foreach (var version in available)
+            if (Parsed(version) is { Prerelease: null } && (best is null || Newer(version, best)))
+                best = version;
+
+        return best;
+    }
+
     // Where a caret stops. A major above zero promises that nothing below it changed meaning, so the
     // range runs to the next major. Below one there is no such promise, and the minor is what carries it
     // instead.

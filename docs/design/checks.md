@@ -6,8 +6,12 @@
 decides what runs and against which type, so nothing is hard-coded per type. The corpus itself answers "what will CI
 hold this corpus to", and no second catalogue is kept by hand.
 
-A check marked **warning** does not fail the build. Read this page when you are adding a check, or deciding whether the
-check you want already exists. Which files a check runs against is [`validate`](../cli/validate.md).
+Neither a check marked **warning** nor one marked **info** fails the build. `info` is for a check declared in
+`_checks.yaml`. A type's own rules report at `error` or `warning`, which is what
+[`meta/type.schema.json`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/meta/type.schema.json) holds
+a `severity:` there to. Read this page when you are adding a
+check, or deciding whether the check you want already exists. Which files a check runs against is
+[`validate`](../cli/validate.md).
 
 ## What it is not
 

@@ -1,0 +1,25 @@
+descriptor-version: 1
+corpus: test-import-versions
+
+# Three imports, each standing differently against what its source publishes. `feed/` is the source, and
+# a folder is read by the names it holds, so a name is the whole of what each file has to be.
+consumes:
+  - corpus: example-engineering
+    shortcode: eng
+    version: ^0.1.0
+    source: feed
+    resolved: "0.1.1"
+  - corpus: example-security
+    shortcode: sec
+    version: ^0.1.0
+    source: feed
+    resolved: "0.1.1"
+  - corpus: example-operations
+    shortcode: ops
+    version: ^0.1.0
+    source: nowhere
+    resolved: "0.1.1"
+
+upstream:
+  url:
+skip: []

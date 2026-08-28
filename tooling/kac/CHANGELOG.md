@@ -19,6 +19,25 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac validate` says when an import has fallen behind what its source publishes.** `kac restore` keeps the version
+  a `consumes:` entry locked for as long as the range still admits it, which is what makes a restore reproducible and
+  is also how a corpus sits on a version nobody meant it to sit on. So `validate` asks each source what it holds now,
+  once per run, and reports three new checks against `.corpus.yaml`.
+
+  `import-behind` is a **warning**: a newer version sits inside the declared range, and `kac restore` takes it.
+  `import-capped` is **information**: a newer version is published and the range holds it back, which is a decision
+  the corpus already made. `import-unreachable` is **information** too, for a source this run could not ask, so a lock
+  reads as unchecked rather than as current. None of the three fails the build, because failing on somebody else's
+  release would turn every downstream red the day a governance corpus ships.
+
+  A source answering with no versions at all reports as unreachable rather than as current, because a registry
+  answers a private feed's anonymous reader exactly as it answers a package nobody has published. A corpus with no
+  `consumes:` block reads no source and builds no client, and every other check still reads the working tree alone.
+
+- **A third severity, `info`.** `kac validate` counts it in its summary line and in `--json`, where
+  `summary.infos` is new, and `kac checks` tallies it apart from the warnings. Neither a warning nor an info changes
+  the exit code. A check declares `severity: info` in `.schema/_checks.yaml`. `docs/design/checks.md` covers it.
+
 - **A corpus says who it is, and `pack` and `bundle` stop inventing it.** Four new keys in `.corpus.yaml`:
   `display-name`, `description`, `license` and `author`. `kac export` carries them in a new `about` block, `kac pack`
   writes them into the package a registry lists, and `kac bundle` writes them into the plugin manifest somebody
