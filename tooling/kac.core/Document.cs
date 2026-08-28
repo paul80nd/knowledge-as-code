@@ -372,6 +372,15 @@ public partial class Doc
         return values;
     }
 
+    // A field's node as the document wrote it, for a caller that decides the shape itself. The three
+    // readings above each settle on strings, which is what a check and a table cell want. An export writes
+    // JSON, so it needs the mapping and the nesting inside an entry intact. `Exporter.Value` is the caller.
+    public YamlNode? FrontNode(string key) => Front is null
+        ? null
+        : (from kv in Front.Children
+            where ((YamlScalarNode)kv.Key).Value == key
+            select kv.Value).FirstOrDefault();
+
     // Walk the top-level blocks to the H1, then look at the one after it. A paragraph whose first
     // inline is a code span is taken as an attempted identity line, and its code spans are collected.
     // Attempted rather than correct: a line with the wrong number of spans is reported as a malformed

@@ -5,7 +5,6 @@ status: draft
 owner: alex.doe
 narrows:
 review-by: "2030-01-01"
-tags: [ framework ]
 ---
 
 # Framework

@@ -97,7 +97,7 @@ parts:
 # absent from the sections because the terms under it are parts, and `parts:` above carries them.
 export:
   version: 1
-  fields: [id, title, narrows, status, review-by]
+  fields: [id, title, narrows, status, review-by, tags]
   sections:
     Scope: full
   parts:
@@ -133,6 +133,10 @@ export:
     `review-by` is the signal a vendored export otherwise lacks. A copy taken a year ago reads exactly
     as it did on the day it was taken, and `status: draft` says the terms were settling rather than
     that the date has passed.
+
+    `tags` travels as the list the record wrote, so a consumer filtering a vendored glossary by subject
+    reads one key rather than the whole `Scope` section. A corpus tagging nothing loses nothing: an
+    absent list and an empty one both arrive as `null`.
 
     `owner` stays behind, and the split between the two is not about which is more useful. A date is a
     fact about the content, and a consumer holds it against today's date knowing nothing about this
