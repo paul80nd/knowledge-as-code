@@ -12,8 +12,8 @@ content-version: "0.1.0"
 # The shorthand another corpus cites this one by. Fill it in when one does, and never change it after.
 shortcode:
 
-# What this corpus is, for a reader who meets it as a package or an installed plugin
-# rather than as a repository. Each is carried into both, and a key left bare is carried into neither.
+# What this corpus is, carried into the package it packs and the plugin it bundles.
+# A key left bare is carried into neither.
 display-name:
 description:
 license:
