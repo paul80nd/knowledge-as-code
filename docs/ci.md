@@ -137,7 +137,12 @@ of the job, exactly as a build restores packages.
 A private feed needs a token, which the job reads from `KAC_REGISTRY_TOKEN`. In GitHub Actions the built-in
 `github.token` reaches GitHub Packages in the same organisation, and it needs `packages: read`.
 
-A corpus that consumes nothing skips this step. Standing alone is the ordinary case.
+A `source:` naming a folder rather than a registry needs no token, and the producer has to have packed into that folder
+before this step runs. Two corpora in one repository take that form: build the producer's package first, in its own
+directory, and the consumer reads it from the path its descriptor names.
+
+**Restore before you validate, not after.** A declared import that is not on disk fails [`validate`](cli/validate.md)
+naming this command. A corpus that consumes nothing skips the step, and standing alone is the ordinary case.
 
 ## Building the plugin
 
