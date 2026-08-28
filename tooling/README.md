@@ -174,3 +174,23 @@ over one export and that neither names the other's file.
 
 CI runs it over both corpora on Linux and Windows, which is why it is a shell script held to the subset Git Bash and
 older macOS bash agree on.
+
+### The import round-trip
+
+[`tests/import-round-trip.sh`](tests/import-round-trip.sh) is the other end-to-end script, and it stays inside the
+repository. It runs `export` and `pack` in [`../examples/engineering/`](../examples/engineering/), then `restore` and
+`validate` in [`../examples/payments/`](../examples/payments/), asserting that a scoped citation resolved against what
+arrived. It then renames a clause upstream, leaving that corpus valid, and asserts the downstream build goes red naming
+the citation nobody downstream touched.
+
+That last assertion is the one the layers above cannot make. Each of them holds one corpus, and the promise being
+proved is that a governance change reaches a repository its owner does not control. Run it from anywhere, with `jq` on
+the path:
+
+```bash
+sh tooling/tests/import-round-trip.sh
+```
+
+It edits one file under `../examples/engineering/` and puts it back from a copy rather than from git, so an uncommitted
+edit of your own survives a run. Both pipelines run it, this one on Linux and Windows, because it is held to the same
+shell subset as the script above.
