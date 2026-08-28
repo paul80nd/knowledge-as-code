@@ -54,7 +54,7 @@ public static class Exporter
 
         foreach (var t in corpus.Adopted)
         {
-            if (t.Export is null) continue;
+            if (t.Export is not { } export) continue;
             if (type is not null && !string.Equals(t.Key, type, StringComparison.Ordinal)) continue;
 
             var held = corpus.Docs.Where(d => d.Type?.Key == t.Key)
@@ -68,7 +68,7 @@ public static class Exporter
             foreach (var doc in records)
                 files.Add(new ExportFile($"{t.Key}/{Id(doc)}.json", Serialize(Record(doc, t, publishing))));
 
-            var parts = t.Export.Parts.Length > 0 && t.Parts is not null
+            var parts = export.Parts.Length > 0 && t.Parts is not null
                 ? PartsFile(records, t, corpus.Tree, unread)
                 : null;
             if (parts is not null) files.Add(parts);
@@ -76,11 +76,11 @@ public static class Exporter
             // Two counts, because they answer two questions and one number cannot. `ExportedType` says
             // which is which.
             types.Add(new ExportedType(
-                t.Key, t.Export.Version, records.Count,
+                t.Key, export.Version, records.Count,
                 parts is null ? 0 : Lines(parts.Content), t.Key, parts?.Path,
-                parts is null ? null : KeyFrom(t, PartLineSource.RecordId),
-                parts is null ? null : KeyFrom(t, PartLineSource.PartKey),
-                t.Export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal)));
+                parts is null ? null : KeyFrom(export, PartLineSource.RecordId),
+                parts is null ? null : KeyFrom(export, PartLineSource.PartKey),
+                export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal)));
         }
 
         files.Add(new ExportFile(ManifestFile,
@@ -307,12 +307,6 @@ public static class Exporter
         }
     }
 
-    // The flat file of every addressable part of a type, one part to a line. JSONL rather than pretty
-    // JSON, and each line repeats what a reader would otherwise have to look up.
-    // `docs/design/export.md` says what that costs and what it buys.
-    //
-    // What a line holds is the type's to declare. Nothing here names a key, so a second type exporting
-    // parts costs an `export.parts.line:` block and no line of C#.
     // What the corpus says about itself, carried through unchanged. Nothing is filled in for a key the
     // descriptor left empty: a licence nobody chose and an author nobody named are claims about a person.
     private static ExportAbout About(CorpusDescriptor descriptor) =>
@@ -325,9 +319,15 @@ public static class Exporter
     // What this type calls the key filled from one source, and null where its line carries none. A
     // consumer addressing a part needs the two that say which record and which part, and only the type
     // knows the words it chose for them.
-    private static string? KeyFrom(TypeSchema t, string source) =>
-        t.Export.Line.FirstOrDefault(l => string.Equals(l.Source, source, StringComparison.Ordinal)).Key;
+    private static string? KeyFrom(ExportSpec export, string source) =>
+        export.Line.FirstOrDefault(l => string.Equals(l.Source, source, StringComparison.Ordinal)).Key;
 
+    // The flat file of every addressable part of a type, one part to a line. JSONL rather than pretty
+    // JSON, and each line repeats what a reader would otherwise have to look up.
+    // `docs/design/export.md` says what that costs and what it buys.
+    //
+    // What a line holds is the type's to declare. Nothing here names a key, so a second type exporting
+    // parts costs an `export.parts.line:` block and no line of C#.
     private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
         var spec = t.Parts!;
