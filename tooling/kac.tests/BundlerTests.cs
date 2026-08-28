@@ -296,9 +296,12 @@ public class BundlerTests
             Plan(plugin: [(Bundler.ManifestFile, inherited)], export: [Manifest()]), Bundler.ManifestFile);
 
         Assert.Equal("example-libraries", written.GetProperty("name").GetString());
-        Assert.False(written.TryGetProperty("author", out _));
         Assert.False(written.TryGetProperty("license", out _));
         Assert.False(written.TryGetProperty("keywords", out _));
+
+        // `author` is asked for by the format rather than removable, so the corpus stands in for the
+        // person it never named. What matters is that the name from the template is gone.
+        Assert.Equal("example-libraries", written.GetProperty("author").GetProperty("name").GetString());
     }
 
     [Fact]

@@ -26,7 +26,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
   **A plugin's identity is now generated rather than copied.** `name`, `version`, `displayName`, `description`,
   `author`, `homepage`, `repository`, `license` and `keywords` are all written from the corpus, and a key the corpus
-  declared nothing for is removed rather than left standing. `.plugin/.claude-plugin/plugin.json` keeps only what the
+  declared nothing for is removed rather than left standing. `author` is the exception, filed under the corpus's own
+  name where it named nobody, because the format asks for one and `claude plugin validate --strict` fails a manifest
+  carrying none. `.plugin/.claude-plugin/plugin.json` keeps only what the
   corpus declares: `metadata.corpusRoot` and `metadata.components`, plus any key this tool has never heard of. A
   manifest copied from a template no longer publishes under the template author's name, licence and repository.
 

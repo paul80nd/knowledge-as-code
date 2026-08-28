@@ -114,6 +114,11 @@ through the export, and `bundle` writes it into the manifest that travels.
 template names somebody, licenses something and points at a repository, and every corpus copying that file would
 publish under an identity it never chose. Removing the key is what makes a corpus that has said nothing assert nothing.
 
+`author` is the exception, because the format asks for one and `claude plugin validate --strict` fails a manifest with
+none. A corpus that named nobody is filed under its own name, which says the corpus wrote its own plugin and says
+nothing about a person. [`pack`](pack.md) files a package's `authors` the same way and for the same reason. `license`
+is not asked for, so a corpus that chose none asserts none.
+
 Every other key survives untouched, including one this tool has never heard of. What a corpus adds to its own manifest
 is its own.
 

@@ -345,7 +345,14 @@ public static class Bundler
 
         State(copy, "displayName", JsonRead.Str(about?["displayName"]));
         State(copy, "license", JsonRead.Str(about?["license"]));
-        Set(copy, "author", JsonRead.Object(about?["author"])?.DeepClone());
+
+        // A corpus naming nobody is filed under its own name, as `Packer.Nuspec` files one under its own
+        // id and for the same reason: the field is asked for, and the honest answer to "who wrote this"
+        // is the corpus rather than whoever wrote the template it copied. A licence is not asked for, so
+        // a corpus that chose none asserts none.
+        Set(copy, "author",
+            JsonRead.Object(about?["author"])?.DeepClone()
+            ?? (name is null ? null : new JsonObject { ["name"] = name }));
 
         // Both name the same place, which is where the corpus's source lives. A plugin manifest asks for
         // them separately and the export states it once.
