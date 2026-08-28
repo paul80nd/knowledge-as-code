@@ -272,11 +272,12 @@ public static class New
     // Carry the plan out, and answer with every path written.
     //
     // The plan decided all of it, so this asks the template nothing beyond the bytes and the mode of each
-    // file it was told to copy.
-    public static IReadOnlyList<string> Apply(NewPlan plan, string templateRoot, string corpusRoot)
+    // file it was told to copy. `declined` is the one thing the bytes alone cannot answer: a seed page
+    // cross-references types this corpus turned down, and `SeedLinks` is what takes those links out.
+    public static IReadOnlyList<string> Apply(NewPlan plan, string templateRoot, string corpusRoot,
+        IReadOnlySet<string> declined)
     {
-        foreach (var file in plan.Copied)
-            Files.Copy(Path.Combine(templateRoot, file.From), Path.Combine(corpusRoot, file.To));
+        foreach (var file in plan.Copied) SeedLinks.Receive(file, templateRoot, corpusRoot, declined);
 
         foreach (var file in plan.Composed)
         {

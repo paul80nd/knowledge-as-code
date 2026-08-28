@@ -10,7 +10,9 @@ counts as absent, and one with a folder and no page fails `type-setup`.
    several types share one.
 3. **Write `.schema/<type>.yaml`.** Run [changing-the-schema](changing-the-schema.md) for the rules that govern it.
 4. **Write the root page `<type>.md` and the `<type>/_template.md`.** Both are `seed`, so nothing holds the two trees
-   equal and the copy across is yours.
+   equal and the copy across is yours. Where either names another type, link its page and give the link the type's own
+   noun: `kac new` drops the link for a corpus that declined that type, and the noun is what carries the sentence
+   afterwards. Never link into another type's folder, which `TemplateLinkTests` refuses.
 5. **Record the lineage.** `<type>.yaml`'s `lineage:` and `collision:` blocks are read into
    `knowledge-as-code/lineage.md`, which says where the name came from and where it already means something else.
 6. **Add the type to `types:` in `.corpus.yaml`.** Generation and validation cover the types a corpus adopted and no

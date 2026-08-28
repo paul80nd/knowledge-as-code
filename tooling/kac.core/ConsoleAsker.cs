@@ -33,7 +33,8 @@ public sealed class ConsoleAsker : IAsker
         return Out.Terminal.Prompt(prompt);
     }
 
-    public bool Confirm(string question) => Out.Terminal.Prompt(new ConfirmationPrompt(question));
+    public bool Confirm(string question, bool fallback = true) =>
+        Out.Terminal.Prompt(new ConfirmationPrompt(question) { DefaultValue = fallback });
 
     // The default offered first, because a selection prompt opens on its first choice and the answer
     // most people want should be the one already under the cursor.

@@ -1,7 +1,8 @@
 namespace kac.core;
 
-// Who `new` puts a question to. The console implementation sits beside `Commands`, where the rest of the
-// console does; a test hands over scripted answers instead.
+// Who a command puts a question to. `new` asks most of them, and `update --drop-type` asks the one
+// standing in front of a deletion. The console implementation sits beside `Commands`, where the rest of
+// the console does; a test hands over scripted answers instead.
 //
 // The seam is here because what is asked, in what order, and what a flag or a default answers instead are
 // decisions, and every decision in this project is testable without a terminal. Only the drawing and the
@@ -14,7 +15,9 @@ public interface IAsker
 
     IReadOnlyList<string> ChooseMany(string question, IReadOnlyList<string> options);
 
-    bool Confirm(string question);
+    /// `fallback` is the answer a bare Enter gives. Yes for a question standing between somebody and the
+    /// thing they asked for, and no for one standing in front of a deletion.
+    bool Confirm(string question, bool fallback = true);
 }
 
 // What `new` was given on the command line. Every answer has a flag, so nothing is reachable only by

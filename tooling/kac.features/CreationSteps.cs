@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using kac.core;
 using Xunit;
 using Reqnroll;
 
@@ -77,6 +78,34 @@ public sealed class CreationSteps
     [When("I create a corpus from a template that is not there")]
     public void WhenICreateACorpusFromATemplateThatIsNotThere() =>
         _exit = Creation.Create(_folder, "https://example.invalid/no/such/repository.git");
+
+    [When(@"I create a corpus there adopting ""(.*)""")]
+    public void WhenICreateACorpusThereAdopting(string types)
+        => _exit = Creation.Create(_folder, types: types);
+
+    // Read from the corpus that was written rather than from the exit code, because a corpus adopting a
+    // subset still fails `schema-dispatch` and exits non-zero. Creation.feature says why.
+    [Then("no link fails to resolve")]
+    public void ThenNoLinkFailsToResolve()
+    {
+        var dangling = Validator.CheckAll(Corpus.Load(_folder))
+            .Where(f => f.Check.Value == "link-resolves")
+            .Select(f => $"{f.File}: {f.Message}")
+            .ToList();
+
+        Assert.True(dangling.Count == 0, string.Join("\n", dangling));
+    }
+
+    // The unlinking has to reach the comparison as well as the write. Held to the template as authored, a
+    // corpus that declined types reads as behind on every seed page it holds, and a full update puts back
+    // the links its own `types:` says it cannot follow.
+    [Then("a full update finds it in step")]
+    public void ThenAFullUpdateFindsItInStep()
+        => Assert.Equal(0, Creation.WouldChangeUnderFull(_folder));
+
+    [Then(@"""(.*)"" links to ""(.*)""")]
+    public void ThenLinksTo(string page, string target)
+        => Assert.Contains($"]({target})", File.ReadAllText(Path.Combine(_folder, page)));
 
     [Then("it refuses")]
     public void ThenItRefuses() => Assert.NotEqual(0, _exit);

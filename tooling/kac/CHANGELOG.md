@@ -15,6 +15,31 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **`kac new` no longer sends a corpus a link to a type it declined.** A type's root page and its `_template.md` name
+  the other types and link to them, which is what makes a full corpus navigable and what left a corpus adopting a
+  subset holding dead links. Each page is now unlinked as it is written: a reference to a declined type keeps its own
+  wording and loses its link, so `That is a [service](services.md).` arrives as `That is a service.`
+
+  The same happens on `kac update --add-type`, for the page that arrives, and on `kac update --policy full`, which now
+  holds a seed to the template as this corpus would have received it rather than as it was authored. Without that a
+  full update wrote the links back.
+
+  This reaches the pages a corpus receives once and then owns. A framework document is shared word for word, and
+  `framework-names-types` goes on holding it to naming a type rather than linking to one.
+
+- **`kac update --add-type` says what the arriving page does not get.** The new page links to the types the corpus
+  holds. The pages already there name it without linking, because each was written while the type was still declined,
+  and changing them is the corpus's own call.
+
+- **`kac update --drop-type` asks before it deletes.** Giving up a type deletes its page and leaves every page still
+  naming it holding a dead link. The run says so, says that `kac validate` reports the ones it can reach, and waits
+  for an answer. The question takes no by default. `--yes` answers it in advance, and a run with no terminal and no
+  `--yes` refuses rather than guessing.
+
 ## 0.15.0 - 2026-08-28
 
 ### Added
