@@ -85,8 +85,7 @@ public static class Imports
                 ? []
                 : PartsIn(read($"{shortcode}/{partsFile}"));
 
-            records.AddRange(
-                RecordsIn(shortcode, key, dir, partsFile, partsFile is not null, parts, names, read));
+            records.AddRange(RecordsIn(shortcode, key, dir, partsFile, parts, names, read));
         }
 
         return new Import(
@@ -100,12 +99,16 @@ public static class Imports
     // Every record one type's folder holds. A record is a file named for its id, and the parts file
     // sitting beside them is not one.
     private static List<ImportedRecord> RecordsIn(
-        string shortcode, string type, string dir, string? partsFile, bool keepsParts,
+        string shortcode, string type, string dir, string? partsFile,
         Dictionary<string, List<string>> parts,
         Func<string, IReadOnlyList<string>?> names, Func<string, string?> read)
     {
         var found = new List<ImportedRecord>();
-        var partsName = partsFile is null ? null : partsFile[(partsFile.LastIndexOf('/') + 1)..];
+
+        // The type keeps parts exactly where its manifest entry named a file for them, which is what
+        // tells a record carrying none from a type that has none to carry.
+        var keepsParts = partsFile is not null;
+        var partsName = partsFile?[(partsFile.LastIndexOf('/') + 1)..];
 
         foreach (var name in names($"{shortcode}/{dir}") ?? [])
         {
