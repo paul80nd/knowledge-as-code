@@ -1,10 +1,10 @@
 # Shared editor conventions for this repository, so a save does not fight the generators.
 #
-# Markdown, YAML and JSON are settled here, because every folder writes all three, and so is
-# the solution file, because it sits here. The languages only the tool writes are settled in
-# `tooling/.editorconfig`, which adds to this file rather than replacing it. Each corpus under
-# `examples/` answers for itself and says so with its own `root = true`, because a corpus is
-# copied out of here and has to arrive carrying its rules.
+# Markdown, YAML and JSON are settled here, because every folder writes all three. So are JSON
+# Lines, which an export writes, and the solution file, because it sits here. The languages only
+# the tool writes are settled in `tooling/.editorconfig`, which adds to this file rather than
+# replacing it. The corpora under `examples/` take these rules as well, and each claims
+# `.editorconfig` with a `skip:` entry so no update sends it the template's copy.
 #
 # For Markdown this covers whitespace alone. It cannot pin how a formatter renders a markdown
 # table — see the note under [*.md] for what actually guards that.
@@ -48,6 +48,18 @@ ij_yaml_spaces_within_brackets = false
 
 [*.json]
 indent_size = 2
+
+# JSON Lines is one object per line, which the JSON formatter's defaults split over many.
+# These hold a format run to the compact form `kac export` writes. Only a JetBrains IDE reads
+# them, so `JsonLinesTests` is the guard.
+[*.jsonl]
+max_line_length = off
+ij_json_object_wrapping = off
+ij_json_array_wrapping = off
+ij_json_space_after_colon = false
+ij_json_space_after_comma = false
+ij_json_spaces_within_braces = false
+ij_json_spaces_within_brackets = false
 
 # MSBuild indents by two and spaces the self-closing slash; the second is an IntelliJ key.
 # The project files take the same rules from `tooling/.editorconfig`, beside the projects.

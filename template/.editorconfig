@@ -3,7 +3,8 @@
 # `root = true`, and the file is whole rather than an addition to anything: a corpus is copied
 # out of the repository it was created in, and has to arrive carrying its own rules.
 #
-# Markdown, YAML and JSON is the whole of it, because a corpus holds no code.
+# Markdown, YAML, JSON and the JSON Lines an export writes is the whole of it, because a
+# corpus holds no code.
 #
 # For Markdown this covers whitespace alone. It cannot pin how a formatter renders a markdown
 # table — see the note under [*.md] for what actually guards that.
@@ -47,3 +48,15 @@ ij_yaml_spaces_within_brackets = false
 
 [*.json]
 indent_size = 2
+
+# JSON Lines is one object per line, which the JSON formatter's defaults split over many.
+# These hold a format run to the compact form `kac export` writes. Only a JetBrains IDE reads
+# them, so run `kac export` again to repair a file another formatter broke.
+[*.jsonl]
+max_line_length = off
+ij_json_object_wrapping = off
+ij_json_array_wrapping = off
+ij_json_space_after_colon = false
+ij_json_space_after_comma = false
+ij_json_spaces_within_braces = false
+ij_json_spaces_within_brackets = false
