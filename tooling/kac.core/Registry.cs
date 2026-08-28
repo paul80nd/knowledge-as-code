@@ -22,14 +22,18 @@ public sealed record Fetched(byte[]? Body, int Status, string? Problem);
 // `Read` answers the bytes of one file, and null where it could not be read.
 public sealed record FolderFeed(Func<string, IReadOnlyList<string>?> Names, Func<string, byte[]?> Read);
 
-// A registry's side of the bargain `kac pack` opened: the package is a `.nupkg`, so what serves it is a
-// NuGet feed, and this is the part of that protocol a restore uses.
+// Where a package comes from. Two questions between them, asked of whatever a `source:` names: which
+// versions of a corpus it holds, and the bytes of one of them.
 //
-// Three requests, and no NuGet client. A feed publishes a service index naming its resources; one of
-// those is the flat container, which lists a package's versions and serves the file itself at addresses
-// built from the id and the version. All three are plain GETs returning JSON or bytes, which is what
-// made borrowing the envelope worth it: moving to another registry is a change to `source:` in one
-// descriptor.
+// A source is a registry or a folder, and `Restore` never learns which. `kac pack` writes a `.nupkg`,
+// so a registry serving one is a NuGet feed and a folder holding one is what NuGet calls a local feed.
+// The same sealed package arrives either way and is held to the same checks.
+//
+// Three requests to a feed, and no NuGet client. It publishes a service index naming its resources; one
+// of those is the flat container, which lists a package's versions and serves the file itself at
+// addresses built from the id and the version. All three are plain GETs returning JSON or bytes, which
+// is what made borrowing the envelope worth it: moving to another registry is a change to `source:` in
+// one descriptor.
 //
 // Every method takes the source a corpus declared and never an address derived once and kept, so a
 // caller cannot address the wrong feed by holding a stale base. The base each source resolved to is
