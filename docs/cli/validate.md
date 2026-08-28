@@ -40,6 +40,39 @@ shortcode, so writing either the other way is refused: two spellings of one obli
 for it. [Imports](../design/imports.md) says why resolution works this way, and what a check may ask of an imported
 record.
 
+### An import that has fallen behind is reported, and never fails
+
+`restore` keeps the version your `consumes:` entry locked for as long as your range still admits it, so two restores of
+an unchanged descriptor fetch the same bytes. That is what makes a build reproducible, and it is also how a corpus sits
+on a version for a year without anyone noticing. So `validate` asks each source what it publishes now, once per run,
+and reports what it finds at two severities.
+
+**A warning where a newer version sits inside your range.** You said you would take that version and have not.
+`kac restore` moves it.
+
+```text
+warning  [import-behind]  'eng:' is locked at 0.1.1 and 0.1.2 is published. '^0.1.0' admits it, so `kac restore` takes it.
+```
+
+**Information where the newer version sits outside your range.** Your range is doing what you wrote it to do, and the
+choice is to widen it or to leave it alone.
+
+```text
+info  [import-capped]  'eng:' is locked at 0.1.1 and 0.2.0 is published. '^0.1.0' holds it back.
+```
+
+**Neither fails the build.** A version behind is not a broken corpus, and failing on somebody else's release would turn
+every downstream red the day the governance layer ships.
+
+**A source this run could not ask reports too**, rather than reading as current. A private feed wants the token named in
+[`restore`](restore.md#reading-a-private-feed), and a folder that is not there says so.
+
+```text
+info  [import-unreachable]  could not ask what 'eng:' publishes, so 0.1.1 is unchecked rather than current. there is no folder at ../engineering/.dist/package.
+```
+
+A corpus with no `consumes:` block asks nothing and pays nothing. No source is read and no client is built.
+
 ## Examples
 
 ### Validate the corpus you are standing in
@@ -85,7 +118,8 @@ Use this to feed a script or a reviewer bot. The summary comes first, then one o
     "templates": 8,
     "skipped": 0,
     "errors": 4,
-    "warnings": 0
+    "warnings": 0,
+    "infos": 0
   },
   "findings": [
     {
@@ -106,7 +140,7 @@ dotnet tool restore
 dotnet tool run kac validate
 ```
 
-A warning is printed and never changes the exit code. [Exit codes](index.md#exit-codes) carries the three.
+Neither a warning nor an info changes the exit code. [Exit codes](index.md#exit-codes) carries the three.
 [Running it in CI](../ci.md) carries the whole workflow.
 
 ## Known limits

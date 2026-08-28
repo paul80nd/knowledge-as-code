@@ -11,7 +11,12 @@ public static class Validator
     // This is the whole of `validate`: the command around it only chooses how to print the result. Any
     // caller wanting to know what the tool thinks of a corpus calls this, so no caller can end up running
     // a subset and believing it ran the lot.
-    public static List<Finding> CheckAll(LoadedCorpus corpus)
+    //
+    // `standings` is what each import's source publishes now, which only a caller holding a registry can
+    // answer. Null is the honest default: a caller that did not ask reports nothing, rather than
+    // reporting every import as current on the strength of never having looked.
+    public static List<Finding> CheckAll(
+        LoadedCorpus corpus, IReadOnlyList<ImportStanding>? standings = null)
     {
         var (schema, tree) = (corpus.Schema, corpus.Tree);
         var findings = new List<Finding>();
@@ -89,6 +94,7 @@ public static class Validator
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
         CheckImports(corpus.Imports, findings);
+        CheckFreshness(standings ?? [], findings);
 
         return findings;
     }
@@ -648,6 +654,40 @@ public static class Validator
             f.Add(new Finding(Corpus.Descriptor, null, Sev.Error, new CheckId("import-restored"),
                 $"`consumes:` declares {named} without a shortcode, so it files under no folder and no "
                 + "citation can reach it. Run `kac restore`, which says which key is missing."));
+    }
+
+    // What each import's source publishes now, against the version this corpus locked.
+    //
+    // Never an error. Being a version behind is not a broken corpus, and failing on somebody else's
+    // release would turn every downstream red the day the governance layer ships, which is how a build
+    // stops meaning anything. The two live findings are told apart by whose decision they report: the
+    // corpus said it would take the newer version and has not, or the corpus capped itself and the cap is
+    // holding. A deliberate decision reported as a problem teaches a reader to skim.
+    //
+    // Reported against the descriptor, which is the file declaring both the range and the lock.
+    private static void CheckFreshness(IReadOnlyList<ImportStanding> standings, List<Finding> f)
+    {
+        foreach (var s in standings)
+            switch (s.How)
+            {
+                case Standing.Behind:
+                    f.Add(new Finding(Corpus.Descriptor, null, Sev.Warning, new CheckId("import-behind"),
+                        $"'{s.Shortcode}:' is locked at {s.Locked} and {s.Available} is published. "
+                        + $"'{s.Range}' admits it, so `kac restore` takes it."));
+                    break;
+
+                case Standing.Capped:
+                    f.Add(new Finding(Corpus.Descriptor, null, Sev.Info, new CheckId("import-capped"),
+                        $"'{s.Shortcode}:' is locked at {s.Locked} and {s.Available} is published. "
+                        + $"'{s.Range}' holds it back."));
+                    break;
+
+                case Standing.Unreachable:
+                    f.Add(new Finding(Corpus.Descriptor, null, Sev.Info, new CheckId("import-unreachable"),
+                        $"could not ask what '{s.Shortcode}:' publishes, so {s.Locked} is unchecked "
+                        + $"rather than current. {s.Problem}"));
+                    break;
+            }
     }
 
     // The three ways a citation names a record that exists and spells it wrong, and null where the

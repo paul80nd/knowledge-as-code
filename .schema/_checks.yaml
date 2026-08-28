@@ -12,7 +12,9 @@
 # them. Why a check exists, what it deliberately does not cover, when it is skipped. What the code does
 # to answer the question stays beside the code.
 #
-# `severity` is what the check reports at, and `warning` does not fail the build. `on-type-page: false`
+# `severity` is what the check reports at, and neither `warning` nor `info` fails the build. A warning is
+# something to act on. An info reports a decision the corpus already made, or a question this run could
+# not put, and reporting either as a problem teaches a reader to skim. `on-type-page: false`
 # withholds it from the table generated onto a type page, for a check whose subject is the schema, a
 # template or the page itself rather than a record somebody wrote.
 #
@@ -490,6 +492,47 @@ checks:
       Reported once against `.corpus.yaml`, and every citation into that shortcode then stays quiet.
       Whoever has not restored wants one line telling them to, rather than one for each reference they
       wrote correctly.
+
+      Not advertised on a type page: it reads `.corpus.yaml` rather than any record.
+
+  import-behind:
+    severity: warning
+    on-type-page: false
+    description: Every corpus in `consumes:` is locked at the newest version its own range admits.
+    notes: >
+      The corpus said it would take that version and has not. `restore` keeps a lock its range still
+      admits, so two restores of an unchanged descriptor write the same bytes, and that reproducibility is
+      also how a corpus sits on a version nobody meant it to sit on. Asking is `validate`'s, once per run.
+
+      A warning rather than an error. A version behind is not a broken corpus, and failing on somebody
+      else's release would turn every downstream red the day the governance layer ships. `kac restore` is
+      what moves it.
+
+      Not advertised on a type page: it reads `.corpus.yaml` rather than any record.
+
+  import-capped:
+    severity: info
+    on-type-page: false
+    description: A newer version of a consumed corpus is published, and this corpus's range holds it back.
+    notes: >
+      Reported apart from `import-behind` because it is somebody's decision rather than their oversight.
+      A range capping a corpus at a major is doing what it was written to do, and the reader's choice is
+      to widen it or to leave it alone. Reporting a decision as a problem trains a reader to skim the
+      output, which is what the warnings then travel through.
+
+      Not advertised on a type page: it reads `.corpus.yaml` rather than any record.
+
+  import-unreachable:
+    severity: info
+    on-type-page: false
+    description: A source named in `consumes:` could not be asked what it publishes.
+    notes: >
+      A run behind a firewall, without the token a private feed wants, or against a folder that is not
+      there, cannot tell a current lock from a stale one. Saying so is the alternative to reporting every
+      import as current, which would be the one answer that reads as an assurance.
+
+      Information rather than a warning. The corpus is not at fault and no edit to it would help, and a
+      pipeline with no reason to reach a registry should not go yellow for declining to.
 
       Not advertised on a type page: it reads `.corpus.yaml` rather than any record.
 

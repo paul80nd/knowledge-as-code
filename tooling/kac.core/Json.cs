@@ -10,7 +10,7 @@ namespace kac.core;
 
 public record ValidateReport(ValidateSummary Summary, IReadOnlyList<ValidateFinding> Findings);
 
-public record ValidateSummary(int Validated, int Templates, int Skipped, int Errors, int Warnings);
+public record ValidateSummary(int Validated, int Templates, int Skipped, int Errors, int Warnings, int Infos);
 
 public record ValidateFinding(string File, int? Line, string Severity, string Check, string Message);
 

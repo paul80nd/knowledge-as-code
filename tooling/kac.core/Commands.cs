@@ -11,8 +11,24 @@ public static class Commands
     public static int Validate(string corpusRoot, bool json)
     {
         var corpus = Corpus.Load(corpusRoot);
-        var findings = Validator.CheckAll(corpus);
+        var findings = Validator.CheckAll(corpus, Standings(corpusRoot, corpus.Descriptor));
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
+    }
+
+    // What each import's source publishes now. Null for a corpus consuming nothing, which is every corpus
+    // standing on its own: no client is built, no source is read, and the check costs it nothing.
+    //
+    // This is the one place `validate` leaves the working tree. A source is a folder as often as it is a
+    // registry, so the reach is local wherever a corpus consumes the one next door. Where it is a
+    // registry and the run cannot reach it, `import-unreachable` says so rather than reporting the lock
+    // as current.
+    private static IReadOnlyList<ImportStanding>? Standings(string corpusRoot, CorpusDescriptor descriptor)
+    {
+        if (descriptor.Consumes.Count == 0) return null;
+
+        using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
+        return Freshness.Read(descriptor.Consumes,
+            new Registry(Registry.Over(client), Registry.OnDisk(corpusRoot)));
     }
 
     // The corpus is loaded whole, whatever `type` names.
@@ -466,12 +482,13 @@ public static class Commands
     {
         var errors = findings.Count(f => f.Severity == Sev.Error);
         var warnings = findings.Count(f => f.Severity == Sev.Warning);
+        var infos = findings.Count(f => f.Severity == Sev.Info);
 
         if (json)
         {
             // Through the source generator rather than reflection. See Json.cs.
             var report = new ValidateReport(
-                new ValidateSummary(validated, templates, skipped, errors, warnings),
+                new ValidateSummary(validated, templates, skipped, errors, warnings, infos),
                 [
                     .. findings
                         .OrderBy(f => f.File).ThenBy(f => f.Line ?? 0)
@@ -509,7 +526,10 @@ public static class Commands
         // able to tell the templates were read rather than skipped.
         Out.Markup(
             $"validated {validated} document(s) and {templates} template(s), skipped {skipped} without "
-            + $"frontmatter. {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}");
+            + $"frontmatter. {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}"
+            // The third count appears only where there is one. A corpus consuming nothing can report no
+            // info at all, and a zero it can never move is a word on every run that says nothing.
+            + (infos > 0 ? $", {Tally(infos, Sev.Info)}" : ""));
         return errors > 0 ? 1 : 0;
     }
 
@@ -546,10 +566,12 @@ public static class Commands
             Out.Line();
 
             // Split by severity, because a reader comes to this list to learn how much of it fails a
-            // build. The catalogue's own order says nothing about that.
-            var errors = catalogue.Count(c => c.Severity == Sev.Error);
-            Out.Markup($"{catalogue.Count} checks: {Tally(errors, Sev.Error)}, "
-                       + $"{Tally(catalogue.Count - errors, Sev.Warning)}.");
+            // build. The catalogue's own order says nothing about that. Counted one severity at a time
+            // rather than as errors and the remainder, so a third is not filed under the second.
+            Out.Markup($"{catalogue.Count} checks: "
+                       + $"{Tally(catalogue.Count(c => c.Severity == Sev.Error), Sev.Error)}, "
+                       + $"{Tally(catalogue.Count(c => c.Severity == Sev.Warning), Sev.Warning)}, "
+                       + $"{Tally(catalogue.Count(c => c.Severity == Sev.Info), Sev.Info)}.");
         }
 
         var problems = Generator.ChecksTableProblems(schema);
@@ -683,8 +705,17 @@ public static class Commands
     // The two things a severity carries into the output, decided in one place: what it is called, and
     // what colour says so. The word carries the severity where colour cannot, into a pipe or under
     // `--no-color`.
-    private static (string Word, string Colour) Severity(Sev severity) =>
-        severity == Sev.Error ? ("error", "red") : ("warning", "yellow");
+    private static (string Word, string Colour) Severity(Sev severity) => severity switch
+    {
+        Sev.Error => ("error", "red"),
+        Sev.Warning => ("warning", "yellow"),
+        Sev.Info => ("info", "grey"),
+
+        // Every severity is named above, so this arm exists for a value cast in from outside the enum.
+        // A fourth one added and not named here is louder as a throw than as a finding filed under the
+        // wrong word.
+        _ => throw new InvalidOperationException($"no word for severity '{severity}'.")
+    };
 
     private static string Tag(Sev severity)
     {
@@ -697,7 +728,10 @@ public static class Commands
     private static string Tally(int count, Sev severity)
     {
         var (word, colour) = Severity(severity);
-        return count == 0 ? $"{count} {word}(s)" : $"[{colour}]{count} {word}(s)[/]";
+
+        // `info` is uncountable, so it takes no plural where the other two take one.
+        var counted = severity == Sev.Info ? $"{count} {word}" : $"{count} {word}(s)";
+        return count == 0 ? counted : $"[{colour}]{counted}[/]";
     }
 
     // `wrote <path>`, with everything but the filename dimmed. A bundle writes a dozen paths sharing a

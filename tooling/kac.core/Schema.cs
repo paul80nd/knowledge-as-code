@@ -631,7 +631,14 @@ public sealed partial class Schema
         {
             var check = checkKeys.At(node, $"check '{id}'");
             checks.Add(new CheckDef(new CheckId(id),
-                Yaml.Str(check.Get("severity")) == "warning" ? Sev.Warning : Sev.Error,
+                // Error unless the entry says otherwise, because most checks are one and a catalogue
+                // entry short of the key should read as the strict answer rather than the quiet one.
+                Yaml.Str(check.Get("severity")) switch
+                {
+                    "warning" => Sev.Warning,
+                    "info" => Sev.Info,
+                    _ => Sev.Error
+                },
                 Yaml.Str(check.Get("description"))?.Trim() ?? "",
                 Yaml.Str(check.Get("notes"))?.Trim() ?? "",
                 // Most checks belong on a type page, so the key is written only where one does not.

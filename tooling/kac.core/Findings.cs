@@ -1,9 +1,15 @@
 namespace kac.core;
 
+// How loud a finding is. `Error` fails the build and the other two do not.
+//
+// `Info` is for something true that is nobody's fault: a corpus capped at a version deliberately, and
+// asked about a newer one. Reporting a decision as a problem teaches a reader to skim the output, which
+// is what the warnings then travel through.
 public enum Sev
 {
     Error,
-    Warning
+    Warning,
+    Info
 }
 
 public record Finding(string File, int? Line, Sev Severity, CheckId Check, string Message);
