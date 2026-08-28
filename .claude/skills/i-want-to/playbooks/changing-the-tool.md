@@ -25,9 +25,11 @@
    [`tooling/README.md`](../../../../tooling/README.md) where the change reaches it. The usage block at the head of the
    page is generated, so an option that moved is regenerated with `KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests`
    rather than typed.
-8. **Run all four layers**, one `kac` invocation at a time. Unit, behaviour specs, golden fixtures, then `validate` and
-   `generate --check` in both corpora. Run the goldens as CI sees them: they read the environment, so
-   `GITHUB_ACTIONS=true` is what reproduces a pass here and a failure there.
+8. **Run all four layers**, one `kac` invocation at a time. While you are still changing the code,
+   `dotnet test tooling/kac.tests --filter "Kind!=Repository"` leaves out the guards that answer for this
+   repository's own pages rather than for `kac`. Run everything before the pull request: unit, behaviour specs,
+   golden fixtures, then `validate` and `generate --check` in both corpora. Run the goldens as CI sees them: they read
+   the environment, so `GITHUB_ACTIONS=true` is what reproduces a pass here and a failure there.
 9. Run **[opening-a-pull-request](opening-a-pull-request.md)**.
 
 **Reply:** what the tool now does, which layer proves it, and what you decided against building in C#.

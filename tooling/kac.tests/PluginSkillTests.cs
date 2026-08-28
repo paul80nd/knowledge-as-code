@@ -10,6 +10,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace kac.tests;
 
+[Trait(Kind.Of, Kind.Repository)]
 public class PluginSkillTests
 {
     private static readonly string Skills =

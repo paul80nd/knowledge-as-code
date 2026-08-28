@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace kac.tests;
 
+[Trait(Kind.Of, Kind.Repository)]
 public partial class ChangelogTests
 {
     private static readonly string Kac = Path.Combine(Repo.Root, "tooling", "kac");

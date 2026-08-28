@@ -119,6 +119,28 @@ Three layers, all run from the repository root and all run in CI, on GitHub thro
 | **Feature** | `kac.features` (Reqnroll) | `dotnet test tooling/kac.features` | **Behaviour**, as Gherkin specs driving `kac.core` in-process: what findings a document produces, and what `new` settles before it writes anything.              |
 | **Golden**  | `kac-tests.cs`            | `dotnet run tooling/kac-tests.cs`  | Fixtures diffed against committed goldens, plus the coverage and checks-table gates and the CLI contract (exit codes). See [`tests/README.md`](tests/README.md). |
 
+### The unit layer holds two kinds of thing
+
+Most of `kac.tests` asks whether `kac` behaves. A small tail asks whether **this repository** still holds
+together: whether a page states the usage the parser accepts, whether a comment cites a file that exists, whether
+`CHANGELOG.md` carries a section for the version `kac.csproj` names. Those fail when content here drifts and never when
+the tool's logic is wrong, and no corpus consuming `kac` carries one, because none of it ships.
+
+A `Kind` trait separates them, so a tight loop can leave the second out:
+
+```sh
+dotnet test tooling/kac.tests --filter "Kind!=Repository"   # the tool alone, while you change it
+dotnet test tooling/kac.tests --filter "Kind=Repository"    # the guards alone, after you touch a page
+dotnet test tooling/kac.tests                               # both, which is what CI runs
+```
+
+A trait rather than a project of its own, because the guards are a small tail rather than half the suite, `Repo` and
+`CliReference` are read from both sides, and the whole suite runs in under a second. A second project would buy a name
+and cost a build.
+
+`KindTests` holds the convention: a test reading `Repo.Root` either carries the trait or is named as one that reads
+the template to exercise the tool. Nothing else would catch a guard written without it, because the class still runs.
+
 The unit layer catches breakage in the pieces early. The feature layer is the readable regression net for what the
 validator does. The golden layer owns the end-to-end CLI contract that the in-process layers bypass. Regenerate golden
 expectations after an intended rule change with `dotnet run tooling/kac-tests.cs -- --update`.

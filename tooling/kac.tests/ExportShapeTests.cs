@@ -13,6 +13,7 @@ using kac.core;
 
 namespace kac.tests;
 
+[Trait(Kind.Of, Kind.Repository)]
 public class ExportShapeTests
 {
     private const string Pinned =
