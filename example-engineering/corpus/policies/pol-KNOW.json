@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/know-knowledge-is-written-down.md",
+  "fields": {
+    "id": "pol-KNOW",
+    "title": "Knowledge is written down and kept with what it describes",
+    "category": "governance",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "The knowledge needed to build, run, decide about and recover a system is written down, versioned, and kept next to the thing it describes. It is not held in someone's head, and not in a chat history nobody can search. Agents read the same documentation people do.",
+    "Scope": "All solutions we build or operate. That covers setup and build instructions, operational runbooks, and architecturally significant decisions. It also covers the reference material a person or an agent needs to work on the system safely.",
+    "Exceptions": "None. The effort is proportionate: a small internal tool needs less than a customer-facing platform. The commitment to write down what is needed does not vary."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/know-knowledge-is-written-down.md"
+  }
+}

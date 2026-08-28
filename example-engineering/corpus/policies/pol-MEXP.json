@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/mexp-minimised-exposure.md",
+  "fields": {
+    "id": "pol-MEXP",
+    "title": "Exposure is minimised and traffic is controlled",
+    "category": "security",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "A system is reachable only from where it needs to be reachable, and it can reach only what it needs. We deny traffic crossing a trust boundary unless we have deliberately allowed it.",
+    "Scope": "All networks, services and interfaces belonging to systems we build or operate, in every environment. It covers traffic arriving at our systems, traffic between them, and traffic leaving them.\n\nA trust boundary is the line between two things that have no automatic right to talk to each other: the public internet and our estate, or two of our own systems with no business calling one another.",
+    "Exceptions": "Some services are meant to be reached by anyone. They are in scope for the rest of this policy rather than exempt from it. They are exposed through an intended route, and everything behind them stays private. Any other exposure requires a recorded deviation under [pol-DEVI]."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/mexp-minimised-exposure.md"
+  }
+}

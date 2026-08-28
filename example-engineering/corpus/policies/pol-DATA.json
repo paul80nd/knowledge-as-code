@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/data-data-protection.md",
+  "fields": {
+    "id": "pol-DATA",
+    "title": "Data is protected according to its sensitivity",
+    "category": "security",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "Data is classified by how sensitive it is and handled accordingly: protected in transit and at rest, kept away from places it does not belong, and deleted when its purpose ends. Personal data carries the additional obligations owed to the people it describes.",
+    "Scope": "All data held or processed by systems we build or operate, in every environment, including backups, exports, logs, analytical copies and test data.\n\n_Boundary: [pol-ENVS] governs the separation between the environments this data moves through, and [pol-SCRT] the secrets that protect it. This policy owns what the data itself requires, in whichever environment it sits._",
+    "Exceptions": "Where a defect genuinely cannot be reproduced without production data, a time-boxed, access-restricted copy may be used under a recorded deviation ([pol-DEVI]) that names who approved it, who can see it and when it will be destroyed. Legal hold overrides deletion, and is recorded when it does.\n\n`LAWFUL` admits none. Where personal data may be copied, and for how long, is a question a recorded deviation can\nanswer; whether we were entitled to hold it at all is not."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/data-data-protection.md"
+  }
+}

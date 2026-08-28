@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/recv-recoverability.md",
+  "fields": {
+    "id": "pol-RECV",
+    "title": "Services and data are recoverable",
+    "category": "operations",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "We know how quickly each critical system must come back, and how much data we can afford to lose. We can demonstrate that we can meet those objectives. Our systems degrade rather than collapse when something they depend on fails.",
+    "Scope": "All systems we operate and the data they hold, with depth set by how critical the system is. It covers both designed-in fault tolerance and the ability to recover after failure.\n\nA failure domain is the set of things that fail together: a disk, a rack, a data centre, a region.\n\nProving a restore needs the data the backup actually holds, so it runs in a controlled restore environment held at production tier: the same access controls, the same data handling, and not an environment below production. Masked or synthesised data would prove the mechanism rather than the restore. [pol-DATA] and [pol-ENVS] bind that environment as production, rather than excepting it.\n\n_Boundary: [pol-ENVS] governs separation between environments and [pol-DATA] governs the handling of the data they hold. The restore environment sits at production tier, so their rules about lower environments do not reach it. [pol-INCR] owns the response to an outage, which is deciding to invoke a recovery and running it. This policy owns being able to recover._",
+    "Exceptions": "Systems holding no state that cannot be regenerated from source need no data backup, but their recovery path is still defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded deviation under [pol-DEVI], owned by whoever will answer for the downtime."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/recv-recoverability.md"
+  }
+}

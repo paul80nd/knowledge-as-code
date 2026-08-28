@@ -1,23 +1,31 @@
 {
   "bundleVersion": 1,
-  "plugin": "knowledge-as-code",
-  "version": "0.1.0",
+  "plugin": "example-engineering",
+  "version": "0.1.1",
   "corpusRoot": "corpus",
   "export": {
-    "formatVersion": 2,
-    "corpus": "knowledge-as-code",
-    "contentVersion": "0.1.0",
+    "formatVersion": 3,
+    "corpus": "example-engineering",
+    "contentVersion": "0.1.1",
     "types": [
-      "glossary"
+      "glossary",
+      "policies"
     ]
   },
   "included": [
     {
       "path": "skills/glossary-lookup",
       "requires": [
-        "glossary"
+        "glossary@1"
       ],
       "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
+    },
+    {
+      "path": "skills/policy-lookup",
+      "requires": [
+        "policies@2"
+      ],
+      "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
     },
     {
       "path": "hooks",

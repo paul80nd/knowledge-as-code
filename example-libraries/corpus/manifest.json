@@ -1,0 +1,41 @@
+{
+  "formatVersion": 3,
+  "corpus": "example-libraries",
+  "shortcode": "lib",
+  "contentVersion": "0.1.1",
+  "mechanismVersion": 5,
+  "commit": "a416cff09ec35a4afe60fef7e9d92e8c6ebba922",
+  "dirty": false,
+  "generatedAt": "2026-08-28T11:20:19Z",
+  "about": {
+    "displayName": "Example Libraries",
+    "description": "A worked example corpus shipped with knowledge-as-code, holding the invented estate of a fictional public-library consortium. It is here to show what a corpus holds, and it governs nobody.",
+    "author": {
+      "name": "Paul Law",
+      "url": "https://github.com/paul80nd"
+    },
+    "license": "MIT"
+  },
+  "publishing": {
+    "target": "github",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/library/{path}#{anchor}",
+    "base": "https://github.com/paul80nd/knowledge-as-code",
+    "pathPrefix": "examples/library",
+    "ref": "a416cff09ec35a4afe60fef7e9d92e8c6ebba922"
+  },
+  "types": [
+    {
+      "type": "glossary",
+      "shapeVersion": 1,
+      "records": 3,
+      "parts": 29,
+      "dir": "glossary",
+      "partsFile": "glossary/terms.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "sections": {
+        "Scope": "full"
+      }
+    }
+  ]
+}

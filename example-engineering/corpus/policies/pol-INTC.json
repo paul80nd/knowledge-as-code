@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/intc-interface-contracts.md",
+  "fields": {
+    "id": "pol-INTC",
+    "title": "Interfaces are contracts we honour",
+    "category": "delivery",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "An interface we publish is a promise to whoever depends on it. We define it explicitly and secure it by default.",
+    "Scope": "Interfaces we publish for consumption beyond the team that owns them: public APIs, internal service-to-service interfaces, webhooks and any other integration surface others build against.",
+    "Exceptions": "An interface with a single consumer inside the team that owns it falls outside the Scope above rather than being excepted. It comes into scope the moment anyone beyond that team builds against it. Teams are usually wrong about who is already calling them.\n\nA security fix may break a contract where leaving it intact would leave data exposed. That is a recorded deviation under [pol-DEVI], and consumers are told as soon as it is safe to tell them."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/intc-interface-contracts.md"
+  }
+}

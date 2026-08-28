@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/derv-derived-data-is-verified.md",
+  "fields": {
+    "id": "pol-DERV",
+    "title": "Derived data is verified before it is trusted",
+    "category": "delivery",
+    "status": "draft",
+    "review-by": "2027-08-09"
+  },
+  "sections": {
+    "Purpose": "Where our code computes a result, rather than storing what it was given, we check that result before anyone relies on it. A run that finished is not evidence that what it produced is right.",
+    "Scope": "Any process that produces data by computing over other data rather than recording what a user gave us: batch jobs, transformations, aggregations, extracts, and report and feature builds. It binds once the output leaves the process that made it.\n\n_Boundary: [pol-AUTV] verifies the code of such a process and [pol-PIPE] governs how it reaches production. This policy is about its output. Protecting that data, rather than checking it, is [pol-DATA]'s._",
+    "Exceptions": "Exploratory analysis that nobody else acts on falls outside the Scope above rather than being excepted. It comes into scope the moment its output informs a decision or feeds another system, which is usually before anyone notices.\n\nRelying on a derived output that has no stated expectations requires a recorded deviation under [pol-DEVI], naming who accepts a wrong answer reaching a decision. \"The numbers have always looked about right\" is not a check."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/derv-derived-data-is-verified.md"
+  }
+}

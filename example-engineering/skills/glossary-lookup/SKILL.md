@@ -19,8 +19,7 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json  # one file per glossary, ho
 ```
 
 Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
-rather than in the repository you are working in, so a path you build relative to the working directory resolves
-nowhere.
+rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
 
 ## Find the term
 
@@ -37,40 +36,50 @@ Two patterns, in this order:
 
 Where the first pattern comes back empty, widen the second: try the singular, and try the other spelling.
 
-**Read the `title` of every hit before you use it.** The field names in this file are ordinary English words — `title`,
-`record`, `definition`, `status`, `type` — so a search for one of those matches every line in the file. A line defines a
+**Read the `title` of every hit before you use it.** The field names in this file are ordinary English words: `title`,
+`record`, `definition`, `status`, `type`. A search for one of those matches every line in the file. A line defines a
 term when its `title` says so, never because it matched.
 
 Each line carries the entry whole:
 
 | Field                 | What it holds                                                             |
 |-----------------------|---------------------------------------------------------------------------|
-| `id`                  | `<glossary-id>.<term>` — the address to quote and to search on             |
-| `title`, `definition` | the term and its meaning                                                   |
-| `not`                 | what the term excludes, where the corpus drew that boundary                |
-| `seeAlso`             | related terms as full ids, so you can search straight to them              |
-| `record`              | the glossary this entry belongs to                                         |
-| `status`, `reviewBy`  | how far the entry has settled, and the date it was meant to be read again  |
-| `path`, `anchor`      | the two values a link template takes — see below                           |
+| `id`                  | `<glossary-id>.<term>` — the address to quote and to search on            |
+| `title`, `definition` | the term and its meaning                                                  |
+| `not`                 | what the term excludes, where the corpus drew that boundary               |
+| `seeAlso`             | related terms as full ids, so you can search straight to them             |
+| `record`              | the glossary this entry belongs to                                        |
+| `status`, `reviewBy`  | how far the entry has settled, and the date it was meant to be read again |
+| `path`, `anchor`      | the two values a link template takes — see below                          |
 
 ## Build a link from a template
 
-**No line holds a URL.** `manifest.json` holds two templates under `publishing`, and each line holds the two values
-they take. Read the manifest once in a session and keep both strings; they are the same for every term in the export.
+**No line holds a URL.** `manifest.json` holds one template under `publishing`, and each line holds the two values it
+takes. Read the manifest once in a session and keep the string; it is the same for every term in the export.
 
 **Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
 else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
-right: a template with one character altered gives a 404 that reads as plausible, or a page from a version of the
-corpus nobody asked about.
+right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the corpus
+nobody asked about.
+
+**One target spells `{path}` differently.** Where `target` is `azure-devops-wiki`, the template addresses a wiki page
+rather than a file, so substitute the line's `path` with `.md` removed and every `/` written as `%2F`. Every other
+target takes the `path` whole.
 
 **To send a reader to a record, use `humanTemplate`.** Substitute `path` and `anchor`. That is the rendered page, and
 the anchor lands the reader on the term rather than at the top of the glossary.
 
-**To read a record's source yourself, use `rawTemplate`.** Substitute `path` alone. There is no anchor to give it: raw
-source is text and has nowhere to land. Fetching the human URL instead hands you the markdown wrapped in someone
-else's HTML, and you will read the page furniture as though it were the record.
+**To read a record's source yourself, fetch the file rather than the page.** `publishing` names the `target`, the
+`base`, the `pathPrefix` and the `ref`. Join `pathPrefix` ahead of the line's `path` to reach the file inside the
+repository, then ask the client that authenticates to that target for it at that `ref`. Fetching the human URL instead
+hands you the markdown wrapped in someone else's HTML, and you will read the page furniture as though it were the
+record.
 
-**Where either template is `null`**, the corpus publishes nowhere the export could address. Say so, and quote the
+**No unauthenticated host serves that source**, except GitHub's and only for a public repository. Where you have no
+client for the target, say so and quote the human link, rather than assembling a URL that will return a sign-in page you
+read as the record.
+
+**Where `humanTemplate` is `null`**, the corpus publishes nowhere the export could address. Say so, and quote the
 `path` as the record's place in the repository. Do not assemble a URL of your own.
 
 ## Read every hit, not the first

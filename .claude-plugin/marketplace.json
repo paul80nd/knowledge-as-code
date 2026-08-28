@@ -1,15 +1,20 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "knowledge-as-code",
-  "description": "A marketplace holding the knowledge-as-code plugin.",
+  "description": "The worked example corpora that ship with knowledge-as-code, each as an installable plugin.",
   "owner": {
     "name": "Paul Law"
   },
   "plugins": [
     {
-      "name": "knowledge-as-code",
-      "description": "Answers questions about the knowledge-as-code corpus from the glossary exported beside it.",
-      "source": "./plugin"
+      "name": "example-libraries",
+      "description": "A worked example corpus shipped with knowledge-as-code, holding the invented estate of a fictional public-library consortium. It is here to show what a corpus holds, and it governs nobody.",
+      "source": "./example-libraries"
+    },
+    {
+      "name": "example-engineering",
+      "description": "A worked example corpus shipped with knowledge-as-code, holding the invented governance layer of a fictional engineering organisation. Its policies bind nobody, and no organisation is certified against anything it records.",
+      "source": "./example-engineering"
     }
   ]
 }

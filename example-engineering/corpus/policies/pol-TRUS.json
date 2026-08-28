@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/trus-trusted-components.md",
+  "fields": {
+    "id": "pol-TRUS",
+    "title": "We ship only components we know and trust",
+    "category": "security",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "We know what our software is made of. We list and screen every third-party component we depend on. Every artefact we deploy traces back to the source change that produced it. Changing a released artefact means releasing a new one.",
+    "Scope": "All third-party and open-source components used by systems we build or operate, including transitive dependencies, base images and build-time tooling. It also covers the third-party and cloud services those systems depend on, and every artefact we deploy, whether we built it or obtained it from someone else.\n\n_Boundary: this policy governs what we admit into the estate and what we can prove about it. Finding, prioritising and closing the vulnerabilities in what we have admitted is [pol-VURM]'s, including whether a finding blocks a release. The route an artefact takes into production, and the approval behind it, is [pol-PIPE]'s._",
+    "Exceptions": "A component that can no longer be sourced or maintained may be retained under a recorded deviation ([pol-DEVI]). The deviation names the risk owner, the compensating controls and the plan to replace it. \"It still works\" is not a plan."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/trus-trusted-components.md"
+  }
+}

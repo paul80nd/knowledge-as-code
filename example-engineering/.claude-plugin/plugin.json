@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "example-engineering",
+  "displayName": "Example Engineering",
+  "version": "0.1.1",
+  "description": "A worked example corpus shipped with knowledge-as-code, holding the invented governance layer of a fictional engineering organisation. Its policies bind nobody, and no organisation is certified against anything it records.",
+  "author": {
+    "name": "Paul Law",
+    "url": "https://github.com/paul80nd"
+  },
+  "homepage": "https://github.com/paul80nd/knowledge-as-code",
+  "repository": "https://github.com/paul80nd/knowledge-as-code",
+  "license": "MIT",
+  "keywords": [
+    "knowledge-as-code",
+    "glossary",
+    "policies"
+  ],
+  "metadata": {
+    "corpusRoot": "corpus",
+    "components": [
+      {
+        "path": "skills/glossary-lookup",
+        "requires": [
+          "glossary@1"
+        ],
+        "announce": true,
+        "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
+      },
+      {
+        "path": "skills/policy-lookup",
+        "requires": [
+          "policies@2"
+        ],
+        "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
+      },
+      {
+        "path": "hooks",
+        "requires": [
+          "glossary"
+        ],
+        "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up."
+      }
+    ]
+  }
+}

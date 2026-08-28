@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/perf-performance-targets.md",
+  "fields": {
+    "id": "pol-PERF",
+    "title": "Performance targets are stated and verified",
+    "category": "delivery",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "Where performance matters, we say what \"fast enough\" means before we build, and we check against it before we release rather than discovering the answer from customers.",
+    "Scope": "Systems where throughput, latency, concurrency or capacity affect whether the system does its job, which is most customer-facing systems and many internal ones. Targets themselves are recorded as NFRs. This policy commits us to having them.",
+    "Exceptions": "Systems where performance is genuinely not a concern (low-volume internal tooling with no user waiting on it) need no targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system that has since acquired users."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/perf-performance-targets.md"
+  }
+}

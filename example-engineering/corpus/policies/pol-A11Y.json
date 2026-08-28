@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/a11y-accessibility.md",
+  "fields": {
+    "id": "pol-A11Y",
+    "title": "Software we build is usable by everyone",
+    "category": "governance",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "The software we put in front of users works for people with disabilities, and meets [WCAG 2.2 AA]. It does that because we designed it that way, not because we corrected it afterwards.",
+    "Scope": "All user-facing applications and interfaces we build. Internal tools meet the same standard, because we do not know which of the people using them needs it.",
+    "Exceptions": "A third-party component we cannot replace may fall short of the target standard. We record the gap, we provide an equivalent route to the same outcome where one exists, and the accessibility statement says so. Recording a gap honestly is acceptable; concealing it is not."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/a11y-accessibility.md"
+  }
+}

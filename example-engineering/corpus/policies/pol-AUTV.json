@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/autv-automated-verification.md",
+  "fields": {
+    "id": "pol-AUTV",
+    "title": "Every change is verified automatically, and failures block",
+    "category": "delivery",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "We build and check every change automatically before it joins the default branch or moves towards production. A failed check stops it. Quality checks are gates.",
+    "Scope": "Every change to any solution we build or operate: application code, infrastructure definitions, database schema, configuration, data pipelines and the documentation held with them.",
+    "Exceptions": "An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than waived."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/autv-automated-verification.md"
+  }
+}

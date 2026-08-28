@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "knowledge-as-code",
-  "displayName": "Knowledge as Code",
-  "version": "0.1.0",
-  "description": "Answers questions about the knowledge-as-code corpus from the glossary exported beside it.",
+  "name": "example-libraries",
+  "displayName": "Example Libraries",
+  "version": "0.1.1",
+  "description": "A worked example corpus shipped with knowledge-as-code, holding the invented estate of a fictional public-library consortium. It is here to show what a corpus holds, and it governs nobody.",
   "author": {
     "name": "Paul Law",
     "url": "https://github.com/paul80nd"
@@ -21,8 +21,9 @@
       {
         "path": "skills/glossary-lookup",
         "requires": [
-          "glossary"
+          "glossary@1"
         ],
+        "announce": true,
         "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
       },
       {

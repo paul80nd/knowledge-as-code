@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/incr-incident-response.md",
+  "fields": {
+    "id": "pol-INCR",
+    "title": "Incidents are managed and learned from",
+    "category": "operations",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "When something goes wrong, we have a defined way to respond. Someone is in charge and severity decides how large the response is. We record what happened, and we can show we are better for having been through it.",
+    "Scope": "Security and operational incidents affecting systems we build or operate, including those reported to us from outside the organisation. A personal data breach is a security incident and is in scope here. What the data itself requires of us is [pol-DATA]'s.\n\n_Boundary: [pol-RECV] owns being able to recover, and that covers the objectives, the backups, and the proof that a restore works. This policy owns deciding to recover and doing it, held to the objectives [pol-RECV] set. `ACTIONS` is shared with [pol-SECD]: findings become tracked work whether they came from an incident review here or from threat modelling there._",
+    "Exceptions": "Low-severity events are handled through routine work rather than the full process. The severity classification decides which, and we apply it deliberately rather than letting whoever wants the least paperwork set it. There is no exception to recording a significant incident, and none at all to recording a personal data breach. `EVIDENC` binds at every severity. Deciding that a breach was not notifiable is itself a decision we have to be able to show."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/incr-incident-response.md"
+  }
+}

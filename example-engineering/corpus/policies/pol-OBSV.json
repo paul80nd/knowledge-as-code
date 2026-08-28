@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/obsv-observability.md",
+  "fields": {
+    "id": "pol-OBSV",
+    "title": "Systems are observable and actively monitored",
+    "category": "operations",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "Our systems tell us what they're doing. They emit enough telemetry (logs, metrics and traces) to explain their behaviour afterwards. It is protected and correlated so events in different systems line up on one timeline. We watch it closely enough to know about a problem before a customer reports it.",
+    "Scope": "All production systems we operate, and the lower environments where behaviour must be understood to validate a change.\n\n_Boundary: this policy sets how long telemetry is kept to stay useful (which is long enough to investigate). Where that telemetry contains personal data, [pol-DATA] sets the lifetime and the shorter of the two governs. What may be written into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._",
+    "Exceptions": "The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system too unimportant to monitor is a system to question the existence of."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/obsv-observability.md"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "formatVersion": 3,
+  "corpus": "example-engineering",
+  "shortcode": "eng",
+  "contentVersion": "0.1.1",
+  "mechanismVersion": 5,
+  "commit": "a416cff09ec35a4afe60fef7e9d92e8c6ebba922",
+  "dirty": false,
+  "generatedAt": "2026-08-28T11:20:23Z",
+  "about": {
+    "displayName": "Example Engineering",
+    "description": "A worked example corpus shipped with knowledge-as-code, holding the invented governance layer of a fictional engineering organisation. Its policies bind nobody, and no organisation is certified against anything it records.",
+    "author": {
+      "name": "Paul Law",
+      "url": "https://github.com/paul80nd"
+    },
+    "license": "MIT"
+  },
+  "publishing": {
+    "target": "github",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/{path}#{anchor}",
+    "base": "https://github.com/paul80nd/knowledge-as-code",
+    "pathPrefix": "examples/engineering",
+    "ref": "a416cff09ec35a4afe60fef7e9d92e8c6ebba922"
+  },
+  "types": [
+    {
+      "type": "glossary",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 20,
+      "dir": "glossary",
+      "partsFile": "glossary/terms.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "sections": {
+        "Scope": "full"
+      }
+    },
+    {
+      "type": "policies",
+      "shapeVersion": 2,
+      "records": 22,
+      "parts": 202,
+      "dir": "policies",
+      "partsFile": "policies/clauses.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "sections": {
+        "Purpose": "summary",
+        "Scope": "full",
+        "Exceptions": "full"
+      }
+    }
+  ]
+}

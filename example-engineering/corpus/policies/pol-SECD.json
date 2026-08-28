@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/secd-security-by-design.md",
+  "fields": {
+    "id": "pol-SECD",
+    "title": "Security is designed in, not added on",
+    "category": "security",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "We decide security and privacy at design time. We write them as requirements, we apply recognised design principles, and we think deliberately about how the system could be attacked. We then carry that through into how the code is written.",
+    "Scope": "New systems, new features and significant changes to existing ones. The depth is proportionate to risk: a high-risk or externally exposed change warrants more than a routine internal one, but neither warrants none.\n\n_Boundary: this policy owns the security decisions we make while building: the requirements, the design, the threats we work through, and how the code is written. Finding weaknesses in what is already built is [pol-VURM]'s. Running the checks that look for them on every change is [pol-AUTV]'s. `ACTIONS` is shared with [pol-INCR]: findings become tracked work whether they came from threat modelling here or from an incident review there._",
+    "Exceptions": "Low-risk changes to systems that hold no sensitive data and have no external exposure need no separate threat consideration. The secure-design principles and the coding standard still apply. A high-risk change may have to proceed before its security work is complete. That is a recorded deviation under [pol-DEVI], not a judgement call made in the moment."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/secd-security-by-design.md"
+  }
+}

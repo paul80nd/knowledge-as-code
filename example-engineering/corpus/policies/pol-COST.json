@@ -1,0 +1,19 @@
+{
+  "type": "policies",
+  "path": "policies/cost-cost-as-an-nfr.md",
+  "fields": {
+    "id": "pol-COST",
+    "title": "Cost is a non-functional requirement",
+    "category": "delivery",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "What a system costs to run is an engineering property of it, like its latency or its availability. Cost is owned and visible to the people whose decisions affect it. We design for cost rather than discover it in an invoice. It is a constraint we optimise within, but it is not a licence to cut resilience, security or accessibility.",
+    "Scope": "All systems we operate on metered infrastructure, in every environment. Targets and thresholds are recorded as NFRs where they matter enough to be stated. This policy commits us to the ownership and the visibility that make them meaningful.",
+    "Exceptions": "Deliberate over-provisioning for resilience, performance headroom or a known event departs from `SIZING`. It is a cost decision rather than an oversight, and it is recorded as a deviation under [pol-DEVI], owned by whoever made it. Short-lived experiments are exempt from right-sizing but not from ownership or from being cleaned up."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/cost-cost-as-an-nfr.md"
+  }
+}

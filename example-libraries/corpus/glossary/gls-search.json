@@ -12,7 +12,6 @@
     "Scope": "How a reader's words reach a catalogue record: what is typed, what is matched, and what orders the results. The things being searched for belong to the whole estate, so they sit in its glossary rather than here."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5a234c57247c1b8034f04a5890616345e2b1115f/glossary/search.md",
-    "raw": "https://raw.githubusercontent.com/paul80nd/knowledge-as-code/5a234c57247c1b8034f04a5890616345e2b1115f/glossary/search.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/library/glossary/search.md"
   }
 }
