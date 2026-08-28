@@ -16,6 +16,15 @@ public partial class CliReferenceTests
     [GeneratedRegex(@"^# .*$", RegexOptions.Multiline)]
     private static partial Regex Heading();
 
+    // The fenced block holding the flow chart, opened by the plain fence GitHub renders natively.
+    [GeneratedRegex(@"^```mermaid$.*?^```$", RegexOptions.Multiline | RegexOptions.Singleline)]
+    private static partial Regex Mermaid();
+
+    // A node whose label is a command, as `kac validate`. The chart also holds nodes that are not
+    // commands, and those are what the label rather than the pattern tells apart.
+    [GeneratedRegex(@"\bkac (?<verb>[a-z]+)\b")]
+    private static partial Regex Invocation();
+
     [Fact]
     public void Every_command_the_parser_declares_has_a_page()
     {
@@ -72,6 +81,46 @@ public partial class CliReferenceTests
             Assert.Equal(Sections.Where(s => carried.Contains(s, StringComparer.Ordinal)), carried);
             Assert.Equal(Sections[..2], carried.Take(2));
         }
+    }
+
+    // The verbs the flow chart deliberately leaves out, each because it is not a step in any sequence.
+    // `checks` reads the schema and prints what could ever fire, which is a question about the schema.
+    //
+    // A list rather than an absence, so a verb added to the parser fails the test below until somebody
+    // decides which it is. That is the bargain `on-type-page: false` already strikes for a check the type
+    // pages do not advertise.
+    private static readonly string[] NotSteps = ["checks"];
+
+    // The chart is drawn by hand, and nothing in MkDocs would notice a verb missing from it. A new
+    // command that nobody placed in the sequence is exactly what a reader comes to this page to find.
+    [Fact]
+    public void The_flow_chart_places_every_command_that_is_a_step()
+    {
+        var chart = Mermaid().Match(File.ReadAllText(CliReference.Index));
+        Assert.True(chart.Success, "docs/cli/index.md carries no ```mermaid block for the flow chart.");
+
+        var drawn = Invocation().Matches(chart.Value)
+            .Select(m => m.Groups["verb"].Value)
+            .ToHashSet(StringComparer.Ordinal);
+
+        Assert.Equal(
+            CliReference.Verbs().Select(v => v.Name).Except(NotSteps, StringComparer.Ordinal)
+                .Order(StringComparer.Ordinal),
+            drawn.Order(StringComparer.Ordinal));
+    }
+
+    // Held to the subset an Azure DevOps wiki renders, which every diagram this repository writes answers
+    // to. `docs/design/generation.md` argues it: a diagram exceeding that subset renders nothing at all,
+    // with no error to say why. So the generator writes `graph` and this is held to the same.
+    [Fact]
+    public void The_flow_chart_stays_inside_the_subset_the_narrowest_renderer_reads()
+    {
+        var chart = Mermaid().Match(File.ReadAllText(CliReference.Index)).Value;
+
+        Assert.StartsWith("graph ", chart[(chart.IndexOf('\n') + 1)..], StringComparison.Ordinal);
+        Assert.DoesNotContain("subgraph", chart, StringComparison.Ordinal);
+        Assert.DoesNotContain("-.-", chart, StringComparison.Ordinal);
+        Assert.DoesNotContain("==>", chart, StringComparison.Ordinal);
     }
 
     // Each row's wording comes from the page it indexes, so a command whose page is added, renamed or

@@ -24,6 +24,58 @@ links the part of it that explains the command.
 
 <!-- END GENERATED: command-table -->
 
+## The order the commands run in
+
+Most commands sit in one sequence. You stand a corpus up, write records, hold them to the schema, and rebuild what the
+corpus derives from them. Everything after that is optional, and which branch you take depends on whether one corpus
+serves you or several.
+
+```mermaid
+graph TD;
+  new[kac new];
+  write[write records];
+  validate[kac validate];
+  generate[kac generate];
+  update[kac update];
+  export[kac export];
+  bundle[kac bundle];
+  pack[kac pack];
+  registry[a package registry];
+  restore[kac restore];
+  consumer[kac validate in the consuming corpus];
+  plugin[an installable plugin];
+  new --> write;
+  write --> validate;
+  validate --> generate;
+  generate --> write;
+  update --> write;
+  generate --> export;
+  export --> bundle;
+  bundle --> plugin;
+  export --> pack;
+  pack --> registry;
+  registry --> restore;
+  restore --> consumer;
+```
+
+**The loop is the part you live in.** Write a record, run [`validate`](validate.md), run [`generate`](generate.md),
+write the next one. CI runs the same two, and [Running it in CI](../ci.md) wires them into a pull request.
+
+**[`update`](update.md) rejoins the loop rather than opening it.** It takes a newer framework into a corpus that
+already has one, and it is where a corpus adopts a type. Run it when the framework moves.
+
+**[`export`](export.md) is the fork.** Both branches below read what it wrote, and neither runs without it.
+
+**One corpus, publishing to an agent.** [`bundle`](bundle.md) assembles the export and your `.plugin/` tree into a
+plugin somebody installs. This is the whole path for a corpus that stands alone, which is the ordinary case.
+
+**Layered corpora, publishing to each other.** [`pack`](pack.md) seals the export into a versioned package, you push
+that to a registry, and the corpus that consumes it runs [`restore`](restore.md) before it validates. The consuming
+corpus then runs the same loop over its own records.
+
+[`checks`](checks.md) is on no branch of this. It reads the schema and prints what could ever fire, which is a question
+about the schema rather than a step in any sequence.
+
 ## Which command answers which question
 
 Four questions get asked about a corpus, and one command answers each. Two of them take a `--check`. A corpus can fail
