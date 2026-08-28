@@ -308,3 +308,37 @@ jobs:
       - name: Install the plugin and ask each skill what it describes
         shell: bash
         run: sh ../../tooling/tests/round-trip.sh
+
+  # The other end of the same promise, over the two corpora that publish and consume. `corpora
+  # (payments)` already runs export, pack, restore and validate and passes; what it cannot show is
+  # that the pass means anything, because a corpus citing nothing would pass it too. So this asserts
+  # the citation resolved, then renames the clause upstream and asserts the downstream build goes red
+  # naming it.
+  #
+  # Both platforms, for the reason the job above runs on both: the script is held to the shell subset
+  # Git Bash and older macOS bash agree on, and a subset nothing exercises is a claim rather than a
+  # constraint. It needs no network and no CLI beyond `jq`, because the two corpora exchange a sealed
+  # package through a folder.
+  #
+  # An ordinary checkout, unlike the job above. Nothing here fetches a record from the host the export
+  # names, so the commit HEAD stands on does not have to be one a raw host serves.
+  import-round-trip:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish from one corpus, consume it from another, and break it on purpose
+        shell: bash
+        run: sh tooling/tests/import-round-trip.sh

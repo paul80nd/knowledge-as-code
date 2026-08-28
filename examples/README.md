@@ -15,6 +15,9 @@ is what `kac new` sends. Everything here is a worked example to borrow ideas fro
 None of the three names a real organisation, and every hostname they hold is under `example.com`, which
 [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered.
 
+[One corpus or several](https://paul80nd.github.io/knowledge-as-code/one-corpus-or-several/) is the page for choosing
+between the first shape and the other two, and says what the split costs.
+
 ## What each one is for
 
 **[`library/`](library/) is the whole thing in one repository.** It holds its own vocabulary, its own service catalogue

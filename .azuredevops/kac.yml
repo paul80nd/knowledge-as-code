@@ -213,6 +213,14 @@ steps:
     displayName: Run the golden test suite
     workingDirectory: $(Build.SourcesDirectory)
 
+  # The import half proved end to end: publish from examples/engineering, consume it from
+  # examples/payments, then rename a clause upstream and assert the downstream build goes red naming
+  # it. Unlike round-trip.sh this reaches no network, because the two corpora exchange a sealed
+  # package through a folder, so it runs here as well as on GitHub.
+  - script: sh tooling/tests/import-round-trip.sh
+    displayName: Publish from one corpus, consume it from another, and break it on purpose
+    workingDirectory: $(Build.SourcesDirectory)
+
   # Pack fails on package metadata no test layer above reads, such as a readme the project names and
   # nobody wrote. Installing what was packed catches a package that is well-formed and still does
   # not resolve to a runnable command.

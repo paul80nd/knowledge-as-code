@@ -99,6 +99,7 @@ markdown_extensions:
 nav:
   - Introduction: index.md
   - Getting started: getting-started.md
+  - One corpus or several: one-corpus-or-several.md
   - Running it in CI: ci.md
   - Troubleshooting: troubleshooting.md
   - The framework:
