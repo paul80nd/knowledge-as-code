@@ -460,6 +460,22 @@ checks:
 
       Not advertised on a type page: it reads `.corpus.yaml` rather than any record.
 
+  import-restored:
+    severity: error
+    on-type-page: false
+    description: Every corpus this one declares in `consumes:` has been restored into `.imports/`.
+    notes: >
+      An error rather than a skip. A citation into a corpus that has not arrived is the one reference
+      nothing else can answer for, so a run that passed over it would check less than the pipeline does,
+      and a broken reference would reach the default branch through a green local run. The message names
+      `kac restore`, which is the command that fetches what the block declares.
+
+      Reported once against `.corpus.yaml`, and every citation into that shortcode then stays quiet.
+      Whoever has not restored wants one line telling them to, rather than one for each reference they
+      wrote correctly.
+
+      Not advertised on a type page: it reads `.corpus.yaml` rather than any record.
+
   framework-names-types:
     severity: error
     on-type-page: false

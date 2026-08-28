@@ -19,6 +19,19 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac validate` resolves a reference across a corpus boundary.** A citation carrying a producer's shortcode, as
+  `eng:pol-VURM.TIMEBOX`, resolves against the export `kac restore` unpacked under `.imports/`. It is read in prose and
+  in a field declaring a `ref:`, so `implements: eng:pol-VURM.TIMEBOX` names one clause rather than a whole policy, and
+  both halves are held to existing. Local records and imported ones go through one lookup, so a corpus is not judged
+  more loosely for having imported the record it cites.
+
+  Each side keeps its own spelling. A record the reading corpus holds is cited bare, one it imported carries the
+  shortcode, and writing either the other way is refused naming the spelling to write.
+
+  A new `import-restored` check fails a corpus declaring an import that is not on disk, and names `kac restore`. Every
+  citation into that shortcode then stays quiet, so a run that has not restored reports one line rather than one per
+  reference. `docs/cli/validate.md` documents both.
+
 - **`kac restore` fetches the corpora a corpus declares it consumes.** A new `consumes:` block in `.corpus.yaml` names
   each producing corpus, the shortcode it is cited by, the version range it is wanted at and the source it comes from.
   `restore` resolves each range, fetches the package `kac pack` sealed, and unpacks it under `.imports/<shortcode>/`,

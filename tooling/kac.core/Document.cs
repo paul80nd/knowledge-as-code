@@ -240,7 +240,7 @@ public partial class Doc
         {
             if (code.Content is not { } content) continue;
             if (!NamesARecord(content, schema)) continue;
-            if (PartCitationRegex().IsMatch(content)) doc.PartRefs.Add((content, code.Line + 1));
+            if (Cites(content)) doc.PartRefs.Add((content, code.Line + 1));
             else if (ColonCitationRegex().IsMatch(content)) doc.ColonCitations.Add((content, code.Line + 1));
         }
 
@@ -272,7 +272,7 @@ public partial class Doc
                 // would collect the first of them and drop the rest.
                 if (citations.Add(citation))
                 {
-                    if (PartCitationRegex().IsMatch(citation)) doc.PartRefs.Add((citation, link.Line + 1));
+                    if (Cites(citation)) doc.PartRefs.Add((citation, link.Line + 1));
                     else if (ColonCitationRegex().IsMatch(citation))
                         doc.ColonCitations.Add((citation, link.Line + 1));
                 }
@@ -391,11 +391,22 @@ public partial class Doc
     // `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`. Both halves admit a hyphen, because a record
     // named by a slug carries one and so does the term a heading is slugged from.
     //
+    // A producer's shortcode may open it, as `eng:pol-VURM.TIMEBOX`, which is how a part of an imported
+    // record is addressed. See Citation.cs.
+    //
     // Loose on case and width after the prefix: a mis-cased or over-long id is one the validator should
     // report as unresolved rather than one the parser should quietly decline to see. The prefix itself is
     // held to lowercase and to four characters, so a citation that mis-cases it is not seen here at all.
-    [System.Text.RegularExpressions.GeneratedRegex(@"^[a-z]{2,4}-[A-Za-z0-9][A-Za-z0-9-]*\.[A-Za-z0-9][A-Za-z0-9_-]*$")]
+    [System.Text.RegularExpressions.GeneratedRegex(
+        @"^(?:[a-z0-9]+:)?[a-z]{2,4}-[A-Za-z0-9][A-Za-z0-9-]*\.[A-Za-z0-9][A-Za-z0-9_-]*$")]
     private static partial System.Text.RegularExpressions.Regex PartCitationRegex();
+
+    // An imported record cited whole, as `eng:pol-VURM`. A record this corpus holds is never collected
+    // this way: `pol-VURM` in a code span is an id a document mentions, and holding every mention to
+    // resolving would report the identity line under every title in the corpus. A scope is the author
+    // saying they mean the record in another corpus, which is a claim worth checking.
+    [System.Text.RegularExpressions.GeneratedRegex(@"^[a-z0-9]+:[a-z]{2,4}-[A-Za-z0-9][A-Za-z0-9-]*$")]
+    private static partial System.Text.RegularExpressions.Regex ScopedRecordRegex();
 
     // What a link carries as a citation beyond its label: a separator against the closing bracket and a
     // part id against that, as the `.TIMEBOX` in `[pol-VURM].TIMEBOX`. Empty where the link ends the
@@ -428,7 +439,17 @@ public partial class Doc
     // The prefixes come from the schema, so adopting a type admits citations into it and declining one
     // shuts them off, with no list here to keep in step.
     private static bool NamesARecord(string content, Schema schema)
-        => content.IndexOf('-') is var dash and > 0 && schema.IdPrefixes.Contains(content[..dash]);
+    {
+        // The scope comes off first. A shortcode carries no hyphen, so reading the prefix out of the
+        // whole string would find `eng:pol` and match no type.
+        var (_, id) = Citation.Split(content);
+        return id.IndexOf('-') is var dash and > 0 && schema.IdPrefixes.Contains(id[..dash]);
+    }
+
+    // Whether this text is a citation the validator answers for: a part of a record, or an imported
+    // record cited whole.
+    private static bool Cites(string text) =>
+        PartCitationRegex().IsMatch(text) || ScopedRecordRegex().IsMatch(text);
 
     // The same citation with a colon where the dot belongs, as `std-A11Y:WCAG`. An id has to sit on the
     // left for this to match. That keeps a scoped reference out of it, since a shortcode carries no

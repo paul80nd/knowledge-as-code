@@ -158,8 +158,8 @@ Whether the producer has released since is a different question, and one this co
 written rather than quietly matching nothing. So is a caret over a prerelease, because no caret takes one: name
 `0.2.0-rc.1` exactly to opt in.
 
-**Nothing yet fails when a restore has not run.** A corpus citing a record it has not imported is a question for
-[`validate`](validate.md), which does not ask it yet.
+**It reports nothing about a corpus that has not restored.** Whether the imports a corpus declares are on disk is
+[`validate`](validate.md)'s question, and it fails and names this command where one is not.
 
 [The corpus descriptor](../corpus-descriptor.md) is the page for the rest of `.corpus.yaml`, including the `upstream:`
 block, which is a different relationship: one framework flowing down to you as files, rather than a graph of records

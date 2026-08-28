@@ -24,6 +24,21 @@ file that caused it. [Discovery](../design/discovery.md) is the pass deciding wh
 
 Run it from inside your corpus. `kac` finds the corpus by walking up for a `.corpus.yaml`.
 
+### A corpus that consumes another validates against both
+
+A corpus declaring `consumes:` cites records another corpus published, and `validate` resolves those citations against
+the exports [`restore`](restore.md) unpacked under `.imports/`. `eng:pol-VURM.TIMEBOX` reaches a clause of an imported
+policy, in prose and in a field declaring a `ref:` alike, and a clause that corpus does not carry fails here exactly as
+a local one would.
+
+**Run `restore` first.** A declared import that has not arrived is an error naming the command, rather than a citation
+quietly passed over. A local run that checks less than the pipeline does is how a broken reference reaches your default
+branch.
+
+Each side keeps its own spelling. A record your corpus holds is cited bare and one it imported carries its producer's
+shortcode, so writing either the other way is refused: two spellings of one obligation defeat every search anybody runs
+for it.
+
 ## Examples
 
 ### Validate the corpus you are standing in

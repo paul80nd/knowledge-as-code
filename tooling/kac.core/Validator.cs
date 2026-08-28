@@ -82,12 +82,13 @@ public static class Validator
         // Uniqueness and reciprocity need every document in hand. The index they build is handed on rather
         // than built again: it is the corpus's one account of which id names which document, and a second
         // one would be free to answer differently.
-        var byId = CheckCorpus(schema, corpus.Docs, findings);
+        var byId = CheckCorpus(schema, corpus.Docs, findings, corpus.Imports);
 
         CheckCorpusRules(schema, corpus.Docs, byId, tree, findings);
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
+        CheckImports(corpus.Imports, findings);
 
         return findings;
     }
@@ -450,7 +451,8 @@ public static class Validator
     // The questions that need every record in hand, and the index of them that answering leaves behind:
     // which document each id names, first writer winning. That index is exactly what a corpus rule asks
     // for next.
-    public static Dictionary<string, Doc> CheckCorpus(Schema schema, List<Doc> docs, List<Finding> f)
+    public static Dictionary<string, Doc> CheckCorpus(
+        Schema schema, List<Doc> docs, List<Finding> f, ImportGraph? imports = null)
     {
         var byId = new Dictionary<string, Doc>(StringComparer.OrdinalIgnoreCase);
         foreach (var d in docs)
@@ -464,35 +466,53 @@ public static class Validator
                 byId[id] = d;
         }
 
-        // Part citations: `pol-VURM.TIMEBOX`, `gls-knowledge-as-code.corpus`. The whole point of giving a
-        // part an address is that something else can name it, and a citation nothing answers to is the
-        // failure that machinery exists to prevent: it resolves to a document that plainly exists, so a
-        // reader has no reason to doubt the half after the dot.
+        // Local records and imported ones behind one lookup. See Resolver.cs: once the graph is
+        // assembled a citation across a boundary is a citation, and every check below reads it the same
+        // way it reads one that never left the corpus.
+        var resolver = new Resolver(byId, imports ?? ImportGraph.None);
+
+        // Part citations: `pol-VURM.TIMEBOX`, `gls-knowledge-as-code.corpus`, `eng:pol-VURM.TIMEBOX`. The
+        // whole point of giving a part an address is that something else can name it, and a citation
+        // nothing answers to is the failure that machinery exists to prevent: it resolves to a document
+        // that plainly exists, so a reader has no reason to doubt the half after the dot.
         //
         // The half before the dot decides the words. A citation into a type that keeps no parts at all
         // is a different mistake from one naming a part that type does not have, and saying so saves the
         // author looking for a heading the document was never going to carry.
         foreach (var d in docs)
-        foreach (var (citation, line) in d.PartRefs)
+        foreach (var (text, line) in d.PartRefs)
         {
-            var dot = citation.IndexOf('.');
-            var (docId, partId) = (citation[..dot], citation[(dot + 1)..]);
+            var citation = Citation.Read(text);
+            var landed = resolver.Resolve(citation);
 
-            if (!byId.TryGetValue(docId, out var target))
+            if (Spelled(citation, landed) is { } wrong)
             {
-                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
-                    $"'{citation}' cites '{docId}', which does not exist."));
+                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"), wrong));
                 continue;
             }
 
-            var noun = target.Type?.Parts?.Noun;
+            if (landed.How is Landing.Missing)
+            {
+                f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
+                    $"'{citation}' cites '{citation.Whole}', which does not exist."));
+                continue;
+            }
+
+            // The import this cites has not been restored, and `import-restored` has already said so.
+            if (landed.How is Landing.NotRestored) continue;
+
+            // A scoped record cited whole, such as `eng:pol-VURM`. It resolved, and there is no second
+            // half to ask about.
+            if (citation.Part is not { } partId) continue;
+
+            var noun = landed.Noun(schema);
             if (noun is null)
                 f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
-                    $"'{citation}' addresses a part of {target.Rel}, and its type offers none. Cite the "
-                    + $"document as '{docId}'."));
-            else if (!target.Parts.Any(p => string.Equals(p.Id, partId, StringComparison.Ordinal)))
+                    $"'{citation}' addresses a part of {landed.Where}, and its type offers none. Cite the "
+                    + $"document as '{citation.Whole}'."));
+            else if (!landed.Carries(partId))
                 f.Add(new Finding(d.Rel, line, Sev.Error, new CheckId("part-ref"),
-                    $"'{citation}' cites a {noun} '{partId}' that {target.Rel} does not carry."));
+                    $"'{citation}' cites a {noun} '{partId}' that {landed.Where} does not carry."));
         }
 
         // Referenced ids: every field the schema gives a `ref:`. The declaration names the type an id in
@@ -516,19 +536,58 @@ public static class Validator
                 if (spec.Type != "id" && (spec.Type != "list" || spec.Of != "id")) continue;
 
                 var admitted = Admitted(spec, schema);
-                foreach (var targetId in d.FrontList(name))
+                foreach (var value in d.FrontList(name))
                 {
-                    if (spec.IsLiteral(targetId)) continue;
-                    if (!byId.TryGetValue(targetId, out var target))
+                    if (spec.IsLiteral(value)) continue;
+
+                    var citation = Citation.Read(value);
+                    var landed = resolver.Resolve(citation);
+                    var at = d.FrontStartLine;
+
+                    if (Spelled(citation, landed) is { } wrong)
                     {
-                        f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, new CheckId("ref-resolves"),
-                            $"'{name}' points at '{targetId}', which does not exist."));
+                        f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
+                            $"'{name}': {wrong}"));
                         continue;
                     }
 
-                    if (Admits(admitted, target)) continue;
-                    f.Add(new Finding(d.Rel, d.FrontStartLine, Sev.Error, new CheckId("ref-resolves"),
-                        $"'{name}' points at '{targetId}', which is {WithArticle(target.Type!)}, "
+                    if (landed.How is Landing.Missing)
+                    {
+                        f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
+                            $"'{name}' points at '{citation.Whole}', which does not exist."));
+                        continue;
+                    }
+
+                    if (landed.How is Landing.NotRestored) continue;
+
+                    // A field may reach a part: `implements: eng:pol-VURM.TIMEBOX` names one clause
+                    // rather than the whole policy. Both halves are asked, because half an obligation is
+                    // not an obligation and a coverage report walks these edges.
+                    if (citation.Part is { } partId)
+                    {
+                        var noun = landed.Noun(schema);
+                        if (noun is null)
+                        {
+                            f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
+                                $"'{name}' points at a part of {landed.Where}, and its type offers none. "
+                                + $"Name the document as '{citation.Whole}'."));
+                            continue;
+                        }
+
+                        if (!landed.Carries(partId))
+                        {
+                            f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
+                                $"'{name}' points at a {noun} '{partId}' that {landed.Where} does not "
+                                + "carry."));
+                            continue;
+                        }
+                    }
+
+                    var type = landed.Type(schema);
+                    if (admitted.Count == 0 || type is null || admitted.Contains(type)) continue;
+
+                    f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
+                        $"'{name}' points at '{citation.Whole}', which is {WithArticle(type)}, "
                         + $"not {OneOf(admitted)}."));
                 }
             }
@@ -570,6 +629,38 @@ public static class Validator
     // same way, so what a target is held against is one object compared with the same object: a type
     // answers to the name of its schema file and to the folder it declares, and neither name has to be
     // the one the other side wrote.
+    // A declared import that is not on disk.
+    //
+    // An error rather than a skip. A run that quietly checked less than CI is how a broken reference
+    // reaches main, and the reference into an unrestored corpus is exactly the one nothing else can ask
+    // about. It is reported once against the descriptor, which is the file naming what did not arrive.
+    private static void CheckImports(ImportGraph imports, List<Finding> f)
+    {
+        foreach (var shortcode in imports.NotRestored)
+            f.Add(new Finding(Corpus.Descriptor, null, Sev.Error, new CheckId("import-restored"),
+                $"`consumes:` declares '{shortcode}:' and {Restore.ImportsDir}/{shortcode}/ holds no "
+                + "export. Run `kac restore`."));
+    }
+
+    // The three ways a citation names a record that exists and spells it wrong, and null where the
+    // spelling is right.
+    //
+    // Each earns its own sentence. A reader told the record does not exist goes looking for the record,
+    // and finds it exactly where they left it.
+    private static string? Spelled(Citation citation, Landed landed) => landed.How switch
+    {
+        Landing.NeedsScope =>
+            $"'{citation}' names a record this corpus imports rather than holds. Write it as "
+            + $"'{landed.Scope}:{citation.Record}', so a reader can see which corpus owns it.",
+        Landing.NeedsNoScope =>
+            $"'{citation}' scopes a record this corpus holds itself. Write it as '{citation.Record}': "
+            + "two spellings of one id defeat every search anybody runs for it.",
+        Landing.UnknownScope =>
+            $"'{citation}' cites '{landed.Scope}:', and this corpus consumes nothing under that "
+            + "shortcode. Declare it in `consumes:`, or correct the spelling.",
+        _ => null
+    };
+
     private static List<TypeSchema> Admitted(FieldSpec spec, Schema schema) =>
         [.. spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>()];
 
