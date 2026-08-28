@@ -53,6 +53,15 @@ where it is one part of a group that is no use apart. Where the tool did not cha
 Releasing renames `## Unreleased` to `## <version> - <date>` and moves `<Version>` in the same commit.
 `ChangelogTests` fails a version that has no section.
 
+**Move a corpus's `content-version` whenever you change what it knows.** Each corpus under `examples/` publishes: a
+push to `main` packs it to GitHub Packages and bundles it into the `marketplace` branch, and both publishers take the
+version the corpus states. A version that has not moved publishes nothing, silently, so an edited record reaches
+nobody and the published copy drifts from `main` with no build reporting it.
+
+Semantic, and about the records rather than the file: major where a meaning changed or a published URL broke, minor
+for a record added, patch for wording. This is the corpus's own call and not the tool's, so nothing bumps it for you.
+`payments` publishes nothing yet and still moves, because it is the same discipline whichever corpus you are in.
+
 **Ask which pages your change makes wrong.** Nothing in CI reads prose for meaning, so this is yours to do. A change to
 a command reaches [`docs/`](docs/) and often [`tooling/README.md`](tooling/README.md); a change to what the tool is for
 reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md); a change to the schema reaches

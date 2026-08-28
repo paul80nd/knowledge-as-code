@@ -74,6 +74,11 @@ and no release.
 The producer has to have packed first. Run `kac export` and then `kac pack` in that corpus, and the folder holds a
 package to take.
 
+**A folder holds one version, where a registry holds every version it ever accepted.** [`pack`](pack.md) rebuilds its
+output directory whole, so the folder holds whatever was packed last and nothing else. A `resolved:` naming any other
+version cannot be satisfied there, and the run says the folder holds no package for it. Move the lock with the range
+when the producer's `content-version` moves, or delete `resolved:` and let the next restore write it.
+
 #### Reading a private feed
 
 A registry serving a private feed refuses an anonymous read. GitHub Packages is one. Put a token in the environment,
@@ -150,6 +155,9 @@ onto.
 
 **It does not tell you a newer version exists.** A lock the range still admits is taken without asking the registry.
 Whether the producer has released since is a different question, and one this command never asks.
+
+**A folder source cannot serve a version it no longer holds.** A registry keeps every version published to it. A
+folder holds the last one packed, so a consumer locked to an earlier one is refused rather than served something else.
 
 **It refuses everything or fetches everything.** A run that fetched two corpora and then refused the third would leave
 `.imports/` describing a graph your descriptor does not, so a problem anywhere stops the whole run.

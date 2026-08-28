@@ -62,11 +62,23 @@ Four of the framework's seventeen types are adopted by none of the three: `disco
 `postmortems`. They keep their schema, their root page and their template in [`../template/`](../template/), and no
 worked record exercises them.
 
+## What they publish
+
+**`library/` and `engineering/` publish, and `payments/` does not yet.** A push to `main` packs each of the two to
+GitHub Packages and bundles both into the
+[`marketplace`](https://github.com/paul80nd/knowledge-as-code/tree/marketplace) branch, which offers them as
+installable plugins. That is how this repository proves the publishing half of its own tool against a real registry,
+and how somebody deciding whether to adopt the framework can install one and ask it questions.
+
+Each says in its own `description` that it is an example and governs nobody. `kac pack` and `kac bundle` write that
+into the package and the plugin from [`.corpus.yaml`](library/.corpus.yaml), so no reader meets one without being told.
+
+**Move `content-version` when you change a corpus.** Both publishers take the version the corpus states, so one that
+has not moved publishes nothing and says nothing.
+
 ## What is not built yet
 
-**Only `library/` publishes a plugin.** All three build one, because `kac bundle` runs over each of them in CI, but the
-[`marketplace`](https://github.com/paul80nd/knowledge-as-code/tree/marketplace) branch carries `library/` alone.
-
-**Only `engineering/` publishes a package.** It is the one corpus declaring a `shortcode`, which is the word a consumer
-cites an import by and which `kac pack` refuses a corpus without. So it is the only one the gate packs, and the only one
-`publish-corpus.yml` pushes to GitHub Packages.
+**`payments/` publishes nothing.** It adopts `nfrs`, `services` and `standards`, and none of those declares an
+`export:` block in the schema, so its export carries a manifest and no records. A package would be an empty envelope
+and a plugin would hold no skill.
+[#335](https://github.com/paul80nd/knowledge-as-code/issues/335) is where that gets built.

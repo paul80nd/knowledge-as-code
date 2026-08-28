@@ -50,6 +50,9 @@ and contend over its output.
   `knowledge-as-code/`, written a single time.
 * **Extend one fictional organisation**: Example Engineering, whose policies stay stack-agnostic and name no service.
   [`README.md`](README.md) explains why.
+* **Move `content-version` in [`.corpus.yaml`](.corpus.yaml) whenever you change what this corpus knows.** A push to
+  `main` publishes this corpus, and both publishers take the version it states, so one that has not moved publishes
+  nothing and says nothing. Major for a meaning that changed, minor for a record added, patch for wording.
 * **Branch and open a PR.** Pushes to `main` are rejected.
 
 ## Writing a record
