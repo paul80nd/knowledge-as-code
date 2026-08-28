@@ -625,10 +625,6 @@ public static class Validator
         return byId;
     }
 
-    // The types a ref field may point at, as the schema's own objects. A document's type is resolved the
-    // same way, so what a target is held against is one object compared with the same object: a type
-    // answers to the name of its schema file and to the folder it declares, and neither name has to be
-    // the one the other side wrote.
     // A declared import that is not on disk.
     //
     // An error rather than a skip. A run that quietly checked less than CI is how a broken reference
@@ -661,6 +657,10 @@ public static class Validator
         _ => null
     };
 
+    // The types a ref field may point at, as the schema's own objects. A document's type is resolved the
+    // same way, so what a target is held against is one object compared with the same object: a type
+    // answers to the name of its schema file and to the folder it declares, and neither name has to be
+    // the one the other side wrote.
     private static List<TypeSchema> Admitted(FieldSpec spec, Schema schema) =>
         [.. spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>()];
 
