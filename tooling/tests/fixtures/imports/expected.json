@@ -1,0 +1,18 @@
+{
+  "summary": {
+    "validated": 0,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 1,
+    "warnings": 0
+  },
+  "findings": [
+    {
+      "file": ".corpus.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "import-restored",
+      "message": "`consumes:` declares 'eng:' and .imports/eng/ holds no export. Run `kac restore`."
+    }
+  ]
+}

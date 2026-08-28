@@ -115,7 +115,8 @@ id has to touch the bracket, so `See [pol-VURM]. The policy...` stays a full sto
 
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, record, part. A
 record the reading corpus holds is cited bare, and qualifying one is an error, because two spellings of a single
-obligation defeat search. Nothing yet resolves a scoped reference, since no corpus imports another.
+obligation defeat search. `kac validate` resolves a scoped reference against the corpus `kac restore` unpacked under
+`.imports/`, and holds it to carrying the part named.
 
 ### A shortcode is the half before the colon
 

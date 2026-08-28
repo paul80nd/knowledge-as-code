@@ -1,5 +1,10 @@
 # Frameworks
 
+> **Nothing is filed here, and that is not the part to copy.** Example Libraries is a fictional consortium, and this
+> page is left as the template sends it. An organisation running an estate like this one would have something to put
+> under at least one posture. Copy the three postures and fill them yourself: which frameworks bind you is the question
+> this page exists to ask.
+
 The external frameworks this corpus refers to, and what each one obliges us to.
 
 A policy maps its clauses to a framework's controls in the `Alignment` column of its clause table, as

@@ -383,6 +383,18 @@ checks:
       reach nothing and be seen by nothing. The separator is legible in the single file and the
       resolution needs the whole corpus, so the two halves run in different passes.
 
+      A citation may carry a producer's shortcode, as `eng:pol-VURM.TIMEBOX`, and then resolves against
+      what `kac restore` unpacked under `.imports/`. An imported record may be cited whole that way,
+      because the scope is the author claiming the record is another corpus's and that claim is worth
+      checking. A record this corpus holds is never cited whole in a code span, since holding every
+      mention of an id to resolving would report the identity line under every title in the corpus.
+
+      Three more ways it fails, each about the spelling rather than the record: a bare id naming a
+      record this corpus imports, a scoped id naming one it holds, and a shortcode it consumes nothing
+      under. The first two say the spelling to write instead, because a reader told the record does not
+      exist goes looking for a record that is exactly where they left it. A citation into an import that
+      has not been restored reports nothing here, and `import-restored` says it once instead.
+
   ref-resolves:
     severity: error
     description: An id in a field declaring a `ref:` names a document that exists, of a type the `ref:` names.
@@ -392,6 +404,11 @@ checks:
       it the edge with least behind it. The wrong type is the quieter fault: it lands on a real page, so
       it reads as intentional and whatever walks the edge afterwards takes it at its word. A literal the
       field admits, such as `applies-to: [all]`, is not an id and is skipped.
+
+      A field may reach a part and may carry a scope, as `implements: eng:pol-VURM.TIMEBOX`. Both halves
+      of a part-level id are asked, because half an obligation is not an obligation and a coverage report
+      walks these edges. The spelling faults `part-ref` reports across a boundary are reported here too,
+      in the same words, since one lookup answers a citation in prose and one in a field.
 
   reciprocal:
     severity: error
@@ -457,6 +474,22 @@ checks:
 
       A corpus that declares no shortcode is not asked any of this. Nothing cites it yet, and the value
       is immutable once written, so there is nothing to gain by inventing one early.
+
+      Not advertised on a type page: it reads `.corpus.yaml` rather than any record.
+
+  import-restored:
+    severity: error
+    on-type-page: false
+    description: Every corpus this one declares in `consumes:` has been restored into `.imports/`.
+    notes: >
+      An error rather than a skip. A citation into a corpus that has not arrived is the one reference
+      nothing else can answer for, so a run that passed over it would check less than the pipeline does,
+      and a broken reference would reach the default branch through a green local run. The message names
+      `kac restore`, which is the command that fetches what the block declares.
+
+      Reported once against `.corpus.yaml`, and every citation into that shortcode then stays quiet.
+      Whoever has not restored wants one line telling them to, rather than one for each reference they
+      wrote correctly.
 
       Not advertised on a type page: it reads `.corpus.yaml` rather than any record.
 

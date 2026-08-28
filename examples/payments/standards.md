@@ -9,25 +9,24 @@ A standard is a short, living Markdown document that states a rule we follow. It
 concrete examples and a conformance checklist you tick a design against. Standards are the day-to-day rulebook. Design a
 new endpoint, header or contract, and the standard for that area tells you the shape it must take.
 
-## How standards relate to ADRs
+## Where a standard's authority comes from
 
-ADRs and standards are two halves of one record:
+Every standard here cites a policy in the engineering corpus, and none of them cites an ADR. This corpus has not adopted
+`adrs`: a decision about how payments is built is recorded next to the code, and a decision about how the organisation
+builds anything belongs to the governance layer.
 
-* An **ADR** captures a decision: the context, the choice, the alternatives weighed, the consequences. It answers *why*,
-  and it is immutable once accepted.
-* A **standard** captures the practice that decision produces. It answers *what to do*, and we edit it in place as the
-  practice matures.
+So a standard's `implements:` names an imported clause, as `eng:pol-SCRT.STORE`, and `provenance-required` is satisfied
+by that alone. The policy owns the *why* and states the obligation at a height that survives replacing the whole estate.
+The standard owns the *what*, and says what that obligation means for a payment.
 
-A standard distils accepted ADRs into something you can follow without reading the reasoning again, and cites what it
-came from: the ADR owns the *why* and the standard owns the *what*. Where a standard descends from a policy, it cites
-the policy. Below both sits a feature **spec**, which applies the standards to a concrete API and documents only what is
-unique to that feature.
+| Layer                          | Answers                                      | Where it lives     |
+|--------------------------------|----------------------------------------------|--------------------|
+| Policy, as `eng:pol-SCRT`      | What are we committed to, whatever we build? | `../engineering/`  |
+| Standard, as `std-0002`        | What must I do about it in payments?         | Here               |
 
-| Layer           | Answers                      | Lifecycle                    |
-|-----------------|------------------------------|------------------------------|
-| ADRs            | *Why* did we decide this?    | Immutable, append-only log   |
-| Standard        | *What* must I do, and how?   | Living, maintained catalogue |
-| Spec            | What does *this* feature do? | Per-feature instance         |
+A clause may be discharged in both corpora at once. `eng:pol-SCRT.LOGS` prohibits writing a secret to a log, the
+governance layer's own secret-handling standard says what that means estate-wide, and [std-0002] says what it means for
+a PSP key. Neither restates the other, and a reader following the clause id finds both.
 
 ## Why we use them
 
@@ -138,3 +137,5 @@ Standards are living documents, and we edit them in place. Record every material
 | `changelog-on-material-change` | If the Rules section changed and status is `active`, a new changelog entry is required in the same commit. |
 
 <!-- END GENERATED: checks-standards -->
+
+[std-0002]: standards/domain/payment-telemetry.md

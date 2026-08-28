@@ -42,6 +42,14 @@ steps:
       packageType: sdk
       version: 10.0.x
 
+  # This corpus consumes another, so the records it cites arrive before anything reads
+  # them. .imports/ is not committed, and `validate` fails naming this command where it
+  # is empty. A corpus standing on its own drops this step. A source behind a private
+  # registry needs KAC_REGISTRY_TOKEN in the environment.
+  - script: dotnet run --project tooling/kac -- restore
+    displayName: Restore what this corpus consumes
+    workingDirectory: $(Build.SourcesDirectory)
+
   # One invocation per subcommand, run sequentially. Concurrent runs build the same
   # project and contend over its output, so the kac runs must not overlap.
   - script: dotnet run --project tooling/kac -- validate

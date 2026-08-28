@@ -377,7 +377,8 @@ public static class Commands
         }
 
         using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
-        var plan = kac.core.Restore.Plan(descriptor.Consumes, new Registry(Registry.Over(client)),
+        var plan = kac.core.Restore.Plan(descriptor.Consumes,
+            new Registry(Registry.Over(client), Registry.OnDisk(corpusRoot)),
             shortcode => kac.core.Restore.Installed(corpusRoot, shortcode));
 
         if (plan.Problems.Count > 0)

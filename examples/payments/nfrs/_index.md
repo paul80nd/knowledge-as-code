@@ -2,4 +2,7 @@
 
 # NFR Index
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID       | Title                                                                                                    | Applies to         | Target                                        | Status | Review by  |
+|----------|----------------------------------------------------------------------------------------------------------|--------------------|-----------------------------------------------|--------|------------|
+| nfr-0001 | [A customer waits under a second to hear whether their card was accepted](0001-authorisation-latency.md) | svc-payment-api    | p95 under 800ms, measured over a rolling hour | agreed | 2027-08-28 |
+| nfr-0002 | [A recovered ledger loses at most five minutes of payments](0002-ledger-recovery-point.md)               | svc-payment-ledger | RPO 5 minutes, RTO 1 hour                     | agreed | 2027-08-28 |

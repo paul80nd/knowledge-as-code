@@ -31,6 +31,12 @@ public sealed class LoadedCorpus
     // Discovered but not migrated. Reported, so a corpus part-way through adoption reads as part-way
     // through and never as smaller than it is.
     public required int SkippedNoFrontmatter;
+
+    // What this corpus consumes, as `.imports/` holds it.
+    //
+    // The one member carrying a default, because consuming nothing is what a corpus does unless it says
+    // otherwise. Every other member here is a fact about any corpus at all.
+    public ImportGraph Imports = ImportGraph.None;
 }
 
 public static class Corpus
@@ -73,20 +79,26 @@ public static class Corpus
     // The schema is read from wherever `Schema.FindRoot` lands, which is the corpus itself in a standalone
     // one. Falling back to the corpus root leaves a corpus with no schema anywhere above it failing on the
     // file it cannot open, as it did before the walk existed. `kac` declines such a corpus ahead of this.
-    public static LoadedCorpus Load(string corpusRoot) =>
-        Load(
+    public static LoadedCorpus Load(string corpusRoot)
+    {
+        var descriptor = CorpusDescriptor.Load(corpusRoot);
+
+        return Load(
             new Tree(
                 new HashSet<string>(AllFiles(corpusRoot).Select(f => f.Replace('\\', '/')), StringComparer.Ordinal),
                 rel => Files.ReadLf(Path.Combine(corpusRoot, rel)),
                 rel => File.Exists(Path.Combine(corpusRoot, rel))),
             Schema.Load(Schema.FindRoot(corpusRoot) ?? corpusRoot),
-            CorpusDescriptor.Load(corpusRoot));
+            descriptor,
+            Imports.Load(corpusRoot, descriptor.Consumes));
+    }
 
     // The listing, the schema it is judged against, and what the corpus records about itself. That is
     // everything an entry point needs before it can ask a question, and the whole of what this reads.
     // A caller with a corpus nobody wrote to disk hands over the same three things, so a check can be
     // written against one.
-    public static LoadedCorpus Load(Tree tree, Schema schema, CorpusDescriptor descriptor)
+    public static LoadedCorpus Load(
+        Tree tree, Schema schema, CorpusDescriptor descriptor, ImportGraph? imports = null)
     {
         var docs = new List<Doc>();
         var skipped = 0;
@@ -110,7 +122,8 @@ public static class Corpus
             Adopted = Adopted(schema, tree, descriptor),
             Docs = docs,
             Templates = DiscoverTemplates(tree, schema),
-            SkippedNoFrontmatter = skipped
+            SkippedNoFrontmatter = skipped,
+            Imports = imports ?? ImportGraph.None
         };
     }
 

@@ -266,11 +266,15 @@ public static class ValueChecks
     // and a string, which is what lets these checks be tested without one.
     private static bool LooksLikeId(string v)
     {
-        var dash = v.IndexOf('-');
-        if (dash <= 0 || dash == v.Length - 1) return false;
+        // A producer's shortcode may open it, as `eng:pol-VURM`. What follows is held to the same shape
+        // whichever corpus wrote it. See Citation.cs.
+        var (_, id) = Citation.Split(v);
 
-        var rest = v[(dash + 1)..];
-        return v[..dash].All(char.IsLower)
+        var dash = id.IndexOf('-');
+        if (dash <= 0 || dash == id.Length - 1) return false;
+
+        var rest = id[(dash + 1)..];
+        return id[..dash].All(char.IsLower)
                && (rest == rest.ToLowerInvariant() || rest == rest.ToUpperInvariant());
     }
 

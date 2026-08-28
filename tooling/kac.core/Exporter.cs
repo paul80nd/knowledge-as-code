@@ -78,6 +78,8 @@ public static class Exporter
             types.Add(new ExportedType(
                 t.Key, t.Export.Version, records.Count,
                 parts is null ? 0 : Lines(parts.Content), t.Key, parts?.Path,
+                parts is null ? null : KeyFrom(t, PartLineSource.RecordId),
+                parts is null ? null : KeyFrom(t, PartLineSource.PartKey),
                 t.Export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal)));
         }
 
@@ -310,6 +312,12 @@ public static class Exporter
     //
     // What a line holds is the type's to declare. Nothing here names a key, so a second type exporting
     // parts costs an `export.parts.line:` block and no line of C#.
+    // What this type calls the key filled from one source, and null where its line carries none. A
+    // consumer addressing a part needs the two that say which record and which part, and only the type
+    // knows the words it chose for them.
+    private static string? KeyFrom(TypeSchema t, string source) =>
+        t.Export.Line.FirstOrDefault(l => string.Equals(l.Source, source, StringComparison.Ordinal)).Key;
+
     private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
         var spec = t.Parts!;

@@ -1,5 +1,10 @@
 # Frameworks
 
+> **The standing recorded here is invented.** Example Payments is a fictional payments system. It holds no
+> certification and has signed no contract. PCI DSS sits under **Obliged** because that is where a real payments team
+> would put it, so the page shows a worked example rather than an empty one. Copy the three postures and not the
+> filing: which frameworks bind you is the question this page exists to ask.
+
 The external frameworks this corpus refers to, and what each one obliges us to.
 
 A policy maps its clauses to a framework's controls in the `Alignment` column of its clause table, as
@@ -23,11 +28,17 @@ exist*, and only one of them survives a change of mind.
 
 ## Obliged
 
-_Nothing recorded yet._
+### PCI DSS v4.0
 
-Write one `###` heading per framework, and say plainly what binds this organisation to it: the certification held, the
-law that applies, the contract that requires it. Say which parts of it this corpus answers for, and where the rest is
-answered, so a reader cannot mistake a partial mapping for full coverage.
+The card schemes require it of any merchant taking card payments, through the acquiring bank's contract. It binds this
+corpus because payments is where cards are taken.
+
+This corpus answers for the merchant's own systems, which is a small part of the standard: the card details never reach
+them, so the assessment available to us is the shortest one. What the payment service provider answers for is in their
+own attestation, and [std-0001] holds the contract to naming which requirements sit on which side.
+
+The engineering corpus maps its policies to ISO 27001 and to UK GDPR rather than to this. A policy stating a commitment
+for the whole organisation is not the place for a standard binding one bounded context.
 
 ## Self-obligated
 
@@ -42,3 +53,5 @@ Frameworks that shaped the thinking and bind nothing. Keep the section, even whe
 openly is easier to argue with than one absorbed silently.
 
 _Nothing recorded yet._
+
+[std-0001]: standards/domain/card-data.md

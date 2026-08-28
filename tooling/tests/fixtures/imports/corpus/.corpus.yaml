@@ -1,0 +1,13 @@
+descriptor-version: 1
+corpus: test-imports
+
+# Declared and not restored, which is what this fixture is here to be told about.
+consumes:
+  - corpus: example-engineering
+    shortcode: eng
+    version: ^0.1.0
+    source: ../engineering/.dist/package
+
+upstream:
+  url:
+skip: []

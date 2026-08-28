@@ -71,9 +71,10 @@ already has one, and it is where a corpus adopts a type. Run it when the framewo
 **One corpus, publishing to an agent.** [`bundle`](bundle.md) assembles the export and your `.plugin/` tree into a
 plugin somebody installs. This is the whole path for a corpus that stands alone, which is the ordinary case.
 
-**Layered corpora, publishing to each other.** [`pack`](pack.md) seals the export into a versioned package, you push
-that to a registry, and the corpus that consumes it runs [`restore`](restore.md) before it validates. The consuming
-corpus then runs the same loop over its own records.
+**Layered corpora, publishing to each other.** [`pack`](pack.md) seals the export into a versioned package, you put
+that on a registry or in a folder, and the corpus that consumes it runs [`restore`](restore.md) before it validates.
+[`validate`](validate.md) then resolves a citation carrying the producer's shortcode against what arrived, so the
+consuming corpus runs the same loop over its own records and over the ones it inherited.
 
 [`checks`](checks.md) is on no branch of this. It reads the schema and prints what could ever fire, which is a question
 about the schema rather than a step in any sequence.

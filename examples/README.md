@@ -25,9 +25,30 @@ it. It adopts `adrs`, `capabilities`, `data`, `glossary`, `integrations`, `proce
 stack-agnostic, so they name no service and invent no estate. That is what lets them be published and read by a team
 that runs something else entirely. It adopts `adrs`, `controls`, `glossary`, `policies`, `standards` and `tools`.
 
-**[`payments/`](payments/) is a domain corpus, and it is thin on purpose.** A domain corpus inherits its governance
-rather than restating it, and thin is what makes that visible: there is nothing here that `engineering/` already says.
-It adopts `nfrs`, `services` and `standards`, and holds no records in them yet.
+**[`payments/`](payments/) is a domain corpus, and it is thin on purpose.** It declares `engineering/` in `consumes:`,
+so its standards cite `eng:pol-SCRT.STORE` rather than restating what that clause binds. Thin is what makes the
+inheritance visible: there is nothing here that `engineering/` already says. It adopts `nfrs`, `services` and
+`standards`, and holds six records between them.
+
+## How payments consumes engineering
+
+`payments/.corpus.yaml` names `example-engineering` in `consumes:`, at a version range, and gives a `source:` of
+`../engineering/.dist/package`. That folder is where `kac pack` writes, so the two corpora exchange a sealed package
+without a registry between them. `kac restore` unpacks it under `payments/.imports/eng/`, which is not committed.
+
+`kac validate` then resolves a citation carrying the `eng:` shortcode against what arrived, and reports a clause the
+governance layer does not carry exactly as it reports a broken local reference. A declared import that has not been
+restored is an error naming `kac restore`.
+
+**The producer packs before the consumer restores.** In this repository:
+
+```sh
+cd examples/engineering && kac export && kac pack
+cd ../payments && kac restore && kac validate
+```
+
+A corpus consuming across repositories names a registry's service index as its `source:` instead, and
+[the `restore` page](https://paul80nd.github.io/knowledge-as-code/cli/restore/) covers both forms.
 
 ## What they share
 
@@ -42,10 +63,6 @@ Four of the framework's seventeen types are adopted by none of the three: `disco
 worked record exercises them.
 
 ## What is not built yet
-
-**`payments/` does not consume `engineering/`.** No key in `.corpus.yaml` names another corpus, and no `kac` verb reads
-one corpus's export into another. The inheritance is a convention here rather than a declaration, and
-[#93](https://github.com/paul80nd/knowledge-as-code/issues/93) is where it gets built.
 
 **Only `library/` publishes a plugin.** All three build one, because `kac bundle` runs over each of them in CI, but the
 [`marketplace`](https://github.com/paul80nd/knowledge-as-code/tree/marketplace) branch carries `library/` alone.

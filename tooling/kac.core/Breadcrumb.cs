@@ -141,6 +141,8 @@ public static class Breadcrumb
                 JsonRead.Int(entry["parts"]) ?? 0,
                 JsonRead.Str(entry["dir"]) ?? key,
                 JsonRead.Str(entry["partsFile"]),
+                JsonRead.Str(entry["recordKey"]),
+                JsonRead.Str(entry["partKey"]),
                 Fidelities(entry["sections"])));
         }
 

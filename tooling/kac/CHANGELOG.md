@@ -19,21 +19,43 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
-- **`kac restore` fetches the corpora a corpus declares it consumes.** A new `consumes:` block in `.corpus.yaml` names
-  each producing corpus, the shortcode it is cited by, the version range it is wanted at and the registry it is
-  published to. `restore` resolves each range, fetches the package `kac pack` sealed, and unpacks it under
-  `.imports/<shortcode>/`, which the template now gitignores. The version each range resolved to is written back onto
-  its own entry, so `.corpus.yaml` stays the one description of what a corpus is.
+- **`kac export` names the two keys that address a part.** Each type's manifest entry gains `recordKey` and
+  `partKey`, naming which key of a part line says which record it belongs to and which part of that record it is. A
+  type names its own keys, so a consumer holding a corpus with a type it never adopted had no way to read them and had
+  to assume a spelling. Both are absent where the type keeps no parts, as `partsFile` is. `docs/design/export.md`
+  covers it.
 
-  A range says `1.2.0` or `^1.2.0` and nothing else, and a caret never takes a prerelease. A lock the range still admits is taken without asking the
-  registry, so two restores of an unchanged descriptor write the same bytes. A run says what it fetched, at which
-  version, and which corpora were already current.
+- **`kac validate` resolves a reference across a corpus boundary.** A citation carrying a producer's shortcode, as
+  `eng:pol-VURM.TIMEBOX`, resolves against the export `kac restore` unpacked under `.imports/`. It is read in prose and
+  in a field declaring a `ref:`, so `implements: eng:pol-VURM.TIMEBOX` names one clause rather than a whole policy, and
+  both halves are held to existing. Local records and imported ones go through one lookup, so a corpus is not judged
+  more loosely for having imported the record it cites.
+
+  Each side keeps its own spelling. A record the reading corpus holds is cited bare, one it imported carries the
+  shortcode, and writing either the other way is refused naming the spelling to write.
+
+  A new `import-restored` check fails a corpus declaring an import that is not on disk, and names `kac restore`. Every
+  citation into that shortcode then stays quiet, so a run that has not restored reports one line rather than one per
+  reference. `docs/cli/validate.md` documents both.
+
+- **`kac restore` fetches the corpora a corpus declares it consumes.** A new `consumes:` block in `.corpus.yaml` names
+  each producing corpus, the shortcode it is cited by, the version range it is wanted at and the source it comes from.
+  `restore` resolves each range, fetches the package `kac pack` sealed, and unpacks it under `.imports/<shortcode>/`,
+  which the template now gitignores. The version each range resolved to is written back onto its own entry, so
+  `.corpus.yaml` stays the one description of what a corpus is.
+
+  A `source:` names a registry's service index or a folder of packages. A folder holds the same sealed package a
+  registry serves, so a corpus consuming a sibling in its own repository needs no registry, no token and no release. A
+  path is relative to the corpus declaring it, as `upstream.url` is.
+
+  A range says `1.2.0` or `^1.2.0` and nothing else, and a caret never takes a prerelease. A lock the range still
+  admits is taken without asking the registry, so two restores of an unchanged descriptor write the same bytes. A run
+  says what it fetched, at which version, and which corpora were already current.
 
   A shortcode two entries both claim is refused naming both, as is a corpus two entries both consume, as is a package
-  whose own manifest is cited by a different shortcode from the one declared. `KAC_REGISTRY_TOKEN` in the environment carries a bearer token for a
-  private feed. `docs/cli/restore.md` documents the verb, and `docs/corpus-descriptor.md` the block.
-
-  Nothing yet fails when a restore has not run. `kac validate` does not read `.imports/` at all.
+  whose own manifest is cited by a different shortcode from the one declared. `KAC_REGISTRY_TOKEN` in the environment
+  carries a bearer token for a private feed. `docs/cli/restore.md` documents the verb, and `docs/corpus-descriptor.md`
+  the block.
 
 ## 0.14.0 - 2026-08-27
 

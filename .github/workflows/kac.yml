@@ -48,6 +48,22 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # payments consumes engineering, and what it consumes is a sealed package rather than the corpus
+      # next door. So the producer's package is built here before the consumer asks for it. Each job
+      # holds its own checkout, so nothing another job in this matrix did is on this runner.
+      - name: Build the package this corpus consumes
+        if: matrix.corpus == 'payments'
+        working-directory: examples/engineering
+        run: |
+          dotnet run --project ../../tooling/kac -- export
+          dotnet run --project ../../tooling/kac -- pack
+
+      # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails naming
+      # this command. A corpus consuming nothing skips the step.
+      - name: Restore what this corpus consumes
+        if: matrix.corpus == 'payments'
+        run: dotnet run --project ../../tooling/kac -- restore
+
       - name: Validate frontmatter, links and structure
         run: dotnet run --project ../../tooling/kac -- validate
 

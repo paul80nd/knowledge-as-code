@@ -129,11 +129,12 @@ cites those policies without holding them, and this block is where it says which
 | `corpus`    | the name the producer publishes the package under          | you        |
 | `shortcode` | the word you cite it by, as the `eng` in `eng:pol-VURM`    | you        |
 | `version`   | the range you mean, as `0.1.0` or `^0.1.0`                 | you        |
-| `source`    | the registry's service index, where the package is fetched | you        |
+| `source`    | the registry or folder the package is fetched from         | you        |
 | `resolved`  | the version the last restore took                          | `restore`  |
 
 The range is what you meant and `resolved` is what your build used, so both sit on the entry rather than in a lock file
-beside this one. [`restore`](cli/restore.md) says how a range resolves and what a run refuses.
+beside this one. A `source` is a registry's service index, or a path to a folder holding what a producer built.
+[`restore`](cli/restore.md) says how a range resolves, what a folder source takes, and what a run refuses.
 
 Leave the key out entirely where this corpus stands on its own, which is the ordinary case.
 
