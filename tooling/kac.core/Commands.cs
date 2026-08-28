@@ -362,6 +362,51 @@ public static class Commands
         return 0;
     }
 
+    // Fetch what this corpus declares it consumes, and unpack each one where the resolver will look.
+    //
+    // The corpus is never loaded, only its descriptor: what a restore has to decide is a fact about the
+    // declarations and about what the registry holds, and loading a corpus before its imports have
+    // arrived would ask the validator about a graph that is not assembled yet.
+    public static int Restore(string corpusRoot)
+    {
+        var descriptor = CorpusDescriptor.Load(corpusRoot);
+        if (descriptor.Consumes.Count == 0)
+        {
+            Out.Line("this corpus consumes nothing, so there is nothing to restore.");
+            return 0;
+        }
+
+        using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
+        var plan = kac.core.Restore.Plan(descriptor.Consumes, new Registry(Registry.Over(client)),
+            shortcode => kac.core.Restore.Installed(corpusRoot, shortcode));
+
+        if (plan.Problems.Count > 0)
+        {
+            foreach (var problem in plan.Problems) Stop($"restore: {problem}");
+            return 1;
+        }
+
+        var written = kac.core.Restore.Write(corpusRoot, plan);
+        foreach (var path in written) Out.Markup(Wrote(path));
+
+        // The lock is written after the fetch rather than as each version resolves, so a run that
+        // refused halfway leaves the descriptor saying what the last whole restore took.
+        CorpusDescriptor.SetResolved(corpusRoot,
+            plan.Steps.ToDictionary(s => s.Corpus, s => s.Version, StringComparer.Ordinal));
+
+        // Named one apiece rather than counted. Which version each import came in at is the thing a
+        // reader of this output is checking, and a corpus already current is the answer to a different
+        // question than a corpus just fetched.
+        foreach (var step in plan.Steps)
+            Account($"restore: {step.Corpus} {step.Version} as '{step.Shortcode}:'."
+                    + (step.Current ? " Already current." : ""));
+
+        Account($"restore: {written.Count} fetched, {plan.Steps.Count - written.Count} already current. "
+                + $"The resolved versions are in .corpus.yaml, and {kac.core.Restore.ImportsDir}/ is not "
+                + "committed.");
+        return 0;
+    }
+
     public static int Generate(string corpusRoot, bool check)
     {
         var corpus = Corpus.Load(corpusRoot);

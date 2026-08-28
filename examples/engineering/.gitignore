@@ -8,3 +8,8 @@ _reports/
 # Generated — `export` rebuilds .dist/export/ whole, `bundle` rebuilds .dist/plugin/ and the
 # marketplace beside it, and `pack` rebuilds .dist/package/. One rule covers all three.
 .dist/
+
+# Restored — `restore` fetches each corpus this one consumes and unpacks it here. Committing it
+# would put another corpus's whole content in this repository's history, so CI restores before it
+# validates.
+.imports/

@@ -15,6 +15,7 @@ links the part of it that explains the command.
 | [`new`](new.md)           | Stand a corpus up in the folder you are in.             |
 | [`validate`](validate.md) | Check the corpus against its schema.                    |
 | [`generate`](generate.md) | Rewrite the parts of a corpus derived from its records. |
+| [`restore`](restore.md)   | Fetch the corpora this one consumes.                    |
 | [`export`](export.md)     | Write the corpus out as data a consumer can read.       |
 | [`bundle`](bundle.md)     | Assemble the export into an installable agent plugin.   |
 | [`pack`](pack.md)         | Seal the export into a versioned package.               |
