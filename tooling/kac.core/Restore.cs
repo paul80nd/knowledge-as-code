@@ -190,8 +190,8 @@ public static class Restore
 
             if (entry.Source is not { } source)
             {
-                problems.Add($"{at} names no source. It is the registry's service index, which is the URL "
-                             + "the producer pushes the package to.");
+                problems.Add($"{at} names no source. It is where the package is fetched from: a "
+                             + "registry's service index, or a folder holding what a producer built.");
                 continue;
             }
 
@@ -237,8 +237,7 @@ public static class Restore
             return new Registry.Answer<string>(null,
                 $"'{entry.Corpus}' has no version matching '{entry.Version}' at {entry.Source}. "
                 + (versions.Count == 0
-                    ? "That registry holds no version of it at all, or holds them behind a token this "
-                      + $"run did not have. Set {Registry.TokenVariable} where the feed is private."
+                    ? Registry.Absent(entry.Source)
                     : $"It holds {string.Join(", ", versions)}."));
 
         return new Registry.Answer<string>(best, null);

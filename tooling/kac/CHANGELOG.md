@@ -20,18 +20,23 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **`kac restore` fetches the corpora a corpus declares it consumes.** A new `consumes:` block in `.corpus.yaml` names
-  each producing corpus, the shortcode it is cited by, the version range it is wanted at and the registry it is
-  published to. `restore` resolves each range, fetches the package `kac pack` sealed, and unpacks it under
-  `.imports/<shortcode>/`, which the template now gitignores. The version each range resolved to is written back onto
-  its own entry, so `.corpus.yaml` stays the one description of what a corpus is.
+  each producing corpus, the shortcode it is cited by, the version range it is wanted at and the source it comes from.
+  `restore` resolves each range, fetches the package `kac pack` sealed, and unpacks it under `.imports/<shortcode>/`,
+  which the template now gitignores. The version each range resolved to is written back onto its own entry, so
+  `.corpus.yaml` stays the one description of what a corpus is.
 
-  A range says `1.2.0` or `^1.2.0` and nothing else, and a caret never takes a prerelease. A lock the range still admits is taken without asking the
-  registry, so two restores of an unchanged descriptor write the same bytes. A run says what it fetched, at which
-  version, and which corpora were already current.
+  A `source:` names a registry's service index or a folder of packages. A folder holds the same sealed package a
+  registry serves, so a corpus consuming a sibling in its own repository needs no registry, no token and no release. A
+  path is relative to the corpus declaring it, as `upstream.url` is.
+
+  A range says `1.2.0` or `^1.2.0` and nothing else, and a caret never takes a prerelease. A lock the range still
+  admits is taken without asking the registry, so two restores of an unchanged descriptor write the same bytes. A run
+  says what it fetched, at which version, and which corpora were already current.
 
   A shortcode two entries both claim is refused naming both, as is a corpus two entries both consume, as is a package
-  whose own manifest is cited by a different shortcode from the one declared. `KAC_REGISTRY_TOKEN` in the environment carries a bearer token for a
-  private feed. `docs/cli/restore.md` documents the verb, and `docs/corpus-descriptor.md` the block.
+  whose own manifest is cited by a different shortcode from the one declared. `KAC_REGISTRY_TOKEN` in the environment
+  carries a bearer token for a private feed. `docs/cli/restore.md` documents the verb, and `docs/corpus-descriptor.md`
+  the block.
 
   Nothing yet fails when a restore has not run. `kac validate` does not read `.imports/` at all.
 

@@ -15,6 +15,7 @@ namespace kac.tests;
 public class RestoreTests
 {
     private const string Source = "https://feed.example/index.json";
+    private const string Shelf = "../engineering/.dist/package";
 
     [Fact]
     public void A_declaration_with_no_lock_takes_the_highest_version_its_range_admits()
@@ -281,10 +282,77 @@ public class RestoreTests
         Assert.Equal(Exporter.ManifestFile, step.Files[^1].Path);
     }
 
+    // A corpus consuming a sibling it builds beside itself, which is what the corpora under `examples/`
+    // do. The folder is the whole source: no service index is read and no token is needed.
+    [Fact]
+    public void A_folder_source_resolves_against_the_packages_the_folder_holds()
+    {
+        var asked = new List<string>();
+
+        var step = Assert.Single(Plan(
+            [Declared(range: "^0.1.0", source: Shelf)],
+            Watched(Feed(["0.9.0"]), asked),
+            folder: Packages(["0.1.0", "0.1.4", "0.2.0"])).Steps);
+
+        Assert.Equal("0.1.4", step.Version);
+        Assert.Empty(asked);
+    }
+
+    // A folder is listed rather than addressed, so the name is matched the way a registry matches an id
+    // and a version: without regard to case.
+    [Fact]
+    public void A_package_file_named_in_another_case_is_still_found()
+        => Assert.Equal("0.1.0", Assert.Single(Plan(
+            [Declared(range: "0.1.0", source: Shelf)],
+            Feed([]),
+            folder: Packages(["0.1.0"], named: v => $"Example-Engineering.{v}.NUPKG")).Steps).Version);
+
+    // The two forms a `source:` may take are both named, because a path with nothing on it and a
+    // mistyped URL land here alike.
+    [Fact]
+    public void A_source_naming_no_folder_is_refused_naming_both_forms_a_source_takes()
+    {
+        var problem = Assert.Single(Plan(
+            [Declared(source: "../nowhere")], Feed([]), folder: Packages(["0.1.0"])).Problems);
+
+        Assert.Contains("there is no folder at ../nowhere", problem, StringComparison.Ordinal);
+        Assert.Contains("service index", problem, StringComparison.Ordinal);
+    }
+
+    // A folder cannot be hiding the package behind a token, so the sentence a registry gets would send
+    // the reader after a credential that would change nothing. `kac pack` is what fills the folder.
+    [Fact]
+    public void A_folder_holding_no_package_names_the_command_that_fills_it()
+    {
+        var problem = Assert.Single(Plan(
+            [Declared(source: Shelf)],
+            Feed([]),
+            folder: Packages(["0.1.0"], id: "example-security")).Problems);
+
+        Assert.Contains("kac pack", problem, StringComparison.Ordinal);
+        Assert.DoesNotContain(Registry.TokenVariable, problem, StringComparison.Ordinal);
+    }
+
+    // The path through `Unpack` is the registry's own, so a package a folder served is held to every
+    // identity check one a registry served is.
+    [Fact]
+    public void A_package_a_folder_served_is_held_to_the_shortcode_it_stamped()
+    {
+        var problem = Assert.Single(Plan(
+            [Declared(source: Shelf)],
+            Feed([]),
+            folder: Packages(["0.1.0"], shortcode: "gov")).Problems);
+
+        Assert.Contains("cited as 'gov:' by its own manifest", problem, StringComparison.Ordinal);
+    }
+
     private static RestorePlan Plan(
         IReadOnlyList<Consumed> declared, Func<string, Fetched> feed,
-        Func<string, Imported?>? installed = null) =>
-        Restore.Plan(declared, new Registry(feed), installed ?? (_ => null));
+        Func<string, Imported?>? installed = null, FolderFeed? folder = null) =>
+        Restore.Plan(declared, new Registry(feed, folder ?? Empty), installed ?? (_ => null));
+
+    // A machine holding no folder at all, for the scenarios declaring a registry source.
+    private static readonly FolderFeed Empty = new(_ => null, _ => null);
 
     // A folder under `.imports/` holding one corpus at one version, whatever shortcode is asked about.
     private static Func<string, Imported?> Holding(string version, string corpus = "example-engineering") =>
@@ -294,8 +362,27 @@ public class RestoreTests
         string corpus = "example-engineering",
         string shortcode = "eng",
         string range = "0.1.0",
-        string? resolved = null) =>
-        new(corpus, shortcode, range, resolved, Source);
+        string? resolved = null,
+        string source = Source) =>
+        new(corpus, shortcode, range, resolved, source);
+
+    // A folder holding one package per version, under the names `kac pack` writes. Anything but `Shelf`
+    // is a path with no folder on it, which is the case a source pointing at nothing takes.
+    private static FolderFeed Packages(
+        string[] versions,
+        string id = "example-engineering",
+        string shortcode = "eng",
+        Func<string, string>? named = null)
+    {
+        var held = new Dictionary<string, byte[]>(StringComparer.Ordinal);
+
+        foreach (var version in versions)
+            held[(named ?? (v => $"{id}.{v}.nupkg"))(version)] = Package(id, shortcode, version, []);
+
+        return new FolderFeed(
+            source => source == Shelf ? [.. held.Keys] : null,
+            path => held.TryGetValue(Path.GetFileName(path), out var body) ? body : null);
+    }
 
     // A feed answering the three requests a restore makes: the service index, the version listing, and
     // the package itself at every version listed.

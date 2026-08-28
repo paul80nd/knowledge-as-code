@@ -17,7 +17,7 @@ kac restore [--no-color]
 One organisation often keeps its policies in one corpus, meaning one repository of knowledge records, and its teams'
 knowledge in several others. A team's corpus cites those policies without holding them. `restore` is what brings them
 in: it reads the `consumes:` block of [`.corpus.yaml`](../corpus-descriptor.md), fetches each corpus named there from
-the registry it is published to, and unpacks it under `.imports/<shortcode>/`.
+the source it declares, and unpacks it under `.imports/<shortcode>/`.
 
 What it fetches is the package [`pack`](pack.md) seals, so a consumer takes a released version rather than cloning the
 producer and reading whatever is on their default branch this afternoon.
@@ -43,8 +43,9 @@ consumes:
 ```
 
 `corpus` is the name the producer publishes under. `shortcode` is the word you cite it by, as the `eng` in
-`eng:pol-VURM.TIMEBOX`, and the producer owns its spelling. `source` is the registry's service index, which is the URL
-the producer pushes the package to.
+`eng:pol-VURM.TIMEBOX`, and the producer owns its spelling. `source` is where the package is fetched from, and it takes
+two forms: a registry's service index, which is the URL the producer pushes to, or a folder holding what a producer
+built.
 
 `version` is the range you mean, and it takes one of two forms. `0.1.0` is that version and no other. `^0.1.0` is the
 newest version that cannot have changed a meaning since: the same major, or below `1.0.0` the same minor, because a
@@ -52,6 +53,26 @@ newest version that cannot have changed a meaning since: the same major, or belo
 
 `resolved` is what the last restore actually took, and `restore` writes it. The range says what you meant and the lock
 says what your build used, so the two live on one entry rather than in a second file.
+
+#### Taking a package from a folder
+
+`source` also names a folder, which is what [`pack`](pack.md) fills at `.dist/package/`. A path is relative to the
+corpus declaring it, exactly as `upstream.url` is:
+
+```yaml
+consumes:
+  - corpus: example-engineering
+    shortcode: eng
+    version: ^0.1.0
+    source: ../engineering/.dist/package
+```
+
+Nothing else changes. The range resolves against the versions the folder holds, and what arrives is the same sealed
+package a registry would have served. So a corpus consuming a sibling in its own repository needs no registry, no token
+and no release.
+
+The producer has to have packed first. Run `kac export` and then `kac pack` in that corpus, and the folder holds a
+package to take.
 
 #### Reading a private feed
 
