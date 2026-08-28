@@ -307,6 +307,20 @@ public class RestoreTests
             Feed([]),
             folder: Packages(["0.1.0"], named: v => $"Example-Engineering.{v}.NUPKG")).Steps).Version);
 
+    // A package id may carry dots, so `example-engineering` is a prefix of a longer id a producer might
+    // build beside it. A version opens on a digit, and that is what keeps the sibling out.
+    [Fact]
+    public void A_longer_package_id_in_the_same_folder_is_not_read_as_a_version()
+    {
+        var problem = Assert.Single(Plan(
+            [Declared(source: Shelf)],
+            Feed([]),
+            folder: Packages(["0.1.0"], named: _ => "example-engineering.extras.0.1.0.nupkg")).Problems);
+
+        Assert.Contains("kac pack", problem, StringComparison.Ordinal);
+        Assert.DoesNotContain("extras", problem, StringComparison.Ordinal);
+    }
+
     // The two forms a `source:` may take are both named, because a path with nothing on it and a
     // mistyped URL land here alike.
     [Fact]

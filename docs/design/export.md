@@ -106,6 +106,20 @@ entry under `types` carries it once.
 "sections": { "Purpose": "summary", "Scope": "full", "Exceptions": "full" }
 ```
 
+### Each type names the two keys that address a part
+
+A part line's keys are the type's own words, so a consumer holding a corpus with a type it never adopted has no schema
+to read them from. Two of them are the ones any reader needs: which record a line belongs to, and which part of that
+record it is. The type's entry names both.
+
+```json
+"partsFile": "policies/clauses.jsonl", "recordKey": "record", "partKey": "part"
+```
+
+A consumer assuming a spelling would read a producer's parts as empty wherever that producer chose different words, and
+every citation into them would fail for a reason nothing states. Both keys are absent where the type keeps no parts, as
+`partsFile` is.
+
 ### `corpus` names the corpus and `shortcode` cites it
 
 `corpus` is what the corpus calls itself, which tells one export from another. `shortcode` is what a citation writes

@@ -22,6 +22,8 @@
       "parts": 5,
       "dir": "glossary",
       "partsFile": "glossary/terms.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
       "sections": {
         "Scope": "full"
       }
@@ -33,6 +35,8 @@
       "parts": 3,
       "dir": "policies",
       "partsFile": "policies/clauses.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
       "sections": {
         "Purpose": "summary",
         "Scope": "full",

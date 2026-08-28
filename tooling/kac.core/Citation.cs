@@ -16,6 +16,11 @@ public readonly record struct Citation(string? Scope, string Record, string? Par
     // The record with its scope and without its part, which is what resolving the first half asks about.
     public string Whole => (Scope is null ? "" : Scope + ":") + Record;
 
+    // The same citation under another scope, or under none. What a message about a misspelling has to
+    // suggest writing instead: dropping the part along with the scope would tell an author to replace a
+    // clause reference with a whole-record one.
+    public Citation In(string? scope) => this with { Scope = scope };
+
     // What the text says, whatever it says. Nothing here decides whether the scope names an import or
     // the record exists: this reads the form, and the validator answers for the meaning.
     public static Citation Read(string text)

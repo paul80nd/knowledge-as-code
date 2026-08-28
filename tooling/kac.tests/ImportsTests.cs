@@ -41,6 +41,27 @@ public class ImportsTests
     public void The_parts_file_is_not_read_as_a_record()
         => Assert.Single(Assert.Single(Loaded().Imports).Records);
 
+    // A type names its own part-line keys, so a producer calling them something else exports a package
+    // whose parts a consumer assuming the spelling would read as empty.
+    [Fact]
+    public void The_part_line_keys_are_read_from_what_the_producer_published()
+    {
+        var record = Assert.Single(
+            Assert.Single(Loaded(Files(recordKey: "policy", partKey: "clause")).Imports).Records);
+
+        Assert.Equal(["STORE", "ROTATE"], record.Parts);
+    }
+
+    // An export written before the manifest named them carries neither, and the two names every type
+    // has used are what it falls back to.
+    [Fact]
+    public void An_export_naming_no_part_line_keys_falls_back_to_record_and_part()
+    {
+        var record = Assert.Single(Assert.Single(Loaded(Files(publishKeys: false)).Imports).Records);
+
+        Assert.Equal(["STORE", "ROTATE"], record.Parts);
+    }
+
     // A type keeping no parts is told apart from a record carrying none, because the two earn different
     // sentences from `part-ref`.
     [Fact]
@@ -58,7 +79,27 @@ public class ImportsTests
 
         Assert.Empty(graph.Imports);
         Assert.Equal(["eng"], graph.NotRestored);
+        Assert.Empty(graph.Undeclared);
     }
+
+    // Nothing can ever answer to it, so passing over it would leave `import-restored` reporting clean on
+    // a declaration no restore could satisfy.
+    [Fact]
+    public void An_entry_naming_no_shortcode_is_reported_under_the_corpus_it_named()
+    {
+        var graph = Imports.Load(
+            [new Consumed("example-engineering", null, "^0.1.0", null, "../engineering")],
+            _ => null, _ => null);
+
+        Assert.Empty(graph.NotRestored);
+        Assert.Equal(["'example-engineering'"], graph.Undeclared);
+    }
+
+    // An entry short of both is named by where it sits, which is all there is to name it by.
+    [Fact]
+    public void An_entry_naming_neither_a_corpus_nor_a_shortcode_is_named_by_its_position()
+        => Assert.Equal(["entry 1"], Imports
+            .Load([new Consumed(null, null, null, null, null)], _ => null, _ => null).Undeclared);
 
     [Theory]
     [InlineData("eng:pol-VURM.TIMEBOX", "eng", "pol-VURM", "TIMEBOX")]
@@ -102,8 +143,16 @@ public class ImportsTests
 
     // One import's folder, as `restore` writes it: the manifest, one record, and the parts file the
     // manifest names. `partsFile: null` is the same corpus with a type that keeps no parts.
-    private static Dictionary<string, string> Files(string? partsFile = "policies/clauses.jsonl")
+    private static Dictionary<string, string> Files(
+        string? partsFile = "policies/clauses.jsonl",
+        string recordKey = "record",
+        string partKey = "part",
+        bool publishKeys = true)
     {
+        var keys = partsFile is null || !publishKeys
+            ? ""
+            : $", \"recordKey\": \"{recordKey}\", \"partKey\": \"{partKey}\"";
+
         var files = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["eng/manifest.json"] = $$"""
@@ -117,7 +166,7 @@ public class ImportsTests
                     {
                       "type": "policies",
                       "dir": "policies"
-                      {{(partsFile is null ? "" : $", \"partsFile\": \"{partsFile}\"")}}
+                      {{(partsFile is null ? "" : $", \"partsFile\": \"{partsFile}\"")}}{{keys}}
                     }
                   ]
                 }
@@ -133,9 +182,9 @@ public class ImportsTests
 
         if (partsFile is not null)
             files[$"eng/{partsFile}"] =
-                """{"record":"pol-SCRT","part":"STORE"}"""
+                $$"""{"{{recordKey}}":"pol-SCRT","{{partKey}}":"STORE"}"""
                 + "\n"
-                + """{"record":"pol-SCRT","part":"ROTATE"}"""
+                + $$"""{"{{recordKey}}":"pol-SCRT","{{partKey}}":"ROTATE"}"""
                 + "\n";
 
         return files;

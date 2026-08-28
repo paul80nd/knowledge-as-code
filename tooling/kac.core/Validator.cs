@@ -606,7 +606,12 @@ public static class Validator
                 var admitted = Admitted(spec, schema);
                 foreach (var targetId in d.FrontList(name))
                 {
-                    if (!byId.TryGetValue(targetId, out var target)) continue;
+                    // Read as a citation, because a ref field admits a scope and a part. A record in
+                    // another corpus carries no field pointing back into this one, so a scoped id is
+                    // nobody's to reciprocate and is left alone.
+                    var cited = Citation.Read(targetId);
+                    if (cited.Scope is not null) continue;
+                    if (!byId.TryGetValue(cited.Record, out var target)) continue;
 
                     // A target of the wrong type carries no counterpart field to answer with, so asking
                     // would report one fault twice: once as the wrong type, and once as a silence that
@@ -636,6 +641,13 @@ public static class Validator
             f.Add(new Finding(Corpus.Descriptor, null, Sev.Error, new CheckId("import-restored"),
                 $"`consumes:` declares '{shortcode}:' and {Restore.ImportsDir}/{shortcode}/ holds no "
                 + "export. Run `kac restore`."));
+
+        // An entry naming no shortcode names no folder either, so nothing could ever answer to it. The
+        // key it is short of is `restore`'s to name.
+        foreach (var named in imports.Undeclared)
+            f.Add(new Finding(Corpus.Descriptor, null, Sev.Error, new CheckId("import-restored"),
+                $"`consumes:` declares {named} without a shortcode, so it files under no folder and no "
+                + "citation can reach it. Run `kac restore`, which says which key is missing."));
     }
 
     // The three ways a citation names a record that exists and spells it wrong, and null where the
@@ -647,10 +659,10 @@ public static class Validator
     {
         Landing.NeedsScope =>
             $"'{citation}' names a record this corpus imports rather than holds. Write it as "
-            + $"'{landed.Scope}:{citation.Record}', so a reader can see which corpus owns it.",
+            + $"'{citation.In(landed.Scope)}', so a reader can see which corpus owns it.",
         Landing.NeedsNoScope =>
-            $"'{citation}' scopes a record this corpus holds itself. Write it as '{citation.Record}': "
-            + "two spellings of one id defeat every search anybody runs for it.",
+            $"'{citation}' scopes a record this corpus holds itself. Write it as "
+            + $"'{citation.In(null)}': two spellings of one id defeat every search anybody runs for it.",
         Landing.UnknownScope =>
             $"'{citation}' cites '{landed.Scope}:', and this corpus consumes nothing under that "
             + "shortcode. Declare it in `consumes:`, or correct the spelling.",

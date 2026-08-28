@@ -83,8 +83,16 @@ public record ExportPublishing(
 //
 // `Sections` is the fidelity each section travelled at. It belongs to the type rather than to any one
 // record, so it is stated here instead of onto every record the type wrote.
+//
+// `RecordKey` and `PartKey` name the two keys of a part line that address the part: which record it
+// belongs to, and which part of that record it is. They are published because a type names its own keys
+// and a consumer reading a type it never adopted has no schema to read them from. Assuming a spelling
+// would leave a producer whose type calls them something else exporting a valid package whose parts read
+// as empty, and every citation into them failing for a reason nothing states. Both are null where the
+// type keeps no parts, alongside `PartsFile`.
 public record ExportedType(
     string Type, int ShapeVersion, int Records, int Parts, string Dir, string? PartsFile,
+    string? RecordKey, string? PartKey,
     IReadOnlyDictionary<string, string> Sections);
 
 // One record, carrying what its type's `export:` block declares and nothing else. `Fields` and

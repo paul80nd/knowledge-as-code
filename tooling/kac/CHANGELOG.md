@@ -19,6 +19,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac export` names the two keys that address a part.** Each type's manifest entry gains `recordKey` and
+  `partKey`, naming which key of a part line says which record it belongs to and which part of that record it is. A
+  type names its own keys, so a consumer holding a corpus with a type it never adopted had no way to read them and had
+  to assume a spelling. Both are absent where the type keeps no parts, as `partsFile` is. `docs/design/export.md`
+  covers it.
+
 - **`kac validate` resolves a reference across a corpus boundary.** A citation carrying a producer's shortcode, as
   `eng:pol-VURM.TIMEBOX`, resolves against the export `kac restore` unpacked under `.imports/`. It is read in prose and
   in a field declaring a `ref:`, so `implements: eng:pol-VURM.TIMEBOX` names one clause rather than a whole policy, and
@@ -50,8 +56,6 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   whose own manifest is cited by a different shortcode from the one declared. `KAC_REGISTRY_TOKEN` in the environment
   carries a bearer token for a private feed. `docs/cli/restore.md` documents the verb, and `docs/corpus-descriptor.md`
   the block.
-
-  Nothing yet fails when a restore has not run. `kac validate` does not read `.imports/` at all.
 
 ## 0.14.0 - 2026-08-27
 

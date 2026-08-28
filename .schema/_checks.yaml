@@ -383,6 +383,18 @@ checks:
       reach nothing and be seen by nothing. The separator is legible in the single file and the
       resolution needs the whole corpus, so the two halves run in different passes.
 
+      A citation may carry a producer's shortcode, as `eng:pol-VURM.TIMEBOX`, and then resolves against
+      what `kac restore` unpacked under `.imports/`. An imported record may be cited whole that way,
+      because the scope is the author claiming the record is another corpus's and that claim is worth
+      checking. A record this corpus holds is never cited whole in a code span, since holding every
+      mention of an id to resolving would report the identity line under every title in the corpus.
+
+      Three more ways it fails, each about the spelling rather than the record: a bare id naming a
+      record this corpus imports, a scoped id naming one it holds, and a shortcode it consumes nothing
+      under. The first two say the spelling to write instead, because a reader told the record does not
+      exist goes looking for a record that is exactly where they left it. A citation into an import that
+      has not been restored reports nothing here, and `import-restored` says it once instead.
+
   ref-resolves:
     severity: error
     description: An id in a field declaring a `ref:` names a document that exists, of a type the `ref:` names.
@@ -392,6 +404,11 @@ checks:
       it the edge with least behind it. The wrong type is the quieter fault: it lands on a real page, so
       it reads as intentional and whatever walks the edge afterwards takes it at its word. A literal the
       field admits, such as `applies-to: [all]`, is not an id and is skipped.
+
+      A field may reach a part and may carry a scope, as `implements: eng:pol-VURM.TIMEBOX`. Both halves
+      of a part-level id are asked, because half an obligation is not an obligation and a coverage report
+      walks these edges. The spelling faults `part-ref` reports across a boundary are reported here too,
+      in the same words, since one lookup answers a citation in prose and one in a field.
 
   reciprocal:
     severity: error

@@ -150,6 +150,11 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
 
     // The version inside a package's file name, and null where the name belongs to another package or to
     // no package at all. `kac pack` writes `<id>.<version>.nupkg`.
+    //
+    // A version opens on a digit, and asking that is what keeps a longer id out. `Acme.Core` is a prefix
+    // of `Acme.Core.Abstractions`, so without it a sibling package in the same folder reads as a version
+    // of this one. Resolution refuses the string either way, and the refusal would have named a version
+    // nobody published rather than saying the folder holds nothing.
     private static string? VersionIn(string name, string id)
     {
         const string suffix = ".nupkg";
@@ -159,7 +164,7 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
         if (!name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) return null;
 
         var version = name[prefix.Length..^suffix.Length];
-        return version.Length > 0 ? version : null;
+        return version.Length > 0 && version[0] is >= '0' and <= '9' ? version : null;
     }
 
     private static string NoFolder(string source) =>

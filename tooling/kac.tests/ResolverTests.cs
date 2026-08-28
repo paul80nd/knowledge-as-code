@@ -37,14 +37,14 @@ public class ResolverTests
     public void A_bare_id_naming_an_imported_record_is_told_the_scope_to_write()
         => Assert.Equal(
             "'pol-SCRT.STORE' names a record this corpus imports rather than holds. Write it as "
-            + "'eng:pol-SCRT', so a reader can see which corpus owns it.",
+            + "'eng:pol-SCRT.STORE', so a reader can see which corpus owns it.",
             Assert.Single(Cite("`pol-SCRT.STORE`")).Message);
 
     [Fact]
     public void A_scoped_id_naming_a_record_this_corpus_holds_is_told_to_drop_the_scope()
         => Assert.Equal(
-            "'eng:pol-LOCAL.HERE' scopes a record this corpus holds itself. Write it as 'pol-LOCAL': "
-            + "two spellings of one id defeat every search anybody runs for it.",
+            "'eng:pol-LOCAL.HERE' scopes a record this corpus holds itself. Write it as "
+            + "'pol-LOCAL.HERE': two spellings of one id defeat every search anybody runs for it.",
             Assert.Single(Cite("`eng:pol-LOCAL.HERE`")).Message);
 
     [Fact]
@@ -88,6 +88,19 @@ public class ResolverTests
         => Assert.Contains("consumes nothing under that shortcode",
             Assert.Single(Implements("gov:pol-SCRT")).Message);
 
+    // `byId` compares an id without regard to case, so an imported one is compared the same way. A
+    // stricter reading here would report a record that is exactly where the reader left it as absent.
+    [Fact]
+    public void A_mis_cased_imported_id_resolves_as_a_mis_cased_local_one_does()
+        => Assert.Empty(Cite("`eng:pol-scrt.STORE`"));
+
+    // The prefix stays lower case, because `PartCitationRegex` never sees a citation that mis-cases it.
+    // What the id says after the prefix is what this reads without regard to case.
+    [Fact]
+    public void A_mis_cased_bare_id_is_still_told_the_scope_to_write()
+        => Assert.Contains("Write it as 'eng:pol-scrt.STORE'",
+            Assert.Single(Cite("`pol-scrt.STORE`")).Message);
+
     // A corpus standing on its own is the ordinary case, and none of the rules above reach it.
     [Fact]
     public void A_corpus_importing_nothing_reads_a_bare_citation_exactly_as_before()
@@ -128,7 +141,7 @@ public class ResolverTests
                 new ImportedRecord("pol-SCRT", "policies", "policies/scrt.md", true, ["STORE", "ROTATE"]),
                 new ImportedRecord("svc-GATE", "services", "services/gate.md", false, [])
             ])
-        ], []);
+        ], [], []);
 
     // Two types, and the parts declaration is what gives a message the word "clause" rather than "part".
     private static Schema Schema()

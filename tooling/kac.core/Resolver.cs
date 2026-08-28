@@ -67,16 +67,20 @@ public sealed record Landed(Landing How, Doc? Local, ImportedRecord? Imported, s
 // records: two spellings of one obligation defeat every search anybody runs for it.
 public sealed class Resolver
 {
+    // Case-insensitive throughout, because `byId` is: an id that resolves when this corpus wrote the
+    // record has to resolve when another corpus did. `id-unique` reports a collision the same way, so a
+    // stricter comparison here would report a mis-cased import as a record that does not exist and send
+    // the reader looking for one that is where they left it.
     private readonly Dictionary<string, Doc> _local;
-    private readonly Dictionary<string, ImportedRecord> _imported = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, string> _scopes = new(StringComparer.Ordinal);
-    private readonly HashSet<string> _shortcodes = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, ImportedRecord> _imported = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _scopes = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _shortcodes = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _pending;
 
     public Resolver(Dictionary<string, Doc> local, ImportGraph imports)
     {
         _local = local;
-        _pending = [.. imports.NotRestored];
+        _pending = new HashSet<string>(imports.NotRestored, StringComparer.OrdinalIgnoreCase);
 
         foreach (var import in imports.Imports)
         {

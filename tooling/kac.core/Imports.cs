@@ -20,12 +20,19 @@ public sealed record ImportedRecord(
 public sealed record Import(
     string Shortcode, string Corpus, string Version, string? Link, IReadOnlyList<ImportedRecord> Records);
 
-// What `.imports/` answered for what `consumes:` declared. `NotRestored` names each shortcode whose
-// declaration stands and whose folder does not, which `validate` reports rather than works around.
-public sealed record ImportGraph(IReadOnlyList<Import> Imports, IReadOnlyList<string> NotRestored)
+// What `.imports/` answered for what `consumes:` declared, which `validate` reports rather than works
+// around.
+//
+// `NotRestored` holds the shortcode of each declaration whose folder does not stand. `Undeclared` holds
+// the entries that named no shortcode at all: they have no folder to look in, so no citation could reach
+// one, and each is named by its corpus or by its position.
+public sealed record ImportGraph(
+    IReadOnlyList<Import> Imports,
+    IReadOnlyList<string> NotRestored,
+    IReadOnlyList<string> Undeclared)
 {
     // A corpus standing on its own, which is the ordinary case and pays nothing for this.
-    public static readonly ImportGraph None = new([], []);
+    public static readonly ImportGraph None = new([], [], []);
 }
 
 // The exports a corpus imported, read from the folders `kac restore` unpacked them into.
@@ -50,18 +57,25 @@ public static class Imports
     {
         var imports = new List<Import>();
         var missing = new List<string>();
+        var nameless = new List<string>();
 
-        foreach (var entry in declared)
+        for (var i = 0; i < declared.Count; i++)
         {
-            // A declaration too broken to name a folder is `restore`'s to refuse, and it says so in
-            // sentences this pass has no business repeating.
-            if (entry.Shortcode is not { } shortcode) continue;
+            // An entry naming no shortcode has no folder to look in, so it can never be restored. Why
+            // the declaration is wrong is `restore`'s to say, in sentences naming the key it wants. What
+            // is said here is that the entry stands and nothing answers to it, which is this check's own
+            // question and would otherwise pass in silence.
+            if (declared[i].Shortcode is not { } shortcode)
+            {
+                nameless.Add(declared[i].Corpus is { } corpus ? $"'{corpus}'" : $"entry {i + 1}");
+                continue;
+            }
 
             if (Read(shortcode, names, read) is { } import) imports.Add(import);
             else missing.Add(shortcode);
         }
 
-        return new ImportGraph(imports, missing);
+        return new ImportGraph(imports, missing, nameless);
     }
 
     // One folder read whole, or null where it holds no manifest. The manifest is the last file a restore
@@ -81,9 +95,17 @@ public static class Imports
             if (JsonRead.Str(type?["dir"]) is not { } dir) continue;
 
             var partsFile = JsonRead.Str(type?["partsFile"]);
+
+            // The keys a part line addresses itself by are the producing type's own words, so they are
+            // read from what it published rather than assumed. `Json.cs` says why the export carries
+            // them. An export written before it did carries neither, and the two names every type has
+            // used are what it falls back to.
             var parts = partsFile is null
                 ? []
-                : PartsIn(read($"{shortcode}/{partsFile}"));
+                : PartsIn(
+                    read($"{shortcode}/{partsFile}"),
+                    JsonRead.Str(type?["recordKey"]) ?? "record",
+                    JsonRead.Str(type?["partKey"]) ?? "part");
 
             records.AddRange(RecordsIn(shortcode, key, dir, partsFile, parts, names, read));
         }
@@ -129,17 +151,17 @@ public static class Imports
     // The parts each record carries, in the order the file lists them. A parts file is one JSON object
     // per line, so a line this build cannot read is skipped rather than failing the whole import: the
     // producer's export is held to its own shape by the producer's own build.
-    private static Dictionary<string, List<string>> PartsIn(string? text)
+    private static Dictionary<string, List<string>> PartsIn(string? text, string recordKey, string partKey)
     {
-        var parts = new Dictionary<string, List<string>>(StringComparer.Ordinal);
+        var parts = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
         if (text is null) return parts;
 
         foreach (var line in text.Split('\n'))
         {
             if (line.Length == 0) continue;
             if (JsonRead.Parse(line) is not { } part) continue;
-            if (JsonRead.Str(part["record"]) is not { } record) continue;
-            if (JsonRead.Str(part["part"]) is not { } id) continue;
+            if (JsonRead.Str(part[recordKey]) is not { } record) continue;
+            if (JsonRead.Str(part[partKey]) is not { } id) continue;
 
             if (!parts.TryGetValue(record, out var carried)) parts[record] = carried = [];
             carried.Add(id);
