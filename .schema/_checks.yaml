@@ -525,11 +525,15 @@ checks:
   import-unreachable:
     severity: info
     on-type-page: false
-    description: A source named in `consumes:` could not be asked what it publishes.
+    description: A lock in `consumes:` could not be checked against what its source publishes.
     notes: >
       A run behind a firewall, without the token a private feed wants, or against a folder that is not
       there, cannot tell a current lock from a stale one. Saying so is the alternative to reporting every
       import as current, which would be the one answer that reads as an assurance.
+
+      A source answering with no versions at all reports here too, rather than as a lock that is current.
+      A registry answers a private feed's anonymous reader exactly as it answers a package nobody has
+      published, and neither answer says the locked version is the newest there is.
 
       Information rather than a warning. The corpus is not at fault and no edit to it would help, and a
       pipeline with no reason to reach a registry should not go yellow for declining to.

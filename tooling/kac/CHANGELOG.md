@@ -30,7 +30,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   reads as unchecked rather than as current. None of the three fails the build, because failing on somebody else's
   release would turn every downstream red the day a governance corpus ships.
 
-  A corpus with no `consumes:` block reads no source and builds no client.
+  A source answering with no versions at all reports as unreachable rather than as current, because a registry
+  answers a private feed's anonymous reader exactly as it answers a package nobody has published. A corpus with no
+  `consumes:` block reads no source and builds no client, and every other check still reads the working tree alone.
 
 - **A third severity, `info`.** `kac validate` counts it in its summary line and in `--json`, where
   `summary.infos` is new, and `kac checks` tallies it apart from the warnings. Neither a warning nor an info changes

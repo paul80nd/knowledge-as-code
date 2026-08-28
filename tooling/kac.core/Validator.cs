@@ -684,7 +684,7 @@ public static class Validator
 
                 case Standing.Unreachable:
                     f.Add(new Finding(Corpus.Descriptor, null, Sev.Info, new CheckId("import-unreachable"),
-                        $"could not ask what '{s.Shortcode}:' publishes, so {s.Locked} is unchecked "
+                        $"could not check what '{s.Shortcode}:' publishes, so {s.Locked} is unchecked "
                         + $"rather than current. {s.Problem}"));
                     break;
             }

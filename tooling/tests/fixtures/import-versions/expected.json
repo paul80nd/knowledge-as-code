@@ -48,7 +48,7 @@
       "line": null,
       "severity": "info",
       "check": "import-unreachable",
-      "message": "could not ask what 'ops:' publishes, so 0.1.1 is unchecked rather than current. there is no folder at nowhere. `source:` names either a registry's service index or a folder holding the packages a producer built."
+      "message": "could not check what 'ops:' publishes, so 0.1.1 is unchecked rather than current. there is no folder at nowhere. `source:` names either a registry's service index or a folder holding the packages a producer built."
     }
   ]
 }

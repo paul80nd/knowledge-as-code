@@ -36,7 +36,7 @@ public static class Freshness
     //
     // An entry short of a shortcode, a range or a source is skipped in silence: `restore` refuses it by
     // name, in sentences saying which key is missing. An entry with no `resolved:` is skipped too, having
-    // no locked version to hold anything against.
+    // no locked version to hold anything against, and so is one whose range has moved past its lock.
     public static List<ImportStanding> Read(IReadOnlyList<Consumed> declared, Registry registry)
     {
         var standings = new List<ImportStanding>();
@@ -49,11 +49,27 @@ public static class Freshness
             if (entry.Source is not { } source) continue;
             if (entry.Corpus is not { } corpus) continue;
 
+            // A lock its own range no longer admits is about to move, and downwards as readily as up: the
+            // next restore re-resolves it, because the range has been narrowed since. Nothing said about
+            // it now would still be true afterwards.
+            if (!VersionRange.Admits(range, locked)) continue;
+
             var published = registry.Versions(source, corpus);
             if (published.Value is not { } versions)
             {
                 standings.Add(new ImportStanding(
                     shortcode, range, locked, Standing.Unreachable, null, published.Problem));
+                continue;
+            }
+
+            // An empty listing is not a current lock. A feed answers 404 both for a package nobody has
+            // published and for a private one refusing an anonymous read, and `Registry` says the two are
+            // not tellable apart there. A folder answering none has not been packed into. None of the
+            // three says the locked version is the newest there is, so none of them may read as current.
+            if (versions.Count == 0)
+            {
+                standings.Add(new ImportStanding(
+                    shortcode, range, locked, Standing.Unreachable, null, Registry.Absent(source)));
                 continue;
             }
 

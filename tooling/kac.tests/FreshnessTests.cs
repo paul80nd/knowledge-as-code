@@ -51,6 +51,26 @@ public class FreshnessTests
     public void An_exact_range_holding_an_older_version_is_capped()
         => Assert.Equal(Standing.Capped, Read(range: "0.1.1", resolved: "0.1.1", holds: ["0.1.2"]).How);
 
+    // A feed answers 404 both for a package nobody published and for a private one refusing an anonymous
+    // read, and `Registry` returns an empty listing for it. Reading that as current is the one answer that
+    // would pass for an assurance. The words are `Registry.Absent`'s, which says a different sentence for
+    // a folder than for a registry.
+    [Fact]
+    public void A_source_listing_no_versions_at_all_is_unreachable()
+    {
+        var standing = Read(resolved: "0.1.1", holds: []);
+
+        Assert.Equal(Standing.Unreachable, standing.How);
+        Assert.Equal(Registry.Absent(Shelf), standing.Problem);
+    }
+
+    // The next restore re-resolves this one, downwards, so calling it capped would name a version the
+    // corpus is about to move away from and offer a choice it does not have.
+    [Fact]
+    public void A_lock_its_own_range_no_longer_admits_is_passed_over()
+        => Assert.Empty(Freshness.Read(
+            [Declared(range: "0.1.1", resolved: "0.2.0")], Feed(["0.1.1", "0.2.0", "0.3.0"])));
+
     [Fact]
     public void A_source_that_could_not_be_asked_is_unreachable()
     {

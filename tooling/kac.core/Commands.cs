@@ -26,7 +26,11 @@ public static class Commands
     {
         if (descriptor.Consumes.Count == 0) return null;
 
-        using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
+        // Shorter than the two minutes `restore` allows itself. That one fetches packages and is run when
+        // somebody means to wait; this reads one small index per source, on a command run after every
+        // edit. A source that never answers costs each of its imports this and then reports
+        // `import-unreachable`, so the wait is bounded by the number of entries rather than by a hang.
+        using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
         return Freshness.Read(descriptor.Consumes,
             new Registry(Registry.Over(client), Registry.OnDisk(corpusRoot)));
     }

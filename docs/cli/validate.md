@@ -126,6 +126,10 @@ validates cleanly. A green run says the corpus is consistent rather than that it
 `*.md` instead, which honours no exclude file, so a Markdown file the corpus had ignored is discovered and validated.
 [Discovery](../design/discovery.md#the-fallback-walk-honours-nothing) says what that changes.
 
+**It reaches the network where your corpus consumes another.** Every other check reads your working tree, and this one
+asks each source in `consumes:` what it publishes. A source that does not answer within twenty seconds reports
+`import-unreachable` and the run carries on. A corpus with no `consumes:` block opens no connection at all.
+
 **`immutable-after-accepted` needs git history and does not run.** Whether the content of an accepted document changed
 is a question about a diff, and this command reads a working tree.
 
