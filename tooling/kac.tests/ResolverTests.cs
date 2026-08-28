@@ -77,6 +77,13 @@ public class ResolverTests
             Assert.Single(Implements("eng:svc-GATE")).Message);
 
     [Fact]
+    public void A_ref_field_holding_a_bare_imported_id_is_told_the_scope_to_write()
+        => Assert.Equal(
+            "'implements': 'pol-SCRT' names a record this corpus imports rather than holds. Write it as "
+            + "'eng:pol-SCRT', so a reader can see which corpus owns it.",
+            Assert.Single(Implements("pol-SCRT")).Message);
+
+    [Fact]
     public void A_ref_field_reports_a_scope_naming_no_import()
         => Assert.Contains("consumes nothing under that shortcode",
             Assert.Single(Implements("gov:pol-SCRT")).Message);
