@@ -133,10 +133,14 @@ public record ExportedType(
 // Absent is `null` throughout, here and on every line of the flat file. `Exporter.Absent` is where that
 // is decided. A section carried at `reference` is `null` for that reason, and a section the record never
 // wrote is absent from the map instead: two absences answering different questions about the record.
+//
+// A field's value is JSON because a field its type declares as a list travels as an array.
+// `Exporter.Value` reads the shape off that declaration, so one key holds one shape on every record of
+// the type and a consumer never branches on what an individual record wrote.
 public record ExportRecord(
     string Type,
     string Path,
-    IReadOnlyDictionary<string, string?> Fields,
+    IReadOnlyDictionary<string, JsonNode?> Fields,
     IReadOnlyDictionary<string, string?> Sections,
     ExportLinks? Links);
 

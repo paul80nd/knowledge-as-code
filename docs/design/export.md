@@ -16,7 +16,8 @@ exporter reads that declaration and nothing else, so a corpus adopting a new typ
 
 Three keys select what a record sends:
 
-* **`fields:`** is a plain list. A field travels whole or not at all.
+* **`fields:`** is a plain list. A field travels whole or not at all, and in the shape its type declared: a list as a
+  JSON array, anything else as a string.
 * **`sections:`** names each section beside a **fidelity**, saying how much of that section travels.
 * **`parts:`** names the keys of one part's line, and the fidelity that entry carries.
 
@@ -196,7 +197,14 @@ nobody reviews is invisible.
 
 **Absent is `null`.** Every key writes it that way. A field a record leaves blank and a field it does not carry are one
 absence to a consumer, and `""` in one file beside `null` in another would leave that consumer checking which file it
-had opened before it could test for nothing.
+had opened before it could test for nothing. A list a record left empty is that same absence, so no key arrives as `[]`.
+
+**A list field's shape comes from the type, not from the record.** A field its type declares as a list is a JSON array
+in every record file that carries anything under it, so a consumer reads one key one way across every record of the
+type.
+
+Where the type declares those entries as objects, each entry carries the keys that declaration names. An entry key
+holding a list of its own is an array inside it, so an entry naming a framework and the clauses it maps to carries both.
 
 **Prose arrives unwrapped.** The corpus wraps at 120 columns, which is a fact about the file rather than about the
 words, and a grep for a phrase straddling the wrap would find nothing. Blank lines are the author's and stay.
@@ -325,8 +333,9 @@ exporter rather than declared by any one type's `export:` block. How a link is b
 
 ## What a type cannot say
 
-**An exported field is a scalar.** `export.fields:` reads each name as one value, so a field the record writes as a
-list arrives as `null`. A policy's `aligns-with` is that case, and it stays out of the block for that reason.
+**A part line carries no list.** A `line:` key reading `front.<field>` takes one value, so a type naming a list field
+there writes `null` on every line of the flat file. The record file carries that same field as an array, which is where
+a consumer reads it.
 
 **A clause carries no framework alignment.** A policy states one in the `Alignment` cell of the clause it qualifies,
 and that reference resolves through the corpus's own `frameworks.md`, which says whether the corpus is obliged to the

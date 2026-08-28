@@ -294,6 +294,47 @@ public class ExporterTests
     }
 
     [Fact]
+    public void A_field_the_type_declares_as_a_list_travels_as_an_array()
+    {
+        var fields = Fields(ListType(), "gls-one", "tags: [ search, discovery ]");
+
+        Assert.Equal(JsonValueKind.Array, fields.GetProperty("tags").ValueKind);
+        Assert.Equal(["search", "discovery"], fields.GetProperty("tags").EnumerateArray().Select(e => e.GetString()));
+    }
+
+    // A shape `list` refuses, read here anyway so the export never disagrees with `Doc.FrontList` about
+    // what a field holds.
+    [Fact]
+    public void A_list_written_as_one_scalar_travels_as_an_array_of_one()
+    {
+        var fields = Fields(ListType(), "gls-one", "tags: search");
+
+        Assert.Equal(["search"], fields.GetProperty("tags").EnumerateArray().Select(e => e.GetString()));
+    }
+
+    // `[]` beside `null` would give a consumer two spellings of the same absence to branch on.
+    [Fact]
+    public void A_list_left_empty_is_null_and_never_an_empty_array()
+    {
+        var fields = Fields(ListType(), "gls-one", "tags:");
+
+        Assert.Equal(JsonValueKind.Null, fields.GetProperty("tags").ValueKind);
+    }
+
+    // The reading `Doc.FrontEntries` cannot give: it takes the key naming an entry, which is all a table
+    // cell has room for, so a roll-up read that way would carry the framework and drop the references.
+    [Fact]
+    public void An_object_entry_carries_the_keys_its_type_declares()
+    {
+        var fields = Fields(ObjectListType(), "gls-one",
+            "aligns-with:\n  - framework: ISO27001\n    clauses: [ A.8.24, A.8.8 ]");
+
+        var entry = Assert.Single(fields.GetProperty("aligns-with").EnumerateArray().ToList());
+        Assert.Equal("ISO27001", entry.GetProperty("framework").GetString());
+        Assert.Equal(["A.8.24", "A.8.8"], entry.GetProperty("clauses").EnumerateArray().Select(e => e.GetString()));
+    }
+
+    [Fact]
     public void A_record_carries_the_fields_and_sections_its_type_declares_and_no_others()
     {
         var record = JsonDocument.Parse(
@@ -744,6 +785,65 @@ public class ExporterTests
         $"---\nid: {id}\ntier: descriptive\nstatus: {status}\nowner: someone\n"
         + $"narrows: {narrows}\nreview-by: \"{reviewBy}\"\n---\n\n"
         + $"# {id}\n\n## Scope\n\n{scope}\n\n## Terms\n\n{terms}";
+
+    // The `fields` object of one record, over a type and one line of extra frontmatter. The line sits
+    // last, because `key-order` is the corpus's business and nothing here reads it.
+    private static JsonElement Fields(TypeSchema type, string id, string extra)
+    {
+        var text = $"---\nid: {id}\ntier: descriptive\nstatus: draft\nowner: someone\n"
+                   + $"review-by: \"2030-01-01\"\n{extra}\n---\n\n"
+                   + $"# {id}\n\n## Scope\n\nWhat this admits.\n\n## Terms\n\n### Alpha\n\nA.\n";
+
+        return JsonDocument.Parse(Single(Plan(Corpus(type, (id, text))), $"glossary/{id}.json").Content)
+            .RootElement.GetProperty("fields");
+    }
+
+    // A glossary declaring `tags` as a list of strings and exporting it.
+    private static TypeSchema ListType() => FieldType("tags", new FieldSpec
+    {
+        Name = "tags",
+        Type = "list",
+        Of = "string"
+    });
+
+    // A glossary declaring the shape a policy's `aligns-with` has: a list whose entries are objects, one
+    // key naming the entry and one holding a list of its own.
+    private static TypeSchema ObjectListType() => FieldType("aligns-with", new FieldSpec
+    {
+        Name = "aligns-with",
+        Type = "list",
+        Of = "object",
+        Entry =
+        [
+            new FieldSpec { Name = "framework", Type = "string" },
+            new FieldSpec { Name = "clauses", Type = "list", Of = "string" }
+        ]
+    });
+
+    private static TypeSchema FieldType(string name, FieldSpec spec)
+    {
+        var type = GlossaryType();
+        return new TypeSchema
+        {
+            Key = type.Key,
+            TypeName = type.TypeName,
+            Folder = type.Folder,
+            Page = type.Page,
+            IdPrefix = type.IdPrefix,
+            RequiredSections = type.RequiredSections,
+            Parts = type.Parts,
+            Fields = new Dictionary<string, FieldSpec>(StringComparer.Ordinal) { [name] = spec },
+            Export = new ExportSpec
+            {
+                Version = type.Export!.Version,
+                Fields = [name],
+                Sections = type.Export.Sections,
+                Parts = type.Export.Parts,
+                PartsDeclared = type.Export.PartsDeclared,
+                Line = type.Export.Line
+            }
+        };
+    }
 
     // A loaded corpus holding the glossaries given, in the order given. That is deliberately not the
     // order the export writes them in, so a passing ordering test is not reading its input back.

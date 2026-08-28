@@ -28,6 +28,10 @@ refused.
 **Wrapped prose and a paragraph break.** `gls-estate` carries a `**Not:**` line wrapped across two source lines, and a
 `Scope` of two paragraphs. The export joins the first and keeps the second, which is the whole of the unwrap rule.
 
+**Three shapes of one list field.** `tags` is declared as a list and exported, and the three glossaries write it three
+ways. `gls-search` carries two entries, `gls-estate` carries one, and `gls-framework` carries none, so the export writes
+an array of two, an array of one and `null`.
+
 **A second type, taking its parts from a table.** `pol-RTNT` is an ordinary policy: three clauses under `Clauses`, the
 binding two bold and the advisory one plain. It is here because a glossary cannot show what a table source does
 differently.

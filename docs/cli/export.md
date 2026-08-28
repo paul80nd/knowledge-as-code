@@ -68,10 +68,7 @@ Commit first where you are about to publish the result.
 **It is not a backup.** A record travels as the fields and sections its type declared, so a corpus cannot be rebuilt
 from an export of it. `.dist/export/` is rebuilt whole from the corpus, and never the other way.
 
-**An exported field is a scalar.** A field the record writes as a list arrives as `null`. A policy's `aligns-with` is
-that case, and stays out of the block for that reason.
-
-**Three more limits belong to a type's declaration rather than to this command.**
+**Four limits belong to a type's declaration rather than to this command.**
 [The export format](../design/export.md#what-a-type-cannot-say) states each one and what it costs a consumer.
 
 Two commands read what this writes. [`bundle`](bundle.md) assembles it into a plugin an agent installs, and

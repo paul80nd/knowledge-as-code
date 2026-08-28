@@ -19,6 +19,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **`kac export` carries a field its type declares as a list.** Every such field was written as `null` on every record,
+  which reads exactly as a record that holds nothing. A list now travels as a JSON array, and an entry the type
+  declares as an object carries the keys that declaration names. A list a record left empty stays `null`, beside the
+  field it never wrote. `docs/design/export.md` states the shape.
+
+- **The glossary exports `tags`.** It is the first field to travel as a list. A consumer holding a vendored glossary
+  can filter its records by subject without reading each `Scope`. The key lands on `glossary/<record>.json`, and a term
+  line in `terms.jsonl` carries no `tags`.
+
 - **`kac new` no longer sends a corpus a link to a type it declined.** A type's root page and its `_template.md` name
   the other types and link to them, which is what makes a full corpus navigable and what left a corpus adopting a subset
   holding dead links. Each page is now unlinked as it is written: a reference to a declined type keeps its own wording

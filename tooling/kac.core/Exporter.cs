@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 
@@ -66,7 +67,8 @@ public static class Exporter
             if (records.Count == 0) continue;
 
             foreach (var doc in records)
-                files.Add(new ExportFile($"{t.Key}/{Id(doc)}.json", Serialize(Record(doc, t, publishing))));
+                files.Add(new ExportFile($"{t.Key}/{Id(doc)}.json",
+                    Serialize(Record(doc, t, corpus.Schema, publishing))));
 
             var parts = export.Parts.Length > 0 && t.Parts is not null
                 ? PartsFile(records, t, corpus.Tree, unread)
@@ -205,14 +207,16 @@ public static class Exporter
         }
     }
 
-    private static ExportRecord Record(Doc doc, TypeSchema t, Publishing? publishing)
+    private static ExportRecord Record(Doc doc, TypeSchema t, Schema schema, Publishing? publishing)
     {
         var export = t.Export!;
         var link = publishing?.Link(doc.Rel);
 
-        var fields = new Dictionary<string, string?>(StringComparer.Ordinal);
+        var fields = new Dictionary<string, JsonNode?>(StringComparer.Ordinal);
         foreach (var name in export.Fields)
-            fields[name] = Absent(name == Generator.Title ? doc.H1 : doc.FrontScalar(name));
+            fields[name] = name == Generator.Title
+                ? JsonValue.Create(Absent(doc.H1))
+                : Value(doc.FrontNode(name), schema.EffectiveField(t, name));
 
         var sections = new Dictionary<string, string?>(StringComparer.Ordinal);
         foreach (var (name, fidelity) in export.Sections)
@@ -259,6 +263,54 @@ public static class Exporter
             ExportSpec.Summary => text.Split("\n\n", 2)[0],
             _ => text
         };
+    }
+
+    // One declared field as JSON, in the shape its type declared. A field declared as a list is an array
+    // however the record wrote it, so `depends-on: svc-a` and `depends-on: [svc-a]` both reach a consumer
+    // as an array of one entry. Everything else is the scalar, which is what `string`, `date`, `enum` and
+    // `id` all come to here.
+    //
+    // The declaration decides the shape because a consumer holds the declaration and reads one key one
+    // way. A shape read off the document would vary record by record. `docs/design/export.md` states it.
+    private static JsonNode? Value(YamlNode? node, FieldSpec? spec)
+    {
+        if (spec?.Type != "list") return JsonValue.Create(Absent((node as YamlScalarNode)?.Value));
+
+        // A list written as one scalar is the one-entry case, as `Doc.FrontList` reads it. `list` refuses
+        // that shape, so the corpus is one `validate` already reports, and reading it the second way here
+        // keeps the two accounts of a field the same.
+        //
+        // An empty list arrives as `null` beside the absent field, because `Absent` spells every absence
+        // one way and a consumer meeting `[]` as well would have a second question about the same record.
+        IEnumerable<YamlNode> items = node switch
+        {
+            YamlSequenceNode seq => seq.Children,
+            null => [],
+            _ => [node]
+        };
+
+        var array = new JsonArray();
+        foreach (var item in items)
+            if (Entry(item, spec) is { } entry) array.Add(entry);
+
+        return array.Count > 0 ? array : null;
+    }
+
+    // One entry of a list. A scalar entry is its own value, and an entry the type declares as an object
+    // carries the keys that declaration names, each read back through `Value` so a key holding a list of
+    // its own travels as an array too.
+    //
+    // An entry written in the other shape is dropped. `entry-shape` reports it, so the corpus is one
+    // `validate` already refuses, and a guess here would hand a consumer a second reading of that record.
+    private static JsonNode? Entry(YamlNode node, FieldSpec spec)
+    {
+        if (spec.Of != "object") return JsonValue.Create(Absent((node as YamlScalarNode)?.Value));
+        if (node is not YamlMappingNode map || spec.Entry is null) return null;
+
+        var obj = new JsonObject();
+        foreach (var key in spec.Entry) obj[key.Name] = Value(Yaml.Get(map, key.Name), key);
+
+        return obj;
     }
 
     // Every absent value an export writes, spelled one way. A corpus writing `narrows:` with nothing

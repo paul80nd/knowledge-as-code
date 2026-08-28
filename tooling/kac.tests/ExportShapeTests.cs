@@ -19,7 +19,7 @@ public class ExportShapeTests
     private const string Pinned =
         """
         glossary@1
-          fields: id, title, narrows, status, review-by
+          fields: id, title, narrows, status, review-by, tags
           sections: Scope=full
           parts: full
             id: part.id

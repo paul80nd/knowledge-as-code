@@ -6,7 +6,10 @@
     "title": "Estate",
     "narrows": null,
     "status": "draft",
-    "review-by": "2030-01-01"
+    "review-by": "2030-01-01",
+    "tags": [
+      "estate"
+    ]
   },
   "sections": {
     "Scope": "What every system here has in common: the words a reader meets whichever system they arrived from, and the ones a newcomer has to be told.\n\nA word one system uses its own way belongs in that system's glossary, which redefines it and names the entry here that it narrows."

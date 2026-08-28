@@ -362,7 +362,7 @@
           "minimum": 1
         },
         "fields": {
-          "description": "The frontmatter a record contributes, in the order an export writes it. Each names a field the type declares or inherits, or `title`, which is the record's heading rather than a field.",
+          "description": "The frontmatter a record contributes, in the order an export writes it. Each names a field the type declares or inherits, or `title`, which is the record's heading rather than a field. A field travels in the shape its declaration gives it: a list as a JSON array, anything else as a string.",
           "type": "array",
           "minItems": 1,
           "items": {

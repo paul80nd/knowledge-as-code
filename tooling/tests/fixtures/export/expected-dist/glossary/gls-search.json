@@ -6,7 +6,11 @@
     "title": "Search",
     "narrows": "gls-estate",
     "status": "draft",
-    "review-by": "2030-01-01"
+    "review-by": "2030-01-01",
+    "tags": [
+      "search",
+      "discovery"
+    ]
   },
   "sections": {
     "Scope": "How a reader's words reach a record. The things being searched for belong to the estate, so they sit in its glossary rather than here."

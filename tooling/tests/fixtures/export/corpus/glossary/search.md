@@ -5,7 +5,7 @@ status: draft
 owner: mira.okonjo
 narrows: gls-estate
 review-by: "2030-01-01"
-tags: [ search ]
+tags: [ search, discovery ]
 ---
 
 # Search
