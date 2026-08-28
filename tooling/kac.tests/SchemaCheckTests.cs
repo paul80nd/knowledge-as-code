@@ -123,29 +123,21 @@ public class SchemaCheckTests
     }
 
     [Fact]
-    public void A_ref_naming_a_folder_no_schema_covers_is_reported()
-    {
-        var finding = Assert.Single(Check(Widgets(fields:
+    public void A_ref_naming_a_type_this_corpus_declined_is_left_alone()
+        => Assert.Empty(Check(Widgets(fields:
         [
             ("stored-in", new FieldSpec { Name = "stored-in", Type = "list", Of = "id", Refs = ["data"] })
         ])));
 
-        Assert.Equal("schema-dispatch", finding.Check.Value);
-        Assert.Contains("ref: data", finding.Message);
-    }
-
-    // A scalar `ref:` parses to a one-entry list, so both forms arrive here the same way.
+    // A scalar `ref:` parses to a one-entry list, so both forms arrive here the same way, and a list
+    // mixing an adopted type with a declined one is the case a corpus meets first.
     [Fact]
-    public void Every_entry_of_a_list_ref_is_checked_and_a_covered_one_passes()
-    {
-        var finding = Assert.Single(Check(Widgets(fields:
+    public void A_list_ref_naming_an_adopted_type_and_a_declined_one_is_left_alone()
+        => Assert.Empty(Check(Widgets(fields:
         [
             ("promoted-to",
                 new FieldSpec { Name = "promoted-to", Type = "list", Of = "id", Refs = ["widgets", "gadgets"] })
         ])));
-
-        Assert.Contains("ref: gadgets", finding.Message);
-    }
 
     // Only an enum's range is applied, so a vocabulary declared anywhere else enforces nothing.
     [Fact]
@@ -677,13 +669,8 @@ public class SchemaCheckTests
     }
 
     [Fact]
-    public void A_versus_against_a_type_no_schema_covers_is_reported()
-    {
-        var finding = Assert.Single(Check(TwoTypes(("widgets", [("gizmos", "Not a type here.")]))));
-
-        Assert.Equal("schema-dispatch", finding.Check.Value);
-        Assert.Contains("versus: gizmos", finding.Message);
-    }
+    public void A_versus_against_a_type_this_corpus_declined_is_left_alone()
+        => Assert.Empty(Check(TwoTypes(("widgets", [("gizmos", "Not a type here.")]))));
 
     [Fact]
     public void A_versus_against_itself_is_reported()

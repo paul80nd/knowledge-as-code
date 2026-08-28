@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 27,
+    "errors": 25,
     "warnings": 0
   },
   "findings": [
@@ -123,13 +123,6 @@
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
-      "check": "schema-dispatch",
-      "message": "field 'related' declares 'ref: gizmos', and no schema covers that folder. Either the type was never adopted here, or the name is wrong."
-    },
-    {
-      "file": ".schema/widgets.yaml",
-      "line": null,
-      "severity": "error",
       "check": "schema-shape",
       "message": "field 'related' declares 'mirrors-section: See also', and the type's 'sections:' block declares no such section. Name a section the type has, or add it."
     },
@@ -181,13 +174,6 @@
       "severity": "error",
       "check": "schema-unreadable",
       "message": "rule 'widgets-are-named' has an expr but no message: an author has to be told what to do about it."
-    },
-    {
-      "file": ".schema/widgets.yaml",
-      "line": null,
-      "severity": "error",
-      "check": "schema-dispatch",
-      "message": "type 'widgets' declares 'versus: gizmos', and no schema covers that folder. Either the type was never adopted here, or the name is wrong."
     },
     {
       "file": ".schema/widgets.yaml",

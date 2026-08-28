@@ -190,16 +190,10 @@ public static class Commands
 
         if (validated == 0) return 0;
 
-        // Two different faults end here, and the message has to say which. A corpus taking every type and
-        // failing is a defect upstream, and the person who just ran the command should not be left
-        // thinking they caused it. A corpus that declined types is meeting its own schema: the file of a
-        // type it kept points `ref:` and `versus:` at types it did not.
-        Stop(plan.DeclinedTypes.Count > 0
-            ? "new: the corpus this created does not validate. a schema file it received names a type "
-              + "this corpus declined. .schema/ is yours from here, so take those references out. the "
-              + "files are written and staged."
-            : "new: the corpus this created does not validate. that is a defect in the template or in the "
-              + "tool, and not in anything you answered. the files are written and staged.");
+        // Whichever types were adopted, a corpus this wrote and cannot validate is a defect upstream. The
+        // person who just ran the command should not be left thinking they caused it.
+        Stop("new: the corpus this created does not validate. that is a defect in the template or in the "
+             + "tool, and not in anything you answered. the files are written and staged.");
         return 1;
     }
 

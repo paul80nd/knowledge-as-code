@@ -590,7 +590,18 @@ public static class Validator
                     }
 
                     var type = landed.Type(schema);
-                    if (admitted.Count == 0 || type is null || admitted.Contains(type)) continue;
+                    if (type is null || admitted.Contains(type)) continue;
+
+                    // The field names types and this corpus adopted none of them, so nothing it lands on
+                    // can be the right type. Named from the declaration rather than by a label, because a
+                    // type this corpus turned down has no schema here to read a label out of.
+                    if (admitted.Count == 0)
+                    {
+                        f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
+                            $"'{name}' points at '{citation.Whole}', which is {WithArticle(type)}. The field "
+                            + $"points at {Named(spec.Refs)}, which this corpus did not adopt."));
+                        continue;
+                    }
 
                     f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
                         $"'{name}' points at '{citation.Whole}', which is {WithArticle(type)}, "
@@ -716,11 +727,18 @@ public static class Validator
     private static List<TypeSchema> Admitted(FieldSpec spec, Schema schema) =>
         [.. spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>()];
 
-    // Whether a field may point at the document its id landed on. Where the question cannot be put the
-    // answer is yes, which leaves the target to the checks that can: a `ref:` at a folder no schema
-    // covers is `schema-dispatch`'s to report, and a document in a folder no type covers is `type`'s.
+    // Whether a field may point at the document its id landed on. A document in a folder no type covers
+    // is admitted, because its own type is what is missing and `type` is the check that reports it.
+    //
+    // Called only where the field declares a `ref:`, so an empty `admitted` is a field whose every type
+    // this corpus turned down. Nothing it lands on is of the right type, and `ref-resolves` above says so.
     private static bool Admits(List<TypeSchema> admitted, Doc target) =>
-        admitted.Count == 0 || target.Type is null || admitted.Contains(target.Type);
+        target.Type is null || admitted.Contains(target.Type);
+
+    // The types a declaration names, spelled as it spells them. Reached where none of them is covered
+    // here, so there is no label to say aloud and the folder name is all a reader has to go on.
+    private static string Named(IReadOnlyList<string> refs) =>
+        string.Join(", ", refs.Select(r => $"'{r}'"));
 
     // The types named as a reader would say them aloud ("a Service", "an FAQ or a Standard") in the
     // order the declaration lists them. That is the order whoever wrote it chose.

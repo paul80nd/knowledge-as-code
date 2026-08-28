@@ -27,8 +27,13 @@ writes the files that template says a corpus receives, and writes what no templa
 names your corpus, and a `README.md` to rewrite where the template sends none of its own.
 
 It asks what the corpus is called, which types it adopts, where it publishes and what builds it, with a default for
-each. Answer nothing at all and you still end with a corpus that validates, holding every type the template declares.
+each. Whichever types you adopt, the corpus it writes validates before the command finishes.
 [Layers](../design/layers.md) says which files it writes and who owns each one afterwards.
+
+A corpus adopting a subset is sent nothing it cannot follow. A type page links the other type pages, and `new` drops
+each link to a type you declined, leaving the type's name standing in the sentence. A type's schema points `ref:` and
+`versus:` at the types beside it, and each of those names a type rather than a folder, so one you declined enforces
+nothing until [`update --add-type`](update.md) brings it in.
 
 Use it once, on an empty or nearly empty folder. Taking a newer framework into a corpus that already exists is
 [`update`](update.md).
@@ -89,24 +94,6 @@ kac new --from ../knowledge-as-code
 `--from` accepts a local path as well as a URL. This is the offline route, and it is what the tool's own tests use.
 
 ## Known limits
-
-**A corpus that declines types arrives with a schema naming what it declined.** A type's own file points `ref:` and
-`versus:` at the types it sits beside, so `.schema/adrs.yaml` names standards whether or not you adopted standards.
-`new` validates before it finishes and names the fault for what it is:
-
-```text
-.schema/adrs.yaml
-  error  [schema-dispatch]  type 'adrs' declares 'versus: standards', and no schema covers that
-                            folder. Either the type was never adopted here, or the name is wrong.
-
-validated 2 document(s) and 2 template(s), skipped 0 without frontmatter. 1 error(s), 0 warning(s)
-new: staged. `git status` shows everything this wrote, and the first commit is yours.
-new: the corpus this created does not validate. a schema file it received names a type this corpus
-declined. .schema/ is yours from here, so take those references out. the files are written and staged.
-```
-
-The pages arrive clean. A type page links the other type pages, and `new` drops each link to a type this corpus
-declined, leaving the type's name standing in the sentence.
 
 **It needs a network and a git client**, unless you pass a local `--from`. The template is fetched at run time.
 

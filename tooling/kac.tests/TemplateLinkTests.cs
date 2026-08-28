@@ -52,7 +52,7 @@ public partial class TemplateLinkTests
     {
         var owner = Owner(rel);
 
-        var reaching = Local(Link().Matches(Read(rel)).Select(m => m.Groups["target"].Value))
+        var reaching = Local(Targets(Read(rel)))
             .Where(t => t.Contains('/', StringComparison.Ordinal))
             .Select(t => t[..t.IndexOf('/', StringComparison.Ordinal)])
             .Where(folder => Declared.ByFolder.ContainsKey(folder) && folder != owner)
@@ -68,6 +68,12 @@ public partial class TemplateLinkTests
     // separates its label from its target with a colon.
     [GeneratedRegex(@"^\[[^\]\r\n]+\]:\s*(?<target>\S+)", RegexOptions.Multiline)]
     private static partial Regex Definition();
+
+    // Every target a page addresses, whichever form carries it. The folder question is the same for both:
+    // a corpus that declined the type holds no folder, and neither form has a repair once it is there.
+    private static IEnumerable<string> Targets(string markdown) =>
+        Link().Matches(markdown).Select(m => m.Groups["target"].Value)
+            .Concat(Definition().Matches(markdown).Select(m => m.Groups["target"].Value));
 
     [Theory]
     [MemberData(nameof(Seeds))]

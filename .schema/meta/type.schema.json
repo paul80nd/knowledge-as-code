@@ -550,7 +550,7 @@
           ]
         },
         "ref": {
-          "description": "The folders an id in this field may belong to. A scalar is the one-folder case. Both halves are asked of every id: that it names a record, and that the record is of a type named here. An id of the wrong type lands on a real page and reads as deliberate, and this line is the only place the type it should have named is written down. Between them the `ref:` declarations are the graph, and the taxonomy renders them as one.",
+          "description": "The folders an id in this field may belong to. A scalar is the one-folder case. Both halves are asked of every id: that it names a record, and that the record is of a type named here. An id of the wrong type lands on a real page and reads as deliberate, and this line is the only place the type it should have named is written down. Between them the `ref:` declarations are the graph, and the taxonomy renders them as one. A folder this corpus declined is left unenforced, and adopting the type starts the reference with no edit here.",
           "oneOf": [
             {
               "$ref": "#/$defs/name"

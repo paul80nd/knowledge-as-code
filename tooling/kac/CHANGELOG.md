@@ -15,7 +15,7 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.16.0 - 2026-08-28
 
 ### Changed
 
@@ -40,9 +40,28 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   This reaches the pages a corpus receives once and then owns. A framework document is shared word for word, and
   `framework-names-types` goes on holding it to naming a type rather than linking to one.
 
+  A link into another type's folder has no such repair, because its text names a record. Two seed pages defined one as
+  a reference link, which reached a corpus whole, so `glossary.md` and `frameworks.md` now name the record without
+  linking it.
+
 - **`kac update --add-type` says what the arriving page does not get.** The new page links to the types the corpus
   holds. The pages already there name it without linking, because each was written while the type was still declined,
   and changing them is the corpus's own call.
+
+- **`kac validate` no longer refuses a schema for naming a type the corpus declined.** A field's `ref:` and a type's
+  `versus:` each name a type, and a corpus adopts as many types as it has use for. `.schema/standards.yaml` alone
+  reaches four other types, through `ref:` on four fields and a `versus:` naming one of them again, so a corpus adopting
+  standards and nothing else met five `schema-dispatch` errors on a schema it had just been sent. Both declarations are
+  now left alone where no schema covers the type. Nothing is rendered, and `kac update --add-type` starts the reference
+  without an edit to `.schema/`.
+
+  What a record is held to does not soften with it. `ref-resolves` goes on asking that a cited id exists, and a field
+  whose every declared type this corpus turned down now admits nothing rather than everything. It names the types the
+  declaration wanted, since a type nothing covers has no label to read:
+  `'derived-from' points at 'std-0002', which is a Standard. The field points at 'adrs', which this corpus did not
+  adopt.`
+
+  With this and the unlinking above, `kac new` adopting any single type writes a corpus that validates and exits 0.
 
 - **`kac update --drop-type` asks before it deletes.** Giving up a type deletes its page and leaves every page still
   naming it holding a dead link. The run says so, says that `kac validate` reports the ones it can reach, and waits for
