@@ -2,4 +2,7 @@
 
 # Service Index (SVC)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID                 | Title                               | Platform   | Criticality | Status | Owner    |
+|--------------------|-------------------------------------|------------|-------------|--------|----------|
+| svc-payment-api    | [Payment API](payment-api.md)       | dotnet-api | critical    | live   | paul.law |
+| svc-payment-ledger | [Payment Ledger](payment-ledger.md) | dotnet-api | critical    | live   | paul.law |

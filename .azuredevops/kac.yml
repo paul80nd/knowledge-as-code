@@ -66,6 +66,22 @@ steps:
   # Every corpus declares a different `types:`, so running all of them is what proves the framework
   # holds for a corpus that adopted a subset and not only for one that adopted the lot.
   - ${{ each corpus in parameters.corpora }}:
+      # payments consumes engineering, and what it consumes is a sealed package rather than the corpus
+      # next door. Built here rather than relied on from engineering's own steps above, so narrowing
+      # `corpora` to payments alone still runs.
+      - ${{ if eq(corpus, 'payments') }}:
+          - script: |
+              dotnet run --project ../../tooling/kac -- export
+              dotnet run --project ../../tooling/kac -- pack
+            displayName: Build the package this corpus consumes (${{ corpus }})
+            workingDirectory: $(Build.SourcesDirectory)/examples/engineering
+
+          # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails
+          # naming this command. A corpus consuming nothing skips the step.
+          - script: dotnet run --project ../../tooling/kac -- restore
+            displayName: Restore what this corpus consumes (${{ corpus }})
+            workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
+
       - script: dotnet run --project ../../tooling/kac -- validate
         displayName: Validate frontmatter, links and structure (${{ corpus }})
         workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}

@@ -5,8 +5,8 @@
 > [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered.
 
 A corpus is plain markdown in git where every document has a type and every type has a schema. This one is a domain
-corpus, and it is thin on purpose. It adopts three types and holds no records in them yet. A domain corpus inherits its
-governance rather than restating it, and a thin corpus shows that where a full one hides it.
+corpus, and it is thin on purpose. It adopts three types and holds six records between them. A domain corpus inherits
+its governance rather than restating it, and a thin corpus shows that where a full one hides it.
 [`../README.md`](../README.md) sets it beside the other two corpora here and says what each one demonstrates.
 
 **A new corpus starts from [`../../template/`](../../template/)**, which is the same corpus with the content taken out.
@@ -34,6 +34,7 @@ and is not, and the calls that are genuinely close.
 Needs `kac` on your path. [`../../README.md`](../../README.md#running-the-tool) covers the ways to get one.
 
 ```bash
+kac restore      # fetch the corpora this one consumes into .imports/
 kac validate     # frontmatter, links, structure, clauses and the graph
 kac generate     # regenerate the indexes and generated blocks
 kac export       # write the corpus to .dist/export/ as data a consumer reads
@@ -41,24 +42,32 @@ kac bundle       # assemble that export and .plugin/ into a plugin under .dist/p
 kac checks       # list every check the validator implements
 ```
 
+`restore` comes first, and it needs a package to take. Run `kac export` and then `kac pack` in
+[`../engineering/`](../engineering/) once, and this corpus's `source:` has a folder to read.
+
 While you are changing the tool, run `dotnet run --project ../../tooling/kac -- validate` instead. That reaches the
 working tree, and an installed `kac` does not.
 
-## Why it holds nothing
+## What it demonstrates
 
-A corpus with no records still validates, generates, exports and bundles, and this one is here to prove that. The
-smallest honest declaration a corpus can make is three types and no content, and every piece of machinery runs over it
-unchanged.
+**A domain corpus consuming a governance one.** `.corpus.yaml` names `example-engineering` in `consumes:`, and
+`kac restore` unpacks that corpus's published export under `.imports/eng/`. A standard here then cites
+`eng:pol-SCRT.STORE`, and `kac validate` holds that citation to naming a policy and a clause that really exist. Cite a
+clause the governance layer does not carry and the build fails, exactly as it would for a record next door.
 
-It also marks what a domain corpus does not hold. There are no policies here and no compliance posture. Both belong to
-`../engineering/`, and a payments team reads them from there rather than keeping a copy that drifts. The `standards`
-this corpus does adopt are for rules specific to payments, which belong nowhere else.
+**Run `kac restore` before anything else.** A declared import that has not arrived is an error naming the command. The
+folder it fills is not committed, so a fresh clone holds none of it.
 
-## What it does not do yet
+**Thinness is the point.** There are no policies here and no compliance posture. Both belong to `../engineering/`, and
+a payments team reads them from there rather than keeping a copy that drifts. Six records is the whole corpus: two
+services, the two NFRs they carry, and two standards saying what the inherited policies mean for a payment. Everything
+else a payments team is bound by is one repository away and cited by id.
 
-**It consumes nothing.** `.corpus.yaml` carries no key naming another corpus, and no `kac` verb reads one corpus's
-export into another. Until it does, this corpus inherits its governance by convention rather than by declaration.
-[#93](https://github.com/paul80nd/knowledge-as-code/issues/93) is where that gets built.
+**The same obligation is met at two layers.** `eng:pol-SCRT.LOGS` prohibits writing a secret to a log. The governance
+corpus's own secret-handling standard discharges it for the whole estate, and [std-0002] discharges it again for a PSP
+key and a card token. Neither restates the other, and both name the clause.
+
+[std-0002]: standards/domain/payment-telemetry.md
 
 ## What this corpus declares about itself
 

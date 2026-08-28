@@ -37,7 +37,7 @@ corpus: example-payments
 #
 # The number is a notification and nothing refuses to load because it moved.
 # Bumped by hand, and nothing but a person writes it.
-content-version: "0.1.0"
+content-version: "0.2.0"
 
 # How this corpus is published. One of: azure-devops | azure-devops-wiki | github | mkdocs | none.
 publishing-target: github
@@ -72,6 +72,32 @@ publishing:
   #
   # Absent where the corpus is the repository, which is the ordinary case.
   path-prefix: examples/payments
+
+# The corpora this one reads records from.
+#
+# A domain corpus inherits its governance rather than restating it. The policies binding
+# payments are written once, in the engineering corpus, and this block is where this corpus
+# says it takes them from there. `kac restore` fetches each one and unpacks it under
+# `.imports/<shortcode>/`, which is not committed.
+#
+# `shortcode` is the word a citation carries, as the `eng` in `eng:pol-SCRT.STORE`. The
+# producer owns that spelling, so it is copied from their descriptor rather than chosen here.
+#
+# `version` is the range this corpus means and `resolved` is what the last restore took.
+# `restore` writes the second, so the range says what was intended and the lock says what the
+# build used.
+#
+# `source` is a folder here, holding the package `kac pack` writes in the corpus next door.
+# The two corpora live in one repository, so there is no registry between them and no token to
+# hold. A corpus consuming across repositories names a registry's service index instead.
+#
+# https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key means.
+consumes:
+  - corpus: example-engineering
+    shortcode: eng
+    version: ^0.1.0
+    source: ../engineering/.dist/package
+    resolved: "0.1.0"
 
 # Where this corpus takes the framework from.
 #
