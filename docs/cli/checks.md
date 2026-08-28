@@ -43,8 +43,8 @@ One check to a line, with the severity it reports at and what it proves, and a t
 87 checks: 62 error(s), 23 warning(s), 2 info.
 ```
 
-Neither a **warning** nor an **info** fails the build. A warning is something to act on, and an info reports a decision
-your corpus already made: an import held back by the range you wrote, or a source this run could not reach.
+Neither a **warning** nor an **info** fails the build. A warning is something to act on. An info reports something
+true that is nobody's fault, such as a version your own range holds back.
 
 ### Read the catalogue as data
 

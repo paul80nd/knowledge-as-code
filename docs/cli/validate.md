@@ -32,46 +32,20 @@ policy, in prose and in a field declaring a `ref:` alike, and a clause that corp
 a local one would.
 
 **Run `restore` first.** A declared import that has not arrived is an error naming the command, rather than a citation
-quietly passed over. A local run that checks less than the pipeline does is how a broken reference reaches your default
-branch.
+quietly passed over.
 
 Each side keeps its own spelling. A record your corpus holds is cited bare and one it imported carries its producer's
-shortcode, so writing either the other way is refused: two spellings of one obligation defeat every search anybody runs
-for it. [Imports](../design/imports.md) says why resolution works this way, and what a check may ask of an imported
-record.
+shortcode, and writing either the other way is refused naming the spelling to write.
+[Imports](../design/imports.md) says why resolution works this way, and what a check may ask of an imported record.
 
-### An import that has fallen behind is reported, and never fails
+### An import that has fallen behind is reported
 
-`restore` keeps the version your `consumes:` entry locked for as long as your range still admits it, so two restores of
-an unchanged descriptor fetch the same bytes. That is what makes a build reproducible, and it is also how a corpus sits
-on a version for a year without anyone noticing. So `validate` asks each source what it publishes now, once per run,
-and reports what it finds at two severities.
+`validate` asks each source your `consumes:` block names what it publishes now. A newer version inside your range is a
+**warning**, and `kac restore` takes it. A newer version your range holds back is **information**, and so is a source
+this run could not ask, which usually wants the token [`restore`](restore.md#reading-a-private-feed) names.
 
-**A warning where a newer version sits inside your range.** You said you would take that version and have not.
-`kac restore` moves it.
-
-```text
-warning  [import-behind]  'eng:' is locked at 0.1.1 and 0.1.2 is published. '^0.1.0' admits it, so `kac restore` takes it.
-```
-
-**Information where the newer version sits outside your range.** Your range is doing what you wrote it to do, and the
-choice is to widen it or to leave it alone.
-
-```text
-info  [import-capped]  'eng:' is locked at 0.1.1 and 0.2.0 is published. '^0.1.0' holds it back.
-```
-
-**Neither fails the build.** A version behind is not a broken corpus, and failing on somebody else's release would turn
-every downstream red the day the governance layer ships.
-
-**A source this run could not ask reports too**, rather than reading as current. A private feed wants the token named in
-[`restore`](restore.md#reading-a-private-feed), and a folder that is not there says so.
-
-```text
-info  [import-unreachable]  could not ask what 'eng:' publishes, so 0.1.1 is unchecked rather than current. there is no folder at ../engineering/.dist/package.
-```
-
-A corpus with no `consumes:` block asks nothing and pays nothing. No source is read and no client is built.
+None of the three changes the exit code, and a corpus with no `consumes:` block reads no source at all.
+[Imports](../design/imports.md#an-import-that-has-fallen-behind) says why being behind is never an error here.
 
 ## Examples
 
