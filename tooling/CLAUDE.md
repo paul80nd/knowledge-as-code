@@ -35,6 +35,12 @@ to this repository's root, where it is authored once.
 
 **Run one invocation at a time.** Concurrent runs build the same project and contend over its output.
 
+**A warning fails the build.** [`Directory.Build.props`](Directory.Build.props) sets `TreatWarningsAsErrors` for every
+project here and for `kac-tests.cs`, so a nullable warning is a broken build rather than a line in the log nobody
+reads. It holds locally as well as in CI, on purpose: a check running in one and not the other is how the thing it
+catches reaches `main`. Where a warning is genuinely wrong, suppress that one with a reason beside it rather than
+turning the setting off.
+
 **Three pipelines, and each has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
 [`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.
 [`examples/library/azure-pipelines.yml`](../examples/library/azure-pipelines.yml) is a corpus's own, forked by each
