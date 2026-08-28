@@ -28,8 +28,6 @@ A clause may be discharged in both corpora at once. `eng:pol-SCRT.LOGS` prohibit
 governance layer's own secret-handling standard says what that means estate-wide, and [std-0002] says what it means for
 a PSP key. Neither restates the other, and a reader following the clause id finds both.
 
-[std-0002]: standards/domain/payment-telemetry.md
-
 ## Why we use them
 
 The ADR log preserves the reasoning, and reasoning is the wrong thing to read when you are mid-build and want the rule.
@@ -139,3 +137,5 @@ Standards are living documents, and we edit them in place. Record every material
 | `changelog-on-material-change` | If the Rules section changed and status is `active`, a new changelog entry is required in the same commit. |
 
 <!-- END GENERATED: checks-standards -->
+
+[std-0002]: standards/domain/payment-telemetry.md

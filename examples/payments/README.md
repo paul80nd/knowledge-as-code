@@ -67,8 +67,6 @@ else a payments team is bound by is one repository away and cited by id.
 corpus's own secret-handling standard discharges it for the whole estate, and [std-0002] discharges it again for a PSP
 key and a card token. Neither restates the other, and both name the clause.
 
-[std-0002]: standards/domain/payment-telemetry.md
-
 ## What this corpus declares about itself
 
 [`.corpus.yaml`](.corpus.yaml) says what this corpus is, which of the framework's types it has adopted, where its
@@ -108,3 +106,5 @@ The `.schema/` this corpus is judged against sits at the repository root, one co
 with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks first.
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
+
+[std-0002]: standards/domain/payment-telemetry.md
