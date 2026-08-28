@@ -30,20 +30,22 @@ Most commands sit in one sequence. You stand a corpus up, write records, hold th
 corpus derives from them. Everything after that is optional, and which branch you take depends on whether one corpus
 serves you or several.
 
+A square box is a command you type. A rounded one is what you do or what you get.
+
 ```mermaid
 graph TD;
   new[kac new];
-  write[write records];
+  write(write records);
   validate[kac validate];
   generate[kac generate];
   update[kac update];
   export[kac export];
   bundle[kac bundle];
   pack[kac pack];
-  registry[a package registry];
+  registry(a package registry);
   restore[kac restore];
   consumer[kac validate in the consuming corpus];
-  plugin[an installable plugin];
+  plugin(an installable plugin);
   new --> write;
   write --> validate;
   validate --> generate;

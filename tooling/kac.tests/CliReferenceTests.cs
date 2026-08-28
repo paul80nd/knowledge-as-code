@@ -25,6 +25,11 @@ public partial class CliReferenceTests
     [GeneratedRegex(@"\bkac (?<verb>[a-z]+)\b")]
     private static partial Regex Invocation();
 
+    // One node declaration, as `id[label];` or `id(label);`. An edge line carries no bracket, so this
+    // reads the declarations and passes over the arrows between them.
+    [GeneratedRegex(@"^\s*\w+(?<open>[\[(])(?<label>[^\])]+)[\])];$", RegexOptions.Multiline)]
+    private static partial Regex Node();
+
     [Fact]
     public void Every_command_the_parser_declares_has_a_page()
     {
@@ -112,6 +117,11 @@ public partial class CliReferenceTests
     // Held to the subset an Azure DevOps wiki renders, which every diagram this repository writes answers
     // to. `docs/design/generation.md` argues it: a diagram exceeding that subset renders nothing at all,
     // with no error to say why. So the generator writes `graph` and this is held to the same.
+    //
+    // This page is read on the documentation site and on github.com, and never by a wiki, so the rule is
+    // followed here because it costs nothing rather than because it binds. Node shapes are the exception
+    // the test below states: nothing has held a wiki to one, and this page is where that is safe to find
+    // out. The three constraints named here are the ones the rule actually names.
     [Fact]
     public void The_flow_chart_stays_inside_the_subset_the_narrowest_renderer_reads()
     {
@@ -121,6 +131,24 @@ public partial class CliReferenceTests
         Assert.DoesNotContain("subgraph", chart, StringComparison.Ordinal);
         Assert.DoesNotContain("-.-", chart, StringComparison.Ordinal);
         Assert.DoesNotContain("==>", chart, StringComparison.Ordinal);
+    }
+
+    // What tells a command from the rest of the chart, which is the shape and nothing else. Colour alone
+    // would say nothing to a reader who cannot see it, and a fill that reads on a light background reads
+    // as a hole on a dark one.
+    //
+    // Asserted because a node added in the wrong shape is invisible to every other check here, and the
+    // convention only works while every node keeps it. The page states it in a line above the diagram.
+    [Fact]
+    public void A_command_is_drawn_as_a_box_and_everything_else_is_rounded()
+    {
+        var chart = Mermaid().Match(File.ReadAllText(CliReference.Index)).Value;
+
+        foreach (Match node in Node().Matches(chart))
+        {
+            var command = node.Groups["label"].Value.StartsWith("kac ", StringComparison.Ordinal);
+            Assert.Equal(command ? "[" : "(", node.Groups["open"].Value);
+        }
     }
 
     // Each row's wording comes from the page it indexes, so a command whose page is added, renamed or

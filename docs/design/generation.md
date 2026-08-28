@@ -81,6 +81,10 @@ than Mermaid's own, and a diagram exceeding it renders nothing at all with no er
 So the generator writes `graph` rather than `flowchart`, uses no subgraphs, and keeps every arrow to `-->`. A corpus
 publishing somewhere more capable receives the same diagram, because one generator writes for every publishing target.
 
+Those three are what the rule covers, and node shapes are not among them. Nobody has held a wiki to one, so the
+generator draws every node as `[...]` and the question stays unasked. A diagram on this site is free of the rule
+entirely, because no wiki reads one.
+
 ## Output is byte-stable
 
 Generation is a pure function of frontmatter and schema, so running it twice produces no diff. Tables are padded to a
