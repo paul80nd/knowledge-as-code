@@ -40,6 +40,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   This reaches the pages a corpus receives once and then owns. A framework document is shared word for word, and
   `framework-names-types` goes on holding it to naming a type rather than linking to one.
 
+  A link into another type's folder has no such repair, because its text names a record. Two seed pages defined one as
+  a reference link, which reached a corpus whole, so `glossary.md` and `frameworks.md` now name the record without
+  linking it.
+
 - **`kac update --add-type` says what the arriving page does not get.** The new page links to the types the corpus
   holds. The pages already there name it without linking, because each was written while the type was still declined,
   and changing them is the corpus's own call.

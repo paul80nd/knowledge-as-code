@@ -44,12 +44,10 @@ openly is easier to argue with than one absorbed silently.
 ### ISO 27001
 
 **Inspiration.** ISO/IEC 27001:2022, and Annex A in particular: the control set a security, delivery or operations
-policy maps its clauses to. [pol-DEVI] cites `A.5.4` and `A.5.36` to say where its thinking came from, rather than to
+policy maps its clauses to. `pol-DEVI` cites `A.5.4` and `A.5.36` to say where its thinking came from, rather than to
 claim it discharges either control.
 
 Move this entry to **Obliged** on the day the organisation registers against the standard, and say there what the
 registration covers. Until then an Annex A reference marks provenance and nothing more.
 
-Referenced by: [pol-DEVI].
-
-[pol-DEVI]: policies/devi-deviations-are-recorded.md
+Referenced by: `pol-DEVI`.
