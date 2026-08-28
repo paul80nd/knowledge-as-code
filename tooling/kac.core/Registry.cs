@@ -136,8 +136,8 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
         if (folder.Names(source) is not { } names)
             return new Answer<byte[]>(null, NoFolder(source));
 
-        var name = names.FirstOrDefault(
-            n => string.Equals(VersionIn(n, id), version, StringComparison.OrdinalIgnoreCase));
+        var name = names.FirstOrDefault(n =>
+            string.Equals(VersionIn(n, id), version, StringComparison.OrdinalIgnoreCase));
 
         if (name is null)
             return new Answer<byte[]>(null, $"{source} holds no package for {id} {version}.");

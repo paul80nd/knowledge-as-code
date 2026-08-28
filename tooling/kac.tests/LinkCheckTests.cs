@@ -13,7 +13,6 @@ namespace kac.tests;
 
 public class LinkCheckTests
 {
-
     [Fact]
     public void A_target_resolves_absolute_from_the_root_or_relative_to_the_document()
     {

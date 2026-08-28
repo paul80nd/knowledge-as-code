@@ -242,7 +242,7 @@ public static class ValueChecks
     // where that key is the one absent.
     private static string Names(YamlMappingNode map, FieldSpec spec) =>
         spec.Entry is [{ } first, ..] && Yaml.Get(map, first.Name) is { } named
-        && Yaml.Raw(named) is { Length: > 0 } value
+                                      && Yaml.Raw(named) is { Length: > 0 } value
             ? $"'{value}'"
             : "here";
 

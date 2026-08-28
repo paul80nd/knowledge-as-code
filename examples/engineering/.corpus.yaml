@@ -66,5 +66,8 @@ export:
 plugin:
   from: ../../template/.plugin
 
-# Nothing held differently from the framework.
-skip: []
+# This corpus sits inside the repository that authors the template, whose own `.editorconfig`
+# already covers every file here. A corpus created elsewhere receives the seed and owns it.
+skip:
+  - path: .editorconfig
+    reason: The repository holding this corpus sets the editor conventions for it.

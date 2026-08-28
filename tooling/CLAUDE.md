@@ -232,6 +232,10 @@ from the framework carrying them, and one that has gone is a block that stopped 
   [`export`](tests/fixtures/export/README.md) and [`export-policies`](tests/fixtures/export-policies/README.md).
   Nothing else in the suite holds a tracked copy of an untracked artefact. The `bundle` fixtures deliberately do not,
   because most of a bundle is that same export and a second copy would be a second thing to keep in step.
+* **A `.jsonl` is one complete JSON object per line.** A formatter pretty-printing one destroys the format and leaves
+  valid JSON behind. The two under `expected-dist/` are where that bites, because the golden diff then reports an
+  export that moved rather than a file a tool broke. `JsonLinesTests` asks the invariant of every `.jsonl` git would
+  list, staged or not, and names the file and the line.
 * Regenerate with `dotnet run tooling/kac-tests.cs -- --update [name]`, then **read the diff**. The command rewrites
   expectations to whatever the tool now produces, so it will happily bless a regression.
 

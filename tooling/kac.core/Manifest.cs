@@ -123,7 +123,11 @@ public record SkippedFile(string Path, string? Reason);
 // needs is refused by name in `Restore.Plan`, where the message can say which key is missing and
 // which entry it is missing from.
 public record Consumed(
-    string? Corpus, string? Shortcode, string? Version, string? Resolved, string? Source);
+    string? Corpus,
+    string? Shortcode,
+    string? Version,
+    string? Resolved,
+    string? Source);
 
 public class CorpusDescriptor
 {
@@ -477,7 +481,6 @@ public class CorpusDescriptor
             keys.Add(("taken-on", $"\"{on}\""));
             return [.. keys];
         }
-
     }
 
     // Record what a restore resolved: the version each consumed corpus was taken at, written onto that

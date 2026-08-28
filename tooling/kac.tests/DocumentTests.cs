@@ -288,7 +288,8 @@ public class DocumentTests
     [Fact]
     public void Part_citations_are_collected_from_inline_link_text()
     {
-        var doc = ParseWithClauses("See [pol-VURM.TIMEBOX](vurm-a-title.md#clauses) and [the table](vurm-a-title.md).\n");
+        var doc = ParseWithClauses(
+            "See [pol-VURM.TIMEBOX](vurm-a-title.md#clauses) and [the table](vurm-a-title.md).\n");
 
         Assert.NotNull(doc);
         Assert.Equal(["pol-VURM.TIMEBOX"], doc.PartRefs.Select(r => r.Ref));

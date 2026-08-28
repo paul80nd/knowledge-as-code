@@ -13,7 +13,6 @@ namespace kac.tests;
 
 public class BundlerTests
 {
-
     [Fact]
     public void A_plugin_tree_with_no_manifest_is_refused()
         => Assert.Contains(".claude-plugin/plugin.json",
@@ -32,8 +31,11 @@ public class BundlerTests
         => Assert.Contains("names no corpus",
             Assert.Single(Plan(
                 plugin: [(Bundler.ManifestFile, Source())],
-                export: [(Exporter.ManifestFile,
-                    $$"""{"formatVersion": {{Exporter.FormatVersion}}, "types": []}""")]).Problems));
+                export:
+                [
+                    (Exporter.ManifestFile,
+                        $$"""{"formatVersion": {{Exporter.FormatVersion}}, "types": []}""")
+                ]).Problems));
 
     // The export is copied under `corpusRoot`, so the only other answer is to merge it into the plugin
     // tree.
@@ -336,8 +338,10 @@ public class BundlerTests
             Plan(plugin: [(Bundler.ManifestFile, Source())], export: [About()]), Bundler.ManifestFile);
 
         Assert.Equal(
-            ["name", "displayName", "version", "description", "author", "homepage", "repository",
-             "license", "keywords", "metadata"],
+            [
+                "name", "displayName", "version", "description", "author", "homepage", "repository",
+                "license", "keywords", "metadata"
+            ],
             written.EnumerateObject().Select(p => p.Name).ToArray());
     }
 

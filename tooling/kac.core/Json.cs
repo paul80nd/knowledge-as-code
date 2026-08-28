@@ -59,7 +59,10 @@ public record ExportManifest(
 // a licence nobody chose and an author nobody named are assertions about a person, and the template that
 // once supplied them is how a corpus came to publish under somebody else's name.
 public record ExportAbout(
-    string? DisplayName, string? Description, ExportAuthor? Author, string? License);
+    string? DisplayName,
+    string? Description,
+    ExportAuthor? Author,
+    string? License);
 
 // Who publishes a corpus. An object rather than a string, because a plugin manifest carries both halves
 // and a package envelope carries the name alone, so splitting them here lets each take what it holds.
@@ -84,7 +87,11 @@ public record ExportAuthor(string? Name, string? Url);
 // target nothing builds links for. That is the same state the per-record files report by carrying no
 // links.
 public record ExportPublishing(
-    string Target, string? HumanTemplate, string? Base, string? PathPrefix, string? Ref);
+    string Target,
+    string? HumanTemplate,
+    string? Base,
+    string? PathPrefix,
+    string? Ref);
 
 // One type this export carries, how much of it there is, and where to find it.
 //
@@ -109,8 +116,14 @@ public record ExportPublishing(
 // as empty, and every citation into them failing for a reason nothing states. Both are null where the
 // type keeps no parts, alongside `PartsFile`.
 public record ExportedType(
-    string Type, int ShapeVersion, int Records, int Parts, string Dir, string? PartsFile,
-    string? RecordKey, string? PartKey,
+    string Type,
+    int ShapeVersion,
+    int Records,
+    int Parts,
+    string Dir,
+    string? PartsFile,
+    string? RecordKey,
+    string? PartKey,
     IReadOnlyDictionary<string, string> Sections);
 
 // One record, carrying what its type's `export:` block declares and nothing else. `Fields` and

@@ -25,7 +25,10 @@ public sealed record BundleFile(string Path, byte[] Content, bool Executable = f
 // breadcrumb is read at every start, resume, clear and compact. `docs/cli/bundle.md` says which
 // skills earn the line.
 public sealed record PluginComponent(
-    string Path, IReadOnlyList<string> Requires, string? Note, bool Announce = false);
+    string Path,
+    IReadOnlyList<string> Requires,
+    string? Note,
+    bool Announce = false);
 
 // A component left out, and the type whose absence left it out. The reason is carried, because it is
 // the one thing the assembled plugin cannot say about itself.
@@ -370,8 +373,12 @@ public static class Bundler
         // The framework's own name leads, because that is what somebody searches a marketplace for.
         var keywords = Types(exportManifest).Select(t => t.Type).ToList();
         Set(copy, "keywords",
-            keywords.Count == 0 ? null : new JsonArray([.. keywords.Prepend("knowledge-as-code")
-                .Select(k => (JsonNode)JsonValue.Create(k)!)]));
+            keywords.Count == 0
+                ? null
+                : new JsonArray([
+                    .. keywords.Prepend("knowledge-as-code")
+                        .Select(k => (JsonNode)JsonValue.Create(k)!)
+                ]));
 
         if (JsonRead.Object(copy["metadata"]) is { } metadata && metadata["components"] is JsonArray components)
         {
