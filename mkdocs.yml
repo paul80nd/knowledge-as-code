@@ -74,7 +74,20 @@ markdown_extensions:
   - toc:
       permalink: true
   - pymdownx.details
-  - pymdownx.superfences
+  # A ```mermaid block is rendered as a diagram rather than as code. The fence is the plain one GitHub
+  # renders natively, so one file draws the same picture on the site and in the repository, and a corpus
+  # publishing to an Azure DevOps wiki needs nothing else. `docs/design/generation.md` carries the subset
+  # every diagram here is held to, which is narrower than Mermaid's own.
+  #
+  # The theme fetches https://unpkg.com/mermaid@11/dist/mermaid.min.js at page load, and only for a page
+  # carrying one of these. It is the one thing this site asks of a host other than Pages, the version is
+  # the theme's to choose rather than ours to pin, and a reader who cannot reach unpkg.com reads the
+  # diagram's source instead of seeing the picture. Every such block renders on github.com either way.
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   # Publishes tooling/kac/CHANGELOG.md without a second copy of it, so the file stays beside the project whose
   # versions it records. `check_paths` fails a moved path rather than publishing an empty page.
   - pymdownx.snippets:
