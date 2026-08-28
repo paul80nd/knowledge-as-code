@@ -79,7 +79,7 @@ Each corpus is named with the version it came in at, and the folder it was unpac
 ```text
 wrote .imports/eng
 restore: example-engineering 0.1.0 as 'eng:'.
-restore: 1 fetched, 0 already current. The resolved versions are in .corpus.yaml, and .imports/ is not committed.
+restore: 1 fetched, 0 already current. 1 resolved version(s) written to .corpus.yaml, and .imports/ is not committed.
 ```
 
 ### Run it again
@@ -89,7 +89,7 @@ says so and leaves it alone:
 
 ```text
 restore: example-engineering 0.1.0 as 'eng:'. Already current.
-restore: 0 fetched, 1 already current. The resolved versions are in .corpus.yaml, and .imports/ is not committed.
+restore: 0 fetched, 1 already current. 1 resolved version(s) written to .corpus.yaml, and .imports/ is not committed.
 ```
 
 Where the lock still satisfies the range, the registry is never asked at all. Two restores of an unchanged
@@ -134,7 +134,8 @@ Whether the producer has released since is a different question, and one this co
 `.imports/` describing a graph your descriptor does not, so a problem anywhere stops the whole run.
 
 **A range says `1.2.0` or `^1.2.0`, and nothing else.** Comparators, unions and wildcards are refused where they are
-written rather than quietly matching nothing.
+written rather than quietly matching nothing. So is a caret over a prerelease, because no caret takes one: name
+`0.2.0-rc.1` exactly to opt in.
 
 **Nothing yet fails when a restore has not run.** A corpus citing a record it has not imported is a question for
 [`validate`](validate.md), which does not ask it yet.

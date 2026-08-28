@@ -16,6 +16,13 @@ public sealed record RestoreStep(
 // nothing at all: a corpus half-restored validates against a graph nobody declared.
 public sealed record RestorePlan(IReadOnlyList<RestoreStep> Steps, IReadOnlyList<string> Problems);
 
+// What a folder under `.imports/` already holds, read from the export manifest that arrived in it.
+//
+// The corpus is carried beside the version because a shortcode alone does not say whose records these
+// are. An entry repointed at another corpus keeps its shortcode, and a folder judged only by version
+// would be left standing with the wrong corpus's records inside it.
+public sealed record Imported(string Corpus, string Version);
+
 // The consuming half of publishing. A corpus declares what it consumes, and this fetches each
 // dependency at a version the declaration admits and unpacks it where the resolver will look.
 //
@@ -42,7 +49,7 @@ public static class Restore
     // nothing readable. It is a function rather than a path so that the whole decision is testable from
     // a set of strings, which is the bargain `Update.Plan` and `New.Plan` already strike.
     public static RestorePlan Plan(
-        IReadOnlyList<Consumed> declared, Registry registry, Func<string, string?> installed)
+        IReadOnlyList<Consumed> declared, Registry registry, Func<string, Imported?> installed)
     {
         var problems = new List<string>();
         var steps = new List<RestoreStep>();
@@ -60,9 +67,10 @@ public static class Restore
 
             var version = resolved.Value!;
 
-            // Already unpacked at the version this resolved to, so nothing is fetched. The folder is
-            // what a restore produces, and a folder holding the right version is the produced thing.
-            if (installed(entry.Shortcode) == version)
+            // Already unpacked, by the same corpus and at the version this resolved to, so nothing is
+            // fetched. Both halves are asked, because the checks a fetch is held to are skipped here and
+            // a shortcode says nothing about whose records are under it.
+            if (installed(entry.Shortcode) == new Imported(entry.Corpus, version))
             {
                 steps.Add(new RestoreStep(entry.Corpus, entry.Shortcode, version, true, []));
                 continue;
@@ -97,6 +105,7 @@ public static class Restore
             var root = Folder(corpusRoot, step.Shortcode);
             if (Directory.Exists(root)) Directory.Delete(root, recursive: true);
 
+            // Written in the order the plan named them, which puts the manifest last.
             foreach (var file in step.Files)
             {
                 var path = Path.Combine(root, file.Path.Replace('/', Path.DirectorySeparatorChar));
@@ -110,15 +119,19 @@ public static class Restore
         return written;
     }
 
-    // What version a shortcode's folder already holds, or null where it holds nothing this tool wrote.
-    // The unpacked export's own manifest is what answers, because it is the version that actually
-    // arrived rather than the version something recorded having asked for.
-    public static string? Installed(string corpusRoot, string shortcode)
+    // What a shortcode's folder already holds, or null where it holds nothing this tool wrote. The
+    // unpacked export's own manifest is what answers, because it is what actually arrived rather than
+    // what something recorded having asked for.
+    public static Imported? Installed(string corpusRoot, string shortcode)
     {
         var path = Path.Combine(Folder(corpusRoot, shortcode), Exporter.ManifestFile);
         if (!File.Exists(path)) return null;
 
-        return JsonRead.Str(JsonRead.Parse(File.ReadAllText(path))?["contentVersion"]);
+        var manifest = JsonRead.Parse(File.ReadAllText(path));
+        return JsonRead.Str(manifest?["corpus"]) is { } corpus
+               && JsonRead.Str(manifest?["contentVersion"]) is { } version
+            ? new Imported(corpus, version)
+            : null;
     }
 
     private static string Folder(string corpusRoot, string shortcode) =>
@@ -224,7 +237,8 @@ public static class Restore
             return new Registry.Answer<string>(null,
                 $"'{entry.Corpus}' has no version matching '{entry.Version}' at {entry.Source}. "
                 + (versions.Count == 0
-                    ? "That registry holds no version of it at all."
+                    ? "That registry holds no version of it at all, or holds them behind a token this "
+                      + $"run did not have. Set {Registry.TokenVariable} where the feed is private."
                     : $"It holds {string.Join(", ", versions)}."));
 
         return new Registry.Answer<string>(best, null);
@@ -306,8 +320,16 @@ public static class Restore
             return Refused(entry, $"was fetched at {version} and says it is {carried ?? "no version"}. "
                                   + "The registry is serving something other than what it listed.");
 
+        // Ordered so the manifest is last, because its presence is what `Installed` reads the folder's
+        // identity from. A write that stopped halfway would otherwise leave a folder answering for
+        // records it does not hold, and every later run would call it current and never repair it. The
+        // order is the plan's rather than the writer's, so what a run does is decided in one place.
         return new Registry.Answer<IReadOnlyList<BundleFile>>(
-            [.. files.OrderBy(f => f.Path, StringComparer.Ordinal)], null);
+            [
+                .. files
+                    .OrderBy(f => f.Path.Equals(Exporter.ManifestFile, StringComparison.Ordinal))
+                    .ThenBy(f => f.Path, StringComparer.Ordinal)
+            ], null);
     }
 
     // Whether a path stays inside the folder it is unpacked into: no root, no drive, and no segment

@@ -391,8 +391,17 @@ public static class Commands
 
         // The lock is written after the fetch rather than as each version resolves, so a run that
         // refused halfway leaves the descriptor saying what the last whole restore took.
-        CorpusDescriptor.SetResolved(corpusRoot,
+        var locked = CorpusDescriptor.SetResolved(corpusRoot,
             plan.Steps.ToDictionary(s => s.Corpus, s => s.Version, StringComparer.Ordinal));
+
+        // An entry the writer could not find is named rather than passed over. It writes a line into a
+        // block somebody hand-wrote, and a shape it cannot place would otherwise read as a lock recorded
+        // and leave the next run resolving from the registry again.
+        var unwritten = plan.Steps.Select(s => s.Corpus)
+            .Where(c => !locked.Contains(c, StringComparer.Ordinal)).ToList();
+        if (unwritten.Count > 0)
+            Note($"restore: could not write a resolved version for {string.Join(", ", unwritten)}. "
+                 + "Write `resolved:` on each entry by hand, so the next run takes the same version.");
 
         // Named one apiece rather than counted. Which version each import came in at is the thing a
         // reader of this output is checking, and a corpus already current is the answer to a different
@@ -402,8 +411,8 @@ public static class Commands
                     + (step.Current ? " Already current." : ""));
 
         Account($"restore: {written.Count} fetched, {plan.Steps.Count - written.Count} already current. "
-                + $"The resolved versions are in .corpus.yaml, and {kac.core.Restore.ImportsDir}/ is not "
-                + "committed.");
+                + $"{locked.Count} resolved version(s) written to .corpus.yaml, and "
+                + $"{kac.core.Restore.ImportsDir}/ is not committed.");
         return 0;
     }
 

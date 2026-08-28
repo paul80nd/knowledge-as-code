@@ -26,6 +26,12 @@ public class VersionRangeTests
     [InlineData("1.2.0 || 2.0.0")]
     public void Anything_else_is_not_a_range(string range) => Assert.False(VersionRange.Legible(range));
 
+    // It parses, and then admits nothing, because no caret takes a prerelease. Accepting it here would
+    // report later as a corpus holding none of the versions it holds.
+    [Fact]
+    public void A_caret_over_a_prerelease_is_not_a_range()
+        => Assert.False(VersionRange.Legible("^0.2.0-rc.1"));
+
     [Fact]
     public void An_exact_range_admits_that_version_and_no_other()
     {

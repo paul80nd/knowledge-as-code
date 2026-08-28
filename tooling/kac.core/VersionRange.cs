@@ -20,7 +20,12 @@ public static class VersionRange
 
     // Whether this range is one of the two forms, so a typo is refused where it was written rather than
     // silently matching nothing.
-    public static bool Legible(string range) => Parsed(Bare(range)) is not null;
+    //
+    // A caret over a prerelease is one of the typos. `^0.2.0-rc.1` parses, and then admits nothing at all
+    // because no caret takes a prerelease, so a range accepted here would be reported later as a corpus
+    // holding none of the versions it holds. Naming the prerelease exactly is how a corpus opts in.
+    public static bool Legible(string range) =>
+        Parsed(Bare(range)) is { } version && (!range.StartsWith(Caret) || version.Prerelease is null);
 
     // Whether `version` is one this range admits. A version the parser cannot read is admitted by
     // nothing: it came from a registry, and this tool orders versions it can order.

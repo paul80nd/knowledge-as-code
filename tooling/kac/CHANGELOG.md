@@ -25,7 +25,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `.imports/<shortcode>/`, which the template now gitignores. The version each range resolved to is written back onto
   its own entry, so `.corpus.yaml` stays the one description of what a corpus is.
 
-  A range says `1.2.0` or `^1.2.0` and nothing else. A lock the range still admits is taken without asking the
+  A range says `1.2.0` or `^1.2.0` and nothing else, and a caret never takes a prerelease. A lock the range still admits is taken without asking the
   registry, so two restores of an unchanged descriptor write the same bytes. A run says what it fetched, at which
   version, and which corpora were already current.
 

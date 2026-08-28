@@ -51,15 +51,23 @@ public class RestoreTests
     [Fact]
     public void A_corpus_already_unpacked_at_the_resolved_version_is_left_alone()
     {
-        var step = Assert.Single(Plan([Declared(range: "0.1.0")], Feed(["0.1.0"]), _ => "0.1.0").Steps);
+        var step = Assert.Single(Plan([Declared(range: "0.1.0")], Feed(["0.1.0"]), Holding("0.1.0")).Steps);
 
         Assert.True(step.Current);
         Assert.Empty(step.Files);
     }
 
+    // The identity checks a fetch is held to are skipped on this path, so a folder judged by version
+    // alone would leave one corpus's records standing under another corpus's shortcode.
+    [Fact]
+    public void A_folder_holding_another_corpus_at_the_right_version_is_fetched_again()
+        => Assert.False(Assert
+            .Single(Plan([Declared(range: "0.1.0")], Feed(["0.1.0"]), Holding("0.1.0", "example-security")).Steps)
+            .Current);
+
     [Fact]
     public void A_corpus_unpacked_at_another_version_is_fetched_again()
-        => Assert.False(Assert.Single(Plan([Declared(range: "0.1.0")], Feed(["0.1.0"]), _ => "0.0.9").Steps)
+        => Assert.False(Assert.Single(Plan([Declared(range: "0.1.0")], Feed(["0.1.0"]), Holding("0.0.9")).Steps)
             .Current);
 
     // One folder per shortcode, so two declarations claiming one would restore over each other and
@@ -175,10 +183,16 @@ public class RestoreTests
         => Assert.Contains("It holds 0.1.0, 0.2.0",
             Assert.Single(Plan([Declared(range: "^1.0.0")], Feed(["0.1.0", "0.2.0"])).Problems));
 
+    // A private feed answers an anonymous read the same way an empty one does, and nothing here can tell
+    // them apart, so the message carries both readings.
     [Fact]
-    public void A_corpus_the_registry_has_never_held_says_so()
-        => Assert.Contains("holds no version of it at all",
-            Assert.Single(Plan([Declared()], Feed([])).Problems));
+    public void A_corpus_the_registry_has_never_held_names_the_token_as_well()
+    {
+        var problem = Assert.Single(Plan([Declared()], Feed([])).Problems);
+
+        Assert.Contains("holds no version of it at all", problem);
+        Assert.Contains(Registry.TokenVariable, problem);
+    }
 
     [Fact]
     public void A_registry_that_cannot_be_read_is_reported_rather_than_read_as_empty()
@@ -244,21 +258,37 @@ public class RestoreTests
         Assert.Equal(first, Read(root));
     }
 
-    // What is on disk is what a later run asks about, and the version it reports is the one that
-    // actually arrived rather than the one something recorded having asked for.
+    // What is on disk is what a later run asks about, and what it reports is what actually arrived
+    // rather than what something recorded having asked for.
     [Fact]
     public void What_a_folder_holds_is_read_from_the_manifest_that_arrived()
     {
         var root = Temp();
         Restore.Write(root, Plan([Declared()], Feed(["0.1.0"])));
 
-        Assert.Equal("0.1.0", Restore.Installed(root, "eng"));
+        Assert.Equal(new Imported("example-engineering", "0.1.0"), Restore.Installed(root, "eng"));
         Assert.Null(Restore.Installed(root, "pay"));
     }
 
+    // The manifest is what `Installed` reads a folder's identity from, so a write that stopped halfway
+    // must not have left one. Written last, a folder with a manifest is a folder with its records.
+    [Fact]
+    public void The_manifest_is_the_last_file_written()
+    {
+        var step = Assert.Single(Plan([Declared()],
+            Feed(["0.1.0"], ["glossary/terms.jsonl", "policies/clauses.jsonl"])).Steps);
+
+        Assert.Equal(Exporter.ManifestFile, step.Files[^1].Path);
+    }
+
     private static RestorePlan Plan(
-        IReadOnlyList<Consumed> declared, Func<string, Fetched> feed, Func<string, string?>? installed = null) =>
+        IReadOnlyList<Consumed> declared, Func<string, Fetched> feed,
+        Func<string, Imported?>? installed = null) =>
         Restore.Plan(declared, new Registry(feed), installed ?? (_ => null));
+
+    // A folder under `.imports/` holding one corpus at one version, whatever shortcode is asked about.
+    private static Func<string, Imported?> Holding(string version, string corpus = "example-engineering") =>
+        _ => new Imported(corpus, version);
 
     private static Consumed Declared(
         string corpus = "example-engineering",

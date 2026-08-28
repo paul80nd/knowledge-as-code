@@ -416,6 +416,53 @@ public class ManifestTests
         Assert.Equal(["0.1.0", "1.0.0"], CorpusDescriptor.Load(dir).Consumes.Select(c => c.Resolved));
     }
 
+    // The two passes over one file have to agree on what an entry says. A YAML comment after a value is
+    // not part of it, and a writer reading it as one silently writes no lock at all.
+    [Fact]
+    public void A_comment_after_a_value_is_not_part_of_it()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path,
+            "consumes:\n  - corpus: example-engineering  # our policies live here\n"
+            + "    shortcode: eng\n    version: ^0.1.0\n");
+
+        var written = CorpusDescriptor.SetResolved(dir,
+            new Dictionary<string, string> { ["example-engineering"] = "0.1.4" });
+
+        Assert.Equal(["example-engineering"], written);
+        Assert.Equal("0.1.4", Assert.Single(CorpusDescriptor.Load(dir).Consumes).Resolved);
+    }
+
+    // A dash standing alone opens an entry whose keys are on the lines below it, which the loader reads
+    // and this pass has to read the same way.
+    [Fact]
+    public void A_dash_on_a_line_of_its_own_opens_an_entry()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path,
+            "consumes:\n  -\n    corpus: example-engineering\n    shortcode: eng\n    version: ^0.1.0\n");
+
+        CorpusDescriptor.SetResolved(dir,
+            new Dictionary<string, string> { ["example-engineering"] = "0.1.4" });
+
+        Assert.Equal("0.1.4", Assert.Single(CorpusDescriptor.Load(dir).Consumes).Resolved);
+    }
+
+    // A shape this pass cannot place is reported by its absence from the return, so a caller says what
+    // landed rather than saying everything did.
+    [Fact]
+    public void An_entry_this_pass_cannot_place_is_left_out_of_what_it_reports()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"),
+            "consumes: [{corpus: example-engineering, shortcode: eng, version: ^0.1.0}]\n");
+
+        Assert.Empty(CorpusDescriptor.SetResolved(dir,
+            new Dictionary<string, string> { ["example-engineering"] = "0.1.4" }));
+    }
+
     // A run that resolved every entry to the lock it already carried has changed nothing, and a file
     // nothing edited should not report as edited.
     [Fact]

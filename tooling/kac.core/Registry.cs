@@ -54,6 +54,9 @@ public sealed class Registry(Func<string, Fetched> get)
 
         // A package nobody has published yet, which is a corpus depending on one that has not shipped.
         // The caller reports it as no version satisfying the range, which is the sentence worth reading.
+        //
+        // A private feed answers an anonymous read the same way, so the two are not tellable apart here.
+        // `Restore` names the token where it reports an empty listing.
         if (index is { Body: null, Status: 404 })
             return new Answer<IReadOnlyList<string>>([], null);
 
@@ -149,7 +152,13 @@ public sealed class Registry(Func<string, Fetched> get)
                     : new Fetched(null, status,
                         $"{status} {response.ReasonPhrase}" + Unauthorised(status));
             }
-            catch (Exception e) when (e is HttpRequestException or TaskCanceledException or IOException)
+            // The network's own failures, and the three a `source:` nobody checked throws before a packet
+            // is sent: a URL with no scheme, one no parser can read, and one naming a protocol this
+            // client does not speak. All of them are the descriptor being wrong, and the caller has a
+            // sentence ready that names the source and says what the key is for.
+            catch (Exception e) when (e is HttpRequestException or TaskCanceledException or IOException
+                                          or InvalidOperationException or UriFormatException
+                                          or NotSupportedException)
             {
                 return new Fetched(null, 0, e.Message.TrimEnd('.'));
             }

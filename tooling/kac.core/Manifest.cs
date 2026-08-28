@@ -463,15 +463,21 @@ public class CorpusDescriptor
     //
     // An entry already carrying `resolved:` has that line rewritten. One that does not takes a new line
     // at the end of its own keys, so the lock reads as part of the entry it belongs to.
-    public static void SetResolved(string corpusRoot, IReadOnlyDictionary<string, string> versions)
+    //
+    // Returns the corpora whose lock was written. Reading a file two ways is reading it two ways, and the
+    // YAML loader accepts shapes this pass does not: a flow-style sequence is one. So the caller is told
+    // what landed rather than left to say that everything did.
+    public static IReadOnlyList<string> SetResolved(
+        string corpusRoot, IReadOnlyDictionary<string, string> versions)
     {
+        var written = new List<string>();
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
-        if (!File.Exists(path) || versions.Count == 0) return;
+        if (!File.Exists(path) || versions.Count == 0) return written;
 
         var before = Files.ReadLf(path);
         var lines = new List<string>(before.Split('\n'));
         var start = lines.FindIndex(l => l.StartsWith("consumes:", StringComparison.Ordinal));
-        if (start < 0) return;
+        if (start < 0) return written;
 
         // Walked from the end, so an insertion never moves a line this loop has yet to read.
         var entries = Entries(lines, start);
@@ -483,12 +489,15 @@ public class CorpusDescriptor
             var line = $"{new string(' ', entry.Indent)}resolved: {Quoted(version)}";
             if (entry.Resolved is { } at) lines[at] = line;
             else lines.Insert(entry.End, line);
+            written.Add(name);
         }
 
         // Written only where a line changed. A restore that found every import current would otherwise
         // rewrite the descriptor on every run, and a file nothing edited should not report as edited.
         var after = string.Join('\n', lines).TrimEnd('\n') + "\n";
         if (!after.Equals(before, StringComparison.Ordinal)) File.WriteAllText(path, after);
+
+        return written;
     }
 
     // Where each entry of the `consumes:` block sits: the corpus it names, the column its keys are
@@ -507,15 +516,16 @@ public class CorpusDescriptor
             var trimmed = lines[i].TrimStart();
             if (trimmed.Length == 0 || trimmed.StartsWith('#')) continue;
 
-            // A dash opens an entry and carries that entry's first key, so the column after it is where
-            // every key of the entry is written.
-            if (trimmed.StartsWith("- ", StringComparison.Ordinal))
+            // A dash opens an entry, and usually carries that entry's first key, so the column after it
+            // is where every key of the entry is written. A dash standing alone opens one whose keys are
+            // on the lines below, and the column is the same either way.
+            if (trimmed.StartsWith("- ", StringComparison.Ordinal) || trimmed == "-")
             {
                 if (indent > 0) entries.Add((corpus, indent, resolved, end));
                 corpus = null;
                 resolved = null;
                 indent = lines[i].Length - trimmed.Length + 2;
-                trimmed = trimmed[2..];
+                trimmed = trimmed.Length > 1 ? trimmed[2..] : "";
             }
             else if (indent == 0) continue;
 
@@ -527,12 +537,21 @@ public class CorpusDescriptor
         if (indent > 0) entries.Add((corpus, indent, resolved, end));
         return entries;
 
-        // What a key on this line says, or null where the line says something else. The value is read
-        // as YAML would read it, so a version written in quotes comes back without them.
-        static string? Key(string line, string key) =>
-            line.StartsWith(key + ":", StringComparison.Ordinal)
-                ? line[(key.Length + 1)..].Trim().Trim('"', '\'') is { Length: > 0 } v ? v : null
-                : null;
+        // What a key on this line says, or null where the line says something else. The value is read as
+        // YAML would read it: a comment after it is dropped, and quotes around it come off, so a name
+        // this pass compares is the name the loader parsed.
+        static string? Key(string line, string key)
+        {
+            if (!line.StartsWith(key + ":", StringComparison.Ordinal)) return null;
+
+            var value = line[(key.Length + 1)..];
+
+            // A `#` opens a comment only where a space precedes it, which is what lets a value carry one.
+            var comment = value.IndexOf(" #", StringComparison.Ordinal);
+            if (comment >= 0) value = value[..comment];
+
+            return value.Trim().Trim('"', '\'') is { Length: > 0 } v ? v : null;
+        }
     }
 
     // A version written so YAML reads it as a string. `0.1.0` parses as one either way, and `1.0` does
