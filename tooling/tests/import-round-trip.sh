@@ -16,7 +16,11 @@
 #
 # It edits one file in `examples/engineering/` and puts it back, from a copy rather than from git, so an
 # uncommitted edit of your own survives a run. It also rebuilds `.dist/` in both corpora and `.imports/`
-# in the consumer, all of which are untracked and rebuilt by any later command.
+# in the consumer, all of which are untracked.
+#
+# A run that fails partway deletes `.imports/` rather than leaving it. A restore keeps a folder already
+# holding the version it resolved to, so a broken export left unpacked there would be read by every later
+# run and by every later `kac validate`, and rebuilding the package would not replace it.
 #
 # Held to the subset Git Bash and older macOS bash agree on: no arrays, no `[[`, no process substitution.
 #
@@ -37,7 +41,6 @@ RENAMED=MINIMUM
 CITATION="eng:pol-DATA.$CLAUSE"
 
 WORK=${WORK:-$(mktemp -d)}
-rm -rf "$WORK"
 mkdir -p "$WORK"
 
 fail() {
@@ -48,10 +51,18 @@ fail() {
 # The upstream file goes back however this run ends, including on a failed assertion. A copy rather than
 # `git checkout`, which would also discard whatever else the person running this had in that file.
 cp "$POLICY" "$WORK/policy.md"
+DONE=0
+
 restore_policy() {
   cp "$WORK/policy.md" "$POLICY"
 }
-trap restore_policy EXIT
+
+cleanup() {
+  restore_policy
+  [ "$DONE" = 1 ] || rm -rf "$CONSUMER/.imports"
+}
+
+trap cleanup EXIT
 
 # One `kac` invocation at a time throughout: concurrent runs build the same project and contend over its
 # output.
@@ -77,8 +88,10 @@ echo "import-round-trip: the citation is there to prove"
 grep -rq "$CITATION" "$CONSUMER/standards" || fail "$CONSUMER/standards cites no $CITATION."
 
 # And it reaches across the boundary rather than into the corpus doing the citing. A consumer holding its
-# own `pol-DATA` would resolve this locally and prove nothing about an import.
-if grep -rq "^id: pol-DATA$" "$CONSUMER/standards" "$CONSUMER/services" "$CONSUMER/nfrs" 2>/dev/null; then
+# own `pol-DATA` would resolve this locally and prove nothing about an import. Read over the whole corpus
+# rather than over the folders it adopts today: a list of type folders here would be a copy of `types:`
+# in its descriptor, and the day this corpus adopts `policies` is the day the copy is wrong.
+if grep -rq "^id: pol-DATA$" "$CONSUMER" --exclude-dir=.imports --exclude-dir=.dist; then
   fail "$CONSUMER holds a record with id 'pol-DATA', so $CITATION resolves locally."
 fi
 
@@ -107,6 +120,12 @@ sed "s/\`$CLAUSE\`/\`$RENAMED\`/" "$POLICY" > "$WORK/renamed.md"
 cmp -s "$POLICY" "$WORK/renamed.md" && fail "renaming '$CLAUSE' in $POLICY changed nothing."
 cp "$WORK/renamed.md" "$POLICY"
 
+# The claim this test rests on, asserted rather than left in a comment. `export` does not validate, so a
+# rename that broke the producer would go out in the package and the downstream failure would no longer
+# mean what the assertion below says it means.
+kac "$PRODUCER" validate \
+  || fail "renaming '$CLAUSE' left $PRODUCER invalid, so the break is not a clean one."
+
 publish_and_restore
 
 if kac "$CONSUMER" validate > "$WORK/broken.txt" 2>&1; then
@@ -126,4 +145,5 @@ restore_policy
 publish_and_restore
 kac "$CONSUMER" validate || fail "the consumer does not validate after the clause was put back."
 
+DONE=1
 echo "import-round-trip: ok"
