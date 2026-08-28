@@ -195,6 +195,21 @@ public class CorpusDescriptor
     // want back.
     public string? Shortcode;
 
+    // What a person calls this corpus, and what it is. Both travel: into the plugin manifest a reader
+    // installs, and into the package description a registry lists.
+    //
+    // Absent is ordinary. A corpus that states neither gets a sentence built from its own name, which is
+    // what every corpus got before these keys existed.
+    public string? DisplayName;
+    public string? Description;
+
+    // Who publishes this corpus, and under what licence. Neither is derivable, and both are asserted
+    // about somebody the moment a plugin is installed, so a corpus that has not said stays silent rather
+    // than inheriting whoever wrote the template.
+    public string? AuthorName;
+    public string? AuthorUrl;
+    public string? License;
+
     // How long a shortcode may be. `.schema/_checks.yaml` argues each part of the spelling under
     // `shortcode`.
     public const int ShortcodeMin = 2;
@@ -298,6 +313,14 @@ public class CorpusDescriptor
 
         descriptor.Name = Yaml.Str(Yaml.Get(root, "corpus"));
         descriptor.Shortcode = Blank(Yaml.Str(Yaml.Get(root, "shortcode")));
+        // Trimmed, because a folded scalar carries the newline that closed it and these values are
+        // written into JSON a reader sees rather than into a document that reflows.
+        descriptor.DisplayName = Said(Yaml.Str(Yaml.Get(root, "display-name")));
+        descriptor.Description = Said(Yaml.Str(Yaml.Get(root, "description")));
+        descriptor.License = Said(Yaml.Str(Yaml.Get(root, "license")));
+        var author = Yaml.Get(root, "author");
+        descriptor.AuthorName = Said(Yaml.Str(Yaml.Get(author, "name")));
+        descriptor.AuthorUrl = Said(Yaml.Str(Yaml.Get(author, "url")));
         descriptor.PublishingTarget = Yaml.Str(Yaml.Get(root, "publishing-target"));
         var publishing = Yaml.Get(root, "publishing");
         descriptor.Base = Yaml.Str(Yaml.Get(publishing, "base"));
@@ -327,6 +350,10 @@ public class CorpusDescriptor
         // A key written with no value parses as an empty scalar, which is a corpus saying nothing rather
         // than saying "". `examples/library/.corpus.yaml` writes `path:` bare, with the reason in a comment.
         static string? Blank(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
+
+        // The same, with the surrounding whitespace gone. A folded scalar ends on a newline, and a
+        // value written into JSON keeps whatever it was handed.
+        static string? Said(string? value) => Blank(value)?.Trim();
     }
 
     // What to tell an author whose descriptor still uses a renamed key, or null where none is in use.

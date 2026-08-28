@@ -115,12 +115,6 @@ public static class Bundler
         if (manifest is null)
             return Stop(problems, $"{ManifestFile} is not a JSON object.");
 
-        // A manifest with no name is refused. The name is what a marketplace installs by and what a
-        // user types. Inventing one here would install the plugin under a name nobody chose.
-        var pluginName = JsonRead.Str(manifest["name"]);
-        if (pluginName is null)
-            return Stop(problems, $"{ManifestFile} states no name, which is what a plugin is installed by.");
-
         // Where the export is put inside the plugin, read from the manifest. The skills address it
         // through `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by that same name. A default here would quietly
         // disagree with the words a corpus wrote in its own skill.
@@ -141,6 +135,15 @@ public static class Bundler
         if (exportManifest is null)
             return Stop(problems,
                 $"the export holds no readable {Exporter.ManifestFile}. Run the export first: kac export");
+
+        // A plugin with no name is refused. The name is what a marketplace installs by and what a user
+        // types, and it is the corpus's own name rather than a second one to keep in step. Asked of the
+        // export, because that is where `Rewrite` takes it from.
+        var pluginName = JsonRead.Str(exportManifest["corpus"]);
+        if (pluginName is null)
+            return Stop(problems,
+                $"the export names no corpus, and that name is what a plugin is installed by. Write "
+                + "`corpus:` in .corpus.yaml and export again.");
 
         // The shape the export declares, held against the shape this build knows how to read. A
         // mismatch is refused, and both numbers are named. `docs/cli/bundle.md` says what a
@@ -214,8 +217,8 @@ public static class Bundler
         // `docs/cli/bundle.md` says why, and why the format version stays put.
         var version = JsonRead.Str(exportManifest["contentVersion"]);
         if (version is null)
-            warnings.Add("the export states no contentVersion, so the plugin keeps the version its own "
-                         + "manifest states. Set content-version in .corpus.yaml.");
+            warnings.Add("the export states no contentVersion, so the plugin manifest carries no version "
+                         + "and nothing will install it. Set content-version in .corpus.yaml.");
 
         // The plugin tree, less every subtree a trimmed component owns, and less the manifest, which is
         // rewritten below. A path no component owns is unconditional and travels whatever the corpus
@@ -230,8 +233,8 @@ public static class Bundler
         // difference between them is a defect rather than something to interpret.
         files.AddRange(source.Export.Select(file => file with { Path = $"{Dist.PluginDir}/{corpusRoot}/{file.Path}" }));
 
-        files.Add(Utf8($"{Dist.PluginDir}/{ManifestFile}",
-            Rewrite(manifest, version, included)));
+        var travelling = Rewrite(manifest, exportManifest, version, included);
+        files.Add(Utf8($"{Dist.PluginDir}/{ManifestFile}", Serialize(travelling)));
 
         // The breadcrumb, rendered here because everything it states is settled here. Asking the
         // surviving files rather than the components is what ties it to the hook directory.
@@ -250,7 +253,7 @@ public static class Bundler
                 [.. included.Select(c => new BundleIncluded(c.Path, c.Requires, c.Note))],
                 [.. trimmed.Select(t => new BundleTrimmed(t.Path, t.Requires, t.Reason))]))));
 
-        files.Add(Utf8(Dist.MarketplaceRel, Marketplace(manifest, pluginName)));
+        files.Add(Utf8(Dist.MarketplaceRel, Marketplace(travelling, pluginName)));
 
         return new BundlePlan(
             [.. files.OrderBy(f => f.Path, StringComparer.Ordinal)],
@@ -317,16 +320,58 @@ public static class Bundler
             | UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute);
     }
 
-    // The plugin manifest as it will travel: the version replaced, the trimmed components gone, and
-    // every other key exactly as the corpus wrote it.
+    // The plugin manifest as it will travel: who this plugin is written from the export, the trimmed
+    // components gone, and every other key exactly as the corpus wrote it.
     //
-    // The document is edited as a DOM rather than mapped onto a record, because `plugin.json` is the
-    // corpus's own file and a corpus may write keys this tool has never heard of. Reading it into a
-    // shape known here and writing that back out would delete them without a word.
-    private static string Rewrite(JsonObject manifest, string? version, List<PluginComponent> included)
+    // **Identity is generated and never inherited.** A corpus copies this file from a template, and a
+    // template naming an author, a licence and a repository hands every corpus that copies it somebody
+    // else's identity to publish under. So each of those keys is written from what the corpus declared,
+    // and a key the corpus declared nothing for is removed rather than left standing. `docs/cli/bundle.md`
+    // says which key each one comes from.
+    //
+    // What is left is the corpus's own declaration: which components it ships, and anything else it
+    // wrote. The document is edited as a DOM rather than mapped onto a record, because a corpus may
+    // write keys this tool has never heard of, and reading it into a shape known here would delete them
+    // without a word.
+    private static JsonObject Rewrite(
+        JsonObject manifest, JsonObject exportManifest, string? version, List<PluginComponent> included)
     {
         var copy = (JsonObject)manifest.DeepClone();
         if (version is not null) copy["version"] = version;
+
+        var about = JsonRead.Object(exportManifest["about"]);
+        var name = JsonRead.Str(exportManifest["corpus"]);
+        if (name is not null) copy["name"] = name;
+
+        State(copy, "displayName", JsonRead.Str(about?["displayName"]));
+        State(copy, "license", JsonRead.Str(about?["license"]));
+
+        // A corpus naming nobody is filed under its own name, as `Packer.Nuspec` files one under its own
+        // id and for the same reason: the field is asked for, and the honest answer to "who wrote this"
+        // is the corpus rather than whoever wrote the template it copied. A licence is not asked for, so
+        // a corpus that chose none asserts none.
+        Set(copy, "author",
+            JsonRead.Object(about?["author"])?.DeepClone()
+            ?? (name is null ? null : new JsonObject { ["name"] = name }));
+
+        // Both name the same place, which is where the corpus's source lives. A plugin manifest asks for
+        // them separately and the export states it once.
+        var home = JsonRead.Str(JsonRead.Object(exportManifest["publishing"])?["base"]);
+        State(copy, "homepage", home);
+        State(copy, "repository", home);
+
+        // Said by the corpus where it said anything, and otherwise a sentence naming what a reader is
+        // installing. A description is what a marketplace lists, so leaving none is worse than a plain one.
+        State(copy, "description",
+            JsonRead.Str(about?["description"])
+            ?? (name is null ? null : $"The {name} knowledge corpus, and the skills that read it."));
+
+        // The types the export actually carried, so a plugin never advertises a type its corpus declined.
+        // The framework's own name leads, because that is what somebody searches a marketplace for.
+        var keywords = Types(exportManifest).Select(t => t.Type).ToList();
+        Set(copy, "keywords",
+            keywords.Count == 0 ? null : new JsonArray([.. keywords.Prepend("knowledge-as-code")
+                .Select(k => (JsonNode)JsonValue.Create(k)!)]));
 
         if (JsonRead.Object(copy["metadata"]) is { } metadata && metadata["components"] is JsonArray components)
         {
@@ -338,8 +383,38 @@ public static class Bundler
             metadata["components"] = kept;
         }
 
-        return copy.ToJsonString(Indented) + "\n";
+        // Ordered so a reader meets the plugin's identity before its declarations, whatever order the
+        // keys were written or added in. A key this tool has never heard of keeps its place after the
+        // ones named here, which is where the corpus wrote it.
+        var ordered = new JsonObject();
+        foreach (var key in Order.Where(k => copy.ContainsKey(k)))
+        {
+            ordered[key] = copy[key]!.DeepClone();
+            copy.Remove(key);
+        }
+
+        foreach (var (key, value) in copy) ordered[key] = value?.DeepClone();
+        return ordered;
     }
+
+    // The keys of a plugin manifest, in the order one is read. Identity first, then what the corpus
+    // declares it ships.
+    private static readonly string[] Order =
+    [
+        "$schema", "name", "displayName", "version", "description", "author", "homepage", "repository",
+        "license", "keywords", "metadata"
+    ];
+
+    // One key stated where the corpus stated it, and gone where it did not. A key left standing is a key
+    // inherited from whatever template the corpus copied, which is the fault this exists to prevent.
+    private static void Set(JsonObject manifest, string key, JsonNode? value)
+    {
+        if (value is null) manifest.Remove(key);
+        else manifest[key] = value;
+    }
+
+    private static void State(JsonObject manifest, string key, string? value) =>
+        Set(manifest, key, value is { Length: > 0 } said ? JsonValue.Create(said) : null);
 
     // The marketplace offering the plugin, so there is something to install it from. One definition
     // serves both ways of reaching it: a path while the plugin is being proved, and a published
@@ -349,16 +424,16 @@ public static class Bundler
     //
     // `.dist/` is the marketplace root and the plugin sits beneath it as `./plugin`, for the reason
     // `Dist.Root` gives.
-    private static string Marketplace(JsonObject manifest, string pluginName) =>
+    private static string Marketplace(JsonObject travelling, string pluginName) =>
         Serialize(new MarketplaceManifest(
             "https://anthropic.com/claude-code/marketplace.schema.json",
             pluginName,
             $"A marketplace holding the {pluginName} plugin.",
-            new MarketplaceOwner(Owner(manifest) ?? pluginName),
+            new MarketplaceOwner(Owner(travelling) ?? pluginName),
             [
                 new MarketplacePlugin(
                     pluginName,
-                    JsonRead.Str(manifest["description"]) ?? $"The {pluginName} plugin, built from this corpus.",
+                    JsonRead.Str(travelling["description"]) ?? $"The {pluginName} plugin, built from this corpus.",
                     $"./{Dist.PluginDir}")
             ]));
 
@@ -449,6 +524,10 @@ public static class Bundler
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
+
+    // The manifest as it is written out. Its own serialiser, because the document is a DOM carrying keys
+    // this tool has never heard of rather than a record it could map.
+    private static string Serialize(JsonObject manifest) => manifest.ToJsonString(Indented) + "\n";
 
     private static string Serialize(BundleRecord record) =>
         JsonSerializer.Serialize(record, KacJson.Relaxed.BundleRecord) + "\n";

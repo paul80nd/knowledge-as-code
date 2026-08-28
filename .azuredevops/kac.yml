@@ -177,8 +177,11 @@ steps:
       cp -R ../../template/.plugin "$TEMPDIR/no-types/.plugin"
       cp .plugin/.claude-plugin/plugin.json "$TEMPDIR/no-types/.plugin/.claude-plugin/plugin.json"
 
-      # kac reads a folder as a corpus by this file, and a corpus adopting no type declares nothing.
-      echo "descriptor-version: 1" > "$TEMPDIR/no-types/.corpus.yaml"
+      # kac reads a folder as a corpus by this file. The name and the version are what a plugin is
+      # installed by and updated on, and the bundle takes both from here, so a corpus adopting no
+      # type still states them.
+      printf 'descriptor-version: 1\ncorpus: no-types\ncontent-version: "0.1.0"\n' \
+        > "$TEMPDIR/no-types/.corpus.yaml"
 
       cd "$TEMPDIR/no-types"
       dotnet run --project "$SOURCES/tooling/kac" -- export

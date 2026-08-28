@@ -122,7 +122,7 @@ public static class Packer
         [
             Utf8("[Content_Types].xml", ContentTypes(payload.Select(f => f.Path))),
             Utf8("_rels/.rels", Rels(nuspecPath)),
-            Utf8(nuspecPath, Nuspec(id, version, shortcode, repository)),
+            Utf8(nuspecPath, Nuspec(id, version, shortcode, repository, About(manifest))),
             .. payload
         ];
 
@@ -165,21 +165,35 @@ public static class Packer
     // be a second thing to keep in step.
     //
     // The description is the one place the envelope names the shortcode, because a description is
-    // required and a person browsing a feed is owed the word they will cite the package by.
+    // required and a person browsing a feed is owed the word they will cite the package by. What the
+    // corpus says about itself opens it, where the corpus said anything: a person browsing a feed is
+    // owed the corpus's own account before the tool's.
+    //
+    // `authors` is required by the format, so a corpus naming nobody is filed under its own id rather
+    // than under whoever wrote the template it copied. A licence is not required, and a corpus that
+    // chose none asserts none.
     //
     // `repository` is the one element beyond the four, and a registry may act on it: GitHub Packages
     // reads that URL to decide which repository a package belongs to, and a token scoped to a
     // repository refuses a package naming none. `docs/cli/pack.md` says when to pass it.
-    private static string Nuspec(string id, string version, string shortcode, string? repository)
+    private static string Nuspec(
+        string id, string version, string shortcode, string? repository, ExportAbout? about)
     {
         XNamespace ns = "http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd";
+
+        var cited = $"Cited as '{shortcode}:'.";
+        var description = about?.Description is { Length: > 0 } said
+            ? $"{said} {cited}"
+            : $"The {id} knowledge corpus, exported as data. {cited}";
 
         var metadata = new XElement(ns + "metadata",
             new XElement(ns + "id", id),
             new XElement(ns + "version", version),
-            new XElement(ns + "authors", id),
-            new XElement(ns + "description",
-                $"The {id} knowledge corpus, exported as data. Cited as '{shortcode}:'."));
+            new XElement(ns + "authors", about?.Author?.Name is { Length: > 0 } who ? who : id),
+            new XElement(ns + "description", description));
+
+        if (about?.License is { Length: > 0 } licence)
+            metadata.Add(new XElement(ns + "license", new XAttribute("type", "expression"), licence));
 
         if (repository is { Length: > 0 })
             metadata.Add(new XElement(ns + "repository",
@@ -187,6 +201,21 @@ public static class Packer
                 new XAttribute("url", repository)));
 
         return Xml(new XDocument(new XElement(ns + "package", metadata)));
+    }
+
+    // What the corpus said about itself, read back off the export it published. Null where the export
+    // predates the block, which leaves every element built the way it was before.
+    private static ExportAbout? About(System.Text.Json.Nodes.JsonObject manifest)
+    {
+        if (JsonRead.Object(manifest["about"]) is not { } about) return null;
+
+        var author = JsonRead.Object(about["author"]);
+
+        return new ExportAbout(
+            JsonRead.Str(about["displayName"]),
+            JsonRead.Str(about["description"]),
+            author is null ? null : new ExportAuthor(JsonRead.Str(author["name"]), JsonRead.Str(author["url"])),
+            JsonRead.Str(about["license"]));
     }
 
     // The OPC relationship naming the manifest inside the package. A zip is not a package until

@@ -7,6 +7,12 @@
   "commit": "<commit>",
   "dirty": null,
   "generatedAt": "<generatedAt>",
+  "about": {
+    "displayName": null,
+    "description": null,
+    "author": null,
+    "license": null
+  },
   "publishing": {
     "target": "none",
     "humanTemplate": null,

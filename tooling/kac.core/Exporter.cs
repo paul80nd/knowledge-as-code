@@ -96,6 +96,7 @@ public static class Exporter
                 run.Commit,
                 run.Dirty,
                 run.GeneratedAt,
+                About(corpus.Descriptor),
                 Addresses(corpus.Descriptor, publishing),
                 types))));
 
@@ -312,6 +313,15 @@ public static class Exporter
     //
     // What a line holds is the type's to declare. Nothing here names a key, so a second type exporting
     // parts costs an `export.parts.line:` block and no line of C#.
+    // What the corpus says about itself, carried through unchanged. Nothing is filled in for a key the
+    // descriptor left empty: a licence nobody chose and an author nobody named are claims about a person.
+    private static ExportAbout About(CorpusDescriptor descriptor) =>
+        new(descriptor.DisplayName, descriptor.Description,
+            descriptor.AuthorName is null && descriptor.AuthorUrl is null
+                ? null
+                : new ExportAuthor(descriptor.AuthorName, descriptor.AuthorUrl),
+            descriptor.License);
+
     // What this type calls the key filled from one source, and null where its line carries none. A
     // consumer addressing a part needs the two that say which record and which part, and only the type
     // knows the words it chose for them.

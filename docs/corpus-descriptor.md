@@ -53,6 +53,27 @@ a legal one looks like and why it never changes. `kac validate` holds you to it.
 Leave the key out until something cites this corpus, which is the ordinary case. [`new`](cli/new.md) writes it bare, and
 an export from a corpus that has not declared one states `null`.
 
+### What a corpus says about itself
+
+```yaml
+display-name: Knowledge as Code
+description: >
+  The engineering knowledge of one organisation, held as records a person and an agent read the same way.
+license: MIT
+author:
+  name: A Person
+  url: https://github.com/a-person
+```
+
+Four keys for a reader who meets this corpus as a package or an installed plugin rather than as a repository.
+[`export`](cli/export.md) carries all four, [`pack`](cli/pack.md) writes them into the package a registry lists, and
+[`bundle`](cli/bundle.md) writes them into the plugin manifest somebody installs.
+
+**A key left bare is carried into neither.** A licence nobody chose and an author nobody named are claims about a
+person, so a corpus that has not said asserts nothing. That is why [`new`](cli/new.md) writes all four bare: a value
+supplied there would be inherited rather than chosen, and every corpus created from the same tool would publish under
+one name.
+
 ## Publishing
 
 ```yaml

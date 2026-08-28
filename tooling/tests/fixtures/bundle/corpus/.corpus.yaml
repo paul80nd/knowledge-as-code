@@ -1,6 +1,13 @@
-# The fixture corpus's descriptor. Present for one key: `content-version` is the number the bundle
-# stamps onto the plugin, and a corpus without it would prove only the fallback.
+# The fixture corpus's descriptor. Present for what the bundle writes into the plugin manifest from it:
+# `content-version` is the number stamped as the plugin's version, and the identity block below is
+# generated into the manifest rather than copied from whatever the plugin file happened to say.
 descriptor-version: 1
 corpus: example-libraries
+display-name: Example Libraries
+description: A worked example corpus, holding an invented estate.
+license: MIT
+author:
+  name: Paul Law
+  url: https://example.com/paul
 content-version: "2.3.4"
 publishing-target: none

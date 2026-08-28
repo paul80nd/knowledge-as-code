@@ -1,5 +1,11 @@
-# Publishes what landed. On every push to main it rebuilds the export and the bundle from the merge
-# commit and writes the result to the `marketplace` branch, which is what a reader adds to Claude Code.
+# Publishes what landed. On every push to main it rebuilds each worked corpus's export and bundle from
+# the merge commit and writes them to the `marketplace` branch, which is what a reader adds to Claude
+# Code. One marketplace, one directory per plugin, assembled here because `bundle` runs in one corpus
+# and knows only that corpus's own.
+#
+# What is published is fictional and is meant to be. These are the example corpora, and they are here so
+# that somebody deciding whether to adopt the framework can install one and ask it questions. Each
+# plugin's description says so, and `.corpus.yaml` is where the corpus states it.
 #
 # One job here holds write, and the branch is what makes that safe: orphaned, never merged back, and
 # holding no file anyone authors, so nothing CI builds can reach the source a human edits. The one
@@ -26,10 +32,19 @@ concurrency:
 env:
   DOTNET_NOLOGO: 'true'
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  # The corpora that publish a plugin, in the order the marketplace lists them. A corpus joins by
+  # adopting a type something in the plugin tree reads, or it ships a plugin with no component in it.
+  CORPORA: 'library engineering'
 
 jobs:
   # Everything that has to be true before anything is published, in a job that cannot publish.
   verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        corpus:
+          - library
+          - engineering
     runs-on: ubuntu-latest
     # Stated rather than inherited: it is why an unpinned CLI may run in this job.
     permissions:
@@ -48,15 +63,15 @@ jobs:
 
       # The gate ran against the pull request's head, and main moved beneath it, so this asks again.
       - name: Validate frontmatter, links and structure
-        working-directory: examples/library
+        working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- validate
 
       - name: Build the export
-        working-directory: examples/library
+        working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- export
 
       - name: Assemble the plugin bundle
-        working-directory: examples/library
+        working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- bundle
 
       # Unpinned for the reason kac.yml gives, which holds only where the CLI cannot reach a push.
@@ -65,7 +80,7 @@ jobs:
 
       # The last thing between a broken bundle and the people who have it installed.
       - name: Validate the assembled plugin and its marketplace
-        working-directory: examples/library
+        working-directory: examples/${{ matrix.corpus }}
         run: |
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
@@ -93,46 +108,67 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
+      # Each corpus in turn, because the branch holds one marketplace offering both. `bundle` writes a
+      # marketplace naming the corpus it ran in, which is what installs a plugin from a path while it
+      # is being proved. The published one offers every plugin at once, and is assembled below.
+      - name: Build every plugin the marketplace offers
+        run: |
+          set -e
 
-      # Every link the export writes names the commit HEAD stands on, which here is one the raw host
-      # serves.
-      - name: Build the export
-        working-directory: examples/library
-        run: dotnet run --project ../../tooling/kac -- export
+          for corpus in $CORPORA; do
+            ( cd "examples/$corpus" \
+              && dotnet run --project ../../tooling/kac -- export \
+              && dotnet run --project ../../tooling/kac -- bundle )
+          done
 
-      - name: Assemble the plugin bundle
-        working-directory: examples/library
-        run: dotnet run --project ../../tooling/kac -- bundle
-
-      # Claude Code offers an update only when the manifest `version` string changes, so a push
-      # carrying the same content-version reaches nobody. A match ends the job here rather than
-      # leaving a commit that says otherwise.
-      - name: Publish the bundle to the marketplace branch
-        working-directory: examples/library
+      # Claude Code offers an update only when a manifest's `version` string changes, so a push
+      # carrying the same content-version reaches nobody. Every plugin matching what the branch
+      # already holds ends the job here rather than leaving a commit that says otherwise.
+      - name: Decide whether anything is new
         env:
           BRANCH: marketplace
+        run: |
+          set -e
+
+          if git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null 2>&1; then
+            git fetch origin "$BRANCH:refs/remotes/origin/$BRANCH"
+          fi
+
+          NEW=''
+          for corpus in $CORPORA; do
+            BUILT=$(jq -r '.version' "examples/$corpus/.dist/plugin/.claude-plugin/plugin.json")
+            NAME=$(jq -r '.name' "examples/$corpus/.dist/plugin/.claude-plugin/plugin.json")
+
+            PUBLISHED=$(git show "origin/$BRANCH:$NAME/.claude-plugin/plugin.json" 2> /dev/null \
+              | jq -r '.version // empty')
+
+            if [ "$BUILT" != "$PUBLISHED" ]; then
+              echo "$NAME $BUILT is new; the branch holds ${PUBLISHED:-nothing}."
+              NEW=yes
+            else
+              echo "$NAME $BUILT is already on $BRANCH."
+            fi
+          done
+
+          if [ -z "$NEW" ]; then
+            echo "every plugin is already published. Nothing to publish."
+            echo "Bump content-version in the corpus you changed to release it."
+          fi
+
+          echo "NEW=$NEW" >> "$GITHUB_ENV"
+
+      - name: Publish the marketplace branch
+        if: env.NEW == 'yes'
+        env:
+          BRANCH: marketplace
+          MARKETPLACE: knowledge-as-code
           WORKTREE: ${{ runner.temp }}/marketplace
         run: |
           set -e
 
-          BUILT=$(jq -r '.version' .dist/plugin/.claude-plugin/plugin.json)
-
-          # Read rather than written down: a corpus names its own plugin and marketplace.
-          PLUGIN=$(jq -r '.plugins[0].name' .dist/.claude-plugin/marketplace.json)
-          MARKETPLACE=$(jq -r '.name' .dist/.claude-plugin/marketplace.json)
-
-          PUBLISHED=''
           EXISTS=''
           if git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null 2>&1; then
             EXISTS=yes
-            git fetch origin "$BRANCH:refs/remotes/origin/$BRANCH"
-            PUBLISHED=$(git show "origin/$BRANCH:plugin/.claude-plugin/plugin.json" 2> /dev/null \
-              | jq -r '.version // empty')
-          fi
-
-          if [ "$BUILT" = "$PUBLISHED" ]; then
-            echo "content-version $BUILT is already on $BRANCH — nothing to publish."
-            exit 0
           fi
 
           # A worktree rather than a second clone, so the branch is built with the credentials the
@@ -155,12 +191,39 @@ jobs:
             exit 1
           fi
 
-          # `.dist/` is the marketplace root, so its contents become the branch root. The export is
-          # left behind: the plugin already carries the same bytes under `corpus/`.
-          cp -R .dist/.claude-plugin "$WORKTREE/.claude-plugin"
-          cp -R .dist/plugin "$WORKTREE/plugin"
+          # One directory per plugin, named for the plugin, because that is what the marketplace
+          # entries below point at. The export is left behind: each plugin already carries the same
+          # bytes under `corpus/`.
+          ENTRIES=''
+          ROWS=''
+          for corpus in $CORPORA; do
+            BUILT="examples/$corpus/.dist/plugin"
+            NAME=$(jq -r '.name' "$BUILT/.claude-plugin/plugin.json")
+            cp -R "$BUILT" "$WORKTREE/$NAME"
 
-          # Tells someone arriving in a browser where the source is, and that editing here is pointless.
+            ENTRY=$(jq -c --arg name "$NAME" --arg source "./$NAME" \
+              '{name: $name, description: .description, source: $source}' \
+              "$BUILT/.claude-plugin/plugin.json")
+            ENTRIES="$ENTRIES$ENTRY,"
+
+            VERSION=$(jq -r '.version' "$BUILT/.claude-plugin/plugin.json")
+            ROWS="$ROWS| \`$NAME\` | \`$VERSION\` |
+          "
+          done
+
+          # One marketplace offering every plugin, which `bundle` does not write because it runs in one
+          # corpus and knows only that corpus's own.
+          mkdir -p "$WORKTREE/.claude-plugin"
+          echo "[${ENTRIES%,}]" | jq \
+            --arg marketplace "$MARKETPLACE" \
+            '{"$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+              name: $marketplace,
+              description: "The worked example corpora that ship with knowledge-as-code, each as an installable plugin.",
+              owner: {name: "Paul Law"},
+              plugins: .}' > "$WORKTREE/.claude-plugin/marketplace.json"
+
+          # Tells someone arriving in a browser where the source is, that these corpora are invented,
+          # and that editing here is pointless.
           cat > "$WORKTREE/README.md" <<EOF
           # knowledge-as-code — the plugin marketplace
 
@@ -172,19 +235,26 @@ jobs:
 
           The source is on [\`main\`](https://github.com/$GITHUB_REPOSITORY).
 
+          ## What these are
+
+          Each plugin here carries one of the **worked example corpora** that ship with knowledge-as-code.
+          The estates they describe are invented, they govern nobody, and they are here so that somebody
+          deciding whether to adopt the framework can install one and ask it questions. Each plugin's own
+          description says so.
+
           ## Installing
 
           \`\`\`
           /plugin marketplace add $GITHUB_REPOSITORY@$BRANCH
-          /plugin install $PLUGIN@$MARKETPLACE
+          /plugin install <plugin>@$MARKETPLACE
           \`\`\`
 
           ## This build
 
-          | | |
+          | Plugin | Corpus content version |
           |---|---|
-          | Corpus content version | \`$BUILT\` |
-          | Built from | [\`$GITHUB_SHA\`](https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA) |
+          $ROWS
+          Built from [\`$GITHUB_SHA\`](https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA).
           EOF
 
           cd "$WORKTREE"
@@ -192,9 +262,9 @@ jobs:
 
           git -c user.name='github-actions[bot]' \
               -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-              commit -m "Publish $PLUGIN $BUILT" \
+              commit -m "Publish the $MARKETPLACE marketplace" \
                      -m "Built from $GITHUB_SHA."
 
           git push origin "HEAD:refs/heads/$BRANCH"
 
-          echo "published content-version $BUILT to $BRANCH."
+          echo "published $MARKETPLACE to $BRANCH."

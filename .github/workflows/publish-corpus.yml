@@ -1,6 +1,11 @@
-# Publishes the governance corpus as a package a downstream corpus can import. On a push to main that
-# touched examples/engineering/, it rebuilds the export, seals it, and pushes it to GitHub Packages at
+# Publishes each worked corpus as a package a downstream corpus can import. On a push to main that
+# touched one of them, it rebuilds that corpus's export, seals it, and pushes it to GitHub Packages at
 # the version .corpus.yaml states.
+#
+# What is published is fictional and is meant to be. These are the example corpora: publishing them is
+# how this repository proves the pack-and-push half of its own tool against a real registry, and how
+# somebody deciding whether to adopt it can pull one and look. Each package says so in its own
+# description, which `.corpus.yaml` states and `kac pack` writes into the envelope.
 #
 # A content-version the registry already holds ends the job at exit 0, as publish-plugin.yml does for
 # the same reason. The path filter narrows the runs but cannot tell an edited record from an edited
@@ -10,7 +15,7 @@
 # Nothing here retries, skips a duplicate or forces. A registry keeps a published version forever, so a
 # correction is a new content-version and never a second push of this one.
 #
-# examples/engineering is the only corpus with a shortcode, and a pack is refused without one.
+# A pack is refused without a shortcode, so a corpus joins this matrix by declaring one.
 # docs/cli/pack.md says why.
 
 name: publish-corpus
@@ -20,6 +25,7 @@ on:
     branches:
       - main
     paths:
+      - 'examples/library/**'
       - 'examples/engineering/**'
 
 permissions:
@@ -34,11 +40,16 @@ concurrency:
 env:
   DOTNET_NOLOGO: 'true'
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
-  CORPUS: examples/engineering
 
 jobs:
   # Everything that has to be true before anything is published, in a job that cannot publish.
   verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        corpus:
+          - library
+          - engineering
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -56,15 +67,15 @@ jobs:
       # The gate ran against the pull request's head, and main moved beneath it. A published version
       # cannot be replaced, only followed, so it is asked again about the merge commit.
       - name: Validate frontmatter, links and structure
-        working-directory: examples/engineering
+        working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- validate
 
       - name: Build the export
-        working-directory: examples/engineering
+        working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- export
 
       - name: Seal the export into a package
-        working-directory: examples/engineering
+        working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- pack
 
   # The only job granted write. It rebuilds rather than taking an artifact from `verify`, as
@@ -72,6 +83,15 @@ jobs:
   # nothing and add a second way for the two to disagree.
   publish:
     needs: verify
+    strategy:
+      fail-fast: false
+      # One at a time. Two jobs pushing to one feed is not a conflict, but a failure then names a
+      # corpus rather than a run, which is what somebody reading the log is looking for.
+      max-parallel: 1
+      matrix:
+        corpus:
+          - library
+          - engineering
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -89,13 +109,13 @@ jobs:
       # Every link the export writes names the commit HEAD stands on, which here is one the raw host
       # serves.
       - name: Build the export
-        working-directory: examples/engineering
+        working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- export
 
       # --repository, because GitHub Packages reads that URL to decide which repository a package
       # belongs to, and github.token is scoped to one. A package naming none is refused.
       - name: Seal the export into a package
-        working-directory: examples/engineering
+        working-directory: examples/${{ matrix.corpus }}
         run: >
           dotnet run --project ../../tooling/kac -- pack
           --repository ${{ github.server_url }}/${{ github.repository }}
@@ -114,7 +134,7 @@ jobs:
         run: |
           set -eo pipefail
 
-          MANIFEST="$CORPUS/.dist/export/manifest.json"
+          MANIFEST="examples/${{ matrix.corpus }}/.dist/export/manifest.json"
           ID=$(jq -r '.corpus' "$MANIFEST")
           VERSION=$(jq -r '.contentVersion' "$MANIFEST")
 
@@ -132,7 +152,7 @@ jobs:
           # a pattern match.
           if echo "$PUBLISHED" | grep -Fqx "$VERSION"; then
             echo "$ID $VERSION is already published. Nothing to publish."
-            echo "Bump content-version in $CORPUS/.corpus.yaml to release what changed since."
+            echo "Bump content-version in examples/${{ matrix.corpus }}/.corpus.yaml to release what changed since."
             echo "NEW=" >> "$GITHUB_ENV"
             exit 0
           fi
@@ -151,7 +171,7 @@ jobs:
         run: |
           set -e
 
-          dotnet nuget push "$CORPUS/.dist/package/$ID.$VERSION.nupkg" \
+          dotnet nuget push "examples/${{ matrix.corpus }}/.dist/package/$ID.$VERSION.nupkg" \
             --source "$FEED" \
             --api-key "$GH_TOKEN"
 
