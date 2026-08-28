@@ -586,6 +586,9 @@ public sealed partial class Schema
     public static Schema Load(string root)
     {
         var dir = Path.Combine(root, ".schema");
+        // Read as the file carries it, where the corpus side reads through `Files.ReadLf`. The schema
+        // needs no normalising of its own, because YAML normalises a line break to `\n` on input. So a
+        // `.schema/` checked out with CRLF endings reaches every value as LF.
         return Load(Directory.GetFiles(dir, "*.yaml")
             .ToDictionary(f => Path.GetFileName(f), File.ReadAllText, StringComparer.Ordinal));
     }
