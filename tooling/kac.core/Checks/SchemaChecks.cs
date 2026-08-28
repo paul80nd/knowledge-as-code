@@ -5,13 +5,18 @@ namespace kac.core;
 // Every other check reads a document. This one reads the files that decide how documents are read, and
 // it exists because those files are copied into corpora whose authors cannot ask what a key meant. A
 // declaration nothing dispatches is not inert to a reader: `rules:` is documented as behaviour the
-// validator applies, so a rule id no code answers to reads as a commitment, and a `ref:` at a type the
-// corpus never adopted reads as a link that is being checked.
+// validator applies, so a rule id no code answers to reads as a commitment.
 //
 // The question asked of each value is not "is this key spelled right" but "is there code that acts on
 // this value". `style: mnemonic` is a real style and would pass a spelling test; what makes it sound is
 // the branch in IdChecks. So each vocabulary here is read from the code that dispatches it rather than
 // restated.
+//
+// A `ref:` and a `versus:` are the exception, because each names a type and a corpus adopts as many types
+// as it has use for. One naming a type this corpus declined is left alone here: nothing enforces it,
+// nothing renders it, and adopting the type later starts both without an edit to this file. A name that
+// is simply wrong is caught where the schema is authored, by SchemaReferenceTests, which reads a
+// `.schema/` holding every type.
 //
 // Findings land against `.schema/<file>.yaml`, because that is the file a corpus owner edits and the
 // one an update writes. A rule or field the loader could not read at all carries its own
@@ -31,7 +36,7 @@ public static class SchemaChecks
         CheckDeclaredChecks(schema, f);
         foreach (var name in schema.UniversalOrder)
             if (schema.Universal.TryGetValue(name, out var spec))
-                CheckField(".schema/_universal.yaml", name, spec, schema, null, f);
+                CheckField(".schema/_universal.yaml", name, spec, null, f);
 
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
@@ -59,7 +64,7 @@ public static class SchemaChecks
             CheckProse(at, key, t, f);
 
             foreach (var name in t.FieldOrder)
-                CheckField(at, name, t.Fields[name], schema, t, f);
+                CheckField(at, name, t.Fields[name], t, f);
 
             foreach (var rule in t.Rules)
                 CheckRule(at, key, rule, f);
@@ -69,10 +74,9 @@ public static class SchemaChecks
     }
 
     // The disambiguations, which are the one thing a type says about another type rather than about
-    // itself. Three ways that goes wrong, and all three read as working until someone opens the page:
-    // a pair against a type no schema covers renders a heading naming nothing; a pair against itself
-    // renders "ADR vs ADR"; and a pair both sides declare renders twice, with two accounts of the same
-    // distinction that nothing keeps in step.
+    // itself. Two ways that goes wrong, and both read as working until someone opens the page: a pair
+    // against itself renders "ADR vs ADR", and a pair both sides declare renders twice, with two accounts
+    // of the same distinction that nothing keeps in step.
     //
     // Which side declares a pair is a convention rather than a rule the tool could derive: it is the
     // type the heading is titled from. So the tool holds the two sides against each other and leaves
@@ -93,12 +97,9 @@ public static class SchemaChecks
                 continue;
             }
 
-            if (!schema.ByFolder.ContainsKey(other))
-            {
-                Dispatch(at, $"type '{key}' declares 'versus: {other}', and no schema covers that folder. Either "
-                             + "the type was never adopted here, or the name is wrong.", f);
-                continue;
-            }
+            // A type this corpus turned down. `Generator.Disambiguations` already leaves the pair out, so
+            // nothing renders and there is nothing to report: a pair needs both sides to say anything.
+            if (!schema.ByFolder.ContainsKey(other)) continue;
 
             var pair = string.CompareOrdinal(key, other) < 0 ? $"{key}|{other}" : $"{other}|{key}";
             if (declared.TryGetValue(pair, out var first))
@@ -392,15 +393,11 @@ public static class SchemaChecks
     // `t` is the type declaring the field, and is null for a universal one. A field declared for every
     // type belongs to none of them, so the questions that read the type's own declarations are not
     // asked of it.
-    private static void CheckField(string at, string name, FieldSpec spec, Schema schema, TypeSchema? t,
+    private static void CheckField(string at, string name, FieldSpec spec, TypeSchema? t,
         List<Finding> f)
     {
         if (spec.Problem is { } problem)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unreadable"), problem));
-
-        foreach (var folder in spec.Refs.Where(folder => !schema.ByFolder.ContainsKey(folder)))
-            Dispatch(at, $"field '{name}' declares 'ref: {folder}', and no schema covers that folder. "
-                         + "Either the type was never adopted here, or the name is wrong.", f);
 
         // Only an enum's range is applied. A `values:` list anywhere else states a vocabulary that
         // nothing holds a document to, which is the shape of promise this pass exists to stop.

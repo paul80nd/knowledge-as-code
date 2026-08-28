@@ -21,7 +21,8 @@ stability: experimental
 
 versus:
   gizmos: >
-    A disambiguation against a type no schema covers, which renders a heading naming nothing.
+    A disambiguation against a type no schema covers, which is a type this corpus declined and reports
+    nothing.
   widgets: >
     And one against itself, which renders "Widget vs Widget".
 

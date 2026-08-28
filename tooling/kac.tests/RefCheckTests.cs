@@ -47,14 +47,27 @@ public class RefCheckTests
         => Assert.Equal("'supersedes' points at 'adr-0099', which does not exist.",
             Assert.Single(Refs(Field("supersedes", "adrs"), "adr-0099")).Message);
 
-    // A `ref:` at a folder no schema covers is `schema-dispatch`'s to report.
+    // A folder no schema covers is a type this corpus declined, which SchemaChecks leaves alone. What the
+    // record is held to does not soften with it: the id has to exist, and it cannot be of a type the
+    // field never named. The declaration names the type, because a type nothing covers has no label.
     [Fact]
     public void A_ref_at_a_folder_no_schema_covers_still_asks_that_the_target_exists()
-    {
-        Assert.Empty(Refs(Field("supersedes", "widgets"), "svc-catalogue"));
-        Assert.Equal("'supersedes' points at 'adr-0099', which does not exist.",
+        => Assert.Equal("'supersedes' points at 'adr-0099', which does not exist.",
             Assert.Single(Refs(Field("supersedes", "widgets"), "adr-0099")).Message);
-    }
+
+    [Fact]
+    public void A_field_whose_every_type_this_corpus_declined_admits_nothing()
+        => Assert.Equal(
+            "'supersedes' points at 'svc-catalogue', which is a Service. The field points at 'widgets', "
+            + "which this corpus did not adopt.",
+            Assert.Single(Refs(Field("supersedes", "widgets"), "svc-catalogue")).Message);
+
+    // One declined type beside one this corpus holds leaves the question askable, so the reader is told
+    // which type was wanted rather than which was missing.
+    [Fact]
+    public void A_field_naming_a_declined_type_beside_an_adopted_one_still_names_the_type_it_wanted()
+        => Assert.Equal("'supersedes' points at 'svc-catalogue', which is a Service, not an ADR.",
+            Assert.Single(Refs(Field("supersedes", "widgets", "adrs"), "svc-catalogue")).Message);
 
     // A wrong-type target carries no counterpart field to point back with, so the reciprocity check stays out of it.
     [Fact]

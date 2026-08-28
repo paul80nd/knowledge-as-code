@@ -1,8 +1,8 @@
 # What the schema is held to
 
 Before `kac` validates a single record, it validates the schema. A declaration the tool does nothing with is not
-harmlessly inert: `rules:` reads as behaviour the validator applies, and a `ref:` reads as a target being checked.
-Either one can sit in a file for a year while nobody notices it does nothing.
+harmlessly inert: `rules:` reads as behaviour the validator applies, and `id.style:` reads as a spelling every id is
+held to. Either one can sit in a file for a year while nobody notices it does nothing.
 
 This matters most in a corpus that copied the framework from somewhere else. A **corpus** is one repository of knowledge
 records kept in git, and if you hold a copied `.schema/` you cannot ask what a key was meant to do. The pass answers for
@@ -18,8 +18,6 @@ you, and every finding names the file and the key.
 | `values: $enums.x` where `_enums.yaml` declares no `x`                                   | `schema-unreadable`  |
 | A rule claiming a `severity:` that neither an `expr:` nor a rule class answers           | `schema-dispatch`    |
 | A rule class reporting under a check id `_checks.yaml` does not declare                  | `schema-dispatch`    |
-| A `ref:` entry naming a folder no schema covers                                          | `schema-dispatch`    |
-| A `versus:` entry naming a folder no schema covers                                       | `schema-dispatch`    |
 | `values:` on any field that is not an `enum`                                             | `schema-dispatch`    |
 | `min-items:` or `min-records:` on any field that is not a `list`                         | `schema-dispatch`    |
 | An `entry:` block on a list whose `of:` is not `object`                                  | `schema-dispatch`    |
@@ -76,11 +74,21 @@ reconciled, any folder is read, any sentence is rendered. What makes one sound i
 or the shape of the page the value lands on. A `sections:` block sits beside a `mirrors-section:`, and the width of a
 table cell bounds the `summary:` that becomes it.
 
-## A target nothing resolves
+## A `ref:` and a `versus:` name a type this corpus may not hold
 
-A `ref:` at a type the corpus never adopted is reported for the same reason as one that is misspelled. Whether the
-folder was deleted locally or never existed upstream, the field claims a target nothing can resolve. Re-adopt the type
-file or drop the `ref:`. Those are two ways of settling one question about what this corpus holds.
+Both are outside the pass. A field's `ref:` names the type its ids point at, and a type's `versus:` names the type it is
+most often confused with. A corpus, meaning one repository of knowledge records, adopts as many of the framework's types
+as it has use for, so either one may name a type this corpus turned down.
+
+Nothing is reported when it does. The disambiguation renders nothing, and `kac update --add-type` starts the reference
+without an edit to `.schema/`. What a record is held to does not soften with it. `ref-resolves` still asks that a cited
+id exists, and it refuses one of a type the field never named: a field whose every type this corpus declined admits
+nothing at all, and says which types it wanted.
+
+The cost is a misspelled name, which reads the same way from inside a corpus that holds a subset of the types. `kac`
+reports it nowhere. What catches it is a test over the authored `.schema/`, held in the repository that writes the
+framework, where every type is present. This repository runs one. A fork writing its own framework schema needs its own,
+and the shape to copy is `tooling/kac.tests/SchemaReferenceTests.cs`.
 
 ## A rule may declare no `severity:`, but not one nothing answers
 

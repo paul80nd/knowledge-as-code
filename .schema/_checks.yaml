@@ -56,9 +56,12 @@ checks:
     notes: >
       The question is whether code acts on the value, not whether it is spelled correctly: `style:
       mnemonic` would pass a spelling test, and what makes it sound is the branch that reads it. Covers
-      a rule id claiming a `severity:` nothing answers, a `ref:` or a `versus:` at a folder no schema
-      covers, `values:` on anything but an enum, `min-items:` on anything but a list, and an unknown
-      `id.style` or `index.order`.
+      a rule id claiming a `severity:` nothing answers, `values:` on anything but an enum, `min-items:`
+      on anything but a list, and an unknown `id.style` or `index.order`.
+
+      A `ref:` and a `versus:` are outside it, because each names a type and a corpus adopts as many
+      types as it has use for. One naming a type this corpus declined enforces nothing and is asked
+      nothing, and adopting the type later starts it with no edit here.
 
       It runs the other way too, for the one part of the code a registry can name: a check id a rule
       class reports under that this file does not declare. A check declared here and reported by

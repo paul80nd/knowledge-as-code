@@ -34,19 +34,23 @@ Scenario: A template that cannot be read is refused
   And the folder holds nothing new
 
 # A type page cross-references the other types, and a corpus adopting a subset holds no page for those
-# links to reach. The links are taken out as each page is written. Held to `link-resolves` alone rather
-# than to a clean exit: a declined type's neighbours still refuse themselves through `schema-dispatch`,
-# which is #346 and not this.
+# links to reach. The links are taken out as each page is written.
 
 Scenario: A corpus that declined types is sent no link it cannot follow
   Given a git repository
   When I create a corpus there adopting "adrs,glossary"
-  Then no link fails to resolve
+  Then it succeeds
+  And no link fails to resolve
 
-Scenario: A corpus adopting a single type is sent no link it cannot follow
+# A type's schema reaches its neighbours too: `standards.yaml` alone reaches four other types, through
+# `ref:` on four fields and a `versus:` naming one of them again. Those name types rather than folders, so
+# a corpus that declined them is asked nothing about them, and adopting one later needs no edit there.
+
+Scenario: A corpus adopting a single type validates
   Given a git repository
   When I create a corpus there adopting "standards"
-  Then no link fails to resolve
+  Then it succeeds
+  And no link fails to resolve
 
 Scenario: A corpus adopting every type keeps the links between its type pages
   Given a git repository

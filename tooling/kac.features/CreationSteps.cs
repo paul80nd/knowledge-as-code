@@ -83,8 +83,8 @@ public sealed class CreationSteps
     public void WhenICreateACorpusThereAdopting(string types)
         => _exit = Creation.Create(_folder, types: types);
 
-    // Read from the corpus that was written rather than from the exit code, because a corpus adopting a
-    // subset still fails `schema-dispatch` and exits non-zero. Creation.feature says why.
+    // Read from the corpus that was written rather than from the exit code, so a failure here names the
+    // links. The exit code is asserted beside it and answers for every other check.
     [Then("no link fails to resolve")]
     public void ThenNoLinkFailsToResolve()
     {
