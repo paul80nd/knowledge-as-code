@@ -1,6 +1,6 @@
 {
   "type": "policies",
-  "path": "policies/mexp-minimised-exposure.md",
+  "path": "policies/security/mexp-minimised-exposure.md",
   "fields": {
     "id": "pol-MEXP",
     "title": "Exposure is minimised and traffic is controlled",
@@ -14,6 +14,6 @@
     "Exceptions": "Some services are meant to be reached by anyone. They are in scope for the rest of this policy rather than exempt from it. They are exposed through an intended route, and everything behind them stays private. Any other exposure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/mexp-minimised-exposure.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d071c2dbedb3ecb1b91a81f56d47d68c94deb822/examples/engineering/policies/security/mexp-minimised-exposure.md"
   }
 }

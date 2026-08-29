@@ -1,6 +1,6 @@
 {
   "type": "policies",
-  "path": "policies/ever-everything-in-version-control.md",
+  "path": "policies/delivery/ever-everything-in-version-control.md",
   "fields": {
     "id": "pol-EVER",
     "title": "Everything is in version control",
@@ -14,6 +14,6 @@
     "Exceptions": "Vendor-supplied binaries and third-party assets we cannot hold in source are referenced by version and provenance instead. See [pol-TRUS]. Any other asset held outside version control requires a recorded deviation under [pol-DEVI], naming the asset, the reason and the recovery plan if it is lost."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/ever-everything-in-version-control.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d071c2dbedb3ecb1b91a81f56d47d68c94deb822/examples/engineering/policies/delivery/ever-everything-in-version-control.md"
   }
 }

@@ -1,6 +1,6 @@
 {
   "type": "policies",
-  "path": "policies/autv-automated-verification.md",
+  "path": "policies/delivery/autv-automated-verification.md",
   "fields": {
     "id": "pol-AUTV",
     "title": "Every change is verified automatically, and failures block",
@@ -14,6 +14,6 @@
     "Exceptions": "An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than waived."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/autv-automated-verification.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d071c2dbedb3ecb1b91a81f56d47d68c94deb822/examples/engineering/policies/delivery/autv-automated-verification.md"
   }
 }

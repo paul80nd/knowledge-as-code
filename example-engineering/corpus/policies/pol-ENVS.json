@@ -1,6 +1,6 @@
 {
   "type": "policies",
-  "path": "policies/envs-environment-separation.md",
+  "path": "policies/security/envs-environment-separation.md",
   "fields": {
     "id": "pol-ENVS",
     "title": "Environments are separated, and production stays in production",
@@ -14,6 +14,6 @@
     "Exceptions": "Not every solution needs a full set of tiers. A reduced set is acceptable where the rationale is recorded and the production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not development, and [pol-INCR] governs it. `CREDS` and `REUSE` carry a secrets prohibition that [pol-SCRT] owns and that admits no exception. Any other departure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a416cff09ec35a4afe60fef7e9d92e8c6ebba922/examples/engineering/policies/envs-environment-separation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d071c2dbedb3ecb1b91a81f56d47d68c94deb822/examples/engineering/policies/security/envs-environment-separation.md"
   }
 }
