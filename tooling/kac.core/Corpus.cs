@@ -167,7 +167,7 @@ public static class Corpus
     private static List<string> DiscoverTemplates(Tree tree, Schema schema)
     {
         var result = new List<string>();
-        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             var rel = $"{t.Folder}/{Artefact.Template}";
             if (tree.OnDisk(rel)) result.Add(rel);

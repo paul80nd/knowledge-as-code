@@ -44,7 +44,7 @@ public static class Validator
         // A type's page is not a record. It carries no frontmatter, and it describes the documents beneath
         // it, so the structural checks do not apply. What it does carry is links, and it is the page every
         // record links back to and every contributor reads first.
-        foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             if (string.IsNullOrEmpty(t.Page)) continue;
             if (!tree.Exists(t.Page)) continue; // absence is type-setup's to report, not this pass's
