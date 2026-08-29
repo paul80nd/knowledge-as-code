@@ -2,7 +2,6 @@
 id: std-0001
 tier: normative
 status: active
-axis: domain
 implements:
   - eng:pol-DATA.MINIMAL
   - eng:pol-MEXP.PEERID

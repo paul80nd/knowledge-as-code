@@ -2,7 +2,7 @@
 
 # Standard Index (STD)
 
-| ID       | Title                                                                                           | Axis   | Status | Derived from | Review by  |
-|----------|-------------------------------------------------------------------------------------------------|--------|--------|--------------|------------|
-| std-0001 | [Card details reach the PSP and never reach us](domain/card-data.md)                            | domain | active |              | 2027-08-28 |
-| std-0002 | [A payment leaves an order reference in the logs and nothing else](domain/payment-telemetry.md) | domain | active |              | 2027-08-28 |
+| ID       | Title                                                                                    | Category | Status | Derived from | Review by  |
+|----------|------------------------------------------------------------------------------------------|----------|--------|--------------|------------|
+| std-0001 | [Card details reach the PSP and never reach us](card-data.md)                            |          | active |              | 2027-08-28 |
+| std-0002 | [A payment leaves an order reference in the logs and nothing else](payment-telemetry.md) |          | active |              | 2027-08-28 |

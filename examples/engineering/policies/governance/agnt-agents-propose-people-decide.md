@@ -1,7 +1,6 @@
 ---
 id: pol-AGNT
 tier: normative
-category: governance
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -64,13 +63,13 @@ applies it has thereby accepted it. [pol-PIPE] governs putting that fix back int
 
 This corpus already works the way this policy describes. When someone records an observation here, it goes in as a
 discovery. A discovery names its source, says how confident we are, and expires unless someone confirms it. It cannot
-confirm itself. It becomes an FAQ or a [standard](../standards) only when a person promotes it. [adr-0001] records why,
+confirm itself. It becomes an FAQ or a [standard](../../standards) only when a person promotes it. [adr-0001] records why,
 and says what we lose if that promotion step is skipped.
 
-[adr-0001]: ../adrs/0001-knowledge-as-code.md
-[pol-ACCS]: accs-access-by-identity.md
-[pol-AUTV]: autv-automated-verification.md
-[pol-PIPE]: pipe-pipeline-to-production.md
-[pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[NIST AI RMF 1.0]: ../frameworks.md#nist-ai-rmf
+[adr-0001]: ../../adrs/0001-knowledge-as-code.md
+[pol-ACCS]: ../security/accs-access-by-identity.md
+[pol-AUTV]: ../delivery/autv-automated-verification.md
+[pol-PIPE]: ../delivery/pipe-pipeline-to-production.md
+[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[NIST AI RMF 1.0]: ../../frameworks.md#nist-ai-rmf

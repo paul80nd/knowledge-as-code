@@ -2,7 +2,6 @@
 id: std-0001
 tier: normative
 status: draft
-axis: common
 implements:
   - pol-EVER
 applies-to:
@@ -77,4 +76,4 @@ instead. We also cannot ask an author about a change a year later if we cannot t
 
 - [pol-EVER] commits us to holding everything in version control, with a history that attributes each change.
 
-[pol-EVER]: ../../policies/ever-everything-in-version-control.md#clauses
+[pol-EVER]: ../../policies/delivery/ever-everything-in-version-control.md#clauses

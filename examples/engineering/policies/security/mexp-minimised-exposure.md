@@ -1,7 +1,6 @@
 ---
 id: pol-MEXP
 tier: normative
-category: security
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -53,6 +52,6 @@ Some services are meant to be reached by anyone. They are in scope for the rest 
 it. They are exposed through an intended route, and everything behind them stays private. Any other exposure requires a
 recorded deviation under [pol-DEVI].
 
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-EVER]: ever-everything-in-version-control.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-EVER]: ../delivery/ever-everything-in-version-control.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001

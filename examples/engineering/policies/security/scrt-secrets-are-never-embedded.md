@@ -1,7 +1,6 @@
 ---
 id: pol-SCRT
 tier: normative
-category: security
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -58,8 +57,8 @@ too.
 is the ordinary case, and it is a recorded deviation under [pol-DEVI] naming who accepts the risk, what compensates for
 it and when it is revisited.
 
-[pol-ACCS]: accs-access-by-identity.md
-[pol-DATA]: data-data-protection.md
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-ENVS]: envs-environment-separation.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
+[pol-ACCS]: ../security/accs-access-by-identity.md
+[pol-DATA]: ../security/data-data-protection.md
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-ENVS]: ../security/envs-environment-separation.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001

@@ -1,7 +1,6 @@
 ---
 id: pol-DATA
 tier: normative
-category: security
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -64,8 +63,8 @@ hold overrides deletion, and is recorded when it does.
 `LAWFUL` admits none. Where personal data may be copied, and for how long, is a question a recorded deviation can
 answer; whether we were entitled to hold it at all is not.
 
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-ENVS]: envs-environment-separation.md
-[pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[UK GDPR]: ../frameworks.md#uk-gdpr
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-ENVS]: ../security/envs-environment-separation.md
+[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[UK GDPR]: ../../frameworks.md#uk-gdpr

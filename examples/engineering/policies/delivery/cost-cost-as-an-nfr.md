@@ -1,7 +1,6 @@
 ---
 id: pol-COST
 tier: normative
-category: delivery
 status: draft
 aligns-with:
 review-by: "2027-08-04"
@@ -51,8 +50,8 @@ Short-lived experiments are exempt from right-sizing but not from ownership or f
 ## Notes
 
 No ISO/IEC 27001:2022 Annex A area corresponds to cost efficiency, so `aligns-with` stays empty. See
-[Policies](../policies.md#why-we-use-them). The [Azure WAF] Cost Optimization pillar is the only alignment this policy
+[Policies](../../policies.md#why-we-use-them). The [Azure WAF] Cost Optimization pillar is the only alignment this policy
 will ever have, because nothing external obliges an organisation to manage its own spend.
 
-[pol-DEVI]: devi-deviations-are-recorded.md
-[Azure WAF]: ../frameworks.md#azure-well-architected-framework
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[Azure WAF]: ../../frameworks.md#azure-well-architected-framework

@@ -199,23 +199,23 @@ Referenced by: [pol-INTC], [pol-SECD], [pol-ACCS].
 A framework nothing references does not belong here. If we stop using one, say so and when, rather than deleting the
 entry: a policy clause written under its influence is easier to read with the history intact.
 
-[pol-A11Y]: policies/a11y-accessibility.md
-[pol-ACCS]: policies/accs-access-by-identity.md
-[pol-AGNT]: policies/agnt-agents-propose-people-decide.md
-[pol-AUTV]: policies/autv-automated-verification.md
-[pol-COST]: policies/cost-cost-as-an-nfr.md
-[pol-DATA]: policies/data-data-protection.md
-[pol-DERV]: policies/derv-derived-data-is-verified.md
-[pol-DEVI]: policies/devi-deviations-are-recorded.md
-[pol-ENVS]: policies/envs-environment-separation.md
-[pol-EVER]: policies/ever-everything-in-version-control.md
-[pol-INTC]: policies/intc-interface-contracts.md
-[pol-OBSV]: policies/obsv-observability.md
-[pol-PERF]: policies/perf-performance-targets.md
-[pol-PIPE]: policies/pipe-pipeline-to-production.md
-[pol-RECV]: policies/recv-recoverability.md
-[pol-SECD]: policies/secd-security-by-design.md
-[pol-TRUS]: policies/trus-trusted-components.md
-[pol-VURM]: policies/vurm-vulnerability-remediation.md
+[pol-A11Y]: policies/governance/a11y-accessibility.md
+[pol-ACCS]: policies/security/accs-access-by-identity.md
+[pol-AGNT]: policies/governance/agnt-agents-propose-people-decide.md
+[pol-AUTV]: policies/delivery/autv-automated-verification.md
+[pol-COST]: policies/delivery/cost-cost-as-an-nfr.md
+[pol-DATA]: policies/security/data-data-protection.md
+[pol-DERV]: policies/delivery/derv-derived-data-is-verified.md
+[pol-DEVI]: policies/governance/devi-deviations-are-recorded.md
+[pol-ENVS]: policies/security/envs-environment-separation.md
+[pol-EVER]: policies/delivery/ever-everything-in-version-control.md
+[pol-INTC]: policies/delivery/intc-interface-contracts.md
+[pol-OBSV]: policies/operations/obsv-observability.md
+[pol-PERF]: policies/delivery/perf-performance-targets.md
+[pol-PIPE]: policies/delivery/pipe-pipeline-to-production.md
+[pol-RECV]: policies/operations/recv-recoverability.md
+[pol-SECD]: policies/security/secd-security-by-design.md
+[pol-TRUS]: policies/security/trus-trusted-components.md
+[pol-VURM]: policies/security/vurm-vulnerability-remediation.md
 [PSBAR 2018]: #psbar-2018
 [WCAG 2.2 AA]: #wcag

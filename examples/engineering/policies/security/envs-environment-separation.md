@@ -1,7 +1,6 @@
 ---
 id: pol-ENVS
 tier: normative
-category: security
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -51,9 +50,9 @@ production boundary itself is unaffected. Diagnosing a live incident in producti
 development, and [pol-INCR] governs it. `CREDS` and `REUSE` carry a secrets prohibition that [pol-SCRT] owns and that
 admits no exception. Any other departure requires a recorded deviation under [pol-DEVI].
 
-[pol-DATA]: data-data-protection.md
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-INCR]: incr-incident-response.md
-[pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf
+[pol-DATA]: ../security/data-data-protection.md
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-INCR]: ../operations/incr-incident-response.md
+[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf

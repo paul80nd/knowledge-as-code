@@ -2,7 +2,6 @@
 id: std-0003
 tier: normative
 status: draft
-axis: common
 implements:
   - pol-ENVS
   - pol-SCRT
@@ -77,5 +76,5 @@ does not reach any of them. Reading from the store at run time keeps rotation to
 - [pol-ENVS] keeps production credentials unreachable from a lower environment.
 - [pol-SCRT] commits us to holding secrets in a controlled store and never embedding one.
 
-[pol-ENVS]: ../../policies/envs-environment-separation.md#clauses
-[pol-SCRT]: ../../policies/scrt-secrets-are-never-embedded.md#clauses
+[pol-ENVS]: ../../policies/security/envs-environment-separation.md#clauses
+[pol-SCRT]: ../../policies/security/scrt-secrets-are-never-embedded.md#clauses

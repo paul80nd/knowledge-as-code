@@ -1,7 +1,6 @@
 ---
 id: pol-TRUS
 tier: normative
-category: security
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -57,8 +56,8 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 A component that can no longer be sourced or maintained may be retained under a recorded deviation ([pol-DEVI]). The
 deviation names the risk owner, the compensating controls and the plan to replace it. "It still works" is not a plan.
 
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-PIPE]: pipe-pipeline-to-production.md
-[pol-VURM]: vurm-vulnerability-remediation.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-PIPE]: ../delivery/pipe-pipeline-to-production.md
+[pol-VURM]: ../security/vurm-vulnerability-remediation.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf

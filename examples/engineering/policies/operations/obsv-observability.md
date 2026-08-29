@@ -1,7 +1,6 @@
 ---
 id: pol-OBSV
 tier: normative
-category: operations
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -51,7 +50,7 @@ into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
 The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system too
 unimportant to monitor is a system to question the existence of.
 
-[pol-DATA]: data-data-protection.md
-[pol-SCRT]: scrt-secrets-are-never-embedded.md
-[Azure WAF]: ../frameworks.md#azure-well-architected-framework
-[ISO 27001:2022]: ../frameworks.md#iso-27001
+[pol-DATA]: ../security/data-data-protection.md
+[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[Azure WAF]: ../../frameworks.md#azure-well-architected-framework
+[ISO 27001:2022]: ../../frameworks.md#iso-27001

@@ -1,7 +1,6 @@
 ---
 id: pol-KNOW
 tier: normative
-category: governance
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -47,5 +46,5 @@ significant decisions. It also covers the reference material a person or an agen
 None. The effort is proportionate: a small internal tool needs less than a customer-facing platform. The commitment to
 write down what is needed does not vary.
 
-[pol-AGNT]: agnt-agents-propose-people-decide.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
+[pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001

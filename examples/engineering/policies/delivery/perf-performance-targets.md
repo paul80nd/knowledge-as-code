@@ -1,7 +1,6 @@
 ---
 id: pol-PERF
 tier: normative
-category: delivery
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -45,6 +44,6 @@ Systems where performance is genuinely not a concern (low-volume internal toolin
 targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system that
 has since acquired users.
 
-[pol-DEVI]: devi-deviations-are-recorded.md
-[Azure WAF]: ../frameworks.md#azure-well-architected-framework
-[ISO 27001:2022]: ../frameworks.md#iso-27001
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[Azure WAF]: ../../frameworks.md#azure-well-architected-framework
+[ISO 27001:2022]: ../../frameworks.md#iso-27001

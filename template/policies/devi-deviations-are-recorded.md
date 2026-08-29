@@ -1,7 +1,6 @@
 ---
 id: pol-DEVI
 tier: normative
-category: governance
 status: draft
 aligns-with:
 review-by: "2027-08-23"

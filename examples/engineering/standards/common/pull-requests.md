@@ -2,7 +2,6 @@
 id: std-0002
 tier: normative
 status: draft
-axis: common
 implements:
   - pol-AGNT
   - pol-EVER
@@ -34,7 +33,7 @@ than the author approves it before it merges.
 
 - A pull request **MUST** carry at least one approval from somebody other than the author before it merges
   ([pol-SECD].CODEREV).
-- A reviewer **MUST** check the change against the standards on this axis, and not read for style alone
+- A reviewer **MUST** check the change against the standards that apply to it, and not read for style alone
   ([pol-SECD].CODEREV).
 - A reviewer **MUST** state what they checked when they approve ([pol-SECD].CODEREV).
 
@@ -91,6 +90,6 @@ faster than it can be checked, so the record of what produced it is what a revie
 - [pol-EVER] requires that a change reaches the default branch by reviewed merge.
 - [pol-SECD] requires that review covers security and correctness.
 
-[pol-AGNT]: ../../policies/agnt-agents-propose-people-decide.md#clauses
-[pol-EVER]: ../../policies/ever-everything-in-version-control.md#clauses
-[pol-SECD]: ../../policies/secd-security-by-design.md#clauses
+[pol-AGNT]: ../../policies/governance/agnt-agents-propose-people-decide.md#clauses
+[pol-EVER]: ../../policies/delivery/ever-everything-in-version-control.md#clauses
+[pol-SECD]: ../../policies/security/secd-security-by-design.md#clauses

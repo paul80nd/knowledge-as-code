@@ -1,7 +1,6 @@
 ---
 id: pol-INTC
 tier: normative
-category: delivery
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -49,6 +48,6 @@ already calling them.
 A security fix may break a contract where leaving it intact would leave data exposed. That is a recorded deviation under
 [pol-DEVI], and consumers are told as soon as it is safe to tell them.
 
-[pol-DEVI]: devi-deviations-are-recorded.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[OWASP ASVS 4.0]: ../frameworks.md#owasp-asvs
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[OWASP ASVS 4.0]: ../../frameworks.md#owasp-asvs

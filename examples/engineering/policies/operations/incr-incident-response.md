@@ -1,7 +1,6 @@
 ---
 id: pol-INCR
 tier: normative
-category: operations
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -60,8 +59,8 @@ which, and we apply it deliberately rather than letting whoever wants the least 
 to recording a significant incident, and none at all to recording a personal data breach. `EVIDENC` binds at every
 severity. Deciding that a breach was not notifiable is itself a decision we have to be able to show.
 
-[pol-DATA]: data-data-protection.md
-[pol-RECV]: recv-recoverability.md
-[pol-SECD]: secd-security-by-design.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[UK GDPR]: ../frameworks.md#uk-gdpr
+[pol-DATA]: ../security/data-data-protection.md
+[pol-RECV]: ../operations/recv-recoverability.md
+[pol-SECD]: ../security/secd-security-by-design.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[UK GDPR]: ../../frameworks.md#uk-gdpr

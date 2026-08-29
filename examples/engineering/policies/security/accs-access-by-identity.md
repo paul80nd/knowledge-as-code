@@ -1,7 +1,6 @@
 ---
 id: pol-ACCS
 tier: normative
-category: security
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -52,8 +51,8 @@ Incident response sometimes needs a break-glass account: one kept for emergencie
 allowed where a person cannot otherwise act. The account is still attributable, its use raises an alert and is recorded,
 and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI].
 
-[pol-AGNT]: agnt-agents-propose-people-decide.md
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-EVER]: ever-everything-in-version-control.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[OWASP ASVS 4.0]: ../frameworks.md#owasp-asvs
+[pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-EVER]: ../delivery/ever-everything-in-version-control.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[OWASP ASVS 4.0]: ../../frameworks.md#owasp-asvs

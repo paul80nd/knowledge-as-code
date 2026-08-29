@@ -1,7 +1,6 @@
 ---
 id: pol-A11Y
 tier: normative
-category: governance
 status: draft
 aligns-with:
   - framework: EN 301 549
@@ -52,9 +51,9 @@ is acceptable; concealing it is not.
 ## Notes
 
 What drives this policy is legal obligation rather than an information-security framework, so it carries no ISO/IEC
-27001 reference. See [Policies](../policies.md#why-we-use-them).
+27001 reference. See [Policies](../../policies.md#why-we-use-them).
 
-[pol-DEVI]: devi-deviations-are-recorded.md
-[EN 301 549]: ../frameworks.md#en-301-549
-[PSBAR 2018]: ../frameworks.md#psbar-2018
-[WCAG 2.2 AA]: ../frameworks.md#wcag
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[EN 301 549]: ../../frameworks.md#en-301-549
+[PSBAR 2018]: ../../frameworks.md#psbar-2018
+[WCAG 2.2 AA]: ../../frameworks.md#wcag

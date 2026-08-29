@@ -1,7 +1,6 @@
 ---
 id: pol-DEVI
 tier: normative
-category: governance
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -67,14 +66,14 @@ Some commitments admit no deviation at all, and no record makes any of them acce
 ## Notes
 
 No standard implements this directly. Standards cite it wherever they carry an exception clause, and so do the
-[controls](../controls.md) that check those clauses are honoured.
+[controls](../../controls.md) that check those clauses are honoured.
 
 This policy says nothing about where a deviation is recorded. That belongs to the process that carries it, so that
 changing where we file deviations does not change what we committed to.
 
-[pol-AGNT]: agnt-agents-propose-people-decide.md
-[pol-DATA]: data-data-protection.md
-[pol-INCR]: incr-incident-response.md
-[pol-KNOW]: know-knowledge-is-written-down.md
-[pol-SCRT]: scrt-secrets-are-never-embedded.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
+[pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md
+[pol-DATA]: ../security/data-data-protection.md
+[pol-INCR]: ../operations/incr-incident-response.md
+[pol-KNOW]: ../governance/know-knowledge-is-written-down.md
+[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001

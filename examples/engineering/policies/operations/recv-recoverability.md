@@ -1,7 +1,6 @@
 ---
 id: pol-RECV
 tier: normative
-category: operations
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -63,9 +62,9 @@ Systems holding no state that cannot be regenerated from source need no data bac
 defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded
 deviation under [pol-DEVI], owned by whoever will answer for the downtime.
 
-[pol-DATA]: data-data-protection.md
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-ENVS]: envs-environment-separation.md
-[pol-INCR]: incr-incident-response.md
-[Azure WAF]: ../frameworks.md#azure-well-architected-framework
-[ISO 27001:2022]: ../frameworks.md#iso-27001
+[pol-DATA]: ../security/data-data-protection.md
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-ENVS]: ../security/envs-environment-separation.md
+[pol-INCR]: ../operations/incr-incident-response.md
+[Azure WAF]: ../../frameworks.md#azure-well-architected-framework
+[ISO 27001:2022]: ../../frameworks.md#iso-27001

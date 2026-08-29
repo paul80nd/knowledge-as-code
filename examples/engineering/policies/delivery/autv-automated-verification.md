@@ -1,7 +1,6 @@
 ---
 id: pol-AUTV
 tier: normative
-category: delivery
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -52,8 +51,8 @@ configuration, data pipelines and the documentation held with them.
 An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is
 recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than waived.
 
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-VURM]: vurm-vulnerability-remediation.md
-[DORA metrics]: ../frameworks.md#dora-metrics
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-VURM]: ../security/vurm-vulnerability-remediation.md
+[DORA metrics]: ../../frameworks.md#dora-metrics
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf

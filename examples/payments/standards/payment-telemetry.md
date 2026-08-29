@@ -2,7 +2,6 @@
 id: std-0002
 tier: normative
 status: active
-axis: domain
 implements:
   - eng:pol-DATA.LOGS
   - eng:pol-SCRT.LOGS

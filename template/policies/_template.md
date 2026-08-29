@@ -1,7 +1,6 @@
 ---
 id: pol-{{MNEM}}
 tier: normative
-category: security
 status: draft
 aligns-with:
 review-by:
@@ -23,8 +22,9 @@ and how it is reviewed. What is below is only what a policy adds to that.
 * **`id`**: `pol-` plus a four-character mnemonic for the policy's concept. Upper-case here and lower-case in the
   filename, so `pol-VURM` sits in `vurm-vulnerability-remediation.md`. **Immutable once the policy is active.** A change
   of meaning is a new policy and a retirement of this one.
-* **`category`**: `security` · `delivery` · `operations` · `governance`. The broad area the commitment belongs to, which
-  is a different question from the topics `tags` records.
+* **Where you save it**: the folder below `policies/` becomes the policy's category, which is the broad area
+  the commitment belongs to. That is a different question from the topics `tags` records. A policy saved
+  straight into `policies/` has no category.
 * **`status`**: `draft` · `active` · `retired`.
 * **`aligns-with`**: every **binding** framework the clause table cites, each with the references reached inside it.
   These capture alignment rather than compliance or certification, and the wording matters if this is ever read

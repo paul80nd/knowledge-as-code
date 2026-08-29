@@ -1,7 +1,6 @@
 ---
 id: pol-EVER
 tier: normative
-category: delivery
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -51,9 +50,9 @@ Vendor-supplied binaries and third-party assets we cannot hold in source are ref
 instead. See [pol-TRUS]. Any other asset held outside version control requires a recorded deviation under [pol-DEVI],
 naming the asset, the reason and the recovery plan if it is lost.
 
-[pol-ACCS]: accs-access-by-identity.md
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-SCRT]: scrt-secrets-are-never-embedded.md
-[pol-TRUS]: trus-trusted-components.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf
+[pol-ACCS]: ../security/accs-access-by-identity.md
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[pol-TRUS]: ../security/trus-trusted-components.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf

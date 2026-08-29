@@ -1,7 +1,6 @@
 ---
 id: pol-DERV
 tier: normative
-category: delivery
 status: draft
 aligns-with:
   - framework: UK GDPR
@@ -59,11 +58,11 @@ accepts a wrong answer reaching a decision. "The numbers have always looked abou
 computation was correct. `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]. Citing it here as
 well would overstate what this policy adds.
 
-[pol-AUTV]: autv-automated-verification.md
-[pol-DATA]: data-data-protection.md
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-OBSV]: obsv-observability.md
-[pol-PIPE]: pipe-pipeline-to-production.md
-[Azure WAF]: ../frameworks.md#azure-well-architected-framework
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[UK GDPR]: ../frameworks.md#uk-gdpr
+[pol-AUTV]: ../delivery/autv-automated-verification.md
+[pol-DATA]: ../security/data-data-protection.md
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-OBSV]: ../operations/obsv-observability.md
+[pol-PIPE]: ../delivery/pipe-pipeline-to-production.md
+[Azure WAF]: ../../frameworks.md#azure-well-architected-framework
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[UK GDPR]: ../../frameworks.md#uk-gdpr

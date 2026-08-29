@@ -1,7 +1,6 @@
 ---
 id: pol-PIPE
 tier: normative
-category: delivery
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -55,9 +54,9 @@ An emergency change to restore service may bypass the normal path where the pipe
 would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the change is reconciled back
 into version control before the incident is closed. Otherwise, the fix becomes the next outage.
 
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-EVER]: ever-everything-in-version-control.md
-[pol-TRUS]: trus-trusted-components.md
-[DORA metrics]: ../frameworks.md#dora-metrics
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-EVER]: ../delivery/ever-everything-in-version-control.md
+[pol-TRUS]: ../security/trus-trusted-components.md
+[DORA metrics]: ../../frameworks.md#dora-metrics
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf

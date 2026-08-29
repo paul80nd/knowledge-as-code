@@ -1,7 +1,6 @@
 ---
 id: pol-SECD
 tier: normative
-category: security
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
@@ -55,11 +54,11 @@ consideration. The secure-design principles and the coding standard still apply.
 before its security work is complete. That is a recorded deviation under [pol-DEVI], not a judgement call made in the
 moment.
 
-[pol-AUTV]: autv-automated-verification.md
-[pol-DEVI]: devi-deviations-are-recorded.md
-[pol-INCR]: incr-incident-response.md
-[pol-VURM]: vurm-vulnerability-remediation.md
-[ISO 27001:2022]: ../frameworks.md#iso-27001
-[NIST SSDF 1.1]: ../frameworks.md#nist-ssdf
-[OWASP ASVS 4.0]: ../frameworks.md#owasp-asvs
-[UK GDPR]: ../frameworks.md#uk-gdpr
+[pol-AUTV]: ../delivery/autv-automated-verification.md
+[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-INCR]: ../operations/incr-incident-response.md
+[pol-VURM]: ../security/vurm-vulnerability-remediation.md
+[ISO 27001:2022]: ../../frameworks.md#iso-27001
+[NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf
+[OWASP ASVS 4.0]: ../../frameworks.md#owasp-asvs
+[UK GDPR]: ../../frameworks.md#uk-gdpr
