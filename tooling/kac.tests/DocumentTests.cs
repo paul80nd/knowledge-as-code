@@ -480,4 +480,67 @@ public class DocumentTests
         Assert.NotNull(doc);
         Assert.Empty(doc.MirroredSectionLinks["Dependencies"]);
     }
+
+    // A field derived from where a record sits. The path arithmetic is what these pin: the type's own
+    // folder comes off the front, the filename comes off the back, and whatever is left is the value.
+    private static Schema DerivedCategory() => new()
+    {
+        ByFolder = new Dictionary<string, TypeSchema>
+        {
+            ["policies"] = new()
+            {
+                TypeName = "policy",
+                Folder = "policies",
+                Fields = new Dictionary<string, FieldSpec>
+                {
+                    ["category"] = new() { Name = "category", From = "sub-path" }
+                }
+            }
+        }
+    };
+
+    [Theory]
+    [InlineData("policies/flat.md", "")]                       // filed flat: no category, and none wanted
+    [InlineData("policies/security/nested.md", "security")]
+    [InlineData("policies/platform/node/deep.md", "platform/node")]
+    public void Doc_Derived_reads_the_sub_path_under_the_type_folder(string rel, string expected)
+    {
+        var doc = Doc.Parse(rel, "---\nid: pol-AAAA\n---\n\n# A title\n", DerivedCategory());
+
+        Assert.NotNull(doc);
+        Assert.Equal(expected, doc.Derived("category"));
+    }
+
+    [Fact]
+    public void Doc_Derived_is_null_for_a_field_the_type_does_not_derive()
+    {
+        var doc = Doc.Parse("policies/security/nested.md", "---\nid: pol-AAAA\n---\n\n# A title\n",
+            DerivedCategory());
+
+        Assert.NotNull(doc);
+        Assert.Null(doc.Derived("id"));
+    }
+
+    // The derived value wins over a written one, so the index, the sort and the export cannot disagree
+    // with the folder while `derived-key` is reporting the line.
+    [Fact]
+    public void Doc_FrontScalar_prefers_the_derivation_to_a_hand_written_value()
+    {
+        var doc = Doc.Parse("policies/security/nested.md",
+            "---\nid: pol-AAAA\ncategory: delivery\n---\n\n# A title\n", DerivedCategory());
+
+        Assert.NotNull(doc);
+        Assert.Equal("security", doc.FrontScalar("category"));
+    }
+
+    // An empty derivation reaches the export as an absent field rather than as an empty string, so a
+    // flat record and one whose field was never declared read the same way to a consumer.
+    [Fact]
+    public void Doc_FrontNode_is_null_where_the_derivation_is_empty()
+    {
+        var doc = Doc.Parse("policies/flat.md", "---\nid: pol-AAAA\n---\n\n# A title\n", DerivedCategory());
+
+        Assert.NotNull(doc);
+        Assert.Null(doc.FrontNode("category"));
+    }
 }

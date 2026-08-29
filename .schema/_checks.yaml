@@ -107,6 +107,19 @@ checks:
     severity: error
     description: Every frontmatter key is a universal field, a type field, or a reserved ADO key.
 
+  derived-key:
+    severity: error
+    description: A field the type derives from where the record sits is absent from frontmatter.
+    notes: >
+      A derived field is declared, so `unknown-key` admits it. Its value is the folders between the
+      type's own folder and the file. A written value is a second answer, and the two can disagree.
+
+      You start using categories by making a folder. A record saved straight into its type folder gets
+      an empty value, which is a normal state.
+
+      Asked of a template too, because a template carrying the key teaches every record copied from it
+      to carry one.
+
   key-order:
     severity: error
     description: Key order is a topological extension of the schema's declared field orders.

@@ -2,7 +2,6 @@
 id: std-{{nnnn}}
 tier: normative
 status: draft
-axis:
 derived-from:
 implements:
 verified-by:

@@ -15,6 +15,27 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **A field can be derived from the folder a record sits in.** A type declares `from: sub-path` on a field, and `kac`
+  reads its value from the folders between the type's own folder and the file. `policies/security/accs-access-by-identity.md`
+  carries `category: security` without a line of frontmatter saying so, and `standards/platform/node/testing.md` carries
+  `platform/node`. A record saved straight into its type folder gets an empty value, so you start using categories by
+  making a folder. The value reaches the generated index, its sort, and `kac export`.
+- **`derived-key` reports a derived field written by hand.** The key is declared, so `unknown-key` admits it and cannot
+  say that the value comes from the path. Delete the line, and file the record in the folder you want it to name.
+
+### Changed
+
+- **A standard's `axis` field is gone, and `category` replaces it.** Nothing read `axis` but one index column, which
+  repeated the folder already shown in each row's link. The composition model stays: the rule-set binding a piece of
+  work is the union of the folders that apply to it. Delete `axis:` from every standard.
+- **A policy's `category` is read from its folder rather than from its frontmatter.** It is no longer a required enum
+  of `security`, `delivery`, `operations` and `governance`. Move each policy into the folder its category named, delete
+  the `category:` line, and the exported value is unchanged. The set of folders is now the corpus's own.
+
 ## 0.16.0 - 2026-08-28
 
 ### Changed

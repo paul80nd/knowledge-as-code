@@ -313,11 +313,43 @@ public partial class Doc
         return doc;
     }
 
-    public string? FrontScalar(string key) => Front is null
+    // The sources a `from:` may name, read by `Derived` below. SchemaChecks holds a declaration to this
+    // list, so a source the tool cannot resolve is reported where the schema is read rather than as an
+    // empty column nobody can explain.
+    public static readonly string[] DerivedSources = ["sub-path"];
+
+    // What the type derives for this key from where the record sits, or null where it derives nothing.
+    // One arm per source, so the list above and the code answering to it are read together.
+    public string? Derived(string key) =>
+        Type?.Fields.GetValueOrDefault(key)?.From switch
+        {
+            "sub-path" => SubPath(),
+            _ => null
+        };
+
+    // The folders between the type's own folder and the file. A record filed at
+    // `policies/security/accs-access-by-identity.md` yields `security`, and one at
+    // `standards/platform/node/testing.md` yields `platform/node`. A record sitting directly in its
+    // type folder yields the empty string, which every caller reads as an unset field. A corpus starts
+    // using categories by making a folder, so one with no folders behaves as it always did.
+    private string SubPath()
+    {
+        if (Folder.Length == 0 || Rel.Length <= Folder.Length) return "";
+
+        var under = Rel[(Folder.Length + 1)..];
+        var cut = under.LastIndexOf('/');
+        return cut < 0 ? "" : under[..cut];
+    }
+
+    // A derived field is read here rather than beside each caller, so the index, the sort and the
+    // export all take one answer. Derived first, because a key the type derives is never the author's
+    // to write: `derived-key` reports one that was written, and this call is what stops the two
+    // disagreeing in the meantime.
+    public string? FrontScalar(string key) => Derived(key) ?? (Front is null
         ? null
         : (from kv in Front.Children
             where ((YamlScalarNode)kv.Key).Value == key
-            select (kv.Value as YamlScalarNode)?.Value).FirstOrDefault();
+            select (kv.Value as YamlScalarNode)?.Value).FirstOrDefault());
 
     // What a field holds, read as a list however it is written. A scalar is the one-entry case rather
     // than a separate shape, so a check over the values of a field asks the same question of
@@ -375,11 +407,22 @@ public partial class Doc
     // A field's node as the document wrote it, for a caller that decides the shape itself. The three
     // readings above each settle on strings, which is what a check and a table cell want. An export writes
     // JSON, so it needs the mapping and the nesting inside an entry intact. `Exporter.Value` is the caller.
-    public YamlNode? FrontNode(string key) => Front is null
-        ? null
-        : (from kv in Front.Children
-            where ((YamlScalarNode)kv.Key).Value == key
-            select kv.Value).FirstOrDefault();
+    //
+    // A derived field is handed back as the scalar the derivation came to, for the reason `FrontScalar`
+    // reads one first: the export carries what the corpus means by the field, and where the record sits
+    // is what the corpus means. An empty derivation stays null, so a flat record exports the field
+    // exactly as an unset one.
+    public YamlNode? FrontNode(string key)
+    {
+        if (Derived(key) is { } derived)
+            return derived.Length == 0 ? null : new YamlScalarNode(derived);
+
+        return Front is null
+            ? null
+            : (from kv in Front.Children
+                where ((YamlScalarNode)kv.Key).Value == key
+                select kv.Value).FirstOrDefault();
+    }
 
     // Walk the top-level blocks to the H1, then look at the one after it. A paragraph whose first
     // inline is a code span is taken as an attempted identity line, and its code spans are collected.

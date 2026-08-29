@@ -1,7 +1,6 @@
 ---
 id: pol-ORDN
 tier: normative
-category: governance
 status: draft
 aligns-with:
   - framework: ISO 27001:2022

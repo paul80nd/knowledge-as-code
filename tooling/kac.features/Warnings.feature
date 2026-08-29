@@ -23,7 +23,7 @@ Scenario: Numbers in a list entry compare as numbers, not as text
     | severity | line | check | message |
   And the findings for "policies/ordn-ordinal-not-natural.md" are exactly:
     | severity | line | check      | message                                                                                  |
-    | warning  |    7 | list-order | 'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'. |
+    | warning  |    6 | list-order | 'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'. |
 
 Scenario: A Y-statement past the ceiling its type declares warns, naming the count and the limit
   When I validate the corpus
@@ -53,5 +53,5 @@ Scenario: The corpus as a whole warns seven times and errors not at all
     | adrs/0002-list-order.md              | warning  | 8    | list-order           | 'tags' is not in alphabetical order: 'access-control' should come before 'identity'.                                                                                                              |
     | adrs/0003-long-y-statement.md        | warning  | 13   | y-statement          | Y-statement is 95 words; keep it under 60.                                                                                                                                                        |
     | adrs/0004-incomplete-y-statement.md  | warning  | 13   | y-statement          | Y-statement is missing "facing" and "rather than". The six moves are what make it a Y-statement rather than a summary of one.                                                                     |
-    | policies/ordn-ordinal-not-natural.md | warning  | 7    | list-order           | 'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'.                                                                                                          |
+    | policies/ordn-ordinal-not-natural.md | warning  | 6    | list-order           | 'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'.                                                                                                          |
     | gadgets/alone.md                     | warning  | 1    | min-records          | 'facets: singular' is carried by 1 gadget record: the schema asks for at least 2, because a value here is meant to group records. One that does not belongs in a field that is free to be unique. |

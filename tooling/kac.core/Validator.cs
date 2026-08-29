@@ -132,6 +132,18 @@ public static class Validator
                 if (!t.KnownKeys.Contains(k))
                     report.Err(new CheckId("unknown-key"), $"unknown frontmatter key '{k}'.", d.FrontStartLine);
 
+        // A field the type derives is known, so `unknown-key` passes it and `template-fields` passes it
+        // in a template. Both are right: the key is declared. What neither can say is that the value is
+        // read from where the record sits, so a written one is a second answer nothing reconciles.
+        // Asked of a template as well, because a template carrying the key teaches every record copied
+        // from it to carry one.
+        foreach (var k in d.FrontKeys)
+            if (t.Fields.GetValueOrDefault(k)?.From is { } from)
+                report.Err(new CheckId("derived-key"),
+                    $"'{k}' is derived from the record's {from} and is not written in frontmatter. "
+                    + "Delete the line, and file the record in the folder you want it to name.",
+                    d.FrontStartLine);
+
         // The key order must be a topological extension of the chains the schema declares: every pair it
         // orders must hold, and genuinely unconstrained pairs are free. See
         // TypeSchema.DeriveKeyOrderEdges for why the constraint is a pair set rather than a total order.

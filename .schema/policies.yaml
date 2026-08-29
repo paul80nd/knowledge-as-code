@@ -51,14 +51,17 @@ filename:
 fields:
 
   category:
-    required: true
-    type: enum
-    values: [security, delivery, operations, governance]
-    description: The broad area the commitment belongs to. Controlled, and deliberately few.
+    type: string
+    from: sub-path
+    description: The folder the policy is filed under, below `policies/`.
     notes: >
       Why the policy exists, where `tags` say what topics it touches. The two answer different questions
-      and stay separate. Deliberately a small, closed set: a category earns its place by grouping enough
-      policies to be worth navigating, so resist adding a fifth until one is genuinely crowded out.
+      and stay separate.
+
+      Where you save the file is what sets it. A policy saved straight into `policies/` has no
+      category, and the corpus stays as one list until it wants folders. You choose the folders. A
+      category earns its place by grouping enough policies to be worth navigating, so resist adding a
+      fifth until one is genuinely crowded out.
       Category is metadata rather than folder structure, so a policy is recategorised by editing one line
       rather than by moving a file and rewriting everything that links to it.
 

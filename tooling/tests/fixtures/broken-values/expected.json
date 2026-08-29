@@ -4,7 +4,8 @@
     "templates": 3,
     "skipped": 0,
     "errors": 9,
-    "warnings": 0
+    "warnings": 0,
+    "infos": 0
   },
   "findings": [
     {

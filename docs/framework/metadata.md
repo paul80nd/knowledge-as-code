@@ -51,6 +51,19 @@ Four fields are deliberately absent, and the reasoning is the same each time.
 | `created` / `updated` | Git knows, and will not forget to update it      |
 | `lifecycle`           | Follows from tier. A second field could disagree |
 
+### A field the schema derives, which you never write
+
+A type can also take a field's value from the folder a record is saved in. A field declaring `from: sub-path` carries
+the folders between the type's own folder and the file, so a policy at `policies/security/accs-access-by-identity.md`
+carries `category: security` with no line of frontmatter saying so. Folders can nest, so
+`standards/platform/node/testing.md` carries `platform/node`.
+
+Save a record straight into its type folder and the field is empty. That is a normal state, not a gap. You start
+using categories by making a folder, and you choose the folders yourself.
+
+The value reaches everything that reads the field: the generated index, its sort, and `kac export`. Writing the key by
+hand is an error, reported as `derived-key`, because the folder and the line could then say different things.
+
 ## Naming
 
 **A type name is singular** and its folder and page are plural: an *ADR* in `adrs/`, a *standard* in `standards/`. The

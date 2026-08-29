@@ -1,7 +1,6 @@
 ---
 id: pol-BKUP
 tier: normative
-category: operations
 status: active
 aligns-with:
   - framework: ISO 27001:2022

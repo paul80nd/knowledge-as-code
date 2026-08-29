@@ -57,6 +57,12 @@ public sealed class FieldSpec
     // floor divides nothing, and belongs in a field that is free to be unique.
     public int? MinRecords { get; init; }
 
+    // Where the field's value comes from, for a field the record never writes. `sub-path: security`
+    // is filed at `policies/security/`, so the value is a fact about where the record sits and the
+    // author sets it by saving the file. Null for every field an author fills in. `Doc.DerivedSources`
+    // is the vocabulary, and holds the code that reads each one.
+    public string? From { get; init; }
+
     // Why this declaration could not be read, where it could not be. Carried on the spec rather than
     // thrown at load, so that one unreadable field is one finding naming the file and the key, and the
     // rest of the schema still loads. A corpus is told what is wrong with it, not handed a stack trace.
@@ -886,6 +892,7 @@ public sealed partial class Schema
             Pattern = pattern,
             PatternRegex = CompilePattern(pattern),
             MirrorsSection = Yaml.Str(node.Get("mirrors-section")),
+            From = Yaml.Str(node.Get("from")),
             AllowLiteral = Yaml.StrList(node.Get("allow-literal")),
             MinItems = Yaml.NullableInt(node.Get("min-items")),
             MinRecords = Yaml.NullableInt(node.Get("min-records")),
