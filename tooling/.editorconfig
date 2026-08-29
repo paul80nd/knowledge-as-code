@@ -436,6 +436,16 @@ csharp_indent_case_contents_when_block = false
 # No file here groups its usings, and `dotnet_sort_system_directives_first` carries the order.
 dotnet_separate_import_directive_groups = false
 
+# Every file is in the `kac.core` namespace, whatever folder holds it. `Checks/` and `Rules/` group
+# files by the job they do rather than by who calls them, and nothing outside either folder names it
+# to reach what is inside. The template asks the namespace to follow the folder, which would put one
+# in front of every one of those calls.
+#
+# Two keys, because two analysers ask the question. The first is the .NET one, and the second is
+# ReSharper's, which is what a JetBrains IDE reads.
+dotnet_style_namespace_match_folder = false
+resharper_check_namespace_highlighting = none
+
 # A wrapped binary expression carries the operator at the start of the continuation line: 79
 # such continuations, against none the other way. There is no vendor-neutral property for it,
 # so this is a ReSharper key and other formatters will not read it.
