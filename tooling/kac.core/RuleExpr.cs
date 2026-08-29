@@ -41,21 +41,31 @@ public sealed class RuleExprException(string message) : Exception(message);
 
 public static class RuleExpr
 {
-    // Every function an expression may call, with the types it takes and returns. The grammar knows
-    // nothing about these: adding a fact is adding a row here and a method on Facts.
-    private static readonly Dictionary<string, (ValueType[] Args, ValueType Returns)> Functions =
+    // What one fact declares: the types it takes, the type it returns, and the call that answers it.
+    private readonly record struct FactSpec(
+        ValueType[] Args,
+        ValueType Returns,
+        Func<Facts, object?[], object?> Fn);
+
+    // Every function an expression may call. The grammar knows nothing about these: adding a fact is
+    // adding a row here and a method on Facts. The row carries the call beside the signature, so a fact
+    // this table declares and nothing answers cannot be written. Each cast below is safe because
+    // `TypeOf` has already held the argument to the type declared beside it.
+    private static readonly Dictionary<string, FactSpec> Functions =
         new(StringComparer.Ordinal)
         {
-            ["field"] = ([ValueType.Str], ValueType.Str),
-            ["present"] = ([ValueType.Str], ValueType.Bool),
-            ["section"] = ([ValueType.Str], ValueType.Bool),
-            ["section_count"] = ([ValueType.Str], ValueType.Int),
-            ["first_section"] = ([], ValueType.Str),
-            ["links"] = ([], ValueType.Int),
-            ["words"] = ([], ValueType.Int),
-            ["matches"] = ([ValueType.Str], ValueType.Bool),
-            ["section_matches"] = ([ValueType.Str, ValueType.Str], ValueType.Bool),
-            ["field_matches"] = ([ValueType.Str, ValueType.Str], ValueType.Bool)
+            ["field"] = new([ValueType.Str], ValueType.Str, (f, a) => f.Field((string)a[0]!)),
+            ["present"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Present((string)a[0]!)),
+            ["section"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Section((string)a[0]!)),
+            ["section_count"] = new([ValueType.Str], ValueType.Int, (f, a) => f.SectionCount((string)a[0]!)),
+            ["first_section"] = new([], ValueType.Str, (f, _) => f.FirstSection()),
+            ["links"] = new([], ValueType.Int, (f, _) => f.Links()),
+            ["words"] = new([], ValueType.Int, (f, _) => f.Words()),
+            ["matches"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Matches((string)a[0]!)),
+            ["section_matches"] = new([ValueType.Str, ValueType.Str], ValueType.Bool,
+                (f, a) => f.SectionMatches((string)a[0]!, (string)a[1]!)),
+            ["field_matches"] = new([ValueType.Str, ValueType.Str], ValueType.Bool,
+                (f, a) => f.FieldMatches((string)a[0]!, (string)a[1]!))
         };
 
     // The callable surface by name, for the meta-test holding the reference table in
@@ -93,20 +103,7 @@ public static class RuleExpr
     private static object? Invoke(Call call, Facts f)
     {
         var args = call.Args.Select(a => Value(a, f)).ToArray();
-        return call.Name switch
-        {
-            "field" => f.Field((string)args[0]!),
-            "present" => f.Present((string)args[0]!),
-            "section" => f.Section((string)args[0]!),
-            "section_count" => f.SectionCount((string)args[0]!),
-            "first_section" => f.FirstSection(),
-            "links" => f.Links(),
-            "words" => f.Words(),
-            "matches" => f.Matches((string)args[0]!),
-            "section_matches" => f.SectionMatches((string)args[0]!, (string)args[1]!),
-            "field_matches" => f.FieldMatches((string)args[0]!, (string)args[1]!),
-            _ => null
-        };
+        return Functions.TryGetValue(call.Name, out var fact) ? fact.Fn(f, args) : null;
     }
 
     private static object? Binary(Bin bin, Facts f)
