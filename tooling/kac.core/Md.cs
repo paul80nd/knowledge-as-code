@@ -7,6 +7,21 @@ namespace kac.core;
 
 public static class Md
 {
+    // The extensions every document depends on: the frontmatter block, the pipe tables a clause section
+    // is written as, and task lists. A `[ ]` at the head of a list item is a checkbox, and the same
+    // brackets mid-sentence are prose, so what they mean depends on where the block puts them. The
+    // bracket scan in `Doc` reads inlines and cannot ask. Markdig can: with task lists on, the checkbox
+    // parses as an inline of its own and breaks the run of literals the scan reads, while a `[x]` typed
+    // mid-sentence still reaches it. A built pipeline is immutable, so it is built once here and shared
+    // across every parse.
+    private static readonly MarkdownPipeline Pipeline =
+        new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().UseTaskLists().Build();
+
+    // Every read of a document goes through here, so one file has one reading. Markdig's own default
+    // leaves the frontmatter block unparsed. The `---` closing the block then reads as a setext heading
+    // carrying the whole block as its text, and `fragment-resolves` accepts an anchor no renderer offers.
+    internal static MarkdownDocument Parse(string text) => Markdown.Parse(text, Pipeline);
+
     public static string PlainText(ContainerInline? container)
     {
         if (container is null) return "";
@@ -50,14 +65,14 @@ public static class Md
     // is what a reader takes from a page grouping its subject under `##` and naming each one under
     // `###`.
     public static IEnumerable<(int Level, string Text)> Headings(string markdown) =>
-        Markdown.Parse(markdown).Descendants<HeadingBlock>()
+        Parse(markdown).Descendants<HeadingBlock>()
             .Select(h => (h.Level, PlainText(h.Inline)));
 
     // The anchors a document offers a link: one per heading, at every level.
     public static HashSet<string> Anchors(string markdown)
     {
         var set = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var h in Markdown.Parse(markdown).Descendants<HeadingBlock>())
+        foreach (var h in Parse(markdown).Descendants<HeadingBlock>())
         {
             var slug = Slug(PlainText(h.Inline));
             if (slug.Length > 0) set.Add(slug);
