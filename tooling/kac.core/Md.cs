@@ -69,10 +69,14 @@ public static class Md
             .Select(h => (h.Level, PlainText(h.Inline)));
 
     // The anchors a document offers a link: one per heading, at every level.
-    public static HashSet<string> Anchors(string markdown)
+    public static HashSet<string> Anchors(string markdown) => Anchors(Parse(markdown));
+
+    // Beside the overload above, for a document already parsed. A check holding a `Doc` has its AST,
+    // and parsing the text again would make two readings of one file.
+    public static HashSet<string> Anchors(MarkdownDocument ast)
     {
         var set = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var h in Parse(markdown).Descendants<HeadingBlock>())
+        foreach (var h in ast.Descendants<HeadingBlock>())
         {
             var slug = Slug(PlainText(h.Inline));
             if (slug.Length > 0) set.Add(slug);

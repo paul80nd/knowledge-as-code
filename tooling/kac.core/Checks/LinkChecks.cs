@@ -27,7 +27,8 @@ public static class LinkChecks
             // A fragment with nothing before it names a heading in this document.
             if (path.Length == 0)
             {
-                CheckFragment(d.Text, fragment, d.Rel, link.Line, report);
+                if (fragment.Length > 0)
+                    CheckFragment(Md.Anchors(d.Ast), fragment, d.Rel, link.Line, report);
                 continue;
             }
 
@@ -39,9 +40,10 @@ public static class LinkChecks
             }
 
             // Only a Markdown file offers headings to land on. A link into anything else carries a
-            // fragment the corpus cannot judge, and silence is the honest answer.
-            if (file.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
-                CheckFragment(tree.Read(file), fragment, path, link.Line, report);
+            // fragment the corpus cannot judge, and silence is the honest answer. A link naming no
+            // fragment asks nothing of the file, so it is never read.
+            if (fragment.Length > 0 && file.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+                CheckFragment(Md.Anchors(tree.Read(file)), fragment, path, link.Line, report);
         }
 
         // undefined shortcut and reference labels left as literal '[label]'. Id-shaped is an error:
@@ -97,11 +99,10 @@ public static class LinkChecks
     //
     // Judged on the anchor every renderer agrees on; see `Md.Slug`. A heading whose punctuation makes
     // renderers disagree therefore fails here, where somebody is looking, and not later in the wiki.
-    private static void CheckFragment(string markdown, string fragment, string page, int? line,
+    private static void CheckFragment(HashSet<string> anchors, string fragment, string page, int? line,
         Report report)
     {
-        if (fragment.Length == 0) return;
-        if (Md.Anchors(markdown).Contains(fragment)) return;
+        if (anchors.Contains(fragment)) return;
         report.Err(new CheckId("fragment-resolves"), $"'#{fragment}' names no heading in '{page}'.", line);
     }
 
