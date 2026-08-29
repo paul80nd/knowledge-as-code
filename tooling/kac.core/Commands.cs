@@ -136,40 +136,28 @@ public static class Commands
             if (asker is not null && !asker.Confirm("Create the corpus here anyway?")) return Cancelled();
         }
 
-        var read = TemplateSource.Read("new", request.From, request.Ref, request.Path, Path.GetTempPath(),
-            prompt: asker is not null);
-        if (read.Problem is { } unreachable) return Fail(unreachable);
-        using var template = read.Source!;
+        using var take = TemplateSource.Take("new", request.From, request.From, request.Ref, request.Path,
+            Path.GetTempPath(), prompt: asker is not null, toolVersion);
+        if (take.Problem is { } unreadable) return Fail(unreadable);
 
-        var manifestFile = Path.Combine(template.Root, Manifest.FileName);
-        if (!File.Exists(manifestFile))
-            return Fail($"new: {request.From} holds no {Manifest.FileName}, so there is no template to "
-                        + "read. --path names the folder holding it, where it is not at the root.");
-
-        var manifest = Manifest.LoadFrom(manifestFile);
-        if (kac.core.New.TooOldFor(manifest.MinimumTool, toolVersion, "new") is { } tooOld) return Fail(tooOld);
-
-        // The schema the template serves, which is the one account of what types there are to adopt.
-        var schema = Schema.Load(Schema.FindRoot(template.Root) ?? template.Root);
-        var declared = schema.ByFolder.Keys.OrderBy(k => k, StringComparer.Ordinal).ToList();
-
-        var answered = Asking.Resolve(request, new DirectoryInfo(dir).Name, declared,
+        var answered = Asking.Resolve(request, new DirectoryInfo(dir).Name, take.Declared,
             Git.Run(dir, "remote get-url origin")?.Trim(), asker);
         if (answered.Problem is { } unanswered) return Fail(unanswered);
         var answers = answered.Answers!;
 
-        var upstream = new Upstream(request.From, request.Path, request.Ref, template.Commit,
-            manifest.Version, today);
+        var upstream = new Upstream(request.From, request.Path, request.Ref, take.Commit,
+            take.Manifest.Version, today);
 
-        Summarise(dir, answers, upstream, declared.Count);
+        Summarise(dir, answers, upstream, take.Declared.Count);
         if (asker is not null && !asker.Confirm("Create it?")) return Cancelled();
 
-        var plan = kac.core.New.Plan(template.Files(), manifest, answers, upstream,
-            kac.core.New.DeclinesTypes(schema, answers.Types));
-        if (plan.TemplateIsUnsound) return Unsound(plan, request.From);
+        var plan = kac.core.New.Plan(take.Files(), take.Manifest, answers, upstream,
+            kac.core.New.DeclinesTypes(take.Schema, answers.Types));
+        if (plan.TemplateIsUnsound)
+            return Unsound("new", request.From, plan.Unclassified, plan.UnknownCi);
 
-        var declined = SeedLinks.Declined(schema, answers.Types);
-        foreach (var path in kac.core.New.Apply(plan, template.Root, dir, declined)) Out.Markup(Wrote(path));
+        var declined = SeedLinks.Declined(take.Schema, answers.Types);
+        foreach (var path in kac.core.New.Apply(plan, take.Root, dir, declined)) Out.Markup(Wrote(path));
 
         // Named where a reader can act on it, counted where they cannot. A declined type is a decision
         // just made and needs no list; a starter withheld is one file, and which one is the whole fact.
@@ -180,7 +168,7 @@ public static class Commands
                     + $"{answers.Ci}.");
 
         Account($"new: wrote {plan.Copied.Count + plan.Composed.Count} file(s) for {answers.Name}, taken "
-                + $"from {request.From}{At(template.Commit)}.");
+                + $"from {request.From}{At(take.Commit)}.");
 
         // Generation writes the `_index.md` files and the generated blocks that validation then checks,
         // so it goes first. Staging goes last, so everything the command did is visible in one place.
@@ -272,18 +260,19 @@ public static class Commands
             Account("new: staged. `git status` shows everything this wrote, and the first commit is yours.");
     }
 
-    // Both halves of `NewPlan.TemplateIsUnsound`, each naming what the template did rather than the
-    // count of it, because the fix is upstream and needs the paths.
-    private static int Unsound(NewPlan plan, string from)
+    // Both halves of `TemplateIsUnsound`, which `NewPlan` and `UpdatePlan` declare alike. Each names what
+    // the template did rather than the count of it, because the fix is upstream and needs the paths.
+    private static int Unsound(string verb, string from, IReadOnlyList<string> unclassified,
+        IReadOnlyList<string> unknownCi)
     {
-        if (plan.Unclassified.Count > 0)
+        if (unclassified.Count > 0)
         {
-            Stop($"new: {from} has a manifest that does not place its own tree. these files match no rule:");
-            foreach (var path in plan.Unclassified) Out.ErrLine($"  {path}");
+            Stop($"{verb}: {from} has a manifest that does not place its own tree. these files match no rule:");
+            foreach (var path in unclassified) Out.ErrLine($"  {path}");
         }
 
-        if (plan.UnknownCi.Count > 0)
-            Stop($"new: {from} serves {string.Join(" and ", plan.UnknownCi)}, which this tool cannot offer. "
+        if (unknownCi.Count > 0)
+            Stop($"{verb}: {from} serves {string.Join(" and ", unknownCi)}, which this tool cannot offer. "
                  + $"it offers {string.Join(", ", CiSystem.All)}.");
 
         return 1;
@@ -644,37 +633,24 @@ public static class Commands
             return Fail("update: this repository holds uncommitted changes. commit or stash them first, "
                         + "so that what `update` writes reads as a diff of its own.");
 
-        var read = TemplateSource.Read("update", kac.core.Update.TemplatePath(from, corpusRoot),
+        using var take = TemplateSource.Take("update", kac.core.Update.TemplatePath(from, corpusRoot), from,
             request.Ref ?? descriptor.UpstreamRef, request.Path ?? descriptor.UpstreamPath,
-            Path.GetTempPath(), prompt: Out.Interactive && !request.Yes);
-        if (read.Problem is { } unreachable) return Fail(unreachable);
-        using var template = read.Source!;
-
-        var manifestFile = Path.Combine(template.Root, Manifest.FileName);
-        if (!File.Exists(manifestFile))
-            return Fail($"update: {from} holds no {Manifest.FileName}, so there is no template to read. "
-                        + "--path names the folder holding it, where it is not at the root.");
-
-        var manifest = Manifest.LoadFrom(manifestFile);
-        if (kac.core.New.TooOldFor(manifest.MinimumTool, toolVersion, "update") is { } tooOld)
-            return Fail(tooOld);
-
-        var schema = Schema.Load(Schema.FindRoot(template.Root) ?? template.Root);
-        var declared = schema.ByFolder.Keys.OrderBy(k => k, StringComparer.Ordinal).ToList();
+            Path.GetTempPath(), prompt: Out.Interactive && !request.Yes, toolVersion);
+        if (take.Problem is { } unreadable) return Fail(unreadable);
 
         var corpusFiles = kac.core.Update.Listing(corpusRoot);
-        var adoption = kac.core.Update.Adopt(corpusFiles, descriptor, schema, declared,
+        var adoption = kac.core.Update.Adopt(corpusFiles, descriptor, take.Schema, take.Declared,
             request.AddType, request.DropType);
         if (adoption.Problem is { } refused) return Fail(refused);
 
-        var types = new UpdateTypes(declared, adoption.Types,
-            kac.core.New.DeclinesTypes(schema, adoption.Types ?? declared));
+        var types = new UpdateTypes(take.Declared, adoption.Types,
+            kac.core.New.DeclinesTypes(take.Schema, adoption.Types ?? take.Declared));
 
-        var declined = SeedLinks.Declined(schema, adoption.Types ?? declared);
+        var declined = SeedLinks.Declined(take.Schema, adoption.Types ?? take.Declared);
 
-        var plan = kac.core.Update.Plan(template.Files(), corpusFiles, manifest, descriptor, types, policy,
-            kac.core.Update.ReadInPlace(template.Root, corpusRoot),
-            file => kac.core.Update.Same(template.Root, corpusRoot, file, declined));
+        var plan = kac.core.Update.Plan(take.Files(), corpusFiles, take.Manifest, descriptor, types, policy,
+            kac.core.Update.ReadInPlace(take.Root, corpusRoot),
+            file => kac.core.Update.Same(take.Root, corpusRoot, file, declined));
 
         // A type being given up takes its own files with it, and they are deletions like any other. So
         // they join the plan rather than being carried beside it, and `--check` reports them too.
@@ -689,41 +665,25 @@ public static class Commands
                 ]
             };
 
-        if (plan.TemplateIsUnsound) return Unsound(plan, from);
+        if (plan.TemplateIsUnsound)
+            return Unsound("update", from, plan.Unclassified, plan.UnknownCi);
 
-        var taken = from + At(template.Commit);
-        if (request.Check) return ReportCheck(plan, taken, request.DropType);
+        var origin = from + At(take.Commit);
+        if (request.Check) return ReportCheck(plan, origin, request.DropType);
 
         if (request.DropType is { } dropping && Relinquish(dropping, request) is { } stopped)
             return stopped;
 
-        kac.core.Update.Apply(plan, template.Root, corpusRoot, declined);
-        CorpusDescriptor.Stamp(corpusRoot, manifest.Version, today, template.Commit);
+        kac.core.Update.Apply(plan, take.Root, corpusRoot, declined);
+        CorpusDescriptor.Stamp(corpusRoot, take.Manifest.Version, today, take.Commit);
 
         // Only where a flag asked for it. `types:` is the corpus's own list, and rewriting it on a run
         // that changed nothing would reformat a block somebody laid out by hand.
         if (adoption.Account is not null && adoption.Types is { } adopted)
             CorpusDescriptor.SetTypes(corpusRoot, adopted);
 
-        return ReportUpdate(plan, adoption, corpusRoot, taken, manifest.Version, today, request.DropType,
-            request.AddType);
-    }
-
-    // A template this tool cannot read the whole of, in either of the two ways. Each names what the
-    // template did rather than the count of it, because the fix is upstream and needs the paths.
-    private static int Unsound(UpdatePlan plan, string from)
-    {
-        if (plan.Unclassified.Count > 0)
-        {
-            Stop($"update: {from} has a manifest that does not place its own tree. these files match no rule:");
-            foreach (var path in plan.Unclassified) Out.ErrLine($"  {path}");
-        }
-
-        if (plan.UnknownCi.Count > 0)
-            Stop($"update: {from} serves {string.Join(" and ", plan.UnknownCi)}, which this tool cannot "
-                 + $"offer. it offers {string.Join(", ", CiSystem.All)}.");
-
-        return 1;
+        return ReportUpdate(plan, adoption, corpusRoot, origin, take.Manifest.Version, today,
+            request.DropType, request.AddType);
     }
 
     // The shape both listings take: how loud, what it is called, and what it says. Only the last column
@@ -814,9 +774,9 @@ public static class Commands
     // What `--check` found: nothing, or the files that would change. The same discipline as
     // `generate --check`, and for the same reason. A pipeline says whether a corpus has fallen behind,
     // and never pushes.
-    private static int ReportCheck(UpdatePlan plan, string taken, string? dropped)
+    private static int ReportCheck(UpdatePlan plan, string origin, string? dropped)
     {
-        Out.Line($"update: comparing this corpus against {taken}.");
+        Out.Line($"update: comparing this corpus against {origin}.");
         Aside(plan, dropped);
 
         if (!plan.Changes)
@@ -852,10 +812,10 @@ public static class Commands
     }
 
     // What the update did. Every file it touched, then the tally and what the descriptor now records.
-    private static int ReportUpdate(UpdatePlan plan, Adoption adoption, string corpusRoot, string taken,
+    private static int ReportUpdate(UpdatePlan plan, Adoption adoption, string corpusRoot, string origin,
         int templateVersion, string today, string? dropped, string? added)
     {
-        Out.Line($"update: taking the framework from {taken}.");
+        Out.Line($"update: taking the framework from {origin}.");
         foreach (var file in plan.Written) Out.Markup(Wrote(file.To));
         foreach (var file in plan.Seeded) Out.Markup(Wrote(file.To) + "  [grey](new)[/]");
         foreach (var rel in plan.Deleted) Out.Markup($"  [red]deleted[/]  {rel.EscapeMarkup()}");
