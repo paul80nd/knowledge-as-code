@@ -263,7 +263,7 @@ public static class New
             if (adopted.Contains(name, StringComparer.Ordinal)) continue;
             files.Add($".schema/{name}.yaml");
             if (!string.IsNullOrEmpty(type.Page)) files.Add(type.Page);
-            folders.Add((string.IsNullOrEmpty(type.Folder) ? name : type.Folder) + "/");
+            folders.Add(type.Folder + "/");
         }
 
         return rel => files.Contains(rel) || folders.Any(f => rel.StartsWith(f, StringComparison.Ordinal));

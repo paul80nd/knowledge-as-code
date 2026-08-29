@@ -339,8 +339,21 @@ public static class SchemaChecks
     private static void CheckFolder(string at, string key, TypeSchema t, List<Finding> f)
     {
         if (string.IsNullOrEmpty(t.Folder))
+        {
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares no 'folder:'. Say which folder holds its records."));
+            return;
+        }
+
+        // The two names are one name. `Schema.Load` keys the types by the file's own name and
+        // `Doc.Parse` reads a record's type from the folder it sits in, while `type-setup`, `generate`
+        // and `update` act on the declared value. Where the two differ, one half of the tool writes
+        // into a folder the other half cannot see, and every other check passes.
+        if (!string.Equals(t.Folder, key, StringComparison.Ordinal))
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"type '{key}' declares 'folder: {t.Folder}', and this file is named for '{key}'. A document's "
+                + "type is read from the folder it sits in, and that lookup uses the file's name. Records under "
+                + $"'{t.Folder}/' would reach nothing. Make the two names agree."));
     }
 
     // What a type says about itself, which every generated list of types is written from. Each is

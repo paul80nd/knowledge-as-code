@@ -57,7 +57,7 @@ public static class Validator
             if (page.FrontStartLine > 0)
                 findings.Add(new Finding(t.Page, page.FrontStartLine, Sev.Error, new CheckId("page-frontmatter"),
                     "the page carries frontmatter: it describes the records beneath it and is not one, so it has "
-                    + $"no id, tier or status of its own. Move what it holds into '{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/' "
+                    + $"no id, tier or status of its own. Move what it holds into '{t.Folder}/' "
                     + "as a record, and delete the block."));
 
             LinkChecks.Check(page, schema, tree, new Report(page.Rel, findings));
@@ -307,12 +307,11 @@ public static class Validator
             var at = $".schema/{key}.yaml";
             var pageExists = !string.IsNullOrEmpty(t.Page) && tree.Exists(t.Page);
 
-            var folder = string.IsNullOrEmpty(t.Folder) ? key : t.Folder;
-            if (!tree.HasFolder(folder))
+            if (!tree.HasFolder(t.Folder))
             {
                 if (pageExists)
                     f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                        $"type '{key}' has {t.Page} but no '{folder}/': a type is set up as both or neither."));
+                        $"type '{key}' has {t.Page} but no '{t.Folder}/': a type is set up as both or neither."));
                 continue;
             }
 
@@ -321,11 +320,12 @@ public static class Validator
 
             // The template is asked for with `OnDisk`, as `Corpus.DiscoverTemplates` asks for it. `Tree`
             // says why that is the right question for this one file.
-            var template = $"{folder}/{Artefact.Template}";
+            var template = $"{t.Folder}/{Artefact.Template}";
             if (!tree.OnDisk(template)) missing.Add(template);
             if (missing.Count > 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
-                    $"type '{key}' has a '{folder}/' folder but is not fully set up. Add {string.Join(", ", missing)}."));
+                    $"type '{key}' has a '{t.Folder}/' folder but is not fully set up. "
+                    + $"Add {string.Join(", ", missing)}."));
         }
     }
 

@@ -36,6 +36,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   of `security`, `delivery`, `operations` and `governance`. Move each policy into the folder its category named, delete
   the `category:` line, and the exported value is unchanged. The set of folders is now the corpus's own.
 
+- **`schema-shape` reports a type whose `folder:` is not the name of the file declaring it.** A document's type is
+  read from the folder it sits in, and that lookup uses the schema file's name, so the two disagreeing left every
+  record of the type unread while `generate` wrote into the folder nobody was reading. The two names now have to
+  agree.
+
 ### Fixed
 
 - **`kac validate` judges a `#fragment` against the headings alone.** It read a record's frontmatter block as a
