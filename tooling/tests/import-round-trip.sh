@@ -35,7 +35,7 @@ CONSUMER="$REPO/examples/payments"
 
 # The clause this proves the trip with. It is a real citation: `examples/payments/` binds its card-data
 # standard to the governance policy on collecting no more personal data than is needed.
-POLICY="$PRODUCER/policies/data-data-protection.md"
+POLICY="$PRODUCER/policies/security/data-data-protection.md"
 CLAUSE=MINIMAL
 RENAMED=MINIMUM
 CITATION="eng:pol-DATA.$CLAUSE"
