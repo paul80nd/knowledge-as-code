@@ -1,6 +1,7 @@
 ---
 id: pol-{{MNEM}}
 tier: normative
+category: security
 status: draft
 aligns-with:
 review-by:

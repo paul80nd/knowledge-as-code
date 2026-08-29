@@ -41,8 +41,8 @@ them too. A field declaring `from: sub-path` takes its value from them, so
 `policies/security/accs-access-by-identity.md` carries `category: security` and `standards/platform/node/testing.md`
 carries `platform/node`.
 
-Folders can go as deep as you want. A record saved straight into its type folder gets an empty value, so a corpus with
-no folders at all works the same as it always did.
+Folders can go as deep as you want. A record saved straight into its type folder gets an empty value, so a corpus that
+files everything at the top of each type folder declares nothing and reads no differently.
 [Metadata](../framework/metadata.md#a-field-the-schema-derives-which-you-never-write) says what an author does about it.
 
 ## Frontmatter is how a document opts in

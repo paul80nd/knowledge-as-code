@@ -17,7 +17,7 @@ path is `security`. Nothing in the frontmatter says so.
 
 ## Scope
 
-This fixture only. It sits beside a policy filed flat, so the golden pins both a derived category and an empty one.
+This fixture only. Its category reaches the generated index below, which is what the golden here pins.
 
 ## Clauses
 

@@ -533,6 +533,20 @@ public class DocumentTests
         Assert.Equal("security", doc.FrontScalar("category"));
     }
 
+    // `field()` and `present()` are two facts about one field, so a rule guarding on the second before
+    // reading the first has to see them agree. `FrontList` is what `Facts.Present` asks.
+    [Theory]
+    [InlineData("policies/security/nested.md", true)]
+    [InlineData("policies/flat.md", false)]
+    public void Doc_FrontList_carries_a_derived_value_as_its_one_entry(string rel, bool present)
+    {
+        var doc = Doc.Parse(rel, "---\nid: pol-AAAA\n---\n\n# A title\n", DerivedCategory());
+
+        Assert.NotNull(doc);
+        Assert.Equal(present, doc.FrontList("category").Count > 0);
+        Assert.Equal(doc.FrontScalar("category")?.Length > 0, doc.FrontList("category").Count > 0);
+    }
+
     // An empty derivation reaches the export as an absent field rather than as an empty string, so a
     // flat record and one whose field was never declared read the same way to a consumer.
     [Fact]

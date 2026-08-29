@@ -95,6 +95,12 @@ Scenario: A field the type derives from the folder is not the author's to write
     | line | check       | message                                                                                                                                                     |
     | 1    | derived-key | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
 
+Scenario: A template carrying a derived field is reported, not only a record
+  When I validate the corpus
+  Then the findings for "policies/_template.md" are exactly:
+    | line | check       | message                                                                                                                                                     |
+    | 1    | derived-key | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
+
 Scenario: The whole corpus produces exactly these findings and nothing else
   When I validate the corpus
   Then validation reports 23 documents and 0 skipped
@@ -112,6 +118,7 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | adrs/0010-half-filled-copy.md                               | error    | 13   | placeholder-left    | '{{the pressure to get something committed}}' is a placeholder the template left for you to fill in.   |
     | adrs/0011-headings-with-no-body.md                          | error    | 32   | empty-section       | required section '## Consequences' has nothing under it.                                               |
     | adrs/0011-headings-with-no-body.md                          | error    | 34   | empty-section       | section '## Related' has nothing under it. Write it or delete the heading.                             |
+    | policies/_template.md                                       | error    | 1    | derived-key         | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
     | policies/agnt-identity-malformed.md                         | error    | 11   | identity            | identity line is malformed. Write it as `Policy: pol-AGNT` `DRAFT`.                                    |
     | policies/dirs-directory-link.md                             | error    | 16   | link-resolves       | link target '/media' does not resolve.                                                                 |
     | policies/envs-identity-status.md                            | error    | 11   | identity-status     | identity line status 'ACTIVE' does not match the document's status 'draft'.                            |

@@ -3,7 +3,7 @@
     "validated": 23,
     "templates": 3,
     "skipped": 0,
-    "errors": 28,
+    "errors": 29,
     "warnings": 1,
     "infos": 0
   },
@@ -84,6 +84,13 @@
       "severity": "error",
       "check": "empty-section",
       "message": "section '## Related' has nothing under it. Write it or delete the heading."
+    },
+    {
+      "file": "policies/_template.md",
+      "line": 1,
+      "severity": "error",
+      "check": "derived-key",
+      "message": "'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name."
     },
     {
       "file": "policies/agnt-identity-malformed.md",

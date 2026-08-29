@@ -316,7 +316,8 @@ public partial class Doc
     // The sources a `from:` may name, read by `Derived` below. SchemaChecks holds a declaration to this
     // list, so a source the tool cannot resolve is reported where the schema is read rather than as an
     // empty column nobody can explain.
-    public static readonly string[] DerivedSources = ["sub-path"];
+    public static readonly IReadOnlySet<string> DerivedSources =
+        new HashSet<string>(["sub-path"], StringComparer.Ordinal);
 
     // What the type derives for this key from where the record sits, or null where it derives nothing.
     // One arm per source, so the list above and the code answering to it are read together.
@@ -327,11 +328,9 @@ public partial class Doc
             _ => null
         };
 
-    // The folders between the type's own folder and the file. A record filed at
-    // `policies/security/accs-access-by-identity.md` yields `security`, and one at
-    // `standards/platform/node/testing.md` yields `platform/node`. A record sitting directly in its
-    // type folder yields the empty string, which every caller reads as an unset field. A corpus starts
-    // using categories by making a folder, so one with no folders behaves as it always did.
+    // The folders between the type's own folder and the file, which is the value every reading below
+    // hands back. A record sitting directly in its type folder yields the empty string, and every
+    // caller reads that as an unset field. `docs/design/discovery.md` is the account of it.
     private string SubPath()
     {
         if (Folder.Length == 0 || Rel.Length <= Folder.Length) return "";
@@ -341,10 +340,11 @@ public partial class Doc
         return cut < 0 ? "" : under[..cut];
     }
 
-    // A derived field is read here rather than beside each caller, so the index, the sort and the
-    // export all take one answer. Derived first, because a key the type derives is never the author's
-    // to write: `derived-key` reports one that was written, and this call is what stops the two
-    // disagreeing in the meantime.
+    // A derived field is read here rather than beside each caller, so the index, the sort, the export
+    // and a rule expression all take one answer. Derived first, because a key the type derives is
+    // never the author's to write: `derived-key` reports one that was written, and this call is what
+    // stops the two disagreeing in the meantime. `FrontList` below reads one the same way, so
+    // `field()` and `present()` cannot answer differently about the same field.
     public string? FrontScalar(string key) => Derived(key) ?? (Front is null
         ? null
         : (from kv in Front.Children
@@ -357,6 +357,11 @@ public partial class Doc
     // schema declared is the field's own check, answered before this is asked.
     public List<string> FrontList(string key)
     {
+        // A derived field is a scalar, so it is the one-entry case here too. An empty derivation is no
+        // entries, which is what makes `present()` false for a record filed flat.
+        if (Derived(key) is { } derived)
+            return derived.Length == 0 ? [] : [derived];
+
         var values = new List<string>();
         if (Front is null) return values;
 

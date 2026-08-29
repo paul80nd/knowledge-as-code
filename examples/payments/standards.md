@@ -49,7 +49,7 @@ would not separate them from anything. They move into folders on the day there a
 
 ## Where to find them
 
-* **[→ Standards index](standards/_index.md)**: the generated catalogue of every standard, grouped by category.
+* **[→ Standards index](standards/_index.md)**: the generated catalogue of every standard, with the category of each.
 * **[`_template.md`](standards/_template.md).** Copy it to start a new standard. The categories above and the steps
   below cover the rest.
 
