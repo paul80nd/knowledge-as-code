@@ -88,6 +88,17 @@ public class SchemaCheckTests
         Assert.Contains(CheckCatalogue.EmittedByRules()[0].Value, finding.Message);
     }
 
+    // The arrangement where `generate` writes into one folder and discovery reads another.
+    [Fact]
+    public void A_folder_that_is_not_the_files_own_name_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(folder: "gadgets")));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Equal(".schema/widgets.yaml", finding.File);
+        Assert.Contains("gadgets", finding.Message);
+    }
+
     // The arrangement that reads as enforced from every angle and is not.
     [Fact]
     public void A_rule_claiming_a_severity_that_nothing_dispatches_is_reported()

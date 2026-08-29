@@ -75,10 +75,11 @@ checks:
     on-type-page: false
     description: A type's declarations are well-formed and agree with one another.
     notes: >
-      Where `schema-dispatch` asks whether code acts on a value, this asks whether a second declaration
-      in the same file agrees with it. A type declaring no `folder:` has nowhere for its records to
-      live. A `mirrors-section:` names a section the `sections:` block must also declare. A
-      `description:` past 120 characters widens every row of the table it lands in.
+      Where `schema-dispatch` asks whether code acts on a value, this asks whether a second declaration in the
+      same file agrees with it. A type declaring no `folder:` has nowhere for its records to live, and one
+      naming a folder other than the file's own name hides every record it holds, because the lookup from
+      folder to schema is by file name. A `mirrors-section:` names a section the `sections:` block must also
+      declare. A `description:` past 120 characters widens every row of the table it lands in.
 
       Not advertised on a type page, for the reason `schema-unknown-key` is not.
 

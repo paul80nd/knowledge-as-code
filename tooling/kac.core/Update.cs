@@ -336,7 +336,7 @@ public static class Update
             return Refuse($"update: this template declares no type called '{dropping}', so there is no "
                           + "folder to read. take the name out of `types:` by hand.");
 
-        var folder = string.IsNullOrEmpty(type.Folder) ? dropping : type.Folder;
+        var folder = type.Folder;
         var records = RecordsUnder(corpusFiles, folder);
         if (records.Count > 0)
             return Refuse($"update: {folder}/ holds {records.Count} record(s), and deleting a record is "
@@ -367,7 +367,7 @@ public static class Update
     // the folder. What `--drop-type` deletes once it has established the folder holds no record.
     public static IReadOnlyList<string> FilesOf(IReadOnlySet<string> corpusFiles, TypeSchema type, string name)
     {
-        var folder = string.IsNullOrEmpty(type.Folder) ? name : type.Folder;
+        var folder = type.Folder;
         var files = new List<string> { $".schema/{name}.yaml" };
         if (!string.IsNullOrEmpty(type.Page)) files.Add(type.Page);
         files.AddRange(corpusFiles.Where(rel => rel.StartsWith(folder + "/", StringComparison.Ordinal)));

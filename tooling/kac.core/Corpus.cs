@@ -169,7 +169,7 @@ public static class Corpus
         var result = new List<string>();
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
-            var rel = $"{(string.IsNullOrEmpty(t.Folder) ? key : t.Folder)}/{Artefact.Template}";
+            var rel = $"{t.Folder}/{Artefact.Template}";
             if (tree.OnDisk(rel)) result.Add(rel);
         }
 
