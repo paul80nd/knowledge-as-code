@@ -15,7 +15,7 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.17.0 - 2026-08-29
 
 ### Added
 
@@ -26,6 +26,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   making a folder. The value reaches the generated index, its sort, and `kac export`.
 - **`derived-key` reports a derived field written by hand.** The key is declared, so `unknown-key` admits it and cannot
   say that the value comes from the path. Delete the line, and file the record in the folder you want it to name.
+- **`schema-shape` reports a type whose `folder:` is not the name of the file declaring it.** A document's type is
+  read from the folder it sits in, and that lookup uses the schema file's name, so the two disagreeing left every
+  record of the type unread while `generate` wrote into the folder nobody was reading. The two names now have to
+  agree.
 
 ### Changed
 
@@ -35,11 +39,6 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **A policy's `category` is read from its folder rather than from its frontmatter.** It is no longer a required enum
   of `security`, `delivery`, `operations` and `governance`. Move each policy into the folder its category named, delete
   the `category:` line, and the exported value is unchanged. The set of folders is now the corpus's own.
-
-- **`schema-shape` reports a type whose `folder:` is not the name of the file declaring it.** A document's type is
-  read from the folder it sits in, and that lookup uses the schema file's name, so the two disagreeing left every
-  record of the type unread while `generate` wrote into the folder nobody was reading. The two names now have to
-  agree.
 
 ### Fixed
 
