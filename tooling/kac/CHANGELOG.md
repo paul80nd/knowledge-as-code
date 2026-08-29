@@ -36,6 +36,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   of `security`, `delivery`, `operations` and `governance`. Move each policy into the folder its category named, delete
   the `category:` line, and the exported value is unchanged. The set of folders is now the corpus's own.
 
+### Fixed
+
+- **`kac validate` judges a `#fragment` against the headings alone.** It read a record's frontmatter block as a
+  heading, so `fragment-resolves` accepted a link naming an anchor no renderer offers. A link into a record is now
+  held to the headings that record carries.
+
 ## 0.16.0 - 2026-08-28
 
 ### Changed

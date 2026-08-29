@@ -39,4 +39,13 @@ public class AnchorTests
     [Fact]
     public void Emphasis_and_code_spans_are_read_through()
         => Assert.Equal(["the-_index-file"], Md.Anchors("## The `_index` **file**\n").Order());
+
+    // A frontmatter block offers no anchor, whatever it holds. See Md.Parse.
+    [Fact]
+    public void A_frontmatter_block_offers_no_anchor()
+    {
+        var anchors = Md.Anchors("---\nid: adr-0001\nstatus: proposed\n---\n\n# Knowledge as code\n");
+
+        Assert.Equal(["knowledge-as-code"], anchors.Order());
+    }
 }

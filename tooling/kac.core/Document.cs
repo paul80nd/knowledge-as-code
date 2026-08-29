@@ -1,5 +1,4 @@
 using System.Text;
-using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -149,22 +148,12 @@ public partial class Doc
     public IReadOnlyDictionary<string, List<LinkRef>> MirroredSectionLinks =
         new Dictionary<string, List<LinkRef>>(StringComparer.OrdinalIgnoreCase);
 
-    // The extensions every record depends on: the frontmatter block, the pipe tables a clause section
-    // is written as, and task lists. A `[ ]` at the head of a list item is a checkbox, and the same
-    // brackets mid-sentence are prose, so what they mean depends on where the block puts them. The
-    // bracket scan below reads inlines and cannot ask. Markdig can: with task lists on, the checkbox
-    // parses as an inline of its own and breaks the run of literals the scan reads, while a `[x]`
-    // typed mid-sentence still reaches it. A built pipeline is immutable, so it is built once here
-    // and shared across every parse.
-    private static readonly MarkdownPipeline Pipeline =
-        new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().UseTaskLists().Build();
-
     // `requireFrontmatter: false` is for a document read for its prose alone: either a type page or one
     // of the framework's own documents. A type page is not a record and carries no frontmatter. Both
     // hold links and generated blocks worth checking, so the parse runs whether or not a block is there.
     public static Doc? Parse(string rel, string text, Schema schema, bool requireFrontmatter = true)
     {
-        var ast = Markdown.Parse(text, Pipeline);
+        var ast = Md.Parse(text);
 
         var fmBlock = ast.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
         if (fmBlock is null && requireFrontmatter) return null; // not migrated, so the caller counts and skips
