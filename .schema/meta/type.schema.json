@@ -572,6 +572,11 @@
           "description": "A further constraint on the value, applied to each entry where the field is a list.",
           "$ref": "#/$defs/regex"
         },
+        "from": {
+          "description": "Where the field's value comes from, for a field the record never writes. `sub-path` is the folders between the type's own folder and the file, so `policies/security/accs-access-by-identity.md` carries `security` and `standards/platform/node/testing.md` carries `platform/node`. A record saved straight into its type folder gets an empty value, so you start using categories by making a folder. A derived field may not also be `required:`. `derived-key` reports one written into frontmatter.",
+          "type": "string",
+          "enum": ["sub-path"]
+        },
         "mirrors-section": {
           "description": "The section whose ids this field must mirror. It must be one the type's `sections:` block declares. The ids are held in both directions and case-insensitively, in a bullet or in prose alike. Both directions is the part to weigh: the field has to be the whole truth about what the section names, so a prose aside about something deliberately absent from the field will fail.",
           "type": "string",

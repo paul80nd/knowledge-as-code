@@ -431,6 +431,21 @@ public static class SchemaChecks
                          + "an entry's shape is read only where the entries are objects. Declare "
                          + "'of: object', or drop the block.", f);
 
+        // A source is a vocabulary, and `Doc.Derived` is the branch that answers to it. A name nothing
+        // resolves leaves the field empty in every record, which reads on the page as a column the
+        // corpus simply never fills in.
+        if (spec.From is { } from && !Doc.DerivedSources.Contains(from))
+            Dispatch(at, $"field '{name}' declares 'from: {from}', which no derivation reads. The "
+                         + $"sources the tool resolves are {List(Doc.DerivedSources)}.", f);
+
+        // A derived value is never written, so requiring it asks for a line the author must not supply.
+        // Every record of the type would fail `required-field` and `derived-key` in turn, and the way
+        // out of one is the way into the other.
+        if (spec.From is not null && spec.Required)
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"field '{name}' declares both 'from: {spec.From}' and 'required: true'. A derived field "
+                + "is not the author's to write, so nothing can satisfy the requirement. Drop 'required'."));
+
         // Any section reconciles, so this is not a vocabulary the tool holds. That is why nothing else
         // would catch a section the type never offers. The reconciliation would run against a heading
         // no record may carry and report every id in the field as missing from it.

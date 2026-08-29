@@ -1,10 +1,11 @@
 {
   "summary": {
-    "validated": 2,
-    "templates": 2,
+    "validated": 5,
+    "templates": 3,
     "skipped": 0,
     "errors": 0,
-    "warnings": 0
+    "warnings": 0,
+    "infos": 0
   },
   "findings": []
 }

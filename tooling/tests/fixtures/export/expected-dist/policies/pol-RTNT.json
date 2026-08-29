@@ -4,7 +4,7 @@
   "fields": {
     "id": "pol-RTNT",
     "title": "Data is kept for as long as somebody needs it",
-    "category": "governance",
+    "category": null,
     "status": "draft",
     "review-by": "2030-01-01"
   },

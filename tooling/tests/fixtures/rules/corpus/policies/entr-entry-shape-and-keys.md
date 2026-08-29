@@ -1,7 +1,6 @@
 ---
 id: pol-ENTR
 tier: normative
-category: governance
 status: active
 aligns-with:
   - ISO 27001:2022

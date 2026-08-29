@@ -38,27 +38,24 @@ want the deeper *why*.
 
 ## Categories
 
-We state each standard at its true **altitude** on one of four axes (`common`, `platform`, `interface`, `domain`), and
-we **compose** them. The rule-set enforced for a piece of work is the union of the axes that apply to it.
+Standards **compose**. The rule-set enforced for a piece of work is the union of the folders that apply to it, so a rule
+is written at the most general folder where it is still true and left alone below that.
 
-The folders below group the standards a reader goes looking for together. A folder sits on an axis: `public-api`,
-`widgets` and `webhooks` all carry `axis: interface`.
+A folder under `standards/` is the standard's category, and the tool reads it from where the file sits. Folders can
+nest, so `platform/node/` is a category and `platform/` is the category above it. A standard saved straight into
+`standards/` has no category, which is the right shape while there are few enough to read as one list.
 
-* **common**: platform-agnostic principles (testing philosophy, code-quality-as-a-gate). _Active._
-* **platform**: language, runtime and framework specifics (`node/`, `lit/`, future `dotnet/`). _Active._
-* **public-api**: public HTTP APIs called directly from customer-embedded widgets and integrations. _Drafted._
-* **widgets**: embedded widgets and web components, the clients of the public API, and how we build, deliver and embed
-  them. _Drafted._
-* **global-styles**: embed theming, which covers the `--<prefix>-*` CSS custom-property contract, stable class hooks,
-  and the authoring rules that keep every embedded widget restylable to match the host brand at render time. _Drafted._
-* **messaging**: the message bus contract, covering topic naming, payload shape and delivery guarantees. _Drafted._
+This corpus holds one folder so far.
 
-Auth, caching and versioning change with the consumer and the trust model, so the interface and domain categories stay
-distinct. The common and platform axes let a rule live once, at the layer where it is actually true.
+* **common**: platform-agnostic principles that hold whatever a service is written in. Version control, pull requests,
+  secret handling and build gates all live here.
+
+A standard that binds one language or one product surface goes in a folder of its own beside it. A payment-specific
+rule belongs in the payments corpus.
 
 ## Where to find them
 
-* **[→ Standards index](standards/_index.md)**: the generated catalogue of every standard, grouped by axis.
+* **[→ Standards index](standards/_index.md)**: the generated catalogue of every standard, with the category of each.
 * **[`_template.md`](standards/_template.md).** Copy it to start a new standard. The categories above and the steps
   below cover the rest.
 
@@ -73,7 +70,7 @@ distinct. The common and platform axes let a rule live once, at the layer where 
 | `status` *†    | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                       |
 | `owner` *†     | string                                     | A named person, never a team alias.                                                 |
 | `tags` †       | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
-| `axis` *       | `common` `platform` `interface` `domain`   | The layer where the rule is actually true.                                          |
+| `category`     | derived from the record's sub-path         | The folder the standard is filed under, below `standards/`.                         |
 | `derived-from` | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead.      |
 | `implements`   | list                                       | Policy ids this standard puts into practice.                                        |
 | `verified-by`  | list                                       | Control ids that check it.                                                          |
@@ -106,6 +103,7 @@ Standards are living documents, and we edit them in place. Record every material
 |-----------------------------|---------|-----------------------------------------------------------------------------------------------------------------|
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                             |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                  |
+| `derived-key`               | error   | A field derived from the record's folder is not written in frontmatter.                                         |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |

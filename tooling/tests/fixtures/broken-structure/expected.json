@@ -1,10 +1,11 @@
 {
   "summary": {
-    "validated": 22,
+    "validated": 23,
     "templates": 3,
     "skipped": 0,
-    "errors": 27,
-    "warnings": 1
+    "errors": 29,
+    "warnings": 1,
+    "infos": 0
   },
   "findings": [
     {
@@ -85,22 +86,36 @@
       "message": "section '## Related' has nothing under it. Write it or delete the heading."
     },
     {
+      "file": "policies/_template.md",
+      "line": 1,
+      "severity": "error",
+      "check": "derived-key",
+      "message": "'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name."
+    },
+    {
       "file": "policies/agnt-identity-malformed.md",
-      "line": 12,
+      "line": 11,
       "severity": "error",
       "check": "identity",
       "message": "identity line is malformed. Write it as `Policy: pol-AGNT` `DRAFT`."
     },
     {
+      "file": "policies/cats-category-written.md",
+      "line": 1,
+      "severity": "error",
+      "check": "derived-key",
+      "message": "'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name."
+    },
+    {
       "file": "policies/dirs-directory-link.md",
-      "line": 17,
+      "line": 16,
       "severity": "error",
       "check": "link-resolves",
       "message": "link target '/media' does not resolve."
     },
     {
       "file": "policies/envs-identity-status.md",
-      "line": 12,
+      "line": 11,
       "severity": "error",
       "check": "identity-status",
       "message": "identity line status 'ACTIVE' does not match the document's status 'draft'."
@@ -121,21 +136,21 @@
     },
     {
       "file": "policies/intc-label-case.md",
-      "line": 17,
+      "line": 16,
       "severity": "error",
       "check": "label-canonical",
       "message": "reference '[pol-vurm]' should be written as the id 'pol-VURM'."
     },
     {
       "file": "policies/intc-label-case.md",
-      "line": 18,
+      "line": 17,
       "severity": "error",
       "check": "label-canonical",
       "message": "reference '[ADR-0004]' should be written as the id 'adr-0004'."
     },
     {
       "file": "policies/know-identity-case.md",
-      "line": 12,
+      "line": 11,
       "severity": "error",
       "check": "identity-status",
       "message": "identity line status 'Draft' must be upper-case: `DRAFT`."
@@ -149,7 +164,7 @@
     },
     {
       "file": "policies/obsv-no-identity-line.md",
-      "line": 10,
+      "line": 9,
       "severity": "error",
       "check": "identity",
       "message": "no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`."
@@ -163,7 +178,7 @@
     },
     {
       "file": "policies/recv-identity-id.md",
-      "line": 12,
+      "line": 11,
       "severity": "error",
       "check": "identity-id",
       "message": "identity line id 'pol-OBSV' does not match the document's id 'pol-RECV'."
@@ -177,7 +192,7 @@
     },
     {
       "file": "policies/trus-identity-type.md",
-      "line": 12,
+      "line": 11,
       "severity": "error",
       "check": "identity-type",
       "message": "identity line says 'Standard', but this is a Policy."

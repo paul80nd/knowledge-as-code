@@ -107,4 +107,4 @@ with `template/`. A corpus outside this repository carries its own at its own ro
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
 
-[std-0002]: standards/domain/payment-telemetry.md
+[std-0002]: standards/payment-telemetry.md

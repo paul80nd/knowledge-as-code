@@ -1,7 +1,6 @@
 ---
 id: pol-RTNT
 tier: normative
-category: governance
 status: draft
 aligns-with:
 review-by: "2030-01-01"

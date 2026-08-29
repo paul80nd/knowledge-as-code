@@ -1,7 +1,6 @@
 ---
 id: pol-CERT
 tier: normative
-category: governance
 status: active
 owner: alex.doe
 review-by: "2026-12-31"

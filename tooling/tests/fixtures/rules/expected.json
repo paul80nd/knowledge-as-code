@@ -4,7 +4,8 @@
     "templates": 16,
     "skipped": 0,
     "errors": 12,
-    "warnings": 14
+    "warnings": 14,
+    "infos": 0
   },
   "findings": [
     {
@@ -107,35 +108,35 @@
     },
     {
       "file": "policies/entr-entry-shape-and-keys.md",
-      "line": 6,
+      "line": 5,
       "severity": "error",
       "check": "entry-shape",
       "message": "'aligns-with' entry must be a mapping, with the keys 'framework', 'clauses'."
     },
     {
       "file": "policies/entr-entry-shape-and-keys.md",
-      "line": 7,
+      "line": 6,
       "severity": "error",
       "check": "entry-key",
       "message": "'aligns-with' entry carries 'frameworks', and the schema declares 'framework', 'clauses'."
     },
     {
       "file": "policies/entr-entry-shape-and-keys.md",
-      "line": 7,
+      "line": 6,
       "severity": "error",
       "check": "entry-key",
       "message": "'aligns-with' entry here is missing 'framework'."
     },
     {
       "file": "policies/roll-alignment-not-rolled-up.md",
-      "line": 6,
+      "line": 5,
       "severity": "error",
       "check": "alignment-rollup",
       "message": "'aligns-with' claims 'ISO 27001:2022.A.5.17', and no clause cites it."
     },
     {
       "file": "policies/unpl-framework-not-placed.md",
-      "line": 29,
+      "line": 28,
       "severity": "error",
       "check": "framework-posture",
       "message": "'ISO 27001:2022' is cited here and nothing says what our standing against it is. File it under 'Obliged' or 'Self-obligated', or under a standing that binds nothing."

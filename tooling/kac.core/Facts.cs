@@ -13,8 +13,9 @@ namespace kac.core;
 // caches safe to cache: the document it was built from cannot change while it exists.
 public sealed class Facts(Doc doc)
 {
-    // Null where the frontmatter does not carry the key at all, or carries it as a bare key. A rule
-    // comparing against an absent field is answered by RuleExpr's comparison rules, not here.
+    // Null where the document does not carry the key at all, or carries it as a bare key. A field the
+    // type derives answers with what it derived, and with the empty string where that is nothing. A
+    // rule comparing against an absent field is answered by RuleExpr's comparison rules, not here.
     public string? Field(string name) => doc.FrontScalar(name);
 
     // Whether the field carries anything, asked of either shape a field may be written in. A rule guards

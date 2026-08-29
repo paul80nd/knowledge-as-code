@@ -46,32 +46,27 @@ decisions.
 
 ## Categories
 
-Every policy carries a `category`: **security**, **delivery**, **operations** or **governance**. It answers *why this
-policy exists* (the broad area of the commitment), where `tags` answer *what topics it touches*. Two questions need two
-fields: a secrets policy is `category: security` and `tags: [credentials, key-management, secrets]`.
+A policy's category is the folder it sits in under `policies/`, and the tool reads it from there. It answers *why this
+policy exists*, where `tags` answer *what topics it touches*. Two questions need two fields: a secrets policy filed at
+`policies/security/` carries `tags: [credentials, key-management, secrets]` as well.
 
-The set is closed and deliberately small. Four categories cut the policies into groups worth navigating. A fifth would
-have to earn its place by making one of these too crowded to scan. That pressure is easier to judge once there are
-enough policies to feel it.
-
-Category is metadata and `policies/` stays flat. Recategorising a policy is then a one-line edit. A file move would
-rewrite every document linking to it. The awkward calls are the ones most likely to be revisited, and accessibility
-under governance is the clearest of them.
+Make the folders your own commitments need, and keep the set small enough to scan. A policy saved straight into
+`policies/` has no category, which is the right shape while there are few enough to read as one list.
 
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-policies -->
 
-| Field         | Value                                           | Notes                                                                                |
-|---------------|-------------------------------------------------|--------------------------------------------------------------------------------------|
-| `id` *†       | string                                          | Stable, unique across the corpus, never reused. Format set by the type.              |
-| `tier` *†     | `normative`                                     | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.  |
-| `status` *†   | `draft` `active` `retired`                      | `draft` until agreed. `retired` rather than deleted.                                 |
-| `owner` *†    | string                                          | A named person, never a team alias.                                                  |
-| `tags` †      | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
-| `category` *  | `security` `delivery` `operations` `governance` | The broad area the commitment belongs to. Controlled, and deliberately few.          |
-| `aligns-with` | list                                            | The binding frameworks this policy's clauses map to, with the references they reach. |
-| `review-by` * | date                                            | Quoted. Annual is usually right for a policy.                                        |
+| Field         | Value                              | Notes                                                                                |
+|---------------|------------------------------------|--------------------------------------------------------------------------------------|
+| `id` *†       | string                             | Stable, unique across the corpus, never reused. Format set by the type.              |
+| `tier` *†     | `normative`                        | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.  |
+| `status` *†   | `draft` `active` `retired`         | `draft` until agreed. `retired` rather than deleted.                                 |
+| `owner` *†    | string                             | A named person, never a team alias.                                                  |
+| `tags` †      | list                               | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
+| `category`    | derived from the record's sub-path | The folder the policy is filed under, below `policies/`.                             |
+| `aligns-with` | list                               | The binding frameworks this policy's clauses map to, with the references they reach. |
+| `review-by` * | date                               | Quoted. Annual is usually right for a policy.                                        |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -86,8 +81,8 @@ under governance is the clearest of them.
 3. Copy [`_template.md`](policies/_template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
    upper-case. The H1 states the commitment in plain words. The identity line beneath it carries the id, written
    ``` `Policy: pol-MNEM` `DRAFT` ```, and CI checks it against the frontmatter.
-4. Set `category` to whichever of the four the commitment belongs to. If two fit, pick the one a reader looking for this
-   policy would try first. If none does, that is a taxonomy question, and not a fifth category invented in passing.
+4. Save it under the category folder the commitment belongs to, or directly in `policies/` while the corpus is small
+   enough to read as one list. If two folders fit, pick the one a reader looking for this policy would try first.
 5. State the scope it binds, then the commitment itself as clauses: one obligation per row, each with a short upper-case
    id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. Write any explicit exceptions beneath the clauses, where a reader
    meets them before relying on the rule.
@@ -126,6 +121,7 @@ under governance is the clearest of them.
 |----------------------------------------|---------|---------------------------------------------------------------------------------------------------------------------|
 | `frontmatter-parses`                   | error   | Frontmatter is present and is a valid YAML mapping.                                                                 |
 | `unknown-key`                          | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                      |
+| `derived-key`                          | error   | A field derived from the record's folder is not written in frontmatter.                                             |
 | `key-order`                            | error   | Key order is a topological extension of the schema's field order.                                                   |
 | `required-field`                       | error   | Required and conditionally-required fields are present.                                                             |
 | `bare-key`                             | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                      |

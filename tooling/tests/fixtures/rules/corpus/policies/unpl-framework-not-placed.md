@@ -1,7 +1,6 @@
 ---
 id: pol-UNPL
 tier: normative
-category: governance
 status: active
 aligns-with:
 review-by: "2026-12-31"

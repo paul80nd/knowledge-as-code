@@ -54,4 +54,4 @@ openly is easier to argue with than one absorbed silently.
 
 _Nothing recorded yet._
 
-[std-0001]: standards/domain/card-data.md
+[std-0001]: standards/card-data.md

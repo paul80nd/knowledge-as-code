@@ -2,7 +2,6 @@
 id: std-{{nnnn}}
 tier: normative
 status: draft
-axis:
 derived-from:
 implements:
 verified-by:
@@ -25,7 +24,9 @@ and how it is reviewed. What is below is only what a standard adds to that.
 
 * **`id`**: `std-` plus a four-digit number, never reused.
 * **`status`**: `draft` until agreed, then `active`, and later `deprecated` or `superseded`. Values are lowercase.
-* **`axis`**: the layer where the rule is actually true.
+* **Where you save it**: the folder below `standards/` becomes the standard's category, and folders can
+  nest. Write the rule in the most general folder where it is still true. A standard saved straight into
+  `standards/` has no category, which is fine while there are few enough to read as one list.
 * **`derived-from`**: the ADR id (s) this standard distils. A standard citing neither an ADR here nor a policy in
   `implements` is guidance, not a standard.
 * **`applies-to`**: service ids, or `all`.

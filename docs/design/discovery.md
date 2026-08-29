@@ -34,6 +34,17 @@ Five rules narrow that listing, and a file matching any of them is not a record.
 
 [Automation](../framework/automation.md#what-is-not-a-record) says why each path is named rather than globbed.
 
+## `from: sub-path` reads a field's value out of the folders
+
+The first folder in a record's path decides its type. The folders below that one are yours to arrange, and `kac` reads
+them too. A field declaring `from: sub-path` takes its value from them, so
+`policies/security/accs-access-by-identity.md` carries `category: security` and `standards/platform/node/testing.md`
+carries `platform/node`.
+
+Folders can go as deep as you want. A record saved straight into its type folder gets an empty value, so a corpus that
+files everything at the top of each type folder declares nothing and reads no differently.
+[Metadata](../framework/metadata.md#a-field-the-schema-derives-which-you-never-write) says what an author does about it.
+
 ## Frontmatter is how a document opts in
 
 A document is validated only if it carries a YAML frontmatter block. A file sitting in a type folder without one is

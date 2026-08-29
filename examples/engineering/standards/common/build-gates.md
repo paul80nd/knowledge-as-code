@@ -2,7 +2,6 @@
 id: std-0004
 tier: normative
 status: draft
-axis: common
 implements:
   - pol-AUTV
   - pol-DEVI
@@ -70,5 +69,5 @@ visible and gives it an end date.
 - [pol-AUTV] commits us to verifying every change automatically and treating a failure as blocking.
 - [pol-DEVI] sets what a recorded deviation has to carry.
 
-[pol-AUTV]: ../../policies/autv-automated-verification.md#clauses
-[pol-DEVI]: ../../policies/devi-deviations-are-recorded.md#clauses
+[pol-AUTV]: ../../policies/delivery/autv-automated-verification.md#clauses
+[pol-DEVI]: ../../policies/governance/devi-deviations-are-recorded.md#clauses

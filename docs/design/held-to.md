@@ -26,6 +26,8 @@ you, and every finding names the file and the key.
 | A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows           | `schema-shape`       |
 | A tier declaring no `label:` or no `behaviour:` (both head its section in the taxonomy)  | `schema-shape`       |
 | An `id.style` with no code behind the value                                              | `schema-dispatch`    |
+| A `from:` naming a source no derivation reads                                            | `schema-dispatch`    |
+| A `from:` on a field that is also `required: true`                                       | `schema-shape`       |
 | A type declaring no `folder:`                                                            | `schema-shape`       |
 | A `mirrors-section:` at a section the type's `sections:` block does not declare          | `schema-shape`       |
 | An `export.sections:` key at a section the type's `sections:` block does not declare     | `schema-shape`       |
@@ -66,6 +68,16 @@ being admitted without anyone having to remember.
 
 [`meta/type.schema.json`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/meta/type.schema.json)
 holds a list, and that list can be behind, which is why it advises an author and gates nothing.
+
+### A derived field is not the author's to fill in
+
+`from: sub-path` says the field's value comes from the folders a record sits in. The source is a vocabulary, so a
+name no derivation reads is `schema-dispatch`. The field would then be empty on every record, and the page would show
+a column the corpus never fills in.
+
+Declaring it `required: true` as well is `schema-shape`. The two declarations contradict each other: the author cannot
+write the field, so they cannot meet the requirement, and writing the line to try trips `derived-key` instead.
+[Discovery](discovery.md#from-sub-path-reads-a-fields-value-out-of-the-folders) says how the value is read.
 
 ## What `schema-shape` asks instead
 

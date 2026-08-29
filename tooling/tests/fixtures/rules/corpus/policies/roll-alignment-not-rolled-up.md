@@ -1,7 +1,6 @@
 ---
 id: pol-ROLL
 tier: normative
-category: governance
 status: active
 aligns-with:
   - framework: ISO 27001:2022

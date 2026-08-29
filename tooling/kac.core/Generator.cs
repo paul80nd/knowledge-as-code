@@ -394,10 +394,15 @@ public static class Generator
     // What a field may hold: its type, or the values themselves where the type is an enum with a resolved
     // set. The word `enum` tells an author nothing they can write into frontmatter. The set is what they
     // came to the page for, so the set is what the column carries.
+    //
+    // A derived field carries neither. Nothing an author types lands in it, so the column that would
+    // tell them what to write says where the value comes from instead.
     private static string ValueFor(FieldSpec f) =>
-        f is { Type: "enum", Values.Count: > 0 }
-            ? string.Join(" ", f.Values!.Select(v => $"`{v}`"))
-            : f.Type;
+        f.From is { } from
+            ? $"derived from the record's {from}"
+            : f is { Type: "enum", Values.Count: > 0 }
+                ? string.Join(" ", f.Values!.Select(v => $"`{v}`"))
+                : f.Type;
 
     // The same reference for metadata.md, which documents the universal fields once for the whole
     // taxonomy. Values are the unrefined universal declarations: with no type in hand to narrow it,
@@ -471,6 +476,9 @@ public static class Generator
         ("frontmatter-parses", [new("frontmatter-parses")], "Frontmatter is present and is a valid YAML mapping.",
             null),
         ("unknown-key", [new("unknown-key")], "Every frontmatter key is a schema field or a reserved ADO key.", null),
+        ("derived-key", [new("derived-key")],
+            "A field derived from the record's folder is not written in frontmatter.",
+            t => t.AnyField(f => f.From is not null)),
         ("key-order", [new("key-order")], "Key order is a topological extension of the schema's field order.", null),
         ("required-field", [new("required-field")], "Required and conditionally-required fields are present.", null),
         ("bare-key", [new("bare-key")], "An absent value is a bare key, never `null`, `~`, `\"\"` or `—`.", null),

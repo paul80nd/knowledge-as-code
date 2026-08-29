@@ -1,7 +1,6 @@
 ---
 id: pol-ENVS
 tier: normative
-category: operations
 status: draft
 review-by: "2027-08-05"
 owner: alex.doe

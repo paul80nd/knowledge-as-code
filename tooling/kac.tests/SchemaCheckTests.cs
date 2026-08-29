@@ -699,4 +699,36 @@ public class SchemaCheckTests
         => Assert.Empty(Check(TwoTypes(
             ("adrs", [("widgets", "One account, written once.")]),
             ("widgets", []))));
+
+    // A source nothing resolves leaves the field empty in every record of the type, which reads on the
+    // page as a column the corpus never fills in rather than as a schema that will not do what it says.
+    [Fact]
+    public void A_field_deriving_from_a_source_nothing_resolves_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(
+            fields: [("shelf", new FieldSpec { Name = "shelf", From = "the-filename" })])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Equal(".schema/widgets.yaml", finding.File);
+        Assert.Contains("from: the-filename", finding.Message);
+        Assert.Contains("sub-path", finding.Message);
+    }
+
+    [Fact]
+    public void A_field_deriving_from_a_source_the_tool_resolves_is_left_alone()
+        => Assert.Empty(Check(Widgets(
+            fields: [("shelf", new FieldSpec { Name = "shelf", From = "sub-path" })])));
+
+    // Requiring a derived field asks for a line the author must not supply, so every record of the type
+    // fails `required-field` and `derived-key` in turn and the way out of one is the way into the other.
+    [Fact]
+    public void A_derived_field_that_is_also_required_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(
+            fields: [("shelf", new FieldSpec { Name = "shelf", From = "sub-path", Required = true })])));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Equal(".schema/widgets.yaml", finding.File);
+        Assert.Contains("'shelf'", finding.Message);
+    }
 }
