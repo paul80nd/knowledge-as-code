@@ -49,6 +49,34 @@ public class TemplateSourceTests : IDisposable
         Assert.True(Directory.Exists(from));
     }
 
+    // The take is the fetch plus everything both verbs then ask of the template. Its two refusals are
+    // what a rearrangement of that sequence would lose, and the fetch above cannot reach either.
+    [Fact]
+    public void A_template_with_no_manifest_is_refused_by_the_verb_that_asked()
+    {
+        var from = Dir("template");
+        Write(from, "README.md");
+
+        using var take = TemplateSource.Take("new", from, from, null, null, _temp.FullName,
+            prompt: false, toolVersion: "0.6.0");
+
+        Assert.StartsWith("new: ", take.Problem);
+        Assert.Contains("holds no manifest.yaml", take.Problem);
+    }
+
+    [Fact]
+    public void A_template_asking_for_a_newer_tool_is_refused()
+    {
+        var from = Dir("template");
+        Write(from, "manifest.yaml", "minimum-tool: \"9.9.9\"\n");
+
+        using var take = TemplateSource.Take("update", from, from, null, null, _temp.FullName,
+            prompt: false, toolVersion: "0.6.0");
+
+        Assert.StartsWith("update: ", take.Problem);
+        Assert.Contains("9.9.9", take.Problem);
+    }
+
     [Fact]
     public void A_path_names_the_folder_holding_the_manifest()
     {

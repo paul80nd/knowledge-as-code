@@ -96,6 +96,62 @@ public sealed class TemplateSource : IDisposable
             null);
     }
 
+    // A template read whole: the manifest it carries, the schema it serves, and the types that schema
+    // declares. `Problem` is set instead where any of that could not be read, which is the contract
+    // `Fetch` states for its own pair.
+    //
+    // Disposable, because the fetch beneath it may have cloned. A take that reported a problem holds
+    // nothing to remove, so disposing one costs nothing.
+    public sealed class Taken(TemplateSource? source, Manifest? manifest, Schema? schema,
+        IReadOnlyList<string>? declared, string? problem) : IDisposable
+    {
+        public string? Problem => problem;
+        public string Root => source!.Root;
+        public string? Commit => source!.Commit;
+        public Manifest Manifest => manifest!;
+        public Schema Schema => schema!;
+        public IReadOnlyList<string> Declared => declared!;
+        public IReadOnlySet<string> Files() => source!.Files();
+
+        public void Dispose() => source?.Dispose();
+    }
+
+    // The template, and everything both verbs then ask of it: that it carries a manifest, that the
+    // manifest admits this version of the tool, and what schema it serves.
+    //
+    // `from` is fetched and `named` is printed. The two differ for `update`, where a relative
+    // `upstream.url` is resolved against the corpus root before the fetch, and the corpus is answered in
+    // the terms it wrote rather than in the path they resolved to.
+    public static Taken Take(string verb, string from, string named, string? gitRef, string? path,
+        string into, bool prompt, string toolVersion)
+    {
+        var read = Read(verb, from, gitRef, path, into, prompt);
+        if (read.Problem is { } unreachable) return new Taken(null, null, null, null, unreachable);
+
+        var source = read.Source!;
+
+        var manifestFile = Path.Combine(source.Root, Manifest.FileName);
+        if (!File.Exists(manifestFile))
+        {
+            source.Dispose();
+            return new Taken(null, null, null, null,
+                $"{verb}: {named} holds no {Manifest.FileName}, so there is no template to read. "
+                + "--path names the folder holding it, where it is not at the root.");
+        }
+
+        var held = Manifest.LoadFrom(manifestFile);
+        if (New.TooOldFor(held.MinimumTool, toolVersion, verb) is { } tooOld)
+        {
+            source.Dispose();
+            return new Taken(null, null, null, null, tooOld);
+        }
+
+        // The schema the template serves, which is the one account of what types there are to adopt.
+        var serves = Schema.Load(Schema.FindRoot(source.Root) ?? source.Root);
+        return new Taken(source, held, serves,
+            [.. serves.ByFolder.Keys.OrderBy(k => k, StringComparer.Ordinal)], null);
+    }
+
     // Every file the template holds, relative to `Root` and forward-slashed.
     //
     // Read through git where the template is a repository, so what a clone ignores the manifest never
