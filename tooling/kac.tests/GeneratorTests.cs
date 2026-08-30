@@ -134,6 +134,127 @@ public class GeneratorTests
                     < page.IndexOf("rbk-b", StringComparison.Ordinal));
     }
 
+    // A type deriving a field from where its records sit, which is what an index groups on. The schema
+    // is built rather than loaded so each test below can file records wherever it wants to.
+    private static Schema Located() => new()
+    {
+        ByFolder = new Dictionary<string, TypeSchema>
+        {
+            ["policies"] = new()
+            {
+                TypeName = "policy",
+                Label = "Policy",
+                Folder = "policies",
+                IdPrefix = "pol",
+                IndexColumns = ["id", "title", "category"],
+                Fields = new Dictionary<string, FieldSpec>
+                {
+                    ["category"] = new() { Name = "category", From = "sub-path" }
+                }
+            }
+        }
+    };
+
+    private static (TypeSchema Type, List<Doc> Docs) Filed(params string[] rels)
+    {
+        var schema = Located();
+        return (schema.ByFolder["policies"],
+        [
+            .. rels.Select((rel, i) => Doc.Parse($"policies/{rel}",
+                $"---\nid: pol-{i:0000}\n---\n\n# Record {i}\n", schema)!)
+        ]);
+    }
+
+    // The grouping, and the reason a reader gets headings at all: a type with folders reads as one
+    // undifferentiated list without them.
+    [Fact]
+    public void IndexPage_heads_a_table_per_folder_where_the_type_derives_one()
+    {
+        var (t, docs) = Filed("security/one.md", "delivery/two.md");
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.Contains("## Delivery\n", page);
+        Assert.Contains("## Security\n", page);
+        Assert.True(page.IndexOf("## Delivery", StringComparison.Ordinal)
+                    < page.IndexOf("## Security", StringComparison.Ordinal));
+    }
+
+    // Only the first level heads a table. A heading per level would give Node one of its own, and a
+    // reader scanning for it has to already know that Node sits under Platform.
+    [Fact]
+    public void IndexPage_groups_a_record_nested_deeper_under_its_first_folder()
+    {
+        var (t, docs) = Filed("platform/node/one.md", "platform/two.md");
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.Contains("## Platform\n", page);
+        Assert.DoesNotContain("## Node", page);
+    }
+
+    // The derived column earns its place only where it says more than the heading does.
+    [Fact]
+    public void IndexPage_drops_the_derived_column_where_it_repeats_the_heading()
+    {
+        var (t, docs) = Filed("security/one.md");
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.DoesNotContain("Category", page);
+    }
+
+    [Fact]
+    public void IndexPage_keeps_the_derived_column_where_a_record_sits_below_the_heading()
+    {
+        var (t, docs) = Filed("platform/node/one.md");
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.Contains("Category", page);
+        Assert.Contains("platform/node", page);
+    }
+
+    // A corpus that has never used a folder reads as it always did, bar the column that had nothing in
+    // it to read.
+    [Fact]
+    public void IndexPage_heads_nothing_where_every_record_is_filed_flat()
+    {
+        var (t, docs) = Filed("one.md", "two.md");
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.DoesNotContain("## ", page);
+        Assert.DoesNotContain("Category", page);
+    }
+
+    // Folders alone group nothing. A type that derives no field from where its records sit has no
+    // grouping key, so its index reads as one table however deep the records are filed.
+    [Fact]
+    public void IndexPage_heads_nothing_where_the_type_derives_no_field_from_the_path()
+    {
+        var t = new TypeSchema { Label = "Standard", IdPrefix = "std", IndexColumns = ["title"] };
+        var doc = Doc.Parse("standards/common/build-gates.md",
+            "---\nid: std-0004\n---\n\n# A failing check blocks the merge\n", new Schema())!;
+
+        var page = Generator.IndexPage(t, [doc]);
+
+        Assert.DoesNotContain("## ", page);
+    }
+
+    // Records filed flat beside foldered ones lead, in a table with no heading, because there is no
+    // folder to name one after.
+    [Fact]
+    public void IndexPage_leads_with_the_records_no_folder_holds()
+    {
+        var (t, docs) = Filed("security/one.md", "loose.md");
+
+        var page = Generator.IndexPage(t, docs);
+
+        Assert.True(page.IndexOf("pol-0001", StringComparison.Ordinal)
+                    < page.IndexOf("## Security", StringComparison.Ordinal));
+    }
+
     [Fact]
     public void SchemaTable_prefers_description_and_falls_back_to_notes()
     {

@@ -2,6 +2,8 @@
 
 # Policy Index (POL)
 
-| ID       | Title                                                            | Category | Status | Aligns with | Review by  |
-|----------|------------------------------------------------------------------|----------|--------|-------------|------------|
-| pol-SCRT | [A policy filed one folder down](security/scrt-nested-policy.md) | security | draft  |             | 2027-08-05 |
+## Security
+
+| ID       | Title                                                            | Status | Aligns with | Review by  |
+|----------|------------------------------------------------------------------|--------|-------------|------------|
+| pol-SCRT | [A policy filed one folder down](security/scrt-nested-policy.md) | draft  |             | 2027-08-05 |

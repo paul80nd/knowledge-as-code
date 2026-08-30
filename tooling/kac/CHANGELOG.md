@@ -15,6 +15,19 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **`kac generate` heads a table per folder in a type's index.** A type that declares a field with `from: sub-path`
+  groups its index rows on the first folder below the type, so a policy folder holding Delivery, Governance,
+  Operations and Security reads as four tables instead of one long list. A record filed deeper joins the table its
+  first folder heads. A type whose records all sit directly in its folder gets the single table it has always had.
+- **The derived column is dropped from a table that repeats it.** Every row under a heading of Security carries
+  `security`, so the Category column says nothing there and is left out. A record filed deeper keeps it, because
+  `platform/node` under a heading of Platform is the one place `node` is written down. A corpus using no folders at
+  all loses a column that was empty in every row.
+
 ## 0.17.0 - 2026-08-29
 
 ### Added
