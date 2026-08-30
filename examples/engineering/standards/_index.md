@@ -2,9 +2,11 @@
 
 # Standard Index (STD)
 
-| ID       | Title                                                                                        | Category | Status | Derived from | Review by  |
-|----------|----------------------------------------------------------------------------------------------|----------|--------|--------------|------------|
-| std-0001 | [Everything a service needs is committed to its repository](common/version-control.md)       | common   | draft  |              | 2027-08-26 |
-| std-0002 | [A pull request carries its reasoning and one accountable approval](common/pull-requests.md) | common   | draft  |              | 2027-08-26 |
-| std-0003 | [A secret is read from the store at run time](common/secret-handling.md)                     | common   | draft  |              | 2027-08-26 |
-| std-0004 | [A failing check blocks the merge](common/build-gates.md)                                    | common   | draft  |              | 2027-08-26 |
+## Common
+
+| ID       | Title                                                                                        | Status | Derived from | Review by  |
+|----------|----------------------------------------------------------------------------------------------|--------|--------------|------------|
+| std-0001 | [Everything a service needs is committed to its repository](common/version-control.md)       | draft  |              | 2027-08-26 |
+| std-0002 | [A pull request carries its reasoning and one accountable approval](common/pull-requests.md) | draft  |              | 2027-08-26 |
+| std-0003 | [A secret is read from the store at run time](common/secret-handling.md)                     | draft  |              | 2027-08-26 |
+| std-0004 | [A failing check blocks the merge](common/build-gates.md)                                    | draft  |              | 2027-08-26 |

@@ -2,7 +2,14 @@
 
 # Standard Index (STD)
 
-| ID       | Title                                                        | Category      | Status | Derived from | Review by  |
-|----------|--------------------------------------------------------------|---------------|--------|--------------|------------|
-| std-0001 | [Testing, stated once for every platform](common/testing.md) | common        | draft  |              | 2027-08-05 |
-| std-0002 | [Testing on Node](platform/node/testing.md)                  | platform/node | draft  |              | 2027-08-05 |
+## Common
+
+| ID       | Title                                                        | Status | Derived from | Review by  |
+|----------|--------------------------------------------------------------|--------|--------------|------------|
+| std-0001 | [Testing, stated once for every platform](common/testing.md) | draft  |              | 2027-08-05 |
+
+## Platform
+
+| ID       | Title                                       | Category      | Status | Derived from | Review by  |
+|----------|---------------------------------------------|---------------|--------|--------------|------------|
+| std-0002 | [Testing on Node](platform/node/testing.md) | platform/node | draft  |              | 2027-08-05 |

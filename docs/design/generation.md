@@ -28,6 +28,16 @@ nothing says so.
 do-not-edit banner. A type holding no records yet gets an index saying so rather than a table with no rows, and a type
 with no folder gets no index at all.
 
+**An index heads a table per folder.** A type that declares a field with `from: sub-path` reads that field out of
+the folders below the type, and the index groups its rows on it.
+[Discovery](discovery.md#from-sub-path-reads-a-fields-value-out-of-the-folders) says how the value is read. Only the
+first folder heads a table, so `standards/platform/node/testing.md` joins the Platform table instead of opening one of
+its own. A type whose records all sit directly in its folder gets a single table and no headings.
+
+**The derived column is dropped where the heading already carries it.** Every row under a heading of Security holds
+`security`, so the column says nothing the reader has not read. A record filed deeper keeps it: `platform/node` under a
+heading of Platform is the one place `node` is written down.
+
 **The frontmatter reference lists the universal fields first, marked `†`, then the type's own.** Each row renders that
 field's `description`, falling back to `notes` where the schema declares none.
 

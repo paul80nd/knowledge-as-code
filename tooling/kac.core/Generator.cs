@@ -22,17 +22,59 @@ public static class Generator
         // An empty type still gets its index, because every type page links to one and a withheld file
         // fails link-resolves. A headed table with no rows says less than nothing, so an empty index says
         // it is empty and points at the template.
-        var body = docs.Count == 0
-            ? $"_Nothing here yet. Copy [`{Artefact.Template}`]({Artefact.Template}) to add the first._"
-            : RenderTable(
-                [.. t.IndexColumns.Select(Humanize)],
-                [
-                    .. Sorted(t, docs)
-                        .Select(d => t.IndexColumns.Select(c => Cell(d, c, t)).ToList())
-                ]);
+        if (docs.Count == 0)
+            return $"{Banner}\n\n# {title}\n\n"
+                   + $"_Nothing here yet. Copy [`{Artefact.Template}`]({Artefact.Template}) to add the first._\n";
+
+        // Rows are sorted before they are grouped, so the type's declared `sort:` orders each table and
+        // the grouping only decides which table a row lands in.
+        var located = t.Fields.Values.FirstOrDefault(f => f.From == Doc.SubPath)?.Name;
+        var groups = Sorted(t, docs)
+            .GroupBy(d => Group(d, located))
+            .OrderBy(g => g.Key, StringComparer.Ordinal)
+            .Select(g => (g.Key, Rows: g.ToList()))
+            .ToList();
+
+        var body = string.Join("\n\n", groups.Select(g => g.Key.Length == 0
+            ? Table(t, located, g.Key, g.Rows)
+            : $"## {GroupHeading(g.Key)}\n\n{Table(t, located, g.Key, g.Rows)}"));
 
         return $"{Banner}\n\n# {title}\n\n{body}\n";
     }
+
+    // Which table a row lands in: the first folder under the type, and nothing below it. A type nesting
+    // two deep would otherwise scatter four records across three headings, and a reader scanning for a
+    // standard about Node has to already know that Node sits under Platform.
+    //
+    // A type deriving nothing from where its records sit has one group, keyed on the empty string, which
+    // is the index as it reads without folders.
+    private static string Group(Doc d, string? located)
+    {
+        if (located is null) return "";
+        var sub = d.FrontScalar(located) ?? "";
+        var cut = sub.IndexOf('/');
+        return cut < 0 ? sub : sub[..cut];
+    }
+
+    // One group's table. The derived column is dropped where every row repeats the heading above it,
+    // and where a corpus using no folders leaves it empty in every row. A record filed deeper keeps it,
+    // because `platform/node` under a heading of Platform is the one place `node` is written down.
+    // `docs/design/generation.md` states the rule for whoever reads the index.
+    private static string Table(TypeSchema t, string? located, string key, List<Doc> rows)
+    {
+        var columns = located is not null && rows.All(d => (d.FrontScalar(located) ?? "") == key)
+            ? t.IndexColumns.Where(c => c != located).ToList()
+            : t.IndexColumns.ToList();
+
+        return RenderTable(
+            [.. columns.Select(Humanize)],
+            [.. rows.Select(d => columns.Select(c => Cell(d, c, t)).ToList())]);
+    }
+
+    // A folder names its group, title-cased for the heading. `Humanize` is not reused: it turns `id`
+    // into `ID`, which is true of the field and not of a folder carrying the same three letters.
+    private static string GroupHeading(string key) =>
+        char.ToUpperInvariant(key[0]) + key[1..].Replace('-', ' ');
 
     // The two directions an index is written in. SchemaChecks reads this set, so a type declaring a third
     // word is told at load rather than sorted the default way and left looking deliberate.

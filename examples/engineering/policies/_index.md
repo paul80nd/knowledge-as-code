@@ -2,27 +2,44 @@
 
 # Policy Index (POL)
 
-| ID       | Title                                                                                                          | Category   | Status | Aligns with                         | Review by  |
-|----------|----------------------------------------------------------------------------------------------------------------|------------|--------|-------------------------------------|------------|
-| pol-A11Y | [Software we build is usable by everyone](governance/a11y-accessibility.md)                                    | governance | draft  | EN 301 549, PSBAR 2018, WCAG 2.2 AA | 2027-08-04 |
-| pol-ACCS | [Access is by individual identity, on least privilege](security/accs-access-by-identity.md)                    | security   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-AGNT | [Agents propose, people decide](governance/agnt-agents-propose-people-decide.md)                               | governance | draft  | ISO 27001:2022                      | 2027-08-05 |
-| pol-AUTV | [Every change is verified automatically, and failures block](delivery/autv-automated-verification.md)          | delivery   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-COST | [Cost is a non-functional requirement](delivery/cost-cost-as-an-nfr.md)                                        | delivery   | draft  |                                     | 2027-08-04 |
-| pol-DATA | [Data is protected according to its sensitivity](security/data-data-protection.md)                             | security   | draft  | ISO 27001:2022, UK GDPR             | 2027-08-04 |
-| pol-DERV | [Derived data is verified before it is trusted](delivery/derv-derived-data-is-verified.md)                     | delivery   | draft  | UK GDPR                             | 2027-08-09 |
-| pol-DEVI | [Deviations are recorded, owned and time-bound](governance/devi-deviations-are-recorded.md)                    | governance | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-ENVS | [Environments are separated, and production stays in production](security/envs-environment-separation.md)      | security   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-EVER | [Everything is in version control](delivery/ever-everything-in-version-control.md)                             | delivery   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-INCR | [Incidents are managed and learned from](operations/incr-incident-response.md)                                 | operations | draft  | ISO 27001:2022, UK GDPR             | 2027-08-04 |
-| pol-INTC | [Interfaces are contracts we honour](delivery/intc-interface-contracts.md)                                     | delivery   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-KNOW | [Knowledge is written down and kept with what it describes](governance/know-knowledge-is-written-down.md)      | governance | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-MEXP | [Exposure is minimised and traffic is controlled](security/mexp-minimised-exposure.md)                         | security   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-OBSV | [Systems are observable and actively monitored](operations/obsv-observability.md)                              | operations | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-PERF | [Performance targets are stated and verified](delivery/perf-performance-targets.md)                            | delivery   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-PIPE | [Changes reach production through the pipeline](delivery/pipe-pipeline-to-production.md)                       | delivery   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-RECV | [Services and data are recoverable](operations/recv-recoverability.md)                                         | operations | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-SCRT | [Secrets are managed, never embedded](security/scrt-secrets-are-never-embedded.md)                             | security   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-SECD | [Security is designed in, not added on](security/secd-security-by-design.md)                                   | security   | draft  | ISO 27001:2022, UK GDPR             | 2027-08-04 |
-| pol-TRUS | [We ship only components we know and trust](security/trus-trusted-components.md)                               | security   | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-VURM | [Vulnerabilities are found, prioritised and closed to a timeframe](security/vurm-vulnerability-remediation.md) | security   | draft  | ISO 27001:2022, UK GDPR             | 2027-08-04 |
+## Delivery
+
+| ID       | Title                                                                                                 | Status | Aligns with    | Review by  |
+|----------|-------------------------------------------------------------------------------------------------------|--------|----------------|------------|
+| pol-AUTV | [Every change is verified automatically, and failures block](delivery/autv-automated-verification.md) | draft  | ISO 27001:2022 | 2027-08-04 |
+| pol-COST | [Cost is a non-functional requirement](delivery/cost-cost-as-an-nfr.md)                               | draft  |                | 2027-08-04 |
+| pol-DERV | [Derived data is verified before it is trusted](delivery/derv-derived-data-is-verified.md)            | draft  | UK GDPR        | 2027-08-09 |
+| pol-EVER | [Everything is in version control](delivery/ever-everything-in-version-control.md)                    | draft  | ISO 27001:2022 | 2027-08-04 |
+| pol-INTC | [Interfaces are contracts we honour](delivery/intc-interface-contracts.md)                            | draft  | ISO 27001:2022 | 2027-08-04 |
+| pol-PERF | [Performance targets are stated and verified](delivery/perf-performance-targets.md)                   | draft  | ISO 27001:2022 | 2027-08-04 |
+| pol-PIPE | [Changes reach production through the pipeline](delivery/pipe-pipeline-to-production.md)              | draft  | ISO 27001:2022 | 2027-08-04 |
+
+## Governance
+
+| ID       | Title                                                                                                     | Status | Aligns with                         | Review by  |
+|----------|-----------------------------------------------------------------------------------------------------------|--------|-------------------------------------|------------|
+| pol-A11Y | [Software we build is usable by everyone](governance/a11y-accessibility.md)                               | draft  | EN 301 549, PSBAR 2018, WCAG 2.2 AA | 2027-08-04 |
+| pol-AGNT | [Agents propose, people decide](governance/agnt-agents-propose-people-decide.md)                          | draft  | ISO 27001:2022                      | 2027-08-05 |
+| pol-DEVI | [Deviations are recorded, owned and time-bound](governance/devi-deviations-are-recorded.md)               | draft  | ISO 27001:2022                      | 2027-08-04 |
+| pol-KNOW | [Knowledge is written down and kept with what it describes](governance/know-knowledge-is-written-down.md) | draft  | ISO 27001:2022                      | 2027-08-04 |
+
+## Operations
+
+| ID       | Title                                                                             | Status | Aligns with             | Review by  |
+|----------|-----------------------------------------------------------------------------------|--------|-------------------------|------------|
+| pol-INCR | [Incidents are managed and learned from](operations/incr-incident-response.md)    | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
+| pol-OBSV | [Systems are observable and actively monitored](operations/obsv-observability.md) | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-RECV | [Services and data are recoverable](operations/recv-recoverability.md)            | draft  | ISO 27001:2022          | 2027-08-04 |
+
+## Security
+
+| ID       | Title                                                                                                          | Status | Aligns with             | Review by  |
+|----------|----------------------------------------------------------------------------------------------------------------|--------|-------------------------|------------|
+| pol-ACCS | [Access is by individual identity, on least privilege](security/accs-access-by-identity.md)                    | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-DATA | [Data is protected according to its sensitivity](security/data-data-protection.md)                             | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
+| pol-ENVS | [Environments are separated, and production stays in production](security/envs-environment-separation.md)      | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-MEXP | [Exposure is minimised and traffic is controlled](security/mexp-minimised-exposure.md)                         | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-SCRT | [Secrets are managed, never embedded](security/scrt-secrets-are-never-embedded.md)                             | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-SECD | [Security is designed in, not added on](security/secd-security-by-design.md)                                   | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
+| pol-TRUS | [We ship only components we know and trust](security/trus-trusted-components.md)                               | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-VURM | [Vulnerabilities are found, prioritised and closed to a timeframe](security/vurm-vulnerability-remediation.md) | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
