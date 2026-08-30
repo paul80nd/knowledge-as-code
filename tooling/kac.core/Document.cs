@@ -302,25 +302,29 @@ public partial class Doc
         return doc;
     }
 
+    // The one source there is, named so that the schema's word, the arm resolving it and the index
+    // grouping on it cannot drift apart.
+    public const string SubPath = "sub-path";
+
     // The sources a `from:` may name, read by `Derived` below. SchemaChecks holds a declaration to this
     // list, so a source the tool cannot resolve is reported where the schema is read rather than as an
     // empty column nobody can explain.
     public static readonly IReadOnlySet<string> DerivedSources =
-        new HashSet<string>(["sub-path"], StringComparer.Ordinal);
+        new HashSet<string>([SubPath], StringComparer.Ordinal);
 
     // What the type derives for this key from where the record sits, or null where it derives nothing.
     // One arm per source, so the list above and the code answering to it are read together.
     public string? Derived(string key) =>
         Type?.Fields.GetValueOrDefault(key)?.From switch
         {
-            "sub-path" => SubPath(),
+            SubPath => SubPathValue(),
             _ => null
         };
 
     // The folders between the type's own folder and the file, which is the value every reading below
     // hands back. A record sitting directly in its type folder yields the empty string, and every
     // caller reads that as an unset field. `docs/design/discovery.md` is the account of it.
-    private string SubPath()
+    private string SubPathValue()
     {
         if (Folder.Length == 0 || Rel.Length <= Folder.Length) return "";
 
