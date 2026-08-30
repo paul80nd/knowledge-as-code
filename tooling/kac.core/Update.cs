@@ -194,20 +194,26 @@ public static class Update
                 continue;
             }
 
-            var to = placement.Path;
-            var here = corpusFiles.Contains(to);
+            var here = corpusFiles.Contains(placement.Path);
 
             // A seeded record the corpus filed under a category folder is that record, moved. Read by
             // path it looks absent, and the offer that follows writes a second copy carrying the same
             // id, which `id-unique` then fails.
-            if (!here && placement.Layer == Manifest.Seed && Filed(from, to, corpusFiles, ids) is { } filed)
+            //
+            // In step under `full` as well as under `cautious`, which is the one place a moved seed
+            // parts company with a seed sitting where it was sent. A record's relative links are written
+            // for the depth it was seeded at, so the template's bytes copied a folder down leave every
+            // `../` short by one and `link-resolves` fails the lot. There is no copy to write, so there
+            // is nothing to compare either.
+            if (!here && placement.Layer == Manifest.Seed
+                      && Filed(from, placement.Path, corpusFiles, ids) is { } filed)
             {
-                here = true;
-                to = filed;
                 sent.Add(filed);
+                inStep++;
+                continue;
             }
 
-            var file = new PlannedFile(from, to, placement.Layer);
+            var file = new PlannedFile(from, placement.Path, placement.Layer);
 
             // A seed is the corpus's own words from the moment it lands, so `cautious` asks only whether
             // the corpus has one. `full` holds it to the template and hands the reconciliation to the
@@ -298,15 +304,21 @@ public static class Update
     // The search stops at the type folder. An id carries its type's prefix, so a record above or beside
     // that folder is a different record whatever it is called. The ordering settles a corpus that
     // somehow holds one id twice, so every machine answers the same.
+    //
+    // Compared the way `id-unique` compares, so the guard is as wide as the rule it stands in front of.
+    // An id differing only in case is one record to that check, and matching it here on case alone
+    // would offer the copy that trips it.
     private static string? Filed(string from, string to, IReadOnlySet<string> corpusFiles, RecordIds ids)
     {
-        if (ids.Sent(from) is not { } id) return null;
-
+        // Ahead of the read, because a seed landing at the root is every type's page and `CLAUDE.md`,
+        // and parsing each of those to discard the answer is work `--check` does on every run.
         var cut = to.IndexOf('/', StringComparison.Ordinal);
         if (cut <= 0) return null;
 
+        if (ids.Sent(from) is not { } id) return null;
+
         return RecordsUnder(corpusFiles, to[..cut])
-            .FirstOrDefault(rel => id.Equals(ids.Held(rel), StringComparison.Ordinal));
+            .FirstOrDefault(rel => id.Equals(ids.Held(rel), StringComparison.OrdinalIgnoreCase));
     }
 
     // Whether a tombstone names this path. The rules are read from the corpus's side, through the

@@ -34,7 +34,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   corpus files a seeded policy under `policies/governance/` and still holds it. Compared by path, the corpus read as
   holding none, and `update` offered a second copy at the seeded path. Accepting it left two records carrying one id,
   which `kac validate` then failed on `id-unique`. A seed absent from its path is now looked for by the id it carries,
-  anywhere under its type's folder.
+  anywhere under its type's folder, and a match is left alone under `--policy full` as well as under `cautious`. A
+  record's relative links are written for the depth it was seeded at, so there is no copy `full` could write a folder
+  down that would resolve.
 
 ## 0.17.0 - 2026-08-29
 

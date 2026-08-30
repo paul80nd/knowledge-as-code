@@ -205,9 +205,10 @@ public class UpdateTests
         Assert.Equal(["policies/devi-deviations-are-recorded.md"], plan.Seeded.Select(f => f.To));
     }
 
-    // `full` holds a seed to the template, and the copy it is held against is the one the corpus keeps.
+    // `full` refreshes a seed against the template, and a record's relative links are written for the
+    // depth it was seeded at. There is no copy that would land correctly a folder down.
     [Fact]
-    public void A_moved_seed_is_refreshed_where_the_corpus_filed_it_under_full()
+    public void A_moved_seed_is_left_alone_under_full_too()
     {
         var plan = Plan(
             Files("template/policies/devi-deviations-are-recorded.md"),
@@ -215,8 +216,22 @@ public class UpdateTests
             policy: CorpusDescriptor.Full,
             ids: Carrying("pol-DEVI", "policies/governance/devi-deviations-are-recorded.md", "pol-DEVI"));
 
-        Assert.Equal(["policies/governance/devi-deviations-are-recorded.md"],
-            plan.Seeded.Select(f => f.To));
+        Assert.Empty(plan.Seeded);
+        Assert.Equal(1, plan.InStep);
+        Assert.False(plan.Changes);
+    }
+
+    // `id-unique` reads two ids differing only in case as one, so the match in front of it has to.
+    [Fact]
+    public void A_moved_seed_is_matched_however_the_corpus_cased_its_id()
+    {
+        var plan = Plan(
+            Files("template/policies/devi-deviations-are-recorded.md"),
+            Files("policies/governance/devi-deviations-are-recorded.md"),
+            ids: Carrying("pol-DEVI", "policies/governance/devi-deviations-are-recorded.md", "pol-Devi"));
+
+        Assert.Empty(plan.Seeded);
+        Assert.Equal(1, plan.InStep);
     }
 
     // The policy widens what is compared and never what is copied.

@@ -57,7 +57,12 @@ Compared by path alone, that corpus reads as holding no such seed. The update wo
 and accepting it leaves two records carrying one id, which `kac validate` then fails on `id-unique`.
 
 So a seed absent from its path is looked for by the id it carries, anywhere under its type's folder. A match is the
-corpus's copy of that record: `cautious` leaves it alone, and `full` refreshes it where the corpus filed it.
+corpus's copy of that record, and the update leaves it alone.
+
+`full` leaves it alone too, which is the one place a moved record parts company with a seed sitting where it was sent.
+A record's relative links are written for the depth it was seeded at, so the template's copy written a folder down
+leaves every `../` short by one and `kac validate` fails the lot on `link-resolves`. Rewrite such a record from the
+template by hand, and fix the links as you go.
 
 ## A deletion is declared, never guessed
 
