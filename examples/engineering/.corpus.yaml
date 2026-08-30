@@ -71,5 +71,3 @@ plugin:
 skip:
   - path: .editorconfig
     reason: The repository holding this corpus sets the editor conventions for it.
-  - path: policies/devi-deviations-are-recorded.md
-    reason: Held here under governance/, which is the category folder this corpus files it in.

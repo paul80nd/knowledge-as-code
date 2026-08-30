@@ -20,6 +20,7 @@ public class UpdateTests
             new ManifestRule([".schema/**"], Manifest.Overlay),
             new ManifestRule(["template/pages/**"], Manifest.Overlay, "pages/"),
             new ManifestRule(["template/*.md"], Manifest.Seed, ""),
+            new ManifestRule(["template/policies/**"], Manifest.Seed, "policies/"),
             new ManifestRule(["template/ci.yml"], Manifest.Seed, "", "github"),
             new ManifestRule(["old/**"], Manifest.Removed, "legacy/"),
             new ManifestRule(["template/.plugin/.claude-plugin/plugin.json"], Manifest.Seed,
@@ -31,15 +32,24 @@ public class UpdateTests
 
     private static HashSet<string> Files(params string[] paths) => new(paths, StringComparer.Ordinal);
 
+    // No file carries an id unless a case says so, so a seed is matched by path alone as it always was.
+    private static readonly RecordIds Anonymous = new(_ => null, _ => null);
+
+    // One id on the template's side and one on the corpus's, which is all a case about a moved seed
+    // needs. Every other file carries none.
+    private static RecordIds Carrying(string seed, string path, string held) =>
+        new(_ => seed, rel => rel.Equals(path, StringComparison.Ordinal) ? held : null);
+
     // Every type adopted, so nothing is declined unless a case says so.
     private static UpdateTypes Everything(params string[] declared) =>
         new(declared, declared, _ => false);
 
     private static UpdatePlan Plan(IReadOnlySet<string> template, IReadOnlySet<string> corpus,
         CorpusDescriptor? descriptor = null, UpdateTypes? types = null,
-        string policy = CorpusDescriptor.Cautious, bool readInPlace = false, bool same = false) =>
+        string policy = CorpusDescriptor.Cautious, bool readInPlace = false, bool same = false,
+        RecordIds? ids = null) =>
         Update.Plan(template, corpus, Rules(), descriptor ?? new CorpusDescriptor(),
-            types ?? Everything(), policy, readInPlace, _ => same);
+            types ?? Everything(), policy, readInPlace, _ => same, ids ?? Anonymous);
 
     // A corpus sharing one plugin tree with its siblings holds none of the shared half, so an update
     // that wrote a copy here would put the tree back the moment it was taken away.
@@ -156,6 +166,57 @@ public class UpdateTests
         var plan = Plan(Files("template/CLAUDE.md"), Files("CLAUDE.md"), policy: CorpusDescriptor.Full);
 
         Assert.Equal(["CLAUDE.md"], plan.Seeded.Select(f => f.To));
+    }
+
+    // Filing a record in a folder is how a corpus sets its category, so this is the ordinary case.
+    [Fact]
+    public void A_seeded_record_the_corpus_filed_under_a_category_is_already_held()
+    {
+        var plan = Plan(
+            Files("template/policies/devi-deviations-are-recorded.md"),
+            Files("policies/governance/devi-deviations-are-recorded.md"),
+            ids: Carrying("pol-DEVI", "policies/governance/devi-deviations-are-recorded.md", "pol-DEVI"));
+
+        Assert.Empty(plan.Seeded);
+        Assert.Equal(1, plan.InStep);
+        Assert.False(plan.Changes);
+    }
+
+    // The corpus holds a record of that type, and the id says it is a different one.
+    [Fact]
+    public void A_seeded_record_the_corpus_has_none_of_is_still_written()
+    {
+        var plan = Plan(
+            Files("template/policies/devi-deviations-are-recorded.md"),
+            Files("policies/governance/know-knowledge-is-written-down.md"),
+            ids: Carrying("pol-DEVI", "policies/governance/know-knowledge-is-written-down.md", "pol-KNOW"));
+
+        Assert.Equal(["policies/devi-deviations-are-recorded.md"], plan.Seeded.Select(f => f.To));
+    }
+
+    [Fact]
+    public void A_record_of_the_same_id_outside_the_type_folder_is_not_that_seed()
+    {
+        var plan = Plan(
+            Files("template/policies/devi-deviations-are-recorded.md"),
+            Files("standards/devi-deviations-are-recorded.md"),
+            ids: Carrying("pol-DEVI", "standards/devi-deviations-are-recorded.md", "pol-DEVI"));
+
+        Assert.Equal(["policies/devi-deviations-are-recorded.md"], plan.Seeded.Select(f => f.To));
+    }
+
+    // `full` holds a seed to the template, and the copy it is held against is the one the corpus keeps.
+    [Fact]
+    public void A_moved_seed_is_refreshed_where_the_corpus_filed_it_under_full()
+    {
+        var plan = Plan(
+            Files("template/policies/devi-deviations-are-recorded.md"),
+            Files("policies/governance/devi-deviations-are-recorded.md"),
+            policy: CorpusDescriptor.Full,
+            ids: Carrying("pol-DEVI", "policies/governance/devi-deviations-are-recorded.md", "pol-DEVI"));
+
+        Assert.Equal(["policies/governance/devi-deviations-are-recorded.md"],
+            plan.Seeded.Select(f => f.To));
     }
 
     // The policy widens what is compared and never what is copied.
@@ -279,7 +340,7 @@ public class UpdateTests
         };
 
         var plan = Update.Plan(Files("template/ci.yml"), Files(), manifest, new CorpusDescriptor(),
-            Everything(), CorpusDescriptor.Cautious, readInPlace: false, _ => false);
+            Everything(), CorpusDescriptor.Cautious, readInPlace: false, _ => false, Anonymous);
 
         Assert.Equal(["jenkins"], plan.UnknownCi);
         Assert.True(plan.TemplateIsUnsound);
@@ -291,7 +352,7 @@ public class UpdateTests
         var manifest = new Manifest { Rules = [new ManifestRule([".schema/**"], Manifest.Overlay)] };
 
         var plan = Update.Plan(Files("stray.txt"), Files(), manifest, new CorpusDescriptor(),
-            Everything(), CorpusDescriptor.Cautious, readInPlace: false, _ => false);
+            Everything(), CorpusDescriptor.Cautious, readInPlace: false, _ => false, Anonymous);
 
         Assert.Equal(["stray.txt"], plan.Unclassified);
         Assert.True(plan.TemplateIsUnsound);

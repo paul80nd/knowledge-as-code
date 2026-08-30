@@ -47,6 +47,18 @@ one run.
 
 A seed belongs to the corpus once written, so retiring one is the corpus's own call.
 
+## A seeded record is matched by its id
+
+The template seeds a record at the top of its type's folder, as `policies/devi-deviations-are-recorded.md`. A corpus
+is free to file that record deeper, and a type may read the folder below it as the record's category, so
+`policies/governance/devi-deviations-are-recorded.md` is an ordinary place for it to end up.
+
+Compared by path alone, that corpus reads as holding no such seed. The update would offer a copy at the seeded path,
+and accepting it leaves two records carrying one id, which `kac validate` then fails on `id-unique`.
+
+So a seed absent from its path is looked for by the id it carries, anywhere under its type's folder. A match is the
+corpus's copy of that record: `cautious` leaves it alone, and `full` refreshes it where the corpus filed it.
+
 ## A deletion is declared, never guessed
 
 A file missing from the template is not evidence it was dropped. It is as likely to be evidence of a mistake upstream.
