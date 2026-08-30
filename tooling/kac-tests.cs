@@ -344,6 +344,15 @@ void RunUpdateScenario(string name, string scenario)
         // other is a starting point the corpus never wrote over, so the two answer to different rules.
         File.AppendAllText(Path.Combine(temp, "knowledge-as-code.md"), "\nAn edit this corpus made.\n");
         File.Delete(Path.Combine(temp, ".editorconfig"));
+
+        // A third, and the one nothing above it covers: a seeded record filed under a category folder,
+        // which is how a corpus sets a record's category. The corpus still holds that record, so it is
+        // in step, and an update offering it again would leave two copies carrying one id.
+        var filed = Path.Combine(temp, "policies", "governance");
+        Directory.CreateDirectory(filed);
+        File.Move(Path.Combine(temp, "policies", "devi-deviations-are-recorded.md"),
+            Path.Combine(filed, "devi-deviations-are-recorded.md"));
+
         Commit(temp, "drift");
 
         var (checkOut, checkErr, checkExit) = Run(temp, "dotnet", kac, "update", "--check", "--from", repoRoot);

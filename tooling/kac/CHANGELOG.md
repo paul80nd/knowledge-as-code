@@ -28,6 +28,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `platform/node` under a heading of Platform is the one place `node` is written down. A corpus using no folders at
   all loses a column that was empty in every row.
 
+### Fixed
+
+- **`kac update` finds a seeded record the corpus filed in a sub-folder.** A record's folder sets its category, so a
+  corpus files a seeded policy under `policies/governance/` and still holds it. Compared by path, the corpus read as
+  holding none, and `update` offered a second copy at the seeded path. Accepting it left two records carrying one id,
+  which `kac validate` then failed on `id-unique`. A seed absent from its path is now looked for by the id it carries,
+  anywhere under its type's folder, and a match is left alone under `--policy full` as well as under `cautious`. A
+  record's relative links are written for the depth it was seeded at, so there is no copy `full` could write a folder
+  down that would resolve.
+
 ## 0.17.0 - 2026-08-29
 
 ### Added

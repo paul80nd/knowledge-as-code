@@ -60,6 +60,14 @@ public sealed record Adoption(
     string? Account,
     string? Problem);
 
+// The record id a file carries, read on each side of an update: `Sent` from the template and `Held`
+// from the corpus, each given a path relative to that root. Null wherever the file carries none, which
+// is every file that is not a record.
+//
+// A delegate, for the reason `same` is one: a plan decides from what it is told, so a case can state
+// two ids with no tree on disk. `Update.IdAt` is what a command passes.
+public sealed record RecordIds(Func<string, string?> Sent, Func<string, string?> Held);
+
 // What an update comes to. `Written` and `Seeded` are the files to copy, and are the only lists carrying
 // where each file is read from. Everything else names a path in the corpus.
 public sealed record UpdatePlan(
@@ -103,13 +111,16 @@ public static class Update
     // shared half of that tree is withheld rather than copied in. Its own manifest is a seed and still
     // arrives: the manifest names the plugin and is the corpus's to write.
     //
+    // `ids` answers what record a file is, and `Filed` below says why a seed asks. Every other layer is
+    // decided by path, because only a record is free to move.
+    //
     // `readInPlace` is true where the corpus sits inside the repository serving its template. A file
     // whose destination is its source is then shared with that corpus rather than copied into it, which
     // is the arrangement `.schema/` and the travelling skills are in: the tool walks up for them, so the
     // corpus below holds none of its own and is missing nothing. `ReadInPlace` below decides it.
     public static UpdatePlan Plan(IReadOnlySet<string> templateFiles, IReadOnlySet<string> corpusFiles,
         Manifest manifest, CorpusDescriptor descriptor, UpdateTypes types, string policy,
-        bool readInPlace, Func<PlannedFile, bool> same)
+        bool readInPlace, Func<PlannedFile, bool> same, RecordIds ids)
     {
         var owned = descriptor.Skipped.ToDictionary(s => s.Path, s => s.Reason, StringComparer.Ordinal);
         var full = policy.Equals(CorpusDescriptor.Full, StringComparison.Ordinal);
@@ -184,6 +195,24 @@ public static class Update
             }
 
             var here = corpusFiles.Contains(placement.Path);
+
+            // A seeded record the corpus filed under a category folder is that record, moved. Read by
+            // path it looks absent, and the offer that follows writes a second copy carrying the same
+            // id, which `id-unique` then fails.
+            //
+            // In step under `full` as well as under `cautious`, which is the one place a moved seed
+            // parts company with a seed sitting where it was sent. A record's relative links are written
+            // for the depth it was seeded at, so the template's bytes copied a folder down leave every
+            // `../` short by one and `link-resolves` fails the lot. There is no copy to write, so there
+            // is nothing to compare either.
+            if (!here && placement.Layer == Manifest.Seed
+                      && Filed(from, placement.Path, corpusFiles, ids) is { } filed)
+            {
+                sent.Add(filed);
+                inStep++;
+                continue;
+            }
+
             var file = new PlannedFile(from, placement.Path, placement.Layer);
 
             // A seed is the corpus's own words from the moment it lands, so `cautious` asks only whether
@@ -266,6 +295,30 @@ public static class Update
         var template = Path.GetFullPath(templateRoot).TrimEnd(Path.DirectorySeparatorChar);
         var corpus = Path.GetFullPath(corpusRoot).TrimEnd(Path.DirectorySeparatorChar);
         return corpus.StartsWith(template + Path.DirectorySeparatorChar, StringComparison.Ordinal);
+    }
+
+    // Where the corpus filed a seeded record, or null where it holds no such record. A record is its id
+    // everywhere else in the tool, so a seed absent from the path the template sends it to is looked for
+    // by id before it is offered again.
+    //
+    // The search stops at the type folder. An id carries its type's prefix, so a record above or beside
+    // that folder is a different record whatever it is called. The ordering settles a corpus that
+    // somehow holds one id twice, so every machine answers the same.
+    //
+    // Compared the way `id-unique` compares, so the guard is as wide as the rule it stands in front of.
+    // An id differing only in case is one record to that check, and matching it here on case alone
+    // would offer the copy that trips it.
+    private static string? Filed(string from, string to, IReadOnlySet<string> corpusFiles, RecordIds ids)
+    {
+        // Ahead of the read, because a seed landing at the root is every type's page and `CLAUDE.md`,
+        // and parsing each of those to discard the answer is work `--check` does on every run.
+        var cut = to.IndexOf('/', StringComparison.Ordinal);
+        if (cut <= 0) return null;
+
+        if (ids.Sent(from) is not { } id) return null;
+
+        return RecordsUnder(corpusFiles, to[..cut])
+            .FirstOrDefault(rel => id.Equals(ids.Held(rel), StringComparison.OrdinalIgnoreCase));
     }
 
     // Whether a tombstone names this path. The rules are read from the corpus's side, through the
@@ -396,6 +449,17 @@ public static class Update
         if (SeedLinks.Reaches(file)) sent = SeedLinks.Unlinked(sent, declined);
         return Generator.Authored(sent)
                == Generator.Authored(Files.ReadLf(Path.Combine(corpusRoot, file.To)));
+    }
+
+    // The id the record at a path carries, or null where the file carries none. Read with the document
+    // parser, so an update asks a corpus the same question `validate` asks it. Frontmatter that will not
+    // parse carries no id here, and `validate` is what reports it.
+    internal static string? IdAt(string root, string rel, Schema schema)
+    {
+        if (!rel.EndsWith(".md", StringComparison.Ordinal)) return null;
+
+        var path = Path.Combine(root, rel);
+        return File.Exists(path) ? Doc.Parse(rel, Files.ReadLf(path), schema)?.FrontScalar("id") : null;
     }
 
     // Every tracked (and not-ignored) file a corpus holds, relative and forward-slashed. `GitFiles` falls

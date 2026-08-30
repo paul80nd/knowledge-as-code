@@ -650,7 +650,10 @@ public static class Commands
 
         var plan = kac.core.Update.Plan(take.Files(), corpusFiles, take.Manifest, descriptor, types, policy,
             kac.core.Update.ReadInPlace(take.Root, corpusRoot),
-            file => kac.core.Update.Same(take.Root, corpusRoot, file, declined));
+            file => kac.core.Update.Same(take.Root, corpusRoot, file, declined),
+            new RecordIds(
+                rel => kac.core.Update.IdAt(take.Root, rel, take.Schema),
+                rel => kac.core.Update.IdAt(corpusRoot, rel, take.Schema)));
 
         // A type being given up takes its own files with it, and they are deletions like any other. So
         // they join the plan rather than being carried beside it, and `--check` reports them too.
