@@ -206,6 +206,10 @@ first thing a corpus deletes. Where a link genuinely belongs there, put it in a 
 writes those from the types the corpus adopted, so they can only name pages that exist. `framework-names-types` holds
 you to this.
 
+**Everywhere else, naming a type is not linking to one.** A record may say a discovery becomes an FAQ where the corpus
+adopted neither. Those are the ordinary nouns, and naming one promises no page. What adoption governs is the link. A
+corpus that never adopted standards has no `standards.md` to open, so name the type and leave the label off.
+
 ## Write to the tier
 
 | Tier            | Written as                                                                     |
