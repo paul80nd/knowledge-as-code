@@ -36,7 +36,7 @@ set of files these rules name, read from wherever they are authored, and `to:` o
 corpus.
 
 **[`.schema/`](.schema/README.md)** is the machine-readable statement of what a record of each type carries, authored
-once at the root and read by both corpora below. A corpus of your own carries its own copy, at its own root.
+once at the root and read by every corpus below. A corpus of your own carries its own copy, at its own root.
 
 **[`template/`](template/README.md)** holds the rest: the framework's own documentation, the plugin tree, the pages and
 templates a corpus starts from, and the repository-shaped files it cannot work without. Some a corpus receives once and
@@ -136,7 +136,7 @@ which names your corpus, and a `README.md` to rewrite. Nothing here is what you 
 dotnet tool install --global KnowledgeAsCode.Tool
 
 mkdir ../my-corpus && cd ../my-corpus
-kac new                             # asks four things, and defaults every one of them
+kac new                             # asks a few short questions, each with a default
 git commit -m "Start a corpus"      # new stages what it wrote; the first commit is yours
 ```
 
@@ -183,8 +183,8 @@ Stated openly, because they are load-bearing:
 * **Azure DevOps wiki is the primary publishing target.** Frontmatter renders as a metadata table there, `.order`
   drives navigation, and `/`-rooted links resolve from the corpus root. Everything degrades to plain markdown elsewhere,
   but the sharp edges were filed against ADO.
-* **Seventeen types is a lot.** It is the most likely thing to be wrong here. The mitigation is a decision table, and a
-  standing willingness to merge types that are not earning their place.
+* **The taxonomy may be too large.** It is the most likely thing to be wrong here. The mitigation is a decision
+  table, and a standing willingness to merge types that are not earning their place.
 * **Trust matters more than coverage.** The failure mode of a wiki is not too little content, it is content nobody
   believes. Generated indexes, validated links and immutable decisions all serve that.
 * **You own the content, and install the tool.** An organisation adopting this gets its own cut of the schema and the

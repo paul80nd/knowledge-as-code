@@ -23,7 +23,7 @@ corpus is made of, and stops short of committing so you can read what it staged.
 
 ```bash
 mkdir my-corpus && cd my-corpus
-kac new          # asks four things, and has a default for each
+kac new          # asks a few short questions, each with a default
 ```
 
 ## Use
@@ -62,6 +62,6 @@ reference for every command:
 
 **<https://github.com/paul80nd/knowledge-as-code>**
 
-It also holds a worked corpus you can read before you write your own.
+It also holds worked corpora you can read before you write your own.
 
 Released under the MIT licence.
