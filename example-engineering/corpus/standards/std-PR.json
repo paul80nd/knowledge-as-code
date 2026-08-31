@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/common/pull-requests.md",
+  "fields": {
+    "id": "std-PR",
+    "title": "A pull request carries its reasoning and one accountable approval",
+    "category": "common",
+    "status": "draft",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-08-26",
+    "tags": [
+      "agents",
+      "code-review",
+      "pull-requests"
+    ]
+  },
+  "sections": {
+    "Summary": "Every change to the default branch arrives as a pull request that says what it does and why, and a named person other than the author approves it before it merges.",
+    "Conformance checklist": "- [ ] Branch policy requires a pull request, and requires at least one approval.\n- [ ] Branch policy excludes the author from satisfying that approval.\n- [ ] The description links a work item.\n- [ ] Where an agent produced any part of the change, the description names the agent, the model and the task.\n- [ ] The reviewer states what they checked, rather than restating what the change claims."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/engineering/standards/common/pull-requests.md"
+  }
+}

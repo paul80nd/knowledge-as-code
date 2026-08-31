@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/common/dependencies.md",
+  "fields": {
+    "id": "std-DEPS",
+    "title": "A dependency is pinned, screened and named in the inventory",
+    "category": "common",
+    "status": "draft",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-08-31",
+    "tags": [
+      "dependencies",
+      "licences",
+      "supply-chain"
+    ]
+  },
+  "sections": {
+    "Summary": "Every third-party package a build pulls in is pinned to a version, comes from a feed we control, and is screened for vulnerabilities and licence terms before anyone adopts it. A critical finding stops the release.",
+    "Conformance checklist": "- [ ] Every package source configured in the repository points at the organisation's feed.\n- [ ] The lockfile is committed, and CI installs from it rather than resolving afresh.\n- [ ] The dependency scan runs on every build, and its results are visible without opening the tool.\n- [ ] No critical finding is open past 7 days without a recorded deviation.\n- [ ] Every licence in the tree appears on the allowed list.\n- [ ] The build artefacts for the last release are still in the managed repository."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/engineering/standards/common/dependencies.md"
+  }
+}

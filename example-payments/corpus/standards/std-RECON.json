@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/ledger/reconciliation.md",
+  "fields": {
+    "id": "std-RECON",
+    "title": "The ledger is reconciled against the PSP every day",
+    "category": "ledger",
+    "status": "active",
+    "applies-to": [
+      "svc-payment-ledger"
+    ],
+    "review-by": "2027-08-31",
+    "tags": [
+      "ledger",
+      "reconciliation",
+      "settlement"
+    ]
+  },
+  "sections": {
+    "Summary": "A daily run matches the PSP's settlement file against the ledger, entry by entry. Anything that does not match is a break, and a break is owned by somebody until it closes.",
+    "Conformance checklist": "- [ ] The run has completed for every day in the last month.\n- [ ] Each run's record names the file it read, the entries it compared and the breaks it found.\n- [ ] A day with breaks does not appear in the revenue report.\n- [ ] Every break older than 30 days has a named owner.\n- [ ] A missing settlement file raises an alert within the run's own window.\n- [ ] Each break closed last month closed through a ledger correction."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/payments/standards/ledger/reconciliation.md"
+  }
+}

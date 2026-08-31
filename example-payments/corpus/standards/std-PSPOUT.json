@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/authorisation/psp-timeouts.md",
+  "fields": {
+    "id": "std-PSPOUT",
+    "title": "A call to the PSP is bounded, and an unknown outcome is resolved",
+    "category": "authorisation",
+    "status": "active",
+    "applies-to": [
+      "svc-payment-api"
+    ],
+    "review-by": "2027-08-31",
+    "tags": [
+      "psp",
+      "resilience",
+      "timeouts"
+    ]
+  },
+  "sections": {
+    "Summary": "Every call to the payment service provider (PSP) has a deadline. A call that times out leaves the payment in an unknown state, and the service resolves that state by asking the PSP.",
+    "Conformance checklist": "- [ ] Every PSP client in the repository is configured with a timeout.\n- [ ] A decline is not retried, confirmed by a test.\n- [ ] The retry policy stops after two attempts, and the backoff carries jitter.\n- [ ] A forced timeout in a test environment leaves the payment marked unknown.\n- [ ] The resolver clears an unknown outcome within 15 minutes, and alerts when it cannot.\n- [ ] The checkout shows a pending message while the outcome is unknown."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/payments/standards/authorisation/psp-timeouts.md"
+  }
+}

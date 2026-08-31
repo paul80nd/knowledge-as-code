@@ -1,0 +1,27 @@
+{
+  "type": "standards",
+  "path": "standards/operations/payment-telemetry.md",
+  "fields": {
+    "id": "std-TELEM",
+    "title": "A payment leaves an order reference in the logs and nothing else",
+    "category": "operations",
+    "status": "active",
+    "applies-to": [
+      "svc-payment-api",
+      "svc-payment-ledger"
+    ],
+    "review-by": "2027-08-28",
+    "tags": [
+      "logging",
+      "observability",
+      "redaction"
+    ]
+  },
+  "sections": {
+    "Summary": "A payment is traced by its order reference and by the PSP's own reference. A card token, a PSP key and a customer's name and address stay out of every log, trace and error report.",
+    "Conformance checklist": "- [ ] The redaction field list is in the repository and a test asserts each entry is removed.\n- [ ] A search of the last 30 days of logs for `tok_` and for `sk_` returns nothing.\n- [ ] A search of the last 30 days of logs for a known test customer's surname returns nothing.\n- [ ] Error reports carry a request id and no request body.\n- [ ] The PSP key resolves from the managed store at start-up, and appears in no configuration file."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/payments/standards/operations/payment-telemetry.md"
+  }
+}

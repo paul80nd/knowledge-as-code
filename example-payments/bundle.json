@@ -1,0 +1,46 @@
+{
+  "bundleVersion": 1,
+  "plugin": "example-payments",
+  "version": "0.7.0",
+  "corpusRoot": "corpus",
+  "export": {
+    "formatVersion": 3,
+    "corpus": "example-payments",
+    "contentVersion": "0.7.0",
+    "types": [
+      "standards"
+    ]
+  },
+  "included": [
+    {
+      "path": "skills/standards-lookup",
+      "requires": [
+        "standards@1"
+      ],
+      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+    }
+  ],
+  "trimmed": [
+    {
+      "path": "skills/glossary-lookup",
+      "requires": [
+        "glossary@1"
+      ],
+      "reason": "the export carries no glossary"
+    },
+    {
+      "path": "skills/policy-lookup",
+      "requires": [
+        "policies@2"
+      ],
+      "reason": "the export carries no policies"
+    },
+    {
+      "path": "hooks",
+      "requires": [
+        "glossary"
+      ],
+      "reason": "the export carries no glossary"
+    }
+  ]
+}

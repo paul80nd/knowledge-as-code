@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/common/deployment.md",
+  "fields": {
+    "id": "std-DEPLOY",
+    "title": "One artefact is built once and promoted to production",
+    "category": "common",
+    "status": "draft",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-08-31",
+    "tags": [
+      "artefacts",
+      "deployment",
+      "release"
+    ]
+  },
+  "sections": {
+    "Summary": "The pipeline builds an artefact once, then promotes that same artefact through each environment. Configuration arrives from outside it, and the only route into production is the pipeline.",
+    "Conformance checklist": "- [ ] The image or package running in production carries the same digest as the one tested below it.\n- [ ] The artefact reports the commit it was built from, on a health or version endpoint.\n- [ ] No configuration file inside the artefact names an environment.\n- [ ] The pipeline definition is in the repository, and its last change went through review.\n- [ ] Production access allows deployment through the pipeline identity alone.\n- [ ] The last release's rollback path is written down, and somebody has run it in an environment below production."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/engineering/standards/common/deployment.md"
+  }
+}

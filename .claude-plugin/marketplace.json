@@ -15,6 +15,11 @@
       "name": "example-engineering",
       "description": "A worked example corpus shipped with knowledge-as-code, holding the invented governance layer of a fictional engineering organisation. Its policies bind nobody, and no organisation is certified against anything it records.",
       "source": "./example-engineering"
+    },
+    {
+      "name": "example-payments",
+      "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
+      "source": "./example-payments"
     }
   ]
 }

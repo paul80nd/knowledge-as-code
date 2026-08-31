@@ -1,0 +1,42 @@
+{
+  "formatVersion": 3,
+  "corpus": "example-payments",
+  "shortcode": "pay",
+  "contentVersion": "0.7.0",
+  "mechanismVersion": 5,
+  "commit": "d44d96c1a30e0ca3b0e916af99d9625c407a869d",
+  "dirty": false,
+  "generatedAt": "2026-08-31T10:28:22Z",
+  "about": {
+    "displayName": "Example Payments",
+    "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
+    "author": {
+      "name": "Paul Law",
+      "url": "https://github.com/paul80nd"
+    },
+    "license": "MIT"
+  },
+  "publishing": {
+    "target": "github",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/payments/{path}#{anchor}",
+    "base": "https://github.com/paul80nd/knowledge-as-code",
+    "pathPrefix": "examples/payments",
+    "ref": "d44d96c1a30e0ca3b0e916af99d9625c407a869d"
+  },
+  "types": [
+    {
+      "type": "standards",
+      "shapeVersion": 1,
+      "records": 8,
+      "parts": 24,
+      "dir": "standards",
+      "partsFile": "standards/rules.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "sections": {
+        "Summary": "full",
+        "Conformance checklist": "full"
+      }
+    }
+  ]
+}

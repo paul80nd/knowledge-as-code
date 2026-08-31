@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/common/build-gates.md",
+  "fields": {
+    "id": "std-GATES",
+    "title": "A failing check blocks the merge",
+    "category": "common",
+    "status": "draft",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-08-26",
+    "tags": [
+      "continuous-integration",
+      "quality-gates",
+      "testing"
+    ]
+  },
+  "sections": {
+    "Summary": "Every push builds and tests automatically, and a check that fails stops the change. Turning a check off is a recorded deviation with a named owner.",
+    "Conformance checklist": "- [ ] A push triggers the build with no manual step.\n- [ ] Branch policy lists the build and the test suite as required checks.\n- [ ] The build passes from a clean clone on a fresh agent.\n- [ ] Every skipped, excluded or suppressed check names a deviation.\n- [ ] Every such deviation is open, owned by an individual, and inside its review date.\n- [ ] The last defect fix in this repository carries a test that fails without the fix."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/engineering/standards/common/build-gates.md"
+  }
+}

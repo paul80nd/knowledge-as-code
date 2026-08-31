@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/ledger/entries.md",
+  "fields": {
+    "id": "std-LEDGER",
+    "title": "A ledger entry is written once and corrected by another entry",
+    "category": "ledger",
+    "status": "active",
+    "applies-to": [
+      "svc-payment-ledger"
+    ],
+    "review-by": "2027-08-31",
+    "tags": [
+      "append-only",
+      "double-entry",
+      "ledger"
+    ]
+  },
+  "sections": {
+    "Summary": "Every movement of money is a balanced pair of entries, written once and never amended. A mistake is corrected by a further pair, so the sequence finance read on the day is the sequence they read a year later.",
+    "Conformance checklist": "- [ ] Every amount column is an integer type, and every entry carries a currency code.\n- [ ] The database grants the service no UPDATE or DELETE on the entries table.\n- [ ] Summing debits and credits across the whole table returns zero.\n- [ ] Every correction in the last month appears as a reversal naming the entry it reverses.\n- [ ] Each entry names an order, a PSP reference and an idempotency key.\n- [ ] A payment's history can be rebuilt from the entries with no other source."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/payments/standards/ledger/entries.md"
+  }
+}

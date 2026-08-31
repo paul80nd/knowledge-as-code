@@ -1,15 +1,16 @@
 {
   "bundleVersion": 1,
   "plugin": "example-engineering",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 3,
     "corpus": "example-engineering",
-    "contentVersion": "0.6.1",
+    "contentVersion": "0.7.0",
     "types": [
       "glossary",
-      "policies"
+      "policies",
+      "standards"
     ]
   },
   "included": [
@@ -26,6 +27,13 @@
         "policies@2"
       ],
       "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
+    },
+    {
+      "path": "skills/standards-lookup",
+      "requires": [
+        "standards@1"
+      ],
+      "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
     },
     {
       "path": "hooks",

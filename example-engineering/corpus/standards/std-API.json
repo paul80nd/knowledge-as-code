@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/common/api-contracts.md",
+  "fields": {
+    "id": "std-API",
+    "title": "An interface is described by a contract in the repository",
+    "category": "common",
+    "status": "draft",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-08-31",
+    "tags": [
+      "api-versioning",
+      "contracts",
+      "interfaces"
+    ]
+  },
+  "sections": {
+    "Summary": "Every interface we publish has a machine-readable contract committed beside the code. The build checks the implementation against it, and a change that consumers cannot absorb ships as a new version.",
+    "Conformance checklist": "- [ ] The repository holds the contract, and a reviewer can read the diff to it in the pull request.\n- [ ] The build fails when a route, a field or a status code drifts from the contract.\n- [ ] Every path carries a version segment, and the previous version still answers.\n- [ ] Each endpoint rejects an unauthenticated call, confirmed by a test.\n- [ ] A request carrying an unknown or malformed field is refused rather than accepted and ignored.\n- [ ] Each deprecated version answers with a removal date in the response headers."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/engineering/standards/common/api-contracts.md"
+  }
+}

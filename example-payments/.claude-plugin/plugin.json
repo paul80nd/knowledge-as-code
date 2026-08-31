@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "example-payments",
+  "displayName": "Example Payments",
+  "version": "0.7.0",
+  "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
+  "author": {
+    "name": "Paul Law",
+    "url": "https://github.com/paul80nd"
+  },
+  "homepage": "https://github.com/paul80nd/knowledge-as-code",
+  "repository": "https://github.com/paul80nd/knowledge-as-code",
+  "license": "MIT",
+  "keywords": [
+    "knowledge-as-code",
+    "standards"
+  ],
+  "metadata": {
+    "corpusRoot": "corpus",
+    "components": [
+      {
+        "path": "skills/standards-lookup",
+        "requires": [
+          "standards@1"
+        ],
+        "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+      }
+    ]
+  }
+}

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "example-libraries",
   "displayName": "Example Libraries",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A worked example corpus shipped with knowledge-as-code, holding the invented estate of a fictional public-library consortium. It is here to show what a corpus holds, and it governs nobody.",
   "author": {
     "name": "Paul Law",

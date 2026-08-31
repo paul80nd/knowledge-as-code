@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/common/testing.md",
+  "fields": {
+    "id": "std-TEST",
+    "title": "A test runs at the lowest level that can catch the fault",
+    "category": "common",
+    "status": "draft",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-08-31",
+    "tags": [
+      "test-data",
+      "test-levels",
+      "testing"
+    ]
+  },
+  "sections": {
+    "Summary": "A team writes each test at the cheapest level that can fail on the fault it is looking for, and runs the whole suite on data that was never a real customer's.",
+    "Conformance checklist": "- [ ] The suite that runs on every push finishes in under ten minutes.\n- [ ] Running the suite twice in a row, and in a different order, gives the same result.\n- [ ] No test in the repository calls a hostname outside the build agent.\n- [ ] The build publishes a coverage figure, and the threshold it fails at is in the repository.\n- [ ] Every fixture in the repository is generated or masked, confirmed by reading it.\n- [ ] No test configuration names a production connection string or endpoint."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/engineering/standards/common/testing.md"
+  }
+}

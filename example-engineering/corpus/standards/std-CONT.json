@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/platform/containers.md",
+  "fields": {
+    "id": "std-CONT",
+    "title": "A container image is pinned by digest and runs as a non-root user",
+    "category": "platform",
+    "status": "draft",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-08-31",
+    "tags": [
+      "base-images",
+      "containers",
+      "runtime"
+    ]
+  },
+  "sections": {
+    "Summary": "An image is built from a base pinned by digest, tagged with the version it will keep forever, and started as a non-root user with no port open beyond the one the service answers on.",
+    "Conformance checklist": "- [ ] Every `FROM` in the repository carries a digest.\n- [ ] The base image digest was refreshed within the last month.\n- [ ] `docker inspect` on the running image reports a non-root user.\n- [ ] The deployment manifest names an image digest rather than a tag.\n- [ ] The registry refuses a second push to a tag that already exists.\n- [ ] The container exposes one port, and it is the one the service answers on."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/engineering/standards/platform/containers.md"
+  }
+}

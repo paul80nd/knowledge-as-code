@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/checkout/card-data.md",
+  "fields": {
+    "id": "std-CARD",
+    "title": "Card details reach the PSP and never reach us",
+    "category": "checkout",
+    "status": "active",
+    "applies-to": [
+      "svc-payment-api"
+    ],
+    "review-by": "2027-08-28",
+    "tags": [
+      "cards",
+      "pci-dss",
+      "tokenisation"
+    ]
+  },
+  "sections": {
+    "Summary": "The browser sends card details to the payment service provider (PSP) and receives a token. Our services handle the token. No card number, expiry date or security code crosses a boundary we own.",
+    "Conformance checklist": "- [ ] The checkout page posts card fields to a PSP hostname, confirmed in the browser's network trace.\n- [ ] No request body reaching our estate carries a field named for a card number, expiry or security code.\n- [ ] A search of every schema in the estate for a card-number column returns nothing.\n- [ ] The support tool has no free-text field a card number could be typed into.\n- [ ] The PSP contract's responsibility matrix is current, and someone here has read it this year."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d44d96c1a30e0ca3b0e916af99d9625c407a869d/examples/payments/standards/checkout/card-data.md"
+  }
+}
