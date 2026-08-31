@@ -14,6 +14,6 @@
     "Exceptions": "An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than waived."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4fc3ce293f114fb3945c9e92324db19dae3a577f/examples/engineering/policies/delivery/autv-automated-verification.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c645f591a414b47ca1153bd4a99ea77396ffcdd0/examples/engineering/policies/delivery/autv-automated-verification.md"
   }
 }

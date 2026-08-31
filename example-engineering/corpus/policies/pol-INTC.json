@@ -14,6 +14,6 @@
     "Exceptions": "An interface with a single consumer inside the team that owns it falls outside the Scope above rather than being excepted. It comes into scope the moment anyone beyond that team builds against it. Teams are usually wrong about who is already calling them.\n\nA security fix may break a contract where leaving it intact would leave data exposed. That is a recorded deviation under [pol-DEVI], and consumers are told as soon as it is safe to tell them."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4fc3ce293f114fb3945c9e92324db19dae3a577f/examples/engineering/policies/delivery/intc-interface-contracts.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c645f591a414b47ca1153bd4a99ea77396ffcdd0/examples/engineering/policies/delivery/intc-interface-contracts.md"
   }
 }

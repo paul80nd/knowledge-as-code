@@ -1,3 +1,3 @@
-example-libraries 0.1.1 travels with this session as data, exported 2026-08-31.
+example-libraries 0.1.2 travels with this session as data, exported 2026-08-31.
 glossary. 29 entries across 3 records: Example Libraries, Knowledge as code and Search.
 Ask the glossary-lookup skill before you infer what a word here means.
