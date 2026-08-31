@@ -2,7 +2,6 @@
 id: tol-trial-no-criteria
 tier: descriptive
 status: trial
-category: observability
 owner: alex.doe
 ---
 

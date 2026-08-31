@@ -2,7 +2,6 @@
 id: tol-Site_Server
 tier: descriptive
 status: approved
-category: runtime
 owner: alex.doe
 ---
 

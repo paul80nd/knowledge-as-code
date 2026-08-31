@@ -46,7 +46,7 @@ the evaluation we already did.
 | `status` *†  | `approved` `trial` `deprecated` `rejected` | `approved` means approved for new work. Existing use that is not approved is drift.                  |
 | `owner` *†   | string                                     | A named person, never a team alias.                                                                  |
 | `tags` †     | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                     |
-| `category` * | string                                     | e.g. `testing`, `build`, `observability`, `runtime`.                                                 |
+| `category`   | derived from the record's sub-path         | The folder the tool is filed under, below `tools/`.                                                  |
 | `versions`   | string                                     | A range, not a pin. The register states what we stand behind. The manifests state what is installed. |
 | `licence`    | string                                     | SPDX identifier. The field nobody wants until they urgently do.                                      |
 | `decided-in` | id                                         | Where a decision was worth recording. Small, uncontroversial adoptions need only a register entry.   |
@@ -82,6 +82,7 @@ the evaluation we already did.
 |-----------------------------|---------|-----------------------------------------------------------------------------------------------------------------|
 | `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                             |
 | `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                  |
+| `derived-key`               | error   | A field derived from the record's folder is not written in frontmatter.                                         |
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
