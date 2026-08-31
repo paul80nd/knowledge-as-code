@@ -1,13 +1,13 @@
 # Example Libraries: a knowledge corpus
 
 > **Everything here is invented.** Example Libraries is a fictional public-library consortium. Its services, decisions
-> and vocabulary were written to give each knowledge type something real-shaped to hold, and to push the schema into its
+> and vocabulary were written to give the schema something real-shaped to hold, and to push it into its
 > awkward corners. Nothing in this corpus describes anyone, and no hostname in it resolves: every one is under
 > `example.com`, which [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered.
 > **Delete these records before you write your first real one.**
 
 A corpus is plain markdown in git where every document has a type and every type has a schema. This one is
-self-contained: it adopts eight types, holds every record it needs, and consumes nothing.
+self-contained: it consumes nothing.
 [`../README.md`](../README.md) sets it beside the other two corpora here and says what each one demonstrates.
 
 **Read this one, copy [`../../template/`](../../template/).** The template is the same corpus with the content taken

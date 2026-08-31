@@ -20,8 +20,8 @@ between the first shape and the other two, and says what the split costs.
 
 ## What each one is for
 
-**[`library/`](library/) is the whole thing in one repository.** It holds its own vocabulary, its own service catalogue
-and the decisions behind them, and it takes nothing from outside. A first corpus arrives in this shape and most stay in
+**[`library/`](library/) is the whole thing in one repository.** It holds its own vocabulary and its own service
+catalogue, and it takes nothing from outside. A first corpus arrives in this shape and most stay in
 it. It adopts `adrs`, `capabilities`, `data`, `glossary`, `integrations`, `processes`, `runbooks` and `services`.
 
 **[`engineering/`](engineering/) is the governance layer.** Its policies are written to be principle-level and
@@ -61,9 +61,9 @@ corpus created anywhere else carries its own copy at its own root, which is wher
 Each corpus declares `types:` in its own `.corpus.yaml`. Adoption is a decision rather than the shape the folders happen
 to have, and `kac validate` holds each corpus to standing up everything it declared and nothing it did not.
 
-Four of the framework's seventeen types are adopted by none of the three: `discoveries`, `explanations`, `faqs` and
-`postmortems`. They keep their schema, their root page and their template in [`../template/`](../template/), and no
-worked record exercises them.
+The framework's `discoveries`, `explanations`, `faqs` and `postmortems` are adopted by none of the three. They keep
+their schema, their root page and their template in [`../template/`](../template/), and no worked record exercises
+them.
 
 ## What they publish
 
