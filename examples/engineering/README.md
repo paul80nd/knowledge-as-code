@@ -71,8 +71,8 @@ references beside it.
 
 ## Maturity
 
-**Policies are the proven type here.** The other five schemas have met little real content, and three of them hold
-none at all. That is the honest limit: a schema is wrong in ways only real content reveals.
+**Policies and standards are the proven types here.** The other four schemas have met little real content, and two of
+them hold none at all. That is the honest limit: a schema is wrong in ways only real content reveals.
 
 ## What this corpus declares about itself
 

@@ -5,8 +5,9 @@
 > [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered.
 
 A corpus is plain markdown in git where every document has a type and every type has a schema. This one is a domain
-corpus, and it is thin on purpose. It adopts three types and holds six records between them. A domain corpus inherits
-its governance rather than restating it, and a thin corpus shows that where a full one hides it.
+corpus, and it is thin on purpose. It adopts three types, and it writes rules about handling a payment and nothing
+else. A domain corpus inherits its governance rather than restating it, and a thin corpus shows that where a full one
+hides it.
 [`../README.md`](../README.md) sets it beside the other two corpora here and says what each one demonstrates.
 
 **A new corpus starts from [`../../template/`](../../template/)**, which is the same corpus with the content taken out.
@@ -59,9 +60,9 @@ clause the governance layer does not carry and the build fails, exactly as it wo
 folder it fills is not committed, so a fresh clone holds none of it.
 
 **Thinness is the point.** There are no policies here and no compliance posture. Both belong to `../engineering/`, and
-a payments team reads them from there rather than keeping a copy that drifts. Six records is the whole corpus: two
-services, the two NFRs they carry, and two standards saying what the inherited policies mean for a payment. Everything
-else a payments team is bound by is one repository away and cited by id.
+a payments team reads them from there rather than keeping a copy that drifts. The whole corpus is two services, the
+NFRs they carry, and the standards saying what the inherited policies mean for a payment. Everything else a payments
+team is bound by is one repository away and cited by id.
 
 **The same obligation is met at two layers.** `eng:pol-SCRT.LOGS` prohibits writing a secret to a log. The governance
 corpus's own secret-handling standard discharges it for the whole estate, and [std-TELEM] discharges it again for a PSP
@@ -107,4 +108,4 @@ with `template/`. A corpus outside this repository carries its own at its own ro
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
 
-[std-TELEM]: standards/payment-telemetry.md
+[std-TELEM]: standards/operations/payment-telemetry.md
