@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "example-payments",
   "displayName": "Example Payments",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
   "author": {
     "name": "Paul Law",

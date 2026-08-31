@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 3,
     "corpus": "example-payments",
-    "contentVersion": "0.7.1",
+    "contentVersion": "0.7.2",
     "types": [
       "standards"
     ]

@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] Branch policy requires a pull request, and requires at least one approval.\n- [ ] Branch policy excludes the author from satisfying that approval.\n- [ ] The description links a work item.\n- [ ] Where an agent produced any part of the change, the description names the agent, the model and the task.\n- [ ] The reviewer states what they checked, rather than restating what the change claims."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d223538c4b3153e0f00c75aaa4a14fa5e1db62de/examples/engineering/standards/common/pull-requests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/133ebc790b38f5bc7e1620a3682218a24a2e8312/examples/engineering/standards/common/pull-requests.md"
   }
 }
