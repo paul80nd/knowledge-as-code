@@ -185,6 +185,17 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   cost.
 * **Cite rather than restate.** If the reasoning lives elsewhere, link it. Nobody updates a copy.
 
+## Rewrite the block, not the diff
+
+Adding a fact to prose that already exists means writing the whole block again with that fact in it. Prose grown one
+edit at a time reads as a stack of additions, because that is what it is.
+
+* **You should not be able to point at the sentence you added.** Where you can, you appended. Read the block whole,
+  then write it again carrying everything it now has to say.
+* **A block whose diff is only added lines was never re-read.** Nothing reworded and nothing dropped is the tell, and a
+  pull request shows it.
+* **A fact belonging to a list the block already carries joins that list.** It does not open a paragraph of its own.
+
 ## Rules you can ignore
 
 Split an infinitive, open with *and* or *but*, end on a preposition, repeat a word rather than reach for a synonym. Each
