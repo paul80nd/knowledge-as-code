@@ -33,8 +33,9 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
 ## Writing a rule
 
 * **Read the field declaration and the `sections:` block first.** The rule may already be answered. A `reciprocal:`, a
-  `mirrors-section:`, a `required-when:`, a scalar type, a required section, a section left as a bare heading. Each has
-  been written out as a rule at some point, and each read as outstanding work for as long as it survived.
+  `mirrors-section:`, a `mirrors-citations:`, a `required-when:`, a scalar type, a required section, a section left as
+  a bare heading. Each has been written out as a rule at some point, and each read as outstanding work for as long as
+  it survived.
 
 * **A rule you have not built declares no `severity:`.** That absence is what says "declared, not enforced", and the
   type page renders it as such. Naming a level nothing fires at fails the schema-load pass. It would read as enforced

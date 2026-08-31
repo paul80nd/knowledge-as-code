@@ -109,10 +109,20 @@ shift. `"2026-06-12"` renders as written.
 **Enum values are lower-case and hyphenated.** They are grep targets first and prose second.
 
 **A list is a block sequence, one entry per line.** An entry stays individually reviewable in a diff, and a finding can
-point at the entry that caused it rather than at the field. Two fields take the compact flow form instead, and each
-earns it the same way: the entries are short, there are many of them, and no reader stops on one. `tags: [ a, b ]` says
-how a record is found rather than what it says. The `clauses:` inside a policy's `aligns-with` entry is a run of
-framework references under a framework already named on the line above.
+point at the entry that caused it rather than at the field.
+
+**Two things send a list to the compact flow form, and either is enough.**
+
+* **The field is secondary metadata.** `tags: [ a, b ]` says how a record is found rather than what it says, and a block
+  sequence gives the least interesting field in the block the most lines.
+* **The entries are short and there are many of them.** A standard's `implements:` puts a line per clause between the
+  reader and the document, and thirteen clauses of `pol-AUTV` is thirteen lines. The `clauses:` inside a policy's
+  `aligns-with` entry is a run of framework references under a framework already named on the line above.
+
+Everything else stays a block sequence: a handful of entries, or entries a reviewer weighs one at a time.
+
+Nothing enforces either form, so this is the house style rather than a rule. A corpus taking the framework writes
+whichever valid YAML it prefers.
 
 **A list of objects names each entry on its first key.** `aligns-with` writes the framework, then the references reached
 inside it. The naming key comes first because the tool sorts on it and an index column renders it.
@@ -177,12 +187,15 @@ part would resolve to one target, so a document citing six of them carries six d
 A policy's clauses are rows of a single table under `## Clauses`. The anchor reaches that table and the row's `Id`
 column is what a reader scans to, so a clause is cited this way:
 
-    A push to any branch **MUST** trigger a build ([pol-AUTV].INTEG).
+    _**Covers:** [pol-AUTV].INTEG, [pol-AUTV].BLOCK_
 
     [pol-AUTV]: ../../policies/delivery/autv-automated-verification.md#clauses
 
 The part stays on the page for a reader. The link states the record alone, because the record is as far as the
-anchors reach.
+anchors reach. Two clauses of one policy reuse the definition, which is what this form is for.
+
+Where in a document a clause is cited is the type's business rather than this page's. A standard names its clauses on
+the `Covers` line closing each rule, and its `_template.md` says so.
 
 **The label is the id exactly as that record carries it**: `adr-0013`, `pol-DEVI`, `svc-billing-api`. The prefix is
 always lower-case, and what follows takes the type's own form, so a mnemonic stays upper-case and a slug stays

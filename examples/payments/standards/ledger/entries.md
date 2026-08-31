@@ -2,9 +2,7 @@
 id: std-LEDGER
 tier: normative
 status: active
-implements:
-  - eng:pol-DERV.EXPECT
-  - eng:pol-DERV.LINEAGE
+implements: [ eng:pol-DERV.EXPECT, eng:pol-DERV.LINEAGE ]
 applies-to:
   - svc-payment-ledger
 review-by: "2027-08-31"
@@ -25,31 +23,32 @@ further pair, so the sequence finance read on the day is the sequence they read 
 
 ### An entry is a balanced pair
 
-- The ledger **MUST** write a movement of money as a debit and a credit of the same amount (`eng:pol-DERV.EXPECT`).
-- An entry **MUST** carry the amount in minor units as an integer, with its ISO 4217 currency code
-  (`eng:pol-DERV.EXPECT`).
-- An entry **MUST NOT** carry an amount in a floating-point type, at rest or in transit (`eng:pol-DERV.EXPECT`).
-- The ledger **MUST** write a pair of entries in one transaction, so no reader ever sees one half
-  (`eng:pol-DERV.EXPECT`).
+- The ledger **MUST** write a movement of money as a debit and a credit of the same amount.
+- An entry **MUST** carry the amount in minor units as an integer, with its ISO 4217 currency code.
+- An entry **MUST NOT** carry an amount in a floating-point type, at rest or in transit.
+- The ledger **MUST** write a pair of entries in one transaction, so no reader ever sees one half.
+
+_**Covers:** `eng:pol-DERV.EXPECT`_
 
 ### Nothing amends an entry
 
-- The ledger **MUST** refuse an update or a delete on a written entry (`eng:pol-DERV.LINEAGE`).
+- The ledger **MUST** refuse an update or a delete on a written entry.
 - The ledger **MUST** record a correction as a reversing pair followed by the intended pair, each naming the entry it
-  corrects (`eng:pol-DERV.LINEAGE`).
-- An entry **MUST** carry the time the event happened and the time it was written, where the two differ
-  (`eng:pol-DERV.LINEAGE`).
+  corrects.
+- An entry **MUST** carry the time the event happened and the time it was written, where the two differ.
+
+_**Covers:** `eng:pol-DERV.LINEAGE`_
 
 ### An entry says what produced it
 
 - An entry **MUST** name the order, the PSP reference and the idempotency key from
-  [std-IDEM.the-caller-chooses-the-key] (`eng:pol-DERV.LINEAGE`).
-- An entry **MUST** name the event that produced it: an authorisation, a capture, a refund or a chargeback
-  (`eng:pol-DERV.LINEAGE`).
+  [std-IDEM.the-caller-chooses-the-key].
+- An entry **MUST** name the event that produced it: an authorisation, a capture, a refund or a chargeback.
 - An entry for an authorisation **MUST** record the authentication outcome from
-  [std-SCA.the-outcome-travels-with-the-payment], and who bears the liability for a chargeback
-  (`eng:pol-DERV.LINEAGE`).
-- The ledger **MUST** be able to answer a payment's full history from its entries alone (`eng:pol-DERV.LINEAGE`).
+  [std-SCA.the-outcome-travels-with-the-payment], and who bears the liability for a chargeback.
+- The ledger **MUST** be able to answer a payment's full history from its entries alone.
+
+_**Covers:** `eng:pol-DERV.LINEAGE`_
 
 ## Examples
 
@@ -80,8 +79,6 @@ old figure now disagrees with the ledger and nothing explains why.
 
 Finance reconciles against this table, and an auditor reads it. An amended row makes both of them wrong about the past,
 and neither can tell that it happened.
-
-- `eng:pol-DERV` commits us to stating what a correct output looks like, and to tracing a value back to its source.
 
 ## Sources and further reading
 

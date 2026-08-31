@@ -14,9 +14,11 @@ lineage:
   prior-art: None — a fixture type has no ancestor to claim.
 
 notes: >
-  A fixture type laid over the real schema so that the mirroring check is exercised against a section
-  that is not 'Related'. The section a field mirrors is whatever the field names, and the ADR type —
-  the only real one that mirrors anything — cannot say that on its own.
+  A fixture type laid over the real schema so that the two mirroring checks are exercised away from the
+  types that declare them. The section a field mirrors is whatever the field names, and the ADR type —
+  the only real one that mirrors a section — cannot say that on its own. The label a field reconciles
+  its citations against is whatever the field names too, and 'standards' is the only real type
+  declaring one.
 
 id:
   prefix: giz
@@ -42,9 +44,23 @@ fields:
     mirrors-section: Dependencies
     description: What this gizmo calls, repeated as prose in the section it mirrors.
 
+  covers:
+    required: false
+    type: list
+    of: id
+    ref: gizmos
+    part-required: true
+    mirrors-citations: Covers
+    description: Behaviours of another gizmo this one answers, named again in a footnote closing each section.
+
 sections:
   required: [What it does]
-  optional: [Dependencies]
+  optional: [Dependencies, Behaviours]
+
+parts:
+  source: headings
+  section: Behaviours
+  noun: behaviour
 
 index:
   columns: [id, title, status, owner]

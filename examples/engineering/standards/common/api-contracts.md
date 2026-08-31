@@ -2,14 +2,8 @@
 id: std-API
 tier: normative
 status: draft
-implements:
-  - pol-INTC.BREAK
-  - pol-INTC.DEPREC
-  - pol-INTC.EXPOSE
-  - pol-INTC.HOLDS
-  - pol-INTC.SECURE
-  - pol-INTC.SPEC
-  - pol-INTC.VERSION
+implements: [ pol-INTC.BREAK, pol-INTC.DEPREC, pol-INTC.EXPOSE, pol-INTC.HOLDS, pol-INTC.SECURE, pol-INTC.SPEC,
+  pol-INTC.VERSION ]
 applies-to:
   - all
 review-by: "2027-08-31"
@@ -31,30 +25,32 @@ implementation against it, and a change that consumers cannot absorb ships as a 
 ### The contract is the source of truth
 
 - A service **MUST** publish a machine-readable contract for every interface it exposes, committed to the repository
-  that builds the service ([pol-INTC].SPEC).
-- Where the implementation and the contract disagree, a team **MUST** treat the implementation as the defect
-  ([pol-INTC].SPEC).
-- A build **MUST** fail where the implementation no longer answers the contract ([pol-INTC].HOLDS).
-- A consumer **MUST** test against the published contract rather than against a running instance of the provider
-  ([pol-INTC].HOLDS).
+  that builds the service.
+- Where the implementation and the contract disagree, a team **MUST** treat the implementation as the defect.
+- A build **MUST** fail where the implementation no longer answers the contract.
+- A consumer **MUST** test against the published contract rather than against a running instance of the provider.
+
+_**Covers:** [pol-INTC].HOLDS, [pol-INTC].SPEC_
 
 ### Every endpoint authenticates and validates
 
-- An endpoint **MUST** authenticate the caller before it does any work ([pol-INTC].SECURE).
-- An endpoint **MUST** authorise the operation before it does any work ([pol-INTC].SECURE).
-- An endpoint **MUST** validate each field it receives against the contract, and reject a request that does not match
-  ([pol-INTC].SECURE).
+- An endpoint **MUST** authenticate the caller before it does any work.
+- An endpoint **MUST** authorise the operation before it does any work.
+- An endpoint **MUST** validate each field it receives against the contract, and reject a request that does not match.
 - An interface **MUST NOT** serve personal data, a secret, or an operation that changes state, to an unauthenticated
-  caller ([pol-INTC].EXPOSE).
+  caller.
+
+_**Covers:** [pol-INTC].EXPOSE, [pol-INTC].SECURE_
 
 ### A change carries a version and a notice
 
-- A published interface **MUST** carry a version a consumer can pin to ([pol-INTC].VERSION).
-- A breaking change **MUST** ship as a new version, with the previous version still answering ([pol-INTC].BREAK).
-- A team **MUST** give notice before it removes a version, on the timescale the deprecation approach states
-  ([pol-INTC].DEPREC).
-- A deprecated version **MUST** answer with a `Deprecation` header and a `Sunset` header, so a consumer meets the
-  notice in the traffic ([pol-INTC].DEPREC).
+- A published interface **MUST** carry a version a consumer can pin to.
+- A breaking change **MUST** ship as a new version, with the previous version still answering.
+- A team **MUST** give notice before it removes a version, on the timescale the deprecation approach states.
+- A deprecated version **MUST** answer with a `Deprecation` header and a `Sunset` header, so a consumer meets the notice
+  in the traffic.
+
+_**Covers:** [pol-INTC].BREAK, [pol-INTC].DEPREC, [pol-INTC].VERSION_
 
 ## Examples
 
@@ -96,8 +92,6 @@ change nobody meant to make.
 
 A consumer plans against what we published. We cannot ask every consumer to re-read the implementation each morning, so
 the contract carries the promise and the version carries the change.
-
-- [pol-INTC] commits us to defining, versioning and verifying the interfaces we publish.
 
 ## Sources and further reading
 

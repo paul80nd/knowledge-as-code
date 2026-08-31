@@ -247,6 +247,10 @@ public static class Validator
         // with itself about documents that do not exist.
         if (kind == DocKind.Record) CheckMirrorsSection(d, t, schema, report);
 
+        // `implements:` mirrors the `Covers` lines. Reconciles two halves of the same document as the
+        // one above does, and is held off a template for the same reason.
+        if (kind == DocKind.Record) CheckMirrorsCitations(d, t, schema, report);
+
         // The type's own rules. Every one of them judges a filled-in document: whether the prose has
         // outgrown the links, whether a step hedges, whether a control names its evidence. A template
         // answers none of those questions, and its guidance prose would answer several of them wrongly.
@@ -986,14 +990,58 @@ public static class Validator
                 if (id is not null) inSection.Add(id);
             }
 
-            foreach (var id in inFront.Except(inSection))
+            // Both sets ignore case, and so must the comparison across them: `Except` builds a set of its
+            // own and reaches for the default comparer unless handed one.
+            foreach (var id in inFront.Except(inSection, StringComparer.OrdinalIgnoreCase))
                 report.Err(new CheckId("related-matches-section"),
                     $"'{spec.Name}' lists '{id}' but it is not referenced in the '## {section}' section.",
                     d.FrontStartLine);
-            foreach (var id in inSection.Except(inFront))
+            foreach (var id in inSection.Except(inFront, StringComparer.OrdinalIgnoreCase))
                 report.Err(new CheckId("related-matches-section"),
                     $"the '## {section}' section references '{id}' but '{spec.Name}' does not list it.",
                     d.FrontStartLine);
+        }
+    }
+
+    // A field against the citations gathered by the footnote lines carrying its label. Where
+    // `mirrors-section` reads one named section, this reads a line wherever one closes a section, so a
+    // document says section by section which of the field's references that stretch of prose answers.
+    //
+    // Two faults, and the misplaced line is the one to report first: a line the reader takes for a
+    // footnote, sitting where nothing marks it as one. Its citations count all the same, so a document
+    // that only put the line in the wrong place gets one finding rather than one per id it named.
+    private static void CheckMirrorsCitations(Doc d, TypeSchema t, Schema schema, Report report)
+    {
+        foreach (var spec in t.DeclaredFields)
+        {
+            if (spec.MirrorsCitations is not { } label) continue;
+            var prefixes = spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>()
+                .Select(target => target.IdPrefix + "-").ToList();
+            if (prefixes.Count == 0) continue;
+
+            var footnotes = d.CitationFootnotes.GetValueOrDefault(label, []);
+            foreach (var footnote in footnotes.Where(footnote => !footnote.ClosesSection))
+                report.Err(new CheckId("mirrors-citations"),
+                    $"this '{label}' line stands in the middle of a section. Write it as the last thing "
+                    + "under the heading it belongs to.", footnote.Line);
+
+            // Only the types the field points at. A rule leans on the rules of other standards and on
+            // the ADR that decided it, and a line naming one of those is prose rather than coverage: the
+            // field could not carry it, so reporting it would be a finding nothing could clear.
+            var inFront = new HashSet<string>(d.FrontList(spec.Name), StringComparer.OrdinalIgnoreCase);
+            var inBody = new HashSet<string>(
+                footnotes.SelectMany(footnote => footnote.Citations)
+                    .Where(citation => prefixes.Any(prefix =>
+                        Citation.Read(citation).Record.StartsWith(prefix, StringComparison.Ordinal))),
+                StringComparer.OrdinalIgnoreCase);
+
+            foreach (var id in inFront.Except(inBody, StringComparer.OrdinalIgnoreCase))
+                report.Err(new CheckId("mirrors-citations"),
+                    $"'{spec.Name}' lists '{id}' and no '{label}' line names it. Close the section that "
+                    + "answers it with one, or take the id out of the field.", d.FrontStartLine);
+            foreach (var id in inBody.Except(inFront, StringComparer.OrdinalIgnoreCase))
+                report.Err(new CheckId("mirrors-citations"),
+                    $"a '{label}' line names '{id}' and '{spec.Name}' does not list it.", d.FrontStartLine);
         }
     }
 

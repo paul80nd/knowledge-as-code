@@ -98,6 +98,12 @@ one.
 address something else cites: `std-SECRET.every-secret-rotates` names one group, and an export carries the group as a
 line of its own. A standard with a single group writes one heading. `part-none` fails a Rules section with none.
 
+**Close a heading with the clauses it covers**, as a footnote in italic with the label bold:
+`_**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LOGS_`. `mirrors-citations` holds the union of those lines equal to
+`implements`, in both directions, so the frontmatter says which obligations the standard discharges and each heading
+says which rule discharges which. A heading covering no clause carries no line, and the rules themselves carry no
+citation.
+
 **A standard's size follows its subject.** One binding every piece of work usually runs to seven or eight rules, and one
 covering a single interface may run to thirty. Neither is padded or cut to meet the other.
 
@@ -142,6 +148,7 @@ Standards are living documents, and we edit them in place. Record every material
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
+| `mirrors-citations`         | error   | A field that mirrors a label reconciles with the citations the labelled lines gather.                           |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |

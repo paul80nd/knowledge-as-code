@@ -820,6 +820,49 @@ public class ExporterTests
         ]
     });
 
+    // A footnote reconciling a field against what the part cites is a fact about coverage rather than a
+    // piece of the part. Left in, a part carrying nothing else travels with the footnote standing where
+    // its words belong, and the consumer reads a coverage line as the definition.
+    [Fact]
+    public void A_citation_footnote_is_not_exported_as_the_part_s_lead()
+    {
+        var line = Assert.Single(Lines(Plan(Corpus(Covering(),
+            ("gls-one", Glossary("gls-one", null,
+                "### Alpha\n\nA, defined.\n\n_**Covers:** [gls-two](gls-two.md).beta_\n"))))));
+
+        Assert.Equal("A, defined.", line.GetProperty("definition").GetString());
+    }
+
+    [Fact]
+    public void A_part_holding_only_a_citation_footnote_exports_no_lead()
+    {
+        var line = Assert.Single(Lines(Plan(Corpus(Covering(),
+            ("gls-one", Glossary("gls-one", null,
+                "### Alpha\n\n_**Covers:** [gls-two](gls-two.md).beta_\n"))))));
+
+        Assert.Equal(JsonValueKind.Null, line.GetProperty("definition").ValueKind);
+    }
+
+    // The glossary type with a field reconciling its citations against a `Covers` line. Declared rather
+    // than merely present, because that is the list the exporter reads the labels off.
+    private static TypeSchema Covering()
+    {
+        var type = GlossaryType();
+        return new TypeSchema
+        {
+            Key = type.Key,
+            TypeName = type.TypeName,
+            Folder = type.Folder,
+            Page = type.Page,
+            IdPrefix = type.IdPrefix,
+            RequiredSections = type.RequiredSections,
+            Parts = type.Parts,
+            Export = type.Export,
+            DeclaredFields =
+                [new FieldSpec { Name = "covers", Refs = ["glossary"], MirrorsCitations = "Covers" }]
+        };
+    }
+
     private static TypeSchema FieldType(string name, FieldSpec spec)
     {
         var type = GlossaryType();

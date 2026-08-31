@@ -65,6 +65,15 @@ public class PartRow
         BodyEnd > BodyStart ? text.AsSpan()[BodyStart..Math.Min(BodyEnd, text.Length)] : default;
 }
 
+// One labelled footnote and the citations it gathers: `_**Covers:** [pol-SCRT].EMBED_`, written as the
+// last block of the section it closes. The label is the field's to declare, so the parser is told which
+// labels to look for and collects every line carrying one.
+//
+// `ClosesSection` is what tells this form from the labelled prose that sits in among the writing. Held
+// rather than filtered on, so a line written in the wrong place is reported as misplaced and its
+// citations still count: dropping them would report every id it named as missing from the document.
+public record CitationFootnote(int Line, bool ClosesSection, IReadOnlyList<string> Citations);
+
 // One H2 and what stands under it: the heading as written, the line it sits on, and where its body
 // begins and ends in the document's text. The body runs to the next heading at the same level or
 // above, so a sub-heading and everything beneath it stand inside the section above them. Found once
@@ -147,6 +156,12 @@ public partial class Doc
     // reconciliation reports every id in the field rather than passing in silence.
     public IReadOnlyDictionary<string, List<LinkRef>> MirroredSectionLinks =
         new Dictionary<string, List<LinkRef>>(StringComparer.OrdinalIgnoreCase);
+
+    // The labelled footnote lines a field of this type reconciles against, keyed by the label the field
+    // declared. Keyed for the reason above: two fields on a type may declare two labels. A label no
+    // line carries arrives as an empty list, so the reconciliation reports every id in the field.
+    public IReadOnlyDictionary<string, List<CitationFootnote>> CitationFootnotes =
+        new Dictionary<string, List<CitationFootnote>>(StringComparer.OrdinalIgnoreCase);
 
     // `requireFrontmatter: false` is for a document read for its prose alone: either a type page or one
     // of the framework's own documents. A type page is not a record and carries no frontmatter. Both
@@ -243,17 +258,8 @@ public partial class Doc
             // The other places a citation is written: the label of a reference link, the text of an
             // inline one, and a part id following either. Collected beside the code spans so every form
             // a citation takes answers to the same pass. See `part-ref` in .schema/_checks.yaml.
-            var cited = link.Reference?.Label ?? (link.FirstChild as LiteralInline)?.Content.ToString();
-            if (cited is not null && NamesARecord(cited, schema))
+            if (LinkCitation(link, schema) is { } citation)
             {
-                // The cheapest form: the label names the record and the part id follows the closing
-                // bracket as text, so a document citing six clauses of one policy defines it once.
-                // A label already carrying the whole citation ends it, and reading a second part id
-                // onto it would build `pol-VURM.TIMEBOX.Also` and match nothing.
-                var citation = PartCitationRegex().IsMatch(cited)
-                    ? cited
-                    : cited + PartSuffix(text, link.Span.End + 1);
-
                 // Once per citation, where a code span is collected every time it appears: a
                 // reference is defined once however often the prose reaches for it, and the definition
                 // is the line an author would fix. The whole citation is the key rather than the
@@ -298,6 +304,8 @@ public partial class Doc
         doc.YStatement = ast.Descendants<QuoteBlock>().FirstOrDefault(q => q.Line > (doc.H1Line - 1));
 
         doc.MirroredSectionLinks = SectionLinks(ast, type?.DeclaredFields.Select(spec => spec.MirrorsSection));
+        doc.CitationFootnotes =
+            Footnotes(ast, schema, type?.DeclaredFields.Select(spec => spec.MirrorsCitations));
 
         return doc;
     }
@@ -464,6 +472,10 @@ public partial class Doc
     // part id against that, as the `.TIMEBOX` in `[pol-VURM].TIMEBOX`. Empty where the link ends the
     // citation, which leaves the label to answer for itself.
     //
+    // Read off the text following the link rather than off the source, so that a delimiter closing an
+    // emphasis is not taken for part of the id. `_**Covers:** [pol-VURM].TIMEBOX_` ends on markup, and
+    // the underscore is a character a part id may carry.
+    //
     // Nothing may stand between the separator and the id. A sentence ending on a link is ordinary
     // prose, and its full stop is followed by a space, so `See [pol-VURM]. The policy` reaches no part
     // called `The`. A digit opens a part id, since a heading slugs to one, so `[pol-VURM].2024` is read
@@ -473,14 +485,32 @@ public partial class Doc
     // A colon is collected here too, for `ColonCitationRegex` to word: a citation spelled with one
     // should be told the form to write, as it is in a code span. A link reference definition writes a
     // colon in the same place and is a block, so it never reaches this.
-    private static string PartSuffix(string text, int at)
+    private static string PartSuffix(LinkInline link)
     {
-        if (at + 1 >= text.Length) return "";
-        if (text[at] is not ('.' or ':') || !char.IsAsciiLetterOrDigit(text[at + 1])) return "";
+        if (link.NextSibling is not LiteralInline next) return "";
 
-        var end = at + 1;
-        while (end < text.Length && (char.IsAsciiLetterOrDigit(text[end]) || text[end] is '_' or '-')) end++;
-        return text[at..end];
+        var after = next.Content.ToString();
+        if (after.Length < 2) return "";
+        if (after[0] is not ('.' or ':') || !char.IsAsciiLetterOrDigit(after[1])) return "";
+
+        var end = 1;
+        while (end < after.Length && (char.IsAsciiLetterOrDigit(after[end]) || after[end] is '_' or '-')) end++;
+        return after[..end];
+    }
+
+    // The citation a link writes, or null where it writes none. The label of a reference link and the
+    // text of an inline one are the same claim, and `NamesARecord` is what keeps ordinary prose in a
+    // link out of it.
+    //
+    // The part id may follow the closing bracket as text, which is the cheapest form: a document citing
+    // six clauses of one policy defines the label once. A label already carrying the whole citation ends
+    // it, and reading a second part id onto it would build `pol-VURM.TIMEBOX.Also` and match nothing.
+    private static string? LinkCitation(LinkInline link, Schema schema)
+    {
+        var cited = link.Reference?.Label ?? (link.FirstChild as LiteralInline)?.Content.ToString();
+        if (cited is null || !NamesARecord(cited, schema)) return null;
+
+        return PartCitationRegex().IsMatch(cited) ? cited : cited + PartSuffix(link);
     }
 
     // Whether the half before the dot opens with a prefix some type declares. The shape alone cannot
@@ -725,6 +755,70 @@ public partial class Doc
     // The links under each of the named H2 sections, gathered in one walk however many are asked for.
     // A section title matches case-insensitively, an H1 ends whichever section is open, and a heading
     // deeper than H2 leaves it open: a sub-heading is inside its section, not after it.
+    // The labelled footnotes a field reconciles against, keyed by the label the field declared. The form
+    // is a whole line in italic opening on a bold label, which is what tells it from the labelled prose
+    // that sits in among the writing: `**Not:**` is bold alone and stands mid-paragraph.
+    //
+    // Every paragraph is read, nested ones included. A footnote written inside a list item is collected
+    // and marked as closing nothing, so the validator reports where it sits rather than dropping it and
+    // reporting each id it named as absent from the document.
+    private static Dictionary<string, List<CitationFootnote>> Footnotes(
+        MarkdownDocument ast, Schema schema, IEnumerable<string?>? labels)
+    {
+        // Keyed by the label as the schema wrote it, and matched on the label with the colon taken off.
+        // The colon belongs to the form, so `mirrors-citations: "Covers:"` would otherwise match no line
+        // anybody would write, and the author would meet one finding per id in the field with nothing
+        // naming the cause.
+        //
+        // Two fields spelling one label two ways share the list, rather than the second field
+        // reconciling against nothing. Both are asking about the same lines.
+        var result = new Dictionary<string, List<CitationFootnote>>(StringComparer.OrdinalIgnoreCase);
+        var matching = new Dictionary<string, List<CitationFootnote>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var label in (labels ?? []).OfType<string>())
+        {
+            if (!matching.TryGetValue(Label(label), out var footnotes))
+                matching[Label(label)] = footnotes = [];
+            result[label] = footnotes;
+        }
+
+        if (result.Count == 0) return result;
+
+        // The link definitions render as nothing, and markdig gathers them into one block at the end of
+        // every document whatever the source. Left in, a footnote closing the last section would read as
+        // standing in the middle of one.
+        var blocks = ast.Where(b => b is not LinkReferenceDefinitionGroup).ToList();
+
+        foreach (var para in ast.Descendants<ParagraphBlock>())
+        {
+            if (para.Inline?.FirstChild is not EmphasisInline { DelimiterCount: 1 } italic) continue;
+            if (italic.FirstChild is not EmphasisInline { DelimiterCount: 2 } bold) continue;
+            if (!matching.TryGetValue(Label(Md.PlainText(bold)), out var footnotes)) continue;
+
+            var at = blocks.IndexOf(para);
+            var closes = at >= 0 && (at + 1 == blocks.Count || blocks[at + 1] is HeadingBlock);
+
+            // Both notations, in the order the line writes them. A local record is cited through a link
+            // and an imported one through a code span, so a corpus reading its policies from an import
+            // writes every citation the second way.
+            var cited = italic.Descendants()
+                .Select(inline => inline switch
+                {
+                    LinkInline { IsImage: false } link => LinkCitation(link, schema),
+                    CodeInline { Content: { } content } when NamesARecord(content, schema) => content,
+                    _ => null
+                })
+                .OfType<string>();
+
+            footnotes.Add(new CitationFootnote(para.Line + 1, closes, [.. cited]));
+        }
+
+        return result;
+    }
+
+    // A footnote's label with the colon the form puts after it taken off, so that the schema and the
+    // document are read the same way whichever of them wrote one.
+    private static string Label(string text) => text.Trim().TrimEnd(':').TrimEnd();
+
     private static Dictionary<string, List<LinkRef>> SectionLinks(
         MarkdownDocument ast, IEnumerable<string?>? sectionTitles)
     {

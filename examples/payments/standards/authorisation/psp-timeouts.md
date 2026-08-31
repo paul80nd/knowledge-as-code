@@ -2,11 +2,7 @@
 id: std-PSPOUT
 tier: normative
 status: active
-implements:
-  - eng:pol-PERF.TARGETS
-  - eng:pol-RECV.DEGRADE
-  - eng:pol-RECV.RETRY
-  - eng:pol-RECV.TIMEOUT
+implements: [ eng:pol-PERF.TARGETS, eng:pol-RECV.DEGRADE, eng:pol-RECV.RETRY, eng:pol-RECV.TIMEOUT ]
 applies-to:
   - svc-payment-api
 review-by: "2027-08-31"
@@ -27,27 +23,31 @@ state, and the service resolves that state by asking the PSP.
 
 ### Every call has a deadline
 
-- A call to the PSP **MUST** carry a timeout (`eng:pol-RECV.TIMEOUT`).
-- A timeout **MUST** be set in configuration, so it moves without a release (`eng:pol-RECV.TIMEOUT`).
-- The authorisation call **MUST** time out at 5 seconds (`eng:pol-PERF.TARGETS`).
+- A call to the PSP **MUST** carry a timeout.
+- A timeout **MUST** be set in configuration, so it moves without a release.
+- The authorisation call **MUST** time out at 5 seconds.
+
+_**Covers:** `eng:pol-PERF.TARGETS`, `eng:pol-RECV.TIMEOUT`_
 
 ### A retry is bounded and backs off
 
-- A service **MUST** retry a connection failure or a `5xx` (`eng:pol-RECV.RETRY`).
-- A service **MUST NOT** retry a decline (`eng:pol-RECV.RETRY`).
-- A service **MUST** stop after two retries, with exponential backoff and jitter between them
-  (`eng:pol-RECV.RETRY`).
+- A service **MUST** retry a connection failure or a `5xx`.
+- A service **MUST NOT** retry a decline.
+- A service **MUST** stop after two retries, with exponential backoff and jitter between them.
 - A service **MUST** stop calling the PSP for 30 seconds once the failure rate passes the threshold configured against
-  it (`eng:pol-RECV.DEGRADE`).
+  it.
+
+_**Covers:** `eng:pol-RECV.DEGRADE`, `eng:pol-RECV.RETRY`_
 
 ### An unknown outcome is resolved
 
-- A service **MUST** record a timed-out authorisation as unknown (`eng:pol-RECV.DEGRADE`).
+- A service **MUST** record a timed-out authorisation as unknown.
 - A service **MUST** query the PSP for the outcome of an unknown authorisation, quoting the idempotency key from
-  [std-IDEM.the-caller-chooses-the-key] (`eng:pol-RECV.DEGRADE`).
-- A service **MUST** resolve every unknown outcome within 15 minutes, and raise an alert on one that is not
-  (`eng:pol-RECV.DEGRADE`).
-- The checkout **MUST** tell the customer the payment is being confirmed (`eng:pol-RECV.DEGRADE`).
+  [std-IDEM.the-caller-chooses-the-key].
+- A service **MUST** resolve every unknown outcome within 15 minutes, and raise an alert on one that is not.
+- The checkout **MUST** tell the customer the payment is being confirmed.
+
+_**Covers:** `eng:pol-RECV.DEGRADE`_
 
 ## Examples
 
@@ -82,10 +82,6 @@ real one.
 
 The 5-second bound sits well above [nfr-0001], which asks for an answer inside 800ms at the 95th percentile. The
 target governs the ordinary call and the timeout bounds the worst one.
-
-- `eng:pol-PERF` commits us to stating performance targets in terms we can measure.
-- `eng:pol-RECV` commits us to bounding an outbound call, to retrying within limits, and to degrading rather than
-  failing.
 
 ## Sources and further reading
 

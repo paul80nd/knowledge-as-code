@@ -187,6 +187,21 @@ public class SchemaCheckTests
         Assert.Contains("See also", finding.Message);
     }
 
+    // The labelled line gathers citations of another record, so a field pointing at no type carries
+    // nothing the line could ever be held against.
+    [Fact]
+    public void A_mirrors_citations_on_a_field_with_no_ref_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(fields:
+        [
+            ("implements", new FieldSpec
+                { Name = "implements", Type = "list", Of = "id", MirrorsCitations = "Covers" })
+        ])));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Contains("Covers", finding.Message);
+    }
+
     // A description is rendered into the type page's checks table, which is read by scanning. The bound
     // is held here rather than left to review because the table is generated: an over-long cell reads as
     // deliberate in the diff, and there is nowhere else it would be noticed.

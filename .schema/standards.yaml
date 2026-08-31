@@ -97,8 +97,18 @@ fields:
     of: id
     ref: policies
     part-required: true
+    mirrors-citations: Covers
     description: Policy clause ids this standard puts into practice, as `pol-EVER.BRANCH`.
     notes: >
+      Each rule closes on a `Covers` line naming the clauses it discharges, and CI holds the union of
+      those lines equal to this field. The frontmatter says which obligations the standard answers, and
+      each rule says which of them it answers, so a reader wanting the rule behind `pol-SCRT.ROTATE`
+      finds it without reading the whole document.
+
+      The obligations under a rule carry no clause citation of their own. One line at the foot of the
+      rule says what the rule discharges, where an id on every bullet buries the obligation a reader
+      came for.
+
       Clause by clause, and a bare policy id is refused. A standard discharges some of a policy's clauses
       and seldom all of them, so a bare id is one keystroke shorter than the honest list and reads to
       anything counting coverage as every clause covered. A standard that does cover every clause lists
@@ -189,8 +199,9 @@ export:
     `seeAlso` carries the rules of other standards this one points at. A standard composes by union, so
     one rule commonly leans on another, and a link's target is stripped out of the words: an agent
     reading "under [std-LEDGER.nothing-amends-an-entry]" is handed a bracket it cannot follow. A policy
-    clause cited alongside stays inside the wording, because a clause is a table row with no anchor of
-    its own and the link names the record alone.
+    clause reaches neither: the clauses a rule discharges are named on its `Covers` line, and the
+    exporter drops that line before it takes the obligations. So a rule carrying nothing but the
+    footnote travels with no obligations rather than with the footnote standing where they belong.
 
     The rules of one standard reach a consumer sorted on the heading, because that is what a
     heading-sourced type does. The order the author grouped them in is a fact about the page, and a

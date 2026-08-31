@@ -2,10 +2,7 @@
 id: std-TELEM
 tier: normative
 status: active
-implements:
-  - eng:pol-DATA.LOGS
-  - eng:pol-SCRT.LOGS
-  - eng:pol-SCRT.STORE
+implements: [ eng:pol-DATA.LOGS, eng:pol-SCRT.LOGS, eng:pol-SCRT.STORE ]
 applies-to:
   - svc-payment-api
   - svc-payment-ledger
@@ -27,12 +24,11 @@ name and address stay out of every log, trace and error report.
 
 ### What a log line may carry
 
-- A log line **MUST** identify a payment by its order reference, its PSP reference, or both
-  (`eng:pol-DATA.LOGS`).
-- A log line **MUST NOT** carry a card token, in a message, a property or a structured field
-  (`eng:pol-SCRT.LOGS`).
-- A log line **MUST NOT** carry a customer's name, address, email address or telephone number
-  (`eng:pol-DATA.LOGS`).
+- A log line **MUST** identify a payment by its order reference, its PSP reference, or both.
+- A log line **MUST NOT** carry a card token, in a message, a property or a structured field.
+- A log line **MUST NOT** carry a customer's name, address, email address or telephone number.
+
+_**Covers:** `eng:pol-DATA.LOGS`, `eng:pol-SCRT.LOGS`_
 
 ### The redaction runs before the sink
 
@@ -45,9 +41,10 @@ name and address stay out of every log, trace and error report.
 ### A PSP key is a secret and behaves like one
 
 - A service **MUST** read the PSP's secret key from the managed store at start-up, through the identity granted to that
-  workload (`eng:pol-SCRT.STORE`).
-- A service **MUST NOT** write a PSP key to a log, a console, an error report or a support ticket
-  (`eng:pol-SCRT.LOGS`).
+  workload.
+- A service **MUST NOT** write a PSP key to a log, a console, an error report or a support ticket.
+
+_**Covers:** `eng:pol-SCRT.LOGS`, `eng:pol-SCRT.STORE`_
 
 ## Examples
 
@@ -78,9 +75,6 @@ every copy of it, and a copy is not covered by rotating the token at the PSP.
 `eng:pol-SCRT` binds every secret and this standard says what its prohibition on logging means for a payment. That
 obligation is discharged twice on purpose: `eng:pol-SCRT.LOGS` reaches the whole estate through the governance layer's
 own secret-handling standard, and reaches a PSP key and a card token through this one.
-
-- `eng:pol-DATA` commits us to keeping unmasked personal data out of logs and telemetry.
-- `eng:pol-SCRT` commits us to holding secrets in a controlled store, and to keeping them out of logs.
 
 ## Sources and further reading
 

@@ -2,17 +2,8 @@
 id: std-DEPLOY
 tier: normative
 status: draft
-implements:
-  - pol-ENVS.PROMOTE
-  - pol-ENVS.SAMEDEF
-  - pol-PIPE.ASCODE
-  - pol-PIPE.CONFIG
-  - pol-PIPE.DEPLOY
-  - pol-PIPE.LOCAL
-  - pol-PIPE.MANUAL
-  - pol-PIPE.REVERT
-  - pol-PIPE.SAMEART
-  - pol-PIPE.TRACE
+implements: [ pol-ENVS.PROMOTE, pol-ENVS.SAMEDEF, pol-PIPE.ASCODE, pol-PIPE.CONFIG, pol-PIPE.DEPLOY, pol-PIPE.LOCAL,
+  pol-PIPE.MANUAL, pol-PIPE.REVERT, pol-PIPE.SAMEART, pol-PIPE.TRACE ]
 applies-to:
   - all
 review-by: "2027-08-31"
@@ -33,34 +24,36 @@ from outside it, and the only route into production is the pipeline.
 
 ### The artefact is built once
 
-- A pipeline **MUST** build the artefact once, and promote that build to every environment ([pol-PIPE].SAMEART).
-- An artefact **MUST** carry the commit it was built from, so a running version resolves to a change
-  ([pol-PIPE].TRACE).
-- A deployment record **MUST** name the artefact, the change and the approval behind it ([pol-PIPE].TRACE).
-- A pipeline **MUST NOT** deploy an artefact built anywhere but the pipeline ([pol-PIPE].LOCAL).
+- A pipeline **MUST** build the artefact once, and promote that build to every environment.
+- An artefact **MUST** carry the commit it was built from, so a running version resolves to a change.
+- A deployment record **MUST** name the artefact, the change and the approval behind it.
+- A pipeline **MUST NOT** deploy an artefact built anywhere but the pipeline.
+
+_**Covers:** [pol-PIPE].LOCAL, [pol-PIPE].SAMEART, [pol-PIPE].TRACE_
 
 ### Configuration sits outside the artefact
 
-- A service **MUST** read environment-specific configuration at start-up, from outside the artefact
-  ([pol-PIPE].CONFIG).
-- An artefact **MUST NOT** carry a hostname, connection string or feature setting that differs between environments
-  ([pol-PIPE].CONFIG).
+- A service **MUST** read environment-specific configuration at start-up, from outside the artefact.
+- An artefact **MUST NOT** carry a hostname, connection string or feature setting that differs between environments.
+
+_**Covers:** [pol-PIPE].CONFIG_
 
 ### Production changes through the pipeline alone
 
-- A change **MUST** reach production through the automated pipeline ([pol-PIPE].DEPLOY).
-- A change **MUST** reach each environment below production by promotion from the one before it
-  ([pol-ENVS].PROMOTE).
-- Every environment **MUST** be provisioned from the same definition, parameterised per environment
-  ([pol-ENVS].SAMEDEF).
-- The pipeline definition **MUST** live in the repository and be reviewed like the code ([pol-PIPE].ASCODE).
-- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema ([pol-PIPE].MANUAL).
+- A change **MUST** reach production through the automated pipeline.
+- A change **MUST** reach each environment below production by promotion from the one before it.
+- Every environment **MUST** be provisioned from the same definition, parameterised per environment.
+- The pipeline definition **MUST** live in the repository and be reviewed like the code.
+- A team **MUST NOT** hand-edit production code, configuration, infrastructure or schema.
+
+_**Covers:** [pol-ENVS].PROMOTE, [pol-ENVS].SAMEDEF, [pol-PIPE].ASCODE, [pol-PIPE].DEPLOY, [pol-PIPE].MANUAL_
 
 ### A way back exists before the change goes
 
-- A release **MUST** have a stated rollback or recovery path before it starts ([pol-PIPE].REVERT).
-- A database migration **MUST** leave the previous version of the service able to run against the new schema
-  ([pol-PIPE].REVERT).
+- A release **MUST** have a stated rollback or recovery path before it starts.
+- A database migration **MUST** leave the previous version of the service able to run against the new schema.
+
+_**Covers:** [pol-PIPE].REVERT_
 
 ## Examples
 
@@ -90,9 +83,6 @@ transitive package, a build agent.
 
 An artefact rebuilt per environment is a different artefact, and the testing done below production applied to the other
 one. Building once makes the thing we tested the thing we ship.
-
-- [pol-ENVS] commits us to provisioning environments from one definition and promoting between them.
-- [pol-PIPE] commits us to reaching production through an automated pipeline, with a way back.
 
 [pol-ENVS]: ../../policies/security/envs-environment-separation.md#clauses
 [pol-PIPE]: ../../policies/delivery/pipe-pipeline-to-production.md#clauses

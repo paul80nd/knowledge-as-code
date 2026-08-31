@@ -142,8 +142,28 @@ to cite. Where the reader lands is the definition's to decide, so point it at th
 id has to touch the bracket, so `See [pol-VURM]. The policy...` stays a full stop and a sentence.
 
 A field may require the part rather than admit it. A standard's `implements:` names the clauses it puts into practice,
-one entry each, and `kac validate` refuses a bare policy id there. The whole policy is shorter to write than the list it
-stands for, and it reads to anything counting coverage as every clause covered.
+and `kac validate` refuses a bare policy id there. The whole policy is shorter to write than the list it stands for, and
+it reads to anything counting coverage as every clause covered.
+
+A field may also be held to what the prose cites. `implements:` declares `mirrors-citations: Covers`, so each rule
+closes on a footnote naming the clauses it discharges, and `kac validate` holds the union of those lines equal to the
+field:
+
+```markdown
+### Nowhere else holds a secret
+
+- A repository **MUST NOT** contain a secret, in source or in a pipeline definition.
+- A build **MUST NOT** bake a secret into an artefact or an image.
+
+_**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LEAKED, [pol-SCRT].LOGS_
+```
+
+The line is written in italic with the label bold, and it closes the section it covers. A section covering nothing
+carries no line. Both directions are checked, so the field stays the whole truth about which obligations the standard
+answers, and each rule says which of them it answers.
+
+One line at the foot of a rule is what the obligations under it would otherwise each carry. The reader who came for the
+rule reads the rule, and the reader who came for the coverage reads the footnote or the field.
 
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, record, part. A
 record the reading corpus holds is cited bare, and qualifying one is an error, because two spellings of a single

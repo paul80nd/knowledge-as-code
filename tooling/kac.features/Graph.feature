@@ -1,8 +1,10 @@
 Feature: Cross-document graph checks
-kac reconciles ids across the whole corpus: uniqueness, referenced ids, reciprocal fields, and a
-field mirroring a section. Driven in-process against the graph fixture, which lays a gizmo type over
-the real schema. A second type gives an ADR a document of another type to point at, and it gives a
-field mirroring a section other than 'Related' something to mirror.
+kac reconciles ids across the whole corpus: uniqueness, referenced ids, reciprocal fields, a field
+mirroring a section, and a field mirroring the citations a labelled line gathers. Driven in-process
+against the graph fixture, which lays a gizmo type over the real schema. A second type gives an ADR a
+document of another type to point at, and it gives a field mirroring a section other than 'Related'
+something to mirror. The gizmo type keeps parts of its own, so a citation into one is what the
+labelled lines carry.
 
 Background:
   Given the graph fixture corpus
@@ -34,9 +36,19 @@ Scenario: A field reconciles against the section it names, whichever section tha
     | line | check                   | message                                                                                    |
     |    1 | related-matches-section | the '## Dependencies' section references 'giz-mirrored' but 'depends-on' does not list it. |
 
+Scenario: A field reconciles against the lines carrying its label, whichever label that is
+  When I validate the corpus
+  Then the findings for "gizmos/covering.md" are exactly:
+    | line | check | message |
+  And the findings for "gizmos/drifting.md" are exactly:
+    | line | check             | message                                                                                                                             |
+    |    1 | mirrors-citations | 'covers' lists 'giz-behaving.it-rattles' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
+    |    1 | mirrors-citations | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                                                         |
+    |   30 | mirrors-citations | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to.                    |
+
 Scenario: The whole graph produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 7 documents and 0 skipped
+  Then validation reports 10 documents and 0 skipped
   And the findings are exactly:
     | file                  | severity | line | check                   | message                                                                                              |
     | adrs/0001-first.md    | error    |    1 | related-matches-section | 'related' lists 'adr-0002' but it is not referenced in the '## Related' section.                     |
@@ -52,3 +64,6 @@ Scenario: The whole graph produces exactly these findings and nothing else
     | adrs/0004-dangling.md | error    |    1 | ref-resolves            | 'superseded-by' points at 'adr-0099', which does not exist.                                          |
     | adrs/0005-mistyped.md | error    |    1 | ref-resolves            | 'superseded-by' points at 'giz-mirrored', which is a Gizmo, not an ADR.                              |
     | gizmos/adrift.md      | error    |    1 | related-matches-section | the '## Dependencies' section references 'giz-mirrored' but 'depends-on' does not list it.           |
+    | gizmos/drifting.md    | error    |    1 | mirrors-citations       | 'covers' lists 'giz-behaving.it-rattles' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
+    | gizmos/drifting.md    | error    |    1 | mirrors-citations       | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                         |
+    | gizmos/drifting.md    | error    |   30 | mirrors-citations       | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to. |

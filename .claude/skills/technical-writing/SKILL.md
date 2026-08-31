@@ -159,6 +159,10 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   A link label opening a line is the one that bites: `[pol-AGNT]: gate` is a link reference definition, and the line
   disappears from the page. A value of two words or more is safe, and a verb is safer still. Write: "[pol-AGNT] sets the
   acceptance gate."
+* **A footnote closing a section is a whole line in italic, opening on a bold label.** Position tells the two forms
+  apart: the label above sits in among the writing, and a footnote closes the section it is about. Wrap the line in
+  underscores, which leaves the asterisks to mark a stressed word inside a sentence.
+  Write: "_**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LOGS_"
 * **A bold lead-in may carry two steps.** Splitting it moves half the instruction outside the emphasis. Write: "**Retire
   the old policy and write a new one.**"
 * **Bold the term, not the claim,** inside a paragraph. Where the claim is the misreading the paragraph exists to

@@ -2,13 +2,7 @@
 id: std-SECRET
 tier: normative
 status: draft
-implements:
-  - pol-ENVS.REUSE
-  - pol-SCRT.EMBED
-  - pol-SCRT.LEAKED
-  - pol-SCRT.LOGS
-  - pol-SCRT.ROTATE
-  - pol-SCRT.STORE
+implements: [ pol-ENVS.REUSE, pol-SCRT.EMBED, pol-SCRT.LEAKED, pol-SCRT.LOGS, pol-SCRT.ROTATE, pol-SCRT.STORE ]
 applies-to:
   - all
 review-by: "2027-08-26"
@@ -29,24 +23,27 @@ that service in that environment. Nothing else holds a secret.
 
 ### A secret comes from the store
 
-- A service **MUST** read every secret from the managed store, through an identity granted to the workload
-  ([pol-SCRT].STORE).
-- An environment below production **MUST** hold its own secrets, distinct from production's ([pol-ENVS].REUSE).
+- A service **MUST** read every secret from the managed store, through an identity granted to the workload.
+- An environment below production **MUST** hold its own secrets, distinct from production's.
+
+_**Covers:** [pol-ENVS].REUSE, [pol-SCRT].STORE_
 
 ### Nowhere else holds a secret
 
 - A repository **MUST NOT** contain a secret, in source, in a configuration file, in a pipeline definition or in a test
-  fixture ([pol-SCRT].EMBED).
-- A build **MUST NOT** bake a secret into an artefact or an image ([pol-SCRT].EMBED).
-- A service **MUST NOT** write a secret to a log, to a console, to an error message or to a support ticket
-  ([pol-SCRT].LOGS).
-- A pipeline **MUST** run a secret scanner over the repository and its history, and fail on a finding
-  ([pol-SCRT].LEAKED).
+  fixture.
+- A build **MUST NOT** bake a secret into an artefact or an image.
+- A service **MUST NOT** write a secret to a log, to a console, to an error message or to a support ticket.
+- A pipeline **MUST** run a secret scanner over the repository and its history, and fail on a finding.
+
+_**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LEAKED, [pol-SCRT].LOGS_
 
 ### Every secret rotates
 
-- A secret **MUST** be replaceable in the store without a code change or a rebuild ([pol-SCRT].ROTATE).
-- Every secret **MUST** rotate on a period recorded against it in the store ([pol-SCRT].ROTATE).
+- A secret **MUST** be replaceable in the store without a code change or a rebuild.
+- Every secret **MUST** rotate on a period recorded against it in the store.
+
+_**Covers:** [pol-SCRT].ROTATE_
 
 ## Examples
 
@@ -76,9 +73,6 @@ writes the value into the image, so rotating it costs a rebuild and a redeploy.
 
 A secret in a repository is a secret in every clone, every fork and every backup of that repository, and rotating it
 does not reach any of them. Reading from the store at run time keeps rotation to one place.
-
-- [pol-ENVS] keeps production credentials unreachable from a lower environment.
-- [pol-SCRT] commits us to holding secrets in a controlled store and never embedding one.
 
 ## Sources and further reading
 

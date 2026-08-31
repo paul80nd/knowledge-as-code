@@ -33,6 +33,7 @@ you, and every finding names the file and the key.
 | A `from:` on a field that is also `required: true`                                       | `schema-shape`       |
 | A type declaring no `folder:`                                                            | `schema-shape`       |
 | A `mirrors-section:` at a section the type's `sections:` block does not declare          | `schema-shape`       |
+| A `mirrors-citations:` on a field with no `ref:`, so its ids resolve against nothing     | `schema-shape`       |
 | An `export.sections:` key at a section the type's `sections:` block does not declare     | `schema-shape`       |
 | An `export.fields:` entry naming a field neither the type nor `_universal.yaml` declares | `schema-shape`       |
 | An `export:` block declaring no `version:`, which a consumer reads its files at          | `schema-shape`       |

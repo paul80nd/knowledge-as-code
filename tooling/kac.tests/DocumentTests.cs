@@ -481,6 +481,162 @@ public class DocumentTests
         Assert.Empty(doc.MirroredSectionLinks["Dependencies"]);
     }
 
+    // A schema whose policy type declares a field reconciling against a labelled line, for the parse
+    // tests below. The label is the field's to name, and the prefix is what tells a citation from prose,
+    // so both come off the same declaration the real corpus reads.
+    private static Schema WithFootnotes(params string[] labels) => new()
+    {
+        ByFolder = new Dictionary<string, TypeSchema>
+        {
+            ["policies"] = new()
+            {
+                IdPrefix = "pol",
+                DeclaredFields =
+                [
+                    .. labels.Select((label, i) =>
+                        new FieldSpec { Name = $"field{i}", MirrorsCitations = label })
+                ]
+            }
+        }
+    };
+
+    private static Doc? ParseWithFootnotes(string body, params string[] labels) =>
+        Doc.Parse("policies/scrt-a-title.md",
+            $"---\nid: pol-SCRT\n---\n\n# Secrets are managed\n\n{body}",
+            WithFootnotes(labels.Length > 0 ? labels : ["Covers"]));
+
+    // The form the corpus writes, in both notations: a link with the part id against the bracket for a
+    // record the corpus holds, and a code span for one it imports.
+    [Fact]
+    public void A_labelled_line_closing_a_section_gathers_its_citations()
+    {
+        var doc = ParseWithFootnotes("""
+                                     ## A rule
+
+                                     Something binding.
+
+                                     _**Covers:** [pol-VURM].TIMEBOX, `eng:pol-VURM.WINDOW`_
+
+                                     [pol-VURM]: vurm-a-title.md
+                                     """);
+
+        Assert.NotNull(doc);
+        var footnote = Assert.Single(doc.CitationFootnotes["Covers"]);
+        Assert.True(footnote.ClosesSection);
+        Assert.Equal(["pol-VURM.TIMEBOX", "eng:pol-VURM.WINDOW"], footnote.Citations);
+    }
+
+    // The underscore closing the emphasis is markup, and a part id may carry one. Read off the source
+    // the last citation on the line comes out as `TIMEBOX_`, which reaches no clause anybody wrote.
+    [Fact]
+    public void An_emphasis_delimiter_is_not_read_into_the_part_id()
+    {
+        var doc = ParseWithFootnotes("""
+                                     ## A rule
+
+                                     _**Covers:** [pol-VURM].TIMEBOX_
+
+                                     [pol-VURM]: vurm-a-title.md
+                                     """);
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX"], doc.PartRefs.Select(r => r.Ref));
+    }
+
+    // The two labelled forms are told apart by the italic and by the position. A bold label standing in
+    // among the prose is the other one, and gathers nothing.
+    [Fact]
+    public void A_bold_label_that_is_not_italic_is_not_a_footnote()
+    {
+        var doc = ParseWithFootnotes("""
+                                     ## A rule
+
+                                     **Covers:** [pol-VURM].TIMEBOX, and the rest of the sentence.
+
+                                     [pol-VURM]: vurm-a-title.md
+                                     """);
+
+        Assert.NotNull(doc);
+        Assert.Empty(doc.CitationFootnotes["Covers"]);
+    }
+
+    // Collected rather than dropped, so the validator reports where the line sits instead of reporting
+    // every id it named as absent from the document.
+    [Theory]
+    [InlineData("_**Covers:** [pol-VURM].TIMEBOX_\n\nMore prose under the same heading.")]
+    [InlineData("- A bullet, and beneath it:\n\n  _**Covers:** [pol-VURM].TIMEBOX_")]
+    public void A_labelled_line_that_closes_no_section_is_collected_as_misplaced(string body)
+    {
+        var doc = ParseWithFootnotes($"## A rule\n\n{body}\n\n[pol-VURM]: vurm-a-title.md\n");
+
+        Assert.NotNull(doc);
+        var footnote = Assert.Single(doc.CitationFootnotes["Covers"]);
+        Assert.False(footnote.ClosesSection);
+        Assert.Equal(["pol-VURM.TIMEBOX"], footnote.Citations);
+    }
+
+    // The definitions render as nothing and markdig gathers them at the end of every document, so a line
+    // closing the last section would read as standing in the middle of one.
+    [Fact]
+    public void A_line_closing_the_last_section_closes_it_despite_the_definitions_beneath()
+    {
+        var doc = ParseWithFootnotes("""
+                                     ## The last rule
+
+                                     _**Covers:** [pol-VURM].TIMEBOX_
+
+                                     [pol-VURM]: vurm-a-title.md
+                                     """);
+
+        Assert.NotNull(doc);
+        Assert.True(Assert.Single(doc.CitationFootnotes["Covers"]).ClosesSection);
+    }
+
+    // The validator reports every id in the field rather than skipping the field.
+    [Fact]
+    public void A_label_no_line_carries_is_collected_as_empty()
+    {
+        var doc = ParseWithFootnotes("## A rule\n\n_**Notes:** nothing to see_\n");
+
+        Assert.NotNull(doc);
+        Assert.Empty(doc.CitationFootnotes["Covers"]);
+    }
+
+    // The colon belongs to the form, so a schema writing it into the label still matches the line every
+    // author writes. Left alone, the declaration would match nothing and say nothing about why.
+    [Fact]
+    public void A_declared_label_carrying_the_colon_matches_the_line_anyway()
+    {
+        var doc = ParseWithFootnotes("""
+                                     ## A rule
+
+                                     _**Covers:** [pol-VURM].TIMEBOX_
+
+                                     [pol-VURM]: vurm-a-title.md
+                                     """, "Covers:");
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX"], Assert.Single(doc.CitationFootnotes["Covers:"]).Citations);
+    }
+
+    // Two fields spelling one label two ways are asking about the same lines, so they share them. The
+    // second field would otherwise reconcile against nothing and report every id it lists.
+    [Fact]
+    public void Two_fields_spelling_one_label_two_ways_see_the_same_lines()
+    {
+        var doc = ParseWithFootnotes("""
+                                     ## A rule
+
+                                     _**Covers:** [pol-VURM].TIMEBOX_
+
+                                     [pol-VURM]: vurm-a-title.md
+                                     """, "Covers", "Covers:");
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX"], Assert.Single(doc.CitationFootnotes["Covers"]).Citations);
+        Assert.Equal(["pol-VURM.TIMEBOX"], Assert.Single(doc.CitationFootnotes["Covers:"]).Citations);
+    }
+
     // A field derived from where a record sits. The path arithmetic is what these pin: the type's own
     // folder comes off the front, the filename comes off the back, and whatever is left is the value.
     private static Schema DerivedCategory() => new()

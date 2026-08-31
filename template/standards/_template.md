@@ -32,6 +32,10 @@ and how it is reviewed. What is below is only what a standard adds to that.
   `standards/` has no category, which is fine while there are few enough to read as one list.
 * **`derived-from`**: the ADR id (s) this standard distils. A standard citing neither an ADR here nor a policy in
   `implements` is guidance, not a standard.
+* **`implements`**: the policy clauses this standard puts into practice, as
+  `implements: [ pol-EVER.BRANCH, pol-EVER.HISTORY ]`. A bare policy id is refused: a standard discharges some of a
+  policy's clauses and seldom all of them, and the bare id reads to anything counting coverage as every clause covered.
+  A reader takes the same list from the `Covers` lines below, so this field is written for whatever counts coverage.
 * **`applies-to`**: service ids, or `all`.
 * **`review-by`**: a quoted `"YYYY-MM-DD"`. Drives the staleness report.
 
@@ -66,11 +70,21 @@ eight. One covering a single interface may run to thirty.
 the bullet list. A paragraph after the bullets is dropped from it without a word, so put the reasoning in Rationale and
 provenance where it travels.
 
+**Close a heading with the clauses it covers**, as a footnote in italic with the label bold. CI holds the union of
+those lines equal to `implements`, so the frontmatter says which obligations the standard discharges and each heading
+says which rule discharges which. Write it as the last thing under the heading, and leave it off a heading that covers
+no clause.
+
+**The rules themselves carry no clause citation.** One line at the foot of the heading says what that heading
+discharges. An id in brackets on every bullet buries the obligation a reader came for.
+
 ### {{What the rules below hold a reader to}}
 
 - Services **MUST** ...
 - Responses **SHOULD** ...
 - Clients **MAY** ...
+
+_**Covers:** [pol-{{MNEM}}].{{CLAUSE}}_
 
 ## Examples
 

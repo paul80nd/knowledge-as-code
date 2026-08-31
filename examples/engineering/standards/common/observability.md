@@ -2,16 +2,8 @@
 id: std-OBS
 tier: normative
 status: draft
-implements:
-  - pol-OBSV.ALERTS
-  - pol-OBSV.BLIND
-  - pol-OBSV.CENTRAL
-  - pol-OBSV.CLOCKS
-  - pol-OBSV.CORREL
-  - pol-OBSV.HEALTH
-  - pol-OBSV.RETAIN
-  - pol-OBSV.SECRETS
-  - pol-OBSV.SLO
+implements: [ pol-OBSV.ALERTS, pol-OBSV.BLIND, pol-OBSV.CENTRAL, pol-OBSV.CLOCKS, pol-OBSV.CORREL, pol-OBSV.HEALTH,
+  pol-OBSV.RETAIN, pol-OBSV.SECRETS, pol-OBSV.SLO ]
 applies-to:
   - all
 review-by: "2027-08-31"
@@ -32,35 +24,39 @@ trace id that follows the request across services. An alert names an owner and a
 
 ### Everything lands in the central store
 
-- A service **MUST** emit its logs, traces and metrics to the central platform ([pol-OBSV].CENTRAL).
-- A service **MUST NOT** hold the only copy of a log, so that losing the host still leaves the evidence
-  ([pol-OBSV].CENTRAL).
-- A service **MUST NOT** reach production without health monitoring and at least one alert on it
-  ([pol-OBSV].BLIND).
+- A service **MUST** emit its logs, traces and metrics to the central platform.
+- A service **MUST NOT** hold the only copy of a log, so that losing the host still leaves the evidence.
+- A service **MUST NOT** reach production without health monitoring and at least one alert on it.
+
+_**Covers:** [pol-OBSV].BLIND, [pol-OBSV].CENTRAL_
 
 ### One request reads as one timeline
 
-- A service **MUST** stamp every record with a UTC timestamp taken from a synchronised clock ([pol-OBSV].CLOCKS).
-- A service **MUST** accept an inbound `traceparent` ([pol-OBSV].CORREL).
-- A service **MUST** pass that `traceparent` to everything it calls ([pol-OBSV].CORREL).
-- A log line **MUST** carry the trace id, so a search on one request returns every service that touched it
-  ([pol-OBSV].CORREL).
-- A service **MUST** emit structured fields rather than a formatted sentence, so a search can filter on a value
-  ([pol-OBSV].CORREL).
+- A service **MUST** stamp every record with a UTC timestamp taken from a synchronised clock.
+- A service **MUST** accept an inbound `traceparent`.
+- A service **MUST** pass that `traceparent` to everything it calls.
+- A log line **MUST** carry the trace id, so a search on one request returns every service that touched it.
+- A service **MUST** emit structured fields rather than a formatted sentence, so a search can filter on a value.
+
+_**Covers:** [pol-OBSV].CLOCKS, [pol-OBSV].CORREL_
 
 ### Telemetry carries no personal data
 
-- A service **MUST** redact unmasked personal data before the record is written ([pol-OBSV].SECRETS).
-- A service **MUST** hold a credential or a token to [std-SECRET.nowhere-else-holds-a-secret], which says where a
-  secret may appear ([pol-OBSV].SECRETS).
+- A service **MUST** redact unmasked personal data before the record is written.
+- A service **MUST** hold a credential or a token to [std-SECRET.nowhere-else-holds-a-secret], which says where a secret
+  may appear.
+
+_**Covers:** [pol-OBSV].SECRETS_
 
 ### Somebody acts on every alert
 
-- A service **MUST** publish availability and latency objectives ([pol-OBSV].SLO).
-- A service **MUST** alert when it is on course to miss one of those objectives ([pol-OBSV].SLO).
-- An alert **MUST** name the accountable owner and the first action to take ([pol-OBSV].HEALTH).
-- A team **MUST** delete or fix an alert nobody acts on, rather than leaving it to be filtered ([pol-OBSV].ALERTS).
-- A team **MUST** retain telemetry for the period the repository records against the service ([pol-OBSV].RETAIN).
+- A service **MUST** publish availability and latency objectives.
+- A service **MUST** alert when it is on course to miss one of those objectives.
+- An alert **MUST** name the accountable owner and the first action to take.
+- A team **MUST** delete or fix an alert nobody acts on, rather than leaving it to be filtered.
+- A team **MUST** retain telemetry for the period the repository records against the service.
+
+_**Covers:** [pol-OBSV].ALERTS, [pol-OBSV].HEALTH, [pol-OBSV].RETAIN, [pol-OBSV].SLO_
 
 ## Examples
 
@@ -89,8 +85,6 @@ caused it means reading by eye.
 
 An incident is answered from what was already being recorded. Adding a log line during the incident tells you about the
 next one.
-
-- [pol-OBSV] commits us to central, correlated telemetry and to alerts somebody acts on.
 
 ## Sources and further reading
 

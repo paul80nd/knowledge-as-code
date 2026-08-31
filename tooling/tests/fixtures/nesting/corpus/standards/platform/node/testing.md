@@ -24,6 +24,8 @@ The specific half, two folders deep. One topic, two altitudes, and the same file
 
 - A record here **MUST** stay free of findings, so the golden pins a clean corpus and nothing else.
 
+_**Covers:** [pol-SCRT].NEST_
+
 ## Examples
 
 This file is the example. It is filed at `standards/platform/node/testing.md`, and the category the tool reads from that path is `platform/node`.

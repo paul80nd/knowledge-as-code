@@ -47,6 +47,13 @@ public sealed class FieldSpec
     public Regex? PatternRegex { get; init; }    // Pattern compiled, though the message still quotes the source string
     public string? MirrorsSection { get; init; } // section whose ids this field must mirror
 
+    // The label on the footnote lines whose citations this field must mirror. A standard's
+    // `implements:` declares `Covers`, and each section under its rules closes on
+    // `_**Covers:** [pol-SCRT].EMBED_`. Beside `MirrorsSection:` rather than inside it, because the two
+    // read different halves of a document: one gathers what a named section links to, and this one
+    // gathers what a labelled line cites wherever in the document that line closes a section.
+    public string? MirrorsCitations { get; init; }
+
     // Words admitted beside the field's declared type: `applies-to: [all]`, `last-rehearsed: never`. A
     // value listed here is taken as written, and nothing further is asked of it. That is what lets a
     // date field say "never" and a list of ids say "all" without either widening into a string field
@@ -433,7 +440,8 @@ public sealed class TypeSchema
     public bool HasRule(RuleId id) => Rules.Any(r => r.Id == id);
 
     // Whether any field on this type declares the given FieldSpec property. The same question serves the
-    // schema-driven core checks (reciprocal, mirrors-section) that fire only when a field opts in.
+    // schema-driven core checks (reciprocal, mirrors-section, mirrors-citations) that fire only when a
+    // field opts in.
     public bool AnyField(Func<FieldSpec, bool> predicate) => Fields.Values.Any(predicate);
 
     // The universal fields, the type's own, and the reserved keys the publishing platform adds.
@@ -938,6 +946,7 @@ public sealed partial class Schema
             Pattern = pattern,
             PatternRegex = CompilePattern(pattern),
             MirrorsSection = Yaml.Str(node.Get("mirrors-section")),
+            MirrorsCitations = Yaml.Str(node.Get("mirrors-citations")),
             From = Yaml.Str(node.Get("from")),
             AllowLiteral = Yaml.StrList(node.Get("allow-literal")),
             MinItems = Yaml.NullableInt(node.Get("min-items")),

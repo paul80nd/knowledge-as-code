@@ -2,11 +2,7 @@
 id: std-RECON
 tier: normative
 status: active
-implements:
-  - eng:pol-DERV.CHECK
-  - eng:pol-DERV.FAILED
-  - eng:pol-DERV.RUNLOG
-  - eng:pol-OBSV.ALERTS
+implements: [ eng:pol-DERV.CHECK, eng:pol-DERV.FAILED, eng:pol-DERV.RUNLOG, eng:pol-OBSV.ALERTS ]
 applies-to:
   - svc-payment-ledger
 review-by: "2027-08-31"
@@ -27,30 +23,32 @@ break, and a break is owned by somebody until it closes.
 
 ### The run happens every day
 
-- A reconciliation **MUST** run once a day against the PSP's settlement file for the previous day
-  (`eng:pol-DERV.CHECK`).
-- The run **MUST** match a settlement row to a ledger entry on the PSP reference (`eng:pol-DERV.CHECK`).
-- The run **MUST** compare the amount and the currency of a matched pair (`eng:pol-DERV.CHECK`).
-- The run **MUST** record its inputs, its output and its result, and keep that record for seven years
-  (`eng:pol-DERV.RUNLOG`).
-- The run **MUST** raise an alert where the settlement file is missing (`eng:pol-DERV.FAILED`).
-- The run **MUST NOT** record a clean run for a day whose settlement file did not arrive (`eng:pol-DERV.FAILED`).
+- A reconciliation **MUST** run once a day against the PSP's settlement file for the previous day.
+- The run **MUST** match a settlement row to a ledger entry on the PSP reference.
+- The run **MUST** compare the amount and the currency of a matched pair.
+- The run **MUST** record its inputs, its output and its result, and keep that record for seven years.
+- The run **MUST** raise an alert where the settlement file is missing.
+- The run **MUST NOT** record a clean run for a day whose settlement file did not arrive.
+
+_**Covers:** `eng:pol-DERV.CHECK`, `eng:pol-DERV.FAILED`, `eng:pol-DERV.RUNLOG`_
 
 ### A break is named and owned
 
 - The run **MUST** classify each break: in the file and not the ledger, in the ledger and not the file, or matched with
-  a different amount (`eng:pol-DERV.CHECK`).
-- The run **MUST** raise one alert naming the count and the total value of the breaks (`eng:pol-OBSV.ALERTS`).
-- The run **MUST NOT** raise an alert for each break (`eng:pol-OBSV.ALERTS`).
-- The run **MUST** escalate a break over 30 days old to the finance owner it names in its configuration
-  (`eng:pol-OBSV.ALERTS`).
+  a different amount.
+- The run **MUST** raise one alert naming the count and the total value of the breaks.
+- The run **MUST NOT** raise an alert for each break.
+- The run **MUST** escalate a break over 30 days old to the finance owner it names in its configuration.
+
+_**Covers:** `eng:pol-DERV.CHECK`, `eng:pol-OBSV.ALERTS`_
 
 ### Nothing downstream reads an unreconciled day
 
-- A revenue report **MUST NOT** include a day whose reconciliation has not passed (`eng:pol-DERV.FAILED`).
-- A team **MUST** close a break with a ledger correction under [std-LEDGER.nothing-amends-an-entry]
-  (`eng:pol-DERV.FAILED`).
-- A team **MUST NOT** close a break by editing the run's output (`eng:pol-DERV.FAILED`).
+- A revenue report **MUST NOT** include a day whose reconciliation has not passed.
+- A team **MUST** close a break with a ledger correction under [std-LEDGER.nothing-amends-an-entry].
+- A team **MUST NOT** close a break by editing the run's output.
+
+_**Covers:** `eng:pol-DERV.FAILED`_
 
 ## Examples
 
@@ -80,9 +78,6 @@ a clean day from an empty file.
 
 The PSP's file is what the money actually did. The ledger is what we believe it did, and a daily comparison is what
 turns a slow drift between the two into a finding somebody sees the next morning.
-
-- `eng:pol-DERV` commits us to checking a derived output before anything downstream uses it.
-- `eng:pol-OBSV` commits us to keeping alerts few enough and meaningful enough that people act on them.
 
 ## Changelog
 
