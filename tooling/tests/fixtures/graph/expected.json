@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 11,
+    "validated": 12,
     "templates": 2,
     "skipped": 0,
-    "errors": 17,
+    "errors": 19,
     "warnings": 1,
     "infos": 0
   },
@@ -133,6 +133,20 @@
       "severity": "error",
       "check": "mirrors-citations",
       "message": "this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end."
+    },
+    {
+      "file": "gizmos/wholesale.md",
+      "line": 1,
+      "severity": "error",
+      "check": "mirrors-citations",
+      "message": "'covers' lists 'giz-behaving.it-hums' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field."
+    },
+    {
+      "file": "gizmos/wholesale.md",
+      "line": 25,
+      "severity": "error",
+      "check": "mirrors-citations",
+      "message": "this 'Covers' line names 'giz-behaving' whole, and 'covers' names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered."
     }
   ]
 }

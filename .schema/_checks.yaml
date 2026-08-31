@@ -432,10 +432,11 @@ checks:
       case-insensitively. The field stays the whole truth about what the document answers, and the lines
       divide that truth between the sections.
 
-      Three faults sit on a line: it is not italic, it closes no section, or it gathers no citation the
-      field could carry. Its citations count whichever is reported. A document that only got the line
-      wrong gets one finding, not one per id it named. A line that is not italic is reported and
-      stopped, the other two being questions about a footnote.
+      Four faults sit on a line: it is not italic, it closes no section, it gathers no citation the
+      field could carry, or it names a record whole where the field declares `part-required:`. Each is
+      reported against the line, once, however many ids the line named. The first three leave the
+      citations counting toward the union. The fourth withholds the id, which no edit to the field could
+      admit. Not italic is reported and stopped, the rest being questions about a footnote.
 
   id-unique:
     severity: error

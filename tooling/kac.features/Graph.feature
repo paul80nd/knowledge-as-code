@@ -49,10 +49,14 @@ Scenario: A field reconciles against the lines carrying its label, whichever lab
   And the findings for "gizmos/unitalic.md" are exactly:
     | line | check             | message                                                                                                                             |
     |   25 | mirrors-citations | this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end.            |
+  And the findings for "gizmos/wholesale.md" are exactly:
+    | line | check             | message                                                                                                                             |
+    |    1 | mirrors-citations | 'covers' lists 'giz-behaving.it-hums' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
+    |   25 | mirrors-citations | this 'Covers' line names 'giz-behaving' whole, and 'covers' names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered. |
 
 Scenario: The whole graph produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 11 documents and 0 skipped
+  Then validation reports 12 documents and 0 skipped
   And the findings are exactly:
     | file                  | severity | line | check                   | message                                                                                              |
     | adrs/0001-first.md    | error    |    1 | related-matches-section | 'related' lists 'adr-0002' but it is not referenced in the '## Related' section.                     |
@@ -73,3 +77,5 @@ Scenario: The whole graph produces exactly these findings and nothing else
     | gizmos/drifting.md    | error    |   31 | mirrors-citations       | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to. |
     | gizmos/drifting.md    | error    |   39 | mirrors-citations       | this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off.       |
     | gizmos/unitalic.md    | error    |   25 | mirrors-citations       | this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end. |
+    | gizmos/wholesale.md   | error    |    1 | mirrors-citations       | 'covers' lists 'giz-behaving.it-hums' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
+    | gizmos/wholesale.md   | error    |   25 | mirrors-citations       | this 'Covers' line names 'giz-behaving' whole, and 'covers' names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered. |

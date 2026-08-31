@@ -109,11 +109,11 @@ fields:
       rule says what the rule discharges, where an id on every bullet buries the obligation a reader
       came for.
 
-      Clause by clause, and a bare policy id is refused. A standard discharges some of a policy's clauses
-      and seldom all of them, so a bare id is one keystroke shorter than the honest list and reads to
-      anything counting coverage as every clause covered. A standard that does cover every clause lists
-      every clause. The policies it relates to are readable from the clause ids, so no second field
-      carries them.
+      Clause by clause, and a bare policy id is refused, in the field and on a `Covers` line alike. A
+      standard discharges some of a policy's clauses and seldom all of them, so a bare id is one
+      keystroke shorter than the honest list and reads to anything counting coverage as every clause
+      covered. A standard that does cover every clause lists every clause. The policies it relates to
+      are readable from the clause ids, so no second field carries them.
 
       One-way, and pointed upward. A standard names the clause it puts into practice. The policy does not
       name its standards. Policies are the layer a downstream corpus inherits and a standard is the layer it

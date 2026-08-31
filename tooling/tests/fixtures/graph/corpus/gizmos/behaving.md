@@ -13,8 +13,8 @@ covers:
 
 ## What it does
 
-Holds the behaviours the two records beside it cite. Nothing here is under test: this is the far end of the citations,
-so that a `Covers` line naming a behaviour that exists is told from one naming a behaviour that does not.
+Holds the behaviours the records beside it cite. Nothing here is under test: this is the far end of the citations, so
+that a `Covers` line naming a behaviour that exists is told from one naming a behaviour that does not.
 
 ## Behaviours
 

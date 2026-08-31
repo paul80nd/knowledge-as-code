@@ -28,6 +28,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `mirrors-citations` reports the line, and its citations count as before, so a standard covering six clauses gets one
   finding rather than six against its frontmatter. A line that is bold alone is still the labelled prose form and is
   passed over.
+- **`kac validate` tells a `Covers` line naming a record whole to name the part.** Where the field declares
+  `part-required:`, `mirrors-citations` reports the line in the words `ref-resolves` uses, naming the target type's own
+  word for a part: `this 'Covers' line names 'pol-EVER' whole, and 'implements' names a clause`. It used to report that
+  the field did not list the id, which sent an author to put a bare policy id there and meet `ref-resolves` refusing it
+  on the next run. A field that admits a bare id keeps the message it had.
 
 ## 0.19.0 - 2026-08-31
 
