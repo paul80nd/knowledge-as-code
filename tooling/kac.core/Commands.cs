@@ -133,7 +133,7 @@ public static class Commands
         {
             Note($"new: this folder already holds {string.Join(", ", ground.Holds)}. without a committed "
                  + "baseline there is nothing to tell those from the files about to arrive.");
-            if (asker is not null && !asker.Confirm("Create the corpus here anyway?")) return Cancelled();
+            if (asker is not null && !asker.Confirm("Create the corpus here anyway?")) return Cancelled("new");
         }
 
         using var take = TemplateSource.Take("new", request.From, request.From, request.Ref, request.Path,
@@ -149,7 +149,7 @@ public static class Commands
             take.Manifest.Version, today);
 
         Summarise(dir, answers, upstream, take.Declared.Count);
-        if (asker is not null && !asker.Confirm("Create it?")) return Cancelled();
+        if (asker is not null && !asker.Confirm("Create it?")) return Cancelled("new");
 
         var plan = kac.core.New.Plan(take.Files(), take.Manifest, answers, upstream,
             kac.core.New.DeclinesTypes(take.Schema, answers.Types));
@@ -194,7 +194,7 @@ public static class Commands
                         + "run `git init` first, or pass --yes to have it run.");
 
         if (asker is not null && !asker.Confirm($"{dir} is not a git repository. Run `git init` here?"))
-            return Cancelled();
+            return Cancelled("new");
 
         return Git.Run(dir, "init -q") is null
             ? Fail("new: `git init` failed. the tool reads the git listing to find what a corpus holds, "
@@ -226,7 +226,7 @@ public static class Commands
                         + "on. pass --yes to give it up anyway.");
 
         return asker is not null && !asker.Confirm($"Give up {dropping}?", fallback: false)
-            ? Cancelled()
+            ? Cancelled("update")
             : null;
     }
 
@@ -278,9 +278,11 @@ public static class Commands
         return 1;
     }
 
-    private static int Cancelled()
+    // The verb is the caller's, because `update` gives a type up through this too and a reader meets the
+    // message as the tail of the command they ran.
+    private static int Cancelled(string verb)
     {
-        Note("new: cancelled. nothing was written.");
+        Note($"{verb}: cancelled. nothing was written.");
         return 1;
     }
 
