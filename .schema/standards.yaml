@@ -135,6 +135,67 @@ sections:
   required: [Summary, Rules, Examples, Conformance checklist, Rationale and provenance]
   optional: [Sources and further reading, Changelog]
 
+# Where a standard keeps the parts something else can cite. A rule is an H3 under `Rules`, holding the
+# obligations that answer to it, and its address is the anchor the heading slugs to. So
+# `std-IDEM.the-caller-chooses-the-key` names the rule a link to that fragment would land on.
+#
+# The heading is the part rather than the bullet under it. A bullet carries no id of its own, and a
+# standard composes by union across the folders that apply, so the smallest thing worth citing is the
+# run of obligations one heading gathers.
+parts:
+  source: headings
+  section: Rules
+  noun: rule
+
+# What a standard contributes to a published export, and how much of each piece travels. `Rules` is
+# absent from the sections because the headings under it are parts, and `parts:` above carries them.
+export:
+  version: 1
+  fields: [id, title, category, status, applies-to, review-by, tags]
+  sections:
+    Summary: full
+    Conformance checklist: full
+  parts:
+    fidelity: full
+    line:
+      id: part.id
+      title: part.text
+      obligations: part.lead
+      seeAlso: part.see-also
+      type: record.type
+      record: record.id
+      part: part.key
+      status: front.status
+      reviewBy: front.review-by
+      path: record.path
+      anchor: part.anchor
+  notes: >
+    A rule travels as the heading and the obligations beneath it, in the markdown the standard wrote
+    them in. The bold **MUST** is what makes a line binding under BCP 14, so flattening the markdown
+    would leave an agent reading an obligation as advice.
+
+    `Summary` says what the standard is for in the author's own words, and a rule read without it binds
+    more than the standard does. `Conformance checklist` travels because it is the same rules written as
+    a test, and an agent asking what it has to do here can answer from the checklist alone.
+
+    `Examples` stays behind. It is the longest section a standard holds, it is written against one
+    stack, and the record is a fetch away for a reader who wants it. `Rationale and provenance` stays
+    behind because it argues from ADRs and policy clauses no consumer receives.
+
+    `implements` stays behind as well, and it is the loss worth naming. A clause id such as
+    `eng:pol-RECV.IDEMPOT` resolves only for a consumer holding that corpus, and one that does not would
+    receive an address it cannot follow. The obligation travels whole either way.
+
+    `seeAlso` carries the rules of other standards this one points at. A standard composes by union, so
+    one rule commonly leans on another, and a link's target is stripped out of the words: an agent
+    reading "under [std-LEDGER.nothing-amends-an-entry]" is handed a bracket it cannot follow. A policy
+    clause cited alongside stays inside the wording, because a clause is a table row with no anchor of
+    its own and the link names the record alone.
+
+    The rules of one standard reach a consumer sorted on the heading, because that is what a
+    heading-sourced type does. The order the author grouped them in is a fact about the page, and a
+    reader who wants it opens the record.
+
 index:
   columns: [id, title, category, status, derived-from, review-by]
   sort: id

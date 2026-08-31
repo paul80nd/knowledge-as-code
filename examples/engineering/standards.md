@@ -98,6 +98,10 @@ concrete artefact, sharpen it or move it to the rationale section. Every **MUST*
 corresponding control, even where that control's mechanism is `not-enforced`. An honest gap is more useful than a silent
 one.
 
+**Group the rules under `###` headings.** A heading says what the rules beneath it hold a reader to, and it is the
+address something else cites: `std-SECRET.every-secret-rotates` names one group, and an export carries the group as a
+line of its own. A standard with a single group writes one heading. `part-none` fails a Rules section with none.
+
 **A standard's size follows its subject.** One binding every piece of work usually runs to seven or eight rules, and one
 covering a single interface may run to thirty. Neither is padded or cut to meet the other.
 
@@ -138,6 +142,8 @@ Standards are living documents, and we edit them in place. Record every material
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
+| `part-none / part-empty`    | error   | The parts section holds at least one heading, and each has something under it.                                  |
+| `part-id-unique / part-ref` | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.           |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |

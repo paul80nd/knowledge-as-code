@@ -51,8 +51,8 @@ trace id that follows the request across services. An alert names an owner and a
 ### Telemetry carries no personal data
 
 - A service **MUST** redact unmasked personal data before the record is written ([pol-OBSV].SECRETS).
-- A service **MUST** hold a credential or a token to [std-SECRET], which says where a secret may appear
-  ([pol-OBSV].SECRETS).
+- A service **MUST** hold a credential or a token to [std-SECRET.nowhere-else-holds-a-secret], which says where a
+  secret may appear ([pol-OBSV].SECRETS).
 
 ### Somebody acts on every alert
 
@@ -100,5 +100,5 @@ next one.
 
 [Google SRE, Service Level Objectives]: https://sre.google/sre-book/service-level-objectives/
 [W3C Trace Context]: https://www.w3.org/TR/trace-context/
-[std-SECRET]: secret-handling.md
+[std-SECRET.nowhere-else-holds-a-secret]: secret-handling.md#nowhere-else-holds-a-secret
 [pol-OBSV]: ../../policies/operations/obsv-observability.md#clauses

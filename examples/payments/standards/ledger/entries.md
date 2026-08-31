@@ -42,12 +42,13 @@ further pair, so the sequence finance read on the day is the sequence they read 
 
 ### An entry says what produced it
 
-- An entry **MUST** name the order, the PSP reference and the idempotency key from [std-IDEM]
-  (`eng:pol-DERV.LINEAGE`).
+- An entry **MUST** name the order, the PSP reference and the idempotency key from
+  [std-IDEM.the-caller-chooses-the-key] (`eng:pol-DERV.LINEAGE`).
 - An entry **MUST** name the event that produced it: an authorisation, a capture, a refund or a chargeback
   (`eng:pol-DERV.LINEAGE`).
-- An entry for an authorisation **MUST** record the authentication outcome from [std-SCA], and who bears the liability
-  for a chargeback (`eng:pol-DERV.LINEAGE`).
+- An entry for an authorisation **MUST** record the authentication outcome from
+  [std-SCA.the-outcome-travels-with-the-payment], and who bears the liability for a chargeback
+  (`eng:pol-DERV.LINEAGE`).
 - The ledger **MUST** be able to answer a payment's full history from its entries alone (`eng:pol-DERV.LINEAGE`).
 
 ## Examples
@@ -91,5 +92,5 @@ and neither can tell that it happened.
 - 2026-08-31: initial version.
 
 [ISO 4217]: https://www.iso.org/iso-4217-currency-codes.html
-[std-IDEM]: ../authorisation/idempotency.md
-[std-SCA]: ../checkout/customer-authentication.md
+[std-IDEM.the-caller-chooses-the-key]: ../authorisation/idempotency.md#the-caller-chooses-the-key
+[std-SCA.the-outcome-travels-with-the-payment]: ../checkout/customer-authentication.md#the-outcome-travels-with-the-payment

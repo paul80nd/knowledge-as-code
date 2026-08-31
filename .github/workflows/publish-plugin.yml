@@ -34,7 +34,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
   # The corpora that publish a plugin, in the order the marketplace lists them. A corpus joins by
   # adopting a type something in the plugin tree reads, or it ships a plugin with no component in it.
-  CORPORA: 'library engineering'
+  CORPORA: 'library engineering payments'
 
 jobs:
   # Everything that has to be true before anything is published, in a job that cannot publish.
@@ -45,6 +45,7 @@ jobs:
         corpus:
           - library
           - engineering
+          - payments
     runs-on: ubuntu-latest
     # Stated rather than inherited: it is why an unpinned CLI may run in this job.
     permissions:
@@ -60,6 +61,23 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
+
+      # payments consumes engineering as a sealed package rather than as the corpus next door, so the
+      # producer's package is built here before the consumer asks for it. Each job holds its own
+      # checkout, so nothing another job in this matrix did is on this runner.
+      - name: Build the package this corpus consumes
+        if: matrix.corpus == 'payments'
+        working-directory: examples/engineering
+        run: |
+          dotnet run --project ../../tooling/kac -- export
+          dotnet run --project ../../tooling/kac -- pack
+
+      # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails naming
+      # this command. A corpus consuming nothing skips the step.
+      - name: Restore what this corpus consumes
+        if: matrix.corpus == 'payments'
+        working-directory: examples/payments
+        run: dotnet run --project ../../tooling/kac -- restore
 
       # The gate ran against the pull request's head, and main moved beneath it, so this asks again.
       - name: Validate frontmatter, links and structure
@@ -108,9 +126,9 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
-      # Each corpus in turn, because the branch holds one marketplace offering both. `bundle` writes a
-      # marketplace naming the corpus it ran in, which is what installs a plugin from a path while it
-      # is being proved. The published one offers every plugin at once, and is assembled below.
+      # Each corpus in turn, because the branch holds one marketplace offering every plugin. `bundle`
+      # writes a marketplace naming the corpus it ran in, which is what installs a plugin from a path
+      # while it is being proved. The published one offers them all at once, and is assembled below.
       - name: Build every plugin the marketplace offers
         run: |
           set -e

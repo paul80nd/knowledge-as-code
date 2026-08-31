@@ -52,9 +52,9 @@ The rule in a single scannable sentence: what a reader needs to take away in one
 The normative content. State each rule imperatively and use [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119)
 keywords (**MUST**, **MUST NOT**, **SHOULD**, **MAY**) so compliance levels are unambiguous.
 
-- Services **MUST** ...
-- Responses **SHOULD** ...
-- Clients **MAY** ...
+Group the rules under `###` headings, one heading per thing the rules beneath it hold a reader to. The heading is what
+somebody hunting one rule finds before the bullet, and it is the address a citation and an export both carry. A
+standard with a single group writes one heading. `part-none` reports a Rules section with none.
 
 Keep each rule testable. If a rule can't be checked against a concrete artefact, it's guidance, not a standard. Either
 sharpen it or move it to the Rationale section.
@@ -62,8 +62,15 @@ sharpen it or move it to the Rationale section.
 Write every rule the subject has, and stop there. A standard binding every piece of work usually runs to seven or
 eight. One covering a single interface may run to thirty.
 
-Where the section runs past about six rules, group them under `###` headings. A heading says what the rules beneath it
-hold a reader to, so somebody hunting one rule finds the group before the bullet.
+**Under a heading, write the rules and nothing else.** An export carries the first block beneath the heading, which is
+the bullet list. A paragraph after the bullets is dropped from it without a word, so put the reasoning in Rationale and
+provenance where it travels.
+
+### {{What the rules below hold a reader to}}
+
+- Services **MUST** ...
+- Responses **SHOULD** ...
+- Clients **MAY** ...
 
 ## Examples
 

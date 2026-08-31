@@ -46,9 +46,9 @@ kac checks       # list every check the validator implements
 `restore` comes first, and it needs a package to take. Run `kac export` and then `kac pack` in
 [`../engineering/`](../engineering/) once, and this corpus's `source:` has a folder to read.
 
-`export` and `bundle` run here and write nothing worth reading. None of the types this corpus adopts declares an
-`export:` block, so the export carries its manifest and no records.
-[`../README.md`](../README.md#what-is-not-built-yet) says what that leaves and where it gets built.
+`export` writes this corpus's standards, because `standards` is the one type it adopts that declares an `export:`
+block. `bundle` then assembles them into a plugin carrying `standards-lookup`, and trims the skills whose types this
+corpus declined.
 
 While you are changing the tool, run `dotnet run --project ../../tooling/kac -- validate` instead. That reaches the
 working tree, and an installed `kac` does not.

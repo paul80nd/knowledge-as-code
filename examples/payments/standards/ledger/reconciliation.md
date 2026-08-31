@@ -48,7 +48,8 @@ break, and a break is owned by somebody until it closes.
 ### Nothing downstream reads an unreconciled day
 
 - A revenue report **MUST NOT** include a day whose reconciliation has not passed (`eng:pol-DERV.FAILED`).
-- A team **MUST** close a break with a ledger correction under [std-LEDGER] (`eng:pol-DERV.FAILED`).
+- A team **MUST** close a break with a ledger correction under [std-LEDGER.nothing-amends-an-entry]
+  (`eng:pol-DERV.FAILED`).
 - A team **MUST NOT** close a break by editing the run's output (`eng:pol-DERV.FAILED`).
 
 ## Examples
@@ -87,4 +88,4 @@ turns a slow drift between the two into a finding somebody sees the next morning
 
 - 2026-08-31: initial version.
 
-[std-LEDGER]: entries.md
+[std-LEDGER.nothing-amends-an-entry]: entries.md#nothing-amends-an-entry

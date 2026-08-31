@@ -41,7 +41,8 @@ wrote .dist/plugin/corpus/manifest.json
 wrote .dist/plugin/hooks/breadcrumb
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 bundle: trimmed skills/policy-lookup: the export carries no policies.
-bundle: wrote 13 file(s) to .dist/plugin/ as example-libraries 0.1.0. 2 component(s) included, 1 trimmed.
+bundle: trimmed skills/standards-lookup: the export carries no standards.
+bundle: wrote 13 file(s) to .dist/plugin/ as example-libraries 0.1.0. 2 component(s) included, 2 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -58,10 +59,10 @@ what CI publishes.
 
 ### Read which components shipped
 
-A corpus adopting two record types ships two skills over one export. The closing line counts them:
+A corpus adopting three record types ships three skills over one export. The closing line counts them:
 
 ```text
-bundle: wrote 35 file(s) to .dist/plugin/ as example-engineering 0.1.0. 3 component(s) included, 0 trimmed.
+bundle: wrote 49 file(s) to .dist/plugin/ as example-engineering 0.1.0. 4 component(s) included, 0 trimmed.
 ```
 
 `bundle.json` names them, and it travels inside the plugin:
@@ -71,7 +72,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/glossary-lookup","skills/policy-lookup","hooks"],"trimmed":[]}
+{"kept":["skills/glossary-lookup","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":[]}
 ```
 
 Search the assembled skills for the file one type exports, to see which of them reads it:

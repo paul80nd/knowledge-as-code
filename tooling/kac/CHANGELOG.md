@@ -19,9 +19,22 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A standard exports its rules, and a corpus adopting standards ships a skill that reads them.** The type declares
+  `parts:` over the H3 headings under `## Rules`, so `kac export` writes one line per rule to
+  `standards/rules.jsonl`, carrying the obligations in the markdown the standard wrote them in. Each record travels
+  beside them with its Summary and its conformance checklist. `kac bundle` includes the new `standards-lookup` skill
+  wherever the export carries standards, and trims it where it does not. `kac new` ships the skill in the plugin tree,
+  and `kac update` sends it to a corpus already created.
 - **A standard may carry a `Sources and further reading` section.** It names the external documents the standard defers
   to, each marked normative or informative. A rule built on somebody else's conventions then says where the rest of it
   lives. `kac new` ships the section in the standards template, and a standard deferring to nothing deletes it.
+
+### Changed
+
+- **A standard's rules sit under `###` headings, and `kac validate` reports a Rules section with none.** The heading
+  is what the rules beneath it hold a reader to, and it is the address a citation and an export both carry, so
+  `part-none` now reaches standards as it already reached glossaries. A standard whose rules are a bare bullet list
+  gains one heading. `kac new` ships the grouping in the standards template.
 
 ### Fixed
 

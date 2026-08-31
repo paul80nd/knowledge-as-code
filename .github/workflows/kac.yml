@@ -81,11 +81,9 @@ jobs:
       - name: Assemble the plugin bundle
         run: dotnet run --project ../../tooling/kac -- bundle
 
-      # Only the corpus that publishes. A pack is refused without a shortcode, and engineering is the
-      # one corpus here declaring one: it is the governance layer the others would consume, and the
-      # only one publish-corpus.yml pushes. See docs/cli/pack.md.
+      # Every corpus here declares a shortcode, and publish-corpus.yml pushes all three, so the gate
+      # asks the same of each. A pack is refused without a shortcode. See docs/cli/pack.md.
       - name: Seal the export into a package
-        if: matrix.corpus == 'engineering'
         run: dotnet run --project ../../tooling/kac -- pack
 
       # Unpinned on purpose: the bundle has to be valid against the CLI a reader actually runs, and
@@ -268,11 +266,11 @@ jobs:
   # Installs what was assembled and asks each skill in it the questions that skill describes. On both
   # platforms because development happens on macOS and the first audience is on Windows.
   #
-  # Two corpora, because the trim reads in two directions and one corpus can only show one of them.
-  # `library` adopts glossary and not policies, so it proves that a skill whose type stayed behind is
-  # gone from the install. `engineering` adopts both, so it proves that two skills ship over one
-  # export and that neither names the other's file. `payments` adopts neither type and would prove
-  # only that a plugin with no skill installs, which `bundle-empty` already pins.
+  # Every corpus, because the trim reads in more than one direction and one corpus can only show one
+  # of them. `library` adopts glossary and not policies, so it proves that a skill whose type stayed
+  # behind is gone from the install. `engineering` adopts both and standards besides, so it proves
+  # that several skills ship over one export and that none names another's file. `payments` adopts
+  # standards alone, so it proves the one heading-sourced lookup a reader receives.
   #
   # A job of its own because it needs a different checkout. The export stamps whatever commit HEAD
   # stands on into every link, and a pull_request run checks out a merge commit the raw host does
@@ -287,6 +285,7 @@ jobs:
         corpus:
           - library
           - engineering
+          - payments
     runs-on: ${{ matrix.os }}
     defaults:
       run:

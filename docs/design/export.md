@@ -81,6 +81,9 @@ proved.
   policies/
     pol-<MNEM>.json      the same, for a policy
     clauses.jsonl        every clause, one to a line, carrying the level it binds at
+  standards/
+    std-<MNEM>.json      the same, for a standard
+    rules.jsonl          every rule, one to a line, carrying the obligations under its heading
 ```
 
 The names are read from the schema. A type's directory is its own key, and its flat file is named for what the type
