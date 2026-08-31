@@ -6,7 +6,20 @@
 
 | ID         | Title                                                                                        | Status | Derived from | Review by  |
 |------------|----------------------------------------------------------------------------------------------|--------|--------------|------------|
+| std-API    | [An interface is described by a contract in the repository](common/api-contracts.md)         | draft  |              | 2027-08-31 |
+| std-DEPLOY | [One artefact is built once and promoted to production](common/deployment.md)                | draft  |              | 2027-08-31 |
+| std-DEPS   | [A dependency is pinned, screened and named in the inventory](common/dependencies.md)        | draft  |              | 2027-08-31 |
 | std-GATES  | [A failing check blocks the merge](common/build-gates.md)                                    | draft  |              | 2027-08-26 |
+| std-OBS    | [A service ships its telemetry to one place, keyed by one id](common/observability.md)       | draft  |              | 2027-08-31 |
 | std-PR     | [A pull request carries its reasoning and one accountable approval](common/pull-requests.md) | draft  |              | 2027-08-26 |
 | std-SECRET | [A secret is read from the store at run time](common/secret-handling.md)                     | draft  |              | 2027-08-26 |
+| std-TEST   | [A test runs at the lowest level that can catch the fault](common/testing.md)                | draft  |              | 2027-08-31 |
 | std-VCS    | [Everything a service needs is committed to its repository](common/version-control.md)       | draft  |              | 2027-08-26 |
+
+## Platform
+
+| ID         | Title                                                                                                      | Category        | Status | Derived from | Review by  |
+|------------|------------------------------------------------------------------------------------------------------------|-----------------|--------|--------------|------------|
+| std-CONT   | [A container image is pinned by digest and runs as a non-root user](platform/containers.md)                | platform        | draft  |              | 2027-08-31 |
+| std-CSSTY  | [C# follows the runtime team's conventions, and the compiler enforces them](platform/dotnet/code-style.md) | platform/dotnet | draft  |              | 2027-08-31 |
+| std-NETTST | [A .NET test suite is xUnit, and an integration test owns its dependencies](platform/dotnet/testing.md)    | platform/dotnet | draft  |              | 2027-08-31 |

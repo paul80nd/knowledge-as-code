@@ -45,13 +45,18 @@ A folder under `standards/` is the standard's category, and the tool reads it fr
 nest, so `platform/node/` is a category and `platform/` is the category above it. A standard saved straight into
 `standards/` has no category, which is the right shape while there are few enough to read as one list.
 
-This corpus holds one folder so far.
+This corpus holds two.
 
-* **common**: platform-agnostic principles that hold whatever a service is written in. Version control, pull requests,
-  secret handling and build gates all live here.
+* **common**: the rules that hold whatever a service is written in. Version control, pull requests, secret handling,
+  build gates, testing, interface contracts, observability, deployment and dependencies all live here.
+* **platform**: the rules that hold for a runtime rather than for the estate. `platform/containers.md` binds anything
+  shipped as an image, and `platform/dotnet/` binds C# alone.
 
-A standard that binds one language or one product surface goes in a folder of its own beside it. A payment-specific
-rule belongs in the payments corpus.
+Two files here are called `testing.md`. `common/testing.md` says which level a test belongs at, and
+`platform/dotnet/testing.md` says what a test at that level looks like in .NET. A C# service is bound by both, and a
+Python one by the first alone.
+
+A payment-specific rule belongs in the payments corpus.
 
 ## Where to find them
 

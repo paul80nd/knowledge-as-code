@@ -2,7 +2,30 @@
 
 # Standard Index (STD)
 
-| ID        | Title                                                                                    | Status | Derived from | Review by  |
-|-----------|------------------------------------------------------------------------------------------|--------|--------------|------------|
-| std-CARD  | [Card details reach the PSP and never reach us](card-data.md)                            | active |              | 2027-08-28 |
-| std-TELEM | [A payment leaves an order reference in the logs and nothing else](payment-telemetry.md) | active |              | 2027-08-28 |
+## Authorisation
+
+| ID         | Title                                                                                             | Status | Derived from | Review by  |
+|------------|---------------------------------------------------------------------------------------------------|--------|--------------|------------|
+| std-IDEM   | [One order pays once, however many times the request arrives](authorisation/idempotency.md)       | active |              | 2027-08-31 |
+| std-PSPOUT | [A call to the PSP is bounded, and an unknown outcome is resolved](authorisation/psp-timeouts.md) | active |              | 2027-08-31 |
+
+## Checkout
+
+| ID       | Title                                                                                       | Status | Derived from | Review by  |
+|----------|---------------------------------------------------------------------------------------------|--------|--------------|------------|
+| std-CARD | [Card details reach the PSP and never reach us](checkout/card-data.md)                      | active |              | 2027-08-28 |
+| std-SCA  | [The PSP decides whether the cardholder is challenged](checkout/customer-authentication.md) | active |              | 2027-08-31 |
+
+## Ledger
+
+| ID         | Title                                                                              | Status | Derived from | Review by  |
+|------------|------------------------------------------------------------------------------------|--------|--------------|------------|
+| std-LEDGER | [A ledger entry is written once and corrected by another entry](ledger/entries.md) | active |              | 2027-08-31 |
+| std-RECON  | [The ledger is reconciled against the PSP every day](ledger/reconciliation.md)     | active |              | 2027-08-31 |
+
+## Operations
+
+| ID         | Title                                                                                               | Status | Derived from | Review by  |
+|------------|-----------------------------------------------------------------------------------------------------|--------|--------------|------------|
+| std-RETAIN | [A payment record is kept for seven years and nothing else is](operations/data-retention.md)        | active |              | 2027-08-31 |
+| std-TELEM  | [A payment leaves an order reference in the logs and nothing else](operations/payment-telemetry.md) | active |              | 2027-08-28 |

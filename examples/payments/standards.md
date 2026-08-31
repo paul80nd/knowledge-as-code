@@ -44,8 +44,15 @@ A folder under `standards/` is the standard's category, and the tool reads it fr
 nest, so `platform/node/` is a category and `platform/` is the category above it. A standard saved straight into
 `standards/` has no category, which is the right shape while there are few enough to read as one list.
 
-This corpus holds two standards and keeps them in one list. Every rule here is about handling a payment, so a folder
-would not separate them from anything. They move into folders on the day there are enough to make one worth opening.
+Every rule here is about handling a payment, so the folders follow the stages a payment passes through.
+
+* **checkout**: what the browser collects and who authenticates the cardholder.
+* **authorisation**: the call to the payment service provider (PSP), and what happens when it does not answer.
+* **ledger**: how a movement of money is recorded and reconciled.
+* **operations**: what a running payment leaves behind, and how long it is kept.
+
+There is no `platform` folder here. A rule about the runtime binds every service we run, so it is written once in the
+governance corpus and inherited.
 
 ## Where to find them
 
@@ -145,4 +152,4 @@ Standards are living documents, and we edit them in place. Record every material
 
 <!-- END GENERATED: checks-standards -->
 
-[std-TELEM]: standards/payment-telemetry.md
+[std-TELEM]: standards/operations/payment-telemetry.md
