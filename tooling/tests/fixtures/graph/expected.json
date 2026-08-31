@@ -3,7 +3,7 @@
     "validated": 10,
     "templates": 2,
     "skipped": 0,
-    "errors": 15,
+    "errors": 16,
     "warnings": 1,
     "infos": 0
   },
@@ -115,10 +115,17 @@
     },
     {
       "file": "gizmos/drifting.md",
-      "line": 30,
+      "line": 31,
       "severity": "error",
       "check": "mirrors-citations",
       "message": "this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to."
+    },
+    {
+      "file": "gizmos/drifting.md",
+      "line": 39,
+      "severity": "error",
+      "check": "mirrors-citations",
+      "message": "this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off."
     }
   ]
 }

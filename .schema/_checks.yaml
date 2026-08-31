@@ -450,6 +450,11 @@ checks:
       its citations still count. Dropping them would report every id it named as absent from the
       document, which is a page of findings for one misplaced line.
 
+      A line gathering no citation the field could carry is reported where it sits too. A heading closing
+      on such a line claims a coverage it does not state, and a reader scanning the footnotes for the
+      rule behind a clause reads it as a rule covering nothing. A line naming only ids of types the
+      field does not point at gathers nothing either, whatever it says on the page.
+
   id-unique:
     severity: error
     description: An id is unique across the whole corpus.

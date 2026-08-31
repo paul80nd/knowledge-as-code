@@ -159,8 +159,8 @@ _**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LEAKED, [pol-SCRT].LOGS_
 ```
 
 The line is written in italic with the label bold, and it closes the section it covers. A section covering nothing
-carries no line. Both directions are checked, so the field stays the whole truth about which obligations the standard
-answers, and each rule says which of them it answers.
+carries no line, and a line naming no clause is reported where it sits. Both directions are checked, so the field stays
+the whole truth about which obligations the standard answers, and each rule says which of them it answers.
 
 One line at the foot of a rule is what the obligations under it would otherwise each carry. The reader who came for the
 rule reads the rule, and the reader who came for the coverage reads the footnote or the field.

@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **`kac validate` reports a `Covers` line that names nothing.** `mirrors-citations` now reports a labelled footnote
+  gathering no citation the field could carry, against the line. A line naming only ids of types the field does not
+  point at gathers nothing either. A section carrying no line at all stays silent, which is how a rule discharging no
+  clause is written.
+
 ## 0.19.0 - 2026-08-31
 
 ### Added
