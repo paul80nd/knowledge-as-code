@@ -26,6 +26,10 @@ land.
 "Because we are certified against it" and "because it seemed sensible" are different answers to *why does this clause
 exist*, and only one of them survives a change of mind.
 
+**A baseline is not a posture.** A framework recorded here is a standing this corpus takes against something outside
+it. A baseline is the document a [standard](standards.md) defers to, and it belongs in that standard, which says how to
+tell the two apart.
+
 ## Obliged
 
 ### PCI DSS v4.0

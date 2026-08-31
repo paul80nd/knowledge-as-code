@@ -1,4 +1,4 @@
-# Engineering Standards
+# Standards
 
 Teams follow these standards when they build and review functionality: the normative patterns and practices of the
 platform.
