@@ -290,10 +290,6 @@ public class CorpusDescriptor
     // makes when it is ready rather than one the tool forces on the version that arrives without it.
     public List<string>? Types;
 
-    // Whether a type is this corpus's. An undeclared corpus answers yes to everything and leaves the
-    // question to the filesystem; the callers that ask are the ones that already know what is on disk.
-    public bool Adopted(string type) => Types is null || Types.Contains(type, StringComparer.Ordinal);
-
     public static CorpusDescriptor Load(string corpusRoot)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
