@@ -187,12 +187,15 @@ part would resolve to one target, so a document citing six of them carries six d
 A policy's clauses are rows of a single table under `## Clauses`. The anchor reaches that table and the row's `Id`
 column is what a reader scans to, so a clause is cited this way:
 
-    A push to any branch **MUST** trigger a build ([pol-AUTV].INTEG).
+    _**Covers:** [pol-AUTV].INTEG, [pol-AUTV].BLOCK_
 
     [pol-AUTV]: ../../policies/delivery/autv-automated-verification.md#clauses
 
 The part stays on the page for a reader. The link states the record alone, because the record is as far as the
-anchors reach.
+anchors reach. Two clauses of one policy reuse the definition, which is what this form is for.
+
+Where in a document a clause is cited is the type's business rather than this page's. A standard names its clauses on
+the `Covers` line closing each rule, and its `_template.md` says so.
 
 **The label is the id exactly as that record carries it**: `adr-0013`, `pol-DEVI`, `svc-billing-api`. The prefix is
 always lower-case, and what follows takes the type's own form, so a mnemonic stays upper-case and a slug stays

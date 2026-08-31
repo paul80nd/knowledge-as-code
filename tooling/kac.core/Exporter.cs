@@ -385,6 +385,7 @@ public static class Exporter
         var spec = t.Parts!;
         var byPath = records.ToDictionary(d => d.Rel, StringComparer.Ordinal);
         var lines = new StringBuilder();
+        var footnotes = t.DeclaredFields.Select(f => f.MirrorsCitations).OfType<string>().ToList();
 
         foreach (var doc in records)
         {
@@ -393,7 +394,7 @@ public static class Exporter
             {
                 if (row.Id is not { Length: > 0 } partId) continue;
 
-                var (lead, aside) = Split(doc, row, spec.Aside);
+                var (lead, aside) = Split(doc, row, spec.Aside, footnotes);
                 var part = new Part(doc, row, partId, id, lead, aside, SeeAlso(doc, row, byPath, tree));
 
                 var line = new JsonObject();
@@ -533,12 +534,17 @@ public static class Exporter
     //
     // A body with no labelled block returns a null aside, which is the common case. The label marks the
     // confusion worth heading off, and most parts have none.
-    private static (string? Lead, string? Aside) Split(Doc doc, PartRow part, string label)
+    //
+    // A footnote reconciling a field against what the part cites is dropped first. It is a fact about
+    // coverage rather than a piece of the part, and a part that carries nothing else would otherwise
+    // travel to a consumer with the footnote standing where its words belong.
+    private static (string? Lead, string? Aside) Split(Doc doc, PartRow part, string label,
+        IReadOnlyList<string> footnotes)
     {
         var blocks = part.Body(doc.Text).ToString()
             .Split("\n\n", StringSplitOptions.RemoveEmptyEntries)
             .Select(Unwrap)
-            .Where(b => b.Length > 0)
+            .Where(b => b.Length > 0 && !footnotes.Any(f => b.StartsWith($"_**{f}:**", StringComparison.Ordinal)))
             .ToList();
 
         var marker = label.Length > 0 ? $"**{label}:**" : null;

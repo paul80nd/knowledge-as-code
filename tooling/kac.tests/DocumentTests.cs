@@ -484,21 +484,26 @@ public class DocumentTests
     // A schema whose policy type declares a field reconciling against a labelled line, for the parse
     // tests below. The label is the field's to name, and the prefix is what tells a citation from prose,
     // so both come off the same declaration the real corpus reads.
-    private static Schema WithFootnotes(string label) => new()
+    private static Schema WithFootnotes(params string[] labels) => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>
         {
             ["policies"] = new()
             {
                 IdPrefix = "pol",
-                DeclaredFields = [new FieldSpec { Name = "implements", MirrorsCitations = label }]
+                DeclaredFields =
+                [
+                    .. labels.Select((label, i) =>
+                        new FieldSpec { Name = $"field{i}", MirrorsCitations = label })
+                ]
             }
         }
     };
 
-    private static Doc? ParseWithFootnotes(string body, string label = "Covers") =>
+    private static Doc? ParseWithFootnotes(string body, params string[] labels) =>
         Doc.Parse("policies/scrt-a-title.md",
-            $"---\nid: pol-SCRT\n---\n\n# Secrets are managed\n\n{body}", WithFootnotes(label));
+            $"---\nid: pol-SCRT\n---\n\n# Secrets are managed\n\n{body}",
+            WithFootnotes(labels.Length > 0 ? labels : ["Covers"]));
 
     // The form the corpus writes, in both notations: a link with the part id against the bracket for a
     // record the corpus holds, and a code span for one it imports.
@@ -611,6 +616,24 @@ public class DocumentTests
                                      """, "Covers:");
 
         Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX"], Assert.Single(doc.CitationFootnotes["Covers:"]).Citations);
+    }
+
+    // Two fields spelling one label two ways are asking about the same lines, so they share them. The
+    // second field would otherwise reconcile against nothing and report every id it lists.
+    [Fact]
+    public void Two_fields_spelling_one_label_two_ways_see_the_same_lines()
+    {
+        var doc = ParseWithFootnotes("""
+                                     ## A rule
+
+                                     _**Covers:** [pol-VURM].TIMEBOX_
+
+                                     [pol-VURM]: vurm-a-title.md
+                                     """, "Covers", "Covers:");
+
+        Assert.NotNull(doc);
+        Assert.Equal(["pol-VURM.TIMEBOX"], Assert.Single(doc.CitationFootnotes["Covers"]).Citations);
         Assert.Equal(["pol-VURM.TIMEBOX"], Assert.Single(doc.CitationFootnotes["Covers:"]).Citations);
     }
 

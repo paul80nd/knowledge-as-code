@@ -199,8 +199,9 @@ export:
     `seeAlso` carries the rules of other standards this one points at. A standard composes by union, so
     one rule commonly leans on another, and a link's target is stripped out of the words: an agent
     reading "under [std-LEDGER.nothing-amends-an-entry]" is handed a bracket it cannot follow. A policy
-    clause reaches neither, because the clauses a rule discharges are named on the `Covers` line closing
-    it and that line stands outside the obligations.
+    clause reaches neither: the clauses a rule discharges are named on its `Covers` line, and the
+    exporter drops that line before it takes the obligations. So a rule carrying nothing but the
+    footnote travels with no obligations rather than with the footnote standing where they belong.
 
     The rules of one standard reach a consumer sorted on the heading, because that is what a
     heading-sourced type does. The order the author grouped them in is a fact about the page, and a

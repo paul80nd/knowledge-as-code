@@ -765,17 +765,23 @@ public partial class Doc
     private static Dictionary<string, List<CitationFootnote>> Footnotes(
         MarkdownDocument ast, Schema schema, IEnumerable<string?>? labels)
     {
-        var declared = (labels ?? []).OfType<string>().Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-        var result = declared.ToDictionary(label => label, _ => new List<CitationFootnote>(),
-            StringComparer.OrdinalIgnoreCase);
-        if (result.Count == 0) return result;
-
         // Keyed by the label as the schema wrote it, and matched on the label with the colon taken off.
         // The colon belongs to the form, so `mirrors-citations: "Covers:"` would otherwise match no line
         // anybody would write, and the author would meet one finding per id in the field with nothing
         // naming the cause.
-        var matching = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var label in declared) matching.TryAdd(Label(label), label);
+        //
+        // Two fields spelling one label two ways share the list, rather than the second field
+        // reconciling against nothing. Both are asking about the same lines.
+        var result = new Dictionary<string, List<CitationFootnote>>(StringComparer.OrdinalIgnoreCase);
+        var matching = new Dictionary<string, List<CitationFootnote>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var label in (labels ?? []).OfType<string>())
+        {
+            if (!matching.TryGetValue(Label(label), out var footnotes))
+                matching[Label(label)] = footnotes = [];
+            result[label] = footnotes;
+        }
+
+        if (result.Count == 0) return result;
 
         // The link definitions render as nothing, and markdig gathers them into one block at the end of
         // every document whatever the source. Left in, a footnote closing the last section would read as
@@ -786,7 +792,7 @@ public partial class Doc
         {
             if (para.Inline?.FirstChild is not EmphasisInline { DelimiterCount: 1 } italic) continue;
             if (italic.FirstChild is not EmphasisInline { DelimiterCount: 2 } bold) continue;
-            if (!matching.TryGetValue(Label(Md.PlainText(bold)), out var key)) continue;
+            if (!matching.TryGetValue(Label(Md.PlainText(bold)), out var footnotes)) continue;
 
             var at = blocks.IndexOf(para);
             var closes = at >= 0 && (at + 1 == blocks.Count || blocks[at + 1] is HeadingBlock);
@@ -803,7 +809,7 @@ public partial class Doc
                 })
                 .OfType<string>();
 
-            result[key].Add(new CitationFootnote(para.Line + 1, closes, [.. cited]));
+            footnotes.Add(new CitationFootnote(para.Line + 1, closes, [.. cited]));
         }
 
         return result;

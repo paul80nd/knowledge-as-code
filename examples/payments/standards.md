@@ -98,6 +98,12 @@ one.
 address something else cites: `std-SECRET.every-secret-rotates` names one group, and an export carries the group as a
 line of its own. A standard with a single group writes one heading. `part-none` fails a Rules section with none.
 
+**Close a heading with the clauses it covers**, as a footnote in italic with the label bold:
+`_**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LOGS_`. `mirrors-citations` holds the union of those lines equal to
+`implements`, in both directions, so the frontmatter says which obligations the standard discharges and each heading
+says which rule discharges which. A heading covering no clause carries no line, and the rules themselves carry no
+citation.
+
 **A standard's size follows its subject.** One binding every piece of work usually runs to seven or eight rules, and one
 covering a single interface may run to thirty. Neither is padded or cut to meet the other.
 

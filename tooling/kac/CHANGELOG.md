@@ -31,8 +31,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the middle of one is reported where it sits. A standard's `implements:` declares it: each rule closes on
   `_**Covers:** …_` naming the clauses it discharges, so the frontmatter says which obligations the standard answers
   and each rule says which of them it answers. The obligations under a rule then carry no clause citation of their
-  own, and an export of them carries none either. `kac validate` also reports the key declared with no `ref:` to
-  resolve against. `kac new` ships the form in the standards template.
+  own, and `kac export` drops the footnote before it takes them, so a part carrying nothing else travels with no
+  obligations rather than with a coverage line standing where its words belong. `kac validate` also reports the key
+  declared with no `ref:` to resolve against. `kac new` ships the form in the standards template.
 - **A standard may carry a `Sources and further reading` section.** It names the external documents the standard defers
   to, each marked normative or informative. A rule built on somebody else's conventions then says where the rest of it
   lives. `kac new` ships the section in the standards template, and a standard deferring to nothing deletes it.
