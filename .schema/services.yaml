@@ -63,10 +63,9 @@ fields:
     ref: services
     description: What this service calls, downward only.
     notes: >
-      What this service calls, downward only. An edge means this service is configured to reach that one. Messages
-      over a bus are not an edge, because the publisher does not know its consumers. Deliberately one-directional:
-      the reverse view is a reader's question, not a second field to keep in step. Nothing generates that view today,
-      so it remains the author's to write.
+      An edge means this service is configured to reach that one. Messages over a bus are not an edge, because
+      the publisher does not know its consumers. One-directional on purpose: the reverse view is a reader's
+      question rather than a second field to keep in step.
 
   data-stores:
     required: false
@@ -83,11 +82,10 @@ fields:
     min-records: 2
     description: Slices the catalogue. One exposure, then any traits. Each value groups services.
     notes: >
-      A facet divides the catalogue into groups worth browsing, so a value only means something once several
-      services share it: `internal` answers "which of these is reachable from outside", where a word describing
-      one service answers nothing and belongs in `tags`. That is the whole reason the two are separate fields.
-      The floor holds the shape of a vocabulary and never its membership, which the type page records for this
-      estate.
+      A facet divides the catalogue into groups worth browsing, so a value means something only once several
+      services share it. `internal` answers "which of these is reachable from outside". A word describing one
+      service answers nothing and belongs in `tags`. The floor holds the shape of a vocabulary and never its
+      membership, which the type page records for this estate.
 
 sections:
   required: [What it does, Where it lives, Environments]
@@ -98,14 +96,14 @@ index:
   sort: id
 
 rules:
-  # A loop lives in the set of edges and no one document holds it, so this is a corpus rule and not an
-  # expression. It warns and never fails: two services that call each other are a fact about the estate, and
-  # the message names the services on the loop so a reader can judge which kind they have.
+  # A loop lives in the set of edges and no one document holds it, so this is a corpus rule rather than an
+  # expression. It warns rather than fails: two services calling each other is a fact about the estate, and
+  # the message names the services the loop runs through.
   - id: no-dependency-cycles
     description: A cycle in the dependency graph, naming the services the loop runs through.
     severity: warning
-  # The state this compares against lives outside the repository, so it can never run in the per-PR pass that
-  # every other rule here runs in. Issue #15 carries it, alongside the same question for the other types.
+  # The state this compares against lives outside the repository, so it can never run in the per-PR pass
+  # every other rule here runs in.
   - id: drift-against-repos
     description: The catalogue against the real repository list, in both directions.
     # Scheduled, not per-PR. Reports services documented but deleted, and repositories with no service document.

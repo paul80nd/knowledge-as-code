@@ -64,7 +64,7 @@ fields:
     type: id
     ref: adrs
     reciprocal: supersedes
-    notes: CI enforces both directions. A one-sided supersession fails the build.
+    notes: CI reconciles both directions, so a one-sided supersession fails the build.
 
   deciders:
     required: false

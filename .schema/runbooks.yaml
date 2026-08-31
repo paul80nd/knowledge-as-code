@@ -60,8 +60,6 @@ fields:
     type: date
     allow-literal: [never]
     description: '`"never"` is permitted, and is worth knowing before the incident rather than during it.'
-    notes: >
-      `"never"` is permitted, and is exactly the thing worth knowing before the incident rather than during it.
 
   rehearsal-frequency:
     required: false

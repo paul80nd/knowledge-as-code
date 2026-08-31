@@ -31,13 +31,14 @@ notes: >
   one redefines it only where the meaning genuinely differs.
 
   A term is an H3 heading, a one-sentence definition, an optional `**Not:** …` line naming what it is most often
-  confused with, and optional links to the owning service or an explanation. Those `**Not:**` lines are the most
-  useful content in the file. One paragraph per term, because a glossary is read end to end and every paragraph
-  is paid for by every reader. The list is alphabetical and flat (no A–Z sub-headings), so that it scans and
-  greps cleanly. The tool checks that order, and it checks that the entries are there: `part-none` reports a `Terms`
-  section holding no headings, and `part-empty` a heading with nothing beneath it. Nothing reads the words themselves,
-  so whoever reviews the file holds an entry to its single sentence and its single paragraph. The rules below that
-  would read a term's shape are declared and not built.
+  confused with, and optional links to the owning service or an explanation. The `**Not:**` lines are the most
+  useful content in the file. One paragraph per term, because a glossary is read end to end and every paragraph is
+  paid for by every reader. The list is alphabetical and flat, with no A–Z sub-headings, so that it scans and greps
+  cleanly.
+
+  The tool checks the order, and that the entries are there. `part-none` reports a `Terms` section holding no
+  headings, and `part-empty` a heading with nothing beneath it. Nothing reads the words themselves, so whoever
+  reviews the file holds an entry to its one sentence and its one paragraph.
 
 id:
   prefix: gls
@@ -64,11 +65,10 @@ fields:
     ref: glossary
     description: The more general glossary this one narrows, where one sits above it.
     notes: >
-      Absent on a glossary nothing sits above: the corpus-wide one, and the framework's own. It records the
-      ordering the resolution rule reads, so "the most general glossary that admits this term" becomes a
-      question a reader answers from the index rather than from knowing the estate. A glossary every corpus
-      shares leaves it empty even where that corpus has a more general one, because a shared file cannot
-      name a record only one corpus holds.
+      Absent on a glossary nothing sits above. It records the ordering the resolution rule reads, so "the most
+      general glossary that admits this term" is answered from the index rather than from knowing the estate.
+      A glossary every corpus shares leaves it empty, because a shared file cannot name a record only one
+      corpus holds.
 
   review-by:
     required: true
@@ -116,33 +116,23 @@ export:
       path: record.path
       anchor: part.anchor
   notes: >
-    A term travels whole: the definition and the `**Not:**` line beneath it, carried as two pieces
-    because they answer two questions. A definition on its own is mostly guessable from the word, so
-    an export that dropped the `**Not:**` line would carry the guessable half.
+    A term travels whole: the definition and the `**Not:**` line beneath it, carried as two pieces because
+    they answer two questions. A definition on its own is mostly guessable from the word.
 
-    `line:` names the keys of one term's line and where each takes its value from. They are a
-    glossary's own words: `definition` is what an entry states, and a type stating obligations instead
-    carries none. `version:` is what a consumer reads that line against. It belongs to the glossary and
-    moves on its own, so a second type reshaping its own line refuses no glossary consumer's bundle.
+    `line:` names the keys of one term's line and where each takes its value from, in a glossary's own
+    words. `version:` is what a consumer reads that line against. It belongs to the glossary and moves on
+    its own, so a second type reshaping its line refuses no glossary consumer's bundle.
 
-    The fields are the glossary's, and together they are what a consumer judges an entry by. `Scope`
-    says which context admits the term. `status` and `review-by` say how far the file has settled and
-    when it was last meant to be read, and the export repeats those two onto every term it writes:
-    the flat file is what gets grepped, and whoever grepped it has not opened the record.
+    The fields are what a consumer judges an entry by. `Scope` says which context admits the term. `status`
+    and `review-by` say how far the file has settled and when it was last meant to be read, and the export
+    repeats both onto every term: the flat file is what gets grepped, and whoever grepped it has not opened
+    the record. A copy taken a year ago reads exactly as it did on the day it was taken, so the date is the
+    signal a vendored export otherwise lacks. `tags` travels as the record wrote it, so a consumer filters
+    by subject on one key.
 
-    `review-by` is the signal a vendored export otherwise lacks. A copy taken a year ago reads exactly
-    as it did on the day it was taken, and `status: draft` says the terms were settling rather than
-    that the date has passed.
-
-    `tags` travels as the list the record wrote, so a consumer filtering a vendored glossary by subject
-    reads one key rather than the whole `Scope` section. A corpus tagging nothing loses nothing: an
-    absent list and an empty one both arrive as `null`.
-
-    `owner` stays behind, and the split between the two is not about which is more useful. A date is a
-    fact about the content, and a consumer holds it against today's date knowing nothing about this
-    corpus. An owner is a fact about this corpus's stewardship, and it stops being actionable the
-    moment the export leaves: whoever holds a vendored copy has no standing to ask, and the name goes
-    stale with nothing in the export to say so.
+    `owner` stays behind. A date is a fact about the content, which a consumer holds against today's date
+    knowing nothing about this corpus. An owner is a fact about this corpus's stewardship, and whoever holds
+    a vendored copy has no standing to ask.
 
 index:
   columns: [id, title, narrows, status, owner, review-by]
@@ -153,10 +143,8 @@ rules:
     description: >
       Where one glossary redefines a term another holds, each entry links to the other entry's anchor.
     # "The other entry", and not the other file. A link to `other.md` lands a reader at the top of the
-    # glossary rather than on the term, and an export carries the cross-reference a link states, so a
-    # link naming no term leaves it nothing to carry. Why the export refuses to guess the counterpart,
-    # rather than reading it from the term's own spelling, is at
-    # https://paul80nd.github.io/knowledge-as-code/cli/export/
+    # glossary rather than on the term, and an export carries the cross-reference a link states, so a link
+    # naming no term leaves it nothing to carry.
     #
     # The reference runs upward only where the general glossary is synced: a file every corpus shares
     # cannot name a record only this one holds.
@@ -164,15 +152,10 @@ rules:
     description: >
       No entry runs beyond one paragraph, and this corpus's digest takes the glossaries in the order the
       export writes them.
-    # A glossary is read end to end, so every entry's length is paid by every reader. The rule governs
-    # the digest this corpus writes for itself, which has a budget. With several glossaries, "carry the
-    # glossary in full" names no single file: the digest takes them in some order and cuts off when the
-    # budget is spent, which three glossaries are enough to do.
-    #
-    # That order is the export's (roots by id, each root's chain beneath it), and it carries generality
-    # only inside a chain. Across unrelated roots it is stable and arbitrary, so which of two roots loses
-    # its tail to the budget is arbitrary too. Whoever builds the digest has to answer that, and naming
-    # an order here is not the same as having answered it.
+    # A glossary is read end to end, so every entry's length is paid by every reader. The rule governs the
+    # digest this corpus writes for itself, which has a budget. With several glossaries, "carry the glossary
+    # in full" names no single file: the digest takes them in the export's order and cuts off when the budget
+    # is spent. Which chain loses its tail is whoever builds the digest to answer.
     #
     # A consumer corpus receives the `export:` block above instead, and that is bounded per term.
   - id: undefined-terms

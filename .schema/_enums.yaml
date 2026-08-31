@@ -2,9 +2,8 @@
 # An enum used by exactly one type lives in that type's file.
 
 notes: >
-  Which types each enum serves is not recorded here. A list of them would be a second place to keep in step with
-  `values: $enums.<name>`, and wrong in any corpus that adopted some of these types and not the others. The
-  reference itself is right by construction. Grep for the enum to find who draws on it.
+  Which types draw on an enum is not recorded here. A list would be a second place to keep in step, and wrong in
+  a corpus that adopted some of these types and not the others. Grep the enum's name to find them.
 
 enums:
 
@@ -12,8 +11,8 @@ enums:
     values: [critical, important, supporting]
     notes: >
       Judged by what a customer experiences when it is unavailable. `critical` means customer-facing failure,
-      `important` means degraded service, `supporting` means internal impact only. It drives runbook and NFR
-      priority, so it should be honest rather than generous.
+      `important` means degraded service, `supporting` means internal impact only. It sets runbook and NFR
+      priority.
 
   severity:
     values: [sev1, sev2, sev3]

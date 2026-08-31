@@ -63,9 +63,7 @@ fields:
     required: true
     type: date
     description: The field that stops this type rotting. Explanations need the tightest staleness discipline.
-    notes: >
-      The field that stops this type rotting. Explanations are the residual category, so they need the
-      tightest staleness discipline, not the loosest.
+    notes: Explanations are the residual category, which is what makes the discipline tightest here.
 
 sections:
   required: [Where the detail lives]

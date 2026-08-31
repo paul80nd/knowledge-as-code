@@ -7,18 +7,18 @@ The type this corpus adopted. `generate` regenerates the two blocks below from t
 
 <!-- BEGIN GENERATED: schema-adrs -->
 
-| Field           | Value                                           | Notes                                                                                                        |
-|-----------------|-------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `id` *†         | string                                          | Stable, unique across the corpus, never reused. Format set by the type.                                      |
-| `tier` *†       | `decided`                                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                          |
-| `status` *†     | `proposed` `accepted` `deprecated` `superseded` | Immutable once `accepted`. Supersede rather than rewrite.                                                    |
-| `owner` *†      | string                                          | A named person, never a team alias.                                                                          |
-| `tags` †        | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                             |
-| `decided-on`    | date                                            | The acceptance date. Bare key until accepted. Required when `status == accepted`.                            |
-| `supersedes`    | id                                              | The ADR this replaces.                                                                                       |
-| `superseded-by` | id                                              | CI enforces both directions. A one-sided supersession fails the build. Required when `status == superseded`. |
-| `deciders`      | list                                            | The people who agreed it.                                                                                    |
-| `related`       | list                                            | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.             |
+| Field           | Value                                           | Notes                                                                                                             |
+|-----------------|-------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| `id` *†         | string                                          | Stable, unique across the corpus, never reused. Format set by the type.                                           |
+| `tier` *†       | `decided`                                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                               |
+| `status` *†     | `proposed` `accepted` `deprecated` `superseded` | Immutable once `accepted`. Supersede rather than rewrite.                                                         |
+| `owner` *†      | string                                          | A named person, never a team alias.                                                                               |
+| `tags` †        | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                  |
+| `decided-on`    | date                                            | The acceptance date. Bare key until accepted. Required when `status == accepted`.                                 |
+| `supersedes`    | id                                              | The ADR this replaces.                                                                                            |
+| `superseded-by` | id                                              | CI reconciles both directions, so a one-sided supersession fails the build. Required when `status == superseded`. |
+| `deciders`      | list                                            | The people who agreed it.                                                                                         |
+| `related`       | list                                            | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.                  |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
