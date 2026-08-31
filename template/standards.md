@@ -90,6 +90,17 @@ one.
 **A standard's size follows its subject.** One binding every piece of work usually runs to seven or eight rules, and one
 covering a single interface may run to thirty. Neither is padded or cut to meet the other.
 
+**Name the external document a standard defers to, in an optional `Sources and further reading` section.** A house rule
+seldom starts from nothing, and a standard adding exceptions to somebody else's conventions is incomplete without that
+document. Mark an entry **normative** where a reader has not read the rule until they have read the source, and
+**informative** where the source is background.
+
+**A baseline is not a posture.** [Frameworks](frameworks.md) records the standing we take against a framework a policy
+clause cites, and it is the only page recording one. A baseline is the document a standard's own rules defer to. Where
+the two look alike, apply the test a policy is written against: would this still be true after replacing the entire
+technology estate? A WCAG posture survives it. A C# style baseline dies with C#, and it goes in the standard deferring
+to it.
+
 Standards are living documents, and we edit them in place. Record every material change in the changelog.
 
 ## What CI checks

@@ -82,6 +82,17 @@ own secret-handling standard, and reaches a PSP key and a card token through thi
 - `eng:pol-DATA` commits us to keeping unmasked personal data out of logs and telemetry.
 - `eng:pol-SCRT` commits us to holding secrets in a controlled store, and to keeping them out of logs.
 
+## Sources and further reading
+
+- **Normative.** [OpenTelemetry semantic conventions] name the attributes a span and a log record carry. This standard
+  says which of them a payment may fill, and renames none of them.
+- **Informative.** [The OpenTelemetry logs data model] covers the fields a log record holds, which is what the
+  redaction list is written against.
+
 ## Changelog
 
 - 2026-08-28: initial version.
+- 2026-08-31: names the OpenTelemetry semantic conventions as a normative source.
+
+[OpenTelemetry semantic conventions]: https://opentelemetry.io/docs/specs/semconv/
+[The OpenTelemetry logs data model]: https://opentelemetry.io/docs/specs/otel/logs/data-model/

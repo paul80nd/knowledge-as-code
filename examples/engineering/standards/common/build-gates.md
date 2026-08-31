@@ -75,5 +75,11 @@ visible and gives it an end date.
 - [pol-AUTV] commits us to verifying every change automatically and treating a failure as blocking.
 - [pol-DEVI] sets what a recorded deviation has to carry.
 
+## Sources and further reading
+
+- **Informative.** [SLSA build levels] cover what a build platform guarantees before a gate running on it means
+  anything: a clean checkout, an agent defined in the repository, and provenance for what the build produced.
+
 [pol-AUTV]: ../../policies/delivery/autv-automated-verification.md#clauses
 [pol-DEVI]: ../../policies/governance/devi-deviations-are-recorded.md#clauses
+[SLSA build levels]: https://slsa.dev/spec/v1.0/levels

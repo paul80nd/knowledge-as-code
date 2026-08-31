@@ -15,6 +15,14 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **A standard may carry a `Sources and further reading` section.** It names the external documents the standard defers
+  to, each marked normative or informative. A rule built on somebody else's conventions then says where the rest of it
+  lives. `kac new` ships the section in the standards template, and a standard deferring to nothing deletes it.
+
 ## 0.18.0 - 2026-08-31
 
 ### Added

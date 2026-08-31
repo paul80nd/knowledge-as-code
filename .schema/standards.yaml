@@ -134,7 +134,7 @@ fields:
 
 sections:
   required: [Summary, Rules, Examples, Conformance checklist, Rationale and provenance]
-  optional: [Changelog]
+  optional: [Sources and further reading, Changelog]
 
 index:
   columns: [id, title, category, status, derived-from, review-by]
