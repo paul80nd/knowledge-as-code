@@ -167,6 +167,10 @@ folder holds the last one packed, so a consumer locked to an earlier one is refu
 written rather than quietly matching nothing. So is a caret over a prerelease, because no caret takes one: name
 `0.2.0-rc.1` exactly to opt in.
 
+**A package unpacks to 256MB at most, and a single entry to 16MB.** A corpus past either is refused rather than read
+into memory. Both caps count the bytes read rather than the size an entry declares, because that size is the package's
+own claim about itself.
+
 **It reports nothing about a corpus that has not restored.** Whether the imports a corpus declares are on disk is
 [`validate`](validate.md)'s question, and it fails and names this command where one is not.
 

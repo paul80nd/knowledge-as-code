@@ -143,6 +143,13 @@ public class RestoreTests
             Assert.Single(Plan([Declared()], Serving(Zip([(entry, "{}")]))).Problems));
 
     [Fact]
+    public void An_entry_that_unpacks_past_the_cap_is_refused()
+        => Assert.Contains("unpacks to more than",
+            Assert.Single(Plan([Declared()],
+                Serving(Zip([($"{Packer.PayloadDir}/big.jsonl", new string('a', 17 * 1024 * 1024))])))
+                .Problems));
+
+    [Fact]
     public void A_package_carrying_no_export_manifest_is_refused()
         => Assert.Contains("no readable corpus/manifest.json",
             Assert.Single(Plan([Declared()], Serving(Zip([("corpus/glossary/terms.jsonl", "{}")]))).Problems));

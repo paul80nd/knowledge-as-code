@@ -33,6 +33,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **A rule whose `expr:` names a number too large for a whole number is reported, rather than ending in a stack
   trace.** `words() < 99999999999` reached the parser's integer literal and overflowed past the exception the schema
   load catches. `kac validate` now names the number, its position and the rule.
+- **`kac restore` refuses a package that unpacks to more than 256MB, or that holds a single entry over 16MB.** The
+  path each entry names was already held inside the import folder, and what it unpacks to was not, so a malformed
+  package was read whole into memory instead. Both caps count the bytes actually read, because a zip entry's
+  declared size is the package's own claim about itself.
 
 ## 0.18.0 - 2026-08-31
 

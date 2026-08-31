@@ -47,6 +47,12 @@ public static class Restore
     // carries and a reader following `eng:pol-VURM` should find it under the name they typed.
     public const string ImportsDir = ".imports";
 
+    // What a package may unpack to. A zip entry declares its uncompressed size and a hostile one is free
+    // to understate it, so both caps are counted against the bytes actually read. A corpus is prose, and
+    // the largest export any corpus here produces is under a megabyte, so these refuse nothing real.
+    private const long MaxEntryBytes = 16L * 1024 * 1024;
+    private const long MaxPackageBytes = 256L * 1024 * 1024;
+
     // What a restore comes to, given what the descriptor declared.
     //
     // `installed` answers what version each shortcode's folder already holds, or null where it holds
@@ -258,6 +264,7 @@ public static class Restore
     {
         var prefix = Packer.PayloadDir + "/";
         var files = new List<BundleFile>();
+        var unpacked = 0L;
 
         try
         {
@@ -278,7 +285,14 @@ public static class Restore
 
                 using var stream = zipped.Open();
                 using var buffer = new MemoryStream();
-                stream.CopyTo(buffer);
+                if (!CopyCapped(stream, buffer, MaxEntryBytes))
+                    return Refused(entry, $"holds an entry named '{zipped.FullName}' that unpacks to more "
+                                          + $"than {MaxEntryBytes / (1024 * 1024)}MB.");
+
+                unpacked += buffer.Length;
+                if (unpacked > MaxPackageBytes)
+                    return Refused(entry, $"unpacks to more than {MaxPackageBytes / (1024 * 1024)}MB.");
+
                 files.Add(new BundleFile(path, buffer.ToArray()));
             }
         }
@@ -343,6 +357,25 @@ public static class Restore
         && !Path.IsPathRooted(path)
         && !path.Contains(':', StringComparison.Ordinal)
         && !path.Split('/', '\\').Any(s => s is ".." or "");
+
+    // Copies until the cap is passed, and answers whether it stayed inside it. `CopyTo` reads an entry
+    // whole before anything can object, which is the point: what a package costs to open has to be
+    // decidable while it is being opened rather than afterwards.
+    private static bool CopyCapped(Stream from, Stream to, long cap)
+    {
+        var chunk = new byte[81920];
+        var total = 0L;
+
+        int read;
+        while ((read = from.Read(chunk, 0, chunk.Length)) > 0)
+        {
+            total += read;
+            if (total > cap) return false;
+            to.Write(chunk, 0, read);
+        }
+
+        return true;
+    }
 
     private static Registry.Answer<IReadOnlyList<BundleFile>> Refused(Declaration entry, string fault) =>
         new(null, $"the package for '{entry.Corpus}' {fault}");
