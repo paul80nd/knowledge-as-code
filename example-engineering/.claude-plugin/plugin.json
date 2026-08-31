@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "example-engineering",
   "displayName": "Example Engineering",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A worked example corpus shipped with knowledge-as-code, holding the invented governance layer of a fictional engineering organisation. Its policies bind nobody, and no organisation is certified against anything it records.",
   "author": {
     "name": "Paul Law",

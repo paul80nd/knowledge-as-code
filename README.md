@@ -27,7 +27,7 @@ description says so.
 | Plugin | Corpus content version |
 |---|---|
 | `example-libraries` | `0.1.5` |
-| `example-engineering` | `0.7.0` |
+| `example-engineering` | `0.7.1` |
 | `example-payments` | `0.7.0` |
 
-Built from [`d44d96c1a30e0ca3b0e916af99d9625c407a869d`](https://github.com/paul80nd/knowledge-as-code/commit/d44d96c1a30e0ca3b0e916af99d9625c407a869d).
+Built from [`afb06848fcf6c8699724cf0b94f1094c7184e9f8`](https://github.com/paul80nd/knowledge-as-code/commit/afb06848fcf6c8699724cf0b94f1094c7184e9f8).
