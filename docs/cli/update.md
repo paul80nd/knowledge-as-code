@@ -132,8 +132,10 @@ everything you wrote. `--check` is the exception and runs over a tree in any sta
 it. It cannot tell a type the framework has just added from one declined at creation, so it names both and lets you
 decide.
 
-**The descriptor's own shape is stamped, not migrated.** Where `descriptor-version` has moved, the keys the tool owns
-are rewritten and anything new or missing is reported for you to settle.
+**The descriptor's own shape is stamped, not migrated.** `update` writes `descriptor-version` to the format this tool
+produces and compares nothing. A file a newer `kac` wrote is stamped back, and nothing reports that it was. A key that
+has since been renamed is the one shape question the run does answer. It stops, names both spellings, and leaves the
+file alone.
 
 **The template has no changelog.** What changed in a framework is read from the diff `update` leaves behind.
 
