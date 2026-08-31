@@ -2,14 +2,8 @@
 id: std-PR
 tier: normative
 status: draft
-implements:
-  - pol-AGNT.ACCEPT
-  - pol-AGNT.EQUAL
-  - pol-AGNT.PROV
-  - pol-AGNT.SELFVER
-  - pol-EVER.BRANCH
-  - pol-EVER.INTENT
-  - pol-SECD.CODEREV
+implements: [ pol-AGNT.ACCEPT, pol-AGNT.EQUAL, pol-AGNT.PROV, pol-AGNT.SELFVER, pol-EVER.BRANCH, pol-EVER.INTENT,
+  pol-SECD.CODEREV ]
 applies-to:
   - all
 review-by: "2027-08-26"
@@ -30,27 +24,27 @@ than the author approves it before it merges.
 
 ### A change arrives as a pull request
 
-- A pull request **MUST** merge into the default branch rather than reaching it by direct push ([pol-EVER].BRANCH).
-- A pull request description **MUST** link the work item that asked for the change ([pol-EVER].INTENT).
+- A pull request **MUST** merge into the default branch rather than reaching it by direct push.
+- A pull request description **MUST** link the work item that asked for the change.
+
+_**Covers:** [pol-EVER].BRANCH, [pol-EVER].INTENT_
 
 ### Somebody other than the author approves it
 
-- A pull request **MUST** carry at least one approval from somebody other than the author before it merges
-  ([pol-SECD].CODEREV).
-- A reviewer **MUST** check the change against the standards that apply to it, and not read for style alone
-  ([pol-SECD].CODEREV).
-- A reviewer **MUST** state what they checked when they approve ([pol-SECD].CODEREV).
+- A pull request **MUST** carry at least one approval from somebody other than the author before it merges.
+- A reviewer **MUST** check the change against the standards that apply to it, and not read for style alone.
+- A reviewer **MUST** state what they checked when they approve.
+
+_**Covers:** [pol-SECD].CODEREV_
 
 ### Agent-produced work says what produced it
 
-- A pull request holding agent-produced work **MUST** name the agent, the model and the prompt or task that produced
-  it ([pol-AGNT].PROV).
-- Agent-produced work **MUST** carry the approval of a named person, who owns the change afterwards
-  ([pol-AGNT].ACCEPT).
-- A reviewer **MUST NOT** accept an agent's own summary of a change as evidence that the change is correct
-  ([pol-AGNT].SELFVER).
-- Branch policy **MUST** apply to agent-produced work unchanged, with no exemption and no second route in
-  ([pol-AGNT].EQUAL).
+- A pull request holding agent-produced work **MUST** name the agent, the model and the prompt or task that produced it.
+- Agent-produced work **MUST** carry the approval of a named person, who owns the change afterwards.
+- A reviewer **MUST NOT** accept an agent's own summary of a change as evidence that the change is correct.
+- Branch policy **MUST** apply to agent-produced work unchanged, with no exemption and no second route in.
+
+_**Covers:** [pol-AGNT].ACCEPT, [pol-AGNT].EQUAL, [pol-AGNT].PROV, [pol-AGNT].SELFVER_
 
 ## Examples
 
@@ -89,10 +83,6 @@ agent's own account in place of a check.
 
 A review is the last point at which a person sees the change before it becomes ours. An agent can produce a change far
 faster than it can be checked, so the record of what produced it is what a reviewer works from.
-
-- [pol-AGNT] holds a person accountable for agent-produced work.
-- [pol-EVER] requires that a change reaches the default branch by reviewed merge.
-- [pol-SECD] requires that review covers security and correctness.
 
 ## Sources and further reading
 

@@ -2,15 +2,8 @@
 id: std-GATES
 tier: normative
 status: draft
-implements:
-  - pol-AUTV.BLOCK
-  - pol-AUTV.BYPASS
-  - pol-AUTV.DISABLE
-  - pol-AUTV.INTEG
-  - pol-AUTV.MACHINE
-  - pol-AUTV.REGRESS
-  - pol-DEVI.EXPIRY
-  - pol-DEVI.OWNER
+implements: [ pol-AUTV.BLOCK, pol-AUTV.BYPASS, pol-AUTV.DISABLE, pol-AUTV.INTEG, pol-AUTV.MACHINE, pol-AUTV.REGRESS,
+  pol-DEVI.EXPIRY, pol-DEVI.OWNER ]
 applies-to:
   - all
 review-by: "2027-08-26"
@@ -31,18 +24,21 @@ deviation with a named owner.
 
 ### Every change is built and tested automatically
 
-- A push to any branch **MUST** trigger a build and the test suite, without anyone asking for it ([pol-AUTV].INTEG).
-- The build **MUST** run from a clean checkout, on an agent provisioned from a definition in the repository
-  ([pol-AUTV].MACHINE).
-- A fix for a defect **MUST** arrive with a test that fails without it ([pol-AUTV].REGRESS).
+- A push to any branch **MUST** trigger a build and the test suite, without anyone asking for it.
+- The build **MUST** run from a clean checkout, on an agent provisioned from a definition in the repository.
+- A fix for a defect **MUST** arrive with a test that fails without it.
+
+_**Covers:** [pol-AUTV].INTEG, [pol-AUTV].MACHINE, [pol-AUTV].REGRESS_
 
 ### A failing check stops the change
 
-- Branch policy **MUST** block a merge while any required check is failing ([pol-AUTV].BLOCK).
-- A team **MUST NOT** merge over a failing check without a recorded deviation ([pol-AUTV].BYPASS).
-- A team **MUST NOT** skip, silence or suppress a check without a recorded deviation ([pol-AUTV].DISABLE).
-- A deviation covering a suppressed check **MUST** name the individual who accepts the risk ([pol-DEVI].OWNER).
-- That deviation **MUST** carry a review date ([pol-DEVI].EXPIRY).
+- Branch policy **MUST** block a merge while any required check is failing.
+- A team **MUST NOT** merge over a failing check without a recorded deviation.
+- A team **MUST NOT** skip, silence or suppress a check without a recorded deviation.
+- A deviation covering a suppressed check **MUST** name the individual who accepts the risk.
+- That deviation **MUST** carry a review date.
+
+_**Covers:** [pol-AUTV].BLOCK, [pol-AUTV].BYPASS, [pol-AUTV].DISABLE, [pol-DEVI].EXPIRY, [pol-DEVI].OWNER_
 
 ## Examples
 
@@ -71,9 +67,6 @@ back to the second until the retry path breaks in production.
 
 A check that can be waived quietly stops being a gate and becomes a report. Recording the waiver keeps the exception
 visible and gives it an end date.
-
-- [pol-AUTV] commits us to verifying every change automatically and treating a failure as blocking.
-- [pol-DEVI] sets what a recorded deviation has to carry.
 
 ## Sources and further reading
 

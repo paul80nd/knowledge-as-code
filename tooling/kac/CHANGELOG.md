@@ -15,7 +15,7 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.19.0 - 2026-08-31
 
 ### Added
 
@@ -25,6 +25,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   beside them with its Summary and its conformance checklist. `kac bundle` includes the new `standards-lookup` skill
   wherever the export carries standards, and trims it where it does not. `kac new` ships the skill in the plugin tree,
   and `kac update` sends it to a corpus already created.
+- **A field can be held to the citations its prose gathers.** A type declares `mirrors-citations: <Label>` beside the
+  field's `ref:`, and `kac validate` reports drift in both directions between the field and the labelled lines. A line
+  is written in italic with the label bold, and closes the section whose citations it gathers, so a line standing in
+  the middle of one is reported where it sits. A standard's `implements:` declares it: each rule closes on
+  `_**Covers:** …_` naming the clauses it discharges, so the frontmatter says which obligations the standard answers
+  and each rule says which of them it answers. The obligations under a rule then carry no clause citation of their
+  own, and an export of them carries none either. `kac validate` also reports the key declared with no `ref:` to
+  resolve against. `kac new` ships the form in the standards template.
 - **A standard may carry a `Sources and further reading` section.** It names the external documents the standard defers
   to, each marked normative or informative. A rule built on somebody else's conventions then says where the rest of it
   lives. `kac new` ships the section in the standards template, and a standard deferring to nothing deletes it.
@@ -55,6 +63,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   path each entry names was already held inside the import folder, and what it unpacks to was not, so a malformed
   package was read whole into memory instead. Both caps count the bytes actually read, because a zip entry's
   declared size is the package's own claim about itself.
+- **A part id written against a link takes no delimiter that closes an emphasis.** `_[pol-SCRT].EMBED_` read the
+  citation as `pol-SCRT.EMBED_`, because the id was measured off the source rather than off the text markdown makes
+  of it. `part-ref` reported a clause nobody could write.
 
 ## 0.18.0 - 2026-08-31
 

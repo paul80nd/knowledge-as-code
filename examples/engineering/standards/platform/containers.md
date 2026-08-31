@@ -2,12 +2,7 @@
 id: std-CONT
 tier: normative
 status: draft
-implements:
-  - pol-ACCS.LEAST
-  - pol-ENVS.BASELIN
-  - pol-MEXP.PUBLIC
-  - pol-TRUS.MUTATE
-  - pol-TRUS.SOURCE
+implements: [ pol-ACCS.LEAST, pol-ENVS.BASELIN, pol-MEXP.PUBLIC, pol-TRUS.MUTATE, pol-TRUS.SOURCE ]
 applies-to:
   - all
 review-by: "2027-08-31"
@@ -28,27 +23,30 @@ non-root user with no port open beyond the one the service answers on.
 
 ### The base image is chosen and pinned
 
-- A Dockerfile **MUST** name its base image from the organisation's registry ([pol-TRUS].SOURCE).
-- A Dockerfile **MUST** pin the base image by digest rather than by a moving tag ([pol-ENVS].BASELIN).
+- A Dockerfile **MUST** name its base image from the organisation's registry.
+- A Dockerfile **MUST** pin the base image by digest rather than by a moving tag.
 - A repository **MUST** rebuild against a refreshed base at least monthly, so a patched base reaches the running
-  service ([pol-ENVS].BASELIN).
+  service.
+
+_**Covers:** [pol-ENVS].BASELIN, [pol-TRUS].SOURCE_
 
 ### A published tag never moves
 
-- A pipeline **MUST** tag an image with the build's own version ([pol-TRUS].MUTATE).
-- A registry **MUST** refuse a second push to a tag that already exists ([pol-TRUS].MUTATE).
-- A deployment **MUST** name an image by digest, so the running container is the one the pipeline built
-  ([pol-TRUS].MUTATE).
+- A pipeline **MUST** tag an image with the build's own version.
+- A registry **MUST** refuse a second push to a tag that already exists.
+- A deployment **MUST** name an image by digest, so the running container is the one the pipeline built.
+
+_**Covers:** [pol-TRUS].MUTATE_
 
 ### The container holds only what the service needs
 
-- An image **MUST** declare a non-root `USER` ([pol-ACCS].LEAST).
-- A container **MUST** run as that user ([pol-ACCS].LEAST).
-- A container **MUST** run with a read-only root filesystem, writing only to a declared volume ([pol-ACCS].LEAST).
-- An image **MUST** be built from a runtime base rather than an SDK base, so no compiler ships to production
-  ([pol-ACCS].LEAST).
-- An image **MUST NOT** expose a management, debug or metrics port to anything outside the cluster
-  ([pol-MEXP].PUBLIC).
+- An image **MUST** declare a non-root `USER`.
+- A container **MUST** run as that user.
+- A container **MUST** run with a read-only root filesystem, writing only to a declared volume.
+- An image **MUST** be built from a runtime base rather than an SDK base, so no compiler ships to production.
+- An image **MUST NOT** expose a management, debug or metrics port to anything outside the cluster.
+
+_**Covers:** [pol-ACCS].LEAST, [pol-MEXP].PUBLIC_
 
 ## Examples
 
@@ -79,11 +77,6 @@ different image from the same Dockerfile.
 
 A tag is a name somebody can repoint, and a digest is the bytes. Deploying by digest is what makes the image we tested
 and the image running the same object.
-
-- [pol-ACCS] commits us to granting the least privilege the work needs, which reaches a process as well as a person.
-- [pol-ENVS] commits us to being able to state and reproduce the configuration an environment runs.
-- [pol-MEXP] commits us to keeping a management interface off the public internet.
-- [pol-TRUS] commits us to trusted sources and to leaving a released artefact alone.
 
 ## Sources and further reading
 

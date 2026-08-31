@@ -2,9 +2,7 @@
 id: std-CSSTY
 tier: normative
 status: draft
-implements:
-  - pol-AUTV.WARN
-  - pol-SECD.CODING
+implements: [ pol-AUTV.WARN, pol-SECD.CODING ]
 applies-to:
   - all
 review-by: "2027-08-31"
@@ -25,27 +23,29 @@ repository. Analysers run as part of the build, and a warning is a defect.
 
 ### The conventions come from one file
 
-- A repository holding C# **MUST** carry an `.editorconfig` at its root, taken from the .NET runtime team's own
-  ([pol-SECD].CODING).
-- A project **MUST** set `TreatWarningsAsErrors` and `EnforceCodeStyleInBuild`, so the build checks the style
-  ([pol-AUTV].WARN).
-- A project **MUST** enable nullable reference types ([pol-SECD].CODING).
-- Code **MUST NOT** silence a nullability warning with `!` ([pol-SECD].CODING).
-- A project **MUST** enable the .NET analysers at the `latest` analysis level ([pol-SECD].CODING).
+- A repository holding C# **MUST** carry an `.editorconfig` at its root, taken from the .NET runtime team's own.
+- A project **MUST** set `TreatWarningsAsErrors` and `EnforceCodeStyleInBuild`, so the build checks the style.
+- A project **MUST** enable nullable reference types.
+- Code **MUST NOT** silence a nullability warning with `!`.
+- A project **MUST** enable the .NET analysers at the `latest` analysis level.
+
+_**Covers:** [pol-AUTV].WARN, [pol-SECD].CODING_
 
 ### A suppression is local and says why
 
-- A suppression **MUST** sit on the member it applies to, with a `Justification` naming the reason
-  ([pol-AUTV].WARN).
-- A repository **MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file ([pol-AUTV].WARN).
+- A suppression **MUST** sit on the member it applies to, with a `Justification` naming the reason.
+- A repository **MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file.
+
+_**Covers:** [pol-AUTV].WARN_
 
 ### The security rules the analysers cover
 
-- Code **MUST** build a SQL command through a parameter rather than by joining strings ([pol-SECD].CODING).
-- Code **MUST** use the framework's cryptography ([pol-SECD].CODING).
-- Code **MUST NOT** call an algorithm the analysers report as broken ([pol-SECD].CODING).
-- Code **MUST** compare a secret with `CryptographicOperations.FixedTimeEquals` rather than with `==`
-  ([pol-SECD].CODING).
+- Code **MUST** build a SQL command through a parameter rather than by joining strings.
+- Code **MUST** use the framework's cryptography.
+- Code **MUST NOT** call an algorithm the analysers report as broken.
+- Code **MUST** compare a secret with `CryptographicOperations.FixedTimeEquals` rather than with `==`.
+
+_**Covers:** [pol-SECD].CODING_
 
 ## Examples
 
@@ -88,9 +88,6 @@ written next year.
 
 C# has a house style already, written by the people who write the language's own libraries. Taking theirs means a
 reviewer argues about the change instead of the braces, and a newcomer has read the rules before they arrive.
-
-- [pol-AUTV] commits us to triaging a new warning rather than accumulating it.
-- [pol-SECD] commits us to writing code to a documented secure-coding standard for its stack.
 
 ## Sources and further reading
 

@@ -617,6 +617,11 @@
           "type": "string",
           "minLength": 1
         },
+        "mirrors-citations": {
+          "description": "The label on the footnote lines whose citations this field must mirror. Each line is written in italic with the label bold, and closes the section whose citations it gathers: `_**Covers:** [pol-SCRT].EMBED_`. A section covering nothing carries no line. The union of the lines is held equal to the field, in both directions and case-insensitively, so the field stays the whole truth about what the document answers. The field must declare a `ref:`, since the lines gather citations of another record.",
+          "type": "string",
+          "minLength": 1
+        },
         "allow-literal": {
           "description": "Words admitted beside the field's declared type: `last-rehearsed: never`, `applies-to: [all]`. A value listed here is taken as written and nothing further is asked of it. On a list it exempts the entry rather than the field, so the ids beside it are still ids.",
           "type": "array",

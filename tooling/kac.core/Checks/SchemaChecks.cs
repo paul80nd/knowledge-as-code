@@ -521,6 +521,15 @@ public static class SchemaChecks
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"field '{name}' declares 'mirrors-section: {section}', and the type's 'sections:' block "
                 + "declares no such section. Name a section the type has, or add it."));
+
+        // Any label reconciles, so there is no vocabulary here either. What the label gathers is
+        // citations of another record, and a field pointing at no type carries none, so the two sides
+        // could never meet.
+        if (spec.MirrorsCitations is { } label && spec.Refs.Count == 0)
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"field '{name}' declares 'mirrors-citations: {label}' and no 'ref:'. The line gathers "
+                + "citations of another record, and this field carries none, so the two sides could "
+                + "never meet. Declare a 'ref:', or drop the key."));
     }
 
     // A rule says what it is by what it carries. An `expr:` is a rule that is finished; an id one of the

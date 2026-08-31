@@ -435,6 +435,21 @@ checks:
       finding as much as the reverse, so the field has to be the whole truth about what the section
       names.
 
+  mirrors-citations:
+    severity: error
+    description: A field declaring a `mirrors-citations:` reconciles with the lines carrying its label.
+    notes: >
+      The line is a footnote, written in italic with the label bold, and closing the section whose
+      citations it gathers. A section covering nothing carries none.
+
+      What reconciles is the union of the lines against the field, in both directions and
+      case-insensitively. The field stays the whole truth about what the document answers, and the lines
+      divide that truth between the sections.
+
+      A line the reader takes for a footnote and that closes no section is reported where it sits, and
+      its citations still count. Dropping them would report every id it named as absent from the
+      document, which is a page of findings for one misplaced line.
+
   id-unique:
     severity: error
     description: An id is unique across the whole corpus.

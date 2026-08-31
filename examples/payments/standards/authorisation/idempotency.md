@@ -2,9 +2,7 @@
 id: std-IDEM
 tier: normative
 status: active
-implements:
-  - eng:pol-INTC.SPEC
-  - eng:pol-RECV.IDEMPOT
+implements: [ eng:pol-INTC.SPEC, eng:pol-RECV.IDEMPOT ]
 applies-to:
   - svc-payment-api
   - svc-payment-ledger
@@ -26,31 +24,31 @@ outcome and charges nobody a second time.
 
 ### The caller chooses the key
 
-- A request that authorises, captures or refunds **MUST** carry an `Idempotency-Key` header
-  (`eng:pol-RECV.IDEMPOT`).
-- The caller **MUST** derive the key from the order and the operation, so a retry of one attempt produces the same key
-  (`eng:pol-RECV.IDEMPOT`).
-- A service **MUST** reject a request with no key, rather than treating it as a new payment
-  (`eng:pol-RECV.IDEMPOT`).
-- The contract **MUST** state the key's format and how long it is honoured (`eng:pol-INTC.SPEC`).
+- A request that authorises, captures or refunds **MUST** carry an `Idempotency-Key` header.
+- The caller **MUST** derive the key from the order and the operation, so a retry of one attempt produces the same key.
+- A service **MUST** reject a request with no key, rather than treating it as a new payment.
+- The contract **MUST** state the key's format and how long it is honoured.
+
+_**Covers:** `eng:pol-INTC.SPEC`, `eng:pol-RECV.IDEMPOT`_
 
 ### The service answers a repeat from its record
 
-- A service **MUST** store the key with the outcome before it answers the first request (`eng:pol-RECV.IDEMPOT`).
-- A service **MUST** return the stored outcome for a repeated key, with the same status and body
-  (`eng:pol-RECV.IDEMPOT`).
-- A service **MUST** honour a key for at least 24 hours (`eng:pol-RECV.IDEMPOT`).
-- A service **MUST** answer `422` where a repeated key arrives with a different amount or a different order, rather
-  than charging either one (`eng:pol-RECV.IDEMPOT`).
-- A service **MUST** pass the key to the PSP as the PSP's own idempotency key, so a retry stops at whichever hop
-  already answered (`eng:pol-RECV.IDEMPOT`).
+- A service **MUST** store the key with the outcome before it answers the first request.
+- A service **MUST** return the stored outcome for a repeated key, with the same status and body.
+- A service **MUST** honour a key for at least 24 hours.
+- A service **MUST** answer `422` where a repeated key arrives with a different amount or a different order, rather than
+  charging either one.
+- A service **MUST** pass the key to the PSP as the PSP's own idempotency key, so a retry stops at whichever hop already
+  answered.
+
+_**Covers:** `eng:pol-RECV.IDEMPOT`_
 
 ### An in-flight repeat waits or is told to wait
 
-- A service **MUST** answer `409` where the key is recorded and the first request has not finished
-  (`eng:pol-RECV.IDEMPOT`).
-- A service **MUST NOT** start a second call to the PSP while the first is in flight for the same key
-  (`eng:pol-RECV.IDEMPOT`).
+- A service **MUST** answer `409` where the key is recorded and the first request has not finished.
+- A service **MUST NOT** start a second call to the PSP while the first is in flight for the same key.
+
+_**Covers:** `eng:pol-RECV.IDEMPOT`_
 
 ## Examples
 
@@ -80,9 +78,6 @@ The avoided key is fresh on each retry, so the customer is charged once per time
 
 A timeout tells the caller nothing about whether the money moved. Without a key the safe action is to give up, and with
 one the safe action is to retry, which is the difference between a lost payment and a slow one.
-
-- `eng:pol-INTC` commits us to publishing the contract a caller writes against.
-- `eng:pol-RECV` commits us to making an operation that may be retried safe to re-run.
 
 ## Sources and further reading
 

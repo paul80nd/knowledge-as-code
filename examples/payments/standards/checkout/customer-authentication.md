@@ -2,10 +2,7 @@
 id: std-SCA
 tier: normative
 status: active
-implements:
-  - eng:pol-INTC.SECURE
-  - eng:pol-SECD.DESIGN
-  - eng:pol-SECD.REQS
+implements: [ eng:pol-INTC.SECURE, eng:pol-SECD.DESIGN, eng:pol-SECD.REQS ]
 applies-to:
   - svc-payment-api
 review-by: "2027-08-31"
@@ -26,27 +23,31 @@ cardholder is challenged, and our services carry the outcome rather than decidin
 
 ### The PSP runs the authentication
 
-- The checkout **MUST** start authentication through the PSP's 3-D Secure flow before it asks for an authorisation
-  (`eng:pol-SECD.DESIGN`).
-- A service **MUST** treat an authorisation with no authentication outcome as declined (`eng:pol-SECD.DESIGN`).
+- The checkout **MUST** start authentication through the PSP's 3-D Secure flow before it asks for an authorisation.
+- A service **MUST** treat an authorisation with no authentication outcome as declined.
 - A service **MUST NOT** decide by itself that a payment is exempt from Strong Customer Authentication, which is the
-  cardholder proving who they are with two independent factors (`eng:pol-SECD.REQS`).
-- A service **MUST** record the exemption the PSP applied, where the PSP applied one (`eng:pol-SECD.REQS`).
+  cardholder proving who they are with two independent factors.
+- A service **MUST** record the exemption the PSP applied, where the PSP applied one.
+
+_**Covers:** `eng:pol-SECD.DESIGN`, `eng:pol-SECD.REQS`_
 
 ### The outcome travels with the payment
 
-- An authorisation request **MUST** carry the PSP's authentication reference (`eng:pol-INTC.SECURE`).
-- A service **MUST** pass the authentication outcome to the ledger, which
-  [std-LEDGER.an-entry-says-what-produced-it] holds to recording it (`eng:pol-SECD.REQS`).
-- A service **MUST NOT** retry a declined authorisation with the authentication step left out (`eng:pol-SECD.DESIGN`).
+- An authorisation request **MUST** carry the PSP's authentication reference.
+- A service **MUST** pass the authentication outcome to the ledger, which [std-LEDGER.an-entry-says-what-produced-it]
+  holds to recording it.
+- A service **MUST NOT** retry a declined authorisation with the authentication step left out.
+
+_**Covers:** `eng:pol-INTC.SECURE`, `eng:pol-SECD.DESIGN`, `eng:pol-SECD.REQS`_
 
 ### The challenge is somebody else's page
 
-- The checkout **MUST** hand the cardholder to the PSP's challenge page or frame (`eng:pol-SECD.DESIGN`).
-- The checkout **MUST NOT** collect a one-time passcode, a password or a biometric prompt on a page we serve
-  (`eng:pol-SECD.DESIGN`).
+- The checkout **MUST** hand the cardholder to the PSP's challenge page or frame.
+- The checkout **MUST NOT** collect a one-time passcode, a password or a biometric prompt on a page we serve.
 - The checkout **MUST** hold the order for the length of the challenge, and release it on a stated timeout rather than
-  waiting forever (`eng:pol-SECD.REQS`).
+  waiting forever.
+
+_**Covers:** `eng:pol-SECD.DESIGN`, `eng:pol-SECD.REQS`_
 
 ## Examples
 
@@ -77,9 +78,6 @@ or accepts it with the liability on us.
 
 Authentication decides who pays when a payment turns out to be fraudulent. The PSP holds the card scheme's rules and
 the issuer's response, so a decision we make here would be a second, worse copy of theirs.
-
-- `eng:pol-INTC` commits us to interfaces that authenticate and authorise before they act.
-- `eng:pol-SECD` commits us to secure defaults, to failing closed, and to capturing security requirements up front.
 
 ## Sources and further reading
 

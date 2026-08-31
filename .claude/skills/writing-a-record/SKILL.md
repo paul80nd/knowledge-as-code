@@ -109,10 +109,20 @@ shift. `"2026-06-12"` renders as written.
 **Enum values are lower-case and hyphenated.** They are grep targets first and prose second.
 
 **A list is a block sequence, one entry per line.** An entry stays individually reviewable in a diff, and a finding can
-point at the entry that caused it rather than at the field. Two fields take the compact flow form instead, and each
-earns it the same way: the entries are short, there are many of them, and no reader stops on one. `tags: [ a, b ]` says
-how a record is found rather than what it says. The `clauses:` inside a policy's `aligns-with` entry is a run of
-framework references under a framework already named on the line above.
+point at the entry that caused it rather than at the field.
+
+**Two things send a list to the compact flow form, and either is enough.**
+
+* **The field is secondary metadata.** `tags: [ a, b ]` says how a record is found rather than what it says, and a block
+  sequence gives the least interesting field in the block the most lines.
+* **The entries are short and there are many of them.** A standard's `implements:` puts a line per clause between the
+  reader and the document, and thirteen clauses of `pol-AUTV` is thirteen lines. The `clauses:` inside a policy's
+  `aligns-with` entry is a run of framework references under a framework already named on the line above.
+
+Everything else stays a block sequence: a handful of entries, or entries a reviewer weighs one at a time.
+
+Nothing enforces either form, so this is the house style rather than a rule. A corpus taking the framework writes
+whichever valid YAML it prefers.
 
 **A list of objects names each entry on its first key.** `aligns-with` writes the framework, then the references reached
 inside it. The naming key comes first because the tool sorts on it and an index column renders it.

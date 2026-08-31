@@ -24,6 +24,8 @@ The general half of a rule that is written at two altitudes. Its filename repeat
 
 - A record here **MUST** stay free of findings, so the golden pins a clean corpus and nothing else.
 
+_**Covers:** [pol-SCRT].NEST_
+
 ## Examples
 
 This file is the example. It is filed at `standards/common/testing.md`, and the category the tool reads from that path is `common`.

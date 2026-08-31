@@ -2,17 +2,8 @@
 id: std-DEPS
 tier: normative
 status: draft
-implements:
-  - pol-TRUS.INVENT
-  - pol-TRUS.LICENCE
-  - pol-TRUS.REPO
-  - pol-TRUS.SCREEN
-  - pol-TRUS.SOURCE
-  - pol-TRUS.UNTRUST
-  - pol-VURM.RANK
-  - pol-VURM.SCAN
-  - pol-VURM.SHIP
-  - pol-VURM.TIMEBOX
+implements: [ pol-TRUS.INVENT, pol-TRUS.LICENCE, pol-TRUS.REPO, pol-TRUS.SCREEN, pol-TRUS.SOURCE, pol-TRUS.UNTRUST,
+  pol-VURM.RANK, pol-VURM.SCAN, pol-VURM.SHIP, pol-VURM.TIMEBOX ]
 applies-to:
   - all
 review-by: "2027-08-31"
@@ -33,32 +24,31 @@ vulnerabilities and licence terms before anyone adopts it. A critical finding st
 
 ### Where a package comes from
 
-- A build **MUST** resolve packages from the organisation's feed, which proxies the public registries
-  ([pol-TRUS].SOURCE).
-- A repository **MUST** commit a lockfile pinning every direct and transitive dependency to a version
-  ([pol-TRUS].INVENT).
-- A build **MUST** install from the lockfile, and fail where the lockfile and the manifest disagree
-  ([pol-TRUS].INVENT).
-- A build **MUST** publish its artefacts to the managed repository, versioned and retained ([pol-TRUS].REPO).
-- A team **MUST NOT** add a package from a personal feed, a git URL or an archive downloaded by hand
-  ([pol-TRUS].UNTRUST).
+- A build **MUST** resolve packages from the organisation's feed, which proxies the public registries.
+- A repository **MUST** commit a lockfile pinning every direct and transitive dependency to a version.
+- A build **MUST** install from the lockfile, and fail where the lockfile and the manifest disagree.
+- A build **MUST** publish its artefacts to the managed repository, versioned and retained.
+- A team **MUST NOT** add a package from a personal feed, a git URL or an archive downloaded by hand.
+
+_**Covers:** [pol-TRUS].INVENT, [pol-TRUS].REPO, [pol-TRUS].SOURCE, [pol-TRUS].UNTRUST_
 
 ### What happens before adoption
 
-- Somebody **MUST** screen a new package for known vulnerabilities before the pull request that adds it merges
-  ([pol-TRUS].SCREEN).
-- Somebody **MUST** check a new package's licence against the allowed list before that pull request merges
-  ([pol-TRUS].LICENCE).
+- Somebody **MUST** screen a new package for known vulnerabilities before the pull request that adds it merges.
+- Somebody **MUST** check a new package's licence against the allowed list before that pull request merges.
 - A pull request adding a package **MUST** say what the package is for, so a reviewer can weigh it against writing the
-  code ([pol-TRUS].SCREEN).
+  code.
+
+_**Covers:** [pol-TRUS].LICENCE, [pol-TRUS].SCREEN_
 
 ### What happens afterwards
 
-- A pipeline **MUST** scan the dependency tree on every build and on a weekly schedule ([pol-VURM].SCAN).
-- A team **MUST** rank a finding by its severity and by whether the affected path runs ([pol-VURM].RANK).
-- A team **MUST** close a critical finding within 7 days and a high finding within 30 ([pol-VURM].TIMEBOX).
-- A team **MUST NOT** release with an open critical finding, absent a recorded deviation naming who accepts the risk
-  ([pol-VURM].SHIP).
+- A pipeline **MUST** scan the dependency tree on every build and on a weekly schedule.
+- A team **MUST** rank a finding by its severity and by whether the affected path runs.
+- A team **MUST** close a critical finding within 7 days and a high finding within 30.
+- A team **MUST NOT** release with an open critical finding, absent a recorded deviation naming who accepts the risk.
+
+_**Covers:** [pol-VURM].RANK, [pol-VURM].SCAN, [pol-VURM].SHIP, [pol-VURM].TIMEBOX_
 
 ## Examples
 
@@ -96,9 +86,6 @@ A reviewer can weigh the first against writing the code. The second gives them n
 
 Most of the code we ship was written by somebody else. A pinned tree tells us exactly whose code that is, which is what
 makes an advisory answerable in minutes rather than in a survey of every repository.
-
-- [pol-TRUS] commits us to knowing what we depend on, and to taking it from sources we trust.
-- [pol-VURM] commits us to finding vulnerabilities, ranking them and closing them to a timeframe.
 
 ## Sources and further reading
 

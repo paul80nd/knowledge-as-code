@@ -5,8 +5,9 @@
 
 1. **Read [`.schema/CLAUDE.md`](../../../../.schema/CLAUDE.md) first.** It carries the closed key space, the field-order
    trap, and the test for whether a rule needs C#.
-2. **Check the question is not already answered.** A `reciprocal:`, a `mirrors-section:`, a `required-when:`, a scalar
-   type or a required section may already say it. Each has been written out as a rule at some point.
+2. **Check the question is not already answered.** A `reciprocal:`, a `mirrors-section:`, a `mirrors-citations:`, a
+   `required-when:`, a scalar type or a required section may already say it. Each has been written out as a rule at
+   some point.
 3. **Make the edit.** A field using keys the schema language already has costs nothing in C#. A key the language does
    **not** have means an edit to `Schema.cs`, to the code reading what it parsed into, and to `meta/type.schema.json`
    in the same change. A value nothing dispatches fails `schema-dispatch` one step later. Where the obligation is

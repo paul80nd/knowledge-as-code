@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 7,
+    "validated": 10,
     "templates": 2,
     "skipped": 0,
-    "errors": 12,
+    "errors": 15,
     "warnings": 1,
     "infos": 0
   },
@@ -98,6 +98,27 @@
       "severity": "error",
       "check": "related-matches-section",
       "message": "the '## Dependencies' section references 'giz-mirrored' but 'depends-on' does not list it."
+    },
+    {
+      "file": "gizmos/drifting.md",
+      "line": 1,
+      "severity": "error",
+      "check": "mirrors-citations",
+      "message": "'covers' lists 'giz-behaving.it-rattles' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field."
+    },
+    {
+      "file": "gizmos/drifting.md",
+      "line": 1,
+      "severity": "error",
+      "check": "mirrors-citations",
+      "message": "a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it."
+    },
+    {
+      "file": "gizmos/drifting.md",
+      "line": 30,
+      "severity": "error",
+      "check": "mirrors-citations",
+      "message": "this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to."
     }
   ]
 }

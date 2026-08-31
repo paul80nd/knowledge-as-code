@@ -2,14 +2,8 @@
 id: std-VCS
 tier: normative
 status: draft
-implements:
-  - pol-EVER.ASSETS
-  - pol-EVER.BRANCH
-  - pol-EVER.HISTORY
-  - pol-EVER.INTENT
-  - pol-EVER.ORPHAN
-  - pol-EVER.PARITY
-  - pol-EVER.SHARED
+implements: [ pol-EVER.ASSETS, pol-EVER.BRANCH, pol-EVER.HISTORY, pol-EVER.INTENT, pol-EVER.ORPHAN, pol-EVER.PARITY,
+  pol-EVER.SHARED ]
 applies-to:
   - all
 review-by: "2027-08-26"
@@ -31,18 +25,20 @@ reviewed merge from an identified author.
 ### The repository holds everything the service needs
 
 - A repository **MUST** hold the source, the build definition, the infrastructure definition, the configuration
-  templates and the recovery scripts for the services it owns ([pol-EVER].ASSETS).
-- A repository **MUST NOT** depend on an asset held only on a workstation, in a cloud portal or in an unversioned
-  share ([pol-EVER].ORPHAN).
-- Infrastructure, schema and configuration changes **MUST** go through the same review as application code
-  ([pol-EVER].PARITY).
+  templates and the recovery scripts for the services it owns.
+- A repository **MUST NOT** depend on an asset held only on a workstation, in a cloud portal or in an unversioned share.
+- Infrastructure, schema and configuration changes **MUST** go through the same review as application code.
+
+_**Covers:** [pol-EVER].ASSETS, [pol-EVER].ORPHAN, [pol-EVER].PARITY_
 
 ### Every change is attributable and reviewed
 
-- The default branch **MUST** refuse a direct push, so that every change arrives as a merge ([pol-EVER].BRANCH).
-- A commit subject **MUST** name the work item that asked for the change, written as `#<id>` ([pol-EVER].INTENT).
-- A commit **MUST** carry the author's own verified identity ([pol-EVER].HISTORY).
-- A commit **MUST NOT** be authored by a shared or generic account ([pol-EVER].SHARED).
+- The default branch **MUST** refuse a direct push, so that every change arrives as a merge.
+- A commit subject **MUST** name the work item that asked for the change, written as `#<id>`.
+- A commit **MUST** carry the author's own verified identity.
+- A commit **MUST NOT** be authored by a shared or generic account.
+
+_**Covers:** [pol-EVER].BRANCH, [pol-EVER].HISTORY, [pol-EVER].INTENT, [pol-EVER].SHARED_
 
 ## Examples
 
@@ -79,7 +75,5 @@ The second cannot be rebuilt from the repository, so the recovery path runs thro
 
 A team that can rebuild a service from source follows a recovery procedure. A team missing one asset investigates
 instead. We also cannot ask an author about a change a year later if we cannot tell who made it.
-
-- [pol-EVER] commits us to holding everything in version control, with a history that attributes each change.
 
 [pol-EVER]: ../../policies/delivery/ever-everything-in-version-control.md#clauses
