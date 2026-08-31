@@ -62,6 +62,12 @@ Semantic, and about the records rather than the file: major where a meaning chan
 for a record added, patch for wording. This is the corpus's own call and not the tool's, so nothing bumps it for you.
 `payments` publishes nothing yet and still moves, because it is the same discipline whichever corpus you are in.
 
+**Repoint every consumer of a corpus whose minor moved.** Below 1.0.0 a caret pins the minor, so `examples/engineering`
+going to `0.4.0` leaves `examples/payments` locked at a version its own `consumes:` range no longer admits, and
+`kac restore` fails naming the version it could not find. A local run passes over it, because `.imports/` is untracked
+and a restore keeps a folder already holding the version it resolved to. Delete `.imports/` and restore again to see
+what CI sees.
+
 **Ask which pages your change makes wrong.** Nothing in CI reads prose for meaning, so this is yours to do. A change to
 a command reaches [`docs/`](docs/) and often [`tooling/README.md`](tooling/README.md); a change to what the tool is for
 reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md); a change to the schema reaches
