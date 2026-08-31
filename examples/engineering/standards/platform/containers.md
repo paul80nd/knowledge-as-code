@@ -15,7 +15,7 @@ owner: paul.law
 tags: [ base-images, containers, runtime ]
 ---
 
-# A container image is pinned by digest and runs as nobody
+# A container image is pinned by digest and runs as a non-root user
 
 `Standard: std-CONT` `DRAFT`
 
@@ -35,14 +35,15 @@ non-root user with no port open beyond the one the service answers on.
 
 ### A published tag never moves
 
-- A pipeline **MUST** tag an image with the build's own version, and **MUST NOT** push that tag again
-  ([pol-TRUS].MUTATE).
+- A pipeline **MUST** tag an image with the build's own version ([pol-TRUS].MUTATE).
+- A registry **MUST** refuse a second push to a tag that already exists ([pol-TRUS].MUTATE).
 - A deployment **MUST** name an image by digest, so the running container is the one the pipeline built
   ([pol-TRUS].MUTATE).
 
 ### The container holds only what the service needs
 
-- An image **MUST** declare a non-root `USER`, and the service **MUST** run as it ([pol-ACCS].LEAST).
+- An image **MUST** declare a non-root `USER` ([pol-ACCS].LEAST).
+- A container **MUST** run as that user ([pol-ACCS].LEAST).
 - A container **MUST** run with a read-only root filesystem, writing only to a declared volume ([pol-ACCS].LEAST).
 - An image **MUST** be built from a runtime base rather than an SDK base, so no compiler ships to production
   ([pol-ACCS].LEAST).

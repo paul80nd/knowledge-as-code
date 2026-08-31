@@ -40,8 +40,8 @@ implementation against it, and a change that consumers cannot absorb ships as a 
 
 ### Every endpoint authenticates and validates
 
-- An endpoint **MUST** authenticate the caller and authorise the operation before it does any work
-  ([pol-INTC].SECURE).
+- An endpoint **MUST** authenticate the caller before it does any work ([pol-INTC].SECURE).
+- An endpoint **MUST** authorise the operation before it does any work ([pol-INTC].SECURE).
 - An endpoint **MUST** validate each field it receives against the contract, and reject a request that does not match
   ([pol-INTC].SECURE).
 - An interface **MUST NOT** serve personal data, a secret, or an operation that changes state, to an unauthenticated

@@ -29,25 +29,26 @@ tokens at 13 months, logs at 90 days, and the customer's contact details when th
 ### Each store has one period
 
 - The ledger **MUST** keep an entry for seven years from the date it was written (`eng:pol-DATA.LINGER`).
-- A card token **MUST** be deleted 13 months after its last use, which is the window a chargeback can arrive in
-  (`eng:pol-DATA.LINGER`).
-- Payment telemetry **MUST** be deleted after 90 days (`eng:pol-OBSV.RETAIN`).
+- A service **MUST** delete a card token 13 months after its last use (`eng:pol-DATA.LINGER`).
+- The telemetry platform **MUST** delete a payment record after 90 days (`eng:pol-OBSV.RETAIN`).
 - A store **MUST NOT** hold personal data with no stated period against it (`eng:pol-DATA.LINGER`).
 
 ### Deletion happens without anyone asking
 
-- A scheduled job **MUST** delete data that has passed its period, and **MUST** run at least weekly
-  (`eng:pol-DATA.DELETE`).
+- A scheduled job **MUST** delete data that has passed its period (`eng:pol-DATA.DELETE`).
+- That job **MUST** run at least weekly (`eng:pol-DATA.DELETE`).
 - The job **MUST** record what it deleted, by store and by count (`eng:pol-DATA.DELETE`).
-- A backup **MUST** age out on the same period as the store it came from (`eng:pol-DATA.DELETE`).
+- A backup policy **MUST** age a backup out on the same period as the store it came from (`eng:pol-DATA.DELETE`).
 
 ### An erasure request is answered
 
-- An erasure request **MUST** remove the customer's contact details and replace their name in the ledger with the
-  order reference (`eng:pol-DATA.RIGHTS`).
-- An erasure request **MUST NOT** delete a ledger entry, because a legal obligation to keep the record outranks the
-  request (`eng:pol-DATA.RIGHTS`).
+- A service **MUST** remove the customer's contact details on an erasure request (`eng:pol-DATA.RIGHTS`).
+- A service **MUST** replace the customer's name in the ledger with the order reference (`eng:pol-DATA.RIGHTS`).
+- A service **MUST NOT** delete a ledger entry on an erasure request (`eng:pol-DATA.RIGHTS`).
 - A service **MUST** answer an erasure request within one month of receiving it (`eng:pol-DATA.RIGHTS`).
+
+A ledger entry survives an erasure request because a tax record is a legal obligation, and the order reference is
+enough to keep the books without keeping the name.
 
 ## Examples
 
@@ -78,8 +79,8 @@ reaches when nobody chooses.
 
 ## Rationale and provenance
 
-Data we no longer need is data we can still lose. Seven years is what the tax record asks for, and everything shorter
-is the shortest period the job it does allows.
+Data we no longer need is data we can still lose. Seven years covers the six-year tax record with a year in hand. The
+chargeback window sets 13 months, and an investigation rarely reaches past 90 days.
 
 - `eng:pol-DATA` commits us to deleting personal data once its purpose ends, and to answering the rights people hold
   over it.

@@ -49,7 +49,8 @@ from outside it, and the only route into production is the pipeline.
 ### Production changes through the pipeline alone
 
 - A change **MUST** reach production through the automated pipeline ([pol-PIPE].DEPLOY).
-- A change **MUST** reach each environment by promotion rather than by a manual copy ([pol-ENVS].PROMOTE).
+- A change **MUST** reach each environment below production by promotion from the one before it
+  ([pol-ENVS].PROMOTE).
 - Every environment **MUST** be provisioned from the same definition, parameterised per environment
   ([pol-ENVS].SAMEDEF).
 - The pipeline definition **MUST** live in the repository and be reviewed like the code ([pol-PIPE].ASCODE).

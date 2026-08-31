@@ -20,6 +20,6 @@
 
 | ID         | Title                                                                                                      | Category        | Status | Derived from | Review by  |
 |------------|------------------------------------------------------------------------------------------------------------|-----------------|--------|--------------|------------|
-| std-CONT   | [A container image is pinned by digest and runs as nobody](platform/containers.md)                         | platform        | draft  |              | 2027-08-31 |
-| std-NETSTY | [C# follows the runtime team's conventions, and the compiler enforces them](platform/dotnet/code-style.md) | platform/dotnet | draft  |              | 2027-08-31 |
+| std-CONT   | [A container image is pinned by digest and runs as a non-root user](platform/containers.md)                | platform        | draft  |              | 2027-08-31 |
+| std-CSSTY  | [C# follows the runtime team's conventions, and the compiler enforces them](platform/dotnet/code-style.md) | platform/dotnet | draft  |              | 2027-08-31 |
 | std-NETTST | [A .NET test suite is xUnit, and an integration test owns its dependencies](platform/dotnet/testing.md)    | platform/dotnet | draft  |              | 2027-08-31 |

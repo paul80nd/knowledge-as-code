@@ -54,4 +54,4 @@ openly is easier to argue with than one absorbed silently.
 
 _Nothing recorded yet._
 
-[std-CARD]: standards/card-data.md
+[std-CARD]: standards/checkout/card-data.md

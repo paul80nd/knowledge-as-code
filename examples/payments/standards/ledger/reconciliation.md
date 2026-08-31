@@ -29,26 +29,27 @@ break, and a break is owned by somebody until it closes.
 
 - A reconciliation **MUST** run once a day against the PSP's settlement file for the previous day
   (`eng:pol-DERV.CHECK`).
-- The run **MUST** match on the PSP reference, and **MUST** compare the amount and the currency
-  (`eng:pol-DERV.CHECK`).
+- The run **MUST** match a settlement row to a ledger entry on the PSP reference (`eng:pol-DERV.CHECK`).
+- The run **MUST** compare the amount and the currency of a matched pair (`eng:pol-DERV.CHECK`).
 - The run **MUST** record its inputs, its output and its result, and keep that record for seven years
   (`eng:pol-DERV.RUNLOG`).
-- A missing settlement file **MUST** raise an alert rather than record a clean run (`eng:pol-DERV.FAILED`).
+- The run **MUST** raise an alert where the settlement file is missing (`eng:pol-DERV.FAILED`).
+- The run **MUST NOT** record a clean run for a day whose settlement file did not arrive (`eng:pol-DERV.FAILED`).
 
 ### A break is named and owned
 
 - The run **MUST** classify each break: in the file and not the ledger, in the ledger and not the file, or matched with
   a different amount (`eng:pol-DERV.CHECK`).
-- The run **MUST** raise one alert naming the count and the total value of the breaks, and **MUST NOT** raise one per
-  break (`eng:pol-OBSV.ALERTS`).
-- A break over 30 days old **MUST** be escalated to the finance owner named in the run's configuration
+- The run **MUST** raise one alert naming the count and the total value of the breaks (`eng:pol-OBSV.ALERTS`).
+- The run **MUST NOT** raise an alert for each break (`eng:pol-OBSV.ALERTS`).
+- The run **MUST** escalate a break over 30 days old to the finance owner it names in its configuration
   (`eng:pol-OBSV.ALERTS`).
 
 ### Nothing downstream reads an unreconciled day
 
 - A revenue report **MUST NOT** include a day whose reconciliation has not passed (`eng:pol-DERV.FAILED`).
-- A closed break **MUST** be closed by a ledger correction under [std-LEDGER], rather than by an edit to the run's
-  output (`eng:pol-DERV.FAILED`).
+- A team **MUST** close a break with a ledger correction under [std-LEDGER] (`eng:pol-DERV.FAILED`).
+- A team **MUST NOT** close a break by editing the run's output (`eng:pol-DERV.FAILED`).
 
 ## Examples
 

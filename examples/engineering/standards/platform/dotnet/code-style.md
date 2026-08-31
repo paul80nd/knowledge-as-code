@@ -1,5 +1,5 @@
 ---
-id: std-NETSTY
+id: std-CSSTY
 tier: normative
 status: draft
 implements:
@@ -14,7 +14,7 @@ tags: [ analyzers, code-style, csharp ]
 
 # C# follows the runtime team's conventions, and the compiler enforces them
 
-`Standard: std-NETSTY` `DRAFT`
+`Standard: std-CSSTY` `DRAFT`
 
 ## Summary
 
@@ -27,10 +27,10 @@ repository. Analysers run as part of the build, and a warning is a defect.
 
 - A repository holding C# **MUST** carry an `.editorconfig` at its root, taken from the .NET runtime team's own
   ([pol-SECD].CODING).
-- A project **MUST** set `TreatWarningsAsErrors` and `EnforceCodeStyleInBuild`, so the style is checked by the build
-  rather than by a reviewer ([pol-AUTV].WARN).
-- A project **MUST** enable nullable reference types, and **MUST NOT** silence a nullability warning with `!`
-  ([pol-SECD].CODING).
+- A project **MUST** set `TreatWarningsAsErrors` and `EnforceCodeStyleInBuild`, so the build checks the style
+  ([pol-AUTV].WARN).
+- A project **MUST** enable nullable reference types ([pol-SECD].CODING).
+- Code **MUST NOT** silence a nullability warning with `!` ([pol-SECD].CODING).
 - A project **MUST** enable the .NET analysers at the `latest` analysis level ([pol-SECD].CODING).
 
 ### A suppression is local and says why
@@ -42,8 +42,8 @@ repository. Analysers run as part of the build, and a warning is a defect.
 ### The security rules the analysers cover
 
 - Code **MUST** build a SQL command through a parameter rather than by joining strings ([pol-SECD].CODING).
-- Code **MUST** use the framework's cryptography, and **MUST NOT** call an algorithm the analysers report as broken
-  ([pol-SECD].CODING).
+- Code **MUST** use the framework's cryptography ([pol-SECD].CODING).
+- Code **MUST NOT** call an algorithm the analysers report as broken ([pol-SECD].CODING).
 - Code **MUST** compare a secret with `CryptographicOperations.FixedTimeEquals` rather than with `==`
   ([pol-SECD].CODING).
 
@@ -87,7 +87,7 @@ written next year.
 ## Rationale and provenance
 
 C# has a house style already, written by the people who write the language's own libraries. Taking theirs means a
-reviewer argues about the change rather than about the braces, and a newcomer has read the rules before they arrive.
+reviewer argues about the change instead of the braces, and a newcomer has read the rules before they arrive.
 
 - [pol-AUTV] commits us to triaging a new warning rather than accumulating it.
 - [pol-SECD] commits us to writing code to a documented secure-coding standard for its stack.

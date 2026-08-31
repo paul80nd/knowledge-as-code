@@ -28,8 +28,7 @@ cardholder is challenged, and our services carry the outcome rather than decidin
 
 - The checkout **MUST** start authentication through the PSP's 3-D Secure flow before it asks for an authorisation
   (`eng:pol-SECD.DESIGN`).
-- A service **MUST** treat an authorisation without an authentication outcome as declined, so a failure denies rather
-  than allows (`eng:pol-SECD.DESIGN`).
+- A service **MUST** treat an authorisation with no authentication outcome as declined (`eng:pol-SECD.DESIGN`).
 - A service **MUST NOT** decide by itself that a payment is exempt from Strong Customer Authentication, which is the
   cardholder proving who they are with two independent factors (`eng:pol-SECD.REQS`).
 - A service **MUST** record the exemption the PSP applied, where the PSP applied one (`eng:pol-SECD.REQS`).
@@ -37,8 +36,8 @@ cardholder is challenged, and our services carry the outcome rather than decidin
 ### The outcome travels with the payment
 
 - An authorisation request **MUST** carry the PSP's authentication reference (`eng:pol-INTC.SECURE`).
-- The ledger entry for an authorisation **MUST** record the authentication outcome and who bears the liability for a
-  chargeback (`eng:pol-SECD.REQS`).
+- A service **MUST** pass the authentication outcome to the ledger, which [std-LEDGER] holds to recording it
+  (`eng:pol-SECD.REQS`).
 - A service **MUST NOT** retry a declined authorisation with the authentication step left out (`eng:pol-SECD.DESIGN`).
 
 ### The challenge is somebody else's page
@@ -93,4 +92,5 @@ the issuer's response, so a decision we make here would be a second, worse copy 
 - 2026-08-31: initial version.
 
 [EMV 3-D Secure]: https://www.emvco.com/emv-technologies/3-d-secure/
+[std-LEDGER]: ../ledger/entries.md
 [The PSD2 regulatory technical standards on SCA]: https://www.handbook.fca.org.uk/techstandards/PS/2018/2018_389.pdf

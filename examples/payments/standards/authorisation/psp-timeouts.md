@@ -21,36 +21,33 @@ tags: [ psp, resilience, timeouts ]
 ## Summary
 
 Every call to the payment service provider (PSP) has a deadline. A call that times out leaves the payment in an unknown
-state, and the service resolves that state by asking the PSP rather than by guessing.
+state, and the service resolves that state by asking the PSP.
 
 ## Rules
 
 ### Every call has a deadline
 
-- A call to the PSP **MUST** carry a timeout, and that timeout **MUST** be set in configuration rather than in code
-  (`eng:pol-RECV.TIMEOUT`).
-- The authorisation call **MUST** time out at 5 seconds, which leaves the checkout inside its 800ms target at the 95th
-  percentile with room for one retry (`eng:pol-PERF.TARGETS`).
-- A service **MUST NOT** make a call to the PSP with no timeout at all (`eng:pol-RECV.TIMEOUT`).
+- A call to the PSP **MUST** carry a timeout (`eng:pol-RECV.TIMEOUT`).
+- A timeout **MUST** be set in configuration, so it moves without a release (`eng:pol-RECV.TIMEOUT`).
+- The authorisation call **MUST** time out at 5 seconds (`eng:pol-PERF.TARGETS`).
 
 ### A retry is bounded and backs off
 
-- A service **MUST** retry only a connection failure or a `5xx`, and **MUST NOT** retry a decline
-  (`eng:pol-RECV.RETRY`).
+- A service **MUST** retry a connection failure or a `5xx` (`eng:pol-RECV.RETRY`).
+- A service **MUST NOT** retry a decline (`eng:pol-RECV.RETRY`).
 - A service **MUST** stop after two retries, with exponential backoff and jitter between them
   (`eng:pol-RECV.RETRY`).
 - A service **MUST** stop calling the PSP for 30 seconds once the failure rate passes the threshold configured against
   it (`eng:pol-RECV.DEGRADE`).
 
-### An unknown outcome is resolved, not assumed
+### An unknown outcome is resolved
 
-- A service **MUST** record a timed-out authorisation as unknown rather than as failed (`eng:pol-RECV.DEGRADE`).
+- A service **MUST** record a timed-out authorisation as unknown (`eng:pol-RECV.DEGRADE`).
 - A service **MUST** query the PSP for the outcome of an unknown authorisation, quoting the idempotency key from
   [std-IDEM] (`eng:pol-RECV.DEGRADE`).
 - A service **MUST** resolve every unknown outcome within 15 minutes, and raise an alert on one that is not
   (`eng:pol-RECV.DEGRADE`).
-- The checkout **MUST** tell the customer the payment is being confirmed, rather than reporting a failure it cannot
-  see (`eng:pol-RECV.DEGRADE`).
+- The checkout **MUST** tell the customer the payment is being confirmed (`eng:pol-RECV.DEGRADE`).
 
 ## Examples
 
@@ -76,12 +73,15 @@ and a debit on their statement.
 - [ ] The retry policy stops after two attempts, and the backoff carries jitter.
 - [ ] A forced timeout in a test environment leaves the payment marked unknown.
 - [ ] The resolver clears an unknown outcome within 15 minutes, and alerts when it cannot.
-- [ ] The checkout shows a pending message rather than a failure when the outcome is unknown.
+- [ ] The checkout shows a pending message while the outcome is unknown.
 
 ## Rationale and provenance
 
 A timeout is the absence of an answer. Treating it as a decline invents an outcome, and the customer's bank has the
 real one.
+
+The 5-second bound sits well above [nfr-0001], which asks for an answer inside 800ms at the 95th percentile. The
+target governs the ordinary call and the timeout bounds the worst one.
 
 - `eng:pol-PERF` commits us to stating performance targets in terms we can measure.
 - `eng:pol-RECV` commits us to bounding an outbound call, to retrying within limits, and to degrading rather than
@@ -96,4 +96,5 @@ real one.
 - 2026-08-31: initial version.
 
 [Exponential backoff and jitter]: https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/
+[nfr-0001]: ../../nfrs/0001-authorisation-latency.md
 [std-IDEM]: idempotency.md

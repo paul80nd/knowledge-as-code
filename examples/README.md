@@ -31,7 +31,7 @@ that runs something else entirely. It adopts `adrs`, `controls`, `glossary`, `po
 **[`payments/`](payments/) is a domain corpus, and it is thin on purpose.** It declares `engineering/` in `consumes:`,
 so its standards cite `eng:pol-SCRT.STORE` rather than restating what that clause binds. Thin is what makes the
 inheritance visible: there is nothing here that `engineering/` already says. It adopts `nfrs`, `services` and
-`standards`, and declines the other fourteen types.
+`standards`, and declines the rest.
 
 ## How payments consumes engineering
 

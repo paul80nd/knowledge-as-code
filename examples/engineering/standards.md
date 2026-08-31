@@ -52,9 +52,9 @@ This corpus holds two.
 * **platform**: the rules that hold for a runtime rather than for the estate. `platform/containers.md` binds anything
   shipped as an image, and `platform/dotnet/` binds C# alone.
 
-`common/testing.md` and `platform/dotnet/testing.md` are the composition model made concrete. The first says which
-level a test belongs at, and the second says what a test at that level looks like in .NET. A C# service is bound by
-both, and a Python one by the first alone.
+Two files here are called `testing.md`. `common/testing.md` says which level a test belongs at, and
+`platform/dotnet/testing.md` says what a test at that level looks like in .NET. A C# service is bound by both, and a
+Python one by the first alone.
 
 A payment-specific rule belongs in the payments corpus.
 

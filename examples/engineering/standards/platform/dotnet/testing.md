@@ -19,7 +19,7 @@ tags: [ csharp, testcontainers, xunit ]
 ## Summary
 
 C# tests are written with xUnit. A unit test touches no process boundary, and an integration test starts the
-dependencies it needs in containers rather than sharing an environment with anyone.
+dependencies it needs in containers of its own.
 
 ## Rules
 
@@ -30,21 +30,20 @@ This standard adds the .NET shape to [std-TEST], which says which level a test b
 - A test project **MUST** use xUnit, so one runner reports every suite in the estate ([pol-AUTV].LEVELS).
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix
   ([pol-AUTV].LEVELS).
-- A test **MUST** assert with `Assert` or with FluentAssertions, and a project **MUST** pick one and keep to it
-  ([pol-AUTV].LEVELS).
+- A project **MUST** assert with `Assert` or with FluentAssertions ([pol-AUTV].LEVELS).
+- A project **MUST** keep to the one it picked ([pol-AUTV].LEVELS).
 
 ### A unit test crosses no boundary
 
 - A unit test **MUST NOT** open a socket, read the filesystem, or start a container ([pol-AUTV].LEVELS).
-- A test **MUST NOT** call `Thread.Sleep` or `Task.Delay` to wait for something, and **MUST** inject a fake clock
-  instead ([pol-AUTV].LEVELS).
+- A test **MUST NOT** call `Thread.Sleep` or `Task.Delay` to wait for something ([pol-AUTV].LEVELS).
+- A test **MUST** take its time from an injected clock ([pol-AUTV].LEVELS).
 - A test **MUST** await every asynchronous call, so a failure surfaces in the test that caused it
   ([pol-AUTV].LEVELS).
 
 ### An integration test starts what it needs
 
-- An integration test **MUST** start its dependencies with Testcontainers, and **MUST NOT** reach a shared database
-  ([pol-AUTV].LEVELS).
+- An integration test **MUST** start its dependencies with Testcontainers ([pol-AUTV].LEVELS).
 - An integration test for an ASP.NET service **MUST** host it with `WebApplicationFactory` rather than by deploying it
   ([pol-AUTV].LEVELS).
 - An integration test **MUST** leave no state behind, so the suite passes when it runs twice ([pol-AUTV].LEVELS).

@@ -33,31 +33,34 @@ trace id that follows the request across services. An alert names an owner and a
 ### Everything lands in the central store
 
 - A service **MUST** emit its logs, traces and metrics to the central platform ([pol-OBSV].CENTRAL).
-- A service **MUST NOT** hold the only copy of a log, so that losing the host loses the evidence ([pol-OBSV].CENTRAL).
+- A service **MUST NOT** hold the only copy of a log, so that losing the host still leaves the evidence
+  ([pol-OBSV].CENTRAL).
 - A service **MUST NOT** reach production without health monitoring and at least one alert on it
   ([pol-OBSV].BLIND).
 
 ### One request reads as one timeline
 
 - A service **MUST** stamp every record with a UTC timestamp taken from a synchronised clock ([pol-OBSV].CLOCKS).
-- A service **MUST** accept an inbound `traceparent`, and pass it to everything it calls ([pol-OBSV].CORREL).
+- A service **MUST** accept an inbound `traceparent` ([pol-OBSV].CORREL).
+- A service **MUST** pass that `traceparent` to everything it calls ([pol-OBSV].CORREL).
 - A log line **MUST** carry the trace id, so a search on one request returns every service that touched it
   ([pol-OBSV].CORREL).
 - A service **MUST** emit structured fields rather than a formatted sentence, so a search can filter on a value
   ([pol-OBSV].CORREL).
 
-### Telemetry carries no secret
+### Telemetry carries no personal data
 
-- A service **MUST** redact credentials, tokens and unmasked personal data before the record is written
+- A service **MUST** redact unmasked personal data before the record is written ([pol-OBSV].SECRETS).
+- A service **MUST** hold a credential or a token to [std-SECRET], which says where a secret may appear
   ([pol-OBSV].SECRETS).
 
 ### Somebody acts on every alert
 
-- A service **MUST** publish availability and latency objectives, and alert when it is on course to miss one
-  ([pol-OBSV].SLO).
+- A service **MUST** publish availability and latency objectives ([pol-OBSV].SLO).
+- A service **MUST** alert when it is on course to miss one of those objectives ([pol-OBSV].SLO).
 - An alert **MUST** name the accountable owner and the first action to take ([pol-OBSV].HEALTH).
 - A team **MUST** delete or fix an alert nobody acts on, rather than leaving it to be filtered ([pol-OBSV].ALERTS).
-- Telemetry **MUST** be retained for the period the repository records against the service ([pol-OBSV].RETAIN).
+- A team **MUST** retain telemetry for the period the repository records against the service ([pol-OBSV].RETAIN).
 
 ## Examples
 
@@ -97,4 +100,5 @@ next one.
 
 [Google SRE, Service Level Objectives]: https://sre.google/sre-book/service-level-objectives/
 [W3C Trace Context]: https://www.w3.org/TR/trace-context/
+[std-SECRET]: secret-handling.md
 [pol-OBSV]: ../../policies/operations/obsv-observability.md#clauses

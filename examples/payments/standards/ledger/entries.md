@@ -25,17 +25,18 @@ further pair, so the sequence finance read on the day is the sequence they read 
 
 ### An entry is a balanced pair
 
-- A movement of money **MUST** be written as a debit and a credit of the same amount (`eng:pol-DERV.EXPECT`).
+- The ledger **MUST** write a movement of money as a debit and a credit of the same amount (`eng:pol-DERV.EXPECT`).
 - An entry **MUST** carry the amount in minor units as an integer, with its ISO 4217 currency code
   (`eng:pol-DERV.EXPECT`).
 - An entry **MUST NOT** carry an amount in a floating-point type, at rest or in transit (`eng:pol-DERV.EXPECT`).
-- A pair of entries **MUST** be written in one transaction, so no reader ever sees one half (`eng:pol-DERV.EXPECT`).
+- The ledger **MUST** write a pair of entries in one transaction, so no reader ever sees one half
+  (`eng:pol-DERV.EXPECT`).
 
 ### Nothing amends an entry
 
 - The ledger **MUST** refuse an update or a delete on a written entry (`eng:pol-DERV.LINEAGE`).
-- A correction **MUST** be a reversing pair followed by the intended pair, each naming the entry it corrects
-  (`eng:pol-DERV.LINEAGE`).
+- The ledger **MUST** record a correction as a reversing pair followed by the intended pair, each naming the entry it
+  corrects (`eng:pol-DERV.LINEAGE`).
 - An entry **MUST** carry the time the event happened and the time it was written, where the two differ
   (`eng:pol-DERV.LINEAGE`).
 
@@ -45,6 +46,8 @@ further pair, so the sequence finance read on the day is the sequence they read 
   (`eng:pol-DERV.LINEAGE`).
 - An entry **MUST** name the event that produced it: an authorisation, a capture, a refund or a chargeback
   (`eng:pol-DERV.LINEAGE`).
+- An entry for an authorisation **MUST** record the authentication outcome from [std-SCA], and who bears the liability
+  for a chargeback (`eng:pol-DERV.LINEAGE`).
 - The ledger **MUST** be able to answer a payment's full history from its entries alone (`eng:pol-DERV.LINEAGE`).
 
 ## Examples
@@ -89,3 +92,4 @@ and neither can tell that it happened.
 
 [ISO 4217]: https://www.iso.org/iso-4217-currency-codes.html
 [std-IDEM]: ../authorisation/idempotency.md
+[std-SCA]: ../checkout/customer-authentication.md

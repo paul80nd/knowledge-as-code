@@ -32,14 +32,15 @@ data that was never a real customer's.
 - A team **MUST** cover an agreement between two components with a test that exercises both ([pol-AUTV].LEVELS).
 - A team **MUST** keep the tests that run on every push under ten minutes, so the answer arrives while the work is
   still open ([pol-AUTV].LEVELS).
-- A test **MUST** fail for one reason, and its name **MUST** say what that reason is ([pol-AUTV].LEVELS).
+- A test **MUST** fail for one reason ([pol-AUTV].LEVELS).
+- A test's name **MUST** say what that reason is ([pol-AUTV].LEVELS).
 - A test **MUST NOT** depend on the order the suite runs in, on the wall clock, or on a service somebody else deploys
   ([pol-AUTV].LEVELS).
 
 ### Know what the suite reaches
 
-- A build **MUST** report line coverage, and **MUST** fail where coverage falls below the figure the repository records
-  ([pol-AUTV].COVER).
+- A build **MUST** report line coverage ([pol-AUTV].COVER).
+- A build **MUST** fail where coverage falls below the figure the repository records ([pol-AUTV].COVER).
 - A team **MUST** read a coverage drop as a gap in the tests rather than as a threshold to lower ([pol-AUTV].COVER).
 
 ### The data is never a real customer's
