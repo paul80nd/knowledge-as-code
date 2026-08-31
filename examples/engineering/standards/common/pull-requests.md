@@ -3,9 +3,13 @@ id: std-PR
 tier: normative
 status: draft
 implements:
-  - pol-AGNT
-  - pol-EVER
-  - pol-SECD
+  - pol-AGNT.ACCEPT
+  - pol-AGNT.EQUAL
+  - pol-AGNT.PROV
+  - pol-AGNT.SELFVER
+  - pol-EVER.BRANCH
+  - pol-EVER.INTENT
+  - pol-SECD.CODEREV
 applies-to:
   - all
 review-by: "2027-08-26"

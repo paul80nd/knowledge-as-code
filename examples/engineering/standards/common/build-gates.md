@@ -3,8 +3,14 @@ id: std-GATES
 tier: normative
 status: draft
 implements:
-  - pol-AUTV
-  - pol-DEVI
+  - pol-AUTV.BLOCK
+  - pol-AUTV.BYPASS
+  - pol-AUTV.DISABLE
+  - pol-AUTV.INTEG
+  - pol-AUTV.MACHINE
+  - pol-AUTV.REGRESS
+  - pol-DEVI.EXPIRY
+  - pol-DEVI.OWNER
 applies-to:
   - all
 review-by: "2027-08-26"

@@ -43,6 +43,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   groups its index rows on the first folder below the type, so a policy folder holding Delivery, Governance,
   Operations and Security reads as four tables instead of one long list. A record filed deeper joins the table its
   first folder heads. A type whose records all sit directly in its folder gets the single table it has always had.
+- **`implements:` on a standard names clauses.** `implements: [ pol-EVER ]` becomes one entry per clause the standard
+  puts into practice, as `pol-EVER.BRANCH`. The bare id claimed the whole policy, so a standard discharging six of
+  eight clauses read to a coverage report as full cover and the other two disappeared. The shorthand is refused
+  rather than admitted beside the list, because it is a keystroke shorter than the honest form. A corpus that wants
+  the old reading back claims `.schema/standards.yaml` with a `skip:` entry in `.corpus.yaml`, which stops
+  `kac update` replacing it.
 - **The derived column is dropped from a table that repeats it.** Every row under a heading of Security carries
   `security`, so the Category column says nothing there and is left out. A record filed deeper keeps it, because
   `platform/node` under a heading of Platform is the one place `node` is written down. A corpus using no folders at

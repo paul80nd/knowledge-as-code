@@ -174,7 +174,7 @@
       "line": 1,
       "severity": "error",
       "check": "provenance-required",
-      "message": "A standard cites where its authority comes from: an ADR in `derived-from`, a policy in `implements`, or both. With neither this is guidance, and guidance is an explanation."
+      "message": "A standard cites where its authority comes from: an ADR in `derived-from`, a policy clause in `implements`, or both. With neither this is guidance, and guidance is an explanation."
     },
     {
       "file": "tools/deprecated-no-successor.md",
