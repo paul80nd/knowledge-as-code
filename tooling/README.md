@@ -169,11 +169,12 @@ cd ../examples/library && sh ../../tooling/tests/round-trip.sh
 ```
 
 The corpus it runs in decides which skill it questions. `example-libraries` adopts glossary and not policies, so it
-proves the trim as well as the glossary skill. `example-engineering` adopts both, so it proves that two skills ship
-over one export and that neither names the other's file.
+proves the trim as well as the glossary skill. `example-engineering` adopts glossary, policies and standards, so it
+proves that several skills ship over one export and that none names another's file. `example-payments` adopts
+standards alone, and its rules are headings rather than table rows, so it is where a part addressing itself is proved.
 
-CI runs it over both corpora on Linux and Windows, which is why it is a shell script held to the subset Git Bash and
-older macOS bash agree on.
+CI runs it over all three corpora on Linux and Windows, which is why it is a shell script held to the subset Git Bash
+and older macOS bash agree on.
 
 ### The import round-trip
 

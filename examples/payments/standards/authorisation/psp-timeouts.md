@@ -44,7 +44,7 @@ state, and the service resolves that state by asking the PSP.
 
 - A service **MUST** record a timed-out authorisation as unknown (`eng:pol-RECV.DEGRADE`).
 - A service **MUST** query the PSP for the outcome of an unknown authorisation, quoting the idempotency key from
-  [std-IDEM] (`eng:pol-RECV.DEGRADE`).
+  [std-IDEM.the-caller-chooses-the-key] (`eng:pol-RECV.DEGRADE`).
 - A service **MUST** resolve every unknown outcome within 15 minutes, and raise an alert on one that is not
   (`eng:pol-RECV.DEGRADE`).
 - The checkout **MUST** tell the customer the payment is being confirmed (`eng:pol-RECV.DEGRADE`).
@@ -97,4 +97,4 @@ target governs the ordinary call and the timeout bounds the worst one.
 
 [Exponential backoff and jitter]: https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/
 [nfr-0001]: ../../nfrs/0001-authorisation-latency.md
-[std-IDEM]: idempotency.md
+[std-IDEM.the-caller-chooses-the-key]: idempotency.md#the-caller-chooses-the-key

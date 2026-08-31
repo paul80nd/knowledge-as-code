@@ -9,9 +9,13 @@ descriptor-version: 1
 
 corpus: example-payments
 
+# The shorthand another corpus cites this one by, as the `eng` in `eng:pol-VURM.TIMEBOX`. Immutable
+# once anything cites it, and nothing does yet.
+shortcode: pay
+
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.6.2"
+content-version: "0.7.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -36,9 +40,9 @@ publishing:
 consumes:
   - corpus: example-engineering
     shortcode: eng
-    version: ^0.6.0
+    version: ^0.7.0
     source: ../engineering/.dist/package
-    resolved: "0.6.1"
+    resolved: "0.7.0"
 
 # Taken from this repository's root rather than over the network, because the template is served here.
 # `kac update` stamps the last three.

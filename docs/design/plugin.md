@@ -77,10 +77,10 @@ not take `skills/ab` with it.
 
 ### Each component reads its own type's parts file
 
-A corpus adopting both glossary and policies ships both skills over one export. The export writes one parts file per
-type, and each skill addresses the one belonging to the type it declares in `requires`. A skill naming another type's
-answers from a table written for a different question, and whoever asked cannot tell. `bundle` does not read a
-component's files, so nothing here catches that. The round trip does, over the installed copy.
+A corpus adopting several types that export ships a skill for each, over one export. The export writes one parts file
+per type, and each skill addresses the one belonging to the type it declares in `requires`. A skill naming another
+type's parts file answers from one written for a different question, and whoever asked cannot tell. `bundle` does not
+read a component's files, so nothing here catches that. The round trip does, over the installed copy.
 
 ### Trimming everything warns and still builds
 

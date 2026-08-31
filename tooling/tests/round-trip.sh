@@ -12,8 +12,8 @@
 #   cd examples/library && sh ../../tooling/tests/round-trip.sh
 #
 # The corpus it runs in decides which lookup it performs. `example-libraries` proves the glossary
-# skill and `example-engineering` proves the policy skill, because each holds the records that skill
-# was written for.
+# skill, `example-engineering` proves the policy skill and `example-payments` proves the standards
+# skill, because each holds the records that skill was written for.
 #
 # It reads `.dist/`, writes only inside a work directory of its own, and installs into a Claude
 # config directory of its own, so it leaves the machine it ran on as it found it.
@@ -394,6 +394,101 @@ policy_lookup() {
   echo "round-trip: $RECORD.json carries Purpose, Scope and Exceptions."
 }
 
+# The same question of the standards skill. A rule is neither a term nor a clause: one line holds
+# several obligations, and the keyword that says whether each binds is written inside the wording.
+standards_lookup() {
+  RULES="$ROOT/$CORPUS_ROOT/standards/rules.jsonl"
+
+  [ -f "$RULES" ] || fail "this corpus proves the standards skill and its export carries no standards."
+
+  echo "round-trip: rules reachable at $CORPUS_ROOT/standards/rules.jsonl inside the installed plugin"
+
+  # The skill's first pattern: the subject in the words the estate would use. It tells a reader to
+  # search the stem, and `idempot` is the stem `idempotency` and `idempotent` both sit on.
+  grep -iE 'idempot' "$RULES" > "$WORK/subject.txt" || fail "no rule mentions idempotency."
+
+  grep -qE '"record": *"std-IDEM"' "$WORK/subject.txt" \
+    || fail "a search for the subject reached no rule of std-IDEM."
+
+  # The skill's second pattern, collecting one standard once a first hit has named it.
+  grep -E '"record": *"std-IDEM"' "$RULES" > "$WORK/rules.txt" \
+    || fail "no rule belongs to std-IDEM."
+
+  grep -E '"id": *"std-IDEM.the-caller-chooses-the-key"' "$WORK/rules.txt" > "$WORK/hits.txt" \
+    || fail "std-IDEM carries no the-caller-chooses-the-key rule."
+
+  HITS=$(wc -l < "$WORK/hits.txt" | tr -d ' ')
+  [ "$HITS" = "1" ] || fail "expected one line for std-IDEM.the-caller-chooses-the-key, found $HITS."
+
+  OBLIGATIONS=$(jqr '.obligations // empty' "$WORK/hits.txt")
+  [ -n "$OBLIGATIONS" ] || fail "std-IDEM.the-caller-chooses-the-key came back with no obligations."
+
+  # The markdown is what carries the keyword, so it travels unflattened. A reader handed the bullets
+  # with the emphasis stripped cannot tell an obligation from the prose around it.
+  echo "$OBLIGATIONS" | grep -qF '**MUST**' \
+    || fail "std-IDEM.the-caller-chooses-the-key came back with no bold MUST in its obligations."
+
+  echo "round-trip: std-IDEM.the-caller-chooses-the-key carries its obligations, keyword and all."
+
+  # `MUST NOT` opens with `MUST`, and the skill tells a reader to compare the keyword whole. A rule
+  # holding a prohibition is what shows the longer keyword survives the export unshortened.
+  grep -E '"id": *"std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait"' "$RULES" \
+    > "$WORK/prohibition.txt" || fail "std-IDEM carries no an-in-flight-repeat-waits-or-is-told-to-wait rule."
+
+  jqr '.obligations // empty' "$WORK/prohibition.txt" | grep -qF '**MUST NOT**' \
+    || fail "std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait came back with no bold MUST NOT."
+
+  echo "round-trip: a prohibition arrives as MUST NOT, whole rather than shortened to its first word."
+
+  # What a heading-sourced part gives that a table row cannot. A clause resolves to the section
+  # holding its table, and a rule resolves to itself, so a link built from the template lands on the
+  # rule rather than at the top of the standard.
+  ANCHOR=$(jqr '.anchor' "$WORK/hits.txt")
+  PART=$(jqr '.part' "$WORK/hits.txt")
+
+  [ "$ANCHOR" = "$PART" ] || fail "the rule's anchor is '$ANCHOR' and its part is '$PART'."
+
+  echo "round-trip: a rule addresses itself, so its anchor is its own key."
+
+  # A heading-sourced type sorts on the heading, so a grep meets a rule where somebody looking down a
+  # list of names would find it. The standard writes this pair the other way round, which is what makes
+  # the assertion say something: a reader wanting the author's order opens the record.
+  FIRST=$(line_of "$RULES" std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait)
+  LAST=$(line_of "$RULES" std-IDEM.the-caller-chooses-the-key)
+
+  [ -n "$FIRST" ] || fail "std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait is not in the export."
+  [ -n "$LAST" ] || fail "std-IDEM.the-caller-chooses-the-key is not in the export."
+  [ "$FIRST" -lt "$LAST" ] || fail "the rules of std-IDEM came back out of heading order."
+
+  echo "round-trip: the rules of std-IDEM come back sorted on the heading."
+
+  # A rule leans on another standard's rule, and composition is what makes that ordinary. The link is
+  # what states the reference, and its target is stripped out of the words, so `seeAlso` is where the
+  # id survives. `std-RECON` points at a rule of `std-LEDGER`.
+  grep -E '"id": *"std-RECON.nothing-downstream-reads-an-unreconciled-day"' "$RULES" \
+    > "$WORK/refers.txt" || fail "std-RECON carries no nothing-downstream-reads-an-unreconciled-day rule."
+
+  SEEALSO=$(jqr '.seeAlso // [] | join(",")' "$WORK/refers.txt")
+  [ "$SEEALSO" = "std-LEDGER.nothing-amends-an-entry" ] \
+    || fail "std-RECON.nothing-downstream-reads-an-unreconciled-day points at '$SEEALSO'."
+
+  echo "round-trip: a rule carries the other standard's rule it leans on, as a part id."
+
+  # The skill sends a reader from the rule to the record beside it for the two sections that say what
+  # the rule is for and how anyone shows the work meets it.
+  RECORD=$(jqr '.record' "$WORK/hits.txt")
+  STANDARD="$ROOT/$CORPUS_ROOT/standards/$RECORD.json"
+
+  [ -f "$STANDARD" ] || fail "$RECORD.json is not beside the rules file."
+
+  for section in Summary "Conformance checklist"; do
+    BODY=$(jqr --arg s "$section" '.sections[$s] // empty' "$STANDARD")
+    [ -n "$BODY" ] || fail "$RECORD.json carries no $section for the rule to be read against."
+  done
+
+  echo "round-trip: $RECORD.json carries Summary and Conformance checklist."
+}
+
 CORPUS=$(jqr '.corpus' "$EXPORT_MANIFEST")
 
 case "$CORPUS" in
@@ -403,11 +498,14 @@ case "$CORPUS" in
   example-engineering)
     policy_lookup
     ;;
+  example-payments)
+    standards_lookup
+    ;;
   *)
-    # A corpus exporting neither type has no lookup to perform. One exporting either and reaching
-    # here has been renamed out of the arms above, and would otherwise close on a pass having asked
-    # the skill nothing.
-    for parts in glossary/terms.jsonl policies/clauses.jsonl; do
+    # A corpus exporting none of these types has no lookup to perform. One exporting any of them and
+    # reaching here has been renamed out of the arms above, and would otherwise close on a pass having
+    # asked the skill nothing.
+    for parts in glossary/terms.jsonl policies/clauses.jsonl standards/rules.jsonl; do
       if [ -f "$ROOT/$CORPUS_ROOT/$parts" ]; then
         fail "$CORPUS exports $parts and no arm above reads it. Name this corpus in one of them."
       fi

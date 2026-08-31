@@ -48,6 +48,21 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
+        standards@1
+          fields: id, title, category, status, applies-to, review-by, tags
+          sections: Summary=full, Conformance checklist=full
+          parts: full
+            id: part.id
+            title: part.text
+            obligations: part.lead
+            seeAlso: part.see-also
+            type: record.type
+            record: record.id
+            part: part.key
+            status: front.status
+            reviewBy: front.review-by
+            path: record.path
+            anchor: part.anchor
         """;
 
     [Fact]

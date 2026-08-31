@@ -19,6 +19,8 @@ it cites no authority, so nothing says who decided any of it.
 
 ## Rules
 
+### A failure says what happened
+
 A failure is reported with the status code that describes it and a body the caller can act on.
 
 ## Examples

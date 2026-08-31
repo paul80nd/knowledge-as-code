@@ -19,6 +19,13 @@
         "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
       },
       {
+        "path": "skills/standards-lookup",
+        "requires": [
+          "standards@1"
+        ],
+        "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+      },
+      {
         "path": "hooks",
         "requires": [
           "glossary"

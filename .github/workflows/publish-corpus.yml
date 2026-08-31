@@ -27,6 +27,7 @@ on:
     paths:
       - 'examples/library/**'
       - 'examples/engineering/**'
+      - 'examples/payments/**'
 
 permissions:
   contents: read
@@ -50,6 +51,7 @@ jobs:
         corpus:
           - library
           - engineering
+          - payments
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -63,6 +65,23 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
+
+      # payments consumes engineering as a sealed package rather than as the corpus next door, so the
+      # producer's package is built here before the consumer asks for it. Each job holds its own
+      # checkout, so nothing another job in this matrix did is on this runner.
+      - name: Build the package this corpus consumes
+        if: matrix.corpus == 'payments'
+        working-directory: examples/engineering
+        run: |
+          dotnet run --project ../../tooling/kac -- export
+          dotnet run --project ../../tooling/kac -- pack
+
+      # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails naming
+      # this command. A corpus consuming nothing skips the step.
+      - name: Restore what this corpus consumes
+        if: matrix.corpus == 'payments'
+        working-directory: examples/payments
+        run: dotnet run --project ../../tooling/kac -- restore
 
       # The gate ran against the pull request's head, and main moved beneath it. A published version
       # cannot be replaced, only followed, so it is asked again about the merge commit.
@@ -92,6 +111,7 @@ jobs:
         corpus:
           - library
           - engineering
+          - payments
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:

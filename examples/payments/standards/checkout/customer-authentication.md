@@ -36,8 +36,8 @@ cardholder is challenged, and our services carry the outcome rather than decidin
 ### The outcome travels with the payment
 
 - An authorisation request **MUST** carry the PSP's authentication reference (`eng:pol-INTC.SECURE`).
-- A service **MUST** pass the authentication outcome to the ledger, which [std-LEDGER] holds to recording it
-  (`eng:pol-SECD.REQS`).
+- A service **MUST** pass the authentication outcome to the ledger, which
+  [std-LEDGER.an-entry-says-what-produced-it] holds to recording it (`eng:pol-SECD.REQS`).
 - A service **MUST NOT** retry a declined authorisation with the authentication step left out (`eng:pol-SECD.DESIGN`).
 
 ### The challenge is somebody else's page
@@ -92,5 +92,5 @@ the issuer's response, so a decision we make here would be a second, worse copy 
 - 2026-08-31: initial version.
 
 [EMV 3-D Secure]: https://www.emvco.com/emv-technologies/3-d-secure/
-[std-LEDGER]: ../ledger/entries.md
+[std-LEDGER.an-entry-says-what-produced-it]: ../ledger/entries.md#an-entry-says-what-produced-it
 [The PSD2 regulatory technical standards on SCA]: https://www.handbook.fca.org.uk/techstandards/PS/2018/2018_389.pdf

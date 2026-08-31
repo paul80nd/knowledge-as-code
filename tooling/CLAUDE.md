@@ -268,9 +268,10 @@ root after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code 
 cd examples/library && sh ../../tooling/tests/round-trip.sh
 ```
 
-**Which lookup it performs is decided by the corpus it runs in.** `example-libraries` proves the glossary skill and
-`example-engineering` proves the policy skill, because each holds the records that skill was written for. CI runs both,
-so adding a third assertion means choosing the corpus that already holds what it asks about.
+**Which lookup it performs is decided by the corpus it runs in.** `example-libraries` proves the glossary skill,
+`example-engineering` proves the policy skill and `example-payments` proves the standards skill, because each holds the
+records that skill was written for. CI runs all three, so adding a fourth assertion means choosing the corpus that
+already holds what it asks about.
 
 **It runs on two platforms in CI**, which is the reason it is a shell script rather than another scenario in the golden
 suite. Development happens on macOS and the first audience is on Windows, so the script is held to the subset Git Bash
@@ -286,7 +287,7 @@ changing.
 **The trim is asserted from `bundle.json` inside the installed copy**, in both directions: a component the run kept is a
 directory the install holds, and one it trimmed is a path the install does not. Each surviving skill is then held to
 naming the parts file of the type its `requires` declares, and no other type's. A corpus adopting one type can only show
-half of that, which is why two corpora run.
+half of that, which is why more than one corpus runs.
 
 Everything after that is written about one corpus, because what a skill tells a reader to search for is content. Two of
 the glossary assertions restate over the real corpus what `ExporterTests` pins over corpora it builds for the purpose:
@@ -297,3 +298,8 @@ The policy assertions ask a different question of the same chain. A clause carri
 separately, and `level` is the field a reader acts on, so `pol-VURM.SHIP` is asserted at `MUST NOT` whole. A level
 rebuilt by matching the first word of the wording would file that prohibition as an obligation and pass every other
 check here.
+
+The standards assertions ask it of a type with no `level` at all. A rule line holds several obligations and the keyword
+sits inside the markdown, so the bold `**MUST**` and `**MUST NOT**` are what is asserted. `std-IDEM` is also where a
+part addressing itself is proved: a rule is a heading, so its `anchor` is its own key, where a clause resolves to the
+section holding its table.
