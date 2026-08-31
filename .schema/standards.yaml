@@ -66,8 +66,7 @@ fields:
     values: [draft, active, deprecated, superseded]
     description: Plain values only. Enforcement notes belong in `verified-by`.
     notes: >
-      Plain values only. Enforcement notes belong in `verified-by`. A status of "until ADR-NNNN is accepted"
-      is derivable from `derived-from` plus that ADR's own status.
+      A status of "until ADR-NNNN is accepted" is derivable from `derived-from` plus that ADR's own status.
 
   category:
     type: string
@@ -89,8 +88,8 @@ fields:
     ref: adrs
     description: The ADRs this standard distils. Provenance may come from `implements` instead.
     notes: >
-      The ADRs this standard distils. Provenance is required (see `provenance-required` below) but may be
-      satisfied by `implements` instead where the standard descends from a policy rather than a decision.
+      `provenance-required` below is what enforces it. `implements` satisfies it where the standard descends
+      from a policy rather than a decision.
 
   implements:
     required: false
