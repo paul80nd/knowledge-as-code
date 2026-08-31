@@ -71,8 +71,8 @@ what CI sees.
 **Ask which pages your change makes wrong.** Nothing in CI reads prose for meaning, so this is yours to do. A change to
 a command reaches [`docs/`](docs/) and often [`tooling/README.md`](tooling/README.md); a change to what the tool is for
 reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md); a change to the schema reaches
-[`.schema/README.md`](.schema/README.md), [`.schema/meta/type.schema.json`](.schema/meta/type.schema.json) and
-[`docs/schema/`](docs/schema/).
+[`.schema/README.md`](.schema/README.md), [`.schema/meta/type.schema.json`](.schema/meta/type.schema.json),
+[`docs/framework/metadata.md`](docs/framework/metadata.md) and [`docs/design/held-to.md`](docs/design/held-to.md).
 
 **Run the layers your change touches.** [`examples/library/CLAUDE.md`](examples/library/CLAUDE.md) carries the commands,
 and every corpus carries the same set. Run one `kac` invocation at a time: concurrent runs build the same project and
