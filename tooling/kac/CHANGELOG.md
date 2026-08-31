@@ -35,6 +35,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   is what the rules beneath it hold a reader to, and it is the address a citation and an export both carry, so
   `part-none` now reaches standards as it already reached glossaries. A standard whose rules are a bare bullet list
   gains one heading. `kac new` ships the grouping in the standards template.
+- **A tool's `category` is the folder it sits in under `tools/`, as a policy's and a standard's already were.** It was
+  the one of the three still written by hand, and the only field in the schema carrying no `description:`. A record
+  that writes the key now fails `derived-key`: delete the line and file the record under the folder you want it to
+  name. It is no longer required, so a tool filed directly in `tools/` simply has no category, which is what the other
+  two do. `kac new` ships the template without the key.
 
 ### Fixed
 

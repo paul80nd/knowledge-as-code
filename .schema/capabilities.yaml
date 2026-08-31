@@ -97,7 +97,8 @@ rules:
     description: A capability's prose stays proportionate to its links, because it is a hub.
     severity: warning
     # A capability linking to nothing is a specification however short it is, which is why the
-    # allowance is a ratio rather than a ceiling.
+    # allowance is a ratio rather than a ceiling. `explanations` sets the same one, so moving it here
+    # asks the question there.
     expr: "words() <= links() * 40"
     message: >
       Prose has outgrown the links. A capability is a hub. Move the detail into the documents it should

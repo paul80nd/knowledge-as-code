@@ -80,6 +80,8 @@ rules:
   - id: links-rather-than-restates
     description: An explanation's prose stays proportionate to its links, rather than restating their facts.
     severity: warning
+    # The ratio `capabilities` sets, arrived at separately: prose outgrowing its links is restating
+    # whatever the type. Moving it there asks the question here.
     expr: "words() <= links() * 40"
     message: >
       Prose has outgrown the links. Each fact restated here is a second copy to keep true. Link to the

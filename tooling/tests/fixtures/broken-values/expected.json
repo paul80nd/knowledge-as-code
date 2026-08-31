@@ -66,7 +66,7 @@
     },
     {
       "file": "tools/bad-licence-pattern.md",
-      "line": 5,
+      "line": 4,
       "severity": "error",
       "check": "field-pattern",
       "message": "'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\\-+ ()]+$."

@@ -2,7 +2,6 @@
 id: tol-bad-licence-pattern
 tier: descriptive
 status: approved
-category: testing
 licence: GPL/2.0 †
 owner: alex.doe
 ---

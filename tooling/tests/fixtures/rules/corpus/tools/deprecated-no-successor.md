@@ -2,7 +2,6 @@
 id: tol-deprecated-no-successor
 tier: descriptive
 status: deprecated
-category: build
 owner: alex.doe
 ---
 

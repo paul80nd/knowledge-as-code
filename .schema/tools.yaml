@@ -46,9 +46,13 @@ fields:
       Finding drift is a manual job. `drift-against-manifests` is declared and does not run.
 
   category:
-    required: true
     type: string
-    notes: e.g. `testing`, `build`, `observability`, `runtime`.
+    from: sub-path
+    description: The folder the tool is filed under, below `tools/`.
+    notes: >
+      A folder groups the tools a reader comes looking for together: `testing`, `build`,
+      `observability`, `runtime`. Deriving it means a category an author typed cannot disagree with the
+      folder holding the file.
 
   versions:
     required: false

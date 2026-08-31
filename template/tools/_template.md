@@ -2,7 +2,6 @@
 id: tol-{{slug}}
 tier: descriptive
 status: trial
-category:
 versions:
 licence:
 decided-in:

@@ -2,7 +2,6 @@
 id: tol-names-another-tool
 tier: descriptive
 status: approved
-category: build
 owner: alex.doe
 ---
 

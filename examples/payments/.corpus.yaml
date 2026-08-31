@@ -42,7 +42,7 @@ consumes:
     shortcode: eng
     version: ^0.7.0
     source: ../engineering/.dist/package
-    resolved: "0.7.0"
+    resolved: "0.7.1"
 
 # Taken from this repository's root rather than over the network, because the template is served here.
 # `kac update` stamps the last three.

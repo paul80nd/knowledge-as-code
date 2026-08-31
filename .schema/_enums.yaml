@@ -19,7 +19,3 @@ enums:
 
   rehearsal-frequency:
     values: [per-release, quarterly, annual]
-
-  review-cadence:
-    values: [quarterly, biannual, annual]
-    notes: Guidance for setting `review-by`, and not itself a frontmatter field.
