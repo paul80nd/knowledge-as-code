@@ -46,10 +46,13 @@ Scenario: A field reconciles against the lines carrying its label, whichever lab
     |    1 | mirrors-citations | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                                                         |
     |   31 | mirrors-citations | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to.                    |
     |   39 | mirrors-citations | this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off.                          |
+  And the findings for "gizmos/unitalic.md" are exactly:
+    | line | check             | message                                                                                                                             |
+    |   25 | mirrors-citations | this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end.            |
 
 Scenario: The whole graph produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 10 documents and 0 skipped
+  Then validation reports 11 documents and 0 skipped
   And the findings are exactly:
     | file                  | severity | line | check                   | message                                                                                              |
     | adrs/0001-first.md    | error    |    1 | related-matches-section | 'related' lists 'adr-0002' but it is not referenced in the '## Related' section.                     |
@@ -69,3 +72,4 @@ Scenario: The whole graph produces exactly these findings and nothing else
     | gizmos/drifting.md    | error    |    1 | mirrors-citations       | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                         |
     | gizmos/drifting.md    | error    |   31 | mirrors-citations       | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to. |
     | gizmos/drifting.md    | error    |   39 | mirrors-citations       | this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off.       |
+    | gizmos/unitalic.md    | error    |   25 | mirrors-citations       | this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end. |

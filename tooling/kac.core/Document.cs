@@ -69,10 +69,14 @@ public class PartRow
 // last block of the section it closes. The label is the field's to declare, so the parser is told which
 // labels to look for and collects every line carrying one.
 //
-// `ClosesSection` is what tells this form from the labelled prose that sits in among the writing. Held
-// rather than filtered on, so a line written in the wrong place is reported as misplaced and its
-// citations still count: dropping them would report every id it named as missing from the document.
-public record CitationFootnote(int Line, bool ClosesSection, IReadOnlyList<string> Citations);
+// `Italic` and `ClosesSection` are the two ways a line can carry the label and not be the form. Held
+// rather than filtered on, so each is reported against the line and its citations still count: dropping
+// them would report every id it named as missing from the document.
+//
+// `Italic` is false where a space inside the underscores stopped markdown reading them, which leaves
+// them on the page. `ClosesSection` is what tells the form from the labelled prose that sits in among
+// the writing.
+public record CitationFootnote(int Line, bool Italic, bool ClosesSection, IReadOnlyList<string> Citations);
 
 // One H2 and what stands under it: the heading as written, the line it sits on, and where its body
 // begins and ends in the document's text. The body runs to the next heading at the same level or
@@ -790,8 +794,28 @@ public partial class Doc
 
         foreach (var para in ast.Descendants<ParagraphBlock>())
         {
-            if (para.Inline?.FirstChild is not EmphasisInline { DelimiterCount: 1 } italic) continue;
-            if (italic.FirstChild is not EmphasisInline { DelimiterCount: 2 } bold) continue;
+            if (para.Inline?.FirstChild is not { } first) continue;
+
+            // Two shapes reach the same line. Written as the form, markdig gives one italic inline
+            // opening on the bold label. Written with a space against either mark, it reads neither as
+            // emphasis and gives an unpaired delimiter run, the bold label, and the rest of the line
+            // beside it. The second is what the author meant and not what the page will show, so it is
+            // collected and told apart by `Italic` rather than passed over.
+            //
+            // What each reads is the stretch the label opens and no more. The first stops at the
+            // closing mark, so the second stops at the line break, and a paragraph running on past one
+            // does not hand either a citation the footnote never claimed.
+            bool italic;
+            IEnumerable<MarkdownObject> scope;
+            EmphasisInline bold;
+            if (first is EmphasisInline { DelimiterCount: 1 } em
+                && em.FirstChild is EmphasisInline { DelimiterCount: 2 } inItalic)
+                (italic, scope, bold) = (true, em.Descendants(), inItalic);
+            else if (first is LiteralInline stray && Unpaired(stray.Content.ToString())
+                     && stray.NextSibling is EmphasisInline { DelimiterCount: 2 } beside)
+                (italic, scope, bold) = (false, OnTheLine(first), beside);
+            else continue;
+
             if (!matching.TryGetValue(Label(Md.PlainText(bold)), out var footnotes)) continue;
 
             var at = blocks.IndexOf(para);
@@ -800,7 +824,7 @@ public partial class Doc
             // Both notations, in the order the line writes them. A local record is cited through a link
             // and an imported one through a code span, so a corpus reading its policies from an import
             // writes every citation the second way.
-            var cited = italic.Descendants()
+            var cited = scope
                 .Select(inline => inline switch
                 {
                     LinkInline { IsImage: false } link => LinkCitation(link, schema),
@@ -809,10 +833,31 @@ public partial class Doc
                 })
                 .OfType<string>();
 
-            footnotes.Add(new CitationFootnote(para.Line + 1, closes, [.. cited]));
+            footnotes.Add(new CitationFootnote(para.Line + 1, italic, closes, [.. cited]));
         }
 
         return result;
+    }
+
+    // A delimiter run markdown could not pair off, which is what a mark with a space against it leaves.
+    // Either mark, since the form writes underscores outside and asterisks inside, and an author who
+    // reached for the other pair has made the same mistake.
+    private static bool Unpaired(string text)
+    {
+        var run = text.Trim();
+        return run.Length > 0 && (run.All(c => c == '_') || run.All(c => c == '*'));
+    }
+
+    // Every inline from here to the end of the line it opens. A paragraph runs on past a soft line
+    // break, and the prose after one is not the footnote's to gather.
+    private static IEnumerable<MarkdownObject> OnTheLine(Inline? from)
+    {
+        for (var node = from; node is not null and not LineBreakInline; node = node.NextSibling)
+        {
+            yield return node;
+            if (node is ContainerInline container)
+                foreach (var inner in container.Descendants()) yield return inner;
+        }
     }
 
     // A footnote's label with the colon the form puts after it taken off, so that the schema and the

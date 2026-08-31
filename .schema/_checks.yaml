@@ -425,17 +425,17 @@ checks:
     description: A field declaring a `mirrors-citations:` reconciles with the lines carrying its label.
     notes: >
       The line is a footnote, written in italic with the label bold, and closing the section whose
-      citations it gathers. A section covering nothing carries none.
+      citations it gathers. A section covering nothing carries none. A line that is bold alone is the
+      labelled prose a glossary writes its `Not` in, and is passed over.
 
       What reconciles is the union of the lines against the field, in both directions and
       case-insensitively. The field stays the whole truth about what the document answers, and the lines
       divide that truth between the sections.
 
-      Two faults sit on a line rather than on the field. A line the reader takes for a footnote and that
-      closes no section is reported where it sits, and its citations still count: dropping them would
-      report every id it named as absent from the document. A line gathering no citation the field could
-      carry is reported where it sits too. One naming only ids of types the field does not point at
-      gathers nothing either.
+      Three faults sit on a line: it is not italic, it closes no section, or it gathers no citation the
+      field could carry. Its citations count whichever is reported. A document that only got the line
+      wrong gets one finding, not one per id it named. A line that is not italic is reported and
+      stopped, the other two being questions about a footnote.
 
   id-unique:
     severity: error

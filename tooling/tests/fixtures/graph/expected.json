@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 10,
+    "validated": 11,
     "templates": 2,
     "skipped": 0,
-    "errors": 16,
+    "errors": 17,
     "warnings": 1,
     "infos": 0
   },
@@ -126,6 +126,13 @@
       "severity": "error",
       "check": "mirrors-citations",
       "message": "this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off."
+    },
+    {
+      "file": "gizmos/unitalic.md",
+      "line": 25,
+      "severity": "error",
+      "check": "mirrors-citations",
+      "message": "this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end."
     }
   ]
 }
