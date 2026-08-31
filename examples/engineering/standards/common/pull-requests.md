@@ -94,6 +94,12 @@ faster than it can be checked, so the record of what produced it is what a revie
 - [pol-EVER] requires that a change reaches the default branch by reviewed merge.
 - [pol-SECD] requires that review covers security and correctness.
 
+## Sources and further reading
+
+- **Informative.** [Google's Code Review Developer Guide] covers what a reviewer looks for and how they say it. These
+  rules say who reviews and what they record, and leave the reading itself to that guide.
+
+[Google's Code Review Developer Guide]: https://google.github.io/eng-practices/review/
 [pol-AGNT]: ../../policies/governance/agnt-agents-propose-people-decide.md#clauses
 [pol-EVER]: ../../policies/delivery/ever-everything-in-version-control.md#clauses
 [pol-SECD]: ../../policies/security/secd-security-by-design.md#clauses

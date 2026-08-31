@@ -80,5 +80,14 @@ does not reach any of them. Reading from the store at run time keeps rotation to
 - [pol-ENVS] keeps production credentials unreachable from a lower environment.
 - [pol-SCRT] commits us to holding secrets in a controlled store and never embedding one.
 
+## Sources and further reading
+
+- **Normative.** [NIST SP 800-57 Part 1 Rev. 5] sets the cryptoperiod a key's rotation period comes from. This standard
+  requires a period against every secret and names none.
+- **Informative.** [OWASP Secrets Management Cheat Sheet] covers the storage, distribution and detection practices
+  these rules assume.
+
+[NIST SP 800-57 Part 1 Rev. 5]: https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final
+[OWASP Secrets Management Cheat Sheet]: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
 [pol-ENVS]: ../../policies/security/envs-environment-separation.md#clauses
 [pol-SCRT]: ../../policies/security/scrt-secrets-are-never-embedded.md#clauses

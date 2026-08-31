@@ -94,8 +94,19 @@ ADR owns the "why" and this standard owns the "what". Link, don't duplicate.
 
 - [adr-{{a}}] decided {{what this rule rests on}}
 
+## Sources and further reading
+
+Optional. The external documents this standard defers to. Mark an entry **normative** where a reader has not read the
+rule until they have read the source, and **informative** where the source is background. A compliance posture is not a
+source, and [frameworks.md](../frameworks.md) is where one goes.
+
+- **Normative.** [{{Source}}] sets {{the baseline this standard adds exceptions to}}.
+- **Informative.** [{{Other source}}] covers {{what a reader takes from it}}.
+
 ## Changelog
 
 - {{YYYY-MM-DD}}: initial version.
 
 [adr-{{a}}]: {{a}}.md
+[{{Other source}}]: {{url}}
+[{{Source}}]: {{url}}
