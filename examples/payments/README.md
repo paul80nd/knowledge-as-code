@@ -76,8 +76,7 @@ live in it, each named for what it versions, and the file's own comments say wha
 
 Declaring `types:` states a decision rather than the shape the folders happen to have. `validate` then holds the corpus
 to standing up everything it declared, and every generated list of types is written from that declaration. That matters
-most here: fourteen of the seventeen types this framework offers were declined, and the file is where that decision is
-written down.
+most here: this corpus declined more types than it adopted, and the file is where that decision is written down.
 
 ## Layout
 

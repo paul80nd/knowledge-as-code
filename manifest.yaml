@@ -203,7 +203,7 @@ rules:
     note: >
       Type root pages: what the type is, why it exists, and how to contribute one. The rules above carve
       out the framework's own pages, which are not a corpus's to rewrite. Written as a pattern rather
-      than as seventeen names, so adding a type is adding its schema and its pages and nothing else.
+      than as one name per type, so adding a type is adding its schema and its pages and nothing else.
 
   # Everything else `template/` holds: the worked records that show the shape, and the `_index.md` a
   # corpus arrives with fresh so that it validates before its owner has run anything. `generate` owns
