@@ -28,6 +28,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac validate` reports a schema declaring `of: object` with no `entry:` block, rather than ending in a stack
   trace.** The schema pass already names that fault as `schema-shape`. A record filling such a field reached the
   entry check first and took the run down, so the message never printed.
+- **Declining `kac update --drop-type` says `update`, where it used to say `new`.** The message is the tail of the
+  command that printed it, and the one it named was a command the reader had not run.
 
 ## 0.18.0 - 2026-08-31
 
