@@ -172,6 +172,18 @@ policy and a term of a glossary are both parts. The label carries it and the tar
 Linking to the file instead lands a reader at the top of the document to find the part themselves. It also loses the
 reference: a tool reading the corpus carries what the link states, and a link naming no part states none.
 
+**Where a type gives its parts no anchor of their own, link the record and write the part outside the label.** Every
+part would resolve to one target, so a document citing six of them carries six definitions landing in the same place.
+A policy's clauses are rows of a single table under `## Clauses`. The anchor reaches that table and the row's `Id`
+column is what a reader scans to, so a clause is cited this way:
+
+    A push to any branch **MUST** trigger a build ([pol-AUTV].INTEG).
+
+    [pol-AUTV]: ../../policies/delivery/autv-automated-verification.md#clauses
+
+The part stays on the page for a reader. The link states the record alone, because the record is as far as the
+anchors reach.
+
 **The label is the id exactly as that record carries it**: `adr-0013`, `pol-DEVI`, `svc-billing-api`. The prefix is
 always lower-case, and what follows takes the type's own form, so a mnemonic stays upper-case and a slug stays
 lower-case. A part id is the record's own id, a dot, and the part as its type writes one: `pol-DEVI.TIMEBOX`,
