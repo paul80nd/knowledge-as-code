@@ -1,5 +1,5 @@
 ---
-id: std-{{nnnn}}
+id: std-{{MNEM}}
 tier: normative
 status: draft
 derived-from:
@@ -13,7 +13,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Standard: std-{{nnnn}}` `DRAFT`
+`Standard: std-{{MNEM}}` `DRAFT`
 
 ## Summary
 

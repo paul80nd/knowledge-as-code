@@ -49,6 +49,41 @@ public static class SchemaChecks
                 Dispatch(at, $"type '{key}' declares 'id.style: {t.IdStyle}', which no id check reads. "
                              + $"The styles the tool applies are {List(IdChecks.IdStyles)}.", f);
 
+            // A span the wrong way round admits nothing, so every record of the type fails id-format
+            // and the message quotes back a range that cannot be met. JSON Schema cannot say this.
+            if (t.IdWidth.Min > t.IdWidth.Max)
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"type '{key}' declares 'id.width' with a 'min:' of {t.IdWidth.Min} above its 'max:' of "
+                    + $"{t.IdWidth.Max}. No id can be both, so every record of the type would fail. Put the "
+                    + "shorter end in 'min:'."));
+
+            // A span is for a mnemonic, whose length follows the concept it names. A number is padded
+            // to a fixed width so that ids sort, and a span there would make `adr-007` and `adr-0007`
+            // two ids for one decision.
+            if (t.IdWidth.Min != t.IdWidth.Max && t.IdStyle == "numbered")
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"type '{key}' is 'id.style: numbered' and declares 'id.width' as a span of {t.IdWidth}. "
+                    + "A number is padded to one width so that ids sort, and a span would make '"
+                    + $"{t.IdPrefix}-007' and '{t.IdPrefix}-0007' two ids for one record. Give the type an exact "
+                    + "width, or the mnemonic style a span was written for."));
+
+            // Two ways a type leaves its id and its filename able to say different things. A span
+            // admits several lengths, so the head of `secret-handling.md` reads as an id under any span
+            // reaching six. A slug id is the whole filename stem, so a type withholding it from the
+            // filename has withheld the id itself.
+            if (t.FilenameCarriesId && t.IdWidth.Min != t.IdWidth.Max)
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"type '{key}' declares 'id.width' as a span of {t.IdWidth} and leaves its filename "
+                    + "carrying the id. A span admits several lengths, so a topical filename binds to "
+                    + "whichever id its first segment happens to spell. Declare 'filename.carries-id: false', "
+                    + "or make the width exact."));
+
+            if (!t.FilenameCarriesId && t.IdStyle == "slug")
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"type '{key}' is 'id.style: slug' and declares 'filename.carries-id: false'. A slug id "
+                    + "is the filename stem, so there is nothing left for the id to be. Take the key out, or "
+                    + "give the type a style whose id is written in frontmatter."));
+
             if (t.IndexOrder.Length > 0 && !Generator.IndexOrders.Contains(t.IndexOrder))
                 Dispatch(at, $"type '{key}' declares 'index.order: {t.IndexOrder}', which the generator does "
                              + $"not read. An index is written {List(Generator.IndexOrders)}.", f);

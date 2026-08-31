@@ -1,5 +1,5 @@
 ---
-id: std-0002
+id: std-PR
 tier: normative
 status: draft
 implements:
@@ -15,7 +15,7 @@ tags: [ agents, code-review, pull-requests ]
 
 # A pull request carries its reasoning and one accountable approval
 
-`Standard: std-0002` `DRAFT`
+`Standard: std-PR` `DRAFT`
 
 ## Summary
 

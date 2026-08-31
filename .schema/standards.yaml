@@ -36,18 +36,27 @@ collision: >
   together. RFC 8174 establishes that the keywords carry their normative meaning **only when written in
   capitals**, and that is the rule this type depends on. Citing RFC 2119 alone leaves it unsupported.
 
+# A mnemonic drawn from the concept the standard governs, two to seven characters. Standards are cited
+# constantly from controls and from other standards, so the id is what a reader meets most often and it
+# should say something. The length follows the word rather than a column: std-PR and std-SECRET are each
+# as long as the thing they name. The filename carries none of it, which is what `carries-id:` says.
 id:
   prefix: std
-  style: numbered
-  width: 4
+  style: mnemonic
+  width:
+    min: 2
+    max: 7
 
 filename:
   pattern: '^[a-z0-9-]+\.md$'
+  carries-id: false
   slug-max: 30
   notes: >
-    A standard is named for the rule area and is not numbered in the filename. The numeric id lives in
-    frontmatter. A repeated area name is the composition model made concrete, so `common/testing.md` and
-    `platform/node/testing.md` are one topic written at two altitudes.
+    A standard is named for the rule area alone and carries no part of its id. The category folder and
+    the topical slug already say what the file holds, and prefixing the mnemonic gives
+    `common/secr-secret-handling.md`. The mnemonic lives in frontmatter. A repeated area name is the
+    composition model made concrete, so `common/testing.md` and `platform/node/testing.md` are one
+    topic written at two altitudes.
 
 fields:
 

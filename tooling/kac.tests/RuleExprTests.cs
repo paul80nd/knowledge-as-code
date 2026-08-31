@@ -35,9 +35,9 @@ public class RuleExprTests
     [Fact]
     public void Present_reads_a_list_as_well_as_a_scalar()
     {
-        Assert.True(Eval("present('derived-from')", "id: std-0001\nderived-from: [ adr-0001 ]"));
-        Assert.False(Eval("present('derived-from')", "id: std-0001\nderived-from: []"));
-        Assert.False(Eval("present('derived-from')", "id: std-0001\nderived-from:"));
+        Assert.True(Eval("present('derived-from')", "id: std-ERRORS\nderived-from: [ adr-0001 ]"));
+        Assert.False(Eval("present('derived-from')", "id: std-ERRORS\nderived-from: []"));
+        Assert.False(Eval("present('derived-from')", "id: std-ERRORS\nderived-from:"));
     }
 
     [Fact]

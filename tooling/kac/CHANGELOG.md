@@ -17,8 +17,24 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **A type's `id.width` takes a `min`/`max` span as well as an exact count.** A mnemonic drawn from a concept rather
+  than cut to a length can then admit both `std-PR` and `std-SECRET` under one declaration. `kac validate` reports an
+  id outside the span as `id-format` and names both ends. An exact `width: 4` behaves as it always has.
+- **`filename.carries-id: false` keeps a type's id out of its filenames.** Its records are filed by topic alone, and
+  nothing then reads the head of a filename as an id: `id-matches-filename` stays silent, `slug-length` measures the
+  whole stem, and a link to the file is a link rather than a citation. `kac validate` refuses the three spans it
+  cannot act on. One beside a filename that still carries the id, because `secret-handling.md` would otherwise bind
+  to whichever id its first segment happens to spell. One on a `numbered` type, which pads to a single width so that
+  ids sort. One whose `min:` sits above its `max:`, which no id can meet.
+
 ### Changed
 
+- **Standards take mnemonic ids.** `std-0001` becomes `std-VCS`. A number records the order things were created, and
+  a reader meeting one in a control's `verifies:` learns nothing. Filenames are untouched, because a standard is
+  already named for its rule area. A corpus that wants its numbered standards back claims
+  `.schema/standards.yaml` with a `skip:` entry in `.corpus.yaml`, which stops `kac update` replacing it.
 - **`kac generate` heads a table per folder in a type's index.** A type that declares a field with `from: sub-path`
   groups its index rows on the first folder below the type, so a policy folder holding Delivery, Governance,
   Operations and Security reads as four tables instead of one long list. A record filed deeper joins the table its
@@ -30,6 +46,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
+- **A schema key spelled `no` or `off` now switches its behaviour off.** `on-type-page: no` in `_checks.yaml` read as
+  `on-type-page: true`, because only the exact word `false` was taken, and the check was then written onto a type page
+  the schema had excused it from. Both spellings of each answer are read.
 - **`kac update` finds a seeded record the corpus filed in a sub-folder.** A record's folder sets its category, so a
   corpus files a seeded policy under `policies/governance/` and still holds it. Compared by path, the corpus read as
   holding none, and `update` offered a second copy at the seeded path. Accepting it left two records carrying one id,

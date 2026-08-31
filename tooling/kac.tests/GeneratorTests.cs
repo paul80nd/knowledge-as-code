@@ -82,7 +82,7 @@ public class GeneratorTests
     {
         var t = new TypeSchema { Label = "Standard", IdPrefix = "std", IndexColumns = ["title"] };
         var doc = Doc.Parse("standards/common/build-gates.md",
-            "---\nid: std-0004\n---\n\n# A failing check blocks the merge\n", new Schema())!;
+            "---\nid: std-GATES\n---\n\n# A failing check blocks the merge\n", new Schema())!;
 
         var page = Generator.IndexPage(t, [doc]);
 
@@ -235,7 +235,7 @@ public class GeneratorTests
     {
         var t = new TypeSchema { Label = "Standard", IdPrefix = "std", IndexColumns = ["title"] };
         var doc = Doc.Parse("standards/common/build-gates.md",
-            "---\nid: std-0004\n---\n\n# A failing check blocks the merge\n", new Schema())!;
+            "---\nid: std-GATES\n---\n\n# A failing check blocks the merge\n", new Schema())!;
 
         var page = Generator.IndexPage(t, [doc]);
 

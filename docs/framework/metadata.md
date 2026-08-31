@@ -71,7 +71,7 @@ folder is a collection, and a record's type is inferred from it, so the mapping 
 types take the singular. `data/` is a mass noun, and a corpus has one `glossary/` held in several files, one per bounded
 context.
 
-**An id prefix is singular**, since an id names a single record: `adr-0017`, `std-0004`.
+**An id prefix is singular**, since an id names a single record: `adr-0017`, `std-SECRET`.
 
 **An id style is one of three**, and the schema sets one per type.
 
@@ -82,14 +82,22 @@ none of the others can carry.
 something already well identified.
 
 *Mnemonic* (`pol-VURM`, filed as `vurm-vulnerability-remediation.md`) suits a small, long-lived set that other records
-cite constantly. The id is what a reader meets most often, so it should say something. It is upper-case in the id and
-lower-case in the filename, and its first letter matches the slug's so the folder still reads alphabetically. A mnemonic
-makes a claim a number never does, so draw it from the concept rather than the current wording.
+cite constantly. The id is what a reader meets most often, so it should say something. A mnemonic makes a claim a number
+never does, so draw it from the concept rather than the current wording.
 
-**A filename slug is at most 30 characters**, excluding the `NNNN-` or `mnem-` prefix. The filename is a handle and the
-H1 carries the full descriptive title. A slug you cannot get under 30 characters is often a signal the record is doing
-two things: `internal-services-backing-public-surfaces` was one idea too many. Splitting or narrowing the scope beats
-abbreviating harder.
+**`id.width` is an exact count or a span.** `width: 4` gives every policy a four-character handle. A span, written as
+`min:` and `max:`, lets the length follow the concept: standards set `min: 2` and `max: 7`, so `std-PR` and `std-SECRET`
+are both well formed.
+
+**`filename.carries-id` says whether the filename opens with the mnemonic.** A policy's does, upper-case in the id and
+lower-case in the filename, with its first letter matching the slug's so the folder still reads alphabetically. A
+standard's filename is a topical slug under a category folder, and the mnemonic lives in frontmatter alone. A span needs
+that, because one filename cannot say which of several lengths its opening segment is.
+
+**A filename slug is at most 30 characters**, excluding the `NNNN-` or `mnem-` prefix where the filename carries one.
+The filename is a handle and the H1 carries the full descriptive title. A slug you cannot get under 30 characters is
+often a signal the record is doing two things: `internal-services-backing-public-surfaces` was one idea too many.
+Splitting or narrowing the scope beats abbreviating harder.
 
 ## IDs
 

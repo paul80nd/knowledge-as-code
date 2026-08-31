@@ -35,8 +35,8 @@ a corpus while claiming the rulebook's authority.
 1. Work out where it goes. The corpus's own taxonomy page has a decision table.
 2. Copy the type's `_template.md`. It marks the parts you supply as `{{placeholder}}` and fences its own guidance
    between `DELETE FROM HERE` and `DELETE TO HERE` comments. A finished record has neither left in it.
-3. Allocate an id in the style that type uses: the next unused number, a four-character mnemonic for the concept, or a
-   slug. The folder's index says what is already taken.
+3. Allocate an id in the style that type uses: the next unused number, a mnemonic for the concept, or a slug. The
+   folder's index says what is already taken.
 4. Fill in the frontmatter.
 5. Write the content. Follow the template's section structure, which exists so records of a type are comparable. The
    tier rules are why a runbook step and an ADR paragraph are held to different constraints.

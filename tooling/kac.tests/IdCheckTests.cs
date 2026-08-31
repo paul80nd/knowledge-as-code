@@ -10,19 +10,26 @@ namespace kac.tests;
 public class IdCheckTests
 {
     private static TypeSchema Numbered() => new()
-        { Folder = "adrs", IdPrefix = "adr", IdStyle = "numbered", IdWidth = 4 };
+        { Folder = "adrs", IdPrefix = "adr", IdStyle = "numbered", IdWidth = new(4, 4) };
 
     private static TypeSchema Mnemonic() => new()
-        { Folder = "policies", IdPrefix = "pol", IdStyle = "mnemonic", IdWidth = 4 };
+        { Folder = "policies", IdPrefix = "pol", IdStyle = "mnemonic", IdWidth = new(4, 4) };
 
     private static TypeSchema Slug() => new()
         { Folder = "tools", IdPrefix = "tol", IdStyle = "slug" };
+
+    // A mnemonic as long as the word it names, filed under a topical slug that carries none of it.
+    private static TypeSchema Span() => new()
+    {
+        Folder = "standards", IdPrefix = "std", IdStyle = "mnemonic", IdWidth = new(2, 7),
+        FilenameCarriesId = false
+    };
 
     // The two part sources, each with the id shape its own declaration gives a part. A policy's clauses
     // are written to a pattern; a glossary's terms are the anchors their headings slug to.
     private static TypeSchema Clauses() => new()
     {
-        Folder = "policies", IdPrefix = "pol", IdStyle = "mnemonic", IdWidth = 4,
+        Folder = "policies", IdPrefix = "pol", IdStyle = "mnemonic", IdWidth = new(4, 4),
         Parts = new PartSpec(PartSpec.Table, "^[A-Z]{3,8}$", ["MUST"], [])
     };
 
@@ -52,6 +59,23 @@ public class IdCheckTests
     [InlineData("pol-1URM")] // opens with a digit
     public void A_mnemonic_id_is_upper_case_and_opens_with_a_letter(string id)
         => Assert.Equal("id-format", Assert.Single(Run(id, "policies/vurm-a.md", Mnemonic())).Check.Value);
+
+    [Theory]
+    [InlineData("std-PR")]      // the floor
+    [InlineData("std-SECRET")]
+    [InlineData("std-TESTING")] // the ceiling
+    public void A_mnemonic_anywhere_inside_a_declared_span_is_silent(string id)
+        => Assert.Empty(Run(id, "standards/version-control.md", Span()));
+
+    [Theory]
+    [InlineData("std-P")]        // one short of the floor
+    [InlineData("std-TESTINGS")] // one past the ceiling
+    public void A_mnemonic_outside_a_declared_span_is_reported_against_the_width(string id)
+    {
+        var found = Assert.Single(Run(id, "standards/version-control.md", Span()));
+        Assert.Equal("id-format", found.Check.Value);
+        Assert.Contains("followed by 2 to 7 upper-case", found.Message);
+    }
 
     [Theory]
     [InlineData("tol-Site_Server")] // capitals and an underscore
@@ -94,6 +118,17 @@ public class IdCheckTests
     public void A_filename_that_carries_no_discriminator_is_left_to_filename_pattern(string id, string rel)
         => Assert.Empty(Run(id, rel, TypeFor(rel)));
 
+    // `secret-handling.md` opens with six letters and a hyphen. Under a type that reads the head of a
+    // filename, any span reaching six binds it to a `std-SECRET` nobody wrote.
+    [Fact]
+    public void A_filename_carrying_no_id_is_not_held_to_the_agreement()
+        => Assert.Empty(Run("std-VCS", "standards/common/secret-handling.md", Span()));
+
+    // A standard's filename is a topical slug, so a link to one is a link and cites nothing.
+    [Fact]
+    public void A_link_to_a_record_whose_filename_carries_no_id_cites_nothing()
+        => Assert.Null(Cite("/standards/card-data.md", "controls/0001-a.md", Span()));
+
     private const string TooLong = "slug-that-is-definitely-way-too-long";
 
     // A numbered type's `0003-` is a discriminator the author did not choose, so it is not counted. Under
@@ -113,6 +148,12 @@ public class IdCheckTests
     public void A_mnemonic_head_is_excluded_too()
         => Assert.Contains($"slug '{TooLong}' is 36 characters",
             Assert.Single(Filename($"policies/mexp-{TooLong}.md", Mnemonic())).Message);
+
+    // Nothing is cut from the head where nothing there belongs to the id.
+    [Fact]
+    public void A_filename_carrying_no_id_is_measured_whole()
+        => Assert.Contains($"slug 'secr-{TooLong}' is 41 characters",
+            Assert.Single(Filename($"standards/secr-{TooLong}.md", Span())).Message);
 
     [Fact]
     public void A_slug_within_the_limit_is_silent()

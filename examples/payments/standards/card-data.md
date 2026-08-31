@@ -1,5 +1,5 @@
 ---
-id: std-0001
+id: std-CARD
 tier: normative
 status: active
 implements:
@@ -15,7 +15,7 @@ tags: [ cards, pci-dss, tokenisation ]
 
 # Card details reach the PSP and never reach us
 
-`Standard: std-0001` `ACTIVE`
+`Standard: std-CARD` `ACTIVE`
 
 ## Summary
 

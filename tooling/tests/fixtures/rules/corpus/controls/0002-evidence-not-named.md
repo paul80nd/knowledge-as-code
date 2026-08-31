@@ -3,7 +3,7 @@ id: ctl-0002
 tier: normative
 status: active
 owner: alex.doe
-verifies: [std-0001]
+verifies: [std-ERRORS]
 mechanism: review-checklist
 frequency: per-pr
 applies-to: [all]

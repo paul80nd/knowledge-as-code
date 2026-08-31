@@ -1,5 +1,5 @@
 ---
-id: std-0004
+id: std-GATES
 tier: normative
 status: draft
 implements:
@@ -14,7 +14,7 @@ tags: [ continuous-integration, quality-gates, testing ]
 
 # A failing check blocks the merge
 
-`Standard: std-0004` `DRAFT`
+`Standard: std-GATES` `DRAFT`
 
 ## Summary
 

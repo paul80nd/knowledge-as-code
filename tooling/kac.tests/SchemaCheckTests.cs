@@ -19,7 +19,7 @@ public class SchemaCheckTests
         string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
         string goesHere = "A widget", string labelPlural = "Widgets", string detail = "It is a widget.",
         (string Other, string Text)[]? versus = null, bool lineage = true, PartSpec? parts = null,
-        ExportSpec? export = null) => new()
+        ExportSpec? export = null, WidthSpec? width = null, bool carriesId = true) => new()
     {
         TypeName = "widget",
         Key = folder,
@@ -27,6 +27,8 @@ public class SchemaCheckTests
         Lineage = lineage ? new LineageSpec("None.", "", "") : null,
         Folder = folder,
         IdStyle = idStyle,
+        IdWidth = width ?? new WidthSpec(4, 4),
+        FilenameCarriesId = carriesId,
         Tier = tier,
         Summary = summary,
         GoesHere = goesHere,
@@ -261,6 +263,52 @@ public class SchemaCheckTests
     [InlineData("slug")]
     public void Every_style_the_id_checks_apply_passes(string style)
         => Assert.Empty(Check(Widgets(idStyle: style)));
+
+    // Reversed, the span admits nothing, so every record of the type fails on an unmeetable range.
+    [Fact]
+    public void A_span_of_widths_the_wrong_way_round_is_reported()
+    {
+        var finding = Assert.Single(Check(
+            Widgets(idStyle: "mnemonic", width: new WidthSpec(7, 2), carriesId: false)));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Contains("above its 'max:' of 2", finding.Message);
+    }
+
+    // A number is padded to one width so that ids sort, so a span there is two ids for one record.
+    [Fact]
+    public void A_span_of_widths_on_a_numbered_type_is_reported()
+    {
+        var finding = Assert.Single(Check(
+            Widgets(idStyle: "numbered", width: new WidthSpec(2, 7), carriesId: false)));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Contains("padded to one width", finding.Message);
+    }
+
+    // A span admits several lengths, so the head of a topical filename binds to whichever id it spells.
+    [Fact]
+    public void A_span_of_widths_beside_a_filename_that_carries_the_id_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(idStyle: "mnemonic", width: new WidthSpec(2, 7))));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Contains("span of 2 to 7", finding.Message);
+    }
+
+    [Fact]
+    public void A_span_of_widths_passes_where_the_filename_carries_no_id()
+        => Assert.Empty(Check(Widgets(idStyle: "mnemonic", width: new WidthSpec(2, 7), carriesId: false)));
+
+    // A slug id is the filename stem, so a slug type withholding it has withheld the id itself.
+    [Fact]
+    public void A_slug_type_that_withholds_its_id_from_the_filename_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(carriesId: false)));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Contains("nothing left for the id to be", finding.Message);
+    }
 
     // An absent key and a deliberate `folder: null` are the same empty string by the time this reads it.
     [Fact]

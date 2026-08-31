@@ -64,7 +64,7 @@ services, the two NFRs they carry, and two standards saying what the inherited p
 else a payments team is bound by is one repository away and cited by id.
 
 **The same obligation is met at two layers.** `eng:pol-SCRT.LOGS` prohibits writing a secret to a log. The governance
-corpus's own secret-handling standard discharges it for the whole estate, and [std-0002] discharges it again for a PSP
+corpus's own secret-handling standard discharges it for the whole estate, and [std-TELEM] discharges it again for a PSP
 key and a card token. Neither restates the other, and both name the clause.
 
 ## What this corpus declares about itself
@@ -107,4 +107,4 @@ with `template/`. A corpus outside this repository carries its own at its own ro
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
 
-[std-0002]: standards/payment-telemetry.md
+[std-TELEM]: standards/payment-telemetry.md

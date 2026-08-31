@@ -109,18 +109,18 @@ public class ResolverTests
     // The prose citation under test, in a standard, against a corpus holding one policy and importing
     // another corpus that holds two records.
     private static List<Finding> Cite(string body, ImportGraph? imports = null)
-        => Check($"# std-0001\n\n{body}\n", null, imports);
+        => Check($"# std-ERRORS\n\n{body}\n", null, imports);
 
     private static List<Finding> Implements(string target, ImportGraph? imports = null)
-        => Check("# std-0001\n", target, imports);
+        => Check("# std-ERRORS\n", target, imports);
 
     private static List<Finding> Check(string body, string? implements, ImportGraph? imports)
     {
         var schema = Schema();
         var docs = new List<Doc>
         {
-            Doc.Parse("standards/std-0001.md",
-                $"---\nid: std-0001\n{(implements is null ? "" : $"implements: {implements}\n")}---\n\n{body}",
+            Doc.Parse("standards/error-responses.md",
+                $"---\nid: std-ERRORS\n{(implements is null ? "" : $"implements: {implements}\n")}---\n\n{body}",
                 schema)!,
             Doc.Parse("policies/pol-LOCAL.md",
                 "---\nid: pol-LOCAL\n---\n\n# pol-LOCAL\n\n## Clauses\n\n"
