@@ -30,6 +30,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   entry check first and took the run down, so the message never printed.
 - **Declining `kac update --drop-type` says `update`, where it used to say `new`.** The message is the tail of the
   command that printed it, and the one it named was a command the reader had not run.
+- **A rule whose `expr:` names a number too large for a whole number is reported, rather than ending in a stack
+  trace.** `words() < 99999999999` reached the parser's integer literal and overflowed past the exception the schema
+  load catches. `kac validate` now names the number, its position and the rule.
 
 ## 0.18.0 - 2026-08-31
 
