@@ -167,7 +167,7 @@ Examples read `Write: ... Not: ...`. The first is the one to copy.
   reader hears the sentence the way it was meant. Reach for it where the stress is the point, and leave it alone
   everywhere else: a page of emphasis emphasises nothing. Write it with asterisks, as the rest of the corpus does.
   Write: "software that serves *most* of them."
-* **No emoji.**
+* **No emoji decorating prose.** A tick and a cross marking a good-and-bad pair are labels rather than decoration.
 * **Use a numbered list only when the order carries meaning.** Introduce a list with a sentence saying what the items
   are, and keep the items parallel. Where the items speak for themselves, open the list without a stem.
 
