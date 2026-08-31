@@ -13,8 +13,8 @@ page keys off that.
 
 An ADR and a postmortem have nothing in common as subject matter. As behaviour they are identical: both are accounts
 that were true at a moment, both become misleading if edited afterwards, and both are superseded rather than corrected.
-So they share a **tier**, meaning the group a type belongs to by how it behaves, and the tier carries the rules: the
-review bar, the validation, the language, and the expectation of immutability.
+So they share a **tier**, meaning the group a type belongs to by how it behaves. The tier carries the rules: the review
+bar, the validation, the language, and the expectation of immutability.
 
 The taxonomy therefore grows without new machinery.
 
@@ -28,8 +28,8 @@ inheriting someone else's retention policy. It also turns *which of these files 
 [`kac update --check`](../cli/update.md) answers.
 
 The framework's own `manifest.yaml` declares which files fall on which side, so no prose has to assert it. Every file
-resolves to exactly one **layer**, meaning who owns a file and what happens when it differs from upstream, and each
-layer has a rule about what divergence means.
+resolves to exactly one **layer**, meaning who owns a file and what happens when it differs from upstream. Each layer
+has its own rule about what divergence means.
 
 ## Schema before prose
 
@@ -47,7 +47,7 @@ taxonomy without waiting on a change to the code.
 Repositories and folders are storage. The relationships are the knowledge.
 
 A policy is implemented by a standard, verified by a control, applied to a service, contributing to a capability. That
-chain is meaningful whichever folder each record sits in, and it carries the value: a service document is a fact, but a
+chain is meaningful whichever folder each record sits in, and it carries the value. A service document is a fact. A
 service document that can tell you which standards bind it is an answer.
 
 The graph is also the part that breaks silently. So reciprocal edges must agree in both directions, and a one-sided link
@@ -59,8 +59,8 @@ Every record has exactly one home. Where two places need the same knowledge, the
 copying it.
 
 A copy does not stay in step. Someone updates one and not the other, and afterwards nobody can tell which is current,
-so a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none,
-because a gap is visible and a contradiction is not.
+so a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none, because a
+gap is visible and a contradiction is not.
 
 ## Cheap capture, deliberate promotion
 
@@ -90,7 +90,7 @@ newer one is a version they choose to take.
 
 The cost is **drift** in the half they own, meaning a file that no longer matches the upstream it came from. A manifest
 and a descriptor answer it. A corpus records which version of the shared layer it is on, and which divergences it has
-deliberately accepted, so a necessary deviation does not look like an accident.
+deliberately accepted. A necessary deviation therefore does not look like an accident.
 
 ## Readable and writable by agents
 

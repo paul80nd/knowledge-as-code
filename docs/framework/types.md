@@ -1,11 +1,11 @@
 # The default types
 
 Seventeen knowledge types ship with the framework. A corpus adopts the ones it needs by naming them in `types:` in
-[`.corpus.yaml`](../corpus-descriptor.md), and a declined type's schema file is never written, so nothing arrives to be
+[`.corpus.yaml`](../corpus-descriptor.md). A declined type's schema file is never written, so nothing arrives to be
 ignored.
 
-Adopting all of them is not expected. A corpus running one product might stand up four and never want the rest, and
-it can declare a type of its own that the framework has never heard of. What follows is what you get without deciding
+Adopting all of them is not expected. A corpus running one product might stand up four and never want the rest. It can
+also declare a type of its own that the framework has never heard of. What follows is what you get without deciding
 anything.
 
 They are grouped by [tier](taxonomy.md#the-five-tiers), because tier is what sets the rules each one answers to.
@@ -65,15 +65,14 @@ Perishable. Unreviewed until promoted, and it expires by default.
 ## The pairs that look alike
 
 Several of these sit close enough to be confused, and the schema declares the distinction on the type it belongs to. An
-ADR is the decision and its reasoning, frozen; a standard is the rule that results, kept current. A process is read at a
-desk; a runbook is read at three in the morning. A discovery is cheap and unverified; an FAQ is what it becomes once
+ADR is the decision and its reasoning, frozen. A standard is the rule that results, kept current. A process is read at
+a desk, and a runbook at three in the morning. A discovery is cheap and unverified, and an FAQ is what it becomes once
 somebody confirms it.
 
-A corpus's own taxonomy page renders every such pair it holds both sides of, so the distinctions you meet are the ones
-your own types actually raise.
+A corpus's own taxonomy page renders every such pair it holds both sides of. The distinctions you meet are therefore
+the ones your own types actually raise.
 
 ## Adding one of your own
 
-A type is a YAML file in `.schema/` declaring its fields, its tier and its rules. Nothing in `kac` changes, and nothing
-upstream has to agree. [Taxonomy](taxonomy.md#changing-the-taxonomy) says what that costs and where the decision
-belongs.
+A type is a YAML file in `.schema/` declaring its fields, its tier and its rules, and nothing upstream has to agree.
+[Taxonomy](taxonomy.md#changing-the-taxonomy) says what it takes, what it costs, and where the decision belongs.

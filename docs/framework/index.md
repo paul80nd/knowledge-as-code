@@ -2,7 +2,7 @@
 
 Knowledge as Code is a way of holding engineering knowledge: plain Markdown in git, where every document carries a type
 and every type declares a schema. `kac` is the tool that holds a corpus to that schema. This section is the framework
-itself, meaning the ideas the tool serves rather than the commands that serve them.
+itself, meaning the ideas the tool serves rather than the commands serving them.
 
 A **corpus** is one repository of knowledge records, with the schema it runs. Every corpus takes the same framework
 and fills it with its own knowledge.
@@ -23,9 +23,9 @@ and fills it with its own knowledge.
 
 ## What a corpus holds beside these
 
-Four pages travel with each corpus as well. Three of them carry tables generated from the types that corpus adopted, so
-a corpus that took five of the framework's types gets five rows linking to pages it holds. Contributing carries no
-generated block: it is the way in, and what a corpus adds locally.
+Four pages travel with each corpus as well. Three of them carry tables generated from the types that corpus adopted. A
+corpus that took five of the framework's types therefore gets five rows, each linking to a page it holds. Contributing
+carries no generated block: it is the way in, and what a corpus adds locally.
 
 | In the corpus | Answers                                                              |
 |---------------|----------------------------------------------------------------------|
