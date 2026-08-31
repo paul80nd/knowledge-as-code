@@ -181,8 +181,8 @@ NuGet client.
 Run `pack` in the gate, where it proves the corpus can still be packaged. Push it from a separate job, because that
 job needs a credential the gate should not hold.
 
-Ask the registry what it already holds before you push. A published version is never replaced, so a run that would
-overwrite one has met a `content-version` somebody forgot to bump:
+A published version is never replaced, so pushing one the registry already holds fails rather than overwriting it.
+That failure means a `content-version` somebody forgot to bump:
 
 ```bash
 VERSION=$(jq -r '.contentVersion' .dist/export/manifest.json)
@@ -193,6 +193,8 @@ dotnet nuget push ".dist/package/$ID.$VERSION.nupkg" \
   --api-key "$GITHUB_TOKEN"
 ```
 
-The job needs `packages: write` in GitHub Actions.
+The job needs `packages: write` in GitHub Actions. That block pushes and asks the registry nothing, so a re-run of a
+corpus whose version has not moved fails on the push.
 [`publish-corpus.yml`](https://github.com/paul80nd/knowledge-as-code/blob/main/.github/workflows/publish-corpus.yml)
-is the whole pipeline this repository publishes from, guard included.
+is the whole pipeline this repository publishes from. It asks the registry what it holds first and skips a version
+already there, which is what keeps that re-run green.
