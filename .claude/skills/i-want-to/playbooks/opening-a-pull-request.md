@@ -5,7 +5,8 @@ Run at the end of every other playbook. A push to `main` is rejected, so this is
 1. **Ask which pages your change made wrong.** Nothing in CI reads prose for meaning, so this is yours. A change to a
    command reaches [`docs/`](../../../../docs/) and often `tooling/README.md`. A change to what the tool is for reaches
    the root `README.md` and `PACKAGE.md`. A change to the schema reaches `.schema/README.md`,
-   `.schema/meta/type.schema.json` and `docs/schema/`, all three authored once at the root.
+   `.schema/meta/type.schema.json`, `docs/framework/metadata.md` and `docs/design/held-to.md`, all four authored
+   once at the root.
 2. **Write the changelog entry**, where the tool changed. A line under `## Unreleased` in
    [`CHANGELOG.md`](../../../../tooling/kac/CHANGELOG.md), on this branch. One written after the merge reaches nobody.
 3. **Ask whether to release, and recommend an answer.** Moving `<Version>` in

@@ -4,14 +4,14 @@
 
 name: publish-docs
 
+# No `paths:` filter. A page's content need not come from the file holding the page: docs/changelog.md is
+# a snippet of tooling/kac/CHANGELOG.md, so a release moves the site without touching anything a filter
+# naming docs/ would list. Such a filter has to name every input the site reads, and the one that goes
+# unlisted is invisible. The concurrency group below holds the cost of building on every push to one run.
 on:
   push:
     branches:
       - main
-    paths:
-      - docs/**
-      - mkdocs.yml
-      - .github/workflows/publish-docs.yml
 
 permissions:
   contents: read
