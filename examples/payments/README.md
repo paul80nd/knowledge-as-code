@@ -46,6 +46,10 @@ kac checks       # list every check the validator implements
 `restore` comes first, and it needs a package to take. Run `kac export` and then `kac pack` in
 [`../engineering/`](../engineering/) once, and this corpus's `source:` has a folder to read.
 
+`export` and `bundle` run here and write nothing worth reading. None of the types this corpus adopts declares an
+`export:` block, so the export carries its manifest and no records.
+[`../README.md`](../README.md#what-is-not-built-yet) says what that leaves and where it gets built.
+
 While you are changing the tool, run `dotnet run --project ../../tooling/kac -- validate` instead. That reaches the
 working tree, and an installed `kac` does not.
 
@@ -76,8 +80,7 @@ live in it, each named for what it versions, and the file's own comments say wha
 
 Declaring `types:` states a decision rather than the shape the folders happen to have. `validate` then holds the corpus
 to standing up everything it declared, and every generated list of types is written from that declaration. That matters
-most here: fourteen of the seventeen types this framework offers were declined, and the file is where that decision is
-written down.
+most here: this corpus declined more types than it adopted, and the file is where that decision is written down.
 
 ## Layout
 

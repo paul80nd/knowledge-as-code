@@ -33,7 +33,7 @@ public partial class DefaultTypesTests
             Listed().OrderBy(x => x, Comparer<(string, string)>.Default));
 
     // The count the page opens on, spelled as prose spells it. A type added moves this, and nothing else on the
-    // site may state it: `framework/index.md` and `getting-started.md` both carried a copy, and a copy is what
+    // file may state it: `framework/index.md` and `getting-started.md` both carried a copy, and a copy is what
     // goes stale on the day somebody adds the eighteenth.
     private static readonly string[] Numbers =
     [
@@ -51,16 +51,22 @@ public partial class DefaultTypesTests
             Page, StringComparison.Ordinal);
     }
 
+    // Tracked files rather than a folder walk, so a worktree under `.claude/` and an untracked scratch
+    // file are somebody else's business. The prose files are the ones a reader meets a number in.
     [Fact]
-    public void No_other_page_states_that_count()
+    public void No_other_file_states_that_count()
     {
         var word = Spelled(Schema.Load(Repo.Root).ByFolder.Count);
-        var docs = Path.Combine(Repo.Root, "docs");
+        var tracked = GitFiles.Tracked(Repo.Root);
 
-        var elsewhere = Directory.EnumerateFiles(docs, "*.md", SearchOption.AllDirectories)
-            .Where(f => Path.GetFileName(f) != "types.md")
-            .Where(f => File.ReadAllText(f).Contains(word, StringComparison.OrdinalIgnoreCase))
-            .Select(f => Path.GetRelativePath(Repo.Root, f).Replace('\\', '/'))
+        Assert.NotNull(tracked);
+
+        var elsewhere = tracked
+            .Where(f => f.EndsWith(".md", StringComparison.Ordinal)
+                        || f.EndsWith(".yaml", StringComparison.Ordinal))
+            .Where(f => f != "docs/framework/types.md")
+            .Where(f => File.ReadAllText(Path.Combine(Repo.Root, f))
+                .Contains(word, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
         Assert.True(elsewhere.Count == 0,
