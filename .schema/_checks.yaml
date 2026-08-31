@@ -429,6 +429,9 @@ checks:
       walks these edges. The spelling faults `part-ref` reports across a boundary are reported here too,
       in the same words, since one lookup answers a citation in prose and one in a field.
 
+      A field declaring `part-required:` is held to the part as well. The record named whole is refused
+      there, because it reads to a coverage report as every part of it.
+
   reciprocal:
     severity: error
     description: A field declaring a `reciprocal:` agrees with its counterpart in both directions.

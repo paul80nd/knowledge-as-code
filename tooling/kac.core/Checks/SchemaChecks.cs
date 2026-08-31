@@ -36,7 +36,7 @@ public static class SchemaChecks
         CheckDeclaredChecks(schema, f);
         foreach (var name in schema.UniversalOrder)
             if (schema.Universal.TryGetValue(name, out var spec))
-                CheckField(".schema/_universal.yaml", name, spec, null, f);
+                CheckField(".schema/_universal.yaml", name, spec, null, schema, f);
 
         foreach (var (key, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
@@ -99,7 +99,7 @@ public static class SchemaChecks
             CheckProse(at, key, t, f);
 
             foreach (var name in t.FieldOrder)
-                CheckField(at, name, t.Fields[name], t, f);
+                CheckField(at, name, t.Fields[name], t, schema, f);
 
             foreach (var rule in t.Rules)
                 CheckRule(at, key, rule, f);
@@ -441,7 +441,7 @@ public static class SchemaChecks
     // `t` is the type declaring the field, and is null for a universal one. A field declared for every
     // type belongs to none of them, so the questions that read the type's own declarations are not
     // asked of it.
-    private static void CheckField(string at, string name, FieldSpec spec, TypeSchema? t,
+    private static void CheckField(string at, string name, FieldSpec spec, TypeSchema? t, Schema schema,
         List<Finding> f)
     {
         if (spec.Problem is { } problem)
@@ -493,6 +493,24 @@ public static class SchemaChecks
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"field '{name}' declares both 'from: {spec.From}' and 'required: true'. A derived field "
                 + "is not the author's to write, so nothing can satisfy the requirement. Drop 'required'."));
+
+        // A part is read out of the record a reference names, so a field declaring no `ref:` gives the
+        // key nothing to be resolved against.
+        if (spec.PartRequired && spec.Refs.Count == 0)
+            Dispatch(at, $"field '{name}' declares 'part-required: true' and no 'ref:'. A part is looked up "
+                         + "in the record the reference names, so nothing reads the key. Declare a 'ref:', "
+                         + "or drop the key.", f);
+
+        // A type keeping no parts answers no citation into one, so every id the field carries would fail
+        // and the way out of it would be an edit to the target's type. Asked of the types this corpus
+        // adopted alone, because a `ref:` naming one it declined is left alone everywhere here.
+        if (spec.PartRequired)
+            foreach (var folder in spec.Refs)
+                if (schema.ByFolder.TryGetValue(folder, out var target) && target.Parts is null)
+                    f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                        $"field '{name}' declares 'part-required: true' and points at '{folder}', which keeps "
+                        + "no parts. Nothing an author writes could reach one, so every record filling the "
+                        + "field would fail. Take the key out, or give the type a 'parts:' block."));
 
         // Any section reconciles, so this is not a vocabulary the tool holds. That is why nothing else
         // would catch a section the type never offers. The reconciliation would run against a heading

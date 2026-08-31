@@ -37,6 +37,11 @@ public sealed class FieldSpec
     // rather than a separate shape.
     public IReadOnlyList<string> Refs { get; init; } = [];
 
+    // Whether an id in this field has to reach a part of the record rather than the record whole. A
+    // standard's `implements:` declares it: a bare policy id is one keystroke shorter than the honest
+    // list of clauses, and it reads to anything walking the edge as every clause covered.
+    public bool PartRequired { get; init; }
+
     public string? Reciprocal { get; init; } // field on the target that must point back
     public string? Pattern { get; init; }
     public Regex? PatternRegex { get; init; }    // Pattern compiled, though the message still quotes the source string
@@ -928,6 +933,7 @@ public sealed partial class Schema
             Entry = entry,
             Values = values,
             Refs = refs,
+            PartRequired = Yaml.Bool(node.Get("part-required")),
             Reciprocal = Yaml.Str(node.Get("reciprocal")),
             Pattern = pattern,
             PatternRegex = CompilePattern(pattern),

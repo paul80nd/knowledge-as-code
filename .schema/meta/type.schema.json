@@ -595,6 +595,10 @@
             }
           ]
         },
+        "part-required": {
+          "description": "Whether an id in this field must reach a part of the record rather than the record whole. A standard's `implements:` declares it, so it names the clauses it puts into practice one by one. The record named whole reads to anything walking the edge as every part covered. Needs a `ref:` to resolve the part against, and every type it names has to keep parts.",
+          "type": "boolean"
+        },
         "reciprocal": {
           "description": "The field on the target that must point back. Every id is resolved against the corpus whether or not the edge is reciprocal, so this declares the return leg and nothing else.",
           "$ref": "#/$defs/name"

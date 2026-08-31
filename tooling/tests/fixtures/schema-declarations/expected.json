@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 25,
+    "errors": 27,
     "warnings": 0,
     "infos": 0
   },
@@ -125,6 +125,13 @@
       "line": null,
       "severity": "error",
       "check": "schema-shape",
+      "message": "field 'related' declares 'part-required: true' and points at 'widgets', which keeps no parts. Nothing an author writes could reach one, so every record filling the field would fail. Take the key out, or give the type a 'parts:' block."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
       "message": "field 'related' declares 'mirrors-section: See also', and the type's 'sections:' block declares no such section. Name a section the type has, or add it."
     },
     {
@@ -147,6 +154,13 @@
       "severity": "error",
       "check": "schema-dispatch",
       "message": "field 'retention' is 'type: string' and declares 'min-records:', which is read against the entries of a list. Declare it 'type: list', or drop the floor."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "field 'retention' declares 'part-required: true' and no 'ref:'. A part is looked up in the record the reference names, so nothing reads the key. Declare a 'ref:', or drop the key."
     },
     {
       "file": ".schema/widgets.yaml",

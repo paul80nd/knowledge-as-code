@@ -14,11 +14,12 @@ so the golden is the schema pass and nothing else.
   The loader asks for severity first, so a rule omitting both reports only the missing severity. The two faults
   therefore need a rule each.
 * **Undispatched** — a rule claiming `severity: warning` that nothing implements, `id.style: roman-numeral`,
-  `index.order: newest-first`, `tier: experimental`, a `values:` list on a `type: list` field, and a `min-items:` on a
-  `type: string` field.
+  `index.order: newest-first`, `tier: experimental`, a `values:` list on a `type: list` field, a `min-items:` on a
+  `type: string` field, and a `part-required:` on a field naming no `ref:` to resolve the part against.
 * **Shape** — a type with no `folder:`, `mirrors-section: See also` where the only section the type declares
-  is `Summary`, `tier: experimental` where `_tiers.yaml` declares no such tier, a `summary:` too long for the table
-  cell it becomes, and no `goes-here:` at all — the two ways one key can fail, taken one each so both are pinned.
+  is `Summary`, `tier: experimental` where `_tiers.yaml` declares no such tier, `part-required: true` on a field
+  pointing at `widgets`, which keeps no parts, a `summary:` too long for the table cell it becomes, and no
+  `goes-here:` at all — the two ways one key can fail, taken one each so both are pinned.
   `label-plural:` and `detail:` are present, since a type with nothing to say about itself would report the same fault
   four times and pin nothing extra.
 * **Export** — a projection every part of which resolves to nothing: `colour` where the type declares no such field,

@@ -28,6 +28,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   cannot act on. One beside a filename that still carries the id, because `secret-handling.md` would otherwise bind
   to whichever id its first segment happens to spell. One on a `numbered` type, which pads to a single width so that
   ids sort. One whose `min:` sits above its `max:`, which no id can meet.
+- **A field can require the part of the record it points at.** A type declares `part-required: true` beside the
+  field's `ref:`, and `kac validate` reports an id there that names the record whole. The message uses the target
+  type's own word for a part, so a field pointing at policies asks for a clause. `kac validate` also reports the key
+  declared with no `ref:` to resolve against, and one pointing at a type that keeps no parts.
 
 ### Changed
 
