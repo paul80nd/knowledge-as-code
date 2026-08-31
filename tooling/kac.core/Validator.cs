@@ -1008,23 +1008,23 @@ public static class Validator
     // document says section by section which of the field's references that stretch of prose answers.
     private static void CheckMirrorsCitations(Doc d, TypeSchema t, Schema schema, Report report)
     {
-        var declared = new List<(FieldSpec Spec, List<CitationFootnote> Lines, List<string> Prefixes)>();
+        var declared = new List<(FieldSpec Spec, List<CitationFootnote> Lines, List<TypeSchema> Targets)>();
         foreach (var spec in t.DeclaredFields)
         {
             if (spec.MirrorsCitations is not { } label) continue;
-            var prefixes = spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>()
-                .Select(target => target.IdPrefix + "-").ToList();
-            if (prefixes.Count == 0) continue;
-            declared.Add((spec, d.CitationFootnotes.GetValueOrDefault(label, []), prefixes));
+            var targets = spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>().ToList();
+            if (targets.Count == 0) continue;
+            declared.Add((spec, d.CitationFootnotes.GetValueOrDefault(label, []), targets));
         }
 
-        // Three faults sit on a line, and all three are decided against the lines rather than against a
-        // field. Two fields spelling one label are handed the same list, so a per-field pass would
+        // Three of the four faults about a line are decided here, against the lines rather than against
+        // a field. Two fields spelling one label are handed the same list, so a per-field pass would
         // report each line twice, and would call a line answering one of those fields empty for the
-        // other.
+        // other. The fourth is below, `part-required:` being the field's declaration rather than the
+        // line's.
         //
-        // Whatever is wrong with a line, its citations count. A document that only got the line wrong
-        // gets one finding rather than one per id it named.
+        // Reporting against the line is what keeps a broken one to a single finding. Its citations
+        // still count below, so the field is not also told that every id the line named is missing.
         //
         // The comparer is held in a typed local so the group key comes from the selector. Passed
         // inline, it widens the key to object and the group no longer enumerates.
@@ -1032,7 +1032,7 @@ public static class Validator
         foreach (var group in declared.GroupBy(x => x.Lines, sameLines))
         {
             var label = group.First().Spec.MirrorsCitations!;
-            var prefixes = group.SelectMany(x => x.Prefixes).ToList();
+            var targets = group.SelectMany(x => x.Targets).ToList();
             foreach (var footnote in group.Key)
             {
                 // Reported and stopped. Until the line is the form, where it sits and what it gathers
@@ -1049,21 +1049,60 @@ public static class Validator
                     report.Err(new CheckId("mirrors-citations"),
                         $"this '{label}' line stands in the middle of a section. Write it as the last "
                         + "thing under the heading it belongs to.", footnote.Line);
-                if (!footnote.Citations.Any(citation => Gathers(prefixes, citation)))
+                if (!footnote.Citations.Any(citation => Gathered(targets, citation) is not null))
                     report.Err(new CheckId("mirrors-citations"),
                         $"this '{label}' line names nothing it could gather. Name what the section "
                         + "answers, or take the line off.", footnote.Line);
             }
         }
 
-        foreach (var (spec, lines, prefixes) in declared)
+        foreach (var (spec, lines, targets) in declared)
         {
             var label = spec.MirrorsCitations!;
             var inFront = new HashSet<string>(d.FrontList(spec.Name), StringComparer.OrdinalIgnoreCase);
-            var inBody = new HashSet<string>(
-                lines.SelectMany(footnote => footnote.Citations)
-                    .Where(citation => Gathers(prefixes, citation)),
-                StringComparer.OrdinalIgnoreCase);
+            var inBody = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            // A field requiring the part admits no bare id, so a line naming a record whole is not
+            // something the field can be edited to admit. It is kept out of the union: left in, the
+            // author would be sent to the field and told there to come back.
+            //
+            // Asked per field, where the three faults above are asked once across every field sharing
+            // the label. `part-required:` is one field's declaration, so two fields spelling one label
+            // may disagree about a line, and each is entitled to its own answer.
+            foreach (var footnote in lines)
+            {
+                var whole = new List<(TypeSchema Target, string Id)>();
+                foreach (var text in footnote.Citations)
+                {
+                    if (Gathered(targets, text) is not { } target) continue;
+                    var citation = Citation.Read(text);
+                    if (spec.PartRequired && citation.Part is null) whole.Add((target, citation.Whole));
+                    else inBody.Add(text);
+                }
+
+                // Reported against the line in the words `ref-resolves` uses, and once for the line
+                // however many ids it named: one repair reported six times is what the other three
+                // faults are shaped to avoid. Twice only where the line names records of two types
+                // whose words for a part differ, and each finding then carries the right one.
+                //
+                // Only where the line is the form. A line already told it is not italic has a repair
+                // to make first.
+                if (!footnote.Italic) continue;
+                foreach (var byTarget in whole.GroupBy(x => x.Target))
+                {
+                    var noun = byTarget.Key.Parts?.Noun ?? "part";
+                    var ids = byTarget.Select(x => x.Id)
+                        .Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                    var write = ids.Count == 1
+                        ? $"Write '{ids[0]}.<{noun}>'"
+                        : $"Write each as '<id>.<{noun}>'";
+
+                    report.Err(new CheckId("mirrors-citations"),
+                        $"this '{label}' line names {string.Join(", ", ids.Select(id => $"'{id}'"))} "
+                        + $"whole, and '{spec.Name}' names a {noun}. {write}, one entry per {noun}. A "
+                        + $"bare id reads as every {noun} covered.", footnote.Line);
+                }
+            }
 
             foreach (var id in inFront.Except(inBody, StringComparer.OrdinalIgnoreCase))
                 report.Err(new CheckId("mirrors-citations"),
@@ -1075,12 +1114,20 @@ public static class Validator
         }
     }
 
-    // Only the types a field points at. A rule leans on the rules of other standards and on the ADR that
-    // decided it, and a line naming one of those is prose rather than coverage: the field could not carry
-    // it, so reporting it would be a finding nothing could clear. A line naming only those therefore
-    // gathers nothing, which is what an empty line is.
-    private static bool Gathers(List<string> prefixes, string citation) =>
-        prefixes.Any(prefix => Citation.Read(citation).Record.StartsWith(prefix, StringComparison.Ordinal));
+    // The type a citation belongs to, of the types a field points at, or null where it belongs to none. A
+    // rule leans on the rules of other standards and on the ADR that decided it, and a line naming one of
+    // those is prose rather than coverage: the field could not carry it, so reporting it would be a
+    // finding nothing could clear. A line naming only those therefore gathers nothing, which is what an
+    // empty line is.
+    //
+    // The type rather than a yes, because a message about the citation borrows that type's noun for a
+    // part.
+    private static TypeSchema? Gathered(List<TypeSchema> targets, string citation)
+    {
+        var record = Citation.Read(citation).Record;
+        return targets.FirstOrDefault(
+            target => record.StartsWith(target.IdPrefix + "-", StringComparison.Ordinal));
+    }
 
     // The type's own `rules:`, in the order the schema declares them. Two kinds arrive here. A rule
     // carrying an `expr:` is answered by evaluating it, and needs no C# at all. A rule whose question

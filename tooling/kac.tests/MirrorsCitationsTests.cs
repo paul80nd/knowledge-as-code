@@ -122,6 +122,45 @@ public class MirrorsCitationsTests
                         + "section that answers it with one, or take the id out of the field.",
             Assert.Single(Reconcile("**Covers:** [pol-SCRT].ROTATE", "pol-SCRT.ROTATE")).Message);
 
+    // Putting the id in the field is what the ordinary message implies, and `ref-resolves` refuses it
+    // there. So the line is told what the field would have told the author on the next run, in the
+    // target type's own word for a part.
+    [Fact]
+    public void A_line_naming_a_record_whole_under_a_part_required_field_is_told_to_name_the_part()
+    {
+        var found = Assert.Single(Reconcile("_**Covers:** [pol-SCRT]_"));
+
+        Assert.Equal("this 'Covers' line names 'pol-SCRT' whole, and 'implements' names a clause. Write "
+                     + "'pol-SCRT.<clause>', one entry per clause. A bare id reads as every clause "
+                     + "covered.", found.Message);
+        Assert.Equal(10, found.Line);
+    }
+
+    // Once for the line however many ids it named. One repair reported many times is what the other
+    // three faults are shaped to avoid, and this one was written outside that shape.
+    [Fact]
+    public void A_line_naming_several_records_whole_is_reported_once()
+        => Assert.Equal("this 'Covers' line names 'pol-SCRT', 'pol-OTHR' whole, and 'implements' names "
+                        + "a clause. Write each as '<id>.<clause>', one entry per clause. A bare id "
+                        + "reads as every clause covered.",
+            Assert.Single(Reconcile("_**Covers:** [pol-SCRT], [pol-OTHR]_")).Message);
+
+    // The same id twice on one line is one fault. The union this replaced went through a set, so the
+    // repeat collapsed there and has to collapse here.
+    [Fact]
+    public void A_record_named_whole_twice_on_one_line_is_reported_once()
+        => Assert.Equal("this 'Covers' line names 'pol-SCRT' whole, and 'implements' names a clause. "
+                        + "Write 'pol-SCRT.<clause>', one entry per clause. A bare id reads as every "
+                        + "clause covered.",
+            Assert.Single(Reconcile("_**Covers:** [pol-SCRT], [pol-SCRT]_")).Message);
+
+    // A field admitting a bare id has nothing to complain about, so the ordinary message is the right
+    // one and it stands against the frontmatter.
+    [Fact]
+    public void A_line_naming_a_record_whole_under_a_field_admitting_one_keeps_the_ordinary_message()
+        => Assert.Equal("a 'Covers' line names 'pol-SCRT' and 'implements' does not list it.",
+            Assert.Single(Reconcile(Schema(partRequired: false), "_**Covers:** [pol-SCRT]_")).Message);
+
     // Two fields spelling one label are handed the same lines, so what is wrong with a line is decided
     // across both. A line answering one of them is not empty for the other, and a misplaced line is one
     // finding rather than two.
@@ -188,8 +227,9 @@ public class MirrorsCitationsTests
 
     // A standard whose `implements:` reconciles against a `Covers` line, and the policy its clause ids
     // point at. Two types, because the reconciliation is scoped to the types the field references and a
-    // one-type corpus could never show that.
-    private static Schema Schema() => new()
+    // one-type corpus could never show that. The policy keeps clauses, as the real one does, so a
+    // message about a citation of one has the word to use.
+    private static Schema Schema(bool partRequired = true) => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>
         {
@@ -201,11 +241,15 @@ public class MirrorsCitationsTests
                     new FieldSpec
                     {
                         Name = "implements", Type = "list", Of = "id", Refs = ["policies"],
-                        MirrorsCitations = "Covers"
+                        MirrorsCitations = "Covers", PartRequired = partRequired
                     }
                 ]
             },
-            ["policies"] = new() { Key = "policies", Folder = "policies", IdPrefix = "pol" }
+            ["policies"] = new()
+            {
+                Key = "policies", Folder = "policies", IdPrefix = "pol",
+                Parts = new PartSpec("table", "", [], []) { Noun = "clause", Section = "Clauses" }
+            }
         }
     };
 
@@ -215,15 +259,19 @@ public class MirrorsCitationsTests
     // The definitions are what make each label a link. A shortcut reference with none behind it is a
     // bracket in prose, and the citation would never be collected at all.
     private static List<Finding> Reconcile(string body, params string[] implements)
+        => Reconcile(Schema(), body, implements);
+
+    private static List<Finding> Reconcile(Schema schema, string body, params string[] implements)
     {
         var field = string.Concat(implements.Select(id => $"  - {id}\n"));
         var text = $"---\nid: std-SECRET\nimplements:\n{field}---\n\n# A standard\n\n"
-                   + $"## A rule\n\n{body}\n\n[pol-SCRT]: scrt.md\n[std-OTHER]: other.md\n";
-        var doc = Doc.Parse("standards/secret-handling.md", text, Schema());
+                   + $"## A rule\n\n{body}\n\n[pol-SCRT]: scrt.md\n[pol-OTHR]: othr.md\n"
+                   + "[std-OTHER]: other.md\n";
+        var doc = Doc.Parse("standards/secret-handling.md", text, schema);
         Assert.NotNull(doc);
 
         var found = new List<Finding>();
-        Validator.CheckDocument(doc, Schema(), new Tree(new HashSet<string>(), _ => ""), found);
+        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found);
         return [.. found.Where(x => x.Check.Value == "mirrors-citations")];
     }
 }

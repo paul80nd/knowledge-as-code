@@ -596,7 +596,7 @@
           ]
         },
         "part-required": {
-          "description": "Whether an id in this field must reach a part of the record rather than the record whole. A standard's `implements:` declares it, and names clauses one by one. Needs a `ref:` to resolve the part against, and every type it names has to keep parts.",
+          "description": "Whether an id in this field must reach a part of the record rather than the record whole. A standard's `implements:` declares it, and names clauses one by one. A `mirrors-citations:` line naming a record whole is held to it too. Needs a `ref:` to resolve the part against, and every type it names has to keep parts.",
           "type": "boolean"
         },
         "reciprocal": {
