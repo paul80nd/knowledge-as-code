@@ -1,4 +1,4 @@
-# Engineering Standards
+# Standards
 
 Teams follow these standards when they build and review functionality: the normative patterns and practices of the
 platform.
@@ -102,11 +102,10 @@ seldom starts from nothing, and a standard adding exceptions to somebody else's 
 document. Mark an entry **normative** where a reader has not read the rule until they have read the source, and
 **informative** where the source is background.
 
-**A baseline is not a posture.** [Frameworks](frameworks.md) records the standing we take against a framework a policy
-clause cites, and it is the only page recording one. A baseline is the document a standard's own rules defer to. Where
-the two look alike, apply the test a policy is written against: would this still be true after replacing the entire
-technology estate? A WCAG posture survives it. A C# style baseline dies with C#, and it goes in the standard deferring
-to it.
+**A baseline is not a posture.** [Frameworks](frameworks.md) records the standing we take against a framework this
+corpus cites, and it is the only page recording one. A baseline is the document a standard's own rules defer to. Where
+the two look alike, ask whether it would still be true after replacing the entire technology estate. A PCI DSS posture
+survives that. A C# style baseline dies with C#, and it goes in the standard deferring to it.
 
 Standards are living documents, and we edit them in place. Record every material change in the changelog.
 
