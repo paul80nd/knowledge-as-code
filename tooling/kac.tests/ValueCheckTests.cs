@@ -167,6 +167,15 @@ public class ValueCheckTests
     }
 
     [Fact]
+    public void An_object_list_declaring_no_entry_block_requires_nothing()
+    {
+        var spec = new FieldSpec { Name = "field", Type = "list", Of = "object" };
+        var found = Assert.Single(Run("field:\n  - framework: ISO\n", spec));
+        Assert.Equal("entry-key", found.Check.Value);
+        Assert.Contains("carries 'framework'", found.Message);
+    }
+
+    [Fact]
     public void A_pattern_on_a_scalar_field_calls_it_a_value()
     {
         var spec = new FieldSpec

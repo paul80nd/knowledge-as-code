@@ -23,6 +23,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   to, each marked normative or informative. A rule built on somebody else's conventions then says where the rest of it
   lives. `kac new` ships the section in the standards template, and a standard deferring to nothing deletes it.
 
+### Fixed
+
+- **`kac validate` reports a schema declaring `of: object` with no `entry:` block, rather than ending in a stack
+  trace.** The schema pass already names that fault as `schema-shape`. A record filling such a field reached the
+  entry check first and took the run down, so the message never printed.
+
 ## 0.18.0 - 2026-08-31
 
 ### Added

@@ -228,7 +228,11 @@ public static class ValueChecks
         // Named against the entry rather than the field, using whatever the entry does carry to say
         // which of several it is. An entry missing the very key that names it has nothing to be quoted
         // by, and the line is what locates it instead.
-        foreach (var missing in spec.Entry!.Where(k => k.Required && !present.Contains(k.Name)))
+        //
+        // A field declaring `of: object` and no `entry:` block requires nothing here, because there is no
+        // shape to require it. `schema-shape` reports that schema as a defect. A record reaching this line
+        // must not take the run down before that message is printed.
+        foreach (var missing in (spec.Entry ?? []).Where(k => k.Required && !present.Contains(k.Name)))
             report.Err(new CheckId("entry-key"),
                 $"'{name}' entry {Names(map, spec)} is missing '{missing.Name}'.",
                 Yaml.LineOf(map, frontStart));
