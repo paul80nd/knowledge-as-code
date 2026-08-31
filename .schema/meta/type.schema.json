@@ -150,9 +150,36 @@
           ]
         },
         "width": {
-          "description": "How many characters a `numbered` or `mnemonic` discriminator carries. Defaults to 4. A `slug` has no fixed width and does not read it.",
-          "type": "integer",
-          "minimum": 1
+          "description": "How many characters a `numbered` or `mnemonic` discriminator carries. Either an exact count, or a `min`/`max` span. Defaults to 4. A `slug` has no fixed width and does not read it. A span is for `mnemonic` alone, whose length follows the concept it names, and it requires `filename.carries-id: false`, because several lengths cannot all be read out of one filename. A `numbered` id is padded to one width so that ids sort.",
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "min",
+                "max"
+              ],
+              "properties": {
+                "notes": {
+                  "$ref": "#/$defs/notes"
+                },
+                "min": {
+                  "description": "The shortest discriminator this type admits.",
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "max": {
+                  "description": "The longest discriminator this type admits.",
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          ]
         }
       },
       "dependentSchemas": {
@@ -185,6 +212,10 @@
         "pattern": {
           "description": "What a record's filename must match, `.md` included.",
           "$ref": "#/$defs/regex"
+        },
+        "carries-id": {
+          "description": "Whether the filename opens with the id's discriminator, as `0007-decide-x.md` and `vurm-remediation.md` do. Defaults to true. Set false where records are filed by topic alone, and then nothing reads the head of a filename as an id: not the agreement between the two, not the slug `slug-max` measures, and not the citation a link to the file would otherwise carry.",
+          "type": "boolean"
         },
         "slug-max": {
           "description": "The longest slug a filename may carry: the slug the author chose, so the extension is dropped and so is the discriminator where the name carries one ahead of it. Defaults to 30.",

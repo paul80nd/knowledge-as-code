@@ -1,5 +1,5 @@
 ---
-id: std-{{nnnn}}
+id: std-{{MNEM}}
 tier: normative
 status: draft
 derived-from:
@@ -13,7 +13,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Standard: std-{{nnnn}}` `DRAFT`
+`Standard: std-{{MNEM}}` `DRAFT`
 
 Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
 real one — it carries the frontmatter, identity line and required sections that `kac validate` holds

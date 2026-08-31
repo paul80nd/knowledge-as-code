@@ -22,10 +22,10 @@ The standard owns the *what*, and says what that obligation means for a payment.
 | Layer                          | Answers                                      | Where it lives     |
 |--------------------------------|----------------------------------------------|--------------------|
 | Policy, as `eng:pol-SCRT`      | What are we committed to, whatever we build? | `../engineering/`  |
-| Standard, as `std-0002`        | What must I do about it in payments?         | Here               |
+| Standard, as `std-TELEM`       | What must I do about it in payments?         | Here               |
 
 A clause may be discharged in both corpora at once. `eng:pol-SCRT.LOGS` prohibits writing a secret to a log, the
-governance layer's own secret-handling standard says what that means estate-wide, and [std-0002] says what it means for
+governance layer's own secret-handling standard says what that means estate-wide, and [std-TELEM] says what it means for
 a PSP key. Neither restates the other, and a reader following the clause id finds both.
 
 ## Why we use them
@@ -87,6 +87,9 @@ concrete artefact, sharpen it or move it to the rationale section. Every **MUST*
 corresponding control, even where that control's mechanism is `not-enforced`. An honest gap is more useful than a silent
 one.
 
+**A standard's size follows its subject.** One binding every piece of work usually runs to seven or eight rules, and one
+covering a single interface may run to thirty. Neither is padded or cut to meet the other.
+
 Standards are living documents, and we edit them in place. Record every material change in the changelog.
 
 ## What CI checks
@@ -131,4 +134,4 @@ Standards are living documents, and we edit them in place. Record every material
 
 <!-- END GENERATED: checks-standards -->
 
-[std-0002]: standards/payment-telemetry.md
+[std-TELEM]: standards/payment-telemetry.md

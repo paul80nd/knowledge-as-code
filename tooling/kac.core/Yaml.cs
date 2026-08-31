@@ -44,7 +44,18 @@ public static class Yaml
     }
 
     public static bool Bool(YamlNode? node)
-        => (node as YamlScalarNode)?.Value?.ToLowerInvariant() is "true" or "yes";
+        => Bool(node, false);
+
+    // The same reading for a key whose absence means yes. Both spellings of each answer are taken, because
+    // YAML admits `no` and `off` as well as `false`, and a schema writing one of those to switch something
+    // off would otherwise switch it on. Anything else falls back, which is what an absent key does.
+    public static bool Bool(YamlNode? node, bool fallback)
+        => (node as YamlScalarNode)?.Value?.ToLowerInvariant() switch
+        {
+            "true" or "yes" or "on" => true,
+            "false" or "no" or "off" => false,
+            _ => fallback
+        };
 
     public static int Int(YamlNode? node, int fallback)
         => int.TryParse((node as YamlScalarNode)?.Value, out var v) ? v : fallback;

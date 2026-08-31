@@ -1,12 +1,12 @@
 # Automation
 
 What a pipeline does for a corpus, and what it deliberately leaves alone. `kac checks` lists every check the validator
-can emit against the corpus it is run in, and that command is the authority on what runs. This page says what the checks
-are for.
+can emit against the corpus it is run in, and that command is the authority on what runs. This page says what the
+checks are for.
 
 **Every check reads the corpus. None reads the estate the corpus describes.** A service deleted last month still
-validates cleanly, and a descriptive record is only as true as the person who last read it. That limit is worth
-carrying: a green build says the corpus is consistent, rather than that it is right.
+validates cleanly. A descriptive record is only as true as the person who last read it. That limit is worth carrying: a
+green build says the corpus is consistent, rather than that it is right.
 
 ## What a pipeline runs
 
@@ -48,8 +48,8 @@ is declared on the types where the risk actually lives, which today means integr
 ### Rules the schema declares and nothing runs
 
 A type may declare a rule with a description and no severity. `validate` skips it, and the type's own page renders it
-under *Declared, not yet enforced*, so a reader meets the gap on the page they were already reading. What the schema
-refuses is a severity with nothing behind it, so a rule cannot claim to run and then not.
+under *Declared, not yet enforced*. A reader therefore meets the gap on the page they were already reading. What the
+schema refuses is a severity with nothing behind it, so a rule cannot claim to run and then not.
 
 ## What generation protects
 
@@ -60,15 +60,14 @@ whose markers have gone is written by nothing, so their presence is itself check
 Only the types a corpus adopted are generated, so every generated list names pages that corpus actually holds.
 [`generate`](../cli/generate.md) says which blocks exist and what each is built from.
 
-**A pipeline never commits.** Where generated content is stale the build fails and names the command to run locally.
-[Contributing](contributing.md#what-a-pipeline-will-not-do) says what that trade buys.
+**A pipeline never commits**, and [Contributing](contributing.md#what-a-pipeline-will-not-do) says why.
 
 ## What is not a record
 
 The framework's own documents, the scaffolding folders, a type's `_template.md` and a corpus's root pages are not
 records, and no schema is applied to them. Each path is named, so nobody answers a validation failure by quietly
-widening an exclusion. The `_` prefix is the one deliberate glob: it belongs to the framework's own artefacts, and the
-tool matches on the prefix itself wherever it appears in a path.
+widening an exclusion. The `_` prefix is the one deliberate glob. It belongs to the framework's own artefacts, and the
+tool matches on the prefix wherever it appears in a path.
 
 Excluding a file as a record does not excuse it from every check. The framework's own documents still link to things, so
 their links are resolved like any page's. A template is checked as a template: a defect in one becomes every record's

@@ -1,5 +1,5 @@
 ---
-id: std-0001
+id: std-VCS
 tier: normative
 status: draft
 implements:
@@ -13,7 +13,7 @@ tags: [ change-management, repositories, source-control ]
 
 # Everything a service needs is committed to its repository
 
-`Standard: std-0001` `DRAFT`
+`Standard: std-VCS` `DRAFT`
 
 ## Summary
 

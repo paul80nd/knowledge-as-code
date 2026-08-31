@@ -35,7 +35,7 @@ corpus because payments is where cards are taken.
 
 This corpus answers for the merchant's own systems, which is a small part of the standard: the card details never reach
 them, so the assessment available to us is the shortest one. What the payment service provider answers for is in their
-own attestation, and [std-0001] holds the contract to naming which requirements sit on which side.
+own attestation, and [std-CARD] holds the contract to naming which requirements sit on which side.
 
 The engineering corpus maps its policies to ISO 27001 and to UK GDPR rather than to this. A policy stating a commitment
 for the whole organisation is not the place for a standard binding one bounded context.
@@ -54,4 +54,4 @@ openly is easier to argue with than one absorbed silently.
 
 _Nothing recorded yet._
 
-[std-0001]: standards/card-data.md
+[std-CARD]: standards/card-data.md

@@ -1,5 +1,5 @@
 ---
-id: std-0002
+id: std-TELEM
 tier: normative
 status: active
 implements:
@@ -16,7 +16,7 @@ tags: [ logging, observability, redaction ]
 
 # A payment leaves an order reference in the logs and nothing else
 
-`Standard: std-0002` `ACTIVE`
+`Standard: std-TELEM` `ACTIVE`
 
 ## Summary
 

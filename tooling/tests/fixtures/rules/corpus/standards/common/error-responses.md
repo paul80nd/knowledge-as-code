@@ -1,5 +1,5 @@
 ---
-id: std-0001
+id: std-ERRORS
 tier: normative
 status: active
 owner: alex.doe
@@ -10,7 +10,7 @@ review-by: "2026-12-31"
 
 # Error responses
 
-`Standard: std-0001` `ACTIVE`
+`Standard: std-ERRORS` `ACTIVE`
 
 ## Summary
 

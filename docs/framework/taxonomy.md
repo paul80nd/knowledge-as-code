@@ -1,12 +1,12 @@
 # Taxonomy
 
 A **type** is what a record is about: a policy, a runbook, a glossary. A **tier** is how it behaves: whether it may be
-edited after acceptance, whether it decays, what has to be true of it. The two are different things, and it is behaviour
-that sets the rules.
+edited after acceptance, whether it decays, what has to be true of it. The two are different things, and it is
+behaviour that sets the rules.
 
-That split is what lets the taxonomy grow without new machinery. Every validation rule, review expectation, language
-rule and generated report keys off the tier, so a new kind of knowledge needs a tier and nothing else.
-[Principles](principles.md#behaviour-before-subject) argues why.
+Every validation rule, review expectation, language rule and generated report keys off the tier, so a new kind of
+knowledge needs a tier and nothing else. [Principles](principles.md#behaviour-before-subject) argues why that is the
+split to make.
 
 ## The five tiers
 
@@ -21,18 +21,18 @@ rule and generated report keys off the tier, so a new kind of knowledge needs a 
 What review each tier asks for is in [Contributing](contributing.md#review-follows-the-tier).
 
 **Observed is the row that surprises people.** The tier carrying the least authority is the one a corpus most depends
-on, because capture that is not free does not happen.
-[Cheap capture, deliberate promotion](principles.md#cheap-capture-deliberate-promotion) is where that argument lives.
+on. [Cheap capture, deliberate promotion](principles.md#cheap-capture-deliberate-promotion) is where that argument
+lives.
 
-**No record states its lifecycle.** Immutable, living and perishable are readable off the table above, so a record
-carries `tier` and nothing that could disagree with it. A type declares both, and the schema requires it.
+**No record states its lifecycle.** Immutable, living and perishable are readable off the table above. A record
+therefore carries `tier` and nothing that could disagree with it. A type declares both, and the schema requires it.
 
 ## Which types a corpus holds
 
-The framework declares more types than any one corpus stands up, and
-[The default types](types.md) introduces every one of them. A corpus names the ones it adopted in `types:` in
-[`.corpus.yaml`](../corpus-descriptor.md). Its own taxonomy page then carries a decision table covering those and no
-others: what you are holding in the left column, where it goes in the right.
+The framework declares more types than any one corpus stands up, and [The default types](types.md) introduces every one
+of them. A corpus names the ones it adopted in `types:` in [`.corpus.yaml`](../corpus-descriptor.md). Its own taxonomy
+page then carries a decision table covering those and no others. What you are holding goes in the left column, and
+where it belongs in the right.
 
 Most mistakes here are placement mistakes rather than writing mistakes. Somebody writes a good record and files it where
 it either duplicates something or is never found. Where nothing fits, the answer is a taxonomy conversation and
@@ -54,9 +54,9 @@ Each type is a page and a folder beside it, named for the type in the plural:
   └── <records>.md
 ```
 
-**A leading underscore is reserved.** It marks the framework's own artefact: the generated index and the template inside
-a type folder, and the scaffolding directories alongside them. The tool reads the prefix rather than the names, so
-anything under it is excluded from discovery and never validated as a record. A record must therefore not take it.
+**A leading underscore is reserved.** It marks the framework's own artefact: the generated index and the template
+inside a type folder, and the scaffolding directories alongside them. The tool reads the prefix rather than the names,
+so anything under it is excluded from discovery and never validated as a record.
 
 The prefix also sorts ahead of letters, whether or not a listing folds case. That keeps the framework's files together
 at the top of a folder you are scanning for content.
@@ -72,8 +72,8 @@ of links. A **spec** is the per-feature application of standards to a concrete c
 that owns the feature, next to the API description and the feature files it describes.
 
 That is the same central-versus-local rule a decision record follows: cross-repo synthesis lives in the corpus, and
-feature-level detail lives with the code. Every other close call is between two types a corpus holds, so each is written
-on the type its heading names first and appears on that corpus's own page.
+feature-level detail lives with the code. Every other close call is between two types a corpus holds. Each is written
+on the type its heading names first, and appears on that corpus's own page.
 
 ## Changing the taxonomy
 
@@ -81,4 +81,4 @@ Adding a type, merging two, or moving a type between tiers is a larger act than 
 corpus holds ADRs, that change belongs in one, amending whichever recorded the taxonomy in the first place.
 
 Adding a type is adding a YAML file to `.schema/`, and a corpus adopts it by naming it in `types:` and syncing. Nothing
-in the tool changes. [Principles](principles.md#schema-before-prose) says why that matters.
+in the tool changes, which [Principles](principles.md#schema-before-prose) argues is the point.

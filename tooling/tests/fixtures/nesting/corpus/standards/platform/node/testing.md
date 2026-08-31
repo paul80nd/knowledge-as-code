@@ -1,5 +1,5 @@
 ---
-id: std-0002
+id: std-NODE
 tier: normative
 status: draft
 implements:
@@ -12,7 +12,7 @@ owner: alex.doe
 
 # Testing on Node
 
-`Standard: std-0002` `DRAFT`
+`Standard: std-NODE` `DRAFT`
 
 ## Summary
 

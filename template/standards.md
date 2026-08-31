@@ -87,6 +87,9 @@ concrete artefact, sharpen it or move it to the rationale section. Every **MUST*
 corresponding control, even where that control's mechanism is `not-enforced`. An honest gap is more useful than a silent
 one.
 
+**A standard's size follows its subject.** One binding every piece of work usually runs to seven or eight rules, and one
+covering a single interface may run to thirty. Neither is padded or cut to meet the other.
+
 Standards are living documents, and we edit them in place. Record every material change in the changelog.
 
 ## What CI checks

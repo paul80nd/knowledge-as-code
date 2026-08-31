@@ -1,5 +1,5 @@
 ---
-id: std-0001
+id: std-TEST
 tier: normative
 status: draft
 implements:
@@ -12,7 +12,7 @@ owner: alex.doe
 
 # Testing, stated once for every platform
 
-`Standard: std-0001` `DRAFT`
+`Standard: std-TEST` `DRAFT`
 
 ## Summary
 

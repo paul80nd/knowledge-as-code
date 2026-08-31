@@ -4,9 +4,9 @@
 
 ## Common
 
-| ID       | Title                                                                                        | Status | Derived from | Review by  |
-|----------|----------------------------------------------------------------------------------------------|--------|--------------|------------|
-| std-0001 | [Everything a service needs is committed to its repository](common/version-control.md)       | draft  |              | 2027-08-26 |
-| std-0002 | [A pull request carries its reasoning and one accountable approval](common/pull-requests.md) | draft  |              | 2027-08-26 |
-| std-0003 | [A secret is read from the store at run time](common/secret-handling.md)                     | draft  |              | 2027-08-26 |
-| std-0004 | [A failing check blocks the merge](common/build-gates.md)                                    | draft  |              | 2027-08-26 |
+| ID         | Title                                                                                        | Status | Derived from | Review by  |
+|------------|----------------------------------------------------------------------------------------------|--------|--------------|------------|
+| std-GATES  | [A failing check blocks the merge](common/build-gates.md)                                    | draft  |              | 2027-08-26 |
+| std-PR     | [A pull request carries its reasoning and one accountable approval](common/pull-requests.md) | draft  |              | 2027-08-26 |
+| std-SECRET | [A secret is read from the store at run time](common/secret-handling.md)                     | draft  |              | 2027-08-26 |
+| std-VCS    | [Everything a service needs is committed to its repository](common/version-control.md)       | draft  |              | 2027-08-26 |

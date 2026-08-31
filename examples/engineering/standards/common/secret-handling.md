@@ -1,5 +1,5 @@
 ---
-id: std-0003
+id: std-SECRET
 tier: normative
 status: draft
 implements:
@@ -14,7 +14,7 @@ tags: [ credentials, key-management, secrets ]
 
 # A secret is read from the store at run time
 
-`Standard: std-0003` `DRAFT`
+`Standard: std-SECRET` `DRAFT`
 
 ## Summary
 

@@ -1,5 +1,5 @@
 ---
-id: std-{{nnnn}}
+id: std-{{MNEM}}
 tier: normative
 status: draft
 derived-from:
@@ -13,7 +13,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Standard: std-{{nnnn}}` `DRAFT`
+`Standard: std-{{MNEM}}` `DRAFT`
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
@@ -22,7 +22,10 @@ and how it is reviewed. What is below is only what a standard adds to that.
 
 **Frontmatter**
 
-* **`id`**: `std-` plus a four-digit number, never reused.
+* **`id`**: `std-` plus a mnemonic for the concept the standard governs, two to seven characters and upper-case. A
+  reader meets it in a control's `verifies:`, so draw it from the concept rather than from the current wording. The
+  filename carries none of it: `std-SECRET` sits in `common/secret-handling.md`. **Immutable once the standard is
+  active.**
 * **`status`**: `draft` until agreed, then `active`, and later `deprecated` or `superseded`. Values are lowercase.
 * **Where you save it**: the folder below `standards/` becomes the standard's category, and folders can
   nest. Write the rule in the most general folder where it is still true. A standard saved straight into
@@ -55,6 +58,9 @@ keywords (**MUST**, **MUST NOT**, **SHOULD**, **MAY**) so compliance levels are 
 
 Keep each rule testable. If a rule can't be checked against a concrete artefact, it's guidance, not a standard. Either
 sharpen it or move it to the Rationale section.
+
+Write every rule the subject has, and stop there. A standard binding every piece of work usually runs to seven or
+eight. One covering a single interface may run to thirty.
 
 Where the section runs past about six rules, group them under `###` headings. A heading says what the rules beneath it
 hold a reader to, so somebody hunting one rule finds the group before the bullet.

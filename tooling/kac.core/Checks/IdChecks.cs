@@ -1,14 +1,18 @@
 namespace kac.core;
 
 // An id is a prefix and a discriminator: `adr-0007`, `pol-VURM`, `svc-search`. The prefix names the
-// type and the discriminator names the document, and the filename carries that same discriminator. That
-// agreement is what makes an id and a path two names for one document rather than two documents, and
-// what lets a link to a file be read as a citation of an id. `_universal.yaml` states the asymmetry it
-// defends: a filename may be corrected, an id may not.
+// type and the discriminator names the document. Where the filename carries that same discriminator the
+// agreement between them is what makes an id and a path two names for one document rather than two
+// documents, and what lets a link to a file be read as a citation of an id. `_universal.yaml` states the
+// asymmetry it defends: a filename may be corrected, an id may not.
 //
-// `numbered` and `mnemonic` put a fixed-width discriminator at the head of a longer filename (0007-…,
-// vurm-…), so the rest of the name is a slug the author chose. `slug-max` measures that rest. A
-// `slug` id is the whole filename stem, with no head to skip.
+// `numbered` and `mnemonic` put the discriminator at the head of a longer filename (0007-…, vurm-…), so
+// the rest of the name is a slug the author chose. `slug-max` measures that rest. A `slug` id is the
+// whole filename stem, with no head to skip.
+//
+// A type declaring `filename.carries-id: false` files its records by topic and puts the id in
+// frontmatter alone. Everything reading the head of a filename then reads nothing, which is what stops
+// `secret-handling.md` binding to a `std-SECRET` its author never wrote.
 //
 // The shape of a discriminator is stated here once and read three ways: forwards, holding an id to its
 // filename; backwards, reading a link's filename as the id it cites; and sideways, deciding whether a
@@ -34,15 +38,16 @@ public static class IdChecks
         }
 
         // The shape first, then the agreement, so a malformed id is reported once rather than twice.
-        // Where the filename carries no discriminator the agreement is skipped: that name has failed
-        // filename-pattern, and one broken name is one finding.
+        // Where the filename carries no discriminator the agreement is skipped, for either of two
+        // reasons: the type keeps its id out of the filename, or that name has failed filename-pattern
+        // and one broken name is one finding.
         var rest = id[expectPrefix.Length..];
         var carried = FilenameDiscriminator(rel, t);
 
         switch (t.IdStyle)
         {
             case "numbered":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsDigit))
+                if (!t.IdWidth.Admits(rest.Length) || !rest.All(char.IsDigit))
                     report.Err(new CheckId("id-format"),
                         $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} digits.", line);
                 else if (carried is not null && rest != carried)
@@ -53,8 +58,8 @@ public static class IdChecks
             // The id carries the mnemonic upper-case (pol-VURM); the filename carries it lower-case
             // (vurm-…md), so the two are compared case-insensitively.
             case "mnemonic":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsLetterOrDigit)
-                                             || !char.IsLetter(rest[0]) || rest != rest.ToUpperInvariant())
+                if (!t.IdWidth.Admits(rest.Length) || !rest.All(char.IsLetterOrDigit)
+                                                   || !char.IsLetter(rest[0]) || rest != rest.ToUpperInvariant())
                     report.Err(new CheckId("id-format"),
                         $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} upper-case alphanumeric "
                         + "characters beginning with a letter.", line);
@@ -96,10 +101,13 @@ public static class IdChecks
                 $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.");
     }
 
-    // What a filename carries of the id, and nothing of the slug beside it. Null where the name does not
-    // open with a discriminator in the shape the style declares.
+    // What a filename carries of the id, and nothing of the slug beside it. Null where the type keeps its
+    // id out of the filename, and null where the name does not open with a discriminator in the shape the
+    // style declares.
     private static string? FilenameDiscriminator(string rel, TypeSchema t)
     {
+        if (!t.FilenameCarriesId) return null;
+
         var name = Path.GetFileName(rel);
         switch (t.IdStyle)
         {
@@ -113,7 +121,7 @@ public static class IdChecks
             case "mnemonic":
             {
                 var dash = name.IndexOf('-');
-                if (dash != t.IdWidth) return null;
+                if (!t.IdWidth.Admits(dash)) return null;
                 var head = name[..dash];
                 return head.All(char.IsLetterOrDigit) ? head : null;
             }
@@ -168,11 +176,11 @@ public static class IdChecks
         switch (t.IdStyle)
         {
             case "numbered":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsDigit)) return false;
+                if (!t.IdWidth.Admits(rest.Length) || !rest.All(char.IsDigit)) return false;
                 canonical = $"{t.IdPrefix}-{rest}";
                 return true;
             case "mnemonic":
-                if (rest.Length != t.IdWidth || !rest.All(char.IsLetterOrDigit) || !char.IsLetter(rest[0]))
+                if (!t.IdWidth.Admits(rest.Length) || !rest.All(char.IsLetterOrDigit) || !char.IsLetter(rest[0]))
                     return false;
                 canonical = $"{t.IdPrefix}-{rest.ToUpperInvariant()}";
                 return true;
@@ -229,7 +237,9 @@ public static class IdChecks
         {
             // A discriminator of the wrong width is a filename that opens with digits without being a
             // record. The id checks report that where it is written, and it cites nothing here.
-            "numbered" => discriminator.Length == refType.IdWidth ? $"{refType.IdPrefix}-{discriminator}" : null,
+            "numbered" => refType.IdWidth.Admits(discriminator.Length)
+                ? $"{refType.IdPrefix}-{discriminator}"
+                : null,
             "mnemonic" => $"{refType.IdPrefix}-{discriminator.ToUpperInvariant()}",
             "slug" => $"{refType.IdPrefix}-{discriminator}",
             _ => null

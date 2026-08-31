@@ -362,9 +362,15 @@ public sealed class TypeSchema
     public string Collision { get; init; } = "";
     public string IdPrefix { get; init; } = "";
     public string IdStyle { get; init; } = "";
-    public int IdWidth { get; init; }
+    public WidthSpec IdWidth { get; init; } = new(4, 4);
     public string? FilenamePattern { get; init; }
     public Regex? FilenameRegex { get; init; } // FilenamePattern compiled, though the message quotes the source
+
+    // Whether the filename opens with the id's discriminator, as `0007-decide-x.md` and `vurm-remediation.md`
+    // do. A type that files its records by topic alone says no, and then nothing reads the head of
+    // `secret-handling.md` as an id: not the agreement between the two, not the slug the limit measures,
+    // and not the citation a link to the file would otherwise carry.
+    public bool FilenameCarriesId { get; init; } = true;
     public int SlugMax { get; init; } = 30;
     public IReadOnlyList<string> FieldOrder { get; init; } = [];
     public IReadOnlyDictionary<string, FieldSpec> Fields { get; init; } = new Dictionary<string, FieldSpec>();
@@ -519,6 +525,21 @@ public sealed record TierSpec(string Name, string Label, string Behaviour, strin
 // renders as one.
 public sealed record LineageSpec(string PriorArt, string Alignment, string Divergence);
 
+// How long a `numbered` or `mnemonic` discriminator may be. A scalar `width:` sets both ends alike, which
+// is what a padded number wants. A `min:`/`max:` mapping opens a span, for a mnemonic drawn from a concept
+// rather than cut to a length: `std-PR` and `std-SECRET` are each as long as the thing they name.
+//
+// A span and a filename carrying the discriminator cannot both hold. `secret-handling.md` opens with six
+// letters before a hyphen, so a span reaching six binds it to an id nobody wrote. SchemaChecks refuses
+// the pair.
+public sealed record WidthSpec(int Min, int Max)
+{
+    public bool Admits(int length) => length >= Min && length <= Max;
+
+    // What a message calls the width: "4" where it is exact, "2 to 7" where it is a span.
+    public override string ToString() => Min == Max ? $"{Min}" : $"{Min} to {Max}";
+}
+
 public sealed partial class Schema
 {
     // The one key admitted at every level and required at none. See Level.
@@ -651,7 +672,7 @@ public sealed partial class Schema
                 Yaml.Str(check.Get("description"))?.Trim() ?? "",
                 Yaml.Str(check.Get("notes"))?.Trim() ?? "",
                 // Most checks belong on a type page, so the key is written only where one does not.
-                Yaml.Str(check.Get("on-type-page")) is not "false"));
+                Yaml.Bool(check.Get("on-type-page"), true)));
         }
 
         unread.AddRange(checkKeys.Unread());
@@ -754,10 +775,11 @@ public sealed partial class Schema
 
             IdPrefix = Yaml.Str(id.Get("prefix")) ?? "",
             IdStyle = Yaml.Str(id.Get("style")) ?? "",
-            IdWidth = Yaml.Int(id.Get("width"), 4),
+            IdWidth = ParseWidth(id, keys),
 
             FilenamePattern = filenamePattern,
             FilenameRegex = CompilePattern(filenamePattern),
+            FilenameCarriesId = Yaml.Bool(fn.Get("carries-id"), true),
             SlugMax = Yaml.Int(fn.Get("slug-max"), 30),
 
             FieldOrder = fieldOrder,
@@ -813,6 +835,24 @@ public sealed partial class Schema
             KeyOrderEdges = TypeSchema.DeriveKeyOrderEdges(layer.Order, fieldOrder),
             DeclaredFields = DeriveDeclaredFields(layer, fieldOrder, fields)
         };
+    }
+
+    // `width: 4` and a `min:`/`max:` block are one declaration written two ways, so both are read here
+    // and the checks downstream meet a single shape. `meta/type.schema.json` requires both ends of a
+    // block, and a block short of one still has to parse into something: the end it did write, read as
+    // an exact width. SchemaChecks reports the span whose ends are the wrong way round.
+    private static WidthSpec ParseWidth(Level id, KeyReader keys)
+    {
+        var node = id.Get("width");
+        if (node is not YamlMappingNode)
+        {
+            var exact = Yaml.Int(node, 4);
+            return new WidthSpec(exact, exact);
+        }
+
+        var range = keys.At(node, "the 'id.width' block");
+        var min = Yaml.Int(range.Get("min"), 4);
+        return new WidthSpec(min, Yaml.Int(range.Get("max"), min));
     }
 
     // Every field a document of the type is judged against, in declared order: the universal fields

@@ -26,6 +26,9 @@ you, and every finding names the file and the key.
 | A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows           | `schema-shape`       |
 | A tier declaring no `label:` or no `behaviour:` (both head its section in the taxonomy)  | `schema-shape`       |
 | An `id.style` with no code behind the value                                              | `schema-dispatch`    |
+| An `id.width` span on a `numbered` type, which pads to one width so that ids sort        | `schema-shape`       |
+| An `id.width` span beside a filename still carrying the id, or a `min:` above its `max:` | `schema-shape`       |
+| A `filename.carries-id: false` on a `slug` type, whose id is the filename stem           | `schema-shape`       |
 | A `from:` naming a source no derivation reads                                            | `schema-dispatch`    |
 | A `from:` on a field that is also `required: true`                                       | `schema-shape`       |
 | A type declaring no `folder:`                                                            | `schema-shape`       |
