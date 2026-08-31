@@ -144,6 +144,7 @@ public class RuleExprTests
     [InlineData("field('unterminated", "unterminated string")]
     [InlineData("words() # 3", "unexpected character")]
     [InlineData("present", "must be called with parentheses")]
+    [InlineData("words() < 99999999999", "too large for a whole number")] // digits an int cannot hold
     public void A_defective_expression_fails_to_compile(string expr, string expectedInMessage)
     {
         var ex = Assert.Throws<RuleExprException>(() => RuleExpr.Compile(expr));

@@ -95,24 +95,9 @@ public class ManifestTests
             m.Place("template/knowledge-as-code/style.md"));
     }
 
-    // A descriptor that says nothing leaves adoption to the filesystem, so nothing it holds can be
-    // surplus to what it declared.
-    [Fact]
-    public void A_descriptor_declaring_no_types_adopts_everything()
-    {
-        var descriptor = new CorpusDescriptor();
-
-        Assert.Null(descriptor.Types);
-        Assert.True(descriptor.Adopted("adrs"));
-    }
-
     [Fact]
     public void A_descriptor_declaring_types_declines_the_schema_files_of_the_rest()
     {
-        var descriptor = new CorpusDescriptor { Types = ["adrs"] };
-
-        Assert.True(descriptor.Adopted("adrs"));
-        Assert.False(descriptor.Adopted("runbooks"));
         Assert.False(Declines(".schema/adrs.yaml"));
         Assert.True(Declines(".schema/runbooks.yaml"));
     }

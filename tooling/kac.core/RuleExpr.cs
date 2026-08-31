@@ -302,7 +302,13 @@ public static class RuleExpr
             switch (token.Kind)
             {
                 case "str": return new Lit(token.Text);
-                case "int": return new Lit(int.Parse(token.Text));
+                // Digits alone reach here, so the only way this fails is a run too long for an int. That
+                // is a fault in the rule rather than in the grammar, and it answers as one.
+                case "int":
+                    return int.TryParse(token.Text, out var whole)
+                        ? new Lit(whole)
+                        : throw new RuleExprException(
+                            $"'{token.Text}' at {token.Pos} is too large for a whole number, in '{source}'.");
                 case "(":
                 {
                     var inner = Implies();

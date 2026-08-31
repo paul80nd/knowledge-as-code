@@ -82,8 +82,9 @@ silence should fall, which trades one visible guard for a table of special cases
 ## Every expression is checked when the schema loads
 
 `kac` parses and type-checks each expression before it opens a single record, and anything wrong stops the load naming
-the rule. That covers a syntax error, an unknown fact and the wrong number of arguments. It also covers a comparison
-between a number and text, arithmetic on text, and a whole expression that is not a yes/no question.
+the rule. That covers a syntax error, an unknown fact, the wrong number of arguments and a number too large to hold.
+It also covers a comparison between a number and text, arithmetic on text, and a whole expression that is not a
+yes/no question.
 
 Without it, `words() == 'three'` compiles and then evaluates false for the life of the schema. That is a check which
 appears wired up and never fires, the exact failure this layer exists to end.
