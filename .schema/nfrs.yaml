@@ -37,8 +37,7 @@ fields:
     type: enum
     values: [draft, agreed, retired]
     description: '`agreed` is a commitment someone accepted, not an aspiration.'
-    notes: >
-      `agreed` is a commitment someone has actually accepted, not an aspiration. Stay in `draft` until then.
+    notes: Stay in `draft` until someone has accepted it.
 
   applies-to:
     required: true
@@ -46,9 +45,7 @@ fields:
     of: id
     ref: [services, capabilities]
     description: Estate-wide targets are almost always wrong. Scope them.
-    notes: >
-      Estate-wide targets are almost always wrong: a marketing page and the booking flow do not deserve the
-      same budget.
+    notes: A marketing page and the booking flow do not deserve the same budget.
 
   target:
     required: true
@@ -67,9 +64,7 @@ fields:
     of: id
     ref: integrations
     description: Integrations whose own SLA caps this target.
-    notes: >
-      External dependencies whose own SLA caps this target. A target exceeding what a dependency promises is
-      a hope, not a commitment.
+    notes: A target exceeding what a dependency promises is a hope rather than a commitment.
 
   review-by:
     required: true

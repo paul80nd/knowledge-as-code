@@ -73,9 +73,9 @@ fields:
     of: string
     description: Repo-relative paths. Nothing resolves them today.
     notes: >
-      Repo-relative paths. No check reads them: the field carries plain strings rather than references, so
-      `ref-resolves` never sees it, and `feature-file-orphans` is declared and does not run. A path that goes
-      stale here goes stale silently.
+      No check reads them: the field carries plain strings rather than references, so `ref-resolves` never
+      sees it, and `feature-file-orphans` is declared and does not run. A path that goes stale here goes
+      stale silently.
 
   nfrs:
     required: false

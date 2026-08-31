@@ -51,12 +51,14 @@ fields:
     type: list
     of: id
     ref: [widgets, gizmos]
+    part-required: true
     mirrors-section: See also
     unique: true
 
   retention:
     type: string
     required-when: classification is personal
+    part-required: true
     min-items: 2
     min-records: 2
 

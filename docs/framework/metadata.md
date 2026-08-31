@@ -141,6 +141,10 @@ The third form is the cheapest. It needs one link definition however many clause
 to cite. Where the reader lands is the definition's to decide, so point it at the section holding the parts. The part
 id has to touch the bracket, so `See [pol-VURM]. The policy...` stays a full stop and a sentence.
 
+A field may require the part rather than admit it. A standard's `implements:` names the clauses it puts into practice,
+one entry each, and `kac validate` refuses a bare policy id there. The whole policy is shorter to write than the list it
+stands for, and it reads to anything counting coverage as every clause covered.
+
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, record, part. A
 record the reading corpus holds is cited bare, and qualifying one is an error, because two spellings of a single
 obligation defeat search. `kac validate` resolves a scoped reference against the corpus `kac restore` unpacked under

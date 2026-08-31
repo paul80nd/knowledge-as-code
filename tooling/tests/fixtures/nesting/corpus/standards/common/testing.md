@@ -3,7 +3,7 @@ id: std-TEST
 tier: normative
 status: draft
 implements:
-  - pol-SCRT
+  - pol-SCRT.NEST
 applies-to:
   - all
 review-by: "2027-08-05"

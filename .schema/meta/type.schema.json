@@ -69,7 +69,7 @@
       ]
     },
     "summary": {
-      "description": "What the type is, in one line, and it heads the type's row in the repository's own index. Rendered as a table cell, so `kac` holds it to a length. The count is taken with whitespace folded, which is why it is not repeated here.",
+      "description": "What the type is, in one line, and it heads the type's row in the repository's own index. Rendered as a table cell, so `kac` holds it to a length, counted with whitespace folded.",
       "type": "string",
       "minLength": 1
     },
@@ -84,7 +84,7 @@
       "minLength": 1
     },
     "collision": {
-      "description": "Where this type's name already means something else to a reader arriving from another framework. Say what the word means elsewhere and what the reader will therefore get wrong. Paragraphs separated by a blank line, and links written inline rather than as reference labels. Most types collide with nothing and leave this out: inventing one spends a warning a reader would otherwise trust.",
+      "description": "Where this type's name already means something else to a reader arriving from another framework. Say what the word means elsewhere and what the reader will get wrong. Paragraphs separated by a blank line, and links written inline rather than as reference labels. Most types collide with nothing and leave this out: inventing one spends a warning a reader would otherwise trust.",
       "type": "string"
     },
     "versus": {
@@ -110,7 +110,7 @@
           "$ref": "#/$defs/notes"
         },
         "prior-art": {
-          "description": "What the type is nearest to, or that nothing established fits. Links are written inline, not as reference labels, because the block this renders into cannot see the definitions at the foot of the page it lands on. The only required part of the block, and \"none\" is one of its answers: some types have no useful ancestor, and claiming one is worse than admitting none.",
+          "description": "What the type is nearest to, or that nothing established fits. Links are written inline, not as reference labels, because the block this renders into cannot see the definitions at the foot of the page it lands on. The only required part of the block, and \"none\" is one of its answers: claiming an ancestor a type has not got is worse than admitting none.",
           "type": "string",
           "minLength": 1
         },
@@ -150,7 +150,7 @@
           ]
         },
         "width": {
-          "description": "How many characters a `numbered` or `mnemonic` discriminator carries. Either an exact count, or a `min`/`max` span. Defaults to 4. A `slug` has no fixed width and does not read it. A span is for `mnemonic` alone, whose length follows the concept it names, and it requires `filename.carries-id: false`, because several lengths cannot all be read out of one filename. A `numbered` id is padded to one width so that ids sort.",
+          "description": "How many characters a `numbered` or `mnemonic` discriminator carries, as an exact count or a `min`/`max` span. Defaults to 4. A `slug` has no fixed width and does not read it. A span is for `mnemonic` alone, whose length follows the concept it names, and it needs `filename.carries-id: false`, because several lengths cannot be read out of one filename. A `numbered` id is padded to one width so that ids sort.",
           "oneOf": [
             {
               "type": "integer",
@@ -380,7 +380,7 @@
       ]
     },
     "export": {
-      "description": "What a record of this type contributes to a published export, and how much of each piece travels. An export is a dependency surface: once a consumer corpus reads one, its shape is a contract. So the declaration belongs here, beside the sections and fields it selects from, rather than to an exporter deciding type by type in code. A type declaring no block contributes nothing.",
+      "description": "What a record of this type contributes to a published export, and how much of each piece travels. Its shape is a contract once a consumer corpus reads it. A type declaring no block contributes nothing.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -446,7 +446,7 @@
   },
   "$defs": {
     "notes": {
-      "description": "Commentary. The one key admitted at every level and required at none: what these files should say and the tool has no use for. Where a field carries both, `description:` is what a reader of the type page needs at a glance and `notes:` is the reasoning there is no room for there. A field declaring only notes still renders them, and a note grown past a line is asking for a `description:` beside it.",
+      "description": "Commentary: what these files should say and the tool has no use for. Admitted at every level and required at none. Where a field carries both, `description:` is what a reader of the type page needs at a glance and `notes:` is the reasoning there is no room for there. A field declaring only notes still renders them.",
       "type": "string"
     },
     "name": {
@@ -581,7 +581,7 @@
           ]
         },
         "ref": {
-          "description": "The folders an id in this field may belong to. A scalar is the one-folder case. Both halves are asked of every id: that it names a record, and that the record is of a type named here. An id of the wrong type lands on a real page and reads as deliberate, and this line is the only place the type it should have named is written down. Between them the `ref:` declarations are the graph, and the taxonomy renders them as one. A folder this corpus declined is left unenforced, and adopting the type starts the reference with no edit here.",
+          "description": "The folders an id in this field may belong to. A scalar is the one-folder case. Both halves are asked of every id: that it names a record, and that the record is of a type named here. An id of the wrong type lands on a real page and reads as deliberate, and this line is the only place the type it should have named is written down. A folder this corpus declined is left unenforced, and adopting the type starts the reference with no edit here.",
           "oneOf": [
             {
               "$ref": "#/$defs/name"
@@ -595,6 +595,10 @@
             }
           ]
         },
+        "part-required": {
+          "description": "Whether an id in this field must reach a part of the record rather than the record whole. A standard's `implements:` declares it, so it names the clauses it puts into practice one by one. The record named whole reads to anything walking the edge as every part covered. Needs a `ref:` to resolve the part against, and every type it names has to keep parts.",
+          "type": "boolean"
+        },
         "reciprocal": {
           "description": "The field on the target that must point back. Every id is resolved against the corpus whether or not the edge is reciprocal, so this declares the return leg and nothing else.",
           "$ref": "#/$defs/name"
@@ -604,7 +608,7 @@
           "$ref": "#/$defs/regex"
         },
         "from": {
-          "description": "Where the field's value comes from, for a field the record never writes. `sub-path` is the folders between the type's own folder and the file, so `policies/security/accs-access-by-identity.md` carries `security` and `standards/platform/node/testing.md` carries `platform/node`. A record saved straight into its type folder gets an empty value, so you start using categories by making a folder. A derived field may not also be `required:`. `derived-key` reports one written into frontmatter.",
+          "description": "Where the field's value comes from, for a field the record never writes. `sub-path` is the folders between the type's own folder and the file, so `standards/platform/node/testing.md` carries `platform/node`. A record saved straight into its type folder gets an empty value. A derived field may not also be `required:`, and `derived-key` reports one written into frontmatter.",
           "type": "string",
           "enum": ["sub-path"]
         },
@@ -628,7 +632,7 @@
           "minimum": 1
         },
         "min-records": {
-          "description": "The floor on how many records carry a given value. What a field says when its values are meant to group documents rather than describe one. Counted per type, case-insensitively, and once per record however often one record repeats a value. Reports a warning against each record carrying the short value. Membership is never declared: the corpus decides what its vocabulary is.",
+          "description": "The floor on how many records carry a given value, for a field whose values group documents rather than describe one. Counted per type, case-insensitively, and once per record however often one repeats a value. Reports a warning against each record carrying the short value. The membership of the vocabulary is never declared here.",
           "type": "integer",
           "minimum": 1
         }

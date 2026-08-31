@@ -49,26 +49,22 @@ fields:
     type: enum
     values: [unverified, corroborated, confirmed]
     description: Starts at `unverified`, and stays there unless genuinely proven.
-    notes: >
-      Starts at `unverified` and stays there unless genuinely proven. An agent cannot confirm its own observation.
+    notes: An agent cannot confirm its own observation.
 
   expires:
     required: true
     type: date
     description: Quoted. Ninety days from capture, a convention the template carries.
     notes: >
-      Perishable by default: ninety days from the day it was written, which the template carries rather than the
-      schema, since nothing here writes a document's frontmatter. An observation nobody has needed in three months
-      was probably situational.
+      The template carries the ninety days, because nothing here writes a document's frontmatter. An
+      observation nobody has needed in three months was probably situational.
 
   provenance:
     required: false
     required-when: 'source == dreamed'
     type: string
     description: A reference back to the session and passage, so review is a check rather than an act of faith.
-    notes: >
-      A reference back to the session and passage this came from, so review is a thirty-second check rather
-      than an act of faith. An unverifiable proposal is a rejected proposal.
+    notes: An unverifiable proposal is a rejected proposal.
 
   applies-to:
     required: false

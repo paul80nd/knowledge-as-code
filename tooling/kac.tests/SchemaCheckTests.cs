@@ -790,4 +790,52 @@ public class SchemaCheckTests
         Assert.Equal(".schema/widgets.yaml", finding.File);
         Assert.Contains("'shelf'", finding.Message);
     }
+
+    // A part is read out of the record a reference names, so a field declaring no `ref:` leaves the key
+    // with nothing to be resolved against.
+    [Fact]
+    public void A_field_requiring_a_part_and_naming_no_reference_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(
+            fields: [("implements", new FieldSpec { Name = "implements", Type = "id", PartRequired = true })])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains("part-required: true", finding.Message);
+    }
+
+    // Every id the field carries would fail, and the way out of it is an edit to the type at the other
+    // end rather than to the record carrying the field.
+    [Fact]
+    public void A_field_requiring_a_part_of_a_type_that_keeps_none_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(fields:
+        [
+            ("implements",
+                new FieldSpec { Name = "implements", Type = "id", Refs = ["widgets"], PartRequired = true })
+        ])));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Contains("keeps no parts", finding.Message);
+    }
+
+    [Fact]
+    public void A_field_requiring_a_part_of_a_type_that_keeps_them_passes()
+        => Assert.Empty(Check(Widgets(
+            fields:
+            [
+                ("implements",
+                    new FieldSpec { Name = "implements", Type = "id", Refs = ["widgets"], PartRequired = true })
+            ],
+            sections: ["Terms"],
+            parts: new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" })));
+
+    // A `ref:` naming a type this corpus declined is left alone everywhere in this pass, and the part it
+    // requires is no exception: adopting the type starts both without an edit here.
+    [Fact]
+    public void A_field_requiring_a_part_of_a_type_this_corpus_declined_is_left_alone()
+        => Assert.Empty(Check(Widgets(fields:
+        [
+            ("implements",
+                new FieldSpec { Name = "implements", Type = "id", Refs = ["gadgets"], PartRequired = true })
+        ])));
 }

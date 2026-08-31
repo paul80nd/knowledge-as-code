@@ -3,7 +3,7 @@ id: std-NODE
 tier: normative
 status: draft
 implements:
-  - pol-VURM
+  - pol-VURM.CLEAN
 applies-to:
   - all
 review-by: "2027-08-05"

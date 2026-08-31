@@ -27,9 +27,8 @@ id:
   style: numbered
   width: 4
   notes: >
-    `pmt-` names the document, which is what every other prefix here does (`adr-`, `pol-`, `std-`, `ctl-`). `inc-`
-    names the incident instead, and an incident can produce more than one record, so the id would promise an identity
-    it does not hold.
+    `pmt-` names the document, as every other prefix here does. `inc-` would name the incident, and one
+    incident can produce more than one record.
 
 filename:
   pattern: '^\d{4}-[a-z0-9-]+\.md$'
@@ -43,9 +42,7 @@ fields:
     type: enum
     values: [draft, published]
     description: '`published` freezes the document. A new understanding is a new postmortem.'
-    notes: >
-      `published` freezes the document. A materially different understanding is a new postmortem that
-      references this one.
+    notes: A materially different understanding is a new postmortem referencing this one.
 
   occurred-on:
     required: true

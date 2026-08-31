@@ -79,6 +79,30 @@ public class RefCheckTests
     public void A_target_of_the_right_type_is_still_held_to_pointing_back()
         => Assert.Equal("reciprocal", Assert.Single(Refs(Reciprocating("supersedes", "adrs"), "adr-0002")).Check.Value);
 
+    // `part-required:` on the field, which a standard's `implements:` declares so that it names the
+    // clauses it puts into practice one by one.
+    [Fact]
+    public void A_field_requiring_a_part_admits_an_id_that_names_one()
+        => Assert.Empty(Implements("pol-VURM.TIMEBOX"));
+
+    [Fact]
+    public void A_field_requiring_a_part_refuses_the_record_named_whole()
+    {
+        var found = Assert.Single(Implements("pol-VURM"));
+
+        Assert.Equal("ref-resolves", found.Check.Value);
+        Assert.Equal("'implements' points at 'pol-VURM' whole, and this field names a clause. Write "
+                     + "'pol-VURM.<clause>', one entry per clause. A bare id reads as every clause covered.",
+            found.Message);
+    }
+
+    // The type is answered first. A message asking for a clause would send the author looking for one on
+    // a record whose type keeps none.
+    [Fact]
+    public void A_target_of_the_wrong_type_is_reported_as_that_rather_than_as_a_missing_part()
+        => Assert.Equal("'implements' points at 'adr-0002', which is an ADR, not a Policy.",
+            Assert.Single(Implements("adr-0002")).Message);
+
     private static FieldSpec Field(string name, params string[] refs) =>
         new() { Name = name, Type = "id", Refs = refs };
 
@@ -116,6 +140,50 @@ public class RefCheckTests
             .OfType<Doc>()
             .ToList();
         Assert.Equal(cast.Length + 1, docs.Count); // a document that did not parse would quietly shrink the corpus
+
+        var found = new List<Finding>();
+        Validator.CheckCorpus(schema, docs, found);
+        return found;
+    }
+
+    // A second cast, for the field that reaches past the record. A standard carries `implements:`, and a
+    // policy keeps clauses in a table for it to name. The ADR is what a target of the wrong type is
+    // taken from, and its type keeps no parts.
+    private static List<Finding> Implements(string target)
+    {
+        var field = new FieldSpec
+            { Name = "implements", Type = "list", Of = "id", Refs = ["policies"], PartRequired = true };
+
+        var standards = new TypeSchema
+        {
+            Key = "standards", Folder = "standards", Label = "Standard", LabelPlural = "Standards",
+            FieldOrder = ["implements"],
+            Fields = new Dictionary<string, FieldSpec> { ["implements"] = field }
+        };
+        var policies = new TypeSchema
+        {
+            Key = "policies", Folder = "policies", Label = "Policy", LabelPlural = "Policies",
+            Parts = new PartSpec(PartSpec.Table, "", ["MUST"], []) { Section = "Clauses", Noun = "clause" }
+        };
+        var adrs = new TypeSchema { Key = "adrs", Folder = "adrs", Label = "ADR", LabelPlural = "ADRs" };
+
+        var schema = new Schema
+        {
+            ByFolder = new Dictionary<string, TypeSchema>
+                { ["standards"] = standards, ["policies"] = policies, ["adrs"] = adrs }
+        };
+
+        var docs = new[]
+        {
+            Doc.Parse("policies/vurm-remediation.md",
+                $"---\nid: pol-VURM\n---\n\n# pol-VURM\n\n## Clauses\n\n| Id | Clause |\n|----|--------|\n"
+                + "| `TIMEBOX` | **MUST** be timeboxed |\n", schema),
+            Doc.Parse("adrs/adr-0002.md", "---\nid: adr-0002\n---\n\n# adr-0002\n", schema),
+            Doc.Parse("standards/testing.md",
+                $"---\nid: std-TEST\nimplements:\n  - {target}\n---\n\n# std-TEST\n", schema)
+        }.OfType<Doc>().ToList();
+
+        Assert.Equal(3, docs.Count); // a document that did not parse would quietly shrink the corpus
 
         var found = new List<Finding>();
         Validator.CheckCorpus(schema, docs, found);

@@ -36,7 +36,8 @@ error, and reads better reported as one.
 
 **Does the graph hold?** Every id a cross-reference names resolves to a document that exists, and every relative link
 resolves. Reciprocal pairs agree in both directions, so a one-sided link fails. `implements` is deliberately not
-reciprocal: it points up from a standard to a policy, and nobody sitting at the policy can know what implements it.
+reciprocal: it points up from a standard to a policy clause, and nobody sitting at the policy can know what
+implements it.
 
 **Does the record do what its tier asks?** Behaviour sets the rule, so the checks follow the tier. A standard cites what
 it derives from. A procedural one records when it was last rehearsed. An observed one carries an expiry, because a

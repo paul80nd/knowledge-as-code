@@ -45,9 +45,7 @@ fields:
     of: string
     min-items: 3
     description: 'Over-fill it: error text, service names, and what someone types before they know the cause.'
-    notes: >
-      Be generous: the literal error text, the service names, and the words someone would type who does not
-      yet know what is wrong. This is the field that makes the document findable, so over-fill it.
+    notes: This is the field that makes the document findable.
 
   applies-to:
     required: false

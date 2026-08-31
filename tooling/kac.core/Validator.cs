@@ -602,22 +602,35 @@ public static class Validator
                     }
 
                     var type = landed.Type(schema);
-                    if (type is null || admitted.Contains(type)) continue;
-
-                    // The field names types and this corpus adopted none of them, so nothing it lands on
-                    // can be the right type. Named from the declaration rather than by a label, because a
-                    // type this corpus turned down has no schema here to read a label out of.
-                    if (admitted.Count == 0)
+                    if (type is not null && !admitted.Contains(type))
                     {
-                        f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
-                            $"'{name}' points at '{citation.Whole}', which is {WithArticle(type)}. The field "
-                            + $"points at {Named(spec.Refs)}, which this corpus did not adopt."));
+                        // The field names types and this corpus adopted none of them, so nothing it lands
+                        // on can be the right type. Named from the declaration rather than by a label,
+                        // because a type this corpus turned down has no schema here to read a label from.
+                        if (admitted.Count == 0)
+                            f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
+                                $"'{name}' points at '{citation.Whole}', which is {WithArticle(type)}. The field "
+                                + $"points at {Named(spec.Refs)}, which this corpus did not adopt."));
+                        else
+                            f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
+                                $"'{name}' points at '{citation.Whole}', which is {WithArticle(type)}, "
+                                + $"not {OneOf(admitted)}."));
+
                         continue;
                     }
 
-                    f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
-                        $"'{name}' points at '{citation.Whole}', which is {WithArticle(type)}, "
-                        + $"not {OneOf(admitted)}."));
+                    // A field the schema gives `part-required:` admits no bare id, because the record
+                    // named whole reads to whatever walks the edge as every part covered. Asked after the
+                    // type, so a target of the wrong type is reported as that rather than as a record
+                    // named whole. The fallback noun is for a target whose type this corpus declined.
+                    if (spec.PartRequired && citation.Part is null)
+                    {
+                        var noun = landed.Noun(schema) ?? "part";
+                        f.Add(new Finding(d.Rel, at, Sev.Error, new CheckId("ref-resolves"),
+                            $"'{name}' points at '{citation.Whole}' whole, and this field names a {noun}. Write "
+                            + $"'{citation.Whole}.<{noun}>', one entry per {noun}. A bare id reads as every "
+                            + $"{noun} covered."));
+                    }
                 }
             }
         }

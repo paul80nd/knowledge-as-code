@@ -3,7 +3,13 @@ id: std-VCS
 tier: normative
 status: draft
 implements:
-  - pol-EVER
+  - pol-EVER.ASSETS
+  - pol-EVER.BRANCH
+  - pol-EVER.HISTORY
+  - pol-EVER.INTENT
+  - pol-EVER.ORPHAN
+  - pol-EVER.PARITY
+  - pol-EVER.SHARED
 applies-to:
   - all
 review-by: "2027-08-26"

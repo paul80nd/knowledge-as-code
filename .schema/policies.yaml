@@ -33,12 +33,10 @@ collision: >
   about it.
 
 # A four-character mnemonic, upper-case in the id and lower-case in the filename: pol-VURM in
-# vurm-vulnerability-remediation.md. Policies are long-lived and cited from standards, controls and
-# processes, so the id is what a reader meets most often and it should say something. Draw the mnemonic
-# from the policy's concept rather than its current wording, because it is immutable once the policy is
-# active: retitle freely, never re-mnemonic. A change substantial enough to invalidate the mnemonic is a
-# new policy and a retirement of the old one, not an edit. Chronological types keep numbers: an ADR's id
-# records when the decision was taken, which a mnemonic cannot.
+# vurm-vulnerability-remediation.md. A policy is cited from standards, controls and processes, so the id
+# is what a reader meets most often and it should say something. Draw it from the policy's concept rather
+# than its wording: the mnemonic is immutable once the policy is active, so retitle freely and never
+# re-mnemonic. A change big enough to invalidate it is a new policy and a retirement of the old one.
 id:
   prefix: pol
   style: mnemonic
@@ -58,13 +56,12 @@ fields:
       Why the policy exists, where `tags` say what topics it touches. The two answer different questions
       and stay separate.
 
-      Where you save the file is what sets it. A policy saved straight into `policies/` has no
-      category, and the corpus stays as one list until it wants folders.
+      Where you save the file is what sets it. A policy saved straight into `policies/` has no category,
+      and the corpus stays as one list until it wants folders.
 
-      The folders are the corpus's own, and no list here closes them. Keep the set small enough to
-      scan: a category earns its place by grouping enough policies to be worth navigating. Changing a
-      policy's category means moving the file and repointing what links to it, so it is worth getting
-      right while the corpus is small.
+      The folders are the corpus's own and no list here closes them. A category earns its place by
+      grouping enough policies to be worth navigating, and changing one means moving the file and
+      repointing what links to it.
 
   status:
     required: true
@@ -90,13 +87,12 @@ fields:
     notes: >
       Every binding reference the document's clauses carry, grouped under the framework supplying it, so
       the generated index reads as a coverage table. The clause table is where a mapping is stated and
-      this is a summary of it, so a reference here that no clause carries is a claim of coverage the
-      document cannot show. `alignment-rollup` holds the two together in both directions.
+      this summarises it, so a reference here that no clause carries is a claim of coverage the document
+      cannot show. `alignment-rollup` holds the two together in both directions.
 
       Binding is the word doing the work. A clause may cite a framework we took ideas from, and that
       citation is provenance rather than obligation. The roll-up carries the frameworks `frameworks.md`
-      files as obliged or self-obligated, so an index read as a coverage table answers what we are on
-      the hook for rather than what we have read.
+      files as obliged or self-obligated, so the index answers what we are on the hook for.
 
       Grouped rather than flat because the number of frameworks a policy touches stays small while the
       number of references does not. A data protection policy maps to two frameworks and twenty of their
@@ -104,48 +100,41 @@ fields:
 
       The framework is named by the label its `Alignment` cell carries, so `[ISO 27001:2022].A.8.24` in
       the table is `ISO 27001:2022` here. Naming it by the `frameworks.md` anchor instead would drop the
-      version, which is the half a coverage claim turns on.
-
-      A framework a policy cites with no reference into it carries no `clauses:`. `[WCAG 2.2 AA]` is the
-      whole citation, because what the clause aligns with is the standard entire.
-
-      What our standing against a framework is, whether obliged, self-obligated or inspiration, is stated
-      once in `frameworks.md` and never in a policy.
+      version, which is the half a coverage claim turns on. A framework cited with no reference into it
+      carries no `clauses:`, as `[WCAG 2.2 AA]` does.
 
   review-by:
     required: true
     type: date
     description: Quoted. Annual is usually right for a policy.
 
-# `Clauses` is the policy proper: a table of individually addressable obligations, one row each, so a
-# standard or a control can cite the commitment it answers rather than the whole document. It is the only
-# place an obligation is stated: prose elsewhere in the document describes, qualifies or explains, and a
-# sentence that binds has escaped the table.
+# `Clauses` is the policy proper: a table of addressable obligations, one row each, so a standard or a
+# control can cite the commitment it answers rather than the whole document. It is the only place an
+# obligation is stated, and a sentence that binds anywhere else has escaped the table.
 #
-# `Notes` is the home for anything genuinely contextual about this policy: why it carries no framework
-# alignment, how it relates to the taxonomy, what it deliberately leaves to an implementing process.
+# `Notes` holds what is contextual about this policy: why it carries no framework alignment, how it
+# relates to the taxonomy, what it leaves to an implementing process.
 sections:
   required: [Purpose, Scope, Clauses]
   optional: [Exceptions, Notes]
 
-# Where a policy keeps the parts something else can cite, and the shape of the table it keeps them in.
-# The declaration sits here so that a type carries clauses by describing them, and one with no `parts:`
-# block simply offers none.
+# Where a policy keeps the parts something else can cite, and the shape of the table it keeps them in. A
+# type carries clauses by describing them here, and one with no `parts:` block offers none.
 #
-# Ids are short and upper-case because they are read inside a citation (`pol-VURM.TIMEBOX`), where a
-# long one buries the policy it belongs to. Seven characters is enough for a word worth guessing at
-# and short enough that compressing to it is rare. Each is written beside its row.
+# Ids are short and upper-case because they are read inside a citation (`pol-VURM.TIMEBOX`), where a long
+# one buries the policy it belongs to. Seven characters is enough for a word worth guessing at. Each is
+# written beside its row.
 #
-# Binding levels are written bold and non-binding ones plain, and rows are grouped in the order below,
-# so a reader sees the weight drop off down the table without needing a divider it cannot carry.
+# Binding levels are written bold and non-binding ones plain, and rows are grouped in the order below, so
+# a reader sees the weight drop off down the table without needing a divider it cannot carry.
 # `clause-order` reports a table that leaves a level and re-enters it. Inside a level the author's order
 # stands, unchecked: related obligations are grouped by hand, and nobody reads a clause table by id.
 #
 # `Alignment` carries the frameworks a clause maps to, as reference links resolving into
 # `/frameworks.md`. Per clause rather than per document, because a policy aligns with a control through
 # one obligation and not through all of them, and an empty cell is the honest answer where no genuine
-# mapping exists. What our standing against a framework actually is, whether obliged,
-# self-obligated or inspiration, is stated once in `frameworks.md` and nowhere else.
+# mapping exists. What our standing against a framework is, whether obliged, self-obligated or
+# inspiration, is stated once in `frameworks.md` and nowhere else.
 parts:
   source: table
   section: Clauses
@@ -185,11 +174,10 @@ export:
     holding a clause without them reads a stricter policy than the one we wrote. `Purpose` travels as
     its opening paragraph, which is where a policy states its position.
 
-    Alignment stays behind entire, cell and roll-up alike. A reference resolves through
-    `frameworks.md`, which says whether we are obliged, self-obligated or merely borrowing, and no
-    consumer receives that page. A mapping carried without it says a policy touches A.8.24 and leaves
-    the reader to guess what touching it commits us to. Nothing asks for the mapping today, so it is
-    the export's to add back once something does.
+    Alignment stays behind entire, cell and roll-up alike. A reference resolves through `frameworks.md`,
+    which says whether we are obliged, self-obligated or merely borrowing, and no consumer receives that
+    page. A mapping carried without it says a policy touches A.8.24 and leaves the reader to guess what
+    touching it commits us to.
 
     A clause carries no `seeAlso`: a cross-reference is read from the body beneath a part, and a table
     row has none. A clause pointing at another policy reaches a consumer as the id inside its words.
@@ -204,19 +192,17 @@ rules:
       `aligns-with` carries every binding reference the `Alignment` column cites, and no others.
     severity: error
     postures: [Obliged, Self-obligated]
-    # Both directions, because either half going stale is the same defect wearing a different face. A
-    # reference in the table and not in the roll-up leaves the index under-reporting coverage, and one in
-    # the roll-up and not in the table is a claim of coverage no clause can show. The second is the worse
-    # of the two: it reads as evidence.
+    # Both directions. A reference in the table and not in the roll-up leaves the index under-reporting
+    # coverage, and one in the roll-up and not in the table is a claim of coverage no clause can show. The
+    # second is the worse of the two: it reads as evidence.
     #
-    # `postures:` names the standings that oblige a summary, as `frameworks.md` heads them. A clause may
-    # cite a framework we took ideas from, and the roll-up leaves it: the generated index is read as a
-    # coverage table, so a framework binding nothing dilutes the only question that table answers. The
-    # standings are the corpus's judgement rather than the tool's, which is why they are declared here.
+    # `postures:` names the standings that oblige a summary, as `frameworks.md` heads them. A framework
+    # binding nothing dilutes the only question a coverage table answers. The standings are the corpus's
+    # judgement rather than the tool's, which is why they are declared here.
     #
-    # An error rather than a warning, unlike the other checks over this table. The rest report how a
-    # clause is written, where an author's judgement is the thing being questioned. This one reports two
-    # copies of one fact disagreeing, and there is no reading of that a policy meant.
+    # An error rather than a warning, unlike the other checks over this table. The rest report how a clause
+    # is written, where an author's judgement is what is being questioned. This one reports two copies of
+    # one fact disagreeing.
 
   - id: posture-belongs-to-frameworks
     description: '"compliant", "certified" or "registered" near a framework reference. Standing belongs in `frameworks.md`.'

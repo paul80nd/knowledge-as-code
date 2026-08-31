@@ -52,9 +52,7 @@ fields:
     type: date
     allow-literal: [never]
     description: Quoted date or `"never"`. Set when someone follows it end to end, not when the page is edited.
-    notes: >
-      Quoted date, or `"never"`, which is permitted and preferable to a guess. Updated when someone actually
-      follows the process end to end, not when someone edits the document.
+    notes: '`"never"` is preferable to a guess.'
 
   rehearsal-frequency:
     required: false

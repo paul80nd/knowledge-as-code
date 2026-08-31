@@ -3,8 +3,12 @@ id: std-SECRET
 tier: normative
 status: draft
 implements:
-  - pol-ENVS
-  - pol-SCRT
+  - pol-ENVS.REUSE
+  - pol-SCRT.EMBED
+  - pol-SCRT.LEAKED
+  - pol-SCRT.LOGS
+  - pol-SCRT.ROTATE
+  - pol-SCRT.STORE
 applies-to:
   - all
 review-by: "2027-08-26"

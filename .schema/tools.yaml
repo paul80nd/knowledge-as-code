@@ -43,8 +43,7 @@ fields:
     values: [approved, trial, deprecated, rejected]
     description: '`approved` means approved for new work. Existing use that is not approved is drift.'
     notes: >
-      `approved` means approved **for new work**. Something already in use but not approved is drift, and
-      finding it is a manual job. `drift-against-manifests` is declared and does not run.
+      Finding drift is a manual job. `drift-against-manifests` is declared and does not run.
 
   category:
     required: true
@@ -84,8 +83,8 @@ fields:
     reciprocal: replaces
     description: The tool id that replaces this one.
     notes: >
-      The counterpart of `replaces`, and what a deprecated entry owes its reader. CI enforces both
-      directions, so a supersession claimed at one end is claimed at both.
+      What a deprecated entry owes its reader. CI reconciles both directions, so a supersession claimed at one
+      end is claimed at both.
 
 sections:
   required: [What we use it for, Status]

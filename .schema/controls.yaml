@@ -64,9 +64,8 @@ fields:
     values: [ci, review-checklist, manual-periodic, runtime-alert, not-enforced]
     description: How the check happens. `not-enforced` is first-class. An honest gap beats a fiction.
     notes: >
-      `not-enforced` is a first-class value and the point of the coverage report: it converts an aspiration
-      into a visible number rather than letting the rulebook quietly become fiction. Do not invent a
-      mechanism to avoid using it.
+      `not-enforced` is what the coverage report is for: it turns an aspiration into a visible number. Do not
+      invent a mechanism to avoid using it.
 
   frequency:
     required: false

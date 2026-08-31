@@ -97,9 +97,16 @@ fields:
     type: list
     of: id
     ref: policies
-    description: Policy ids this standard puts into practice.
+    part-required: true
+    description: Policy clause ids this standard puts into practice, as `pol-EVER.BRANCH`.
     notes: >
-      One-way, and pointed upward. A standard names the policy it puts into practice. The policy does not
+      Clause by clause, and a bare policy id is refused. A standard discharges some of a policy's clauses
+      and seldom all of them, so a bare id is one keystroke shorter than the honest list and reads to
+      anything counting coverage as every clause covered. A standard that does cover every clause lists
+      every clause. The policies it relates to are readable from the clause ids, so no second field
+      carries them.
+
+      One-way, and pointed upward. A standard names the clause it puts into practice. The policy does not
       name its standards. Policies are the layer a downstream corpus inherits and a standard is the layer it
       writes for itself, so the set of implementers is unknowable from where the policy sits. A policy
       with no implementer named is the normal state, not a gap.
@@ -135,12 +142,12 @@ index:
 
 rules:
   - id: provenance-required
-    description: A standard cites an ADR in `derived-from`, a policy in `implements`, or both.
+    description: A standard cites an ADR in `derived-from`, a policy clause in `implements`, or both.
     severity: error
     expr: "present('derived-from') or present('implements')"
     message: >
-      A standard cites where its authority comes from: an ADR in `derived-from`, a policy in `implements`,
-      or both. With neither this is guidance, and guidance is an explanation.
+      A standard cites where its authority comes from: an ADR in `derived-from`, a policy clause in
+      `implements`, or both. With neither this is guidance, and guidance is an explanation.
   - id: rules-have-controls
     description: >
       Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.
