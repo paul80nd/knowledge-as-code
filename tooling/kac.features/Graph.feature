@@ -44,7 +44,8 @@ Scenario: A field reconciles against the lines carrying its label, whichever lab
     | line | check             | message                                                                                                                             |
     |    1 | mirrors-citations | 'covers' lists 'giz-behaving.it-rattles' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
     |    1 | mirrors-citations | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                                                         |
-    |   30 | mirrors-citations | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to.                    |
+    |   31 | mirrors-citations | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to.                    |
+    |   39 | mirrors-citations | this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off.                          |
 
 Scenario: The whole graph produces exactly these findings and nothing else
   When I validate the corpus
@@ -66,4 +67,5 @@ Scenario: The whole graph produces exactly these findings and nothing else
     | gizmos/adrift.md      | error    |    1 | related-matches-section | the '## Dependencies' section references 'giz-mirrored' but 'depends-on' does not list it.           |
     | gizmos/drifting.md    | error    |    1 | mirrors-citations       | 'covers' lists 'giz-behaving.it-rattles' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
     | gizmos/drifting.md    | error    |    1 | mirrors-citations       | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                         |
-    | gizmos/drifting.md    | error    |   30 | mirrors-citations       | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to. |
+    | gizmos/drifting.md    | error    |   31 | mirrors-citations       | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to. |
+    | gizmos/drifting.md    | error    |   39 | mirrors-citations       | this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off.       |

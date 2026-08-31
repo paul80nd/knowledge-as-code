@@ -1,7 +1,7 @@
 using kac.core;
 
 // In-process unit tests for `mirrors-citations`, which reconciles a field against the footnote lines
-// carrying its label. The golden fixture pins the three faults over a corpus; these pin the arms a
+// carrying its label. The golden fixture pins the four faults over a corpus; these pin the arms a
 // fixture cannot reach, because each needs a document the corpora would report something else about.
 
 namespace kac.tests;
@@ -21,6 +21,20 @@ public class MirrorsCitationsTests
     public void A_citation_of_a_type_the_field_does_not_reference_is_passed_over()
         => Assert.Empty(Reconcile("_**Covers:** [pol-SCRT].ROTATE, and [std-OTHER].a-rule_",
             "pol-SCRT.ROTATE"));
+
+    // A line naming only what the field cannot carry gathers nothing, so it is empty in the sense the
+    // reconciliation reads, whatever it says on the page.
+    [Fact]
+    public void A_line_naming_only_types_the_field_does_not_reference_is_reported_as_empty()
+        => Assert.Equal("this 'Covers' line names nothing it could gather. Name what the section "
+                        + "answers, or take the line off.",
+            Assert.Single(Reconcile("_**Covers:** [std-OTHER].a-rule_")).Message);
+
+    // A section carrying no line stays silent, which is the point of the key: a rule discharging no
+    // clause is ordinary. Only a line somebody wrote is asked to name something.
+    [Fact]
+    public void A_section_closing_on_no_line_at_all_is_not_reported()
+        => Assert.Empty(Reconcile("Prose alone, under a heading that covers nothing."));
 
     [Fact]
     public void A_clause_no_line_names_is_reported_against_the_field()
@@ -47,6 +61,77 @@ public class MirrorsCitationsTests
                      + "under the heading it belongs to.", found.Message);
         Assert.Equal(11, found.Line);
     }
+
+    // The two faults about a line are independent, so a line that is both misplaced and empty is told
+    // both things. Each names a different repair.
+    [Fact]
+    public void A_line_that_is_both_misplaced_and_empty_is_reported_twice()
+        => Assert.Equal(2,
+            Reconcile("_**Covers:**_\n\nMore prose under the same heading.").Count);
+
+    // Two fields spelling one label are handed the same lines, so what is wrong with a line is decided
+    // across both. A line answering one of them is not empty for the other, and a misplaced line is one
+    // finding rather than two.
+    [Fact]
+    public void A_line_answering_one_of_two_fields_sharing_a_label_is_not_reported_for_the_other()
+    {
+        var schema = SharedLabelSchema();
+        var doc = Doc.Parse("standards/secret-handling.md",
+            "---\nid: std-SECRET\nimplements:\n  - pol-SCRT.ROTATE\ndecided-by:\n---\n\n"
+            + "# A standard\n\n## A rule\n\n_**Covers:** [pol-SCRT].ROTATE_\n\n[pol-SCRT]: scrt.md\n",
+            schema);
+        Assert.NotNull(doc);
+
+        var found = new List<Finding>();
+        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found);
+        Assert.DoesNotContain(found, x => x.Check.Value == "mirrors-citations");
+    }
+
+    // The same two fields, and a line neither of them could gather. One finding, because the fault is
+    // the line's rather than either field's.
+    [Fact]
+    public void A_line_neither_of_two_fields_sharing_a_label_could_gather_is_reported_once()
+    {
+        var schema = SharedLabelSchema();
+        var doc = Doc.Parse("standards/secret-handling.md",
+            "---\nid: std-SECRET\nimplements:\ndecided-by:\n---\n\n"
+            + "# A standard\n\n## A rule\n\n_**Covers:** [std-OTHER].a-rule_\n\n[std-OTHER]: other.md\n",
+            schema);
+        Assert.NotNull(doc);
+
+        var found = new List<Finding>();
+        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found);
+        Assert.Equal("this 'Covers' line names nothing it could gather. Name what the section answers, "
+                     + "or take the line off.",
+            Assert.Single(found, x => x.Check.Value == "mirrors-citations").Message);
+    }
+
+    // Two fields reconciling against one label, each pointing at a type of its own.
+    private static Schema SharedLabelSchema() => new()
+    {
+        ByFolder = new Dictionary<string, TypeSchema>
+        {
+            ["standards"] = new()
+            {
+                Key = "standards", Folder = "standards", IdPrefix = "std",
+                DeclaredFields =
+                [
+                    new FieldSpec
+                    {
+                        Name = "implements", Type = "list", Of = "id", Refs = ["policies"],
+                        MirrorsCitations = "Covers"
+                    },
+                    new FieldSpec
+                    {
+                        Name = "decided-by", Type = "list", Of = "id", Refs = ["adrs"],
+                        MirrorsCitations = "Covers"
+                    }
+                ]
+            },
+            ["policies"] = new() { Key = "policies", Folder = "policies", IdPrefix = "pol" },
+            ["adrs"] = new() { Key = "adrs", Folder = "adrs", IdPrefix = "adr" }
+        }
+    };
 
     // A standard whose `implements:` reconciles against a `Covers` line, and the policy its clause ids
     // point at. Two types, because the reconciliation is scoped to the types the field references and a

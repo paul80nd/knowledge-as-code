@@ -1006,33 +1006,51 @@ public static class Validator
     // A field against the citations gathered by the footnote lines carrying its label. Where
     // `mirrors-section` reads one named section, this reads a line wherever one closes a section, so a
     // document says section by section which of the field's references that stretch of prose answers.
-    //
-    // Two faults, and the misplaced line is the one to report first: a line the reader takes for a
-    // footnote, sitting where nothing marks it as one. Its citations count all the same, so a document
-    // that only put the line in the wrong place gets one finding rather than one per id it named.
     private static void CheckMirrorsCitations(Doc d, TypeSchema t, Schema schema, Report report)
     {
+        var declared = new List<(FieldSpec Spec, List<CitationFootnote> Lines, List<string> Prefixes)>();
         foreach (var spec in t.DeclaredFields)
         {
             if (spec.MirrorsCitations is not { } label) continue;
             var prefixes = spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>()
                 .Select(target => target.IdPrefix + "-").ToList();
             if (prefixes.Count == 0) continue;
+            declared.Add((spec, d.CitationFootnotes.GetValueOrDefault(label, []), prefixes));
+        }
 
-            var footnotes = d.CitationFootnotes.GetValueOrDefault(label, []);
-            foreach (var footnote in footnotes.Where(footnote => !footnote.ClosesSection))
-                report.Err(new CheckId("mirrors-citations"),
-                    $"this '{label}' line stands in the middle of a section. Write it as the last thing "
-                    + "under the heading it belongs to.", footnote.Line);
+        // Two faults sit on a line, and both are decided against the lines rather than against a field.
+        // Two fields spelling one label are handed the same list, so a per-field pass would report each
+        // line twice, and would call a line answering one of those fields empty for the other.
+        //
+        // A misplaced line's citations count all the same, so a document that only put the line in the
+        // wrong place gets one finding rather than one per id it named.
+        // Held in a typed local so the group key comes from the selector. Passed inline, the comparer
+        // widens the key to object and the group no longer enumerates.
+        IEqualityComparer<List<CitationFootnote>> sameLines = ReferenceEqualityComparer.Instance;
+        foreach (var group in declared.GroupBy(x => x.Lines, sameLines))
+        {
+            var label = group.First().Spec.MirrorsCitations!;
+            var prefixes = group.SelectMany(x => x.Prefixes).ToList();
+            foreach (var footnote in group.Key)
+            {
+                if (!footnote.ClosesSection)
+                    report.Err(new CheckId("mirrors-citations"),
+                        $"this '{label}' line stands in the middle of a section. Write it as the last "
+                        + "thing under the heading it belongs to.", footnote.Line);
+                if (!footnote.Citations.Any(citation => Gathers(prefixes, citation)))
+                    report.Err(new CheckId("mirrors-citations"),
+                        $"this '{label}' line names nothing it could gather. Name what the section "
+                        + "answers, or take the line off.", footnote.Line);
+            }
+        }
 
-            // Only the types the field points at. A rule leans on the rules of other standards and on
-            // the ADR that decided it, and a line naming one of those is prose rather than coverage: the
-            // field could not carry it, so reporting it would be a finding nothing could clear.
+        foreach (var (spec, lines, prefixes) in declared)
+        {
+            var label = spec.MirrorsCitations!;
             var inFront = new HashSet<string>(d.FrontList(spec.Name), StringComparer.OrdinalIgnoreCase);
             var inBody = new HashSet<string>(
-                footnotes.SelectMany(footnote => footnote.Citations)
-                    .Where(citation => prefixes.Any(prefix =>
-                        Citation.Read(citation).Record.StartsWith(prefix, StringComparison.Ordinal))),
+                lines.SelectMany(footnote => footnote.Citations)
+                    .Where(citation => Gathers(prefixes, citation)),
                 StringComparer.OrdinalIgnoreCase);
 
             foreach (var id in inFront.Except(inBody, StringComparer.OrdinalIgnoreCase))
@@ -1044,6 +1062,13 @@ public static class Validator
                     $"a '{label}' line names '{id}' and '{spec.Name}' does not list it.", d.FrontStartLine);
         }
     }
+
+    // Only the types a field points at. A rule leans on the rules of other standards and on the ADR that
+    // decided it, and a line naming one of those is prose rather than coverage: the field could not carry
+    // it, so reporting it would be a finding nothing could clear. A line naming only those therefore
+    // gathers nothing, which is what an empty line is.
+    private static bool Gathers(List<string> prefixes, string citation) =>
+        prefixes.Any(prefix => Citation.Read(citation).Record.StartsWith(prefix, StringComparison.Ordinal));
 
     // The type's own `rules:`, in the order the schema declares them. Two kinds arrive here. A rule
     // carrying an `expr:` is answered by evaluating it, and needs no C# at all. A rule whose question

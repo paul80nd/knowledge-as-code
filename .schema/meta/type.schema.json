@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.com/knowledge-as-code/.schema/meta/type.schema.json",
   "title": "kac type schema",
-  "description": "The shape of a type file in `.schema/`. One file declares one record type: what it is called, where its records live, what their frontmatter carries, and what CI holds them to. The files beginning with an underscore are other shapes and this does not describe them.",
+  "description": "The shape of a type file in `.schema/`. One file declares one record type: its name, its folder, its frontmatter, and what CI holds its records to. The files beginning with an underscore are other shapes.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -42,7 +42,7 @@
       "minLength": 1
     },
     "folder": {
-      "description": "The folder holding this type's records, which is also what this file is named for: a document's type is inferred from its folder, so folder to schema is an identity lookup.",
+      "description": "The folder holding this type's records, and what this file is named for: a document's type is inferred from its folder.",
       "$ref": "#/$defs/name"
     },
     "page": {
@@ -69,7 +69,7 @@
       ]
     },
     "summary": {
-      "description": "What the type is, in one line, and it heads the type's row in the repository's own index. Rendered as a table cell, so `kac` holds it to a length, counted with whitespace folded.",
+      "description": "What the type is, in one line. It heads the type's row in the repository's own index, rendered as a table cell, so `kac` holds it to a length.",
       "type": "string",
       "minLength": 1
     },
@@ -79,16 +79,16 @@
       "minLength": 1
     },
     "detail": {
-      "description": "What the type carries beyond its first sentence, and the edge a reader is most likely to walk over. Rendered as prose rather than into a table, so no cell bound reaches it. It is the framework's account of the type: anything local, and any example from the estate, belongs on the type's own page.",
+      "description": "What the type carries beyond its first sentence, and the edge a reader is most likely to walk over. Rendered as prose rather than into a table, so no cell bound reaches it. Anything local belongs on the type's own page instead.",
       "type": "string",
       "minLength": 1
     },
     "collision": {
-      "description": "Where this type's name already means something else to a reader arriving from another framework. Say what the word means elsewhere and what the reader will get wrong. Paragraphs separated by a blank line, and links written inline rather than as reference labels. Most types collide with nothing and leave this out: inventing one spends a warning a reader would otherwise trust.",
+      "description": "Where this type's name already means something else to a reader arriving from another framework. Say what the word means elsewhere and what the reader will get wrong. Paragraphs separated by a blank line, and links written inline. Most types collide with nothing and leave this out.",
       "type": "string"
     },
     "versus": {
-      "description": "The calls that are genuinely close, keyed by the other type. A pair is declared once, by the type its heading is titled from, and it renders as the taxonomy's disambiguation list. Which side declares it is a judgement, so a pair both sides declare fails, as does one against the declaring type itself. A pair renders only where the corpus adopted both types.",
+      "description": "The calls that are genuinely close, keyed by the other type, rendered as the taxonomy's disambiguation list. A pair is declared once, by the type its heading is titled from. A pair both sides declare fails, as does one against the declaring type itself, and a pair renders only where the corpus adopted both types.",
       "type": "object",
       "propertyNames": {
         "$ref": "#/$defs/name"
@@ -99,7 +99,7 @@
       }
     },
     "lineage": {
-      "description": "Where the type's name came from, and where it parts company with whatever lent it. This is the framework's own intellectual debt, identical wherever the schema is taken. What a corpus stands at against an external framework is the other thing entirely, and `frameworks.md` records it alone.",
+      "description": "Where the type's name came from, and where it parts company with whatever lent it. The framework's own debt, identical wherever the schema is taken. What a corpus stands at against an external framework is `frameworks.md` instead.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -110,7 +110,7 @@
           "$ref": "#/$defs/notes"
         },
         "prior-art": {
-          "description": "What the type is nearest to, or that nothing established fits. Links are written inline, not as reference labels, because the block this renders into cannot see the definitions at the foot of the page it lands on. The only required part of the block, and \"none\" is one of its answers: claiming an ancestor a type has not got is worse than admitting none.",
+          "description": "What the type is nearest to, or that nothing established fits. Links are written inline, because the block this renders into cannot see the definitions at the foot of the page it lands on. The only required part of the block, and \"none\" is one of its answers.",
           "type": "string",
           "minLength": 1
         },
@@ -150,7 +150,7 @@
           ]
         },
         "width": {
-          "description": "How many characters a `numbered` or `mnemonic` discriminator carries, as an exact count or a `min`/`max` span. Defaults to 4. A `slug` has no fixed width and does not read it. A span is for `mnemonic` alone, whose length follows the concept it names, and it needs `filename.carries-id: false`, because several lengths cannot be read out of one filename. A `numbered` id is padded to one width so that ids sort.",
+          "description": "How many characters a `numbered` or `mnemonic` discriminator carries, as an exact count or a `min`/`max` span. Defaults to 4. A `slug` has no fixed width and does not read it. A span is for `mnemonic` alone, and needs `filename.carries-id: false`, because several lengths cannot be read out of one filename.",
           "oneOf": [
             {
               "type": "integer",
@@ -214,11 +214,11 @@
           "$ref": "#/$defs/regex"
         },
         "carries-id": {
-          "description": "Whether the filename opens with the id's discriminator, as `0007-decide-x.md` and `vurm-remediation.md` do. Defaults to true. Set false where records are filed by topic alone, and then nothing reads the head of a filename as an id: not the agreement between the two, not the slug `slug-max` measures, and not the citation a link to the file would otherwise carry.",
+          "description": "Whether the filename opens with the id's discriminator, as `0007-decide-x.md` and `vurm-remediation.md` do. Defaults to true. Set false where records are filed by topic alone, and nothing then reads the head of a filename as an id.",
           "type": "boolean"
         },
         "slug-max": {
-          "description": "The longest slug a filename may carry: the slug the author chose, so the extension is dropped and so is the discriminator where the name carries one ahead of it. Defaults to 30.",
+          "description": "The longest slug a filename may carry: the extension is dropped, and so is the discriminator where the name carries one ahead of it. Defaults to 30.",
           "type": "integer",
           "minimum": 1
         }
@@ -297,7 +297,7 @@
       }
     },
     "parts": {
-      "description": "Where a record of this type keeps the parts something else may cite: the children a `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus` citation addresses. A type declaring no block offers no parts, and a citation into one of its records is reported as reaching nothing.",
+      "description": "Where a record of this type keeps the parts something else may cite: what the `.TIMEBOX` of `pol-VURM.TIMEBOX` addresses. A type declaring no block offers no parts, and a citation into one of its records reaches nothing.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -388,12 +388,12 @@
           "$ref": "#/$defs/notes"
         },
         "version": {
-          "description": "The shape a consumer holds this type's exported files to. Moved by hand when a reader written against the shape before it would now be wrong: a key renamed or dropped, a value whose type changed, a key that means something new. Adding a key moves nothing. Each type carries its own, so a change to one type's shape cannot refuse a consumer reading another.",
+          "description": "The shape a consumer holds this type's exported files to. Moved by hand where a reader written against the shape before it would now be wrong: a key renamed or dropped, a value whose type changed, a key that means something new. Adding a key moves nothing, and each type carries its own.",
           "type": "integer",
           "minimum": 1
         },
         "fields": {
-          "description": "The frontmatter a record contributes, in the order an export writes it. Each names a field the type declares or inherits, or `title`, which is the record's heading rather than a field. A field travels in the shape its declaration gives it: a list as a JSON array, anything else as a string.",
+          "description": "The frontmatter a record contributes, in the order an export writes it. Each names a field the type declares or inherits, or `title`, which is the record's heading rather than a field. A list travels as a JSON array and anything else as a string.",
           "type": "array",
           "minItems": 1,
           "items": {
@@ -401,7 +401,7 @@
           }
         },
         "sections": {
-          "description": "The sections that travel, keyed by the heading the type declares and each carrying the fidelity it travels at. A heading the `sections:` block does not declare fails: two structural declarations free to disagree are what selecting by key exists to prevent.",
+          "description": "The sections that travel, keyed by the heading the type declares and each carrying the fidelity it travels at. A heading the `sections:` block does not declare fails.",
           "type": "object",
           "minProperties": 1,
           "additionalProperties": {
@@ -425,7 +425,7 @@
               "$ref": "#/$defs/fidelity"
             },
             "line": {
-              "description": "The keys one part writes, in the order the line writes them, each naming the source that fills it. The key is the type's own word and reaches a consumer as written, so a glossary's `definition` and a policy's `level` never meet in one shape.",
+              "description": "The keys one part writes, in the order the line writes them, each naming the source that fills it. The key is the type's own word and reaches a consumer as written.",
               "type": "object",
               "minProperties": 1,
               "additionalProperties": {
@@ -446,7 +446,7 @@
   },
   "$defs": {
     "notes": {
-      "description": "Commentary: what these files should say and the tool has no use for. Admitted at every level and required at none. Where a field carries both, `description:` is what a reader of the type page needs at a glance and `notes:` is the reasoning there is no room for there. A field declaring only notes still renders them.",
+      "description": "Commentary the tool has no use for. Admitted at every level and required at none. Where a field carries both, `description:` is what the type page shows at a glance and `notes:` is the reasoning behind it. A field declaring only notes still renders them.",
       "type": "string"
     },
     "name": {
@@ -467,7 +467,7 @@
       }
     },
     "fidelity": {
-      "description": "How much of one piece travels into an export. `full` carries it whole, `summary` cuts it to its opening block, and `reference` carries the key and none of its words. Written against every entry and defaulted nowhere: which of the three a consumer gets is the whole of what an export declares.",
+      "description": "How much of one piece travels into an export. `full` carries it whole, `summary` cuts it to its opening block, and `reference` carries the key and none of its words. Written against every entry and defaulted nowhere.",
       "enum": [
         "full",
         "summary",
@@ -475,7 +475,7 @@
       ]
     },
     "lineSource": {
-      "description": "Where one key of a part line takes its value from. `part.lead` and `part.aside` read a part's body, which only a heading-sourced type gives a part: a table row is its own body, and a table-sourced type carries the row through `part.text` and its columns. `front.<field>` names a field the type declares or inherits. `column.<Header>` names a header the type's `parts.columns:` declares.",
+      "description": "Where one key of a part line takes its value from. `part.lead` and `part.aside` read a part's body, which only a heading-sourced type gives a part. A table-sourced type carries the row through `part.text` and its columns instead. `front.<field>` names a field the type declares or inherits, and `column.<Header>` a header the type's `parts.columns:` declares.",
       "anyOf": [
         {
           "enum": [
@@ -556,7 +556,7 @@
           ]
         },
         "entry": {
-          "description": "The keys one entry of the list holds, where `of: object` makes its entries mappings. Declared with the vocabulary a field is declared with, so a key is held to its own `type:`, `pattern:` and `required:`. Order is load-bearing: the first key declared is the one naming the entry, which is what the entries are sorted on and what an index column renders.",
+          "description": "The keys one entry of the list holds, where `of: object` makes its entries mappings. Declared with the vocabulary a field is declared with, so a key is held to its own `type:`, `pattern:` and `required:`. The first key declared names the entry, and is what the entries sort on and what an index column renders.",
           "type": "object",
           "minProperties": 1,
           "additionalProperties": {
@@ -581,7 +581,7 @@
           ]
         },
         "ref": {
-          "description": "The folders an id in this field may belong to. A scalar is the one-folder case. Both halves are asked of every id: that it names a record, and that the record is of a type named here. An id of the wrong type lands on a real page and reads as deliberate, and this line is the only place the type it should have named is written down. A folder this corpus declined is left unenforced, and adopting the type starts the reference with no edit here.",
+          "description": "The folders an id in this field may belong to. A scalar is the one-folder case. Both halves are asked of every id: that it names a record, and that the record is of a type named here. A folder this corpus declined is left unenforced, and adopting the type starts the reference with no edit here.",
           "oneOf": [
             {
               "$ref": "#/$defs/name"
@@ -596,7 +596,7 @@
           ]
         },
         "part-required": {
-          "description": "Whether an id in this field must reach a part of the record rather than the record whole. A standard's `implements:` declares it, so it names the clauses it puts into practice one by one. The record named whole reads to anything walking the edge as every part covered. Needs a `ref:` to resolve the part against, and every type it names has to keep parts.",
+          "description": "Whether an id in this field must reach a part of the record rather than the record whole. A standard's `implements:` declares it, and names clauses one by one. Needs a `ref:` to resolve the part against, and every type it names has to keep parts.",
           "type": "boolean"
         },
         "reciprocal": {
@@ -608,22 +608,22 @@
           "$ref": "#/$defs/regex"
         },
         "from": {
-          "description": "Where the field's value comes from, for a field the record never writes. `sub-path` is the folders between the type's own folder and the file, so `standards/platform/node/testing.md` carries `platform/node`. A record saved straight into its type folder gets an empty value. A derived field may not also be `required:`, and `derived-key` reports one written into frontmatter.",
+          "description": "Where the field's value comes from, for a field the record never writes. `sub-path` is the folders between the type's own folder and the file, so `standards/platform/node/testing.md` carries `platform/node`. A record saved straight into its type folder gets an empty value. A derived field may not also be `required:`.",
           "type": "string",
           "enum": ["sub-path"]
         },
         "mirrors-section": {
-          "description": "The section whose ids this field must mirror. It must be one the type's `sections:` block declares. The ids are held in both directions and case-insensitively, in a bullet or in prose alike. Both directions is the part to weigh: the field has to be the whole truth about what the section names, so a prose aside about something deliberately absent from the field will fail.",
+          "description": "The section whose ids this field must mirror, which must be one the type's `sections:` block declares. The ids are held in both directions and case-insensitively, in a bullet or in prose alike. The field has to be the whole truth about what the section names.",
           "type": "string",
           "minLength": 1
         },
         "mirrors-citations": {
-          "description": "The label on the footnote lines whose citations this field must mirror. Each line is written in italic with the label bold, and closes the section whose citations it gathers: `_**Covers:** [pol-SCRT].EMBED_`. A section covering nothing carries no line. The union of the lines is held equal to the field, in both directions and case-insensitively, so the field stays the whole truth about what the document answers. The field must declare a `ref:`, since the lines gather citations of another record.",
+          "description": "The label on the footnote lines whose citations this field must mirror. Each line is written in italic with the label bold, and closes the section whose citations it gathers: `_**Covers:** [pol-SCRT].EMBED_`. The union of the lines is held equal to the field, in both directions and case-insensitively. A section covering nothing carries no line, and a line gathering nothing the field could carry is reported. Needs a `ref:`.",
           "type": "string",
           "minLength": 1
         },
         "allow-literal": {
-          "description": "Words admitted beside the field's declared type: `last-rehearsed: never`, `applies-to: [all]`. A value listed here is taken as written and nothing further is asked of it. On a list it exempts the entry rather than the field, so the ids beside it are still ids.",
+          "description": "Words admitted beside the field's declared type: `last-rehearsed: never`, `applies-to: [all]`. A value listed here is taken as written. On a list it exempts the entry rather than the field, so the ids beside it are still ids.",
           "type": "array",
           "minItems": 1,
           "items": {
@@ -637,7 +637,7 @@
           "minimum": 1
         },
         "min-records": {
-          "description": "The floor on how many records carry a given value, for a field whose values group documents rather than describe one. Counted per type, case-insensitively, and once per record however often one repeats a value. Reports a warning against each record carrying the short value. The membership of the vocabulary is never declared here.",
+          "description": "The floor on how many records carry a given value, for a field whose values group documents rather than describe one. Counted per type, case-insensitively, and once per record however often one repeats a value. Warns against each record carrying the short value.",
           "type": "integer",
           "minimum": 1
         }

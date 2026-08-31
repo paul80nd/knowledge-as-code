@@ -73,7 +73,7 @@ provenance where it travels.
 **Close a heading with the clauses it covers**, as a footnote in italic with the label bold. CI holds the union of
 those lines equal to `implements`, so the frontmatter says which obligations the standard discharges and each heading
 says which rule discharges which. Write it as the last thing under the heading, and leave it off a heading that covers
-no clause.
+no clause. CI reports a line naming none.
 
 **The rules themselves carry no clause citation.** One line at the foot of the heading says what that heading
 discharges. An id in brackets on every bullet buries the obligation a reader came for.

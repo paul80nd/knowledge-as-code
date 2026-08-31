@@ -55,13 +55,12 @@ checks:
       on anything but a list, and an unknown `id.style` or `index.order`.
 
       A `ref:` and a `versus:` are outside it, because each names a type and a corpus adopts as many
-      types as it has use for. One naming a type this corpus declined enforces nothing and is asked
-      nothing, and adopting the type later starts it with no edit here.
+      types as it has use for. One naming a type this corpus declined is asked nothing, and adopting the
+      type later starts it with no edit here.
 
-      It runs the other way too, for the one part of the code a registry can name: a check id a rule
-      class reports under that this file does not declare. A check declared here and reported by
-      nothing cannot be found at load, since every other check reports through a literal written where
-      the check is. The coverage gate answers that one, by failing on a check no fixture can reach.
+      It runs the other way too: a check id a rule class reports under that this file does not declare.
+      A check declared here and reported by nothing is the coverage gate's to catch, by failing on a
+      check no fixture can reach.
 
   schema-shape:
     severity: error
@@ -101,10 +100,9 @@ checks:
     description: A field the type derives from where the record sits is absent from frontmatter.
     notes: >
       A derived field is declared, so `unknown-key` admits it. Its value is the folders between the
-      type's own folder and the file. A written value is a second answer, and the two can disagree.
+      type's own folder and the file, and a written value is a second answer the two can disagree over.
 
-      You start using categories by making a folder. A record saved straight into its type folder gets
-      an empty value, which is a normal state.
+      A record saved straight into its type folder gets an empty value, which is a normal state.
 
       Asked of a template too, because a template carrying the key teaches every record copied from it
       to carry one.
@@ -250,10 +248,8 @@ checks:
     description: A section the type declares carries something under its heading.
     notes: >
       An author with nothing to say cannot delete a required heading, so what they leave is a blank
-      beneath it, which reads as a finished document to everyone but the person who needed the section.
-      A template's sections stand empty for the copy to fill. The section a type keeps its parts in is
-      left to the checks that read them, which are looking at the same blank and can say what belongs
-      there.
+      beneath it. A template's sections stand empty for the copy to fill. The section a type keeps its
+      parts in is left to the checks that read them.
 
   placeholder-left:
     severity: error
@@ -280,23 +276,20 @@ checks:
       What `clause-table`'s empty-table arm asks of the other source. A record promising parts and
       carrying none says nothing where it undertook to say something.
 
-      Nothing else reports it. `required-section` is answered by the heading existing. `empty-section`
-      passes the parts section over, on the grounds that whatever reads the parts is looking at the same
-      blank and can name what belongs there. This check does that naming: it quotes the section, the
-      word the type calls its parts, and the heading level to write them at.
+      Nothing else reports it. `required-section` is answered by the heading existing, and
+      `empty-section` passes the parts section over. This check quotes the section, the word the type
+      calls its parts, and the heading level to write them at.
 
-      Reported and stopped, for the reason a broken table is. The checks after it read parts, and a
-      section holding none gives them nothing to say.
+      Reported and stopped, for the reason a broken table is: the checks after it read parts.
 
   part-empty:
     severity: error
     description: A part declared by a heading carries something under it.
     notes: >
       A heading is an address and a container both. An empty entry passes everything a reader can check
-      from outside: it has a title, a working anchor and a citation that resolves. It lacks only the
-      words the reader came for, and an export then carries it as a part holding none and counts it
-      among the rest. The table source needs no equivalent, since a row with an empty clause
-      cell is stopped by `clause-modal` before anyone asks.
+      from outside: a title, a working anchor and a citation that resolves. An export then carries it as
+      a part holding no words and counts it among the rest. The table source needs no equivalent, since
+      `clause-modal` stops a row with an empty clause cell first.
 
       The check hangs off the source, so anything declaring `source: headings` inherits it. It quotes
       the heading, because a glossary holds twenty entries and "one of these is empty" is not something
@@ -373,51 +366,43 @@ checks:
     severity: error
     description: A part reference names a document that exists and carries that part.
     notes: >
-      Written `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`, and checked wherever it appears, since
-      any type may cite a part.
+      Written `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`, and checked wherever it appears,
+      since any type may cite a part.
 
       Every form the corpus writes is read: a code span, a link carrying the citation as its text or as
       its label, and a link naming the record with the part id against its closing bracket, as
       `[pol-VURM].TIMEBOX`. That third form needs one link definition however many parts of the record a
       document cites. The id has to touch the bracket, so a full stop closing a sentence after a link
-      stays a full stop. A link needs asking about most, because it resolves against a page rather than
-      against the part.
+      stays a full stop.
 
       Three ways it fails, each reported in the words that fit: the document does not exist, its type
-      keeps no parts at all, or the part is not one it carries. A colon where the dot belongs is reported
-      here too, naming the form to write, because the parser reads a citation by its separator and one
-      spelled with a colon would reach nothing. The separator is legible in the single file where the
-      resolution needs the whole corpus, so the two halves run in different passes.
+      keeps no parts at all, or the part is not one it carries. A colon where the dot belongs is
+      reported here too, naming the form to write.
 
       A citation may carry a producer's shortcode, as `eng:pol-VURM.TIMEBOX`, and then resolves against
-      what `kac restore` unpacked under `.imports/`. An imported record may be cited whole that way,
-      because the scope is the author claiming the record is another corpus's and that claim is worth
-      checking. A record this corpus holds is never cited whole in a code span, since holding every
-      mention of an id to resolving would report the identity line under every title in the corpus.
+      what `kac restore` unpacked under `.imports/`. An imported record may be cited whole that way, and
+      a record this corpus holds never is.
 
       Three more ways it fails, each about the spelling rather than the record: a bare id naming a
       record this corpus imports, a scoped id naming one it holds, and a shortcode it consumes nothing
-      under. The first two say the spelling to write instead, because a reader told the record does not
-      exist goes looking for a record that is exactly where they left it. A citation into an import that
-      has not been restored reports nothing here, and `import-restored` says it once instead.
+      under. The first two say the spelling to write instead. A citation into an import that has not
+      been restored reports nothing here, and `import-restored` says it once instead.
 
   ref-resolves:
     severity: error
     description: An id in a field declaring a `ref:` names a document that exists, of a type the `ref:` names.
     notes: >
       Both halves are asked, of a scalar and a list alike, and whether or not the field also declares a
-      `reciprocal:`. A one-directional edge has no counterpart obliged to keep it in step, which makes
-      it the edge with least behind it. The wrong type is the quieter fault: it lands on a real page, so
-      it reads as intentional and whatever walks the edge afterwards takes it at its word. A literal the
-      field admits, such as `applies-to: [all]`, is not an id and is skipped.
+      `reciprocal:`. The wrong type is the quieter fault: it lands on a real page, so it reads as
+      intentional and whatever walks the edge afterwards takes it at its word. A literal the field
+      admits, such as `applies-to: [all]`, is not an id and is skipped.
 
       A field may reach a part and may carry a scope, as `implements: eng:pol-VURM.TIMEBOX`. Both halves
-      of a part-level id are asked, because half an obligation is not an obligation and a coverage report
-      walks these edges. The spelling faults `part-ref` reports across a boundary are reported here too,
-      in the same words, since one lookup answers a citation in prose and one in a field.
+      of a part-level id are asked. The spelling faults `part-ref` reports across a boundary are
+      reported here too, in the same words.
 
-      A field declaring `part-required:` is held to the part as well. The record named whole is refused
-      there, because it reads to a coverage report as every part of it.
+      A field declaring `part-required:` is held to the part as well, so the record named whole is
+      refused there.
 
   reciprocal:
     severity: error
@@ -446,9 +431,11 @@ checks:
       case-insensitively. The field stays the whole truth about what the document answers, and the lines
       divide that truth between the sections.
 
-      A line the reader takes for a footnote and that closes no section is reported where it sits, and
-      its citations still count. Dropping them would report every id it named as absent from the
-      document, which is a page of findings for one misplaced line.
+      Two faults sit on a line rather than on the field. A line the reader takes for a footnote and that
+      closes no section is reported where it sits, and its citations still count: dropping them would
+      report every id it named as absent from the document. A line gathering no citation the field could
+      carry is reported where it sits too. One naming only ids of types the field does not point at
+      gathers nothing either.
 
   id-unique:
     severity: error
@@ -481,20 +468,18 @@ checks:
     notes: >
       A shortcode is two to eight characters, lower case, opens on a letter, and carries letters and
       digits alone. It is what another corpus writes before the colon, as the `eng` in
-      `eng:pol-VURM.TIMEBOX`, so it is read far more often than it is written and stays short.
-      <https://paul80nd.github.io/knowledge-as-code/framework/metadata/> carries the notation.
+      `eng:pol-VURM.TIMEBOX`. <https://paul80nd.github.io/knowledge-as-code/framework/metadata/> carries
+      the notation.
 
-      No hyphen, because the citation parser is built on its absence. That parser reads a hyphen before a
-      colon as an id, so a shortcode carrying one turns a scoped reference into a citation written with
-      the wrong separator.
+      No hyphen, because the citation parser reads a hyphen before a colon as an id: a shortcode
+      carrying one turns a scoped reference into a citation written with the wrong separator.
 
       Not a type prefix either, whatever the schema declares: `std:pol-VURM` reads as a standard. The
-      prefixes come from the schema, so adopting a type shuts its spelling off with no list here to keep
-      in step. Case is ignored for that comparison alone, so `STD` is told both that it is miscased and
-      that the spelling underneath is taken.
+      prefixes come from the schema, so there is no list here to keep in step. Case is ignored for that
+      comparison alone, so `STD` is told both that it is miscased and that the spelling underneath is
+      taken.
 
-      A corpus that declares no shortcode is not asked any of this. Nothing cites it yet, and the value
-      is immutable once written, so there is nothing to gain by inventing one early.
+      A corpus that declares no shortcode is not asked any of this.
 
   import-restored:
     severity: error
@@ -502,13 +487,10 @@ checks:
     description: Every corpus this one declares in `consumes:` has been restored into `.imports/`.
     notes: >
       An error rather than a skip. A citation into a corpus that has not arrived is the one reference
-      nothing else can answer for, so a run that passed over it would check less than the pipeline does,
-      and a broken reference would reach the default branch through a green local run. The message names
-      `kac restore`, which is the command that fetches what the block declares.
+      nothing else can answer for. A green local run would otherwise let a broken reference reach the
+      default branch. The message names `kac restore`.
 
       Reported once against `.corpus.yaml`, and every citation into that shortcode then stays quiet.
-      Whoever has not restored wants one line telling them to, rather than one for each reference they
-      wrote correctly.
 
   import-behind:
     severity: warning
@@ -516,12 +498,11 @@ checks:
     description: Every corpus in `consumes:` is locked at the newest version its own range admits.
     notes: >
       The corpus said it would take that version and has not. `restore` keeps a lock its range still
-      admits, so two restores of an unchanged descriptor write the same bytes, and that reproducibility is
-      also how a corpus sits on a version nobody meant it to sit on. Asking is `validate`'s, once per run.
+      admits, so two restores of an unchanged descriptor write the same bytes. Asking is `validate`'s,
+      once per run.
 
-      A warning rather than an error. A version behind is not a broken corpus, and failing on somebody
-      else's release would turn every downstream red the day the governance layer ships. `kac restore` is
-      what moves it.
+      A warning rather than an error. A version behind is not a broken corpus, and `kac restore` is what
+      moves it.
 
   import-capped:
     severity: info
@@ -529,9 +510,8 @@ checks:
     description: A newer version of a consumed corpus is published, and this corpus's range holds it back.
     notes: >
       Reported apart from `import-behind` because it is somebody's decision rather than their oversight.
-      A range capping a corpus at a major is doing what it was written to do, and the reader's choice is
-      to widen it or to leave it alone. Reporting a decision as a problem trains a reader to skim the
-      output, which is what the warnings then travel through.
+      A range capping a corpus at a major is doing what it was written to do. The reader's choice is to
+      widen it or to leave it alone.
 
   import-unreachable:
     severity: info
@@ -539,15 +519,14 @@ checks:
     description: A lock in `consumes:` could not be checked against what its source publishes.
     notes: >
       A run behind a firewall, without the token a private feed wants, or against a folder that is not
-      there, cannot tell a current lock from a stale one. Saying so is the alternative to reporting every
-      import as current, which would be the one answer that reads as an assurance.
+      there cannot tell a current lock from a stale one. Saying so is the alternative to reporting every
+      import as current, which would read as an assurance.
 
-      A source answering with no versions at all reports here too, rather than as a lock that is current.
-      A registry answers a private feed's anonymous reader exactly as it answers a package nobody has
-      published, and neither answer says the locked version is the newest there is.
+      A source answering with no versions at all reports here too, rather than as a lock that is
+      current. A registry answers a private feed's anonymous reader exactly as it answers a package
+      nobody has published.
 
-      Information rather than a warning. The corpus is not at fault and no edit to it would help, and a
-      pipeline with no reason to reach a registry should not go yellow for declining to.
+      Information rather than a warning. The corpus is not at fault and no edit to it would help.
 
   framework-names-types:
     severity: error
@@ -628,8 +607,7 @@ checks:
     notes: >
       Both directions, and the message names the reference and the side it is missing from. A reference
       in a cell and not in the roll-up leaves the generated index under-reporting what the policy
-      covers. A reference in the roll-up and not in any cell is a claim of coverage no clause can show,
-      which is the worse of the two because it reads as evidence.
+      covers. A reference in the roll-up and not in any cell is a claim of coverage no clause can show.
 
       A framework cited with no reference into it compares as the framework alone, so `[WCAG 2.2 AA]` in
       a cell answers an `aligns-with` entry carrying no `clauses:`.
@@ -639,12 +617,10 @@ checks:
     description: A framework a clause cites is placed on the corpus's framework register.
     notes: >
       The register says whether we are obliged to a framework, self-obligated to it, or borrowing from
-      it, and `alignment-rollup` reads that to decide which references its roll-up carries. A framework
-      the register does not place has no standing to read, so the roll-up would silently leave it out
-      and the index would under-report coverage with nothing saying so.
+      it. `alignment-rollup` reads that standing to decide which references its roll-up carries, so a
+      framework the register does not place would be left out with nothing saying so.
 
-      Reported once per framework rather than once per clause citing it. The fix is one entry on the
-      register, and a policy citing the same framework six times has one fault.
+      Reported once per framework rather than once per clause citing it.
 
   terms-alphabetical:
     severity: warning
