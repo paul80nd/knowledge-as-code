@@ -23,6 +23,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   gathering no citation the field could carry, against the line. A line naming only ids of types the field does not
   point at gathers nothing either. A section carrying no line at all stays silent, which is how a rule discharging no
   clause is written.
+- **`kac validate` reports a `Covers` line a space left out of italic.** Markdown will not read an emphasis mark with a
+  space against it, so `_**Covers:** [pol-SCRT].EMBED _` is not the form and the marks reach the page.
+  `mirrors-citations` reports the line, and its citations count as before, so a standard covering six clauses gets one
+  finding rather than six against its frontmatter. A line that is bold alone is still the labelled prose form and is
+  passed over.
 
 ## 0.19.0 - 2026-08-31
 

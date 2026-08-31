@@ -1018,14 +1018,16 @@ public static class Validator
             declared.Add((spec, d.CitationFootnotes.GetValueOrDefault(label, []), prefixes));
         }
 
-        // Two faults sit on a line, and both are decided against the lines rather than against a field.
-        // Two fields spelling one label are handed the same list, so a per-field pass would report each
-        // line twice, and would call a line answering one of those fields empty for the other.
+        // Three faults sit on a line, and all three are decided against the lines rather than against a
+        // field. Two fields spelling one label are handed the same list, so a per-field pass would
+        // report each line twice, and would call a line answering one of those fields empty for the
+        // other.
         //
-        // A misplaced line's citations count all the same, so a document that only put the line in the
-        // wrong place gets one finding rather than one per id it named.
-        // Held in a typed local so the group key comes from the selector. Passed inline, the comparer
-        // widens the key to object and the group no longer enumerates.
+        // Whatever is wrong with a line, its citations count. A document that only got the line wrong
+        // gets one finding rather than one per id it named.
+        //
+        // The comparer is held in a typed local so the group key comes from the selector. Passed
+        // inline, it widens the key to object and the group no longer enumerates.
         IEqualityComparer<List<CitationFootnote>> sameLines = ReferenceEqualityComparer.Instance;
         foreach (var group in declared.GroupBy(x => x.Lines, sameLines))
         {
@@ -1033,6 +1035,16 @@ public static class Validator
             var prefixes = group.SelectMany(x => x.Prefixes).ToList();
             foreach (var footnote in group.Key)
             {
+                // Reported and stopped. Until the line is the form, where it sits and what it gathers
+                // are questions that cannot be asked of it.
+                if (!footnote.Italic)
+                {
+                    report.Err(new CheckId("mirrors-citations"),
+                        $"this '{label}' line is not italic, so its marks show on the page. An "
+                        + "emphasis mark needs a word against it at each end.", footnote.Line);
+                    continue;
+                }
+
                 if (!footnote.ClosesSection)
                     report.Err(new CheckId("mirrors-citations"),
                         $"this '{label}' line stands in the middle of a section. Write it as the last "

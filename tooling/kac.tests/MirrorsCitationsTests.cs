@@ -69,6 +69,59 @@ public class MirrorsCitationsTests
         => Assert.Equal(2,
             Reconcile("_**Covers:**_\n\nMore prose under the same heading.").Count);
 
+    // Markdown will not read an underscore with a space against it, so the line is not italic and the
+    // underscores reach the page. The citations still parse, so the field reports nothing about them.
+    [Theory]
+    [InlineData("_**Covers:** [pol-SCRT].ROTATE _")]
+    [InlineData("_ **Covers:** [pol-SCRT].ROTATE_")]
+    [InlineData("_**Covers:** [pol-SCRT].ROTATE")]
+    public void A_line_a_stray_underscore_left_out_of_italic_is_reported_where_it_sits(string body)
+    {
+        var found = Assert.Single(Reconcile(body, "pol-SCRT.ROTATE"));
+
+        Assert.Equal("this 'Covers' line is not italic, so its marks show on the page. An "
+                     + "emphasis mark needs a word against it at each end.", found.Message);
+        Assert.Equal(11, found.Line);
+    }
+
+    // Either mark, since the form writes underscores outside and asterisks inside. An author who
+    // reached for the other pair made the same mistake and is told the same thing.
+    [Theory]
+    [InlineData("*__Covers:__ [pol-SCRT].ROTATE *")]
+    [InlineData("__**Covers:** [pol-SCRT].ROTATE __")]
+    public void A_stray_run_of_either_mark_is_reported_where_it_sits(string body)
+        => Assert.Equal("this 'Covers' line is not italic, so its marks show on the page. An "
+                        + "emphasis mark needs a word against it at each end.",
+            Assert.Single(Reconcile(body, "pol-SCRT.ROTATE")).Message);
+
+    // A paragraph runs on past a soft line break, and the italic form stops at its closing mark. So the
+    // broken form stops at the break: the prose after one is not the footnote's to gather, and reading
+    // it would send the author to the field over a citation the line never claimed.
+    [Fact]
+    public void A_citation_on_the_line_after_a_broken_one_is_not_gathered()
+        => Assert.Equal("this 'Covers' line is not italic, so its marks show on the page. An "
+                        + "emphasis mark needs a word against it at each end.",
+            Assert.Single(Reconcile(
+                    "_**Covers:** [pol-SCRT].ROTATE _\nAlso see [pol-SCRT].STORE, in passing.",
+                    "pol-SCRT.ROTATE"))
+                .Message);
+
+    // Reported and stopped. The line above closes no section and the one here gathers nothing, and
+    // neither is asked until the line is the form.
+    [Fact]
+    public void A_line_that_is_not_italic_is_told_that_and_nothing_else()
+        => Assert.Equal("this 'Covers' line is not italic, so its marks show on the page. An "
+                        + "emphasis mark needs a word against it at each end.",
+            Assert.Single(Reconcile("_**Covers:** _\n\nMore prose under the same heading.")).Message);
+
+    // A bold label opening a paragraph is the labelled prose form, which a glossary's `**Not:**` is
+    // written in. Only a stray underscore says the author reached for a footnote.
+    [Fact]
+    public void A_line_that_is_bold_alone_is_not_a_footnote()
+        => Assert.Equal("'implements' lists 'pol-SCRT.ROTATE' and no 'Covers' line names it. Close the "
+                        + "section that answers it with one, or take the id out of the field.",
+            Assert.Single(Reconcile("**Covers:** [pol-SCRT].ROTATE", "pol-SCRT.ROTATE")).Message);
+
     // Two fields spelling one label are handed the same lines, so what is wrong with a line is decided
     // across both. A line answering one of them is not empty for the other, and a misplaced line is one
     // finding rather than two.

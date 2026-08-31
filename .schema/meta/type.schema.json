@@ -618,7 +618,7 @@
           "minLength": 1
         },
         "mirrors-citations": {
-          "description": "The label on the footnote lines whose citations this field must mirror. Each line is written in italic with the label bold, and closes the section whose citations it gathers: `_**Covers:** [pol-SCRT].EMBED_`. The union of the lines is held equal to the field, in both directions and case-insensitively. A section covering nothing carries no line, and a line gathering nothing the field could carry is reported. Needs a `ref:`.",
+          "description": "The label on the footnote lines whose citations this field must mirror. Each line is written in italic with the label bold and closes the section whose citations it gathers: `_**Covers:** [pol-SCRT].EMBED_`. The union of the lines is held equal to the field, in both directions and case-insensitively. A section covering nothing carries no line, and a line that is not the form is reported where it sits. Needs a `ref:`.",
           "type": "string",
           "minLength": 1
         },

@@ -105,8 +105,8 @@ line of its own. A standard with a single group writes one heading. `part-none` 
 **Close a heading with the clauses it covers**, as a footnote in italic with the label bold:
 `_**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LOGS_`. `mirrors-citations` holds the union of those lines equal to
 `implements`, in both directions, so the frontmatter says which obligations the standard discharges and each heading
-says which rule discharges which. A heading covering no clause carries no line, and a line naming none is reported. The
-rules themselves carry no citation.
+says which rule discharges which. A heading covering no clause carries no line, and a line naming none is reported, as
+is one a stray space left out of italic. The rules themselves carry no citation.
 
 **A standard's size follows its subject.** One binding every piece of work usually runs to seven or eight rules, and one
 covering a single interface may run to thirty. Neither is padded or cut to meet the other.
