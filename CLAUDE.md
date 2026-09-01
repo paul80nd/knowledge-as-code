@@ -1,9 +1,10 @@
 # Working in this repository
 
 This repository is not a corpus. It holds `kac`, the documentation site published beside it, the schema every corpus
-below is judged against, the template `kac new` sends a corpus, and three worked corpora standing in for ones that took
-it. The tool finds a corpus by walking up for a `.corpus.yaml`, so it reads one of the corpora under `examples/`, or
-`template/`, and never this root.
+below is judged against, the template `kac new` sends a corpus, and four worked corpora under `examples/`. Three of
+them stand in for corpora that took the framework, and `dog-fooding` holds this repository to it. The tool finds a
+corpus by walking up for a `.corpus.yaml`, so it reads one of the corpora under `examples/`, or `template/`, and never
+this root.
 
 **Load `i-want-to` before you plan.** It routes the work to the playbook carrying its steps, and names the writing skill
 for the surface you are on.

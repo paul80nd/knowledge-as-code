@@ -42,6 +42,7 @@ parameters:
       - library
       - engineering
       - payments
+      - dog-fooding
 
 pool:
   vmImage: ubuntu-latest
@@ -66,10 +67,11 @@ steps:
   # Every corpus declares a different `types:`, so running all of them is what proves the framework
   # holds for a corpus that adopted a subset and not only for one that adopted the lot.
   - ${{ each corpus in parameters.corpora }}:
-      # payments consumes engineering, and what it consumes is a sealed package rather than the corpus
-      # next door. Built here rather than relied on from engineering's own steps above, so narrowing
-      # `corpora` to payments alone still runs.
-      - ${{ if eq(corpus, 'payments') }}:
+      # payments and dog-fooding name `../engineering/.dist/package` as their `source:`, which is where
+      # `kac pack` writes, so the producer is packed before a consumer restores. The package is built
+      # here rather than taken from engineering's own turn in this loop, so a run narrowed to one
+      # consumer still has a package to restore.
+      - ${{ if or(eq(corpus, 'payments'), eq(corpus, 'dog-fooding')) }}:
           - script: |
               dotnet run --project ../../tooling/kac -- export
               dotnet run --project ../../tooling/kac -- pack

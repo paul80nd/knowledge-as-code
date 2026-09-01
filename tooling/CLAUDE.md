@@ -15,11 +15,11 @@ renders it for somebody who has installed nothing, so it takes `writing-the-docs
 `kac` is the published tool from `~/.dotnet/tools`, at whatever version was installed last, and it rewrites generated
 files with an older wording without saying so.
 
-**Run every corpus.** The three under `examples/` hold records and prove the tool against them. `template/` holds what
-a new corpus receives, and a copy of it has to validate before its owner has run anything.
+**Run every corpus.** The four under `examples/` prove the tool against what they hold. `template/` holds what a new
+corpus receives, and a copy of it has to validate before its owner has run anything.
 
 ```sh
-# each corpus, one at a time: library, engineering, payments
+# each corpus, one at a time: library, engineering, payments, dog-fooding
 cd examples/library
 dotnet run --project ../../tooling/kac -- validate
 dotnet run --project ../../tooling/kac -- generate --check
@@ -270,8 +270,8 @@ cd examples/library && sh ../../tooling/tests/round-trip.sh
 
 **Which lookup it performs is decided by the corpus it runs in.** `example-libraries` proves the glossary skill,
 `example-engineering` proves the policy skill and `example-payments` proves the standards skill, because each holds the
-records that skill was written for. CI runs all three, so adding a fourth assertion means choosing the corpus that
-already holds what it asks about.
+records that skill was written for. CI runs those three, and `example-dogfooding` is left out because it is the same
+shape as `example-payments`. Adding an assertion means choosing the corpus that already holds what it asks about.
 
 **It runs on two platforms in CI**, which is the reason it is a shell script rather than another scenario in the golden
 suite. Development happens on macOS and the first audience is on Windows, so the script is held to the subset Git Bash

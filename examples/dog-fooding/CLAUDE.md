@@ -1,11 +1,22 @@
 # Working in this repository
 
+## This corpus describes the repository it sits in
+
+Every other corpus here is fiction, and a record that is convenient is good enough. This one is not. A service record
+names a real workflow file, a standard binds a real pull request, and a runbook is followed by whoever is on the end of
+a red build. Check the claim against the repository before you write it down, and correct the record when the
+repository moves.
+
+**A finding about the framework belongs to the framework.** When a schema field has no honest value for something real
+here, that is worth reporting rather than working around. Raise it on the issue tracker and say what the record carries
+meanwhile.
+
 ## Know where you are before you touch `../../.schema/` or `../../tooling/`
 
 This corpus sits inside the repository serving the template, so those two directories are yours to change and what you
 write reaches every corpus that took a copy. Write for someone who cannot see this conversation. The schema sits at the
-repository root and not in this corpus, because the other three corpora here and `template/` are judged against the same
-copy.
+repository root and not in this corpus, because the other three corpora here and `template/` are judged against the
+same copy.
 
 A corpus created elsewhere receives its own copy of `.schema/`, and a local edit there is drift. `kac update --check`
 reports it. Fix it in the template and run `kac update`.
@@ -18,6 +29,7 @@ reports it. Fix it in the template and run `kac update`.
 
 ```bash
 # here, in the corpus, through the tool this repository builds
+dotnet run --project ../../tooling/kac -- restore          # what this corpus consumes
 dotnet run --project ../../tooling/kac -- validate         # the corpus
 dotnet run --project ../../tooling/kac -- generate --check # generated output is fresh
 
@@ -27,8 +39,9 @@ dotnet test tooling/kac.features   # Reqnroll behaviour specs
 dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and checks-table gates
 ```
 
-A bare `kac` runs the published tool rather than this one. [`../../tooling/CLAUDE.md`](../../tooling/CLAUDE.md) says
-what that costs, and carries the `template/` runs that go beside these.
+`restore` needs a package to take, so run `export` and then `pack` in [`../engineering/`](../engineering/) first. A
+bare `kac` runs the published tool rather than this one. [`../../tooling/CLAUDE.md`](../../tooling/CLAUDE.md) says what
+that costs, and carries the `template/` runs that go beside these.
 
 All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
 leave you green locally and red in CI. Run **one `kac` invocation at a time**: concurrent runs build the same project
@@ -48,8 +61,8 @@ and contend over its output.
   file reads in one voice and someone arriving cold cannot tell which paragraph is newest.
 * **Say it once.** Cite rather than duplicate. A paragraph that belongs in two documents belongs in
   `knowledge-as-code/`, written a single time.
-* **Extend one fictional system**: Example Payments, on `example.com`, which RFC 2606 reserves.
-  [`README.md`](README.md) explains why.
+* **Cite the inherited clause rather than restating it.** `../engineering/` carries the policies. A standard here says
+  what one of its clauses means for this repository, and names the clause on a `Covers` line.
 * **Move `content-version` in [`.corpus.yaml`](.corpus.yaml) whenever you change what this corpus knows.** A push to
   `main` publishes this corpus, and both publishers take the version it states, so one that has not moved publishes
   nothing and says nothing. Major for a meaning that changed, minor for a record added, patch for wording.
@@ -58,8 +71,8 @@ and contend over its output.
 ## Writing a record
 
 **How a document is written follows its tier, not its type.** Read everything below before writing or rewriting one: a
-runbook step and an ADR paragraph obey different constraints, and nothing in CI will tell you that you used the wrong
-ones.
+runbook step and a standard's clause obey different constraints, and nothing in CI will tell you that you used the
+wrong ones.
 
 * **Load `technical-writing`.** The rules for the words, which are the same in every document and every commit message.
 * **Then `writing-a-record`.** What this corpus adds to them, what the record's tier adds on top, the link forms CI

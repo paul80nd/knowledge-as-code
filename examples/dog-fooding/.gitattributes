@@ -1,0 +1,5 @@
+# Line-ending policy: LF in the repository and in every working tree, on all
+# platforms. kac generates and compares its files as LF; without this a Windows
+# checkout (git's default core.autocrlf=true) presents CRLF and trips
+# `generate --check` and the golden-file test suite. Every tracked file here is text.
+* text=auto eol=lf

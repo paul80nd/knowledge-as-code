@@ -8,10 +8,11 @@ A corpus is plain markdown in git where every document has a type and every type
 corpus, and it is thin on purpose. It adopts three types, and it writes rules about handling a payment and nothing
 else. A domain corpus inherits its governance rather than restating it, and a thin corpus shows that where a full one
 hides it.
-[`../README.md`](../README.md) sets it beside the other two corpora here and says what each one demonstrates.
+[`../README.md`](../README.md) sets it beside the other three corpora here and says what each one demonstrates.
 
 **A new corpus starts from [`../../template/`](../../template/)**, which is the same corpus with the content taken out.
-This one is closer to that template than either of its neighbours, and it is still a corpus rather than a copy of one.
+This one is the thinnest of the corpora here that hold records, and it is still a corpus rather than a copy of the
+template.
 
 Why it is built this way is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath it.
 
@@ -58,7 +59,8 @@ working tree, and an installed `kac` does not.
 **A domain corpus consuming a governance one.** `.corpus.yaml` names `example-engineering` in `consumes:`, and
 `kac restore` unpacks that corpus's published export under `.imports/eng/`. A standard here then cites
 `eng:pol-SCRT.STORE`, and `kac validate` holds that citation to naming a policy and a clause that really exist. Cite a
-clause the governance layer does not carry and the build fails, exactly as it would for a record next door.
+clause the governance layer does not carry and the build fails, exactly as it would for a local id naming a record that
+does not exist.
 
 **Run `kac restore` before anything else.** A declared import that has not arrived is an error naming the command. The
 folder it fills is not committed, so a fresh clone holds none of it.
@@ -106,8 +108,9 @@ The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays
 wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
 nothing else: what the tool reads lives beside the tool.
 
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with the other two corpora and
-with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks first.
+The `.schema/` this corpus is judged against sits at the repository root, one copy shared with the other three corpora
+and with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks
+first.
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
 

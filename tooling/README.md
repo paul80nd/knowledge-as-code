@@ -55,7 +55,7 @@ option carries generated `--help`. `Program.cs` says why that library and not an
 ## Running it against a corpus
 
 `kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, so it is run from inside one.
-Running it from here reaches no corpus at all. This repository holds four: the three under `examples/`, which carry the
+Running it from here reaches no corpus at all. This repository holds five: the four under `examples/`, which carry the
 records, and `template/`, which holds most of what `kac new` sends a corpus. The template manifest at the repository
 root names the rest, and is the only account of which files a corpus receives and where each one lands.
 
@@ -173,8 +173,9 @@ proves the trim as well as the glossary skill. `example-engineering` adopts glos
 proves that several skills ship over one export and that none names another's file. `example-payments` adopts
 standards alone, and its rules are headings rather than table rows, so it is where a part addressing itself is proved.
 
-CI runs it over all three corpora on Linux and Windows, which is why it is a shell script held to the subset Git Bash
-and older macOS bash agree on.
+CI runs it over those three corpora on Linux and Windows, which is why it is a shell script held to the subset Git
+Bash and older macOS bash agree on. `example-dogfooding` is the same shape as `example-payments` and is left out,
+because a fourth run would prove nothing the first three do not.
 
 ### The import round-trip
 

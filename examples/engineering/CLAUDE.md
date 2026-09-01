@@ -4,7 +4,7 @@
 
 This corpus sits inside the repository serving the template, so those two directories are yours to change and what you
 write reaches every corpus that took a copy. Write for someone who cannot see this conversation. The schema sits at the
-repository root and not in this corpus, because the other two corpora here and `template/` are judged against the same
+repository root and not in this corpus, because the other three corpora here and `template/` are judged against the same
 copy.
 
 A corpus created elsewhere receives its own copy of `.schema/`, and a local edit there is drift. `kac update --check`

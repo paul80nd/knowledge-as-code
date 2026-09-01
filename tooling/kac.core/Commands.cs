@@ -18,8 +18,8 @@ public static class Commands
     // What each import's source publishes now. Null for a corpus consuming nothing, which is every corpus
     // standing on its own: no client is built, no source is read, and the check costs it nothing.
     //
-    // This is the one place `validate` leaves the working tree. A source is a folder as often as it is a
-    // registry, so the reach is local wherever a corpus consumes the one next door. Where it is a
+    // This is the one place `validate` leaves the working tree. A `source:` names a folder as often as a
+    // registry, and a folder is read from disk, so no network is involved there. Where the source is a
     // registry and the run cannot reach it, `import-unreachable` says so rather than reporting the lock
     // as current.
     private static IReadOnlyList<ImportStanding>? Standings(string corpusRoot, CorpusDescriptor descriptor)
