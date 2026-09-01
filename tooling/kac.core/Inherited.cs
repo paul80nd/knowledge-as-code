@@ -33,12 +33,17 @@ public sealed record InheritedRecord(string Name, string Content);
 //
 // `FormatVersion` is the envelope the producer wrote. A consumer merging its files has to read every key
 // it stamps, so an envelope this build does not know is refused rather than merged around.
+//
+// `Sources` is what this corpus inherited in turn. A grandparent's records arrive inside its child's
+// export already labelled, and their address lives in the child's `sources` rather than anywhere this
+// corpus could work out. Carrying the list forward is what makes a chain of any depth cost no code.
 public sealed record InheritedCorpus(
     string Shortcode,
     int FormatVersion,
     string? Corpus,
     string? ContentVersion,
     ExportPublishing Publishing,
+    IReadOnlyList<ExportSource> Sources,
     IReadOnlyList<InheritedType> Types);
 
 // The exports a corpus consumes, read as the bytes an export will carry rather than as the facts a check
@@ -116,7 +121,30 @@ public static class Inherited
             JsonRead.Str(manifest["corpus"]),
             JsonRead.Str(manifest["contentVersion"]),
             Addresses(JsonRead.Object(manifest["publishing"])),
+            SourcesIn(manifest["sources"]),
             types);
+    }
+
+    // The corpora the producer inherited, carried forward whole. Each names the corpus that wrote the
+    // records rather than the one this corpus fetched them through, which is what a line's `shortcode`
+    // has to key into.
+    private static List<ExportSource> SourcesIn(JsonNode? sources)
+    {
+        var read = new List<ExportSource>();
+
+        foreach (var node in sources as JsonArray ?? [])
+        {
+            var entry = JsonRead.Object(node);
+            if (JsonRead.Str(entry?["shortcode"]) is not { } shortcode) continue;
+
+            read.Add(new ExportSource(
+                shortcode,
+                JsonRead.Str(entry?["corpus"]),
+                JsonRead.Str(entry?["contentVersion"]),
+                Addresses(JsonRead.Object(entry?["publishing"]))));
+        }
+
+        return read;
     }
 
     // How the producer publishes, carried through as it wrote it. A key it did not write reads as absent

@@ -1,0 +1,18 @@
+{
+  "type": "policies",
+  "path": "policies/keep.md",
+  "fields": {
+    "id": "pol-KEEP",
+    "title": "Keeping what we are asked to keep",
+    "status": "active",
+    "review-by": "2030-01-01"
+  },
+  "sections": {
+    "Purpose": "What we hold, and for how long.",
+    "Scope": "Every store this organisation runs.",
+    "Exceptions": "A store under a legal hold outlives its retention period."
+  },
+  "links": {
+    "human": "https://github.com/example/upstream/blob/1111111111111111111111111111111111111111/policies/keep.md"
+  }
+}

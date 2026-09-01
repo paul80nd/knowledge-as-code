@@ -139,14 +139,33 @@ public static class Exporter
                 run.GeneratedAt,
                 About(corpus.Descriptor),
                 Addresses(corpus.Descriptor, publishing),
-                [.. consumed.Select(c => new ExportSource(
-                    c.Shortcode, c.Corpus, c.ContentVersion, c.Publishing))],
+                Sources(consumed),
                 types))));
 
         // The manifest is built last, because it reports what the rest of the run produced. Sorting
         // every file by path makes the listing a caller prints read in the order they sit on disk.
         return new ExportPlan([.. files.OrderBy(f => f.Path, StringComparer.Ordinal)], types, withheld,
             [.. unread.Distinct(StringComparer.Ordinal).OrderBy(u => u, StringComparer.Ordinal)], []);
+    }
+
+    // Every corpus a line may name: the ones this corpus consumes, and the ones they consumed in turn.
+    //
+    // A grandparent's records arrive inside its child's export already carrying the child's account of
+    // where that grandparent publishes. Carrying the list forward is what makes a chain of any depth
+    // resolve, and `Disagreements` is what refuses two accounts of one corpus.
+    private static List<ExportSource> Sources(List<InheritedCorpus> consumed)
+    {
+        var found = new Dictionary<string, ExportSource>(StringComparer.Ordinal);
+
+        foreach (var from in consumed)
+        {
+            found.TryAdd(from.Shortcode,
+                new ExportSource(from.Shortcode, from.Corpus, from.ContentVersion, from.Publishing));
+
+            foreach (var theirs in from.Sources) found.TryAdd(theirs.Shortcode, theirs);
+        }
+
+        return [.. found.Values.OrderBy(s => s.Shortcode, StringComparer.Ordinal)];
     }
 
     // The consumed corpora this run carries, narrowed to the type asked for and ordered by shortcode so
@@ -189,6 +208,22 @@ public static class Exporter
     private static List<string> Disagreements(LoadedCorpus corpus, List<InheritedCorpus> consumed, string? type)
     {
         var found = new List<string>();
+        var seen = new Dictionary<string, ExportSource>(StringComparer.Ordinal);
+
+        // Two corpora consumed here can each have consumed a third, at two versions. A line naming that
+        // third resolves through whichever account won, so its links would land on a commit half the
+        // records were never read at. One account or nothing.
+        foreach (var source in consumed.SelectMany(c =>
+                     c.Sources.Prepend(new ExportSource(
+                         c.Shortcode, c.Corpus, c.ContentVersion, c.Publishing))))
+        {
+            if (seen.TryAdd(source.Shortcode, source)) continue;
+            if (seen[source.Shortcode] == source) continue;
+
+            found.Add($"'{source.Shortcode}' arrives twice and differently: at "
+                      + $"{seen[source.Shortcode].ContentVersion} and at {source.ContentVersion}. A line "
+                      + "naming it could resolve either way.");
+        }
 
         foreach (var key in consumed.SelectMany(c => c.Types).Select(t => t.Type)
                      .Distinct(StringComparer.Ordinal).OrderBy(k => k, StringComparer.Ordinal))
@@ -278,7 +313,10 @@ public static class Exporter
                     JsonRead.Str(t) is { } v ? Scoped(v, shortcode) : null))
             ]);
 
-        read[ShortcodeKey] = JsonValue.Create(shortcode);
+        // A line arriving with a shortcode was written by a corpus further up the chain, and names it.
+        // Overwriting it would file a grandparent's record under the corpus this one fetched it through,
+        // and send every link for it to the wrong repository.
+        read[ShortcodeKey] ??= JsonValue.Create(shortcode);
         return Serialize(read);
     }
 

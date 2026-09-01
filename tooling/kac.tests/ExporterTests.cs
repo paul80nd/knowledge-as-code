@@ -592,6 +592,7 @@ public class ExporterTests
         new(shortcode, Exporter.FormatVersion, $"{shortcode}-corpus", "1.0.0",
             new ExportPublishing("github", $"https://example.com/{shortcode}/{{path}}#{{anchor}}",
                 $"https://example.com/{shortcode}", null, "beefbeef"),
+            [],
             [
                 new InheritedType("glossary", 1, "glossary", "glossary/terms.jsonl",
                     "record", "part", "id", "seeAlso",
@@ -633,20 +634,69 @@ public class ExporterTests
         Assert.False(line.TryGetProperty(Exporter.ShortcodeKey, out _));
     }
 
-    // What makes a grandparent arrive labelled once. `eng` merging `gp` stamped its own lines and left
-    // `gp:` alone, and this corpus merging `eng` has to do the same or the prefixes stack.
-    [Fact]
-    public void An_id_already_naming_a_corpus_keeps_the_name_it_arrived_with()
-    {
-        var theirs =
-            """{"id":"gp:gls-old.alpha","record":"gp:gls-old","seeAlso":null,"part":"alpha"}""";
+    // A line as it reaches a grandchild: `eng` merged `gp` and stamped it, so the line arrives naming the
+    // corpus that wrote it rather than the one it came through.
+    private const string TheirInheritedLine =
+        """{"id":"gp:gls-old.alpha","record":"gp:gls-old","seeAlso":null,"part":"alpha","shortcode":"gp"}""";
 
-        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Consumed("eng", theirs));
+    // What makes a grandparent arrive labelled once rather than twice. Restamping would file the record
+    // under the corpus this one fetched it through, and send every link for it to the wrong repository.
+    [Fact]
+    public void A_line_already_naming_its_writer_keeps_that_name()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Consumed("eng", TheirInheritedLine));
+
         var line = Lines(plan).Single(l => l.GetProperty("id").GetString()!.Contains(':'));
 
         Assert.Equal("gp:gls-old.alpha", line.GetProperty("id").GetString());
         Assert.Equal("gp:gls-old", line.GetProperty("record").GetString());
-        Assert.Equal("eng", line.GetProperty(Exporter.ShortcodeKey).GetString());
+        Assert.Equal("gp", line.GetProperty(Exporter.ShortcodeKey).GetString());
+    }
+
+    // The other half of the same promise. A line naming `gp` resolves only where `gp` is in `sources`,
+    // and this corpus never heard of `gp`: it reads the account `eng` published.
+    [Fact]
+    public void A_corpus_its_producer_consumed_reaches_sources_too()
+    {
+        var eng = Consumed("eng", TheirInheritedLine) with
+        {
+            Sources =
+            [
+                new ExportSource("gp", "gp-corpus", "0.2.0",
+                    new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
+                        "https://example.com/gp", null, "cafecafe"))
+            ]
+        };
+
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), eng);
+
+        var sources = JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+            .GetProperty("sources").EnumerateArray().ToList();
+
+        Assert.Equal(["eng", "gp"], sources.Select(s => s.GetProperty("shortcode").GetString()));
+        Assert.Equal("cafecafe",
+            sources[1].GetProperty("publishing").GetProperty("ref").GetString());
+    }
+
+    // Two corpora consumed here can each have consumed a third, at two versions. Whichever account won,
+    // a line naming that third would resolve to a commit half its records were never read at.
+    [Fact]
+    public void One_corpus_arriving_twice_at_two_versions_refuses()
+    {
+        ExportSource At(string version) =>
+            new("gp", "gp-corpus", version,
+                new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
+                    "https://example.com/gp", null, version));
+
+        var plan = Merged(
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Consumed("eng", TheirLine) with { Sources = [At("0.2.0")] },
+            Consumed("ops", TheirLine) with { Sources = [At("0.3.0")] });
+
+        Assert.Empty(plan.Files);
+        Assert.Contains("0.2.0", Assert.Single(plan.Refused));
+        Assert.Contains("0.3.0", plan.Refused[0]);
     }
 
     // Two corpora can name one record, so an inherited file is filed under the corpus that wrote it. The

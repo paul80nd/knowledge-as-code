@@ -1,0 +1,83 @@
+{
+  "formatVersion": 4,
+  "corpus": "test-inherited",
+  "shortcode": "own",
+  "contentVersion": null,
+  "mechanismVersion": null,
+  "commit": "<commit>",
+  "dirty": null,
+  "generatedAt": "<generatedAt>",
+  "about": {
+    "displayName": null,
+    "description": null,
+    "author": null,
+    "license": null
+  },
+  "publishing": {
+    "target": "none",
+    "humanTemplate": null,
+    "base": null,
+    "pathPrefix": null,
+    "ref": null
+  },
+  "sources": [
+    {
+      "shortcode": "eng",
+      "corpus": "example-engineering",
+      "contentVersion": "0.4.1",
+      "publishing": {
+        "target": "github",
+        "humanTemplate": "https://github.com/example/upstream/blob/1111111111111111111111111111111111111111/{path}#{anchor}",
+        "base": "https://github.com/example/upstream",
+        "pathPrefix": null,
+        "ref": "1111111111111111111111111111111111111111"
+      }
+    },
+    {
+      "shortcode": "gp",
+      "corpus": "example-grandparent",
+      "contentVersion": "0.2.0",
+      "publishing": {
+        "target": "github",
+        "humanTemplate": "https://github.com/example/grandparent/blob/2222222222222222222222222222222222222222/{path}#{anchor}",
+        "base": "https://github.com/example/grandparent",
+        "pathPrefix": null,
+        "ref": "2222222222222222222222222222222222222222"
+      }
+    }
+  ],
+  "types": [
+    {
+      "type": "glossary",
+      "shapeVersion": 1,
+      "records": 2,
+      "parts": 3,
+      "dir": "glossary",
+      "partsFile": "glossary/terms.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": "seeAlso",
+      "sections": {
+        "Scope": "full"
+      }
+    },
+    {
+      "type": "policies",
+      "shapeVersion": 2,
+      "records": 1,
+      "parts": 1,
+      "dir": "policies",
+      "partsFile": "policies/clauses.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": null,
+      "sections": {
+        "Purpose": "summary",
+        "Scope": "full",
+        "Exceptions": "full"
+      }
+    }
+  ]
+}

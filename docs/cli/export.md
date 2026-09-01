@@ -22,6 +22,11 @@ It writes three kinds of file: a manifest saying what the export is, one file pe
 record, and a flat file cheap to grep for a reader holding only a word. What travels is each type's own decision,
 declared beside the type, so a corpus adopting a new type exports it without the tool changing.
 
+**What your corpus consumes travels with what it wrote.** A corpus, meaning one repository of knowledge records, may
+name others in `consumes:`. Their records arrive merged into the flat file for each type, so a consumer greps once for
+everything that reaches it. Run [`restore`](restore.md) first: `export` refuses rather than writing a smaller export
+that reads as whole.
+
 [The export format](../design/export.md) is the contract those files answer to. Run `export` before
 [`bundle`](bundle.md) or [`pack`](pack.md), each of which reads what this writes.
 
@@ -52,6 +57,17 @@ kac export --type glossary
 
 The corpus is still loaded whole, so every id resolves. A type your corpus has not adopted is refused by name.
 
+### Carry what this corpus consumes
+
+Where `.corpus.yaml` names another corpus in `consumes:`, the run says which arrived and at what version:
+
+```text
+export: carried example-engineering 0.7.4, which this corpus consumes. Their records travel merged with its own.
+```
+
+Their records are filed under the shortcode of the corpus that wrote them, and their lines carry that shortcode too.
+A line with none is your own, which is the rule a citation already follows.
+
 ### Notice a dirty tree
 
 An export names the commit it was built from. Where the tree has uncommitted changes, the run says so and the manifest
@@ -62,6 +78,19 @@ export: built from a dirty working tree, and the manifest says so. The commit it
 ```
 
 Commit first where you are about to publish the result.
+
+### Meet a refusal
+
+Three things end the run with the reason and nothing written, because each would otherwise publish a file that reads as
+whole and answers two ways:
+
+```text
+export: nothing is restored for eng, which this corpus consumes and an export carries. Run kac restore.
+```
+
+The other two are a consumed corpus at an export format this `kac` does not read, and one exporting a type at a
+different shape or a different section fidelity from yours. The first is fixed by re-exporting and re-packing upstream.
+The second is a decision about the two corpora, not about this command.
 
 ## Known limits
 

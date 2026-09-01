@@ -1,0 +1,71 @@
+{
+  "formatVersion": 4,
+  "corpus": "example-engineering",
+  "shortcode": "eng",
+  "contentVersion": "0.4.1",
+  "mechanismVersion": 5,
+  "commit": "1111111111111111111111111111111111111111",
+  "dirty": false,
+  "generatedAt": "2026-01-01T00:00:00Z",
+  "about": {
+    "displayName": "Example Engineering",
+    "description": "A corpus this fixture consumes.",
+    "author": null,
+    "license": "MIT"
+  },
+  "publishing": {
+    "target": "github",
+    "humanTemplate": "https://github.com/example/upstream/blob/1111111111111111111111111111111111111111/{path}#{anchor}",
+    "base": "https://github.com/example/upstream",
+    "pathPrefix": null,
+    "ref": "1111111111111111111111111111111111111111"
+  },
+  "sources": [
+    {
+      "shortcode": "gp",
+      "corpus": "example-grandparent",
+      "contentVersion": "0.2.0",
+      "publishing": {
+        "target": "github",
+        "humanTemplate": "https://github.com/example/grandparent/blob/2222222222222222222222222222222222222222/{path}#{anchor}",
+        "base": "https://github.com/example/grandparent",
+        "pathPrefix": null,
+        "ref": "2222222222222222222222222222222222222222"
+      }
+    }
+  ],
+  "types": [
+    {
+      "type": "glossary",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 2,
+      "dir": "glossary",
+      "partsFile": "glossary/terms.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": "seeAlso",
+      "sections": {
+        "Scope": "full"
+      }
+    },
+    {
+      "type": "policies",
+      "shapeVersion": 2,
+      "records": 1,
+      "parts": 1,
+      "dir": "policies",
+      "partsFile": "policies/clauses.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": null,
+      "sections": {
+        "Purpose": "summary",
+        "Scope": "full",
+        "Exceptions": "full"
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+# The run names what it inherited, because a file count says nothing about whose records are in it and a
+# consumer receiving another corpus's records under this corpus's name is worth stating out loud.
+wrote .dist/export/glossary/eng/gls-shared.json
+wrote .dist/export/glossary/gls-local.json
+wrote .dist/export/glossary/terms.jsonl
+wrote .dist/export/policies/eng/pol-KEEP.json
+export: carried example-engineering 0.4.1, which this corpus consumes.
+export: wrote 6 file(s) for glossary, policies.
+
+# The temp root is not a git repository, so this corpus builds no link of its own. What it inherited
+# still carries eng's, because those were resolved by eng.
+export: no published links

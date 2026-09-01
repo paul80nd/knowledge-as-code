@@ -1,0 +1,2 @@
+{"id":"gls-shared.record","title":"Record","definition":"One document under version control.","not":"a row in a table.","seeAlso":["gls-shared.store"],"type":"glossary","record":"gls-shared","part":"record","status":"active","reviewBy":"2030-01-01","path":"glossary/shared.md","anchor":"record"}
+{"id":"gp:gls-old.store","title":"Store","definition":"Anywhere data comes to rest.","not":null,"seeAlso":null,"type":"glossary","record":"gp:gls-old","part":"store","status":"active","reviewBy":"2030-01-01","path":"glossary/old.md","anchor":"store","shortcode":"gp"}

@@ -1,0 +1,6 @@
+# `expected-dist/` holds what the export wrote, file for file, so nothing here lists it a second time.
+# This is the one thing that tree cannot say: the corpus itself is untouched, and a restored import is
+# read rather than rewritten.
+glossary/local.md
+.imports/eng/manifest.json
+.imports/eng/glossary/terms.jsonl
