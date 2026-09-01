@@ -122,10 +122,10 @@ for a record added, patch for wording. This is the corpus's own call and not the
 `dog-fooding` holds no record yet and still moves, because it is the same discipline whichever corpus you are in.
 
 **Repoint every consumer of a corpus whose minor moved.** Below 1.0.0 a caret pins the minor, so `examples/engineering`
-going to `0.4.0` leaves `examples/payments` locked at a version its own `consumes:` range no longer admits, and
-`kac restore` fails naming the version it could not find. A local run passes over it, because `.imports/` is untracked
-and a restore keeps a folder already holding the version it resolved to. Delete `.imports/` and restore again to see
-what CI sees.
+going to `0.4.0` leaves `examples/payments` and `examples/dog-fooding` locked at a version their own `consumes:` ranges
+no longer admit, and `kac restore` fails naming the version it could not find. A local run passes over it, because
+`.imports/` is untracked and a restore keeps a folder already holding the version it resolved to. Delete `.imports/`
+and restore again to see what CI sees.
 
 **Ask which pages your change makes wrong.** Nothing in CI reads prose for meaning, so this is yours to do. A change to
 a command reaches [`docs/`](docs/) and often [`tooling/README.md`](tooling/README.md); a change to what the tool is for

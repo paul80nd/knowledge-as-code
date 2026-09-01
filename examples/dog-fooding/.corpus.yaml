@@ -21,9 +21,9 @@ content-version: "0.1.0"
 # carried into neither.
 display-name: Example Dogfooding
 description: >
-  The corpus this repository keeps about itself, holding the standards, controls, tools, runbooks and services that
-  build and publish knowledge-as-code. It is the one corpus here that records something real, and it consumes Example
-  Engineering the way any domain corpus consumes a governance layer.
+  The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented
+  estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the
+  way any domain corpus consumes a governance layer.
 license: MIT
 author:
   name: Paul Law

@@ -31,10 +31,11 @@ repository that nobody classified is far more likely to be the repository's own.
 
 ## Its relationship to `examples/`
 
-[`../examples/`](../examples/) holds four corpora that took this template. Each keeps its own copy of every overlaid
+[`../examples/`](../examples/) holds the corpora that took this template. Each keeps its own copy of every overlaid
 file, real, visible and git-tracked, the way a corpus keeps them.
 
-Five copies of one file is what this arrangement is for, and also how it goes quietly wrong. `kac update --check`, run
+One file living in this folder and in every one of those trees is what the arrangement is for, and also how it goes
+quietly wrong. `kac update --check`, run
 from inside a corpus against this repository's root, holds that corpus and the template to matching in both directions.
 It catches an overlaid file the corpus changed, and one the corpus has that the template does not.
 

@@ -1,7 +1,8 @@
 # The worked corpora
 
-Four corpora, each one whole in its own right, and each demonstrating a different deployment shape. `kac` runs over all
-of them on every commit, so a schema change that breaks any of them fails CI here rather than in somebody's repository.
+Whole corpora, each one complete in its own right, and between them every deployment shape the framework supports.
+`kac` runs over all of them on every commit, so a schema change that breaks any of them fails CI here rather than in
+somebody's repository.
 
 **Read these, copy [`../template/`](../template/).** The template is the same corpus with the content taken out, and it
 is what `kac new` sends. Everything here is a worked example to borrow ideas from.
@@ -13,12 +14,12 @@ is what `kac new` sends. Everything here is a worked example to borrow ideas fro
 | [`payments/`](payments/)        | A domain corpus, inheriting its governance  | A payments system             |
 | [`dog-fooding/`](dog-fooding/)  | A domain corpus, describing this repository | knowledge-as-code itself      |
 
-The first three name no real organisation, and every hostname they hold is under `example.com`, which
+Every one but `dog-fooding/` names no real organisation, and every hostname those hold is under `example.com`, which
 [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered. `dog-fooding/` takes
 this repository as its estate, so anything written there is checkable against the tree around it.
 
 [One corpus or several](https://paul80nd.github.io/knowledge-as-code/one-corpus-or-several/) is the page for choosing
-between the first shape and the others, and says what the split costs.
+between one corpus and several, and says what the split costs.
 
 ## What each one is for
 
@@ -41,12 +42,10 @@ and holds no record yet, which is also what a corpus looks like on the day it is
 
 ## How payments consumes engineering
 
-`dog-fooding/` consumes it the same way, and everything below holds for both.
-
 `payments/.corpus.yaml` names `example-engineering` in `consumes:`, at a version range, and gives a `source:` of
 `../engineering/.dist/package`. That folder is where `kac pack` writes, so a producer and its consumer exchange a
 sealed package without a registry between them. `kac restore` unpacks it under `payments/.imports/eng/`, which is not
-committed.
+committed. `dog-fooding/` consumes the same corpus the same way, so everything in this section holds for it too.
 
 `kac validate` then resolves a citation carrying the `eng:` shortcode against what arrived, and reports a clause the
 governance layer does not carry exactly as it reports a broken local reference. A declared import that has not been
@@ -83,9 +82,9 @@ and how somebody deciding whether to adopt the framework can install one and ask
 
 A plugin carries the export and whatever in the plugin tree can read it, so what each one does follows from the types
 that reach its export. `library/` ships the glossary lookup alone. Every other corpus here ships every lookup, because
-`engineering/` adopts each type they read and whatever consumes it carries its records into its own export.
-A skill whose type reaches neither the corpus nor its imports is trimmed, and `bundle.json` inside the plugin names
-every component that was dropped and the type it needed.
+`engineering/` adopts every type those skills read, and a corpus consuming `engineering/` carries its records into its
+own export. A skill whose type reaches neither the corpus nor its imports is trimmed, and `bundle.json` inside the
+plugin names every component that was dropped and the type it needed.
 
 Each corpus says in its own `description` what it is. `kac pack` and `kac bundle` write that into the package and the
 plugin from [`.corpus.yaml`](library/.corpus.yaml), so no reader meets an invented estate without being told.

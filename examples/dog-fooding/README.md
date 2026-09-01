@@ -1,8 +1,8 @@
 # Example Dogfooding: this repository, held to its own framework
 
-> **Everything here is real.** The corpora beside it describe invented estates. This one describes the repository it
-> sits in: the tool, the site, the branch, and the rules a change to any of them answers to. A record here is wrong if
-> the repository disagrees with it.
+> **Everything here is real.** The corpora beside this one describe invented estates. This one describes the
+> repository it sits in: the tool, the site, the branch, and the rules a change to any of them answers to. A record
+> here is wrong if the repository disagrees with it.
 
 A corpus is plain markdown in git where every document has a type and every type has a schema. This one is a domain
 corpus in the same shape as [`../payments/`](../payments/): it consumes [`../engineering/`](../engineering/) for its
@@ -92,6 +92,5 @@ knowledge-as-code/     # the system's own documentation
 The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays the visible half, so an Azure DevOps
 wiki published from this tree shows knowledge rather than mechanism.
 
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here
-and with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks
-first.
+The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here and
+with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks first.

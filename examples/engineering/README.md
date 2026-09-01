@@ -118,8 +118,7 @@ The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays
 wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
 nothing else: what the tool reads lives beside the tool.
 
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here
-and with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks
-first.
+The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here and
+with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks first.
 
 Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
