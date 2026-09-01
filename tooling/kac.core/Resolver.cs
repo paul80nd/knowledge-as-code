@@ -44,16 +44,22 @@ public sealed record Landed(Landing How, Doc? Local, ImportedRecord? Imported, s
         return schema.ByFolder.GetValueOrDefault(imported.Type)?.Parts?.Noun ?? "part";
     }
 
+    // The imported record, for a caller that has already established the citation landed on one. Every
+    // other landing carries none, so reaching this is that check having been skipped, and the message
+    // names the landing it happened on.
+    private ImportedRecord Found => Imported
+        ?? throw new InvalidOperationException($"a citation that landed {How} holds no imported record.");
+
     // Whether the record carries the part named. Compared ordinally, as a part id is everywhere else.
     public bool Carries(string part) =>
         Local is { } local
             ? local.Parts.Any(p => string.Equals(p.Id, part, StringComparison.Ordinal))
-            : Imported!.Parts.Any(p => string.Equals(p, part, StringComparison.Ordinal));
+            : Found.Parts.Any(p => string.Equals(p, part, StringComparison.Ordinal));
 
     // The type this record is, as the schema names it. Null where nothing in the schema covers it, which
     // leaves the target to the checks that can answer for it.
     public TypeSchema? Type(Schema schema) =>
-        Local is { } local ? local.Type : schema.ByFolder.GetValueOrDefault(Imported!.Type);
+        Local is { } local ? local.Type : schema.ByFolder.GetValueOrDefault(Found.Type);
 }
 
 // Every record a citation can land on, local and imported alike, behind one lookup.

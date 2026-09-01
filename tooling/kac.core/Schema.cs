@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using YamlDotNet.RepresentationModel;
 
@@ -310,6 +311,13 @@ public sealed record RuleSpec
     // rule means to someone reading the type page: one is a diagnosis, the other is a definition.
     public string? Message { get; init; }
 
+    // A rule the dispatcher answers by evaluating rather than by looking up a class in `Rules/`.
+    // Compiling an expression is refused without a severity and a message, so a rule that carries one
+    // carries the message too, and the dispatcher reads it without asking again.
+    [MemberNotNullWhen(true, nameof(Compiled))]
+    [MemberNotNullWhen(true, nameof(Message))]
+    public bool IsExpression => Compiled is not null;
+
     // The framework standings `alignment-rollup` holds a policy's roll-up to, named as the corpus's own
     // register writes them. It sits in the schema for the reason every threshold does: which standings
     // oblige a summary is a judgement a corpus makes, and remaking it should not be a release.
@@ -400,6 +408,15 @@ public sealed class TypeSchema
     public string IndexOrder { get; init; } = "";
     public PartSpec? Parts { get; init; }
     public ExportSpec? Export { get; init; }
+
+    // The two above, for a caller that has already established this type declares them. The exporter
+    // selects types on exactly that basis before it reaches either, so a null is that selection having
+    // been skipped, and the message names the type it happened for.
+    public ExportSpec DeclaredExport => Export
+        ?? throw new InvalidOperationException($"type '{TypeName}' declares no export: to read.");
+
+    public PartSpec DeclaredParts => Parts
+        ?? throw new InvalidOperationException($"type '{TypeName}' declares no export.parts: to read.");
     public IReadOnlyList<RuleSpec> Rules { get; init; } = [];
 
     // Derived at load from the declarations above. See the Derive* helpers.
@@ -1051,6 +1068,12 @@ public sealed partial class Schema
         typeFields.TryGetValue(name, out var tf) ? tf : universal.GetValueOrDefault(name);
 
     public FieldSpec? EffectiveField(TypeSchema t, string name) => Effective(t.Fields, Universal, name);
+
+    // The same, for a caller working from a list of names it has already established the type answers.
+    // The generator builds that list from this method, so a miss is the list and the lookup having gone
+    // out of step.
+    public FieldSpec DeclaredField(TypeSchema t, string name) => EffectiveField(t, name)
+        ?? throw new InvalidOperationException($"type '{t.TypeName}' declares no field '{name}'.");
 
     // A key the schema may write either way: one folder or several, one sort column or several. Both
     // arrive as a list, so that neither form can be read as the absence of the key. `Yaml.Str` answers

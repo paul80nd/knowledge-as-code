@@ -381,7 +381,11 @@ public static class Update
                 $"update: adopted {adding}. its schema, root page and template arrived with this run.", null);
         }
 
-        var dropping = drop!;
+        // `drop` is set here, because the pair being empty returned at the top and `add` being set
+        // returned just above. Asked again so the compiler carries it, and answered the same way the
+        // top guard answers an empty pair.
+        if (drop is not { } dropping) return new Adoption(held, [], null, null);
+
         if (!held.Contains(dropping, StringComparer.Ordinal))
             return Refuse($"update: '{dropping}' is not adopted, so there is nothing to give up.");
 

@@ -102,7 +102,7 @@ public sealed class NoDependencyCycles : ICorpusRule
             // Rotated to open at the lowest id, so which record carries the warning follows from the
             // cycle and not from where the walk entered it. The same cycle reached twice is then written
             // the same way, which is what lets it be recognised as one.
-            var lowest = cycle.IndexOf(cycle.Min(StringComparer.Ordinal)!);
+            var lowest = cycle.IndexOf(cycle.Order(StringComparer.Ordinal).First());
             List<string> rotated = [.. cycle[lowest..], .. cycle[..lowest]];
 
             var route = string.Join(" → ", rotated.Append(rotated[0]));

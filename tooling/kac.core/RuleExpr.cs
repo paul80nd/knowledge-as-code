@@ -47,25 +47,31 @@ public static class RuleExpr
         ValueType Returns,
         Func<Facts, object?[], object?> Fn);
 
+    // The string argument at `index`. `TypeOf` holds every argument to the type declared beside its row
+    // before a call is built, so anything else arriving here is a defect in that check rather than an
+    // expression a corpus could write.
+    private static string Str(object?[] args, int index) =>
+        args[index] as string
+        ?? throw new RuleExprException($"argument {index + 1} did not reach the call as a string.");
+
     // Every function an expression may call. The grammar knows nothing about these: adding a fact is
     // adding a row here and a method on Facts. The row carries the call beside the signature, so a fact
-    // this table declares and nothing answers cannot be written. Each cast below is safe because
-    // `TypeOf` has already held the argument to the type declared beside it.
+    // this table declares and nothing answers cannot be written.
     private static readonly Dictionary<string, FactSpec> Functions =
         new(StringComparer.Ordinal)
         {
-            ["field"] = new([ValueType.Str], ValueType.Str, (f, a) => f.Field((string)a[0]!)),
-            ["present"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Present((string)a[0]!)),
-            ["section"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Section((string)a[0]!)),
-            ["section_count"] = new([ValueType.Str], ValueType.Int, (f, a) => f.SectionCount((string)a[0]!)),
+            ["field"] = new([ValueType.Str], ValueType.Str, (f, a) => f.Field(Str(a, 0))),
+            ["present"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Present(Str(a, 0))),
+            ["section"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Section(Str(a, 0))),
+            ["section_count"] = new([ValueType.Str], ValueType.Int, (f, a) => f.SectionCount(Str(a, 0))),
             ["first_section"] = new([], ValueType.Str, (f, _) => f.FirstSection()),
             ["links"] = new([], ValueType.Int, (f, _) => f.Links()),
             ["words"] = new([], ValueType.Int, (f, _) => f.Words()),
-            ["matches"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Matches((string)a[0]!)),
+            ["matches"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Matches(Str(a, 0))),
             ["section_matches"] = new([ValueType.Str, ValueType.Str], ValueType.Bool,
-                (f, a) => f.SectionMatches((string)a[0]!, (string)a[1]!)),
+                (f, a) => f.SectionMatches(Str(a, 0), Str(a, 1))),
             ["field_matches"] = new([ValueType.Str, ValueType.Str], ValueType.Bool,
-                (f, a) => f.FieldMatches((string)a[0]!, (string)a[1]!))
+                (f, a) => f.FieldMatches(Str(a, 0), Str(a, 1)))
         };
 
     // The callable surface by name, for the meta-test holding the reference table in

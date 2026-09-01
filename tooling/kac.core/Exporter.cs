@@ -426,7 +426,7 @@ public static class Exporter
 
     private static ExportRecord Record(Doc doc, TypeSchema t, Schema schema, Publishing? publishing)
     {
-        var export = t.Export!;
+        var export = t.DeclaredExport;
         var link = publishing?.Link(doc.Rel);
 
         var fields = new Dictionary<string, JsonNode?>(StringComparer.Ordinal);
@@ -602,7 +602,7 @@ public static class Exporter
     // parts costs an `export.parts.line:` block and no line of C#.
     private static List<string> PartLines(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
-        var spec = t.Parts!;
+        var spec = t.DeclaredParts;
         var byPath = records.ToDictionary(d => d.Rel, StringComparer.Ordinal);
         var lines = new List<string>();
         var footnotes = t.DeclaredFields.Select(f => f.MirrorsCitations).OfType<string>().ToList();
@@ -618,7 +618,7 @@ public static class Exporter
                 var part = new Part(doc, row, partId, id, lead, aside, SeeAlso(doc, row, byPath, tree));
 
                 var line = new JsonObject();
-                foreach (var (key, source) in t.Export!.Line) line[key] = Value(source, part, t);
+                foreach (var (key, source) in t.DeclaredExport.Line) line[key] = Value(source, part, t);
 
                 lines.Add(Serialize(line));
                 unread.AddRange(Unread(doc, row, partId, byPath, tree));
@@ -670,12 +670,12 @@ public static class Exporter
             PartLineSource.PartText => JsonValue.Create(part.Row.Text),
             PartLineSource.PartLead => JsonValue.Create(part.Lead),
             PartLineSource.PartAside => JsonValue.Create(part.Aside),
-            PartLineSource.PartLevel => JsonValue.Create(t.Parts!.Modal(part.Row.Text)),
+            PartLineSource.PartLevel => JsonValue.Create(t.DeclaredParts.Modal(part.Row.Text)),
             PartLineSource.PartSeeAlso => part.SeeAlso is null
                 ? null
                 : new JsonArray([.. part.SeeAlso.Select(v => (JsonNode?)JsonValue.Create(v))]),
 
-            PartLineSource.PartAnchor => JsonValue.Create(t.Parts!.Anchor(part.Id)),
+            PartLineSource.PartAnchor => JsonValue.Create(t.DeclaredParts.Anchor(part.Id)),
 
             PartLineSource.RecordId => JsonValue.Create(part.Record),
             PartLineSource.RecordType => JsonValue.Create(t.Key),
