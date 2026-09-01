@@ -8,6 +8,11 @@
          reaches production. CI and a local build answer the same way on purpose: a check that runs in
          one and not the other is how the thing it catches reaches main. -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <!-- The style in .editorconfig and the analyser rules are checked by the build rather than by a
+         reviewer. -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
 </Project>
